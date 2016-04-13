@@ -1,0 +1,9 @@
+.unit-schema .form-group {
+	float: left
+}
+.unit-schema-container > * {
+	display: inline-block;
+}
+.unit-schema-container div > button {
+	display: block;
+}
