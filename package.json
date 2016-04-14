@@ -15,6 +15,7 @@
 		"luomus"
 	],
 	"author": "Olli Raitio <olli.raitio@helsinki.fi>",
+	"repository": "https://bitbucket.org/luomus/laji-form.js.git",
 	"license": "MIT",
 	"engines": {
 		"node": "4.2.2"
