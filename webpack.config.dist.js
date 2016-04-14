@@ -2,12 +2,14 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
-	entry: [
-		path.join(__dirname, "playground", "app"),
-	],
+	context: __dirname + "/src",
+	entry: "./app.js",
 	output: {
-		publicPath: "/build/",
-		filename: "main.js"
+		path: "./dist",
+		publicPath: "/dist/",
+		filename: "laji-form.js",
+		library: "LajiForm",
+		libraryTarget: "umd"
 	},
 	plugins: [
 		new webpack.IgnorePlugin(/^(buffertools)$/) // unwanted "deeper" dependency
@@ -18,7 +20,6 @@ module.exports = {
 				test: /\.jsx?$/,
 				include: [
 					path.join(__dirname, "src"),
-					path.join(__dirname, "playground")
 				],
 				loader: "babel"
 			},
