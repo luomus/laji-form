@@ -221,11 +221,10 @@ class FormSelect extends Component {
 	}
 }
 
-export default class App extends Component {
+export class LajiForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			form: false,
 			schema: undefined,
 			uiSchema: undefined,
 			formData: undefined,
@@ -234,18 +233,28 @@ export default class App extends Component {
 		};
 	}
 
-	componentDidMount() {
-		api.getAllForms((response) => {
-			let forms ={};
-			response.forms.forEach(function(form) {
-				forms[form.id] = form;
-			});
-			this.setState({forms: forms});
-		});
+	render() {
+		const {schema, uiSchema, formData, errorMsg, lastApiCallFailed} = this.state;
+		if (lastApiCallFailed) return (<ErrorMsg errorMsg={errorMsg} />);
+		return (schema == null) ? null :
+			<Form
+				schema={schema}
+				uiSchema={uiSchema}
+				formData={formData}
+				onChange={this.onFormDataChange}
+				fields={{unit: UnitsField}}
+				onError={log("errors")} />
 	}
 
-	onSelectedFormChange = (form) => {
-		this.changeForm(form.id);
+	componentDidMount() {
+		let formId = this.props.formId;
+		if (formId !== undefined && formId !== null) this.changeForm(formId);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.formId !== this.props.formId) {
+			this.changeForm(nextProps.formId);
+		}
 	}
 
 	changeForm = (id) => {
@@ -258,23 +267,34 @@ export default class App extends Component {
 	}
 
 	onFormDataChange = ({formData}) => this.setState({formData});
+}
+
+export default class LajiFormApp extends Component {
+	constructor(props) {
+		super(props);
+		this.state = { formId: undefined };
+	}
+	componentDidMount() {
+		api.getAllForms((response) => {
+			let forms ={};
+			response.forms.forEach(function(form) {
+				forms[form.id] = form;
+			});
+			this.setState({forms: forms});
+		});
+	}
+
+	onSelectedFormChange = (form) => {
+		this.setState({formId: form.id});
+	}
+
 	render() {
-		const {schema, uiSchema, formData, errorMsg} = this.state;
 		return (
 			<div>
 				<FormSelect title="valitse lomake"
 					forms={this.state.forms}
 					onChange={this.onSelectedFormChange} />
-				{(() => {
-					if (this.state.lastApiCallFailed) return <ErrorBox errorMsg={errorMsg} />;
-					else if (this.state.schema) return <Form
-						schema={schema}
-						uiSchema={uiSchema}
-						formData={formData}
-						onChange={this.onFormDataChange}
-						fields={{unit: UnitsField}}
-						onError={log("errors")} />
-				})()}
+				<LajiForm formId={this.state.formId}/>
 			</div>
 		);
 	}
