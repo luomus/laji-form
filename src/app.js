@@ -66,9 +66,9 @@ class Unit extends Component {
 		let fieldWrap = {fields: {taxonName: schema.items.properties.taxonName}, additionalFields: {}};
 		let taxonNames = {};
 		fieldWrap.fields.taxonName.enum.map((name) => { taxonNames[name] = true });
-		if (taxonNames[unit.taxonName]) {
+		if (unit.taxonName && taxonNames[unit.taxonName]) {
 			Object.keys(fieldWrap).forEach((fieldKey) => {
-				uiSchema.options[unit.taxonName][fieldKey].forEach((fieldName) => {
+				uiSchema["ui:options"][unit.taxonName][fieldKey].forEach((fieldName) => {
 					fieldWrap[fieldKey][fieldName] = schema.items.properties[fieldName];
 				});
 			});
@@ -226,9 +226,9 @@ export default class App extends Component {
 		super(props);
 		this.state = {
 			form: false,
-			schema: {},
-			uiSchema: {},
-			formData: {},
+			schema: undefined,
+			uiSchema: undefined,
+			formData: undefined,
 			lastApiCallFailed: false,
 			errorMsg: undefined
 		};
@@ -240,152 +240,7 @@ export default class App extends Component {
 			response.forms.forEach(function(form) {
 				forms[form.id] = form;
 			});
-			this.setState({forms: forms, form: true});
-		});
-
-		let schema = {
-			"type": "object",
-			"properties": {
-				"gatherings": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"dateBegin": {
-								"type": "string",
-								"title": "Alkupäivä"
-							},
-							"dateEnd": {
-								"type": "string",
-								"title": "Loppupäivä"
-							},
-							"leg": {
-								"type": "array",
-								"title": "Leg",
-								"items": {
-									"type": "string"
-								}
-							},
-							"kartta": {
-								"type": "string",
-								"title": "[KARTTA] [ < edellinen ] [ seuraava >]"
-							},
-							"units": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"properties": {
-										"taxonName": {"type": "string", "title": "Taksoni", "enum": ["MY.kantarelli", "MY.korvasieni", "MY.kalalokki"], "enumNames": ["kantarelli", "korvasieni", "kalalokki"]},
-										"age": {"type": "string", "title": "Ikä"},
-										"sex": {"type": "string", "title": "sukupuoli", "enum": ["MY.male", "MY.female"], "enumNames": ["koiras", "naaras"]},
-										"notes": {"type": "string", "title": "Vapaat huomiot"},
-										"count": {"type": "string", "title": "Lukumäärä"},
-										"ring": {"type": "string", "title": "Rengas"}
-									}
-								}
-							},
-							"locality": {
-								"type": "string",
-								"title": "Paikannimet"
-							},
-							"localityDescription": {
-								"type": "string",
-								"title": "Paikan vapaamuotoinen kuvaus"
-							},
-							"habitatDescription": {
-								"type": "string",
-								"title": "Habitaatin kuvaus"
-							},
-							"biotype": {
-								"type": "string",
-								"enum": [
-									"forest",
-									"suo"
-								],
-								"enumNames": [
-									"metsä",
-									"suo"
-								]
-							},
-							"biotypeSuo": {
-								"type": "string",
-								"enum": [
-									"korpi",
-									"räme",
-									"neva"
-								],
-								"enumNames": [
-									"korpi",
-									"räme",
-									"neva"
-								]
-							},
-							"biotypeForest": {
-								"type": "string",
-								"enum": [
-									"kuusi",
-									"mänty",
-									"lehto"
-								],
-								"enumNames": [
-									"kuusi",
-									"mänty",
-									"lehto"
-								]
-							},
-							"image": {
-								"type": "string",
-								"title": "Raahaa tähän kuvat tai valitse tiedosto koneeltasi [Browse]"
-							},
-							"rights": {
-								"type": "string",
-								"title": "Kuivien käyttöoikeus [pakollinen]"
-							}
-						},
-						"required": [
-							"leg"
-						]
-					}
-				},
-				"temp": {
-					"type": "boolean"
-				},
-				"ready": {
-					"type": "boolean"
-				}
-			},
-			"required": []
-		};
-		let uiSchema = {
-			gatherings: {
-				items: {
-					units: {
-						"ui:field": "unit",
-						"options": {
-							"MY.kantarelli": {
-								"url": "http://mock.api.luomus.fi/species/kantarelli",
-								"fields": ["age", "count"],
-								"additionalFields": ["notes"]
-							},
-							"MY.korvasieni": {
-								"url": "http://mock.api.luomus.fi/species/kantarelli",
-								"fields": ["age", "count"],
-								"additionalFields": ["notes"]
-							},
-							"MY.kalalokki": {
-								"url": "http://mock.api.luomus.fi/species/kantarelli",
-								"fields": ["age", "count", "ring", "sex"],
-								"additionalFields": ["notes"]
-							}
-						}
-					}
-				}
-			}
-		};
-		this.setState({
-			schema: schema,
-			uiSchema: uiSchema,
-			formData: {}
+			this.setState({forms: forms});
 		});
 	}
 
@@ -396,43 +251,31 @@ export default class App extends Component {
 	changeForm = (id) => {
 		let that = this;
 		api.getForm(id, function onSuccess(response) {
-			that.setState({schema: response, lastApiCallFailed: false, errorMsg: undefined});
+			that.setState({schema: response.schema, uiSchema: response.uiSchema, lastApiCallFailed: false, errorMsg: undefined});
 		}, function onError(response) {
-			that.setState({schema: {}, lastApiCallFailed: true, errorMsg: response});
+			that.setState({schema: undefined, uiSchema: undefined, lastApiCallFailed: true, errorMsg: response});
 		});
 	}
 
 	onFormDataChange = ({formData}) => this.setState({formData});
-
-//<div className="container-fluid">
-//<div className="page-header">
-//<FormSelect title="valitse lomake"
-//forms={this.state.forms}
-//onChange={this.onSelectedFormChange} />
-//</div>
-//<div className="col-sm-5">
-//{this.state.lastApiCallFailed ?
-//  <ErrorBox errorMsg={errorMsg} /> :
-//  (!this.state.form ? null :
-//    <Form
-//      schema={schema}
-//      uiSchema={uiSchema}
-//      formData={formData}
-//      onChange={this.onFormDataChange}
-//      fields={{unit: UnitsField}}
-//      onError={log("errors")} />)}
-//</div>
-//</div>
 	render() {
 		const {schema, uiSchema, formData, errorMsg} = this.state;
 		return (
-			<Form
-				schema={schema}
-				uiSchema={uiSchema}
-				formData={formData}
-				onChange={this.onFormDataChange}
-				fields={{unit: UnitsField}}
-				onError={log("errors")} />
+			<div>
+				<FormSelect title="valitse lomake"
+					forms={this.state.forms}
+					onChange={this.onSelectedFormChange} />
+				{(() => {
+					if (this.state.lastApiCallFailed) return <ErrorBox errorMsg={errorMsg} />;
+					else if (this.state.schema) return <Form
+						schema={schema}
+						uiSchema={uiSchema}
+						formData={formData}
+						onChange={this.onFormDataChange}
+						fields={{unit: UnitsField}}
+						onError={log("errors")} />
+				})()}
+			</div>
 		);
 	}
 }
