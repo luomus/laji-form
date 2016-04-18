@@ -36,7 +36,7 @@ class Unit extends Component {
 					schema={this.getSchema()}
 					onChange={this.onChange}
 					formData={this.props.unit}
-					errorSchema={{}}
+					errorSchema={this.props.errorSchema}
 					idSchema={this.props.idSchema}
 					registry={this.props.registry}
 					uiSchema={{classNames: "unit-schema"}}
@@ -64,7 +64,9 @@ class Unit extends Component {
 		let uiSchema = this.props.uiSchema;
 		let unit = this.props.unit;
 		let fieldWrap = {fields: {taxonName: schema.items.properties.taxonName}, additionalFields: {}};
-		if (unit.taxonName) {
+		let taxonNames = {};
+		fieldWrap.fields.taxonName.enum.map((name) => { taxonNames[name] = true });
+		if (taxonNames[unit.taxonName]) {
 			Object.keys(fieldWrap).forEach((fieldKey) => {
 				uiSchema.options[unit.taxonName][fieldKey].forEach((fieldName) => {
 					fieldWrap[fieldKey][fieldName] = schema.items.properties[fieldName];
@@ -141,10 +143,11 @@ class UnitsField extends Component {
 				id={idx}
 				key={idx}
 				unit={unit}
+				onChange={this.onUnitChange}
 				schema={this.props.schema}
 				uiSchema={this.props.uiSchema}
-				onChange={this.onUnitChange}
 				idSchema={this.props.idSchema}
+				errorSchema={this.props.errorSchema[idx]}
 				registry={this.props.registry} />);
 			idx++;
 		});
