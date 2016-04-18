@@ -107,7 +107,7 @@ class UnitsField extends Component {
 		this.setState(change, () => {
 			let dataOutput = [];
 			if (this.state.units) this.state.units.forEach((unit) => {
-				if (unit) dataOutput.push(unit);
+				if (Object.keys(unit).length > 0) dataOutput.push(unit);
 			});
 			this.props.onChange(dataOutput);
 		});
