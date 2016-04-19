@@ -211,7 +211,7 @@ class FormSelect extends Component {
 		let options = [];
 		let forms = this.props.forms;
 		if (forms) Object.keys(forms).forEach((id) => {
-			options.push(<option value={id}>{this.props.forms[id].name}</option>)
+			options.push(<option value={id} key={id}>{this.props.forms[id].title}</option>)
 		});
 		return options;
 	}
