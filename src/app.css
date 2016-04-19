@@ -1,6 +1,9 @@
 .unit-schema .form-group {
 	float: left
 }
+.unit-schema .form-group > * {
+	display: table;
+}
 .unit-schema-container > * {
 	display: inline-block;
 }
