@@ -28,5 +28,5 @@ You can also use directly the LajiForm component like so:
 ...
 import { LajiForm } from "laji-form";
 
-render(<LajiForm formId="id" />, document.getElementById("app"));
+render(<LajiForm formId="id" data={formData} />, document.getElementById("app"));
 ```

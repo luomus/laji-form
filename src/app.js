@@ -227,7 +227,7 @@ export class LajiForm extends Component {
 		this.state = {
 			schema: undefined,
 			uiSchema: undefined,
-			formData: undefined,
+			formData: this.props.data,
 			lastApiCallFailed: false,
 			errorMsg: undefined
 		};
