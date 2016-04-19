@@ -26,7 +26,7 @@ export default class LajiForm extends Component {
 				uiSchema={uiSchema}
 				formData={formData}
 				onChange={this.onFormDataChange}
-				fields={{unit: UnitsField}}
+				fields={{unitTripreport: UnitsField}}
 				onError={log("errors")} />
 	}
 
