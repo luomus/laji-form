@@ -46,9 +46,9 @@ export default class UnitsField extends Component {
 			unitRows.push(<Unit
 				id={idx}
 				key={idx}
-				unit={unit}
+				data={unit}
 				onChange={this.onUnitChange}
-				schema={this.props.schema}
+				schema={this.props.schema.items}
 				uiSchema={this.props.uiSchema}
 				idSchema={this.props.idSchema}
 				errorSchema={this.props.errorSchema[idx]}
@@ -81,6 +81,7 @@ export default class UnitsField extends Component {
 
 class Unit extends Component {
 	static propTypes = {
+		data: PropTypes.object.isRequired,
 		schema: PropTypes.object.isRequired,
 		uiSchema: PropTypes.object.isRequired,
 		idSchema: PropTypes.object.isRequired,
@@ -98,7 +99,7 @@ class Unit extends Component {
 				<SchemaField
 					schema={this.getSchema()}
 					onChange={this.onChange}
-					formData={this.props.unit}
+					formData={this.props.data}
 					errorSchema={this.props.errorSchema}
 					idSchema={this.props.idSchema}
 					registry={this.props.registry}
@@ -109,7 +110,7 @@ class Unit extends Component {
 	}
 
 	renderButtons = () => {
-		if (!this.props.unit.taxonName) return;
+		if (!this.props.data.taxonName) return;
 
 		let buttons = [<Button text="Lisää kuva" onClick={this.onAddClick} />];
 		buttons.unshift(
@@ -125,17 +126,17 @@ class Unit extends Component {
 	getSchema = () => {
 		let schema = this.props.schema;
 		let uiSchema = this.props.uiSchema;
-		let unit = this.props.unit;
-		let fieldWrap = {fields: {taxonName: schema.items.properties.taxonName}, additionalFields: {}};
+		let unit = this.props.data;
+		let fieldWrap = {fields: {taxonName: schema.properties.taxonName}, additionalFields: {}};
 		let taxonNames = {};
 		fieldWrap.fields.taxonName.enum.map((name) => { taxonNames[name] = true });
 		if (unit.taxonName && taxonNames[unit.taxonName]) {
 			Object.keys(fieldWrap).forEach((fieldKey) => {
 				uiSchema["ui:options"][unit.taxonName][fieldKey].forEach((fieldName) => {
-					fieldWrap[fieldKey][fieldName] = schema.items.properties[fieldName];
+					fieldWrap[fieldKey][fieldName] = schema.properties[fieldName];
 				});
 			});
-			fieldWrap.fields.taxonName = schema.items.properties.taxonName;
+			fieldWrap.fields.taxonName = schema.properties.taxonName;
 		}
 		let fields = fieldWrap.fields;
 		if (this.state.showAdditional) Object.keys(fieldWrap.additionalFields).forEach((field) => {
