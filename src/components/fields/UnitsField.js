@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import SelectWidget from "react-jsonschema-form/lib/components/widgets/SelectWidget"
@@ -163,7 +164,7 @@ class Unit extends Component {
 	}
 
 	onTaxonNameSelected = (e) => {
-		this.props.onChange(this.props.id, {[this.state.selectField]: e.target.value});
+		this.props.onChange(this.props.id, getDefaultFormState(this.props.schema, {[this.state.selectField]: e.target.value}, this.props.schema.definitions));
 	}
 
 	onChange = (data) => {
