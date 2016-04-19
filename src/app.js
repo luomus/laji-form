@@ -258,11 +258,11 @@ export class LajiForm extends Component {
 	}
 
 	changeForm = (id) => {
-		let that = this;
-		api.getForm(id, function onSuccess(response) {
-			that.setState({schema: response.schema, uiSchema: response.uiSchema, lastApiCallFailed: false, errorMsg: undefined});
-		}, function onError(response) {
-			that.setState({schema: undefined, uiSchema: undefined, lastApiCallFailed: true, errorMsg: response});
+		let lang = this.props.lang || 'en';
+		api.getForm(id, lang, (response) => {
+			this.setState({schema: response.schema, uiSchema: response.uiSchema, lastApiCallFailed: false, errorMsg: undefined});
+		}, (response) => {
+			this.setState({schema: undefined, uiSchema: undefined, lastApiCallFailed: true, errorMsg: response});
 		});
 	}
 
@@ -275,7 +275,7 @@ export default class LajiFormApp extends Component {
 		this.state = { formId: undefined };
 	}
 	componentDidMount() {
-		api.getAllForms((response) => {
+		api.getAllForms('fi', (response) => {
 			let forms ={};
 			response.forms.forEach(function(form) {
 				forms[form.id] = form;
@@ -294,7 +294,7 @@ export default class LajiFormApp extends Component {
 				<FormSelect title="valitse lomake"
 					forms={this.state.forms}
 					onChange={this.onSelectedFormChange} />
-				<LajiForm formId={this.state.formId}/>
+				<LajiForm formId={this.state.formId} lang="fi"/>
 			</div>
 		);
 	}

@@ -4,8 +4,8 @@ let http = require("http");
 let extend = require("util")._extend;
 let queryString = require("querystring");
 
-const API_HOST =  "form.laji.fi";
-const API_PATH =  "/lajiform";
+const API_HOST =  "apitest.laji.fi";
+const API_PATH =  "/v0/forms";
 
 let requestBaseOptions = {
 	host: API_HOST,
@@ -51,12 +51,12 @@ function get(path, query, onSuccess, onError) {
 	apiRequest("GET", path, query, onSuccess, onError);
 }
 
-function getAllForms(callback) {
-	get("", {format: "json"}, callback);
+function getAllForms(lang = 'en', callback) {
+	get("", {format: "json", lang: lang}, callback);
 }
-function getForm(id, onSuccess, onError) {
+function getForm(id, lang = 'en', onSuccess, onError) {
 	if (id === undefined) throw "id parameter is mandatory";
-	get("/" + id, undefined, onSuccess, onError);
+	get("/" + id, {lang: lang}, onSuccess, onError);
 }
 
 module.exports = {
