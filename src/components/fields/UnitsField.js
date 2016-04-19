@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import SelectWidget from "react-jsonschema-form/lib/components/widgets/SelectWidget"
+import StringField from "react-jsonschema-form/lib/components/fields/StringField"
 import Button from "../Button";
 
 export default class UnitsField extends Component {
@@ -90,23 +92,38 @@ class Unit extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {showAdditional: false};
+		this.state = {showAdditional: false, selectField: "taxonName"};
 	}
 
 	render() {
 		return (
 			<div className="unit-schema-container">
-				<SchemaField
-					schema={this.getSchema()}
-					onChange={this.onChange}
-					formData={this.props.data}
-					errorSchema={this.props.errorSchema}
-					idSchema={this.props.idSchema}
-					registry={this.props.registry}
-					uiSchema={{classNames: "unit-schema"}}
-				/>
+				{this.renderUnit()}
 				{this.renderButtons()}
 			</div>);
+	}
+
+	renderUnit = () => {
+		const schema = this.getSchema();
+		let selectField = this.state.selectField;
+		if (!this.props.data[selectField]) return (
+			<NoninitializedSelect
+				name={schema.title || selectField}
+				schema={schema.properties[selectField]}
+				onChange={this.onTaxonNameSelected}
+			/>
+		)
+		else return (
+			<SchemaField
+				schema={this.getSchema()}
+				onChange={this.onChange}
+				formData={this.props.data}
+				errorSchema={this.props.errorSchema}
+				idSchema={this.props.idSchema}
+				registry={this.props.registry}
+				uiSchema={{classNames: "unit-schema"}}
+			/>
+		)
 	}
 
 	renderButtons = () => {
@@ -145,6 +162,10 @@ class Unit extends Component {
 		return {type: "object", properties: fields}
 	}
 
+	onTaxonNameSelected = (e) => {
+		this.props.onChange(this.props.id, {[this.state.selectField]: e.target.value});
+	}
+
 	onChange = (data) => {
 		this.props.onChange(this.props.id, data);
 	}
@@ -159,5 +180,25 @@ class Unit extends Component {
 
 	onAddImgClick = () => {
 
+	}
+}
+
+class NoninitializedSelect extends Component {
+	render() {
+		let options = (() => {
+			const schema = this.props.schema;
+			let options = [<option value="" disabled hidden />];
+			for (let i = 0; i < schema.enum.length; i++) {
+				options.push(<option value={schema.enum[i]}>{schema.enumNames[i]}</option>)
+			}
+			return options;
+		})();
+
+		return (
+			<fieldset>
+				<label>{this.props.name}</label>
+				<select defaultValue="" className="form-control" onChange={this.props.onChange}>{options}</select>
+			</fieldset>
+		)
 	}
 }
