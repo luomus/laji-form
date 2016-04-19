@@ -7,7 +7,7 @@ This is a React module, that can be installed as a npm dependency and bolted to 
 Install as a git dependency:
 
 ```
-npm install git+ssh:git@bitbucket.org:luomus/laji-form.js.git --save 
+npm install git+ssh://git@bitbucket.org:luomus/laji-form.js.git --save
 ```
 
 # Usage #
