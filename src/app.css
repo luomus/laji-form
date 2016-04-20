@@ -1,8 +1,5 @@
-.unit-schema .form-group {
+.horizontal fieldset > * {
 	float: left
-}
-.unit-schema .form-group > * {
-	display: table;
 }
 .unit-schema-container > * {
 	display: inline-block;

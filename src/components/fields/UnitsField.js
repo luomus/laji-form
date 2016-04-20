@@ -5,6 +5,7 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import SelectWidget from "react-jsonschema-form/lib/components/widgets/SelectWidget"
 import StringField from "react-jsonschema-form/lib/components/fields/StringField"
 import Button from "../Button";
+import HorizontalSchemaField from "./HorizontalSchemaField";
 
 export default class UnitsField extends Component {
 	constructor(props) {
@@ -123,14 +124,14 @@ class Unit extends Component {
 			/>
 		)
 		else return (
-			<SchemaField
+			<HorizontalSchemaField
 				schema={this.getSchema()}
 				onChange={this.onChange}
 				formData={this.props.data}
 				errorSchema={this.props.errorSchema}
 				idSchema={this.props.idSchema}
 				registry={this.props.registry}
-				uiSchema={{classNames: "unit-schema"}}
+				uiSchema={{}}
 			/>
 		)
 	}
