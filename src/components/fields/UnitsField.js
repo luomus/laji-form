@@ -138,11 +138,11 @@ class Unit extends Component {
 	renderButtons = () => {
 		if (!this.props.data.taxonName) return;
 
-		let buttons = [<Button text="Lisää kuva" onClick={this.onAddClick} />];
+		let buttons = [<Button text="Lisää kuva" key="0" onClick={this.onAddClick} />];
 		buttons.unshift(
 			(this.state.showAdditional) ?
-				<Button text="Näytä vähemmän muuttujia" onClick={this.dontShowAdditional} /> :
-				<Button text="Näytä lisää muuttujia" onClick={this.showAdditional} />
+				<Button text="Näytä vähemmän muuttujia" key={buttons.length} onClick={this.dontShowAdditional} /> :
+				<Button text="Näytä lisää muuttujia" key={buttons.length} onClick={this.showAdditional} />
 		);
 		return (<div className="unit-schema-buttons">
 			{buttons}
@@ -196,9 +196,9 @@ class NoninitializedSelect extends Component {
 	render() {
 		let options = (() => {
 			const schema = this.props.schema;
-			let options = [<option value="" disabled hidden />];
+			let options = [<option value="" key="-1" disabled hidden />];
 			for (let i = 0; i < schema.enum.length; i++) {
-				options.push(<option value={schema.enum[i]}>{schema.enumNames[i]}</option>)
+				options.push(<option value={schema.enum[i]} key={i}>{schema.enumNames[i]}</option>)
 			}
 			return options;
 		})();
