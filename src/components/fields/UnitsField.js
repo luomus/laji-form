@@ -173,7 +173,7 @@ class Unit extends Component {
 	}
 
 	onTaxonNameSelected = (e) => {
-		this.props.onChange(this.props.id, getDefaultFormState(this.props.schema, {[this.state.selectField]: e.target.value}, this.props.schema.definitions));
+		this.props.onChange(this.props.id, getDefaultFormState(this.props.schema, {[this.state.selectField]: e.target.value}, {}));
 	}
 
 	onChange = (data) => {
