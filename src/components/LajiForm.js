@@ -51,8 +51,13 @@ export default class LajiForm extends Component {
 							"ui:field": "eventTime"
 						},
 						"observers": {
-							"ui:field": "eventObservers",
 							"items": {
+								"ui:field": "horizontal",
+								"name": {
+									"ui:field": "locked"
+								}
+							},
+							"additionalItems": {
 								"ui:field": "horizontal"
 							}
 						},
@@ -120,9 +125,26 @@ export default class LajiForm extends Component {
 								},
 								"observers": {
 									"type": "array",
-									"items": {
+									"items": [
+											{
+											"type": "object",
+											"properties": {
+												"name": {
+													"type": "string"
+												},
+												"isPublic": {
+													"type": "boolean"
+												},
+												"canEdit": {
+													"type": "boolean"
+												}
+											},
+											"required": ["name"]
+										}
+									],
+									"additionalItems": {
 										"type": "object",
-										"properties": {
+											"properties": {
 											"name": {
 												"type": "string"
 											},
@@ -287,40 +309,47 @@ export default class LajiForm extends Component {
 		}
 
 
-		//const formData = {
-		//	"gatherings": [
-		//		{
-		//			"dateBegin": "",
-		//			"dateEnd": "",
-		//			"leg": [],
-		//			"kartta": "",
-		//			"units": [
-		//				{
-		//					"fastInput": "",
-		//					"taxonName": "MY.kantarelli",
-		//					"age": "",
-		//					"sex": "MY.sexM",
-		//					"notes": "",
-		//					"count": "",
-		//					"ring": ""
-		//				}
-		//			],
-		//			"locality": "",
-		//			"localityDescription": "",
-		//			"habitatDescription": "",
-		//			"biotype": "forest",
-		//			"biotypeSuo": "korpi",
-		//			"biotypeForest": "kuusi",
-		//			"image": "",
-		//			"rights": ""
-		//		}
-		//	],
-		//	"temp": false,
-		//	"ready": false
-		//}
+		const formData = {
+			"gatherings": [
+				{
+					"dateBegin": "",
+					"dateEnd": "",
+					"observers": [
+						{
+							"name": "Testimies",
+							"isPublic": false,
+							"canEdit": false
+						}
+					],
+					"leg": [],
+					"kartta": "",
+					"units": [
+						{
+							"fastInput": "",
+							"taxonName": "MY.kantarelli",
+							"age": "",
+							"sex": "MY.sexM",
+							"notes": "",
+							"count": "",
+							"ring": ""
+						}
+					],
+					"locality": "",
+					"localityDescription": "",
+					"habitatDescription": "",
+					"biotype": "forest",
+					"biotypeSuo": "korpi",
+					"biotypeForest": "kuusi",
+					"image": "",
+					"rights": ""
+				}
+			],
+			"temp": false,
+			"ready": false
+		}
 
-		//this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
-		this.setState({schema: response.schema, uiSchema: response.uiSchema});
+		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
+		//this.setState({schema: response.schema, uiSchema: response.uiSchema});
 	}
 
 	componentWillReceiveProps(nextProps) {

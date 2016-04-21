@@ -12,7 +12,7 @@ export default class UnitsField extends Component {
 		super(props);
 		this.state = {units: []};
 
-		let units = this.props.formData;
+		let units = this.props.formData ? this.props.formData : [];
 		if (units.length > 0) {
 			while (units.length % 10) {
 				units.push({});
@@ -173,7 +173,7 @@ class Unit extends Component {
 	}
 
 	onTaxonNameSelected = (e) => {
-		this.props.onChange(this.props.id, getDefaultFormState(this.props.schema, {[this.state.selectField]: e.target.value}, {}));
+		this.props.onChange(this.props.id, getDefaultFormState(this.props.schema, {[this.state.selectField]: e.target.value}, this.props.schema.definitions));
 	}
 
 	onChange = (data) => {
