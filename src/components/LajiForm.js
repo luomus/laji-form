@@ -137,12 +137,12 @@ export default class LajiForm extends Component {
 													"canEdit": {
 														"type": "boolean"
 													}
-												}
-											},
-											"required": ["name", "isPublic", "canEdit"]
+												},
+												"required": ["name"]
+											}
 										}
 									},
-									"required": ["evenTime", "observers"]
+									"required": ["eventTime", "observers"]
 								},
 								"leg": {
 									"type": "array",
@@ -293,6 +293,7 @@ export default class LajiForm extends Component {
 				"required": []
 			}
 		}
+
 
 		//const formData = {
 		//	"gatherings": [

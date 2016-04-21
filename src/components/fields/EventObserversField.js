@@ -18,29 +18,47 @@ export default class EventObserversField extends Component {
 	render() {
 		return (
 			<div>
-				<SchemaField {...this.props} schema={this.props.schema.items} uiSchema={this.state.lockedObserverUiSchema} formData={this.state.lockedObserver} errorSchema={{}} onChange={this.onLockedObserverChange} />
-				<SchemaField {...this.props} uiSchema={this.state.uiSchema} formData={this.state.formData} onChange={this.onChange} name={undefined} />
+				<SchemaField {...this.props} schema={this.props.schema.items} uiSchema={this.state.lockedObserverUiSchema} formData={this.state.lockedObserver} errorSchema={this.props.errorSchema[0]} onChange={this.onLockedObserverChange} />
+				<SchemaField {...this.props} uiSchema={this.state.uiSchema} formData={this.state.formData} errorSchema={this.state.errorSchema} onChange={this.onChange} name={undefined} />
 			</div>
 		);
 	}
 
+	getErrorSchema = (props) => {
+		let errorSchema = {};
+		Object.keys(props.errorSchema).forEach((key) => {
+			if (key === "0") return;
+			errorSchema[parseInt(key) - 1] = props.errorSchema[key];
+		});
+		return errorSchema;
+	}
+
 	componentDidMount() {
-		if (this.props.formData.length === 0) {
-			let lockedObserver = getDefaultFormState(this.props.schema.items, {name: "Testimies"}, {});
+		let formData = JSON.parse(JSON.stringify(this.props.formData));
 
-			let formData = JSON.parse(JSON.stringify(this.props.formData));
-			formData.shift();
-
-			this.setState({lockedObserver, formData}, () => {
-				this.props.onChange([lockedObserver])
-			});
+		let lockedObserver = undefined;
+		if  (this.props.formData.length) {
+			// remove locked observer from data
+			lockedObserver = formData.shift();
+		} else {
+			lockedObserver = getDefaultFormState(this.props.schema.items, {name: "Testimies"}, {});
 		}
+
+		let errorSchema = this.getErrorSchema(this.props);
+
+		this.setState({lockedObserver, formData, errorSchema}, () => {
+			if (this.props.formData.length === 0) {
+				formData.unshift(lockedObserver);
+				this.props.onChange(formData);
+			}
+		});
 	}
 
 	componentWillReceiveProps(props) {
 		let formData = JSON.parse(JSON.stringify(props.formData));
 		formData.shift();
-		this.setState({formData});
+		let errorSchema = this.getErrorSchema(props);
+		this.setState({formData, errorSchema});
 	}
 
 	onLockedObserverChange = (lockedObserver) => {
