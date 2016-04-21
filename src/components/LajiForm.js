@@ -47,15 +47,13 @@ export default class LajiForm extends Component {
 			"uiSchema": {
 				"gatherings": {
 					"items": {
-						"event": {
-							"eventTime": {
-								"ui:field": "eventTime"
-							},
-							"observers": {
-								"ui:field": "eventObservers",
-								"items": {
-									"ui:field": "horizontal"
-								}
+						"eventTime": {
+							"ui:field": "eventTime"
+						},
+						"observers": {
+							"ui:field": "eventObservers",
+							"items": {
+								"ui:field": "horizontal"
 							}
 						},
 						"units": {
@@ -106,43 +104,37 @@ export default class LajiForm extends Component {
 						"items": {
 							"type": "object",
 							"properties": {
-								"event": {
+								"eventTime": {
 									"type": "object",
 									"properties": {
-										"eventTime": {
-											"type": "object",
-											"properties": {
-												"dateBegin": {
-													"type": "string",
-													"title": "Datebegin"
-												},
-												"dateEnd": {
-													"type": "string",
-													"title": "dateEnd"
-												}
-											},
-											"required": ["dateBegin"]
+										"dateBegin": {
+											"type": "string",
+											"title": "Datebegin"
 										},
-										"observers": {
-											"type": "array",
-											"items": {
-												"type": "object",
-												"properties": {
-													"name": {
-														"type": "string"
-													},
-													"isPublic": {
-														"type": "boolean"
-													},
-													"canEdit": {
-														"type": "boolean"
-													}
-												},
-												"required": ["name"]
-											}
+										"dateEnd": {
+											"type": "string",
+											"title": "dateEnd"
 										}
 									},
-									"required": ["eventTime", "observers"]
+									"required": ["dateBegin"]
+								},
+								"observers": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"isPublic": {
+												"type": "boolean"
+											},
+											"canEdit": {
+												"type": "boolean"
+											}
+										},
+										"required": ["name"]
+									}
 								},
 								"leg": {
 									"type": "array",

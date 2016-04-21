@@ -9,7 +9,7 @@ export default class EventObserversField extends Component {
 
 		let uiSchema = JSON.parse(JSON.stringify(props.uiSchema));
 		delete uiSchema["ui:field"];
-		let lockedObserverUiSchema = JSON.parse(JSON.stringify(props.uiSchema.items));
+		let lockedObserverUiSchema = props.uiSchema.items ? JSON.parse(JSON.stringify(props.uiSchema.items)) : {};
 		lockedObserverUiSchema.name = {"ui:field": "locked"};
 
 		this.state = {uiSchema, lockedObserverUiSchema};
