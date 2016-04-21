@@ -3,7 +3,6 @@ import Form from "react-jsonschema-form";
 import api from "../api";
 import UnitsField from "./fields/UnitsField";
 import HorizontalSchemaField from "./fields/HorizontalSchemaField";
-import EventObserversField from "./fields/EventObserversField";
 import LockedField from "./fields/LockedField";
 
 const log = (type) => console.log.bind(console, type);
@@ -32,7 +31,6 @@ export default class LajiForm extends Component {
 				fields={{
 					unitTripreport: UnitsField,
 					horizontal: HorizontalSchemaField,
-					eventObservers: EventObserversField,
 					locked: LockedField}}
 				onError={log("errors")} />
 	}
