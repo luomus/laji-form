@@ -16,13 +16,6 @@ export default class TableField extends Component {
 	}
 
 	render() {
-		return (<div className="horizontal">{this.renderSchema()}</div>)
-		//return (
-		//	<HorizontalWrapper><SchemaField {...this.props} uiSchema={this.state.uiSchema} /></HorizontalWrapper>
-		//);
-	}
-
-	renderSchema = () => {
 		let props = this.props;
 		console.log(props);
 
@@ -53,12 +46,54 @@ export default class TableField extends Component {
 
 		console.log(properties);
 
-		let content = [];
+		let rows = [];
 
+		let headers = [];
 		Object.keys(properties).forEach((property) => {
-			content.push(<label>{property}</label>);
+			headers.push(<label>{property}</label>);
 		});
-		return content;
+
+		rows.push(<TableRow>{headers}</TableRow>);
+		
+		props.formData.forEach((row) => {
+			let rowSchemas = [];
+			Object.keys(properties).forEach((property) => {
+				// let formData = (props.formData && props.formData[property]) ? props.formData[property] : getDefaultFormState(properties[property], undefined, props.schema.definitions);
+				let formData = row;
+				rowSchemas.push(<SchemaField
+					schema={properties[property]}
+					uiSchema={{}}
+					idSchema={props.idSchema}
+					formData={formData[property]}
+					errorSchema={(props.errorSchema) ? props.errorSchema[property] : {}}
+					registry={props.registry}
+					onChange={props.onChange} />)
+			});
+			rows.push(<TableRow>{rowSchemas}</TableRow>)
+		});
+
+		// uiSchema={props.uiSchema[property]}
+
+		// Object.keys(properties).forEach((property) => {
+		// 	let formData = (props.formData && props.formData[property]) ? props.formData[property] : getDefaultFormState(properties[property], undefined, props.schema.definitions);
+		// 	rows.push(<TableRow><SchemaField
+		// 		schema={properties[property]}
+		// 		uiSchema={{}}
+		// 		idSchema={props.idSchema}
+		// 		formData={formData}
+		// 		errorSchema={(props.errorSchema) ? props.errorSchema[property] : {}}
+		// 		registry={props.registry}
+		// 		onChange={props.onChange} /></TableRow>)
+		// });
+
+		return (<table>{rows}</table>);
+
+		// let rows = [];
+		// rows.push(<TableRow data={content})
+		// this.props.formData.forEach((item) => {
+		// 	rows.push(<TableRow data={item} />);
+		// });
+		// return content;
 
 		//let schemas = [];
 		//Object.keys(properties).forEach((property) => {
@@ -73,5 +108,15 @@ export default class TableField extends Component {
 		//		onChange={props.onChange} />)
 		//});
 		//return schemas;
+	}
+}
+
+class TableRow extends Component {
+	render() {
+		let cells = [];
+		this.props.children.forEach((child, idx) => {
+			cells.push(<td key={idx}>{child}</td>);
+		});
+		return (<tr>{cells}</tr>)
 	}
 }

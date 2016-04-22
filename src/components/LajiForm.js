@@ -69,7 +69,8 @@ export default class LajiForm extends Component {
 									"url": "http://mock.api.luomus.fi/species/kantarelli",
 									"fields": [
 										"age",
-										"count"
+										"count",
+										"alive"
 									],
 									"additionalFields": [
 										"notes"
@@ -79,7 +80,8 @@ export default class LajiForm extends Component {
 									"url": "http://mock.api.luomus.fi/species/kantarelli",
 									"fields": [
 										"age",
-										"count"
+										"count",
+										"alive"
 									],
 									"additionalFields": [
 										"notes"
@@ -91,7 +93,8 @@ export default class LajiForm extends Component {
 										"age",
 										"count",
 										"ring",
-										"sex"
+										"sex",
+										"alive"
 									],
 									"additionalFields": [
 										"notes"
@@ -227,6 +230,10 @@ export default class LajiForm extends Component {
 												"type": "string",
 												"title": "Number of individuals"
 											},
+											"alive": {
+												"type": "boolean",
+												"title": "elossa?"
+											},
 											"ring": {
 												"type": "string",
 												"title": "Ring"
@@ -319,6 +326,11 @@ export default class LajiForm extends Component {
 						{
 							"name": "Testimies",
 							"isPublic": false,
+							"canEdit": false
+						},
+						{
+							"name": "keke",
+							"isPublic": true,
 							"canEdit": false
 						}
 					],
