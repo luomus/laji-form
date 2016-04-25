@@ -1,113 +1,135 @@
 import React, { Component, PropTypes } from "react";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import update from "react-addons-update";
+import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import HorizontalWrapper from "../HorizontalWrapper";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import Button from "../Button";
 
 export default class TableField extends Component {
-
 	constructor(props) {
 		super(props);
-
-		let uiSchema = JSON.parse(JSON.stringify(props.uiSchema));
-		delete uiSchema["ui:field"];
-
-		this.state = {uiSchema};
+		this.state = this.getStateFromProps(props);
 	}
 
-	render() {
-		let props = this.props;
-		console.log(props);
-
+	getStateFromProps = (props) => {
 		function haveSameKeys(a, b) {
 			return Object.keys(a).length == Object.keys(b).length && Object.keys(a).every((prop) => { return Object.keys(b).includes(prop)})
 		}
 
-		let properties;
+		let schemaProperties;
 		if (props.schema.items) {
-			properties = props.schema.items;
-			let propertiesContainer = properties;
+			schemaProperties = props.schema.items;
+			let propertiesContainer = schemaProperties;
 			if (!propertiesContainer.properties) {
 				let propertiesItems = Object.keys(propertiesContainer);
-				propertiesContainer = properties[propertiesItems[0]];
+				propertiesContainer = schemaProperties[propertiesItems[0]];
 				propertiesItems.shift();
 				if (!propertiesItems.every((item) => { return haveSameKeys(item, propertiesContainer) })) {
 					throw "Schema is not tabular!";
 				}
 			}
-			properties = propertiesContainer.properties;
-			if (props.schema.additionalItems && !haveSameKeys(properties, props.schema.additionalItems.properties)) {
+			schemaProperties = propertiesContainer.properties;
+			if (props.schema.additionalItems && !haveSameKeys(schemaProperties, props.schema.additionalItems.properties)) {
 				throw "Schema is not tabular!";
 			}
+		} else if (props.schema.properties) {
+			schemaProperties = props.schema.properties;
 		}
-		else if (props.schema.properties) {
-			properties = props.schema.properties;
+		return {schemaProperties};
+	}
+
+	render() {
+		let props = this.props;
+		let schemaProperties = this.state.schemaProperties;
+
+		let formDataRoot, isArray;
+		if (props.schema.type == "array") {
+			formDataRoot = props.formData;
+			isArray = true;
+		} else {
+			formDataRoot = [props.formData];
+			isArray = false;
 		}
-
-		console.log(properties);
-
-		let rows = [];
 
 		let headers = [];
-		Object.keys(properties).forEach((property) => {
-			headers.push(<label>{property}</label>);
+		Object.keys(schemaProperties).forEach((property, i) => {
+			headers.push(<label key={i}>{schemaProperties[property].title ? schemaProperties[property].title : property}</label>);
 		});
 
-		rows.push(<TableRow>{headers}</TableRow>);
-		
-		props.formData.forEach((row) => {
+		let rows = [];
+		rows.push(<TableRow key={0}>{headers.concat(isArray? [undefined] : [])}</TableRow>);
+
+		formDataRoot.forEach((row, i) => {
+			let errorSchemaRoot, idSchemaRoot, formDataUpdateRoot, formDataUpdateRootPointer;
+			if (props.schema.type == "array") {
+				errorSchemaRoot = props.errorSchema[i];
+				idSchemaRoot = props.idSchema.id + "_" + i;
+				formDataUpdateRoot = {[i]: {}};
+				formDataUpdateRootPointer = formDataUpdateRoot[i];
+			} else {
+				errorSchemaRoot = props.errorSchema;
+				idSchemaRoot = props.idSchema.id;
+				formDataUpdateRoot = {};
+				formDataUpdateRootPointer = formDataUpdateRoot;
+			}
+
 			let rowSchemas = [];
-			Object.keys(properties).forEach((property) => {
-				// let formData = (props.formData && props.formData[property]) ? props.formData[property] : getDefaultFormState(properties[property], undefined, props.schema.definitions);
-				let formData = row;
+			Object.keys(schemaProperties).forEach((property, j) => {
+				let uiSchema = {};
+
+				if (Object.keys(props.uiSchema).length > 0) {
+					if (!props.schema.additionalItems || (props.uiSchema.items && props.uiSchema.items[property] && i <= props.schema.items.length - 1)) {
+						uiSchema = props.uiSchema.items[property];
+					} else if (props.schema.additionalItems && props.uiSchema.additionalItems && props.uiSchema.additionalItems[property] && i > props.schema.items.length - 1) {
+						uiSchema = props.uiSchema.additionalItems[property];
+					}
+				}
 				rowSchemas.push(<SchemaField
-					schema={properties[property]}
-					uiSchema={{}}
-					idSchema={props.idSchema}
-					formData={formData[property]}
-					errorSchema={(props.errorSchema) ? props.errorSchema[property] : {}}
+					key={j}
+					schema={update(schemaProperties[property], {title: {$set: undefined}})}
+					uiSchema={uiSchema}
+					idSchema={{id: idSchemaRoot + "_" + property}}
+					formData={row ? row[property] : undefined}
+					errorSchema={(errorSchemaRoot && errorSchemaRoot[property]) ? errorSchemaRoot[property] : {}}
 					registry={props.registry}
-					onChange={props.onChange} />)
+					onChange={(data) => {
+						formDataUpdateRootPointer[property] = {$set: data};
+						let formData = update(this.props.formData, formDataUpdateRoot);
+						props.onChange(formData);
+					}} />)
 			});
-			rows.push(<TableRow>{rowSchemas}</TableRow>)
+			if (isArray && (!props.schema.additionalItems || i > props.schema.items.length - 1)) {
+				rowSchemas = rowSchemas.concat([(<Button key={i} text="Delete" type="danger" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$splice: [[i, 1]]})) } } />)]);
+			}
+			rows.push(<TableRow key={i + 1}>{rowSchemas}</TableRow>)
 		});
 
-		// uiSchema={props.uiSchema[property]}
+		if (isArray) {
+			rows.push(
+				<TableRow key={rows.length}>
+					{Array(Object.keys(schemaProperties).length).fill(undefined) // empty td for every column
+						.concat([<Button text="Add" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$push: [this.getNewRowArrayItem()]})) } } key="0"/>])}
+				</TableRow>)
+		}
 
-		// Object.keys(properties).forEach((property) => {
-		// 	let formData = (props.formData && props.formData[property]) ? props.formData[property] : getDefaultFormState(properties[property], undefined, props.schema.definitions);
-		// 	rows.push(<TableRow><SchemaField
-		// 		schema={properties[property]}
-		// 		uiSchema={{}}
-		// 		idSchema={props.idSchema}
-		// 		formData={formData}
-		// 		errorSchema={(props.errorSchema) ? props.errorSchema[property] : {}}
-		// 		registry={props.registry}
-		// 		onChange={props.onChange} /></TableRow>)
-		// });
+		return (<table className="table-field"><tbody>{rows}</tbody></table>);
+	}
 
-		return (<table>{rows}</table>);
+	getNewRowArrayItem = () => {
+		let props = this.props;
+		if (!props.schema.items) throw "This is not an array field!";
+		else if (props.schema.additionalItems && props.formData.length > props.schema.items.length) {
+			return getDefaultFormState(props.schema.additionalItems, {}, props.registry);
+		} else if (props.schema.items[props.formData.length - 1]) {
+			return getDefaultFormState(props.schema.items[props.formData.length - 1], {}, props.registry);
+		} else {
+			return getDefaultFormState(props.schema.items, {}, props.registry);
+		}
+	}
 
-		// let rows = [];
-		// rows.push(<TableRow data={content})
-		// this.props.formData.forEach((item) => {
-		// 	rows.push(<TableRow data={item} />);
-		// });
-		// return content;
-
-		//let schemas = [];
-		//Object.keys(properties).forEach((property) => {
-		//	let formData = (props.formData && props.formData[property]) ? props.formData[property] : getDefaultFormState(props.schema.properties[property], undefined, props.schema.definitions);
-		//	schemas.push(<SchemaField
-		//		schema={props.schema.properties[property]}
-		//		uiSchema={props.uiSchema[property]}
-		//		idSchema={props.idSchema}
-		//		formData={formData}
-		//		errorSchema={(props.errorSchema) ? props.errorSchema[property] : {}}
-		//		registry={props.registry}
-		//		onChange={props.onChange} />)
-		//});
-		//return schemas;
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 	}
 }
 

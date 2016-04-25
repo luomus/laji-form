@@ -6,6 +6,7 @@ import SelectWidget from "react-jsonschema-form/lib/components/widgets/SelectWid
 import StringField from "react-jsonschema-form/lib/components/fields/StringField"
 import Button from "../Button";
 import HorizontalSchemaField from "./HorizontalSchemaField";
+import TableField from "./TableField";
 
 export default class UnitsField extends Component {
 	constructor(props) {
@@ -124,7 +125,7 @@ class Unit extends Component {
 			/>
 		)
 		else return (
-			<HorizontalSchemaField
+			<TableField
 				schema={this.getSchema()}
 				onChange={this.onChange}
 				formData={this.props.data}

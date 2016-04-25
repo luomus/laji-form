@@ -53,13 +53,9 @@ export default class LajiForm extends Component {
 						"observers": {
 							"ui:field": "table",
 							"items": {
-								"ui:field": "horizontal",
 								"name": {
 									"ui:field": "locked"
 								}
-							},
-							"additionalItems": {
-								"ui:field": "horizontal"
 							}
 						},
 						"units": {
@@ -328,11 +324,11 @@ export default class LajiForm extends Component {
 							"isPublic": false,
 							"canEdit": false
 						},
-						{
-							"name": "keke",
-							"isPublic": true,
-							"canEdit": false
-						}
+						//{
+						//	"name": "keke",
+						//	"isPublic": true,
+						//	"canEdit": false
+						//}
 					],
 					"leg": [],
 					"kartta": "",

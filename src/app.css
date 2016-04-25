@@ -7,3 +7,9 @@
 .unit-schema-container div > button {
 	display: block;
 }
+.table-field tr td {
+	padding: 0px 2px;
+}
+.table-field td .form-group {
+	margin-bottom: initial;
+}
