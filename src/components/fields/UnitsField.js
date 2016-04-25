@@ -63,7 +63,7 @@ export default class UnitsField extends Component {
 				onChange={this.onUnitChange}
 				schema={this.props.schema.items}
 				uiSchema={this.props.uiSchema}
-				idSchema={this.props.idSchema}
+				idSchema={{id: this.props.idSchema.id + "_" + idx}}
 				errorSchema={this.props.errorSchema[idx]}
 				registry={this.props.registry} />);
 			idx++;

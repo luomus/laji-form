@@ -9,7 +9,5 @@
 }
 .table-field tr td {
 	padding: 0px 2px;
-}
-.table-field td .form-group {
-	margin-bottom: initial;
+	vertical-align: top;
 }
