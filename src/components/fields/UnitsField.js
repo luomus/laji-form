@@ -11,7 +11,7 @@ export default class UnitsField extends Component {
 		super(props);
 		this.state = {units: []};
 
-		let units = this.props.formData;
+		let units = this.props.formData || [];
 		if (units.length > 0) {
 			while (units.length % 10) {
 				units.push({});
