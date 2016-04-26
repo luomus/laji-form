@@ -41,10 +41,10 @@ curl -X POST --header "Content-Type: application/json" --header "Accept: applica
   }" "http://apitest.laji.fi/v0/api-token"
 ```
 
-Copy settings template file
+Copy settings template file:
 
 ```
 cp properties.json.example properties.json
 ```
 
-Then write the API key you got in your email to properties.json
+Then write the API key you got in your email to ```properties.json```.
