@@ -3,13 +3,16 @@ import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import HorizontalWrapper from "../HorizontalWrapper";
 import Button from "../Button";
 
 export default class TableField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 	}
 
 	getStateFromProps = (props) => {
@@ -156,9 +159,6 @@ export default class TableField extends Component {
 		}
 	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
 }
 
 class TableRow extends Component {

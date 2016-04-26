@@ -5,6 +5,7 @@ import UnitsField from "./fields/UnitsField";
 import HorizontalSchemaField from "./fields/HorizontalSchemaField";
 import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
+import EventTimeField from "./fields/EventTimeField";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -33,7 +34,8 @@ export default class LajiForm extends Component {
 					unitTripreport: UnitsField,
 					horizontal: HorizontalSchemaField,
 					table: TableField,
-					locked: LockedField}}
+					locked: LockedField,
+					eventTime: EventTimeField}}
 				onError={log("errors")} />
 	}
 
@@ -114,11 +116,15 @@ export default class LajiForm extends Component {
 									"properties": {
 										"dateBegin": {
 											"type": "string",
-											"title": "Datebegin"
+											"title": "Begin of date"
 										},
 										"dateEnd": {
 											"type": "string",
-											"title": "dateEnd"
+											"title": "End of datek"
+										},
+										"dateTime": {
+											"type": "string",
+											"title": "Time"
 										}
 									},
 									"required": ["dateBegin"]
@@ -344,8 +350,8 @@ export default class LajiForm extends Component {
 			"ready": false
 		}
 
-		//this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
-		this.setState({schema: response.schema, uiSchema: response.uiSchema});
+		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
+		//this.setState({schema: response.schema, uiSchema: response.uiSchema});
 	}
 
 	componentWillReceiveProps(nextProps) {
