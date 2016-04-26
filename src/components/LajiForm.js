@@ -51,7 +51,12 @@ export default class LajiForm extends Component {
 							"ui:field": "eventTime"
 						},
 						"observers": {
-							"ui:field": "table"
+							"ui:field": "table",
+							"items": {
+								"name": {
+									"ui:field": "locked"
+								}
+							}
 						},
 						"units": {
 							"ui:field": "unitTripreport",
@@ -120,7 +125,22 @@ export default class LajiForm extends Component {
 								},
 								"observers": {
 									"type": "array",
-									"items": {
+									"items": [{
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"isPublic": {
+												"type": "boolean"
+											},
+											"canEdit": {
+												"type": "boolean"
+											}
+										},
+										"required": ["name"]
+									}],
+									"additionalItems": {
 										"type": "object",
 										"properties": {
 											"name": {

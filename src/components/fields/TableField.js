@@ -147,9 +147,9 @@ export default class TableField extends Component {
 	getNewRowArrayItem = () => {
 		let props = this.props;
 		if (!props.schema.items) throw "This is not an array field!";
-		else if (props.schema.additionalItems && props.formData.length > props.schema.items.length) {
+		else if (props.schema.additionalItems && (!props.formData || props.formData.length > props.schema.items.length)) {
 			return getDefaultFormState(props.schema.additionalItems, {}, props.registry);
-		} else if (typeof(props.schema.items) === "array" && props.schema.items[props.formData.length - 1]) {
+		} else if (props.schema.items && props.schema.items[props.formData.length - 1]) {
 			return getDefaultFormState(props.schema.items[props.formData.length - 1], {}, props.registry);
 		} else {
 			return getDefaultFormState(props.schema.items, {}, props.registry);
