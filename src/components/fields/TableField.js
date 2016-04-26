@@ -113,7 +113,10 @@ export default class TableField extends Component {
 				</TableRow>)
 		}
 
-		return (<table className="table-field"><tbody>{rows}</tbody></table>);
+		return (<fieldset>
+			<TitleField title={this.props.title || this.props.name} />
+			<table className="table-field"><tbody>{rows}</tbody></table>
+		</fieldset>);
 	}
 
 	getNewRowArrayItem = () => {
