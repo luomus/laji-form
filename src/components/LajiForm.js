@@ -51,12 +51,7 @@ export default class LajiForm extends Component {
 							"ui:field": "eventTime"
 						},
 						"observers": {
-							"ui:field": "table",
-							"items": {
-								"name": {
-									"ui:field": "locked"
-								}
-							}
+							"ui:field": "table"
 						},
 						"units": {
 							"ui:field": "unitTripreport",

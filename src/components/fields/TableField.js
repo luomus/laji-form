@@ -61,30 +61,29 @@ export default class TableField extends Component {
 		rows.push(<TableRow key={0}>{headers.concat(isArray? [undefined] : [])}</TableRow>);
 
 		if (formDataRoot) formDataRoot.forEach((row, i) => {
-			let errorSchemaRoot, idSchemaRoot, formDataUpdateRoot, formDataUpdateRootPointer;
+			let errorSchemaRoot, idSchemaRoot, formDataUpdateRoot, formDataUpdateRootPointer, uiSchemaRoot;
 			if (props.schema.type == "array") {
 				errorSchemaRoot = props.errorSchema[i];
 				idSchemaRoot = props.idSchema.id + "_" + i;
 				formDataUpdateRoot = {[i]: {}};
 				formDataUpdateRootPointer = formDataUpdateRoot[i];
+				if ((!props.schema.additionalItems && props.uiSchema.items && props.uiSchema.items) || (props.uiSchema.items && props.uiSchema.items && i <= props.schema.items.length - 1)) {
+					uiSchemaRoot = props.uiSchema.items
+				} else if (props.schema.additionalItems && props.uiSchema.additionalItems && props.uiSchema.additionalItems && i > props.schema.items.length - 1) {
+					uiSchemaRoot = props.uiSchema.additionalItems;
+				}
 			} else {
 				errorSchemaRoot = props.errorSchema;
 				idSchemaRoot = props.idSchema.id;
 				formDataUpdateRoot = {};
 				formDataUpdateRootPointer = formDataUpdateRoot;
+				uiSchemaRoot = props.uiSchema;
 			}
 
 			let rowSchemas = [];
 			Object.keys(schemaProperties).forEach((property, j) => {
-				let uiSchema = {};
+				let uiSchema = uiSchemaRoot ? (uiSchemaRoot[property] || {}) : {};
 
-				if (Object.keys(props.uiSchema).length > 0) {
-					if (!props.schema.additionalItems || (props.uiSchema.items && props.uiSchema.items[property] && i <= props.schema.items.length - 1)) {
-						uiSchema = props.uiSchema.items[property];
-					} else if (props.schema.additionalItems && props.uiSchema.additionalItems && props.uiSchema.additionalItems[property] && i > props.schema.items.length - 1) {
-						uiSchema = props.uiSchema.additionalItems[property];
-					}
-				}
 				rowSchemas.push(<SchemaField
 					key={j}
 					schema={update(schemaProperties[property], {title: {$set: undefined}})}
@@ -139,7 +138,6 @@ export default class TableField extends Component {
 
 		let item = this.getNewRowArrayItem();
 		if (!this.props.formData) {
-			console.log(item);
 			this.props.onChange([item]);
 		} else {
 			this.props.onChange(update(this.props.formData, {$push: [item]}))
