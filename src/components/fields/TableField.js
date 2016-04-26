@@ -60,7 +60,7 @@ export default class TableField extends Component {
 		let rows = [];
 		rows.push(<TableRow key={0}>{headers.concat(isArray? [undefined] : [])}</TableRow>);
 
-		formDataRoot.forEach((row, i) => {
+		if (formDataRoot) formDataRoot.forEach((row, i) => {
 			let errorSchemaRoot, idSchemaRoot, formDataUpdateRoot, formDataUpdateRootPointer;
 			if (props.schema.type == "array") {
 				errorSchemaRoot = props.errorSchema[i];
@@ -109,14 +109,41 @@ export default class TableField extends Component {
 			rows.push(
 				<TableRow key={rows.length}>
 					{Array(Object.keys(schemaProperties).length).fill(undefined) // empty td for every column
-						.concat([<Button text="Add" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$push: [this.getNewRowArrayItem()]})) } } key="0"/>])}
+						.concat([this.getAddButton()])}
 				</TableRow>)
 		}
 
-		return (<fieldset>
-			<TitleField title={this.props.title || this.props.name} />
-			<table className="table-field"><tbody>{rows}</tbody></table>
-		</fieldset>);
+		return (
+			<fieldset>
+				<TitleField title={this.props.title || this.props.name} />
+				{
+					(this.props.formData && (!this.props.formData.hasOwnProperty("length") || this.props.formData.length > 0)) ? (
+						<table className="table-field"><tbody>
+						{rows}
+						</tbody></table>
+					) : (
+						<div className="row"><p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+							{this.getAddButton()}
+						</p></div>
+					)
+				}
+			</fieldset>);
+	}
+
+	getAddButton = () => {
+		return (<Button text="Add" classList={["col-xs-12"]} onClick={ () => { this.addItem() } } key="0"/>);
+	}
+
+	addItem = () => {
+		if (this.props.schema.type !== "array") throw "addItem can be called only for array schema!";
+
+		let item = this.getNewRowArrayItem();
+		if (!this.props.formData) {
+			console.log(item);
+			this.props.onChange([item]);
+		} else {
+			this.props.onChange(update(this.props.formData, {$push: [item]}))
+		}
 	}
 
 	getNewRowArrayItem = () => {
@@ -124,7 +151,7 @@ export default class TableField extends Component {
 		if (!props.schema.items) throw "This is not an array field!";
 		else if (props.schema.additionalItems && props.formData.length > props.schema.items.length) {
 			return getDefaultFormState(props.schema.additionalItems, {}, props.registry);
-		} else if (props.schema.items[props.formData.length - 1]) {
+		} else if (typeof(props.schema.items) === "array" && props.schema.items[props.formData.length - 1]) {
 			return getDefaultFormState(props.schema.items[props.formData.length - 1], {}, props.registry);
 		} else {
 			return getDefaultFormState(props.schema.items, {}, props.registry);

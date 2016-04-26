@@ -125,26 +125,9 @@ export default class LajiForm extends Component {
 								},
 								"observers": {
 									"type": "array",
-									"items": [
-											{
-											"type": "object",
-											"properties": {
-												"name": {
-													"type": "string"
-												},
-												"isPublic": {
-													"type": "boolean"
-												},
-												"canEdit": {
-													"type": "boolean"
-												}
-											},
-											"required": ["name"]
-										}
-									],
-									"additionalItems": {
+									"items": {
 										"type": "object",
-											"properties": {
+										"properties": {
 											"name": {
 												"type": "string"
 											},
@@ -156,7 +139,7 @@ export default class LajiForm extends Component {
 											}
 										},
 										"required": ["name"]
-									}
+									},
 								},
 								"leg": {
 									"type": "array",
@@ -318,18 +301,7 @@ export default class LajiForm extends Component {
 				{
 					"dateBegin": "",
 					"dateEnd": "",
-					"observers": [
-						{
-							"name": "Testimies",
-							"isPublic": false,
-							"canEdit": false
-						},
-						//{
-						//	"name": "keke",
-						//	"isPublic": true,
-						//	"canEdit": false
-						//}
-					],
+					"observers": [],
 					"leg": [],
 					"kartta": "",
 					"units": [
@@ -357,8 +329,8 @@ export default class LajiForm extends Component {
 			"ready": false
 		}
 
-		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
-		//this.setState({schema: response.schema, uiSchema: response.uiSchema});
+		//this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
+		this.setState({schema: response.schema, uiSchema: response.uiSchema});
 	}
 
 	componentWillReceiveProps(nextProps) {
