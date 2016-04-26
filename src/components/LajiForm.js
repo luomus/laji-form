@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
-import api from "../api";
+import Api from "../api";
 import UnitsField from "./fields/UnitsField";
 
 const log = (type) => console.log.bind(console, type);
@@ -15,6 +15,7 @@ export default class LajiForm extends Component {
 			lastApiCallFailed: false,
 			errorMsg: undefined
 		};
+		this.api = new Api(props.apiKey);
 	}
 
 	render() {
@@ -42,8 +43,7 @@ export default class LajiForm extends Component {
 	}
 
 	changeForm = (id) => {
-		let lang = this.props.lang || 'en';
-		api.getForm(id, lang, (response) => {
+		this.api.getForm(id, (response) => {
 			this.setState({schema: response.schema, uiSchema: response.uiSchema, lastApiCallFailed: false, errorMsg: undefined});
 		}, (response) => {
 			this.setState({schema: undefined, uiSchema: undefined, lastApiCallFailed: true, errorMsg: response});
