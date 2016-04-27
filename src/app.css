@@ -1,10 +1,10 @@
 .horizontal fieldset > * {
 	float: left
 }
-.unit-schema-container > * {
+.expandable-field-container > * {
 	display: inline-block;
 }
-.unit-schema-container div > button {
+.expandable-field-container div > button {
 	display: block;
 }
 .table-field tr td {

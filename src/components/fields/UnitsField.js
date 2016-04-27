@@ -115,7 +115,7 @@ class Unit extends Component {
 			/>
 		)
 		else return (
-			<AdditionalsExpanderField
+			<AdditionalsExpanderField expanderButtonText="Näytä lisää muuttujia"  contractorButtonText="Näytä vähemmän muuttujia"
 				schema={schema}
 				onChange={this.onChange}
 				formData={this.props.data}
@@ -123,7 +123,9 @@ class Unit extends Component {
 				idSchema={this.props.idSchema}
 				registry={this.props.registry}
 				uiSchema={schemas.uiSchema}
-			/>
+			>
+				<Button text="Lisää kuva" onClick={this.onAddImgClick}/>
+			</AdditionalsExpanderField>
 		)
 	}
 
@@ -166,7 +168,7 @@ class Unit extends Component {
 
 
 	onAddImgClick = () => {
-
+		console.log("add click");
 	}
 }
 

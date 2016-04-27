@@ -10,6 +10,8 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  * uiSchema = {"ui:options": {
  *  "additionalFields: [fieldName1, ...]
  * }
+ *
+ * Additional buttons are given as children.
  */
 export default class AdditionalsExpanderField extends Component {
 	constructor(props) {
@@ -19,7 +21,7 @@ export default class AdditionalsExpanderField extends Component {
 
 	render() {
 		return (
-			<div className="unit-schema-container">
+			<div className="expandable-field-container">
 				{this.renderUnit()}
 				{this.renderButtons()}
 			</div>);
@@ -57,14 +59,14 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	renderButtons = () => {
-		let buttons = this.props.children || [];
-		buttons.unshift(
-			(this.state.showAdditional) ?
-				<Button text="Näytä vähemmän muuttujia" key={buttons.length} onClick={this.dontShowAdditional} /> :
-				<Button text="Näytä lisää muuttujia" key={buttons.length} onClick={this.showAdditional} />
-		);
-		return (<div className="unit-schema-buttons">
-			{buttons}
+		let expanderText = this.props.expanderButtonText || "Lisää";
+		let contractorText = this.props.contractorButtonText || "Vähemmän";
+		let button = this.state.showAdditional ?
+				<Button text={contractorText} onClick={this.dontShowAdditional} /> :
+				<Button text={expanderText} onClick={this.showAdditional} />;
+		return (<div>
+			{button}
+			{this.props.children}
 		</div>);
 	}
 
