@@ -115,7 +115,7 @@ class Unit extends Component {
 			/>
 		)
 		else return (
-			<AdditionalsExpanderField expanderButtonText="Näytä lisää muuttujia"  contractorButtonText="Näytä vähemmän muuttujia"
+			<AdditionalsExpanderField
 				schema={schema}
 				onChange={this.onChange}
 				formData={this.props.data}
@@ -147,7 +147,7 @@ class Unit extends Component {
 		}
 
 		let fields = fieldWrap.fields;
-		let uiOptions = {additionalFields: []};
+		let uiOptions = {additionalFields: [], expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
 		Object.keys(fieldWrap.additionalFields).forEach((field) => {
 			fields[field] = fieldWrap.additionalFields[field];
 			uiOptions.additionalFields.push(field);

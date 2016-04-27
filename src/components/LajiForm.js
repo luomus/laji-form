@@ -3,6 +3,7 @@ import Form from "react-jsonschema-form";
 import Api from "../api";
 import UnitsField from "./fields/UnitsField";
 import HorizontalSchemaField from "./fields/HorizontalSchemaField";
+import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
 import EventTimeField from "./fields/EventTimeField";
@@ -36,7 +37,7 @@ export default class LajiForm extends Component {
 					horizontal: HorizontalSchemaField,
 					table: TableField,
 					locked: LockedField,
-					eventTime: EventTimeField}}
+					expandable: AdditionalsExpanderField}}
 				onError={log("errors")} />
 	}
 
@@ -51,7 +52,13 @@ export default class LajiForm extends Component {
 				"gatherings": {
 					"items": {
 						"eventTime": {
-							"ui:field": "eventTime"
+							"ui:field": "expandable",
+							"ui:options": {
+								"additionalFields": ["dateEnd"],
+								"innerSchema": "table",
+								"expanderButtonText": "Ilmoita aikaväli",
+								"contractorButtonText": "Piilota aikavälin loppu"
+							}
 						},
 						"observers": {
 							"ui:field": "table",
@@ -122,13 +129,13 @@ export default class LajiForm extends Component {
 											"type": "string",
 											"title": "Begin of date"
 										},
-										"dateEnd": {
-											"type": "string",
-											"title": "End of datek"
-										},
 										"dateTime": {
 											"type": "string",
 											"title": "Time"
+										},
+										"dateEnd": {
+											"type": "string",
+											"title": "End of datek"
 										}
 									},
 									"required": ["dateBegin"]
