@@ -56,12 +56,12 @@ export default class LajiForm extends Component {
 							"ui:field": "expandable",
 							"ui:options": {
 								"additionalFields": ["dateEnd"],
-								"innerSchema": "table",
+								"innerUiField": "table",
 								"expanderButtonText": "Ilmoita aikaväli",
 								"contractorButtonText": "Piilota aikavälin loppu"
 							}
 						},
-						"observers": {
+						"leg": {
 							"ui:field": "table",
 							"items": {
 								"name": {
@@ -74,9 +74,8 @@ export default class LajiForm extends Component {
 							"items": {
 								"ui:field": "unit",
 								"ui:options": {
-									"innerSchema": "table",
+									"innerUiField": "table",
 									"MY.kantarelli": {
-										"url": "http://mock.api.luomus.fi/species/kantarelli",
 										"fields": [
 											"age",
 											"count",
@@ -87,7 +86,6 @@ export default class LajiForm extends Component {
 										]
 									},
 									"MY.korvasieni": {
-										"url": "http://mock.api.luomus.fi/species/kantarelli",
 										"fields": [
 											"age",
 											"count",
@@ -98,7 +96,6 @@ export default class LajiForm extends Component {
 										]
 									},
 									"MY.kalalokki": {
-										"url": "http://mock.api.luomus.fi/species/kantarelli",
 										"fields": [
 											"age",
 											"count",
@@ -121,40 +118,46 @@ export default class LajiForm extends Component {
 				"properties": {
 					"gatherings": {
 						"type": "array",
+						"title": "Perustiedot",
 						"items": {
 							"type": "object",
 							"properties": {
 								"eventTime": {
 									"type": "object",
+									"title": "Aika",
 									"properties": {
 										"dateBegin": {
 											"type": "string",
-											"title": "Begin of date"
+											"title": "Havaintoaika"
 										},
 										"dateTime": {
 											"type": "string",
-											"title": "Time"
+											"title": "Kellonaika"
 										},
 										"dateEnd": {
 											"type": "string",
-											"title": "End of datek"
+											"title": "Havaintoajan loppu"
 										}
 									},
 									"required": ["dateBegin"]
 								},
-								"observers": {
+								"leg": {
 									"type": "array",
+									"title": "Havainnoitsijat",
 									"items": [{
 										"type": "object",
 										"properties": {
 											"name": {
-												"type": "string"
+												"type": "string",
+												"title": "Havainnon tekijät"
 											},
 											"isPublic": {
-												"type": "boolean"
+												"type": "boolean",
+												"title": "Näytetäänkö nimi julkisesti?"
 											},
 											"canEdit": {
-												"type": "boolean"
+												"type": "boolean",
+												"title": "Anna käyttäjälle muokkausoikeus"
 											}
 										},
 										"required": ["name"]
@@ -163,24 +166,20 @@ export default class LajiForm extends Component {
 										"type": "object",
 										"properties": {
 											"name": {
-												"type": "string"
+												"type": "string",
+												"title": "Havainnon tekijät"
 											},
 											"isPublic": {
-												"type": "boolean"
+												"type": "boolean",
+												"title": "Näytetäänkö nimi julkisesti?"
 											},
 											"canEdit": {
-												"type": "boolean"
+												"type": "boolean",
+												"title": "Anna käyttäjälle muokkausoikeus"
 											}
 										},
 										"required": ["name"]
 									},
-								},
-								"leg": {
-									"type": "array",
-									"title": "Leg",
-									"items": {
-										"type": "string"
-									}
 								},
 								"kartta": {
 									"type": "string",
@@ -188,14 +187,13 @@ export default class LajiForm extends Component {
 								},
 								"units": {
 									"type": "array",
+									"title": "Havainnot",
 									"items": {
 										"type": "object",
 										"properties": {
-											"fastInput": {
-												"type": "string"
-											},
 											"taxonName": {
 												"type": "string",
+												"title": "Taksoni",
 												"enum": [
 													"MY.kantarelli",
 													"MY.korvasieni",
@@ -209,11 +207,11 @@ export default class LajiForm extends Component {
 											},
 											"age": {
 												"type": "string",
-												"title": "Age"
+												"title": "Ikä"
 											},
 											"sex": {
 												"type": "string",
-												"title": "Sex",
+												"title": "Sukupuoli",
 												"enum": [
 													"MY.sexM",
 													"MY.sexF",
@@ -237,19 +235,19 @@ export default class LajiForm extends Component {
 											},
 											"notes": {
 												"type": "string",
-												"title": "Notes"
+												"title": "Muistiinpanot"
 											},
 											"count": {
 												"type": "string",
-												"title": "Number of individuals"
+												"title": "Lukumäärä"
 											},
 											"alive": {
 												"type": "boolean",
-												"title": "elossa?"
+												"title": "Elossa?"
 											},
 											"ring": {
 												"type": "string",
-												"title": "Ring"
+												"title": "Rengas"
 											}
 										},
 										"required": []
@@ -335,7 +333,7 @@ export default class LajiForm extends Component {
 				{
 					"dateBegin": "",
 					"dateEnd": "",
-					"observers": [],
+					"leg": [],
 					"leg": [],
 					"kartta": "",
 					"units": [

@@ -33,7 +33,7 @@ export default class UnitsField extends Component {
 	render() {
 		return (
 			<fieldset>
-				<TitleField title={this.props.name}/>
+				<TitleField title={this.props.schema.title || this.props.name}/>
 				{this.renderUnits()}
 				<Button text="Lisää havaintorivejä" onClick={this.onAddClick} /><br/>
 				Pikasyötön lajiryhmä: <select onChange={this.onGroupChange}>{this.renderGroupSelect()}</select>

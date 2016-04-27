@@ -5,6 +5,12 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 import AdditionalsExpanderField from "./AdditionalsExpanderField";
 import Button from "../Button";
 
+/**
+ * Unit's uiSchema can be defined in uiSchema:
+ * uiSchema = {"ui:options": {
+ *  innerUiSField: "string"
+ * }
+ */
 export default class Unit extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
@@ -68,7 +74,7 @@ export default class Unit extends Component {
 			fields[field] = fieldWrap.additionalFields[field];
 			uiOptions.additionalFields.push(field);
 		});
-		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerSchema) uiOptions.innerSchema = uiSchema["ui:options"].innerSchema;
+		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
 		return {
 			schema: {type: "object", properties: fields},
 			uiSchema: update(uiSchema, {$merge: {"ui:options": uiOptions}})
@@ -102,8 +108,8 @@ class NoninitializedSelect extends Component {
 
 		return (
 			<fieldset>
-				<label>{this.props.name}</label>
-				<select defaultValue="" className="form-control" onChange={this.props.onChange}>{options}</select>
+				<label>{this.props.schema.title || this.props.name}</label>
+				<select defaultValue="" className="form-control taxon-select" onChange={this.props.onChange}>{options}</select>
 			</fieldset>
 		)
 	}
