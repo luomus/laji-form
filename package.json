@@ -38,8 +38,8 @@
     "style-loader": "^0.13.1",
     "util": "^0.10.3",
     "webpack": "^1.12.15",
-    "react-jsonschema-form": "~0.26.0",
-    "react-addons-update": "~15.0.1"
+    "react-addons-update": "~15.0.1",
+    "react-jsonschema-form": "~0.27.0"
   },
   "devDependencies": {
     "express": "~4.13.4",
