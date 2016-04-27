@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from "react";
+import update from "react-addons-update";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import SelectWidget from "react-jsonschema-form/lib/components/widgets/SelectWidget"
-import StringField from "react-jsonschema-form/lib/components/fields/StringField"
 import Button from "../Button";
-import HorizontalSchemaField from "./HorizontalSchemaField";
-import TableField from "./TableField";
+import AdditionalsExpanderField from "./AdditionalsExpanderField";
 
 export default class UnitsField extends Component {
 	constructor(props) {
@@ -55,7 +52,7 @@ export default class UnitsField extends Component {
 	renderUnits = () => {
 		let unitRows = [];
 		let idx = 0;
-		this.state.units.forEach((unit) => {
+		if (this.state.units) this.state.units.forEach((unit) => {
 			unitRows.push(<Unit
 				id={idx}
 				key={idx}
@@ -103,19 +100,12 @@ class Unit extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {showAdditional: false, selectField: "taxonName"};
+		this.state = {selectField: "taxonName"};
 	}
 
 	render() {
-		return (
-			<div className="unit-schema-container">
-				{this.renderUnit()}
-				{this.renderButtons()}
-			</div>);
-	}
-
-	renderUnit = () => {
-		const schema = this.getSchema();
+		const schemas = this.getSchemas();
+		const schema = schemas.schema;
 		let selectField = this.state.selectField;
 		if (!this.props.data[selectField]) return (
 			<NoninitializedSelect
@@ -125,33 +115,20 @@ class Unit extends Component {
 			/>
 		)
 		else return (
-			<TableField
-				schema={this.getSchema()}
+			<AdditionalsExpanderField
+				schema={schema}
 				onChange={this.onChange}
 				formData={this.props.data}
 				errorSchema={this.props.errorSchema}
 				idSchema={this.props.idSchema}
 				registry={this.props.registry}
-				uiSchema={{}}
+				uiSchema={schemas.uiSchema}
 			/>
 		)
 	}
 
-	renderButtons = () => {
-		if (!this.props.data.taxonName) return;
-
-		let buttons = [<Button text="Lisää kuva" key="0" onClick={this.onAddClick} />];
-		buttons.unshift(
-			(this.state.showAdditional) ?
-				<Button text="Näytä vähemmän muuttujia" key={buttons.length} onClick={this.dontShowAdditional} /> :
-				<Button text="Näytä lisää muuttujia" key={buttons.length} onClick={this.showAdditional} />
-		);
-		return (<div className="unit-schema-buttons">
-			{buttons}
-		</div>);
-	}
-
-	getSchema = () => {
+	// Returns {schema: schema, uiSchema: uiSchema}
+	getSchemas = () => {
 		let schema = this.props.schema;
 		let uiSchema = this.props.uiSchema;
 		let unit = this.props.data;
@@ -166,11 +143,17 @@ class Unit extends Component {
 			});
 			fieldWrap.fields.taxonName = schema.properties.taxonName;
 		}
+
 		let fields = fieldWrap.fields;
-		if (this.state.showAdditional) Object.keys(fieldWrap.additionalFields).forEach((field) => {
+		let uiOptions = {additionalFields: []};
+		Object.keys(fieldWrap.additionalFields).forEach((field) => {
 			fields[field] = fieldWrap.additionalFields[field];
+			uiOptions.additionalFields.push(field);
 		});
-		return {type: "object", properties: fields}
+		return {
+			schema: {type: "object", properties: fields},
+			uiSchema: update(uiSchema.items, {$merge: {"ui:options": uiOptions}})
+		}
 	}
 
 	onTaxonNameSelected = (e) => {
@@ -181,13 +164,6 @@ class Unit extends Component {
 		this.props.onChange(this.props.id, data);
 	}
 
-	showAdditional = () => {
-		this.setState({showAdditional: true});
-	}
-
-	dontShowAdditional = () => {
-		this.setState({showAdditional: false});
-	}
 
 	onAddImgClick = () => {
 

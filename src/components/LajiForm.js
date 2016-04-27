@@ -63,6 +63,9 @@ export default class LajiForm extends Component {
 						},
 						"units": {
 							"ui:field": "unitTripreport",
+							"items": {
+									"ui:field": "table"
+							},
 							"ui:options": {
 								"MY.kantarelli": {
 									"url": "http://mock.api.luomus.fi/species/kantarelli",
