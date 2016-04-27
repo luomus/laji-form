@@ -12,14 +12,14 @@ npm install git+ssh://git@bitbucket.org:luomus/laji-form.js.git --save
 
 # Usage #
 
-LajiFormApp offers a HTML select filled with laji forms. Selecting an options updates the LajiForm component accordingly.
+LajiFormApp offers a HTML select filled with laji forms. Selecting an options updates the LajiForm component accordingly. You'll need an api key for apitest.laji.fi (see the development section).
 
 ```
 import React from "react";
 import { render } from "react-dom";
 import LajiFormApp from "laji-form";
 
-render(<LajiFormApp />, document.getElementById("app"));
+render(<LajiFormApp apiKey="apiKey" />, document.getElementById("app"));
 ```
 
 You can also use directly the LajiForm component like so:
@@ -28,7 +28,7 @@ You can also use directly the LajiForm component like so:
 ...
 import { LajiForm } from "laji-form";
 
-render(<LajiForm formId="id" data={formData} />, document.getElementById("app"));
+render(<LajiForm formId="id" data={formData} apiKey="apiKey" />, document.getElementById("app"));
 ```
 
 # Development #
