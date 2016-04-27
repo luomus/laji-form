@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import api from "../api";
+import Api from "../api";
 import LajiForm from "./LajiForm";
 import FormSelect from "./FormSelect";
 
@@ -7,9 +7,10 @@ export default class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { formId: undefined };
+		this.api = new Api(props.apiKey);
 	}
 	componentDidMount() {
-		api.getAllForms('fi', (response) => {
+		this.api.getAllForms((response) => {
 			let forms ={};
 			response.forms.forEach(function(form) {
 				forms[form.id] = form;
@@ -28,7 +29,7 @@ export default class LajiFormApp extends Component {
 				<FormSelect title="valitse lomake"
 				            forms={this.state.forms}
 				            onChange={this.onSelectedFormChange} />
-				<LajiForm formId={this.state.formId} lang="fi"/>
+				<LajiForm apiKey={this.props.apiKey} formId={this.state.formId} lang="fi"/>
 			</div>
 		);
 	}

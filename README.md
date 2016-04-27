@@ -30,3 +30,21 @@ import { LajiForm } from "laji-form";
 
 render(<LajiForm formId="id" data={formData} />, document.getElementById("app"));
 ```
+
+# Development #
+
+You need to configure your personal apitest.laji.fi access token. Get the key to you email:
+
+```
+curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{\
+  \"email\": \"<YOUR EMAIL ADDRESS>\"\
+  }" "http://apitest.laji.fi/v0/api-token"
+```
+
+Copy settings template file
+
+```
+cp properties.json.example properties.json
+```
+
+Then write the API key you got in your email to properties.json
