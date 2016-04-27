@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import Api from "../api";
 import UnitsField from "./fields/UnitsField";
+import UnitField from "./fields/UnitField";
 import HorizontalSchemaField from "./fields/HorizontalSchemaField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
-import EventTimeField from "./fields/EventTimeField";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -34,6 +34,7 @@ export default class LajiForm extends Component {
 				onChange={this.onFormDataChange}
 				fields={{
 					unitTripreport: UnitsField,
+					unit: UnitField,
 					horizontal: HorizontalSchemaField,
 					table: TableField,
 					locked: LockedField,
@@ -71,43 +72,44 @@ export default class LajiForm extends Component {
 						"units": {
 							"ui:field": "unitTripreport",
 							"items": {
-									"ui:field": "table"
-							},
-							"ui:options": {
-								"MY.kantarelli": {
-									"url": "http://mock.api.luomus.fi/species/kantarelli",
-									"fields": [
-										"age",
-										"count",
-										"alive"
-									],
-									"additionalFields": [
-										"notes"
-									]
-								},
-								"MY.korvasieni": {
-									"url": "http://mock.api.luomus.fi/species/kantarelli",
-									"fields": [
-										"age",
-										"count",
-										"alive"
-									],
-									"additionalFields": [
-										"notes"
-									]
-								},
-								"MY.kalalokki": {
-									"url": "http://mock.api.luomus.fi/species/kantarelli",
-									"fields": [
-										"age",
-										"count",
-										"ring",
-										"sex",
-										"alive"
-									],
-									"additionalFields": [
-										"notes"
-									]
+								"ui:field": "unit",
+								"ui:options": {
+									"innerSchema": "table",
+									"MY.kantarelli": {
+										"url": "http://mock.api.luomus.fi/species/kantarelli",
+										"fields": [
+											"age",
+											"count",
+											"alive"
+										],
+										"additionalFields": [
+											"notes"
+										]
+									},
+									"MY.korvasieni": {
+										"url": "http://mock.api.luomus.fi/species/kantarelli",
+										"fields": [
+											"age",
+											"count",
+											"alive"
+										],
+										"additionalFields": [
+											"notes"
+										]
+									},
+									"MY.kalalokki": {
+										"url": "http://mock.api.luomus.fi/species/kantarelli",
+										"fields": [
+											"age",
+											"count",
+											"ring",
+											"sex",
+											"alive"
+										],
+										"additionalFields": [
+											"notes"
+										]
+									}
 								}
 							}
 						}

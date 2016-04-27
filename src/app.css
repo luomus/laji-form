@@ -3,6 +3,7 @@
 }
 .expandable-field-container > * {
 	display: inline-block;
+	vertical-align: bottom;
 }
 .expandable-field-container div > button {
 	display: block;

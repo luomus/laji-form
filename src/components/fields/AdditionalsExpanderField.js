@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import Button from "../Button";
+import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TableField from "./TableField";
 import HorizontalSchemaField from "./HorizontalSchemaField";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
+import Button from "../Button";
 
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:
