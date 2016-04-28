@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import Api from "../api";
+import NestField from "./fields/NestField";
 import UnitsField from "./fields/UnitsField";
 import UnitField from "./fields/UnitField";
 import HorizontalSchemaField from "./fields/HorizontalSchemaField";
@@ -33,6 +34,7 @@ export default class LajiForm extends Component {
 				formData={formData}
 				onChange={this.onFormDataChange}
 				fields={{
+					nest: NestField,
 					unitTripreport: UnitsField,
 					unit: UnitField,
 					horizontal: HorizontalSchemaField,
@@ -52,6 +54,22 @@ export default class LajiForm extends Component {
 			"uiSchema": {
 				"gatherings": {
 					"items": {
+						"ui:field": "nest",
+						"ui:options": {
+							"localityWrapper": {
+								title: "Havaintopaikan tiedot",
+								fields: ["locality", "localityDescription", "biotype", "biotypeForest", "biotypeSuo"],
+								uiSchema: {
+									"ui:field": "table"
+								}
+							},
+							"imagesWrapper": {
+								"fields": ["image", "rights"],
+								uiSchema: {
+									"ui:field": "table"
+								}
+							}
+						},
 						"eventTime": {
 							"ui:field": "expandable",
 							"ui:options": {
