@@ -6,12 +6,21 @@ import AdditionalsExpanderField from "./AdditionalsExpanderField";
 import Button from "../Button";
 
 /**
- * Unit's uiSchema can be defined in uiSchema:
+ * Field with fields, which are shown according to recursive scope.
  * uiSchema = {"ui:options": {
- *  innerUiField: "string"
+ *  uiSchema: <uiSchema> (ui schema for inner schema)
+ *  fieldScopes: {
+ *   fieldName: {
+ *     fieldValue: {
+ *       fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
+ *       fieldScopes: {fieldName: <fieldScope>, fieldName2 ...}
+ *     },
+ *     fieldValue2, ...
+ *   }
+ *  }
  * }
  */
-export default class UnitField extends Component {
+export default class ScopeField extends Component {
 	static propTypes = {
 		formData: PropTypes.object.isRequired,
 		schema: PropTypes.object.isRequired,
@@ -22,7 +31,7 @@ export default class UnitField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldGroups)[0]}
+		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0]}
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -32,7 +41,7 @@ export default class UnitField extends Component {
 
 	getStateFromProps(props) {
 		let schemas = this.getSchemas(props);
-		return {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldGroups)[0], schema: schemas.schema, uiSchema: schemas.uiSchema};
+		return {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], schema: schemas.schema, uiSchema: schemas.uiSchema};
 	}
 
 	render() {
@@ -66,34 +75,40 @@ export default class UnitField extends Component {
 		let formData = props.formData;
 
 		let fieldsToShow = {};
-		let additionalFields = [];
+		let options = uiSchema["ui:options"];
+		let generatedUiSchema = options.uiSchema || {};
 
-		function addFieldGroupFieldsToFields(fieldGroups) {
-			if (!fieldGroups) return;
-			Object.keys(fieldGroups).forEach((fieldSelector, i) => {
+		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
+			if (!fieldScope) return;
+			let scopes = fieldScope.fieldScopes;
+			Object.keys(scopes).forEach((fieldSelector) => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValue = formData[fieldSelector];
 				if (fieldSelectorValue) {
-					let fieldGroup = fieldGroups[fieldSelector][fieldSelectorValue];
-					fieldGroup.fields.forEach((fieldName) => {
+					let fieldScope = scopes[fieldSelector][fieldSelectorValue];
+					fieldScope.fields.forEach((fieldName) => {
 						fieldsToShow[fieldName] = schema.properties[fieldName];
 					})
-					if (fieldGroup.fieldGroups) {
-						addFieldGroupFieldsToFields(fieldGroup.fieldGroups)
+					if (fieldScope.uiSchema) {
+						Object.keys(fieldScope.uiSchema).forEach((uiSchemaProperty) => {
+							return update(generatedUiSchema, {[uiSchemaProperty]: {$merge: fieldScope.uiSchema[uiSchemaProperty]}});
+						});
+					}
+					if (fieldScope.fieldScopes) {
+						addFieldScopeFieldsToFieldsToShow(fieldScope)
 					}
 				}
 			});
 		}
+		addFieldScopeFieldsToFieldsToShow(options);
 
-		let fieldGroups = uiSchema["ui:options"].fieldGroups;
-		addFieldGroupFieldsToFields(fieldGroups);
 		let uiOptions = {expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
 
 		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
 
 		return {
 			schema: {type: "object", properties: fieldsToShow},
-			uiSchema: update(uiSchema, {$merge: {"ui:options": uiOptions}})
+			uiSchema: generatedUiSchema
 		}
 	}
 

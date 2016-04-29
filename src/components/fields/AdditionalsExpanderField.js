@@ -7,11 +7,11 @@ import Button from "../Button";
 
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:
- * uiSchema = {"ui:options": {
- *  "additionalFields: [string]
- *  "expanderButtonText": "string"
- *  "contractorButtonText": "string"
- *  "uiSchemField": "string"
+ * uiSchema = {ui:options: {
+ *  additionalFields [<string>]
+ *  expanderButtonText: <string>
+ *  contractorButtonText: <string>
+ *  uiSchema: <uiSchema> (used for inner schema)
  * }
  *
  * Additional buttons are given as children.
@@ -60,8 +60,8 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	getUiSchema = () => {
-		return (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].innerUiField) ?
-			{"ui:field": this.props.uiSchema["ui:options"].innerUiField } : {};
+		return (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].uiSchema) ?
+			this.props.uiSchema["ui:options"].uiSchema : {};
 	}
 
 	renderButtons = () => {

@@ -4,7 +4,7 @@ import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import Button from "../Button";
-import UnitField from "./UnitField";
+import UnitField from "./ScopeField";
 
 export default class UnitsField extends Component {
 	constructor(props) {

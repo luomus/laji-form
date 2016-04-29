@@ -6,6 +6,16 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  * Makes it possible to extract fields from object schema and
  * make them act like a nested schema without touching the form data structure.
  *
+ * uiSchema = {
+ *  title: <string>,
+ *  ui:options: {
+ *    fieldName: {
+ *      fields: [<string>],
+ *      title: <string>,
+ *    }
+ *  }
+ * }
+ *
  * Example usage:
  *
  * schema = {
@@ -76,7 +86,7 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  *    "inner": {
  *      "ui:field": "someField"
  *      "inner_1": {
- *      "ui:field": "someField2"
+ *        "ui:field": "someField2"
  *      }
  *    },
  *    "inner2": {

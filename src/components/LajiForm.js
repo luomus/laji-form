@@ -3,7 +3,7 @@ import Form from "react-jsonschema-form";
 import Api from "../api";
 import NestField from "./fields/NestField";
 import UnitsField from "./fields/UnitsField";
-import UnitField from "./fields/UnitField";
+import ScopeField from "./fields/ScopeField";
 import HorizontalSchemaField from "./fields/HorizontalSchemaField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
@@ -34,10 +34,10 @@ export default class LajiForm extends Component {
 				formData={formData}
 				onChange={this.onFormDataChange}
 				fields={{
-					nest: NestField,
+					nested: NestField,
 					unitTripreport: UnitsField,
-					unit: UnitField,
-					horizontal: HorizontalSchemaField,
+					scoped: ScopeField,
+					horizontal: TableField,
 					table: TableField,
 					locked: LockedField,
 					expandable: AdditionalsExpanderField}}
@@ -54,27 +54,41 @@ export default class LajiForm extends Component {
 			"uiSchema": {
 				"gatherings": {
 					"items": {
-						"ui:field": "nest",
+						"ui:field": "nested",
 						"ui:options": {
 							"localityWrapper": {
 								title: "Havaintopaikan tiedot",
-								fields: ["locality", "localityDescription", "biotype", "biotypeForest", "biotypeSuo", "biotypeForestKuusi", "biotypeForestMänty", "biotypeForestMänty2", "biotypeForestLehto", "biotypeSuoKorpi", "biotypeSuoRäme", "biotypeSuoNeva"],
+								fields: ["locality", "localityDescription", "habitatDescription", "biotype", "biotypeForest", "biotypeSuo", "biotypeForestKuusi", "biotypeForestMänty", "biotypeForestMänty2", "biotypeForestLehto", "biotypeSuoKorpi", "biotypeSuoRäme", "biotypeSuoNeva"],
 								uiSchema: {
-									//"ui:field": "table"
-									"ui:field": "unit",
+									"ui:field": "scoped",
 									"ui:options": {
-										"innerUiField": "table",
-										"fieldGroups": {
+										"uiSchema": {
+												"ui:field": "expandable",
+												"ui:options": {
+													"expanderButtonText": "Näytä lisää",
+													"contractorButtonText": "Näytä vähemmän",
+													"additionalFields": ["habitatDescription"],
+													"uiSchema": {
+														"ui:field": "table"
+													}
+											}
+										},
+										"fieldScopes": {
 											"biotype": {
 												"forest": {
-													"fields": ["locality", "localityDescription", "biotypeForest"],
-													"fieldGroups": {
+													"fields": ["locality", "localityDescription", "biotypeForest", "habitatDescription"],
+													"fieldScopes": {
 														"biotypeForest": {
 															"kuusi": {
 																"fields": ["biotypeForestKuusi"]
 															},
 															"mänty": {
-																"fields": ["biotypeForestMänty", "biotypeForestMänty2"]
+																"fields": ["biotypeForestMänty", "biotypeForestMänty2"],
+																"uiSchema": {
+																	"ui:options": {
+																		"additionalFields": ["biotypeForestMänty2"]
+																	}
+																}
 															},
 															"lehto": {
 																"fields": ["biotypeForestLehto"]
@@ -84,7 +98,7 @@ export default class LajiForm extends Component {
 												},
 												"suo": {
 													"fields": ["locality", "localityDescription", "biotypeSuo"],
-													"fieldGroups": {
+													"fieldScopes": {
 														"biotypeSuo": {
 															"korpi": {
 																"fields": ["biotypeSuoKorpi"]
@@ -114,7 +128,9 @@ export default class LajiForm extends Component {
 							"ui:field": "expandable",
 							"ui:options": {
 								"additionalFields": ["dateEnd"],
-								"innerUiField": "table",
+								"uiSchema": {
+									"ui:field": "table"
+								},
 								"expanderButtonText": "Ilmoita aikaväli",
 								"contractorButtonText": "Piilota aikavälin loppu"
 							}
@@ -130,10 +146,19 @@ export default class LajiForm extends Component {
 						"units": {
 							"ui:field": "unitTripreport",
 							"items": {
-								"ui:field": "unit",
+								"ui:field": "scoped",
 								"ui:options": {
-									"innerUiField": "table",
-									"fieldGroups": {
+									"uiSchema": {
+										"ui:field": "expandable",
+										"ui:options": {
+											"expanderButtonText": "Näytä lisää muuttujia",
+											"contractorButtonText": "Näytä vähemmän muuttujia",
+											"uiSchema": {
+												"ui:field": "table"
+											}
+										}
+									},
+									"fieldScopes": {
 										"taxonName": {
 											"MY.kantarelli": {
 												"fields": [
@@ -257,11 +282,13 @@ export default class LajiForm extends Component {
 												"type": "string",
 												"title": "Taksoni",
 												"enum": [
+													"",
 													"MY.kantarelli",
 													"MY.korvasieni",
 													"MY.kalalokki"
 												],
 												"enumNames": [
+													"",
 													"kantarelli",
 													"korvasieni",
 													"kalalokki"
@@ -275,6 +302,7 @@ export default class LajiForm extends Component {
 												"type": "string",
 												"title": "Sukupuoli",
 												"enum": [
+													"",
 													"MY.sexM",
 													"MY.sexF",
 													"MY.sexU",
@@ -285,6 +313,7 @@ export default class LajiForm extends Component {
 													"MY.sexC"
 												],
 												"enumNames": [
+													"",
 													"M - Male",
 													"F - Female",
 													"U - Unknown",
@@ -330,10 +359,12 @@ export default class LajiForm extends Component {
 								"biotype": {
 									"type": "string",
 									"enum": [
+										"",
 										"forest",
 										"suo"
 									],
 									"enumNames": [
+										"",
 										"metsä",
 										"suo"
 									]
@@ -341,11 +372,13 @@ export default class LajiForm extends Component {
 								"biotypeSuo": {
 									"type": "string",
 									"enum": [
+										"",
 										"korpi",
 										"räme",
 										"neva"
 									],
 									"enumNames": [
+										"",
 										"korpi",
 										"räme",
 										"neva"
@@ -354,11 +387,13 @@ export default class LajiForm extends Component {
 								"biotypeForest": {
 									"type": "string",
 									"enum": [
+										"",
 										"kuusi",
 										"mänty",
 										"lehto"
 									],
 									"enumNames": [
+										"",
 										"kuusi",
 										"mänty",
 										"lehto"
@@ -451,8 +486,8 @@ export default class LajiForm extends Component {
 			"ready": false
 		}
 
-		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
-		//this.setState({schema: response.schema, uiSchema: response.uiSchema});
+		//this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
+		this.setState({schema: response.schema, uiSchema: response.uiSchema});
 	}
 
 	componentWillReceiveProps(nextProps) {
