@@ -8,12 +8,12 @@ import Button from "../Button";
 /**
  * Unit's uiSchema can be defined in uiSchema:
  * uiSchema = {"ui:options": {
- *  innerUiSField: "string"
+ *  innerUiField: "string"
  * }
  */
-export default class Unit extends Component {
+export default class UnitField extends Component {
 	static propTypes = {
-		data: PropTypes.object.isRequired,
+		formData: PropTypes.object.isRequired,
 		schema: PropTypes.object.isRequired,
 		uiSchema: PropTypes.object.isRequired,
 		idSchema: PropTypes.object.isRequired,
@@ -22,14 +22,23 @@ export default class Unit extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {selectField: "taxonName"};
+		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldGroups)[0]}
+		this.state = this.getStateFromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps(props) {
+		let schemas = this.getSchemas(props);
+		return {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldGroups)[0], schema: schemas.schema, uiSchema: schemas.uiSchema};
 	}
 
 	render() {
-		const schemas = this.getSchemas();
-		const schema = schemas.schema;
-		let selectField = this.state.selectField;
-		if (!this.props.data[selectField]) return (
+		const schema = this.state.schema;
+		let selectField = this.state.primaryfieldsSelector;
+		if (!this.props.formData[selectField]) return (
 			<NoninitializedSelect
 				name={schema.title || selectField}
 				schema={schema.properties[selectField]}
@@ -40,58 +49,60 @@ export default class Unit extends Component {
 			<AdditionalsExpanderField
 				schema={schema}
 				onChange={this.onChange}
-				formData={this.props.data}
+				formData={this.props.formData}
 				errorSchema={this.props.errorSchema}
 				idSchema={this.props.idSchema}
 				registry={this.props.registry}
-				uiSchema={schemas.uiSchema}
+				uiSchema={this.state.uiSchema}
 			>
-				<Button text="Lisää kuva" onClick={this.onAddImgClick}/>
 			</AdditionalsExpanderField>
 		)
 	}
 
 	// Returns {schema: schema, uiSchema: uiSchema}
-	getSchemas = () => {
-		let schema = this.props.schema;
-		let uiSchema = this.props.uiSchema;
-		let unit = this.props.data;
-		let fieldWrap = {fields: {taxonName: schema.properties.taxonName}, additionalFields: {}};
-		let taxonNames = {};
-		fieldWrap.fields.taxonName.enum.map((name) => { taxonNames[name] = true });
-		if (unit.taxonName && taxonNames[unit.taxonName]) {
-			Object.keys(fieldWrap).forEach((fieldKey) => {
-				uiSchema["ui:options"][unit.taxonName][fieldKey].forEach((fieldName) => {
-					fieldWrap[fieldKey][fieldName] = schema.properties[fieldName];
-				});
+	getSchemas = (props) => {
+		let schema = props.schema;
+		let uiSchema = props.uiSchema;
+		let formData = props.formData;
+
+		let fieldsToShow = {};
+		let additionalFields = [];
+
+		function addFieldGroupFieldsToFields(fieldGroups) {
+			if (!fieldGroups) return;
+			Object.keys(fieldGroups).forEach((fieldSelector, i) => {
+				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
+				let fieldSelectorValue = formData[fieldSelector];
+				if (fieldSelectorValue) {
+					let fieldGroup = fieldGroups[fieldSelector][fieldSelectorValue];
+					fieldGroup.fields.forEach((fieldName) => {
+						fieldsToShow[fieldName] = schema.properties[fieldName];
+					})
+					if (fieldGroup.fieldGroups) {
+						addFieldGroupFieldsToFields(fieldGroup.fieldGroups)
+					}
+				}
 			});
-			fieldWrap.fields.taxonName = schema.properties.taxonName;
 		}
 
-		let fields = fieldWrap.fields;
-		let uiOptions = {additionalFields: [], expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
-		Object.keys(fieldWrap.additionalFields).forEach((field) => {
-			fields[field] = fieldWrap.additionalFields[field];
-			uiOptions.additionalFields.push(field);
-		});
+		let fieldGroups = uiSchema["ui:options"].fieldGroups;
+		addFieldGroupFieldsToFields(fieldGroups);
+		let uiOptions = {expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
+
 		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
+
 		return {
-			schema: {type: "object", properties: fields},
+			schema: {type: "object", properties: fieldsToShow},
 			uiSchema: update(uiSchema, {$merge: {"ui:options": uiOptions}})
 		}
 	}
 
 	onTaxonNameSelected = (e) => {
-		this.props.onChange(this.props.id, getDefaultFormState(this.props.schema, {[this.state.selectField]: e.target.value}, this.props.schema.definitions));
+		this.props.onChange(getDefaultFormState(this.props.schema, {[this.state.primaryfieldsSelector]: e.target.value}, this.props.schema.definitions));
 	}
 
 	onChange = (data) => {
-		this.props.onChange(this.props.id, data);
-	}
-
-
-	onAddImgClick = () => {
-		console.log("add click");
+		this.props.onChange(data);
 	}
 }
 
@@ -109,7 +120,7 @@ class NoninitializedSelect extends Component {
 		return (
 			<fieldset>
 				<label>{this.props.schema.title || this.props.name}</label>
-				<select defaultValue="" className="form-control taxon-select" onChange={this.props.onChange}>{options}</select>
+				<select defaultValue="" className="form-control field-selector-select" onChange={this.props.onChange}>{options}</select>
 			</fieldset>
 		)
 	}

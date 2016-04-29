@@ -165,7 +165,7 @@ export default class NestField extends Component {
 					if (formData[prop].hasOwnProperty(nestedProp)) {
 						if (cloned) {
 							cloned = true;
-							formData = update(formData, {$merge: {nestedProp: formData[prop][nestedProp]}})
+							formData = update(formData, {$merge: {nestedProp: formData[prop][nestedProp]}});
 						} else {
 							formData[nestedProp] = formData[prop][nestedProp];
 						}

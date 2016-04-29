@@ -55,10 +55,9 @@ export default class UnitsField extends Component {
 		let idx = 0;
 		if (this.state.units) this.state.units.forEach((unit) => {
 			unitRows.push(<SchemaField
-				id={idx}
 				key={idx}
-				data={unit}
-				onChange={this.onUnitChange}
+				formData={unit}
+				onChange={this.onChangeForIdx(idx)}
 				schema={this.props.schema.items}
 				uiSchema={this.props.uiSchema.items}
 				idSchema={{id: this.props.idSchema.id + "_" + idx}}
@@ -69,10 +68,12 @@ export default class UnitsField extends Component {
 		return unitRows;
 	}
 
-	onUnitChange = (idx, unit) => {
-		let units = this.state.units;
-		units[idx] = unit;
-		this.onChange({units: units});
+	onChangeForIdx = (idx) => {
+		return (formData) => {
+			let units = this.state.units;
+			units[idx] = formData;
+			this.onChange({units: units});
+		}
 	}
 
 	onGroupChange = (e) => {

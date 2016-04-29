@@ -58,9 +58,49 @@ export default class LajiForm extends Component {
 						"ui:options": {
 							"localityWrapper": {
 								title: "Havaintopaikan tiedot",
-								fields: ["locality", "localityDescription", "biotype", "biotypeForest", "biotypeSuo"],
+								fields: ["locality", "localityDescription", "biotype", "biotypeForest", "biotypeSuo", "biotypeForestKuusi", "biotypeForestMänty", "biotypeForestMänty2", "biotypeForestLehto", "biotypeSuoKorpi", "biotypeSuoRäme", "biotypeSuoNeva"],
 								uiSchema: {
-									"ui:field": "table"
+									//"ui:field": "table"
+									"ui:field": "unit",
+									"ui:options": {
+										"innerUiField": "table",
+										"fieldGroups": {
+											"biotype": {
+												"forest": {
+													"fields": ["locality", "localityDescription", "biotypeForest"],
+													"fieldGroups": {
+														"biotypeForest": {
+															"kuusi": {
+																"fields": ["biotypeForestKuusi"]
+															},
+															"mänty": {
+																"fields": ["biotypeForestMänty", "biotypeForestMänty2"]
+															},
+															"lehto": {
+																"fields": ["biotypeForestLehto"]
+															}
+														}
+													},
+												},
+												"suo": {
+													"fields": ["locality", "localityDescription", "biotypeSuo"],
+													"fieldGroups": {
+														"biotypeSuo": {
+															"korpi": {
+																"fields": ["biotypeSuoKorpi"]
+															},
+															"räme": {
+																"fields": ["biotypeSuoRäme"]
+															},
+															"neva": {
+																"fields": ["biotypeSuoNeva"]
+															}
+														}
+													}
+												}
+											},
+										}
+									}
 								}
 							},
 							"imagesWrapper": {
@@ -93,37 +133,41 @@ export default class LajiForm extends Component {
 								"ui:field": "unit",
 								"ui:options": {
 									"innerUiField": "table",
-									"MY.kantarelli": {
-										"fields": [
-											"age",
-											"count",
-											"alive"
-										],
-										"additionalFields": [
-											"notes"
-										]
-									},
-									"MY.korvasieni": {
-										"fields": [
-											"age",
-											"count",
-											"alive"
-										],
-										"additionalFields": [
-											"notes"
-										]
-									},
-									"MY.kalalokki": {
-										"fields": [
-											"age",
-											"count",
-											"ring",
-											"sex",
-											"alive"
-										],
-										"additionalFields": [
-											"notes"
-										]
+									"fieldGroups": {
+										"taxonName": {
+											"MY.kantarelli": {
+												"fields": [
+													"age",
+													"count",
+													"alive"
+												],
+												"additionalFields": [
+													"notes"
+												]
+											},
+											"MY.korvasieni": {
+												"fields": [
+													"age",
+													"count",
+													"alive"
+												],
+												"additionalFields": [
+													"notes"
+												]
+											},
+											"MY.kalalokki": {
+												"fields": [
+													"age",
+													"count",
+													"ring",
+													"sex",
+													"alive"
+												],
+												"additionalFields": [
+													"notes"
+												]
+											}
+										}
 									}
 								}
 							}
@@ -319,6 +363,34 @@ export default class LajiForm extends Component {
 										"mänty",
 										"lehto"
 									]
+								},
+								"biotypeForestKuusi": {
+									"type": "boolean",
+									"title": "oliko pelottava kuusimetsä?"
+								},
+								"biotypeForestMänty": {
+									"type": "boolean",
+									"title": "Lisämäntymetsäkenttä"
+								},
+								"biotypeForestMänty2": {
+									"type": "boolean",
+									"title": "Lisämäntymetsäkenttä2"
+								},
+								"biotypeForestLehto": {
+									"type": "boolean",
+									"title": "Oliko uhrilehto?"
+								},
+								"biotypeSuoKorpi": {
+									"type": "string",
+									"title": "Kerro lisää korvesta"
+								},
+								"biotypeSuoRäme": {
+									"type": "number",
+									"title": "Märkyys 1-10"
+								},
+								"biotypeSuoNeva": {
+									"type": "boolean",
+									"title": "Oliko haiseva neva?"
 								},
 								"image": {
 									"type": "string",
