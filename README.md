@@ -12,7 +12,7 @@ npm install git+ssh://git@bitbucket.org:luomus/laji-form.js.git --save
 
 # Usage #
 
-LajiForm is a react-jsonschema-form wrapper. It passes all the parameters to <Form />.
+LajiForm is a react-jsonschema-form wrapper. It passes all its properties to <Form />.
 
 ```
 import React from "react";
@@ -20,15 +20,6 @@ import { render } from "react-dom";
 import LajiForm from "laji-form";
 
 render(<LajiForm schema={...} uiSchema={...} formData={...} />, document.getElementById("app"));
-```
-
-LajiForm API is also importable:
-
-```
-...
-import { Api } from "laji-form";
-
-let api = new Api("apikey");
 ```
 
 # Development #

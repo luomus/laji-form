@@ -3,7 +3,7 @@ import { render } from "react-dom"
 import LajiForm from "../src/components/LajiForm";
 import FormSelect from "./FormSelect"
 import properties from "../properties.json"
-import Api from "../src/api";
+import Api from "./api";
 
 class LajiFormApp extends Component {
 	constructor(props) {
