@@ -1,8 +1,8 @@
-import LajiFormApp from "./components/LajiFormApp";
+import Api from "./api";
 import LajiForm from "./components/LajiForm";
 
 import styles from  "./app.css";
 
-export { LajiForm };
-export default LajiFormApp;
+export { Api };
+export default LajiForm;
 
