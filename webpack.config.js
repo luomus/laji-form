@@ -23,13 +23,6 @@ module.exports = {
 				loader: "babel"
 			},
 			{
-				test: /\.css$/,
-				loader: "style-loader!css-loader",
-				include: [
-					path.join(__dirname, "src")
-				]
-			},
-			{
 				test: /\.json$/,
 				loader: "json",
 				include: [

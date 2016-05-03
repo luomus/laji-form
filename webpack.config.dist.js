@@ -3,7 +3,7 @@ var webpack = require("webpack");
 
 module.exports = {
 	context: __dirname + "/src",
-	entry: "./app.js",
+	entry: "./components/LajiForm.js",
 	output: {
 		path: "./dist",
 		publicPath: "/dist/",
@@ -22,13 +22,6 @@ module.exports = {
 					path.join(__dirname, "src"),
 				],
 				loader: "babel"
-			},
-			{
-				test: /\.css$/,
-				loader: "style-loader!css-loader",
-				include: [
-					path.join(__dirname, "src")
-				]
 			}
 		]
 	}
