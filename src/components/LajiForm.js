@@ -56,6 +56,26 @@ export default class LajiForm extends Component {
 					"items": {
 						"ui:field": "nested",
 						"ui:options": {
+							"eventTime": {
+								"fields": ["dateBegin", "dateEnd"],
+								"uiSchema": {
+									"ui:field": "expandable",
+									"ui:options": {
+										"additionalFields": ["dateEnd"],
+										"uiSchema": {
+											"ui:field": "table"
+										},
+										"expanderButtonText": "Ilmoita aikaväli",
+										"contractorButtonText": "Piilota aikavälin loppu"
+									}
+								}
+							},
+							"imagesWrapper": {
+								"fields": ["image", "rights"],
+								uiSchema: {
+									"ui:field": "table"
+								}
+							},
 							"localityWrapper": {
 								title: "Havaintopaikan tiedot",
 								fields: ["locality", "localityDescription", "habitatDescription", "biotype", "biotypeForest", "biotypeSuo", "biotypeForestKuusi", "biotypeForestMänty", "biotypeForestMänty2", "biotypeForestLehto", "biotypeSuoKorpi", "biotypeSuoRäme", "biotypeSuoNeva"],
@@ -117,31 +137,9 @@ export default class LajiForm extends Component {
 									}
 								}
 							},
-							"imagesWrapper": {
-								"fields": ["image", "rights"],
-								uiSchema: {
-									"ui:field": "table"
-								}
-							}
-						},
-						"eventTime": {
-							"ui:field": "expandable",
-							"ui:options": {
-								"additionalFields": ["dateEnd"],
-								"uiSchema": {
-									"ui:field": "table"
-								},
-								"expanderButtonText": "Ilmoita aikaväli",
-								"contractorButtonText": "Piilota aikavälin loppu"
-							}
 						},
 						"leg": {
-							"ui:field": "table",
-							"items": {
-								"name": {
-									"ui:field": "locked"
-								}
-							}
+							"ui:field": "table"
 						},
 						"units": {
 							"ui:field": "unitTripreport",
@@ -209,24 +207,13 @@ export default class LajiForm extends Component {
 						"items": {
 							"type": "object",
 							"properties": {
-								"eventTime": {
-									"type": "object",
-									"title": "Aika",
-									"properties": {
-										"dateBegin": {
-											"type": "string",
-											"title": "Havaintoaika"
-										},
-										"dateTime": {
-											"type": "string",
-											"title": "Kellonaika"
-										},
-										"dateEnd": {
-											"type": "string",
-											"title": "Havaintoajan loppu"
-										}
-									},
-									"required": ["dateBegin"]
+								"dateBegin": {
+									"type": "string",
+									"title": "Havaintoaika"
+								},
+								"dateEnd": {
+									"type": "string",
+									"title": "Havaintoajan loppu"
 								},
 								"leg": {
 									"type": "array",
@@ -437,7 +424,9 @@ export default class LajiForm extends Component {
 								}
 							},
 							"required": [
-								"leg"
+								"leg",
+								"image",
+								"dateBegin"
 							]
 						}
 					},

@@ -117,32 +117,43 @@ export default class NestField extends Component {
 		let idSchema = props.idSchema;
 		let errorSchema = props.errorSchema;
 		let formData = props.formData;
-
 		let schemaProperties = props.schema.properties;
-		let options = props.uiSchema["ui:options"];
-		Object.keys(options).forEach((newFieldName) => {
-			schemaProperties = update(schemaProperties, {$merge: {[newFieldName]: getNewSchemaField(options[newFieldName].title)}});
-			idSchema = update(idSchema, {$merge: {[newFieldName]: getNewIdSchemaField(idSchema.id, newFieldName)}});
-			errorSchema = update(errorSchema, {$merge: {[newFieldName]: {}}});
+		let schemaRequired = [];
 
-			options[newFieldName].fields.forEach((fieldName) => {
-				schemaProperties[newFieldName].properties[fieldName] = schemaProperties[fieldName];
-				idSchema[newFieldName][fieldName] = getNewIdSchemaField(idSchema[newFieldName].id, fieldName);
-				errorSchema[newFieldName][fieldName] = errorSchema[fieldName];
+		let requiredDictionarified = {};
+		if (props.schema.required) props.schema.required.forEach((req) => {
+			requiredDictionarified[req] = true;
+		});
+
+		let options = props.uiSchema["ui:options"];
+		Object.keys(options).forEach((wrapperFieldName) => {
+			schemaProperties = update(schemaProperties, {$merge: {[wrapperFieldName]: getNewSchemaField(options[wrapperFieldName].title)}});
+			idSchema = update(idSchema, {$merge: {[wrapperFieldName]: getNewIdSchemaField(idSchema.id, wrapperFieldName)}});
+			errorSchema = update(errorSchema, {$merge: {[wrapperFieldName]: {}}});
+
+			options[wrapperFieldName].fields.forEach((fieldName) => {
+				schemaProperties[wrapperFieldName].properties[fieldName] = schemaProperties[fieldName];
+				if (requiredDictionarified[fieldName]) {
+					schemaProperties[wrapperFieldName].required ?
+						schemaProperties[wrapperFieldName].required.push(fieldName) :
+						(schemaProperties[wrapperFieldName].required = [fieldName])
+				}
+				idSchema[wrapperFieldName][fieldName] = getNewIdSchemaField(idSchema[wrapperFieldName].id, fieldName);
+				errorSchema[wrapperFieldName][fieldName] = errorSchema[fieldName];
 
 				[schemaProperties, idSchema, errorSchema].forEach((schemaFieldProperty) => {
 					delete schemaFieldProperty[fieldName];
-				})
+				});
 
-				if (options[newFieldName].uiSchema) {
-					uiSchema[newFieldName] = options[newFieldName].uiSchema;
+				if (options[wrapperFieldName].uiSchema) {
+					uiSchema[wrapperFieldName] = options[wrapperFieldName].uiSchema;
 				}
 
 				if (formData.hasOwnProperty(fieldName)) {
-						if (!formData[newFieldName]) {
-							formData = update(formData, {$merge: {[newFieldName]: {[fieldName]: formData[fieldName]}}});
+						if (!formData[wrapperFieldName]) {
+							formData = update(formData, {$merge: {[wrapperFieldName]: {[fieldName]: formData[fieldName]}}});
 						} else {
-							formData = update(formData, {[newFieldName]: {$merge: {[fieldName]: formData[fieldName]}}});
+							formData = update(formData, {[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}});
 							delete formData[fieldName];
 						}
 				}

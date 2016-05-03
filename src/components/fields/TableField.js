@@ -21,6 +21,7 @@ export default class TableField extends Component {
 		}
 
 		let schemaProperties;
+		let schemaRequirements = [];
 		if (props.schema.items) {
 			schemaProperties = props.schema.items;
 			let propertiesContainer = schemaProperties;
@@ -33,18 +34,29 @@ export default class TableField extends Component {
 				}
 			}
 			schemaProperties = propertiesContainer.properties;
+			if (propertiesContainer.required) propertiesContainer.required.forEach((requirement) => {
+				schemaRequirements.push(requirement);
+			});
 			if (props.schema.additionalItems && !haveSameKeys(schemaProperties, props.schema.additionalItems.properties)) {
 				throw "Schema is not tabular!";
 			}
 		} else if (props.schema.properties) {
 			schemaProperties = props.schema.properties;
+			schemaRequirements = props.schema.required;
 		}
-		return {schemaProperties};
+		return {schemaProperties, schemaRequirements};
+	}
+
+	isRequired = (requirements, name) => {
+		const schema = this.props.schema;
+		return Array.isArray(requirements) &&
+			requirements.indexOf(name) !== -1;
 	}
 
 	render() {
-		let props = this.props;
-		let schemaProperties = this.state.schemaProperties;
+
+		const props = this.props;
+		const {schemaProperties, schemaRequirements} = this.state;
 
 		let formDataRoot, isArray;
 		if (props.schema.type == "array") {
@@ -90,6 +102,7 @@ export default class TableField extends Component {
 				rowSchemas.push(<SchemaField
 					key={j}
 					schema={update(schemaProperties[property], {title: {$set: undefined}})}
+					required={this.isRequired(schemaRequirements, property)}
 					uiSchema={uiSchema}
 					idSchema={{id: idSchemaRoot + "_" + property}}
 					formData={row ? row[property] : undefined}
