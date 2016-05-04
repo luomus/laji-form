@@ -87,32 +87,55 @@ export default class LajiForm extends Component {
 							},
 							"localityWrapper": {
 								title: "Havaintopaikan tiedot",
-								fields: ["locality", "localityDescription", "habitatDescription", "biotype", "biotypeForest", "biotypeSuo", "biotypeForestKuusi", "biotypeForestMänty", "biotypeForestMänty2", "biotypeForestLehto", "biotypeSuoKorpi", "biotypeSuoRäme", "biotypeSuoNeva"],
+								fields: [
+									"locality",
+									"localityDescription",
+									"habitatDescription",
+									"biotype",
+									"biotypeForest",
+									"biotypeSuo",
+									"biotypeForestKuusi",
+									"biotypeForestMänty",
+									"biotypeForestMänty2",
+									"biotypeForestLehto",
+									"biotypeSuoKorpi",
+									"biotypeSuoRäme",
+									"biotypeSuoNeva",
+									"biotypeTest"
+								],
 								uiSchema: {
 									"ui:field": "scoped",
 									"ui:options": {
 										"uiSchema": {
-												"ui:field": "expandable",
-												"ui:options": {
-													"expanderButtonText": "Näytä lisää",
-													"contractorButtonText": "Näytä vähemmän",
-													"additionalFields": ["habitatDescription"],
-													"uiSchema": {
-														"ui:field": "table"
-													}
+											"ui:field": "expandable",
+											"ui:options": {
+												"expanderButtonText": "Näytä lisää",
+												"contractorButtonText": "Näytä vähemmän",
+												"additionalFields": ["habitatDescription"],
+												"uiSchema": {
+													"ui:field": "table"
+												}
 											}
 										},
 										"fieldScopes": {
 											"biotype": {
 												"forest": {
-													"fields": ["locality", "localityDescription", "biotypeForest", "habitatDescription"],
+													"fields": [
+														"locality",
+														"localityDescription",
+														"biotypeForest",
+														"habitatDescription"
+													],
 													"fieldScopes": {
 														"biotypeForest": {
 															"kuusi": {
 																"fields": ["biotypeForestKuusi"]
 															},
 															"mänty": {
-																"fields": ["biotypeForestMänty", "biotypeForestMänty2"],
+																"fields": [
+																	"biotypeForestMänty",
+																	"biotypeForestMänty2"
+																],
 																"uiSchema": {
 																	"ui:options": {
 																		"additionalFields": ["biotypeForestMänty2"]
@@ -126,7 +149,11 @@ export default class LajiForm extends Component {
 													},
 												},
 												"suo": {
-													"fields": ["locality", "localityDescription", "biotypeSuo"],
+													"fields": [
+														"locality",
+														"localityDescription",
+														"biotypeSuo"
+													],
 													"fieldScopes": {
 														"biotypeSuo": {
 															"korpi": {
@@ -171,21 +198,27 @@ export default class LajiForm extends Component {
 												"fields": [
 													"age",
 													"count",
-													"alive"
-												],
-												"additionalFields": [
+													"alive",
 													"notes"
-												]
+												],
+												"uiSchema": {
+													"ui:options": {
+														"additionalFields": ["alive", "notes"]
+													}
+												}
 											},
 											"MY.korvasieni": {
 												"fields": [
 													"age",
 													"count",
-													"alive"
-												],
-												"additionalFields": [
+													"alive",
 													"notes"
-												]
+												],
+												"uiSchema": {
+													"ui:options": {
+														"additionalFields": ["notes"]
+													}
+												}
 											},
 											"MY.kalalokki": {
 												"fields": [
@@ -193,11 +226,14 @@ export default class LajiForm extends Component {
 													"count",
 													"ring",
 													"sex",
-													"alive"
-												],
-												"additionalFields": [
+													"alive",
 													"notes"
-												]
+												],
+												"uiSchema": {
+													"ui:options": {
+														"additionalFields": ["notes"]
+													}
+												}
 											}
 										}
 									}
@@ -435,6 +471,10 @@ export default class LajiForm extends Component {
 								"biotypeSuoNeva": {
 									"type": "boolean",
 									"title": "Oliko haiseva neva?"
+								},
+								"biotypeTest": {
+									"type": "string",
+									"title": "Testibiotyyppikenttä"
 								},
 								"image": {
 									"type": "string",

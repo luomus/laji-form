@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import merge from "deepmerge";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import AdditionalsExpanderField from "./AdditionalsExpanderField";
@@ -13,6 +14,7 @@ import Button from "../Button";
  *   fieldName: {
  *     fieldValue: {
  *       fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
+ *       uiSchema: <uiSchema> (merged recursively to inner uiSchema
  *       fieldScopes: {fieldName: <fieldScope>, fieldName2 ...}
  *     },
  *     fieldValue2, ...
@@ -55,7 +57,7 @@ export default class ScopeField extends Component {
 			/>
 		)
 		else return (
-			<AdditionalsExpanderField
+			<SchemaField
 				schema={schema}
 				onChange={this.onChange}
 				formData={this.props.formData}
@@ -63,8 +65,7 @@ export default class ScopeField extends Component {
 				idSchema={this.props.idSchema}
 				registry={this.props.registry}
 				uiSchema={this.state.uiSchema}
-			>
-			</AdditionalsExpanderField>
+			/>
 		)
 	}
 
@@ -88,11 +89,9 @@ export default class ScopeField extends Component {
 					let fieldScope = scopes[fieldSelector][fieldSelectorValue];
 					fieldScope.fields.forEach((fieldName) => {
 						fieldsToShow[fieldName] = schema.properties[fieldName];
-					})
+					});
 					if (fieldScope.uiSchema) {
-						Object.keys(fieldScope.uiSchema).forEach((uiSchemaProperty) => {
-							return update(generatedUiSchema, {[uiSchemaProperty]: {$merge: fieldScope.uiSchema[uiSchemaProperty]}});
-						});
+						generatedUiSchema = merge(generatedUiSchema, fieldScope.uiSchema);
 					}
 					if (fieldScope.fieldScopes) {
 						addFieldScopeFieldsToFieldsToShow(fieldScope)
