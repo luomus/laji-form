@@ -8,6 +8,7 @@ import HorizontalSchemaField from "./fields/HorizontalSchemaField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
+import InjectField from "./fields/InjectField";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -40,6 +41,7 @@ export default class LajiForm extends Component {
 					horizontal: TableField,
 					table: TableField,
 					locked: LockedField,
+					inject: InjectField,
 					expandable: AdditionalsExpanderField}}
 				onError={log("errors")} />
 	}
@@ -52,6 +54,13 @@ export default class LajiForm extends Component {
 			"title": "Tripreport",
 			"description": "With this form you can log spceimens that you've seen.",
 			"uiSchema": {
+				"ui:field": "inject",
+				"ui:options": {
+					"injections": {
+						"fields": ["editors"],
+						"target": "gatherings"
+					}
+				},
 				"gatherings": {
 					"items": {
 						"ui:field": "nested",
@@ -138,9 +147,9 @@ export default class LajiForm extends Component {
 								}
 							},
 						},
-						"leg": {
-							"ui:field": "table"
-						},
+						//"leg": {
+						//	"ui:field": "table"
+						//},
 						"units": {
 							"ui:field": "unitTripreport",
 							"items": {
@@ -201,6 +210,12 @@ export default class LajiForm extends Component {
 			"schema": {
 				"type": "object",
 				"properties": {
+					"editors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
 					"gatherings": {
 						"type": "array",
 						"title": "Perustiedot",
@@ -218,43 +233,50 @@ export default class LajiForm extends Component {
 								"leg": {
 									"type": "array",
 									"title": "Havainnoitsijat",
-									"items": [{
-										"type": "object",
-										"properties": {
-											"name": {
-												"type": "string",
-												"title": "Havainnon tekijät"
-											},
-											"isPublic": {
-												"type": "boolean",
-												"title": "Näytetäänkö nimi julkisesti?"
-											},
-											"canEdit": {
-												"type": "boolean",
-												"title": "Anna käyttäjälle muokkausoikeus"
-											}
-										},
-										"required": ["name"]
-									}],
-									"additionalItems": {
-										"type": "object",
-										"properties": {
-											"name": {
-												"type": "string",
-												"title": "Havainnon tekijät"
-											},
-											"isPublic": {
-												"type": "boolean",
-												"title": "Näytetäänkö nimi julkisesti?"
-											},
-											"canEdit": {
-												"type": "boolean",
-												"title": "Anna käyttäjälle muokkausoikeus"
-											}
-										},
-										"required": ["name"]
-									},
+									"items": {
+										"type": "string"
+									}
 								},
+								"legPublic": {
+									"type": "boolean"
+								},
+									//"items": [{
+									//	"type": "object",
+									//	"properties": {
+									//		"name": {
+									//			"type": "string",
+									//			"title": "Havainnon tekijät"
+									//		},
+									//		"isPublic": {
+									//			"type": "boolean",
+									//			"title": "Näytetäänkö nimi julkisesti?"
+									//		},
+									//		"canEdit": {
+									//			"type": "boolean",
+									//			"title": "Anna käyttäjälle muokkausoikeus"
+									//		}
+									//	},
+									//	"required": ["name"]
+									//}],
+									//"additionalItems": {
+									//	"type": "object",
+									//	"properties": {
+									//		"name": {
+									//			"type": "string",
+									//			"title": "Havainnon tekijät"
+									//		},
+									//		"isPublic": {
+									//			"type": "boolean",
+									//			"title": "Näytetäänkö nimi julkisesti?"
+									//		},
+									//		"canEdit": {
+									//			"type": "boolean",
+									//			"title": "Anna käyttäjälle muokkausoikeus"
+									//		}
+									//	},
+									//	"required": ["name"]
+									//},
+								//},
 								"kartta": {
 									"type": "string",
 									"title": "[KARTTA] [ < edellinen ] [ seuraava >]"
@@ -444,39 +466,37 @@ export default class LajiForm extends Component {
 
 		const formData = {
 			"gatherings": [
-				{
-					"dateBegin": "",
-					"dateEnd": "",
-					"leg": [],
-					"leg": [],
-					"kartta": "",
-					"units": [
-						{
-							"fastInput": "",
-							"taxonName": "MY.kantarelli",
-							"age": "",
-							"sex": "MY.sexM",
-							"notes": "",
-							"count": "",
-							"ring": ""
-						}
-					],
-					"locality": "",
-					"localityDescription": "",
-					"habitatDescription": "",
-					"biotype": "forest",
-					"biotypeSuo": "korpi",
-					"biotypeForest": "kuusi",
-					"image": "",
-					"rights": ""
-				}
-			],
+			{
+				"dateBegin": "",
+				"dateEnd": "",
+				"leg": [],
+				"legPublic": false,
+				"kartta": "",
+				"units": [],
+				"locality": "",
+				"localityDescription": "",
+				"habitatDescription": "",
+				"biotype": "",
+				"biotypeSuo": "",
+				"biotypeForest": "",
+				"biotypeForestKuusi": false,
+				"biotypeForestMänty": false,
+				"biotypeForestMänty2": false,
+				"biotypeForestLehto": false,
+				"biotypeSuoKorpi": "",
+				"biotypeSuoRäme": 0,
+				"biotypeSuoNeva": false,
+				"image": "",
+				"rights": "",
+			}
+		],
 			"temp": false,
-			"ready": false
+			"ready": false,
+			"editors": ["aaa", "beeee"]
 		}
 
-		//this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
-		this.setState({schema: response.schema, uiSchema: response.uiSchema});
+		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
+		//this.setState({schema: response.schema, uiSchema: response.uiSchema});
 	}
 
 	componentWillReceiveProps(nextProps) {
