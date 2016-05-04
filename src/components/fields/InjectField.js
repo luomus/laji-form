@@ -35,6 +35,16 @@ export default class InjectField extends Component {
 
 		fields.forEach((fieldName) => {
 			schema = update(schema, {properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target], {$merge: {[fieldName]: schema.properties[fieldName]}})}});
+			if (schema.required && schema.required.indexOf(fieldName) !== -1) {
+				let requiredRoot;
+				if (schema.type === "object")
+					requiredRoot = schema.properties[target];
+				else if (schema.type === "array")
+					requiredRoot = schema.properties[target].items;
+				else throw "schema is not object or array";
+				if (requiredRoot.required) requiredRoot.required.push(fieldName);
+				else requiredRoot = [fieldName];
+			}
 			delete schema.properties[fieldName];
 
 			idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {id: idSchema[target].id + "_" + fieldName}}}});

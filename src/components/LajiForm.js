@@ -57,7 +57,7 @@ export default class LajiForm extends Component {
 				"ui:field": "inject",
 				"ui:options": {
 					"injections": {
-						"fields": ["editors"],
+						"fields": ["editors", "test"],
 						"target": "gatherings"
 					}
 				},
@@ -492,6 +492,12 @@ export default class LajiForm extends Component {
 							]
 						}
 					},
+					"test": {
+						"type": "string"
+					},
+					"test2": {
+						"type": "string"
+					},
 					"temp": {
 						"type": "boolean"
 					},
@@ -499,7 +505,7 @@ export default class LajiForm extends Component {
 						"type": "boolean"
 					}
 				},
-				"required": []
+				"required": ["test", "test2"]
 			}
 		}
 
