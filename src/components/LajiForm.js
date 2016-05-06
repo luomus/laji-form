@@ -4,7 +4,6 @@ import Api from "../api";
 import NestField from "./fields/NestField";
 import UnitsField from "./fields/UnitsField";
 import ScopeField from "./fields/ScopeField";
-import HorizontalSchemaField from "./fields/HorizontalSchemaField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
