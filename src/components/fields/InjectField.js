@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
-import Button from "../Button";
 
 /**
  * Inject a schema object property to nested schema.
@@ -61,10 +59,12 @@ export default class InjectField extends Component {
 			}
 			delete formData[fieldName];
 		});
+
 		uiSchema = update(uiSchema, {});
 		delete uiSchema["ui:field"];
 		delete uiSchema["ui:options"];
-		return {schema, uiSchema, idSchema, formData, registry: props.registry, onChange: this.onChange};
+
+		return {...props, schema, uiSchema, idSchema, formData, onChange: this.onChange};
 	}
 
 	onChange = (formData) => {

@@ -9,6 +9,7 @@ import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
 import InjectField from "./fields/InjectField";
+import ArrayCombinerField from "./fields/ArrayCombinerField";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -42,7 +43,8 @@ export default class LajiForm extends Component {
 					table: TableField,
 					locked: LockedField,
 					inject: InjectField,
-					expandable: AdditionalsExpanderField}}
+					expandable: AdditionalsExpanderField,
+					arrayCombiner: ArrayCombinerField}}
 				onError={log("errors")} />
 	}
 
@@ -66,6 +68,7 @@ export default class LajiForm extends Component {
 						"ui:field": "nested",
 						"ui:options": {
 							"eventTime": {
+								"title": "Aika",
 								"fields": ["dateBegin", "dateEnd"],
 								"uiSchema": {
 									"ui:field": "expandable",
@@ -76,6 +79,26 @@ export default class LajiForm extends Component {
 										},
 										"expanderButtonText": "Ilmoita aikaväli",
 										"contractorButtonText": "Piilota aikavälin loppu"
+									}
+								}
+							},
+							"legWrapper": {
+								"title": "Havainnoitsijat",
+								"fields": ["leg", "legPublic", "editors", "testArray"],
+								"uiSchema": {
+									"ui:field": "nested",
+									"ui:options": {
+										"legInnerWrapper": {
+											"fields": ["leg", "editors", "testArray"],
+											"uiSchema": {
+												"ui:field": "arrayCombiner",
+												"ui:options": {
+													"uiSchema": {
+														"ui:field": "table"
+													}
+												}
+											}
+										}
 									}
 								}
 							},
@@ -174,9 +197,6 @@ export default class LajiForm extends Component {
 								}
 							},
 						},
-						//"leg": {
-						//	"ui:field": "table"
-						//},
 						"units": {
 							"ui:field": "unitTripreport",
 							"items": {
@@ -248,6 +268,7 @@ export default class LajiForm extends Component {
 				"properties": {
 					"editors": {
 						"type": "array",
+						"title": "Anna käyttäjälle muokkausoikeus?",
 						"items": {
 							"type": "string"
 						}
@@ -274,7 +295,8 @@ export default class LajiForm extends Component {
 									}
 								},
 								"legPublic": {
-									"type": "boolean"
+									"type": "boolean",
+									"title": "Näytetäänkö nimi julkisesti?"
 								},
 									//"items": [{
 									//	"type": "object",
@@ -483,12 +505,20 @@ export default class LajiForm extends Component {
 								"rights": {
 									"type": "string",
 									"title": "Kuivien käyttöoikeus [pakollinen]"
+								},
+								"testArray": {
+									"type": "array",
+									"items": {
+										type: "boolean"
+									}
 								}
+
 							},
 							"required": [
 								"leg",
 								"image",
-								"dateBegin"
+								"dateBegin",
+								"testArray"
 							]
 						}
 					},
@@ -515,7 +545,7 @@ export default class LajiForm extends Component {
 			{
 				"dateBegin": "",
 				"dateEnd": "",
-				"leg": [],
+				"leg": ["a", "b"],
 				"legPublic": false,
 				"kartta": "",
 				"units": [],
@@ -538,10 +568,10 @@ export default class LajiForm extends Component {
 		],
 			"temp": false,
 			"ready": false,
-			"editors": ["aaa", "beeee"]
+			"editors": ["aaa"]
 		}
 
-		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData: formData});
+		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData});
 		//this.setState({schema: response.schema, uiSchema: response.uiSchema});
 	}
 
