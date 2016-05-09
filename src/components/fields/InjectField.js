@@ -29,7 +29,7 @@ export default class InjectField extends Component {
 
 		const fields = options.fields;
 		const target = options.target;
-		let {schema, uiSchema, idSchema, formData} = props;
+		let {schema, uiSchema, idSchema, formData, errorSchema} = props;
 
 		fields.forEach((fieldName) => {
 			schema = update(schema, {properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target], {$merge: {[fieldName]: schema.properties[fieldName]}})}});
@@ -58,13 +58,29 @@ export default class InjectField extends Component {
 				formData = update(formData, {[target]: this.getUpdateFormDataPath(formData, fieldName)});
 			}
 			delete formData[fieldName];
+
+			if (errorSchema[fieldName] && schema.properties[target].type === "array") {
+				if (!errorSchema[target]) errorSchema = update(errorSchema, {$merge: {[target]: []}});
+				for (let i = 0; i < formData[target].length; i++) {
+					let error = errorSchema[fieldName];
+					if (!errorSchema[target]) errorSchema = update(errorSchema, {$merge: {[target]: {}}});
+					if (!errorSchema[target][i]) errorSchema = update(errorSchema, {[target]: {$merge: {[i]: {}}}});
+					errorSchema = update(errorSchema, {[target]: {[i]: {$merge: {[fieldName]: error}}}});
+				}
+				delete errorSchema[fieldName];
+			} else if (errorSchema[fieldName] && schema.properties[target].type === "object") {
+				if (!errorSchema[target]) errorSchema = update(errorSchema, {$merge: {[target]: {}}});
+				let error = errorSchema[fieldName];
+				if (!errorSchema[target]) errorSchema = update(errorSchema, {$merge: {[target]: {}}});
+				errorSchema = update(errorSchema, {[target]: {$merge: {[fieldName]: error}}});
+			}
 		});
 
 		uiSchema = update(uiSchema, {});
 		delete uiSchema["ui:field"];
 		delete uiSchema["ui:options"];
 
-		return {...props, schema, uiSchema, idSchema, formData, onChange: this.onChange};
+		return {schema, uiSchema, idSchema, formData, errorSchema, onChange: this.onChange};
 	}
 
 	onChange = (formData) => {
@@ -123,9 +139,7 @@ export default class InjectField extends Component {
 
 	render() {
 		return (
-			<SchemaField
-				{...this.state}
-			/>
+			<SchemaField {...this.props} {...this.state} />
 		)
 	}
 }

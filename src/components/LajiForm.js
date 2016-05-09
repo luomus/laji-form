@@ -63,7 +63,7 @@ export default class LajiForm extends Component {
 					}
 				},
 				"gatherings": {
-					"items": {
+					//"items": {
 						"ui:field": "nested",
 						"ui:options": {
 							"eventTime": {
@@ -266,7 +266,7 @@ export default class LajiForm extends Component {
 								}
 							}
 						}
-					}
+					//}
 				}
 			},
 			"schema": {
@@ -476,12 +476,11 @@ export default class LajiForm extends Component {
 									"title": "Kuivien käyttöoikeus [pakollinen]"
 								}
 							},
-							"required": [
-								"leg",
-								"image",
-								"dateBegin",
-								"testArray"
-							]
+							//"required": [
+							//	"leg",
+							//	"image",
+							//	"dateBegin"
+							//]
 						}
 					},
 					"test": {
@@ -497,7 +496,7 @@ export default class LajiForm extends Component {
 						"type": "boolean"
 					}
 				},
-				"required": ["test", "test2"]
+				//"required": ["test", "test2"]
 			}
 		}
 

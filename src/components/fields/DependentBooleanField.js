@@ -10,7 +10,6 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  *  booleanDefiner: <array field name>,
  *  uiSchema: <uiSchema> (uiSchema used for each object).
  * }}
- *
  */
 export default class DependentBooleanField extends Component {
 	constructor(props) {
