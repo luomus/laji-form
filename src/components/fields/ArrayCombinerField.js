@@ -3,6 +3,13 @@ import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 
+/**
+ * Transforms an object schema containing arrays to an array schema containing objects.
+ *
+ * uiSchema = {"ui:options": {
+ *  uiSchema: <uiSchema> (uiSchema which is passed to array items)
+ * }
+ */
 export default class ArrayCombinerField extends Component {
 	constructor(props) {
 		super(props);
@@ -42,7 +49,7 @@ export default class ArrayCombinerField extends Component {
 				if (!obj.hasOwnProperty(prop)) obj[prop] = getDefaultFormState(schema.items.properties[prop], undefined, this.props.schema.definitions);
 			});
 		});
-		return {...props, schema, uiSchema, errorSchema, formData, onChange: this.onChange};
+		return {schema, uiSchema, errorSchema, formData, onChange: this.onChange};
 	}
 
 	onChange = (formData) => {
@@ -64,6 +71,6 @@ export default class ArrayCombinerField extends Component {
 	}
 
 	render() {
-		return (<SchemaField {...this.state} />);
+		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

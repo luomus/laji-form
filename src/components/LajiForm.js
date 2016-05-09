@@ -9,6 +9,7 @@ import TableField from "./fields/TableField";
 import LockedField from "./fields/LockedField";
 import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
+import DependentBooleanField from "./fields/DependentBooleanField";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -43,13 +44,12 @@ export default class LajiForm extends Component {
 					locked: LockedField,
 					inject: InjectField,
 					expandable: AdditionalsExpanderField,
-					arrayCombiner: ArrayCombinerField}}
+					arrayCombiner: ArrayCombinerField,
+					dependentBoolean: DependentBooleanField}}
 				onError={log("errors")} />
 	}
 
 	componentDidMount() {
-		//let formId = this.props.formId;
-		//if (formId !== undefined && formId !== null) this.changeForm(formId);
 		const response = {
 			"id": "JX.519",
 			"title": "Tripreport",
@@ -83,17 +83,24 @@ export default class LajiForm extends Component {
 							},
 							"legWrapper": {
 								"title": "Havainnoitsijat",
-								"fields": ["leg", "legPublic", "editors", "testArray"],
+								"fields": ["leg", "legPublic", "editors"],
 								"uiSchema": {
 									"ui:field": "nested",
 									"ui:options": {
 										"legInnerWrapper": {
-											"fields": ["leg", "editors", "testArray"],
+											"fields": ["leg", "editors"],
 											"uiSchema": {
-												"ui:field": "arrayCombiner",
+												"ui:field": "dependentBoolean",
 												"ui:options": {
+													"booleanField": "editors",
+													"booleanDefiner": "leg",
 													"uiSchema": {
-														"ui:field": "table"
+														"ui:field": "arrayCombiner",
+														"ui:options": {
+															"uiSchema": {
+																"ui:field": "table"
+															}
+														}
 													}
 												}
 											}
@@ -297,43 +304,6 @@ export default class LajiForm extends Component {
 									"type": "boolean",
 									"title": "Näytetäänkö nimi julkisesti?"
 								},
-									//"items": [{
-									//	"type": "object",
-									//	"properties": {
-									//		"name": {
-									//			"type": "string",
-									//			"title": "Havainnon tekijät"
-									//		},
-									//		"isPublic": {
-									//			"type": "boolean",
-									//			"title": "Näytetäänkö nimi julkisesti?"
-									//		},
-									//		"canEdit": {
-									//			"type": "boolean",
-									//			"title": "Anna käyttäjälle muokkausoikeus"
-									//		}
-									//	},
-									//	"required": ["name"]
-									//}],
-									//"additionalItems": {
-									//	"type": "object",
-									//	"properties": {
-									//		"name": {
-									//			"type": "string",
-									//			"title": "Havainnon tekijät"
-									//		},
-									//		"isPublic": {
-									//			"type": "boolean",
-									//			"title": "Näytetäänkö nimi julkisesti?"
-									//		},
-									//		"canEdit": {
-									//			"type": "boolean",
-									//			"title": "Anna käyttäjälle muokkausoikeus"
-									//		}
-									//	},
-									//	"required": ["name"]
-									//},
-								//},
 								"kartta": {
 									"type": "string",
 									"title": "[KARTTA] [ < edellinen ] [ seuraava >]"
@@ -504,14 +474,7 @@ export default class LajiForm extends Component {
 								"rights": {
 									"type": "string",
 									"title": "Kuivien käyttöoikeus [pakollinen]"
-								},
-								"testArray": {
-									"type": "array",
-									"items": {
-										type: "boolean"
-									}
 								}
-
 							},
 							"required": [
 								"leg",
@@ -544,7 +507,7 @@ export default class LajiForm extends Component {
 			{
 				"dateBegin": "",
 				"dateEnd": "",
-				"leg": ["a", "b"],
+				"leg": ["a", "b", "c"],
 				"legPublic": false,
 				"kartta": "",
 				"units": [],
@@ -567,7 +530,7 @@ export default class LajiForm extends Component {
 		],
 			"temp": false,
 			"ready": false,
-			"editors": ["aaa"]
+			"editors": ["a", "c", "d"]
 		}
 
 		this.setState({schema: response.schema, uiSchema: response.uiSchema, formData});
