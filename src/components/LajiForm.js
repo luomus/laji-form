@@ -63,7 +63,7 @@ export default class LajiForm extends Component {
 					}
 				},
 				"gatherings": {
-					//"items": {
+					"items": {
 						"ui:field": "nested",
 						"ui:options": {
 							"eventTime": {
@@ -266,7 +266,7 @@ export default class LajiForm extends Component {
 								}
 							}
 						}
-					//}
+					}
 				}
 			},
 			"schema": {
