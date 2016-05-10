@@ -99,7 +99,6 @@ export default class InjectField extends Component {
 			let originalStringified = JSON.stringify(this.props.formData[fieldName]);
 			if (formData && formData[target] && Array.isArray(formData[target])) {
 				for (var i in formData[target]) {
-					if (i >= this.props.formData[target].length) break;
 					let item = formData[target][i];
 					if (JSON.stringify(item[fieldName]) !== originalStringified) {
 						formData = update(formData, {[fieldName]: {$set: item[fieldName]}});

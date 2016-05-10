@@ -26,6 +26,7 @@ export default class ArrayCombinerField extends Component {
 			uiSchema["ui:options"].uiSchema : {};
 
 		let schema = {type: "array", items: {type: "object", properties: {}}};
+		if (props.schema.hasOwnProperty("title")) schema.title = props.schema.title;
 		Object.keys(props.schema.properties).forEach((propertyName) => {
 			let property = props.schema.properties[propertyName].items;
 			if (property.type === "object" || property.type === "array") throw "items properties can't be objects or arrays";

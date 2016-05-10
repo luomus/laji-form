@@ -7,6 +7,7 @@ class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema, formData: schemas.formData};
+		//this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema};
 	}
 
 	render () {

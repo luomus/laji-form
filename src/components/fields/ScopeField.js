@@ -49,14 +49,9 @@ export default class ScopeField extends Component {
 	render() {
 		const schema = this.state.schema;
 		let selectField = this.state.primaryfieldsSelector;
-		if (!this.props.formData[selectField]) return (
-			<NoninitializedSelect
-				name={schema.title || selectField}
-				schema={schema.properties[selectField]}
-				onChange={this.onTaxonNameSelected}
-			/>
-		)
-		else return (
+
+		let title = schema.properties[selectField].title ? schema.properties[selectField].title : selectField;
+		return (
 			<SchemaField
 				schema={schema}
 				onChange={this.onChange}
@@ -106,7 +101,7 @@ export default class ScopeField extends Component {
 		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
 
 		return {
-			schema: {type: "object", properties: fieldsToShow},
+			schema: update(schema, {$merge: {properties: fieldsToShow}}),
 			uiSchema: generatedUiSchema
 		}
 	}
@@ -117,25 +112,5 @@ export default class ScopeField extends Component {
 
 	onChange = (data) => {
 		this.props.onChange(data);
-	}
-}
-
-class NoninitializedSelect extends Component {
-	render() {
-		let options = (() => {
-			const schema = this.props.schema;
-			let options = [<option value="" key="-1" disabled hidden />];
-			for (let i = 0; i < schema.enum.length; i++) {
-				options.push(<option value={schema.enum[i]} key={i}>{schema.enumNames[i]}</option>)
-			}
-			return options;
-		})();
-
-		return (
-			<fieldset>
-				<label>{this.props.schema.title || this.props.name}</label>
-				<select defaultValue="" className="form-control field-selector-select" onChange={this.props.onChange}>{options}</select>
-			</fieldset>
-		)
 	}
 }

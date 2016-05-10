@@ -55,7 +55,7 @@ export default class DependentBooleanField extends Component {
 
 		formData[definer].forEach((definerItem, i) => {
 			if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) origData.splice(origData.indexOf(definerItem), 1);
-			else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) origData.push(definerItem);
+			else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) origData ? origData.push(definerItem) : (origData = [definerItem]);
 		})
 
 		formData[booleanField] = origData;
