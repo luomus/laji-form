@@ -50,10 +50,9 @@ export default class DependentBooleanField extends Component {
 		let booleanField = options.booleanField;
 		let definer = options.booleanDefiner;
 
-
+		let origData = this.props.formData[booleanField];
 		// if the change happened in booleanField data, reflect the changes to all booleanField items with same data.
 		if (JSON.stringify(this.props.formData[definer]) === JSON.stringify(formData[definer])) {
-			let origData = this.props.formData[booleanField];
 			let dictionarifiedOrigData = this.getDictionarifiedFormData(this.props.formData, booleanField);
 			formData[definer].forEach((definerItem, i) => {
 				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) origData.splice(origData.indexOf(definerItem), 1);
