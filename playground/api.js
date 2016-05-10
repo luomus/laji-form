@@ -1,5 +1,4 @@
 import http from "http";
-import { _extend as extend } from "util";
 import queryString from "querystring"
 
 export default class Api {
@@ -58,4 +57,3 @@ export default class Api {
 		this._get("/" + id, undefined, onSuccess, onError);
 	}
 }
-

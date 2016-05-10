@@ -33,8 +33,10 @@
     "css-loader": "^0.23.1",
     "react": "~15.0.1",
     "react-dom": "~15.0.1",
-    "react-jsonschema-form": "~0.23.1",
-    "webpack": "^1.12.15"
+    "webpack": "^1.12.15",
+    "react-addons-update": "~15.0.1",
+    "react-jsonschema-form": "~0.27.0",
+    "deepmerge": "~0.2.10"
   },
   "devDependencies": {
     "express": "~4.13.4",
