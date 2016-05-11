@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import Button from "../Button";
@@ -35,7 +34,7 @@ export default class UnitsField extends Component {
 			<fieldset>
 				<TitleField title={this.props.schema.title || this.props.name}/>
 				{this.renderUnits()}
-				<Button text="Lisää havaintorivejä" onClick={this.onAddClick} /><br/>
+				<Button onClick={this.onAddClick}>Lisää havaintorivejä</Button><br/>
 				Pikasyötön lajiryhmä: <select onChange={this.onGroupChange}>{this.renderGroupSelect()}</select>
 			</fieldset>
 		)
@@ -61,8 +60,7 @@ export default class UnitsField extends Component {
 				schema={this.props.schema.items}
 				uiSchema={this.props.uiSchema.items}
 				idSchema={{id: this.props.idSchema.id + "_" + idx}}
-				errorSchema={this.props.errorSchema[idx]}
-				registry={this.props.registry} />);
+				errorSchema={this.props.errorSchema[idx]} />);
 			idx++;
 		});
 		return unitRows;

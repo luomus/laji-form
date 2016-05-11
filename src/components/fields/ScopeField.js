@@ -107,7 +107,7 @@ export default class ScopeField extends Component {
 	}
 
 	onTaxonNameSelected = (e) => {
-		this.props.onChange(getDefaultFormState(this.props.schema, {[this.state.primaryfieldsSelector]: e.target.value}, this.props.schema.definitions));
+		this.props.onChange(getDefaultFormState(this.props.schema, {[this.state.primaryfieldsSelector]: e.target.value}, this.props.registry.definitions));
 	}
 
 	onChange = (data) => {

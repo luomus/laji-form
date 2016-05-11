@@ -106,7 +106,7 @@ export default class NestField extends Component {
 	}
 
 	sanityCheck = (props) => {
-		if (props.schema.type !== "object") throw "ui:options wasn't defined";
+		if (props.schema.type !== "object") throw "schema type must be 'object'";
 		if (!props.uiSchema["ui:options"]) throw "ui:options wasn't defined";
 	}
 
@@ -118,7 +118,6 @@ export default class NestField extends Component {
 		let errorSchema = props.errorSchema;
 		let formData = props.formData;
 		let schemaProperties = props.schema.properties;
-		let schemaRequired = [];
 
 		let requiredDictionarified = {};
 		if (props.schema.required) props.schema.required.forEach((req) => {
@@ -149,7 +148,7 @@ export default class NestField extends Component {
 					uiSchema[wrapperFieldName] = options[wrapperFieldName].uiSchema;
 				}
 
-				if (formData.hasOwnProperty(fieldName)) {
+				if (formData && formData.hasOwnProperty(fieldName)) {
 						if (!formData[wrapperFieldName]) {
 							formData = update(formData, {$merge: {[wrapperFieldName]: {[fieldName]: formData[fieldName]}}});
 						} else {
@@ -161,7 +160,7 @@ export default class NestField extends Component {
 		});
 
 		let schema = update(this.props.schema, {properties: {$set: schemaProperties}});
-		return {schema, uiSchema, idSchema, errorSchema, formData};
+		return {schema, uiSchema, idSchema, errorSchema, formData, onChange: this.onChange};
 
 		function getNewSchemaField(title) {
 			return {type: "object", properties: {}, title};
@@ -183,7 +182,7 @@ export default class NestField extends Component {
 		Object.keys(formData).forEach((prop) => {
 			if (dictionarifiedNests[prop]) {
 				Object.keys(formData[prop]).forEach((nestedProp) => {
-					if (formData[prop].hasOwnProperty(nestedProp)) {
+					if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
 						if (cloned) {
 							cloned = true;
 							formData = update(formData, {$merge: {nestedProp: formData[prop][nestedProp]}});
@@ -199,12 +198,6 @@ export default class NestField extends Component {
 	}
 
 	render() {
-		return (<SchemaField {...this.props}
-			schema={this.state.schema}
-			uiSchema={this.state.uiSchema}
-			idSchema={this.state.idSchema}
-			errorSchema={this.state.errorSchema}
-			formData={this.state.formData}
-			onChange={this.onChange}/>)
+		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

@@ -115,7 +115,7 @@ export default class TableField extends Component {
 					}} />)
 			});
 			if (isArray && (!props.schema.additionalItems || i > props.schema.items.length - 1)) {
-				rowSchemas = rowSchemas.concat([(<Button key={i} text="Delete" type="danger" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$splice: [[i, 1]]})) } } />)]);
+				rowSchemas = rowSchemas.concat([(<Button key={i} type="danger" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$splice: [[i, 1]]})) } }>Delete</Button>)]);
 			}
 			rows.push(<TableRow key={i + 1}>{rowSchemas}</TableRow>)
 		});
@@ -147,7 +147,7 @@ export default class TableField extends Component {
 	}
 
 	getAddButton = () => {
-		return (<Button text="Add" classList={["col-xs-12"]} onClick={ () => { this.addItem() } } key="0"/>);
+		return (<Button classList={["col-xs-12"]} onClick={ () => { this.addItem() } } key="0">Add</Button>);
 	}
 
 	addItem = () => {
@@ -165,12 +165,12 @@ export default class TableField extends Component {
 		let props = this.props;
 		if (!props.schema.items) throw "This is not an array field!";
 		else if (props.schema.additionalItems && (props.formData && props.formData.length > props.schema.items.length)) {
-			return getDefaultFormState(props.schema.additionalItems, {}, props.registry);
+			return getDefaultFormState(props.schema.additionalItems, {}, props.registry.definitions);
 		} else if (props.schema.additionalItems && (!props.formData || props.formData.length === 0 || props.schema.items[props.formData.length - 1])) {
 			let i = props.formData ? 0 : props.formData.length - 1;
-			return getDefaultFormState(props.schema.items[i], {}, props.registry);
+			return getDefaultFormState(props.schema.items[i], {}, props.registry.definitions);
 		} else {
-			return getDefaultFormState(props.schema.items, {}, props.registry);
+			return getDefaultFormState(props.schema.items, {}, props.registry.definitions);
 		}
 	}
 
