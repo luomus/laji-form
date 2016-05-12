@@ -5,7 +5,6 @@ import UnitsField from "./fields/UnitsField";
 import ScopeField from "./fields/ScopeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
-import LockedField from "./fields/LockedField";
 import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
@@ -24,7 +23,6 @@ export default class LajiForm extends Component {
 					scoped: ScopeField,
 					horizontal: TableField,
 					table: TableField,
-					locked: LockedField,
 					inject: InjectField,
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
