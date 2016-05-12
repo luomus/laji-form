@@ -13,16 +13,11 @@ import DependentBooleanField from "./fields/DependentBooleanField";
 const log = (type) => console.log.bind(console, type);
 
 export default class LajiForm extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {formData: props.formData, onChange: ({formData}) => {this.setState({formData})}}
-	}
 
 	render() {
 		return  (
 			<Form
 				{...this.props}
-				{...this.state}
 				fields={{
 					nested: NestField,
 					unitTripreport: UnitsField,
