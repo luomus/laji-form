@@ -44,6 +44,7 @@ export default class TableField extends Component {
 			schemaProperties = props.schema.properties;
 			schemaRequirements = props.schema.required;
 		}
+		if (!schemaRequirements) schemaRequirements = [];
 		return {schemaProperties, schemaRequirements};
 	}
 
@@ -69,7 +70,7 @@ export default class TableField extends Component {
 
 		let headers = [];
 		Object.keys(schemaProperties).forEach((property, i) => {
-			headers.push(<label key={i}>{schemaProperties[property].title ? schemaProperties[property].title : property}</label>);
+			headers.push(<label key={i}>{schemaProperties[property].title ? schemaProperties[property].title : property}{this.isRequired(schemaRequirements, property) ? "*" : undefined}</label>);
 		});
 
 		let rows = [];
