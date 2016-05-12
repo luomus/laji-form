@@ -8,6 +8,7 @@ import TableField from "./fields/TableField";
 import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
+import DateTimeWidget from "./widgets/DateTimeWidget";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -27,6 +28,7 @@ export default class LajiForm extends Component {
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
 					dependentBoolean: DependentBooleanField}}
+				widgets={{dateTime: DateTimeWidget}}
 				onError={log("errors")} />
 		)
 	}

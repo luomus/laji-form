@@ -22,7 +22,13 @@
 							"ui:options": {
 								"additionalFields": ["dateEnd"],
 								"uiSchema": {
-									"ui:field": "table"
+									"ui:field": "table",
+									"dateBegin": {
+										"ui:widget": "dateTime"
+									},
+									"dateEnd": {
+										"ui:widget": "dateTime"
+									}
 								},
 								"expanderButtonText": "Ilmoita aikaväli",
 								"contractorButtonText": "Piilota aikavälin loppu"
@@ -442,7 +448,7 @@
 	"formData": {
 			"gatherings": [
 				{
-					"dateBegin": "",
+					"dateBegin": "2016-05-11T11:08:54.044Z",
 					"dateEnd": "",
 					"leg": ["a", "b", "c"],
 					"legPublic": false,
