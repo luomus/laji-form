@@ -6,8 +6,12 @@ import schemas from "./schemas.json";
 class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema, formData: schemas.formData};
-		//this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema};
+		this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema, onChange: this.onChange, formData: schemas.formData}
+		//this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema, onChange: this.onChange};
+	}
+	
+	onChange = (formData) => {
+		this.setState(formData);
 	}
 
 	render () {
