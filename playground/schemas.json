@@ -3,6 +3,7 @@
 	"title": "Tripreport",
 	"description": "With this form you can log spceimens that you've seen.",
 	"uiSchema": {
+		"ui:order": ["gatherings", "temp", "ready"],
 		"ui:field": "inject",
 		"ui:options": {
 			"injections": {
@@ -13,6 +14,7 @@
 		"gatherings": {
 			"ui:field": "mapArray",
 			"items": {
+				"ui:order": ["legWrapper", "eventTime", "units", "localityWrapper", "imagesWrapper"],
 				"ui:field": "nested",
 				"ui:options": {
 					"eventTime": {
@@ -251,11 +253,7 @@
 						},
 						"legPublic": {
 							"type": "boolean",
-							"title": "Näytetäänkö nimi julkisesti?"
-						},
-						"kartta": {
-							"type": "string",
-							"title": "[KARTTA] [ < edellinen ] [ seuraava >]"
+							"title": "Näytetäänkö nimet julkisesti?"
 						},
 						"units": {
 							"type": "array",
