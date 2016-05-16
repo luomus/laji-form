@@ -60,6 +60,7 @@ export default class UnitsField extends Component {
 				schema={this.props.schema.items}
 				uiSchema={this.props.uiSchema.items}
 				idSchema={{id: this.props.idSchema.id + "_" + idx}}
+				registry={this.props.registry}
 				errorSchema={this.props.errorSchema[idx]} />);
 			idx++;
 		});
