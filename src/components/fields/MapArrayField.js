@@ -10,7 +10,7 @@ export default class MapArrayField extends Component {
 
 		let mapItems = [];
 		let idsToIdxs = {};
-		this.props.formData.forEach((item, i) => {
+		if (props.formData) props.formData.forEach((item, i) => {
 			mapItems.push({id: i});
 			idsToIdxs[i] = i;
 		})
@@ -98,9 +98,9 @@ export default class MapArrayField extends Component {
 			  onRemove={this.onRemove}
 				onActiveChanged={this.onActiveChanged}
 			/>
-			<Button disabled={this.state.idsToIdxs[this.state.activeId] === 0}
+			<Button disabled={this.state.activeId === undefined || this.state.idsToIdxs[this.state.activeId] === 0}
 			        onClick={this.onActivatePrev}>Edellinen</Button>
-			<Button disabled={this.props.formData && this.state.idsToIdxs[this.state.activeId] === this.props.formData.length - 1}
+			<Button disabled={this.state.activeId === undefined || (this.props.formData && this.state.idsToIdxs[this.state.activeId] === this.props.formData.length - 1)}
 			        onClick={this.onActivateNext}>Seuraava</Button>
 			{this.renderSchemaField()}
 		</div>)
@@ -154,7 +154,7 @@ class MapComponent extends Component {
 	}
 
 	onActiveChanged = (id) => {
-		if (this.state.items.map((item) => {return item.id}).indexOf(id) < 0) return;
+		if (this.state.items.length > 0  && this.state.items.map((item) => {return item.id}).indexOf(id) < 0) return;
 		this.setState({activeId: id});
 		this.props.onActiveChanged(id);
 	}
@@ -168,13 +168,16 @@ class MapComponent extends Component {
 			if (item.id === this.state.activeId) {
 				let ids = items.map((item)=> {return item.id});
 				let activeIdIdx = ids.indexOf(this.state.activeId);
-				activeId = (activeIdIdx === 0) ? ids[0] : ids[activeIdIdx - 1];
+				if (items.length > 1) {
+					activeId = (activeIdIdx === 0) ? ids[0] : ids[activeIdIdx - 1];
+				}
+				console.log(activeId)
 			}
 
-			items.splice(i, 1)[0];
+			items.splice(i, 1);
 			this.setState({items});
 			this.props.onRemove(item.id);
-			if (activeId !== undefined) this.onActiveChanged(activeId)
+			this.onActiveChanged(activeId);
 		}
 	}
 }
