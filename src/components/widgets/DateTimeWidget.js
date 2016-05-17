@@ -29,7 +29,7 @@ export default class DateTimeWidget extends Component {
 				onChange(Moment(value).toISOString())
 			}}
 			readOnly={readonly}
-			format={"YYYY.MM.DD hh:mm:ss"}
+			format={"DD.MM.YYYY hh:mm:ss"}
 		/>);
 	}
 }
