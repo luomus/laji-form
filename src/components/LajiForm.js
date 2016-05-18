@@ -10,6 +10,7 @@ import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import MapArrayField from "./fields/MapArrayField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
+import AutosuggestWidget from "./widgets/AutosuggestWidget";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -29,8 +30,12 @@ export default class LajiForm extends Component {
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
 					dependentBoolean: DependentBooleanField,
-					mapArray: MapArrayField}}
-				widgets={{dateTime: DateTimeWidget}}
+					mapArray: MapArrayField
+				}}
+				widgets={{
+				dateTime: DateTimeWidget,
+				autosuggest: AutosuggestWidget
+				}}
 				onError={log("errors")} />
 		)
 	}

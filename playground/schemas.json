@@ -171,12 +171,15 @@
 									"expanderButtonText": "Näytä lisää muuttujia",
 									"contractorButtonText": "Näytä vähemmän muuttujia",
 									"uiSchema": {
-										"ui:field": "table"
+										"ui:field": "table",
+											"taxon": {
+												"ui:widget": "autosuggest"
+											}
 									}
 								}
 							},
 							"fieldScopes": {
-								"taxonName": {
+								"taxon": {
 									"MY.kantarelli": {
 										"fields": [
 											"age",
@@ -267,21 +270,9 @@
 							"items": {
 								"type": "object",
 								"properties": {
-									"taxonName": {
+									"taxon": {
 										"type": "string",
-										"title": "Taksoni",
-										"enum": [
-											"",
-											"MY.kantarelli",
-											"MY.korvasieni",
-											"MY.kalalokki"
-										],
-										"enumNames": [
-											"",
-											"kantarelli",
-											"korvasieni",
-											"kalalokki"
-										]
+										"title": "Taksoni"
 									},
 									"age": {
 										"type": "string",
@@ -451,7 +442,7 @@
 					"leg": ["a", "b", "c"],
 					"legPublic": false,
 					"kartta": "",
-					"units": [],
+					"units": [{}],
 					"locality": "",
 					"localityDescription": "",
 					"habitatDescription": "",

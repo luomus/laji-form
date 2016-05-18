@@ -82,6 +82,7 @@ export default class ScopeField extends Component {
 				let fieldSelectorValue = formData[fieldSelector];
 				if (fieldSelectorValue) {
 					let fieldScope = scopes[fieldSelector][fieldSelectorValue];
+					if (!fieldScope) return;
 					fieldScope.fields.forEach((fieldName) => {
 						fieldsToShow[fieldName] = schema.properties[fieldName];
 					});
@@ -94,6 +95,7 @@ export default class ScopeField extends Component {
 				}
 			});
 		}
+
 		addFieldScopeFieldsToFieldsToShow(options);
 
 		let uiOptions = {expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
