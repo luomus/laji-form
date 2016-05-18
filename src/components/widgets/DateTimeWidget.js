@@ -3,8 +3,6 @@ import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import Moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 
-import'react-widgets/lib/less/react-widgets.less'
-
 export default class DateTimeWidget extends Component {
 	static defaultProps = {
 		type: "text",

@@ -3,6 +3,10 @@ import { render } from "react-dom"
 import LajiForm from "../src/components/LajiForm";
 import schemas from "./schemas.json";
 
+//import "../src/styles";
+import "../src/app";
+
+
 class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
