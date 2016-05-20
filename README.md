@@ -1,6 +1,6 @@
 # README #
 
-This is a React module, that can be installed as a npm dependency and bolted to DOM with few lines.
+LajiForm is a React module, that can be installed as a npm dependency. LajiForm is a wrapper for [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form).
 
 # Installing #
 
@@ -12,7 +12,7 @@ npm install git+ssh://git@bitbucket.org:luomus/laji-form.js.git --save
 
 # Usage #
 
-LajiForm is a react-jsonschema-form wrapper. It passes all its properties to <Form />.
+LajiForm passes all its properties to <Form />.
 
 ```
 import React from "react";
