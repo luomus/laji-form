@@ -22,12 +22,14 @@ import LajiForm from "laji-form";
 render(<LajiForm schema={...} uiSchema={...} formData={...} />, document.getElementById("app"));
 ```
 
-Styles must be imported separately. The styles are in ```lib/```:
+## Styles ##
+
+Styles must be imported separately:
 ```
 import "laji-form/lib/styles";
 ```
 
-Webpack configuration:
+Webpack configuration for styles:
 ```
 ...
 loaders: [
