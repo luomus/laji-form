@@ -32,7 +32,6 @@ export default class DependentBooleanField extends Component {
 
 		let schema = update(props.schema, {properties: {[booleanField]: {items: {$merge: {type: "boolean"}}}}});
 
-
 		let booleanFieldDataDictionarified = this.getDictionarifiedBooleanFieldData(props.formData);
 
 		let booleanFieldData = [];

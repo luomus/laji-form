@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import Form from "react-jsonschema-form";
 import NestField from "./fields/NestField";
 import UnitsField from "./fields/UnitsField";
@@ -9,12 +9,19 @@ import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import MapArrayField from "./fields/MapArrayField";
+import AutosuggestField from "./fields/AutosuggestField";
+import {AutosuggestInputField} from "./fields/AutosuggestField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
-import AutosuggestWidget from "./widgets/AutosuggestWidget";
+import ApiClient from "../apiClient";
 
 const log = (type) => console.log.bind(console, type);
 
 export default class LajiForm extends Component {
+
+	constructor(props) {
+		super(props);
+		this.apiClient = new ApiClient(props.apiUrl, props.apiAccessToken, props.apiUserToken);
+	}
 
 	render() {
 		return  (
@@ -30,11 +37,12 @@ export default class LajiForm extends Component {
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
 					dependentBoolean: DependentBooleanField,
-					mapArray: MapArrayField
+					mapArray: MapArrayField,
+					autosuggest: AutosuggestField,
+					autosuggestInput: AutosuggestInputField
 				}}
 				widgets={{
-				dateTime: DateTimeWidget,
-				autosuggest: AutosuggestWidget
+				dateTime: DateTimeWidget
 				}}
 				onError={log("errors")} />
 		)
