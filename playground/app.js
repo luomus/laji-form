@@ -2,15 +2,20 @@ import React, { Component } from "react";
 import { render } from "react-dom"
 import LajiForm from "../src/components/LajiForm";
 import schemas from "./schemas.json";
+import properties from "../properties.json";
+import ApiClientImplementation from "./ApiClientImplementation";
 
 import "../src/styles";
-
 
 class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema, onChange: this.onChange, formData: schemas.formData}
-		//this.state = {schema: schemas.schema, uiSchema: schemas.uiSchema, onChange: this.onChange};
+		this.state = {
+			...schemas,
+			formData: undefined,
+			onChange: this.onChange,
+			apiClient: new ApiClientImplementation("http://apitest.laji.fi/v0", properties.accessToken, properties.userToken)
+		}
 	}
 	
 	onChange = (formData) => {

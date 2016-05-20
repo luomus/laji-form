@@ -42,8 +42,38 @@ export default class ScopeField extends Component {
 	}
 
 	getStateFromProps(props) {
-		let schemas = this.getSchemas(props);
-		return {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], schema: schemas.schema, uiSchema: schemas.uiSchema};
+		let dictionarifiedFieldsInScopes = {};
+		function getFieldScopesFields(fieldScope) {
+			let scopes = fieldScope.fieldScopes;
+			Object.keys(scopes).forEach((fieldName) => {
+				dictionarifiedFieldsInScopes[fieldName] = true;
+				Object.keys(scopes[fieldName]).forEach((fieldValue) => {
+					scopes[fieldName][fieldValue].fields.forEach((scopesFieldName) => {
+						dictionarifiedFieldsInScopes[scopesFieldName] = true;
+					})
+					if (scopes[fieldName][fieldValue].fieldScopes)
+						getFieldScopesFields(scopes[fieldName][fieldValue]);
+				});
+			});
+		}
+		getFieldScopesFields(props.uiSchema["ui:options"]);
+
+		let dictionarifiedSchemaFields = {};
+		Object.keys(props.schema.properties).forEach((fieldName) => {
+			dictionarifiedSchemaFields[fieldName] = true;
+		});
+
+		let fieldsOutsOfScope = [];
+		Object.keys(dictionarifiedSchemaFields).forEach((fieldName) => {
+			if (!dictionarifiedFieldsInScopes[fieldName]) fieldsOutsOfScope.push(fieldName)
+		});
+
+		let schemas = this.getSchemas(props, fieldsOutsOfScope);
+		return {
+			primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
+			schema: schemas.schema,
+			uiSchema: schemas.uiSchema
+		};
 	}
 
 	render() {
@@ -65,15 +95,15 @@ export default class ScopeField extends Component {
 	}
 
 	// Returns {schema: schema, uiSchema: uiSchema}
-	getSchemas = (props) => {
+	getSchemas = (props, fieldsOutOfScope) => {
 		let schema = props.schema;
 		let uiSchema = props.uiSchema;
 		let formData = props.formData;
 
-		let fieldsToShow = {};
 		let options = uiSchema["ui:options"];
 		let generatedUiSchema = options.uiSchema || {};
 
+		let fieldsToShow = {};
 		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
@@ -82,6 +112,7 @@ export default class ScopeField extends Component {
 				let fieldSelectorValue = formData[fieldSelector];
 				if (fieldSelectorValue) {
 					let fieldScope = scopes[fieldSelector][fieldSelectorValue];
+					if (!fieldScope) return;
 					fieldScope.fields.forEach((fieldName) => {
 						fieldsToShow[fieldName] = schema.properties[fieldName];
 					});
@@ -95,6 +126,10 @@ export default class ScopeField extends Component {
 			});
 		}
 		addFieldScopeFieldsToFieldsToShow(options);
+
+		fieldsOutOfScope.forEach((fieldName) => {
+			fieldsToShow[fieldName] = props.schema.properties[fieldName];
+		})
 
 		let uiOptions = {expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
 

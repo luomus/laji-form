@@ -44,7 +44,7 @@
 						"uiSchema": {
 							"ui:field": "nested",
 							"ui:options": {
-								"": {
+								"legInnerWrapper": {
 									"fields": ["leg", "editors"],
 									"uiSchema": {
 										"ui:field": "dependentBoolean",
@@ -55,7 +55,20 @@
 												"ui:field": "arrayCombiner",
 												"ui:options": {
 													"uiSchema": {
-														"ui:field": "table"
+														"items": {
+															"ui:field": "autosuggest",
+															"ui:options": {
+																"autosuggestField": "friends",
+																"suggestionInputField": "leg",
+																"suggestionReceivers": {
+																	"leg": "key"
+																},
+																"allowNonsuggestedValue": true,
+																"uiSchema": {
+																	"ui:field": "table"
+																}
+															}
+														}
 													}
 												}
 											}
@@ -87,7 +100,8 @@
 							"biotypeSuoKorpi",
 							"biotypeSuoRäme",
 							"biotypeSuoNeva",
-							"biotypeTest"
+							"biotypeTest",
+							"biotypeTestShownAlways"
 						],
 						"uiSchema": {
 							"ui:field": "scoped",
@@ -171,13 +185,25 @@
 									"expanderButtonText": "Näytä lisää muuttujia",
 									"contractorButtonText": "Näytä vähemmän muuttujia",
 									"uiSchema": {
-										"ui:field": "table"
+										"ui:field": "autosuggest",
+										"ui:options": {
+											"autosuggestField": "taxon",
+											"suggestionInputField": "informalNameString",
+											"suggestionReceivers": {
+												"informalNameString": "value",
+												"unitType": "payload.informalGroups.0"
+											},
+											"include_payload": true,
+											"uiSchema": {
+												"ui:field": "table"
+											}
+										}
 									}
 								}
 							},
 							"fieldScopes": {
-								"taxonName": {
-									"MY.kantarelli": {
+								"unitType": {
+									"MVL.2": {
 										"fields": [
 											"age",
 											"count",
@@ -190,7 +216,7 @@
 											}
 										}
 									},
-									"MY.korvasieni": {
+									"MVL.21": {
 										"fields": [
 											"age",
 											"count",
@@ -203,7 +229,7 @@
 											}
 										}
 									},
-									"MY.kalalokki": {
+									"MVL.1": {
 										"fields": [
 											"age",
 											"count",
@@ -267,21 +293,12 @@
 							"items": {
 								"type": "object",
 								"properties": {
-									"taxonName": {
+									"informalNameString": {
 										"type": "string",
-										"title": "Taksoni",
-										"enum": [
-											"",
-											"MY.kantarelli",
-											"MY.korvasieni",
-											"MY.kalalokki"
-										],
-										"enumNames": [
-											"",
-											"kantarelli",
-											"korvasieni",
-											"kalalokki"
-										]
+										"title": "Taksoni"
+									},
+									"unitType": {
+										"type" : "string"
 									},
 									"age": {
 										"type": "string",
@@ -420,6 +437,10 @@
 							"type": "string",
 							"title": "Testibiotyyppikenttä"
 						},
+						"biotypeTestShownAlways": {
+							"type": "string",
+							"title": "näkyykö"
+						},
 						"image": {
 							"type": "string",
 							"title": "Raahaa tähän kuvat tai valitse tiedosto koneeltasi [Browse]"
@@ -451,7 +472,7 @@
 					"leg": ["a", "b", "c"],
 					"legPublic": false,
 					"kartta": "",
-					"units": [],
+					"units": [{}],
 					"locality": "",
 					"localityDescription": "",
 					"habitatDescription": "",
