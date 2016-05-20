@@ -193,7 +193,6 @@
 												"informalNameString": "value",
 												"unitType": "payload.informalGroups.0"
 											},
-											"include_payload": true,
 											"uiSchema": {
 												"ui:field": "table"
 											}

@@ -23,6 +23,19 @@ const autosuggestFieldSettings = {
 	}
 }
 
+/**
+ * Sets a given field to be and autosuggest field. The suggestions from the autosuggest field can change other fields values.
+ *
+ * uischema = {"ui:options": {
+ *  autosuggestField: <string> (field name which is used for api call. The suggestions renderer method is also defined by autosuggestField)
+ *  suggestionInputField: <fieldName> (the field which uses autosuggest input)
+ *  suggestionReceivers: {
+ *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
+ *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
+ *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "payload.informalgroups.0}
+ *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
+ * }
+ */
 export default class AutosuggestField extends Component {
 
 	constructor(props) {
@@ -94,6 +107,9 @@ export default class AutosuggestField extends Component {
 	}
 }
 
+/**
+ * Used by AutosuggestField. Should never be used directly. This should really be a widget, but it is impossible to pass options to widgets so we use a field.
+ */
 export class AutosuggestInputField extends Component {
 	static defaultProps = {
 		type: "text",

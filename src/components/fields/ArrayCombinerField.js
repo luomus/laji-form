@@ -6,7 +6,7 @@ import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 /**
  * Transforms an object schema containing arrays to an array schema containing objects.
  *
- * uiSchema = {"ui:options": {
+ * uischema = {"ui:options": {
  *  uiSchema: <uiSchema> (uiSchema which is passed to array items)
  * }
  */
