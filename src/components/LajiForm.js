@@ -12,7 +12,7 @@ import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
 import {AutosuggestInputField} from "./fields/AutosuggestField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
-import ApiClient from "../apiClient";
+import ApiClient from "../ApiClient";
 
 const log = (type) => console.log.bind(console, type);
 
@@ -20,7 +20,7 @@ export default class LajiForm extends Component {
 
 	constructor(props) {
 		super(props);
-		this.apiClient = new ApiClient(props.apiUrl, props.apiAccessToken, props.apiUserToken);
+		this.apiClient = new ApiClient(props.apiClient);
 	}
 
 	render() {
@@ -42,7 +42,7 @@ export default class LajiForm extends Component {
 					autosuggestInput: AutosuggestInputField
 				}}
 				widgets={{
-				dateTime: DateTimeWidget
+					dateTime: DateTimeWidget
 				}}
 				onError={log("errors")} />
 		)

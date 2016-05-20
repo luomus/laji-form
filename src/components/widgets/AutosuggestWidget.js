@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
-import ApiClient from "../../apiClient";
+import ApiClient from "../../ApiClient";
 
 export default class AutosuggestWidget extends Component {
 	static defaultProps = {

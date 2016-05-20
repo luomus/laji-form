@@ -3,6 +3,7 @@ import { render } from "react-dom"
 import LajiForm from "../src/components/LajiForm";
 import schemas from "./schemas.json";
 import properties from "../properties.json";
+import ApiClientImplementation from "./ApiClientImplementation";
 
 import "../src/styles";
 
@@ -13,9 +14,7 @@ class LajiFormApp extends Component {
 			...schemas,
 			formData: undefined,
 			onChange: this.onChange,
-			apiUrl: "http://apitest.laji.fi/v0",
-			apiAccessToken: properties.accessToken,
-			apiUserToken: properties.userToken
+			apiClient: new ApiClientImplementation("http://apitest.laji.fi/v0", properties.accessToken, properties.userToken)
 		}
 	}
 	

@@ -22,6 +22,24 @@ import LajiForm from "laji-form";
 render(<LajiForm schema={...} uiSchema={...} formData={...} />, document.getElementById("app"));
 ```
 
+## API Client ##
+
+In addition to properties you would pass to <Form />, you must pass an api client implementation, if you need to use fields that use lajitest.api.fi. The api client implementation must have fetch() -method, which **returns a Promise**.
+
+Fetch parameters are as follows:
+* **path:** base URL for GET. Exa
+* **query:** Object, where keys are param names and values are param values.
+* **onSuccess:** Callback function for successful GET.
+* **onError:** Callback function for failed GET.
+
+See the example implementation in [src/playground/ApiClientImplementation.js](https://bitbucket.org/luomus/laji-form.js/src/HEAD/playground/ApiClientImplementation.js).
+
+Pass the implementation to LajiForm like so:
+
+```
+<LajiForm apiClient={new ApiClientImplementation()} ... />
+```
+
 Styles must be imported separately. The styles are in ```lib/```:
 ```
 import "laji-form/lib/styles";

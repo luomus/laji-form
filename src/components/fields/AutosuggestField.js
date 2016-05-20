@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import Autosuggest from "react-autosuggest";
-import ApiClient from "../../apiClient";
+import ApiClient from "../../ApiClient";
 
 const autosuggestFieldSettings = {
 	taxon: {
