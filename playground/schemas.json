@@ -468,7 +468,7 @@
 				{
 					"dateBegin": "2016-05-11T11:08:54.044Z",
 					"dateEnd": "",
-					"leg": ["a", "b", "c"],
+					"leg": ["MA.3", "b", "c"],
 					"legPublic": false,
 					"kartta": "",
 					"units": [{}],
