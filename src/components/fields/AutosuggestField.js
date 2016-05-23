@@ -130,8 +130,8 @@ export class AutosuggestInputField extends Component {
 	}
 
 	componentDidMount() {
-		this.setState({isLoading: true});
-		if (this.state.inputValue !== undefined && this.state.inputValue !== "" && this.state.autosuggestSettings.convertInputValue)
+		if (this.state.inputValue !== undefined && this.state.inputValue !== "" && this.state.autosuggestSettings.convertInputValue) {
+			this.setState({isLoading: true});
 			this.state.autosuggestSettings.convertInputValue(this.state.inputValue, this.apiClient)
 				.then( inputValue => {
 					this.setState({inputValue: inputValue, isLoading: false});
@@ -139,6 +139,7 @@ export class AutosuggestInputField extends Component {
 				.catch( () => {
 					this.setState({isLoading: false});
 				})
+		}
 	}
 
 	componentWillReceiveProps(props) {
@@ -210,6 +211,15 @@ export class AutosuggestInputField extends Component {
 			onChange: (e, {newValue}) => {this.onChange(newValue)},
 			readOnly: readonly};
 
+		let cssClasses = {
+					input: "form-control",
+					suggestionsContainer: "list-group autosuggest-container",
+					suggestion: "list-group-item",
+					suggestionFocused: "list-group-item active"
+				}
+		
+		if (this.state.isLoading) cssClasses.container = "autosuggest-loading";
+		
 		return (
 			<Autosuggest
 				inputProps={inputProps}
@@ -218,6 +228,7 @@ export class AutosuggestInputField extends Component {
 				renderSuggestion={this.renderSuggestion}
 				onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
 				onSuggestionSelected={this.onSuggestionSelected}
+				theme={cssClasses}
 			/>
 		);
 	}

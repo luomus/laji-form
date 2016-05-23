@@ -3,8 +3,6 @@ import update from "react-addons-update";
 import merge from "deepmerge";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
-import AdditionalsExpanderField from "./AdditionalsExpanderField";
-import Button from "../Button";
 
 /**
  * Field with fields, which are shown according to recursive scope.
