@@ -19,6 +19,11 @@ const autosuggestFieldSettings = {
 		includePayload: false,
 		render: suggestion => {
 			return suggestion.value;
+		},
+		convertInputValue: (inputValue, apiClient) => {
+			return apiClient.fetch("/person/by-id/" + inputValue).then((response) => {
+				return response.inheritedName + ", " + response.preferredName;
+			})
 		}
 	}
 }
@@ -124,6 +129,18 @@ export class AutosuggestInputField extends Component {
 		this.apiClient = new ApiClient();
 	}
 
+	componentDidMount() {
+		this.setState({isLoading: true});
+		if (this.state.inputValue !== undefined && this.state.inputValue !== "" && this.state.autosuggestSettings.convertInputValue)
+			this.state.autosuggestSettings.convertInputValue(this.state.inputValue, this.apiClient)
+				.then( inputValue => {
+					this.setState({inputValue: inputValue, isLoading: false});
+				})
+				.catch( () => {
+					this.setState({isLoading: false});
+				})
+	}
+
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props))
 	}
@@ -185,7 +202,7 @@ export class AutosuggestInputField extends Component {
 	}
 
 	render() {
-		let {readonly, formData} = this.props;
+		let {readonly} = this.props;
 		let {suggestions, inputValue} = this.state;
 
 		const inputProps = {...this.props,
