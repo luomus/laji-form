@@ -44,7 +44,7 @@
 						"uiSchema": {
 							"ui:field": "nested",
 							"ui:options": {
-								"legInnerWrapper": {
+								"": {
 									"fields": ["leg", "editors"],
 									"uiSchema": {
 										"ui:field": "dependentBoolean",
@@ -97,8 +97,7 @@
 							"biotypeSuoKorpi",
 							"biotypeSuoRäme",
 							"biotypeSuoNeva",
-							"biotypeTest",
-							"biotypeTestShownAlways"
+							"biotypeTest"
 						],
 						"uiSchema": {
 							"ui:field": "scoped",
@@ -432,10 +431,6 @@
 						"biotypeTest": {
 							"type": "string",
 							"title": "Testibiotyyppikenttä"
-						},
-						"biotypeTestShownAlways": {
-							"type": "string",
-							"title": "näkyykö"
 						},
 						"image": {
 							"type": "string",

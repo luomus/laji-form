@@ -136,9 +136,12 @@ export class AutosuggestWidget extends Component {
 		delete uiSchema["ui:field"];
 		return {uiSchema};
 	}
-	onChange = (suggestion) => {
+	onChange = (formData) => {
 		let suggestionValPath = this.props.uiSchema["ui:options"].suggestionReceive;
-		let value = suggestionValPath.split('.').reduce((o,i)=>o[i], suggestion);
+		
+		let value = (typeof formData === "object") ? 
+			suggestionValPath.split('.').reduce((o,i)=>o[i], formData) :
+			formData;
 		this.props.onChange(value)
 	}
 
