@@ -265,6 +265,7 @@ export class AutosuggestInputField extends Component {
 		
 		return (
 			<Autosuggest
+				id={this.props.idSchema.id}
 				inputProps={inputProps}
 				suggestions={suggestions}
 				getSuggestionValue={this.getSuggestionValue}
