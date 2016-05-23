@@ -56,19 +56,16 @@
 												"ui:options": {
 													"uiSchema": {
 														"items": {
-															"ui:field": "autosuggest",
-															"ui:options": {
-																"autosuggestField": "friends",
-																"suggestionInputField": "leg",
-																"suggestionReceivers": {
-																	"leg": "key"
-																},
-																"allowNonsuggestedValue": true,
-																"uiSchema": {
-																	"ui:field": "table"
-																}
-															}
-														}
+															"leg": {
+                                "ui:field": "autosuggestWidget",
+                                "ui:options": {
+                                  "autosuggestField": "friends",
+                                  "allowNonsuggestedValue": true,
+																	"suggestionReceive": "key"
+                                }
+                              }
+														},
+														"ui:field": "table"
 													}
 												}
 											}

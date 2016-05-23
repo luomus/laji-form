@@ -10,7 +10,7 @@ import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
-import {AutosuggestInputField} from "./fields/AutosuggestField";
+import {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import ApiClient from "../ApiClient";
 
@@ -39,7 +39,8 @@ export default class LajiForm extends Component {
 					dependentBoolean: DependentBooleanField,
 					mapArray: MapArrayField,
 					autosuggest: AutosuggestField,
-					autosuggestInput: AutosuggestInputField
+					autosuggestInput: AutosuggestInputField,
+					autosuggestWidget: AutosuggestWidget
 				}}
 				widgets={{
 					dateTime: DateTimeWidget

@@ -112,8 +112,48 @@ export default class AutosuggestField extends Component {
 	}
 }
 
+
 /**
- * Used by AutosuggestField. Should never be used directly. This should really be a widget, but it is impossible to pass options to widgets so we use a field.
+ * Can be used as a widget. This is a field, because it's impossible to pass parameters to a Widget.
+ *
+ * uischema = {"ui:options": {
+ *  autosuggestField: <string> (field name which is used for api call. The suggestions renderer method is also defined by autosuggestField)
+ *  suggestionInputField: <fieldName> (the field which uses autosuggest input)
+ *  suggestionReceiver: <suggestion path> (See explanation for suggestion path at the description of AutosuggestField)
+ * }}
+ */
+export class AutosuggestWidget extends Component {
+	constructor(props) {
+		super(props);
+		this.state = this.getStateFromProps(props);
+	}
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+	getStateFromProps(props) {
+		let {uiSchema} = this.props;
+		uiSchema = update(uiSchema, {$merge: {"ui:field": "autosuggestInput"}});
+		delete uiSchema["ui:field"];
+		return {uiSchema};
+	}
+	onChange = (suggestion) => {
+		let suggestionValPath = this.props.uiSchema["ui:options"].suggestionReceive;
+		let value = suggestionValPath.split('.').reduce((o,i)=>o[i], suggestion);
+		this.props.onChange(value)
+	}
+
+	render() {
+		return (<AutosuggestInputField
+			{...this.props}
+			{...this.state}
+			onChange={this.onChange}
+		/>);
+	}
+}
+
+/**
+ * Metafield used by AutosuggestField and AutosuggestWidget. Should never be used directly. Use AutosuggestWidget instead. 
+ * This should really be a widget, but it is impossible to pass options to widgets so we use a field.
  */
 export class AutosuggestInputField extends Component {
 	static defaultProps = {
