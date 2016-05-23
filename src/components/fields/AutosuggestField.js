@@ -131,7 +131,7 @@ export class AutosuggestWidget extends Component {
 		this.setState(this.getStateFromProps(props));
 	}
 	getStateFromProps(props) {
-		let {uiSchema} = this.props;
+		let {uiSchema} = props;
 		uiSchema = update(uiSchema, {$merge: {"ui:field": "autosuggestInput"}});
 		delete uiSchema["ui:field"];
 		return {uiSchema};
