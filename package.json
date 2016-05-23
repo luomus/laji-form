@@ -2,13 +2,13 @@
   "name": "laji-form",
   "version": "0.0.0",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
-  "main": "src/app.js",
+  "main": "dist/laji-form.js",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4003",
     "build:dist": "rm -rf dist && webpack --config webpack.config.dist.js",
     "build:lib": "rm -rf lib && babel -d lib/ src/",
-    "build": "npm run build:dist && npm run build:lib"
+    "install": "npm run build:dist && npm run build:lib"
   },
   "keywords": [
     "react-jsonschema-form",
