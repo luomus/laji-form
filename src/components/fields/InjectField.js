@@ -98,12 +98,13 @@ export default class InjectField extends Component {
 			let originalStringified = JSON.stringify(this.props.formData[fieldName]);
 			if (formData && formData[target] && Array.isArray(formData[target])) {
 				for (var i in formData[target]) {
-					let item = update(formData[target][i], {});
+					let item = JSON.parse(JSON.stringify(formData[target][i]));
 					if (JSON.stringify(item[fieldName]) !== originalStringified) {
 						formData = update(formData, {[fieldName]: {$set: item[fieldName]}});
 						formDataChanged = true;
 					}
 					delete item[fieldName];
+					formData = update(formData, {[target]: {[i]: {$set: item}}});
 				}
 			} else if (formData && formData[target] && formData[target][fieldName]) {
 				formData = update(formData, {[fieldName]: {$set: formData[target][fieldName]}});
@@ -120,7 +121,7 @@ export default class InjectField extends Component {
 
 		function formatToOriginal(props) {
 			fields.forEach((fieldName) => {
-				formData[fieldName] = props.formData[fieldName];
+				formData = update(formData, {$merge: {[fieldName]: props.formData[fieldName]}});
 			});
 		}
 	}
