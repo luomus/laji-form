@@ -6,9 +6,9 @@
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4003",
-    "build:dist": "rm -rf dist && webpack --config webpack.config.dist.js",
-    "build:lib": "rm -rf lib && babel -d lib/ src/",
-    "install": "npm run build:dist && npm run build:lib"
+    "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js",
+    "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/",
+    "dist": "npm run build:dist && npm run build:lib"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -55,6 +55,7 @@
     "less-loader": "^2.2.3",
     "css-loader": "^0.23.1",
 	  "es6-promise": "^3.2.1",
-	  "isomorphic-fetch": "^2.2.1"
+	  "isomorphic-fetch": "^2.2.1",
+    "rimraf": "^2.4.4"
   }
 }
