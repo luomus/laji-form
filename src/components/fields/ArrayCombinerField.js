@@ -28,8 +28,10 @@ export default class ArrayCombinerField extends Component {
 		let schema = {type: "array", items: {type: "object", properties: {}}};
 		if (props.schema.hasOwnProperty("title")) schema.title = props.schema.title;
 		Object.keys(props.schema.properties).forEach((propertyName) => {
-			let property = props.schema.properties[propertyName].items;
+			let propertyOrigin = props.schema.properties[propertyName];
+			let property = propertyOrigin.items;
 			if (property.type === "object" || property.type === "array") throw "items properties can't be objects or arrays";
+			if (propertyOrigin.title) property.title = propertyOrigin.title;
 			schema.items.properties[propertyName] = property;
 		});
 
