@@ -154,7 +154,7 @@ class MapComponent extends Component {
 	}
 
 	onActiveChanged = (id) => {
-		if (this.state.items.length > 0  && this.state.items.map((item) => {return item.id}).indexOf(id) < 0) return;
+		if (this.state.items.length > 0  && this.state.items.map( item => {return item.id}).indexOf(id) < 0) return;
 		this.setState({activeId: id});
 		this.props.onActiveChanged(id);
 	}
@@ -166,10 +166,10 @@ class MapComponent extends Component {
 
 			let activeId;
 			if (item.id === this.state.activeId) {
-				let ids = items.map((item)=> {return item.id});
+				let ids = items.map( item => {return item.id});
 				let activeIdIdx = ids.indexOf(this.state.activeId);
 				if (items.length > 1) {
-					activeId = (activeIdIdx === 0) ? ids[0] : ids[activeIdIdx - 1];
+					activeId = (activeIdIdx === 0) ? ids[1] : ids[activeIdIdx - 1];
 				}
 			}
 
