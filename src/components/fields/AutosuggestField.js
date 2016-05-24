@@ -238,9 +238,16 @@ export class AutosuggestInputField extends Component {
 		}
 	}
 
+	onBlur = () => {
+		if (!this.state.options.allowNonsuggestedValue) {
+			this.onChange(this.props.formData)
+		}
+	}
+
 	// Unfortunately SchemaFields/Widgets don't pass extra props,
 	// so we must use the existing onChange prop for delivering the changes.
 	onSuggestionSelected = (e, {suggestion}) => {
+		e.preventDefault();
 		this.setState({inputValue: suggestion.value});
 		this.props.onChange(suggestion);
 	}
@@ -252,6 +259,7 @@ export class AutosuggestInputField extends Component {
 		const inputProps = {...this.props,
 			value: (inputValue !== undefined) ? inputValue : "",
 			onChange: (e, {newValue}) => {this.onChange(newValue)},
+			onBlur: this.onBlur,
 			readOnly: readonly};
 
 		let cssClasses = {
