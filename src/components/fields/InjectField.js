@@ -17,7 +17,7 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 export default class InjectField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = this.getStateFromProps(props);
+		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -79,8 +79,7 @@ export default class InjectField extends Component {
 		uiSchema = update(uiSchema, {});
 		delete uiSchema["ui:field"];
 		delete uiSchema["ui:options"];
-
-		return {schema, uiSchema, idSchema, formData, errorSchema, onChange: this.onChange};
+		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
 
 	onChange = (formData) => {
@@ -95,11 +94,11 @@ export default class InjectField extends Component {
 		}
 
 		let formDataChanged = false;
-		fields.forEach((fieldName) => {
+		fields.forEach( fieldName => {
 			let originalStringified = JSON.stringify(this.props.formData[fieldName]);
 			if (formData && formData[target] && Array.isArray(formData[target])) {
 				for (var i in formData[target]) {
-					let item = formData[target][i];
+					let item = update(formData[target][i], {});
 					if (JSON.stringify(item[fieldName]) !== originalStringified) {
 						formData = update(formData, {[fieldName]: {$set: item[fieldName]}});
 						formDataChanged = true;

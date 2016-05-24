@@ -171,7 +171,6 @@ class MapComponent extends Component {
 				if (items.length > 1) {
 					activeId = (activeIdIdx === 0) ? ids[0] : ids[activeIdIdx - 1];
 				}
-				console.log(activeId)
 			}
 
 			items.splice(i, 1);

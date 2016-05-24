@@ -219,7 +219,7 @@ export class AutosuggestInputField extends Component {
 				})
 				.catch( error => {
 					if (this.promiseTimestamp === timestamp) {
-						this.setState({isLoading: false})
+						this.setState({isLoading: false});
 						this.promiseTimestamp = undefined;
 					}
 				});
@@ -263,11 +263,11 @@ export class AutosuggestInputField extends Component {
 			readOnly: readonly};
 
 		let cssClasses = {
-					input: "form-control",
-					suggestionsContainer: "list-group autosuggest-container",
-					suggestion: "list-group-item",
-					suggestionFocused: "list-group-item active"
-				}
+			input: "form-control",
+			suggestionsContainer: "list-group autosuggest-container",
+			suggestion: "list-group-item",
+			suggestionFocused: "list-group-item active"
+		}
 		
 		if (this.state.isLoading) cssClasses.container = "autosuggest-loading";
 		
