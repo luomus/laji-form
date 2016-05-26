@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
+import MapComponent from "laji-map";
 import Button from "../Button";
 
 export default class MapArrayField extends Component {
@@ -90,14 +91,27 @@ export default class MapArrayField extends Component {
 	}
 
 	render() {
+		const style = {
+			map: {
+				width: '800px',
+				height: '600px',
+			}
+		}
+
+		const data = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[24.94117255463528,60.17994558364109],[24.94743538755845,60.17436615002091]]}}]}'
+		function handleChange (e) {
+			console.log(e.type, JSON.stringify(e.data));
+		}
+
 		return (<div>
-			<MapComponent
-				ref={"map"}
-				data={this.state.mapItems}
-				onAdd={this.onAdd}
-			  onRemove={this.onRemove}
-				onActiveChanged={this.onActiveChanged}
-			/>
+			<div style={style.map}>
+				<MapComponent
+					data={JSON.parse(data)}
+					longitude={60.4353462}
+					latitude={22.2285623}
+					zoom={6}
+					onChange={handleChange} />
+			</div>
 			<Button disabled={this.state.activeId === undefined || this.state.idsToIdxs[this.state.activeId] === 0}
 			        onClick={this.onActivatePrev}>Edellinen</Button>
 			<Button disabled={this.state.activeId === undefined || (this.props.formData && this.state.idsToIdxs[this.state.activeId] === this.props.formData.length - 1)}
@@ -115,68 +129,5 @@ export default class MapArrayField extends Component {
 
 		if (formData) return <SchemaField {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} />;
 		return null
-	}
-}
-
-class MapComponent extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {count: this.props.data ? this.props.data.length : 0, items: this.props.data || [], activeId: this.props.data ? 0 : undefined};
-	}
-
-	render() {
-		return (<div style={{backgroundColor: "green", color: "white"}}>
-			STUBB MAP
-			<Button onClick={this.onAddClick}>lisää kuvio</Button>
-			<br/>
-
-			{this.state.items.map((item, idx) => {
-				let id = item.id;
-				return <div key={id + "-bg"} style={{backgroundColor: (this.state.activeId === id) ? "darkgreen" : "initial"}}>{[<Button key={id} onClick={this.onActivatedClick(id)}>Aktivoi {id + 1}.</Button>,
-				<Button key={id + "-remove"} onClick={this.onRemoveClick(idx)}>Poista {id + 1}.</Button>, <br key={id + "-br"}/>]}</div>
-			})}
-		</div>)
-	}
-
-	onAddClick = () => {
-		let id = this.state.count;
-		let items = this.state.items;
-		items.push({id});
-		this.setState({count: this.state.count + 1, items: items});
-		this.props.onAdd(id);
-		this.onActiveChanged(id);
-	}
-
-	onActivatedClick = (id) => {
-		return () => {
-			this.onActiveChanged(id);
-		}
-	}
-
-	onActiveChanged = (id) => {
-		if (this.state.items.length > 0  && this.state.items.map( item => {return item.id}).indexOf(id) < 0) return;
-		this.setState({activeId: id});
-		this.props.onActiveChanged(id);
-	}
-
-	onRemoveClick = (i) => {
-		return () => {
-			let items = this.state.items;
-			let item = items[i];
-
-			let activeId;
-			if (item.id === this.state.activeId) {
-				let ids = items.map( item => {return item.id});
-				let activeIdIdx = ids.indexOf(this.state.activeId);
-				if (items.length > 1) {
-					activeId = (activeIdIdx === 0) ? ids[1] : ids[activeIdIdx - 1];
-				}
-			}
-
-			items.splice(i, 1);
-			this.setState({items});
-			this.props.onRemove(item.id);
-			this.onActiveChanged(activeId);
-		}
 	}
 }
