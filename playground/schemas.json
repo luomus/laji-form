@@ -14,7 +14,7 @@
 		"gatherings": {
 			"ui:field": "mapArray",
 			"items": {
-				"ui:order": ["legWrapper", "eventTime", "units", "localityWrapper", "imagesWrapper"],
+				"ui:order": ["wgs84Geometry", "legWrapper", "eventTime", "units", "localityWrapper", "imagesWrapper"],
 				"ui:field": "nested",
 				"ui:options": {
 					"eventTime": {
@@ -439,6 +439,20 @@
 						"rights": {
 							"type": "string",
 							"title": "Kuivien käyttöoikeus [pakollinen]"
+						},
+						"wgs84Geometry": {
+							"type": "object",
+							"properties": {
+								"type": {
+									"type": "string"
+								},
+								"coordinates": {
+									"type": "array",
+									"items": {
+										"type": "number"
+									}
+								}
+							}
 						}
 					},
 					"required": [
@@ -456,33 +470,71 @@
 		}
 	},
 	"formData": {
-			"gatherings": [
-				{
-					"dateBegin": "2016-05-11T11:08:54.044Z",
-					"dateEnd": "",
-					"leg": ["MA.3", "b", "c"],
-					"legPublic": false,
-					"kartta": "",
-					"units": [{}],
-					"locality": "",
-					"localityDescription": "",
-					"habitatDescription": "",
-					"biotype": "",
-					"biotypeSuo": "",
-					"biotypeForest": "",
-					"biotypeForestKuusi": false,
-					"biotypeForestMänty": false,
-					"biotypeForestMänty2": false,
-					"biotypeForestLehto": false,
-					"biotypeSuoKorpi": "",
-					"biotypeSuoRäme": 0,
-					"biotypeSuoNeva": false,
-					"image": "",
-					"rights": ""
+		"gatherings": [
+			{
+				"dateBegin": "2016-05-11T11:08:54.044Z",
+				"dateEnd": "",
+				"leg": ["MA.3", "b", "c"],
+				"legPublic": false,
+				"kartta": "",
+				"units": [],
+				"locality": "",
+				"localityDescription": "",
+				"habitatDescription": "",
+				"biotype": "",
+				"biotypeSuo": "",
+				"biotypeForest": "",
+				"biotypeForestKuusi": false,
+				"biotypeForestMänty": false,
+				"biotypeForestMänty2": false,
+				"biotypeForestLehto": false,
+				"biotypeSuoKorpi": "",
+				"biotypeSuoRäme": 0,
+				"biotypeSuoNeva": false,
+				"image": "",
+				"rights": "",
+				"wgs84Geometry": {
+					"type": "Point",
+					"coordinates": [
+						24.92990638910176,
+						60.17085995166927
+					]
 				}
-			],
-			"temp": false,
-			"ready": false,
-			"editors": ["a", "c", "d"]
-		}
+			},
+			{
+				"dateBegin": "2016-05-20T11:08:54.044Z",
+				"dateEnd": "",
+				"leg": ["MA.3"],
+				"legPublic": true,
+				"kartta": "",
+				"units": [],
+				"locality": "",
+				"localityDescription": "",
+				"habitatDescription": "",
+				"biotype": "",
+				"biotypeSuo": "",
+				"biotypeForest": "",
+				"biotypeForestKuusi": false,
+				"biotypeForestMänty": false,
+				"biotypeForestMänty2": false,
+				"biotypeForestLehto": false,
+				"biotypeSuoKorpi": "",
+				"biotypeSuoRäme": 0,
+				"biotypeSuoNeva": false,
+				"image": "",
+				"rights": "",
+				"wgs84Geometry": {
+					"type": "Point",
+					"coordinates": [
+						24.934855632550473,
+						60.171278498063046
+					]
+				}
+
+			}
+		],
+		"temp": false,
+		"ready": false,
+		"editors": ["MA.3", "c", "d"]
+	}
 }

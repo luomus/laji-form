@@ -8,20 +8,16 @@ import Button from "../Button";
 export default class MapArrayField extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {activeId: undefined, idsToIdxs: {}, ...this.getStateFromProps(props)};
 
-		let mapItems = [];
-		let idsToIdxs = {};
-		if (props.formData) props.formData.forEach((item, i) => {
-			mapItems.push({id: i});
-			idsToIdxs[i] = i;
-		})
-		this.state = {
-			activeId: (props.formData && props.formData && Array.isArray(props.formData)) ? 0 : undefined,
-			mapItems,
-			idsToIdxs
-		};
-		this.state = {...this.state, ...this.getStateFromProps(props)};
+		let initialData = [];
+		if (this.props.formData) this.props.formData.forEach((item) => {
+			initialData.push({type: "Feature", properties: {}, geometry: item.wgs84Geometry});
+		});
+		this.initialData = initialData;
 	}
+
+
 
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
@@ -32,62 +28,171 @@ export default class MapArrayField extends Component {
 		let {uiSchema, schema} = props;
 
 		schema = schema.items;
+		delete schema.properties.wgs84Geometry;
+
 		uiSchema = uiSchema.items;
-		return {...props, schema, uiSchema, onChange: this.onChange};
+		let order = uiSchema["ui:order"];
+		if (order) {
+			uiSchema = update(uiSchema, {"ui:order": {$splice: [[order.indexOf("wgs84Geometry"), 1]]}})
+		}
+
+		return {...props, schema, uiSchema, onChange: this.onItemChange};
 	}
 
-	onAdd = (id) => {
+	componentDidMount() {
+		['deletestart', 'editstart'].forEach(start => this.refs.map.map.on('draw:' + start, e => {
+			this.preventActivatingByClick = true;
+		}));
+		['deletestop', 'editstop'].forEach(stop => this.refs.map.map.on('draw:' + stop, e => {
+			this.preventActivatingByClick = false;
+		}));
+	}
+
+	getInitialIds = ids => {
+		let idsToIdxs = {};
+		for (let i = 0; i < ids.length; i++) {
+			idsToIdxs[ids[i]]  = i;
+		}
+		this.setState({
+			activeId: parseInt(Object.keys(idsToIdxs)[0]),
+			idsToIdxs
+		});
+	}
+
+	onAdd = (e) => {
+		let id = e.id;
 		let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
+		item.wgs84Geometry = e.data.geometry;
 		let formData = this.props.formData;
 		if (formData && formData.length) formData.push(item);
 		else formData = [item];
 		this.props.onChange(formData, {validate: false});
 
-		let idMap = this.state.idsToIdxs;
-		let arrayIdx = formData.length - 1;
-		idMap[id] = arrayIdx;
-		this.setState({idsToIdxs: idMap});
-	}
-
-	onRemove = (id) => {
 		let idsToIdxs = this.state.idsToIdxs;
-		let idx = idsToIdxs[id];
-		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}));
+		let arrayIdx = formData.length - 1;
+		idsToIdxs[id] = arrayIdx;
 
-		let ids = Object.keys(idsToIdxs).map((i) => {return parseInt(i)});
-		let state = {};
+		this.setState({idsToIdxs});
+		this.setActive(id);
+	}
 
-		for (let idKey = ids.indexOf(id) + 1; idKey < ids.length; idKey++) {
-			let id = ids[idKey];
-			idsToIdxs[id] = idsToIdxs[id] - 1;
+	onRemove = (e) => {
+		let splices = [];
+		let idsToIdxs = JSON.parse(JSON.stringify(this.state.idsToIdxs));
+		let ids = Object.keys(idsToIdxs).map(i => {return parseInt(i)});
+		e.ids.forEach((id) => {
+			let idx = idsToIdxs[id];
+			splices.push([idx, 1]);
+
+			for (let idKey = ids.indexOf(id) + 1; idKey < ids.length; idKey++) {
+				let id = ids[idKey];
+				idsToIdxs[id] = idsToIdxs[id] - 1;
+			}
+			delete idsToIdxs[id];
+		});
+		this.props.onChange(update(this.props.formData, {$splice: splices}));
+
+		let activeId = this.state.activeId;
+		if (e.ids.indexOf(activeId) >= 0) {
+			let activeIdIdx = this.state.idsToIdxs[activeId];
+			let ids = Object.keys(idsToIdxs).map(i => {return parseInt(i)});
+			if (ids.length === 0) {
+				activeId = undefined;
+			}
+			if (activeIdIdx === 0) {
+				activeId = ids[0];
+			} else {
+				let origIds = Object.keys(this.state.idsToIdxs).map(i => {return parseInt(i)});
+
+				function findByI(i) {
+					let id = origIds[i];
+					if (ids.indexOf(id) >= 0) {
+						activeId = id;
+						return true;
+					}
+				}
+				for (let i = origIds.indexOf(activeId); i >= 0; i--) {
+					if (findByI(i)) break;
+				}
+				for (let i = origIds.indexOf(activeId); i < origIds.length; i++) {
+					if (findByI(i)) break;
+				}
+			}
+			this.setState({idsToIdxs});
+			this.setActive(activeId)
 		}
-		delete idsToIdxs[id];
-
-		state.idsToIdxs = idsToIdxs;
-
-		this.setState(state)
 	}
 
-	onActiveChanged = (id) => {
+	onEdited = (e) => {
+		let formData = this.props.formData;
+		Object.keys(e.data).forEach( id => {
+			let geoJSON = e.data[id];
+			let idx = this.state.idsToIdxs[id];
+			formData[idx].wgs84Geometry = geoJSON.geometry;
+		});
+		this.props.onChange(formData);
+	}
+
+	setActive = id => {
 		this.setState({activeId: id});
+		this.setViewTo(id);
 	}
 
-	setActive = (id) => {
-		this.refs.map.onActiveChanged(id);
+	setViewTo = id => {
+		if (id === undefined) return;
+
+		let layer = this.refs.map.drawnItems._layers[id];
+
+		if (!layer) return;
+
+		let map = this.refs.map.map;
+
+		if (layer.getLatLng) {
+			map.setView(layer.getLatLng())
+		} else if (layer.getBounds) {
+			map.fitBounds(layer.getBounds());
+		}
 	}
 
 	onActivatePrev = () => {
-		let ids = Object.keys(this.state.idsToIdxs).map((i) => {return parseInt(i)});;
-		this.setActive(ids[ids.indexOf(this.state.activeId) - 1])
+		let ids = Object.keys(this.state.idsToIdxs).map( i => {return parseInt(i)});
+		let idx = ids.indexOf(this.state.activeId) - 1;
+		if (idx == -1) idx = ids.length - 1;
+		this.setActive(ids[idx])
 	}
 
 	onActivateNext = () => {
-		let ids = Object.keys(this.state.idsToIdxs).map((i) => {return parseInt(i)});;
-		this.setActive(ids[ids.indexOf(this.state.activeId) + 1])
+		let ids = Object.keys(this.state.idsToIdxs).map( i => {return parseInt(i)});
+		let idx = ids.indexOf(this.state.activeId) + 1;
+		if (idx >= ids.length) idx = 0;
+		this.setActive(ids[idx])
 	}
 
-	onChange = (formData) => {
+	onItemChange = (formData) => {
 		this.props.onChange(update(this.props.formData, {$splice: [[this.state.idsToIdxs[this.state.activeId], 1, formData]]}));
+	}
+
+	onMapChange = (e) => {
+		switch (e.type) {
+			case "create":
+				this.onAdd(e);
+				break;
+			case "delete":
+				this.onRemove(e);
+				break;
+			case "edit":
+				this.onEdited(e);
+				break;
+			case "active":
+				this.setActive(e)
+				break;
+		}
+	}
+
+	onFeatureClick = id => {
+		if (!this.preventActivatingByClick) {
+			this.setActive(id);
+		}
 	}
 
 	render() {
@@ -98,24 +203,20 @@ export default class MapArrayField extends Component {
 			}
 		}
 
-		const data = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[24.94117255463528,60.17994558364109],[24.94743538755845,60.17436615002091]]}}]}'
-		function handleChange (e) {
-			console.log(e.type, JSON.stringify(e.data));
-		}
-
 		return (<div>
 			<div style={style.map}>
 				<MapComponent
-					data={JSON.parse(data)}
-					longitude={60.4353462}
-					latitude={22.2285623}
-					zoom={6}
-					onChange={handleChange} />
+					ref={"map"}
+					data={this.initialData}
+					longitude={60.171372}
+					latitude={24.931275}
+					zoom={13}
+					getInitialIds={this.getInitialIds}
+					onChange={this.onMapChange}
+					onFeatureClick={this.onFeatureClick}/>
 			</div>
-			<Button disabled={this.state.activeId === undefined || this.state.idsToIdxs[this.state.activeId] === 0}
-			        onClick={this.onActivatePrev}>Edellinen</Button>
-			<Button disabled={this.state.activeId === undefined || (this.props.formData && this.state.idsToIdxs[this.state.activeId] === this.props.formData.length - 1)}
-			        onClick={this.onActivateNext}>Seuraava</Button>
+			<Button onClick={this.onActivatePrev}>Edellinen</Button>
+			<Button onClick={this.onActivateNext}>Seuraava</Button>
 			{this.renderSchemaField()}
 		</div>)
 	}
@@ -127,7 +228,7 @@ export default class MapArrayField extends Component {
 		let itemFormData = formData && formData.length ? formData[idx] : undefined;
 		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + idx, this.props.registry.definitions);
 
-		if (formData) return <SchemaField {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} />;
+		if (formData && formData.length > 0) return <SchemaField {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} />;
 		return null
 	}
 }
