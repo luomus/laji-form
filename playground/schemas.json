@@ -441,18 +441,7 @@
 							"title": "Kuivien käyttöoikeus [pakollinen]"
 						},
 						"wgs84Geometry": {
-							"type": "object",
-							"properties": {
-								"type": {
-									"type": "string"
-								},
-								"coordinates": {
-									"type": "array",
-									"items": {
-										"type": "number"
-									}
-								}
-							}
+							"type": "object"
 						}
 					},
 					"required": [
@@ -530,7 +519,6 @@
 						60.171278498063046
 					]
 				}
-
 			}
 		],
 		"temp": false,
