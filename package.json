@@ -30,6 +30,7 @@
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "deepmerge": "*",
+    "laji-map": "git+ssh://git@bitbucket.org/luomus/laji-map.js.git",
     "moment": "*",
     "react": "*",
     "react-addons-update": "*",
@@ -51,8 +52,8 @@
     "less": "*",
     "less-loader": "*",
     "css-loader": "*",
-	  "es6-promise": "*",
-	  "isomorphic-fetch": "*",
+    "es6-promise": "*",
+    "isomorphic-fetch": "*",
     "rimraf": "*"
   }
 }
