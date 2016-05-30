@@ -198,8 +198,7 @@ export default class MapArrayField extends Component {
 	render() {
 		const style = {
 			map: {
-				width: '800px',
-				height: '600px',
+				height: '600px'
 			}
 		}
 
@@ -215,8 +214,8 @@ export default class MapArrayField extends Component {
 					onChange={this.onMapChange}
 					onFeatureClick={this.onFeatureClick}/>
 			</div>
-			<Button onClick={this.onActivatePrev}>Edellinen</Button>
-			<Button onClick={this.onActivateNext}>Seuraava</Button>
+			<Button disabled={!(this.props.formData && this.props.formData.length)} onClick={this.onActivatePrev}>Edellinen</Button>
+			<Button disabled={!(this.props.formData && this.props.formData.length)} onClick={this.onActivateNext}>Seuraava</Button>
 			{this.renderSchemaField()}
 		</div>)
 	}
