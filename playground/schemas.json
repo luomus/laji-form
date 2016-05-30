@@ -441,7 +441,8 @@
 							"title": "Kuivien käyttöoikeus [pakollinen]"
 						},
 						"wgs84Geometry": {
-							"type": "object"
+							"type": "object",
+							"properties": {}
 						}
 					},
 					"required": [
