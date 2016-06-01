@@ -11,8 +11,7 @@ import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
-import AutosuggestField from "./fields/AutosuggestField";
-import {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
+import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import ApiClient from "../ApiClient";
 
