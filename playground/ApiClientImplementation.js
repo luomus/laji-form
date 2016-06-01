@@ -1,5 +1,4 @@
 import fetch from "isomorphic-fetch";
-import promise from "es6-promise";
 import queryString from "querystring"
 import merge from 'deepmerge';
 

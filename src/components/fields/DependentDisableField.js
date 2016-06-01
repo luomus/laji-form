@@ -24,6 +24,11 @@ export default class DependentDisableField extends Component {
 		let {uiSchema} = props;
 		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
 			uiSchema["ui:options"].uiSchema : {};
+		Object.keys(props.uiSchema).forEach(key => {
+			if (key !== "ui:options") {
+				uiSchema = update(uiSchema, {$merge: {[key]: props.uiSchema[key]}})
+			}
+		})
 		
 		let options = props.uiSchema["ui:options"];
 		let disableField = options.disableField;
@@ -34,7 +39,7 @@ export default class DependentDisableField extends Component {
 			if (!uiSchema[disableField]) uiSchema = update(uiSchema, {$merge: {[disableField]: {}}});
 			uiSchema = update(uiSchema, {[disableField]: {$merge: {"ui:disabled": true}}});
 		}
-
+		
 		return {uiSchema};
 	}
 

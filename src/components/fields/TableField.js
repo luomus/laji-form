@@ -75,7 +75,6 @@ export default class TableField extends Component {
 				fieldProps.uiSchema = props.uiSchema.additionalItems;
 			}
 			
-			
 			if (fieldProps.uiSchema["ui:field"]) {
 				let field = new props.registry.fields[fieldProps.uiSchema["ui:field"]](fieldProps);
 				for (let fieldProp in fieldProps) {
