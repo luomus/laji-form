@@ -35,7 +35,8 @@ export default class DependentDisableField extends Component {
 		let definer = options.disableDefiner;
 		let regexp = new RegExp(options.regexp);
 		
-		if (!props.formData || props.formData[definer] === undefined || !props.formData[definer].match(regexp)) {
+		if (!props.formData || props.formData[definer] === undefined ||
+			(props.formData && props.formData[definer] !== undefined && !props.formData[definer].match(regexp))) {
 			if (!uiSchema[disableField]) uiSchema = update(uiSchema, {$merge: {[disableField]: {}}});
 			uiSchema = update(uiSchema, {[disableField]: {$merge: {"ui:disabled": true}}});
 		}
