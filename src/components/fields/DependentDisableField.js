@@ -3,11 +3,10 @@ import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
- * Transforms an array field to o boolean field, where each value is true/false according to another array field.
- * Each value is true, if formData[booleanDefiner] == formData[booleanField].
+ * Disables object fields value according a regexp rule.
  * uiSchema = { "ui:options": {
- *  booleanField: <array field name>,
- *  booleanDefiner: <array field name>,
+ *  disableField: <object field name>,
+ *  disableDefiner: <object field name>,
  *  uiSchema: <uiSchema> (uiSchema used for each object).
  * }}
  */
