@@ -57,13 +57,13 @@
 													"uiSchema": {
 														"items": {
 															"leg": {
-                                "ui:field": "autosuggestWidget",
-                                "ui:options": {
-                                  "autosuggestField": "friends",
+																"ui:field": "autosuggestWidget",
+																"ui:options": {
+																	"autosuggestField": "friends",
 																	"allowNonsuggestedValue": true,
-                                  "suggestionReceive": "key"
-                                }
-                              },
+																	"suggestionReceive": "key"
+																}
+															},
 															"ui:field": "dependentDisable",
 															"ui:options": {
 																"disableDefiner": "leg",
