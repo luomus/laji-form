@@ -25,7 +25,7 @@
 							"ui:options": {
 								"additionalFields": ["dateEnd"],
 								"uiSchema": {
-									"ui:field": "table",
+									"ui:field": "horizontal",
 									"dateBegin": {
 										"ui:widget": "dateTime"
 									},
@@ -60,8 +60,8 @@
                                 "ui:field": "autosuggestWidget",
                                 "ui:options": {
                                   "autosuggestField": "friends",
-                                  "allowNonsuggestedValue": true,
-																	"suggestionReceive": "key"
+																	"allowNonsuggestedValue": true,
+                                  "suggestionReceive": "key"
                                 }
                               }
 														},
@@ -78,7 +78,7 @@
 					"imagesWrapper": {
 						"fields": ["image", "rights"],
 						"uiSchema": {
-							"ui:field": "table"
+							"ui:field": "horizontal"
 						}
 					},
 					"localityWrapper": {
@@ -109,7 +109,7 @@
 										"contractorButtonText": "Näytä vähemmän",
 										"additionalFields": ["habitatDescription"],
 										"uiSchema": {
-											"ui:field": "table"
+											"ui:field": "horizontal"
 										}
 									}
 								},
@@ -190,7 +190,7 @@
 												"unitType": "payload.informalGroups.0"
 											},
 											"uiSchema": {
-												"ui:field": "table"
+												"ui:field": "horizontal"
 											}
 										}
 									}

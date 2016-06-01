@@ -19,37 +19,24 @@ export default class TableField extends Component {
 		function haveSameKeys(a, b) {
 			return Object.keys(a).length == Object.keys(b).length && Object.keys(a).every((prop) => { return Object.keys(b).includes(prop)})
 		}
+		
+		if (!props.schema.items) throw "Schema doesn't have items";
 
-		let schemaProperties;
 		let schemaRequirements = [];
-		if (props.schema.items) {
-			schemaProperties = props.schema.items;
-			let propertiesContainer = schemaProperties;
-			if (!propertiesContainer.properties) {
-				let propertiesItems = Object.keys(propertiesContainer);
-				propertiesContainer = schemaProperties[propertiesItems[0]];
-				propertiesItems.shift();
-				if (!propertiesItems.every((item) => { return haveSameKeys(item, propertiesContainer) })) {
-					throw "Schema is not tabular!";
-				}
-			}
-			schemaProperties = propertiesContainer.properties;
-			if (propertiesContainer.required) propertiesContainer.required.forEach((requirement) => {
-				schemaRequirements.push(requirement);
-			});
-			if (props.schema.additionalItems && !haveSameKeys(schemaProperties, props.schema.additionalItems.properties)) {
-				throw "Schema is not tabular!";
-			}
-		} else if (props.schema.properties) {
-			schemaProperties = props.schema.properties;
-			schemaRequirements = props.schema.required;
+		let propertiesContainer = props.schema.items;
+		let schemaProperties = propertiesContainer.properties;
+		
+		if (propertiesContainer.required) propertiesContainer.required.forEach((requirement) => {
+			schemaRequirements.push(requirement);
+		});
+		if (props.schema.additionalItems && !haveSameKeys(schemaProperties, props.schema.additionalItems.properties)) {
+			throw "Schema is not tabular!";
 		}
-		if (!schemaRequirements) schemaRequirements = [];
-		return {schemaProperties, schemaRequirements};
+		
+		return {schemaPropertiesContainer: propertiesContainer, schemaRequirements};
 	}
 
 	isRequired = (requirements, name) => {
-		const schema = this.props.schema;
 		return Array.isArray(requirements) &&
 			requirements.indexOf(name) !== -1;
 	}
@@ -57,16 +44,11 @@ export default class TableField extends Component {
 	render() {
 
 		const props = this.props;
-		const {schemaProperties, schemaRequirements} = this.state;
+		const {schemaPropertiesContainer, schemaRequirements} = this.state;
+		let schemaProperties = schemaPropertiesContainer.properties;
 
-		let formDataRoot, isArray;
-		if (props.schema.type == "array") {
-			formDataRoot = props.formData;
-			isArray = true;
-		} else {
-			formDataRoot = [props.formData];
-			isArray = false;
-		}
+		let formDataRoot = props.formData;
+		let isArray = true;
 
 		let headers = [];
 		Object.keys(schemaProperties).forEach((property, i) => {
@@ -77,43 +59,45 @@ export default class TableField extends Component {
 		rows.push(<TableRow key={0}>{headers.concat(isArray? [undefined] : [])}</TableRow>);
 
 		if (formDataRoot) formDataRoot.forEach((row, i) => {
-			let errorSchemaRoot, idSchemaRoot, formDataUpdateRoot, formDataUpdateRootPointer, uiSchemaRoot;
-			if (props.schema.type == "array") {
-				errorSchemaRoot = props.errorSchema[i];
-				idSchemaRoot = props.idSchema.id + "_" + i;
-				formDataUpdateRoot = {[i]: {}};
-				formDataUpdateRootPointer = formDataUpdateRoot[i];
-				if ((!props.schema.additionalItems && props.uiSchema.items && props.uiSchema.items) || (props.uiSchema.items && props.uiSchema.items && i <= props.schema.items.length - 1)) {
-					uiSchemaRoot = props.uiSchema.items
-				} else if (props.schema.additionalItems && props.uiSchema.additionalItems && props.uiSchema.additionalItems && i > props.schema.items.length - 1) {
-					uiSchemaRoot = props.uiSchema.additionalItems;
-				}
-			} else {
-				errorSchemaRoot = props.errorSchema;
-				idSchemaRoot = props.idSchema.id;
-				formDataUpdateRoot = {};
-				formDataUpdateRootPointer = formDataUpdateRoot;
-				uiSchemaRoot = props.uiSchema;
+			let fieldProps = {
+				schema: schemaPropertiesContainer,
+				errorSchema: props.errorSchema[i] | {},
+				idSchema: {id: props.idSchema.id + "_" + i},
+				registry: props.registry,
+				formData: row,
+				onChange: props.onChange,
+				uiSchema: {}
+			};
+			
+			if ((!props.schema.additionalItems && props.uiSchema.items && props.uiSchema.items) || (props.uiSchema.items && props.uiSchema.items && i <= props.schema.items.length - 1)) {
+				fieldProps.uiSchema = props.uiSchema.items
+			} else if (props.schema.additionalItems && props.uiSchema.additionalItems && props.uiSchema.additionalItems && i > props.schema.items.length - 1) {
+				fieldProps.uiSchema = props.uiSchema.additionalItems;
 			}
-
+			
+			if (fieldProps.uiSchema["ui:field"]) {
+				let field = new props.registry.fields[fieldProps.uiSchema["ui:field"]](fieldProps);
+				for (let fieldProp in fieldProps) {
+					fieldProps[fieldProp] = field.state[fieldProp]|| field.props[fieldProp];
+				};
+			}
+			
 			let rowSchemas = [];
 			Object.keys(schemaProperties).forEach((property, j) => {
-				let uiSchema = uiSchemaRoot ? (uiSchemaRoot[property] || {}) : {};
-
 				rowSchemas.push(<SchemaField
 					key={j}
-					schema={update(schemaProperties[property], {title: {$set: undefined}})}
+					schema={update(fieldProps.schema.properties[property], {title: {$set: undefined}})}
 					required={this.isRequired(schemaRequirements, property)}
-					uiSchema={uiSchema}
-					idSchema={{id: idSchemaRoot + "_" + property}}
-					formData={row ? row[property] : undefined}
-					errorSchema={(errorSchemaRoot && errorSchemaRoot[property]) ? errorSchemaRoot[property] : {}}
+					uiSchema={fieldProps.uiSchema[property]}
+					idSchema={{id: fieldProps.idSchema.id + "_" + property}}
+					formData={fieldProps.formData[property]}
+					errorSchema={fieldProps.errorSchema[property] || {}}
 					registry={props.registry}
 					onChange={(data) => {
-						formDataUpdateRootPointer[property] = {$set: data};
+						formDataUpdateRoot[i][property] = {$set: data};
 						let formData = update(this.props.formData, formDataUpdateRoot);
 						props.onChange(formData);
-					}} />)
+					}} />);
 			});
 			if (isArray && (!props.schema.additionalItems || i > props.schema.items.length - 1)) {
 				rowSchemas = rowSchemas.concat([(<Button key={i} type="danger" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$splice: [[i, 1]]})) } }>Delete</Button>)]);
@@ -121,13 +105,11 @@ export default class TableField extends Component {
 			rows.push(<TableRow key={i + 1}>{rowSchemas}</TableRow>)
 		});
 
-		if (isArray) {
-			rows.push(
-				<TableRow key={rows.length}>
-					{Array(Object.keys(schemaProperties).length).fill(undefined) // empty td for every column
-						.concat([this.getAddButton()])}
-				</TableRow>)
-		}
+		rows.push(
+			<TableRow key={rows.length}>
+				{Array(Object.keys(schemaProperties).length).fill(undefined) // empty td for every column
+					.concat([this.getAddButton()])}
+			</TableRow>)
 
 		let title = this.props.schema.title || this.props.name;
 		return (
@@ -135,11 +117,11 @@ export default class TableField extends Component {
 				{title !== undefined ? <TitleField title={title} /> : null}
 				{
 					(this.props.formData && (!this.props.formData.hasOwnProperty("length") || this.props.formData.length > 0)) ? (
-						<table className="table-field"><tbody>
+						<table className="container"><tbody>
 						{rows}
 						</tbody></table>
 					) : (
-						<div className="row"><p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+						<div><p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
 							{this.getAddButton()}
 						</p></div>
 					)
@@ -152,8 +134,6 @@ export default class TableField extends Component {
 	}
 
 	addItem = () => {
-		if (this.props.schema.type !== "array") throw "addItem can be called only for array schema!";
-
 		let item = this.getNewRowArrayItem();
 		if (!this.props.formData) {
 			this.props.onChange([item]);
@@ -164,8 +144,7 @@ export default class TableField extends Component {
 
 	getNewRowArrayItem = () => {
 		let props = this.props;
-		if (!props.schema.items) throw "This is not an array field!";
-		else if (props.schema.additionalItems && (props.formData && props.formData.length > props.schema.items.length)) {
+		if (props.schema.additionalItems && (props.formData && props.formData.length > props.schema.items.length)) {
 			return getDefaultFormState(props.schema.additionalItems, {}, props.registry.definitions);
 		} else if (props.schema.additionalItems && (!props.formData || props.formData.length === 0 || props.schema.items[props.formData.length - 1])) {
 			let i = props.formData ? 0 : props.formData.length - 1;

@@ -5,6 +5,7 @@ import UnitsField from "./fields/UnitsField";
 import ScopeField from "./fields/ScopeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
+import HorizontalField from "./fields/HorizontalField";
 import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
@@ -31,7 +32,7 @@ export default class LajiForm extends Component {
 					nested: NestField,
 					unitTripreport: UnitsField,
 					scoped: ScopeField,
-					horizontal: TableField,
+					horizontal: HorizontalField,
 					table: TableField,
 					inject: InjectField,
 					expandable: AdditionalsExpanderField,
