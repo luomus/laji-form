@@ -75,10 +75,11 @@ export default class TableField extends Component {
 				fieldProps.uiSchema = props.uiSchema.additionalItems;
 			}
 			
+			
 			if (fieldProps.uiSchema["ui:field"]) {
 				let field = new props.registry.fields[fieldProps.uiSchema["ui:field"]](fieldProps);
 				for (let fieldProp in fieldProps) {
-					fieldProps[fieldProp] = field.state[fieldProp]|| field.props[fieldProp];
+					fieldProps[fieldProp] = field.state[fieldProp] || field.props[fieldProp];
 				};
 			}
 			
@@ -94,8 +95,8 @@ export default class TableField extends Component {
 					errorSchema={fieldProps.errorSchema[property] || {}}
 					registry={props.registry}
 					onChange={(data) => {
-						formDataUpdateRoot[i][property] = {$set: data};
-						let formData = update(this.props.formData, formDataUpdateRoot);
+						// formDataUpdateRoot[i][property] = {$set: data};
+						let formData = update(this.props.formData, {[i]: {[property]: {$set: data}}});
 						props.onChange(formData);
 					}} />);
 			});

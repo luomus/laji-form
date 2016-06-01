@@ -63,7 +63,13 @@
 																	"allowNonsuggestedValue": true,
                                   "suggestionReceive": "key"
                                 }
-                              }
+                              },
+															"ui:field": "dependentDisable",
+															"ui:options": {
+																"disableDefiner": "leg",
+																"disableField": "editors",
+																"regexp": "^MA\\.\\d+$"
+															}
 														},
 														"ui:field": "table"
 													}

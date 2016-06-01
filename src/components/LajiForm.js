@@ -9,6 +9,7 @@ import HorizontalField from "./fields/HorizontalField";
 import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
+import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
 import {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
@@ -38,6 +39,7 @@ export default class LajiForm extends Component {
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
 					dependentBoolean: DependentBooleanField,
+					dependentDisable: DependentDisableField,
 					mapArray: MapArrayField,
 					autosuggest: AutosuggestField,
 					autosuggestInput: AutosuggestInputField,
