@@ -14,6 +14,7 @@ export default class DateTimeWidget extends Component {
 	constructor(props) {
 		super(props);
 		momentLocalizer(Moment)
+		this.format = "DD.MM.YYYY hh:mm:ss";
 	}
 
 	render() {
@@ -21,13 +22,14 @@ export default class DateTimeWidget extends Component {
 
 		return (<DateTimePicker
 			{...this.props}
-			value={(value === "") ? null : Moment(value).toDate()}
+			value={value ? Moment(value).toDate() : null}
 			onChange={(value) => {
 				if (!Moment(value).isValid()) value = this.props.value;
 				onChange(Moment(value).toISOString())
 			}}
 			readOnly={readonly}
-			format={"DD.MM.YYYY hh:mm:ss"}
+			placeholder={this.format}
+			format={this.format}
 		/>);
 	}
 }
