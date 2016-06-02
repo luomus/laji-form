@@ -8,51 +8,42 @@ import UnitField from "./ScopeField";
 export default class UnitsField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {units: []};
+		this.rowAddAmount = 10;
+		this.state = {rowAmount: 0};
+		this.state = ({...this.state, ...this.getStateFromProps(props)})
+	}
 
-		let units = this.props.formData || [];
-		if (units.length > 0) {
-			while (units.length % 10) {
-				units.push({});
-			}
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps = (props) => {
+		let state = {};
+		if (props.formData && props.formData.length > this.state.rowAmount) {
+			state.rowAmount = props.formData.length + this.rowAddAmount - (props.formData.length % this.rowAddAmount);
 		}
-		this.state = {units: units};
+		return state;
 	}
-
-	onChange = (change) => {
-		this.setState(change, () => {
-			let dataOutput = [];
-			if (this.state.units) this.state.units.forEach((unit) => {
-				if (Object.keys(unit).length > 0) dataOutput.push(unit);
-			});
-			this.props.onChange(dataOutput);
-		});
-	}
-
 	render() {
 		return (
 			<fieldset>
 				<TitleField title={this.props.schema.title || this.props.name}/>
 				{this.renderUnits()}
 				<Button onClick={this.onAddClick}>Lisää havaintorivejä</Button><br/>
-				Pikasyötön lajiryhmä: <select onChange={this.onGroupChange}>{this.renderGroupSelect()}</select>
 			</fieldset>
 		)
-	}
-
-	renderGroupSelect = () => {
-		//let options = [];
-		//let groupObject = this.props.schema.items.properties.group;
-		//for (let i = 0; i < groupObject.enum.length; i++) {
-		//    options.push(<option value={groupObject.enum[i]}>{groupObject.enumNames[i]}</option>)
-		//}
-		//return options;
 	}
 
 	renderUnits = () => {
 		let unitRows = [];
 		let idx = 0;
-		if (this.state.units) this.state.units.forEach((unit) => {
+		let data = this.props.formData || [];
+
+		while (data.length < this.state.rowAmount) {
+			data.push({});
+		}
+
+		if (data) data.forEach((unit) => {
 			unitRows.push(<SchemaField
 				key={idx}
 				formData={unit}
@@ -68,24 +59,15 @@ export default class UnitsField extends Component {
 	}
 
 	onChangeForIdx = (idx) => {
-		return (formData) => {
-			let units = this.state.units;
-			units[idx] = formData;
-			this.onChange({units: units});
+		return (itemFormData) => {
+			let formData = this.props.formData;
+			formData[idx] = itemFormData;
+			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
 		}
-	}
-
-	onGroupChange = (e) => {
-		//if (typeof this.props.onChange === "function") this.props.onChange(this.props.forms[e.target.value]);
-		//this.onChange({group: e.target.value});
 	}
 
 	onAddClick = () => {
 		event.preventDefault();
-		let units = this.state.units || [];
-		for (var i = 0; i <  10; i++) {
-			units.push({});
-		}
-		this.onChange({units: units});
+		this.setState({rowAmount: this.state.rowAmount + this.rowAddAmount});
 	}
 }
