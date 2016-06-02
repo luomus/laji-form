@@ -5,12 +5,13 @@ import UnitsField from "./fields/UnitsField";
 import ScopeField from "./fields/ScopeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
+import HorizontalField from "./fields/HorizontalField";
 import InjectField from "./fields/InjectField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
+import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
-import AutosuggestField from "./fields/AutosuggestField";
-import {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
+import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import ApiClient from "../ApiClient";
 
@@ -31,12 +32,13 @@ export default class LajiForm extends Component {
 					nested: NestField,
 					unitTripreport: UnitsField,
 					scoped: ScopeField,
-					horizontal: TableField,
+					horizontal: HorizontalField,
 					table: TableField,
 					inject: InjectField,
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
 					dependentBoolean: DependentBooleanField,
+					dependentDisable: DependentDisableField,
 					mapArray: MapArrayField,
 					autosuggest: AutosuggestField,
 					autosuggestInput: AutosuggestInputField,

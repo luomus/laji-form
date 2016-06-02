@@ -102,6 +102,11 @@ export default class ScopeField extends Component {
 		let generatedUiSchema = options.uiSchema || {};
 
 		let fieldsToShow = {};
+		
+		fieldsOutOfScope.forEach((fieldName) => {
+			fieldsToShow[fieldName] = props.schema.properties[fieldName];
+		})
+		
 		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
@@ -124,10 +129,6 @@ export default class ScopeField extends Component {
 			});
 		}
 		addFieldScopeFieldsToFieldsToShow(options);
-
-		fieldsOutOfScope.forEach((fieldName) => {
-			fieldsToShow[fieldName] = props.schema.properties[fieldName];
-		})
 
 		let uiOptions = {expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
 

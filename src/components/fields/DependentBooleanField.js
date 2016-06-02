@@ -14,7 +14,7 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 export default class DependentBooleanField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = this.getStateFromProps(props);
+		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -40,7 +40,7 @@ export default class DependentBooleanField extends Component {
 		});
 		let formData = update (props.formData, {[booleanField]: {$set: booleanFieldData}});
 
-		return {schema, uiSchema, formData, onChange: this.onChange};
+		return {schema, uiSchema, formData};
 	}
 
 
