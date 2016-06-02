@@ -3,10 +3,10 @@ import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
- * Disables object fields value according a regexp rule.
+ * Disables object field's value according a regexp rule that is matched against another field's value.
  * uiSchema = { "ui:options": {
- *  disableField: <object field name>,
- *  disableDefiner: <object field name>,
+ *  disableField: <object field name>, (field to disable if disableDefiner's value doesn't match the regexp)
+ *  disableDefiner: <object field name>, (field that the regexp is matched against)
  *  uiSchema: <uiSchema> (uiSchema used for each object).
  * }}
  */

@@ -102,8 +102,7 @@
 							"biotypeForestLehto",
 							"biotypeSuoKorpi",
 							"biotypeSuoRäme",
-							"biotypeSuoNeva",
-							"biotypeTest"
+							"biotypeSuoNeva"
 						],
 						"uiSchema": {
 							"ui:field": "scoped",
@@ -433,10 +432,6 @@
 						"biotypeSuoNeva": {
 							"type": "boolean",
 							"title": "Oliko haiseva neva?"
-						},
-						"biotypeTest": {
-							"type": "string",
-							"title": "Testibiotyyppikenttä"
 						},
 						"image": {
 							"type": "string",
