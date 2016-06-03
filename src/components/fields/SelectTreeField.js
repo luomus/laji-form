@@ -4,8 +4,7 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 /**
  * Constructs selects from given tree.
  * uiSchema = {"ui:options": {
-*   tree: {<enum key tree>},
-*   orders: [<string>],
+*   tree: {<enum key tree>}, (node object: {children: {key: {<node>}, key2:{<node>}}, order: ["key", "key2"]} (order is optional)
 *   labels: [<string>]
  * }
  */
