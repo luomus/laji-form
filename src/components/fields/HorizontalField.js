@@ -59,7 +59,7 @@ export default class HorizontalField extends Component {
 		let title = this.props.schema.title || this.props.name;
 		return (
 			<fieldset>
-				{title !== undefined ? <TitleField title={title} /> : null}
+				{(title !== undefined && title !== "") ? <TitleField title={title} /> : null}
 				<div className="row">
 					{fields}
 				</div>
