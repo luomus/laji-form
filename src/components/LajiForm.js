@@ -3,6 +3,7 @@ import Form from "react-jsonschema-form";
 import NestField from "./fields/NestField";
 import UnitsField from "./fields/UnitsField";
 import ScopeField from "./fields/ScopeField";
+import SelectTreeField from "./fields/SelectTreeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import HorizontalField from "./fields/HorizontalField";
@@ -32,6 +33,7 @@ export default class LajiForm extends Component {
 					nested: NestField,
 					unitTripreport: UnitsField,
 					scoped: ScopeField,
+					tree: SelectTreeField,
 					horizontal: HorizontalField,
 					table: TableField,
 					inject: InjectField,
