@@ -22,7 +22,7 @@ const autosuggestFieldSettings = {
 		},
 		convertInputValue: (inputValue, apiClient) => {
 			return apiClient.fetch("/person/by-id/" + inputValue).then((response) => {
-				return response[0].inheritedName + ", " + response[0].preferredName;
+				return response.inheritedName + ", " + response.preferredName;
 			})
 		}
 	}
