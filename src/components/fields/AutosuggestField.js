@@ -173,26 +173,41 @@ export class AutosuggestInputField extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
+		this.triggerConvert();
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
+	triggerConvert = () => {
 		if (this.state.inputValue !== undefined && this.state.inputValue !== "" && this.state.autosuggestSettings.convertInputValue) {
 			this.setState({isLoading: true});
 			this.state.autosuggestSettings.convertInputValue(this.state.inputValue, this.apiClient)
 				.then( inputValue => {
+					if (!this.mounted) return;
 					this.setState({inputValue: inputValue, isLoading: false});
 				})
 				.catch( () => {
+					if (!this.mounted) return;
 					this.setState({isLoading: false});
-				})
+				});
 		}
 	}
 
 	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props))
+		let prevInputValue = this.state.inputValue;
+		this.setState(this.getStateFromProps(props), () => {
+			if (prevInputValue !== this.state.inputValue) this.triggerConvert();
+		});
 	}
 
 	getStateFromProps = (props) => {
 		let options = props.uiSchema["ui:options"];
 		let autosuggestSettings = autosuggestFieldSettings[options.autosuggestField];
-		return {options, autosuggestSettings};
+		let inputValue = props.formData;
+		return {options, autosuggestSettings, inputValue};
 	}
 
 	getSuggestionValue = (suggestion) => {
@@ -212,22 +227,18 @@ export class AutosuggestInputField extends Component {
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetch("/autocomplete/" + this.state.options.autosuggestField, {q: suggestionValue.value, include_payload: this.state.autosuggestSettings.includePayload})
 				.then( suggestions => {
-					if (this.promiseTimestamp === timestamp) {
+					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({suggestions, isLoading: false});
 						this.promiseTimestamp = undefined;
 					}
 				})
 				.catch( error => {
-					if (this.promiseTimestamp === timestamp) {
+					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({isLoading: false});
 						this.promiseTimestamp = undefined;
 					}
 				});
 		})();
-	}
-
-	componentWillUnmount() {
-		this.promiseTimestamp = undefined;
 	}
 
 	onChange = (value) => {

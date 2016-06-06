@@ -61,14 +61,13 @@ export default class TableField extends Component {
 		if (formDataRoot) formDataRoot.forEach((row, i) => {
 			let fieldProps = {
 				schema: schemaPropertiesContainer,
-				errorSchema: props.errorSchema[i] | {},
+				errorSchema: props.errorSchema[i] || {},
 				idSchema: {id: props.idSchema.id + "_" + i},
 				registry: props.registry,
 				formData: row,
-				onChange: props.onChange,
 				uiSchema: {}
 			};
-			
+
 			if ((!props.schema.additionalItems && props.uiSchema.items && props.uiSchema.items) || (props.uiSchema.items && props.uiSchema.items && i <= props.schema.items.length - 1)) {
 				fieldProps.uiSchema = props.uiSchema.items
 			} else if (props.schema.additionalItems && props.uiSchema.additionalItems && props.uiSchema.additionalItems && i > props.schema.items.length - 1) {
@@ -93,13 +92,13 @@ export default class TableField extends Component {
 					formData={fieldProps.formData[property]}
 					errorSchema={fieldProps.errorSchema[property] || {}}
 					registry={props.registry}
-					onChange={(data) => {
+					onChange={data => {
 						let formData = update(this.props.formData, {[i]: {[property]: {$set: data}}});
-						props.onChange(formData);
+						this.onChange(formData);
 					}} />);
 			});
 			if (isArray && (!props.schema.additionalItems || i > props.schema.items.length - 1)) {
-				rowSchemas = rowSchemas.concat([(<Button key={i} type="danger" classList={["col-xs-12"]} onClick={ () => { props.onChange(update(props.formData, {$splice: [[i, 1]]})) } }>Delete</Button>)]);
+				rowSchemas = rowSchemas.concat([(<Button key={i} type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.onChange(update(props.formData, {$splice: [[i, 1]]})) } }>Delete</Button>)]);
 			}
 			rows.push(<TableRow key={i + 1}>{rowSchemas}</TableRow>)
 		});
@@ -135,22 +134,28 @@ export default class TableField extends Component {
 	addItem = () => {
 		let item = this.getNewRowArrayItem();
 		if (!this.props.formData) {
-			this.props.onChange([item]);
+			this.onChange([item]);
 		} else {
-			this.props.onChange(update(this.props.formData, {$push: [item]}))
+			this.onChange(update(this.props.formData, {$push: [item]}))
 		}
 	}
 
 	getNewRowArrayItem = () => {
 		let props = this.props;
+		let schema;
 		if (props.schema.additionalItems && (props.formData && props.formData.length > props.schema.items.length)) {
-			return getDefaultFormState(props.schema.additionalItems, {}, props.registry.definitions);
+			schema = props.schema.additionalItems;
 		} else if (props.schema.additionalItems && (!props.formData || props.formData.length === 0 || props.schema.items[props.formData.length - 1])) {
 			let i = props.formData ? 0 : props.formData.length - 1;
-			return getDefaultFormState(props.schema.items[i], {}, props.registry.definitions);
+			schema = props.schema.items[i];
 		} else {
-			return getDefaultFormState(props.schema.items, {}, props.registry.definitions);
+			schema = props.schema.items;
 		}
+		return getDefaultFormState(schema, {}, props.registry.definitions);
+	}
+
+	onChange = (formData) => {
+		this.props.onChange(formData, {validate: false});
 	}
 
 }
