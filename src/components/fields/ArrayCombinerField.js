@@ -13,7 +13,7 @@ import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 export default class ArrayCombinerField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = this.getStateFromProps(props);
+		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -49,10 +49,12 @@ export default class ArrayCombinerField extends Component {
 		let formData = objectsToArray([], props.formData);
 		formData.forEach((obj) => {
 			Object.keys(schema.items.properties).forEach((prop) => {
-				if (!obj.hasOwnProperty(prop)) obj[prop] = getDefaultFormState(schema.items.properties[prop], undefined, this.props.registry.definitions);
+				if (!obj.hasOwnProperty(prop)) {
+					obj[prop] = getDefaultFormState(schema.items.properties[prop], undefined, this.props.registry.definitions);
+				}
 			});
 		});
-		return {schema, uiSchema, errorSchema, formData, onChange: this.onChange};
+		return {schema, uiSchema, errorSchema, formData};
 	}
 
 	onChange = (formData) => {

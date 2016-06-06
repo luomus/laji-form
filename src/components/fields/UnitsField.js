@@ -61,6 +61,7 @@ export default class UnitsField extends Component {
 	onChangeForIdx = (idx) => {
 		return (itemFormData) => {
 			let formData = this.props.formData;
+			if (!formData) formData = [];
 			formData[idx] = itemFormData;
 			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
 		}

@@ -151,7 +151,7 @@ export default class TableField extends Component {
 		} else {
 			schema = props.schema.items;
 		}
-		return getDefaultFormState(schema, {}, props.registry.definitions);
+		return getDefaultFormState(schema, undefined, props.registry.definitions);
 	}
 
 	onChange = (formData) => {
