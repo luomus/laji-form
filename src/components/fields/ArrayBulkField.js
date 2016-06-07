@@ -5,10 +5,9 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import Button from "../Button";
 import UnitField from "./ScopeField";
 
-export default class UnitsField extends Component {
+export default class ArrayBulkField extends Component {
 	constructor(props) {
 		super(props);
-		this.rowAddAmount = 10;
 		this.state = {rowAmount: 0};
 		this.state = ({...this.state, ...this.getStateFromProps(props)})
 	}
@@ -19,8 +18,11 @@ export default class UnitsField extends Component {
 
 	getStateFromProps = (props) => {
 		let state = {};
+		let options = props.uiSchema["ui:options"];
+		state.rowAddAmount = 10;
+		if (options && options.rowAddAmount && options.rowAddAmount > 0) state.rowAddAmount = options.rowAddAmount;
 		if (props.formData && props.formData.length > this.state.rowAmount) {
-			state.rowAmount = props.formData.length + this.rowAddAmount - (props.formData.length % this.rowAddAmount);
+			state.rowAmount = props.formData.length + state.rowAddAmount - (props.formData.length % state.rowAddAmount);
 		}
 		return state;
 	}
@@ -69,6 +71,6 @@ export default class UnitsField extends Component {
 
 	onAddClick = (event) => {
 		event.preventDefault();
-		this.setState({rowAmount: this.state.rowAmount + this.rowAddAmount});
+		this.setState({rowAmount: this.state.rowAmount + this.state.rowAddAmount});
 	}
 }

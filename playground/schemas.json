@@ -159,6 +159,9 @@
 				},
 				"units": {
 					"ui:field": "unitTripreport",
+					"ui:options": {
+						"rowAddAmount": 4
+					},
 					"items": {
 						"ui:field": "scoped",
 						"ui:options": {

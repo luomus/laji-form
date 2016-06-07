@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Form from "react-jsonschema-form";
 import NestField from "./fields/NestField";
-import UnitsField from "./fields/UnitsField";
+import ArrayBulkField from "./fields/ArrayBulkField";
 import ScopeField from "./fields/ScopeField";
 import SelectTreeField from "./fields/SelectTreeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
@@ -31,7 +31,8 @@ export default class LajiForm extends Component {
 				{...this.props}
 				fields={{
 					nested: NestField,
-					unitTripreport: UnitsField,
+					unitTripreport: ArrayBulkField,
+					bulkArray: ArrayBulkField,
 					scoped: ScopeField,
 					tree: SelectTreeField,
 					horizontal: HorizontalField,
