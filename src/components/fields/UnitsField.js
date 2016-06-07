@@ -67,7 +67,7 @@ export default class UnitsField extends Component {
 		}
 	}
 
-	onAddClick = () => {
+	onAddClick = (event) => {
 		event.preventDefault();
 		this.setState({rowAmount: this.state.rowAmount + this.rowAddAmount});
 	}
