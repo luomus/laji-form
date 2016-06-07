@@ -174,18 +174,18 @@ export class AutosuggestInputField extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		this.triggerConvert();
+		this.triggerConvert(this.props);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
 	}
 
-	triggerConvert = () => {
-		if (this.props.formData !== undefined && this.props.formData !== "" && this.state.autosuggestSettings.convertInputValue) {
-			let origValue = this.props.formData;
+	triggerConvert = (props) => {
+		if (props.formData !== undefined && props.formData !== "" && this.state.autosuggestSettings.convertInputValue) {
+			let origValue = props.formData;
 			this.setState({isLoading: true});
-			this.state.autosuggestSettings.convertInputValue(this.props.formData, this.apiClient)
+			this.state.autosuggestSettings.convertInputValue(props.formData, this.apiClient)
 				.then( inputValue => {
 					if (!this.mounted) return;
 					this.setState({inputValue: inputValue, origValue: origValue, isLoading: false});
@@ -200,7 +200,7 @@ export class AutosuggestInputField extends Component {
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props), () => {
 			if (!this.state.inputValue || (this.state.inputValue && props.formData !== this.state.origValue)) {
-				this.triggerConvert();
+				this.triggerConvert(props);
 			}
 		});
 	}

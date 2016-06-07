@@ -43,7 +43,7 @@ export default class HorizontalField extends Component {
 						required={this.isRequired(props.schema.required, property)}
 						schema={props.schema.properties[property]}
 						uiSchema={props.uiSchema[property]}
-						idSchema={{id: props.idSchema + "_" + property}}
+						idSchema={{id: props.idSchema.id + "_" + property}}
 						errorSchema={props.errorSchema ? (props.errorSchema[property] || {}) : {}}
 						formData={props.formData[property]}
 						registry={props.registry}
@@ -65,10 +65,5 @@ export default class HorizontalField extends Component {
 				</div>
 			</fieldset>
 		);
-
-		// return (<SchemaField
-		// 	{...this.props}
-		// 	{...this.state}
-		// />)
 	}
 }

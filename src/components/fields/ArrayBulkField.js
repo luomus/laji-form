@@ -26,6 +26,7 @@ export default class ArrayBulkField extends Component {
 		}
 		return state;
 	}
+
 	render() {
 		return (
 			<fieldset>

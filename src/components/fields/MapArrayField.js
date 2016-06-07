@@ -227,7 +227,9 @@ export default class MapArrayField extends Component {
 		let itemFormData = formData && formData.length ? formData[idx] : undefined;
 		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + idx, this.props.registry.definitions);
 
-		if (formData && formData.length > 0) return <SchemaField {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} />;
+		console.log(idx);
+
+		if (formData && formData.length > 0) return <SchemaField key={idx} {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} />;
 		return null
 	}
 }
