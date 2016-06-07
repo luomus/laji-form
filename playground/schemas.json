@@ -82,6 +82,7 @@
 						}
 					},
 					"imagesWrapper": {
+						"title": "Kuvat",
 						"fields": ["image", "rights"],
 						"uiSchema": {
 							"ui:field": "horizontal"
@@ -249,8 +250,8 @@
 			},
 			"gatherings": {
 				"type": "array",
-				"title": "Perustiedot",
 				"items": {
+					"title": "Perustiedot",
 					"type": "object",
 					"properties": {
 						"dateBegin": {
