@@ -15,12 +15,10 @@ export default class ApiClient {
 	 * Implementing apiClient must return a promise.
 	 * @param path URL for GET.
 	 * @param query Object, where keys are param names and values are param values.
-	 * @param onSuccess Callback function for successful GET.
-	 * @param onError Callback function for failed GET.
 	 * @returns a Promise.
 	 */
-	fetch(path, query, onSuccess, onError) {
+	fetch(path, query) {
 		if (!this.apiClient) throw new Error("You must pass an api client implementation to LajiForm!");
-		return this.apiClient.fetch(path, query, onSuccess, onError);
+		return this.apiClient.fetch(path, query);
 	}
 }

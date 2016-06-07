@@ -30,8 +30,6 @@ In addition to properties you would pass to <Form />, you must pass an api clien
 
 * **path:** URL path for GET.
 * **query:** Object, where keys are param names and values are param values.
-* **onSuccess:** Callback function for successful GET.
-* **onError:** Callback function for failed GET.
 
 See the example implementation in [src/playground/ApiClientImplementation.js](https://bitbucket.org/luomus/laji-form.js/src/HEAD/playground/ApiClientImplementation.js).
 
