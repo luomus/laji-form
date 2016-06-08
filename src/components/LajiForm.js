@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import Form from "react-jsonschema-form";
 import NestField from "./fields/NestField";
 import ArrayBulkField from "./fields/ArrayBulkField";
+import AutoArrayField from "./fields/AutoArrayField";
 import ScopeField from "./fields/ScopeField";
 import SelectTreeField from "./fields/SelectTreeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
@@ -43,6 +44,7 @@ export default class LajiForm extends Component {
 					dependentBoolean: DependentBooleanField,
 					dependentDisable: DependentDisableField,
 					mapArray: MapArrayField,
+					autoArray: AutoArrayField,
 					autosuggest: AutosuggestField,
 					autosuggestInput: AutosuggestInputField,
 					autosuggestWidget: AutosuggestWidget

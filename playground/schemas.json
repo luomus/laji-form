@@ -159,7 +159,7 @@
 					}
 				},
 				"units": {
-					"ui:field": "unitTripreport",
+					"ui:field": "autoArray",
 					"ui:options": {
 						"rowAddAmount": 4
 					},
@@ -229,6 +229,20 @@
 												"additionalFields": ["notes"]
 											}
 										}
+									}
+								},
+								"recordBasis": {
+									"observationSeen": {
+										"fields": [
+											"seenField",
+											"seenField2"
+										]
+									},
+									"observationHeard": {
+										"fields": [
+											"heardField",
+											"heardField2"
+										]
 									}
 								}
 							}
@@ -331,6 +345,28 @@
 									"ring": {
 										"type": "string",
 										"title": "Rengas"
+									},
+									"recordBasis": {
+										"title": "Näytteen havaitsemistapa",
+										"type": "string",
+										"enum": ["", "observationHeard", "observationSeen"],
+										"enumNames": ["", "Kuultu", "Nähty"]
+									},
+									"seenField": {
+										"type": "string",
+										"title": "Täytä jos nähty"
+									},
+									"seenField2": {
+										"type": "string",
+										"title": "Täytä tääkin jos nähty"
+									},
+									"heardField": {
+										"type": "string",
+										"title": "Täytä jos kuultu"
+									},
+									"heardField2": {
+										"type": "string",
+										"title": "Täytä tääkin jos kuultu"
 									}
 								},
 								"required": []
