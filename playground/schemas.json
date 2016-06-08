@@ -209,7 +209,7 @@
 											"suggestionInputField": "informalNameString",
 											"suggestionReceivers": {
 												"informalNameString": "value",
-												"unitType": "payload.informalGroups"
+												"unitType": "payload.taxonGroups"
 											},
 											"uiSchema": {
 												"ui:field": "horizontal"
@@ -219,65 +219,102 @@
 								}
 							},
 							"fieldScopes": {
-								"unitType": {
-									"MVL.1": {
+								"informalNameString": {
+									"*": {
 										"fields": [
-											"ring",
-											"sex",
-											"notes"
+											"unitType"
 										],
-										"uiSchema": {
-											"ui:options": {
-												"additionalFields": ["notes"]
-											}
-										}
-									},
-									"MVL.2": {
-										"fields": [
-											"age",
-											"notes"
-										],
-										"uiSchema": {
-											"ui:options": {
-												"additionalFields": ["alive", "notes"]
-											}
-										}
-									},
-									"MVL.21": {
-										"fields": [
-											"count",
-											"alive"
-										],
-										"uiSchema": {
-											"ui:options": {
-												"additionalFields": ["notes"]
-											}
-										}
-									},
-									"MVL.26": {
-										"fields": [
-											"age",
-											"alive"
-										],
-										"uiSchema": {
-											"ui:options": {
-												"additionalFields": ["notes"]
+										"fieldScopes": {
+											"unitType": {
+												"MVL.1": {
+													"fields": [
+														"ring",
+														"sex",
+														"notes"
+													],
+													"refs": [
+														"recordBasis"
+													],
+													"uiSchema": {
+														"ui:options": {
+															"additionalFields": [
+																"notes"
+															]
+														}
+													}
+												},
+												"MVL.2": {
+													"fields": [
+														"age",
+														"notes"
+													],
+													"refs": [
+														"recordBasis"
+													],
+													"uiSchema": {
+														"ui:options": {
+															"additionalFields": [
+																"alive",
+																"notes"
+															]
+														}
+													}
+												},
+												"MVL.21": {
+													"fields": [
+														"count",
+														"alive"
+													],
+													"refs": [
+														"recordBasis"
+													],
+													"uiSchema": {
+														"ui:options": {
+															"additionalFields": [
+																"notes"
+															]
+														}
+													}
+												},
+												"MVL.26": {
+													"fields": [
+														"age",
+														"alive"
+													],
+													"refs": [
+														"recordBasis"
+													],
+													"uiSchema": {
+														"ui:options": {
+															"additionalFields": [
+																"notes"
+															]
+														}
+													}
+												}
 											}
 										}
 									}
-								},
+								}
+							},
+							"definitions": {
 								"recordBasis": {
-									"observationSeen": {
-										"fields": [
-											"seenField",
-											"seenField2"
-										]
-									},
-									"observationHeard": {
-										"fields": [
-											"heardField",
-											"heardField2"
-										]
+									"fields": ["recordBasis"],
+									"fieldScopes": {
+										"recordBasis": {
+											"observationSeen": {
+												"fields": [
+													"seenField",
+													"seenField2"
+												]
+											},
+											"observationHeard": {
+												"fields": [
+													"heardField",
+													"heardField2"
+												]
+											}
+										}
 									}
 								}
 							}
