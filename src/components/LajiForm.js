@@ -9,6 +9,7 @@ import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
 import HorizontalField from "./fields/HorizontalField";
 import InjectField from "./fields/InjectField";
+import InjectDefaultValueField from "./fields/InjectDefaultValueField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
@@ -39,6 +40,7 @@ export default class LajiForm extends Component {
 					horizontal: HorizontalField,
 					table: TableField,
 					inject: InjectField,
+					injectDefaultValue: InjectDefaultValueField,
 					expandable: AdditionalsExpanderField,
 					arrayCombiner: ArrayCombinerField,
 					dependentBoolean: DependentBooleanField,
