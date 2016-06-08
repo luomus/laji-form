@@ -178,7 +178,7 @@
 											"suggestionInputField": "informalNameString",
 											"suggestionReceivers": {
 												"informalNameString": "value",
-												"unitType": "payload.informalGroups.0"
+												"unitType": "payload.informalGroups"
 											},
 											"uiSchema": {
 												"ui:field": "horizontal"
@@ -189,11 +189,21 @@
 							},
 							"fieldScopes": {
 								"unitType": {
+									"MVL.1": {
+										"fields": [
+											"ring",
+											"sex",
+											"notes"
+										],
+										"uiSchema": {
+											"ui:options": {
+												"additionalFields": ["notes"]
+											}
+										}
+									},
 									"MVL.2": {
 										"fields": [
 											"age",
-											"count",
-											"alive",
 											"notes"
 										],
 										"uiSchema": {
@@ -204,10 +214,8 @@
 									},
 									"MVL.21": {
 										"fields": [
-											"age",
 											"count",
-											"alive",
-											"notes"
+											"alive"
 										],
 										"uiSchema": {
 											"ui:options": {
@@ -215,14 +223,10 @@
 											}
 										}
 									},
-									"MVL.1": {
+									"MVL.26": {
 										"fields": [
 											"age",
-											"count",
-											"ring",
-											"sex",
-											"alive",
-											"notes"
+											"alive"
 										],
 										"uiSchema": {
 											"ui:options": {
@@ -294,11 +298,14 @@
 								"type": "object",
 								"properties": {
 									"informalNameString": {
-										"type": "string",
-										"title": "Taksoni"
+										"title": "Taksoni",
+										"type" : "string"
 									},
 									"unitType": {
-										"type" : "string"
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
 									},
 									"age": {
 										"type": "string",

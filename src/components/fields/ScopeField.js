@@ -106,6 +106,20 @@ export default class ScopeField extends Component {
 		fieldsOutOfScope.forEach((fieldName) => {
 			fieldsToShow[fieldName] = props.schema.properties[fieldName];
 		})
+
+		function addFieldScopeValues(scopes, fieldSelector, fieldSelectorValue) {
+			let fieldScope = scopes[fieldSelector][fieldSelectorValue];
+			if (!fieldScope) return;
+			fieldScope.fields.forEach((fieldName) => {
+				fieldsToShow[fieldName] = schema.properties[fieldName];
+			});
+			if (fieldScope.uiSchema) {
+				generatedUiSchema = merge(generatedUiSchema, fieldScope.uiSchema);
+			}
+			if (fieldScope.fieldScopes) {
+				addFieldScopeFieldsToFieldsToShow(fieldScope)
+			}
+		}
 		
 		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
 			if (!fieldScope) return;
@@ -113,18 +127,11 @@ export default class ScopeField extends Component {
 			Object.keys(scopes).forEach((fieldSelector) => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValue = formData[fieldSelector];
-				if (fieldSelectorValue) {
-					let fieldScope = scopes[fieldSelector][fieldSelectorValue];
-					if (!fieldScope) return;
-					fieldScope.fields.forEach((fieldName) => {
-						fieldsToShow[fieldName] = schema.properties[fieldName];
-					});
-					if (fieldScope.uiSchema) {
-						generatedUiSchema = merge(generatedUiSchema, fieldScope.uiSchema);
-					}
-					if (fieldScope.fieldScopes) {
-						addFieldScopeFieldsToFieldsToShow(fieldScope)
-					}
+				if (fieldSelectorValue !== undefined) {
+					if (!Array.isArray(fieldSelectorValue))  fieldSelectorValue = [fieldSelectorValue];
+					fieldSelectorValue.forEach(fieldSelectorValue => {
+						addFieldScopeValues(scopes, fieldSelector, fieldSelectorValue);
+					})
 				}
 			});
 		}
