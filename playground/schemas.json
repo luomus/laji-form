@@ -343,6 +343,7 @@
 																					"taxonID": "key"
 																				},
 																				"uiSchema": {
+																					"ui:field": "horizontal",
 																					"taxonID": {
 																						"ui:widget": "hidden"
 																					},
