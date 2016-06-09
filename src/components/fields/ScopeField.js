@@ -53,7 +53,8 @@ export default class ScopeField extends Component {
 			Object.keys(scopes).forEach((fieldName) => {
 				dictionarifiedFieldsInScopes[fieldName] = true;
 				Object.keys(scopes[fieldName]).forEach((fieldValue) => {
-					scopes[fieldName][fieldValue].fields.forEach((scopesFieldName) => {
+					let fields = scopes[fieldName][fieldValue].fields;
+					if (fields) fields.forEach((scopesFieldName) => {
 						dictionarifiedFieldsInScopes[scopesFieldName] = true;
 					});
 					if (scopes[fieldName][fieldValue].fieldScopes)
@@ -122,7 +123,9 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
-				fieldSelectorValues.push("*");
+				//fieldSelectorValues.push("*");
+				fieldSelectorValues = update(fieldSelectorValues, {$push: ["*"]});
+				console.log(fieldSelectorValues);
 				fieldSelectorValues.forEach(fieldSelectorValue => {
 					if (fieldSelectorValue !== undefined) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);

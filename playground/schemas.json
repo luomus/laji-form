@@ -229,9 +229,6 @@
 														"sex",
 														"notes"
 													],
-													"refs": [
-														"recordBasis"
-													],
 													"uiSchema": {
 														"ui:options": {
 															"additionalFields": [
@@ -244,9 +241,6 @@
 													"fields": [
 														"age",
 														"notes"
-													],
-													"refs": [
-														"recordBasis"
 													],
 													"uiSchema": {
 														"ui:options": {
@@ -262,9 +256,6 @@
 														"count",
 														"alive"
 													],
-													"refs": [
-														"recordBasis"
-													],
 													"uiSchema": {
 														"ui:options": {
 															"additionalFields": [
@@ -278,9 +269,6 @@
 														"age",
 														"alive"
 													],
-													"refs": [
-														"recordBasis"
-													],
 													"uiSchema": {
 														"ui:options": {
 															"additionalFields": [
@@ -288,6 +276,9 @@
 															]
 														}
 													}
+												},
+												"*": {
+													"refs": ["recordBasis"]
 												}
 											}
 										}
