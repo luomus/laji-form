@@ -20,18 +20,23 @@ export default class AutoArrayField extends Component {
 		data = update(data, {$push: [{}]});
 
 		let rows = [];
-		let idx = 0;
-		data.forEach((item) => {
-			rows.push(<SchemaField
-				key={idx}
-				formData={item}
-				onChange={this.onChangeForIdx(idx)}
-				schema={this.props.schema.items}
-				uiSchema={this.props.uiSchema.items}
-				idSchema={{id: this.props.idSchema.id + "_" + idx}}
-				registry={this.props.registry}
-				errorSchema={this.props.errorSchema[idx]} />);
-			idx++;
+		data.forEach((item, idx) => {
+			let removable = idx < data.length - 1;
+			rows.push(
+				<div className="row" key={"row_" + idx}>
+					<div className={removable ? "col-md-10" : "col-md-12"} key={"schema_container_" + idx}>
+						<SchemaField
+						key={idx}
+						formData={item}
+						onChange={this.onChangeForIdx(idx)}
+						schema={this.props.schema.items}
+						uiSchema={this.props.uiSchema.items}
+						idSchema={{id: this.props.idSchema.id + "_" + idx}}
+						registry={this.props.registry}
+						errorSchema={this.props.errorSchema[idx]} />
+					</div>
+					{removable ? (<Button key={"button_" + idx} type="danger" classList={["col-md-2"]} onClick={ e => { e.preventDefault(); this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]})) } }>Delete</Button>) : undefined}
+				</div>);
 		});
 		return rows;
 	}
