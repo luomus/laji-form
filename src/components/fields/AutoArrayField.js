@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { toIdSchema } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import Button from "../Button";
@@ -21,6 +22,7 @@ export default class AutoArrayField extends Component {
 
 		let rows = [];
 		data.forEach((item, idx) => {
+			let itemIdPrefix = this.props.idSchema.id + "_" + idx;
 			let removable = idx < data.length - 1;
 			rows.push(
 				<div className="row" key={"row_" + idx}>
@@ -31,7 +33,7 @@ export default class AutoArrayField extends Component {
 						onChange={this.onChangeForIdx(idx)}
 						schema={this.props.schema.items}
 						uiSchema={this.props.uiSchema.items}
-						idSchema={{id: this.props.idSchema.id + "_" + idx}}
+						idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
 						registry={this.props.registry}
 						errorSchema={this.props.errorSchema[idx]} />
 					</div>

@@ -15,6 +15,7 @@ import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
+import HiddenField from "./fields/HiddenField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import ApiClient from "../ApiClient";
 
@@ -49,7 +50,8 @@ export default class LajiForm extends Component {
 					autoArray: AutoArrayField,
 					autosuggest: AutosuggestField,
 					autosuggestInput: AutosuggestInputField,
-					autosuggestWidget: AutosuggestWidget
+					autosuggestWidget: AutosuggestWidget,
+					hidden: HiddenField
 				}}
 				widgets={{
 					dateTime: DateTimeWidget

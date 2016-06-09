@@ -125,7 +125,6 @@ export default class ScopeField extends Component {
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
 				if (fieldSelectorValues.length > 0 && fieldSelectorValues[0] !== undefined) fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
 				fieldSelectorValues = update(fieldSelectorValues, {$push: ["*"]});
-				console.log(fieldSelectorValues);
 				fieldSelectorValues.forEach(fieldSelectorValue => {
 					if (fieldSelectorValue !== undefined) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);

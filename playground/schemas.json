@@ -214,7 +214,8 @@
 											"suggestionInputField": "informalNameString",
 											"suggestionReceivers": {
 												"informalNameString": "value",
-												"unitType": "payload.taxonGroups"
+												"unitType": "payload.taxonGroups",
+												"taxonID": "key"
 											},
 											"uiSchema": {
 												"ui:field": "horizontal"
@@ -225,7 +226,7 @@
 							},
 							"fieldScopes": {
 								"informalNameString": {
-									"*": {
+									"+": {
 										"fields": [
 											"unitType"
 										],
@@ -286,7 +287,20 @@
 													}
 												},
 												"+": {
-													"refs": ["recordBasis"]
+													"refs": ["recordBasis"],
+													"uiSchema": {"ui:options": {
+															"uiSchema": {
+																"ui:options": {
+																	"uiSchema": {
+																		"unitType": {
+																			"ui:field": "hidden"
+																		}
+																	}
+																}
+															}
+														}
+													}
+
 												}
 											}
 										}
@@ -309,6 +323,41 @@
 													"heardField",
 													"heardField2"
 												]
+											},
+											"preservedSpecimen": {
+												"fields": ["identification"],
+												"uiSchema": {
+													"ui:options": {
+														"uiSchema": {
+															"ui:options": {
+																"uiSchema": {
+																	"identification": {
+																		"ui:field": "autoArray",
+																		"items": {
+																			"ui:field": "autosuggest",
+																			"ui:options": {
+																				"autosuggestField": "taxon",
+																				"suggestionInputField": "taxon",
+																				"suggestionReceivers": {
+																					"taxon": "value",
+																					"taxonID": "key"
+																				},
+																				"uiSchema": {
+																					"taxonID": {
+																						"ui:widget": "hidden"
+																					},
+																					"detDate": {
+																						"ui:widget": "dateTime"
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
 											}
 										}
 									}
@@ -386,6 +435,9 @@
 											"type": "string"
 										}
 									},
+									"taxonID": {
+										"type": "string"
+									},
 									"age": {
 										"type": "string",
 										"title": "Ikä"
@@ -435,8 +487,30 @@
 									"recordBasis": {
 										"title": "Näytteen havaitsemistapa",
 										"type": "string",
-										"enum": ["", "observationHeard", "observationSeen"],
-										"enumNames": ["", "Kuultu", "Nähty"]
+										"enum": ["", "observationHeard", "observationSeen", "preservedSpecimen"],
+										"enumNames": ["", "Kuultu", "Nähty", "Otettu talteen"]
+									},
+									"identification": {
+										"title": "Tunnistukset",
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"taxon": {
+													"title": "Taksoni",
+													"type": "string"
+												},
+												"taxonID": {
+													"type": "string"
+												},
+												"det": {
+													"type": "string"
+												},
+												"detDate": {
+													"type": "string"
+												}
+											}
+										}
 									},
 									"seenField": {
 										"type": "string",
@@ -489,25 +563,39 @@
 	},
 	"formData": {
 		"gatheringEvent": {
-			"leg": ["MA.3", "b", "c"],
+			"leg": [
+				"MA.3",
+				"b",
+				"c"
+			],
 			"legPublic": false,
 			"dateEnd": "2016-06-22T11:08:54.044Z"
 		},
 		"gatherings": [
 			{
+				"units": [
+					{
+						"informalNameString": "susi",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.46549",
+						"recordBasis": "preservedSpecimen"
+					}
+				],
 				"dateBegin": "2016-05-11T11:08:54.044Z",
-				"dateEnd": "",
 				"kartta": "",
-				"units": [],
 				"image": "",
-				"rights": "",
 				"wgs84Geometry": {
 					"type": "Point",
 					"coordinates": [
 						24.92990638910176,
 						60.17085995166927
 					]
-				}
+				},
+				"dateEnd": "",
+				"rights": "",
+				"tree": ""
 			},
 			{
 				"kartta": "",
@@ -525,6 +613,10 @@
 		],
 		"temp": false,
 		"ready": false,
-		"editors": ["MA.3", "c", "d"]
+		"editors": [
+			"MA.3",
+			"c",
+			"d"
+		]
 	}
 }

@@ -19,6 +19,15 @@ export default class AdditionalsExpanderField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {showAdditional: false};
+		this.state = {...this.state, ...this.getStateFromProps(props)};
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps(props) {
+		return {schema: this.getSchema(props), uiSchema: this.getUiSchema(props)}
 	}
 
 	render() {
@@ -33,15 +42,14 @@ export default class AdditionalsExpanderField extends Component {
 		return (
 			<SchemaField
 				{...this.props}
-				schema={this.getSchema()}
-				uiSchema={this.getUiSchema()}
+				{...this.state}
 			/>
 		)
 	}
 
-	getSchema = () => {
-		const schema = this.props.schema;
-		const uiSchema = this.props.uiSchema;
+	getSchema = (props) => {
+		const schema = props.schema;
+		const uiSchema = props.uiSchema;
 		if (this.state.showAdditional || !uiSchema["ui:options"] || (uiSchema["ui:options"] && !uiSchema["ui:options"].additionalFields)) {
 			return schema;
 		} else if (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].additionalFields) {
@@ -58,9 +66,9 @@ export default class AdditionalsExpanderField extends Component {
 		throw "bad schema for AdditionalsExpanderField";
 	}
 
-	getUiSchema = () => {
-		return (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].uiSchema) ?
-			this.props.uiSchema["ui:options"].uiSchema : {};
+	getUiSchema = (props) => {
+		return (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
+			props.uiSchema["ui:options"].uiSchema : {};
 	}
 
 	renderButtons = () => {

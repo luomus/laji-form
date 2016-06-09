@@ -65,13 +65,6 @@ export default class AutosuggestField extends Component {
 		let options = propsUiSchema["ui:options"];
 		options.parentData = props.formData;
 
-		schema = update(schema, {});
-		Object.keys(options.suggestionReceivers).forEach((fieldName) => {
-			if (fieldName !== options.suggestionInputField) {
-				delete schema.properties[fieldName];
-			}
-		});
-
 		let uiSchema = options.uiSchema || {};
 		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:field": "autosuggestInput", "ui:options": options}}});
 		let state = {schema, uiSchema};
