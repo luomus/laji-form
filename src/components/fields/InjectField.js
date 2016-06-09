@@ -25,10 +25,11 @@ export default class InjectField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		const options = props.uiSchema["ui:options"].injections;
+		const options = props.uiSchema["ui:options"];
+		const injections = options.injections;
 
-		const fields = options.fields;
-		const target = options.target;
+		const fields = injections.fields;
+		const target = injections.target;
 		let {schema, uiSchema, idSchema, formData, errorSchema} = props;
 
 		fields.forEach((fieldName) => {
@@ -76,9 +77,18 @@ export default class InjectField extends Component {
 			}
 		});
 
-		uiSchema = update(uiSchema, {});
-		delete uiSchema["ui:field"];
-		delete uiSchema["ui:options"];
+		//let options = uiSchema["ui:options"];
+		if (options && options.uiSchema) {
+			uiSchema = update(uiSchema, {$merge: {["ui:field"]: options.uiSchema["ui:field"]}})
+			uiSchema = update(uiSchema, {$merge: {["ui:options"]: options.uiSchema["ui:options"]}})
+		} else {
+			uiSchema = update(uiSchema, {});
+			delete uiSchema["ui:field"];
+			delete uiSchema["ui:options"];
+		}
+		//uiSchema = update(uiSchema, {});
+		//delete uiSchema["ui:field"];
+		//delete uiSchema["ui:options"];
 		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
 

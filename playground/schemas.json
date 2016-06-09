@@ -9,6 +9,14 @@
 			"injections": {
 				"fields": ["editors"],
 				"target": "gatheringEvent"
+			},
+			"uiSchema": {
+				"ui:field": "injectDefaultValue",
+				"ui:options": {
+					"fields": ["dateBegin", "dateEnd"],
+					"target": "gatherings",
+					"source": "gatheringEvent"
+				}
 			}
 		},
 		"gatheringEvent": {
@@ -482,7 +490,8 @@
 	"formData": {
 		"gatheringEvent": {
 			"leg": ["MA.3", "b", "c"],
-			"legPublic": false
+			"legPublic": false,
+			"dateEnd": "2016-06-22T11:08:54.044Z"
 		},
 		"gatherings": [
 			{
@@ -501,8 +510,6 @@
 				}
 			},
 			{
-				"dateBegin": "2016-05-20T11:08:54.044Z",
-				"dateEnd": "",
 				"kartta": "",
 				"units": [],
 				"image": "",
