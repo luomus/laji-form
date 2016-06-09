@@ -123,7 +123,7 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
-				//fieldSelectorValues.push("*");
+				if (fieldSelectorValues.length > 0 && fieldSelectorValues[0] !== undefined) fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
 				fieldSelectorValues = update(fieldSelectorValues, {$push: ["*"]});
 				console.log(fieldSelectorValues);
 				fieldSelectorValues.forEach(fieldSelectorValue => {
