@@ -79,7 +79,6 @@ export default class InjectField extends Component {
 
 		//let options = uiSchema["ui:options"];
 		if (options && options.uiSchema) {
-			console.log("tää");
 			uiSchema = update(uiSchema, {$merge: {["ui:field"]: options.uiSchema["ui:field"]}})
 			uiSchema = update(uiSchema, {$merge: {["ui:options"]: options.uiSchema["ui:options"]}})
 		} else {

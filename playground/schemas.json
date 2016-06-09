@@ -466,7 +466,6 @@
 		"gatheringEvent": {
 			"leg": ["MA.3", "b", "c"],
 			"legPublic": false,
-			"dateBegin": "2016-06-20T11:08:54.044Z",
 			"dateEnd": "2016-06-22T11:08:54.044Z"
 		},
 		"gatherings": [

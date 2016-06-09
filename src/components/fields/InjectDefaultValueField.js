@@ -2,6 +2,19 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
+/**
+ * Injects given fields value as default value to target field.
+ * uiSchema = { "ui:options": {
+ *  "injections": [
+ *    {
+ *      "fields": [field1, field2...], (fields to inject from source field)
+ *      "target": fieldName (target field where default value is injected)
+ *      "source": fieldName (source field where default value is injected from. Must be object field)
+ *    }
+ *    ...
+ *  ]
+ * }}
+ */
 export default class InjectDefaultValueField extends Component {
 	constructor(props) {
 		super(props);
@@ -13,7 +26,7 @@ export default class InjectDefaultValueField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema, formData} = props;
+		let {uiSchema, formData, schema} = props;
 		const options = uiSchema["ui:options"];
 		let fields = options.fields;
 		const target = options.target;
@@ -24,26 +37,18 @@ export default class InjectDefaultValueField extends Component {
 			source = formData[options.source];
 		}
 
-		const copiedTo = {};
-
-		if (!Array.isArray(fields)) fields = [fields];
 		fields.forEach(field => {
-				if (Array.isArray(formData[target])) {
-					formData[target].forEach((item, i) => {
-						let targetsValue = formData[target][i][field];
-						if (targetsValue === undefined && targetsValue !== "") {
-							formData = update(formData, {[target]: {[i]: {$merge: {[field]: source[field]}}}});
-							copiedTo[i] = true;
-						}
-					});
-				} else {
-					if (formData[target][field] === undefined) {
-						formData = update(formData, {[target]: {$merge: {[field]: source[field]}}});
-					}
-				}
+			const schemaInjection = {properties: {[field]: {$merge: {default: source[field]}}}};
+			if (schema.properties[target].type === "array") {
+				schema = update(schema, {properties: {[target]: {items: schemaInjection}}});
+			} else if (schema.properties[target].type === "object") {
+				schema = update(schema, {properties: {[target]: schemaInjection}});
+			} else {
+				throw "schema type must be object or array";
+			}
 		});
 
-		return {uiSchema, formData};
+		return {uiSchema, formData, schema};
 	}
 
 	render() {
