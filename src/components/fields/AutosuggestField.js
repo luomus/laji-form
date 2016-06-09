@@ -13,6 +13,9 @@ const autosuggestFieldSettings = {
 				text += " (" + suggestion.payload.informalGroupsStr + ")";
 			}
 			return text;
+		},
+		convertInputValue: that => {
+			return new Promise((resolve) => {resolve(that.state.options.parentData.informalNameString)});
 		}
 	},
 	friends: {
@@ -20,8 +23,9 @@ const autosuggestFieldSettings = {
 		render: suggestion => {
 			return suggestion.value;
 		},
-		convertInputValue: (inputValue, apiClient) => {
-			return apiClient.fetch("/person/by-id/" + inputValue).then((response) => {
+		convertInputValue: that => {
+			let inputValue = that.props.formData;
+			return new ApiClient().fetch("/person/by-id/" + inputValue).then((response) => {
 				return response.inheritedName + ", " + response.preferredName;
 			})
 		}
@@ -59,6 +63,7 @@ export default class AutosuggestField extends Component {
 		let {schema} = props;
 		let propsUiSchema = props.uiSchema;
 		let options = propsUiSchema["ui:options"];
+		options.parentData = props.formData;
 
 		schema = update(schema, {});
 		Object.keys(options.suggestionReceivers).forEach((fieldName) => {
@@ -172,6 +177,14 @@ export class AutosuggestInputField extends Component {
 		this.apiClient = new ApiClient();
 	}
 
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props), () => {
+			if (!this.state.inputValue || (this.state.inputValue && props.formData !== this.state.origValue)) {
+				this.triggerConvert(props);
+			}
+		});
+	}
+
 	componentDidMount() {
 		this.mounted = true;
 		this.triggerConvert(this.props);
@@ -182,10 +195,11 @@ export class AutosuggestInputField extends Component {
 	}
 
 	triggerConvert = (props) => {
-		if (props.formData !== undefined && props.formData !== "" && this.state.autosuggestSettings.convertInputValue) {
+		const convert = this.state.autosuggestSettings.convertInputValue;
+		if ((this.state.inputValue !== props.formData) && convert) {
 			let origValue = props.formData;
 			this.setState({isLoading: true});
-			this.state.autosuggestSettings.convertInputValue(props.formData, this.apiClient)
+			convert(this)
 				.then( inputValue => {
 					if (!this.mounted) return;
 					this.setState({inputValue: inputValue, origValue: origValue, isLoading: false});
@@ -197,17 +211,10 @@ export class AutosuggestInputField extends Component {
 		}
 	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props), () => {
-			if (!this.state.inputValue || (this.state.inputValue && props.formData !== this.state.origValue)) {
-				this.triggerConvert(props);
-			}
-		});
-	}
-
 	getStateFromProps = (props) => {
 		let options = props.uiSchema["ui:options"];
 		let autosuggestSettings = autosuggestFieldSettings[options.autosuggestField];
+		if (this.state && props.formData !== this.state.inputValue) this.triggerConvert(props);
 		return {options, autosuggestSettings};
 	}
 

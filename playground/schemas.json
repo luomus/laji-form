@@ -191,9 +191,6 @@
 				},
 				"units": {
 					"ui:field": "autoArray",
-					"ui:options": {
-						"rowAddAmount": 4
-					},
 					"items": {
 						"ui:field": "scoped",
 						"ui:options": {
