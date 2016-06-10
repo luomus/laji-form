@@ -7,7 +7,7 @@ import Button from "../Button";
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:
  * uiSchema = {ui:options: {
- *  additionalFields [<string>]
+ *  additionalFields: [<string>]
  *  expanderButtonText: <string>
  *  contractorButtonText: <string>
  *  uiSchema: <uiSchema> (used for inner schema)
@@ -18,7 +18,7 @@ import Button from "../Button";
 export default class AdditionalsExpanderField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {showAdditional: false};
+		this.state = {showAdditional: undefined};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
 	}
 
@@ -27,7 +27,28 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	getStateFromProps(props) {
-		return {schema: this.getSchema(props), uiSchema: this.getUiSchema(props)}
+		let {schema, uiSchema} = props;
+
+		let dictionarifiedAdditionals = {};
+
+		if (uiSchema["ui:options"] && uiSchema["ui:options"].additionalFields && uiSchema["ui:options"].additionalFields.length) {
+			uiSchema["ui:options"].additionalFields.forEach((option) => {
+				dictionarifiedAdditionals[option] = true;
+			});
+			let showAdditional = this.state.showAdditional !== false && this.shouldShowAdditionals(props, dictionarifiedAdditionals);
+			if (!showAdditional && uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].additionalFields) {
+				let filteredSchema = {};
+				Object.keys(schema.properties).forEach((prop) => {
+					if (!dictionarifiedAdditionals[prop]) filteredSchema[prop] = schema.properties[prop];
+				});
+				schema = update(schema, {properties: {$set: filteredSchema}, "ui:field": {$set: undefined}});
+			}
+		}
+
+		uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
+			props.uiSchema["ui:options"].uiSchema : {};
+
+		return {schema, uiSchema, dictionarifiedAdditionals}
 	}
 
 	render() {
@@ -47,37 +68,26 @@ export default class AdditionalsExpanderField extends Component {
 		)
 	}
 
-	getSchema = (props) => {
-		const schema = props.schema;
-		const uiSchema = props.uiSchema;
-		if (this.state.showAdditional || !uiSchema["ui:options"] || (uiSchema["ui:options"] && !uiSchema["ui:options"].additionalFields)) {
-			return schema;
-		} else if (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].additionalFields) {
-			let dictionarifiedAdditionals = {};
-			uiSchema["ui:options"].additionalFields.forEach((option) => {
-				dictionarifiedAdditionals[option] = true;
-			})
-			let filteredSchema = {};
-			Object.keys(schema.properties).forEach((prop) => {
-				if (!dictionarifiedAdditionals[prop]) filteredSchema[prop] = schema.properties[prop];
-			});
-			return update(schema, {properties: {$set: filteredSchema}, "ui:field": {$set: undefined}});
-		}
-		throw "bad schema for AdditionalsExpanderField";
-	}
+	shouldShowAdditionals = (props, dictionarifiedAdditionals) => {
+		if (!dictionarifiedAdditionals) return false;
+		let keys = Object.keys(dictionarifiedAdditionals);
+		if (!keys.length) return false;
 
-	getUiSchema = (props) => {
-		return (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
-			props.uiSchema["ui:options"].uiSchema : {};
+		if (props.formData) for (let property in props.formData) {
+			if (dictionarifiedAdditionals[property]) return true;
+		}
+		return false;
 	}
 
 	renderButtons = () => {
+		if (!this.props.uiSchema || !this.props.uiSchema["ui:options"] || !this.props.uiSchema["ui:options"].additionalFields || !this.props.uiSchema["ui:options"].additionalFields.length) return null;
+
 		let expanderText = "Lisää";
 		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].expanderButtonText) expanderText = this.props.uiSchema["ui:options"].expanderButtonText;
 		let contractorText = "Vähemmän";
 		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].contractorButtonText) contractorText = this.props.uiSchema["ui:options"].contractorButtonText;
 
-		let button = this.state.showAdditional ?
+		let button = (this.state.showAdditional !== false && this.shouldShowAdditionals(this.props, this.state.dictionarifiedAdditionals)) ?
 				<Button onClick={this.dontShowAdditional}>{contractorText}</Button> :
 				<Button onClick={this.showAdditional}>{expanderText}</Button>;
 		return (<div>
@@ -87,10 +97,10 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	showAdditional = () => {
-		this.setState({showAdditional: true});
+		this.setState({showAdditional: true}, () => {this.componentWillReceiveProps(this.props)});
 	}
 
 	dontShowAdditional = () => {
-		this.setState({showAdditional: false});
+		this.setState({showAdditional: false}, () => {this.componentWillReceiveProps(this.props)});
 	}
 }

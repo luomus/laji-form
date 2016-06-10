@@ -237,14 +237,7 @@
 														"ring",
 														"sex",
 														"notes"
-													],
-													"uiSchema": {
-														"ui:options": {
-															"additionalFields": [
-																"notes"
-															]
-														}
-													}
+													]
 												},
 												"MVL.2": {
 													"fields": [
@@ -332,7 +325,6 @@
 															"ui:options": {
 																"uiSchema": {
 																	"identification": {
-																		"ui:field": "autoArray",
 																		"items": {
 																			"ui:field": "autosuggest",
 																			"ui:options": {
@@ -581,7 +573,8 @@
 							"MVL.2"
 						],
 						"taxonID": "MX.46549",
-						"recordBasis": "preservedSpecimen"
+						"recordBasis": "preservedSpecimen",
+						"notes": "Muistiinpanot"
 					}
 				],
 				"dateBegin": "2016-05-11T11:08:54.044Z",
