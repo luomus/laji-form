@@ -17,6 +17,7 @@ import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
 import HiddenField from "./fields/HiddenField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
+import DateWidget from "./widgets/DateWidget";
 import ApiClient from "../ApiClient";
 
 const log = (type) => console.log.bind(console, type);
@@ -54,7 +55,8 @@ export default class LajiForm extends Component {
 					hidden: HiddenField
 				}}
 				widgets={{
-					dateTime: DateTimeWidget
+					dateTime: DateTimeWidget,
+					date: DateWidget
 				}}
 				onError={log("errors")} />
 		)

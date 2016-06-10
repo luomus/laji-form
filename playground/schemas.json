@@ -340,7 +340,7 @@
 																						"ui:widget": "hidden"
 																					},
 																					"detDate": {
-																						"ui:widget": "dateTime"
+																						"ui:widget": "date"
 																					}
 																				}
 																			}
@@ -608,9 +608,7 @@
 		"temp": false,
 		"ready": false,
 		"editors": [
-			"MA.3",
-			"c",
-			"d"
+			"MA.3"
 		]
 	}
 }
