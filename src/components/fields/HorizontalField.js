@@ -16,23 +16,19 @@ export default class HorizontalField extends Component {
 	getStateFromProps = (props) => {
 		let {uiSchema} = props;
 		uiSchema = update(uiSchema, {$merge: {"ui:field": undefined}});
-		
-		//const division = parseInt(12 / Object.keys(props.schema.properties).length);
 
 		const groups = [];
 		let groupIdx = 0;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
-			//let {uiSchema} = props;
-			//if (uiSchema[property]) uiSchema = uiSchema[property];
-			//let hidden = !uiSchema || uiSchema["ui:widget"] == "hidden" || uiSchema["ui:field"] == "hidden";
+			const shouldHaveOwnRow = (type === "array" || type === "object");
+
 			if (this.isHidden(props, property)) return;
-			if (type === "array" || type === "object") {
-				groupIdx++;
-			}
+			if (shouldHaveOwnRow || (groups[groupIdx] && groups[groupIdx].length >= 6)) groupIdx++;
 			if (!groups[groupIdx]) groups[groupIdx] = [];
 			groups[groupIdx].push(property);
+			if (shouldHaveOwnRow) groupIdx++;
 		});
 
 		return {uiSchema, groups};
