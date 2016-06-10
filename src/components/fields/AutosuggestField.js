@@ -9,8 +9,8 @@ const autosuggestFieldSettings = {
 		includePayload: true,
 		render: suggestion => {
 			let text = suggestion.value;
-			if (suggestion.payload.informalGroupsStr) {
-				text += " (" + suggestion.payload.informalGroupsStr + ")";
+			if (suggestion.payload.taxonGroupsStr) {
+				text += " (" + suggestion.payload.taxonGroupsStr + ")";
 			}
 			return text;
 		},
