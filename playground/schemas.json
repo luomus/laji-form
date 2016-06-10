@@ -202,23 +202,45 @@
 					"items": {
 						"ui:field": "scoped",
 						"ui:options": {
+							"includeAdditionalFieldsChooserButton": true,
 							"uiSchema": {
-								"ui:field": "expandable",
+								"ui:field": "autosuggest",
 								"ui:options": {
-									"expanderButtonText": "Näytä lisää muuttujia",
-									"contractorButtonText": "Näytä vähemmän muuttujia",
+									"autosuggestField": "taxon",
+									"suggestionInputField": "informalNameString",
+									"suggestionReceivers": {
+										"informalNameString": "value",
+										"unitType": "payload.taxonGroups",
+										"taxonID": "key"
+									},
 									"uiSchema": {
-										"ui:field": "autosuggest",
-										"ui:options": {
-											"autosuggestField": "taxon",
-											"suggestionInputField": "informalNameString",
-											"suggestionReceivers": {
-												"informalNameString": "value",
-												"unitType": "payload.taxonGroups",
-												"taxonID": "key"
-											},
-											"uiSchema": {
-												"ui:field": "horizontal"
+										"ui:field": "horizontal",
+										"unitType": {
+											"ui:field": "hidden"
+										},
+										"taxonID": {
+											"ui:widget": "hidden"
+										},
+										"identification": {
+											"items": {
+												"ui:field": "autosuggest",
+												"ui:options": {
+													"autosuggestField": "taxon",
+													"suggestionInputField": "taxon",
+													"suggestionReceivers": {
+														"taxon": "value",
+														"taxonID": "key"
+													},
+													"uiSchema": {
+														"ui:field": "horizontal",
+														"taxonID": {
+															"ui:widget": "hidden"
+														},
+														"detDate": {
+															"ui:widget": "date"
+														}
+													}
+												}
 											}
 										}
 									}
@@ -228,7 +250,8 @@
 								"informalNameString": {
 									"+": {
 										"fields": [
-											"unitType"
+											"unitType",
+											"taxonID"
 										],
 										"fieldScopes": {
 											"unitType": {
@@ -243,110 +266,38 @@
 													"fields": [
 														"age",
 														"notes"
-													],
-													"uiSchema": {
-														"ui:options": {
-															"additionalFields": [
-																"alive",
-																"notes"
-															]
-														}
-													}
+													]
 												},
 												"MVL.21": {
 													"fields": [
 														"count",
 														"alive"
-													],
-													"uiSchema": {
-														"ui:options": {
-															"additionalFields": [
-																"notes"
-															]
-														}
-													}
+													]
 												},
 												"MVL.26": {
 													"fields": [
 														"age",
 														"alive"
-													],
-													"uiSchema": {
-														"ui:options": {
-															"additionalFields": [
-																"notes"
-															]
-														}
-													}
+													]
 												},
 												"+": {
-													"refs": ["recordBasis"],
-													"uiSchema": {"ui:options": {
-															"uiSchema": {
-																"ui:options": {
-																	"uiSchema": {
-																		"unitType": {
-																			"ui:field": "hidden"
-																		}
-																	}
-																}
-															}
-														}
-													}
-
-												}
-											}
-										}
-									}
-								}
-							},
-							"definitions": {
-								"recordBasis": {
-									"fields": ["recordBasis"],
-									"fieldScopes": {
-										"recordBasis": {
-											"observationSeen": {
-												"fields": [
-													"seenField",
-													"seenField2"
-												]
-											},
-											"observationHeard": {
-												"fields": [
-													"heardField",
-													"heardField2"
-												]
-											},
-											"preservedSpecimen": {
-												"fields": ["identification"],
-												"uiSchema": {
-													"ui:options": {
-														"uiSchema": {
-															"ui:options": {
-																"uiSchema": {
-																	"identification": {
-																		"items": {
-																			"ui:field": "autosuggest",
-																			"ui:options": {
-																				"autosuggestField": "taxon",
-																				"suggestionInputField": "taxon",
-																				"suggestionReceivers": {
-																					"taxon": "value",
-																					"taxonID": "key"
-																				},
-																				"uiSchema": {
-																					"ui:field": "horizontal",
-																					"taxonID": {
-																						"ui:widget": "hidden"
-																					},
-																					"detDate": {
-																						"ui:widget": "date"
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
+													"fields": ["recordBasis"],
+													"fieldScopes": {
+														"recordBasis": {
+															"observationSeen": {
+																"fields": [
+																	"seenField",
+																	"seenField2"
+																]
+															},
+															"observationHeard": {
+																"fields": [
+																	"heardField",
+																	"heardField2"
+																]
+															},
+															"preservedSpecimen": {
+																"fields": ["identification"]
 															}
 														}
 													}
@@ -574,7 +525,8 @@
 						],
 						"taxonID": "MX.46549",
 						"recordBasis": "preservedSpecimen",
-						"notes": "Muistiinpanot"
+						"notes": "Muistiinpanot",
+						"alive": true
 					}
 				],
 				"dateBegin": "2016-05-11T11:08:54.044Z",

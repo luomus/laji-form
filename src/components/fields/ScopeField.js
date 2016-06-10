@@ -3,6 +3,7 @@ import update from "react-addons-update";
 import merge from "deepmerge";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
+import Button from "../Button"
 
 /**
  * Field with fields, which are shown according to recursive scope.
@@ -38,8 +39,7 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0]}
-		this.state = this.getStateFromProps(props);
+		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], showAdditional: false, additionalFields: {}, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -62,22 +62,26 @@ export default class ScopeField extends Component {
 				});
 			});
 		}
-		getFieldScopesFields(props.uiSchema["ui:options"]);
+		let options = props.uiSchema["ui:options"];
+		getFieldScopesFields(options);
+
+		let includeAdditionalFieldsChooserButton = !!options.includeAdditionalFieldsChooserButton;
 
 		let schemas = this.getSchemas(props);
 		return {
 			...schemas,
 			primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
+			includeAdditionalFieldsChooserButton
 		};
 	}
 
 	render() {
 		return (
-			<SchemaField
-				{...this.props}
-				{...this.state}
-			/>
-		)
+			<div>
+				<SchemaField {...this.props} {...this.state} />
+				{this.renderAdditionalsButton()}
+			</div>
+		);
 	}
 
 	// Returns {schema: schema, uiSchema: uiSchema}
@@ -103,7 +107,7 @@ export default class ScopeField extends Component {
 				});
 			}
 
-			fieldScope.fields.forEach((fieldName) => {
+			if (fieldScope.fields) fieldScope.fields.forEach((fieldName) => {
 				fieldsToShow[fieldName] = schema.properties[fieldName];
 			});
 
@@ -138,6 +142,21 @@ export default class ScopeField extends Component {
 
 		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
 
+		let additionalFields = (this.state && this.state.additionalFields) ? this.state.additionalFields : [];
+		if (additionalFields) {
+			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
+				fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
+			});
+		}
+
+		if (props.formData) {
+			Object.keys(formData).forEach((property) => {
+				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
+					fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
+				}
+			})
+		}
+
 		schema = update(schema, {$merge: {properties: fieldsToShow}});
 
 		Object.keys(schema.properties).forEach(property => {
@@ -151,11 +170,51 @@ export default class ScopeField extends Component {
 		}
 	}
 
-	onTaxonNameSelected = (e) => {
-		this.props.onChange(getDefaultFormState(this.props.schema, {[this.state.primaryfieldsSelector]: e.target.value}, this.props.registry.definitions));
-	}
-
 	onChange = (data) => {
 		this.props.onChange(data);
+	}
+
+	renderAdditionalsButton = () => {
+		if (!this.state.includeAdditionalFieldsChooserButton) return null;
+
+		let button = this.state.showAdditional ?
+			<Button onClick={this.dontShowAdditional}>Sulje</Button> :
+			<Button onClick={this.showAdditional}>Valitse lisää kenttiä</Button>;
+
+		let list = [];
+		if (this.state.showAdditional) {
+			let additionalProperties = {};
+			Object.keys(this.props.schema.properties).forEach(property => {
+				if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
+			});
+
+			let {additionalFields} = this.state;
+
+			let {formData} = this.props;
+			if (!formData) formData = {};
+
+			Object.keys(additionalProperties).sort((a, b) => {return ((additionalProperties[a].title || a) < (additionalProperties[b].title || b)) ? -1 : 1}).forEach(property => {
+				let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
+				list.push(<a
+					key={property}
+					className={"list-group-item" + (isIncluded ? " active" : "")}
+					onClick={() => {
+						additionalFields[property] = !isIncluded;
+						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });
+					}}>
+					{additionalProperties[property].title || property}
+				</a>)
+			});
+		}
+
+		return <div>{button}<div className="list-group scope-field-additionals-container">{list}</div></div>;
+	}
+
+	showAdditional = () => {
+		this.setState({showAdditional: true}, () => {this.componentWillReceiveProps(this.props)});
+	}
+
+	dontShowAdditional = () => {
+		this.setState({showAdditional: false}, () => {this.componentWillReceiveProps(this.props)});
 	}
 }

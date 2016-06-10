@@ -1,4 +1,4 @@
-.autosuggest-container  {
+.autosuggest-container, .scope-field-additionals-container  {
     position: absolute;
     z-index: 1;
 }
