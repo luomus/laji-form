@@ -221,7 +221,7 @@
 										"taxonID": {
 											"ui:widget": "hidden"
 										},
-										"identification": {
+										"identifications": {
 											"items": {
 												"ui:field": "autosuggest",
 												"ui:options": {
@@ -297,7 +297,7 @@
 																]
 															},
 															"preservedSpecimen": {
-																"fields": ["identification"]
+																"fields": ["identifications"]
 															}
 														}
 													}
@@ -434,7 +434,7 @@
 										"enum": ["", "observationHeard", "observationSeen", "preservedSpecimen"],
 										"enumNames": ["", "Kuultu", "Nähty", "Otettu talteen"]
 									},
-									"identification": {
+									"identifications": {
 										"title": "Tunnistukset",
 										"type": "array",
 										"items": {
