@@ -49,7 +49,7 @@ export default class MapArrayField extends Component {
 
 	onRemove = (e) => {
 		let splices = [];
-		e.ids.forEach((id) => {
+		e.ids.sort().reverse().forEach((id) => {
 			splices.push([id, 1]);
 		});
 		this.props.onChange(update(this.props.formData, {$splice: splices}));
@@ -124,6 +124,7 @@ export default class MapArrayField extends Component {
 			</div>
 			<Button disabled={!buttonEnabled} onClick={this.onActivatePrev}>Edellinen</Button>
 			<Button disabled={!buttonEnabled} onClick={this.onActivateNext}>Seuraava</Button>
+			{"[" + ((this.state.activeId !== undefined) ? this.state.activeId + 1 : 0) + "/" + ((this.state.data) ? this.state.data.length : 0) + "]"}
 			{this.renderSchemaField()}
 		</div>)
 	}
