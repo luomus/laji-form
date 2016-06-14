@@ -8,16 +8,8 @@ import Button from "../Button";
 export default class MapArrayField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {activeId: undefined, idsToIdxs: {}, ...this.getStateFromProps(props)};
-
-		let initialData = [];
-		if (this.props.formData) this.props.formData.forEach((item) => {
-			initialData.push({type: "Feature", properties: {}, geometry: item.wgs84Geometry});
-		});
-		this.initialData = initialData;
+		this.state = {...this.getStateFromProps(props)};
 	}
-
-
 
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
@@ -36,140 +28,61 @@ export default class MapArrayField extends Component {
 			uiSchema = update(uiSchema, {"ui:order": {$splice: [[order.indexOf("wgs84Geometry"), 1]]}})
 		}
 
-		return {...props, schema, uiSchema, onChange: this.onItemChange};
-	}
-
-	componentDidMount() {
-		['deletestart', 'editstart'].forEach(start => this.refs.map.map.on('draw:' + start, e => {
-			this.preventActivatingByClick = true;
-		}));
-		['deletestop', 'editstop'].forEach(stop => this.refs.map.map.on('draw:' + stop, e => {
-			this.preventActivatingByClick = false;
-		}));
-	}
-
-	getInitialIds = ids => {
-		let idsToIdxs = {};
-		for (let i = 0; i < ids.length; i++) {
-			idsToIdxs[ids[i]]  = i;
-		}
-		this.setState({
-			activeId: parseInt(Object.keys(idsToIdxs)[0]),
-			idsToIdxs
+		let data = [];
+		if (props.formData) props.formData.forEach((item) => {
+			data.push({type: "Feature", properties: {}, geometry: item.wgs84Geometry});
 		});
+
+		let activeId = (this.state && this.state.activeId !== undefined) ? this.state.activeId : (data.length ? 0 : undefined);
+
+		return {...props, schema, uiSchema, data, activeId, onChange: this.onItemChange};
 	}
 
 	onAdd = (e) => {
-		let id = e.id;
 		let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
 		item.wgs84Geometry = e.data.geometry;
 		let formData = this.props.formData;
 		if (formData && formData.length) formData.push(item);
 		else formData = [item];
 		this.props.onChange(formData, {validate: false});
-
-		let idsToIdxs = this.state.idsToIdxs;
-		let arrayIdx = formData.length - 1;
-		idsToIdxs[id] = arrayIdx;
-
-		this.setState({idsToIdxs});
-		this.setActive(id);
 	}
 
 	onRemove = (e) => {
 		let splices = [];
-		let idsToIdxs = JSON.parse(JSON.stringify(this.state.idsToIdxs));
-		let ids = Object.keys(idsToIdxs).map(i => {return parseInt(i)});
 		e.ids.forEach((id) => {
-			let idx = idsToIdxs[id];
-			splices.push([idx, 1]);
-
-			for (let idKey = ids.indexOf(id) + 1; idKey < ids.length; idKey++) {
-				let id = ids[idKey];
-				idsToIdxs[id] = idsToIdxs[id] - 1;
-			}
-			delete idsToIdxs[id];
+			splices.push([id, 1]);
 		});
 		this.props.onChange(update(this.props.formData, {$splice: splices}));
-
-		let activeId = this.state.activeId;
-		if (e.ids.indexOf(activeId) >= 0) {
-			let activeIdIdx = this.state.idsToIdxs[activeId];
-			let ids = Object.keys(idsToIdxs).map(i => {return parseInt(i)});
-			if (ids.length === 0) {
-				activeId = undefined;
-			}
-			if (activeIdIdx === 0) {
-				activeId = ids[0];
-			} else {
-				let origIds = Object.keys(this.state.idsToIdxs).map(i => {return parseInt(i)});
-
-				function findByI(i) {
-					let id = origIds[i];
-					if (ids.indexOf(id) >= 0) {
-						activeId = id;
-						return true;
-					}
-				}
-				for (let i = origIds.indexOf(activeId); i >= 0; i--) {
-					if (findByI(i)) break;
-				}
-				for (let i = origIds.indexOf(activeId); i < origIds.length; i++) {
-					if (findByI(i)) break;
-				}
-			}
-			this.setState({idsToIdxs});
-			this.setActive(activeId)
-		}
 	}
 
 	onEdited = (e) => {
 		let formData = this.props.formData;
 		Object.keys(e.data).forEach( id => {
 			let geoJSON = e.data[id];
-			let idx = this.state.idsToIdxs[id];
-			formData[idx].wgs84Geometry = geoJSON.geometry;
+			formData[id].wgs84Geometry = geoJSON.geometry;
 		});
 		this.props.onChange(formData);
 	}
 
 	setActive = id => {
+		console.log(id);
 		this.setState({activeId: id});
-		this.setViewTo(id);
-	}
-
-	setViewTo = id => {
-		if (id === undefined) return;
-
-		let layer = this.refs.map.drawnItems._layers[id];
-
-		if (!layer) return;
-
-		let map = this.refs.map.map;
-
-		if (layer.getLatLng) {
-			map.setView(layer.getLatLng())
-		} else if (layer.getBounds) {
-			map.fitBounds(layer.getBounds());
-		}
 	}
 
 	onActivatePrev = () => {
-		let ids = Object.keys(this.state.idsToIdxs).map( i => {return parseInt(i)});
-		let idx = ids.indexOf(this.state.activeId) - 1;
-		if (idx == -1) idx = ids.length - 1;
-		this.setActive(ids[idx])
+		let id = (this.state.data && this.state.data.length) ? this.state.activeId - 1 : undefined;
+		if (id == -1) id = this.state.data.length - 1;
+		this.refs.map.focusToLayer(id)
 	}
 
 	onActivateNext = () => {
-		let ids = Object.keys(this.state.idsToIdxs).map( i => {return parseInt(i)});
-		let idx = ids.indexOf(this.state.activeId) + 1;
-		if (idx >= ids.length) idx = 0;
-		this.setActive(ids[idx])
+		let id =(this.state.data && this.state.data.length) ? this.state.activeId + 1 : undefined;
+		if (id !== undefined && id >= this.state.data.length) id = 0;
+		this.refs.map.focusToLayer(id)
 	}
 
 	onItemChange = (formData) => {
-		this.props.onChange(update(this.props.formData, {$splice: [[this.state.idsToIdxs[this.state.activeId], 1, formData]]}));
+		this.props.onChange(update(this.props.formData, {$splice: [[this.state.activeId, 1, formData]]}));
 	}
 
 	onMapChange = (e) => {
@@ -184,14 +97,8 @@ export default class MapArrayField extends Component {
 				this.onEdited(e);
 				break;
 			case "active":
-				this.setActive(e)
+				this.setActive(e.id);
 				break;
-		}
-	}
-
-	onFeatureClick = id => {
-		if (!this.preventActivatingByClick) {
-			this.setActive(id);
 		}
 	}
 
@@ -202,33 +109,35 @@ export default class MapArrayField extends Component {
 			}
 		}
 
+		const buttonEnabled = this.state.data && this.state.data.length && this.state.activeId !== undefined;
+
 		return (<div>
 			<div style={style.map}>
 				<MapComponent
 					ref={"map"}
-					data={this.initialData}
+					data={this.state.data}
+					activeId={this.state.activeId}
 					longitude={60.171372}
 					latitude={24.931275}
 					zoom={13}
-					getInitialIds={this.getInitialIds}
 					onChange={this.onMapChange}
-					onFeatureClick={this.onFeatureClick}/>
+				/>
 			</div>
-			<Button disabled={!(this.props.formData && this.props.formData.length)} onClick={this.onActivatePrev}>Edellinen</Button>
-			<Button disabled={!(this.props.formData && this.props.formData.length)} onClick={this.onActivateNext}>Seuraava</Button>
+			<Button disabled={!buttonEnabled} onClick={this.onActivatePrev}>Edellinen</Button>
+			<Button disabled={!buttonEnabled} onClick={this.onActivateNext}>Seuraava</Button>
 			{this.renderSchemaField()}
 		</div>)
 	}
 
 	renderSchemaField = () => {
 		let {formData, idSchema, errorSchema} = this.props;
-		let idx = this.state.idsToIdxs[this.state.activeId];
+		let id = this.state.activeId;
 
-		let itemFormData = (formData && formData.length) ? formData[idx] : undefined;
-		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + idx, this.props.registry.definitions);
-		let itemErrorSchema = errorSchema ? errorSchema[idx] : undefined;
+		let itemFormData = (formData && formData.length) ? formData[id] : undefined;
+		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + id, this.props.registry.definitions);
+		let itemErrorSchema = errorSchema ? errorSchema[id] : undefined;
 
-		if (formData && formData.length > 0) return <SchemaField key={idx} {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} />;
+		if (formData && formData.length > 0) return <SchemaField key={id} {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} />;
 		return null
 	}
 }
