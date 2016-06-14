@@ -65,7 +65,6 @@ export default class MapArrayField extends Component {
 	}
 
 	setActive = id => {
-		console.log(id);
 		this.setState({activeId: id});
 	}
 
