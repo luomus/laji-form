@@ -4,7 +4,6 @@ import { toIdSchema } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import Button from "../Button";
-import UnitField from "./ScopeField";
 
 export default class AutoArrayField extends Component {
 	render() {
@@ -47,7 +46,7 @@ export default class AutoArrayField extends Component {
 		return (itemFormData) => {
 			let formData = this.props.formData;
 			if (!formData) formData = [];
-			formData[idx] = itemFormData;
+			formData = update(formData, {$merge: {[idx]: itemFormData}});
 			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
 		}
 	}

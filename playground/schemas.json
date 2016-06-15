@@ -198,51 +198,59 @@
 					}
 				},
 				"units": {
-					"ui:field": "autoArray",
-					"items": {
-						"ui:field": "scoped",
-						"ui:options": {
-							"includeAdditionalFieldsChooserButton": true,
-							"uiSchema": {
-								"ui:field": "autosuggest",
+					"ui:field": "copyValuesArray",
+					"ui:options": {
+						"copy": [
+							"recordBasis"
+						],
+						"uiSchema": {
+							"ui:field": "autoArray",
+							"items": {
+								"ui:field": "scoped",
 								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionInputField": "informalNameString",
-									"suggestionReceivers": {
-										"informalNameString": "value",
-										"unitType": "payload.taxonGroups",
-										"taxonID": "key"
-									},
+									"includeAdditionalFieldsChooserButton": true,
 									"uiSchema": {
-										"ui:field": "unit",
+										"ui:field": "autosuggest",
 										"ui:options": {
+											"autosuggestField": "taxon",
+											"allowNonsuggestedValue": true,
+											"suggestionInputField": "informalNameString",
+											"suggestionReceivers": {
+												"informalNameString": "value",
+												"unitType": "payload.taxonGroups",
+												"taxonID": "key"
+											},
 											"uiSchema": {
-												"ui:field": "horizontal",
-												"unitType": {
-													"ui:field": "hidden"
-												},
-												"taxonID": {
-													"ui:widget": "hidden"
-												},
-												"identifications": {
-													"items": {
-														"ui:field": "autosuggest",
-														"ui:options": {
-															"autosuggestField": "taxon",
-															"allowNonsuggestedValue": true,
-															"suggestionInputField": "taxon",
-															"suggestionReceivers": {
-																"taxon": "value",
-																"taxonID": "key"
-															},
-															"uiSchema": {
-																"ui:field": "horizontal",
-																"taxonID": {
-																	"ui:widget": "hidden"
-																},
-																"detDate": {
-																	"ui:widget": "date"
+												"ui:field": "unit",
+												"ui:options": {
+													"uiSchema": {
+														"ui:field": "horizontal",
+														"unitType": {
+															"ui:field": "hidden"
+														},
+														"taxonID": {
+															"ui:widget": "hidden"
+														},
+														"identifications": {
+															"items": {
+																"ui:field": "autosuggest",
+																"ui:options": {
+																	"autosuggestField": "taxon",
+																	"allowNonsuggestedValue": true,
+																	"suggestionInputField": "taxon",
+																	"suggestionReceivers": {
+																		"taxon": "value",
+																		"taxonID": "key"
+																	},
+																	"uiSchema": {
+																		"ui:field": "horizontal",
+																		"taxonID": {
+																			"ui:widget": "hidden"
+																		},
+																		"detDate": {
+																			"ui:widget": "date"
+																		}
+																	}
 																}
 															}
 														}
@@ -250,67 +258,75 @@
 												}
 											}
 										}
-									}
-								}
-							},
-							"fieldScopes": {
-								"informalNameString": {
-									"+": {
-										"fields": [
-											"unitType",
-											"taxonID"
-										],
-										"fieldScopes": {
-											"unitType": {
-												"MVL.1": {
-													"fields": [
-														"ring",
-														"sex",
-														"notes"
-													]
-												},
-												"MVL.2": {
-													"fields": [
-														"age",
-														"notes"
-													]
-												},
-												"MVL.21": {
-													"fields": [
-														"count",
-														"alive"
-													]
-												},
-												"MVL.26": {
-													"fields": [
-														"age",
-														"alive"
-													]
-												},
-												"+": {
-													"fields": ["recordBasis"],
-													"fieldScopes": {
-														"recordBasis": {
-															"observationSeen": {
-																"fields": [
-																	"seenField",
-																	"seenField2"
-																]
-															},
-															"observationHeard": {
-																"fields": [
-																	"heardField",
-																	"heardField2"
-																]
-															},
-															"preservedSpecimen": {
-																"fields": ["identifications"]
-															}
+									},
+									"fieldScopes": {
+										"informalNameString": {
+											"+": {
+												"fields": [
+													"unitType",
+													"taxonID"
+												],
+												"fieldScopes": {
+													"unitType": {
+														"MVL.1": {
+															"fields": [
+																"ring",
+																"sex",
+																"notes"
+															]
+														},
+														"MVL.2": {
+															"fields": [
+																"age",
+																"notes"
+															]
+														},
+														"MVL.21": {
+															"fields": [
+																"count",
+																"alive"
+															]
+														},
+														"MVL.26": {
+															"fields": [
+																"age",
+																"alive"
+															]
 														}
+													}
+												},
+												"refs": ["recordBasis"]
+											}
+										}
+									},
+									"definitions": {
+										"recordBasis": {
+											"fields": [
+												"recordBasis"
+											],
+											"fieldScopes": {
+												"recordBasis": {
+													"observationSeen": {
+														"fields": [
+															"seenField",
+															"seenField2"
+														]
+													},
+													"observationHeard": {
+														"fields": [
+															"heardField",
+															"heardField2"
+														]
+													},
+													"preservedSpecimen": {
+														"fields": [
+															"identifications"
+														]
 													}
 												}
 											}
 										}
+
 									}
 								}
 							}
@@ -436,7 +452,7 @@
 										"title": "Rengas"
 									},
 									"recordBasis": {
-										"title": "Näytteen havaitsemistapa",
+										"title": "Tyyppi",
 										"type": "string",
 										"enum": ["", "observationHeard", "observationSeen", "preservedSpecimen"],
 										"enumNames": ["", "Kuultu", "Nähty", "Otettu talteen"]
