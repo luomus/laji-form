@@ -214,30 +214,35 @@
 										"taxonID": "key"
 									},
 									"uiSchema": {
-										"ui:field": "horizontal",
-										"unitType": {
-											"ui:field": "hidden"
-										},
-										"taxonID": {
-											"ui:widget": "hidden"
-										},
-										"identifications": {
-											"items": {
-												"ui:field": "autosuggest",
-												"ui:options": {
-													"autosuggestField": "taxon",
-													"suggestionInputField": "taxon",
-													"suggestionReceivers": {
-														"taxon": "value",
-														"taxonID": "key"
-													},
-													"uiSchema": {
-														"ui:field": "horizontal",
-														"taxonID": {
-															"ui:widget": "hidden"
-														},
-														"detDate": {
-															"ui:widget": "date"
+										"ui:field": "unit",
+										"ui:options": {
+											"uiSchema": {
+												"ui:field": "horizontal",
+												"unitType": {
+													"ui:field": "hidden"
+												},
+												"taxonID": {
+													"ui:widget": "hidden"
+												},
+												"identifications": {
+													"items": {
+														"ui:field": "autosuggest",
+														"ui:options": {
+															"autosuggestField": "taxon",
+															"suggestionInputField": "taxon",
+															"suggestionReceivers": {
+																"taxon": "value",
+																"taxonID": "key"
+															},
+															"uiSchema": {
+																"ui:field": "horizontal",
+																"taxonID": {
+																	"ui:widget": "hidden"
+																},
+																"detDate": {
+																	"ui:widget": "date"
+																}
+															}
 														}
 													}
 												}

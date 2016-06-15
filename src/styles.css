@@ -2,3 +2,9 @@
     position: absolute;
     z-index: 1;
 }
+.unit-widget label {
+	display: none;
+}
+.unit-widget-known {
+	color: green;
+}
