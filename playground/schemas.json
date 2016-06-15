@@ -207,6 +207,7 @@
 								"ui:field": "autosuggest",
 								"ui:options": {
 									"autosuggestField": "taxon",
+									"allowNonsuggestedValue": true,
 									"suggestionInputField": "informalNameString",
 									"suggestionReceivers": {
 										"informalNameString": "value",
@@ -229,6 +230,7 @@
 														"ui:field": "autosuggest",
 														"ui:options": {
 															"autosuggestField": "taxon",
+															"allowNonsuggestedValue": true,
 															"suggestionInputField": "taxon",
 															"suggestionReceivers": {
 																"taxon": "value",
