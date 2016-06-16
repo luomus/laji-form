@@ -4,11 +4,12 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import MapComponent from "laji-map";
 import Button from "../Button";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 export default class MapArrayField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {...this.getStateFromProps(props)};
+		this.state = {...this.getStateFromProps(props), direction: "directionless"};
 	}
 
 	componentWillReceiveProps(props) {
@@ -64,20 +65,22 @@ export default class MapArrayField extends Component {
 		this.props.onChange(formData);
 	}
 
-	setActive = id => {
-		this.setState({activeId: id});
+	onActiveChange = id => {
+		this.setState({activeId: id, direction: "directionless"});
 	}
 
 	onActivatePrev = () => {
 		let id = (this.state.data && this.state.data.length) ? this.state.activeId - 1 : undefined;
 		if (id == -1) id = this.state.data.length - 1;
 		this.refs.map.focusToLayer(id)
+		this.setState({direction: "left"});
 	}
 
 	onActivateNext = () => {
 		let id =(this.state.data && this.state.data.length) ? this.state.activeId + 1 : undefined;
 		if (id !== undefined && id >= this.state.data.length) id = 0;
 		this.refs.map.focusToLayer(id)
+		this.setState({direction: "right"});
 	}
 
 	onItemChange = (formData) => {
@@ -96,7 +99,7 @@ export default class MapArrayField extends Component {
 				this.onEdited(e);
 				break;
 			case "active":
-				this.setActive(e.id);
+				this.onActiveChange(e.id);
 				break;
 		}
 	}
@@ -125,7 +128,9 @@ export default class MapArrayField extends Component {
 			<Button disabled={!buttonEnabled} onClick={this.onActivatePrev}>Edellinen</Button>
 			<Button disabled={!buttonEnabled} onClick={this.onActivateNext}>Seuraava</Button>
 			{"[" + ((this.state.activeId !== undefined) ? this.state.activeId + 1 : 0) + "/" + ((this.state.data) ? this.state.data.length : 0) + "]"}
-			{this.renderSchemaField()}
+			<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+				{this.renderSchemaField()}
+			</ReactCSSTransitionGroup>
 		</div>)
 	}
 

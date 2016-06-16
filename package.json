@@ -31,6 +31,7 @@
     "laji-map": "git+ssh://git@bitbucket.org/luomus/laji-map.js.git",
     "moment": "*",
     "react": "*",
+    "react-addons-css-transition-group": "^15.1.0",
     "react-addons-update": "*",
     "react-autosuggest": "*",
     "react-dom": "*",
