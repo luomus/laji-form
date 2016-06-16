@@ -209,6 +209,7 @@
 								"ui:field": "scoped",
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
+									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
 									"uiSchema": {
 										"ui:field": "autosuggest",
 										"ui:options": {
@@ -262,44 +263,43 @@
 									"fieldScopes": {
 										"informalNameString": {
 											"+": {
-												"fields": [
-													"unitType",
-													"taxonID"
-												],
-												"fieldScopes": {
-													"unitType": {
-														"MVL.1": {
-															"fields": [
-																"ring",
-																"sex",
-																"notes"
-															]
-														},
-														"MVL.2": {
-															"fields": [
-																"age",
-																"notes"
-															]
-														},
-														"MVL.21": {
-															"fields": [
-																"count",
-																"alive"
-															]
-														},
-														"MVL.26": {
-															"fields": [
-																"age",
-																"alive"
-															]
-														}
-													}
-												},
-												"refs": ["recordBasis"]
+												"refs": ["unitType", "recordBasis"]
 											}
 										}
 									},
 									"definitions": {
+										"unitType": {
+											"fields": ["taxonID", "unitType"],
+											"fieldScopes": {
+												"unitType": {
+													"MVL.1": {
+														"fields": [
+															"ring",
+															"sex",
+															"notes"
+														]
+													},
+													"MVL.2": {
+														"fields": [
+															"age",
+															"notes"
+														]
+													},
+													"MVL.21": {
+														"fields": [
+															"count",
+															"alive"
+														]
+													},
+													"MVL.26": {
+														"fields": [
+															"age",
+															"alive"
+														]
+													}
+												}
+											}
+										},
 										"recordBasis": {
 											"fields": [
 												"recordBasis"
