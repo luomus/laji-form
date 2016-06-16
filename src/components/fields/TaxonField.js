@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import ApiClient from "../../ApiClient";
 
-export default class UnitField extends Component {
+export default class TaxonField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -23,11 +23,11 @@ export default class UnitField extends Component {
 			}
 		});
 
-		let unitWidgetUiSchema = {"ui:field": "unitWidget", "ui:options": {
+		let taxonWidgetUiSchema = {"ui:field": "taxonWidget", "ui:options": {
 			"taxonID": formData["taxonID"],
 			uiSchema: uiSchema.informalNameString
 		}};
-		uiSchema = update(uiSchema, {$merge: {informalNameString: unitWidgetUiSchema}});
+		uiSchema = update(uiSchema, {$merge: {informalNameString: taxonWidgetUiSchema}});
 
 		return {uiSchema};
 	}
@@ -38,7 +38,7 @@ export default class UnitField extends Component {
 
 }
 
-export class UnitWidgetField extends Component {
+export class TaxonWidgetField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -60,11 +60,11 @@ export class UnitWidgetField extends Component {
 
 	render() {
 		let options = this.props.uiSchema["ui:options"];
-		return <div className="unit-widget">
+		return <div className="taxon-widget">
 			<SchemaField name={"ei"} {...this.props} {...this.state} />
-			<div className="unit-widget-meta">
-				{options.taxonID ? (<div><span className="unit-widget-known">Tunnettu nimi</span><br /></div>) : null}
-				<a href={"http://laji.fi/taksonomia/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
+			<div className="taxon-widget-meta">
+				{options.taxonID ? (<div><span className="taxon-widget-known">Tunnettu nimi</span><br /></div>) : null}
+				<a href={"http://laji.fi/taksoni/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
 			</div>
 		</div>
 	}
