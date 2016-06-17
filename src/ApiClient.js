@@ -6,7 +6,7 @@ let singletonInstance = null;
  */
 export default class ApiClient {
 	constructor(apiClient) {
-		if (!singletonInstance) { singletonInstance = this };
+		if (!singletonInstance) singletonInstance = this;
 		this.apiClient = apiClient;
 		return singletonInstance;
 	}

@@ -15,22 +15,24 @@ export default class DateTimeWidget extends Component {
 	constructor(props) {
 		super(props);
 		momentLocalizer(Moment);
-		this.format = "DD.MM.YYYY, hh:mm:ss";
+		this.format = "DD.MM.YYYY, hh.mm.ss";
 	}
 
 	render() {
 		const {value, readonly, onChange} = this.props;
 
+		let placeholder = this.props.format || this.format;
 		return (<DateTimePicker
-			format={this.format + " A"}
-			placeholder={this.format}
+			format={this.format}
 			{...this.props}
+			placeholder={placeholder}
 			onChange={(value) => {
 				if (value !== null && !Moment(value).isValid()) value = this.props.value;
 				onChange(value === null ? null : Moment(value).toISOString())
 			}}
 			value={value ? Moment(value).toDate() : null}
 			readOnly={readonly}
+			culture="fi"
 		/>);
 	}
 }

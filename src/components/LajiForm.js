@@ -3,6 +3,7 @@ import Form from "react-jsonschema-form";
 import NestField from "./fields/NestField";
 import ArrayBulkField from "./fields/ArrayBulkField";
 import AutoArrayField from "./fields/AutoArrayField";
+import CopyValuesArrayField from "./fields/CopyValuesArrayField";
 import ScopeField from "./fields/ScopeField";
 import SelectTreeField from "./fields/SelectTreeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
@@ -15,6 +16,7 @@ import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
+import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
 import HiddenField from "./fields/HiddenField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
@@ -49,9 +51,12 @@ export default class LajiForm extends Component {
 					dependentDisable: DependentDisableField,
 					mapArray: MapArrayField,
 					autoArray: AutoArrayField,
+					copyValuesArray: CopyValuesArrayField,
 					autosuggest: AutosuggestField,
 					autosuggestInput: AutosuggestInputField,
 					autosuggestWidget: AutosuggestWidget,
+					taxon: TaxonField,
+					taxonWidget: TaxonWidgetField,
 					hidden: HiddenField
 				}}
 				widgets={{

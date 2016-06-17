@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
+import bootstrap from "react-bootstrap";
 import Button from "../Button"
 
 /**
@@ -188,26 +188,46 @@ export default class ScopeField extends Component {
 				if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
 			});
 
-			let {additionalFields} = this.state;
+			let options = this.props.uiSchema["ui:options"];
+			if (options.additionalsGroupingPath) {
+				var groups = options.additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options);
+			}
 
-			let {formData} = this.props;
-			if (!formData) formData = {};
-
-			Object.keys(additionalProperties).sort((a, b) => {return ((additionalProperties[a].title || a) < (additionalProperties[b].title || b)) ? -1 : 1}).forEach(property => {
-				let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
-				list.push(<a
-					key={property}
-					className={"list-group-item" + (isIncluded ? " active" : "")}
-					onClick={() => {
-						additionalFields[property] = !isIncluded;
-						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });
-					}}>
-					{additionalProperties[property].title || property}
-				</a>)
-			});
+			if (groups) Object.keys(groups).forEach(groupName => {
+				let group = groups[groupName];
+				let groupFields = {};
+				group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
+				let groupsList = this.addAdditionalPropertiesToList(groupFields, [])
+				if (groupsList.length) {
+					let listGroup = (<div class="list-group-item list-group" key={groupName}><li className="list-group-item"><label>{groupName}</label></li>{groupsList}</div>)
+					list.push(listGroup);
+				}
+			}); else {
+				list = this.addAdditionalPropertiesToList(additionalProperties, list);
+			}
 		}
 
 		return <div>{button}<div className="list-group scope-field-additionals-container">{list}</div></div>;
+	}
+
+	addAdditionalPropertiesToList = (properties, list) => {
+		let {additionalFields} = this.state;
+		let {formData} = this.props;
+		if (!formData) formData = {};
+
+		Object.keys(properties).sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1}).forEach(property => {
+			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
+			list.push(<a
+				key={property}
+				className={"list-group-item" + (isIncluded ? " active" : "")}
+				onClick={() => {
+						additionalFields[property] = !isIncluded;
+						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });
+					}}>
+				{properties[property].title || property}
+			</a>)
+		});
+		return list;
 	}
 
 	showAdditional = () => {

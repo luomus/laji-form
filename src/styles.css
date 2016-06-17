@@ -2,3 +2,28 @@
     position: absolute;
     z-index: 1;
 }
+.taxon-widget label {
+	display: none;
+}
+.taxon-widget-known {
+	color: green;
+}
+
+.map-array-directionless-enter {
+    opacity: 0.01;
+}
+.map-array-directionless-enter.map-array-directionless-enter-active {
+    opacity: 1;
+    transition: opacity .3s ease-in;
+}
+
+.map-array-left-enter {
+    transform: translate3d(-100%, 0, 0);
+}
+.map-array-right-enter {
+    transform: translate3d(100%, 0, 0);
+}
+.map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
+    transform: translate3d(0, 0, 0);
+    transition: all 300ms;
+}

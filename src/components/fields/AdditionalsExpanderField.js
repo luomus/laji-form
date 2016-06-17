@@ -74,7 +74,7 @@ export default class AdditionalsExpanderField extends Component {
 		if (!keys.length) return false;
 
 		if (props.formData) for (let property in props.formData) {
-			if (dictionarifiedAdditionals[property]) return true;
+			if (props.formData[property] !== null && props.formData[property] !== undefined && dictionarifiedAdditionals[property]) return true;
 		}
 		return false;
 	}
