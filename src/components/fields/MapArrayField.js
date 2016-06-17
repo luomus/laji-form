@@ -5,6 +5,7 @@ import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/util
 import MapComponent from "laji-map";
 import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import { Pagination } from "react-bootstrap";
 
 export default class MapArrayField extends Component {
 	constructor(props) {
@@ -66,21 +67,19 @@ export default class MapArrayField extends Component {
 	}
 
 	onActiveChange = id => {
-		this.setState({activeId: id, direction: "directionless"});
+		let state = {activeId: id};
+		if (this.controlledActiveChange) {
+			this.controlledActiveChange = false;
+		} else {
+			state.direction = "directionless";
+		}
+		this.setState(state);
 	}
 
-	onActivatePrev = () => {
-		let id = (this.state.data && this.state.data.length) ? this.state.activeId - 1 : undefined;
-		if (id == -1) id = this.state.data.length - 1;
+	focusToLayer = (id) => {
+		this.controlledActiveChange = true;
+		this.setState({direction: (id > this.state.activeId) ? "right" : "left"});
 		this.refs.map.focusToLayer(id)
-		this.setState({direction: "left"});
-	}
-
-	onActivateNext = () => {
-		let id =(this.state.data && this.state.data.length) ? this.state.activeId + 1 : undefined;
-		if (id !== undefined && id >= this.state.data.length) id = 0;
-		this.refs.map.focusToLayer(id)
-		this.setState({direction: "right"});
 	}
 
 	onItemChange = (formData) => {
@@ -111,7 +110,7 @@ export default class MapArrayField extends Component {
 			}
 		}
 
-		const buttonEnabled = this.state.data && this.state.data.length && this.state.activeId !== undefined;
+		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeId !== undefined;
 
 		return (<div>
 			<div style={style.map}>
@@ -125,9 +124,15 @@ export default class MapArrayField extends Component {
 					onChange={this.onMapChange}
 				/>
 			</div>
-			<Button disabled={!buttonEnabled} onClick={this.onActivatePrev}>Edellinen</Button>
-			<Button disabled={!buttonEnabled} onClick={this.onActivateNext}>Seuraava</Button>
-			{"[" + ((this.state.activeId !== undefined) ? this.state.activeId + 1 : 0) + "/" + ((this.state.data) ? this.state.data.length : 0) + "]"}
+			{buttonEnabled ? <Pagination
+				activePage={this.state.activeId + 1}
+				items={(this.state.data) ? this.state.data.length : 0}
+				next={true}
+				prev={true}
+				boundaryLinks={true}
+				maxButtons={5}
+			  onSelect={i => {this.focusToLayer(i - 1)}}
+			/> : null}
 			<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
 				{this.renderSchemaField()}
 			</ReactCSSTransitionGroup>
@@ -142,7 +147,8 @@ export default class MapArrayField extends Component {
 		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + id, this.props.registry.definitions);
 		let itemErrorSchema = errorSchema ? errorSchema[id] : undefined;
 
-		if (formData && formData.length > 0) return <SchemaField key={id} {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} />;
-		return null
+		return (formData && formData.length > 0) ?
+			<SchemaField key={id} {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} /> :
+			null
 	}
 }

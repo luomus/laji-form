@@ -5,9 +5,6 @@
 .taxon-widget label {
 	display: none;
 }
-.taxon-widget-known {
-	color: green;
-}
 
 .map-array-directionless-enter {
     opacity: 0.01;

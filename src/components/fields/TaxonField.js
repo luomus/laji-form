@@ -63,7 +63,7 @@ export class TaxonWidgetField extends Component {
 		return <div className="taxon-widget">
 			<SchemaField name={"ei"} {...this.props} {...this.state} />
 			<div className="taxon-widget-meta">
-				{options.taxonID ? (<div><span className="taxon-widget-known">Tunnettu nimi</span><br /></div>) : null}
+				{options.taxonID ? (<div><span className="text-success">Tunnettu nimi</span><br /></div>) : null}
 				<a href={"http://laji.fi/taksoni/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
 			</div>
 		</div>
