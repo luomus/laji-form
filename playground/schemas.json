@@ -80,7 +80,7 @@
 							"uiSchema": {
 								"ui:field": "horizontal",
 								"dateBegin": {
-									"ui:widget": "dateTime"
+									"ui:widget": "time"
 								},
 								"dateEnd": {
 									"ui:widget": "dateTime"

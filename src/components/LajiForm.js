@@ -20,6 +20,7 @@ import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
 import HiddenField from "./fields/HiddenField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
+import TimeWidget from "./widgets/TimeWidget";
 import ApiClient from "../ApiClient";
 
 const log = (type) => console.log.bind(console, type);
@@ -61,7 +62,8 @@ export default class LajiForm extends Component {
 				}}
 				widgets={{
 					dateTime: DateTimeWidget,
-					date: DateWidget
+					date: DateWidget,
+					time: TimeWidget
 				}}
 				onError={log("errors")} />
 		)

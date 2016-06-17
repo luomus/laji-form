@@ -89,9 +89,6 @@ export default class AdditionalsExpanderField extends Component {
 		let contractorText = "Vähemmän";
 		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].contractorButtonText) contractorText = this.props.uiSchema["ui:options"].contractorButtonText;
 
-		console.log("--");
-		console.log(this.shouldShowAdditionals(this.props, this.state.dictionarifiedAdditionals));
-		console.log(this.state.showAdditional);
 		let button = this.shouldShowAdditionals(this.props, this.state.dictionarifiedAdditionals) ?
 				<Button onClick={this.dontShowAdditional}>{contractorText}</Button> :
 				<Button onClick={this.showAdditional}>{expanderText}</Button>;
