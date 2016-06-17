@@ -15,7 +15,7 @@ export default class DateTimeWidget extends Component {
 	constructor(props) {
 		super(props);
 		momentLocalizer(Moment);
-		this.format = "DD.MM.YYYY, hh.mm.ss";
+		this.format = "DD.MM.YYYY, HH.mm.ss";
 	}
 
 	render() {
