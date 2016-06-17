@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem, DropdownButton, MenuItem } from "react-bootstrap";
 import ApiClient from "../../ApiClient";
 import Button from "../Button"
 
@@ -50,7 +50,7 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], showAdditional: false, additionalFields: {}, ...this.getStateFromProps(props)};
+		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], additionalFields: {}, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -197,13 +197,8 @@ export default class ScopeField extends Component {
 	renderAdditionalsButton = () => {
 		if (!this.state.includeAdditionalFieldsChooserButton) return null;
 
-
-		let button = this.state.showAdditional ?
-			<Button onClick={this.dontShowAdditional}>Sulje</Button> :
-			<Button onClick={this.showAdditional}>Valitse lisää kenttiä</Button>;
-
 		let list = [];
-		if (this.state.showAdditional) {
+		//if (this.state.showAdditional) {
 			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
 			if (this.state.additionalsGroupsTranslations) {
 				if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
@@ -223,47 +218,39 @@ export default class ScopeField extends Component {
 				let group = groups[groupName];
 				let groupFields = {};
 				group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
-				let groupsList = this.addAdditionalPropertiesToList(groupFields, []);
+				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
 				if (groupsList.length) {
-					let listGroup = (<div class="list-group-item list-group" key={groupName}><ListGroupItem><label>{translations[groupName] !== undefined ? translations[groupName] : groupName}</label></ListGroupItem>{groupsList}</div>);
-					list.push(listGroup);
+					list.push(<MenuItem header key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>);
+					list.push(...groupsList);
+					//let listGroup = (<div class="list-group-item list-group" key={groupName}><ListGroupItem><label>{translations[groupName] !== undefined ? translations[groupName] : groupName}</label></ListGroupItem>{groupsList}</div>);
+					//list.push(listGroup);
 				}
 			}); else {
-				list = this.addAdditionalPropertiesToList(additionalProperties, list);
+				list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
 			}
-		}
+		//}
 
-		return <div>{button}<ListGroup className="scope-field-additionals-container">{list}</ListGroup></div>;
+		return <DropdownButton id={this.props.idSchema.id + "_dropdown"} title="Valitse lisää kenttiä" bsStyle="info">{list}</DropdownButton>;
 	}
 
-	addAdditionalPropertiesToList = (properties, list) => {
+	addAdditionalPropertiesToList = (properties, list, keyPrefix) => {
 		let {additionalFields} = this.state;
 		let {formData} = this.props;
 		if (!formData) formData = {};
 
 		Object.keys(properties).sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1}).forEach(property => {
 			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
-			list.push(<a
-				className={"list-group-item" + (isIncluded ? " active" : "")}
-				key={property}
-				componentClass="a"
+			list.push(<MenuItem
+				key={keyPrefix + property}
 				active={isIncluded}
 				onClick={() => {
 						additionalFields[property] = !isIncluded;
 						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });
 					}}>
 				{properties[property].title || property}
-			</a>)
+			</MenuItem>)
 		});
 		return list;
-	}
-
-	showAdditional = () => {
-		this.setState({showAdditional: true}, () => {this.componentWillReceiveProps(this.props)});
-	}
-
-	dontShowAdditional = () => {
-		this.setState({showAdditional: false}, () => {this.componentWillReceiveProps(this.props)});
 	}
 
 	translateAdditionalsGroups = () => {
