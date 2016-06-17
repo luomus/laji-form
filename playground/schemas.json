@@ -210,6 +210,7 @@
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
 									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
+									"additionalsGroupsTranslator": "taxonGroups",
 									"uiSchema": {
 										"ui:field": "autosuggest",
 										"ui:options": {

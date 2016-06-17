@@ -14,7 +14,7 @@ class LajiFormApp extends Component {
 			...schemas,
 			 // formData: undefined,
 			onChange: this.onChange,
-			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken)
+			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, "fi")
 		}
 	}
 

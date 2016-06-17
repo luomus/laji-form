@@ -3,7 +3,18 @@ import update from "react-addons-update";
 import merge from "deepmerge";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import ApiClient from "../../ApiClient";
 import Button from "../Button"
+
+const scopeFieldSettings = {
+	taxonGroups: {
+		translate: taxonGroup => {
+			return new ApiClient().fetch("/taxon-groups/" + taxonGroup).then((response) => {
+				return response.name;
+			})
+		},
+	}
+}
 
 /**
  * Field with fields, which are shown according to recursive scope.
@@ -67,12 +78,22 @@ export default class ScopeField extends Component {
 
 		let includeAdditionalFieldsChooserButton = !!options.includeAdditionalFieldsChooserButton;
 
+
 		let schemas = this.getSchemas(props);
-		return {
+		let state = {
 			...schemas,
 			primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
 			includeAdditionalFieldsChooserButton
 		};
+
+		if (options.additionalsGroupsTranslator) {
+			let prevOptions = (this.props && this.props.uiSchema && this.props.uiSchema["ui:options"]) ? this.props.uiSchema["ui:options"] : {};
+			state.additionalsGroupsTranslations = (prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
+				this.state.additionalsGroupsTranslations : {};
+			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;
+		}
+
+		return state;
 	}
 
 	render() {
@@ -84,7 +105,6 @@ export default class ScopeField extends Component {
 		);
 	}
 
-	// Returns {schema: schema, uiSchema: uiSchema}
 	getSchemas = (props) => {
 		let {schema, uiSchema, formData, idSchema} = props;
 
@@ -177,12 +197,18 @@ export default class ScopeField extends Component {
 	renderAdditionalsButton = () => {
 		if (!this.state.includeAdditionalFieldsChooserButton) return null;
 
+
 		let button = this.state.showAdditional ?
 			<Button onClick={this.dontShowAdditional}>Sulje</Button> :
 			<Button onClick={this.showAdditional}>Valitse lisää kenttiä</Button>;
 
 		let list = [];
 		if (this.state.showAdditional) {
+			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
+			if (this.state.additionalsGroupsTranslations) {
+				if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
+			}
+
 			let additionalProperties = {};
 			Object.keys(this.props.schema.properties).forEach(property => {
 				if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
@@ -197,10 +223,9 @@ export default class ScopeField extends Component {
 				let group = groups[groupName];
 				let groupFields = {};
 				group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
-				let groupsList = this.addAdditionalPropertiesToList(groupFields, [])
+				let groupsList = this.addAdditionalPropertiesToList(groupFields, []);
 				if (groupsList.length) {
-					//let listGroup = (<ListGroup key={groupName}><ListGroupItem><label>{groupName}</label></ListGroupItem>{groupsList}</ListGroup>)
-					let listGroup = (<div class="list-group-item list-group" key={groupName}><li className="list-group-item"><label>{groupName}</label></li>{groupsList}</div>)
+					let listGroup = (<div class="list-group-item list-group" key={groupName}><ListGroupItem><label>{translations[groupName] !== undefined ? translations[groupName] : groupName}</label></ListGroupItem>{groupsList}</div>);
 					list.push(listGroup);
 				}
 			}); else {
@@ -239,5 +264,22 @@ export default class ScopeField extends Component {
 
 	dontShowAdditional = () => {
 		this.setState({showAdditional: false}, () => {this.componentWillReceiveProps(this.props)});
+	}
+
+	translateAdditionalsGroups = () => {
+		let options = this.props.uiSchema["ui:options"];
+		if (options.additionalsGroupingPath) {
+			var groups = Object.keys(options.additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options));
+		}
+
+		let translations = {};
+		let translationCount = 0;
+		groups.forEach(groupName => {
+			scopeFieldSettings[this.state.additionalsGroupsTranslator].translate(groupName).then(translation => {
+				translations[groupName] = translation;
+				translationCount++;
+				if (translationCount == groups.length) this.setState({additionalsGroupsTranslations: translations});
+			});
+		});
 	}
 }
