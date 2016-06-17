@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
-import bootstrap from "react-bootstrap";
 import Button from "../Button"
 
 /**
