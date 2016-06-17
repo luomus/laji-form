@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
+import { Row, Col } from "react-bootstrap";
 
 export default class HorizontalField extends Component {
 	constructor(props) {
@@ -59,7 +60,7 @@ export default class HorizontalField extends Component {
 
 			group.forEach((property, gi) => {
 				if (!this.isHidden(props, property)) fields.push(
-					<div key={"div_" + i} className={"col-md-" + ((gi === 0) ? firstDivision : division)}>
+					<Col key={"div_" + i} md={(gi === 0) ? firstDivision : division}>
 						<SchemaField
 							key={i}
 							name={props.schema.properties[property].title || property}
@@ -75,7 +76,7 @@ export default class HorizontalField extends Component {
 									props.onChange(formData);
 								}}
 						/>
-					</div>
+					</Col>
 				)
 				i++;
 			})
@@ -85,9 +86,9 @@ export default class HorizontalField extends Component {
 		return (
 			<fieldset>
 				{(title !== undefined && title !== "") ? <TitleField title={title} /> : null}
-				<div className="row">
+				<Row>
 					{fields}
-				</div>
+				</Row>
 			</fieldset>
 		);
 	}

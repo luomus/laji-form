@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import Button from "../Button"
 
 /**
@@ -198,6 +199,7 @@ export default class ScopeField extends Component {
 				group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
 				let groupsList = this.addAdditionalPropertiesToList(groupFields, [])
 				if (groupsList.length) {
+					//let listGroup = (<ListGroup key={groupName}><ListGroupItem><label>{groupName}</label></ListGroupItem>{groupsList}</ListGroup>)
 					let listGroup = (<div class="list-group-item list-group" key={groupName}><li className="list-group-item"><label>{groupName}</label></li>{groupsList}</div>)
 					list.push(listGroup);
 				}
@@ -206,7 +208,7 @@ export default class ScopeField extends Component {
 			}
 		}
 
-		return <div>{button}<div className="list-group scope-field-additionals-container">{list}</div></div>;
+		return <div>{button}<ListGroup className="scope-field-additionals-container">{list}</ListGroup></div>;
 	}
 
 	addAdditionalPropertiesToList = (properties, list) => {
@@ -217,8 +219,10 @@ export default class ScopeField extends Component {
 		Object.keys(properties).sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1}).forEach(property => {
 			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
 			list.push(<a
-				key={property}
 				className={"list-group-item" + (isIncluded ? " active" : "")}
+				key={property}
+				componentClass="a"
+				active={isIncluded}
 				onClick={() => {
 						additionalFields[property] = !isIncluded;
 						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });

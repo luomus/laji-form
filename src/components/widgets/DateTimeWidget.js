@@ -27,7 +27,6 @@ export default class DateTimeWidget extends Component {
 			{...this.props}
 			placeholder={placeholder}
 			onChange={(value) => {
-			console.log(value);
 				if (value !== null && !Moment(value).isValid()) value = this.props.value;
 				onChange(value === null ? null : Moment(value).toISOString())
 			}}
