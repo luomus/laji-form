@@ -53,7 +53,7 @@ export class TaxonWidgetField extends Component {
 		const options = props.uiSchema["ui:options"];
 		const taxonID = options.taxonID;
 		if (taxonID && (!this.state || taxonID !== this.state.taxonID)) new ApiClient().fetch("/taxonomy/" + options.taxonID).then(response => {
-			this.setState({urlTxt: response.root.scientificName});
+			this.setState({urlTxt: response.scientificName});
 		});
 		return {uiSchema: uiSchema["ui:options"].uiSchema, taxonID: props.uiSchema["ui:options"].taxonID};
 	}
@@ -61,7 +61,7 @@ export class TaxonWidgetField extends Component {
 	render() {
 		let options = this.props.uiSchema["ui:options"];
 		return <div className="taxon-widget">
-			<SchemaField name={"ei"} {...this.props} {...this.state} />
+			<SchemaField {...this.props} {...this.state} />
 			<div className="taxon-widget-meta">
 				{options.taxonID ? (<div><span className="text-success">Tunnettu nimi</span><br /></div>) : null}
 				<a href={"http://laji.fi/taksoni/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
