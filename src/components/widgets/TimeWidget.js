@@ -8,12 +8,10 @@ import DateTimeWidget from "./DateTimeWidget";
 export default class TimeWidget extends Component {
 	constructor(props) {
 		super(props);
-		this.format = "HH.mm.ss";
-		this.state = {value: null};
+		this.format = "HH.mm";
 	}
 
 	onChange = (value) => {
-		this.setState({value});
 		this.props.onChange(value === null ? null : moment(value).format(this.format))
 	}
 
@@ -21,9 +19,9 @@ export default class TimeWidget extends Component {
 		return (<DateTimeWidget
 			{...this.props}
 			onChange={this.onChange}
-			format={this.format.toLowerCase()}
-			placeholder={this.format}
-			value={this.state.value ? moment(this.state.value).toDate() : null}
+			format={this.format}
+			placeholder={this.format.toLowerCase()}
+			value={this.props.value ? moment(this.props.value, "HH.mm") : null}
 			calendar={false}
 		/>);
 	}

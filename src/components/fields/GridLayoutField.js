@@ -4,7 +4,7 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { Row, Col } from "react-bootstrap";
 
-export default class HorizontalField extends Component {
+export default class GridLayoutField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

@@ -8,7 +8,7 @@ import ScopeField from "./fields/ScopeField";
 import SelectTreeField from "./fields/SelectTreeField";
 import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
 import TableField from "./fields/TableField";
-import HorizontalField from "./fields/HorizontalField";
+import GridLayoutField from "./fields/GridLayoutField";
 import InjectField from "./fields/InjectField";
 import InjectDefaultValueField from "./fields/InjectDefaultValueField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
@@ -21,6 +21,7 @@ import HiddenField from "./fields/HiddenField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
 import TimeWidget from "./widgets/TimeWidget";
+import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
 import ApiClient from "../ApiClient";
 
 const log = (type) => console.log.bind(console, type);
@@ -42,7 +43,8 @@ export default class LajiForm extends Component {
 					bulkArray: ArrayBulkField,
 					scoped: ScopeField,
 					tree: SelectTreeField,
-					horizontal: HorizontalField,
+					horizontal: GridLayoutField,
+					grid: GridLayoutField,
 					table: TableField,
 					inject: InjectField,
 					injectDefaultValue: InjectDefaultValueField,
@@ -63,7 +65,8 @@ export default class LajiForm extends Component {
 				widgets={{
 					dateTime: DateTimeWidget,
 					date: DateWidget,
-					time: TimeWidget
+					time: TimeWidget,
+					separatedDateTime: SeparatedDateTimeWidget
 				}}
 				onError={log("errors")} />
 		)

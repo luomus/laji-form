@@ -78,12 +78,12 @@
 								"dateEnd"
 							],
 							"uiSchema": {
-								"ui:field": "horizontal",
+								"ui:field": "grid",
 								"dateBegin": {
-									"ui:widget": "time"
+									"ui:widget": "separatedDateTime"
 								},
 								"dateEnd": {
-									"ui:widget": "dateTime"
+									"ui:widget": "separatedDateTime"
 								}
 							},
 							"expanderButtonText": "Ilmoita aikaväli",
@@ -107,7 +107,7 @@
 							"ui:options": {
 								"additionalFields": ["dateEnd"],
 								"uiSchema": {
-									"ui:field": "horizontal",
+									"ui:field": "grid",
 									"dateBegin": {
 										"ui:widget": "dateTime"
 									},
@@ -124,7 +124,7 @@
 						"title": "Kuvat",
 						"fields": ["image", "rights"],
 						"uiSchema": {
-							"ui:field": "horizontal"
+							"ui:field": "grid"
 						}
 					},
 					"treeWrapper": {
@@ -190,7 +190,7 @@
 									"eka taso", "toka taso", "kolmas taso"
 								],
 								"uiSchema": {
-									"ui:field": "horizontal"
+									"ui:field": "grid"
 								}
 							}
 							}
@@ -226,7 +226,7 @@
 												"ui:field": "taxon",
 												"ui:options": {
 													"uiSchema": {
-														"ui:field": "horizontal",
+														"ui:field": "grid",
 														"unitType": {
 															"ui:field": "hidden"
 														},
@@ -245,7 +245,7 @@
 																		"taxonID": "key"
 																	},
 																	"uiSchema": {
-																		"ui:field": "horizontal",
+																		"ui:field": "grid",
 																		"taxonID": {
 																			"ui:widget": "hidden"
 																		},
@@ -537,7 +537,7 @@
 				"c"
 			],
 			"legPublic": false,
-			"dateEnd": "2016-06-22T11:08:54.044Z"
+			"dateBegin": "2016-06-22T11:08:54.044Z"
 		},
 		"gatherings": [
 			{
