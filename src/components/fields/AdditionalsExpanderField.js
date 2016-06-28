@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
-import TableField from "./TableField";
+import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
 /**
@@ -52,11 +52,18 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	render() {
+		let shouldShowButton = this.shouldShowAdditionalsButton(this.props);
 		return (
-			<div className="expandable-field-container">
-				{this.renderSchema()}
-				{this.renderButtons()}
-			</div>);
+			<Row className="expandable-field-container">
+				<Col md={shouldShowButton ? 10 : 12}>
+					{this.renderSchema()}
+				</Col>
+				{shouldShowButton ?
+					<Col md={2}>
+					{this.renderButton()}
+					</Col> : null
+				}
+			</Row>);
 	}
 
 	renderSchema = () => {
@@ -81,7 +88,14 @@ export default class AdditionalsExpanderField extends Component {
 		return false;
 	}
 
-	renderButtons = () => {
+	shouldShowAdditionalsButton = (props) => {
+		if (props.formData) for (let property in props.formData) {
+			if (this.state.dictionarifiedAdditionals[property] && (props.formData[property] === undefined || props.formData[property] === null)) return true;
+		}
+		return false;
+	}
+
+	renderButton = () => {
 		if (!this.props.uiSchema || !this.props.uiSchema["ui:options"] || !this.props.uiSchema["ui:options"].additionalFields || !this.props.uiSchema["ui:options"].additionalFields.length) return null;
 
 		let expanderText = "Lisää";
@@ -89,13 +103,9 @@ export default class AdditionalsExpanderField extends Component {
 		let contractorText = "Vähemmän";
 		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].contractorButtonText) contractorText = this.props.uiSchema["ui:options"].contractorButtonText;
 
-		let button = this.shouldShowAdditionals(this.props, this.state.dictionarifiedAdditionals) ?
+		return this.shouldShowAdditionals(this.props, this.state.dictionarifiedAdditionals) ?
 				<Button onClick={this.dontShowAdditional}>{contractorText}</Button> :
 				<Button onClick={this.showAdditional}>{expanderText}</Button>;
-		return (<div>
-			{button}
-			{this.props.children}
-		</div>);
 	}
 
 	showAdditional = () => {
