@@ -107,20 +107,27 @@
 						"title": "Aika",
 						"fields": ["dateBegin", "dateEnd"],
 						"uiSchema": {
-							"ui:field": "expandable",
+							"ui:field": "initiallyHidden",
 							"ui:options": {
-								"additionalFields": ["dateEnd"],
 								"uiSchema": {
-									"ui:field": "grid",
-									"dateBegin": {
-										"ui:widget": "dateTime"
-									},
-									"dateEnd": {
-										"ui:widget": "dateTime"
+									"ui:field": "expandable",
+									"ui:options": {
+										"additionalFields": [
+											"dateEnd"
+										],
+										"uiSchema": {
+											"ui:field": "grid",
+											"dateBegin": {
+												"ui:widget": "dateTime"
+											},
+											"dateEnd": {
+												"ui:widget": "dateTime"
+											}
+										},
+										"expanderButtonText": "Ilmoita aikaväli",
+										"contractorButtonText": "Piilota aikavälin loppu"
 									}
-								},
-								"expanderButtonText": "Ilmoita aikaväli",
-								"contractorButtonText": "Piilota aikavälin loppu"
+								}
 							}
 						}
 					},
@@ -386,7 +393,7 @@
 			"gatherings": {
 				"type": "array",
 				"items": {
-					"title": "Havainnot",
+					"title": "Havainto",
 					"type": "object",
 					"properties": {
 						"dateBegin": {
@@ -563,7 +570,7 @@
 						"alive": true
 					}
 				],
-				"dateBegin": "2016-05-11T11:08:54.044Z",
+				"dateBegin": "2016-05-12:08:54.044Z",
 				"wgs84Geometry": {
 					"type": "Point",
 					"coordinates": [
