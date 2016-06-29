@@ -118,10 +118,10 @@
 										"uiSchema": {
 											"ui:field": "grid",
 											"dateBegin": {
-												"ui:widget": "dateTime"
+												"ui:widget": "separatedDateTime"
 											},
 											"dateEnd": {
-												"ui:widget": "dateTime"
+												"ui:widget": "separatedDateTime"
 											}
 										},
 										"expanderButtonText": "Ilmoita aikaväli",
