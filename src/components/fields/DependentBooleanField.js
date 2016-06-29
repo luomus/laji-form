@@ -12,6 +12,16 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  * }}
  */
 export default class DependentBooleanField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				booleanField: PropTypes.string.isRequired,
+				booleanDefiner: PropTypes.string.isRequired,
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};

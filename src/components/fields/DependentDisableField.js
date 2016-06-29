@@ -11,6 +11,17 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  * }}
  */
 export default class DependentDisableField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				disableField: PropTypes.string.isRequired,
+				disableDefiner: PropTypes.string.isRequired,
+				regexp: PropTypes.string.isRequired,
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

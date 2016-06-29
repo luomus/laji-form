@@ -96,6 +96,17 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  *
  */
 export default class NestField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": function(props, propName, componentName) {
+				for (let optionProp in props["ui:options"]) {
+					const prop = props["ui:options"][optionProp];
+					if (!prop.fields || !Array.isArray(prop.fields)) return new Error("Required prop '" + propName + "." + optionProp + ".fields' was not specified in '" + componentName + "'")
+				}
+			}
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

@@ -8,6 +8,15 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination } from "react-bootstrap";
 
 export default class MapArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				grid: PropTypes.boolean,
+				colType: PropTypes.string
+			})
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {...this.getStateFromProps(props), direction: "directionless"};

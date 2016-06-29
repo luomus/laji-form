@@ -46,6 +46,16 @@ const autosuggestFieldSettings = {
  * }
  */
 export default class AutosuggestField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				autosuggestField: PropTypes.oneOf(Object.keys(autosuggestFieldSettings)).isRequired,
+				allowNonsuggestedValue: PropTypes.boolean,
+				suggestionInputField: PropTypes.string.isRequired,
+				suggestionReceivers: PropTypes.object.isRequired
+			}).isRequired
+		}).isRequired
+	}
 
 	constructor(props) {
 		super(props);
@@ -121,6 +131,16 @@ export default class AutosuggestField extends Component {
  * }}
  */
 export class AutosuggestWidget extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				autosuggestField: PropTypes.oneOf(Object.keys(autosuggestFieldSettings)).isRequired,
+				allowNonsuggestedValue: PropTypes.boolean,
+				suggestionReceive: PropTypes.string.isRequired
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

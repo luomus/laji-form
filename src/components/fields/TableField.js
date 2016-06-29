@@ -6,6 +6,12 @@ import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Button from "../Button";
 
 export default class TableField extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			items: PropTypes.object
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -19,8 +25,6 @@ export default class TableField extends Component {
 		function haveSameKeys(a, b) {
 			return Object.keys(a).length == Object.keys(b).length && Object.keys(a).every((prop) => { return Object.keys(b).includes(prop)})
 		}
-		
-		if (!props.schema.items) throw "Schema doesn't have items";
 
 		let schemaRequirements = [];
 		let propertiesContainer = props.schema.items;

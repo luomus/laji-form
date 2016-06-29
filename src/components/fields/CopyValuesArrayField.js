@@ -4,6 +4,15 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 
 export default class AutoArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				copy: PropTypes.arrayOf(PropTypes.string).isRequired,
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
@@ -13,7 +22,7 @@ export default class AutoArrayField extends Component {
 		this.setState(this.getStateFromProps(props));
 	}
 
-	getStateFromProps(props) {
+	getStateFromProps = (props) => {
 		let {uiSchema} = props;
 		uiSchema = uiSchema["ui:options"].uiSchema;
 		return {uiSchema};

@@ -5,6 +5,14 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { Row, Col } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"])
+			})
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -51,7 +59,6 @@ export default class GridLayoutField extends Component {
 
 		const options = props.uiSchema["ui:options"];
 		const colType = (options && options.colType) ? options.colType : "md";
-		console.log(colType);
 
 		let i = 0;
 		let fields = [];

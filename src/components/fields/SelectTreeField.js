@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
@@ -9,6 +9,16 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  * }
  */
 export default class TreeField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				tree: PropTypes.object.isRequired,
+				labels: PropTypes.arrayOf(PropTypes.string),
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {uiSchema: {}, onChange: this.onChange, ...this.getStateFromProps(props)};

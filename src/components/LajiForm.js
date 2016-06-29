@@ -27,7 +27,6 @@ import ApiClient from "../ApiClient";
 const log = (type) => console.log.bind(console, type);
 
 export default class LajiForm extends Component {
-
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);

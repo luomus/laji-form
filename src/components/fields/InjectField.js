@@ -15,6 +15,18 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
  * }}
  */
 export default class InjectField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				injections: PropTypes.shape({
+					fields: PropTypes.arrayOf(PropTypes.string).isRequired,
+					target: PropTypes.string.isRequired
+				}).isRequired,
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};

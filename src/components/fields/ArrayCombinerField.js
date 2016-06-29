@@ -11,6 +11,14 @@ import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
  * }
  */
 export default class ArrayCombinerField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				uiSchema: PropTypes.object
+			})
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};

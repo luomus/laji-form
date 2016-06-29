@@ -4,6 +4,12 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 import ApiClient from "../../ApiClient";
 
 export default class TaxonField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.object
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

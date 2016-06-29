@@ -6,6 +6,14 @@ import Button from "../Button";
 import UnitField from "./ScopeField";
 
 export default class ArrayBulkField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				rowAddAmount: PropTypes.number
+			})
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {rowAmount: 0};

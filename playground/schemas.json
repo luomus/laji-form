@@ -223,7 +223,7 @@
 											"suggestionInputField": "informalNameString",
 											"suggestionReceivers": {
 												"informalNameString": "value",
-												"Type": "payload.taxonGroups",
+												"unitType": "payload.taxonGroups",
 												"taxonID": "key"
 											},
 											"uiSchema": {

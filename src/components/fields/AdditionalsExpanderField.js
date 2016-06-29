@@ -16,6 +16,17 @@ import Button from "../Button";
  * Additional buttons are given as children.
  */
 export default class AdditionalsExpanderField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				additionalFields: PropTypes.arrayOf(PropTypes.string).isRequired,
+				expanderButtonText: PropTypes.string,
+				contractorButtonText: PropTypes.string,
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {showAdditional: undefined};

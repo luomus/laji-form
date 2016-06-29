@@ -41,11 +41,16 @@ const scopeFieldSettings = {
  */
 export default class ScopeField extends Component {
 	static propTypes = {
-		formData: PropTypes.object.isRequired,
-		schema: PropTypes.object.isRequired,
-		uiSchema: PropTypes.object.isRequired,
-		idSchema: PropTypes.object.isRequired,
-		registry: PropTypes.object.isRequired
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				includeAdditionalFieldsChooserButton: PropTypes.boolean,
+				additionalsGroupingPath: PropTypes.string,
+				additionalsGroupsTranslator: PropTypes.oneOf(Object.keys(scopeFieldSettings)),
+				fieldScopes: PropTypes.object.isRequired,
+				definitions: PropTypes.object,
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
 	}
 
 	constructor(props) {
@@ -198,37 +203,33 @@ export default class ScopeField extends Component {
 		if (!this.state.includeAdditionalFieldsChooserButton) return null;
 
 		let list = [];
-		//if (this.state.showAdditional) {
-			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
-			if (this.state.additionalsGroupsTranslations) {
-				if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
-			}
+		let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
+		if (this.state.additionalsGroupsTranslations) {
+			if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
+		}
 
-			let additionalProperties = {};
-			Object.keys(this.props.schema.properties).forEach(property => {
-				if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
-			});
+		let additionalProperties = {};
+		Object.keys(this.props.schema.properties).forEach(property => {
+			if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
+		});
 
-			let options = this.props.uiSchema["ui:options"];
-			if (options.additionalsGroupingPath) {
-				var groups = options.additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options);
-			}
+		let options = this.props.uiSchema["ui:options"];
+		if (options.additionalsGroupingPath) {
+			var groups = options.additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options);
+		}
 
-			if (groups) Object.keys(groups).forEach(groupName => {
-				let group = groups[groupName];
-				let groupFields = {};
-				group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
-				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
-				if (groupsList.length) {
-					list.push(<MenuItem header key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>);
-					list.push(...groupsList);
-					//let listGroup = (<div class="list-group-item list-group" key={groupName}><ListGroupItem><label>{translations[groupName] !== undefined ? translations[groupName] : groupName}</label></ListGroupItem>{groupsList}</div>);
-					//list.push(listGroup);
-				}
-			}); else {
-				list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
+		if (groups) Object.keys(groups).forEach(groupName => {
+			let group = groups[groupName];
+			let groupFields = {};
+			group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
+			let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
+			if (groupsList.length) {
+				list.push(<MenuItem header key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>);
+				list.push(...groupsList);
 			}
-		//}
+		}); else {
+			list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
+		}
 
 		return <DropdownButton id={this.props.idSchema.id + "_dropdown"} title="Valitse lisää kenttiä" bsStyle="info">{list}</DropdownButton>;
 	}
