@@ -35,7 +35,6 @@ export default class InitiallyHiddenField extends Component {
 	shouldShow = (props) => {
 		if (this.state.visible) return true;
 		let formData = props.formData;
-		console.log(props);
 		if (formData) {
 			if (props.schema.type === "object" && Object.keys(formData).length > 0) {
 				for (let prop in formData) {
