@@ -18,6 +18,7 @@ import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
 import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
 import HiddenField from "./fields/HiddenField";
+import InitiallyHiddenField from "./fields/InitiallyHiddenField";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
 import TimeWidget from "./widgets/TimeWidget";
@@ -59,7 +60,8 @@ export default class LajiForm extends Component {
 					autosuggestWidget: AutosuggestWidget,
 					taxon: TaxonField,
 					taxonWidget: TaxonWidgetField,
-					hidden: HiddenField
+					hidden: HiddenField,
+					initiallyHidden: InitiallyHiddenField
 				}}
 				widgets={{
 					dateTime: DateTimeWidget,
