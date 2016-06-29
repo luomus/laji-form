@@ -49,6 +49,10 @@ export default class GridLayoutField extends Component {
 	render() {
 		let props = {...this.props, ...this.state};
 
+		const options = props.uiSchema["ui:options"];
+		const colType = (options && options.colType) ? options.colType : "md";
+		console.log(colType);
+
 		let i = 0;
 		let fields = [];
 		this.state.groups.forEach(group => {
@@ -60,7 +64,7 @@ export default class GridLayoutField extends Component {
 
 			group.forEach((property, gi) => {
 				if (!this.isHidden(props, property)) fields.push(
-					<Col key={"div_" + i} md={(gi === 0) ? firstDivision : division}>
+					<div key={"div_" + i} className={"col-" + colType + "-" + ((gi === 0) ? firstDivision : division)}>
 						<SchemaField
 							key={i}
 							name={props.schema.properties[property].title || property}
@@ -76,7 +80,7 @@ export default class GridLayoutField extends Component {
 									props.onChange(formData);
 								}}
 						/>
-					</Col>
+					</div>
 				)
 				i++;
 			})

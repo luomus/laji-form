@@ -110,30 +110,36 @@ export default class MapArrayField extends Component {
 			}
 		}
 
+		const options = this.props.uiSchema["ui:options"];
+		const isGrid = options && options.grid;
+		const colType = options && options.colType;
+
 		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeId !== undefined;
 
-		return (<div>
-			<div style={style.map}>
-				<MapComponent
-					ref={"map"}
-					data={this.state.data}
-					activeId={this.state.activeId}
-					longitude={60.171372}
-					latitude={24.931275}
-					zoom={13}
-					onChange={this.onMapChange}
-				/>
+		return (<div className={isGrid ? "row" : null}>
+			<div className={isGrid ? "col-" + colType + "-6" : null}>
+				<div style={style.map}>
+					<MapComponent
+						ref={"map"}
+						data={this.state.data}
+						activeId={this.state.activeId}
+						longitude={60.171372}
+						latitude={24.931275}
+						zoom={13}
+						onChange={this.onMapChange}
+					/>
+				</div>
+				{buttonEnabled ? <Pagination
+					activePage={this.state.activeId + 1}
+					items={(this.state.data) ? this.state.data.length : 0}
+					next={true}
+					prev={true}
+					boundaryLinks={true}
+					maxButtons={5}
+					onSelect={i => {this.focusToLayer(i - 1)}}
+				/> : null}
 			</div>
-			{buttonEnabled ? <Pagination
-				activePage={this.state.activeId + 1}
-				items={(this.state.data) ? this.state.data.length : 0}
-				next={true}
-				prev={true}
-				boundaryLinks={true}
-				maxButtons={5}
-			  onSelect={i => {this.focusToLayer(i - 1)}}
-			/> : null}
-			<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+			<ReactCSSTransitionGroup className={isGrid ? "col-" + colType + "-6" : null} transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
 				{this.renderSchemaField()}
 			</ReactCSSTransitionGroup>
 		</div>)
