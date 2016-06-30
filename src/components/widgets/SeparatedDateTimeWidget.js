@@ -51,11 +51,15 @@ export default class SeparatedDateTimeWidget extends Component {
 		const hasDate = !!this.state.date;
 		return (<Row>
 			<Col md={hasDate ? 6 : 12}>
+				<FormGroup>
 				<DateWidget onChange={this.onDateChange} value={this.state.date} />
+				</FormGroup>
 			</Col>
 			{hasDate ?
 				<Col md={6}>
+					<FormGroup>
 					<TimeWidget onChange={this.onTimeChange} value={this.state.time} />
+					</FormGroup>
 				</Col> : null
 			}
 			</Row>);
