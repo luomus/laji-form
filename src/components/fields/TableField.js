@@ -107,32 +107,29 @@ export default class TableField extends Component {
 			rows.push(<TableRow key={i + 1}>{rowSchemas}</TableRow>)
 		});
 
-		rows.push(
-			<TableRow key={rows.length}>
-				{Array(Object.keys(schemaProperties).length).fill(undefined) // empty td for every column
-					.concat([this.getAddButton()])}
-			</TableRow>)
-
 		let title = this.props.schema.title || this.props.name;
 		return (
 			<fieldset>
 				{title !== undefined ? <TitleField title={title} /> : null}
 				{
 					(this.props.formData && (!this.props.formData.hasOwnProperty("length") || this.props.formData.length > 0)) ? (
-						<table className="container"><tbody>
-						{rows}
-						</tbody></table>
-					) : (
-						<div><p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
+						<div>
+							<table className="container"><tbody>
+								{rows}
+							</tbody></table>
 							{this.getAddButton()}
-						</p></div>
+						</div>
+					) : (
+						<div>
+							{this.getAddButton()}
+						</div>
 					)
 				}
 			</fieldset>);
 	}
 
 	getAddButton = () => {
-		return (<Button classList={["col-xs-12"]} onClick={ () => { this.addItem() } } key="0">Add</Button>);
+		return (<Button onClick={ () => { this.addItem() } } key="0">Add</Button>);
 	}
 
 	addItem = () => {
