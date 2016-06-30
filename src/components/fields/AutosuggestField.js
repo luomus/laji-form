@@ -305,7 +305,14 @@ export class AutosuggestInputField extends Component {
 		
 		if (this.state.isLoading) cssClasses.container = "autosuggest-loading";
 
+		const REQUIRED_FIELD_SYMBOL = "*";
+		const label = this.props.schema.title || this.props.name;
+
 		return (
+			<div>
+				<label className="control-label" htmlFor={this.props.idSchema.id}>
+					{this.props.required ? label + REQUIRED_FIELD_SYMBOL : label}
+				</label>
 			<Autosuggest
 				id={this.props.idSchema.id}
 				inputProps={inputProps}
@@ -316,6 +323,7 @@ export class AutosuggestInputField extends Component {
 				onSuggestionSelected={this.onSuggestionSelected}
 				theme={cssClasses}
 			/>
+			</div>
 		);
 	}
 }
