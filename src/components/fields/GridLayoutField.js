@@ -8,7 +8,8 @@ export default class GridLayoutField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"])
+				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"]),
+				maxItemsPerRow: PropTypes.number
 			})
 		}).isRequired
 	}
@@ -29,12 +30,16 @@ export default class GridLayoutField extends Component {
 		const groups = [];
 		let groupIdx = 0;
 
+		const options = props.uiSchema["ui:options"];
+		const maxItemsPerRow = (options && options.maxItemsPerRow
+			&& options.maxItemsPerRow > 0 && options.maxItemsPerRow <= 12) ? options.maxItemsPerRow : 6;
+
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
 			const shouldHaveOwnRow = (type === "array" || type === "object");
 
 			if (this.isHidden(props, property)) return;
-			if (shouldHaveOwnRow || (groups[groupIdx] && groups[groupIdx].length >= 6)) groupIdx++;
+			if (shouldHaveOwnRow || (groups[groupIdx] && groups[groupIdx].length >= maxItemsPerRow)) groupIdx++;
 			if (!groups[groupIdx]) groups[groupIdx] = [];
 			groups[groupIdx].push(property);
 			if (shouldHaveOwnRow) groupIdx++;
