@@ -9,7 +9,7 @@ import Button from "../Button"
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: taxonGroup => {
-			return new ApiClient().fetch("/taxon-groups/" + taxonGroup).then((response) => {
+			return new ApiClient().fetch("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			})
 		},
