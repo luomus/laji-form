@@ -72,7 +72,7 @@ export default class GridLayoutField extends Component {
 			const division = parseInt(12 / group.length);
 
 			// make first division take rest of the total width divided by 12
-			let firstDivision = division + (12 - (Object.keys(group).length * division));
+			const firstDivision = division + (12 - (Object.keys(group).length * division));
 
 			group.forEach((property, gi) => {
 				if (!this.isHidden(props, property)) fields.push(
