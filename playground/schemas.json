@@ -88,8 +88,7 @@
 									"ui:widget": "separatedDateTime"
 								}
 							},
-							"expanderButtonText": "Ilmoita aikaväli",
-							"contractorButtonText": "Piilota aikavälin loppu"
+							"expanderButtonText": "Ilmoita aikaväli"
 						}
 					}
 				}
@@ -126,8 +125,7 @@
 												"ui:widget": "separatedDateTime"
 											}
 										},
-										"expanderButtonText": "Ilmoita aikaväli",
-										"contractorButtonText": "Piilota aikavälin loppu"
+										"expanderButtonText": "Ilmoita aikaväli"
 									}
 								}
 							}

@@ -9,7 +9,6 @@ import Button from "../Button";
  * uiSchema = {ui:options: {
  *  additionalFields: [<string>]
  *  expanderButtonText: <string>
- *  contractorButtonText: <string>
  *  uiSchema: <uiSchema> (used for inner schema)
  * }
  *
@@ -21,7 +20,6 @@ export default class AdditionalsExpanderField extends Component {
 			"ui:options": PropTypes.shape({
 				additionalFields: PropTypes.arrayOf(PropTypes.string).isRequired,
 				expanderButtonText: PropTypes.string,
-				contractorButtonText: PropTypes.string,
 				uiSchema: PropTypes.object
 			}).isRequired
 		}).isRequired
@@ -100,6 +98,7 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	shouldShowAdditionalsButton = (props) => {
+		if (this.shouldShowAdditionals(props, this.state.dictionarifiedAdditionals)) return false;
 		if (props.formData) for (let property in props.formData) {
 			if (this.state.dictionarifiedAdditionals[property] && (props.formData[property] === undefined || props.formData[property] === null)) return true;
 		}
@@ -111,12 +110,8 @@ export default class AdditionalsExpanderField extends Component {
 
 		let expanderText = "Lisää";
 		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].expanderButtonText) expanderText = this.props.uiSchema["ui:options"].expanderButtonText;
-		let contractorText = "Vähemmän";
-		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].contractorButtonText) contractorText = this.props.uiSchema["ui:options"].contractorButtonText;
 
-		return this.shouldShowAdditionals(this.props, this.state.dictionarifiedAdditionals) ?
-				<Button onClick={this.dontShowAdditional}>{contractorText}</Button> :
-				<Button onClick={this.showAdditional}>{expanderText}</Button>;
+		return <Button onClick={this.showAdditional}>{expanderText}</Button>;
 	}
 
 	showAdditional = () => {
