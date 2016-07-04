@@ -290,7 +290,13 @@ export class AutosuggestInputField extends Component {
 
 		const inputProps = {...this.props,
 			value: (inputValue !== undefined) ? inputValue : this.props.formData,
-			onChange: (e, {newValue}) => {this.onChange(newValue)},
+			onChange: (e, {newValue, method}) => {
+				if (method === "type" && this.state.options.preventTypingPattern) {
+					const regexp = new RegExp(this.state.options.preventTypingPattern);
+					if (newValue.match(regexp)) return;
+				}
+				this.onChange(newValue)
+			},
 			onBlur: this.onBlur,
 			readOnly: readonly};
 
@@ -301,7 +307,7 @@ export class AutosuggestInputField extends Component {
 			suggestionsContainer: "list-group autosuggest-container",
 			suggestion: "list-group-item",
 			suggestionFocused: "list-group-item active"
-		}
+		};
 		
 		if (this.state.isLoading) cssClasses.container = "autosuggest-loading";
 

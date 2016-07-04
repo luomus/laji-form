@@ -45,7 +45,8 @@
 															"ui:options": {
 																"autosuggestField": "friends",
 																"allowNonsuggestedValue": true,
-																"suggestionReceive": "key"
+																"suggestionReceive": "key",
+																"preventTypingPattern": "^MA\\.\\d+$"
 															}
 														},
 														"ui:field": "dependentDisable",
