@@ -110,7 +110,7 @@ export default class TableField extends Component {
 		let title = this.props.schema.title || this.props.name;
 		return (
 			<fieldset>
-				{title !== undefined ? <TitleField title={title} /> : null}
+				{(title !== undefined && title !== "")  ? <TitleField title={title} /> : null}
 				{
 					(this.props.formData && (!this.props.formData.hasOwnProperty("length") || this.props.formData.length > 0)) ? (
 						<div>

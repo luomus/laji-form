@@ -27,6 +27,7 @@
 					"fields": ["leg", "legPublic", "editors"],
 					"uiSchema": {
 						"ui:field": "nested",
+						"ui:order": ["", "legPublic"],
 						"ui:options": {
 							"": {
 								"fields": ["leg", "editors"],
