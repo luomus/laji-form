@@ -68,9 +68,13 @@ export class TaxonWidgetField extends Component {
 		let options = this.props.uiSchema["ui:options"];
 		return <div className="taxon-widget">
 			<SchemaField {...this.props} {...this.state} />
-			<div className="taxon-widget-meta">
-				{options.taxonID ? (<div><span className="text-success">Tunnettu nimi</span><br /></div>) : null}
-				<a href={"http://tun.fi/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
+			<div key={options.taxonID} className="taxon-widget-meta">
+				{options.taxonID ?
+					(<div>
+						<span className="text-success">Tunnettu nimi</span><br />
+						<a href={"http://tun.fi/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
+					</div>) : null}
+
 			</div>
 		</div>
 	}
