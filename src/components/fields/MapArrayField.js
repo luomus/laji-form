@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import MapComponent from "laji-map";
 import Button from "../Button";
@@ -125,7 +127,11 @@ export default class MapArrayField extends Component {
 
 		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeId !== undefined;
 
+		const description = options.description;
+
 		return (<div className={isGrid ? "row" : null}>
+			<TitleField title="Kartta" />
+			{description !== undefined ? <DescriptionField description={description} /> : null}
 			<div className={isGrid ? "col-" + colType + "-6" : null}>
 				<div style={style.map}>
 					<MapComponent

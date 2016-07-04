@@ -98,7 +98,8 @@
 			"ui:field": "mapArray",
 			"ui:options": {
 				"grid": true,
-				"colType": "xs"
+				"colType": "xs",
+				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille."
 			},
 			"items": {
 				"ui:order": ["wgs84Geometry", "eventTime", "units", "treeWrapper", "imagesWrapper"],
