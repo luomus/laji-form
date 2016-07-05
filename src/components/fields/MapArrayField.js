@@ -83,6 +83,7 @@ export default class MapArrayField extends Component {
 			this.controlledActiveChange = false;
 		} else {
 			state.direction = "directionless";
+			if (this.state.activeId !== undefined) state.direction = (id > this.state.activeId) ? "right" : "left";
 		}
 		this.setState(state);
 	}
