@@ -13,7 +13,7 @@ export default class MapArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				grid: PropTypes.boolean,
+				inlineProperties: PropTypes.arrayOf(PropTypes.string),
 				colType: PropTypes.string
 			})
 		}).isRequired
@@ -94,7 +94,14 @@ export default class MapArrayField extends Component {
 	}
 
 	onItemChange = (formData) => {
-		this.props.onChange(update(this.props.formData, {$splice: [[this.state.activeId, 1, formData]]}));
+		let newFormData = formData;
+		if (this.props.uiSchema["ui:options"].inlineProperties) {
+			newFormData = this.props.formData[this.state.activeId];
+			for (let prop in formData) {
+				newFormData = update(newFormData, {[prop]: {$set: formData[prop]}});
+			}
+		}
+		this.props.onChange(update(this.props.formData, {$splice: [[this.state.activeId, 1, newFormData]]}));
 	}
 
 	onMapChange = (e) => {
@@ -122,17 +129,27 @@ export default class MapArrayField extends Component {
 		}
 
 		const options = this.props.uiSchema["ui:options"];
-		const isGrid = options && options.grid;
+		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
 		const colType = options && options.colType;
 
 		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeId !== undefined;
 
 		const description = options.description;
 
-		return (<div className={isGrid ? "row" : null}>
+		return (<div><div className={hasInlineProps ? "row" : null}>
 			<TitleField title="Kartta" />
 			{description !== undefined ? <DescriptionField description={description} /> : null}
-			<div className={isGrid ? "col-" + colType + "-6" : null}>
+			{buttonEnabled ? <Pagination
+				className="container"
+				activePage={this.state.activeId + 1}
+				items={(this.state.data) ? this.state.data.length : 0}
+				next={true}
+				prev={true}
+				boundaryLinks={true}
+				maxButtons={5}
+				onSelect={i => {this.focusToLayer(i - 1)}}
+			/> : null}
+			<div className={hasInlineProps ? "col-" + colType + "-6" : null}>
 				<div style={style.map}>
 					<MapComponent
 						ref={"map"}
@@ -144,32 +161,52 @@ export default class MapArrayField extends Component {
 						onChange={this.onMapChange}
 					/>
 				</div>
-				{buttonEnabled ? <Pagination
-					activePage={this.state.activeId + 1}
-					items={(this.state.data) ? this.state.data.length : 0}
-					next={true}
-					prev={true}
-					boundaryLinks={true}
-					maxButtons={5}
-					onSelect={i => {this.focusToLayer(i - 1)}}
-				/> : null}
 			</div>
-			<ReactCSSTransitionGroup className={isGrid ? "col-" + colType + "-6" : null} transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-				{this.renderSchemaField()}
-			</ReactCSSTransitionGroup>
-		</div>)
+
+				<ReactCSSTransitionGroup className="row" transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+						{hasInlineProps ? this.renderInlineSchemaField() : null}
+						{this.renderSchemaField()}
+				</ReactCSSTransitionGroup>
+
+		</div>
+	</div>)
 	}
 
-	renderSchemaField = () => {
+	getSchemaForFields = (fields, isInline) => {
 		let {formData, idSchema, errorSchema} = this.props;
 		let id = this.state.activeId;
 
-		let itemFormData = (formData && formData.length) ? formData[id] : undefined;
+		let itemSchemaProperties = {};
+		let itemFormData = (formData && formData.length) ? {} : undefined;
+		let itemErrorSchema = {};
+		fields.forEach(prop => {
+			itemSchemaProperties[prop] = this.state.schema.properties[prop];
+			if (itemFormData && formData[id].hasOwnProperty(prop)) itemFormData[prop] = formData[id][prop];
+			if (errorSchema && errorSchema[id]) itemErrorSchema[prop] = errorSchema[id][prop];
+		});
+		let itemSchema = update(this.state.schema, {properties: {$set: itemSchemaProperties}});
+		delete itemSchema.title;
 		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + id, this.props.registry.definitions);
-		let itemErrorSchema = errorSchema ? errorSchema[id] : undefined;
+
+		let uiSchema = isInline ? this.props.uiSchema["ui:options"].inlineUiSchema : this.state.uiSchema;
+
+		const options = this.props.uiSchema["ui:options"];
+		const colType = options && options.colType;
 
 		return (itemFormData) ?
-			<SchemaField key={id} {...this.props} {...this.state} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} /> :
-			null
+			(<div key={id + (isInline ? "-inline" : "-default")} className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
+				<SchemaField  {...this.props} {...this.state} schema={itemSchema} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} uiSchema={uiSchema} name={undefined}/>
+			</div>) :
+			null;
+	}
+
+	renderInlineSchemaField = () => {
+		return this.getSchemaForFields(this.props.uiSchema["ui:options"].inlineProperties, !!"is inline");
+	}
+
+	renderSchemaField = () => {
+		const allFields = Object.keys(this.state.schema.properties);
+		let inlineFields = this.props.uiSchema["ui:options"].inlineProperties;
+		return this.getSchemaForFields(inlineFields ? allFields.filter(field => !inlineFields.includes(field)) : allFields);
 	}
 }

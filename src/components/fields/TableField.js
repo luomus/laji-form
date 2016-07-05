@@ -164,7 +164,6 @@ export default class TableField extends Component {
 class TableRow extends Component {
 	render() {
 		const division = parseInt(12 / this.props.children.length);
-		console.log(division);
 
 		// make first division take rest of the total width divided by 12
 		const firstDivision = division + (12 - (this.props.children.length * division));
