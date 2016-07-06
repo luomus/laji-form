@@ -9,7 +9,8 @@ export default class GridLayoutField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"]),
-				maxItemsPerRow: PropTypes.number
+				maxItemsPerRow: PropTypes.number,
+				showLabels: PropTypes.boolean
 			})
 		}).isRequired
 	}
@@ -33,6 +34,7 @@ export default class GridLayoutField extends Component {
 		const options = props.uiSchema["ui:options"];
 		const maxItemsPerRow = (options && options.maxItemsPerRow
 			&& options.maxItemsPerRow > 0 && options.maxItemsPerRow <= 12) ? options.maxItemsPerRow : 6;
+		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
@@ -45,7 +47,7 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		return {uiSchema, groups};
+		return {uiSchema, groups, showLabels};
 	}
 
 	isHidden = (props, property) => {
@@ -75,13 +77,16 @@ export default class GridLayoutField extends Component {
 			const firstDivision = division + (12 - (Object.keys(group).length * division));
 
 			group.forEach((property, gi) => {
+				const name = this.state.showLabels ?  (props.schema.properties[property].title || property) : undefined;
+				let schema = props.schema.properties[property];
+				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
 				if (!this.isHidden(props, property)) fields.push(
 					<div key={"div_" + i} className={"col-" + colType + "-" + ((gi === 0) ? firstDivision : division)}>
 						<SchemaField
 							key={i}
-							name={props.schema.properties[property].title || property}
+							name={name}
 							required={this.isRequired(props.schema.required, property)}
-							schema={props.schema.properties[property]}
+							schema={schema}
 							uiSchema={props.uiSchema[property]}
 							idSchema={{id: props.idSchema.id + "_" + property}}
 							errorSchema={props.errorSchema ? (props.errorSchema[property] || {}) : {}}

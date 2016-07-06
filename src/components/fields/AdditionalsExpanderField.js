@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
@@ -51,36 +52,42 @@ export default class AdditionalsExpanderField extends Component {
 					if (!dictionarifiedAdditionals[prop]) filteredSchema[prop] = schema.properties[prop];
 				});
 				schema = update(schema, {properties: {$set: filteredSchema}, "ui:field": {$set: undefined}});
+				delete schema.title;
 			}
 		}
 
 		uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
 			props.uiSchema["ui:options"].uiSchema : {};
 
-		return {schema, uiSchema, dictionarifiedAdditionals}
+		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
 	}
 
 	render() {
-		let shouldShowButton = this.shouldShowAdditionalsButton(this.props);
+		const shouldShowButton = this.shouldShowAdditionalsButton(this.props);
+		const title = this.props.schema.title || this.props.name;
 		return (
-			<Row className="expandable-field-container">
-				<Col md={shouldShowButton ? 10 : 12}>
-					{this.renderSchema()}
-				</Col>
-				{shouldShowButton ?
-					<Col md={2}>
-					{this.renderButton()}
-					</Col> : null
-				}
-			</Row>);
+			<div>
+				{title ? <TitleField title={title} /> : null}
+				<Row className="expandable-field-container">
+					<Col md={shouldShowButton ? 10 : 12}>
+						{this.renderSchema()}
+					</Col>
+					{shouldShowButton ?
+						<Col md={2} className="expandable-field-container-buttons">
+								{this.renderButton()}
+						</Col> : null
+					}
+
+				</Row>
+			</div>);
 	}
 
 	renderSchema = () => {
 		return (
-			<SchemaField
-				{...this.props}
-				{...this.state}
-			/>
+				<SchemaField
+					{...this.props}
+					{...this.state}
+				/>
 		)
 	}
 

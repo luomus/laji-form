@@ -1,0 +1,98 @@
+body {
+    background: #eeeeee;
+}
+
+.laji-form-group {
+    background: white;
+    padding: 3px 5px;
+	border: 1px solid #dddddd;
+}
+
+.autosuggest-container, .scope-field-additionals-container  {
+    position: absolute;
+    z-index: 1;
+}
+
+.map-array-directionless-enter {
+    opacity: 0.01;
+}
+
+.map-array-directionless-enter.map-array-directionless-enter-active {
+    opacity: 1;
+    transition: opacity .3s ease-in;
+}
+
+.map-array-left-enter {
+    transform: translate3d(-100%, 0, 0);
+}
+
+.map-array-right-enter {
+    transform: translate3d(100%, 0, 0);
+}
+
+.map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
+    transform: translate3d(0, 0, 0);
+    transition: all 300ms;
+}
+
+.map-array-directionless-leave, .map-array-left-leave .map-array-right-leave {
+	/*display:none;*/
+	visibility: hidden;
+	height: 0px;
+	width: 0px;
+}
+
+.laji-form {
+	line-height: 1;
+}
+
+.laji-form .form-group {
+	border-radius: 2px;
+}
+
+.laji-form .form-group {
+	border-radius: 2px;
+}
+
+.laji-form fieldset fieldset > .form-group {
+	background: white;
+}
+
+.laji-form > select {
+	border: 1px solid
+}
+
+.laji-form input, .laji-form select {
+	height: 25px;
+	border-radius: 2px;
+}
+
+.laji-form select {
+	padding: 3px 6px;
+}
+
+.laji-form .form-group {
+	margin-bottom: 7px;
+}
+
+.laji-form button {
+	height: 100%;
+	line-height: 14px;
+	border-radius: 2px;
+	white-space: normal;
+}
+
+.laji-form legend {
+	font-size: 18px;
+}
+
+.laji-form-map {
+	z-index: 1;
+}
+
+.taxon-widget-meta {
+	font-size: 11px;
+	margin-top: -5px;
+	margin-left: 5px
+}
+

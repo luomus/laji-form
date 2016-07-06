@@ -124,7 +124,7 @@ export default class NestField extends Component {
 	getStateFromProps = (props) => {
 		this.sanityCheck(props);
 
-		let uiSchema = update(props.uiSchema, {$merge: {"ui:field": undefined}});
+		let uiSchema = update(props.uiSchema, {$merge: {"ui:field": undefined, classNames: undefined}});
 		let idSchema = props.idSchema;
 		let errorSchema = props.errorSchema;
 		let formData = props.formData;

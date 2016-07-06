@@ -59,7 +59,7 @@ export default class InitiallyHiddenField extends Component {
 		return (
 			<div>
 				<Collapse in={!shouldShow}>
-					<Row><Col xs={2} xsOffset={10}><Button onClick={this.toggleVisibility}>{this.props.schema.title || this.props.name} <span className="caret" /></Button></Col></Row>
+					<Row><Col xs={2} xsOffset={10}><Button style={{whiteSpace: "nowrap"}}onClick={this.toggleVisibility}>{this.props.schema.title || this.props.name} <span className="caret" /></Button></Col></Row>
 				</Collapse>
 				<Collapse in={shouldShow}>
 					<div>

@@ -6,6 +6,7 @@ import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
 
 import "../src/styles";
+import "./styles.css";
 
 class LajiFormApp extends Component {
 	constructor(props) {
@@ -24,7 +25,7 @@ class LajiFormApp extends Component {
 
 	render () {
 		return (
-			<div className="container">
+			<div className="container laji-form">
 				<LajiForm {...this.state} />
 			</div>
 		);
