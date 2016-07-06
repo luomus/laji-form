@@ -3,6 +3,7 @@ import update from "react-addons-update";
 import { toIdSchema } from  "react-jsonschema-form/lib/utils"
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
 export default class AutoArrayField extends Component {
@@ -24,8 +25,8 @@ export default class AutoArrayField extends Component {
 			let itemIdPrefix = this.props.idSchema.id + "_" + idx;
 			let removable = idx < data.length - 1;
 			rows.push(
-				<div className="row" key={"row_" + idx}>
-					<div className={removable ? "col-md-10" : "col-md-12"} key={"schema_container_" + idx}>
+				<Row key={"row_" + idx}>
+					<Col xs={10} key={"schema_container_" + idx}>
 						<SchemaField
 						key={idx}
 						formData={item}
@@ -35,9 +36,9 @@ export default class AutoArrayField extends Component {
 						idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
 						registry={this.props.registry}
 						errorSchema={this.props.errorSchema[idx]} />
-					</div>
-					{removable ? (<Button key={"button_" + idx} type="danger" classList={["col-md-2"]} onClick={ e => { e.preventDefault(); this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]})) } }>Delete</Button>) : undefined}
-				</div>);
+					</Col>
+					{removable ? (<Button key={"button_" + idx} type="danger" classList={["col-xs-2"]} onClick={ e => { e.preventDefault(); this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]})) } }>✖</Button>) : undefined}
+				</Row>);
 		});
 		return rows;
 	}

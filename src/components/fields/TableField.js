@@ -3,6 +3,7 @@ import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
+import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
 export default class TableField extends Component {
@@ -41,17 +42,17 @@ export default class TableField extends Component {
 			let uiOptions = {colType: "xs"};
 			if (idx) uiOptions.showLabels = false;
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
-			items.push(<div className="row" key={idx}>
-				<div className="col-xs-10"><SchemaField
+			items.push(<Row key={idx}>
+				<Col xs={10}><SchemaField
 					formData={item}
 					onChange={this.onChangeForIdx(idx)}
 					schema={this.props.schema.items}
 					uiSchema={uiSchema}
 					idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
 					registry={this.props.registry}
-					errorSchema={this.props.errorSchema[idx]} /></div>
-				<div className="col-xs-2"><Button type="danger"  onClick={ e => { e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>Delete</Button></div>
-			</div>)
+					errorSchema={this.props.errorSchema[idx]} /></Col>
+				<Col xs={2}><Button type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button></Col>
+			</Row>)
 		});
 
 		return (formData && formData.length) ? (<div>
@@ -61,7 +62,7 @@ export default class TableField extends Component {
 	}
 
 	getAddButton = () => {
-		return (<Button onClick={ () => { this.addItem() } } key="add">Add</Button>);
+		return (<Row><Col xs={2}><Button onClick={ () => { this.addItem() }} classList={["col-xs-12"]} key="add">➕</Button></Col></Row>);
 	}
 
 	addItem = () => {

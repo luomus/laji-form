@@ -52,13 +52,14 @@ export default class AdditionalsExpanderField extends Component {
 					if (!dictionarifiedAdditionals[prop]) filteredSchema[prop] = schema.properties[prop];
 				});
 				schema = update(schema, {properties: {$set: filteredSchema}, "ui:field": {$set: undefined}});
-				delete schema.title;
 			}
 		}
+		schema = update(schema, {title: {$set: undefined}});
 
 		uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
 			props.uiSchema["ui:options"].uiSchema : {};
 
+		console.log(schema);
 		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
 	}
 

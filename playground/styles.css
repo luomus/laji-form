@@ -85,6 +85,13 @@ body {
 .laji-form legend {
 	font-size: 18px;
 }
+.laji-form label {
+	font-size: 13px;
+}
+
+.laji-form .field-description {
+	font-size: 13px;
+}
 
 .laji-form-map {
 	z-index: 1;
