@@ -316,11 +316,11 @@ export class AutosuggestInputField extends Component {
 
 		return (
 			<div>
-				<label className="control-label" htmlFor={this.props.idSchema.id}>
+				<label className="control-label" htmlFor={this.props.idSchema.$id}>
 					{this.props.required ? label + REQUIRED_FIELD_SYMBOL : label}
 				</label>
 			<Autosuggest
-				id={this.props.idSchema.id}
+				id={this.props.idSchema.$id}
 				inputProps={inputProps}
 				suggestions={suggestions}
 				getSuggestionValue={this.getSuggestionValue}

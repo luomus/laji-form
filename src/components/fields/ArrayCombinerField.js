@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 
 /**

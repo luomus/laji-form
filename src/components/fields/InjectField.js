@@ -57,7 +57,7 @@ export default class InjectField extends Component {
 			}
 			delete schema.properties[fieldName];
 
-			idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {id: idSchema[target].id + "_" + fieldName}}}});
+			idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema[target].$id + "_" + fieldName}}}});
 			delete idSchema[fieldName];
 
 			formData = update(formData, {});

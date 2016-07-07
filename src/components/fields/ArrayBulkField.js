@@ -60,7 +60,7 @@ export default class ArrayBulkField extends Component {
 				onChange={this.onChangeForIdx(idx)}
 				schema={this.props.schema.items}
 				uiSchema={this.props.uiSchema.items}
-				idSchema={{id: this.props.idSchema.id + "_" + idx}}
+				idSchema={{$id: this.props.idSchema.$id + "_" + idx}}
 				registry={this.props.registry}
 				errorSchema={this.props.errorSchema[idx]} />);
 			idx++;

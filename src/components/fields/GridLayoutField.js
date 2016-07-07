@@ -89,7 +89,7 @@ export default class GridLayoutField extends Component {
 							required={this.isRequired(props.schema.required, property)}
 							schema={schema}
 							uiSchema={props.uiSchema[property]}
-							idSchema={{id: props.idSchema.id + "_" + property}}
+							idSchema={{$id: props.idSchema.$id + "_" + property}}
 							errorSchema={props.errorSchema ? (props.errorSchema[property] || {}) : {}}
 							formData={props.formData[property]}
 							registry={props.registry}

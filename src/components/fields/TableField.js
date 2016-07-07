@@ -36,7 +36,7 @@ export default class TableField extends Component {
 
 		const items = [];
 		if (formData) formData.forEach((item, idx) => {
-			let itemIdPrefix = this.props.idSchema.id + "_" + idx;
+			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 
 			let uiSchema = this.props.uiSchema.items;
 			let uiOptions = {colType: "xs"};

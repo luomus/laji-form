@@ -185,7 +185,7 @@ export default class ScopeField extends Component {
 		schema = update(schema, {$merge: {properties: fieldsToShow}});
 
 		Object.keys(schema.properties).forEach(property => {
-			idSchema = update(idSchema, {$merge: {[property]: {id: idSchema.id + "_" + property}}});
+			idSchema = update(idSchema, {$merge: {[property]: {$id: idSchema.$id + "_" + property}}});
 		});
 
 		return {
@@ -231,7 +231,7 @@ export default class ScopeField extends Component {
 			list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
 		}
 
-		return <DropdownButton id={this.props.idSchema.id + "_dropdown"} title="Valitse lisää kenttiä" bsStyle="info">{list}</DropdownButton>;
+		return <DropdownButton id={this.props.idSchema.$id + "_dropdown"} title="Valitse lisää kenttiä" bsStyle="info">{list}</DropdownButton>;
 	}
 
 	addAdditionalPropertiesToList = (properties, list, keyPrefix) => {

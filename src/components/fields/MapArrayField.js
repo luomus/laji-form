@@ -183,7 +183,7 @@ export default class MapArrayField extends Component {
 		});
 		let itemSchema = update(this.state.schema, {properties: {$set: itemSchemaProperties}});
 		delete itemSchema.title;
-		let itemIdSchema = toIdSchema(this.state.schema, idSchema.id + "_" + id, this.props.registry.definitions);
+		let itemIdSchema = toIdSchema(this.state.schema, idSchema.$id + "_" + id, this.props.registry.definitions);
 
 		let uiSchema = isInline ? this.props.uiSchema["ui:options"].inlineUiSchema : this.state.uiSchema;
 

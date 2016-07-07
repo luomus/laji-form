@@ -137,7 +137,7 @@ export default class NestField extends Component {
 		let options = props.uiSchema["ui:options"];
 		Object.keys(options).forEach((wrapperFieldName) => {
 			schemaProperties = update(schemaProperties, {$merge: {[wrapperFieldName]: getNewSchemaField(options[wrapperFieldName].title)}});
-			idSchema = update(idSchema, {$merge: {[wrapperFieldName]: getNewIdSchemaField(idSchema.id, wrapperFieldName)}});
+			idSchema = update(idSchema, {$merge: {[wrapperFieldName]: getNewIdSchemaField(idSchema.$id, wrapperFieldName)}});
 			errorSchema = update(errorSchema, {$merge: {[wrapperFieldName]: {}}});
 
 			options[wrapperFieldName].fields.forEach((fieldName) => {
@@ -147,7 +147,7 @@ export default class NestField extends Component {
 						schemaProperties[wrapperFieldName].required.push(fieldName) :
 						(schemaProperties[wrapperFieldName].required = [fieldName])
 				}
-				idSchema[wrapperFieldName][fieldName] = getNewIdSchemaField(idSchema[wrapperFieldName].id, fieldName);
+				idSchema[wrapperFieldName][fieldName] = getNewIdSchemaField(idSchema[wrapperFieldName].$id, fieldName);
 				errorSchema[wrapperFieldName][fieldName] = errorSchema[fieldName];
 
 				[schemaProperties, idSchema, errorSchema].forEach((schemaFieldProperty) => {
@@ -176,7 +176,7 @@ export default class NestField extends Component {
 			return {type: "object", properties: {}, title};
 		}
 		function getNewIdSchemaField(id, fieldName) {
-			return {id: id + "_" + fieldName};
+			return {$id: id + "_" + fieldName};
 		}
 	}
 

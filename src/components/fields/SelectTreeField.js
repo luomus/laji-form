@@ -33,7 +33,7 @@ export default class TreeField extends Component {
 		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
 			uiSchema["ui:options"].uiSchema : {};
 		let formData = {};
-		let idSchema = {id: props.idSchema.id};
+		let idSchema = {$id: props.idSchema.$id};
 
 		let dictionarifiedEnums = {};
 		props.schema.enum.forEach((e, i) => {
@@ -73,7 +73,7 @@ export default class TreeField extends Component {
 			select.title = (labels && labels[depth]) ? labels[depth] : " ";
 
 			properties[depth] = select;
-			idSchema[depth] = {id: idSchema.id + "_" + depth};
+			idSchema[depth] = {$id: idSchema.$id + "_" + depth};
 		}
 
 		let searchTerm = props.formData;

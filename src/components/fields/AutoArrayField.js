@@ -23,7 +23,7 @@ export default class AutoArrayField extends Component {
 		
 		let rows = [];
 		data.forEach((item, idx) => {
-			let itemIdPrefix = this.props.idSchema.id + "_" + idx;
+			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
 			rows.push(
 				<Row key={"row_" + idx}>

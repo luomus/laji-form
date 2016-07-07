@@ -17,7 +17,6 @@ function CheckboxWidget({
 }) {
 	const showGlyph = label && help;
 	const labelElem = <strong>{label}{showGlyph ? <HelpGlyph /> : null}</strong>;
-	console.log(label);
 	const tooltip = showGlyph ? <Tooltip id={id + "-tooltip"}>{help}</Tooltip> : null;
 	const elem = (
 		<label>
@@ -35,11 +34,6 @@ function CheckboxWidget({
 		<OverlayTrigger overlay={tooltip} className={`checkbox ${disabled ? "disabled" : ""}`}>{elem}</OverlayTrigger> :
 		elem;
 	return <div className={`checkbox ${disabled ? "disabled" : ""}`}>{container}</div>
-	// const container = (<div className={`checkbox ${disabled ? "disabled" : ""}`}>{elem}</div>);
-	// return tooltip ?
-	// 	(<OverlayTrigger overlay={tooltip} className={`checkbox ${disabled ? "disabled" : ""}`}>
-	// 		{container}
-	// 	</OverlayTrigger>) : container;
 }
 if (process.env.NODE_ENV !== "production") {
 	CheckboxWidget.propTypes = {
