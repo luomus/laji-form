@@ -51,6 +51,9 @@
 																"preventTypingPattern": "^MA\\.\\d+$"
 															}
 														},
+														"editors": {
+															"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
+														},
 														"ui:field": "dependentDisable",
 														"ui:options": {
 															"disableDefiner": "leg",
@@ -391,7 +394,7 @@
 						"title": "Havaintoajan loppu"
 					}
 				},
-				"required": ["dateBegin"]
+				"required": ["dateBegin", "legPublic"]
 			},
 			"gatherings": {
 				"type": "array",

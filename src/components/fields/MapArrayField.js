@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
@@ -191,6 +190,8 @@ export default class MapArrayField extends Component {
 		const options = this.props.uiSchema["ui:options"];
 		const colType = options && options.colType;
 
+		const SchemaField = this.props.registry.fields.SchemaField;
+		
 		return (itemFormData) ?
 			(<div key={id + (isInline ? "-inline" : "-default")} className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
 				<SchemaField  {...this.props} {...this.state} schema={itemSchema} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} uiSchema={uiSchema} name={undefined}/>

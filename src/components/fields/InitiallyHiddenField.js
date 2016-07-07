@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import { Row, Col, Collapse, DropdownButton } from "react-bootstrap";
 import Button from "../Button";
 
@@ -56,6 +55,7 @@ export default class InitiallyHiddenField extends Component {
 
 	render() {
 		let shouldShow = this.shouldShow(this.props);
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
 			<div>
 				<Collapse in={!shouldShow}>

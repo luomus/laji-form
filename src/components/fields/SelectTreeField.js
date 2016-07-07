@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
  * Constructs selects from given tree.
@@ -126,6 +125,7 @@ export default class TreeField extends Component {
 	}
 
 	render() {
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (<SchemaField
 			{...this.props}
 			{...this.state}

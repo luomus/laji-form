@@ -1,5 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import Form from "react-jsonschema-form";
+
+import SchemaField from "./../overriddenComponents/fields/SchemaField";
+import BooleanField from "./../overriddenComponents/fields/BooleanField";
+import CheckboxWidget from "./../overriddenComponents/widgets/CheckboxWidget";
+
 import NestField from "./fields/NestField";
 import ArrayBulkField from "./fields/ArrayBulkField";
 import AutoArrayField from "./fields/AutoArrayField";
@@ -38,6 +43,8 @@ export default class LajiForm extends Component {
 			<Form
 				{...this.props}
 				fields={{
+					SchemaField: SchemaField,
+					BooleanField: BooleanField,
 					nested: NestField,
 					unitTripreport: ArrayBulkField,
 					bulkArray: ArrayBulkField,
@@ -64,6 +71,7 @@ export default class LajiForm extends Component {
 					initiallyHidden: InitiallyHiddenField
 				}}
 				widgets={{
+					CheckboxWidget: CheckboxWidget,
 					dateTime: DateTimeWidget,
 					date: DateWidget,
 					time: TimeWidget,

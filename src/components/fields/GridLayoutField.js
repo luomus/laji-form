@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { Row, Col } from "react-bootstrap";
 
@@ -75,6 +74,8 @@ export default class GridLayoutField extends Component {
 
 			// make first division take rest of the total width divided by 12
 			const firstDivision = division + (12 - (Object.keys(group).length * division));
+			
+			const SchemaField = this.props.registry.fields.SchemaField;
 
 			group.forEach((property, gi) => {
 				const name = this.state.showLabels ?  (props.schema.properties[property].title || property) : undefined;

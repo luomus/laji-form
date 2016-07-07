@@ -1,7 +1,3 @@
-import React, { Component } from "react";
+import React from "react";
 
-export default class AutosuggestField extends Component {
-	render() {
-		return null;
-	}
-}
+export default () => { return null; }

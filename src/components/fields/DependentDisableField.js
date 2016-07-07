@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
  * Disables object field's value according a regexp rule that is matched against another field's value.
@@ -61,6 +60,7 @@ export default class DependentDisableField extends Component {
 	}
 
 	render() {
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

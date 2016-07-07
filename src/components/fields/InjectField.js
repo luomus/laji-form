@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
  * Inject a schema object property to nested schema.
@@ -159,6 +158,7 @@ export default class InjectField extends Component {
 	}
 
 	render() {
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
 			<SchemaField {...this.props} {...this.state} />
 		)

@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 
 /**
  * Transforms an array field to o boolean field, where each value is true/false according to another array field.
@@ -92,6 +91,7 @@ export default class DependentBooleanField extends Component {
 	}
 
 	render() {
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

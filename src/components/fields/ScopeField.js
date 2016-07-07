@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import { ListGroup, ListGroupItem, DropdownButton, MenuItem } from "react-bootstrap";
 import ApiClient from "../../ApiClient";
 import Button from "../Button"
@@ -102,6 +101,7 @@ export default class ScopeField extends Component {
 	}
 
 	render() {
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
 			<div>
 				<SchemaField {...this.props} {...this.state} />

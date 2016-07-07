@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { toIdSchema } from  "react-jsonschema-form/lib/utils"
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
@@ -20,6 +19,8 @@ export default class AutoArrayField extends Component {
 		let data = this.props.formData || [];
 		data = update(data, {$push: [{}]});
 
+		const SchemaField = this.props.registry.fields.SchemaField;
+		
 		let rows = [];
 		data.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.id + "_" + idx;

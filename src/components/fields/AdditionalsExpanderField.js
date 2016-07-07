@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
@@ -59,7 +58,6 @@ export default class AdditionalsExpanderField extends Component {
 		uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
 			props.uiSchema["ui:options"].uiSchema : {};
 
-		console.log(schema);
 		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
 	}
 
@@ -84,6 +82,7 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	renderSchema = () => {
+		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
 				<SchemaField
 					{...this.props}

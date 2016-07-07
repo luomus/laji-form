@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import Button from "../Button";
-import UnitField from "./ScopeField";
 
 export default class ArrayBulkField extends Component {
 	static propTypes = {
@@ -54,6 +52,7 @@ export default class ArrayBulkField extends Component {
 			data.push({});
 		}
 
+		const SchemaField = this.props.registry.fields.SchemaField;
 		if (data) data.forEach((item) => {
 			rows.push(<SchemaField
 				key={idx}
