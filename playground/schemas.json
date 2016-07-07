@@ -397,7 +397,7 @@
 						"title": "Havaintoajan loppu"
 					}
 				},
-				"required": ["dateBegin", "legPublic"]
+				"required": ["dateBegin"]
 			},
 			"gatherings": {
 				"type": "array",

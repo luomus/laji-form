@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Form from "react-jsonschema-form";
+import Button from "./Button";
 
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
 import BooleanField from "./../overriddenComponents/fields/BooleanField";
@@ -35,10 +36,15 @@ const log = (type) => console.log.bind(console, type);
 export default class LajiForm extends Component {
 	constructor(props) {
 		super(props);
+		console.log(props);
 		this.apiClient = new ApiClient(props.apiClient);
 	}
 
 	render() {
+		let submitTxt = "Submit";
+		if (this.props.lang === "fi") submitTxt = "Lähetä";
+		else if (this.props.lang === "sv") submitTxt = "Acceptera";
+
 		return  (
 			<Form
 				{...this.props}
@@ -77,7 +83,9 @@ export default class LajiForm extends Component {
 					time: TimeWidget,
 					separatedDateTime: SeparatedDateTimeWidget
 				}}
-				onError={log("errors")} />
+				onError={log("errors")} >
+				<Button classList={["btn-info"]} type="submit">{submitTxt}</Button>
+				</Form>
 		)
 	}
 }
