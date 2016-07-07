@@ -141,7 +141,10 @@
 						},
 						"imagesWrapper": {
 							"title": "Kuvat",
-							"fields": ["image", "rights"]
+							"fields": ["image", "rights"],
+							"uiSchema": {
+								"ui:field": "grid"
+							}
 						},
 						"treeWrapper": {
 							"title": "Havaintopaikan tiedot",

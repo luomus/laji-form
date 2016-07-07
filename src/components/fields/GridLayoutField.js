@@ -9,7 +9,8 @@ export default class GridLayoutField extends Component {
 			"ui:options": PropTypes.shape({
 				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"]),
 				maxItemsPerRow: PropTypes.number,
-				showLabels: PropTypes.boolean
+				showLabels: PropTypes.boolean,
+				limitWidth: PropTypes.boolean
 			})
 		}).isRequired
 	}
@@ -34,6 +35,7 @@ export default class GridLayoutField extends Component {
 		const maxItemsPerRow = (options && options.maxItemsPerRow
 			&& options.maxItemsPerRow > 0 && options.maxItemsPerRow <= 12) ? options.maxItemsPerRow : 6;
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
+		const limitWidth = (options && options.hasOwnProperty("limitWidth")) ? options.showLabels : true;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
@@ -46,7 +48,7 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		return {uiSchema, groups, showLabels};
+		return {uiSchema, groups, showLabels, limitWidth};
 	}
 
 	isHidden = (props, property) => {
@@ -70,19 +72,23 @@ export default class GridLayoutField extends Component {
 		let fields = [];
 		this.state.groups.forEach(group => {
 
-			const division = parseInt(12 / group.length);
+			let division = parseInt(12 / group.length);
 
-			// make first division take rest of the total width divided by 12
-			const firstDivision = division + (12 - (Object.keys(group).length * division));
-			
 			const SchemaField = this.props.registry.fields.SchemaField;
 
 			group.forEach((property, gi) => {
+				if (!gi) division = division + (12 - (Object.keys(group).length * division));
+
+				const type = props.schema.properties[property].type;
+				if (this.state.limitWidth && type !== "array" && type !== "object" && (!props.uiSchema[property] || !props.uiSchema[property]["ui:widget"] || props.uiSchema[property]["ui:widget"] !== "separatedDateTime")) {
+					division = Math.min(4, division);
+				}
+
 				const name = this.state.showLabels ?  (props.schema.properties[property].title || property) : undefined;
 				let schema = props.schema.properties[property];
 				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
 				if (!this.isHidden(props, property)) fields.push(
-					<div key={"div_" + i} className={"col-" + colType + "-" + ((gi === 0) ? firstDivision : division)}>
+					<div key={"div_" + i} className={"col-" + colType + "-" + division}>
 						<SchemaField
 							key={i}
 							name={name}
