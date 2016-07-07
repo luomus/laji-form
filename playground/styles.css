@@ -2,12 +2,6 @@ body {
     background: #eeeeee;
 }
 
-.laji-form-group {
-    background: white;
-    padding: 3px 5px;
-	border: 1px solid #dddddd;
-}
-
 .autosuggest-container, .scope-field-additionals-container  {
     position: absolute;
     z-index: 1;
@@ -44,22 +38,6 @@ body {
 
 .laji-form {
 	line-height: 1;
-}
-
-.laji-form .form-group {
-	border-radius: 2px;
-}
-
-.laji-form .form-group {
-	border-radius: 2px;
-}
-
-.laji-form fieldset fieldset > .form-group {
-	background: white;
-}
-
-.laji-form > select {
-	border: 1px solid
 }
 
 .laji-form input, .laji-form select {

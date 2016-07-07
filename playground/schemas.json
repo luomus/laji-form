@@ -21,7 +21,7 @@
 		},
 		"gatheringEvent": {
 			"ui:field": "nested",
-			"classNames": "laji-form-group",
+			"classNames": "panel panel-default panel-body",
 			"ui:options": {
 				"legWrapper": {
 					"title": "Havainnoitsijat",
@@ -29,6 +29,7 @@
 					"uiSchema": {
 						"ui:field": "nested",
 						"ui:order": ["", "legPublic"],
+						"classNames": "well well-sm",
 						"ui:options": {
 							"": {
 								"fields": ["leg", "editors"],
@@ -79,6 +80,7 @@
 					],
 					"uiSchema": {
 						"ui:field": "expandable",
+						"classNames": "well well-sm",
 						"ui:options": {
 							"additionalFields": [
 								"dateEnd"
@@ -100,7 +102,7 @@
 		},
 		"gatherings": {
 			"ui:field": "mapArray",
-			"classNames": "laji-form-group",
+			"classNames": "panel panel-default panel-body",
 			"ui:options": {
 				"colType": "md",
 				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
@@ -108,6 +110,7 @@
 				"inlineUiSchema": {
 					"ui:field": "nested",
 					"ui:order": ["eventTime", "treeWrapper", "imagesWrapper"],
+					"classNames": "well well-sm",
 					"ui:options": {
 						"eventTime": {
 							"title": "Aika",
@@ -223,7 +226,7 @@
 							"ui:field": "autoArray",
 							"items": {
 								"ui:field": "scoped",
-								"classNames": "laji-form-group",
+								"classNames": "well well-sm",
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
 									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
