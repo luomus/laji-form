@@ -87,6 +87,9 @@
 							],
 							"uiSchema": {
 								"ui:field": "grid",
+								"ui:options": {
+									"limitWidthAlways": true
+								},
 								"dateBegin": {
 									"ui:widget": "separatedDateTime"
 								},

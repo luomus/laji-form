@@ -10,7 +10,7 @@ export default class GridLayoutField extends Component {
 				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"]),
 				maxItemsPerRow: PropTypes.number,
 				showLabels: PropTypes.boolean,
-				limitWidth: PropTypes.boolean
+				limitWidthAlways: PropTypes.boolean
 			})
 		}).isRequired
 	}
@@ -35,7 +35,7 @@ export default class GridLayoutField extends Component {
 		const maxItemsPerRow = (options && options.maxItemsPerRow
 			&& options.maxItemsPerRow > 0 && options.maxItemsPerRow <= 12) ? options.maxItemsPerRow : 6;
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
-		const limitWidth = (options && options.hasOwnProperty("limitWidth")) ? options.showLabels : true;
+		const limitWidth = (options && options.hasOwnProperty("limitWidthAlways")) ? options.limitWidthAlways : false;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
@@ -80,9 +80,10 @@ export default class GridLayoutField extends Component {
 				if (!gi) division = division + (12 - (Object.keys(group).length * division));
 
 				const type = props.schema.properties[property].type;
-				if (this.state.limitWidth && type !== "array" && type !== "object" && (!props.uiSchema[property] || !props.uiSchema[property]["ui:widget"] || props.uiSchema[property]["ui:widget"] !== "separatedDateTime")) {
+				if (this.state.limitWidth || (type !== "array" && type !== "object" && (!props.uiSchema[property] || !props.uiSchema[property]["ui:widget"] || props.uiSchema[property]["ui:widget"] !== "separatedDateTime"))) {
 					division = Math.min(4, division);
 				}
+
 
 				const name = this.state.showLabels ?  (props.schema.properties[property].title || property) : undefined;
 				let schema = props.schema.properties[property];

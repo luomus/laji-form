@@ -76,7 +76,6 @@ export default class AdditionalsExpanderField extends Component {
 								{this.renderButton()}
 						</Col> : null
 					}
-
 				</Row>
 			</div>);
 	}
