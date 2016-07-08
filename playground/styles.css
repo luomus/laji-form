@@ -29,8 +29,7 @@ body {
     transition: all 300ms;
 }
 
-.map-array-directionless-leave, .map-array-left-leave .map-array-right-leave {
-	/*display:none;*/
+.map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
 	visibility: hidden;
 	height: 0px;
 	width: 0px;

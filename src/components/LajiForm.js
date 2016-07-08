@@ -36,7 +36,6 @@ const log = (type) => console.log.bind(console, type);
 export default class LajiForm extends Component {
 	constructor(props) {
 		super(props);
-		console.log(props);
 		this.apiClient = new ApiClient(props.apiClient);
 	}
 
@@ -78,8 +77,7 @@ export default class LajiForm extends Component {
 				}}
 				widgets={{
 					CheckboxWidget: CheckboxWidget,
-					dateTime: DateTimeWidget,
-					date: DateWidget,
+					dateTime: DateTimeWidget, date: DateWidget,
 					time: TimeWidget,
 					separatedDateTime: SeparatedDateTimeWidget
 				}}

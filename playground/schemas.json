@@ -302,7 +302,7 @@
 									},
 									"definitions": {
 										"unitType": {
-											"fields": ["taxonID", "unitType"],
+											"fields": ["taxonID", "certainty", "unitType"],
 											"fieldScopes": {
 												"unitType": {
 													"MVL.1": {
@@ -489,6 +489,12 @@
 										"type": "string",
 										"enum": ["", "observationHeard", "observationSeen", "preservedSpecimen"],
 										"enumNames": ["", "Kuultu", "Nähty", "Otettu talteen"]
+									},
+									"certainty": {
+										"title": "Varmuus",
+										"type": "string",
+										"enum": ["", "sure", "notSoSure"],
+										"enumNames": ["", "Varma", "En ole varma"]
 									},
 									"identifications": {
 										"title": "Tunnistukset",
