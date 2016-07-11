@@ -374,7 +374,7 @@
 		"properties": {
 			"editors": {
 				"type": "array",
-				"title": "Anna käyttäjälle muokkausoikeus?",
+				"title": "Muokkausoikeus",
 				"items": {
 					"type": "string"
 				}
