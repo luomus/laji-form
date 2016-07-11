@@ -31,6 +31,9 @@ export default class GridLayoutField extends Component {
 
 		if (fieldProps.uiSchema["ui:options"] && fieldProps.uiSchema["ui:options"].uiSchema) {
 			fieldProps = update(fieldProps, {$merge: {uiSchema: fieldProps.uiSchema["ui:options"].uiSchema}});
+			for (let prop in fieldProps.schema.properties) {
+				if (props.uiSchema[prop]) fieldProps = update(fieldProps, {uiSchema: {$merge: {[prop]: props.uiSchema[prop]}}});
+			}
 
 			let field = new props.registry.fields[fieldProps.uiSchema["ui:field"]](fieldProps);
 			for (let fieldProp in fieldProps) {

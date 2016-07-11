@@ -55,7 +55,7 @@ export default class DependentDisableField extends Component {
 			if (!uiSchema[disableField]) uiSchema = update(uiSchema, {$merge: {[disableField]: {}}});
 			uiSchema = update(uiSchema, {[disableField]: {$merge: {"ui:disabled": true}}});
 		}
-		
+
 		return {uiSchema};
 	}
 
