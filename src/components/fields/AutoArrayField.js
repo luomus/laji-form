@@ -48,9 +48,7 @@ export default class AutoArrayField extends Component {
 		return (itemFormData) => {
 			let formData = this.props.formData;
 			if (!formData) formData = [];
-			//formData = update(formData, {$merge: {[idx]: itemFormData}});
-			formData[idx] = itemFormData; // this should be done immutable, but for some reason TaxonField
-			                              // won't update if this is done immutable.
+			formData = update(formData, {$merge: {[idx]: itemFormData}});
 			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
 		}
 	}
