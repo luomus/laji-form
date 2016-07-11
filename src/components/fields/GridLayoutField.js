@@ -25,13 +25,24 @@ export default class GridLayoutField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-		uiSchema = update(uiSchema, {$merge: {"ui:field": undefined}});
+		let fieldProps = {...props};
+
+		fieldProps.uiSchema = update(fieldProps.uiSchema, {$merge: {"ui:field": undefined}});
+
+		if (fieldProps.uiSchema["ui:options"] && fieldProps.uiSchema["ui:options"].uiSchema) {
+			fieldProps = update(fieldProps, {$merge: {uiSchema: fieldProps.uiSchema["ui:options"].uiSchema}});
+
+			let field = new props.registry.fields[fieldProps.uiSchema["ui:field"]](fieldProps);
+			for (let fieldProp in fieldProps) {
+				fieldProps[fieldProp] = field.state[fieldProp] || field.props[fieldProp];
+			}
+		}
 
 		const groups = [];
 		let groupIdx = 0;
 
 		const options = props.uiSchema["ui:options"];
+		const colType = (options && options.colType) ? options.colType : "md";
 		const maxItemsPerRow = (options && options.maxItemsPerRow
 			&& options.maxItemsPerRow > 0 && options.maxItemsPerRow <= 12) ? options.maxItemsPerRow : 6;
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
@@ -48,7 +59,7 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		return {uiSchema, groups, showLabels, limitWidth};
+		return {...fieldProps, colType, groups, showLabels, limitWidth};
 	}
 
 	isHidden = (props, property) => {
@@ -65,43 +76,39 @@ export default class GridLayoutField extends Component {
 	render() {
 		let props = {...this.props, ...this.state};
 
-		const options = props.uiSchema["ui:options"];
-		const colType = (options && options.colType) ? options.colType : "md";
-
 		let i = 0;
 		let fields = [];
 		this.state.groups.forEach(group => {
 
 			let division = parseInt(12 / group.length);
 
-			const SchemaField = this.props.registry.fields.SchemaField;
+			const SchemaField = this.state.registry.fields.SchemaField;
 
 			group.forEach((property, gi) => {
 				if (!gi) division = division + (12 - (Object.keys(group).length * division));
 
-				const type = props.schema.properties[property].type;
-				if (this.state.limitWidth || (type !== "array" && type !== "object" && (!props.uiSchema[property] || !props.uiSchema[property]["ui:widget"] || props.uiSchema[property]["ui:widget"] !== "separatedDateTime"))) {
+				const type = this.state.schema.properties[property].type;
+				if (this.state.limitWidth || (type !== "array" && type !== "object" && (!this.state.uiSchema[property] || !this.state.uiSchema[property]["ui:widget"] || this.state.uiSchema[property]["ui:widget"] !== "separatedDateTime"))) {
 					division = Math.min(4, division);
 				}
 
-
-				const name = this.state.showLabels ?  (props.schema.properties[property].title || property) : undefined;
-				let schema = props.schema.properties[property];
+				const name = this.state.showLabels ?  (this.state.schema.properties[property].title || property) : undefined;
+				let schema = this.state.schema.properties[property];
 				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
-				if (!this.isHidden(props, property)) fields.push(
-					<div key={"div_" + i} className={"col-" + colType + "-" + division}>
+				if (!this.isHidden(this.state, property)) fields.push(
+					<div key={"div_" + i} className={"col-" + this.state.colType + "-" + division}>
 						<SchemaField
 							key={i}
 							name={name}
-							required={this.isRequired(props.schema.required, property)}
+							required={this.isRequired(this.state.schema.required, property)}
 							schema={schema}
-							uiSchema={props.uiSchema[property]}
-							idSchema={{$id: props.idSchema.$id + "_" + property}}
-							errorSchema={props.errorSchema ? (props.errorSchema[property] || {}) : {}}
-							formData={props.formData[property]}
-							registry={props.registry}
+							uiSchema={this.state.uiSchema[property]}
+							idSchema={{$id: this.state.idSchema.$id + "_" + property}}
+							errorSchema={this.state.errorSchema ? (this.state.errorSchema[property] || {}) : {}}
+							formData={this.state.formData[property]}
+							registry={this.state.registry}
 							onChange={(data) => {
-									let formData = update(this.props.formData, {$merge: {[property]: data}});
+									let formData = update(this.state.formData, {$merge: {[property]: data}});
 									props.onChange(formData);
 								}}
 						/>

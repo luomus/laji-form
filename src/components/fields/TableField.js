@@ -41,6 +41,7 @@ export default class TableField extends Component {
 			let uiSchema = this.props.uiSchema.items;
 			let uiOptions = {colType: "xs"};
 			if (idx) uiOptions.showLabels = false;
+			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
 			items.push(<Row key={idx}>
 				<Col xs={10}><SchemaField
