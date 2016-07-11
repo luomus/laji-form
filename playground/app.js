@@ -11,12 +11,13 @@ import "./styles.css";
 class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
+		const lang = "fi";
 		this.state = {
 			...schemas,
 			 // formData: undefined,
 			onChange: this.onChange,
-			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, "fi"),
-			lang: "fi"
+			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
+			lang: lang
 		}
 	}
 
@@ -26,7 +27,7 @@ class LajiFormApp extends Component {
 
 	render () {
 		return (
-			<div className="container laji-form">
+			<div className="container-fluid laji-form">
 				<LajiForm {...this.state} />
 			</div>
 		);

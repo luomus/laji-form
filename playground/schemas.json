@@ -88,6 +88,7 @@
 							"uiSchema": {
 								"ui:field": "grid",
 								"ui:options": {
+									"colType": "sm",
 									"limitWidthAlways": true
 								},
 								"dateBegin": {
@@ -146,7 +147,10 @@
 							"title": "Kuvat",
 							"fields": ["image", "rights"],
 							"uiSchema": {
-								"ui:field": "grid"
+								"ui:field": "grid",
+								"ui:options": {
+									"colType": "sm"
+								}
 							}
 						},
 						"treeWrapper": {
@@ -212,7 +216,10 @@
 											"eka taso", "toka taso", "kolmas taso"
 										],
 										"uiSchema": {
-											"ui:field": "grid"
+											"ui:field": "grid",
+											"ui:options": {
+												"colType": "sm"
+											}
 										}
 									}
 								}

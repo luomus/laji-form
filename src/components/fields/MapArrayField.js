@@ -6,7 +6,7 @@ import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/util
 import MapComponent from "laji-map";
 import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Pagination } from "react-bootstrap";
+import { Pagination, Row } from "react-bootstrap";
 
 export default class MapArrayField extends Component {
 	static propTypes = {
@@ -149,22 +149,23 @@ export default class MapArrayField extends Component {
 				maxButtons={5}
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
-			<div style={style.map} className={"laji-form-map" + (hasInlineProps ? " col-" + colType + "-6" : "")}>
-				<MapComponent
-					ref={"map"}
-					data={this.state.data}
-					activeId={this.state.activeId}
-					longitude={60.171372}
-					latitude={24.931275}
-					zoom={13}
-					onChange={this.onMapChange}
-				/>
-			</div>
+				<div style={style.map} className={"laji-form-map" + (hasInlineProps ? " col-" + colType + "-6" : "")}>
+					<MapComponent
+						ref={"map"}
+						data={this.state.data}
+						activeId={this.state.activeId}
+						longitude={60.171372}
+						latitude={24.931275}
+						zoom={13}
+						onChange={this.onMapChange}
+					/>
+				</div>
 
-			<ReactCSSTransitionGroup className="row" transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-					{hasInlineProps ? this.renderInlineSchemaField() : null}
-					{this.renderSchemaField()}
-			</ReactCSSTransitionGroup>
+				<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+						{hasInlineProps ? this.renderInlineSchemaField() : null}
+					<p />
+						{this.renderSchemaField()}
+				</ReactCSSTransitionGroup>
 
 	</div>)
 	}

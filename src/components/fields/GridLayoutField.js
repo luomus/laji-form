@@ -80,14 +80,18 @@ export default class GridLayoutField extends Component {
 		let fields = [];
 		this.state.groups.forEach(group => {
 
-			let division = parseInt(12 / group.length);
+			const baseDivision = parseInt(12 / group.length);
 
 			const SchemaField = this.state.registry.fields.SchemaField;
 
 			group.forEach((property, gi) => {
-				if (!gi) division = division + (12 - (Object.keys(group).length * division));
+				let division = baseDivision;
+				if (!gi && group.length > 1) {
+					division = 12 - ((Object.keys(group).length - 1) * division);
+				}
 
 				const type = this.state.schema.properties[property].type;
+
 				if (this.state.limitWidth || (type !== "array" && type !== "object" && (!this.state.uiSchema[property] || !this.state.uiSchema[property]["ui:widget"] || this.state.uiSchema[property]["ui:widget"] !== "separatedDateTime"))) {
 					division = Math.min(4, division);
 				}

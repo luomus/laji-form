@@ -39,7 +39,7 @@ body {
 	line-height: 1;
 }
 
-.laji-form input, .laji-form select {
+.laji-form input[type=text], .laji-form select {
 	height: 25px;
 	border-radius: 2px;
 }
@@ -72,6 +72,7 @@ body {
 
 .laji-form-map {
 	z-index: 1;
+	padding-bottom: 15px;
 }
 
 .taxon-widget-meta {
