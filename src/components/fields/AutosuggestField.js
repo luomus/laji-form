@@ -246,7 +246,7 @@ export class AutosuggestInputField extends Component {
 		(() => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.get = this.apiClient.fetch("/autocomplete/" + this.state.options.autosuggestField, {q: suggestionValue.value, include_payload: this.state.autosuggestSettings.includePayload})
+			this.get = this.apiClient.fetch("/autocomplete/" + this.state.options.autosuggestField, {q: suggestionValue.value, includePayload: this.state.autosuggestSettings.includePayload})
 				.then( suggestions => {
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({suggestions, isLoading: false});
