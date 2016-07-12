@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
+import { toIdSchema } from  "react-jsonschema-form/lib/utils"
 import { Row, Col } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
@@ -110,7 +111,7 @@ export default class GridLayoutField extends Component {
 							required={this.isRequired(this.state.schema.required, property)}
 							schema={schema}
 							uiSchema={this.state.uiSchema[property]}
-							idSchema={{$id: this.state.idSchema.$id + "_" + property}}
+							idSchema={toIdSchema(this.state.idSchema[property], this.state.idSchema.$id + "_" + property, this.props.registry.definitions)}
 							errorSchema={this.state.errorSchema ? (this.state.errorSchema[property] || {}) : {}}
 							formData={this.state.formData[property]}
 							registry={this.state.registry}

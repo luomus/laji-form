@@ -6,7 +6,7 @@ export default class ApiClient {
 	constructor(baseUrl, accessToken, userToken, lang = "en") {
 		this.BASE_URL =  baseUrl;
 		this.lang = lang;
-		this.baseQuery = {access_token: accessToken, user_token: userToken, lang: this.lang};
+		this.baseQuery = {access_token: accessToken, userToken: userToken, lang: this.lang};
 	}
 
 	fetch(path, query) {

@@ -21,14 +21,17 @@ import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
-import AutosuggestField, {AutosuggestInputField, AutosuggestWidget} from "./fields/AutosuggestField";
+import AutosuggestField from "./fields/AutosuggestField";
 import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
 import HiddenField from "./fields/HiddenField";
 import InitiallyHiddenField from "./fields/InitiallyHiddenField";
+import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
 import TimeWidget from "./widgets/TimeWidget";
 import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
+import HiddenWidget from "./widgets/HiddenWidget";
+
 import ApiClient from "../ApiClient";
 
 const log = (type) => console.log.bind(console, type);
@@ -68,8 +71,6 @@ export default class LajiForm extends Component {
 					autoArray: AutoArrayField,
 					copyValuesArray: CopyValuesArrayField,
 					autosuggest: AutosuggestField,
-					autosuggestInput: AutosuggestInputField,
-					autosuggestWidget: AutosuggestWidget,
 					taxon: TaxonField,
 					taxonWidget: TaxonWidgetField,
 					hidden: HiddenField,
@@ -79,7 +80,9 @@ export default class LajiForm extends Component {
 					CheckboxWidget: CheckboxWidget,
 					dateTime: DateTimeWidget, date: DateWidget,
 					time: TimeWidget,
-					separatedDateTime: SeparatedDateTimeWidget
+					separatedDateTime: SeparatedDateTimeWidget,
+					autosuggest: AutosuggestWidget,
+					hidden: HiddenWidget
 				}}
 				onError={log("errors")} >
 				<Button classList={["btn-info"]} type="submit">{submitTxt}</Button>
