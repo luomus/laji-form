@@ -38,7 +38,7 @@ export default class AutoArrayField extends Component {
 						registry={this.props.registry}
 						errorSchema={this.props.errorSchema[idx]} />
 					</Col>
-					{removable ? (<Button key={"button_" + idx} type="danger" classList={["col-xs-2"]} onClick={ e => { e.preventDefault(); this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]})) } }>✖</Button>) : undefined}
+					{removable ? (<Col xs={2} key={"button_" + idx}><Button type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]})) } }>✖</Button></Col>) : undefined}
 				</Row>);
 		});
 		return rows;

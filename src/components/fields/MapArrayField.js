@@ -149,6 +149,7 @@ export default class MapArrayField extends Component {
 				maxButtons={5}
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
+			<Row>
 				<div style={style.map} className={"laji-form-map" + (hasInlineProps ? " col-" + colType + "-6" : "")}>
 					<MapComponent
 						ref={"map"}
@@ -166,6 +167,7 @@ export default class MapArrayField extends Component {
 					<p />
 						{this.renderSchemaField()}
 				</ReactCSSTransitionGroup>
+			</Row>
 
 	</div>)
 	}
