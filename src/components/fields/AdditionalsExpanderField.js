@@ -68,11 +68,11 @@ export default class AdditionalsExpanderField extends Component {
 			<div>
 				{title ? <TitleField title={title} /> : null}
 				<Row className="expandable-field-container">
-					<Col md={shouldShowButton ? 10 : 12}>
+					<Col sm={shouldShowButton ? 10 : 12}>
 						{this.renderSchema()}
 					</Col>
 					{shouldShowButton ?
-						<Col md={2} className="expandable-field-container-buttons">
+						<Col sm={2} className="expandable-field-container-buttons">
 								{this.renderButton()}
 						</Col> : null
 					}
