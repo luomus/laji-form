@@ -5,7 +5,10 @@ import ApiClient from "../../ApiClient";
 export default class TaxonField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
-			"ui:options": PropTypes.object
+			"ui:options": PropTypes.shape({
+				taxonField: PropTypes.string.isRequired,
+				uiSchema: PropTypes.object
+			})
 		}).isRequired
 	}
 
@@ -19,8 +22,9 @@ export default class TaxonField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema, formData} = props;
-		uiSchema = uiSchema["ui:options"].uiSchema;
+		let {formData} = props;
+
+		let {uiSchema, taxonField} = props.uiSchema["ui:options"];
 
 		Object.keys(props.uiSchema).forEach(prop => {
 			if (prop !== "ui:options" && prop !== "ui:field") {
@@ -30,9 +34,9 @@ export default class TaxonField extends Component {
 
 		let taxonWidgetUiSchema = {"ui:field": "taxonWidget", "ui:options": {
 			"taxonID": formData["taxonID"],
-			uiSchema: uiSchema.informalNameString
+			uiSchema: uiSchema[taxonField]
 		}};
-		uiSchema = update(uiSchema, {$merge: {informalNameString: taxonWidgetUiSchema}});
+		uiSchema = update(uiSchema, {$merge: {[taxonField]: taxonWidgetUiSchema}});
 
 		return {uiSchema};
 	}

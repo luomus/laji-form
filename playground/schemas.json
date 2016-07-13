@@ -112,10 +112,10 @@
 			"ui:options": {
 				"colType": "md",
 				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
-				"inlineProperties": ["dateBegin", "dateEnd", "tree", "image", "rights"],
+				"inlineProperties": ["dateBegin", "dateEnd", "biotope", "biotopeNotes", "image", "rights"],
 				"inlineUiSchema": {
 					"ui:field": "nested",
-					"ui:order": ["eventTime", "treeWrapper", "imagesWrapper"],
+					"ui:order": ["eventTime", "biotopeWrapper", "imagesWrapper"],
 					"classNames": "well well-sm",
 					"ui:options": {
 						"eventTime": {
@@ -155,11 +155,11 @@
 								}
 							}
 						},
-						"treeWrapper": {
+						"biotopeWrapper": {
 							"title": "Havaintopaikan tiedot",
-							"fields" : ["tree"],
+							"fields" : ["biotope", "biotopeNotes"],
 							"uiSchema": {
-								"tree": {
+								"biotope": {
 									"ui:field": "tree",
 									"ui:options": {
 										"tree": {
@@ -260,6 +260,7 @@
 											"uiSchema": {
 												"ui:field": "taxon",
 												"ui:options": {
+													"taxonField": "informalNameString",
 													"uiSchema": {
 														"ui:field": "grid",
 														"ui:options": {
@@ -283,15 +284,21 @@
 																		"taxonID": "key"
 																	},
 																	"uiSchema": {
-																		"ui:field": "grid",
+																		"ui:field": "taxon",
 																		"ui:options": {
-																			"colType": "sm"
-																		},
-																		"taxonID": {
-																			"ui:widget": "hidden"
-																		},
-																		"detDate": {
-																			"ui:widget": "date"
+																			"taxonField": "taxon",
+																			"uiSchema": {
+																				"ui:field": "grid",
+																				"ui:options": {
+																					"colType": "sm"
+																				},
+																				"taxonID": {
+																					"ui:widget": "hidden"
+																				},
+																				"detDate": {
+																					"ui:widget": "date"
+																				}
+																			}
 																		}
 																	}
 																}
@@ -497,13 +504,15 @@
 										"title": "Tyyppi",
 										"type": "string",
 										"enum": ["", "observationHeard", "observationSeen", "preservedSpecimen"],
-										"enumNames": ["", "Kuultu", "Nähty", "Otettu talteen"]
+										"enumNames": ["", "Kuultu", "Nähty", "Otettu talteen"],
+										"default": "observationSeen"
 									},
 									"certainty": {
 										"title": "Varmuus",
 										"type": "string",
 										"enum": ["", "sure", "notSoSure"],
-										"enumNames": ["", "Varma", "En ole varma"]
+										"enumNames": ["", "Varma", "En ole varma"],
+										"default": "sure"
 									},
 									"identifications": {
 										"title": "Tunnistukset",
@@ -559,11 +568,15 @@
 							"type": "object",
 							"properties": {}
 						},
-						"tree": {
+						"biotope": {
 							"type": "string",
 							"enum": ["", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12", "K13", "K14", "K15", "K16", "K17", "K18", "K19", "K20", "K21", "K22", "K23", "K24", "K25", "K26", "K27", "K28", "K29", "K30", "K31", "K32", "K33", "K34", "K35", "K36", "K37", "K38", "K39", "K40"],
 							"enumNames": ["", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"],
 							"title": " "
+						},
+						"biotopeNotes": {
+							"type": "string",
+							"title": "Lisätiedot"
 						}
 					}
 				}
