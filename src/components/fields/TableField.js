@@ -3,6 +3,7 @@ import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
+import Label from "../../components/Label";
 
 export default class TableField extends Component {
 	static propTypes = {
@@ -32,15 +33,34 @@ export default class TableField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		
-		const {formData} = this.props;
+		const {schema, uiSchema, idSchema, formData} = this.props;
 
 		const items = [];
+		const labels = [];
+
+		const schemaProps = schema.items.properties;
+		const schemaLength = Object.keys(schemaProps).length;
+		const baseDivision = parseInt(12 / schemaLength);
+		Object.keys(schemaProps).forEach((propName, i) => {
+			let division = baseDivision;
+			if (!i) division = 12 - ((schemaLength - 1) * division);
+			division = Math.min(4, division);
+
+			labels.push(<Col xs={division} key={propName + "-label"}><Label
+			                  label={schemaProps[propName].title || propName}
+			                  disabled={false}
+			                  id={idSchema[propName].$id}
+			                  help={(uiSchema && uiSchema.items[propName] && uiSchema.items[propName]["ui:help"]) ? uiSchema.items[propName]["ui:help"] : undefined}
+			/></Col>)
+		});
+		items.push(<Row key="moi"><Row><Col xs={10}>{labels}</Col><Col xs={2} /></Row></Row>);
+
 		if (formData) formData.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 
 			let uiSchema = this.props.uiSchema.items;
-			let uiOptions = {colType: "xs"};
-			if (idx) uiOptions.showLabels = false;
+			let uiOptions = {colType: "xs", showLabels: false};
+			//if (idx) uiOptions.showLabels = false;
 			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
 			items.push(<Row key={idx}>

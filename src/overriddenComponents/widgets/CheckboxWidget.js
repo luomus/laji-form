@@ -1,20 +1,29 @@
 import React, { PropTypes } from "react";
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import HelpGlyph from "../../components/HelpGlyph";
+import Label from "../../components/Label";
 
-const HELP_FIELD_SYMBOL = "?";
+function CheckboxWidget(props) {
+	const {
+		schema,
+		id,
+		value,
+		required,
+		disabled,
+		placeholder,
+		onChange,
+		help,
+		label
+	} = props;
 
-function CheckboxWidget({
-	schema,
-	id,
-	value,
-	required,
-	disabled,
-	placeholder,
-	onChange,
-	help,
-	label,
-}) {
+	return (<div className={`checkbox ${disabled ? "disabled" : ""}`}><Label {...props}>
+		<input type="checkbox"
+		       id={id}
+		       title={placeholder}
+		       checked={typeof value === "undefined" ? false : value}
+		       required={required}
+		       disabled={disabled}
+		       onChange={(event) => onChange(event.target.checked)} />
+	</Label></div>);
+
 	const showGlyph = label && help;
 	const labelElem = <strong>{label}{showGlyph ? <HelpGlyph /> : null}</strong>;
 	const tooltip = showGlyph ? <Tooltip id={id + "-tooltip"}>{help}</Tooltip> : null;
