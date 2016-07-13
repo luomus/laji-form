@@ -57,7 +57,7 @@ export default class InjectDefaultValueField extends Component {
 			}
 		});
 
-		return {uiSchema, formData, schema};
+		return {uiSchema, schema};
 	}
 
 	render() {

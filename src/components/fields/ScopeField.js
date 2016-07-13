@@ -176,6 +176,7 @@ export default class ScopeField extends Component {
 
 		if (props.formData) {
 			Object.keys(formData).forEach((property) => {
+				if (formData[property] === undefined) return;
 				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
 					fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
 				}
@@ -243,7 +244,7 @@ export default class ScopeField extends Component {
 			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
 			list.push(<MenuItem
 				key={keyPrefix + property}
-				active={isIncluded}
+				active={!!isIncluded}
 				onClick={() => {
 						additionalFields[property] = !isIncluded;
 						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });

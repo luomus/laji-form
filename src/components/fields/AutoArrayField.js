@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { toIdSchema } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
@@ -18,6 +18,7 @@ export default class AutoArrayField extends Component {
 	renderItems = () => {
 		let data = this.props.formData || [];
 		data = update(data, {$push: [{}]});
+		//let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
 
 		const SchemaField = this.props.registry.fields.SchemaField;
 		
@@ -38,7 +39,13 @@ export default class AutoArrayField extends Component {
 						registry={this.props.registry}
 						errorSchema={this.props.errorSchema[idx]} />
 					</Col>
-					{removable ? (<Col xs={2} key={"button_" + idx}><Button type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]})) } }>✖</Button></Col>) : undefined}
+					{removable ? (<Col xs={2} key={"button_" + idx}>
+						<Button type="danger"
+						        classList={["col-xs-12"]}
+						        onClick={ e => { e.preventDefault();
+						                         this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))
+						}}>✖</Button>
+					</Col>) : undefined}
 				</Row>);
 		});
 		return rows;
@@ -46,6 +53,10 @@ export default class AutoArrayField extends Component {
 
 	onChangeForIdx = (idx) => {
 		return (itemFormData) => {
+			if (!this.props.formData || idx === this.props.formData.length) {
+				itemFormData = update(getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions), {$merge: itemFormData});
+			}
+
 			let formData = this.props.formData;
 			if (!formData) formData = [];
 			formData = update(formData, {$merge: {[idx]: itemFormData}});

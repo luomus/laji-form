@@ -16,6 +16,7 @@ class LajiFormApp extends Component {
 			...schemas,
 			//formData: undefined,
 			onChange: this.onChange,
+			onSubmit: this.onSubmit,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
 			lang: lang
 		}
@@ -23,6 +24,10 @@ class LajiFormApp extends Component {
 
 	onChange = (formData) => {
 		this.setState(formData);
+	}
+
+	onSubmit = ({formData}) => {
+		console.log(formData)
 	}
 
 	render () {
