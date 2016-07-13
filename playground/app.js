@@ -11,10 +11,10 @@ import "./styles.css";
 class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
-		const lang = "fi";
+		let lang = "fi";
 		this.state = {
 			...schemas,
-			  formData: undefined,
+			  //formData: undefined,
 			onChange: this.onChange,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
 			lang: lang

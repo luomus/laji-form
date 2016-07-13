@@ -27,15 +27,14 @@ export default class DateWidget extends Component {
 		/>);
 
 		return this.props.value ? dateTimeWidget :
-			(<Row><Col lg={6}><FormGroup>{dateTimeWidget}</FormGroup></Col>
-				<Col lg={6}><FormGroup>
+			(<div className="form-inline"><FormGroup>{dateTimeWidget}</FormGroup>
+				<FormGroup>
 					<ButtonGroup>
 							<Button onClick={this.setToday}>Tänään</Button>
 							<Button onClick={this.setYesterday}>eilen</Button>
 					</ButtonGroup>
 				</FormGroup>
-				</Col>
-			</Row>);
+			</div>);
 	}
 
 	setToday = () => {

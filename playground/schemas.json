@@ -44,12 +44,14 @@
 												"uiSchema": {
 													"items": {
 														"leg": {
-															"ui:field": "autosuggestWidget",
-															"ui:options": {
-																"autosuggestField": "friends",
-																"allowNonsuggestedValue": true,
-																"suggestionReceive": "key",
-																"preventTypingPattern": "^MA\\.\\d+$"
+															"ui:widget": {
+																"component": "autosuggest",
+																"options": {
+																	"autosuggestField": "friends",
+																	"allowNonsuggestedValue": true,
+																	"suggestionReceive": "key",
+																	"preventTypingPattern": "^MA\\.\\d+$"
+																}
 															}
 														},
 														"editors": {
