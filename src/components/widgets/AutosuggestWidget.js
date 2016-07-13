@@ -49,6 +49,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	componentWillReceiveProps(props) {
+		if (this.state && props.formData !== this.state.inputValue) this.triggerConvert(props);
 		this.setState(this.getStateFromProps(props));
 	}
 
