@@ -125,10 +125,10 @@ export default class AutoSuggestWidget extends Component {
 		}
 	}
 
-	onInputChange = (value) => {
+	onInputChange = (value, method) => {
 		this.setState({inputValue: value});
 
-		if (this.props.options.allowNonsuggestedValue) {
+		if (method === "type" && this.props.options.allowNonsuggestedValue) {
 			this.props.onChange(value);
 		}
 	}
@@ -144,7 +144,7 @@ export default class AutoSuggestWidget extends Component {
 					const regexp = new RegExp(this.props.options.preventTypingPattern);
 					if (newValue.match(regexp)) return;
 				}
-				this.onInputChange(newValue)
+				this.onInputChange(newValue, method)
 			},
 			onBlur: this.onBlur,
 			readOnly: readonly};

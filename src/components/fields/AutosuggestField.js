@@ -17,7 +17,7 @@ import update from "react-addons-update";
 export default class AutosuggestField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = this.getStateFromProps(props);
+		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -34,6 +34,15 @@ export default class AutosuggestField extends Component {
 		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:widget": {component: "autosuggest", options: options}}}});
 		let state = {schema, uiSchema};
 		return state;
+	}
+
+	onChange = (formData) => {
+		const options = this.props.uiSchema["ui:options"];
+		for (let fieldName in options.suggestionReceivers) {
+			if (fieldName === options.suggestionInputField) continue;
+			formData = update(formData, {$merge: {[fieldName]: undefined}});
+		}
+		this.props.onChange(formData)
 	}
 
 	onSuggestionSelected = (suggestion) => {
