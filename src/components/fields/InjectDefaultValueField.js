@@ -27,7 +27,7 @@ export default class InjectDefaultValueField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = this.getStateFromProps(props);
+		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -47,17 +47,41 @@ export default class InjectDefaultValueField extends Component {
 		}
 
 		fields.forEach(field => {
-			const schemaInjection = {properties: {[field]: {$merge: {default: source[field]}}}};
+				if (schema.properties[target].type === "array") {
+					if (formData && formData[target]) formData[target].forEach((item, i) => {
+						if (item[field] === undefined) {
+							formData = update(formData, {[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
+						}
+					});
+				}
+		});
+
+		return {uiSchema, schema, formData};
+	}
+
+	onChange = (formData) => {
+		let {uiSchema, schema} = this.props;
+		const options = uiSchema["ui:options"];
+		let fields = options.fields;
+		const target = options.target;
+
+		let source = formData;
+		if (options.source) {
+			source = formData[options.source];
+		}
+		fields.forEach(field => {
+			if (source[field] === this.props.formData[field]) return;
 			if (schema.properties[target].type === "array") {
-				schema = update(schema, {properties: {[target]: {items: schemaInjection}}});
-			} else if (schema.properties[target].type === "object") {
-				schema = update(schema, {properties: {[target]: schemaInjection}});
-			} else {
-				throw "schema type must be object or array";
+				if (formData && formData[target]) formData[target].forEach((item, i) => {
+					if (item[field] === undefined || item[field] === this.props.formData[options.source][field]) {
+						formData = update(formData, {[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
+					}
+				});
 			}
 		});
 
-		return {uiSchema, schema};
+		this.props.onChange(formData);
+
 	}
 
 	render() {
@@ -67,3 +91,4 @@ export default class InjectDefaultValueField extends Component {
 		)
 	}
 }
+
