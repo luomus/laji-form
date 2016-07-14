@@ -23,6 +23,7 @@ import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
 import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
+import InputTransformerField from "./fields/InputTransformerField";
 import HiddenField from "./fields/HiddenField";
 import InitiallyHiddenField from "./fields/InitiallyHiddenField";
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
@@ -74,7 +75,8 @@ export default class LajiForm extends Component {
 					taxon: TaxonField,
 					taxonWidget: TaxonWidgetField,
 					hidden: HiddenField,
-					initiallyHidden: InitiallyHiddenField
+					initiallyHidden: InitiallyHiddenField,
+					inputTransform: InputTransformerField
 				}}
 				widgets={{
 					CheckboxWidget: CheckboxWidget,

@@ -247,56 +247,69 @@
 									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
 									"additionalsGroupsTranslator": "taxonGroups",
 									"uiSchema": {
-										"ui:field": "autosuggest",
-										"ui:options": {
-											"autosuggestField": "taxon",
-											"allowNonsuggestedValue": true,
-											"suggestionInputField": "informalNameString",
-											"suggestionReceivers": {
-												"informalNameString": "value",
-												"unitType": "payload.taxonGroups",
-												"taxonID": "key"
+										"ui:field": "inputTransform",
+										"ui:options":{
+											"rules": {
+												"informalNameString": {
+													"regexp": "(.*)\\?$",
+													"transformations": {
+														"certainty": "notSoSure"
+													}
+												}
 											},
 											"uiSchema": {
-												"ui:field": "taxon",
+												"ui:field": "autosuggest",
 												"ui:options": {
-													"taxonField": "informalNameString",
+													"autosuggestField": "taxon",
+													"allowNonsuggestedValue": true,
+													"suggestionInputField": "informalNameString",
+													"suggestionReceivers": {
+														"informalNameString": "value",
+														"unitType": "payload.taxonGroups",
+														"taxonID": "key"
+													},
 													"uiSchema": {
-														"ui:field": "grid",
+														"ui:field": "taxon",
 														"ui:options": {
-															"colType": "sm"
-														},
-														"unitType": {
-															"ui:field": "hidden"
-														},
-														"taxonID": {
-															"ui:widget": "hidden"
-														},
-														"identifications": {
-															"items": {
-																"ui:field": "autosuggest",
+															"taxonField": "informalNameString",
+															"uiSchema": {
+																"ui:field": "grid",
 																"ui:options": {
-																	"autosuggestField": "taxon",
-																	"allowNonsuggestedValue": true,
-																	"suggestionInputField": "taxon",
-																	"suggestionReceivers": {
-																		"taxon": "value",
-																		"taxonID": "key"
-																	},
-																	"uiSchema": {
-																		"ui:field": "taxon",
+																	"colType": "sm"
+																},
+																"unitType": {
+																	"ui:field": "hidden"
+																},
+																"taxonID": {
+																	"ui:widget": "hidden"
+																},
+																"identifications": {
+																	"items": {
+																		"ui:field": "autosuggest",
 																		"ui:options": {
-																			"taxonField": "taxon",
+																			"autosuggestField": "taxon",
+																			"allowNonsuggestedValue": true,
+																			"suggestionInputField": "taxon",
+																			"suggestionReceivers": {
+																				"taxon": "value",
+																				"taxonID": "key"
+																			},
 																			"uiSchema": {
-																				"ui:field": "grid",
+																				"ui:field": "taxon",
 																				"ui:options": {
-																					"colType": "sm"
-																				},
-																				"taxonID": {
-																					"ui:widget": "hidden"
-																				},
-																				"detDate": {
-																					"ui:widget": "date"
+																					"taxonField": "taxon",
+																					"uiSchema": {
+																						"ui:field": "grid",
+																						"ui:options": {
+																							"colType": "sm"
+																						},
+																						"taxonID": {
+																							"ui:widget": "hidden"
+																						},
+																						"detDate": {
+																							"ui:widget": "date"
+																						}
+																					}
 																				}
 																			}
 																		}
