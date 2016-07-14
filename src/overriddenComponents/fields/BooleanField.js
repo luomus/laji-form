@@ -32,7 +32,7 @@ function BooleanField(props) {
 		help,
 		onChange
 	} = props;
-	const {title, description} = schema;
+	const {title} = schema;
 	const {widgets} = registry;
 	const widget = uiSchema["ui:widget"];
 	const commonProps = {
@@ -40,7 +40,6 @@ function BooleanField(props) {
 		id: idSchema && idSchema.$id,
 		onChange,
 		label: title || name,
-		placeholder: description,
 		value: defaultFieldValue(formData, schema),
 		required,
 		disabled,

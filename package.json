@@ -35,7 +35,7 @@
     "react-addons-update": "*",
     "react-autosuggest": "*",
     "react-dom": "*",
-    "react-jsonschema-form": "0.36.1",
+    "react-jsonschema-form": "0.38",
     "react-widgets": "*",
     "react-bootstrap": "*",
     "webpack": "*"

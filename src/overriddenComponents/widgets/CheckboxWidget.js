@@ -8,7 +8,6 @@ function CheckboxWidget(props) {
 		value,
 		required,
 		disabled,
-		placeholder,
 		onChange,
 		help,
 		label
@@ -17,7 +16,6 @@ function CheckboxWidget(props) {
 	return (<div className={`checkbox ${disabled ? "disabled" : ""}`}><Label {...props}>
 		<input type="checkbox"
 		       id={id}
-		       title={placeholder}
 		       checked={typeof value === "undefined" ? false : value}
 		       required={required}
 		       disabled={disabled}
@@ -51,7 +49,6 @@ if (process.env.NODE_ENV !== "production") {
 		onChange: PropTypes.func,
 		value: PropTypes.bool,
 		required: PropTypes.bool,
-		placeholder: PropTypes.string,
 	};
 }
 

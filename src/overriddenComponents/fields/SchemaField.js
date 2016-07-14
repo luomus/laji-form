@@ -114,11 +114,15 @@ if (process.env.NODE_ENV !== "production") {
 		classNames: PropTypes.string,
 		label: PropTypes.string,
 		description: PropTypes.string,
-		hidden: PropTypes.bool,
+		description: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.element,
+		]),
 		help: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.element,
 		]),
+		hidden: PropTypes.bool,
 		required: PropTypes.bool,
 		displayLabel: PropTypes.bool,
 		children: PropTypes.node.isRequired,
