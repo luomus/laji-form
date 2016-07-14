@@ -29,11 +29,7 @@ export default class SeparatedDateTimeWidget extends Component {
 
 	onDateChange = (value) => {
 		if (!value) this.props.onChange(null);
-
-		let data = moment(value, "DD.MM.YYYY").format("YYYY-MM-DD");
-		if (!moment(data).isValid()) return;
-		if (this.state.time) data += "T" + this.state.time;
-		this.props.onChange(data);
+		this.props.onChange(this.state.time ? value + "T" + this.state.time : value);
 	}
 
 	onTimeChange = (value) => {

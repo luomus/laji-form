@@ -20,7 +20,7 @@ export default class DateWidget extends Component {
 
 		const dateTimeWidget = (<DateTimeWidget
 			{...this.props}
-			onChange={(value) => {this.props.onChange(value === null ? null : moment(value).format(this.format))}}
+			onChange={(value) => {this.props.onChange(value === null ? null : moment(value).format("YYYY-MM-DD"))}}
 			format={this.format}
 			placeholder={this.format}
 		  time={false}
@@ -38,9 +38,11 @@ export default class DateWidget extends Component {
 	}
 
 	setToday = () => {
-		this.props.onChange(moment().format(this.format));
+		console.log(moment().format("YYYY-MM-DD"));
+		this.props.onChange(moment().format("YYYY-MM-DD"));
 	}
 	setYesterday = () => {
-		this.props.onChange(moment().subtract(1, "d").format(this.format));
+		console.log(moment().subtract(1, "d").format("YYYY-MM-DD"));
+		this.props.onChange(moment().subtract(1, "d").format("YYYY-MM-DD"));
 	}
 }
