@@ -23,6 +23,7 @@ export default class TimeWidget extends Component {
 			placeholder={this.format.toLowerCase()}
 			value={this.props.value ? moment(this.props.value, "HH.mm") : null}
 			calendar={false}
+			registry={this.props.registry}
 		/>);
 	}
 }

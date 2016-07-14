@@ -31,7 +31,7 @@ export default class DateTimeWidget extends Component {
 			}}
 			value={value ? moment(value).toDate() : null}
 			readOnly={readonly}
-			culture="fi"
+			culture={this.props.registry.lang}
 		/>);
 	}
 }

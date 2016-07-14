@@ -24,14 +24,15 @@ export default class DateWidget extends Component {
 			format={this.format}
 			placeholder={this.format}
 		  time={false}
+		  registry={this.props.registry}
 		/>);
 
 		return this.props.value ? dateTimeWidget :
 			(<div className="form-inline"><FormGroup>{dateTimeWidget}</FormGroup>
 				<FormGroup>
 					<ButtonGroup>
-							<Button onClick={this.setToday}>Tänään</Button>
-							<Button onClick={this.setYesterday}>eilen</Button>
+							<Button onClick={this.setToday}>{this.props.registry.translations.today}</Button>
+							<Button onClick={this.setYesterday}>{this.props.registry.translations.yesterday}</Button>
 					</ButtonGroup>
 				</FormGroup>
 			</div>);

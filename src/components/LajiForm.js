@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from "react";
-import Form from "react-jsonschema-form";
+//import Form from "react-jsonschema-form";
 import Button from "./Button";
 
+import Form from "./../overriddenComponents/Form";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
 import BooleanField from "./../overriddenComponents/fields/BooleanField";
+import StringField from "./../overriddenComponents/fields/StringField";
 import CheckboxWidget from "./../overriddenComponents/widgets/CheckboxWidget";
 
 import NestField from "./fields/NestField";
@@ -35,59 +37,77 @@ import HiddenWidget from "./widgets/HiddenWidget";
 
 import ApiClient from "../ApiClient";
 
+import translations from "../translations.json";
+
 const log = (type) => console.log.bind(console, type);
 
 export default class LajiForm extends Component {
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
+		this.translations = this.constructTranslations();
 	}
 
-	render() {
-		let submitTxt = "Submit";
-		if (this.props.lang === "fi") submitTxt = "Lähetä";
-		else if (this.props.lang === "sv") submitTxt = "Acceptera";
+	constructTranslations = () => {
+		let dictionaries = {}
+		for (let word in translations) {
+			for (let lang in translations[word]) {
+				const translation = translations[word][lang];
+				if (!dictionaries.hasOwnProperty(lang)) dictionaries[lang] = {};
+				dictionaries[lang][word] = translation;
+			}
+		}
+		return dictionaries;
+	}
 
+
+
+	render() {
 		return  (
 			<Form
 				{...this.props}
-				fields={{
-					SchemaField: SchemaField,
-					BooleanField: BooleanField,
-					nested: NestField,
-					unitTripreport: ArrayBulkField,
-					bulkArray: ArrayBulkField,
-					scoped: ScopeField,
-					tree: SelectTreeField,
-					horizontal: GridLayoutField,
-					grid: GridLayoutField,
-					table: TableField,
-					inject: InjectField,
-					injectDefaultValue: InjectDefaultValueField,
-					expandable: AdditionalsExpanderField,
-					arrayCombiner: ArrayCombinerField,
-					dependentBoolean: DependentBooleanField,
-					dependentDisable: DependentDisableField,
-					mapArray: MapArrayField,
-					autoArray: AutoArrayField,
-					copyValuesArray: CopyValuesArrayField,
-					autosuggest: AutosuggestField,
-					taxon: TaxonField,
-					taxonWidget: TaxonWidgetField,
-					hidden: HiddenField,
-					initiallyHidden: InitiallyHiddenField,
-					inputTransform: InputTransformerField
-				}}
-				widgets={{
-					CheckboxWidget: CheckboxWidget,
-					dateTime: DateTimeWidget, date: DateWidget,
-					time: TimeWidget,
-					separatedDateTime: SeparatedDateTimeWidget,
-					autosuggest: AutosuggestWidget,
-					hidden: HiddenWidget
+				registry={{
+					fields: {
+						SchemaField: SchemaField,
+						BooleanField: BooleanField,
+						StringField: StringField,
+						nested: NestField,
+						unitTripreport: ArrayBulkField,
+						bulkArray: ArrayBulkField,
+						scoped: ScopeField,
+						tree: SelectTreeField,
+						horizontal: GridLayoutField,
+						grid: GridLayoutField,
+						table: TableField,
+						inject: InjectField,
+						injectDefaultValue: InjectDefaultValueField,
+						expandable: AdditionalsExpanderField,
+						arrayCombiner: ArrayCombinerField,
+						dependentBoolean: DependentBooleanField,
+						dependentDisable: DependentDisableField,
+						mapArray: MapArrayField,
+						autoArray: AutoArrayField,
+						copyValuesArray: CopyValuesArrayField,
+						autosuggest: AutosuggestField,
+						taxon: TaxonField,
+						taxonWidget: TaxonWidgetField,
+						hidden: HiddenField,
+						initiallyHidden: InitiallyHiddenField,
+						inputTransform: InputTransformerField
+					},
+					widgets: {
+						CheckboxWidget: CheckboxWidget,
+						dateTime: DateTimeWidget, date: DateWidget,
+						time: TimeWidget,
+						separatedDateTime: SeparatedDateTimeWidget,
+						autosuggest: AutosuggestWidget,
+						hidden: HiddenWidget
+					},
+					translations: this.translations[this.props.lang],
+					lang: this.props.lang
 				}}
 				onError={log("errors")} >
-				<Button classList={["btn-info"]} type="submit">{submitTxt}</Button>
+				<Button classList={["btn-info"]} type="submit">{this.translations[this.props.lang].submit}</Button>
 				</Form>
 		)
 	}

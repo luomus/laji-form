@@ -10,7 +10,7 @@ import ArrayField from "../../../node_modules/react-jsonschema-form/lib/componen
 import BooleanField from "./BooleanField";
 import NumberField from "../../../node_modules/react-jsonschema-form/lib/components/fields/NumberField";
 import ObjectField from "../../../node_modules/react-jsonschema-form/lib/components/fields/ObjectField";
-import StringField from "../../../node_modules/react-jsonschema-form/lib/components/fields/StringField";
+import StringField from "./StringField";
 import UnsupportedField from "../../../node_modules/react-jsonschema-form/lib/components/fields/UnsupportedField";
 import DescriptionField from "../../../node_modules/react-jsonschema-form/lib/components/fields/DescriptionField";
 
