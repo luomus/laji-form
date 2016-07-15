@@ -160,67 +160,23 @@
 							"fields" : ["biotope", "biotopeNotes"],
 							"uiSchema": {
 								"biotope": {
-									"ui:field": "tree",
+									"ui:field": "injectFromContext",
 									"ui:options": {
-										"tree": {
-											"children": {
-												"K2": {
-													"children": {
-														"K3": {
-															"children": {
-																"K4": {},
-																"K5": {},
-																"K6": {
-																	"children": {
-																		"K7": {},
-																		"K8": {}
-																	},
-																	"order": ["K7","K8"]
-																}
-															},
-															"order": ["K4, K5", "K6"]
-														},
-														"K9": {
-															"children": {
-																"K10": {
-																	"children": {
-																		"K11": {},
-																		"K12": {}
-																	}
-																},
-																"K13": {}
-															},
-															"order": ["K10", "K13"]
-														}
-													},
-													"order": ["K9, K3"]
-												},
-												"K14": {
-													"children": {
-														"K15": {
-															"children": {
-																"K16": {
-																	"children": {
-																		"K17": {},
-																		"K18": {}
-																	}
-																},
-																"K19": {}
-															}
-														},
-														"K20": {}
+										"injections": {
+											"ui:options.tree": "tree"
+										},
+										"uiSchema": {
+											"ui:field": "tree",
+											"ui:options": {
+												"labels": [
+													"eka taso", "toka taso", "kolmas taso"
+												],
+												"uiSchema": {
+													"ui:field": "grid",
+													"ui:options": {
+														"coltype": "sm"
 													}
 												}
-											},
-											"order": ["K14", "K2"]
-										},
-										"labels": [
-											"eka taso", "toka taso", "kolmas taso"
-										],
-										"uiSchema": {
-											"ui:field": "grid",
-											"ui:options": {
-												"colType": "sm"
 											}
 										}
 									}
@@ -651,5 +607,59 @@
 		"editors": [
 			"MA.3"
 		]
+	},
+	"uiSchemaContext": {
+		"tree": {
+			"children": {
+				"K2": {
+					"children": {
+						"K3": {
+							"children": {
+								"K4": {},
+								"K5": {},
+								"K6": {
+									"children": {
+										"K7": {},
+										"K8": {}
+									},
+									"order": ["K7","K8"]
+								}
+							},
+							"order": ["K4, K5", "K6"]
+						},
+						"K9": {
+							"children": {
+								"K10": {
+									"children": {
+										"K11": {},
+										"K12": {}
+									}
+								},
+								"K13": {}
+							},
+							"order": ["K10", "K13"]
+						}
+					},
+					"order": ["K9, K3"]
+				},
+				"K14": {
+					"children": {
+						"K15": {
+							"children": {
+								"K16": {
+									"children": {
+										"K17": {},
+										"K18": {}
+									}
+								},
+								"K19": {}
+							}
+						},
+						"K20": {}
+					}
+				}
+			},
+			"order": ["K14", "K2"]
+		}
 	}
 }

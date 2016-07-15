@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-//import Form from "react-jsonschema-form";
 import Button from "./Button";
 
 import Form from "./../overriddenComponents/Form";
@@ -28,6 +27,7 @@ import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
 import InputTransformerField from "./fields/InputTransformerField";
 import HiddenField from "./fields/HiddenField";
 import InitiallyHiddenField from "./fields/InitiallyHiddenField";
+import ContextInjectionField from "./fields/ContextInjectionField";
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
@@ -36,7 +36,6 @@ import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
 import HiddenWidget from "./widgets/HiddenWidget";
 
 import ApiClient from "../ApiClient";
-
 import translations from "../translations.js";
 
 const log = (type) => console.log.bind(console, type);
@@ -93,7 +92,8 @@ export default class LajiForm extends Component {
 						taxonWidget: TaxonWidgetField,
 						hidden: HiddenField,
 						initiallyHidden: InitiallyHiddenField,
-						inputTransform: InputTransformerField
+						inputTransform: InputTransformerField,
+						injectFromContext: ContextInjectionField
 					},
 					widgets: {
 						CheckboxWidget: CheckboxWidget,
@@ -104,7 +104,8 @@ export default class LajiForm extends Component {
 						hidden: HiddenWidget
 					},
 					translations: this.translations[this.props.lang],
-					lang: this.props.lang
+					lang: this.props.lang,
+					uiSchemaContext: this.props.uiSchemaContext
 				}}
 				onError={log("errors")} >
 				<Button classList={["btn-info"]} type="submit">{this.translations[this.props.lang].submit}</Button>
