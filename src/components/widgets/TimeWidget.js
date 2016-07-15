@@ -6,24 +6,15 @@ import momentLocalizer from "react-widgets/lib/localizers/moment";
 import DateTimeWidget from "./DateTimeWidget";
 
 export default class TimeWidget extends Component {
-	constructor(props) {
-		super(props);
-		this.format = "HH.mm";
-	}
-
-	onChange = (value) => {
-		this.props.onChange(value === null ? null : moment(value).format(this.format))
-	}
 
 	render() {
+		const {value} = this.props;
 		return (<DateTimeWidget
 			{...this.props}
-			onChange={this.onChange}
-			format={this.format}
-			placeholder={this.format.toLowerCase()}
-			value={this.props.value ? moment(this.props.value, "HH.mm") : null}
+			onChange={value => this.props.onChange(value === null ? null : ("T" + moment(value).toISOString().split("T")[1]))}
 			calendar={false}
 			registry={this.props.registry}
+		  value={value ? (moment().format("YYYY-MM-DD") + value) : null}
 		/>);
 	}
 }

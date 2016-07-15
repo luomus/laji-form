@@ -4,15 +4,10 @@ import ReactWidgets from "react-widgets"
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import DateTimeWidget from "./DateTimeWidget";
-import { Row, Col, FormGroup, FormControl, ButtonToolbar, ButtonGroup, Button } from "react-bootstrap";
-//import Button from "../Button";
+import { FormGroup, ButtonGroup, Button } from "react-bootstrap";
 
 export default class DateWidget extends Component {
 
-	constructor(props) {
-		super(props);
-		this.format = "DD.MM.YYYY";
-	}
 	render() {
 		const options = this.props.options;
 		let showButtons = true;
@@ -20,9 +15,7 @@ export default class DateWidget extends Component {
 
 		const dateTimeWidget = (<DateTimeWidget
 			{...this.props}
-			onChange={(value) => {this.props.onChange(value === null ? null : moment(value).format("YYYY-MM-DD"))}}
-			format={this.format}
-			placeholder={this.format}
+			onChange={value => this.props.onChange(value === null ? null : moment(value).format("YYYY-MM-DD"))}
 		  time={false}
 		  registry={this.props.registry}
 		/>);
@@ -39,11 +32,10 @@ export default class DateWidget extends Component {
 	}
 
 	setToday = () => {
-		console.log(moment().format("YYYY-MM-DD"));
 		this.props.onChange(moment().format("YYYY-MM-DD"));
 	}
+
 	setYesterday = () => {
-		console.log(moment().subtract(1, "d").format("YYYY-MM-DD"));
 		this.props.onChange(moment().subtract(1, "d").format("YYYY-MM-DD"));
 	}
 }

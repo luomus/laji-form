@@ -8,24 +8,46 @@ export default class DateTimeWidget extends Component {
 		type: "text",
 		readonly: false,
 		disabled: false,
-		required: false
+		required: false,
+		calendar: true,
+		time: true
 	}
 
 	constructor(props) {
 		super(props);
 		momentLocalizer(moment);
-		this.format = "DD.MM.YYYY, HH.mm";
-		this.placeholder = "DD.MM.YYYY, hh.mm";
+		this.state = this.getStateFromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps = (props) => {
+		let localeFormats = moment().locale(props.registry.lang)._locale._longDateFormat;
+		const translations = props.registry.translations;
+		let format = "";
+		let placeholder = "";
+		if (this.props.calendar) {
+			format += localeFormats.L;
+			placeholder += translations.datePlaceholderDay;
+		}
+		if (this.props.time) {
+			if (placeholder) placeholder += ", ";
+			if (format) format += ", ";
+			format += localeFormats.LT;
+			placeholder += translations.timePlaceholderDay;
+		}
+		return {format, placeholder}
 	}
 
 	render() {
 		const {value, readonly, onChange} = this.props;
 
 		return (<DateTimePicker
-			format={this.format}
-			placeholder={this.placeholder}
 			{...this.props}
-			onChange={(value, rawValue) => {
+			placeholder={this.state.placeholder}
+			onChange={(value) => {
 				if (value !== null && !moment(value).isValid()) value = this.props.value;
 				onChange(value === null ? null : moment(value).toISOString())
 			}}

@@ -37,7 +37,7 @@ import HiddenWidget from "./widgets/HiddenWidget";
 
 import ApiClient from "../ApiClient";
 
-import translations from "../translations.json";
+import translations from "../translations.js";
 
 const log = (type) => console.log.bind(console, type);
 

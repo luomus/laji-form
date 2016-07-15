@@ -20,27 +20,19 @@ export default class SeparatedDateTimeWidget extends Component {
 		if (value) {
 			let splitted = value.split("T");
 			if (splitted.length == 2) {
-				time = moment(splitted[1], "HH:mm:ss.SSSZ").format("HH.mm");
+				time = "T" + splitted[1];
 			}
-			date = moment(value).format("YYYY-MM-DD");
+			date = splitted[0];
 		}
 		return {date, time};
 	}
 
 	onDateChange = (value) => {
-		if (!value) this.props.onChange(null);
-		this.props.onChange(this.state.time ? value + "T" + this.state.time : value);
+		this.props.onChange(value ? (this.state.time ? value + this.state.time : value) : null);
 	}
 
 	onTimeChange = (value) => {
-		if (!value) {
-			this.props.onChange(this.state.date);
-			return;
-		}
-
-		let momentData = moment(this.state.date + " " + value, "YYYY-MM-DD HH.mm");
-		let data = momentData.toISOString();
-		this.props.onChange(data);
+		this.props.onChange(value ? this.state.date + value : this.state.date);
 	}
 
 	render() {
