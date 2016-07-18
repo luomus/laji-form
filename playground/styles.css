@@ -1,5 +1,6 @@
 body {
     background: #eeeeee;
+	font-size: 13px;
 }
 
 .autosuggest-container, .scope-field-additionals-container  {
@@ -36,8 +37,9 @@ body {
 }
 
 .laji-form input[type=text], .laji-form select {
-	height: 25px;
 	border-radius: 2px;
+	padding: 0px 5px;
+	height: 25px;
 }
 
 .laji-form select {
