@@ -12,7 +12,8 @@ export default class ArrayCombinerField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				uiSchema: PropTypes.object
+				uiSchema: PropTypes.object,
+				additionalItemsAmount: PropTypes.integer
 			})
 		}).isRequired
 	}
@@ -28,18 +29,26 @@ export default class ArrayCombinerField extends Component {
 
 	getStateFromProps = (props) => {
 		let {uiSchema} = props;
+		const options = uiSchema["ui:options"] ? uiSchema["ui:options"] : undefined;
 		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
 			uiSchema["ui:options"].uiSchema : {};
 
-		let schema = {type: "array", items: {type: "object", properties: {}}};
+		let itemSchema = {type: "object", properties: {}};
+		let schema = {type: "array"};
+		if (options && options.additionalItemsAmount) schema.additionalItems = itemSchema;
 		if (props.schema.hasOwnProperty("title")) schema.title = props.schema.title;
 		Object.keys(props.schema.properties).forEach((propertyName) => {
 			let propertyOrigin = props.schema.properties[propertyName];
 			let property = propertyOrigin.items;
 			if (property.type === "object" || property.type === "array") throw "items properties can't be objects or arrays";
 			if (propertyOrigin.title) property.title = propertyOrigin.title;
-			schema.items.properties[propertyName] = property;
+			itemSchema.properties[propertyName] = property;
 		});
+
+		if (options && options.additionalItemsAmount) {
+			schema.items = Array(options.additionalItemsAmount).fill(itemSchema);
+			schema.additionalItems = itemSchema;
+		}
 
 		function objectsToArray(array, objects) {
 			if (objects) Object.keys(objects).forEach((dataCol) => {
@@ -54,9 +63,9 @@ export default class ArrayCombinerField extends Component {
 		let errorSchema = objectsToArray({}, props.errorSchema);
 		let formData = objectsToArray([], props.formData);
 		formData.forEach((obj) => {
-			Object.keys(schema.items.properties).forEach((prop) => {
+			Object.keys(itemSchema.properties).forEach((prop) => {
 				if (!obj.hasOwnProperty(prop)) {
-					obj[prop] = getDefaultFormState(schema.items.properties[prop], undefined, this.props.registry.definitions);
+					obj[prop] = getDefaultFormState(itemSchema.properties[prop], undefined, this.props.registry.definitions);
 				}
 			});
 		});

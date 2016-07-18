@@ -14,7 +14,7 @@ class LajiFormApp extends Component {
 		let lang = "fi";
 		this.state = {
 			...schemas,
-			//formData: undefined,
+			formData: undefined,
 			onChange: this.onChange,
 			onSubmit: this.onSubmit,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),

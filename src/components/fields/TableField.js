@@ -8,7 +8,7 @@ import Label from "../../components/Label";
 export default class TableField extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			items: PropTypes.object
+			items: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 		}).isRequired
 	}
 
@@ -38,7 +38,7 @@ export default class TableField extends Component {
 		const items = [];
 		const labels = [];
 
-		const schemaProps = schema.items.properties;
+		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const schemaLength = Object.keys(schemaProps).length;
 		const baseDivision = parseInt(12 / schemaLength);
 		Object.keys(schemaProps).forEach((propName, i) => {
@@ -53,26 +53,33 @@ export default class TableField extends Component {
 			                  help={(uiSchema && uiSchema.items[propName] && uiSchema.items[propName]["ui:help"]) ? uiSchema.items[propName]["ui:help"] : undefined}
 			/></Col>)
 		});
-		items.push(<Row key="moi"><Row><Col xs={10}>{labels}</Col><Col xs={2} /></Row></Row>);
+		items.push(<Row key="labels"><Row><Col xs={10}>{labels}</Col><Col xs={2} /></Row></Row>);
 
 		if (formData) formData.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 
-			let uiSchema = this.props.uiSchema.items;
+			const isAdditional = this.props.schema.additionalItems &&  idx >= this.props.schema.items.length;
+
+			let schema = (Array.isArray(this.props.schema.items) && idx < this.props.schema.items.length) ? this.props.schema.items[idx] : this.props.schema.items;
+			if (isAdditional) schema = this.props.schema.additionalItems;
+
+			let uiSchema = {};
+			if (this.props.uiSchema.additionalItems && idx >= this.props.schema.items.length) uiSchema = this.props.uiSchema.additionalItems;
+			else if (this.props.uiSchema.items) uiSchema = this.props.uiSchema.items;
+
 			let uiOptions = {colType: "xs", showLabels: false};
-			//if (idx) uiOptions.showLabels = false;
 			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
 			items.push(<Row key={idx}>
 				<Col xs={10}><SchemaField
 					formData={item}
 					onChange={this.onChangeForIdx(idx)}
-					schema={this.props.schema.items}
+					schema={schema}
 					uiSchema={uiSchema}
-					idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
+					idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
 					registry={this.props.registry}
 					errorSchema={this.props.errorSchema[idx]} /></Col>
-				<Col xs={2}><Button type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button></Col>
+				<Col xs={2}>{isAdditional ? <Button type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
 			</Row>)
 		});
 
