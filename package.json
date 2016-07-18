@@ -5,7 +5,7 @@
   "main": "lib/app.js",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline",
-    "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4003",
+    "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
     "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/ --copy-files",
     "install": "npm run build:lib"
   },
