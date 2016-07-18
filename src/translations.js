@@ -23,5 +23,15 @@ export default {
 		fi: "tt.mm",
 		en: "h:mm AM/PM",
 		sv: "tt:mm"
-	}
+	},
+	yes: {
+		fi: "Kyllä",
+		en: "Ei",
+		sv: "Ja"
+	},
+	no: {
+		fi: "Ei",
+		en: "No",
+		sv: "Nej"
+	},
 }

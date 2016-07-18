@@ -8,8 +8,8 @@ export default ({label, help, children, id, disabled}) => {
 
 	const labelElem = (
 		<label>
-			{children}
 			<strong>{label}{showGlyph ? helpGlyph : null}</strong>
+			{children}
 		</label>
 	);
 

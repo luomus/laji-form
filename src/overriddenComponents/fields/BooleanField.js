@@ -45,6 +45,7 @@ function BooleanField(props) {
 		disabled,
 		help,
 		readonly,
+		registry
 	};
 	if (widget) {
 		const Widget = getAlternativeWidget(schema, widget, widgets);

@@ -101,10 +101,23 @@ body {
 	font-size: 11px;
 	padding: 5px;
 }
-.btn-group .btn-danger {
+
+.laji-form .btn-group .btn-danger {
 	width: 100%;
 	float: left;
 	font-size: 14px;
 	line-height: 14px;
 	padding: 6px 12px;
+}
+
+.laji-form .rc-switch {
+	width: 60px;
+}
+
+.laji-form .rc-switch-checked:after {
+	left: 37px;
+}
+.rc-switch-toggled-false .rc-switch-inner {
+	right: 7px;
+	left: initial;
 }
