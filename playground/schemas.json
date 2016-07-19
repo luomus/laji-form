@@ -121,7 +121,12 @@
 									"ui:widget": "separatedDateTime"
 								},
 								"dateEnd": {
-									"ui:widget": "separatedDateTime"
+									"ui:widget": {
+										"component": "separatedDateTime",
+										"options": {
+											"showButtons": false
+										}
+									}
 								}
 							},
 							"expanderButtonText": "Ilmoita aikaväli"
@@ -160,7 +165,12 @@
 													"ui:widget": "separatedDateTime"
 												},
 												"dateEnd": {
-													"ui:widget": "separatedDateTime"
+													"ui:widget": {
+														"component": "separatedDateTime",
+														"options": {
+															"showButtons": false
+														}
+													}
 												}
 											},
 											"expanderButtonText": "Ilmoita aikaväli"

@@ -11,7 +11,7 @@ export default class DateWidget extends Component {
 	render() {
 		const options = this.props.options;
 		let showButtons = true;
-		if (options && !options.showButtons) showButtons = false;
+		if (options && options.hasOwnProperty("showButtons") && !options.showButtons) showButtons = false;
 
 		const dateTimeWidget = (<DateTimeWidget
 			{...this.props}
@@ -22,12 +22,14 @@ export default class DateWidget extends Component {
 
 		return this.props.value ? dateTimeWidget :
 			(<div className="form-inline"><FormGroup>{dateTimeWidget}</FormGroup>
-				<FormGroup>
+				{showButtons ?
+					(<FormGroup>
 					<ButtonGroup>
 							<Button onClick={this.setToday}>{this.props.registry.translations.today}</Button>
 							<Button onClick={this.setYesterday}>{this.props.registry.translations.yesterday}</Button>
 					</ButtonGroup>
-				</FormGroup>
+				</FormGroup>) : null
+					}
 			</div>);
 	}
 

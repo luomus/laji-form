@@ -40,7 +40,7 @@ export default class SeparatedDateTimeWidget extends Component {
 		return (<Row>
 			<Col lg={hasDate ? 6 : 12}>
 				<FormGroup>
-				<DateWidget onChange={this.onDateChange} value={this.state.date} registry={this.props.registry} />
+				<DateWidget onChange={this.onDateChange} value={this.state.date} registry={this.props.registry} options={this.props.options} />
 				</FormGroup>
 			</Col>
 			{hasDate ?
