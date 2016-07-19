@@ -120,6 +120,8 @@ export default class ScopeField extends Component {
 
 		const definitions = options.definitions;
 
+		function isEmpty(val) { return val === undefined || val === null || val === "" }
+
 		function addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue) {
 			let fieldScope = scopes[fieldSelector][fieldSelectorValue];
 			if (!fieldScope) return;
@@ -152,10 +154,10 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
-				if (fieldSelectorValues.length > 0 && fieldSelectorValues[0] !== undefined) fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
+				if (fieldSelectorValues.length > 0 && !isEmpty(fieldSelectorValues[0])) fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
 				fieldSelectorValues = update(fieldSelectorValues, {$push: ["*"]});
 				fieldSelectorValues.forEach(fieldSelectorValue => {
-					if (fieldSelectorValue !== undefined) {
+					if (!isEmpty(fieldSelectorValue)) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
 					}
 				});
@@ -176,7 +178,7 @@ export default class ScopeField extends Component {
 
 		if (props.formData) {
 			Object.keys(formData).forEach((property) => {
-				if (formData[property] === undefined) return;
+				if (isEmpty(formData[property])) return;
 				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
 					fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
 				}
