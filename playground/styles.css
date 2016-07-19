@@ -123,3 +123,7 @@ body {
 	right: 7px;
 	left: initial;
 }
+.rc-switch-disabled .rc-switch-inner {
+	color: #9e9e9e;
+}
+
