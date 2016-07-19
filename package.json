@@ -30,14 +30,15 @@
     "deepmerge": "*",
     "laji-map": "git+ssh://git@bitbucket.org/luomus/laji-map.js.git",
     "moment": "*",
+    "rc-switch": "^1.4.2",
     "react": "*",
     "react-addons-css-transition-group": "^15.1.0",
     "react-addons-update": "*",
     "react-autosuggest": "*",
+    "react-bootstrap": "*",
     "react-dom": "*",
     "react-jsonschema-form": "0.38",
     "react-widgets": "*",
-    "react-bootstrap": "*",
     "webpack": "*"
   },
   "devDependencies": {
