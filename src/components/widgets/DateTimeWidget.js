@@ -25,7 +25,7 @@ export default class DateTimeWidget extends Component {
 
 	getStateFromProps = (props) => {
 		let localeFormats = moment().locale(props.registry.lang)._locale._longDateFormat;
-		const translations = props.registry.translations;
+		const {translations} = props.registry;
 		let format = "";
 		let placeholder = "";
 		if (this.props.calendar) {
@@ -38,6 +38,7 @@ export default class DateTimeWidget extends Component {
 			format += localeFormats.LT;
 			placeholder += translations.timePlaceholderDay;
 		}
+		format = format.replace("YYYY", "Y")
 		return {format, placeholder}
 	}
 
@@ -46,8 +47,9 @@ export default class DateTimeWidget extends Component {
 
 		return (<DateTimePicker
 			{...this.props}
+			{...this.state}
 			placeholder={this.state.placeholder}
-			onChange={(value) => {
+			onChange={value => {
 				if (value !== null && !moment(value).isValid()) value = this.props.value;
 				onChange(value === null ? null : moment(value).toISOString())
 			}}
