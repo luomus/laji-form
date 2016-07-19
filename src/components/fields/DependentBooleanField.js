@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Transforms an array field to o boolean field, where each value is true/false according to another array field.
@@ -52,6 +53,9 @@ export default class DependentBooleanField extends Component {
 		return {schema, uiSchema, formData};
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
+	}
 
 	onChange = (formData) => {
 		let options = this.props.uiSchema["ui:options"];

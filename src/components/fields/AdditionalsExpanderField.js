@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
@@ -59,6 +60,10 @@ export default class AdditionalsExpanderField extends Component {
 			props.uiSchema["ui:options"].uiSchema : {};
 
 		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

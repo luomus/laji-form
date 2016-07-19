@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import update from "react-addons-update";
 
 /**
@@ -101,6 +102,10 @@ export default class InjectField extends Component {
 		//delete uiSchema["ui:field"];
 		//delete uiSchema["ui:options"];
 		return {schema, uiSchema, idSchema, formData, errorSchema};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange = (formData) => {

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 export default class InputTransformerField extends Component {
 	static propTypes = {
@@ -24,6 +25,10 @@ export default class InputTransformerField extends Component {
 		let uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
 			props.uiSchema["ui:options"].uiSchema : {};
 		return {uiSchema};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange = (formData) => {

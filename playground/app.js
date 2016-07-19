@@ -14,16 +14,12 @@ class LajiFormApp extends Component {
 		let lang = "fi";
 		this.state = {
 			...schemas,
-			//formData: {gatheringEvent: {leg: [properties.userToken, "MA.100", "MA.2"]}, editors: [properties.userToken]},
+			//formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
 			onChange: this.onChange,
 			onSubmit: this.onSubmit,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
 			lang: lang
 		}
-	}
-
-	onChange = (formData) => {
-		this.setState(formData);
 	}
 
 	onSubmit = ({formData}) => {

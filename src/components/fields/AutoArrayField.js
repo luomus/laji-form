@@ -1,11 +1,15 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
 export default class AutoArrayField extends Component {
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
+	}
+
 	render() {
 		return (
 			<fieldset>

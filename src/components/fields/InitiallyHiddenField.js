@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { Row, Col, Collapse, DropdownButton } from "react-bootstrap";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import Button from "../Button";
 
 export default class InitiallyHiddenField extends Component {
@@ -25,6 +26,10 @@ export default class InitiallyHiddenField extends Component {
 
 		let options = uiSchema["ui:options"];
 		return {uiSchema: (options && options.uiSchema) || undefined}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	toggleVisibility = () => {

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Injects given fields value as default value to target field.
@@ -57,6 +58,10 @@ export default class InjectDefaultValueField extends Component {
 		});
 
 		return {uiSchema, schema, formData};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange = (formData) => {

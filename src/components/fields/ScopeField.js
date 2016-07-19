@@ -54,7 +54,7 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], additionalFields: {}, ...this.getStateFromProps(props)};
+		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], additionalFields: {}, additionalsOpen: false, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -200,39 +200,52 @@ export default class ScopeField extends Component {
 		this.props.onChange(data);
 	}
 
+	onToggleAdditionals = () => {
+		this.setState({additionalsOpen: !this.state.additionalsOpen});
+	}
+
 	renderAdditionalsButton = () => {
 		if (!this.state.includeAdditionalFieldsChooserButton) return null;
 
 		let list = [];
-		let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
-		if (this.state.additionalsGroupsTranslations) {
-			if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
-		}
-
-		let additionalProperties = {};
-		Object.keys(this.props.schema.properties).forEach(property => {
-			if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
-		});
-
-		let options = this.props.uiSchema["ui:options"];
-		if (options.additionalsGroupingPath) {
-			var groups = options.additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options);
-		}
-
-		if (groups) Object.keys(groups).forEach(groupName => {
-			let group = groups[groupName];
-			let groupFields = {};
-			group.fields.forEach(field => {if (additionalProperties[field]) groupFields[field] = additionalProperties[field]});
-			let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
-			if (groupsList.length) {
-				list.push(<MenuItem header key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>);
-				list.push(...groupsList);
+		if (this.state.additionalsOpen) {
+			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
+			if (this.state.additionalsGroupsTranslations) {
+				if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
 			}
-		}); else {
-			list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
+
+			let additionalProperties = {};
+			Object.keys(this.props.schema.properties).forEach(property => {
+				if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
+			});
+
+			let options = this.props.uiSchema["ui:options"];
+			if (options.additionalsGroupingPath) {
+				var groups = options.additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
+			}
+
+			if (groups) Object.keys(groups).forEach(groupName => {
+				let group = groups[groupName];
+				let groupFields = {};
+				group.fields.forEach(field => {
+					if (additionalProperties[field]) groupFields[field] = additionalProperties[field]
+				});
+				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
+				if (groupsList.length) {
+					list.push(<MenuItem header
+					                    key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>);
+					list.push(...groupsList);
+				}
+			}); else {
+				list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
+			}
 		}
 
-		return <DropdownButton id={this.props.idSchema.$id + "_dropdown"} title="Valitse lisää kenttiä" bsStyle="info">{list}</DropdownButton>;
+		return <DropdownButton
+			id={this.props.idSchema.$id + "_dropdown"}
+			title="Valitse lisää kenttiä"
+			onToggle={this.onToggleAdditionals}
+			bsStyle="info">{list}</DropdownButton>;
 	}
 
 	addAdditionalPropertiesToList = (properties, list, keyPrefix) => {

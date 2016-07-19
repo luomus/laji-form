@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 import Label from "../../components/Label";
@@ -10,6 +10,10 @@ export default class TableField extends Component {
 		schema: PropTypes.shape({
 			items: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 		}).isRequired
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	isRequired = (requirements, name) => {

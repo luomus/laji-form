@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Makes it possible to extract fields from object schema and
@@ -178,6 +179,10 @@ export default class NestField extends Component {
 		function getNewIdSchemaField(id, fieldName) {
 			return {$id: id + "_" + fieldName};
 		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange = (formData) => {

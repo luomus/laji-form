@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import Button from "../Button";
 
 export default class ArrayBulkField extends Component {
@@ -31,6 +32,10 @@ export default class ArrayBulkField extends Component {
 			state.rowAmount = props.formData.length + state.rowAddAmount - (props.formData.length % state.rowAddAmount);
 		}
 		return state;
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

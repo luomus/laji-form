@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState, shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Transforms an object schema containing arrays to an array schema containing objects.
@@ -70,6 +70,10 @@ export default class ArrayCombinerField extends Component {
 			});
 		});
 		return {schema, uiSchema, errorSchema, formData};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange = (formData) => {

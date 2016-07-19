@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import ApiClient from "../../ApiClient";
 
 export default class TaxonField extends Component {
@@ -39,6 +40,10 @@ export default class TaxonField extends Component {
 		uiSchema = update(uiSchema, {$merge: {[taxonField]: taxonWidgetUiSchema}});
 
 		return {uiSchema};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

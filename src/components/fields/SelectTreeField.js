@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Constructs selects from given tree.
@@ -105,6 +106,10 @@ export default class TreeField extends Component {
 		let state = {};
 
 		return {schema, formData, uiSchema, idSchema};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange = (formData) => {

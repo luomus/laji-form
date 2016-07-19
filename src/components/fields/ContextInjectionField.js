@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 export default class ContextInjectionField extends Component {
 	static propTypes = {
@@ -41,6 +42,10 @@ export default class ContextInjectionField extends Component {
 			uiSchema = merge(uiSchema, update);
 		}
 		return {uiSchema};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

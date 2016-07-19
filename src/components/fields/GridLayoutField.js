@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
-import { toIdSchema } from  "react-jsonschema-form/lib/utils"
+import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { Row, Col } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
@@ -64,6 +64,10 @@ export default class GridLayoutField extends Component {
 		});
 
 		return {...fieldProps, colType, groups, showLabels, limitWidth};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	isHidden = (props, property) => {

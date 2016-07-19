@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Disables object field's value according a regexp rule that is matched against another field's value.
@@ -57,6 +58,10 @@ export default class DependentDisableField extends Component {
 		}
 
 		return {uiSchema};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

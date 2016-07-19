@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
 import MapComponent from "laji-map";
 import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
@@ -48,6 +48,10 @@ export default class MapArrayField extends Component {
 		let activeId = (this.state && this.state.activeId !== undefined) ? this.state.activeId : (data.length ? 0 : undefined);
 
 		return {...props, schema, uiSchema, data, activeId, onChange: this.onItemChange};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	onAdd = (e) => {
