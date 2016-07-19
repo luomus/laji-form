@@ -31,30 +31,9 @@ export default class InitiallyHiddenField extends Component {
 		this.setState({visible: !this.state.visible});
 	}
 
-	shouldShow = (props) => {
-		if (this.state.visible) return true;
-		let formData = props.formData;
-		if (formData) {
-			if (props.schema.type === "object" && Object.keys(formData).length > 0) {
-				for (let prop in formData) {
-					const value = formData[prop];
-					if (value !== undefined && value !== null && (!props.schema.properties[prop].default || (props.schema.properties[prop].default !== value))) return true;
-				}
-			}
-			else if (props.schema.type === "array" && formData.length > 0) {
-				for (let item in formData) {
-					for (let prop in item) {
-						const value = item[prop];
-						if (value !== undefined && value !== null && (!props.schema.items.properties[prop].default || (props.schema.items.properties[prop].default !== value))) return true;
-					}
-				}
-			}
-			else throw new Error("schema type should be object or array for InitiallyHiddenField!");
-		}
-	}
 
 	render() {
-		let shouldShow = this.shouldShow(this.props);
+		let shouldShow = this.state.visible;
 		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
 			<div>
