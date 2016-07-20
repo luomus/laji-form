@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import ApiClient from "../../ApiClient";
+import InputMetaInfo from "../InputMetaInfo";
 
 export default class TaxonField extends Component {
 	static propTypes = {
@@ -77,16 +78,14 @@ export class TaxonWidgetField extends Component {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
 		let options = this.props.uiSchema["ui:options"];
-		return <div className="taxon-widget">
+		return <div>
 			<SchemaField {...this.props} {...this.state} />
-			<div key={options.taxonID} className="taxon-widget-meta">
 				{options.taxonID ?
-					(<div>
-						<span className="text-success">Tunnettu nimi</span><br />
+					(<InputMetaInfo className="taxon-widget">
+						<span className="text-success">{this.props.registry.translations.knownSpeciesName}</span><br />
 						<a href={"http://tun.fi/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
-					</div>) : null}
+					</InputMetaInfo>) : null}
 
-			</div>
 		</div>
 	}
 }

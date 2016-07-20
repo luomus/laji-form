@@ -77,10 +77,16 @@ body {
 	padding-bottom: 15px;
 }
 
-.taxon-widget-meta {
+.input-meta {
 	font-size: 11px;
-	margin-top: -5px;
-	margin-left: 5px
+}
+.input-meta button {
+	font-size: 11px;
+	padding: 0;
+	margin: 0;
+}
+.taxon-widget.input-meta {
+	margin-top: -7px;
 }
 
 .laji-form-help-glyph {

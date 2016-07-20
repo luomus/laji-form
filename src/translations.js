@@ -34,4 +34,24 @@ export default {
 		en: "No",
 		sv: "Nej"
 	},
+	knownSpeciesName: {
+		fi: "Tunnettu nimi",
+		en: "Known name",
+		sv: "Vetade namet"
+	},
+	fix: {
+		fi: "Korjaa",
+		en: "Fix",
+		sv: "Fixera"
+	},
+	or: {
+		fi: "tai",
+		en: "or",
+		sv: "eller"
+	},
+	continue: {
+		fi: "jatka",
+		en: "continue",
+		sv: "fortsätta"
+	},
 }

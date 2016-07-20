@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
+import InputMetaInfo from "../InputMetaInfo";
+import { Button } from "react-bootstrap";
 
 const autosuggestFieldSettings = {
 	taxon: {
@@ -25,7 +27,7 @@ const autosuggestFieldSettings = {
 			let inputValue = that.props.value;
 			return new ApiClient().fetch("/person/by-id/" + inputValue).then((response) => {
 				return response.inheritedName + ", " + response.preferredName;
-			})
+			});
 		}
 	}
 }
@@ -119,20 +121,37 @@ export default class AutoSuggestWidget extends Component {
 	onSuggestionSelected = (e, {suggestion}) => {
 		e.preventDefault();
 		if (this.props.options.onSuggestionSelected) {
+			this.setState({inputInProgress: false});
 			this.props.options.onSuggestionSelected(suggestion);
 		} else {
-			this.setState({inputValue: suggestion.value});
+			this.setState({inputValue: suggestion.value, inputInProgress: false});
 			this.props.onChange(suggestion.key);
 		}
 	}
 
 	onInputChange = (value, method) => {
-		//TODO this should be uncommented when allowNonsuggestedValue === true ?
-		//this.setState({inputValue: value});
+		this.setState({inputValue: value, inputInProgress: true});
 
-		if (method === "type" && this.props.options.allowNonsuggestedValue) {
-			this.props.onChange(value);
-		}
+		//if (method === "type" && this.props.options.allowNonsuggestedValue) {
+		//	this.props.onChange(value);
+		//}
+	}
+
+	onFocus =  () => {
+		this.setState({focused: true});
+	}
+
+	onBlur = () => {
+		this.setState({focused: false});
+	}
+
+	onFix = () => {
+		this.refs.autosuggestInput.input.focus();
+	}
+
+	onConfirmUnsuggested = () => {
+		this.setState({inputInProgress: false});
+		this.props.onChange(this.state.inputValue);
 	}
 
 	render() {
@@ -148,6 +167,7 @@ export default class AutoSuggestWidget extends Component {
 				}
 				this.onInputChange(newValue, method)
 			},
+			onFocus: this.onFocus,
 			onBlur: this.onBlur,
 			readOnly: readonly};
 
@@ -162,9 +182,11 @@ export default class AutoSuggestWidget extends Component {
 
 		if (this.state.isLoading) cssClasses.container = "autosuggest-loading";
 
+		const translations = this.props.registry.translations;
 		return (
 			<div>
 				<Autosuggest
+					ref="autosuggestInput"
 					id={this.props.id}
 					inputProps={inputProps}
 					suggestions={suggestions}
@@ -174,6 +196,11 @@ export default class AutoSuggestWidget extends Component {
 					onSuggestionSelected={this.onSuggestionSelected}
 					theme={cssClasses}
 				/>
+				{(!this.state.focused && this.state.inputInProgress) ? <InputMetaInfo>{
+					<div className="text-danger">
+						<Button bsStyle="link" onClick={this.onFix}>{translations.fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
+					</div>
+				}</InputMetaInfo> : null}
 			</div>
 		);
 	}
