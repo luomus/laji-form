@@ -36,7 +36,7 @@ export default class DependentBooleanField extends Component {
 		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
 			uiSchema["ui:options"].uiSchema : {};
 
-		let options = props.uiSchema["ui:options"]
+		let options = props.uiSchema["ui:options"];
 		let booleanField = options.booleanField;
 		let definer = options.booleanDefiner;
 
@@ -48,7 +48,7 @@ export default class DependentBooleanField extends Component {
 		if (this.checkFieldSanity(props.formData, definer) && this.checkFieldSanity(props.formData, booleanField)) props.formData[definer].forEach((definerItem) => {
 			booleanFieldData.push(!!booleanFieldDataDictionarified[definerItem]);
 		});
-		let formData = update (props.formData, {[booleanField]: {$set: booleanFieldData}});
+		const formData = update(props.formData, {[booleanField]: {$set: booleanFieldData}});
 
 		return {schema, uiSchema, formData};
 	}
@@ -67,12 +67,12 @@ export default class DependentBooleanField extends Component {
 		if (JSON.stringify(this.props.formData[definer]) === JSON.stringify(formData[definer])) {
 			let dictionarifiedOrigData = this.getDictionarifiedFormData(this.props.formData, booleanField);
 			formData[definer].forEach((definerItem, i) => {
-				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) origData.splice(origData.indexOf(definerItem), 1);
-				else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) origData ? origData.push(definerItem) : (origData = [definerItem]);
+				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) origData = update(origData, {$splice: [[origData.indexOf(definerItem), 1]]});
+				else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) origData ? (origData = update(origData, {$push: [definerItem]})) : (origData = [definerItem]);
 			})
 		}
 
-		formData[booleanField] = origData;
+		formData = update(formData, {$merge: {[booleanField]: origData}});
 		this.props.onChange(formData);
 	}
 

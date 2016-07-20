@@ -46,22 +46,11 @@ export default class InjectField extends Component {
 
 		fields.forEach((fieldName) => {
 			schema = update(schema, {properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target], {$merge: {[fieldName]: schema.properties[fieldName]}})}});
-			if (schema.required && schema.required.indexOf(fieldName) !== -1) {
-				let requiredRoot;
-				if (schema.type === "object")
-					requiredRoot = schema.properties[target];
-				else if (schema.type === "array")
-					requiredRoot = schema.properties[target].items;
-				else throw "schema is not object or array";
-				if (requiredRoot.required) requiredRoot.required.push(fieldName);
-				else requiredRoot = [fieldName];
-			}
 			delete schema.properties[fieldName];
 
 			idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema[target].$id + "_" + fieldName}}}});
-			delete idSchema[fieldName];
+			idSchema = update(idSchema, {$merge: {[fieldName]: undefined}});
 
-			formData = update(formData, {});
 			if (formData && formData[target] && Array.isArray(formData[target])) {
 				formData[target].forEach((item, i) => {
 					let updatedItem = update(item, this.getUpdateFormDataPath(formData, fieldName));
@@ -70,7 +59,7 @@ export default class InjectField extends Component {
 			} else if (formData && formData[target]) {
 				formData = update(formData, {[target]: this.getUpdateFormDataPath(formData, fieldName)});
 			}
-			delete formData[fieldName];
+			formData = update(formData, {$merge: {[fieldName]: undefined}});
 
 			if (errorSchema[fieldName] && schema.properties[target].type === "array") {
 				if (!errorSchema[target]) errorSchema = update(errorSchema, {$merge: {[target]: []}});
@@ -89,18 +78,12 @@ export default class InjectField extends Component {
 			}
 		});
 
-		//let options = uiSchema["ui:options"];
 		if (options && options.uiSchema) {
-			uiSchema = update(uiSchema, {$merge: {["ui:field"]: options.uiSchema["ui:field"]}})
-			uiSchema = update(uiSchema, {$merge: {["ui:options"]: options.uiSchema["ui:options"]}})
+			uiSchema = update(uiSchema, {$merge: {["ui:field"]: options.uiSchema["ui:field"]}});
+			uiSchema = update(uiSchema, {$merge: {["ui:options"]: options.uiSchema["ui:options"]}});
 		} else {
-			uiSchema = update(uiSchema, {});
-			delete uiSchema["ui:field"];
-			delete uiSchema["ui:options"];
+			uiSchema = update(uiSchema, {$merge: {["ui:field"]: undefined, ["ui:options"]: undefined}});
 		}
-		//uiSchema = update(uiSchema, {});
-		//delete uiSchema["ui:field"];
-		//delete uiSchema["ui:options"];
 		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
 

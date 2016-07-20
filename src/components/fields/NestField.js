@@ -116,13 +116,7 @@ export default class NestField extends Component {
 		this.setState(this.getStateFromProps(props));
 	}
 
-	sanityCheck = (props) => {
-		if (props.schema.type !== "object") throw "schema type must be 'object'";
-		if (!props.uiSchema["ui:options"]) throw "ui:options wasn't defined";
-	}
-
 	getStateFromProps = (props) => {
-		this.sanityCheck(props);
 
 		let uiSchema = update(props.uiSchema, {$merge: {"ui:field": undefined, classNames: undefined}});
 		let idSchema = props.idSchema;
@@ -163,8 +157,8 @@ export default class NestField extends Component {
 						if (!formData[wrapperFieldName]) {
 							formData = update(formData, {$merge: {[wrapperFieldName]: {[fieldName]: formData[fieldName]}}});
 						} else {
-							formData = update(formData, {[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}});
-							delete formData[fieldName];
+							formData = update(formData, {[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}, [fieldName]: {$set: undefined}});
+							//delete formData[fieldName];
 						}
 				}
 			});
@@ -186,27 +180,21 @@ export default class NestField extends Component {
 	}
 
 	onChange = (formData) => {
-		this.sanityCheck(this.props);
 		let options = this.props.uiSchema["ui:options"];
 
 		let dictionarifiedNests = {};
 		Object.keys(this.props.uiSchema["ui:options"]).forEach((newFieldName) => {
 			dictionarifiedNests[newFieldName] = true;
 		});
-		let cloned = false;
 		Object.keys(formData).forEach((prop) => {
 			if (dictionarifiedNests[prop]) {
 				Object.keys(formData[prop]).forEach((nestedProp) => {
 					if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
-						if (cloned) {
-							cloned = true;
-							formData = update(formData, {$merge: {nestedProp: formData[prop][nestedProp]}});
-						} else {
-							formData[nestedProp] = formData[prop][nestedProp];
-						}
+						formData[nestedProp] = formData[prop][nestedProp];
+						formData = update(formData, {$merge: {[nestedProp]: formData[prop][nestedProp]}});
 					}
 				});
-				delete formData[prop];
+				formData = update(formData, {$merge: {[prop]: undefined}})
 			}
 		});
 		this.props.onChange(formData);
