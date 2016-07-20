@@ -1,18 +1,18 @@
 export default {
 	submit: {
-		fi: "Lähetä",
-		en: "Submit",
-		sv: "Acceptera"
+		fi: "lähetä",
+		en: "submit",
+		sv: "acceptera"
 	},
 	today: {
-		fi: "Tänään",
-		en: "Today",
-		sv: "I dag"
+		fi: "tänään",
+		en: "today",
+		sv: "i dag"
 	},
 	yesterday: {
-		fi: "Eilen",
-		en: "Yesterday",
-		sv: "I går"
+		fi: "eilen",
+		en: "yesterday",
+		sv: "i går"
 	},
 	datePlaceholderDay: {
 		fi: "pp.kk.vvvv",
@@ -25,24 +25,24 @@ export default {
 		sv: "tt:mm"
 	},
 	yes: {
-		fi: "Kyllä",
-		en: "Ei",
-		sv: "Ja"
+		fi: "kyllä",
+		en: "ei",
+		sv: "ja"
 	},
 	no: {
-		fi: "Ei",
-		en: "No",
-		sv: "Nej"
+		fi: "ei",
+		en: "no",
+		sv: "nej"
 	},
 	knownSpeciesName: {
-		fi: "Tunnettu nimi",
-		en: "Known name",
-		sv: "Vetade namet"
+		fi: "tunnettu nimi",
+		en: "known name",
+		sv: "vetade namet"
 	},
 	fix: {
-		fi: "Korjaa",
-		en: "Fix",
-		sv: "Fixera"
+		fi: "korjaa",
+		en: "fix",
+		sv: "fixera"
 	},
 	or: {
 		fi: "tai",

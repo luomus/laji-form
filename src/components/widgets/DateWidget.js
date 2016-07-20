@@ -25,8 +25,8 @@ export default class DateWidget extends Component {
 				{showButtons ?
 					(<FormGroup>
 					<ButtonGroup>
-							<Button onClick={this.setToday}>{this.props.registry.translations.today}</Button>
-							<Button onClick={this.setYesterday}>{this.props.registry.translations.yesterday}</Button>
+							<Button onClick={this.setToday}>{this.props.registry.translations.Today}</Button>
+							<Button onClick={this.setYesterday}>{this.props.registry.translations.Yesterday}</Button>
 					</ButtonGroup>
 				</FormGroup>) : null
 					}

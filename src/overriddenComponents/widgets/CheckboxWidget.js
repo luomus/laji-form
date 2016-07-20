@@ -23,8 +23,8 @@ function CheckboxWidget(props) {
 		       required={required}
 		       disabled={disabled}
 		       onChange={value => onChange(value)}
-		       checkedChildren={registry.translations.yes}
-		       unCheckedChildren={registry.translations.no}	/>
+		       checkedChildren={registry.translations.Yes}
+		       unCheckedChildren={registry.translations.No}	/>
 	</Label></div>);
 }
 

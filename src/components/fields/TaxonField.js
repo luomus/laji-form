@@ -82,7 +82,7 @@ export class TaxonWidgetField extends Component {
 			<SchemaField {...this.props} {...this.state} />
 				{options.taxonID ?
 					(<InputMetaInfo className="taxon-widget">
-						<span className="text-success">{this.props.registry.translations.knownSpeciesName}</span><br />
+						<span className="text-success">{this.props.registry.translations.KnownSpeciesName}</span><br />
 						<a href={"http://tun.fi/" + options.taxonID} target="_blank">{(this.state.urlTxt || options.taxonID)}</a>
 					</InputMetaInfo>) : null}
 

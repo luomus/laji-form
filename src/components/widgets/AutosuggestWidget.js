@@ -198,7 +198,7 @@ export default class AutoSuggestWidget extends Component {
 				/>
 				{(!this.state.focused && this.state.inputInProgress) ? <InputMetaInfo>{
 					<div className="text-danger">
-						<Button bsStyle="link" onClick={this.onFix}>{translations.fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
+						<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
 					</div>
 				}</InputMetaInfo> : null}
 			</div>

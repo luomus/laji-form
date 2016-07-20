@@ -48,12 +48,16 @@ export default class LajiForm extends Component {
 	}
 
 	constructTranslations = () => {
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
 		let dictionaries = {}
 		for (let word in translations) {
 			for (let lang in translations[word]) {
 				const translation = translations[word][lang];
 				if (!dictionaries.hasOwnProperty(lang)) dictionaries[lang] = {};
 				dictionaries[lang][word] = translation;
+				dictionaries[lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
 			}
 		}
 		return dictionaries;
@@ -108,7 +112,7 @@ export default class LajiForm extends Component {
 					uiSchemaContext: this.props.uiSchemaContext
 				}}
 				onError={log("errors")} >
-				<Button classList={["btn-info"]} type="submit">{this.translations[this.props.lang].submit}</Button>
+				<Button classList={["btn-info"]} type="submit">{this.translations[this.props.lang].Submit}</Button>
 				</Form>
 		)
 	}
