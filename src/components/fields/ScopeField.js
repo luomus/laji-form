@@ -207,7 +207,7 @@ export default class ScopeField extends Component {
 	}
 
 	renderAdditionalsButton = () => {
-		if (!this.state.includeAdditionalFieldsChooserButton) return null;
+		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData).length === 0) return null;
 
 		let list = [];
 		if (this.state.additionalsOpen) {
