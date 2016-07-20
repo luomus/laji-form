@@ -245,7 +245,7 @@ export default class ScopeField extends Component {
 
 		return <DropdownButton
 			id={this.props.idSchema.$id + "_dropdown"}
-			title="Valitse lisää kenttiä"
+			title={this.props.registry.translations.PickMoreFields}
 			onToggle={this.onToggleAdditionals}
 			bsStyle="info">{list}</DropdownButton>;
 	}

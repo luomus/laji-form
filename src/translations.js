@@ -54,4 +54,9 @@ export default {
 		en: "continue",
 		sv: "fortsätta"
 	},
+	pickMoreFields: {
+		fi: "valitse lisää kenttiä",
+		en: "pick more fields",
+		sv: "picka mera fielder"
+	}
 }
