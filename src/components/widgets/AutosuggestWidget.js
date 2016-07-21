@@ -51,9 +51,10 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props), () => {
-			if (this.state && props.value !== this.state.inputValue) this.triggerConvert(props);
-		});
+		this.setState(this.getStateFromProps(props));
+		// this.setState(this.getStateFromProps(props), () => {
+		// 	if (this.state && props.value !== this.state.inputValue) this.triggerConvert(props);
+		// });
 	}
 
 	getStateFromProps = (props) => {
@@ -129,12 +130,11 @@ export default class AutoSuggestWidget extends Component {
 		}
 	}
 
-	onInputChange = (value, method) => {
+	onInputChange = (value) => {
+		if (this.props.options.onInputChange) {
+			value = this.props.options.onInputChange(value);
+		}
 		this.setState({inputValue: value, inputInProgress: true});
-
-		//if (method === "type" && this.props.options.allowNonsuggestedValue) {
-		//	this.props.onChange(value);
-		//}
 	}
 
 	onFocus =  () => {

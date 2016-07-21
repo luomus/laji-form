@@ -237,69 +237,62 @@
 									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
 									"additionalsGroupsTranslator": "taxonGroups",
 									"uiSchema": {
-										"ui:field": "inputTransform",
-										"ui:options":{
-											"rules": {
-												"informalNameString": {
-													"regexp": "(.*)\\?$",
-													"transformations": {
-														"certainty": "notSoSure"
-													}
+										"ui:field": "autosuggest",
+										"ui:options": {
+											"autosuggestField": "taxon",
+											"allowNonsuggestedValue": true,
+											"suggestionInputField": "informalNameString",
+											"suggestionReceivers": {
+												"informalNameString": "value",
+												"unitType": "payload.taxonGroups",
+												"taxonID": "key"
+											},
+											"inputTransformer": {
+												"regexp": "(.*)\\?$",
+												"transformations": {
+													"certainty": "notSoSure"
 												}
 											},
 											"uiSchema": {
-												"ui:field": "autosuggest",
+												"ui:field": "taxon",
 												"ui:options": {
-													"autosuggestField": "taxon",
-													"allowNonsuggestedValue": true,
-													"suggestionInputField": "informalNameString",
-													"suggestionReceivers": {
-														"informalNameString": "value",
-														"unitType": "payload.taxonGroups",
-														"taxonID": "key"
-													},
+													"taxonField": "informalNameString",
 													"uiSchema": {
-														"ui:field": "taxon",
+														"ui:field": "grid",
 														"ui:options": {
-															"taxonField": "informalNameString",
-															"uiSchema": {
-																"ui:field": "grid",
+															"colType": "sm"
+														},
+														"unitType": {
+															"ui:field": "hidden"
+														},
+														"taxonID": {
+															"ui:widget": "hidden"
+														},
+														"identifications": {
+															"items": {
+																"ui:field": "autosuggest",
 																"ui:options": {
-																	"colType": "sm"
-																},
-																"unitType": {
-																	"ui:field": "hidden"
-																},
-																"taxonID": {
-																	"ui:widget": "hidden"
-																},
-																"identifications": {
-																	"items": {
-																		"ui:field": "autosuggest",
+																	"autosuggestField": "taxon",
+																	"allowNonsuggestedValue": true,
+																	"suggestionInputField": "taxon",
+																	"suggestionReceivers": {
+																		"taxon": "value",
+																		"taxonID": "key"
+																	},
+																	"uiSchema": {
+																		"ui:field": "taxon",
 																		"ui:options": {
-																			"autosuggestField": "taxon",
-																			"allowNonsuggestedValue": true,
-																			"suggestionInputField": "taxon",
-																			"suggestionReceivers": {
-																				"taxon": "value",
-																				"taxonID": "key"
-																			},
+																			"taxonField": "taxon",
 																			"uiSchema": {
-																				"ui:field": "taxon",
+																				"ui:field": "grid",
 																				"ui:options": {
-																					"taxonField": "taxon",
-																					"uiSchema": {
-																						"ui:field": "grid",
-																						"ui:options": {
-																							"colType": "sm"
-																						},
-																						"taxonID": {
-																							"ui:widget": "hidden"
-																						},
-																						"detDate": {
-																							"ui:widget": "date"
-																						}
-																					}
+																					"colType": "sm"
+																				},
+																				"taxonID": {
+																					"ui:widget": "hidden"
+																				},
+																				"detDate": {
+																					"ui:widget": "date"
 																				}
 																			}
 																		}
@@ -319,6 +312,7 @@
 											}
 										}
 									},
+									"strictFields": ["recordBasis"],
 									"definitions": {
 										"unitType": {
 											"fields": ["taxonID", "certainty", "unitType"],

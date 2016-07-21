@@ -29,7 +29,7 @@ export default class AutosuggestField extends Component {
 		let {schema} = props;
 		let propsUiSchema = props.uiSchema;
 		let options = propsUiSchema["ui:options"];
-		options = update(options, {$merge: {onSuggestionSelected: this.onSuggestionSelected}});
+		options = update(options, {$merge: {onSuggestionSelected: this.onSuggestionSelected, onInputChange: this.onInputChange}});
 
 		let uiSchema = options.uiSchema || {};
 		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:widget": {component: "autosuggest", options: options}}}});
@@ -61,6 +61,26 @@ export default class AutosuggestField extends Component {
 		this.props.onChange(formData);
 	}
 
+	onInputChange = (value) => {
+		let {formData} = this.props;
+		const options = this.props.uiSchema["ui:options"];
+		const inputTransformer = options.inputTransformer;
+		if (inputTransformer) {
+			const regexp = new RegExp(inputTransformer.regexp);
+			if (value.match(regexp)) {
+				if (!formData) formData = {};
+				let formDataChange = {};
+				value = value.replace(regexp, "\$1");
+				if (inputTransformer.transformations) for (let transformField in inputTransformer.transformations) {
+					formDataChange[transformField] = inputTransformer.transformations[transformField];
+				}
+				formData = update(formData, {$merge: formDataChange});
+				this.props.onChange(formData);
+			}
+		}
+		return value;
+	}
+
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		return (<SchemaField
@@ -69,4 +89,3 @@ export default class AutosuggestField extends Component {
 		/>);
 	}
 }
-

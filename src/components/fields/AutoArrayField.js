@@ -6,6 +6,34 @@ import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 
 export default class AutoArrayField extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {};
+		this.state = this.getStatefromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStatefromProps(props))
+	}
+
+	getStatefromProps = (props) => {
+		let {idxsToKeys, keyCounter} = this.state;
+		if (!idxsToKeys) {
+			return {
+				idxsToKeys: Array.from(new Array(props.formData.length + 1), (x, i) => i),
+				keyCounter: props.formData.length + 1
+			};
+		// Would somebody tell me why 'this' is undefined in this while loop?
+		} else while (props.formData && props.formData.length >= idxsToKeys.length) {
+			return {
+				idxsToKeys: update(idxsToKeys, {$push: Array.from(new Array(props.formData.length - idxsToKeys.length + 1), (x,i) => keyCounter++)}),
+				keyCounter: keyCounter
+			};
+		}
+		return {};
+	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		return shouldRender(this, nextProps, nextState);
 	}
@@ -22,33 +50,32 @@ export default class AutoArrayField extends Component {
 	renderItems = () => {
 		let data = this.props.formData || [];
 		data = update(data, {$push: [{}]});
-		//let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
 
 		const SchemaField = this.props.registry.fields.SchemaField;
-		
+
 		let rows = [];
 		data.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
+			item = update(item, {$merge: {$key: this.state.idxsToKeys[idx]}});
+			let key = this.state.idxsToKeys[idx];
 			rows.push(
-				<Row key={"row_" + idx}>
-					<Col xs={10} key={"schema_container_" + idx}>
+				<Row key={"row_" + key}>
+					<Col xs={10}>
 						<SchemaField
-						key={idx}
-						formData={item}
-						onChange={this.onChangeForIdx(idx)}
-						schema={this.props.schema.items}
-						uiSchema={this.props.uiSchema.items}
-						idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
-						registry={this.props.registry}
-						errorSchema={this.props.errorSchema[idx]} />
+							key={key}
+							formData={item}
+							onChange={this.onChangeForIdx(idx)}
+							schema={this.props.schema.items}
+							uiSchema={this.props.uiSchema.items}
+							idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
+							registry={this.props.registry}
+							errorSchema={this.props.errorSchema[idx]} />
 					</Col>
-					{removable ? (<Col xs={2} key={"button_" + idx}>
+					{removable ? (<Col xs={2}>
 						<Button type="danger"
 						        classList={["col-xs-12"]}
-						        onClick={ e => { e.preventDefault();
-						                         this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))
-						}}>✖</Button>
+						        onClick={this.onRemove(idx)}>✖</Button>
 					</Col>) : undefined}
 				</Row>);
 		});
@@ -66,5 +93,12 @@ export default class AutoArrayField extends Component {
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
 			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
 		}
+	}
+
+	onRemove = (idx) => e => {
+		e.preventDefault();
+		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
+
+		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))
 	}
 }

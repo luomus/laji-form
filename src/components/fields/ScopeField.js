@@ -33,7 +33,9 @@ const scopeFieldSettings = {
  *  definitions: {
  *    defName: <fieldScope>,
  *    defname2: ...
- *  }
+ *  },
+ *  strictFields: [<string>] (array of field names that should not be shown even if
+ *                            they have value, if they are not in a field scope)
  * }
  *
  * Field scope values accept asterisk (*) as field scope selector.
@@ -47,6 +49,7 @@ export default class ScopeField extends Component {
 				additionalsGroupsTranslator: PropTypes.oneOf(Object.keys(scopeFieldSettings)),
 				fieldScopes: PropTypes.object.isRequired,
 				definitions: PropTypes.object,
+				strictFields: PropTypes.arrayOf(PropTypes.string),
 				uiSchema: PropTypes.object
 			}).isRequired
 		}).isRequired
@@ -177,8 +180,11 @@ export default class ScopeField extends Component {
 		}
 
 		if (props.formData) {
+			let dictionarifiedStrictFields = {};
+			options.strictFields.forEach(field => { dictionarifiedStrictFields[field] = true });
+
 			Object.keys(formData).forEach((property) => {
-				if (isEmpty(formData[property])) return;
+				if (dictionarifiedStrictFields[property] || isEmpty(formData[property])) return;
 				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
 					fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
 				}
