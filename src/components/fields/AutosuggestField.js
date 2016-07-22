@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 
 const suggestionParsers = {
@@ -11,16 +12,11 @@ const suggestionParsers = {
 const autosuggestSettings = {
 	taxon: {
 		renderMetaInfo: that => {
-			const taxonID = (that.props.formData && that.props.formData.taxonID) ? that.props.formData.taxonID : undefined;
-			if (taxonID && (!that.state.taxonID || that.state.taxonID !== taxonID)) {
-				new ApiClient().fetch("/taxonomy/" + taxonID).then(response => {
-					that.setState({urlTxt: response.scientificName});
-				});
-			}
-			return (taxonID) ?
+			const taxonID = that.props.formData.taxonID;
+			return (that.props.formData && taxonID) ?
 				(<div>
 					<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span><br />
-					<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>
+					<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>{!that.state.urlTxt ? <Spinner/> : null}
 				</div>) : null
 		}
 	}
@@ -60,6 +56,14 @@ export default class AutosuggestField extends Component {
 		let uiSchema = options.uiSchema || {};
 		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:widget": {component: "autosuggest", options: options}}}});
 		let state = {schema, uiSchema};
+
+		const taxonID = (props.formData && props.formData.taxonID) ? props.formData.taxonID : undefined;
+		if (taxonID && (!this.state || !this.state.taxonID || this.state.taxonID !== taxonID)) {
+			new ApiClient().fetch("/taxonomy/" + taxonID).then(response => {
+				this.setState({urlTxt: response.scientificName});
+			});
+		}
+
 		return state;
 	}
 

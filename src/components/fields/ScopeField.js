@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import { ListGroup, ListGroupItem, DropdownButton, MenuItem } from "react-bootstrap";
+import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import Button from "../Button"
 
@@ -223,8 +224,8 @@ export default class ScopeField extends Component {
 				});
 				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
 				if (groupsList.length) {
-					list.push(<MenuItem header
-					                    key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>);
+					list.push(<div><MenuItem header
+					                    key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>{translations[groupName] !== undefined ? <Spinner /> : null}</div>);
 					list.push(...groupsList);
 				}
 			}); else {
@@ -234,6 +235,7 @@ export default class ScopeField extends Component {
 
 		return <DropdownButton
 			id={this.props.idSchema.$id + "_dropdown"}
+			className="scope-field-additionals-container"
 			title={this.props.registry.translations.PickMoreFields}
 			onToggle={this.onToggleAdditionals}
 			bsStyle="info">{list}</DropdownButton>;

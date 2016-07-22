@@ -3,6 +3,7 @@ import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import InputMetaInfo from "../InputMetaInfo";
 import { Button } from "react-bootstrap";
+import Spinner from "react-spinner"
 
 const autosuggestSettings = {
 	taxon: {
@@ -79,7 +80,7 @@ export default class AutoSuggestWidget extends Component {
 				})
 				.catch( () => {
 					if (!this.mounted) return;
-					this.setState({isLoading: false, inputValue: undefined, origValue: undefined});
+					this.setState({inputValue: undefined, origValue: undefined, isLoading: false});
 				});
 		}
 	}
@@ -93,7 +94,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onSuggestionsUpdateRequested = (suggestionValue) => {
-		if (!suggestionValue || suggestionValue.value.length < 2) return;
+		if (!suggestionValue || suggestionValue.value.length < 2 || suggestionValue.reason !== "type") return;
 
 		this.setState({isLoading: true});
 		(() => {
@@ -152,7 +153,7 @@ export default class AutoSuggestWidget extends Component {
 
 	render() {
 		let {readonly} = this.props;
-		let {suggestions, inputValue} = this.state;
+		let {suggestions, inputValue, isLoading} = this.state;
 
 		const inputProps = {...this.props,
 			value: (inputValue !== undefined) ? inputValue : this.props.value,
@@ -176,22 +177,23 @@ export default class AutoSuggestWidget extends Component {
 			suggestionFocused: "list-group-item active"
 		};
 
-		if (this.state.isLoading) cssClasses.container = "autosuggest-loading";
-
 		const translations = this.props.registry.translations;
 		return (
 			<div>
-				<Autosuggest
-					ref="autosuggestInput"
-					id={this.props.id}
-					inputProps={inputProps}
-					suggestions={suggestions}
-					getSuggestionValue={this.getSuggestionValue}
-					renderSuggestion={this.renderSuggestion}
-					onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
-					onSuggestionSelected={this.onSuggestionSelected}
-					theme={cssClasses}
-				/>
+				<div className="autosuggest-wrapper">
+					<Autosuggest
+						ref="autosuggestInput"
+						id={this.props.id}
+						inputProps={inputProps}
+						suggestions={suggestions}
+						getSuggestionValue={this.getSuggestionValue}
+						renderSuggestion={this.renderSuggestion}
+						onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+						onSuggestionSelected={this.onSuggestionSelected}
+						theme={cssClasses}
+					/>
+					{isLoading ? <Spinner /> : null }
+				</div>
 				<InputMetaInfo>{
 					(this.state.inputInProgress) ?
 						(<div className="text-danger">

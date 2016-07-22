@@ -3,7 +3,7 @@ body .laji-form {
 	font-size: 13px;
 }
 
-.laji-form .autosuggest-container, .scope-field-additionals-container  {
+.laji-form .autosuggest-container {
     position: absolute;
     z-index: 1;
 }
@@ -139,3 +139,27 @@ body .laji-form {
 	text-decoration: underline;
 }
 
+.laji-form .react-spinner_bar {
+	background-color: black;
+}
+.laji-form .autosuggest-wrapper .react-spinner {
+	width: 25px;
+	left: initial;
+	float: right;
+	right: -10px;
+	bottom: 12px;
+}
+.input-meta .react-spinner {
+	width: 20px;
+	left: initial;
+	float: right;
+	bottom: 3px;
+	right: 87px;
+}
+.scope-field-additionals-container+* .react-spinner {
+	width: 16px;
+	left: initial;
+	float: right;
+	bottom: 13px;
+	right: -5px;
+}
