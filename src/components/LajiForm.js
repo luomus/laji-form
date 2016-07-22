@@ -3,6 +3,7 @@ import Button from "./Button";
 
 import Form from "./../overriddenComponents/Form";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
+import ArrayField from "./../overriddenComponents/fields/ArrayField";
 import BooleanField from "./../overriddenComponents/fields/BooleanField";
 import StringField from "./../overriddenComponents/fields/StringField";
 import CheckboxWidget from "./../overriddenComponents/widgets/CheckboxWidget";
@@ -72,6 +73,7 @@ export default class LajiForm extends Component {
 				registry={{
 					fields: {
 						SchemaField: SchemaField,
+						ArrayField: ArrayField,
 						BooleanField: BooleanField,
 						StringField: StringField,
 						nested: NestField,

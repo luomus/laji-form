@@ -57,7 +57,6 @@ export default class AutoArrayField extends Component {
 		data.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
-			item = update(item, {$merge: {$key: this.state.idxsToKeys[idx]}});
 			let key = this.state.idxsToKeys[idx];
 			rows.push(
 				<Row key={"row_" + key}>
