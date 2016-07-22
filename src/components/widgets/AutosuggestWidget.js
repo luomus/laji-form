@@ -4,10 +4,10 @@ import ApiClient from "../../ApiClient";
 import InputMetaInfo from "../InputMetaInfo";
 import { Button } from "react-bootstrap";
 
-const autosuggestFieldSettings = {
+const autosuggestSettings = {
 	taxon: {
 		includePayload: true,
-		render: suggestion => {
+		renderSuggestion: suggestion => {
 			let text = suggestion.value;
 			if (suggestion.payload.taxonGroupsStr) {
 				text += " (" + suggestion.payload.taxonGroupsStr + ")";
@@ -16,11 +16,11 @@ const autosuggestFieldSettings = {
 		},
 		convertInputValue: that => {
 			return new Promise((resolve) => {resolve(that.state.options.parentData.informalNameString)});
-		}
+		},
 	},
 	friends: {
 		includePayload: false,
-		render: suggestion => {
+		renderSuggestion: suggestion => {
 			return suggestion.value;
 		},
 		convertInputValue: that => {
@@ -52,14 +52,10 @@ export default class AutoSuggestWidget extends Component {
 
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
-		// this.setState(this.getStateFromProps(props), () => {
-		// 	if (this.state && props.value !== this.state.inputValue) this.triggerConvert(props);
-		// });
 	}
 
 	getStateFromProps = (props) => {
-		let autosuggestSettings = autosuggestFieldSettings[props.options.autosuggestField];
-		return {autosuggestSettings};
+		return {autosuggestSettings: autosuggestSettings[props.options.autosuggestField]};
 	}
 
 	componentDidMount() {
@@ -93,7 +89,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	renderSuggestion = (suggestion) => {
-		return (<span>{this.state.autosuggestSettings.render(suggestion)}</span>);
+		return (<span>{this.state.autosuggestSettings.renderSuggestion(suggestion)}</span>);
 	}
 
 	onSuggestionsUpdateRequested = (suggestionValue) => {
@@ -196,11 +192,12 @@ export default class AutoSuggestWidget extends Component {
 					onSuggestionSelected={this.onSuggestionSelected}
 					theme={cssClasses}
 				/>
-				{(!this.state.focused && this.state.inputInProgress) ? <InputMetaInfo>{
-					<div className="text-danger">
-						<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
-					</div>
-				}</InputMetaInfo> : null}
+				<InputMetaInfo>{
+					(this.state.inputInProgress) ?
+						(<div className="text-danger">
+							<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
+						</div>) : (this.props.options.onRenderMetaInfo) ? this.props.options.onRenderMetaInfo() : null
+				}</InputMetaInfo>
 			</div>
 		);
 	}

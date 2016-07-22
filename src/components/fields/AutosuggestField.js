@@ -1,10 +1,28 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import ApiClient from "../../ApiClient";
 
-const autosuggestFieldSettings = {
+const suggestionParsers = {
 	taxonGroup: suggestion => {
 		return suggestion.payload.informalTaxonGroups.map(item => item.id);
+	}
+}
+const autosuggestSettings = {
+	taxon: {
+		renderMetaInfo: that => {
+			const taxonID = (that.props.formData && that.props.formData.taxonID) ? that.props.formData.taxonID : undefined;
+			if (taxonID && (!that.state.taxonID || that.state.taxonID !== taxonID)) {
+				new ApiClient().fetch("/taxonomy/" + taxonID).then(response => {
+					that.setState({urlTxt: response.scientificName});
+				});
+			}
+			return (taxonID) ?
+				(<div>
+					<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span><br />
+					<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>
+				</div>) : null
+		}
 	}
 }
 
@@ -37,6 +55,7 @@ export default class AutosuggestField extends Component {
 		let propsUiSchema = props.uiSchema;
 		let options = propsUiSchema["ui:options"];
 		options = update(options, {$merge: {onSuggestionSelected: this.onSuggestionSelected, onInputChange: this.onInputChange}});
+		if (autosuggestSettings[options.autosuggestField]) options = update(options, {$merge: {onRenderMetaInfo: this.onRenderMetaInfo}});
 
 		let uiSchema = options.uiSchema || {};
 		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:widget": {component: "autosuggest", options: options}}}});
@@ -54,7 +73,7 @@ export default class AutosuggestField extends Component {
 		for (let fieldName in options.suggestionReceivers) {
 			const suggestionValPath = options.suggestionReceivers[fieldName];
 			const fieldVal = (suggestionValPath[0] === "$") ?
-				autosuggestFieldSettings[suggestionValPath.substring(1)](suggestion) :
+				suggestionParsers[suggestionValPath.substring(1)](suggestion) :
 				suggestionValPath.split('.').reduce((o,i)=>o[i], suggestion);
 
 			formData = update(formData, {$merge: {[fieldName]: fieldVal}});
@@ -80,6 +99,10 @@ export default class AutosuggestField extends Component {
 			}
 		}
 		return value;
+	}
+
+	onRenderMetaInfo = () => {
+		return autosuggestSettings[this.props.uiSchema["ui:options"].autosuggestField].renderMetaInfo(this);
 	}
 
 	render() {

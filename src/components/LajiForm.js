@@ -24,7 +24,6 @@ import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
-import TaxonField, {TaxonWidgetField} from "./fields/TaxonField";
 import InputTransformerField from "./fields/InputTransformerField";
 import HiddenField from "./fields/HiddenField";
 import InitiallyHiddenField from "./fields/InitiallyHiddenField";
@@ -94,8 +93,6 @@ export default class LajiForm extends Component {
 						autoArray: AutoArrayField,
 						copyValuesArray: CopyValuesArrayField,
 						autosuggest: AutosuggestField,
-						taxon: TaxonField,
-						taxonWidget: TaxonWidgetField,
 						hidden: HiddenField,
 						initiallyHidden: InitiallyHiddenField,
 						inputTransform: InputTransformerField,

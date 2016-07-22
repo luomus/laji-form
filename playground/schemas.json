@@ -254,49 +254,37 @@
 												}
 											},
 											"uiSchema": {
-												"ui:field": "taxon",
+												"ui:field": "grid",
 												"ui:options": {
-													"taxonField": "informalNameString",
-													"uiSchema": {
-														"ui:field": "grid",
+													"colType": "sm"
+												},
+												"unitType": {
+													"ui:field": "hidden"
+												},
+												"taxonID": {
+													"ui:widget": "hidden"
+												},
+												"identifications": {
+													"items": {
+														"ui:field": "autosuggest",
 														"ui:options": {
-															"colType": "sm"
-														},
-														"unitType": {
-															"ui:field": "hidden"
-														},
-														"taxonID": {
-															"ui:widget": "hidden"
-														},
-														"identifications": {
-															"items": {
-																"ui:field": "autosuggest",
+															"autosuggestField": "taxon",
+															"allowNonsuggestedValue": true,
+															"suggestionInputField": "taxon",
+															"suggestionReceivers": {
+																"taxon": "value",
+																"taxonID": "key"
+															},
+															"uiSchema": {
+																"ui:field": "grid",
 																"ui:options": {
-																	"autosuggestField": "taxon",
-																	"allowNonsuggestedValue": true,
-																	"suggestionInputField": "taxon",
-																	"suggestionReceivers": {
-																		"taxon": "value",
-																		"taxonID": "key"
-																	},
-																	"uiSchema": {
-																		"ui:field": "taxon",
-																		"ui:options": {
-																			"taxonField": "taxon",
-																			"uiSchema": {
-																				"ui:field": "grid",
-																				"ui:options": {
-																					"colType": "sm"
-																				},
-																				"taxonID": {
-																					"ui:widget": "hidden"
-																				},
-																				"detDate": {
-																					"ui:widget": "date"
-																				}
-																			}
-																		}
-																	}
+																	"colType": "sm"
+																},
+																"taxonID": {
+																	"ui:widget": "hidden"
+																},
+																"detDate": {
+																	"ui:widget": "date"
 																}
 															}
 														}
