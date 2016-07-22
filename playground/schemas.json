@@ -244,7 +244,7 @@
 											"suggestionInputField": "informalNameString",
 											"suggestionReceivers": {
 												"informalNameString": "value",
-												"unitType": "payload.taxonGroups",
+												"unitType": "$taxonGroup",
 												"taxonID": "key"
 											},
 											"inputTransformer": {

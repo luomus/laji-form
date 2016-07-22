@@ -65,36 +65,19 @@ export default class ScopeField extends Component {
 	}
 
 	getStateFromProps(props) {
-		let dictionarifiedFieldsInScopes = {};
-		function getFieldScopesFields(fieldScope) {
-			let scopes = fieldScope.fieldScopes;
-			Object.keys(scopes).forEach((fieldName) => {
-				dictionarifiedFieldsInScopes[fieldName] = true;
-				Object.keys(scopes[fieldName]).forEach((fieldValue) => {
-					let fields = scopes[fieldName][fieldValue].fields;
-					if (fields) fields.forEach((scopesFieldName) => {
-						dictionarifiedFieldsInScopes[scopesFieldName] = true;
-					});
-					if (scopes[fieldName][fieldValue].fieldScopes)
-						getFieldScopesFields(scopes[fieldName][fieldValue]);
-				});
-			});
-		}
-		let options = props.uiSchema["ui:options"];
-		getFieldScopesFields(options);
+		const options = props.uiSchema["ui:options"];
 
-		let includeAdditionalFieldsChooserButton = !!options.includeAdditionalFieldsChooserButton;
+		const includeAdditionalFieldsChooserButton = !!options.includeAdditionalFieldsChooserButton;
 
-
-		let schemas = this.getSchemas(props);
-		let state = {
+		const schemas = this.getSchemas(props);
+		const state = {
 			...schemas,
 			primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
 			includeAdditionalFieldsChooserButton
 		};
 
 		if (options.additionalsGroupsTranslator) {
-			let prevOptions = (this.props && this.props.uiSchema && this.props.uiSchema["ui:options"]) ? this.props.uiSchema["ui:options"] : {};
+			const prevOptions = (this.props && this.props.uiSchema && this.props.uiSchema["ui:options"]) ? this.props.uiSchema["ui:options"] : {};
 			state.additionalsGroupsTranslations = (prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
 				this.state.additionalsGroupsTranslations : {};
 			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;

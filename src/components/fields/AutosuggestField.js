@@ -2,6 +2,12 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 
+const autosuggestFieldSettings = {
+	taxonGroup: suggestion => {
+		return suggestion.payload.informalTaxonGroups.map(item => item.id);
+	}
+}
+
 /**
  * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutoSuggestWidget.
  *
@@ -12,13 +18,14 @@ import { shouldRender } from  "react-jsonschema-form/lib/utils"
  *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
  *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
  *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "payload.informalgroups.0}
+ *                                         If fieldName start  with '$', then a function from autosuggestFieldSettings parses the suggestion. Example: $taxonGroup
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
  * }
  */
 export default class AutosuggestField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
+		this.state = this.getStateFromProps(props);
 	}
 
 	componentWillReceiveProps(props) {
@@ -41,21 +48,15 @@ export default class AutosuggestField extends Component {
 		return shouldRender(this, nextProps, nextState);
 	}
 
-	onChange = (formData) => {
-		const options = this.props.uiSchema["ui:options"];
-		for (let fieldName in options.suggestionReceivers) {
-			if (fieldName === options.suggestionInputField) continue;
-			formData = update(formData, {$merge: {[fieldName]: undefined}});
-		}
-		this.props.onChange(formData)
-	}
-
 	onSuggestionSelected = (suggestion) => {
 		let formData = this.props.formData;
 		const options = this.props.uiSchema["ui:options"];
 		for (let fieldName in options.suggestionReceivers) {
 			const suggestionValPath = options.suggestionReceivers[fieldName];
-			const fieldVal = suggestionValPath.split('.').reduce((o,i)=>o[i], suggestion);
+			const fieldVal = (suggestionValPath[0] === "$") ?
+				autosuggestFieldSettings[suggestionValPath.substring(1)](suggestion) :
+				suggestionValPath.split('.').reduce((o,i)=>o[i], suggestion);
+
 			formData = update(formData, {$merge: {[fieldName]: fieldVal}});
 		}
 		this.props.onChange(formData);
