@@ -1,36 +1,36 @@
-body {
+body .laji-form {
     background: #eeeeee;
 	font-size: 13px;
 }
 
-.autosuggest-container, .scope-field-additionals-container  {
+.laji-form .autosuggest-container, .scope-field-additionals-container  {
     position: absolute;
     z-index: 1;
 }
 
-.map-array-directionless-enter {
+.laji-form .map-array-directionless-enter {
     opacity: 0.01;
 }
 
-.map-array-directionless-enter.map-array-directionless-enter-active {
+.laji-form .map-array-directionless-enter.map-array-directionless-enter-active {
     opacity: 1;
     transition: opacity .3s ease-in;
 }
 
-.map-array-left-enter {
+.laji-form .map-array-left-enter {
     transform: translate3d(-100%, 0, 0);
 }
 
-.map-array-right-enter {
+.laji-form .map-array-right-enter {
     transform: translate3d(100%, 0, 0);
 }
 
-.map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
+.laji-form .map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
     transform: translate3d(0, 0, 0);
     transition: all 300ms;
 }
 
-.map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
+.laji-form .map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
 	visibility: hidden;
 	height: 0px;
 	width: 0px;
@@ -72,20 +72,20 @@ body {
 	font-size: 13px;
 }
 
-.laji-form-map {
+.laji-form .laji-form-map {
 	z-index: 1;
 	padding-bottom: 15px;
 }
 
-.input-meta {
+.laji-form .input-meta {
 	font-size: 11px;
 }
-.input-meta button {
+.laji-form .input-meta button {
 	font-size: 11px;
 	padding: 0;
 	margin: 0;
 }
-.taxon-widget.input-meta {
+.laji-form .taxon-widget.input-meta {
 	margin-top: -7px;
 }
 
@@ -125,11 +125,17 @@ body {
 .laji-form .rc-switch-checked:after {
 	left: 37px;
 }
-.rc-switch-toggled-false .rc-switch-inner {
+.laji-form .rc-switch-toggled-false .rc-switch-inner {
 	right: 7px;
 	left: initial;
 }
-.rc-switch-disabled .rc-switch-inner {
+.laji-form .rc-switch-disabled .rc-switch-inner {
 	color: #9e9e9e;
+}
+.laji-form .dropdown-header {
+	font-size: 14px;
+	font-weight: bold;
+	color: black;
+	text-decoration: underline;
 }
 
