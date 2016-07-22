@@ -134,7 +134,7 @@ export default class AutoSuggestWidget extends Component {
 		if (this.props.options.onInputChange) {
 			value = this.props.options.onInputChange(value);
 		}
-		this.setState({inputValue: value, inputInProgress: true});
+		if (value !== this.props.value) this.setState({inputValue: value, inputInProgress: true});
 	}
 
 	onFocus =  () => {
