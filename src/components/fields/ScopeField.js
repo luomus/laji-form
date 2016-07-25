@@ -224,8 +224,9 @@ export default class ScopeField extends Component {
 				});
 				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
 				if (groupsList.length) {
-					list.push(<div><MenuItem header
-					                    key={groupName}>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>{translations[groupName] !== undefined ? <Spinner /> : null}</div>);
+					list.push(<div key={groupName}>
+						<MenuItem header>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>
+						{translations[groupName] !== undefined ? null : <Spinner />}</div>);
 					list.push(...groupsList);
 				}
 			}); else {

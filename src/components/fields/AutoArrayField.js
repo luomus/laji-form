@@ -19,15 +19,16 @@ export default class AutoArrayField extends Component {
 
 	getStatefromProps = (props) => {
 		let {idxsToKeys, keyCounter} = this.state;
+		const formDataLength = props.formData ? props.formData.length : 0;
 		if (!idxsToKeys) {
 			return {
-				idxsToKeys: Array.from(new Array(props.formData.length + 1), (x, i) => i),
-				keyCounter: props.formData.length + 1
+				idxsToKeys: Array.from(new Array(formDataLength + 1), (x, i) => i),
+				keyCounter: formDataLength + 1
 			};
 		// Would somebody tell me why 'this' is undefined in this while loop?
-		} else while (props.formData && props.formData.length >= idxsToKeys.length) {
+		} else while (props.formData && formDataLength >= idxsToKeys.length) {
 			return {
-				idxsToKeys: update(idxsToKeys, {$push: Array.from(new Array(props.formData.length - idxsToKeys.length + 1), (x,i) => keyCounter++)}),
+				idxsToKeys: update(idxsToKeys, {$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)}),
 				keyCounter: keyCounter
 			};
 		}

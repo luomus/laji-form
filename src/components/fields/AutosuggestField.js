@@ -15,8 +15,11 @@ const autosuggestSettings = {
 			const taxonID = that.props.formData.taxonID;
 			return (that.props.formData && taxonID) ?
 				(<div>
-					<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span><br />
-					<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>{!that.state.urlTxt ? <Spinner/> : null}
+					<div>
+						<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span><br />
+						<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>
+					</div>
+					{!that.state.urlTxt ? <Spinner/> : null}
 				</div>) : null
 		}
 	}

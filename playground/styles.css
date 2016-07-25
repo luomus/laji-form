@@ -3,6 +3,9 @@ body .laji-form {
 	font-size: 13px;
 }
 
+.laji-form .autosuggest-wrapper {
+	position: relative;
+}
 .laji-form .autosuggest-container {
     position: absolute;
     z-index: 1;
@@ -11,25 +14,20 @@ body .laji-form {
 .laji-form .map-array-directionless-enter {
     opacity: 0.01;
 }
-
 .laji-form .map-array-directionless-enter.map-array-directionless-enter-active {
     opacity: 1;
     transition: opacity .3s ease-in;
 }
-
 .laji-form .map-array-left-enter {
     transform: translate3d(-100%, 0, 0);
 }
-
 .laji-form .map-array-right-enter {
     transform: translate3d(100%, 0, 0);
 }
-
 .laji-form .map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
     transform: translate3d(0, 0, 0);
     transition: all 300ms;
 }
-
 .laji-form .map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
 	visibility: hidden;
 	height: 0px;
@@ -41,7 +39,6 @@ body .laji-form {
 	padding: 0px 5px;
 	height: 25px;
 }
-
 .laji-form select {
 	padding: 3px 6px;
 }
@@ -49,8 +46,7 @@ body .laji-form {
 .laji-form .form-group {
 	margin-bottom: 7px;
 }
-
-.form-inline .form-group {
+.laji-form .form-inline .form-group {
 	padding-left: 5px;
 }
 
@@ -67,14 +63,8 @@ body .laji-form {
 .laji-form label {
 	font-size: 13px;
 }
-
 .laji-form .field-description {
 	font-size: 13px;
-}
-
-.laji-form .laji-form-map {
-	z-index: 1;
-	padding-bottom: 15px;
 }
 
 .laji-form .input-meta {
@@ -98,6 +88,11 @@ body .laji-form {
 	padding: 2px 5px;
 }
 
+
+.laji-form .laji-form-map {
+	z-index: 1;
+	padding-bottom: 15px;
+}
 .laji-form .map-field .field-description {
 	padding-bottom: 15px;
 }
@@ -109,7 +104,6 @@ body .laji-form {
 	font-size: 11px;
 	padding: 5px;
 }
-
 .laji-form .btn-group .btn-danger {
 	width: 100%;
 	float: left;
@@ -132,6 +126,7 @@ body .laji-form {
 .laji-form .rc-switch-disabled .rc-switch-inner {
 	color: #9e9e9e;
 }
+
 .laji-form .dropdown-header {
 	font-size: 14px;
 	font-weight: bold;
@@ -142,24 +137,26 @@ body .laji-form {
 .laji-form .react-spinner_bar {
 	background-color: black;
 }
+.laji-form .react-spinner {
+	position: absolute;
+	left: initial;
+	top: initial;
+	float: right;
+}
 .laji-form .autosuggest-wrapper .react-spinner {
 	width: 25px;
-	left: initial;
-	float: right;
-	right: -10px;
-	bottom: 12px;
+	right: -9px;
+	bottom: -20px;
 }
 .input-meta .react-spinner {
 	width: 20px;
-	left: initial;
-	float: right;
-	bottom: 3px;
-	right: 87px;
+	bottom: -7px;
+	right: 8px;
 }
 .scope-field-additionals-container+* .react-spinner {
-	width: 16px;
-	left: initial;
-	float: right;
 	bottom: 13px;
 	right: -5px;
+	position: relative;
+	width: 25px;
+	margin-bottom: -33px;
 }
