@@ -393,7 +393,8 @@
 					},
 					"legPublic": {
 						"type": "boolean",
-						"title": "Näytetäänkö nimet julkisesti?"
+						"title": "Näytetäänkö nimet julkisesti?",
+						"default": true
 					},
 					"dateBegin": {
 						"type": "string",
@@ -581,7 +582,7 @@
 				"b",
 				"c"
 			],
-			"legPublic": false,
+			"legPublic": true,
 			"dateBegin": "2016-06-22T11:08:54.044Z"
 		},
 		"gatherings": [
