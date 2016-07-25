@@ -6,6 +6,9 @@ body .laji-form {
 .autosuggest-wrapper {
 	position: relative;
 }
+.autosuggest-wrapper input {
+	padding-right: 27px;
+}
 .autosuggest-container {
     position: absolute;
     z-index: 1;
@@ -35,12 +38,12 @@ body .laji-form {
 }
 
 input[type=text], select {
-	border-radius: 2px;
+	border-radius: 2px !important;
 	padding: 0px 5px;
-	height: 25px;
+	height: 25px !important;
 }
 select {
-	padding: 3px 6px;
+	padding: 3px 6px !important;
 }
 
 .form-group {
@@ -53,8 +56,10 @@ select {
 button {
 	height: 100%;
 	line-height: 14px;
-	border-radius: 2px;
 	white-space: normal;
+}
+button:not(.list-group-item) {
+	border-radius: 2px;
 }
 
 legend {
