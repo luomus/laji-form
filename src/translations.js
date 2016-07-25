@@ -58,5 +58,10 @@ export default {
 		fi: "valitse lisää kenttiä",
 		en: "pick more fields",
 		sv: "picka mera fielder"
+	},
+	search: {
+		fi: "etsi",
+		en: "search",
+		sv: "söka"
 	}
 }

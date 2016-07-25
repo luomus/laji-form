@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Col, Row } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
+import SearchInput, { createFilter } from "react-search-input";
 import ApiClient from "../../ApiClient";
 import Button from "../Button"
 
@@ -59,7 +60,12 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0], additionalFields: {}, additionalsOpen: false, ...this.getStateFromProps(props)};
+		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
+			additionalFields: {},
+			additionalsOpen: false,
+			searchTerm: "",
+			...this.getStateFromProps(props)};
+
 	}
 
 	componentWillReceiveProps(props) {
@@ -193,6 +199,10 @@ export default class ScopeField extends Component {
 		this.props.onChange(data);
 	}
 
+	onSearchChange = ({target: {value}}) => {
+		this.setState({searchTerm: value});
+	}
+
 	onToggleAdditionals = () => {
 		this.setState({additionalsOpen: !this.state.additionalsOpen});
 	}
@@ -203,6 +213,7 @@ export default class ScopeField extends Component {
 		let list = [];
 		if (this.state.additionalsOpen) {
 			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
+			let translationsToKeys = (this.state.additionalsGroupsTranslationsToKeys) ? this.state.additionalsGroupsTranslationsToKeys : {};
 			if (this.state.additionalsGroupsTranslations) {
 				if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
 			}
@@ -217,7 +228,12 @@ export default class ScopeField extends Component {
 				var groups = options.additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
 			}
 
-			if (groups) Object.keys(groups).forEach(groupName => {
+			let filteredGroups = Object.keys(groups);
+			if (this.state.searchTerm !== "" && Object.keys(translations).length && groups) {
+				filteredGroups = Object.keys(translationsToKeys).filter(translation => translation.toLowerCase().includes(this.state.searchTerm.toLowerCase())).map(translation => translationsToKeys[translation]);
+			}
+
+			if (filteredGroups) filteredGroups.forEach(groupName => {
 				let group = groups[groupName];
 				let groupFields = {};
 				group.fields.forEach(field => {
@@ -243,7 +259,14 @@ export default class ScopeField extends Component {
 		return (
 			<div>
 				<Button onClick={this.onToggleAdditionals}>{this.props.registry.translations.PickMoreFields}</Button>
-				{this.state.additionalsOpen ? <Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="scope-field-modal"><Modal.Body><Masonry>{list}</Masonry></Modal.Body></Modal> : null}
+				{this.state.additionalsOpen ?
+					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="scope-field-modal"><Modal.Body>
+						<div className="scope-field-search form-group has-feedback">
+							<input className="form-control" onChange={this.onSearchChange} value={this.state.searchTerm} placeholder={this.props.registry.translations.Search} />
+							<i className="glyphicon glyphicon-search form-control-feedback" />
+						</div>
+						<Masonry>{list}</Masonry>
+					</Modal.Body></Modal> : null}
 			</div>
 		);
 	}
@@ -275,12 +298,17 @@ export default class ScopeField extends Component {
 		}
 
 		let translations = {};
+		let translationsToKeys = {};
 		let translationCount = 0;
 		groups.forEach(groupName => {
 			scopeFieldSettings[this.state.additionalsGroupsTranslator].translate(groupName).then(translation => {
 				translations[groupName] = translation;
+				translationsToKeys[translation] = groupName;
 				translationCount++;
-				if (translationCount == groups.length) this.setState({additionalsGroupsTranslations: translations});
+				if (translationCount == groups.length) this.setState({
+					additionalsGroupsTranslations: translations,
+					additionalsGroupsTranslationsToKeys: translationsToKeys
+				});
 			});
 		});
 	}
