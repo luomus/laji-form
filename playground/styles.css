@@ -3,88 +3,88 @@ body .laji-form {
 	font-size: 13px;
 }
 
-.autosuggest-wrapper {
+.laji-form .autosuggest-wrapper {
 	position: relative;
 }
-.autosuggest-wrapper input {
+.laji-form .autosuggest-wrapper input {
 	padding-right: 27px;
 }
-.autosuggest-container {
+.laji-form .autosuggest-container {
     position: absolute;
     z-index: 1;
 }
 
-.map-array-directionless-enter {
+.laji-form .map-array-directionless-enter {
     opacity: 0.01;
 }
-.map-array-directionless-enter.map-array-directionless-enter-active {
+.laji-form .map-array-directionless-enter.map-array-directionless-enter-active {
     opacity: 1;
     transition: opacity .3s ease-in;
 }
-.map-array-left-enter {
+.laji-form .map-array-left-enter {
     transform: translate3d(-100%, 0, 0);
 }
-.map-array-right-enter {
+.laji-form .map-array-right-enter {
     transform: translate3d(100%, 0, 0);
 }
-.map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
+.laji-form .map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
     transform: translate3d(0, 0, 0);
     transition: all 300ms;
 }
-.map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
+.laji-form .map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
 	visibility: hidden;
 	height: 0px;
 	width: 0px;
 }
 
-input[type=text], select {
+.laji-form input[type=text], select {
 	border-radius: 2px !important;
 	padding: 0px 5px;
 	height: 25px !important;
 }
-select {
+.laji-form select {
 	padding: 3px 6px !important;
 }
 
-.form-group {
+.laji-form .form-group {
 	margin-bottom: 7px;
 }
-.form-inline .form-group {
+.laji-form .form-inline .form-group {
 	padding-left: 5px;
 }
 
-button {
+.laji-form button {
 	height: 100%;
 	line-height: 14px;
 	white-space: normal;
 }
-button:not(.list-group-item) {
+.laji-form button:not(.list-group-item) {
 	border-radius: 2px;
 }
 
-legend {
+.laji-form legend {
 	font-size: 18px;
 }
-label {
+.laji-form label {
 	font-size: 13px;
 }
-.field-description {
+.laji-form .field-description {
 	font-size: 13px;
 }
 
-.input-meta {
+.laji-form .input-meta {
 	font-size: 11px;
 }
-.input-meta button {
+.laji-form .input-meta button {
 	font-size: 11px;
 	padding: 0;
 	margin: 0;
 }
-.taxon-widget.input-meta {
+.laji-form .taxon-widget.input-meta {
 	margin-top: -7px;
 }
 
-.laji-form-help-glyph {
+.laji-form .laji-form-help-glyph {
     margin-left: 5px;
     border-radius:9px;
     color: white;
@@ -94,22 +94,22 @@ label {
 }
 
 
-.laji-form-map {
+.laji-form .laji-form-map {
 	z-index: 1;
 	padding-bottom: 15px;
 }
-.map-field .field-description {
+.laji-form .map-field .field-description {
 	padding-bottom: 15px;
 }
 
-.btn-danger {
+.laji-form .btn-danger {
 	width: auto;
 	float: right;
 	line-height: 5px;
 	font-size: 11px;
 	padding: 5px;
 }
-.btn-group .btn-danger {
+.laji-form .btn-group .btn-danger {
 	width: 100%;
 	float: left;
 	font-size: 14px;
@@ -117,22 +117,22 @@ label {
 	padding: 6px 12px;
 }
 
-.rc-switch {
+.laji-form .rc-switch {
 	width: 60px;
 }
 
-.rc-switch-checked:after {
+.laji-form .rc-switch-checked:after {
 	left: 37px;
 }
-.rc-switch-toggled-false .rc-switch-inner {
+.laji-form .rc-switch-toggled-false .rc-switch-inner {
 	right: 7px;
 	left: initial;
 }
-.rc-switch-disabled .rc-switch-inner {
+.laji-form .rc-switch-disabled .rc-switch-inner {
 	color: #9e9e9e;
 }
 
-.dropdown-header {
+.laji-form .dropdown-header {
 	font-size: 14px;
 	font-weight: bold;
 	color: black;
@@ -148,12 +148,12 @@ label {
 	top: initial;
 	float: right;
 }
-.autosuggest-wrapper .react-spinner {
+.laji-form .autosuggest-wrapper .react-spinner {
 	width: 25px;
 	right: -9px;
 	bottom: -20px;
 }
-.input-meta .react-spinner {
+.laji-form .input-meta .react-spinner {
 	width: 20px;
 	bottom: -7px;
 	right: 8px;
