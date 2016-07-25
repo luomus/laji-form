@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Glyphicon } from "react-bootstrap";
 import Button from "../Button";
 
 /**
@@ -10,6 +10,7 @@ import Button from "../Button";
  * uiSchema = {ui:options: {
  *  additionalFields: [<string>]
  *  expanderButtonText: <string>
+ *  expanderGlyph: <string> or <boolean> (If boolean and true, default glyph is used, otherwise a bootstrap glyph name must be provided"
  *  uiSchema: <uiSchema> (used for inner schema)
  * }
  *
@@ -117,19 +118,15 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	renderButton = () => {
-		if (!this.props.uiSchema || !this.props.uiSchema["ui:options"] || !this.props.uiSchema["ui:options"].additionalFields || !this.props.uiSchema["ui:options"].additionalFields.length) return null;
+		const options = this.props.uiSchema["ui:options"] ? this.props.uiSchema["ui:options"] : undefined;
+		if (!options || !options.additionalFields || !options.additionalFields.length) return null;
 
-		let expanderText = "Lisää";
-		if (this.props.uiSchema && this.props.uiSchema["ui:options"] && this.props.uiSchema["ui:options"].expanderButtonText) expanderText = this.props.uiSchema["ui:options"].expanderButtonText;
+		const text = (options && options.expanderButtonText) ? options.expanderButtonText : this.props.registry.translations.More;
 
-		return <Button onClick={this.showAdditional}>{expanderText}</Button>;
+		return <Button onClick={this.showAdditional}>{text + " ▸" }</Button>;
 	}
 
 	showAdditional = () => {
 		this.setState({showAdditional: true}, () => {this.componentWillReceiveProps(this.props)});
-	}
-
-	dontShowAdditional = () => {
-		this.setState({showAdditional: false}, () => {this.componentWillReceiveProps(this.props)});
 	}
 }

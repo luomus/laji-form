@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { Row, Col, Collapse, DropdownButton } from "react-bootstrap";
+import { Row, Col, Collapse } from "react-bootstrap";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import Button from "../Button";
 
@@ -43,7 +43,11 @@ export default class InitiallyHiddenField extends Component {
 		return (
 			<div>
 				<Collapse in={!shouldShow}>
-					<Row><Col xs={2} xsOffset={10}><Button style={{whiteSpace: "nowrap"}}onClick={this.toggleVisibility}>{this.props.schema.title || this.props.name} <span className="caret" /></Button></Col></Row>
+					<Row><Col xs={2} xsOffset={10}>
+						<Button style={{whiteSpace: "nowrap"}} onClick={this.toggleVisibility}>
+							{this.props.schema.title || this.props.name} <span className="caret" />
+						</Button>
+					</Col></Row>
 				</Collapse>
 				<Collapse in={shouldShow}>
 					<div>

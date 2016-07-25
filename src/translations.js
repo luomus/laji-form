@@ -63,5 +63,11 @@ export default {
 		fi: "etsi",
 		en: "search",
 		sv: "söka"
-	}
+	},
+	more: {
+		fi: "lisää",
+		en: "more",
+		sv: "mera"
+	},
+
 }

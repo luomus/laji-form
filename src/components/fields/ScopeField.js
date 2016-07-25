@@ -6,7 +6,7 @@ import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import SearchInput, { createFilter } from "react-search-input";
 import ApiClient from "../../ApiClient";
-import Button from "../Button"
+import Button from "../Button";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -258,7 +258,7 @@ export default class ScopeField extends Component {
 
 		return (
 			<div>
-				<Button onClick={this.onToggleAdditionals}>{this.props.registry.translations.PickMoreFields}</Button>
+				<Button onClick={this.onToggleAdditionals}><Glyphicon glyph="cog" /> {this.props.registry.translations.PickMoreFields}</Button>
 				{this.state.additionalsOpen ?
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="scope-field-modal"><Modal.Body>
 						<div className="scope-field-search form-group has-feedback">
