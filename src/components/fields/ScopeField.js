@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, DropdownButton, MenuItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Col, Row } from "react-bootstrap";
 import Spinner from "react-spinner";
+import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import Button from "../Button"
 
@@ -220,26 +221,31 @@ export default class ScopeField extends Component {
 				let group = groups[groupName];
 				let groupFields = {};
 				group.fields.forEach(field => {
-					if (additionalProperties[field]) groupFields[field] = additionalProperties[field]
+					if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
 				});
 				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
 				if (groupsList.length) {
-					list.push(<div key={groupName}>
-						<MenuItem header>{translations[groupName] !== undefined ? translations[groupName] : groupName}</MenuItem>
-						{translations[groupName] !== undefined ? null : <Spinner />}</div>);
-					list.push(...groupsList);
+					list.push(
+						<div key={groupName} className="scope-field-modal-item">
+							<div>
+								<span header>{translations[groupName] !== undefined ? translations[groupName] : groupName}</span>
+								{translations[groupName] !== undefined ? null : <Spinner />}
+							</div>
+							<ListGroup key={groupName + "-list"}>{groupsList}</ListGroup>
+						</div>
+					);
 				}
 			}); else {
 				list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
 			}
 		}
 
-		return <DropdownButton
-			id={this.props.idSchema.$id + "_dropdown"}
-			className="scope-field-additionals-container"
-			title={this.props.registry.translations.PickMoreFields}
-			onToggle={this.onToggleAdditionals}
-			bsStyle="info">{list}</DropdownButton>;
+		return (
+			<div>
+				<Button onClick={this.onToggleAdditionals}>{this.props.registry.translations.PickMoreFields}</Button>
+				{this.state.additionalsOpen ? <Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="scope-field-modal"><Modal.Body><Masonry>{list}</Masonry></Modal.Body></Modal> : null}
+			</div>
+		);
 	}
 
 	addAdditionalPropertiesToList = (properties, list, keyPrefix) => {
@@ -249,15 +255,15 @@ export default class ScopeField extends Component {
 
 		Object.keys(properties).sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1}).forEach(property => {
 			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
-			list.push(<MenuItem
-				key={keyPrefix + property}
+			list.push(<ListGroupItem
+				key={property}
 				active={!!isIncluded}
 				onClick={() => {
 						additionalFields[property] = !isIncluded;
 						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });
 					}}>
 				{properties[property].title || property}
-			</MenuItem>)
+			</ListGroupItem>)
 		});
 		return list;
 	}

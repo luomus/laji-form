@@ -134,16 +134,16 @@ body .laji-form {
 	text-decoration: underline;
 }
 
-.laji-form .react-spinner_bar {
+.react-spinner_bar {
 	background-color: black;
 }
-.laji-form .react-spinner {
+.react-spinner {
 	position: absolute;
 	left: initial;
 	top: initial;
 	float: right;
 }
-.laji-form .autosuggest-wrapper .react-spinner {
+.autosuggest-wrapper .react-spinner {
 	width: 25px;
 	right: -9px;
 	bottom: -20px;
@@ -153,10 +153,20 @@ body .laji-form {
 	bottom: -7px;
 	right: 8px;
 }
-.scope-field-additionals-container+* .react-spinner {
-	bottom: 13px;
+.scope-field-modal-item .react-spinner {
 	right: -5px;
-	position: relative;
 	width: 25px;
-	margin-bottom: -33px;
+	top: 14px;
+}
+
+.scope-field-modal-item {
+	width: 130px;
+	padding: 5px;
+}
+.scope-field-modal-item .list-group-item {
+	height: 8px;
+	line-height: 0px;
+}
+.scope-field-modal-item span {
+	font-weight: bold;
 }

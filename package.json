@@ -38,6 +38,7 @@
     "react-bootstrap": "*",
     "react-dom": "*",
     "react-jsonschema-form": "0.38",
+    "react-masonry-component": "^4.2.1",
     "react-spinner": "^0.2.6",
     "react-widgets": "*",
     "webpack": "*"
