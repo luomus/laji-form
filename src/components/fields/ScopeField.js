@@ -4,7 +4,6 @@ import merge from "deepmerge";
 import { ListGroup, ListGroupItem, Modal, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
-import SearchInput, { createFilter } from "react-search-input";
 import ApiClient from "../../ApiClient";
 import Button from "../Button";
 
