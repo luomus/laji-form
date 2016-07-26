@@ -678,6 +678,12 @@
 						"recordBasis": "preservedSpecimen",
 						"notes": "Muistiinpanot",
 						"alive": true
+					},
+					{
+						"informalNameString": "susi",
+						"recordBasis": "preservedSpecimen",
+						"notes": "Muistiinpanot",
+						"alive": true
 					}
 				],
 				"dateBegin": "2016-05-12:08:54.044Z",

@@ -15,14 +15,17 @@ const autosuggestSettings = {
 			}
 			return text;
 		},
-		convertInputValue: that => {
-			return new Promise((resolve) => {resolve(that.state.options.parentData.informalNameString)});
-		},
+		renderUnsuggestedMetaInfo: that => {
+			return <span className="text-danger">{that.props.registry.translations.UnknownSpeciesName}</span>
+		}
 	},
 	friends: {
 		includePayload: false,
 		renderSuggestion: suggestion => {
 			return suggestion.value;
+		},
+		renderUnsuggestedMetaInfo: that => {
+			return <span className="text-danger">{that.props.registry.translations.UnknownName}</span>
 		},
 		convertInputValue: that => {
 			let inputValue = that.props.value;
@@ -33,21 +36,21 @@ const autosuggestSettings = {
 	}
 }
 
-/**
- * uischema = {"ui:options": {
- *  autosuggestField: <string> (field name which is used for api call. The suggestions renderer method is also defined by autosuggestField)
- *  suggestionInputField: <fieldName> (the field which uses autosuggest input)
- *  suggestionReceivers: {
- *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
- *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
- *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "payload.informalgroups.0}
- *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
- * }
- */
 export default class AutoSuggestWidget extends Component {
+	static propTypes = {
+		options: PropTypes.shape({
+			autosuggestField: PropTypes.string.isRequired,
+			allowNonsuggestedValue: PropTypes.boolean,
+			onSuggestionSelected: PropTypes.function,
+			onConfirmUnsuggested: PropTypes.function,
+			onInputChange: PropTypes.function,
+			uiSchema: PropTypes.object
+		}).isRequired
+	}
+
 	constructor(props) {
 		super(props);
-		this.state = {isLoading: false, suggestions: [], ...this.getStateFromProps(props)};
+		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
 	}
 
@@ -69,6 +72,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	triggerConvert = (props) => {
+		if (props.value === undefined || props.value === "") return;
 		const convert = this.state.autosuggestSettings.convertInputValue;
 		if ((this.state.inputValue !== props.value) && convert) {
 			let origValue = props.value;
@@ -80,9 +84,12 @@ export default class AutoSuggestWidget extends Component {
 				})
 				.catch( () => {
 					if (!this.mounted) return;
-					this.setState({inputValue: undefined, origValue: undefined, isLoading: false});
+					this.setState({inputValue: undefined, origValue: undefined, isLoading: false, unsuggested: true});
 				});
+		} else if (this.props.options.isValueSuggested) {
+			if (!this.props.options.isValueSuggested()) this.setState({unsuggested: true});
 		}
+		
 	}
 
 	getSuggestionValue = (suggestion) => {
@@ -118,13 +125,14 @@ export default class AutoSuggestWidget extends Component {
 
 	onSuggestionSelected = (e, {suggestion}) => {
 		e.preventDefault();
+		let state = {inputInProgress: false, unsuggested: false};
 		if (this.props.options.onSuggestionSelected) {
-			this.setState({inputInProgress: false});
 			this.props.options.onSuggestionSelected(suggestion);
 		} else {
-			this.setState({inputValue: suggestion.value, inputInProgress: false});
+			state.inputValue = suggestion.value;
 			this.props.onChange(suggestion.key);
 		}
+		this.setState(state)
 	}
 
 	onInputChange = (value) => {
@@ -147,8 +155,12 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onConfirmUnsuggested = () => {
-		this.setState({inputInProgress: false});
-		this.props.onChange(this.state.inputValue);
+		this.setState({inputInProgress: false, unsuggested: true});
+		if (this.props.options.onConfirmUnsuggested) {
+			this.props.options.onConfirmUnsuggested(this.state.inputValue);
+		} else {
+			this.props.onChange(this.state.inputValue);
+		}
 	}
 
 	render() {
@@ -177,7 +189,6 @@ export default class AutoSuggestWidget extends Component {
 			suggestionFocused: "list-group-item active"
 		};
 
-		const translations = this.props.registry.translations;
 		return (
 			<div>
 				<div className="autosuggest-wrapper">
@@ -194,14 +205,29 @@ export default class AutoSuggestWidget extends Component {
 					/>
 					{isLoading ? <Spinner /> : null }
 				</div>
-				<InputMetaInfo>{
-					(this.state.inputInProgress) ?
-						(<div className="text-danger">
-							<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
-						</div>) : (this.props.options.onRenderMetaInfo) ? this.props.options.onRenderMetaInfo() : null
-				}</InputMetaInfo>
+				<InputMetaInfo>{this.renderMetaInfo()}</InputMetaInfo>
 			</div>
 		);
+	}
+
+	renderMetaInfo = () => {
+		if (this.state.inputInProgress) {
+			const translations = this.props.registry.translations;
+			return (
+				<div className="text-danger">
+					<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
+				</div>
+			);
+		} else if (this.state.unsuggested && this.props.options.onRenderUnsuggestedMetaInfo) {
+			return this.props.options.onRenderUnsuggestedMetaInfo();
+		} else if (this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
+			return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this);
+		} else if (this.props.options.onRenderMetaInfo) {
+			return this.props.options.onRenderMetaInfo();
+		} else if (this.state.autosuggestSettings.renderMetaInfo) {
+			return this.state.autosuggestSettings.renderMetaInfo(this);
+		}
+		return null;
 	}
 }
 

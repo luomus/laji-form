@@ -9,24 +9,27 @@ const suggestionParsers = {
 		return suggestion.payload.informalTaxonGroups.map(item => item.id);
 	}
 }
+
 const autosuggestSettings = {
 	taxon: {
 		renderMetaInfo: that => {
 			const taxonID = that.props.formData.taxonID;
 			return (that.props.formData && taxonID) ?
-				(<div>
+				(
 					<div>
-						<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span><br />
-						<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>
+						<div>
+							<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span><br />
+							<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{(that.state.urlTxt || taxonID)}</a>
+						</div>
+						{!that.state.urlTxt ? <Spinner/> : null}
 					</div>
-					{!that.state.urlTxt ? <Spinner/> : null}
-				</div>) : null
+				) : null
 		}
 	}
 }
 
 /**
- * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutoSuggestWidget.
+ * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutosuggestWidget.
  *
  * uischema = {"ui:options": {
  *  autosuggestField: <string> (field name which is used for api call. The suggestions renderer method is also defined by autosuggestField)
@@ -40,6 +43,22 @@ const autosuggestSettings = {
  * }
  */
 export default class AutosuggestField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				autosuggestField: PropTypes.string.isRequired,
+				suggestionInputField: PropTypes.string.isRequired,
+				allowNonsuggestedValue: PropTypes.boolean,
+				suggestionReceivers: PropTypes.object.isRequired,
+				inputTransformer: PropTypes.shape({
+					regexp: PropTypes.string.isRequired,
+					transformations: PropTypes.object.isRequired
+				}),
+				uiSchema: PropTypes.object
+			}).isRequired
+		}).isRequired
+	}
+	
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -53,8 +72,10 @@ export default class AutosuggestField extends Component {
 		let {schema} = props;
 		let propsUiSchema = props.uiSchema;
 		let options = propsUiSchema["ui:options"];
-		options = update(options, {$merge: {onSuggestionSelected: this.onSuggestionSelected, onInputChange: this.onInputChange}});
-		if (autosuggestSettings[options.autosuggestField]) options = update(options, {$merge: {onRenderMetaInfo: this.onRenderMetaInfo}});
+		options = update(options, {$merge: {onSuggestionSelected: this.onSuggestionSelected, onConfirmUnsuggested: this.onConfirmUnsuggested, onInputChange: this.onInputChange, isValueSuggested: this.isValueSuggested}});
+		if (autosuggestSettings[options.autosuggestField]) {
+			if (autosuggestSettings[options.autosuggestField].renderMetaInfo) options = update(options, {$merge: {onRenderMetaInfo: this.onRenderMetaInfo}});
+		}
 
 		let uiSchema = options.uiSchema || {};
 		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:widget": {component: "autosuggest", options: options}}}});
@@ -88,6 +109,16 @@ export default class AutosuggestField extends Component {
 		this.props.onChange(formData);
 	}
 
+	onConfirmUnsuggested = (value) => {
+		let formData = this.props.formData;
+		const options = this.props.uiSchema["ui:options"];
+		Object.keys(this.props.uiSchema["ui:options"].suggestionReceivers).forEach(fieldName => {
+			formData = update(formData, {$merge: {[fieldName]: undefined}});
+		})
+		formData = update(formData, {$merge: {[options.suggestionInputField]: value}});
+		this.props.onChange(formData);
+	}
+
 	onInputChange = (value) => {
 		let {formData} = this.props;
 		const options = this.props.uiSchema["ui:options"];
@@ -110,6 +141,13 @@ export default class AutosuggestField extends Component {
 
 	onRenderMetaInfo = () => {
 		return autosuggestSettings[this.props.uiSchema["ui:options"].autosuggestField].renderMetaInfo(this);
+	}
+
+	isValueSuggested = () => {
+		for (let fieldName in this.props.uiSchema["ui:options"].suggestionReceivers) {
+			if (!this.props.formData || !this.props.formData[fieldName]) return false;
+		}
+		return true;
 	}
 
 	render() {

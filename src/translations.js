@@ -39,6 +39,16 @@ export default {
 		en: "known name",
 		sv: "vetade namet"
 	},
+	unknownSpeciesName: {
+		fi: "tuntematon nimi",
+		en: "unknown name",
+		sv: "inte vetade namet"
+	},
+	unknownName: {
+		fi: "ei tunnettu nimi",
+		en: "not known name",
+		sv: "inte vetade namet"
+	},
 	fix: {
 		fi: "korjaa",
 		en: "fix",
