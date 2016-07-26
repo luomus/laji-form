@@ -15,7 +15,14 @@ function CheckboxWidget(props) {
 		registry
 	} = props;
 
-	return (<div className={disabled ? "disabled" : ""}><Label {...props}>
+	function onKeyDown(e) {
+		if (e.key === " ") {
+			onChange(!value);
+			e.preventDefault();
+		}
+	}
+
+	return (<div className={disabled ? "disabled" : ""} onKeyDown={onKeyDown}><Label {...props}>
 		<Switch
 		       id={id}
 		       className={"rc-switch-toggled-" + !!value}
