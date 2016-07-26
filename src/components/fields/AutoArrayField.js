@@ -73,7 +73,7 @@ export default class AutoArrayField extends Component {
 							errorSchema={this.props.errorSchema[idx]} />
 					</Col>
 					{removable ? (<Col xs={2}>
-						<Button type="danger"
+						<Button buttonType="danger"
 						        classList={["col-xs-12"]}
 						        onClick={this.onRemove(idx)}>✖</Button>
 					</Col>) : undefined}

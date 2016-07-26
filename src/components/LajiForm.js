@@ -40,6 +40,11 @@ import translations from "../translations.js";
 
 const log = (type) => console.log.bind(console, type);
 
+const enterPreventTypes = {
+	text: true,
+	undefined: true,
+};
+
 export default class LajiForm extends Component {
 	constructor(props) {
 		super(props);
@@ -63,56 +68,62 @@ export default class LajiForm extends Component {
 		return dictionaries;
 	}
 
+	onKeyDown = (event) => {
+		const type = event.target.type;
+		if (event.key === "Enter" && enterPreventTypes[type]) event.preventDefault();
+	}
 
 
 	render() {
 		return  (
-			<Form
-				{...this.props}
-				registry={{
-					fields: {
-						SchemaField: SchemaField,
-						ArrayField: ArrayField,
-						BooleanField: BooleanField,
-						StringField: StringField,
-						nested: NestField,
-						unitTripreport: ArrayBulkField,
-						bulkArray: ArrayBulkField,
-						scoped: ScopeField,
-						tree: SelectTreeField,
-						horizontal: GridLayoutField,
-						grid: GridLayoutField,
-						table: TableField,
-						inject: InjectField,
-						injectDefaultValue: InjectDefaultValueField,
-						expandable: AdditionalsExpanderField,
-						arrayCombiner: ArrayCombinerField,
-						dependentBoolean: DependentBooleanField,
-						dependentDisable: DependentDisableField,
-						mapArray: MapArrayField,
-						autoArray: AutoArrayField,
-						copyValuesArray: CopyValuesArrayField,
-						autosuggest: AutosuggestField,
-						hidden: HiddenField,
-						initiallyHidden: InitiallyHiddenField,
-						inputTransform: InputTransformerField,
-						injectFromContext: ContextInjectionField
-					},
-					widgets: {
-						CheckboxWidget: CheckboxWidget,
-						dateTime: DateTimeWidget, date: DateWidget,
-						time: TimeWidget,
-						separatedDateTime: SeparatedDateTimeWidget,
-						autosuggest: AutosuggestWidget,
-						hidden: HiddenWidget
-					},
-					translations: this.translations[this.props.lang],
-					lang: this.props.lang,
-					uiSchemaContext: this.props.uiSchemaContext
-				}}
-				onError={log("errors")} >
-				<Button classList={["btn-info"]} type="submit">{this.translations[this.props.lang].Submit}</Button>
-				</Form>
+			<div onKeyDown={this.onKeyDown}>
+				<Form
+					{...this.props}
+					registry={{
+						fields: {
+							SchemaField: SchemaField,
+							ArrayField: ArrayField,
+							BooleanField: BooleanField,
+							StringField: StringField,
+							nested: NestField,
+							unitTripreport: ArrayBulkField,
+							bulkArray: ArrayBulkField,
+							scoped: ScopeField,
+							tree: SelectTreeField,
+							horizontal: GridLayoutField,
+							grid: GridLayoutField,
+							table: TableField,
+							inject: InjectField,
+							injectDefaultValue: InjectDefaultValueField,
+							expandable: AdditionalsExpanderField,
+							arrayCombiner: ArrayCombinerField,
+							dependentBoolean: DependentBooleanField,
+							dependentDisable: DependentDisableField,
+							mapArray: MapArrayField,
+							autoArray: AutoArrayField,
+							copyValuesArray: CopyValuesArrayField,
+							autosuggest: AutosuggestField,
+							hidden: HiddenField,
+							initiallyHidden: InitiallyHiddenField,
+							inputTransform: InputTransformerField,
+							injectFromContext: ContextInjectionField
+						},
+						widgets: {
+							CheckboxWidget: CheckboxWidget,
+							dateTime: DateTimeWidget, date: DateWidget,
+							time: TimeWidget,
+							separatedDateTime: SeparatedDateTimeWidget,
+							autosuggest: AutosuggestWidget,
+							hidden: HiddenWidget
+						},
+						translations: this.translations[this.props.lang],
+						lang: this.props.lang,
+						uiSchemaContext: this.props.uiSchemaContext
+					}}
+					onError={log("errors")} >
+					<Button type="submit" classList={["btn-info"]}>{this.translations[this.props.lang].Submit}</Button>
+					</Form>
+				</div>
 		)
 	}
 }

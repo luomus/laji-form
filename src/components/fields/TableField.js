@@ -83,7 +83,7 @@ export default class TableField extends Component {
 					idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
 					registry={this.props.registry}
 					errorSchema={this.props.errorSchema[idx]} /></Col>
-				<Col xs={2}>{isAdditional ? <Button type="danger" classList={["col-xs-12"]} onClick={ e => { e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
+				<Col xs={2}>{isAdditional ? <Button buttonType="danger" classList={["col-xs-12"]} onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
 			</Row>)
 		});
 
