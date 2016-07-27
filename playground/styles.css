@@ -123,6 +123,11 @@ body .laji-form {
 	padding: 6px 12px;
 }
 
+.laji-form label strong:not(:empty)+.rc-switch {
+	display: table;
+	margin-top: 4px;
+}
+
 .laji-form .rc-switch {
 	width: 60px;
 }
