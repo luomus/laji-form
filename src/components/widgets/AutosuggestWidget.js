@@ -119,9 +119,7 @@ export default class AutoSuggestWidget extends Component {
 				.then( suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
-						if (!this.selectUnambigiousIfBlurred(suggestions)) {
-							state.suggestions = suggestions;
-						}
+						if (this.state.focused || (!this.state.focused && !this.selectUnambigious(suggestions))) state.suggestions = suggestions;
 						this.setState(state);
 						this.promiseTimestamp = undefined;
 					}
@@ -145,8 +143,8 @@ export default class AutoSuggestWidget extends Component {
 		this.setState(state)
 	}
 
-	selectUnambigiousIfBlurred = (suggestions) => {
-		if (!this.state.focused && suggestions && suggestions.length === 1 && suggestions[0].value === this.state.inputValue) {
+	selectUnambigious = (suggestions) => {
+		if (suggestions && suggestions.length === 1 && suggestions[0].value === this.state.inputValue) {
 			this.selectSuggestion(suggestions[0]);
 			return true;
 		}
@@ -171,7 +169,7 @@ export default class AutoSuggestWidget extends Component {
 
 	onBlur = () => {
 		this.setState({focused: false}, () => {
-			this.selectUnambigiousIfBlurred(this.state.suggestions);
+			this.selectUnambigious(this.state.suggestions);
 		});
 	}
 
@@ -186,6 +184,11 @@ export default class AutoSuggestWidget extends Component {
 		} else {
 			this.props.onChange(this.state.inputValue);
 		}
+	}
+
+	onKeyDown = (event) => {
+		const {suggestions} = this.state;
+		if (event.key === "Enter" && suggestions && suggestions.length === 1) this.selectUnambigious(suggestions);
 	}
 
 	render() {
@@ -203,7 +206,9 @@ export default class AutoSuggestWidget extends Component {
 			},
 			onFocus: this.onFocus,
 			onBlur: this.onBlur,
-			readOnly: readonly};
+			readOnly: readonly,
+			onKeyDown: this.onKeyDown
+		};
 
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
 
