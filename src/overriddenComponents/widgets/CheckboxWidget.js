@@ -16,9 +16,9 @@ function CheckboxWidget(props) {
 	} = props;
 
 	function onKeyDown(e) {
-		if (e.key === " ") {
-			onChange(!value);
+		if (!disabled && e.key === " ") {
 			e.preventDefault();
+			onChange(!value);
 		}
 	}
 
