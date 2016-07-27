@@ -211,21 +211,24 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	renderMetaInfo = () => {
-		if (this.state.inputInProgress) {
+		if (this.state.inputInProgress && !this.state.focused) {
 			const translations = this.props.registry.translations;
 			return (
 				<div className="text-danger">
-					<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
+					<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button
+					bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
 				</div>
 			);
-		} else if (this.state.unsuggested && this.props.options.onRenderUnsuggestedMetaInfo) {
-			return this.props.options.onRenderUnsuggestedMetaInfo();
-		} else if (this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
-			return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this);
-		} else if (this.props.options.onRenderMetaInfo) {
-			return this.props.options.onRenderMetaInfo();
-		} else if (this.state.autosuggestSettings.renderMetaInfo) {
-			return this.state.autosuggestSettings.renderMetaInfo(this);
+		} else if (!this.state.inputInProgress) {
+			if (this.state.unsuggested && this.props.options.onRenderUnsuggestedMetaInfo) {
+				return this.props.options.onRenderUnsuggestedMetaInfo();
+			} else if (this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
+				return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this);
+			} else if (this.props.options.onRenderMetaInfo) {
+				return this.props.options.onRenderMetaInfo();
+			} else if (this.state.autosuggestSettings.renderMetaInfo) {
+				return this.state.autosuggestSettings.renderMetaInfo(this);
+			}
 		}
 		return null;
 	}
