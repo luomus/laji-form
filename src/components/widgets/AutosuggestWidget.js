@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import InputMetaInfo from "../InputMetaInfo";
-import { Button } from "react-bootstrap";
+import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner"
 
 const autosuggestSettings = {
@@ -17,6 +17,14 @@ const autosuggestSettings = {
 		},
 		renderUnsuggestedMetaInfo: that => {
 			return <span className="text-danger">{that.props.registry.translations.UnknownSpeciesName}</span>
+		},
+		renderMetaInfoListItemAdditional: (that, suggestion) => {
+			const tooltipElem = <Tooltip id={suggestion.key + "-tooltip"}>{that.props.registry.translations.openSpeciedCard}</Tooltip>;
+			return (
+				<OverlayTrigger overlay={tooltipElem}>
+					<a href={"http://tun.fi/" + suggestion.key + "?locale=" + that.props.registry.lang} target="_blank">({suggestion.payload.scientificName})</a>
+				</OverlayTrigger>
+			);
 		}
 	},
 	friends: {
@@ -109,8 +117,12 @@ export default class AutoSuggestWidget extends Component {
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetch("/autocomplete/" + this.props.options.autosuggestField, {q: suggestionValue.value, includePayload: this.state.autosuggestSettings.includePayload})
 				.then( suggestions => {
+					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
-						this.setState({suggestions, isLoading: false});
+						if (!this.selectUnambigiousIfBlurred(suggestions)) {
+							state.suggestions = suggestions;
+						}
+						this.setState(state);
 						this.promiseTimestamp = undefined;
 					}
 				})
@@ -123,23 +135,34 @@ export default class AutoSuggestWidget extends Component {
 		})();
 	}
 
-	onSuggestionSelected = (e, {suggestion}) => {
-		e.preventDefault();
-		let state = {inputInProgress: false, unsuggested: false};
+	selectSuggestion = (suggestion) => {
+		let state = {inputInProgress: false, unsuggested: false, inputValue: suggestion.value};
 		if (this.props.options.onSuggestionSelected) {
 			this.props.options.onSuggestionSelected(suggestion);
 		} else {
-			state.inputValue = suggestion.value;
 			this.props.onChange(suggestion.key);
 		}
 		this.setState(state)
+	}
+
+	selectUnambigiousIfBlurred = (suggestions) => {
+		if (!this.state.focused && suggestions && suggestions.length === 1 && suggestions[0].value === this.state.inputValue) {
+			this.selectSuggestion(suggestions[0]);
+			return true;
+		}
+		return false;
+	}
+
+	onSuggestionSelected = (e, {suggestion}) => {
+		e.preventDefault();
+		this.selectSuggestion(suggestion);
 	}
 
 	onInputChange = (value) => {
 		if (this.props.options.onInputChange) {
 			value = this.props.options.onInputChange(value);
 		}
-		if (value !== this.props.value) this.setState({inputValue: value, inputInProgress: true});
+		if (value !== this.state.inputValue) this.setState({inputValue: value, inputInProgress: true});
 	}
 
 	onFocus =  () => {
@@ -147,7 +170,9 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onBlur = () => {
-		this.setState({focused: false});
+		this.setState({focused: false}, () => {
+			this.selectUnambigiousIfBlurred(this.state.suggestions);
+		});
 	}
 
 	onFix = () => {
@@ -212,13 +237,7 @@ export default class AutoSuggestWidget extends Component {
 
 	renderMetaInfo = () => {
 		if (this.state.inputInProgress && !this.state.focused) {
-			const translations = this.props.registry.translations;
-			return (
-				<div className="text-danger">
-					<Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button> <span>{translations.or}</span> <Button
-					bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.continue}</Button>
-				</div>
-			);
+			return this.renderInprogressMetaInfo();
 		} else if (!this.state.inputInProgress) {
 			if (this.state.unsuggested && this.props.options.onRenderUnsuggestedMetaInfo) {
 				return this.props.options.onRenderUnsuggestedMetaInfo();
@@ -231,6 +250,32 @@ export default class AutoSuggestWidget extends Component {
 			}
 		}
 		return null;
+	}
+
+	renderInprogressMetaInfo = () => {
+		if (this.state.isLoading) return null;
+
+		const translations = this.props.registry.translations;
+
+		const suggestionsList = (this.state.suggestions && this.state.suggestions.length) ?
+			(
+				<ul>
+					{this.state.suggestions.map(suggestion =>
+							<li key={suggestion.key} >
+								<Button bsStyle="link" onClick={() => this.selectSuggestion(suggestion)}>{suggestion.value}</Button>
+								 {this.state.autosuggestSettings.renderMetaInfoListItemAdditional ? <span> {this.state.autosuggestSettings.renderMetaInfoListItemAdditional(this, suggestion)}</span> : null}
+							</li>)
+					}
+				</ul>
+			) : null;
+		const fixButton = <Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button>;
+		const continueButton = <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.useUnknownName}</Button>;
+		return (
+			<div className="text-danger">
+				{suggestionsList ? translations.PickOneOfTheFollowing : fixButton} <span>{translations.or}</span> {continueButton}
+				{suggestionsList}
+			</div>
+		);
 	}
 }
 

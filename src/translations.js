@@ -59,10 +59,10 @@ export default {
 		en: "or",
 		sv: "eller"
 	},
-	continue: {
-		fi: "jatka",
-		en: "continue",
-		sv: "fortsätta"
+	useUnknownName: {
+		fi: "käytä tuntematonta nimeä",
+		en: "use unknown name",
+		sv: "jag pratar inte svenska så bra"
 	},
 	pickMoreFields: {
 		fi: "valitse lisää kenttiä",
@@ -79,5 +79,15 @@ export default {
 		en: "more",
 		sv: "mera"
 	},
+	pickOneOfTheFollowing: {
+		fi: "valitse yksi seuraavista",
+		en: "pick one of the following",
+		sv: "picka en av den här"
+	},
+	openSpeciedCard: {
+		fi: "avaa lajikortti",
+		en: "open taxon information",
+		sv: "öppna artkort"
+	}
 
 }

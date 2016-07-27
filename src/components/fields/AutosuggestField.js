@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 
@@ -14,12 +15,16 @@ const autosuggestSettings = {
 	taxon: {
 		renderMetaInfo: that => {
 			const taxonID = that.props.formData.taxonID;
+			const tooltipElem = <Tooltip id={taxonID + "-tooltip"}>{that.props.registry.translations.openSpeciedCard}</Tooltip>;
 			return (that.props.formData && taxonID) ?
 				(
 					<div>
 						<div className="meta-info-taxon">
 							<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span>
-							{that.state.urlTxt ? <div><a href={"http://tun.fi" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{that.state.urlTxt}</a></div> : <Spinner />}
+							{that.state.urlTxt ?
+								<div><OverlayTrigger overlay={tooltipElem}>
+									<a href={"http://tun.fi/" + taxonID + "?locale=" + that.props.registry.lang} target="_blank">{that.state.urlTxt}</a>
+								</OverlayTrigger></div> : <Spinner />}
 						</div>
 					</div>
 				) : null
