@@ -166,6 +166,7 @@ export default class ScopeField extends Component {
 		if (additionalFields) {
 			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
 				fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
+				if (this.props.schema.properties[property].type === "boolean") fieldsToShow[property].default = true;
 			});
 		}
 
