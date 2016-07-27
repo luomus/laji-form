@@ -256,7 +256,7 @@ export default class ScopeField extends Component {
 			<div>
 				<Button onClick={this.onToggleAdditionals}><Glyphicon glyph="cog" /> {this.props.registry.translations.PickMoreFields}</Button>
 				{this.state.additionalsOpen ?
-					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="scope-field-modal"><Modal.Body>
+					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal"><Modal.Body>
 						<div className="scope-field-search form-group has-feedback">
 							<input className="form-control" onChange={this.onSearchChange} value={this.state.searchTerm} placeholder={this.props.registry.translations.Search} />
 							<i className="glyphicon glyphicon-search form-control-feedback" />

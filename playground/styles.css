@@ -83,10 +83,10 @@ body .laji-form {
 .laji-form .taxon-widget.input-meta {
 	margin-top: -7px;
 }
-.meta-info-taxon {
+.laji-form .meta-info-taxon {
 	display: inline-block;
 }
-.input-meta ul {
+.laji-form .input-meta ul {
 	padding-left: 15px;
 }
 
@@ -150,10 +150,10 @@ body .laji-form {
 	text-decoration: underline;
 }
 
-.react-spinner_bar {
+.laji-form .react-spinner_bar {
 	background-color: black;
 }
-.react-spinner {
+.laji-form .react-spinner {
 	position: absolute;
 	left: initial;
 	top: initial;
@@ -171,7 +171,7 @@ body .laji-form {
 	position: relative;
 }
 
-.scope-field-modal-item .react-spinner {
+.laji-form .scope-field-modal-item .react-spinner {
 	left: 50%;
 	width: 25px;
 	top: 20px;
@@ -179,18 +179,18 @@ body .laji-form {
 	position: relative;
 }
 
-.scope-field-modal-item {
+.laji-form .scope-field-modal-item {
 	width: 130px;
 	padding: 5px;
 }
-.scope-field-modal-item .list-group-item {
+.laji-form .scope-field-modal-item .list-group-item {
 	height: 8px;
 	line-height: 0px;
 }
-.scope-field-modal-item span {
+.laji-form .scope-field-modal-item span {
 	font-weight: bold;
 }
-.scope-field-search {
+.laji-form .scope-field-search {
 	width: 40%;
 	display: block;
 	margin: auto;
