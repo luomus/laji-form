@@ -242,10 +242,7 @@ export default class ScopeField extends Component {
 				if (groupsList.length) {
 					list.push(
 						<div key={groupName} className="scope-field-modal-item">
-							<div>
-								<span header>{translations[groupName] !== undefined ? translations[groupName] : groupName}</span>
-								{translations[groupName] !== undefined ? null : <Spinner />}
-							</div>
+							{translations[groupName] !== undefined ? <span header>{translations[groupName]}</span> : <Spinner />}
 							<ListGroup key={groupName + "-list"}>{groupsList}</ListGroup>
 						</div>
 					);

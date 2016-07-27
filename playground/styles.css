@@ -155,13 +155,22 @@ body .laji-form {
 }
 .laji-form .input-meta .react-spinner {
 	width: 20px;
-	bottom: -7px;
-	right: 8px;
+	left: 11px;
+	top: 10px;
+	position: relative;
 }
+
+.meta-info-taxon {
+	display: inline-block;
+}
+
+
 .scope-field-modal-item .react-spinner {
-	right: -5px;
+	left: 50%;
 	width: 25px;
-	top: 14px;
+	top: 20px;
+	float: none;
+	position: relative;
 }
 
 .scope-field-modal-item {
