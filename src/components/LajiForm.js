@@ -50,6 +50,15 @@ export default class LajiForm extends Component {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
+		this.state = this.getStateFromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps = (props) => {
+		return {translations: this.translations[props.lang]};
 	}
 
 	constructTranslations = () => {
@@ -73,12 +82,17 @@ export default class LajiForm extends Component {
 		if (event.key === "Enter" && enterPreventTypes[type]) event.preventDefault();
 	}
 
+	onChange = ({formData}) => {
+		this.props.onChange(formData);
+	}
 
 	render() {
+		const {translations} = this.state;
 		return  (
 			<div onKeyDown={this.onKeyDown}>
 				<Form
 					{...this.props}
+					onChange={this.onChange}
 					registry={{
 						fields: {
 							SchemaField: SchemaField,
@@ -116,12 +130,12 @@ export default class LajiForm extends Component {
 							autosuggest: AutosuggestWidget,
 							hidden: HiddenWidget
 						},
-						translations: this.translations[this.props.lang],
+						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext
 					}}
 					onError={log("errors")} >
-					<Button type="submit" classList={["btn-info"]}>{this.translations[this.props.lang].Submit}</Button>
+					<Button type="submit" classList={["btn-info"]}>{translations.Submit}</Button>
 					</Form>
 				</div>
 		)

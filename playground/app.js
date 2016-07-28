@@ -26,6 +26,10 @@ class LajiFormApp extends Component {
 		console.log(formData)
 	}
 
+	onChange = (formData) => {
+		this.setState({formData: formData});
+	}
+
 	render () {
 		return (
 			<div className="container-fluid laji-form">
