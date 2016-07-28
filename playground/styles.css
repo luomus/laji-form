@@ -108,19 +108,12 @@ body .laji-form {
 	padding-bottom: 15px;
 }
 
-.laji-form .btn-danger {
+.laji-form :not(.btn-group) > .btn-danger {
 	width: auto;
 	float: right;
 	line-height: 5px;
 	font-size: 11px;
 	padding: 5px;
-}
-.laji-form .btn-group .btn-danger {
-	width: 100%;
-	float: left;
-	font-size: 14px;
-	line-height: 14px;
-	padding: 6px 12px;
 }
 
 .laji-form label strong:not(:empty)+.rc-switch {

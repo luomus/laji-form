@@ -1,11 +1,19 @@
 import React, { Component, PropTypes } from "react";
+import ReactDOM from "react-dom";
 import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Overlay, Popover, ButtonGroup } from "react-bootstrap";
 import Button from "../Button";
 
 export default class AutoArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				confirmDelete: PropTypes.boolean
+			})
+		}).isRequired
+	};
 
 	constructor(props) {
 		super(props);
@@ -19,20 +27,20 @@ export default class AutoArrayField extends Component {
 
 	getStatefromProps = (props) => {
 		let {idxsToKeys, keyCounter} = this.state;
+		const state = {};
+
 		const formDataLength = props.formData ? props.formData.length : 0;
 		if (!idxsToKeys) {
-			return {
-				idxsToKeys: Array.from(new Array(formDataLength + 1), (x, i) => i),
-				keyCounter: formDataLength + 1
-			};
-		// Would somebody tell me why 'this' is undefined in this while loop?
+			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
+			state.keyCounter = formDataLength + 1;
 		} else while (props.formData && formDataLength >= idxsToKeys.length) {
-			return {
-				idxsToKeys: update(idxsToKeys, {$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)}),
-				keyCounter: keyCounter
-			};
+			state.idxsToKeys = update(idxsToKeys, {$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)});
+			state.keyCounter = keyCounter
 		}
-		return {};
+
+		const options = props.uiSchema["ui:options"];
+		state.confirmDelete = !!options.confirmDelete;
+		return state;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -52,13 +60,15 @@ export default class AutoArrayField extends Component {
 		let data = this.props.formData || [];
 		data = update(data, {$push: [{}]});
 
-		const SchemaField = this.props.registry.fields.SchemaField;
+		const {SchemaField} = this.props.registry.fields;
+		const {translations} = this.props.registry;
 
 		let rows = [];
 		data.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
 			let key = this.state.idxsToKeys[idx];
+
 			rows.push(
 				<Row key={"row_" + key}>
 					<Col xs={10}>
@@ -74,8 +84,22 @@ export default class AutoArrayField extends Component {
 					</Col>
 					{removable ? (<Col xs={2}>
 						<Button buttonType="danger"
-						        classList={["col-xs-12"]}
-						        onClick={this.onRemove(idx)}>✖</Button>
+										classList={["col-xs-12"]}
+										ref={"del-" + idx}
+										onKeyDown={this.onButtonKeyDown(idx)}
+										onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
+						{this.state.visibleConfirmationIdx === idx ?
+							<Overlay show={true} placement="left"  rootClose={true} onHide={this.onClearConfirm} target={() => ReactDOM.findDOMNode(this.refs["del-" + idx])} >
+								<Popover id="popover-trigger-click">
+									<span>{translations.ConfirmRemove}</span>
+									<ButtonGroup>
+										<Button buttonType="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
+										<Button buttonType="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
+									</ButtonGroup>
+								</Popover>
+							</Overlay>
+							: null
+						}
 					</Col>) : undefined}
 				</Row>);
 		});
@@ -95,10 +119,26 @@ export default class AutoArrayField extends Component {
 		}
 	}
 
-	onRemove = (idx) => e => {
-		e.preventDefault();
-		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
+	onConfirmRemove = (idx) => () => {
+		this.setState({visibleConfirmationIdx: idx});
+	}
 
+	onClearConfirm = () => {
+		this.setState({visibleConfirmationIdx: undefined});
+	}
+
+	onButtonKeyDown = (idx) => ({key}) => {
+		if (key === "Enter") this.onRemove(idx);
+		else if (key === "Escape") this.onClearConfirm();
+	}
+
+	onRemoveForIdx = (idx) => e => {
+		e.preventDefault();
+		this.onRemove(idx);
+	}
+
+	onRemove = (idx) => {
+		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
 		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))
 	}
 }

@@ -88,6 +88,21 @@ export default {
 		fi: "avaa lajikortti",
 		en: "open taxon information",
 		sv: "öppna artkort"
+	},
+	remove: {
+		fi: "poista",
+		en: "remove",
+		sv: "avslägna"
+	},
+	close: {
+		fi: "sulje",
+		en: "close",
+		sv: "slut"
+	},
+	confirmRemove: {
+		fi: "haluatko varmasti poistaa?",
+		en: "are you sure you want to remove?",
+		sv: "är du säkert du vill avslägna?"
 	}
 
 }

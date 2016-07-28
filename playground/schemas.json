@@ -229,6 +229,9 @@
 						],
 						"uiSchema": {
 							"ui:field": "autoArray",
+							"ui:options": {
+								"confirmDelete": true
+							},
 							"items": {
 								"ui:field": "scoped",
 								"classNames": "well well-sm",
