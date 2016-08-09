@@ -33,9 +33,9 @@ export default class AutoArrayField extends Component {
 		if (!idxsToKeys) {
 			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
 			state.keyCounter = formDataLength + 1;
-		} else while (props.formData && formDataLength >= idxsToKeys.length) {
+		} else if (props.formData && formDataLength >= idxsToKeys.length) {
 			state.idxsToKeys = update(idxsToKeys, {$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)});
-			state.keyCounter = keyCounter
+			state.keyCounter = keyCounter;
 		}
 
 		const options = props.uiSchema["ui:options"];
@@ -139,6 +139,7 @@ export default class AutoArrayField extends Component {
 
 	onRemove = (idx) => {
 		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
-		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))
+		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}));
+		this.onClearConfirm();
 	}
 }
