@@ -182,7 +182,7 @@ export default class MapArrayField extends Component {
 		let id = this.state.activeId;
 
 		let itemSchemaProperties = {};
-		let itemFormData = (formData && formData.length) ? {} : undefined;
+		let itemFormData = (formData && formData.length && id !== undefined) ? {} : undefined;
 		let itemErrorSchema = {};
 		fields.forEach(prop => {
 			itemSchemaProperties[prop] = this.state.schema.properties[prop];
