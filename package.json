@@ -28,7 +28,7 @@
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "deepmerge": "*",
-    "laji-map": "git+ssh://git@bitbucket.org/luomus/laji-map.js.git",
+    "laji-map": "git+https://git@bitbucket.org/luomus/laji-map.js.git",
     "moment": "*",
     "rc-switch": "*",
     "react": "*",
