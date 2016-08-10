@@ -163,6 +163,7 @@ export default class MapArrayField extends Component {
 						latitude={24.931275}
 						zoom={13}
 						onChange={this.onMapChange}
+					  lang={this.props.registry.lang}
 					/>
 				</div>
 
