@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import merge from "deepmerge";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
-import MapComponent from "laji-map";
+import LajiMap from "laji-map";
 import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination, Row } from "react-bootstrap";
@@ -45,9 +46,9 @@ export default class MapArrayField extends Component {
 			data.push({type: "Feature", properties: {}, geometry: item.wgs84Geometry});
 		});
 
-		let activeId = (this.state && this.state.activeId !== undefined) ? this.state.activeId : (data.length ? 0 : undefined);
+		let activeIdx = (this.state && this.state.activeIdx !== undefined) ? this.state.activeIdx : (data.length ? 0 : undefined);
 
-		return {...props, schema, uiSchema, data, activeId, onChange: this.onItemChange};
+		return {...props, schema, uiSchema, data, activeIdx, onChange: this.onItemChange};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -60,83 +61,100 @@ export default class MapArrayField extends Component {
 		let formData = this.props.formData;
 		if (formData && formData.length) formData.push(item);
 		else formData = [item];
-		this.props.onChange(formData, {validate: false});
+		return {propsChange: formData};
 	}
 
 	onRemove = (e) => {
 		let splices = [];
-		e.ids.sort().reverse().forEach((id) => {
-			splices.push([id, 1]);
+		e.idxs.sort().reverse().forEach((idx) => {
+			splices.push([idx, 1]);
 		});
-		this.props.onChange(update(this.props.formData, {$splice: splices}));
+		return {propsChange: update(this.props.formData, {$splice: splices})};
 	}
 
 	onEdited = (e) => {
 		let formData = this.props.formData;
-		Object.keys(e.data).forEach( id => {
-			let geoJSON = e.data[id];
-			formData[id].wgs84Geometry = geoJSON.geometry;
+		Object.keys(e.data).forEach( idx => {
+			let geoJSON = e.data[idx];
+			formData[idx].wgs84Geometry = geoJSON.geometry;
 		});
-		this.props.onChange(formData);
+		return {propsChange: formData};
 	}
 
-	onActiveChange = id => {
-		let state = {activeId: id};
+	onActiveChange = idx => {
+		let state = {activeIdx: idx};
 		if (this.controlledActiveChange) {
 			this.controlledActiveChange = false;
 		} else {
 			state.direction = "directionless";
-			if (this.state.activeId !== undefined) state.direction = (id > this.state.activeId) ? "right" : "left";
+			if (this.state.activeIdx !== undefined) state.direction = (idx > this.state.activeIdx) ? "right" : "left";
 		}
-		this.setState(state);
+		return {state};
 	}
 
-	focusToLayer = (id) => {
+	focusToLayer = (idx) => {
 		this.controlledActiveChange = true;
-		this.setState({direction: (id > this.state.activeId) ? "right" : "left"});
-		this.refs.map.focusToLayer(id)
+		this.setState({direction: (idx > this.state.activeIdx) ? "right" : "left"});
+		this.refs.map.map.focusToLayer(idx)
 	}
 
 	onItemChange = (formData) => {
 		let newFormData = formData;
 		if (this.props.uiSchema["ui:options"].inlineProperties) {
-			newFormData = this.props.formData[this.state.activeId];
+			newFormData = this.props.formData[this.state.activeIdx];
 			for (let prop in formData) {
 				newFormData = update(newFormData, {[prop]: {$set: formData[prop]}});
 			}
 		}
-		this.props.onChange(update(this.props.formData, {$splice: [[this.state.activeId, 1, newFormData]]}));
+		this.props.onChange(update(this.props.formData, {$splice: [[this.state.activeIdx, 1, newFormData]]}));
 	}
 
-	onMapChange = (e) => {
-		switch (e.type) {
-			case "create":
-				this.onAdd(e);
-				break;
-			case "delete":
-				this.onRemove(e);
-				break;
-			case "edit":
-				this.onEdited(e);
-				break;
-			case "active":
-				this.onActiveChange(e.id);
-				break;
-		}
-	}
+	onMapChange = (events) => {
+		let propsChange = undefined;
+		let state = undefined;
 
-	render() {
-		const style = {
-			map: {
-				height: '600px'
+		function mergeEvent(change) {
+			if (change.state) {
+				if (!state) state = change.state;
+				state = merge(state, change.state);
+			}
+			if (change.propsChange) {
+				if (!state) propsChange = change.propsChange;
+				propsChange = merge(propsChange, change.propsChange);
 			}
 		}
 
+		events.forEach(e => {
+			switch (e.type) {
+				case "create":
+					mergeEvent(this.onAdd(e));
+					break;
+				case "delete":
+					mergeEvent(this.onRemove(e));
+					break;
+				case "edit":
+					mergeEvent(this.onEdited(e));
+					break;
+				case "active":
+					mergeEvent(this.onActiveChange(e.idx));
+					break;
+			}
+		});
+
+		const that = this;
+		function onChange() {
+			if (propsChange) that.props.onChange(propsChange);
+		}
+
+		state ? this.setState(state, () => { onChange(); }) : onChange();
+	}
+
+	render() {
 		const options = this.props.uiSchema["ui:options"];
 		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
 		const colType = options && options.colType;
 
-		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeId !== undefined;
+		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 
 		const description = options.description;
 
@@ -145,7 +163,7 @@ export default class MapArrayField extends Component {
 			{description !== undefined ? <DescriptionField description={description} /> : null}
 			{buttonEnabled ? <Pagination
 				className="container"
-				activePage={this.state.activeId + 1}
+				activePage={this.state.activeIdx + 1}
 				items={(this.state.data) ? this.state.data.length : 0}
 				next={true}
 				prev={true}
@@ -154,11 +172,12 @@ export default class MapArrayField extends Component {
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
 			<Row>
-				<div style={style.map} className={"laji-form-map" + (hasInlineProps ? " col-" + colType + "-6" : "")}>
+				<div className={"laji-form-map" + (hasInlineProps ? " col-" + colType + "-6" : "")}>
 					<MapComponent
 						ref={"map"}
 						data={this.state.data}
-						activeId={this.state.activeId}
+						activeIdx={this.state.activeIdx}
+						locate={true}
 						longitude={60.171372}
 						latitude={24.931275}
 						zoom={13}
@@ -179,19 +198,19 @@ export default class MapArrayField extends Component {
 
 	getSchemaForFields = (fields, isInline) => {
 		let {formData, idSchema, errorSchema} = this.props;
-		let id = this.state.activeId;
+		let idx = this.state.activeIdx;
 
 		let itemSchemaProperties = {};
-		let itemFormData = (formData && formData.length && id !== undefined) ? {} : undefined;
+		let itemFormData = (formData && formData.length && idx !== undefined) ? {} : undefined;
 		let itemErrorSchema = {};
 		fields.forEach(prop => {
 			itemSchemaProperties[prop] = this.state.schema.properties[prop];
-			if (itemFormData && formData[id].hasOwnProperty(prop)) itemFormData[prop] = formData[id][prop];
-			if (errorSchema && errorSchema[id]) itemErrorSchema[prop] = errorSchema[id][prop];
+			if (itemFormData && formData[idx].hasOwnProperty(prop)) itemFormData[prop] = formData[idx][prop];
+			if (errorSchema && errorSchema[idx]) itemErrorSchema[prop] = errorSchema[idx][prop];
 		});
 		let itemSchema = update(this.state.schema, {properties: {$set: itemSchemaProperties}});
 		delete itemSchema.title;
-		let itemIdSchema = toIdSchema(this.state.schema, idSchema.$id + "_" + id, this.props.registry.definitions);
+		let itemIdSchema = toIdSchema(this.state.schema, idSchema.$id + "_" + idx, this.props.registry.definitions);
 
 		let uiSchema = isInline ? this.props.uiSchema["ui:options"].inlineUiSchema : this.state.uiSchema;
 
@@ -201,7 +220,7 @@ export default class MapArrayField extends Component {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		
 		return (itemFormData) ?
-			(<div key={id + (isInline ? "-inline" : "-default")} className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
+			(<div key={idx + (isInline ? "-inline" : "-default")} className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
 				<SchemaField  {...this.props} {...this.state} schema={itemSchema} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} uiSchema={uiSchema} name={undefined}/>
 			</div>) :
 			null;
@@ -215,5 +234,18 @@ export default class MapArrayField extends Component {
 		const allFields = Object.keys(this.state.schema.properties);
 		let inlineFields = this.props.uiSchema["ui:options"].inlineProperties;
 		return this.getSchemaForFields(inlineFields ? allFields.filter(field => !inlineFields.includes(field)) : allFields);
+	}
+}
+
+class MapComponent extends Component {
+	componentDidMount() {
+		this.map = new LajiMap({
+			...this.props,
+			rootElem: document.getElementById("laji-map")
+		});
+	}
+
+	render() {
+		return (<div id="laji-map" />);
 	}
 }
