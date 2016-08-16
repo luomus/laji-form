@@ -188,7 +188,6 @@ export default class MapArrayField extends Component {
 
 				<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
 						{hasInlineProps ? this.renderInlineSchemaField() : null}
-					<p />
 						{this.renderSchemaField()}
 				</ReactCSSTransitionGroup>
 			</Row>

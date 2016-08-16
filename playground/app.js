@@ -31,7 +31,7 @@ class LajiFormApp extends Component {
 			this.setState({schema, uiSchema});
 		}).catch(() => {
 			console.log("Form request failed - using local schemas.");
-		})
+		});
 	}
 
 	onSubmit = ({formData}) => {
