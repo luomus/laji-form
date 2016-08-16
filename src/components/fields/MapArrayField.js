@@ -172,7 +172,7 @@ export default class MapArrayField extends Component {
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
 			<Row>
-				<div className={"laji-form-map" + (hasInlineProps ? " col-" + colType + "-6" : "")}>
+				<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
 					<MapComponent
 						ref={"map"}
 						data={this.state.data}
@@ -241,11 +241,11 @@ class MapComponent extends Component {
 	componentDidMount() {
 		this.map = new LajiMap({
 			...this.props,
-			rootElem: document.getElementById("laji-map")
+			rootElem: this.refs.map
 		});
 	}
 
 	render() {
-		return (<div id="laji-map" />);
+		return (<div className="laji-form-map" ref="map" />);
 	}
 }

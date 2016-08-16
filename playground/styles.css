@@ -99,15 +99,10 @@ body .laji-form {
 	padding: 2px 5px;
 }
 
-
 .laji-form .laji-form-map {
 	z-index: 1;
 	padding-bottom: 15px;
 	height: 600px;
-}
-#laji-map {
-	height: 100%;
-	width: 100%;
 }
 .laji-form .map-field .field-description {
 	padding-bottom: 15px;
