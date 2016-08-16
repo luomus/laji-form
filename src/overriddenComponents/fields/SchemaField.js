@@ -5,17 +5,16 @@ import {
 	retrieveSchema,
 	getDefaultRegistry,
 	isFilesArray
-} from "../../../node_modules/react-jsonschema-form/lib/utils";
+} from "react-jsonschema-form/lib/utils";
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
-import NumberField from "../../../node_modules/react-jsonschema-form/lib/components/fields/NumberField";
-import ObjectField from "../../../node_modules/react-jsonschema-form/lib/components/fields/ObjectField";
+import NumberField from "react-jsonschema-form/lib/components/fields/NumberField";
+import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import StringField from "./StringField";
-import UnsupportedField from "../../../node_modules/react-jsonschema-form/lib/components/fields/UnsupportedField";
-import DescriptionField from "../../../node_modules/react-jsonschema-form/lib/components/fields/DescriptionField";
+import UnsupportedField from "react-jsonschema-form/lib/components/fields/UnsupportedField";
+import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 
 const REQUIRED_FIELD_SYMBOL = "*";
-const HELP_FIELD_SYMBOL = "?";
 const COMPONENT_TYPES = {
 	"array":     ArrayField,
 	"boolean":   BooleanField,

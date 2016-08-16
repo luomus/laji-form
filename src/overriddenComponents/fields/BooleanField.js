@@ -5,7 +5,7 @@ import {
 	getAlternativeWidget,
 	optionsList,
 	getDefaultRegistry
-} from "../../../node_modules/react-jsonschema-form/lib/utils";
+} from "react-jsonschema-form/lib/utils";
 import CheckboxWidget from "./../widgets/CheckboxWidget";
 
 
