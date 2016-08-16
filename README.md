@@ -7,7 +7,7 @@ LajiForm is a React module, that can be installed as a npm dependency. LajiForm 
 Install as a git dependency:
 
 ```
-npm install git+ssh://git@bitbucket.org:luomus/laji-form.js.git --save
+npm install git+https://git@bitbucket.org:luomus/laji-form.js.git --save
 ```
 
 # Usage #
@@ -26,7 +26,7 @@ render(<LajiForm schema={...} uiSchema={...} formData={...} />, document.getElem
 
 In addition to properties you would pass to <Form />, you must pass an api client implementation, if you need to use fields that use lajitest.api.fi. The api client implementation must have ```fetch()``` -method, which **returns a Promise**.
 
-```fetch(path, query, onSuccess, onError)``` parameters are as follows:
+```fetch(path, query)``` parameters are as follows:
 
 * **path:** URL path for GET.
 * **query:** Object, where keys are param names and values are param values.
