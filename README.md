@@ -10,7 +10,7 @@ Install as a git dependency:
 npm install git+https://git@bitbucket.org:luomus/laji-form.js.git --save
 ```
 
-```react``` and ```react-addons-css-transition-group``` are peer-dependencies, so they must also be installed. Npm install peer-dependencies automatically.
+```react``` and ```react-addons-css-transition-group``` are peer-dependencies, so they must also be installed. Npm doesn't install peer-dependencies automatically.
 
 # Usage #
 
