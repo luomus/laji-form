@@ -10,6 +10,8 @@ Install as a git dependency:
 npm install git+https://git@bitbucket.org:luomus/laji-form.js.git --save
 ```
 
+```react``` and ```react-addons-css-transition-group``` are peer-dependencies, so they must also be installed. Npm install peer-dependencies automatically.
+
 # Usage #
 
 LajiForm passes all its properties to <Form />.
@@ -41,7 +43,13 @@ Pass the implementation to LajiForm like so:
 
 ## Styles ##
 
-Styles must be imported separately:
+### The usual way ###
+
+Styles can be found at  ```dist/styles.css```.
+
+### The webpack way ###
+
+Styles can be imported with webpack loaders:
 
 ```
 import "laji-form/lib/styles";

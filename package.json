@@ -2,12 +2,13 @@
   "name": "laji-form",
   "version": "0.0.0",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
-  "main": "lib/app.js",
+  "main": "dist/laji-form.js",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
     "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/ --copy-files",
-    "install": "npm run build:lib"
+    "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
+    "install": "npm run build:dist && npm run build:lib"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -28,15 +29,13 @@
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "deepmerge": "*",
+    "extract-text-webpack-plugin": "^1.0.1",
     "laji-map": "git+https://git@bitbucket.org/luomus/laji-map.js.git",
     "moment": "*",
     "rc-switch": "*",
-    "react": "*",
-    "react-addons-css-transition-group": "*",
     "react-addons-update": "*",
     "react-autosuggest": "*",
     "react-bootstrap": "*",
-    "react-dom": "*",
     "react-jsonschema-form": "0.38",
     "react-masonry-component": "*",
     "react-spinner": "*",
@@ -57,6 +56,13 @@
     "css-loader": "*",
     "es6-promise": "*",
     "isomorphic-fetch": "*",
+	  "react": "*",
+	  "react-addons-css-transition-group": "*",
+	  "react-dom": "*",
     "rimraf": "*"
-  }
+  },
+	"peerDependencies": {
+		"react": "*",
+		"react-addons-css-transition-group": "*"
+	}
 }
