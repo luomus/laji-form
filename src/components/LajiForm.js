@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Button from "./Button";
+import validate from "../validation";
 
 import Form from "./../overriddenComponents/Form";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
@@ -38,8 +39,6 @@ import HiddenWidget from "./widgets/HiddenWidget";
 import ApiClient from "../ApiClient";
 import translations from "../translations.js";
 
-const log = (type) => console.log.bind(console, type);
-
 const enterPreventTypes = {
 	text: true,
 	undefined: true
@@ -48,7 +47,8 @@ const enterPreventTypes = {
 export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
-		uiSchemaContext: PropTypes.object
+		uiSchemaContext: PropTypes.object,
+		validators: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -143,7 +143,7 @@ export default class LajiForm extends Component {
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext
 					}}
-					onError={log("errors")} >
+					validate={validate(this.props.validators)} >
 					<Button type="submit" classList={["btn-info"]}>{translations.Submit}</Button>
 					</Form>
 				</div>

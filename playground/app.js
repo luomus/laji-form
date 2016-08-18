@@ -10,6 +10,8 @@ import "./styles.css";
 
 const USE_LOCAL_SCHEMAS = false;
 
+const log = (type) => console.log.bind(console, type);
+
 class LajiFormApp extends Component {
 	constructor(props) {
 		super(props);
@@ -20,6 +22,7 @@ class LajiFormApp extends Component {
 			onChange: this.onChange,
 			onSubmit: this.onSubmit,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
+			onError: log("errors"),
 			lang: lang
 		}
 	}
@@ -27,8 +30,8 @@ class LajiFormApp extends Component {
 	componentDidMount() {
 		if (USE_LOCAL_SCHEMAS) return;
 		this.state.apiClient.fetch("/forms/JX.519", {lang: this.state.lang}).then(result => {
-			const {schema, uiSchema} = result;
-			this.setState({schema, uiSchema});
+			const {schema, uiSchema, validators} = result;
+			this.setState({schema, uiSchema, validators});
 		}).catch(() => {
 			console.log("Form request failed - using local schemas.");
 		});
