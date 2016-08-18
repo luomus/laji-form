@@ -59,7 +59,7 @@
     "isomorphic-fetch": "*",
 	  "react": "*",
 	  "react-addons-css-transition-group": "*",
-	  "react-dom": "*",
+	  "react-dom": "*"
   },
 	"peerDependencies": {
 		"react": "*",
