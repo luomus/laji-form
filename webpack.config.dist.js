@@ -18,7 +18,8 @@ module.exports = {
 	],
 	externals: {
 		"react": "umd react",
-		'react/lib/ReactCSSTransitionGroup': "umd react-addons-css-transition-group"
+		'react/lib/ReactCSSTransitionGroup': "umd react-addons-css-transition-group",
+		'react/lib/update': "umd react-addons-update"
 	},
 	module: {
 		loaders: [

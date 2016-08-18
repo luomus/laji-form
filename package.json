@@ -33,7 +33,6 @@
     "laji-map": "git+https://git@bitbucket.org/luomus/laji-map.js.git",
     "moment": "*",
     "rc-switch": "*",
-    "react-addons-update": "*",
     "react-autosuggest": "*",
     "react-bootstrap": "*",
     "react-jsonschema-form": "0.38",
@@ -59,10 +58,12 @@
     "isomorphic-fetch": "*",
 	  "react": "*",
 	  "react-addons-css-transition-group": "*",
+	  "react-addons-update": "*",
 	  "react-dom": "*"
   },
 	"peerDependencies": {
 		"react": "*",
+		"react-addons-update": "*",
 		"react-addons-css-transition-group": "*"
 	}
 }
