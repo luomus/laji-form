@@ -42,10 +42,19 @@ const log = (type) => console.log.bind(console, type);
 
 const enterPreventTypes = {
 	text: true,
-	undefined: true,
+	undefined: true
 };
 
 export default class LajiForm extends Component {
+	static propTypes = {
+		lang: PropTypes.oneOf(["fi", "en", "sv"]),
+		uiSchemaContext: PropTypes.object
+	}
+
+	static defaultProps = {
+		lang: "en"
+	}
+
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
@@ -83,7 +92,7 @@ export default class LajiForm extends Component {
 	}
 
 	onChange = ({formData}) => {
-		this.props.onChange(formData);
+		if (this.props.onChange) this.props.onChange(formData);
 	}
 
 	render() {
