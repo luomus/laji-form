@@ -192,21 +192,23 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	render() {
-		let {readonly} = this.props;
+		const {props} = this;
 		let {suggestions, inputValue, isLoading} = this.state;
 
-		const inputProps = {...this.props,
-			value: (inputValue !== undefined) ? inputValue : this.props.value,
+		const inputProps = {
+			value: (inputValue !== undefined) ? inputValue : props.value,
+			readOnly: props.readonly,
+			disabled: props.disabled,
+			placeholder: props.disabled,
 			onChange: (e, {newValue, method}) => {
-				if (method === "type" && this.props.options.preventTypingPattern) {
-					const regexp = new RegExp(this.props.options.preventTypingPattern);
+				if (method === "type" && props.options.preventTypingPattern) {
+					const regexp = new RegExp(props.options.preventTypingPattern);
 					if (newValue.match(regexp)) return;
 				}
 				this.onInputChange(newValue, method)
 			},
 			onFocus: this.onFocus,
 			onBlur: this.onBlur,
-			readOnly: readonly,
 			onKeyDown: this.onKeyDown
 		};
 
