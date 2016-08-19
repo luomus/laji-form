@@ -157,9 +157,10 @@ export default class MapArrayField extends Component {
 		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 
 		const description = options.description;
+		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
 
 		return (<div>
-			<TitleField title="Kartta" />
+			<TitleField title={title} />
 			{description !== undefined ? <DescriptionField description={description} /> : null}
 			{buttonEnabled ? <Pagination
 				className="container"

@@ -103,6 +103,11 @@ export default {
 		fi: "haluatko varmasti poistaa?",
 		en: "are you sure you want to remove?",
 		sv: "är du säkert du vill avslägna?"
+	},
+	map: {
+		fi: "kartta",
+		en: "map",
+		sv: "mappen"
 	}
 
 }
