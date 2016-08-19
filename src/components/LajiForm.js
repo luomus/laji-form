@@ -35,6 +35,7 @@ import DateWidget from "./widgets/DateWidget";
 import TimeWidget from "./widgets/TimeWidget";
 import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
 import HiddenWidget from "./widgets/HiddenWidget";
+import FilteredSelectWidget from "./widgets/FilteredSelectWidget";
 
 import ApiClient from "../ApiClient";
 import translations from "../translations.js";
@@ -137,7 +138,8 @@ export default class LajiForm extends Component {
 							time: TimeWidget,
 							separatedDateTime: SeparatedDateTimeWidget,
 							autosuggest: AutosuggestWidget,
-							hidden: HiddenWidget
+							hidden: HiddenWidget,
+							filteredSelect: FilteredSelectWidget
 						},
 						translations,
 						lang: this.props.lang,

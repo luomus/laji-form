@@ -9,7 +9,7 @@ export default class Button extends Component {
 		let buttonProps = {};
 		["disabled", "type", "tabIndex"].forEach(prop => {
 			if (this.props.hasOwnProperty(prop)) buttonProps[prop] = this.props[prop];
-		})
+		});
 
 		return (
 			<button
