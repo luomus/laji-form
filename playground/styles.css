@@ -13,6 +13,9 @@ body .laji-form {
     position: absolute;
     z-index: 1;
 }
+.laji-form .autosuggest-container ul {
+	padding-left: 0px;
+}
 
 .laji-form .map-array-directionless-enter {
     opacity: 0.01;
