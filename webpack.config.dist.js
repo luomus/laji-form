@@ -32,10 +32,7 @@ module.exports = {
 			},
 			{
 				test: /\.json$/,
-				loader: "json",
-				include: [
-					path.join(__dirname)
-				]
+				loader: "json"
 			},
 			{
 				test: /\.png$/,
