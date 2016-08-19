@@ -7,7 +7,7 @@ export default class Button extends Component {
 		classList.push(this.props.buttonType ? "btn-" + this.props.buttonType : "btn-info");
 
 		let buttonProps = {};
-		["disabled", "type", "tabIndex"].forEach(prop => {
+		["disabled", "type", "tabIndex", "onClick"].forEach(prop => {
 			if (this.props.hasOwnProperty(prop)) buttonProps[prop] = this.props[prop];
 		});
 
