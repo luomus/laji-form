@@ -199,7 +199,7 @@ export default class AutoSuggestWidget extends Component {
 			value: (inputValue !== undefined) ? inputValue : props.value,
 			readOnly: props.readonly,
 			disabled: props.disabled,
-			placeholder: props.disabled,
+			placeholder: props.placeholder,
 			onChange: (e, {newValue, method}) => {
 				if (method === "type" && props.options.preventTypingPattern) {
 					const regexp = new RegExp(props.options.preventTypingPattern);
@@ -234,6 +234,7 @@ export default class AutoSuggestWidget extends Component {
 						onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
 						onSuggestionSelected={this.onSuggestionSelected}
 						theme={cssClasses}
+					  focusFirstSuggestion={true}
 					/>
 					{isLoading ? <Spinner /> : null }
 				</div>
