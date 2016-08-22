@@ -134,7 +134,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	selectSuggestion = (suggestion) => {
-		let state = {inputInProgress: false, unsuggested: false, inputValue: suggestion.value};
+		let state = {inputInProgress: false, unsuggested: false, inputValue: suggestion !== undefined ? suggestion.value : ""};
 		if (this.props.options.onSuggestionSelected) {
 			this.props.options.onSuggestionSelected(suggestion);
 		} else {
@@ -169,7 +169,8 @@ export default class AutoSuggestWidget extends Component {
 
 	onBlur = () => {
 		this.setState({focused: false}, () => {
-			this.selectUnambigious(this.state.suggestions);
+			if (this.state.inputValue === "") this.selectSuggestion(undefined);
+			else this.selectUnambigious(this.state.suggestions);
 		});
 	}
 

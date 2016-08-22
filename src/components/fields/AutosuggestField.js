@@ -103,11 +103,14 @@ export default class AutosuggestField extends Component {
 		let formData = this.props.formData;
 		const options = this.props.uiSchema["ui:options"];
 		for (let fieldName in options.suggestionReceivers) {
-			const suggestionValPath = options.suggestionReceivers[fieldName];
-			const fieldVal = (suggestionValPath[0] === "$") ?
-				suggestionParsers[suggestionValPath.substring(1)](suggestion) :
-				suggestionValPath.split('.').reduce((o,i)=>o[i], suggestion);
-
+			// undefined suggestion clears value.
+			let fieldVal = undefined;
+			if (typeof suggestion === "object") {
+				const suggestionValPath = options.suggestionReceivers[fieldName];
+				fieldVal = (suggestionValPath[0] === "$") ?
+					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
+					suggestionValPath.split('.').reduce((o, i)=>o[i], suggestion);
+			}
 			formData = update(formData, {$merge: {[fieldName]: fieldVal}});
 		}
 		this.props.onChange(formData);
