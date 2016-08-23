@@ -1,4 +1,5 @@
 let singletonInstance = null;
+const cache = {};
 
 /**
  * ApiClient "interface". Wraps the given apiClient as a singleton object.
@@ -19,6 +20,14 @@ export default class ApiClient {
 	 */
 	fetch(path, query) {
 		if (!this.apiClient) throw new Error("You must pass an api client implementation to LajiForm!");
-		return this.apiClient.fetch(path, query);
+		return this.apiClient.fetch(path, query).then(response => {
+			return response;
+		});
+	}
+
+	fetchCached(path, query) {
+		const cacheKey = path + JSON.stringify(query);
+		cache[cacheKey] = cache.hasOwnProperty(cacheKey) ? cache[cacheKey] : this.fetch(path, query);
+		return cache[cacheKey]
 	}
 }

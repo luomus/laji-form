@@ -688,13 +688,13 @@
 							"MVL.2"
 						],
 						"taxonID": "MX.46549",
-						"recordBasis": "preservedSpecimen",
+						"recordBasis": "MY.recordBasisPreservedSpecimen",
 						"notes": "Muistiinpanot",
 						"alive": true
 					},
 					{
 						"informalNameString": "susi",
-						"recordBasis": "preservedSpecimen",
+						"recordBasis": "MY.recordBasisPreservedSpecimen",
 						"notes": "Muistiinpanot",
 						"alive": true
 					}
