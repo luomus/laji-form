@@ -44,7 +44,7 @@ export default class InitiallyHiddenField extends Component {
 			<div>
 				<Collapse in={!shouldShow}>
 					<Row><Col xs={2} xsOffset={10}>
-						<Button classList={["initially-hidden"]} onClick={this.toggleVisibility}>
+						<Button classList={["button-right"]} onClick={this.toggleVisibility}>
 							{this.props.schema.title || this.props.name} <span className="caret" />
 						</Button>
 					</Col></Row>

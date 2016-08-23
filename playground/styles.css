@@ -192,7 +192,7 @@ body .laji-form {
 	margin: auto;
 }
 
-.laji-form button.initially-hidden {
+.laji-form button.button-right {
 	float: right;
 	white-space: nowrap;
 }
