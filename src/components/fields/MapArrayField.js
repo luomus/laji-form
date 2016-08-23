@@ -178,7 +178,6 @@ export default class MapArrayField extends Component {
 						ref={"map"}
 						data={this.state.data}
 						activeIdx={this.state.activeIdx}
-						locate={true}
 						longitude={62.3}
 						latitude={25}
 						zoom={3}
