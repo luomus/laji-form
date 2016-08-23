@@ -51,6 +51,7 @@ export default class GridLayoutField extends Component {
 			&& options.maxItemsPerRow > 0 && options.maxItemsPerRow <= 12) ? options.maxItemsPerRow : 6;
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 		const limitWidth = (options && options.hasOwnProperty("limitWidthAlways")) ? options.limitWidthAlways : false;
+		const neverLimitWidth = (options && options.hasOwnProperty("neverLimitWidth")) ? options.neverLimitWidth : false;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
@@ -63,7 +64,7 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		return {...fieldProps, colType, groups, showLabels, limitWidth};
+		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -100,7 +101,10 @@ export default class GridLayoutField extends Component {
 
 				const type = this.state.schema.properties[property].type;
 
-				if (this.state.limitWidth || (type !== "array" && type !== "object" && (!this.state.uiSchema[property] || !this.state.uiSchema[property]["ui:widget"] || this.state.uiSchema[property]["ui:widget"] !== "separatedDateTime"))) {
+				if (!this.state.neverLimitWidth && (this.state.limitWidth ||
+						(type !== "array" && type !== "object" &&
+							(!this.state.uiSchema[property] || !this.state.uiSchema[property]["ui:widget"] ||
+							 this.state.uiSchema[property]["ui:widget"] !== "separatedDateTime")))) {
 					division = Math.min(4, division);
 				}
 

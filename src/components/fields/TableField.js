@@ -48,7 +48,6 @@ export default class TableField extends Component {
 		Object.keys(schemaProps).forEach((propName, i) => {
 			let division = baseDivision;
 			if (!i) division = 12 - ((schemaLength - 1) * division);
-			division = Math.min(4, division);
 
 			labels.push(<Col xs={division} key={propName + "-label"}><Label
 			                  label={schemaProps[propName].title || propName}
@@ -71,7 +70,7 @@ export default class TableField extends Component {
 			if (this.props.uiSchema.additionalItems && idx >= this.props.schema.items.length) uiSchema = this.props.uiSchema.additionalItems;
 			else if (this.props.uiSchema.items) uiSchema = this.props.uiSchema.items;
 
-			let uiOptions = {colType: "xs", showLabels: false};
+			let uiOptions = {colType: "xs", showLabels: false, neverLimitWidth: true};
 			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
 			items.push(<Row key={idx}>
