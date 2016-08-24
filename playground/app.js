@@ -27,6 +27,7 @@ class LajiFormApp extends Component {
 		}
 	}
 
+
 	componentDidMount() {
 		if (USE_LOCAL_SCHEMAS) return;
 		this.state.apiClient.fetch("/forms/JX.519", {lang: this.state.lang}).then(result => {

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import ReactDOM from "react-dom";
 import Button from "./Button";
 import validate from "../validation";
 
@@ -39,11 +40,6 @@ import FilteredSelectWidget from "./widgets/FilteredSelectWidget";
 
 import ApiClient from "../ApiClient";
 import translations from "../translations.js";
-
-const enterPreventTypes = {
-	text: true,
-	undefined: true
-};
 
 export default class LajiForm extends Component {
 	static propTypes = {
@@ -87,11 +83,6 @@ export default class LajiForm extends Component {
 		return dictionaries;
 	}
 
-	onKeyDown = (event) => {
-		const type = event.target.type;
-		if (event.key === "Enter" && enterPreventTypes[type]) event.preventDefault();
-	}
-
 	onChange = ({formData}) => {
 		if (this.props.onChange) this.props.onChange(formData);
 	}
@@ -102,6 +93,7 @@ export default class LajiForm extends Component {
 			<div onKeyDown={this.onKeyDown}>
 				<Form
 					{...this.props}
+					ref="form"
 					onChange={this.onChange}
 					registry={{
 						fields: {
@@ -150,5 +142,39 @@ export default class LajiForm extends Component {
 					</Form>
 				</div>
 		)
+	}
+
+	// Focuses next input element on enter key.
+	onKeyDown = (e) => {
+		const RC_SWITCH_CLASS = "rc-switch";
+
+		let inputTypes = ["input", "select", "textarea"];
+
+		function isTabbableInput(elem) {
+			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
+			        elem.className.includes(RC_SWITCH_CLASS));
+		}
+
+		const formElem = ReactDOM.findDOMNode(this.refs.form);
+
+		if (e.key == "Enter" && formElem.querySelectorAll && isTabbableInput(e.target)) {
+			e.preventDefault();
+			inputTypes.push("." + RC_SWITCH_CLASS + ":not(." + RC_SWITCH_CLASS + "-disabled)");
+			inputTypes = inputTypes.map(type => { return type + ":not(:disabled)" });
+			const fields = formElem.querySelectorAll(inputTypes.join(", "));
+			let doFocus = false;
+			for (let field of fields) {
+				if (field === e.target) {
+					doFocus = true;
+					continue;
+				}
+
+				if (doFocus) {
+					field.focus();
+					if (document.activeElement !== e.target) break;
+				}
+
+			}
+		}
 	}
 }
