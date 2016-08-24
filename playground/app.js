@@ -33,9 +33,11 @@ class LajiFormApp extends Component {
 		this.state.apiClient.fetch("/forms/JX.519", {lang: this.state.lang}).then(result => {
 			const {schema,
 				uiSchema,
+				uiSchemaContext,
 				validators} = result;
 			this.setState({schema,
 				uiSchema,
+				uiSchemaContext,
 				validators});
 		}).catch(() => {
 			console.log("Form request failed - using local schemas.");

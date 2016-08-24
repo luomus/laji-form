@@ -38,7 +38,8 @@ export default class ContextInjectionField extends Component {
 				if (i < splittedPath.length - 1) updatePointer = updatePointer[pathStep];
 				lastPathName = pathStep;
 			});
-			updatePointer[lastPathName] = this.props.registry.uiSchemaContext[injections[injectionPath]];
+
+			updatePointer[lastPathName] = injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.registry.uiSchemaContext);
 			uiSchema = merge(uiSchema, update);
 		}
 		return {uiSchema};
