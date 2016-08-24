@@ -159,9 +159,15 @@ export default class LajiForm extends Component {
 
 		if (e.key == "Enter" && formElem.querySelectorAll && isTabbableInput(e.target)) {
 			e.preventDefault();
+
 			inputTypes.push("." + RC_SWITCH_CLASS + ":not(." + RC_SWITCH_CLASS + "-disabled)");
 			inputTypes = inputTypes.map(type => { return type + ":not(:disabled)" });
-			const fields = formElem.querySelectorAll(inputTypes.join(", "));
+
+			const fieldsNodeList = formElem.querySelectorAll(inputTypes.join(", "));
+			let fields = [...fieldsNodeList];
+
+			if (e.shiftKey) fields = fields.reverse();
+
 			let doFocus = false;
 			for (let field of fields) {
 				if (field === e.target) {
