@@ -17,7 +17,6 @@ class LajiFormApp extends Component {
 		super(props);
 		let lang = "fi";
 		this.state = {
-			...schemas,
 			formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
 			onChange: this.onChange,
 			onSubmit: this.onSubmit,
@@ -25,6 +24,7 @@ class LajiFormApp extends Component {
 			onError: log("errors"),
 			lang: lang
 		}
+		if (USE_LOCAL_SCHEMAS) this.state = { ...schemas, ...this.state}
 	}
 
 
@@ -53,6 +53,7 @@ class LajiFormApp extends Component {
 	}
 
 	render () {
+		if (!this.state.schema) return null;
 		return (
 			<div className="container-fluid laji-form">
 				<LajiForm {...this.state} />
