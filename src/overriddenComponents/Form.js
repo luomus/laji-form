@@ -218,5 +218,3 @@ if (process.env.NODE_ENV !== "production") {
 		safeRenderCompletion: PropTypes.bool,
 	};
 }
-
-export default Form;
