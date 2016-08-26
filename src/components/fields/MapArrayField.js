@@ -9,6 +9,12 @@ import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination, Row } from "react-bootstrap";
 
+const popupMappers = {
+	units: (schema, units, fieldName) => {
+		return {[schema.label || fieldName]: units.map(unit => unit.informalNameString)};
+	}
+}
+
 export default class MapArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -178,12 +184,13 @@ export default class MapArrayField extends Component {
 						ref={"map"}
 						data={this.state.data}
 						activeIdx={this.state.activeIdx}
-						longitude={62.3}
-						latitude={25}
+						latlng={[62.3, 25]}
 						zoom={3}
 						onChange={this.onMapChange}
+						getPopup={this.getPopup}
 					  lang={this.props.registry.lang}
 					/>
+					{options.popupFields ? <Tooltip data={this.getPopupData()} ref="popup"/> : null}
 				</div>
 
 				<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
@@ -233,6 +240,49 @@ export default class MapArrayField extends Component {
 		const allFields = Object.keys(this.state.schema.properties);
 		let inlineFields = this.props.uiSchema["ui:options"].inlineProperties;
 		return this.getSchemaForFields(inlineFields ? allFields.filter(field => !inlineFields.includes(field)) : allFields);
+	}
+
+	getPopup = (idx, openPopupCallback) => {
+		if (!this.refs.popup) return;
+		this.setState({popupIdx: idx}, () => openPopupCallback(this.refs.popup.refs.popup));
+	}
+
+	getPopupData = () => {
+		const popupOptions = this.props.uiSchema["ui:options"].popupFields;
+
+		const data = {};
+		if (!this.props.formData) return data;
+		popupOptions.forEach(field => {
+			const fieldName = field.field;
+			const itemFormData = this.props.formData[this.state.popupIdx];
+			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
+			let fieldSchema = this.props.schema.items.properties;
+
+			if (field.mapper && fieldData) {
+				const mappedData = popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
+				for (let label in mappedData) {
+					data[label] = mappedData[label];
+				}
+			} else if (fieldData) {
+				data[fieldSchema[fieldName].title || fieldName] = fieldData;
+			}
+
+		});
+		return data;
+	}
+}
+
+class Tooltip extends Component {
+	render() {
+		const { data } = this.props;
+		return (
+			<ul ref="popup">
+				{data ? Object.keys(data).map(fieldName => {
+					const item = data[fieldName];
+					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.join(", ") : item}</li>;
+				}) : null}
+			</ul>
+		);
 	}
 }
 

@@ -160,6 +160,10 @@
 				"colType": "md",
 				"title": "Kartta",
 				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
+				"popupFields": [
+					{"field": "units", "mapper": "units"},
+					{"field": "notes"}
+				],
 				"inlineProperties": [
 					"dateBegin",
 					"dateEnd",
@@ -340,8 +344,19 @@
 											}
 										}
 									},
-									"fieldScopes": {},
-									"strictFields": [],
+									"fieldScopes": {
+										"informalNameString": {
+											"+": {
+												"refs": [
+													"unitType",
+													"recordBasis"
+												]
+											}
+										}
+									},
+									"strictFields": [
+										"recordBasis"
+									],
 									"definitions": {
 										"unitType": {
 											"fields": [
@@ -660,7 +675,7 @@
 									"recordBasis": {
 										"type": "string",
 										"title": "Tietueen tyyppi",
-										"default": "Nähty",
+										"default": "MY.recordBasisHumanObservationSeen",
 										"enum": [
 											"",
 											"MY.recordBasisPreservedSpecimen",
@@ -988,26 +1003,56 @@
 	},
 	"formData": {
 		"gatheringEvent": {
-			"leg": ["MA.97"],
-			"editors": ["MA.97"],
+			"leg": [
+				"MA.97"
+			],
+			"editors": [
+				"MA.97"
+			],
 			"legPublic": true
 		},
 		"gatherings": [
 			{
-				"habitat": [
-					"MY.habitatEnumValue4"
+				"notes": "test",
+				"predominantTree": "",
+				"units": [
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "kantarelli",
+						"unitType": [
+							"MVL.233",
+							"MVL.121"
+						],
+						"taxonID": "MX.205511",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					}
 				],
-				"notes": "dfgssgfd",
-				"predominantTree": "MY.predominantTreePine",
 				"wgs84Geometry": {
 					"type": "Point",
 					"coordinates": [
-						25.49879732613559,
-						60.71317264457191
+						24.492325223286233,
+						61.1028355742579
 					]
 				}
 			}
+		],
+		"editors": [
+			"MA.97"
 		]
 	}
 }
-
