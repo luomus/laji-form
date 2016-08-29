@@ -182,7 +182,7 @@ export default class MapArrayField extends Component {
 				<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
 					<MapComponent
 						ref={"map"}
-						data={this.state.data}
+						drawData={this.state.data}
 						activeIdx={this.state.activeIdx}
 						latlng={[62.3, 25]}
 						zoom={3}
