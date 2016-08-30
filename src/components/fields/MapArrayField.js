@@ -100,12 +100,18 @@ export default class MapArrayField extends Component {
 
 	focusToLayer = (idx) => {
 		this.controlledActiveChange = true;
-		this.setState({direction: (idx > this.state.activeIdx) ? "right" : "left"});
+		this.setState({direction: (this.state.activeIdx === undefined) ?
+			"directionless" :
+			((idx > this.state.activeIdx) ? "right" : "left")
+		});
 		this.refs.map.map.focusToLayer(idx)
 	}
 
 	onItemChange = (formData) => {
+		if (this.state.activeIdx === undefined) return;
+
 		let newFormData = formData;
+
 		if (this.props.uiSchema["ui:options"].inlineProperties) {
 			newFormData = this.props.formData[this.state.activeIdx];
 			for (let prop in formData) {
@@ -170,7 +176,7 @@ export default class MapArrayField extends Component {
 			{description !== undefined ? <DescriptionField description={description} /> : null}
 			{buttonEnabled ? <Pagination
 				className="container"
-				activePage={this.state.activeIdx + 1}
+				activePage={(this.state.activeIdx !== undefined) ? this.state.activeIdx + 1 : undefined}
 				items={(this.state.data) ? this.state.data.length : 0}
 				next={true}
 				prev={true}
@@ -182,7 +188,7 @@ export default class MapArrayField extends Component {
 				<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
 					<MapComponent
 						ref={"map"}
-						drawData={this.state.data}
+						drawData={{data: this.state.data}}
 						activeIdx={this.state.activeIdx}
 						latlng={[62.3, 25]}
 						zoom={3}

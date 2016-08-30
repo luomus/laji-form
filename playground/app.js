@@ -39,8 +39,6 @@ class LajiFormApp extends Component {
 				uiSchema,
 				uiSchemaContext,
 				validators});
-		}).catch(() => {
-			console.log("Form request failed - using local schemas.");
 		});
 	}
 
