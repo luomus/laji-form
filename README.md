@@ -19,7 +19,11 @@ LajiForm passes all its properties to react-jsonschema-form.
 ```
 import LajiForm from "laji-form";
 
-LajiForm({schema: schema, uiSchema: uiSchema, formData: formData, rootElem: document.getElementById("app")});
+LajiForm({
+  schema: schema,
+  uiSchema: uiSchema, formData: formData,
+  rootElem: document.getElementById("app")
+});
 ```
 
 ## Usage as a React component ##
@@ -29,7 +33,11 @@ import React from "react";
 import { render } from "react-dom";
 import LajiForm from "laji-form/lib/components/LajiForm";
 
-render(<LajiForm schema={...} uiSchema={...} formData={...} />, document.getElementById("app"));
+render(<LajiForm
+    schema={...}
+    uiSchema={...}
+    formData={...} />,
+  document.getElementById("app"));
 ```
 
 ## API Client ##
