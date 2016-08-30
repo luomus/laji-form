@@ -1,4 +1,4 @@
 import LajiForm from "./components/LajiForm";
+import { render } from "react-dom"
 
-export default LajiForm;
-
+export default props => render(<LajiForm {...props} />, props.rootElem);

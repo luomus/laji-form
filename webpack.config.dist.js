@@ -4,7 +4,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	entry: {
-		"laji-form": "./src/components/LajiForm",
+		"laji-form": "./src/app",
 		styles: "./src/styles"
 	},
 	output: {
@@ -16,11 +16,6 @@ module.exports = {
 		new ExtractTextPlugin("[name].css", {allChunks: true}),
 		new webpack.IgnorePlugin(/^(buffertools)$/) // unwanted "deeper" dependency
 	],
-	externals: {
-		"react": "umd react",
-		'react/lib/ReactCSSTransitionGroup': "umd react-addons-css-transition-group",
-		'react/lib/update': "umd react-addons-update"
-	},
 	module: {
 		loaders: [
 			{

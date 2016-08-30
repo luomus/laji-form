@@ -34,8 +34,12 @@
 	  "laji-validate": "git+https://git@bitbucket.org/luomus/laji-validate.js.git",
     "moment": "*",
     "rc-switch": "*",
+    "react": "*",
+    "react-addons-update": "*",
+    "react-addons-css-transition-group": "*",
     "react-autosuggest": "*",
     "react-bootstrap": "*",
+	  "react-dom": "*",
     "react-jsonschema-form": "0.38",
     "react-masonry-component": "*",
     "react-spinner": "*",
@@ -56,15 +60,6 @@
     "querystring": "*",
     "util": "*",
     "es6-promise": "*",
-    "isomorphic-fetch": "*",
-	  "react": "*",
-	  "react-addons-css-transition-group": "*",
-	  "react-addons-update": "*",
-	  "react-dom": "*"
-  },
-	"peerDependencies": {
-		"react": "*",
-		"react-addons-update": "*",
-		"react-addons-css-transition-group": "*"
-	}
+    "isomorphic-fetch": "*"
+  }
 }
