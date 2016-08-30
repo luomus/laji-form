@@ -1,6 +1,6 @@
 # README #
 
-LajiForm is a React module, that can be installed as a npm dependency. LajiForm is a wrapper for [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form).
+LajiForm is a dynamic form built on React. It can be used as a standalone library or as a React component. LajiForm is a wrapper for [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form).
 
 # Installing #
 
@@ -10,16 +10,24 @@ Install as a git dependency:
 npm install git+https://git@bitbucket.org:luomus/laji-form.js.git --save
 ```
 
-```react``` and ```react-addons-css-transition-group``` are peer-dependencies, so they must also be installed. Npm doesn't install peer-dependencies automatically.
-
 # Usage #
 
-LajiForm passes all its properties to <Form />.
+LajiForm passes all its properties to react-jsonschema-form.
+
+## Usage as a standalone library ##
+
+```
+import LajiForm from "laji-form";
+
+LajiForm({schema: schema, uiSchema: uiSchema, formData: formData, rootElem: document.getElementById("app")});
+```
+
+## Usage as a React component ##
 
 ```
 import React from "react";
 import { render } from "react-dom";
-import LajiForm from "laji-form";
+import LajiForm from "laji-form/lib/components/LajiForm";
 
 render(<LajiForm schema={...} uiSchema={...} formData={...} />, document.getElementById("app"));
 ```
@@ -43,36 +51,7 @@ Pass the implementation to LajiForm like so:
 
 ## Styles ##
 
-### The usual way ###
-
 Styles can be found at  ```dist/styles.css```.
-
-### The webpack way ###
-
-Styles can be imported with webpack loaders:
-
-```
-import "laji-form/lib/styles";
-```
-
-Webpack configuration for styles:
-```
-...
-loaders: [
-	{ test: /\.css$/,  loader: "style-loader!css-loader" },
-	{ test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
-	{ test: /\.gif$/, loader: "url-loader?mimetype=image/png" },
-	{ test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/, loader: "url-loader?mimetype=application/font-woff" },
-	{ test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, loader: "file-loader?name=[name].[ext]" },
-]
-...
-```
-
-Npm packages needed for webpack style injections:
-```
-npm install less less-loader style-loader css-loader file-loader url-loader --save
-```
-
 
 # Development #
 
