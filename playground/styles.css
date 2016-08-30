@@ -111,6 +111,15 @@ body .laji-form {
 	padding-bottom: 15px;
 }
 
+.laji-form .leaflet-popup-content-wrapper {
+	border-radius: 5px;
+}
+.laji-form .leaflet-popup-content ul {
+	list-style: none;
+	padding: 0;
+}
+
+
 .laji-form :not(.btn-group) > .btn-danger {
 	width: auto;
 	float: right;

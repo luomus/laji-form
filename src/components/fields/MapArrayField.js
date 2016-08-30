@@ -196,7 +196,7 @@ export default class MapArrayField extends Component {
 						getPopup={this.getPopup}
 					  lang={this.props.registry.lang}
 					/>
-					{options.popupFields ? <Tooltip data={this.getPopupData()} ref="popup"/> : null}
+					{options.popupFields ? <div style={{display: "none"}}><Popup data={this.getPopupData()} ref="popup"/></div> : null}
 				</div>
 
 				<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
@@ -231,9 +231,19 @@ export default class MapArrayField extends Component {
 
 		const SchemaField = this.props.registry.fields.SchemaField;
 		
-		return (itemFormData) ?
-			(<div key={idx + (isInline ? "-inline" : "-default")} className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
-				<SchemaField  {...this.props} {...this.state} schema={itemSchema} formData={itemFormData} idSchema={itemIdSchema} errorSchema={itemErrorSchema} uiSchema={uiSchema} name={undefined}/>
+		return (itemFormData) ? (
+			<div
+				key={idx + (isInline ? "-inline" : "-default")}
+				className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
+				<SchemaField
+					{...this.props}
+					{...this.state}
+					schema={itemSchema}
+					formData={itemFormData}
+					idSchema={itemIdSchema}
+					errorSchema={itemErrorSchema}
+					uiSchema={uiSchema}
+					name={undefined} />
 			</div>) :
 			null;
 	}
@@ -278,17 +288,17 @@ export default class MapArrayField extends Component {
 	}
 }
 
-class Tooltip extends Component {
+class Popup extends Component {
 	render() {
 		const { data } = this.props;
-		return (
+		return (data && Object.keys(data).length) ? (
 			<ul ref="popup">
 				{data ? Object.keys(data).map(fieldName => {
 					const item = data[fieldName];
 					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.join(", ") : item}</li>;
 				}) : null}
 			</ul>
-		);
+		) : null;
 	}
 }
 
