@@ -63,7 +63,7 @@ export default class MapArrayField extends Component {
 
 	onAdd = (e) => {
 		let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
-		item.wgs84Geometry = e.data.geometry;
+		item.wgs84Geometry = e.feature.geometry;
 		let formData = this.props.formData;
 		if (formData && formData.length) formData.push(item);
 		else formData = [item];
@@ -80,8 +80,8 @@ export default class MapArrayField extends Component {
 
 	onEdited = (e) => {
 		let formData = this.props.formData;
-		Object.keys(e.data).forEach( idx => {
-			let geoJSON = e.data[idx];
+		Object.keys(e.features).forEach( idx => {
+			let geoJSON = e.features[idx];
 			formData[idx].wgs84Geometry = geoJSON.geometry;
 		});
 		return {propsChange: formData};
@@ -188,7 +188,7 @@ export default class MapArrayField extends Component {
 				<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
 					<MapComponent
 						ref={"map"}
-						drawData={{data: this.state.data}}
+						drawData={{featureCollection: {type: "featureCollection", features: this.state.data}}}
 						activeIdx={this.state.activeIdx}
 						latlng={[62.3, 25]}
 						zoom={3}
