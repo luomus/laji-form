@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import { findDOMNode } from "react-dom";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
@@ -7,13 +8,18 @@ import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema
 import LajiMap from "laji-map";
 import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Pagination, Row } from "react-bootstrap";
+import { Pagination, Nav, NavItem, Row } from "react-bootstrap";
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
 		return {[schema.label || fieldName]: units.map(unit => unit.informalNameString)};
 	}
 }
+
+const SCROLLING = "SCROLLING";
+const SQUEEZING = "SQUEEZING";
+const FIXED = "FIXED";
+
 
 export default class MapArrayField extends Component {
 	static propTypes = {
@@ -27,7 +33,16 @@ export default class MapArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {...this.getStateFromProps(props), direction: "directionless"};
+		this.state = {...this.getStateFromProps(props), direction: "directionless", inlineOutOfView: false};
+		this.fixedHeight = 300;
+	}
+
+	componentDidMount() {
+		window.addEventListener("scroll", this.onScroll);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onScroll);
 	}
 
 	componentWillReceiveProps(props) {
@@ -166,15 +181,47 @@ export default class MapArrayField extends Component {
 		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
 		const colType = options && options.colType;
 
-		const buttonEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
+		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
+		const paginationEnabled = !hasInlineProps && navigationEnabled;
+		const navEnabled = hasInlineProps && navigationEnabled;
+
+		const navProps = {
+			activeKey: (this.state.activeIdx !== undefined) ? this.state.activeIdx : undefined,
+			bsStyle: "tabs",
+			onSelect: eventKey => this.focusToLayer(parseInt(eventKey))
+		};
 
 		const description = options.description;
 		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
 
+		const inlineStyle = {};
+
+		const {fixedHeight} = this;
+		const mapHeightStyle = {height: this.state.mapHeight};
+		const heightFixerStyle = {height: fixedHeight};
+		const mapHeightFixerStyle = {height: 0};
+
+		let inlineHeight = fixedHeight;
+		let scrolledHeight = this.state.inlineHeight - this.state.inlineScrolledAmount;
+
+		const state = this.state.scrollState;
+
+		if (state === SQUEEZING &&
+		    ["inlineHeight", "inlineScrolledAmount"].every(stateProp => this.state.hasOwnProperty(stateProp)))
+			inlineHeight = scrolledHeight;
+
+		if (state !== SCROLLING) {
+			inlineStyle.height = inlineHeight;
+			mapHeightStyle.height = Math.max(inlineHeight, this.state.mapHeight - this.state.inlineScrolledAmount);
+			heightFixerStyle.height = this.state.inlineHeight;
+			mapHeightFixerStyle.height = this.state.inlineScrolledAmount;
+			mapHeightFixerStyle.height = this.state.mapHeight - mapHeightStyle.height
+		}
+
 		return (<div>
 			<TitleField title={title} />
 			{description !== undefined ? <DescriptionField description={description} /> : null}
-			{buttonEnabled ? <Pagination
+			{paginationEnabled ? <Pagination
 				className="container"
 				activePage={(this.state.activeIdx !== undefined) ? this.state.activeIdx + 1 : undefined}
 				items={(this.state.data) ? this.state.data.length : 0}
@@ -184,23 +231,35 @@ export default class MapArrayField extends Component {
 				maxButtons={5}
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
-			<Row>
-				<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
-					<MapComponent
-						ref={"map"}
-						drawData={{featureCollection: {type: "featureCollection", features: this.state.data}}}
-						activeIdx={this.state.activeIdx}
-						latlng={[62.3, 25]}
-						zoom={3}
-						onChange={this.onMapChange}
-						getPopup={this.getPopup}
-					  lang={this.props.registry.lang}
-					/>
-					{options.popupFields ? <div style={{display: "none"}}><Popup data={this.getPopupData()} ref="popup"/></div> : null}
-				</div>
+			<Row ref="mapAndSchemasContainer" >
+				<div ref="inlineContainer" className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)} style={inlineStyle} >
+					<div className={hasInlineProps ? " col-" + colType + "-6" : ""} >
+						<MapComponent
+							style={state !== SCROLLING ? mapHeightStyle : undefined}
+							ref={"map"}
+							drawData={{featureCollection: {type: "featureCollection", features: this.state.data}}}
+							activeIdx={this.state.activeIdx}
+							latlng={[62.3, 25]}
+							zoom={3}
+							onChange={this.onMapChange}
+							getPopup={this.getPopup}
+							lang={this.props.registry.lang}
+						/>
+						{(state !== SCROLLING) ? <div ref="mapHeightFixer" style={mapHeightFixerStyle} /> : null}
+						{options.popupFields ? <div style={{display: "none"}}><Popup data={this.getPopupData()} ref="popup"/></div> : null}
+					</div>
 
+					{hasInlineProps ? (
+						<div ref="inlineSchemaContainer">
+							{navEnabled ? <div className={colType ? "col-" + colType + "-6" : "col-xs-12"}><Nav {...navProps} >{this.state.data.map((item, i) => <NavItem key={i} eventKey={i} >{i + 1}</NavItem>)}</Nav></div> : null}
+							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+								{hasInlineProps ? this.renderInlineSchemaField() : null}
+							</ReactCSSTransitionGroup>
+						</div>) : null
+					}
+				</div>
+				{(state !== SCROLLING) ?  <div style={heightFixerStyle} /> : null}
 				<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-						{hasInlineProps ? this.renderInlineSchemaField() : null}
 						{this.renderSchemaField()}
 				</ReactCSSTransitionGroup>
 			</Row>
@@ -230,10 +289,11 @@ export default class MapArrayField extends Component {
 		const colType = options && options.colType;
 
 		const SchemaField = this.props.registry.fields.SchemaField;
-		
+
 		return (itemFormData) ? (
 			<div
 				key={idx + (isInline ? "-inline" : "-default")}
+				ref={isInline ? undefined : "schema"}
 				className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
 				<SchemaField
 					{...this.props}
@@ -286,6 +346,27 @@ export default class MapArrayField extends Component {
 		});
 		return data;
 	}
+
+	onScroll = () => {
+		const inlineRef = this.refs.inlineContainer;
+		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
+
+		if (mapAndSchemasRef) {
+			const mapAndSchemasElem = findDOMNode(mapAndSchemasRef);
+			const inlineElem = findDOMNode(inlineRef);
+			const inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top;
+
+			const inlineHeight = inlineElem.scrollHeight;
+			let mapHeight = findDOMNode(this.refs.map).offsetHeight;
+			if (this.refs.mapHeightFixer) mapHeight += findDOMNode(this.refs.mapHeightFixer).scrollHeight;
+
+			let scrolledHeight = inlineHeight - inlineScrolledAmount;
+			const scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
+				(scrolledHeight < this.fixedHeight) ? FIXED : SQUEEZING;
+
+			this.setState({scrollState, mapHeight, inlineHeight, inlineScrolledAmount});
+		}
+	}
 }
 
 class Popup extends Component {
@@ -311,6 +392,6 @@ class MapComponent extends Component {
 	}
 
 	render() {
-		return (<div className="laji-form-map" ref="map" />);
+		return (<div className="laji-form-map" style={this.props.style} ref="map" />);
 	}
 }

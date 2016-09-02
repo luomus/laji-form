@@ -8,7 +8,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = false;
+const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -17,7 +17,7 @@ class LajiFormApp extends Component {
 		super(props);
 		let lang = "fi";
 		this.state = {
-			formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
+			//formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
 			onChange: this.onChange,
 			onSubmit: this.onSubmit,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),

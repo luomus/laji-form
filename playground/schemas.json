@@ -1006,12 +1006,78 @@
 			"leg": [
 				"MA.97"
 			],
-			"editors": [
-				"MA.97"
-			],
 			"legPublic": true
 		},
 		"gatherings": [
+			{
+				"notes": "test 2",
+				"predominantTree": "",
+				"units": [
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					}
+				],
+				"wgs84Geometry": {
+					"type": "Point",
+					"radius": 4000,
+					"coordinates": [
+						24.192325223286232,
+						61.1028355742579
+					]
+				},
+				"habitat": [
+					"",
+					"",
+					"",
+					"",
+					""
+				]
+			},
 			{
 				"notes": "test",
 				"predominantTree": "",

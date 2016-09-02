@@ -104,7 +104,6 @@ body .laji-form {
 
 .laji-form .laji-form-map {
 	z-index: 1;
-	margin-bottom: 15px;
 	height: 600px;
 }
 .laji-form .map-field .field-description {
@@ -204,4 +203,23 @@ body .laji-form {
 .laji-form button.button-right {
 	float: right;
 	white-space: nowrap;
+}
+
+.laji-form .out-of-view {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	background: white;
+	z-index: 1;
+	border-bottom: 1px solid #e5e5e5;
+	-webkit-box-shadow: -2px 18px 43px -18px rgba(0,0,0,0.75);
+	-moz-box-shadow: -2px 18px 43px -18px rgba(0,0,0,0.75);
+	box-shadow: -2px 18px 43px -18px rgba(0,0,0,0.75);
+}
+.form-map-inline-container {
+	overflow: hidden;
+}
+.map-array-inline-schema {
+	overflow: auto;
 }
