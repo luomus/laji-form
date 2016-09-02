@@ -20,7 +20,6 @@ const SCROLLING = "SCROLLING";
 const SQUEEZING = "SQUEEZING";
 const FIXED = "FIXED";
 
-
 export default class MapArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -198,8 +197,11 @@ export default class MapArrayField extends Component {
 
 		const {fixedHeight} = this;
 		const mapHeightStyle = {height: this.state.mapHeight};
+		const inlineRightHeightStyle = {height: this.state.inlineRightHeight};
+
 		const heightFixerStyle = {height: fixedHeight};
 		const mapHeightFixerStyle = {height: 0};
+		const inlineRightHeightFixerStyle = {height: 0};
 
 		let inlineHeight = fixedHeight;
 		let scrolledHeight = this.state.inlineHeight - this.state.inlineScrolledAmount;
@@ -212,10 +214,12 @@ export default class MapArrayField extends Component {
 
 		if (state !== SCROLLING) {
 			inlineStyle.height = inlineHeight;
-			mapHeightStyle.height = Math.max(inlineHeight, this.state.mapHeight - this.state.inlineScrolledAmount);
+			if (this.state.mapHeight > inlineHeight) {
+				mapHeightStyle.height = Math.max(inlineHeight, (this.state.mapHeight - this.state.inlineScrolledAmount || 0));
+			}
 			heightFixerStyle.height = this.state.inlineHeight;
-			mapHeightFixerStyle.height = this.state.inlineScrolledAmount;
-			mapHeightFixerStyle.height = this.state.mapHeight - mapHeightStyle.height
+			mapHeightFixerStyle.height = this.state.mapHeight - mapHeightStyle.height || 0;
+			inlineRightHeightFixerStyle.height = this.state.inlineRightHeight - inlineRightHeightStyle.height || 0;
 		}
 
 		return (<div>
@@ -250,11 +254,17 @@ export default class MapArrayField extends Component {
 					</div>
 
 					{hasInlineProps ? (
-						<div ref="inlineSchemaContainer">
-							{navEnabled ? <div className={colType ? "col-" + colType + "-6" : "col-xs-12"}><Nav {...navProps} >{this.state.data.map((item, i) => <NavItem key={i} eventKey={i} >{i + 1}</NavItem>)}</Nav></div> : null}
+						<div>
+							{navEnabled ?
+								<div ref="navContainer" className={colType ? "col-" + colType + "-6" : "col-xs-12"}>
+									<Nav {...navProps} >
+										{this.state.data.map((item, i) => <NavItem key={i} eventKey={i} >{i + 1}</NavItem>)}
+									</Nav>
+								</div> : null}
 							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
 								{hasInlineProps ? this.renderInlineSchemaField() : null}
 							</ReactCSSTransitionGroup>
+							{(state !== SCROLLING) ? <div ref="inlineRightHeightFixer" style={inlineRightHeightFixerStyle} /> : null}
 						</div>) : null
 					}
 				</div>
@@ -267,7 +277,7 @@ export default class MapArrayField extends Component {
 	</div>)
 	}
 
-	getSchemaForFields = (fields, isInline) => {
+	getSchemaForFields = (fields, isInline, style) => {
 		let {formData, idSchema, errorSchema} = this.props;
 		let idx = this.state.activeIdx;
 
@@ -293,8 +303,9 @@ export default class MapArrayField extends Component {
 		return (itemFormData) ? (
 			<div
 				key={idx + (isInline ? "-inline" : "-default")}
-				ref={isInline ? undefined : "schema"}
-				className={isInline ? "col-" + colType + "-6" : "col-xs-12"}>
+				ref={isInline ? "inlineSchema" : "schema"}
+				style={style}
+				className={isInline ? "map-array-inline-schema col-" + colType + "-6" : "col-xs-12"}>
 				<SchemaField
 					{...this.props}
 					{...this.state}
@@ -308,8 +319,8 @@ export default class MapArrayField extends Component {
 			null;
 	}
 
-	renderInlineSchemaField = () => {
-		return this.getSchemaForFields(this.props.uiSchema["ui:options"].inlineProperties, !!"is inline");
+	renderInlineSchemaField = (style) => {
+		return this.getSchemaForFields(this.props.uiSchema["ui:options"].inlineProperties, !!"is inline", style);
 	}
 
 	renderSchemaField = () => {
@@ -354,17 +365,24 @@ export default class MapArrayField extends Component {
 		if (mapAndSchemasRef) {
 			const mapAndSchemasElem = findDOMNode(mapAndSchemasRef);
 			const inlineElem = findDOMNode(inlineRef);
+			const inlineSchemaElem = this.refs.inlineSchema;
+			const navContainerElem = this.refs.navContainer;
+
 			const inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top;
 
 			const inlineHeight = inlineElem.scrollHeight;
 			let mapHeight = findDOMNode(this.refs.map).offsetHeight;
 			if (this.refs.mapHeightFixer) mapHeight += findDOMNode(this.refs.mapHeightFixer).scrollHeight;
 
+			let inlineRightHeight = (inlineSchemaElem) ? inlineSchemaElem.scrollHeight : 0;
+			if (navContainerElem) inlineRightHeight += navContainerElem.scrollHeight;
+			if (this.refs.inlineRightHeightFixer) inlineRightHeight += findDOMNode(this.refs.inlineRightHeightFixer).scrollHeight;
+
 			let scrolledHeight = inlineHeight - inlineScrolledAmount;
 			const scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
 				(scrolledHeight < this.fixedHeight) ? FIXED : SQUEEZING;
 
-			this.setState({scrollState, mapHeight, inlineHeight, inlineScrolledAmount});
+			this.setState({scrollState, mapHeight, inlineHeight, inlineRightHeight, inlineScrolledAmount});
 		}
 	}
 }

@@ -1060,6 +1060,54 @@
 						"substrate": "",
 						"taste": "",
 						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
 					}
 				],
 				"wgs84Geometry": {
