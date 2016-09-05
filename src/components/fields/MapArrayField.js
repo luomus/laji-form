@@ -198,7 +198,13 @@ export default class MapArrayField extends Component {
 
 		const inlineStyle = {width: this.state.containerWidth, left: this.state.containerLeft};
 
-		const {fixedHeight} = this;
+		//const {fixedHeight} = this;
+		//let fixedHeight = this.fixedHeight;
+		//if (this.state.schemaBottomDistance) {
+		//	fixedHeight = Math.min(fixedHeight, this.state.schemaBottomDistance);
+		//}
+		let fixedHeight = this.state.fixedHeight;
+		//const fixedHeight = Math.min(this.fixedHeight, (this.state.schemaHeight || this.fixedHeight));
 		const mapStyle = {height: this.state.mapHeight};
 		const inlineSchemaStyle = {height: this.state.inlineSchemaHeight};
 
@@ -374,7 +380,8 @@ export default class MapArrayField extends Component {
 		const inlineRef = this.refs.inlineContainer;
 		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
 
-		let inlineHeight, mapHeight, inlineSchemaHeight, navContainerHeight, inlineScrolledAmount;
+		let inlineHeight, mapHeight, inlineSchemaHeight, schemaBottomDistance,
+		    navContainerHeight, inlineScrolledAmount, fixedHeight;
 		let scrollState = SCROLLING;
 
 		if (mapAndSchemasRef) {
@@ -388,8 +395,13 @@ export default class MapArrayField extends Component {
 				inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top;
 
 				inlineHeight = inlineElem.scrollHeight;
+				if (this.refs.schema) {
+					schemaBottomDistance = this.refs.schema.getBoundingClientRect().bottom;
+				}
+
 				mapHeight = findDOMNode(this.refs.map).offsetHeight;
 				if (this.refs.mapHeightFixer) mapHeight += findDOMNode(this.refs.mapHeightFixer).scrollHeight;
+
 
 				navContainerHeight = (navContainerElem) ? navContainerElem.scrollHeight : 0;
 
@@ -399,12 +411,17 @@ export default class MapArrayField extends Component {
 				}
 
 				let scrolledHeight = inlineHeight - inlineScrolledAmount;
-				scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
-					(scrolledHeight < this.fixedHeight) ? FIXED : SQUEEZING;
 
+				fixedHeight = this.fixedHeight;
+				fixedHeight = Math.min(fixedHeight, schemaBottomDistance || 0);
+
+				scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
+					(scrolledHeight < fixedHeight) ? FIXED : SQUEEZING;
+				if (fixedHeight < 0) scrollState = SCROLLING;
 			}
 		}
-		return {scrollState, mapHeight, inlineHeight, inlineSchemaHeight, navContainerHeight, inlineScrolledAmount};
+		return {scrollState, mapHeight, inlineHeight, inlineSchemaHeight,
+		        schemaBottomDistance, navContainerHeight, inlineScrolledAmount, fixedHeight};
 	}
 
 	getColType = (props) => {
