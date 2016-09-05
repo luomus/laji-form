@@ -8,7 +8,7 @@ import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema
 import LajiMap from "laji-map";
 import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Pagination, Nav, NavItem, Row } from "react-bootstrap";
+import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
@@ -185,26 +185,14 @@ export default class MapArrayField extends Component {
 
 		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 		const paginationEnabled = !hasInlineProps && navigationEnabled;
-		const navEnabled = hasInlineProps && navigationEnabled;
-
-		const navProps = {
-			activeKey: (this.state.activeIdx !== undefined) ? this.state.activeIdx : undefined,
-			bsStyle: "tabs",
-			onSelect: eventKey => this.focusToLayer(parseInt(eventKey))
-		};
 
 		const description = options.description;
 		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
 
 		const inlineStyle = {width: this.state.containerWidth, left: this.state.containerLeft};
 
-		//const {fixedHeight} = this;
-		//let fixedHeight = this.fixedHeight;
-		//if (this.state.schemaBottomDistance) {
-		//	fixedHeight = Math.min(fixedHeight, this.state.schemaBottomDistance);
-		//}
 		let fixedHeight = this.state.fixedHeight;
-		//const fixedHeight = Math.min(this.fixedHeight, (this.state.schemaHeight || this.fixedHeight));
+
 		const mapStyle = {height: this.state.mapHeight};
 		const inlineSchemaStyle = {height: this.state.inlineSchemaHeight};
 
@@ -230,7 +218,8 @@ export default class MapArrayField extends Component {
 			}
 			if (inlineContentHeight > inlineHeight) {
 				inlineSchemaStyle.height = (inlineHeight > (inlineContentHeight - this.state.inlineScrolledAmount || 0)) ?
-					inlineHeight - this.state.navContainerHeight : (this.state.inlineSchemaHeight - this.state.inlineScrolledAmount || 0);
+					(inlineHeight - this.state.navContainerHeight) :
+					(this.state.inlineSchemaHeight - this.state.inlineScrolledAmount || 0);
 			}
 			heightFixerStyle.height = this.state.inlineHeight;
 			mapHeightFixerStyle.height = this.state.mapHeight - mapStyle.height || 0;
@@ -251,7 +240,9 @@ export default class MapArrayField extends Component {
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
 			<Row ref="mapAndSchemasContainer" >
-				<div ref="inlineContainer" className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)} style={inlineStyle} >
+				<div ref="inlineContainer"
+				     className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)}
+				     style={inlineStyle} >
 					<div className={hasInlineProps ? " col-" + colType + "-6" : ""} >
 						<MapComponent
 							style={state !== SCROLLING ? mapStyle : undefined}
@@ -262,35 +253,90 @@ export default class MapArrayField extends Component {
 							zoom={3}
 							onChange={this.onMapChange}
 							getPopup={this.getPopup}
+							onInitializeDrawLayer={this.onInitializeLayer}
 							lang={this.props.registry.lang}
 						/>
 						{(state !== SCROLLING) ? <div ref="mapHeightFixer" style={mapHeightFixerStyle} /> : null}
-						{options.popupFields ? <div style={{display: "none"}}><Popup data={this.getPopupData()} ref="popup"/></div> : null}
+						{options.popupFields ?
+							<div style={{display: "none"}}>
+								<Popup data={this.getPopupData(this.state.popupIdx)} ref="popup"/>
+							</div> : null}
 					</div>
 
 					{hasInlineProps ? (
 						<div>
-							{navEnabled ?
-								<div ref="navContainer" className={colType ? "col-" + colType + "-6" : "col-xs-12"}>
-									<Nav {...navProps} >
-										{this.state.data.map((item, i) => <NavItem key={i} eventKey={i} >{i + 1}</NavItem>)}
-									</Nav>
-								</div> : null}
-							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+							{this.renderNav()}
+							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction}
+							                         transitionEnterTimeout={300}
+							                         transitionLeaveTimeout={300}>
 								{hasInlineProps ? this.renderInlineSchemaField(inlineSchemaStyle,
-									(state !== SCROLLING) ? <div ref="inlineSchemaHeightFixer" className={"col-"  + colType + "-6"} style={inlineSchemaHeightFixerStyle} /> : null)
+									(state !== SCROLLING) ?
+										<div ref="inlineSchemaHeightFixer"
+										     className={"col-"  + colType + "-6"}
+										     style={inlineSchemaHeightFixerStyle} /> : null)
 									: null}
 							</ReactCSSTransitionGroup>
 						</div>) : null
 					}
 				</div>
 				{(state !== SCROLLING) ?  <div style={heightFixerStyle} /> : null}
-				<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+				<ReactCSSTransitionGroup
+					transitionName={"map-array-" + this.state.direction}
+					transitionEnterTimeout={300}
+					transitionLeaveTimeout={300}>
 						{this.renderSchemaField()}
 				</ReactCSSTransitionGroup>
 			</Row>
 
 	</div>)
+	}
+
+	renderNav = () => {
+		const options = this.props.uiSchema["ui:options"];
+		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
+		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
+		const navEnabled = hasInlineProps && navigationEnabled;
+		const colType = this.getColType(this.props);
+
+		return navEnabled ?
+			<div ref="navContainer" className={colType ? "col-" + colType + "-6" : "col-xs-12"}>
+				<Nav bsStyle="tabs" >
+					{this.state.data.map((item, i) => {
+						const popup = <Popup data={this.getPopupData(i)} />;
+						const tooltip = <Tooltip id={"nav-tooltip-" + i}>{popup}</Tooltip>;
+
+						const nav = (
+							<NavItem key={i} eventKey={i} active={i === this.state.activeIdx}
+							         className={this.state.hoveredNav === i ? "hover" : ""}
+							         onClick={() => this.focusToLayer(i)}
+							         onMouseEnter={this.onNavItemMouseEnter(i)}
+							         onMouseLeave={this.onNavItemMouseLeave(i)}>
+								{i + 1}
+							</NavItem>
+						)
+
+						return popup ? (
+							<OverlayTrigger key={i + "-tooltip"}
+							                placement="bottom"
+							                overlay={tooltip} >
+								{nav}
+							</OverlayTrigger>
+						) : nav
+					}
+				)}
+			</Nav>
+		</div> : null
+	}
+
+	onNavItemMouseEnter = (idx) => () => {
+		const {map} = this.refs.map;
+		const layer = map.getDrawLayerById(map.idxsToIds[idx]);
+		map.updateLayerStyle(layer, {color: "#36B43A"});
+	}
+
+	onNavItemMouseLeave = (idx) => () => {
+		const {map} = this.refs.map;
+		map.updateDrawLayerStyle(map.idxsToIds[idx]);
 	}
 
 	getSchemaForFields = (fields, isInline, style, sibling) => {
@@ -352,14 +398,14 @@ export default class MapArrayField extends Component {
 		this.setState({popupIdx: idx}, () => openPopupCallback(this.refs.popup.refs.popup));
 	}
 
-	getPopupData = () => {
+	getPopupData = (idx) => {
 		const popupOptions = this.props.uiSchema["ui:options"].popupFields;
 
 		const data = {};
 		if (!this.props.formData) return data;
 		popupOptions.forEach(field => {
 			const fieldName = field.field;
-			const itemFormData = this.props.formData[this.state.popupIdx];
+			const itemFormData = this.props.formData[idx];
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			let fieldSchema = this.props.schema.items.properties;
 
@@ -374,6 +420,11 @@ export default class MapArrayField extends Component {
 
 		});
 		return data;
+	}
+
+	onInitializeLayer = (idx, layer) => {
+		layer.on("mouseover", () => this.setState({hoveredNav: idx}));
+		layer.on("mouseout", () => this.setState({hoveredNav: undefined}));
 	}
 
 	getScrollVariables = () => {
@@ -480,7 +531,7 @@ class Popup extends Component {
 	render() {
 		const { data } = this.props;
 		return (data && Object.keys(data).length) ? (
-			<ul ref="popup">
+			<ul ref="popup" className="map-data-tooltip">
 				{data ? Object.keys(data).map(fieldName => {
 					const item = data[fieldName];
 					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.join(", ") : item}</li>;

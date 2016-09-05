@@ -113,9 +113,10 @@ body .laji-form {
 .laji-form .leaflet-popup-content-wrapper {
 	border-radius: 5px;
 }
-.laji-form .leaflet-popup-content ul {
+.map-data-tooltip {
 	list-style: none;
 	padding: 0;
+	text-align: initial;
 }
 
 
@@ -216,10 +217,15 @@ body .laji-form {
 	-moz-box-shadow: -2px 18px 43px -18px rgba(0,0,0,0.75);
 	box-shadow: -2px 18px 43px -18px rgba(0,0,0,0.75);
 }
-.form-map-inline-container {
+.laji-form .form-map-inline-container {
 	overflow: hidden;
 }
-.map-array-inline-schema {
+.laji-form .map-array-inline-schema {
 	overflow-y: auto;
 	overflow-x: hidden;
+}
+.laji-form .nav-tabs>li.hover>a {
+	border-color: #eee #eee #ddd;
+	text-decoration: none;
+	background-color: #eee;
 }
