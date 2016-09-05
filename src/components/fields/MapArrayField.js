@@ -311,9 +311,8 @@ export default class MapArrayField extends Component {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
 		return (itemFormData) ? (
-			<div>
+			<div key={idx + (isInline ? "-inline" : "-default")}>
 				<div
-					key={idx + (isInline ? "-inline" : "-default")}
 					ref={isInline ? "inlineSchema" : "schema"}
 					style={style}
 					className={isInline ? "map-array-inline-schema col-" + colType + "-6" : "col-xs-12"}>
