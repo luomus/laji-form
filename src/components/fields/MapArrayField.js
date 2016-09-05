@@ -302,8 +302,7 @@ export default class MapArrayField extends Component {
 			<div ref="navContainer" className={colType ? "col-" + colType + "-6" : "col-xs-12"}>
 				<Nav bsStyle="tabs" >
 					{this.state.data.map((item, i) => {
-						const popup = <Popup data={this.getPopupData(i)} />;
-						const tooltip = <Tooltip id={"nav-tooltip-" + i}>{popup}</Tooltip>;
+						const popupData = this.getPopupData(i);
 
 						const nav = (
 							<NavItem key={i} eventKey={i} active={i === this.state.activeIdx}
@@ -315,10 +314,10 @@ export default class MapArrayField extends Component {
 							</NavItem>
 						)
 
-						return popup ? (
+						return Object.keys(popupData).length ? (
 							<OverlayTrigger key={i + "-tooltip"}
 							                placement="bottom"
-							                overlay={tooltip} >
+							                overlay={<Tooltip id={"nav-tooltip-" + i}><Popup data={popupData} /></Tooltip>} >
 								{nav}
 							</OverlayTrigger>
 						) : nav
