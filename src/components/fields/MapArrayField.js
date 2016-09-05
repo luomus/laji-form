@@ -37,11 +37,15 @@ export default class MapArrayField extends Component {
 	}
 
 	componentDidMount() {
+		this.updateInlineWidth();
+		this.onScroll();
 		window.addEventListener("scroll", this.onScroll);
+		window.addEventListener("resize", this.updateInlineWidth);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.onScroll);
+		window.removeEventListener("resize", this.updateInlineWidth);
 	}
 
 	componentWillReceiveProps(props) {
@@ -193,11 +197,11 @@ export default class MapArrayField extends Component {
 		const description = options.description;
 		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
 
-		const inlineStyle = {};
+		const inlineStyle = {width: this.state.containerWidth, left: this.state.containerLeft};
 
 		const {fixedHeight} = this;
-		const mapHeightStyle = {height: this.state.mapHeight};
-		const inlineSchemaHeightStyle = {height: this.state.inlineSchemaHeight};
+		const mapStyle = {height: this.state.mapHeight};
+		const inlineSchemaStyle = {height: this.state.inlineSchemaHeight};
 
 		const heightFixerStyle = {height: fixedHeight};
 		const mapHeightFixerStyle = {height: 0};
@@ -217,18 +221,15 @@ export default class MapArrayField extends Component {
 		if (state !== SCROLLING) {
 			inlineStyle.height = inlineHeight;
 			if (this.state.mapHeight > inlineHeight) {
-				mapHeightStyle.height = Math.max(inlineHeight, (this.state.mapHeight - this.state.inlineScrolledAmount || 0));
+				mapStyle.height = Math.max(inlineHeight, (this.state.mapHeight - this.state.inlineScrolledAmount || 0));
 			}
 			if (inlineContentHeight > inlineHeight) {
-				inlineSchemaHeightStyle.height = (inlineHeight > (inlineContentHeight - this.state.inlineScrolledAmount || 0)) ?
+				inlineSchemaStyle.height = (inlineHeight > (inlineContentHeight - this.state.inlineScrolledAmount || 0)) ?
 					inlineHeight - this.state.navContainerHeight : (this.state.inlineSchemaHeight - this.state.inlineScrolledAmount || 0);
 			}
-
 			heightFixerStyle.height = this.state.inlineHeight;
-
-			mapHeightFixerStyle.height = this.state.mapHeight - mapHeightStyle.height || 0;
-
-			inlineSchemaHeightFixerStyle.height = this.state.inlineSchemaHeight - inlineSchemaHeightStyle.height || 0;
+			mapHeightFixerStyle.height = this.state.mapHeight - mapStyle.height || 0;
+			inlineSchemaHeightFixerStyle.height = this.state.inlineSchemaHeight - inlineSchemaStyle.height || 0;
 		}
 
 		return (<div>
@@ -248,7 +249,7 @@ export default class MapArrayField extends Component {
 				<div ref="inlineContainer" className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)} style={inlineStyle} >
 					<div className={hasInlineProps ? " col-" + colType + "-6" : ""} >
 						<MapComponent
-							style={state !== SCROLLING ? mapHeightStyle : undefined}
+							style={state !== SCROLLING ? mapStyle : undefined}
 							ref={"map"}
 							drawData={{featureCollection: {type: "featureCollection", features: this.state.data}}}
 							activeIdx={this.state.activeIdx}
@@ -271,7 +272,7 @@ export default class MapArrayField extends Component {
 									</Nav>
 								</div> : null}
 							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-								{hasInlineProps ? this.renderInlineSchemaField(inlineSchemaHeightStyle,
+								{hasInlineProps ? this.renderInlineSchemaField(inlineSchemaStyle,
 									(state !== SCROLLING) ? <div ref="inlineSchemaHeightFixer" className={"col-"  + colType + "-6"} style={inlineSchemaHeightFixerStyle} /> : null)
 									: null}
 							</ReactCSSTransitionGroup>
@@ -396,6 +397,22 @@ export default class MapArrayField extends Component {
 
 			this.setState({scrollState, mapHeight, inlineHeight, inlineSchemaHeight, navContainerHeight, inlineScrolledAmount});
 		}
+	}
+
+	updateInlineWidth = () => {
+		this.setState({...this.getInlineWidth()});
+	}
+
+	getInlineWidth = () => {
+		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
+
+		if (mapAndSchemasRef) {
+			const mapAndSchemasElem = findDOMNode(mapAndSchemasRef);
+			const containerWidth = mapAndSchemasElem.offsetWidth;
+			const containerLeft = mapAndSchemasElem.getBoundingClientRect().left;
+			return {containerWidth, containerLeft};
+		}
+		return {};
 	}
 }
 
