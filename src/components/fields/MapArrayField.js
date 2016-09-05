@@ -252,7 +252,7 @@ export default class MapArrayField extends Component {
 							ref={"map"}
 							drawData={{featureCollection: {type: "featureCollection", features: this.state.data}}}
 							activeIdx={this.state.activeIdx}
-							latlng={[62.3, 25]}
+							center={[62.3, 25]}
 							zoom={3}
 							onChange={this.onMapChange}
 							getPopup={this.getPopup}
