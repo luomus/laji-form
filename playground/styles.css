@@ -220,5 +220,6 @@ body .laji-form {
 	overflow: hidden;
 }
 .map-array-inline-schema {
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }

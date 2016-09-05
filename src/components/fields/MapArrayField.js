@@ -37,15 +37,14 @@ export default class MapArrayField extends Component {
 	}
 
 	componentDidMount() {
-		this.updateInlineWidth();
-		this.onScroll();
-		window.addEventListener("scroll", this.onScroll);
-		window.addEventListener("resize", this.updateInlineWidth);
+		this.updateFromDimensions();
+		window.addEventListener("scroll", this.updateFromScroll);
+		window.addEventListener("resize", this.updateFromDimensions);
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener("scroll", this.onScroll);
-		window.removeEventListener("resize", this.updateInlineWidth);
+		window.removeEventListener("scroll", this.updateFromScroll);
+		window.removeEventListener("resize", this.updateFromDimensions);
 	}
 
 	componentWillReceiveProps(props) {
@@ -182,7 +181,7 @@ export default class MapArrayField extends Component {
 	render() {
 		const options = this.props.uiSchema["ui:options"];
 		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
-		const colType = options && options.colType;
+		const colType = this.getColType(this.props);
 
 		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 		const paginationEnabled = !hasInlineProps && navigationEnabled;
@@ -307,7 +306,7 @@ export default class MapArrayField extends Component {
 		let uiSchema = isInline ? this.props.uiSchema["ui:options"].inlineUiSchema : this.state.uiSchema;
 
 		const options = this.props.uiSchema["ui:options"];
-		const colType = options && options.colType;
+		const colType = this.getColType(this.props);
 
 		const SchemaField = this.props.registry.fields.SchemaField;
 
@@ -371,36 +370,80 @@ export default class MapArrayField extends Component {
 		return data;
 	}
 
-	onScroll = () => {
+	getScrollVariables = () => {
 		const inlineRef = this.refs.inlineContainer;
 		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
 
+		let inlineHeight, mapHeight, inlineSchemaHeight, navContainerHeight, inlineScrolledAmount;
+		let scrollState = SCROLLING;
+
 		if (mapAndSchemasRef) {
 			const mapAndSchemasElem = findDOMNode(mapAndSchemasRef);
-			const inlineElem = findDOMNode(inlineRef);
-			const inlineSchemaElem = this.refs.inlineSchema;
-			const navContainerElem = this.refs.navContainer;
 
-			const inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top;
+			if (this.shouldBeFixed()) {
+				const inlineElem = findDOMNode(inlineRef);
+				const inlineSchemaElem = this.refs.inlineSchema;
+				const navContainerElem = this.refs.navContainer;
 
-			const inlineHeight = inlineElem.scrollHeight;
-			let mapHeight = findDOMNode(this.refs.map).offsetHeight;
-			if (this.refs.mapHeightFixer) mapHeight += findDOMNode(this.refs.mapHeightFixer).scrollHeight;
+				inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top;
 
-			let inlineSchemaHeight = (inlineSchemaElem) ? inlineSchemaElem.offsetHeight : 0;
-			const navContainerHeight = (navContainerElem) ? navContainerElem.scrollHeight : 0;
-			if (this.refs.inlineSchemaHeightFixer) inlineSchemaHeight += findDOMNode(this.refs.inlineSchemaHeightFixer).scrollHeight;
+				inlineHeight = inlineElem.scrollHeight;
+				mapHeight = findDOMNode(this.refs.map).offsetHeight;
+				if (this.refs.mapHeightFixer) mapHeight += findDOMNode(this.refs.mapHeightFixer).scrollHeight;
 
-			let scrolledHeight = inlineHeight - inlineScrolledAmount;
-			const scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
-				(scrolledHeight < this.fixedHeight) ? FIXED : SQUEEZING;
+				navContainerHeight = (navContainerElem) ? navContainerElem.scrollHeight : 0;
 
-			this.setState({scrollState, mapHeight, inlineHeight, inlineSchemaHeight, navContainerHeight, inlineScrolledAmount});
+				inlineSchemaHeight = (inlineSchemaElem) ? inlineSchemaElem.offsetHeight : 0;
+				if (this.refs.inlineSchemaHeightFixer) {
+					inlineSchemaHeight += findDOMNode(this.refs.inlineSchemaHeightFixer).scrollHeight;
+				}
+
+				let scrolledHeight = inlineHeight - inlineScrolledAmount;
+				scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
+					(scrolledHeight < this.fixedHeight) ? FIXED : SQUEEZING;
+
+			}
 		}
+		return {scrollState, mapHeight, inlineHeight, inlineSchemaHeight, navContainerHeight, inlineScrolledAmount};
 	}
 
-	updateInlineWidth = () => {
-		this.setState({...this.getInlineWidth()});
+	getColType = (props) => {
+		const uiSchema = props.uiSchema;
+		if (uiSchema) {
+			const options = uiSchema["ui:options"];
+			if (options.colType) return options.colType;
+		}
+		return "md";
+	}
+
+	shouldBeFixed = () => {
+		function getMinWidthForType(type) {
+			switch(type){
+				case "lg":
+					return 1200;
+				case "md":
+					return 992;
+				case "sm":
+					return 768;
+			}
+		}
+
+		const {inlineProperties} = this.props.uiSchema["ui:options"];
+		const colType = this.getColType(this.props);
+
+		return (
+			inlineProperties &&
+			(colType === "xs" || (window && window.matchMedia && window.matchMedia("(min-width: " + getMinWidthForType(colType) + "px)").matches))
+		);
+	}
+
+
+	updateFromScroll = () => {
+		this.setState(this.getScrollVariables());
+	}
+
+	updateFromDimensions = () => {
+		this.setState({...this.getScrollVariables(), ...this.getInlineWidth()});
 	}
 
 	getInlineWidth = () => {
@@ -439,6 +482,6 @@ class MapComponent extends Component {
 	}
 
 	render() {
-		return (<div className="laji-form-map" style={this.props.style} ref="map" />);
+		return (<div className={"laji-form-map " +this.props.className} style={this.props.style} ref="map" />);
 	}
 }
