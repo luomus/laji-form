@@ -393,7 +393,7 @@ export default class MapArrayField extends Component {
 
 				navContainerHeight = (navContainerElem) ? navContainerElem.scrollHeight : 0;
 
-				inlineSchemaHeight = (inlineSchemaElem) ? inlineSchemaElem.offsetHeight : 0;
+				inlineSchemaHeight = (inlineSchemaElem) ? inlineSchemaElem.offsetHeight : undefined;
 				if (this.refs.inlineSchemaHeightFixer) {
 					inlineSchemaHeight += findDOMNode(this.refs.inlineSchemaHeightFixer).scrollHeight;
 				}
