@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import Button from "./Button";
-import validate from "../validation";
 
 import Form from "./../overriddenComponents/Form";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
@@ -136,8 +135,7 @@ export default class LajiForm extends Component {
 						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext
-					}}
-					validate={validate(this.props.validators)} >
+					}} >
 					<Button type="submit" classList={["btn-info"]}>{translations.Submit}</Button>
 					</Form>
 				</div>

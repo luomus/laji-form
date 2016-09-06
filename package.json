@@ -31,7 +31,6 @@
     "deepmerge": "*",
     "extract-text-webpack-plugin": "^1.0.1",
     "laji-map": "git+https://git@bitbucket.org/luomus/laji-map.js.git",
-	  "laji-validate": "git+https://git@bitbucket.org/luomus/laji-validate.js.git",
     "moment": "*",
     "rc-switch": "*",
     "react": "*",
