@@ -229,3 +229,6 @@ body .laji-form {
 	text-decoration: none;
 	background-color: #eee;
 }
+button[type=submit] {
+	margin-bottom: 1999px;
+}

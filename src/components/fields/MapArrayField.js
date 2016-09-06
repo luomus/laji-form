@@ -218,7 +218,7 @@ export default class MapArrayField extends Component {
 			}
 			if (inlineContentHeight > inlineHeight) {
 				inlineSchemaStyle.height = (inlineHeight > (inlineContentHeight - this.state.inlineScrolledAmount || 0)) ?
-					(inlineHeight - this.state.navContainerHeight) :
+					inlineHeight :
 					(this.state.inlineSchemaHeight - this.state.inlineScrolledAmount || 0);
 			}
 			heightFixerStyle.height = this.state.inlineHeight;
@@ -464,6 +464,7 @@ export default class MapArrayField extends Component {
 
 				fixedHeight = this.fixedHeight;
 				fixedHeight = Math.min(fixedHeight, schemaBottomDistance || 0);
+
 
 				scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
 					(scrolledHeight < fixedHeight) ? FIXED : SQUEEZING;
