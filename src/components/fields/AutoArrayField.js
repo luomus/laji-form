@@ -72,7 +72,7 @@ export default class AutoArrayField extends Component {
 
 			rows.push(
 				<Row key={"row_" + key}>
-					<Col xs={10}>
+					<Col xs={11}>
 						<SchemaField
 							key={key}
 							formData={item}
@@ -83,7 +83,7 @@ export default class AutoArrayField extends Component {
 							registry={this.props.registry}
 							errorSchema={this.props.errorSchema[idx]} />
 					</Col>
-					{removable ? (<Col xs={2}>
+					{removable ? (<Col xs={1}>
 						<Button buttonType="danger"
 										classList={["col-xs-12"]}
 										ref={"del-" + idx}
