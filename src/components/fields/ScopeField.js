@@ -232,7 +232,7 @@ export default class ScopeField extends Component {
 				var groups = options.additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
 			}
 
-			let filteredGroups = Object.keys(groups);
+			let filteredGroups = groups ? Object.keys(groups) : undefined;
 			if (this.state.searchTerm !== "" && Object.keys(translations).length && groups) {
 				filteredGroups = Object.keys(translationsToKeys).filter(translation => translation.toLowerCase().includes(this.state.searchTerm.toLowerCase())).map(translation => translationsToKeys[translation]);
 			}
@@ -262,10 +262,12 @@ export default class ScopeField extends Component {
 				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-cog"]}><Glyphicon glyph="cog" /></Button>
 				{this.state.additionalsOpen ?
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal"><Modal.Body>
+						{groups ? (
 						<div className="scope-field-search form-group has-feedback">
 							<input className="form-control" onChange={this.onSearchChange} value={this.state.searchTerm} placeholder={this.props.registry.translations.Search} />
 							<i className="glyphicon glyphicon-search form-control-feedback" />
 						</div>
+						) : null}
 						<Masonry>{list}</Masonry>
 					</Modal.Body></Modal> : null}
 			</div>
