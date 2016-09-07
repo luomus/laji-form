@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 
 import {
 	getDefaultFormState,
@@ -47,7 +46,6 @@ class ArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -58,16 +56,9 @@ class ArrayField extends Component {
 	getStateFromProps(props) {
 		const formData = Array.isArray(props.formData) ? props.formData : null;
 		const {definitions} = this.props.registry;
-		const state = {
-			items: getDefaultFormState(props.schema, formData, definitions) || []
+		return {
+			items: getDefaultFormState(props.schema, formData, definitions) || [getDefaultFormState(props.schema.items, undefined, definitions)]
 		};
-
-		let {idxsToKeys} = this.state;
-		if (!idxsToKeys) {
-				state.idxsToKeys = Array.from(new Array(state.items.length), (x, i) => i);
-				state.keyCounter = state.items.length;
-		}
-		return state;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -91,8 +82,7 @@ class ArrayField extends Component {
 
 	onAddClick = (event) => {
 		event.preventDefault();
-		const {items, idxsToKeys} = this.state;
-		let {keyCounter} = this.state;
+		const {items} = this.state;
 		const {schema, registry} = this.props;
 		const {definitions} = registry;
 		let itemSchema = schema.items;
@@ -102,9 +92,7 @@ class ArrayField extends Component {
 		this.asyncSetState({
 			items: items.concat([
 				getDefaultFormState(itemSchema, undefined, definitions)
-			]),
-			idxsToKeys: update(idxsToKeys, {$push: Array.from(new Array(items.length - idxsToKeys.length + 1), (x,i) => keyCounter++)}),
-			keyCounter: keyCounter
+			])
 		});
 	};
 
@@ -112,8 +100,7 @@ class ArrayField extends Component {
 		return (event) => {
 			event.preventDefault();
 			this.asyncSetState({
-				items: this.state.items.filter((_, i) => i !== index),
-				idxsToKeys: update(this.state.idxsToKeys, {$splice: [[index, 1]]})
+				items: this.state.items.filter((_, i) => i !== index)
 			}, {validate: true}); // refs #195
 		};
 	};
@@ -122,7 +109,7 @@ class ArrayField extends Component {
 		return (event) => {
 			event.preventDefault();
 			event.target.blur();
-			const {items, idxsToKeys} = this.state;
+			const {items} = this.state;
 			this.asyncSetState({
 				items: items.map((item, i) => {
 					if (i === newIndex) {
@@ -131,15 +118,6 @@ class ArrayField extends Component {
 						return items[newIndex];
 					} else {
 						return item;
-					}
-				}),
-				idxsToKeys: idxsToKeys.map((item, i) => {
-					if (i === newIndex) {
-						return idxsToKeys[index];
-					} else if (i === index) {
-						return idxsToKeys[newIndex];
-					} else {
-						return idxsToKeys;
 					}
 				})
 			}, {validate: true});
@@ -354,7 +332,7 @@ class ArrayField extends Component {
 		const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
 		return (
-			<div key={this.state.idxsToKeys[index]} className="array-item">
+			<div key={index} className="array-item">
 				<div className={hasToolbar ? "col-xs-10" : "col-xs-12"}>
 					<SchemaField
 						schema={itemSchema}
@@ -437,3 +415,4 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export default ArrayField;
+

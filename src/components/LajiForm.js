@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import Button from "./Button";
 
 import Form from "./../overriddenComponents/Form";
+import ArrayField from "./../overriddenComponents/fields/ArrayField";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
 import BooleanField from "./../overriddenComponents/fields/BooleanField";
 import StringField from "./../overriddenComponents/fields/StringField";
@@ -95,6 +96,7 @@ export default class LajiForm extends Component {
 					onChange={this.onChange}
 					registry={{
 						fields: {
+							ArrayField: ArrayField,
 							SchemaField: SchemaField,
 							BooleanField: BooleanField,
 							StringField: StringField,

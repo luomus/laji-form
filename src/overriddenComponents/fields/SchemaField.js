@@ -6,7 +6,7 @@ import {
 	getDefaultRegistry,
 	isFilesArray
 } from "react-jsonschema-form/lib/utils";
-import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
+import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import NumberField from "react-jsonschema-form/lib/components/fields/NumberField";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
