@@ -119,13 +119,15 @@ body .laji-form {
 	text-align: initial;
 }
 
-
-.laji-form :not(.btn-group) > .btn-danger {
+.laji-form :not(.btn-group) > .btn-danger, .laji-form .laji-form-scope-field-cog {
 	width: auto;
 	float: right;
 	line-height: 5px;
 	font-size: 11px;
 	padding: 5px;
+}
+.laji-form .laji-form-scope-field-cog {
+	line-height: 9px;
 }
 
 .laji-form label strong:not(:empty)+.rc-switch {

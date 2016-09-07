@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { Row, Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
 	static propTypes = {

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Glyphicon } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
@@ -96,10 +96,14 @@ export default class ScopeField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
-			<div>
+			<Row>
+				<Col xs={11}>
 				<SchemaField {...this.props} {...this.state} />
-				{this.renderAdditionalsButton()}
-			</div>
+				</Col>
+				<Col xs={1}>
+					{this.renderAdditionalsButton()}
+				</Col>
+			</Row>
 		);
 	}
 
@@ -255,7 +259,7 @@ export default class ScopeField extends Component {
 
 		return (
 			<div>
-				<Button onClick={this.onToggleAdditionals}><Glyphicon glyph="cog" /> {this.props.registry.translations.PickMoreFields}</Button>
+				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-cog"]}><Glyphicon glyph="cog" /></Button>
 				{this.state.additionalsOpen ?
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal"><Modal.Body>
 						<div className="scope-field-search form-group has-feedback">

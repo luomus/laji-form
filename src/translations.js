@@ -64,11 +64,6 @@ export default {
 		en: "use unknown name",
 		sv: "jag pratar inte svenska så bra"
 	},
-	pickMoreFields: {
-		fi: "valitse lisää kenttiä",
-		en: "pick more fields",
-		sv: "picka mera fielder"
-	},
 	search: {
 		fi: "etsi",
 		en: "search",
