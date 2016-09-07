@@ -57,8 +57,9 @@ export default class AutoArrayField extends Component {
 	}
 
 	renderItems = () => {
+		const {registry} = this.props;
 		let data = this.props.formData || [];
-		data = update(data, {$push: [{}]});
+		data = update(data, {$push: [getDefaultFormState(this.props.schema.items, undefined, registry.definitions)]});
 
 		const {SchemaField} = this.props.registry.fields;
 		const {translations} = this.props.registry;
