@@ -189,7 +189,7 @@ export default class MapArrayField extends Component {
 		const description = options.description;
 		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
 
-		const inlineStyle = {width: this.state.containerWidth, left: this.state.containerLeft};
+		const inlineStyle = {width: this.state.containerWidth, left: this.state.containerLeft, top: options.topOffset || 0};
 
 		let fixedHeight = this.state.fixedHeight;
 
@@ -239,7 +239,7 @@ export default class MapArrayField extends Component {
 				maxButtons={5}
 				onSelect={i => {this.focusToLayer(i - 1)}}
 			/> : null}
-			<Row ref="mapAndSchemasContainer" >
+			<Row ref="mapAndSchemasContainer">
 				<div ref="inlineContainer"
 				     className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)}
 				     style={inlineStyle} >
@@ -427,6 +427,8 @@ export default class MapArrayField extends Component {
 	}
 
 	getScrollVariables = () => {
+		const offset = this.props.uiSchema["ui:options"].topOffset || 0;
+
 		const inlineRef = this.refs.inlineContainer;
 		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
 
@@ -437,12 +439,12 @@ export default class MapArrayField extends Component {
 		if (mapAndSchemasRef) {
 			const mapAndSchemasElem = findDOMNode(mapAndSchemasRef);
 
-			if (this.shouldBeFixed()) {
+			if (this.wideEnoughForFixed()) {
 				const inlineElem = findDOMNode(inlineRef);
 				const inlineSchemaElem = this.refs.inlineSchema;
 				const navContainerElem = this.refs.navContainer;
 
-				inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top;
+				inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top + offset;
 
 				inlineHeight = inlineElem.scrollHeight;
 				if (this.refs.schema) {
@@ -484,7 +486,7 @@ export default class MapArrayField extends Component {
 		return "md";
 	}
 
-	shouldBeFixed = () => {
+	wideEnoughForFixed = () => {
 		function getMinWidthForType(type) {
 			switch(type){
 				case "lg":

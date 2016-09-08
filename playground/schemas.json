@@ -162,6 +162,7 @@
 			"ui:options": {
 				"colType": "lg",
 				"title": "Kartta",
+				"topOffset": 50,
 				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
 				"popupFields": [
 					{"field": "units", "mapper": "units"},
@@ -290,6 +291,8 @@
 								"ui:field": "scoped",
 								"classNames": "well well-sm",
 								"ui:options": {
+									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
+									"additionalsGroupsTranslator": "taxonGroups",
 									"includeAdditionalFieldsChooserButton": true,
 									"uiSchema": {
 										"ui:field": "autosuggest",
