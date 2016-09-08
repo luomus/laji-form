@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "dist/laji-form.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
     "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/ --copy-files",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
-    "install": "npm run build:dist && npm run build:lib"
+    "publish": "npm run build:dist && npm run build:lib"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -19,18 +19,8 @@
   "repository": "https://bitbucket.org/luomus/laji-form.js.git",
   "license": "MIT",
   "dependencies": {
-    "babel-cli": "*",
-    "babel-core": "*",
-    "babel-loader": "*",
-    "babel-plugin-react-transform": "*",
-    "babel-plugin-transform-class-properties": "*",
-    "babel-plugin-transform-object-rest-spread": "*",
-    "babel-polyfill": "*",
-    "babel-preset-es2015": "*",
-    "babel-preset-react": "*",
     "deepmerge": "*",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "laji-map": "git+https://git@bitbucket.org/luomus/laji-map.js.git",
+    "laji-map": "*",
     "moment": "*",
     "rc-switch": "*",
     "react": "*",
@@ -42,8 +32,23 @@
     "react-jsonschema-form": "0.38",
     "react-masonry-component": "*",
     "react-spinner": "*",
-    "react-widgets": "*",
-    "webpack": "*",
+    "react-widgets": "*"
+  },
+  "devDependencies": {
+	  "babel-cli": "*",
+	  "babel-core": "*",
+	  "babel-loader": "*",
+	  "babel-plugin-react-transform": "*",
+	  "babel-plugin-transform-class-properties": "*",
+	  "babel-plugin-transform-object-rest-spread": "*",
+	  "babel-polyfill": "*",
+	  "babel-preset-es2015": "*",
+	  "babel-preset-react": "*",
+	  "extract-text-webpack-plugin": "^1.0.1",
+	  "es6-promise": "*",
+	  "isomorphic-fetch": "*"
+	  "webpack": "*",
+	  "webpack-dev-server": "*",
 	  "style-loader": "*",
 	  "url-loader": "*",
 	  "file-loader": "*",
@@ -51,14 +56,9 @@
 	  "less": "*",
 	  "css-loader": "*",
 	  "json-loader": "*",
-	  "rimraf": "*"
-  },
-  "devDependencies": {
-    "react-transform-hmr": "*",
-    "webpack-dev-server": "*",
-    "querystring": "*",
-    "util": "*",
-    "es6-promise": "*",
-    "isomorphic-fetch": "*"
+	  "querystring": "*",
+	  "react-transform-hmr": "*",
+	  "rimraf": "*",
+	  "util": "*"
   }
 }
