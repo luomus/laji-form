@@ -448,7 +448,7 @@ export default class MapArrayField extends Component {
 
 				inlineHeight = inlineElem.scrollHeight;
 				if (this.refs.schema) {
-					schemaBottomDistance = this.refs.schema.getBoundingClientRect().bottom;
+					schemaBottomDistance = this.refs.schema.getBoundingClientRect().bottom - offset;
 				}
 
 				mapHeight = findDOMNode(this.refs.map).offsetHeight;
@@ -464,7 +464,7 @@ export default class MapArrayField extends Component {
 
 				let scrolledHeight = inlineHeight - inlineScrolledAmount;
 
-				fixedHeight = this.fixedHeight;
+				fixedHeight = this.fixedHeight - offset;
 				fixedHeight = Math.min(fixedHeight, schemaBottomDistance || 0);
 
 
