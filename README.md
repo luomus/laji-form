@@ -4,10 +4,8 @@ LajiForm is a dynamic form built on React. It can be used as a standalone librar
 
 # Installing #
 
-Install as a git dependency:
-
 ```
-npm install git+https://git@bitbucket.org:luomus/laji-form.js.git --save
+npm install laji-form --save
 ```
 
 # Usage #

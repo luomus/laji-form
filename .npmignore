@@ -1,4 +1,7 @@
 .idea/
-properties.json
+properties.json*
 src/
 playground/
+.babelrc
+.npmignore
+.webpack*
