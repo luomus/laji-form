@@ -104,5 +104,4 @@ export default {
 		en: "map",
 		sv: "mappen"
 	}
-
 }

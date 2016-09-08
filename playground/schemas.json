@@ -149,8 +149,7 @@
 											}
 										}
 									}
-								},
-								"expanderButtonText": "Ilmoita aikaväli"
+								}
 							}
 						}
 					}
@@ -196,31 +195,7 @@
 								"fields": [
 									"predominantTree",
 									"habitat"
-								],
-								"uiSchema": {
-									"classNames": "well well-sm",
-									"habitat": {
-										"items": {
-											"ui:field": "injectFromContext",
-											"ui:options": {
-												"injections": {
-													"ui:options.tree": "habitat.tree"
-												},
-												"uiSchema": {
-													"ui:field": "tree",
-													"ui:options": {
-														"uiSchema": {
-															"ui:field": "grid",
-															"ui:options": {
-																"coltype": "sm"
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
+								]
 							}
 						},
 						"uiSchema": {
@@ -242,30 +217,49 @@
 								],
 								"uiSchema": {
 									"eventTime": {
-										"ui:field": "initiallyHidden",
+										"ui:field": "expandable",
 										"ui:options": {
+											"additionalFields": [
+												"dateEnd"
+											],
 											"uiSchema": {
-												"ui:field": "expandable",
+												"classNames": "well well-sm",
+												"ui:field": "grid",
+												"dateBegin": {
+													"ui:widget": "separatedDateTime"
+												},
+												"dateEnd": {
+													"ui:widget": {
+														"component": "separatedDateTime",
+														"options": {
+															"showButtons": false
+														}
+													}
+												}
+											},
+											"expanderButtonText": "Ilmoita aikaväli"
+										}
+									},
+									"habitatWrapper": {
+										"classNames": "well well-sm",
+										"habitat": {
+											"items": {
+												"ui:field": "injectFromContext",
 												"ui:options": {
-													"additionalFields": [
-														"dateEnd"
-													],
+													"injections": {
+														"ui:options.tree": "habitat.tree"
+													},
 													"uiSchema": {
-														"classNames": "well well-sm",
-														"ui:field": "grid",
-														"dateBegin": {
-															"ui:widget": "separatedDateTime"
-														},
-														"dateEnd": {
-															"ui:widget": {
-																"component": "separatedDateTime",
-																"options": {
-																	"showButtons": false
+														"ui:field": "tree",
+														"ui:options": {
+															"uiSchema": {
+																"ui:field": "grid",
+																"ui:options": {
+																	"coltype": "sm"
 																}
 															}
 														}
-													},
-													"expanderButtonText": "Ilmoita aikaväli"
+													}
 												}
 											}
 										}
@@ -1040,11 +1034,12 @@
 				"units": [
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1052,11 +1047,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1064,11 +1060,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1076,11 +1073,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1088,11 +1086,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1100,11 +1099,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1112,11 +1112,38 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "kantarelli",
+						"unitType": [
+							"MVL.233",
+							"MVL.121"
+						],
+						"taxonID": "MX.205511",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "kantarelli",
+						"unitType": [
+							"MVL.233",
+							"MVL.121"
+						],
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",

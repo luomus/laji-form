@@ -64,7 +64,6 @@ export default class ScopeField extends Component {
 			additionalsOpen: false,
 			searchTerm: "",
 			...this.getStateFromProps(props)};
-
 	}
 
 	componentWillReceiveProps(props) {
@@ -149,11 +148,14 @@ export default class ScopeField extends Component {
 		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
+
 			Object.keys(scopes).forEach((fieldSelector) => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
-				if (fieldSelectorValues.length > 0 && !isEmpty(fieldSelectorValues[0])) fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
+				if (fieldSelectorValues.length > 0 && !isEmpty(fieldSelectorValues[0])) {
+					fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
+				}
 				fieldSelectorValues = update(fieldSelectorValues, {$push: ["*"]});
 				fieldSelectorValues.forEach(fieldSelectorValue => {
 					if (!isEmpty(fieldSelectorValue)) {
@@ -162,11 +164,12 @@ export default class ScopeField extends Component {
 				});
 			});
 		}
+
 		addFieldScopeFieldsToFieldsToShow(options);
 
-		let uiOptions = {expanderButtonText: "Näytä lisää muuttujia", contractorButtonText: "Näytä vähemmän muuttujia"};
-
-		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
+		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) {
+			uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
+		}
 
 		let additionalFields = (this.state && this.state.additionalFields) ? this.state.additionalFields : [];
 		if (additionalFields) {
@@ -192,7 +195,7 @@ export default class ScopeField extends Component {
 
 		return {
 			schema: schema,
-			uiSchema: generatedUiSchema,
+			uiSchema: generatedUiSchema
 		}
 	}
 
@@ -248,7 +251,7 @@ export default class ScopeField extends Component {
 				group.fields.forEach(field => {
 					if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
 				});
-				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], groupName);
+				let groupsList = this.addAdditionalPropertiesToList(groupFields, []);
 				if (groupsList.length) {
 					list.push(
 						<div key={groupName} className="scope-field-modal-item">
@@ -258,7 +261,7 @@ export default class ScopeField extends Component {
 					);
 				}
 			}); else {
-				list = this.addAdditionalPropertiesToList(additionalProperties, list, "");
+				list = this.addAdditionalPropertiesToList(additionalProperties, list);
 			}
 		}
 
@@ -282,25 +285,27 @@ export default class ScopeField extends Component {
 		);
 	}
 
-	addAdditionalPropertiesToList = (properties, list, keyPrefix) => {
+	addAdditionalPropertiesToList = (properties, list) => {
 		let {additionalFields} = this.state;
 		let {formData} = this.props;
+		const strictFields = this.props.uiSchema["ui:options"].strictFields || [];
 		if (!formData) formData = {};
 
 		Object.keys(properties)
 			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.forEach(property => {
-			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
-			list.push(<ListGroupItem
-				key={property}
-				active={!!isIncluded}
-				onClick={() => {
-						additionalFields[property] = !isIncluded;
-						this.setState({additionalFields}, () => { this.setState(this.getStateFromProps(this.props)) });
+				const isStrict = strictFields.includes(property);
+				const isIncluded = ((additionalFields[property] && !isStrict) ||
+				                  additionalFields[property] === true || (formData[property] && !isStrict));
+				list.push(<ListGroupItem
+					key={property}
+					active={isIncluded}
+					onClick={() => {
+						this.setState({additionalFields: update(additionalFields, {$merge: {[property]: !isIncluded}})}, () => {this.setState(this.getStateFromProps(this.props))});
 					}}>
-				{properties[property].title || property}
-			</ListGroupItem>)
-		});
+					{properties[property].title || property}
+				</ListGroupItem>)
+			});
 		return list;
 	}
 
