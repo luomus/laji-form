@@ -111,6 +111,7 @@ export default class GridLayoutField extends Component {
 				const name = this.state.showLabels ?  (this.state.schema.properties[property].title || property) : undefined;
 				let schema = this.state.schema.properties[property];
 				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
+
 				if (!this.isHidden(this.state, property)) fields.push(
 					<div key={"div_" + i} className={"col-" + this.state.colType + "-" + division}>
 						<SchemaField

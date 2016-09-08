@@ -40,7 +40,7 @@ const scopeFieldSettings = {
  *                            they have value, if they are not in a field scope)
  * }
  *
- * Field scope values accept asterisk (*) as field scope selector.
+ * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
 export default class ScopeField extends Component {
 	static propTypes = {
@@ -84,8 +84,10 @@ export default class ScopeField extends Component {
 		};
 
 		if (options.additionalsGroupsTranslator) {
-			const prevOptions = (this.props && this.props.uiSchema && this.props.uiSchema["ui:options"]) ? this.props.uiSchema["ui:options"] : {};
-			state.additionalsGroupsTranslations = (prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
+			const prevOptions = (this.props && this.props.uiSchema && this.props.uiSchema["ui:options"]) ?
+				this.props.uiSchema["ui:options"] : {};
+			state.additionalsGroupsTranslations =
+				(prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
 				this.state.additionalsGroupsTranslations : {};
 			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;
 		}
@@ -176,7 +178,7 @@ export default class ScopeField extends Component {
 
 		if (props.formData) {
 			let dictionarifiedStrictFields = {};
-			options.strictFields.forEach(field => { dictionarifiedStrictFields[field] = true });
+			if (options.strictFields) options.strictFields.forEach(field => { dictionarifiedStrictFields[field] = true });
 
 			Object.keys(formData).forEach((property) => {
 				if (dictionarifiedStrictFields[property] || isEmpty(formData[property])) return;
@@ -188,14 +190,9 @@ export default class ScopeField extends Component {
 
 		schema = update(schema, {$merge: {properties: fieldsToShow}});
 
-		Object.keys(schema.properties).forEach(property => {
-			idSchema = update(idSchema, {$merge: {[property]: {$id: idSchema.$id + "_" + property}}});
-		});
-
 		return {
 			schema: schema,
 			uiSchema: generatedUiSchema,
-			idSchema: idSchema
 		}
 	}
 
@@ -217,14 +214,20 @@ export default class ScopeField extends Component {
 		let list = [];
 		if (this.state.additionalsOpen) {
 			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
-			let translationsToKeys = (this.state.additionalsGroupsTranslationsToKeys) ? this.state.additionalsGroupsTranslationsToKeys : {};
+			let translationsToKeys = (this.state.additionalsGroupsTranslationsToKeys) ?
+				this.state.additionalsGroupsTranslationsToKeys :
+				{};
+
 			if (this.state.additionalsGroupsTranslations) {
 				if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
 			}
 
 			let additionalProperties = {};
 			Object.keys(this.props.schema.properties).forEach(property => {
-				if (!this.state.schema.properties || !this.state.schema.properties[property] || this.state.schema.properties[property].additional) additionalProperties[property] = this.props.schema.properties[property];
+				if (!this.state.schema.properties ||
+				    !this.state.schema.properties[property] ||
+				    this.state.schema.properties[property].additional)
+					additionalProperties[property] = this.props.schema.properties[property];
 			});
 
 			let options = this.props.uiSchema["ui:options"];
@@ -234,7 +237,9 @@ export default class ScopeField extends Component {
 
 			let filteredGroups = groups ? Object.keys(groups) : undefined;
 			if (this.state.searchTerm !== "" && Object.keys(translations).length && groups) {
-				filteredGroups = Object.keys(translationsToKeys).filter(translation => translation.toLowerCase().includes(this.state.searchTerm.toLowerCase())).map(translation => translationsToKeys[translation]);
+				filteredGroups = Object.keys(translationsToKeys)
+					.filter(translation => translation.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
+					.map(translation => translationsToKeys[translation]);
 			}
 
 			if (filteredGroups) filteredGroups.forEach(groupName => {
@@ -259,12 +264,15 @@ export default class ScopeField extends Component {
 
 		return (
 			<div>
-				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-cog"]}><Glyphicon glyph="cog" /></Button>
+				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-cog"]}>
+					<Glyphicon glyph="cog" />
+				</Button>
 				{this.state.additionalsOpen ?
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal"><Modal.Body>
 						{groups ? (
 						<div className="scope-field-search form-group has-feedback">
-							<input className="form-control" onChange={this.onSearchChange} value={this.state.searchTerm} placeholder={this.props.registry.translations.Search} />
+							<input className="form-control" onChange={this.onSearchChange}
+							       value={this.state.searchTerm} placeholder={this.props.registry.translations.Search} />
 							<i className="glyphicon glyphicon-search form-control-feedback" />
 						</div>
 						) : null}
@@ -279,7 +287,9 @@ export default class ScopeField extends Component {
 		let {formData} = this.props;
 		if (!formData) formData = {};
 
-		Object.keys(properties).sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1}).forEach(property => {
+		Object.keys(properties)
+			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
+			.forEach(property => {
 			let isIncluded = (additionalFields[property] || (additionalFields[property] !== false && formData[property]));
 			list.push(<ListGroupItem
 				key={property}
