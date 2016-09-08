@@ -31,82 +31,86 @@
 			"ui:field": "nested",
 			"classNames": "panel panel-default panel-body",
 			"ui:options": {
-				"legWrapper": {
-					"title": "Havainnoitsijat",
-					"fields": [
-						"leg",
-						"legPublic",
-						"editors"
-					],
-					"uiSchema": {
-						"ui:field": "nested",
-						"ui:order": [
-							"",
-							"legPublic"
+				"nests": {
+					"legWrapper": {
+						"title": "Havainnoitsijat",
+						"fields": [
+							"leg",
+							"legPublic",
+							"editors"
 						],
-						"classNames": "well well-sm",
-						"ui:options": {
-							"": {
-								"fields": [
-									"leg",
-									"editors"
-								],
-								"uiSchema": {
-									"ui:field": "dependentBoolean",
-									"ui:options": {
-										"booleanField": "editors",
-										"booleanDefiner": "leg",
+						"uiSchema": {
+							"ui:field": "nested",
+							"ui:order": [
+								"",
+								"legPublic"
+							],
+							"classNames": "well well-sm",
+							"ui:options": {
+								"nests": {
+									"": {
+										"fields": [
+											"leg",
+											"editors"
+										],
 										"uiSchema": {
-											"ui:field": "arrayCombiner",
+											"ui:field": "dependentBoolean",
 											"ui:options": {
-												"additionalItemsAmount": 1,
+												"booleanField": "editors",
+												"booleanDefiner": "leg",
 												"uiSchema": {
-													"items": {
-														"leg": {
-															"ui:disabled": true,
-															"ui:widget": {
-																"component": "autosuggest",
-																"options": {
-																	"autosuggestField": "friends",
-																	"allowNonsuggestedValue": true,
-																	"suggestionReceive": "key",
-																	"preventTypingPattern": "^MA\\.\\d+$"
+													"ui:field": "arrayCombiner",
+													"ui:options": {
+														"additionalItemsAmount": 1,
+														"uiSchema": {
+															"items": {
+																"leg": {
+																	"ui:disabled": true,
+																	"ui:widget": {
+																		"component": "autosuggest",
+																		"options": {
+																			"autosuggestField": "friends",
+																			"allowNonsuggestedValue": true,
+																			"suggestionReceive": "key",
+																			"preventTypingPattern": "^MA\\.\\d+$"
+																		}
+																	}
+																},
+																"editors": {
+																	"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
+																},
+																"ui:field": "dependentDisable",
+																"ui:options": {
+																	"disableDefiner": "leg",
+																	"disableField": "editors",
+																	"regexp": "^MA\\.\\d+$"
 																}
-															}
-														},
-														"editors": {
-															"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
-														},
-														"ui:field": "dependentDisable",
-														"ui:options": {
-															"disableDefiner": "leg",
-															"disableField": "editors",
-															"regexp": "^MA\\.\\d+$"
-														}
-													},
-													"additionalItems": {
-														"leg": {
-															"ui:widget": {
-																"component": "autosuggest",
-																"options": {
-																	"autosuggestField": "friends",
-																	"allowNonsuggestedValue": true,
-																	"suggestionReceive": "key",
-																	"preventTypingPattern": "^MA\\.\\d+$"
+															},
+															"additionalItems": {
+																"leg": {
+																	"ui:widget": {
+																		"component": "autosuggest",
+																		"options": {
+																			"autosuggestField": "friends",
+																			"allowNonsuggestedValue": true,
+																			"suggestionReceive": "key",
+																			"preventTypingPattern": "^MA\\.\\d+$"
+																		}
+																	}
+																},
+																"editors": {
+																	"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
+																},
+																"ui:field": "dependentDisable",
+																"ui:options": {
+																	"disableDefiner": "leg",
+																	"disableField": "editors",
+																	"regexp": "^MA\\.\\d+$"
 																}
-															}
-														},
-														"editors": {
-															"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
-														},
-														"ui:field": "dependentDisable",
-														"ui:options": {
-															"disableDefiner": "leg",
-															"disableField": "editors",
-															"regexp": "^MA\\.\\d+$"
+															},
+															"ui:field": "table"
 														}
-													},
-													"ui:field": "table"
+													}
 												}
 											}
 										}
@@ -114,40 +118,39 @@
 								}
 							}
 						}
-					}
-				},
-				"eventTime": {
-					"title": "Aika",
-					"fields": [
-						"dateBegin",
-						"dateEnd"
-					],
-					"uiSchema": {
-						"ui:field": "expandable",
-						"classNames": "well well-sm",
-						"ui:options": {
-							"additionalFields": [
-								"dateEnd"
-							],
-							"uiSchema": {
-								"ui:field": "grid",
-								"ui:options": {
-									"colType": "sm",
-									"limitWidthAlways": true
-								},
-								"dateBegin": {
-									"ui:widget": "separatedDateTime"
-								},
-								"dateEnd": {
-									"ui:widget": {
-										"component": "separatedDateTime",
-										"options": {
-											"showButtons": false
+					},
+					"eventTime": {
+						"title": "Aika",
+						"fields": [
+							"dateBegin",
+							"dateEnd"
+						],
+						"uiSchema": {
+							"ui:field": "expandable",
+							"classNames": "well well-sm",
+							"ui:options": {
+								"additionalFields": [
+									"dateEnd"
+								],
+								"uiSchema": {
+									"ui:field": "grid",
+									"ui:options": {
+										"colType": "sm",
+										"limitWidthAlways": true
+									},
+									"dateBegin": {
+										"ui:widget": "separatedDateTime"
+									},
+									"dateEnd": {
+										"ui:widget": {
+											"component": "separatedDateTime",
+											"options": {
+												"showButtons": false
+											}
 										}
 									}
 								}
-							},
-							"expanderButtonText": "Ilmoita aikaväli"
+							}
 						}
 					}
 				}
@@ -179,16 +182,41 @@
 						"notes"
 					],
 					"ui:options": {
-						"eventTime": {
-							"title": "Aika",
-							"fields": [
-								"dateBegin",
-								"dateEnd"
-							],
-							"uiSchema": {
-								"ui:field": "initiallyHidden",
-								"ui:options": {
-									"uiSchema": {
+						"nests": {
+							"eventTime": {
+								"title": "Aika",
+								"fields": [
+									"dateBegin",
+									"dateEnd"
+								]
+							},
+							"habitatWrapper": {
+								"title": "Havaintopaikan tiedot",
+								"fields": [
+									"predominantTree",
+									"habitat"
+								]
+							}
+						},
+						"uiSchema": {
+							"ui:field": "scoped",
+							"ui:options": {
+								"includeAdditionalFieldsChooserButton": true,
+								"fieldScopes": {
+									"notes": {
+										"*": {
+											"fields": [
+												"habitatWrapper"
+											]
+										}
+									}
+								},
+								"strictFields": [
+									"eventTime",
+									"habitatWrapper"
+								],
+								"uiSchema": {
+									"eventTime": {
 										"ui:field": "expandable",
 										"ui:options": {
 											"additionalFields": [
@@ -211,45 +239,38 @@
 											},
 											"expanderButtonText": "Ilmoita aikaväli"
 										}
-									}
-								}
-							}
-						},
-						"habitatWrapper": {
-							"title": "Havaintopaikan tiedot",
-							"fields": [
-								"predominantTree",
-								"habitat"
-							],
-							"uiSchema": {
-								"classNames": "well well-sm",
-								"habitat": {
-									"items": {
-										"ui:field": "injectFromContext",
-										"ui:options": {
-											"injections": {
-												"ui:options.tree": "habitat.tree"
-											},
-											"uiSchema": {
-												"ui:field": "tree",
+									},
+									"habitatWrapper": {
+										"classNames": "well well-sm",
+										"habitat": {
+											"items": {
+												"ui:field": "injectFromContext",
 												"ui:options": {
+													"injections": {
+														"ui:options.tree": "habitat.tree"
+													},
 													"uiSchema": {
-														"ui:field": "grid",
+														"ui:field": "tree",
 														"ui:options": {
-															"coltype": "sm"
+															"uiSchema": {
+																"ui:field": "grid",
+																"ui:options": {
+																	"coltype": "sm"
+																}
+															}
 														}
 													}
 												}
 											}
 										}
+									},
+									"notes": {
+										"classNames": "well well-sm",
+										"ui:widget": "textarea"
 									}
 								}
 							}
 						}
-					},
-					"notes": {
-						"classNames": "well well-sm",
-						"ui:widget": "textarea"
 					}
 				}
 			},
@@ -270,8 +291,6 @@
 								"classNames": "well well-sm",
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
-									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
-									"additionalsGroupsTranslator": "taxonGroups",
 									"uiSchema": {
 										"ui:field": "autosuggest",
 										"ui:options": {
@@ -1015,11 +1034,12 @@
 				"units": [
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1027,11 +1047,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1039,11 +1060,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1051,11 +1073,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1063,11 +1086,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1075,11 +1099,12 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
@@ -1087,11 +1112,38 @@
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
+						"informalNameString": "kantarelli",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
-						"taxonID": "MX.47092",
+						"taxonID": "MX.205511",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "kantarelli",
+						"unitType": [
+							"MVL.233",
+							"MVL.121"
+						],
+						"taxonID": "MX.205511",
+						"taxonConfidence": "",
+						"substrate": "",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "kantarelli",
+						"unitType": [
+							"MVL.233",
+							"MVL.121"
+						],
+						"taxonID": "MX.205511",
 						"taxonConfidence": "",
 						"substrate": "",
 						"taste": "",
