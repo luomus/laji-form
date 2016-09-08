@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "dist/laji-form.js",
   "scripts": {
@@ -46,7 +46,7 @@
 	  "babel-preset-react": "*",
 	  "extract-text-webpack-plugin": "^1.0.1",
 	  "es6-promise": "*",
-	  "isomorphic-fetch": "*"
+	  "isomorphic-fetch": "*",
 	  "webpack": "*",
 	  "webpack-dev-server": "*",
 	  "style-loader": "*",
