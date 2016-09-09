@@ -17,12 +17,16 @@ LajiForm passes all its properties to react-jsonschema-form.
 ```
 import LajiForm from "laji-form";
 
-LajiForm({
+new LajiForm({
   schema: schema,
   uiSchema: uiSchema, formData: formData,
   rootElem: document.getElementById("app")
 });
 ```
+
+You can update the properties with ```setState(props)```. You need to pass only the properties that you are changing, since it just calls the React component's ```setState(props)```.
+
+You can unmount the component with ```unmount()```.
 
 ## Usage as a React component ##
 
