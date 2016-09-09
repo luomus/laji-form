@@ -51,7 +51,8 @@ export default class InjectDefaultValueField extends Component {
 				if (schema.properties[target].type === "array") {
 					if (formData && formData[target]) formData[target].forEach((item, i) => {
 						if (item[field] === undefined) {
-							formData = update(formData, {[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
+							formData = update(formData,
+								{[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
 						}
 					});
 				}
@@ -79,14 +80,14 @@ export default class InjectDefaultValueField extends Component {
 			if (schema.properties[target].type === "array") {
 				if (formData && formData[target]) formData[target].forEach((item, i) => {
 					if (item[field] === undefined || item[field] === this.props.formData[options.source][field]) {
-						formData = update(formData, {[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
+						formData = update(formData,
+							{[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
 					}
 				});
 			}
 		});
 
 		this.props.onChange(formData);
-
 	}
 
 	render() {

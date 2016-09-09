@@ -70,8 +70,12 @@ export default class MapArrayField extends Component {
 		});
 
 		let activeIdx = (this.state && this.state.activeIdx !== undefined) ? this.state.activeIdx : (data.length ? 0 : undefined);
-
-		return {...props, schema, uiSchema, data, activeIdx, onChange: this.onItemChange};
+		let state = {...props, schema, uiSchema, data, activeIdx, onChange: this.onItemChange};
+		if (this.stateToMerge) {
+			state = merge(state, this.stateToMerge);
+			this.stateToMerge = undefined;
+		}
+		return state;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -81,10 +85,9 @@ export default class MapArrayField extends Component {
 	onAdd = (e) => {
 		let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
 		item.wgs84Geometry = e.feature.geometry;
-		let formData = this.props.formData;
-		if (formData && formData.length) formData.push(item);
-		else formData = [item];
-		return {propsChange: formData};
+		let {formData} = this.props;
+		const formDataUpdate = (formData && formData.length) ? update(formData, {$push: [item]}) : [item];
+		return {propsChange: formDataUpdate};
 	}
 
 	onRemove = (e) => {
@@ -170,12 +173,12 @@ export default class MapArrayField extends Component {
 			}
 		});
 
-		const that = this;
-		function onChange() {
-			if (propsChange) that.props.onChange(propsChange);
+		if (state && propsChange)  {
+			this.stateToMerge = state;
+			this.props.onChange(propsChange);
+		} else if (state) {
+			this.setState(state);
 		}
-
-		state ? this.setState(state, () => { onChange(); }) : onChange();
 	}
 
 	render() {
