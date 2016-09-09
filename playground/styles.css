@@ -221,6 +221,9 @@ body .laji-form {
 .laji-form .form-map-inline-container {
 	overflow: hidden;
 }
+.laji-form .form-map-inline-container {
+	overflow: hidden;
+}
 .laji-form .map-array-inline-schema {
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -229,4 +232,10 @@ body .laji-form {
 	border-color: #eee #eee #ddd;
 	text-decoration: none;
 	background-color: #eee;
+}
+.laji-form .laji-form-map-navi {
+	margin-bottom: 5px;
+}
+.laji-form .map-array-schema {
+	margin-top: 5px;
 }

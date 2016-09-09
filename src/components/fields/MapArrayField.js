@@ -303,7 +303,7 @@ export default class MapArrayField extends Component {
 		const {translations} = this.props.registry;
 
 		return navEnabled ?
-			<div ref="navContainer" className={colType ? "col-" + colType + "-6" : "col-xs-12"}>
+			<div ref="navContainer" className={(colType ? "col-" + colType + "-6" : "col-xs-12") + " laji-form-map-navi"}>
 				<Nav bsStyle="tabs" >
 					{this.state.data.map((item, i) => {
 						const popupData = this.getPopupData(i);
@@ -371,7 +371,7 @@ export default class MapArrayField extends Component {
 				<div
 					ref={isInline ? "inlineSchema" : "schema"}
 					style={style}
-					className={isInline ? "map-array-inline-schema col-" + colType + "-6" : "col-xs-12"}>
+					className={isInline ? "map-array-inline-schema col-" + colType + "-6" : "map-array-schema col-xs-12"}>
 					<SchemaField
 						{...this.props}
 						{...this.state}
