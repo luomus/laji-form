@@ -103,5 +103,10 @@ export default {
 		fi: "kartta",
 		en: "map",
 		sv: "mappen"
+	},
+	place: {
+		fi: "paikka",
+		en: "place",
+		sv: "placen"
 	}
 }

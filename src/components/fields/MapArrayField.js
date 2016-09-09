@@ -300,20 +300,22 @@ export default class MapArrayField extends Component {
 		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 		const navEnabled = hasInlineProps && navigationEnabled;
 		const colType = this.getColType(this.props);
+		const {translations} = this.props.registry;
 
 		return navEnabled ?
 			<div ref="navContainer" className={colType ? "col-" + colType + "-6" : "col-xs-12"}>
 				<Nav bsStyle="tabs" >
 					{this.state.data.map((item, i) => {
 						const popupData = this.getPopupData(i);
+						const isActive = i === this.state.activeIdx;
 
 						const nav = (
-							<NavItem key={i} eventKey={i} active={i === this.state.activeIdx}
+							<NavItem key={i} eventKey={i} active={isActive}
 							         className={this.state.hoveredNav === i ? "hover" : ""}
 							         onClick={() => this.focusToLayer(i)}
 							         onMouseEnter={this.onNavItemMouseEnter(i)}
 							         onMouseLeave={this.onNavItemMouseLeave(i)}>
-								{i + 1}
+								{(isActive ? translations.Place + " " : "") + (i + 1)}
 							</NavItem>
 						)
 
