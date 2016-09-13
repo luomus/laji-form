@@ -1,4 +1,4 @@
-body .laji-form {
+body .laji-form:not(.modal-dialog) {
     background: #eeeeee;
 	font-size: 13px;
 }
@@ -240,18 +240,18 @@ body .laji-form {
 	margin-top: 5px;
 }
 
-.laji-form .laji-form-images > * {
+.laji-form .laji-form-images img, .laji-form .laji-form-images div {
 	padding: 4px;
 	width: 120px;
 	height: 120px;
 	float: left;
 	cursor: pointer;
 }
+
 .laji-form .laji-form-drop-zone {
 	border: 2px dashed black;
-	width: 112px;
-	height: 112px;
-	padding: 4px;
+	width: 112px !important;
+	height: 112px !important;
 	margin: 4px;
 }
 

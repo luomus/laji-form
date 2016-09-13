@@ -44,11 +44,14 @@ export default class ImagesArrayField extends Component {
 					<TitleField title={title} />
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
-						{this.state.imgURLs ? this.state.imgURLs.map((dataURL, i) => <img key={i} src={dataURL} onClick={this.onImgClick(i)} />) : null}
-						<DropZone className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
-											onDragEnter={() => this.setState({dragging: true})}
-											onDragLeave={() => this.setState({dragging: false})}
-											onDrop={this.onFileFormChange}>{translations.dropOrSelectFiles}</DropZone>
+						{this.state.imgURLs ? this.state.imgURLs.map((dataURL, i) => <a key={i} onClick={this.onImgClick(i)}><img src={dataURL} /></a>) : null}
+						<a onClick={() => this.refs.dropzone.open()}>
+							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
+							          accept="image/*"
+											  onDragEnter={() => this.setState({dragging: true})}
+											  onDragLeave={() => this.setState({dragging: false})}
+											  onDrop={this.onFileFormChange}>{translations.dropOrSelectFiles}</DropZone>
+						</a>
 						{this.renderModal()}
 					</div>
 				</Col>

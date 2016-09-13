@@ -8,7 +8,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = false;
+const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -52,7 +52,7 @@ class LajiFormApp extends Component {
 	render () {
 		if (!this.state.schema) return null;
 		return (
-			<div className="container-fluid laji-form">
+			<div className="container-fluid">
 				<LajiForm {...this.state} />
 			</div>
 		);

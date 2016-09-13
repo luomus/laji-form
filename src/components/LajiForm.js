@@ -91,7 +91,7 @@ export default class LajiForm extends Component {
 	render() {
 		const {translations} = this.state;
 		return  (
-			<div onKeyDown={this.onKeyDown}>
+			<div onKeyDown={this.onKeyDown} className="laji-form">
 				<Form
 					{...this.props}
 					ref="form"
