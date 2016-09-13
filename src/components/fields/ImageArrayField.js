@@ -40,7 +40,7 @@ export default class ImagesArrayField extends Component {
 
 		return (
 			<Row>
-				<Col xs="12">
+				<Col xs={12}>
 					<TitleField title={title} />
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">

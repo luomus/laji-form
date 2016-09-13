@@ -64,7 +64,9 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth};
+		const maxWidth = 12 / groups.reduce((max, group) => (max !== undefined) ? Math.max(max, group.length) : group.length, 0);
+
+		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth, maxWidth};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -106,6 +108,10 @@ export default class GridLayoutField extends Component {
 							(!this.state.uiSchema[property] || !this.state.uiSchema[property]["ui:widget"] ||
 							 this.state.uiSchema[property]["ui:widget"] !== "separatedDateTime")))) {
 					division = Math.min(4, division);
+				}
+
+				if (type !== "array" && type !== "object") {
+					division = Math.min(this.state.maxWidth, division);
 				}
 
 				const name = this.state.showLabels ?  (this.state.schema.properties[property].title || property) : undefined;
