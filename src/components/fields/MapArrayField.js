@@ -207,7 +207,6 @@ export default class MapArrayField extends Component {
 		let scrolledHeight = this.state.inlineContainerHeight - this.state.inlineContainerScrolledAmount;
 
 		const state = this.state.scrollState;
-		console.log(state);
 
 		const inlineContentHeight = this.state.inlineSchemaHeight;
 
@@ -231,7 +230,6 @@ export default class MapArrayField extends Component {
 			inlineSchemaHeightFixerStyle.height = this.state.inlineSchemaHeight - inlineSchemaStyle.height || 0;
 		}
 
-		console.log(state);
 		return (<div>
 			<TitleField title={title} />
 			{description !== undefined ? <DescriptionField description={description} /> : null}

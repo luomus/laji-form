@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 
 /**
  * Makes it possible to extract fields from object schema and
@@ -131,7 +131,6 @@ export default class NestField extends Component {
 	getStateFromProps = (props) => {
 		const options = props.uiSchema["ui:options"];
 
-		let idSchema = props.idSchema;
 		let errorSchema = props.errorSchema;
 		let formData = props.formData;
 		let schemaProperties = props.schema.properties;
@@ -144,10 +143,10 @@ export default class NestField extends Component {
 			requiredDictionarified[req] = true;
 		});
 
+		const idSchema = {$id: props.idSchema.$id};
 		let nests = options.nests;
 		Object.keys(nests).forEach((wrapperFieldName) => {
 			schemaProperties = update(schemaProperties, {$merge: {[wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)}});
-			idSchema = update(idSchema, {$merge: {[wrapperFieldName]: getNewIdSchemaField(idSchema.$id, wrapperFieldName)}});
 			errorSchema = update(errorSchema, {$merge: {[wrapperFieldName]: {}}});
 
 			nests[wrapperFieldName].fields.forEach((fieldName) => {
@@ -157,10 +156,9 @@ export default class NestField extends Component {
 						schemaProperties[wrapperFieldName].required.push(fieldName) :
 						(schemaProperties[wrapperFieldName].required = [fieldName])
 				}
-				idSchema[wrapperFieldName][fieldName] = getNewIdSchemaField(idSchema[wrapperFieldName].$id, fieldName);
 				errorSchema[wrapperFieldName][fieldName] = errorSchema[fieldName];
 
-				[schemaProperties, idSchema, errorSchema].forEach((schemaFieldProperty) => {
+				[schemaProperties, errorSchema].forEach((schemaFieldProperty) => {
 					delete schemaFieldProperty[fieldName];
 				});
 
@@ -175,6 +173,8 @@ export default class NestField extends Component {
 							formData = update(formData, {[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}, [fieldName]: {$set: undefined}});
 						}
 				}
+
+				idSchema[wrapperFieldName] = toIdSchema(schemaProperties[wrapperFieldName], idSchema.$id + "_" + wrapperFieldName, this.props.registry.definitions);
 			});
 		});
 

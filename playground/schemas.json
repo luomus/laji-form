@@ -197,84 +197,86 @@
 								"fields": [
 									"predominantTree",
 									"habitat",
-									"images"
+									"images",
+									"notes",
+									"eventTime"
 								]
 							}
 						},
 						"uiSchema": {
-							"ui:field": "scoped",
-							"ui:options": {
-								"includeAdditionalFieldsChooserButton": true,
-								"fieldScopes": {
-									"notes": {
-										"*": {
-											"fields": [
-												"habitatWrapper"
-											]
-										}
-									}
-								},
-								"strictFields": [
-									"eventTime",
-									"habitatWrapper"
-								],
-								"uiSchema": {
-									"eventTime": {
-										"ui:field": "expandable",
-										"ui:options": {
-											"additionalFields": [
-												"dateEnd"
-											],
-											"uiSchema": {
-												"classNames": "well well-sm",
-												"ui:field": "grid",
-												"dateBegin": {
-													"ui:widget": "separatedDateTime"
-												},
-												"dateEnd": {
-													"ui:widget": {
-														"component": "separatedDateTime",
-														"options": {
-															"showButtons": false
-														}
-													}
+							"habitatWrapper": {
+									"ui:field": "scoped",
+									"ui:options": {
+										"includeAdditionalFieldsChooserButton": true,
+										"fieldScopes": {
+											"notes": {
+												"*": {
+													"fields": [
+														"habitat",
+														"predominantTree",
+														"images",
+														"notes"
+													]
 												}
-											},
-											"expanderButtonText": "Ilmoita aikaväli"
-										}
-									},
-									"habitatWrapper": {
-										"classNames": "well well-sm",
-										"habitat": {
-											"items": {
-												"ui:field": "injectFromContext",
-												"ui:options": {
-													"injections": {
-														"ui:options.tree": "habitat.tree"
-													},
-													"uiSchema": {
-														"ui:field": "tree",
-														"ui:options": {
-															"uiSchema": {
-																"ui:field": "grid",
-																"ui:options": {
-																	"coltype": "sm"
+											}
+										},
+										"strictFields": [
+											"eventTime"
+										],
+										"uiSchema": {
+											"classNames": "well well-sm",
+											"habitat": {
+												"items": {
+													"ui:field": "injectFromContext",
+													"ui:options": {
+														"injections": {
+															"ui:options.tree": "habitat.tree"
+														},
+														"uiSchema": {
+															"ui:field": "tree",
+															"ui:options": {
+																"uiSchema": {
+																	"ui:field": "grid",
+																	"ui:options": {
+																		"coltype": "sm"
+																	}
 																}
 															}
 														}
 													}
 												}
+											},
+											"images": {
+												"ui:field": "imageArray"
+											},
+											"notes": {
+												"ui:widget": "textarea"
+											},
+											"eventTime": {
+												"ui:field": "expandable",
+												"ui:options": {
+													"additionalFields": [
+														"dateEnd"
+													],
+													"uiSchema": {
+														"ui:field": "grid",
+														"dateBegin": {
+															"ui:widget": "separatedDateTime"
+														},
+														"dateEnd": {
+															"ui:widget": {
+																"component": "separatedDateTime",
+																"options": {
+																	"showButtons": false
+																}
+															}
+														}
+													},
+													"expanderButtonText": "Ilmoita aikaväli"
+												}
 											}
-										},
-										"images": {
-											"ui:field": "imageArray"
 										}
-									},
-									"notes": {
-										"classNames": "well well-sm",
-										"ui:widget": "textarea"
 									}
-								}
 							}
 						}
 					}
