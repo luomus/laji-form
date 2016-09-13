@@ -69,6 +69,7 @@ body .laji-form:not(.modal-dialog) {
 }
 .laji-form label {
 	font-size: 13px;
+	white-space: nowrap;
 }
 .laji-form .field-description {
 	font-size: 13px;
@@ -118,14 +119,15 @@ body .laji-form:not(.modal-dialog) {
 	text-align: initial;
 }
 
-.laji-form :not(.btn-group) > .btn-danger, .laji-form .laji-form-scope-field-cog {
+.laji-form :not(.btn-group) > .btn-danger, .laji-form .laji-form-scope-field-glyph {
 	width: auto;
 	float: right;
 	line-height: 5px;
 	font-size: 11px;
 	padding: 5px;
+	margin: 2px;
 }
-.laji-form .laji-form-scope-field-cog {
+.laji-form .laji-form-scope-field-glyph {
 	line-height: 9px;
 }
 

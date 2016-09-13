@@ -295,6 +295,9 @@
 									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
 									"additionalsGroupsTranslator": "taxonGroups",
 									"includeAdditionalFieldsChooserButton": true,
+									"glyphFields": {
+										"images": "camera"
+									},
 									"uiSchema": {
 										"ui:field": "autosuggest",
 										"ui:options": {
@@ -322,6 +325,9 @@
 												},
 												"taxonID": {
 													"ui:widget": "hidden"
+												},
+												"images": {
+													"ui:field": "imageArray"
 												},
 												"identifications": {
 													"items": {
@@ -861,6 +867,12 @@
 									"smellNotes": {
 										"type": "string",
 										"title": "Smell notes"
+									},
+									"images": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
 									},
 									"identifications": {
 										"type": "array",

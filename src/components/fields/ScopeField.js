@@ -104,7 +104,7 @@ export default class ScopeField extends Component {
 				<SchemaField {...this.props} {...this.state} />
 				</Col>
 				<Col xs={1}>
-					{this.renderAdditionalsButton()}
+					{this.renderAdditionalsButtons()}
 				</Col>
 			</Row>
 		);
@@ -217,7 +217,7 @@ export default class ScopeField extends Component {
 		this.setState({additionalsOpen: !this.state.additionalsOpen});
 	}
 
-	renderAdditionalsButton = () => {
+	renderAdditionalsButtons = () => {
 		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData).length === 0) return null;
 
 		let list = [];
@@ -273,9 +273,10 @@ export default class ScopeField extends Component {
 
 		return (
 			<div>
-				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-cog"]}>
+				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-glyph"]}>
 					<Glyphicon glyph="cog" />
 				</Button>
+				{this.renderGlyphFields()}
 				{this.state.additionalsOpen ?
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal"><Modal.Body>
 						{groups ? (
@@ -291,18 +292,46 @@ export default class ScopeField extends Component {
 		);
 	}
 
-	addAdditionalPropertiesToList = (properties, list) => {
-		let {additionalFields} = this.state;
-		let {formData} = this.props;
-		const strictFields = this.props.uiSchema["ui:options"].strictFields || [];
-		if (!formData) formData = {};
+	renderGlyphFields = () => {
+		const {glyphFields} = this.props.uiSchema["ui:options"];
+		const {additionalFields} = this.state;
 
+		return glyphFields ?
+			Object.keys(glyphFields).map(field => {
+				const isIncluded = this.fieldIsIncluded(field);
+				return (
+					<Button key={field} classList={["laji-form-scope-field-glyph"]} buttonType={isIncluded ? "primary" : "default"}
+					        onClick={ () => {
+										this.setState(
+											{additionalFields: update(this.state.additionalFields, {$merge: {[field]: !isIncluded}})},
+											() => {this.setState(this.getStateFromProps(this.props))}
+										);
+					        }}>
+						<Glyphicon glyph={glyphFields[field]} />
+					</Button>
+				);
+		}) : null;
+	}
+
+	fieldIsIncluded = (property) => {
+		let {formData, uiSchema} = this.props;
+		if (!formData) formData = {};
+		const strictFields = uiSchema["ui:options"].strictFields || [];
+		const {additionalFields} = this.state;
+
+		const isStrict = strictFields.includes(property);
+		const isIncluded = ((additionalFields[property] && !isStrict) ||
+		additionalFields[property] === true || (formData[property] && !isStrict));
+
+		return isIncluded;
+	}
+
+	addAdditionalPropertiesToList = (properties, list) => {
+		const {additionalFields} = this.state;
 		Object.keys(properties)
 			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.forEach(property => {
-				const isStrict = strictFields.includes(property);
-				const isIncluded = ((additionalFields[property] && !isStrict) ||
-				                  additionalFields[property] === true || (formData[property] && !isStrict));
+				const isIncluded = this.fieldIsIncluded(property);
 				list.push(<ListGroupItem
 					key={property}
 					active={isIncluded}

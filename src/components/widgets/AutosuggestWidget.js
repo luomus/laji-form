@@ -22,7 +22,7 @@ const autosuggestSettings = {
 			const tooltipElem = <Tooltip id={suggestion.key + "-tooltip"}>{that.props.registry.translations.openSpeciedCard}</Tooltip>;
 			return (
 				<OverlayTrigger overlay={tooltipElem}>
-					<a href={"http://tun.fi/" + suggestion.key + "?locale=" + that.props.registry.lang} target="_blank">({suggestion.payload.scientificName})</a>
+					<a href={"http://tun.fi/" + suggestion.key} target="_blank">({suggestion.payload.scientificName})</a>
 				</OverlayTrigger>
 			);
 		}
