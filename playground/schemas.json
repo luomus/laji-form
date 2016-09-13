@@ -208,18 +208,12 @@
 									"ui:field": "scoped",
 									"ui:options": {
 										"includeAdditionalFieldsChooserButton": true,
-										"fieldScopes": {
-											"notes": {
-												"*": {
-													"fields": [
-														"habitat",
-														"predominantTree",
-														"images",
-														"notes"
-													]
-												}
-											}
-										},
+										"fields": [
+											"habitat",
+											"predominantTree",
+											"images",
+											"notes"
+										],
 										"strictFields": [
 											"eventTime"
 										],

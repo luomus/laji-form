@@ -21,6 +21,7 @@ const scopeFieldSettings = {
  * Field with fields, which are shown according to recursive scope.
  * uiSchema = {"ui:options": {
  *  uiSchema: <uiSchema> (ui schema for inner schema)
+ *  fields: [<string>] (fields that are always shown)
  *  fieldScopes: {
  *   fieldName: {
  *     fieldValue: {
@@ -49,7 +50,8 @@ export default class ScopeField extends Component {
 				includeAdditionalFieldsChooserButton: PropTypes.boolean,
 				additionalsGroupingPath: PropTypes.string,
 				additionalsGroupsTranslator: PropTypes.oneOf(Object.keys(scopeFieldSettings)),
-				fieldScopes: PropTypes.object.isRequired,
+				fieldScopes: PropTypes.object,
+				fields: PropTypes.arrayOf(PropTypes.string),
 				definitions: PropTypes.object,
 				strictFields: PropTypes.arrayOf(PropTypes.string),
 				uiSchema: PropTypes.object
@@ -59,11 +61,12 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
+		this.state = {
 			additionalFields: {},
 			additionalsOpen: false,
 			searchTerm: "",
-			...this.getStateFromProps(props)};
+			...this.getStateFromProps(props)
+		};
 	}
 
 	componentWillReceiveProps(props) {
@@ -78,7 +81,6 @@ export default class ScopeField extends Component {
 		const schemas = this.getSchemas(props);
 		const state = {
 			...schemas,
-			primaryfieldsSelector: Object.keys(props.uiSchema["ui:options"].fieldScopes)[0],
 			includeAdditionalFieldsChooserButton
 		};
 
@@ -116,6 +118,10 @@ export default class ScopeField extends Component {
 
 		let fieldsToShow = {};
 
+		if (options.fields) options.fields.forEach(field => {
+			fieldsToShow[field] = schema.properties[field];
+		});
+
 		const definitions = options.definitions;
 
 		function isEmpty(val) { return val === undefined || val === null || val === "" }
@@ -149,7 +155,7 @@ export default class ScopeField extends Component {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
 
-			Object.keys(scopes).forEach((fieldSelector) => {
+			if (scopes) Object.keys(scopes).forEach((fieldSelector) => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
