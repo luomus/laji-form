@@ -8,7 +8,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = false;
+const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 

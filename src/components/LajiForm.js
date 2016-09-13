@@ -29,6 +29,8 @@ import InputTransformerField from "./fields/InputTransformerField";
 import HiddenField from "./fields/HiddenField";
 import InitiallyHiddenField from "./fields/InitiallyHiddenField";
 import ContextInjectionField from "./fields/ContextInjectionField";
+import ImageArrayField from "./fields/ImageArrayField";
+
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
@@ -121,7 +123,8 @@ export default class LajiForm extends Component {
 							hidden: HiddenField,
 							initiallyHidden: InitiallyHiddenField,
 							inputTransform: InputTransformerField,
-							injectFromContext: ContextInjectionField
+							injectFromContext: ContextInjectionField,
+							imageArray: ImageArrayField
 						},
 						widgets: {
 							CheckboxWidget: CheckboxWidget,

@@ -173,14 +173,16 @@
 					"dateEnd",
 					"habitat",
 					"predominantTree",
-					"notes"
+					"notes",
+					"images"
 				],
 				"inlineUiSchema": {
 					"ui:field": "nested",
 					"ui:order": [
-						"eventTime",
+						"images",
 						"habitatWrapper",
-						"notes"
+						"notes",
+						"eventTime"
 					],
 					"ui:options": {
 						"nests": {
@@ -195,7 +197,8 @@
 								"title": "Havaintopaikan tiedot",
 								"fields": [
 									"predominantTree",
-									"habitat"
+									"habitat",
+									"images"
 								]
 							}
 						},
@@ -263,6 +266,9 @@
 													}
 												}
 											}
+										},
+										"images": {
+											"ui:field": "imageArray"
 										}
 									},
 									"notes": {
@@ -688,6 +694,13 @@
 								"haapa",
 								"tammi"
 							]
+						},
+						"images": {
+							"title": "Kuvat",
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
 						},
 						"units": {
 							"type": "array",
@@ -1179,6 +1192,10 @@
 					"",
 					"",
 					""
+				],
+				"images": [
+					"MM.55660",
+					"MM.55661"
 				]
 			},
 			{

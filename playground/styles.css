@@ -239,3 +239,30 @@ body .laji-form {
 .laji-form .map-array-schema {
 	margin-top: 5px;
 }
+
+.laji-form .laji-form-images > * {
+	padding: 4px;
+	width: 120px;
+	height: 120px;
+	float: left;
+	cursor: pointer;
+}
+.laji-form .laji-form-drop-zone {
+	border: 2px dashed black;
+	width: 112px;
+	height: 112px;
+	padding: 4px;
+	margin: 4px;
+}
+
+.laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
+	background-color: #d8fbc6;
+}
+
+.laji-form.image-modal {
+	width: 90vmin;
+}
+
+.laji-form.image-modal img {
+	width: 100%;
+}
