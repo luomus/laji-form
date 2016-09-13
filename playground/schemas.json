@@ -132,6 +132,7 @@
 								"additionalFields": [
 									"dateEnd"
 								],
+								"expanderButtonText": "Ilmoita aikaväli",
 								"uiSchema": {
 									"ui:field": "grid",
 									"ui:options": {

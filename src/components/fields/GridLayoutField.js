@@ -64,7 +64,7 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		const maxWidth = 12 / groups.reduce((max, group) => (max !== undefined) ? Math.max(max, group.length) : group.length, 0);
+		const maxWidth = parseInt(12 / groups.reduce((max, group) => (max !== undefined) ? Math.max(max, group.length) : group.length, 0));
 
 		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth, maxWidth};
 	}
