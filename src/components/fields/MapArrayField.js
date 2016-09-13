@@ -192,7 +192,7 @@ export default class MapArrayField extends Component {
 		const description = options.description;
 		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
 
-		const inlineStyle = {width: this.state.containerWidth, left: this.state.containerLeft, top: options.topOffset || 0};
+		const inlineContainerStyle = {width: this.state.containerWidth, left: this.state.containerLeft, top: options.topOffset || 0};
 
 		let fixedHeight = this.state.fixedHeight;
 
@@ -203,32 +203,35 @@ export default class MapArrayField extends Component {
 		const mapHeightFixerStyle = {height: 0};
 		const inlineSchemaHeightFixerStyle = {height: 0};
 
-		let inlineHeight = fixedHeight;
-		let scrolledHeight = this.state.inlineHeight - this.state.inlineScrolledAmount;
+		let inlineContainerHeight = fixedHeight;
+		let scrolledHeight = this.state.inlineContainerHeight - this.state.inlineContainerScrolledAmount;
 
 		const state = this.state.scrollState;
+		console.log(state);
 
-		const inlineContentHeight = this.state.inlineSchemaHeight + this.state.navContainerHeight;
+		const inlineContentHeight = this.state.inlineSchemaHeight;
 
 		if (state === SQUEEZING &&
-		    ["inlineHeight", "inlineScrolledAmount"].every(stateProp => this.state.hasOwnProperty(stateProp)))
-			inlineHeight = scrolledHeight;
+		    ["inlineContainerHeight", "inlineContainerScrolledAmount"].every(stateProp => this.state.hasOwnProperty(stateProp)))
+			inlineContainerHeight = scrolledHeight;
 
 		if (state !== SCROLLING) {
-			inlineStyle.height = inlineHeight;
-			if (this.state.mapHeight > inlineHeight) {
-				mapStyle.height = Math.max(inlineHeight, (this.state.mapHeight - this.state.inlineScrolledAmount || 0));
+			inlineContainerStyle.height = inlineContainerHeight;
+			if (this.state.mapHeight > inlineContainerHeight) {
+				mapStyle.height = Math.max(inlineContainerHeight, (this.state.mapHeight - this.state.inlineContainerScrolledAmount || 0));
 			}
-			if (inlineContentHeight > inlineHeight) {
-				inlineSchemaStyle.height = (inlineHeight > (inlineContentHeight - this.state.inlineScrolledAmount || 0)) ?
-					inlineHeight :
-					(this.state.inlineSchemaHeight - this.state.inlineScrolledAmount || 0);
+			if (inlineContentHeight > inlineContainerHeight) {
+				inlineSchemaStyle.height = (inlineContainerHeight > (inlineContentHeight - this.state.inlineContainerScrolledAmount || 0)) ?
+					inlineContainerHeight :
+					(this.state.inlineSchemaHeight - this.state.inlineContainerScrolledAmount || 0);
+				inlineSchemaStyle.height -= this.state.navContainerHeight;
 			}
-			heightFixerStyle.height = this.state.inlineHeight;
+			heightFixerStyle.height = this.state.inlineContainerHeight;
 			mapHeightFixerStyle.height = this.state.mapHeight - mapStyle.height || 0;
 			inlineSchemaHeightFixerStyle.height = this.state.inlineSchemaHeight - inlineSchemaStyle.height || 0;
 		}
 
+		console.log(state);
 		return (<div>
 			<TitleField title={title} />
 			{description !== undefined ? <DescriptionField description={description} /> : null}
@@ -245,7 +248,7 @@ export default class MapArrayField extends Component {
 			<Row ref="mapAndSchemasContainer">
 				<div ref="inlineContainer"
 				     className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)}
-				     style={inlineStyle} >
+				     style={state !== SCROLLING ? inlineContainerStyle : null} >
 					<div className={hasInlineProps ? " col-" + colType + "-6" : ""} >
 						<MapComponent
 							style={state !== SCROLLING ? mapStyle : undefined}
@@ -272,7 +275,7 @@ export default class MapArrayField extends Component {
 							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction}
 							                         transitionEnterTimeout={300}
 							                         transitionLeaveTimeout={300}>
-								{hasInlineProps ? this.renderInlineSchemaField(inlineSchemaStyle,
+								{hasInlineProps ? this.renderInlineSchemaField(((state !== SCROLLING) ? inlineSchemaStyle : null),
 									(state !== SCROLLING) ?
 										<div ref="inlineSchemaHeightFixer"
 										     className={"col-"  + colType + "-6"}
@@ -437,8 +440,8 @@ export default class MapArrayField extends Component {
 		const inlineRef = this.refs.inlineContainer;
 		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
 
-		let inlineHeight, mapHeight, inlineSchemaHeight, schemaBottomDistance,
-		    navContainerHeight, inlineScrolledAmount, fixedHeight;
+		let inlineContainerHeight, mapHeight, inlineSchemaHeight, schemaBottomDistance,
+		    navContainerHeight, inlineContainerScrolledAmount, fixedHeight;
 		let scrollState = SCROLLING;
 
 		if (mapAndSchemasRef) {
@@ -449,16 +452,15 @@ export default class MapArrayField extends Component {
 				const inlineSchemaElem = this.refs.inlineSchema;
 				const navContainerElem = this.refs.navContainer;
 
-				inlineScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top + offset;
+				inlineContainerScrolledAmount = -mapAndSchemasElem.getBoundingClientRect().top + offset;
 
-				inlineHeight = inlineElem.scrollHeight;
+				inlineContainerHeight = inlineElem.scrollHeight;
 				if (this.refs.schema) {
 					schemaBottomDistance = this.refs.schema.getBoundingClientRect().bottom - offset;
 				}
 
 				mapHeight = findDOMNode(this.refs.map).offsetHeight;
 				if (this.refs.mapHeightFixer) mapHeight += findDOMNode(this.refs.mapHeightFixer).scrollHeight;
-
 
 				navContainerHeight = (navContainerElem) ? navContainerElem.scrollHeight : 0;
 
@@ -467,19 +469,18 @@ export default class MapArrayField extends Component {
 					inlineSchemaHeight += findDOMNode(this.refs.inlineSchemaHeightFixer).scrollHeight;
 				}
 
-				let scrolledHeight = inlineHeight - inlineScrolledAmount;
+				let scrolledHeight = inlineContainerHeight - inlineContainerScrolledAmount;
 
 				fixedHeight = this.fixedHeight - offset;
 				fixedHeight = Math.min(fixedHeight, schemaBottomDistance || 0);
 
-
-				scrollState = (inlineScrolledAmount < 0) ? SCROLLING :
+				scrollState = (inlineContainerScrolledAmount <= 0) ? SCROLLING :
 					(scrolledHeight < fixedHeight) ? FIXED : SQUEEZING;
-				if (fixedHeight < 0) scrollState = SCROLLING;
+				if (fixedHeight <= 0) scrollState = SCROLLING;
 			}
 		}
-		return {scrollState, mapHeight, inlineHeight, inlineSchemaHeight,
-		        schemaBottomDistance, navContainerHeight, inlineScrolledAmount, fixedHeight};
+		return {scrollState, mapHeight, inlineContainerHeight, inlineSchemaHeight,
+		        schemaBottomDistance, navContainerHeight, inlineContainerScrolledAmount, fixedHeight};
 	}
 
 	getColType = (props) => {
