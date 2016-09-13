@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
-import { Modal } from "react-bootstrap";
+import { Modal, Row, Col } from "react-bootstrap";
 import DropZone from "react-dropzone";
 
 export default class ImagesArrayField extends Component {
@@ -39,18 +39,20 @@ export default class ImagesArrayField extends Component {
 		const title = (schema.title === undefined) ? name : schema.title;
 
 		return (
-			<div>
-				<TitleField title={title} />
-				{description !== undefined ? <DescriptionField description={description} /> : null}
-				<div className="laji-form-images">
-					{this.state.imgURLs ? this.state.imgURLs.map((dataURL, i) => <img key={i} src={dataURL} onClick={this.onImgClick(i)} />) : null}
-					<DropZone className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
-					          onDragEnter={() => this.setState({dragging: true})}
-					          onDragLeave={() => this.setState({dragging: false})}
-					          onDrop={this.onFileFormChange}>{translations.dropOrSelectFiles}</DropZone>
-					{this.renderModal()}
-				</div>
-			</div>
+			<Row>
+				<Col xs="12">
+					<TitleField title={title} />
+					{description !== undefined ? <DescriptionField description={description} /> : null}
+					<div className="laji-form-images">
+						{this.state.imgURLs ? this.state.imgURLs.map((dataURL, i) => <img key={i} src={dataURL} onClick={this.onImgClick(i)} />) : null}
+						<DropZone className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
+											onDragEnter={() => this.setState({dragging: true})}
+											onDragLeave={() => this.setState({dragging: false})}
+											onDrop={this.onFileFormChange}>{translations.dropOrSelectFiles}</DropZone>
+						{this.renderModal()}
+					</div>
+				</Col>
+			</Row>
 		);
 	}
 
