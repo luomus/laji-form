@@ -181,6 +181,10 @@ export default class MapArrayField extends Component {
 		}
 	}
 
+	componentDidUpdate = () => {
+		if (this.refs.map && this.refs.map.map.map) this.refs.map.map.map.invalidateSize();
+	}
+
 	render() {
 		const options = this.props.uiSchema["ui:options"];
 		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
