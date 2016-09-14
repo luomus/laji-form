@@ -255,6 +255,7 @@ body .laji-form:not(.modal-dialog) {
 	width: 112px !important;
 	height: 112px !important;
 	margin: 4px;
+	margin-top: 8px;
 }
 
 .laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
@@ -267,4 +268,15 @@ body .laji-form:not(.modal-dialog) {
 
 .laji-form.image-modal img {
 	width: 100%;
+}
+
+.laji-form .img-container {
+	position: relative;
+}
+.laji-form .img-remove {
+	border-radius: 7px !important;
+	top: 0;
+	position: absolute;
+	padding: 4px 2px !important;
+	right: -8px;
 }

@@ -5,6 +5,7 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { Modal, Row, Col } from "react-bootstrap";
 import DropZone from "react-dropzone";
+import Button from "../Button";
 
 export default class ImagesArrayField extends Component {
 
@@ -44,7 +45,7 @@ export default class ImagesArrayField extends Component {
 					<TitleField title={title} />
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
-						{this.state.imgURLs ? this.state.imgURLs.map((dataURL, i) => <a key={i} onClick={this.onImgClick(i)}><img src={dataURL} /></a>) : null}
+						{this.renderImgs()}
 						<a onClick={() => this.refs.dropzone.open()}>
 							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 							          accept="image/*"
@@ -59,6 +60,17 @@ export default class ImagesArrayField extends Component {
 		);
 	}
 
+	renderImgs = () => {
+		return this.state.imgURLs ?
+			this.state.imgURLs.map((dataURL, i) => (
+				<div key={i} className="img-container">
+					<a onClick={this.onImgClick(i)}><img src={dataURL} /></a>
+					<Button buttonType="danger" classList={["img-remove"]} onClick={this.onImgRmClick(i)}>✖</Button>
+				</div>
+			)) :
+			null;
+	}
+
 	onImgClick = (i) => () => {
 		const item = this.props.formData[i];
 		if (item.match(/MM\./)) {
@@ -68,6 +80,10 @@ export default class ImagesArrayField extends Component {
 		} else {
 			this.setState({modalOpen: true, modalImgSrc: item});
 		}
+	}
+
+	onImgRmClick = (i) => () => {
+		this.props.onChange(update(this.props.formData, {$splice: [[i, 1]]}));
 	}
 
 	renderModal = () => {
