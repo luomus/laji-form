@@ -445,6 +445,7 @@
 			},
 			"gatheringEvent": {
 				"type": "object",
+				"title": "",
 				"properties": {
 					"leg": {
 						"type": "array",

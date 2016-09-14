@@ -3,8 +3,9 @@ import ReactDOM from "react-dom";
 import Button from "./Button";
 
 import Form from "./../overriddenComponents/Form";
-import ArrayField from "./../overriddenComponents/fields/ArrayField";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
+import ArrayField from "./../overriddenComponents/fields/ArrayField";
+import ObjectField from "./../overriddenComponents/fields/ObjectField";
 import BooleanField from "./../overriddenComponents/fields/BooleanField";
 import StringField from "./../overriddenComponents/fields/StringField";
 import CheckboxWidget from "./../overriddenComponents/widgets/CheckboxWidget";
@@ -98,8 +99,9 @@ export default class LajiForm extends Component {
 					onChange={this.onChange}
 					registry={{
 						fields: {
-							ArrayField: ArrayField,
 							SchemaField: SchemaField,
+							ArrayField: ArrayField,
+							ObjectField: ObjectField,
 							BooleanField: BooleanField,
 							StringField: StringField,
 							nested: NestField,
