@@ -1,5 +1,4 @@
-body .laji-form:not(.modal-dialog) {
-    background: #eeeeee;
+body .laji-form {
 	font-size: 13px;
 }
 
@@ -105,6 +104,7 @@ body .laji-form:not(.modal-dialog) {
 .laji-form .laji-form-map {
 	z-index: 1;
 	height: 600px;
+	margin-bottom: 10px;
 }
 .laji-form .map-field .field-description {
 	padding-bottom: 15px;
@@ -237,9 +237,6 @@ body .laji-form:not(.modal-dialog) {
 }
 .laji-form .laji-form-map-navi {
 	margin-bottom: 5px;
-}
-.laji-form .map-array-schema {
-	margin-top: 5px;
 }
 
 .laji-form .laji-form-images img, .laji-form .laji-form-images div {
