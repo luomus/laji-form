@@ -279,13 +279,18 @@ body .laji-form {
 	right: -8px;
 }
 
-
 .laji-form .auto-array-item {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
 	display: flex;
 }
 .laji-form .auto-array-schema {
+	-webkit-flex-grow: 1;
+	-ms-flex-grow: 1;
 	flex-grow: 1;
 }
 .laji-form .auto-array-delete-container {
-	width: 30px;
+	width: 25px;
 }
