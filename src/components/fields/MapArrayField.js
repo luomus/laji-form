@@ -75,6 +75,9 @@ export default class MapArrayField extends Component {
 			state = merge(state, this.stateToMerge);
 			this.stateToMerge = undefined;
 		}
+
+		if (!this.props.formData || !this.props.formData.length) state = {...state,  ...this.getInlineWidth()};
+
 		return state;
 	}
 
