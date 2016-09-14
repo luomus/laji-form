@@ -71,8 +71,8 @@ export default class AutoArrayField extends Component {
 			let key = this.state.idxsToKeys[idx];
 
 			rows.push(
-				<Row key={"row_" + key}>
-					<Col xs={11}>
+				<div key={"row_" + key} className="auto-array-item" >
+					<div className="auto-array-schema">
 						<SchemaField
 							key={key}
 							formData={item}
@@ -82,27 +82,29 @@ export default class AutoArrayField extends Component {
 							idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
 							registry={this.props.registry}
 							errorSchema={this.props.errorSchema[idx]} />
-					</Col>
-					{removable ? (<Col xs={1}>
-						<Button buttonType="danger"
-										classList={["col-xs-12"]}
-										ref={"del-" + idx}
-										onKeyDown={this.onButtonKeyDown(idx)}
-										onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
-						{this.state.visibleConfirmationIdx === idx ?
-							<Overlay show={true} placement="left"  rootClose={true} onHide={this.onClearConfirm} target={() => ReactDOM.findDOMNode(this.refs["del-" + idx])} >
-								<Popover id="popover-trigger-click">
-									<span>{translations.ConfirmRemove}</span>
-									<ButtonGroup>
-										<Button buttonType="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
-										<Button buttonType="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
-									</ButtonGroup>
-								</Popover>
-							</Overlay>
-							: null
-						}
-					</Col>) : undefined}
-				</Row>);
+					</div>
+					<div className="auto-array-delete-container">
+						{removable ? (<div>
+							<Button buttonType="danger"
+							        classList={["col-xs-12", "auto-array-delete"]}
+							        ref={"del-" + idx}
+							        onKeyDown={this.onButtonKeyDown(idx)}
+							        onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
+							{this.state.visibleConfirmationIdx === idx ?
+								<Overlay show={true} placement="left"  rootClose={true} onHide={this.onClearConfirm} target={() => ReactDOM.findDOMNode(this.refs["del-" + idx])} >
+									<Popover id="popover-trigger-click">
+										<span>{translations.ConfirmRemove}</span>
+										<ButtonGroup>
+											<Button buttonType="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
+											<Button buttonType="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
+										</ButtonGroup>
+									</Popover>
+								</Overlay>
+								: null
+							}
+						</div>) : undefined}
+					</div>
+				</div>);
 		});
 		return rows;
 	}
