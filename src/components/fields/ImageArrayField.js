@@ -58,9 +58,9 @@ export default class ImagesArrayField extends Component {
 						<a onClick={() => this.refs.dropzone.open()}>
 							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 							          accept="image/*"
-											  onDragEnter={() => this.setState({dragging: true})}
-											  onDragLeave={() => this.setState({dragging: false})}
-											  onDrop={this.onFileFormChange}>{translations.dropOrSelectFiles}</DropZone>
+											  onDragEnter={() => {this.setState({dragging: true})}}
+											  onDragLeave={() => {this.setState({dragging: false})}}
+											  onDrop={(files) => {this.setState({dragging: false}); this.onFileFormChange(files)}}>{translations.dropOrSelectFiles}</DropZone>
 						</a>
 						{this.renderModal()}
 					</div>
