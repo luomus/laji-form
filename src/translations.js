@@ -69,6 +69,11 @@ export default {
 		en: "search",
 		sv: "söka"
 	},
+	filter: {
+		fi: "rajaa",
+		en: "filter",
+		sv: "??"
+	},
 	more: {
 		fi: "lisää",
 		en: "more",

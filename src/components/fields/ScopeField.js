@@ -321,7 +321,7 @@ export default class ScopeField extends Component {
 						<Modal.Body>
 								<div className="scope-field-search form-group has-feedback">
 									<input className="form-control" onChange={this.onSearchChange}
-												 value={this.state.searchTerm} placeholder={translations.Search} />
+												 value={this.state.searchTerm} placeholder={translations.Filter} />
 									<i className="glyphicon glyphicon-search form-control-feedback" />
 								</div>
 							<Masonry>{list}</Masonry>
