@@ -21,7 +21,7 @@
   "dependencies": {
     "deepmerge": "*",
     "laji-map": "*",
-    "moment": "*",
+    "moment": "2.14.1",
     "rc-switch": "*",
     "react": "*",
     "react-addons-css-transition-group": "*",
