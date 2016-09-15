@@ -92,7 +92,7 @@ class ObjectField extends Component {
 			disabled,
 			readonly
 			} = this.props;
-		const {definitions, fields, formContext} = this.props.registry;
+		const {definitions, fields} = this.props.registry;
 		const {SchemaField, TitleField, DescriptionField} = fields;
 		const schema = retrieveSchema(this.props.schema, definitions);
 		const title = (schema.title === undefined) ? name : schema.title;
@@ -116,13 +116,12 @@ class ObjectField extends Component {
 				{title ? <TitleField
 					id={`${idSchema.$id}__title`}
 					title={title}
-					required={required}
-					formContext={formContext}/> : null}
+					required={required} /> : null}
 				{schema.description ?
 					<DescriptionField
 						id={`${idSchema.$id}__description`}
 						description={schema.description}
-						formContext={formContext} /> : null}
+					/> : null}
 				{
 					orderedProperties.map((name, index) => {
 						return (
@@ -163,9 +162,9 @@ if (process.env.NODE_ENV !== "production") {
 			])).isRequired,
 			fields: PropTypes.objectOf(PropTypes.func).isRequired,
 			definitions: PropTypes.object.isRequired,
-			formContext: PropTypes.object.isRequired,
 		})
 	};
 }
 
 export default ObjectField;
+

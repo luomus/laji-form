@@ -110,8 +110,14 @@ export default {
 		sv: "placen"
 	},
 	dropOrSelectFiles: {
-		fi: "Raahaa tähän kuvat tai klikkaa valitaksesi kuvat koneeltasi",
-		en: "Drag pictures here or click here to select the pictures from you computer",
+		fi: "raahaa tähän kuvat tai klikkaa valitaksesi kuvat koneeltasi",
+		en: "drag pictures here or click here to select the pictures from you computer",
 		sv: "???"
 	},
+	selectMoreFields: {
+		fi: "valitse lisää kenttiä",
+		en: "pick more fields",
+		sv: "???"
+	},
+
 }

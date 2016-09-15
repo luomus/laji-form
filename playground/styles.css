@@ -39,8 +39,10 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form input[type=text], select {
+.laji-form input, .laji-form select, .laji-form textarea {
 	border-radius: 2px !important;
+}
+.laji-form input[type=text], .laji-form select {
 	padding: 0px 5px;
 	height: 25px !important;
 }
@@ -111,7 +113,7 @@ body .laji-form {
 }
 
 .laji-form .leaflet-popup-content-wrapper {
-	border-radius: 5px;
+	border-radius: 2px;
 }
 .map-data-tooltip {
 	list-style: none;
@@ -203,6 +205,15 @@ body .laji-form {
 	display: block;
 	margin: auto;
 }
+.laji-form .list-group-item:first-child {
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+.laji-form .dropdown-menu {
+	padding: 0px;
+	border-radius: 2px;
+}
 
 .laji-form button.button-right {
 	float: right;
@@ -293,4 +304,12 @@ body .laji-form {
 }
 .laji-form .auto-array-delete-container {
 	width: 25px;
+}
+
+.laji-form .list-group-item.disabled {
+	opacity: .65;
+}
+
+.laji-form .modal-title {
+	text-align: center;
 }

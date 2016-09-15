@@ -23,6 +23,7 @@ export default class ImagesArrayField extends Component {
 		(props.formData || []).map((item, i) => {
 			if (item.match(/MM\./)) {
 				this.apiClient.fetchCached("/images/" + item).then(response => {
+					if (!this.mounted) return;
 					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})})
 				})
 			}
@@ -31,8 +32,16 @@ export default class ImagesArrayField extends Component {
 		return {imgURLs: props.formData};
 	}
 
+	componentDidMount() {
+		this.mounted = true;
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
 	render() {
-		const {readonly, disabled, schema, uiSchema, name, registry} = this.props;
+		const {schema, uiSchema, name, registry} = this.props;
 		const {translations} = registry;
 
 		const options = uiSchema["ui:options"] || {};
@@ -88,11 +97,14 @@ export default class ImagesArrayField extends Component {
 
 	renderModal = () => {
 		return this.state.modalOpen ?
-			<Modal dialogClassName="laji-form image-modal" show={true} onHide={() => this.setState({modalOpen: false})}><Modal.Body>
-				<div className="laji-form image-modal-content">
-					<img src={this.state.modalImgSrc} />
-				</div>
-			</Modal.Body></Modal> : null;
+			<Modal dialogClassName="laji-form image-modal" show={true} onHide={() => this.setState({modalOpen: false})}>
+				<Modal.Header closeButton={true} />
+				<Modal.Body>
+					<div className="laji-form image-modal-content">
+						<img src={this.state.modalImgSrc} />
+					</div>
+				</Modal.Body>
+			</Modal> : null;
 	}
 
 	onFileFormChange = (files) => {

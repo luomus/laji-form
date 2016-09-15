@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Tooltip, OverlayTrigger, Dropdown, MenuItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
@@ -220,6 +220,7 @@ export default class ScopeField extends Component {
 	renderAdditionalsButtons = () => {
 		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData).length === 0) return null;
 
+		const options = this.props.uiSchema["ui:options"];
 		let list = [];
 		if (this.state.additionalsOpen) {
 			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
@@ -239,7 +240,6 @@ export default class ScopeField extends Component {
 					additionalProperties[property] = this.props.schema.properties[property];
 			});
 
-			let options = this.props.uiSchema["ui:options"];
 			if (options.additionalsGroupingPath) {
 				var groups = options.additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
 			}
@@ -257,7 +257,7 @@ export default class ScopeField extends Component {
 				group.fields.forEach(field => {
 					if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
 				});
-				let groupsList = this.addAdditionalPropertiesToList(groupFields, []);
+				let groupsList = this.addAdditionalPropertiesToList(groupFields, [], ListGroupItem);
 				if (groupsList.length) {
 					list.push(
 						<div key={groupName} className="scope-field-modal-item">
@@ -267,79 +267,129 @@ export default class ScopeField extends Component {
 					);
 				}
 			}); else {
-				list = this.addAdditionalPropertiesToList(additionalProperties, list);
+				list = this.addAdditionalPropertiesToList(additionalProperties, list, MenuItem);
 			}
 		}
+
+		const glyph = <Glyphicon glyph="cog" />;
+
+		return (
+			<div>
+				{options.additionalsGroupingPath ? this.renderFieldsModal(list, glyph) : this.renderFieldsDropdown(list, glyph)}
+				{this.renderGlyphFields()}
+			</div>
+		);
+	}
+
+	renderFieldsDropdown(list, glyph) {
+		const tooltip = <Tooltip id={this.props.idSchema.$id + "-scope-tooltip"}><span>moi</span></Tooltip>
+		return (
+			<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
+			          bsStyle="info"
+			          pullRight
+			          onSelect={(eventKey, event) => {
+									this.preventCloseDropdown = true;
+			          }}
+			          open={this.state.additionalsOpen}
+			          onToggle={(isOpen) => {
+									if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
+									this.preventCloseDropdown = false;
+			           }}>
+				<OverlayTrigger overlay={tooltip}>
+					<span>
+						<Button bsRole="toggle" classList={["laji-form-scope-field-glyph"]}>{glyph}</Button>
+					</span>
+				</OverlayTrigger>
+				<Dropdown.Menu>
+					{list}
+				</Dropdown.Menu>
+			</Dropdown>
+		);
+	}
+
+	renderFieldsModal(list, glyph) {
+		const {translations} = this.props.registry;
 
 		return (
 			<div>
 				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-glyph"]}>
-					<Glyphicon glyph="cog" />
+					{glyph}
 				</Button>
-				{this.renderGlyphFields()}
-				{this.state.additionalsOpen ?
-					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal"><Modal.Body>
-						{groups ? (
-						<div className="scope-field-search form-group has-feedback">
-							<input className="form-control" onChange={this.onSearchChange}
-							       value={this.state.searchTerm} placeholder={this.props.registry.translations.Search} />
-							<i className="glyphicon glyphicon-search form-control-feedback" />
-						</div>
-						) : null}
-						<Masonry>{list}</Masonry>
-					</Modal.Body></Modal> : null}
+				{this.state.additionalsOpen ?  (
+					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
+						<Modal.Header closeButton={true} ><Modal.Title>{translations.SelectMoreFields}</Modal.Title></Modal.Header>
+						<Modal.Body>
+								<div className="scope-field-search form-group has-feedback">
+									<input className="form-control" onChange={this.onSearchChange}
+												 value={this.state.searchTerm} placeholder={translations.Search} />
+									<i className="glyphicon glyphicon-search form-control-feedback" />
+								</div>
+							<Masonry>{list}</Masonry>
+						</Modal.Body>
+					</Modal>
+				) : null}
 			</div>
 		);
 	}
 
 	renderGlyphFields = () => {
 		const {glyphFields} = this.props.uiSchema["ui:options"];
-		const {additionalFields} = this.state;
 
 		return glyphFields ?
-			Object.keys(glyphFields).map(field => {
-				const isIncluded = this.fieldIsIncluded(field);
+			Object.keys(glyphFields).map(property => {
+				const isIncluded = this.propertyIsIncluded(property);
+				const hasData = this.propertyHasData(property, this.props.formData);
 				return (
-					<Button key={field} classList={["laji-form-scope-field-glyph"]} buttonType={isIncluded ? "primary" : "default"}
-					        onClick={ () => {
-										this.setState(
-											{additionalFields: update(this.state.additionalFields, {$merge: {[field]: !isIncluded}})},
-											() => {this.setState(this.getStateFromProps(this.props))}
-										);
-					        }}>
-						<Glyphicon glyph={glyphFields[field]} />
+					<Button key={property} disabled={hasData} classList={["laji-form-scope-field-glyph"]} buttonType={isIncluded ? "primary" : "default"}
+					        onClick={ () => this.toggleAdditionalProperty(property)}>
+						<Glyphicon glyph={glyphFields[property]} />
 					</Button>
 				);
 		}) : null;
 	}
 
-	fieldIsIncluded = (property) => {
-		let {formData, uiSchema} = this.props;
-		if (!formData) formData = {};
-		const strictFields = uiSchema["ui:options"].strictFields || [];
+	propertyIsIncluded = (property) => {
+		const strictFields = this.props.uiSchema["ui:options"].strictFields || [];
 		const {additionalFields} = this.state;
 
 		const isStrict = strictFields.includes(property);
 		const isIncluded = ((additionalFields[property] && !isStrict) ||
-		additionalFields[property] === true || (formData[property] && !isStrict));
+		additionalFields[property] === true || (this.state.schema.properties[property] && !isStrict));
 
 		return isIncluded;
 	}
 
-	addAdditionalPropertiesToList = (properties, list) => {
-		const {additionalFields} = this.state;
+	// TODO need to be careful with the recursion. If ScopeField is used with deeply nested data, we should
+	// consider another solution.
+	propertyHasData = (field, container) => {
+		if (!container) return false;
+		const data = container[field];
+		return (data && data !== "" &&
+			(data.constructor !== Object || Object.keys(data).length > 0) &&
+			(!Array.isArray(data) || data.length > 0) &&
+			(data.constructor !== Object || Object.keys(data).some(_field => this.propertyHasData(_field, data))));
+	}
+
+	toggleAdditionalProperty = (field) => {
+		const isIncluded = this.propertyIsIncluded(field);
+		if (this.propertyHasData(field, this.props.formData))	return;
+		this.setState({additionalFields: update(this.state.additionalFields, {$merge: {[field]: !isIncluded}})},
+			() => {this.setState(this.getStateFromProps(this.props))});
+	}
+
+	addAdditionalPropertiesToList = (properties, list, ElemType) => {
 		Object.keys(properties)
 			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.forEach(property => {
-				const isIncluded = this.fieldIsIncluded(property);
-				list.push(<ListGroupItem
+				const isIncluded = this.propertyIsIncluded(property);
+				const hasData = this.propertyHasData(property, this.props.formData);
+				list.push(<ElemType
 					key={property}
+					disabled={hasData}
 					active={isIncluded}
-					onClick={() => {
-						this.setState({additionalFields: update(additionalFields, {$merge: {[property]: !isIncluded}})}, () => {this.setState(this.getStateFromProps(this.props))});
-					}}>
+					onClick={() => this.toggleAdditionalProperty(property)}>
 					{properties[property].title || property}
-				</ListGroupItem>)
+				</ElemType>)
 			});
 		return list;
 	}
