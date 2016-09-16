@@ -52,6 +52,7 @@ export default class GridLayoutField extends Component {
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 		const limitWidth = (options && options.hasOwnProperty("limitWidthAlways")) ? options.limitWidthAlways : false;
 		const neverLimitWidth = (options && options.hasOwnProperty("neverLimitWidth")) ? options.neverLimitWidth : false;
+		const minWidth = (options && options.hasOwnProperty("minWidth")) ? options.minWidth : 2;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
@@ -66,7 +67,7 @@ export default class GridLayoutField extends Component {
 
 		const maxWidth = parseInt(12 / groups.reduce((max, group) => (max !== undefined) ? Math.max(max, group.length) : group.length, 0));
 
-		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth, maxWidth};
+		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth, maxWidth, minWidth};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -107,14 +108,16 @@ export default class GridLayoutField extends Component {
 						(type !== "array" && type !== "object" &&
 							(!this.state.uiSchema[property] || !this.state.uiSchema[property]["ui:widget"] ||
 							 this.state.uiSchema[property]["ui:widget"] !== "separatedDateTime")))) {
-					division = Math.min(4, division);
+					division = Math.min(this.state.minWidth, division);
 				}
 
 				if (type !== "array" && type !== "object") {
 					division = Math.min(this.state.maxWidth, division);
 				}
 
-				const name = this.state.showLabels ?  (this.state.schema.properties[property].title || property) : undefined;
+				//const name = this.state.showLabels ? (this.state.schema.properties[property].title || property) : undefined;
+				const title = this.state.schema.properties[property].title ;
+				const name = this.state.showLabels ? (title !== undefined ? title : property) : undefined;
 				let schema = this.state.schema.properties[property];
 				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
 

@@ -69,7 +69,7 @@ export default class AdditionalsExpanderField extends Component {
 
 	render() {
 		const shouldShowButton = this.shouldShowAdditionalsButton(this.props);
-		const title = this.props.schema.title || this.props.name;
+		const title = this.props.schema.title !== undefined ? this.props.schema.title : this.props.name;
 		return (
 			<div>
 				{title ? <TitleField title={title} /> : null}

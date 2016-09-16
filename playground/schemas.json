@@ -33,7 +33,7 @@
 			"ui:options": {
 				"nests": {
 					"legWrapper": {
-						"title": "Havainnoitsijat",
+						"title": "",
 						"fields": [
 							"leg",
 							"legPublic",
@@ -45,7 +45,6 @@
 								"",
 								"legPublic"
 							],
-							"classNames": "well well-sm",
 							"ui:options": {
 								"nests": {
 									"": {
@@ -120,14 +119,13 @@
 						}
 					},
 					"eventTime": {
-						"title": "Aika",
+						"title": "",
 						"fields": [
 							"dateBegin",
 							"dateEnd"
 						],
 						"uiSchema": {
 							"ui:field": "expandable",
-							"classNames": "well well-sm",
 							"ui:options": {
 								"additionalFields": [
 									"dateEnd"
@@ -137,7 +135,8 @@
 									"ui:field": "grid",
 									"ui:options": {
 										"colType": "sm",
-										"limitWidthAlways": true
+										"limitWidthAlways": true,
+										"minWidth": 4
 									},
 									"dateBegin": {
 										"ui:widget": "separatedDateTime"
@@ -154,6 +153,9 @@
 							}
 						}
 					}
+				},
+				"uiSchema": {
+					"classNames": "well well-sm"
 				}
 			}
 		},
@@ -178,12 +180,6 @@
 				],
 				"inlineUiSchema": {
 					"ui:field": "nested",
-					"ui:order": [
-						"images",
-						"habitatWrapper",
-						"notes",
-						"eventTime"
-					],
 					"ui:options": {
 						"nests": {
 							"eventTime": {
@@ -206,72 +202,72 @@
 						},
 						"uiSchema": {
 							"habitatWrapper": {
-									"ui:field": "scoped",
-									"ui:options": {
-										"includeAdditionalFieldsChooserButton": true,
-										"fields": [
-											"habitat",
-											"predominantTree",
-											"images",
-											"notes"
-										],
-										"strictFields": [
-											"eventTime"
-										],
-										"uiSchema": {
-											"classNames": "well well-sm",
-											"habitat": {
-												"items": {
-													"ui:field": "injectFromContext",
-													"ui:options": {
-														"injections": {
-															"ui:options.tree": "habitat.tree"
-														},
-														"uiSchema": {
-															"ui:field": "tree",
-															"ui:options": {
-																"uiSchema": {
-																	"ui:field": "grid",
-																	"ui:options": {
-																		"coltype": "sm"
-																	}
+								"ui:field": "scoped",
+								"classNames": "well well-sm",
+								"ui:options": {
+									"includeAdditionalFieldsChooserButton": true,
+									"fields": [
+										"habitat",
+										"predominantTree",
+										"images",
+										"notes"
+									],
+									"strictFields": [
+										"eventTime"
+									],
+									"uiSchema": {
+										"habitat": {
+											"items": {
+												"ui:field": "injectFromContext",
+												"ui:options": {
+													"injections": {
+														"ui:options.tree": "habitat.tree"
+													},
+													"uiSchema": {
+														"ui:field": "tree",
+														"ui:options": {
+															"uiSchema": {
+																"ui:field": "grid",
+																"ui:options": {
+																	"colType": "sm"
 																}
 															}
 														}
 													}
 												}
-											},
-											"images": {
-												"ui:field": "imageArray"
-											},
-											"notes": {
-												"ui:widget": "textarea"
-											},
-											"eventTime": {
-												"ui:field": "expandable",
-												"ui:options": {
-													"additionalFields": [
-														"dateEnd"
-													],
-													"uiSchema": {
-														"ui:field": "grid",
-														"dateBegin": {
-															"ui:widget": "separatedDateTime"
-														},
-														"dateEnd": {
-															"ui:widget": {
-																"component": "separatedDateTime",
-																"options": {
-																	"showButtons": false
-																}
+											}
+										},
+										"images": {
+											"ui:field": "imageArray"
+										},
+										"notes": {
+											"ui:widget": "textarea"
+										},
+										"eventTime": {
+											"ui:field": "expandable",
+											"ui:options": {
+												"additionalFields": [
+													"dateEnd"
+												],
+												"uiSchema": {
+													"ui:field": "grid",
+													"dateBegin": {
+														"ui:widget": "separatedDateTime"
+													},
+													"dateEnd": {
+														"ui:widget": {
+															"component": "separatedDateTime",
+															"options": {
+																"showButtons": false
 															}
 														}
-													},
-													"expanderButtonText": "Ilmoita aikaväli"
-												}
+													}
+												},
+												"expanderButtonText": "Ilmoita aikaväli"
 											}
 										}
 									}
+								}
 							}
 						}
 					}
@@ -319,7 +315,8 @@
 											"uiSchema": {
 												"ui:field": "grid",
 												"ui:options": {
-													"colType": "sm"
+													"colType": "md",
+													"maxItemsPerRow": 12
 												},
 												"unitType": {
 													"ui:field": "hidden"
@@ -438,7 +435,7 @@
 		"properties": {
 			"editors": {
 				"type": "array",
-				"title": "Editoijat",
+				"title": "Muokkausoikeus",
 				"items": {
 					"type": "string"
 				}
@@ -449,14 +446,14 @@
 				"properties": {
 					"leg": {
 						"type": "array",
-						"title": "Leg",
+						"title": "Havainnoitsijat",
 						"items": {
 							"type": "string"
 						}
 					},
 					"legPublic": {
 						"type": "boolean",
-						"title": "Näytetäänkö nimi julkisesti?",
+						"title": "Näytetäänkö nimet julkisesti?",
 						"default": true
 					},
 					"dateBegin": {
@@ -699,7 +696,7 @@
 							]
 						},
 						"images": {
-							"title": "Kuvat",
+							"title": "Kuvat havaintopaikasta",
 							"type": "array",
 							"items": {
 								"type": "string"
@@ -707,6 +704,7 @@
 						},
 						"units": {
 							"type": "array",
+							"title": "Havainnot",
 							"items": {
 								"type": "object",
 								"properties": {
@@ -872,6 +870,7 @@
 									},
 									"images": {
 										"type": "array",
+										"title": "Kuvat havainnosta",
 										"items": {
 											"type": "string"
 										}

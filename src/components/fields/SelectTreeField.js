@@ -71,7 +71,7 @@ export default class TreeField extends Component {
 				select.enum.push(key);
 				select.enumNames.push(dictionarifiedEnums[key]);
 			})
-			select.title = (labels && labels[depth]) ? labels[depth] : " ";
+			select.title = (labels && labels[depth]) ? labels[depth] : "";
 
 			properties[depth] = select;
 			idSchema[depth] = {$id: idSchema.$id + "_" + depth};

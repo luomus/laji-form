@@ -99,14 +99,14 @@ export default class ScopeField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		return (
-			<Row>
-				<Col xs={11}>
+			<div className="scope-field">
+				<div className="scope-field-schema">
 				<SchemaField {...this.props} {...this.state} />
-				</Col>
-				<Col xs={1}>
+				</div>
+				<div className="scope-field-buttons">
 					{this.renderAdditionalsButtons()}
-				</Col>
-			</Row>
+				</div>
+			</div>
 		);
 	}
 
