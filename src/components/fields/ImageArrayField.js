@@ -55,13 +55,14 @@ export default class ImagesArrayField extends Component {
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
-						<a onClick={() => this.refs.dropzone.open()}>
 							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
-							          accept="image/*"
+											  accept="image/*"
 											  onDragEnter={() => {this.setState({dragging: true})}}
 											  onDragLeave={() => {this.setState({dragging: false})}}
-											  onDrop={(files) => {this.setState({dragging: false}); this.onFileFormChange(files)}}>{translations.dropOrSelectFiles}</DropZone>
-						</a>
+											  onDrop={files => {
+													this.setState({dragging: false});
+													this.onFileFormChange(files)}
+												}>{translations.DropOrSelectFiles}</DropZone>
 						{this.renderModal()}
 					</div>
 				</Col>
@@ -108,7 +109,6 @@ export default class ImagesArrayField extends Component {
 	}
 
 	onFileFormChange = (files) => {
-		console.log("form change");
 		const {onChange, formData} = this.props;
 		this.processFiles(files)
 			.then(filesInfo => {
