@@ -143,7 +143,11 @@ export default class NestField extends Component {
 			requiredDictionarified[req] = true;
 		});
 
-		const idSchema = {$id: props.idSchema.$id};
+		const idSchema = {};
+		Object.keys(props.idSchema).forEach(id => {
+			idSchema[id] = props.idSchema[id];
+		});
+
 		let nests = options.nests;
 		Object.keys(nests).forEach((wrapperFieldName) => {
 			schemaProperties = update(schemaProperties, {$merge: {[wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)}});
@@ -174,8 +178,10 @@ export default class NestField extends Component {
 						}
 				}
 
-				idSchema[wrapperFieldName] = toIdSchema(schemaProperties[wrapperFieldName], idSchema.$id + "_" + wrapperFieldName, this.props.registry.definitions);
+				delete idSchema[fieldName]
 			});
+
+			idSchema[wrapperFieldName] = toIdSchema(schemaProperties[wrapperFieldName], idSchema.$id + "_" + wrapperFieldName, this.props.registry.definitions);
 		});
 
 		let schema = update(this.props.schema, {properties: {$set: schemaProperties}});
