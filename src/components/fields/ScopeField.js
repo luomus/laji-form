@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Tooltip, OverlayTrigger, Dropdown, MenuItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
@@ -282,7 +282,6 @@ export default class ScopeField extends Component {
 	}
 
 	renderFieldsDropdown(list, glyph) {
-		const tooltip = <Tooltip id={this.props.idSchema.$id + "-scope-tooltip"}><span>moi</span></Tooltip>
 		return (
 			<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
 			          bsStyle="info"
@@ -295,11 +294,7 @@ export default class ScopeField extends Component {
 									if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
 									this.preventCloseDropdown = false;
 			           }}>
-				<OverlayTrigger overlay={tooltip}>
-					<span>
-						<Button bsRole="toggle" classList={["laji-form-scope-field-glyph"]}>{glyph}</Button>
-					</span>
-				</OverlayTrigger>
+				<Button bsRole="toggle" classList={["laji-form-scope-field-glyph"]}>{glyph}</Button>
 				<Dropdown.Menu>
 					{list}
 				</Dropdown.Menu>

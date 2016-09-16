@@ -70,7 +70,7 @@ export default class MapArrayField extends Component {
 		});
 
 		let activeIdx = (this.state && this.state.activeIdx !== undefined) ? this.state.activeIdx : (data.length ? 0 : undefined);
-		let state = {...props, schema, uiSchema, data, activeIdx, onChange: this.onItemChange};
+		let state = {...props, schema, uiSchema, data, activeIdx};
 		if (this.stateToMerge) {
 			state = merge(state, this.stateToMerge);
 			this.stateToMerge = undefined;
@@ -352,7 +352,7 @@ export default class MapArrayField extends Component {
 	}
 
 	getSchemaForFields = (fields, isInline, style, sibling) => {
-		let {formData, idSchema, errorSchema} = this.props;
+		let {formData, idSchema, errorSchema, registry} = this.state;
 		let idx = this.state.activeIdx;
 
 		let itemSchemaProperties = {};
@@ -388,6 +388,8 @@ export default class MapArrayField extends Component {
 						idSchema={itemIdSchema}
 						errorSchema={itemErrorSchema}
 						uiSchema={uiSchema}
+						registry={registry}
+						onChange={this.onItemChange}
 						name={undefined} />
 				</div>
 				{sibling ? sibling : null}
@@ -562,7 +564,15 @@ class MapComponent extends Component {
 		});
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
+	}
+
 	render() {
+		if (this.map) {
+			this.map.setDrawData(this.props.drawData);
+			this.map.setActive(this.map.idxsToIds[this.props.activeIdx]);
+		}
 		return (<div className={"laji-form-map " +this.props.className} style={this.props.style} ref="map" />);
 	}
 }

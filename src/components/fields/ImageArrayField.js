@@ -108,6 +108,7 @@ export default class ImagesArrayField extends Component {
 	}
 
 	onFileFormChange = (files) => {
+		console.log("form change");
 		const {onChange, formData} = this.props;
 		this.processFiles(files)
 			.then(filesInfo => {
