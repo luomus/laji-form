@@ -167,8 +167,13 @@
 				"title": "Kartta",
 				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
 				"popupFields": [
-					{"field": "units", "mapper": "units"},
-					{"field": "notes"}
+					{
+						"field": "units",
+						"mapper": "units"
+					},
+					{
+						"field": "notes"
+					}
 				],
 				"inlineProperties": [
 					"dateBegin",
@@ -382,7 +387,8 @@
 										}
 									},
 									"strictFields": [
-										"recordBasis"
+										"recordBasis",
+										"taxonConfidence"
 									],
 									"definitions": {
 										"unitType": {
@@ -435,7 +441,7 @@
 		"properties": {
 			"editors": {
 				"type": "array",
-				"title": "Muokkausoikeus",
+				"title": "Editoijat",
 				"items": {
 					"type": "string"
 				}
@@ -446,14 +452,14 @@
 				"properties": {
 					"leg": {
 						"type": "array",
-						"title": "Havainnoitsijat",
+						"title": "Leg",
 						"items": {
 							"type": "string"
 						}
 					},
 					"legPublic": {
 						"type": "boolean",
-						"title": "Näytetäänkö nimet julkisesti?",
+						"title": "Näytetäänkö nimi julkisesti?",
 						"default": true
 					},
 					"dateBegin": {
@@ -675,7 +681,7 @@
 						},
 						"predominantTree": {
 							"type": "string",
-							"title": "MY.predominantTree",
+							"title": "Valtapuulaji",
 							"enum": [
 								"",
 								"MY.predominantTreeSpruce",
@@ -687,17 +693,17 @@
 							],
 							"enumNames": [
 								"",
-								"kuusi",
-								"mänty",
-								"koivu",
-								"leppä",
-								"haapa",
-								"tammi"
+								"Kuusi",
+								"Mänty",
+								"Koivu",
+								"Leppä",
+								"Haapa",
+								"Tammi"
 							]
 						},
 						"images": {
-							"title": "Kuvat havaintopaikasta",
 							"type": "array",
+							"title": "Kuvat havaintopaikasta",
 							"items": {
 								"type": "string"
 							}
@@ -737,26 +743,26 @@
 										],
 										"enumNames": [
 											"",
-											"MY.recordBasisPreservedSpecimen",
-											"MY.recordBasisFossilSpecimen",
+											"Näyte",
+											"Fossiili",
 											"MY.recordBasisSubfossilSpecimen",
-											"MY.recordBasisHumanObservation",
-											"MY.recordBasisMachineObservation",
-											"MY.recordBasisLivingSpecimen",
-											"MY.recordBasisMicrobialSpecimen",
+											"Havainto",
+											"Laitteen tekemä havainto",
+											"Elävä näyte",
+											"Mikrobinäyte",
 											"Nähty",
 											"Kuultu",
 											"Valokuvattu",
 											"Epäsuora havainto (jäljet, ulosteet, yms)",
-											"MY.recordBasisHumanObservationHandled",
-											"MY.recordBasisHumanObservationVideo",
-											"MY.recordBasisHumanObservationAudio",
-											"MY.recordBasisMachineObservationVideo",
-											"MY.recordBasisMachineObservationAudio",
-											"MY.recordBasisMachineObservationGeologger",
-											"MY.recordBasisMachineObservationSatelliteTransmitter",
-											"MY.recordBasisMachineObservationGMSTransmitter",
-											"MY.recordBasisLiterature"
+											"Käsitelty (otettu kiinni, tutkittu ja vapautettu)",
+											"Videoitu",
+											"Äänitetty",
+											"Laitteen tekemä videotallenne",
+											"Laitteen tekemä äänitallenne",
+											"Geopaikannin",
+											"Satelliittipaikannus",
+											"GMS-paikannus",
+											"Kirjallisuustieto"
 										]
 									},
 									"informalNameString": {
@@ -777,6 +783,7 @@
 									"taxonConfidence": {
 										"type": "string",
 										"title": "Varmuus",
+										"default": "MY.taxonConfidenceSure",
 										"enum": [
 											"",
 											"MY.taxonConfidenceSure",
@@ -784,8 +791,8 @@
 										],
 										"enumNames": [
 											"",
-											"varma",
-											"epävarma"
+											"Varma",
+											"Epävarma"
 										]
 									},
 									"notes": {
@@ -798,19 +805,7 @@
 									},
 									"substrate": {
 										"type": "string",
-										"title": "Kasvualusta",
-										"enum": [
-											"",
-											"MY.substrateOrganicLiving",
-											"MY.substrateOrganicDeceased",
-											"MY.substrateInorganic"
-										],
-										"enumNames": [
-											"",
-											"Elävällä alustalla",
-											"Kuolleella eliöllä",
-											"elottomalla alustalla"
-										]
+										"title": "Kasvualusta"
 									},
 									"substrateSpecies": {
 										"type": "string",
@@ -870,7 +865,7 @@
 									},
 									"images": {
 										"type": "array",
-										"title": "Kuvat havainnosta",
+										"title": "MZ.images",
 										"items": {
 											"type": "string"
 										}
@@ -1043,98 +1038,5 @@
 				]
 			}
 		}
-	},
-	"formData": {
-		"gatheringEvent": {
-			"leg": [
-				"MA.97"
-			],
-			"legPublic": true
-		},
-		"gatherings": [
-			{
-				"notes": "test 2",
-				"predominantTree": "",
-				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "kantarelli",
-						"unitType": [
-							"MVL.233",
-							"MVL.121"
-						],
-						"taxonID": "MX.205511",
-						"taxonConfidence": "",
-						"substrate": "",
-						"taste": "",
-						"smell": "",
-						"images": [
-							"MM.55660",
-							"MM.55661"
-						]
-					}
-				],
-				"wgs84Geometry": {
-					"type": "Point",
-					"radius": 4000,
-					"coordinates": [
-						24.192325223286232,
-						61.1028355742579
-					]
-				},
-				"habitat": [
-					"",
-					"",
-					"",
-					"",
-					""
-				],
-				"images": [
-					"MM.55660",
-					"MM.55661"
-				]
-			},
-			{
-				"notes": "test",
-				"predominantTree": "",
-				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "ass",
-						"unitType": [
-							"MVL.2"
-						],
-						"taxonID": "MX.47092",
-						"taxonConfidence": "",
-						"substrate": "",
-						"taste": "",
-						"smell": ""
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "kantarelli",
-						"unitType": [
-							"MVL.233",
-							"MVL.121"
-						],
-						"taxonID": "MX.205511",
-						"taxonConfidence": "",
-						"substrate": "",
-						"taste": "",
-						"smell": ""
-					}
-				],
-				"wgs84Geometry": {
-					"type": "Point",
-					"coordinates": [
-						24.492325223286233,
-						61.1028355742579
-					]
-				}
-			}
-		],
-		"editors": [
-			"MA.97"
-		]
 	}
 }
