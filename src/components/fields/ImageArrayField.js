@@ -131,7 +131,7 @@ export default class ImagesArrayField extends Component {
 					formDataBody.append("data", file);
 				});
 
-				return this.apiClient.fetch("/images", {token: this.props.registry.userToken}, {
+				return this.apiClient.fetch("/images", undefined, {
 					method: "POST",
 					body: formDataBody
 				});
