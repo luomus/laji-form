@@ -18,9 +18,9 @@ export default class ApiClient {
 	 * @param query Object, where keys are param names and values are param values.
 	 * @returns a Promise.
 	 */
-	fetch(path, query) {
+	fetch(path, query, options) {
 		if (!this.apiClient) throw new Error("You must pass an api client implementation to LajiForm!");
-		return this.apiClient.fetch(path, query).then(response => {
+		return this.apiClient.fetch(path, query, options).then(response => {
 			return response;
 		});
 	}

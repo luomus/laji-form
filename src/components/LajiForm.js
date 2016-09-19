@@ -47,7 +47,8 @@ export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
 		uiSchemaContext: PropTypes.object,
-		validators: PropTypes.object
+		validators: PropTypes.object,
+		userToken: PropTypes.string
 	}
 
 	static defaultProps = {
@@ -139,6 +140,7 @@ export default class LajiForm extends Component {
 						},
 						translations,
 						lang: this.props.lang,
+						userToken: this.props.userToken,
 						uiSchemaContext: this.props.uiSchemaContext
 					}} >
 					<Button type="submit" classList={["btn-info"]}>{translations.Submit}</Button>

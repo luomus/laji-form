@@ -1,17 +1,21 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
+import Context from "../../Context";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { Modal, Row, Col } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
 
+const CONTEXT_KEY = "IMAGE_ARRAY_FIELD";
+
 export default class ImagesArrayField extends Component {
 
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient();
+		this._context = new Context().get(CONTEXT_KEY);
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -20,16 +24,18 @@ export default class ImagesArrayField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		(props.formData || []).map((item, i) => {
-			if (item.match(/MM\./)) {
+		let imgURLs = props.formData;
+		(props.formData || []).forEach((item, i) => {
+			if (item.substr(0, 3) === "MM.") {
 				this.apiClient.fetchCached("/images/" + item).then(response => {
 					if (!this.mounted) return;
 					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})})
-				})
+				});
+			} else if (item.substr(0, 4) !== "data") {
+				imgURLs = update(imgURLs, {$merge: {[i]: this._context[item]}})
 			}
-			return item;
 		});
-		return {imgURLs: props.formData};
+		return {imgURLs};
 	}
 
 	componentDidMount() {
@@ -109,12 +115,36 @@ export default class ImagesArrayField extends Component {
 	}
 
 	onFileFormChange = (files) => {
-		const {onChange, formData} = this.props;
+		const {onChange} = this.props;
+		let formData = this.props.formData || [];
+
+		let formDataLength = formData ? formData.length : 0;
+		let dataURLs = undefined;
 		this.processFiles(files)
 			.then(filesInfo => {
-				const dataURLs = filesInfo.map(fileInfo => fileInfo.dataURL);
-				onChange((formData && formData.length > 0) ? update(formData, {$push: dataURLs}) : dataURLs);
-			});
+				dataURLs = filesInfo.map(fileInfo => fileInfo.dataURL);
+				onChange(update(formData, {$push: dataURLs}));
+
+				const formDataBody = new FormData();
+
+				files.forEach(file => {
+					formDataBody.append("data", file);
+				});
+
+				return this.apiClient.fetch("/images", {token: this.props.registry.userToken}, {
+					method: "POST",
+					body: formDataBody
+				});
+		}).then(response => {
+			onChange(update(formData,
+				response.reduce((updateObject, item, idx) => {
+						const id = item.id;
+						this._context[id] = dataURLs[idx];
+						updateObject.$merge[formDataLength + idx] = id;
+						return updateObject;
+					}, {$merge: {}}))
+			);
+		});
 	}
 
 	addNameToDataURL = (dataURL, name) => {

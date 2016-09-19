@@ -22,7 +22,8 @@ class LajiFormApp extends Component {
 			onSubmit: this.onSubmit,
 			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
 			onError: log("errors"),
-			lang: lang
+			lang: lang,
+			userToken: properties.userToken
 		}
 		if (USE_LOCAL_SCHEMAS) this.state = { ...schemas, ...this.state}
 	}

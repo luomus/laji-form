@@ -315,7 +315,7 @@
 											"uiSchema": {
 												"ui:field": "grid",
 												"ui:options": {
-													"colType": "md",
+													"colType": "sm",
 													"maxItemsPerRow": 12
 												},
 												"unitType": {

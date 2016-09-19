@@ -9,9 +9,9 @@ export default class ApiClient {
 		this.baseQuery = {access_token: accessToken, userToken: userToken, lang: this.lang};
 	}
 
-	fetch(path, query) {
+	fetch(path, query, options) {
 		const queryObject = (typeof query == "object") ? merge(this.baseQuery, query) : this.baseQuery;
-		return fetch(this.BASE_URL + path + "?" + queryString.stringify(queryObject)).then((response) => {
+		return fetch(this.BASE_URL + path + "?" + queryString.stringify(queryObject), options).then((response) => {
 			if (response.status >= 400)
 				throw new Error("Request failed");
 			return response.json();

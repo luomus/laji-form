@@ -46,10 +46,11 @@ render(<LajiForm
 
 In addition to properties you would pass to <Form />, you must pass an api client implementation, if you need to use fields that use lajitest.api.fi. The api client implementation must have ```fetch()``` -method, which **returns a Promise**.
 
-```fetch(path, query)``` parameters are as follows:
+```fetch(path, query, options)``` parameters are as follows:
 
 * **path:** URL path for GET.
 * **query:** Object, where keys are param names and values are param values.
+* **options:** Object containing options for request.
 
 See the example implementation in [src/playground/ApiClientImplementation.js](https://bitbucket.org/luomus/laji-form.js/src/HEAD/playground/ApiClientImplementation.js).
 
