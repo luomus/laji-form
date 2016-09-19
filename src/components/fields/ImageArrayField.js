@@ -144,6 +144,14 @@ export default class ImagesArrayField extends Component {
 						return updateObject;
 					}, {$merge: {}}))
 			);
+		}).catch(error => {
+			alert(this.props.registry.translations.PictureError);
+			onChange(update(formData,
+				dataURLs.reduce((updateObject, dataURL, idx) => {
+					updateObject.$splice[0].push(formDataLength + idx);
+					return updateObject;
+				}, {$splice: [[]]})
+			))
 		});
 	}
 

@@ -124,5 +124,10 @@ export default {
 		en: "select more fields",
 		sv: "???"
 	},
+	pictureError: {
+		fi: "kuvien tallennus epäonnistui. Yritä myöhemmin uudestaan.",
+		en: "saving pictures failed. Please try again later.",
+		sv: "???"
+	}
 
 }
