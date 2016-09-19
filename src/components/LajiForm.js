@@ -41,7 +41,10 @@ import HiddenWidget from "./widgets/HiddenWidget";
 import FilteredSelectWidget from "./widgets/FilteredSelectWidget";
 
 import ApiClient from "../ApiClient";
+import Context from "../Context";
 import translations from "../translations.js";
+
+const CONTEXT_KEY = "MAIN";
 
 export default class LajiForm extends Component {
 	static propTypes = {
@@ -58,6 +61,10 @@ export default class LajiForm extends Component {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
+		this._context = new Context().get(CONTEXT_KEY);
+		this._context.blockingLoaderCounter = 0;
+		this._context.pushBlockingLoader = this.pushBlockingLoader;
+		this._context.popBlockingLoader = this.popBlockingLoader;
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -67,6 +74,14 @@ export default class LajiForm extends Component {
 
 	getStateFromProps = (props) => {
 		return {translations: this.translations[props.lang]};
+	}
+
+	componentDidMount() {
+		this.mounted = true;
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
 	}
 
 	constructTranslations = () => {
@@ -143,11 +158,11 @@ export default class LajiForm extends Component {
 					}} >
 					<Button type="submit" classList={["btn-info"]}>{translations.Submit}</Button>
 					</Form>
+				{this.state.blocking ? <div className="blocking-loader" /> : null}
 				</div>
 		)
 	}
 
-	// Focuses next input element on enter key.
 	onKeyDown = (e) => {
 		const RC_SWITCH_CLASS = "rc-switch";
 
@@ -156,6 +171,10 @@ export default class LajiForm extends Component {
 		function isTabbableInput(elem) {
 			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
 			        elem.className.includes(RC_SWITCH_CLASS));
+		}
+
+		if (this._context.blockingLoaderCounter > 0) {
+			e.preventDefault();
 		}
 
 		const formElem = ReactDOM.findDOMNode(this.refs.form);
@@ -185,5 +204,20 @@ export default class LajiForm extends Component {
 
 			}
 		}
+	}
+
+	pushBlockingLoader = () => {
+		this._context.blockingLoaderCounter++;
+		setTimeout(() => {
+			if (this.mounted) this.setState({blocking: this._context.blockingLoaderCounter > 0});
+		}, 500);
+	}
+
+	popBlockingLoader = () => {
+		this._context.blockingLoaderCounter--;
+		if (this._context.blockingLoaderCounter < 0) {
+			throw new Warning("Blocking loader was popped before pushing!");
+		}
+		this.setState({blocking: this._context.blockingLoaderCounter > 0})
 	}
 }

@@ -16,6 +16,7 @@ export default class ImagesArrayField extends Component {
 		super(props);
 		this.apiClient = new ApiClient();
 		this._context = new Context().get(CONTEXT_KEY);
+		this.mainContext = new Context().get("MAIN");
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -120,6 +121,7 @@ export default class ImagesArrayField extends Component {
 
 		let formDataLength = formData ? formData.length : 0;
 		let dataURLs = undefined;
+		this.mainContext.pushBlockingLoader();
 		this.processFiles(files)
 			.then(filesInfo => {
 				dataURLs = filesInfo.map(fileInfo => fileInfo.dataURL);
@@ -144,6 +146,7 @@ export default class ImagesArrayField extends Component {
 						return updateObject;
 					}, {$merge: {}}))
 			);
+			this.mainContext.popBlockingLoader();
 		}).catch(error => {
 			alert(this.props.registry.translations.PictureError);
 			onChange(update(formData,
@@ -152,6 +155,7 @@ export default class ImagesArrayField extends Component {
 					return updateObject;
 				}, {$splice: [[]]})
 			))
+			this.mainContext.popBlockingLoader();
 		});
 	}
 
