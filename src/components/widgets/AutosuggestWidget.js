@@ -284,7 +284,7 @@ export default class AutoSuggestWidget extends Component {
 		const continueButton = <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.useUnknownName}</Button>;
 		return (
 			<div className="text-danger">
-				{suggestionsList ? translations.PickOneOfTheFollowing : fixButton} <span>{translations.or}</span> {continueButton}
+				{suggestionsList ? translations.SelectOneOfTheFollowing : fixButton} <span>{translations.or}</span> {continueButton}
 				{suggestionsList}
 			</div>
 		);

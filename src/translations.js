@@ -79,9 +79,9 @@ export default {
 		en: "more",
 		sv: "mera"
 	},
-	pickOneOfTheFollowing: {
+	selectOneOfTheFollowing: {
 		fi: "valitse yksi seuraavista",
-		en: "pick one of the following",
+		en: "select one of the following",
 		sv: "picka en av den här"
 	},
 	openSpeciedCard: {
@@ -121,7 +121,7 @@ export default {
 	},
 	selectMoreFields: {
 		fi: "valitse lisää kenttiä",
-		en: "pick more fields",
+		en: "select more fields",
 		sv: "???"
 	},
 
