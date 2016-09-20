@@ -26,7 +26,7 @@ export default {
 	},
 	yes: {
 		fi: "kyllä",
-		en: "ei",
+		en: "yes",
 		sv: "ja"
 	},
 	no: {
