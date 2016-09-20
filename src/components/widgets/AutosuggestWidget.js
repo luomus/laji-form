@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
+import Context from "../../Context";
 import InputMetaInfo from "../InputMetaInfo";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner"
@@ -62,6 +63,7 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
+		this.mainContext = new Context().get("MAIN");
 	}
 
 	componentWillReceiveProps(props) {
@@ -142,7 +144,7 @@ export default class AutoSuggestWidget extends Component {
 		} else {
 			this.props.onChange(suggestion.key);
 		}
-		this.setState(state)
+		this.setState(state);
 	}
 
 	selectUnambigious = (suggestions) => {

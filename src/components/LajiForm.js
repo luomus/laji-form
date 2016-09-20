@@ -46,6 +46,13 @@ import translations from "../translations.js";
 
 const CONTEXT_KEY = "MAIN";
 
+const RC_SWITCH_CLASS = "rc-switch";
+
+const inputTypes = ["input", "select", "textarea"];
+let tabbableSelectors = inputTypes.slice(0);
+tabbableSelectors.push("." + RC_SWITCH_CLASS + ":not(." + RC_SWITCH_CLASS + "-disabled)");
+tabbableSelectors = tabbableSelectors.map(type => { return type + ":not(:disabled)" });
+
 export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
@@ -65,6 +72,7 @@ export default class LajiForm extends Component {
 		this._context.blockingLoaderCounter = 0;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
+		this._context.focusNextInput = this.focusNextInput;
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -73,7 +81,7 @@ export default class LajiForm extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		return {translations: this.translations[props.lang]};
+		return {translations: this.translations[props.lang], formData: props.formData};
 	}
 
 	componentDidMount() {
@@ -102,14 +110,16 @@ export default class LajiForm extends Component {
 
 	onChange = ({formData}) => {
 		if (this.props.onChange) this.props.onChange(formData);
+		this.state.formData = formData;
 	}
 
 	render() {
-		const {translations} = this.state;
+		const {translations, formData} = this.state;
 		return  (
 			<div onKeyDown={this.onKeyDown} className="laji-form">
 				<Form
 					{...this.props}
+					formData={formData}
 					ref="form"
 					onChange={this.onChange}
 					registry={{
@@ -163,46 +173,55 @@ export default class LajiForm extends Component {
 		)
 	}
 
-	onKeyDown = (e) => {
-		const RC_SWITCH_CLASS = "rc-switch";
-
-		let inputTypes = ["input", "select", "textarea"];
-
+	canFocusNextInput = (inputElem) => {
 		function isTabbableInput(elem) {
 			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-			        elem.className.includes(RC_SWITCH_CLASS));
-		}
-
-		if (this._context.blockingLoaderCounter > 0) {
-			e.preventDefault();
+			elem.className.includes(RC_SWITCH_CLASS));
 		}
 
 		const formElem = ReactDOM.findDOMNode(this.refs.form);
 
-		if (e.key == "Enter" && formElem.querySelectorAll && isTabbableInput(e.target)) {
-			e.preventDefault();
+		return (formElem.querySelectorAll && isTabbableInput(inputElem));
+	}
 
-			inputTypes.push("." + RC_SWITCH_CLASS + ":not(." + RC_SWITCH_CLASS + "-disabled)");
-			inputTypes = inputTypes.map(type => { return type + ":not(:disabled)" });
+	getTabbableFields = (reverse) => {
+		const formElem = ReactDOM.findDOMNode(this.refs.form);
 
-			const fieldsNodeList = formElem.querySelectorAll(inputTypes.join(", "));
-			let fields = [...fieldsNodeList];
+		const fieldsNodeList = formElem.querySelectorAll(tabbableSelectors.join(", "));
+		let fields = [...fieldsNodeList];
 
-			if (e.shiftKey) fields = fields.reverse();
+		if (reverse) fields = fields.reverse();
+		return fields;
+	}
 
-			let doFocus = false;
-			for (let field of fields) {
-				if (field === e.target) {
-					doFocus = true;
-					continue;
-				}
+	focusNextInput = (inputElem, reverseDirection) => {
+		if (!this.canFocusNextInput(inputElem)) return;
 
-				if (doFocus) {
-					field.focus();
-					if (document.activeElement !== e.target) break;
-				}
+		const fields = this.getTabbableFields(reverseDirection);
 
+		let doFocus = false;
+		for (let field of fields) {
+			if (field === inputElem) {
+				doFocus = true;
+				continue;
 			}
+
+			if (doFocus) {
+				field.focus();
+				if (document.activeElement !== inputElem) break;
+			}
+		}
+	}
+
+	onKeyDown = (e) => {
+		if (this._context.blockingLoaderCounter > 0) {
+			e.preventDefault();
+			return;
+		}
+
+		if (e.key == "Enter" && this.canFocusNextInput(e.target)) {
+			e.preventDefault();
+			this.focusNextInput(e.target, e.shiftKey);
 		}
 	}
 

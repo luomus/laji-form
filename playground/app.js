@@ -19,15 +19,20 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
+let formData = schemas.formData;
+formData = {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]};
+
 const lajiForm = new LajiForm({
-	formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
-	onChange: onChange,
-	onSubmit: onSubmit,
-	apiClient: apiClient,
+	formData,
+	onChange,
+	onSubmit,
+	apiClient,
+	lang,
 	onError: log("errors"),
-	lang: lang,
 	rootElem: document.getElementById("app")
 });
+
+//setTimeout(() => lajiForm.pushBlockingLoader(), 3000)
 
 if (!USE_LOCAL_SCHEMAS) {
 	apiClient.fetch("/forms/JX.519", {lang}).then(result => {
@@ -47,5 +52,5 @@ function onSubmit({formData}) {
 }
 
 function onChange(formData) {
-	lajiForm.setState({formData: formData});
+	//lajiForm.setState({formData: formData});
 }

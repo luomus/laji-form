@@ -1039,5 +1039,119 @@
 				]
 			}
 		}
+	},
+	"formData": {
+		"gatheringEvent": {
+			"leg": [
+				"ZDI3MDY5ZmEtZDA4Ny00ZWVjLTlmNjMtMDFlYmNiNTBmZDhm"
+			],
+			"legPublic": true
+		},
+		"gatherings": [
+			{
+				"predominantTree": "",
+				"units": [
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "sikurirousku",
+						"unitType": [
+							"MVL.233",
+							"MVL.24",
+							"MVL.61"
+						],
+						"taxonID": "MX.72469",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "karvarousku",
+						"unitType": [
+							"MVL.233",
+							"MVL.24",
+							"MVL.61"
+						],
+						"taxonID": "MX.72276",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "haaparousku",
+						"unitType": [
+							"MVL.233",
+							"MVL.24",
+							"MVL.61"
+						],
+						"taxonID": "MX.72694",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "suppilovahvero",
+						"unitType": [
+							"MVL.233",
+							"MVL.121"
+						],
+						"taxonID": "MX.205515",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"taste": "",
+						"smell": ""
+					}
+				],
+				"wgs84Geometry": {
+					"type": "Point",
+					"coordinates": [
+						24.995422018084213,
+						60.35710573410569
+					]
+				}
+			},
+			{
+				"predominantTree": "",
+				"units": [
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "suippumyrkkyseitikki",
+						"unitType": [
+							"MVL.233",
+							"MVL.24",
+							"MVL.61"
+						],
+						"taxonID": "MX.73119",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"taste": "",
+						"smell": ""
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "valkokärpässieni",
+						"unitType": [
+							"MVL.233",
+							"MVL.24",
+							"MVL.61"
+						],
+						"taxonID": "MX.72561",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"taste": "",
+						"smell": ""
+					}
+				],
+				"wgs84Geometry": {
+					"type": "Point",
+					"coordinates": [
+						24.63054593815989,
+						60.26832057836028
+					]
+				}
+			}
+		],
+		"editors": [
+			"ZDI3MDY5ZmEtZDA4Ny00ZWVjLTlmNjMtMDFlYmNiNTBmZDhm"
+		]
 	}
 }
