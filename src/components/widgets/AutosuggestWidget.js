@@ -112,7 +112,6 @@ export default class AutoSuggestWidget extends Component {
 
 	onSuggestionsUpdateRequested = (suggestionValue) => {
 		if (!suggestionValue || suggestionValue.value.length < 2 || suggestionValue.reason !== "type") return;
-
 		this.setState({isLoading: true});
 		(() => {
 			let timestamp = Date.now();
@@ -136,6 +135,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	selectSuggestion = (suggestion) => {
+		this.suggestionSelectedFlag = true;
 		let state = {inputInProgress: false, unsuggested: false, inputValue: suggestion !== undefined ? suggestion.value : ""};
 		if (this.props.options.onSuggestionSelected) {
 			this.props.options.onSuggestionSelected(suggestion);
@@ -162,7 +162,10 @@ export default class AutoSuggestWidget extends Component {
 		if (this.props.options.onInputChange) {
 			value = this.props.options.onInputChange(value);
 		}
-		if (value !== this.state.inputValue) this.setState({inputValue: value, inputInProgress: true});
+		if (value !== this.state.inputValue && !this.suggestionSelectedFlag) {
+			this.setState({inputValue: value, inputInProgress: true});
+		}
+		this.suggestionSelectedFlag = false;
 	}
 
 	onFocus =  () => {
