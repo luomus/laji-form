@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-import { render } from "react-dom"
-import LajiForm from "../src/components/LajiForm";
+import LajiForm from "../src/app"
 import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
@@ -12,51 +10,42 @@ const USE_LOCAL_SCHEMAS = false;
 
 const log = (type) => console.log.bind(console, type);
 
-class LajiFormApp extends Component {
-	constructor(props) {
-		super(props);
-		let lang = "fi";
-		this.state = {
-			formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
-			onChange: this.onChange,
-			onSubmit: this.onSubmit,
-			apiClient: new ApiClientImplementation("https://apitest.laji.fi/v0", properties.accessToken, properties.userToken, lang),
-			onError: log("errors"),
-			lang: lang,
-		}
-		if (USE_LOCAL_SCHEMAS) this.state = { ...schemas, ...this.state}
-	}
+let lang = "fi";
 
-	componentDidMount() {
-		if (USE_LOCAL_SCHEMAS) return;
-		this.state.apiClient.fetch("/forms/JX.519", {lang: this.state.lang}).then(result => {
-			const {schema,
-				uiSchema,
-				uiSchemaContext,
-				validators} = result;
-			this.setState({schema,
-				uiSchema,
-				uiSchemaContext,
-				validators});
-		});
-	}
+const apiClient = new ApiClientImplementation(
+	"https://apitest.laji.fi/v0",
+	properties.accessToken,
+	properties.userToken,
+	lang
+);
 
-	onSubmit = ({formData}) => {
-		console.log(formData)
-	}
+const lajiForm = new LajiForm({
+	formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
+	onChange: onChange,
+	onSubmit: onSubmit,
+	apiClient: apiClient,
+	onError: log("errors"),
+	lang: lang,
+	rootElem: document.getElementById("app")
+});
 
-	onChange = (formData) => {
-		this.setState({formData: formData});
-	}
+if (!USE_LOCAL_SCHEMAS) {
+	apiClient.fetch("/forms/JX.519", {lang}).then(result => {
+		const {schema,
+			uiSchema,
+			uiSchemaContext,
+			validators} = result;
+		lajiForm.setState({schema,
+			uiSchema,
+			uiSchemaContext,
+			validators});
+	});
+};
 
-	render () {
-		if (!this.state.schema) return null;
-		return (
-			<div className="container-fluid">
-				<LajiForm {...this.state} />
-			</div>
-		);
-	}
+function onSubmit({formData}) {
+	console.log(formData);
 }
 
-render((<LajiFormApp />), document.getElementById("app"));
+function onChange(formData) {
+	lajiForm.setState({formData: formData});
+}
