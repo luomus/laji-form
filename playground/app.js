@@ -23,7 +23,7 @@ const formData = {gatheringEvent: {leg: [properties.userToken]}, editors: [prope
 
 const lajiForm = new LajiForm({
 	...schemas,
-	formData,
+	//formData,
 	onSubmit,
 	apiClient,
 	lang,

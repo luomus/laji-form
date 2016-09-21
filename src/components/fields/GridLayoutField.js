@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { isHidden } from "../../utils";
 import { Row } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
@@ -58,7 +59,7 @@ export default class GridLayoutField extends Component {
 			const type = props.schema.properties[property].type;
 			const shouldHaveOwnRow = (type === "array" || type === "object");
 
-			if (this.isHidden(props, property)) return;
+			if (isHidden(props.uiSchema, property)) return;
 			if (shouldHaveOwnRow || (groups[groupIdx] && groups[groupIdx].length >= maxItemsPerRow)) groupIdx++;
 			if (!groups[groupIdx]) groups[groupIdx] = [];
 			groups[groupIdx].push(property);
@@ -74,12 +75,6 @@ export default class GridLayoutField extends Component {
 		return shouldRender(this, nextProps, nextState);
 	}
 
-	isHidden = (props, property) => {
-		let {uiSchema} = props;
-		if (uiSchema[property]) uiSchema = uiSchema[property];
-		return !uiSchema || uiSchema["ui:widget"] == "hidden" || uiSchema["ui:field"] == "hidden";
-	}
-	
 	isRequired = (requirements, name) => {
 		return Array.isArray(requirements) &&
 			requirements.indexOf(name) !== -1;
@@ -121,7 +116,7 @@ export default class GridLayoutField extends Component {
 				let schema = this.state.schema.properties[property];
 				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
 
-				if (!this.isHidden(this.state, property)) fields.push(
+				if (!isHidden(this.state.uiSchema, property)) fields.push(
 					<div key={"div_" + i} className={"col-" + this.state.colType + "-" + division}>
 						<SchemaField
 							key={i}

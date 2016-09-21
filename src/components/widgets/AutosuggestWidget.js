@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import Context from "../../Context";
 import InputMetaInfo from "../InputMetaInfo";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner"
@@ -63,7 +62,6 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
-		this.mainContext = new Context().get("MAIN");
 	}
 
 	componentWillReceiveProps(props) {
@@ -101,7 +99,6 @@ export default class AutoSuggestWidget extends Component {
 		} else if (this.props.options.isValueSuggested) {
 			if (!this.props.options.isValueSuggested()) this.setState({unsuggested: true});
 		}
-		
 	}
 
 	getSuggestionValue = (suggestion) => {
@@ -204,6 +201,7 @@ export default class AutoSuggestWidget extends Component {
 		let {suggestions, inputValue, isLoading} = this.state;
 
 		const inputProps = {
+			id: this.props.id,
 			value: (inputValue !== undefined) ? inputValue : props.value,
 			readOnly: props.readonly,
 			disabled: props.disabled,
@@ -234,7 +232,7 @@ export default class AutoSuggestWidget extends Component {
 				<div className="autosuggest-wrapper">
 					<Autosuggest
 						ref="autosuggestInput"
-						id={this.props.id}
+						id={`${this.props.id}-autosuggest`}
 						inputProps={inputProps}
 						suggestions={suggestions}
 						getSuggestionValue={this.getSuggestionValue}

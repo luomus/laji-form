@@ -5,7 +5,9 @@ import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuIte
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
+import Context from "../../Context";
 import Button from "../Button";
+import { isHidden, getFieldsFinalUiSchema } from "../../utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -67,6 +69,7 @@ export default class ScopeField extends Component {
 			searchTerm: "",
 			...this.getStateFromProps(props)
 		};
+		this.mainContext = new Context().get("MAIN");
 	}
 
 	componentWillReceiveProps(props) {
@@ -93,7 +96,22 @@ export default class ScopeField extends Component {
 			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;
 		}
 
+		if (this.state && Object.keys(this.state.schema.properties).length < Object.keys(schemas.schema.properties).length) {
+			const lastField = this.getVisibleFields(props, this.state.schema.properties).pop();
+			if (document.activeElement.id === this.props.idSchema[lastField].$id) {
+				this.shouldFocusNextAfterRender = this.props.idSchema[lastField].$id;
+			}
+		}
+
 		return state;
+	}
+
+	componentDidUpdate() {
+		const id = this.shouldFocusNextAfterRender;
+		if (id && document.activeElement &&  id === document.activeElement.id) {
+			this.mainContext.focusNextInput(document.getElementById(id));
+		}
+		this.shouldFocusNextAfterRender = undefined;
 	}
 
 	render() {
@@ -110,8 +128,15 @@ export default class ScopeField extends Component {
 		);
 	}
 
+	getVisibleFields = (props, properties) => {
+		const {uiSchema} = props;
+		let fields = Object.keys(properties)
+			.filter(field => { return !isHidden(getFieldsFinalUiSchema(uiSchema, field), field) });
+		return fields;
+	}
+
 	getSchemas = (props) => {
-		let {schema, uiSchema, formData, idSchema} = props;
+		let {schema, uiSchema, formData} = props;
 
 		let options = uiSchema["ui:options"];
 		let generatedUiSchema = options.uiSchema || {};

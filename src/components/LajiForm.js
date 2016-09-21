@@ -193,6 +193,7 @@ export default class LajiForm extends Component {
 	}
 
 	focusNextInput = (inputElem, reverseDirection) => {
+		if (!inputElem) inputElem = document.activeElement;
 		if (!this.canFocusNextInput(inputElem)) return;
 
 		const fields = this.getTabbableFields(reverseDirection);
