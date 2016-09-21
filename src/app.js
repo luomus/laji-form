@@ -8,19 +8,19 @@ export default class LajiFormWrapper {
 		this.app = render(<LajiFormApp {...props} />, this.rootElem);
 	}
 
-	setState(state) {
+	setState = (state) => {
 		this.app.setState(state);
 	}
 
-	pushBlockingLoader() {
+	pushBlockingLoader = () => {
 		this.app.refs.lajiform.pushBlockingLoader();
 	}
 
-	popBlockingLoader() {
+	popBlockingLoader = () => {
 		this.app.refs.lajiform.popBlockingLoader();
 	}
 
-	unmount() {
+	unmount = () => {
 		unmountComponentAtNode(this.rootElem);
 	}
 }
@@ -32,7 +32,7 @@ class LajiFormApp extends Component {
 		this.state = props;
 	}
 
-	render () {
+	render() {
 		if (!this.state.schema) return null;
 		return <LajiForm {...this.state} ref="lajiform"/>;
 	}

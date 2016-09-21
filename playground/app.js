@@ -6,7 +6,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = false;
+const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -19,12 +19,11 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
-let formData = schemas.formData;
-formData = {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]};
+const formData = {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]};
 
 const lajiForm = new LajiForm({
+	...schemas,
 	formData,
-	onChange,
 	onSubmit,
 	apiClient,
 	lang,
@@ -32,25 +31,11 @@ const lajiForm = new LajiForm({
 	rootElem: document.getElementById("app")
 });
 
-//setTimeout(() => lajiForm.pushBlockingLoader(), 3000)
-
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.519", {lang}).then(result => {
-		const {schema,
-			uiSchema,
-			uiSchemaContext,
-			validators} = result;
-		lajiForm.setState({schema,
-			uiSchema,
-			uiSchemaContext,
-			validators});
-	});
-};
+	apiClient.fetch("/forms/JX.519", {lang})
+	         .then(lajiForm.setState);
+}
 
 function onSubmit({formData}) {
 	console.log(formData);
-}
-
-function onChange(formData) {
-	//lajiForm.setState({formData: formData});
 }
