@@ -81,7 +81,7 @@ export default class LajiForm extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		return {translations: this.translations[props.lang], formData: props.formData};
+		return {translations: this.translations[props.lang]};
 	}
 
 	componentDidMount() {
@@ -110,16 +110,14 @@ export default class LajiForm extends Component {
 
 	onChange = ({formData}) => {
 		if (this.props.onChange) this.props.onChange(formData);
-		this.state.formData = formData;
 	}
 
 	render() {
-		const {translations, formData} = this.state;
+		const {translations} = this.state;
 		return  (
 			<div onKeyDown={this.onKeyDown} className="laji-form">
 				<Form
 					{...this.props}
-					formData={formData}
 					ref="form"
 					onChange={this.onChange}
 					registry={{

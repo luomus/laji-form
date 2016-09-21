@@ -25,15 +25,20 @@ export default class ImagesArrayField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let imgURLs = props.formData;
+		let imgURLs = [];
 		(props.formData || []).forEach((item, i) => {
 			if (item.substr(0, 3) === "MM.") {
+				imgURLs.push(undefined);
+				this.mainContext.pushBlockingLoader();
 				this.apiClient.fetchCached("/images/" + item).then(response => {
 					if (!this.mounted) return;
-					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})})
-				});
+					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
+					this.mainContext.popBlockingLoader();
+				}).catch(this.mainContext.popBlockingLoader);
 			} else if (item.substr(0, 4) !== "data") {
-				imgURLs = update(imgURLs, {$merge: {[i]: this._context[item]}})
+				imgURLs.push(this._context[item]);
+			} else {
+				imgURLs.push(item);
 			}
 		});
 		return {imgURLs};
@@ -116,27 +121,30 @@ export default class ImagesArrayField extends Component {
 	}
 
 	onFileFormChange = (files) => {
+		this.props.onChange(update(this.props.formData || [], {$push: ["MM.33000"]}));
+		return;
 		const {onChange} = this.props;
 		let formData = this.props.formData || [];
 
 		let formDataLength = formData ? formData.length : 0;
 		let dataURLs = undefined;
+
 		this.mainContext.pushBlockingLoader();
-		this.processFiles(files)
-			.then(filesInfo => {
-				dataURLs = filesInfo.map(fileInfo => fileInfo.dataURL);
-				onChange(update(formData, {$push: dataURLs}));
 
-				const formDataBody = new FormData();
+		this.processFiles(files).then(filesInfo => {
+			dataURLs = filesInfo.map(fileInfo => fileInfo.dataURL);
+			onChange(update(formData, {$push: dataURLs}));
 
-				files.forEach(file => {
-					formDataBody.append("data", file);
-				});
+			const formDataBody = new FormData();
 
-				return this.apiClient.fetch("/images", undefined, {
-					method: "POST",
-					body: formDataBody
-				});
+			files.forEach(file => {
+				formDataBody.append("data", file);
+			});
+
+			return this.apiClient.fetch("/images", undefined, {
+				method: "POST",
+				body: formDataBody
+			});
 		}).then(response => {
 			onChange(update(formData,
 				response.reduce((updateObject, item, idx) => {
@@ -146,15 +154,17 @@ export default class ImagesArrayField extends Component {
 						return updateObject;
 					}, {$merge: {}}))
 			);
+
 			this.mainContext.popBlockingLoader();
-		}).catch(error => {
+		}).catch(() => {
 			alert(this.props.registry.translations.PictureError);
 			onChange(update(formData,
 				dataURLs.reduce((updateObject, dataURL, idx) => {
 					updateObject.$splice[0].push(formDataLength + idx);
 					return updateObject;
 				}, {$splice: [[]]})
-			))
+			));
+
 			this.mainContext.popBlockingLoader();
 		});
 	}
