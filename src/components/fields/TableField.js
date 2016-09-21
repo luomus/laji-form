@@ -36,8 +36,9 @@ export default class TableField extends Component {
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		
-		const {schema, uiSchema, idSchema, formData} = this.props;
+
+		const {props} = this;
+		const {schema, uiSchema, idSchema, formData} = props;
 
 		const items = [];
 		const labels = [];
@@ -59,16 +60,16 @@ export default class TableField extends Component {
 		items.push(<Row key="labels"><Row><Col xs={10}>{labels}</Col><Col xs={2} /></Row></Row>);
 
 		if (formData) formData.forEach((item, idx) => {
-			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
+			let itemIdPrefix = props.idSchema.$id + "_" + idx;
 
-			const isAdditional = this.props.schema.additionalItems &&  idx >= this.props.schema.items.length;
+			const isAdditional = props.schema.additionalItems &&  idx >= props.schema.items.length;
 
-			let schema = (Array.isArray(this.props.schema.items) && idx < this.props.schema.items.length) ? this.props.schema.items[idx] : this.props.schema.items;
-			if (isAdditional) schema = this.props.schema.additionalItems;
+			let schema = (Array.isArray(props.schema.items) && idx < props.schema.items.length) ? props.schema.items[idx] : props.schema.items;
+			if (isAdditional) schema = props.schema.additionalItems;
 
 			let uiSchema = {};
-			if (this.props.uiSchema.additionalItems && idx >= this.props.schema.items.length) uiSchema = this.props.uiSchema.additionalItems;
-			else if (this.props.uiSchema.items) uiSchema = this.props.uiSchema.items;
+			if (props.uiSchema.additionalItems && idx >= props.schema.items.length) uiSchema = props.uiSchema.additionalItems;
+			else if (props.uiSchema.items) uiSchema = props.uiSchema.items;
 
 			let uiOptions = {colType: "xs", showLabels: false, neverLimitWidth: true};
 			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
@@ -79,10 +80,10 @@ export default class TableField extends Component {
 					onChange={this.onChangeForIdx(idx)}
 					schema={schema}
 					uiSchema={uiSchema}
-					idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
-					registry={this.props.registry}
-					errorSchema={this.props.errorSchema[idx]} /></Col>
-				<Col xs={2}>{isAdditional ? <Button buttonType="danger" classList={["col-xs-12"]} onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
+					idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
+					registry={props.registry}
+					errorSchema={props.errorSchema[idx]} /></Col>
+				<Col xs={2}>{((!props.schema.additionalItems && idx) || isAdditional) ? <Button buttonType="danger" classList={["col-xs-12"]} onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
 			</Row>)
 		});
 

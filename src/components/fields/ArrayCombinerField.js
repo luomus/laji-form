@@ -45,6 +45,7 @@ export default class ArrayCombinerField extends Component {
 			itemSchema.properties[propertyName] = property;
 		});
 
+		schema.items = itemSchema;
 		if (options && options.additionalItemsAmount) {
 			schema.items = Array(options.additionalItemsAmount).fill(itemSchema);
 			schema.additionalItems = itemSchema;
@@ -60,6 +61,7 @@ export default class ArrayCombinerField extends Component {
 			});
 			return array;
 		}
+
 		let errorSchema = objectsToArray({}, props.errorSchema);
 		let formData = objectsToArray([], props.formData);
 		formData.forEach((obj) => {

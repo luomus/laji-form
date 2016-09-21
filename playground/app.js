@@ -19,11 +19,10 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
-const formData = {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]};
 
 const lajiForm = new LajiForm({
 	...schemas,
-	//formData,
+	//formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
 	onSubmit,
 	apiClient,
 	lang,

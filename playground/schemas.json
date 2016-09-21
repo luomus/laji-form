@@ -60,32 +60,8 @@
 												"uiSchema": {
 													"ui:field": "arrayCombiner",
 													"ui:options": {
-														"additionalItemsAmount": 1,
 														"uiSchema": {
 															"items": {
-																"leg": {
-																	"ui:disabled": true,
-																	"ui:widget": {
-																		"component": "autosuggest",
-																		"options": {
-																			"autosuggestField": "friends",
-																			"allowNonsuggestedValue": true,
-																			"suggestionReceive": "key",
-																			"preventTypingPattern": "^MA\\.\\d+$"
-																		}
-																	}
-																},
-																"editors": {
-																	"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
-																},
-																"ui:field": "dependentDisable",
-																"ui:options": {
-																	"disableDefiner": "leg",
-																	"disableField": "editors",
-																	"regexp": "^MA\\.\\d+$"
-																}
-															},
-															"additionalItems": {
 																"leg": {
 																	"ui:widget": {
 																		"component": "autosuggest",
