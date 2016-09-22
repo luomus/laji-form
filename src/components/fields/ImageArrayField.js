@@ -74,7 +74,7 @@ export default class ImagesArrayField extends Component {
 											  onDrop={files => {
 													this.setState({dragging: false});
 													this.onFileFormChange(files)}
-												}>{translations.DropOrSelectFiles}</DropZone>
+												}><a href="#" onClick={e => e.preventDefault()}>{translations.DropOrSelectFiles}</a></DropZone>
 						{this.renderModal()}
 					</div>
 				</Col>
