@@ -29,12 +29,10 @@ export default class ImagesArrayField extends Component {
 		(props.formData || []).forEach((item, i) => {
 			if (item.substr(0, 3) === "MM.") {
 				imgURLs.push(undefined);
-				this.mainContext.pushBlockingLoader();
 				this.apiClient.fetchCached("/images/" + item).then(response => {
 					if (!this.mounted) return;
 					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
-					this.mainContext.popBlockingLoader();
-				}).catch(this.mainContext.popBlockingLoader);
+				})
 			} else if (item.substr(0, 4) !== "data") {
 				imgURLs.push(this._context[item]);
 			} else {
