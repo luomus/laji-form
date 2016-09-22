@@ -95,12 +95,18 @@ export default class ImagesArrayField extends Component {
 
 	onImgClick = (i) => () => {
 		const item = this.props.formData[i];
+		const state = {modalOpen: true};
 		if (item.match(/MM\./)) {
 			this.apiClient.fetchCached("/images/" + item).then(response => {
-				this.setState({modalOpen: true, modalImgSrc: response.originalURL});
+				state.modalImgSrc = response.originalURL;
+				this.setState(state);
 			})
+		} else if (item.substr(0, 4) !== "data") {
+			state.modalImgSrc = this._context[item];
+			this.setState(state);
 		} else {
-			this.setState({modalOpen: true, modalImgSrc: item});
+			state.modalImgSrc = item;
+			this.setState(state);
 		}
 	}
 
@@ -121,8 +127,6 @@ export default class ImagesArrayField extends Component {
 	}
 
 	onFileFormChange = (files) => {
-		this.props.onChange(update(this.props.formData || [], {$push: ["MM.33000"]}));
-		return;
 		const {onChange} = this.props;
 		let formData = this.props.formData || [];
 
@@ -158,7 +162,7 @@ export default class ImagesArrayField extends Component {
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
 			alert(this.props.registry.translations.PictureError);
-			onChange(update(formData,
+			onChange(update(this.props.formData,
 				dataURLs.reduce((updateObject, dataURL, idx) => {
 					updateObject.$splice[0].push(formDataLength + idx);
 					return updateObject;
