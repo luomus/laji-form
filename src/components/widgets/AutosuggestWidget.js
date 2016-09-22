@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
+import Context from "../../Context";
 import InputMetaInfo from "../InputMetaInfo";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner"
@@ -62,6 +63,7 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
+		this.mainContext = new Context().get("MAIN");
 	}
 
 	componentWillReceiveProps(props) {
@@ -88,7 +90,7 @@ export default class AutoSuggestWidget extends Component {
 			let origValue = props.value;
 			this.setState({isLoading: true});
 			convert(this)
-				.then( inputValue => {
+				.then(inputValue => {
 					if (!this.mounted) return;
 					this.setState({inputValue: inputValue, origValue: origValue, isLoading: false});
 				})
@@ -109,17 +111,21 @@ export default class AutoSuggestWidget extends Component {
 		return (<span>{this.state.autosuggestSettings.renderSuggestion(suggestion)}</span>);
 	}
 
-	onSuggestionsUpdateRequested = (suggestionValue) => {
-		if (!suggestionValue || suggestionValue.value.length < 2 || suggestionValue.reason !== "type") return;
+	onSuggestionsFetchRequested = ({value}) => {
+		if (!value || value.length < 2) return;
+
 		this.setState({isLoading: true});
 		(() => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.get = this.apiClient.fetch("/autocomplete/" + this.props.options.autosuggestField, {q: suggestionValue.value, includePayload: this.state.autosuggestSettings.includePayload})
+			this.get = this.apiClient.fetch("/autocomplete/" + this.props.options.autosuggestField, {q: value, includePayload: this.state.autosuggestSettings.includePayload})
 				.then( suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
-						if (this.state.focused || (!this.state.focused && !this.selectUnambigious(suggestions))) state.suggestions = suggestions;
+						const unambigiousSuggestion = this.findUnambigiousSuggestion(suggestions);
+						if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
+						else if (this.state.focused) state.suggestions = suggestions;
+						else state.oldSuggestions = suggestions;
 						this.setState(state);
 						this.promiseTimestamp = undefined;
 					}
@@ -133,23 +139,19 @@ export default class AutoSuggestWidget extends Component {
 		})();
 	}
 
+	onSuggestionsClearRequested = () => {
+		this.setState({oldSuggestions: this.state.suggestions.slice(0), suggestions: []});
+	}
+
 	selectSuggestion = (suggestion) => {
 		this.suggestionSelectedFlag = true;
-		let state = {inputInProgress: false, unsuggested: false, inputValue: suggestion !== undefined ? suggestion.value : ""};
+		let state = {inputInProgress: false, unsuggested: false, inputValue: (suggestion !== undefined && suggestion !== null) ? suggestion.value : ""};
 		if (this.props.options.onSuggestionSelected) {
 			this.props.options.onSuggestionSelected(suggestion);
 		} else {
 			this.props.onChange(suggestion.key);
 		}
 		this.setState(state);
-	}
-
-	selectUnambigious = (suggestions) => {
-		if (suggestions && suggestions.length === 1 && suggestions[0].value === this.state.inputValue) {
-			this.selectSuggestion(suggestions[0]);
-			return true;
-		}
-		return false;
 	}
 
 	onSuggestionSelected = (e, {suggestion}) => {
@@ -171,10 +173,28 @@ export default class AutoSuggestWidget extends Component {
 		this.setState({focused: true});
 	}
 
-	onBlur = () => {
+	findUnambigiousSuggestion = (suggestions) => {
+		if (!Array.isArray(suggestions)) suggestions = [suggestions];
+		return suggestions.find(suggestion => (suggestion && suggestion.value === this.state.inputValue));
+	}
+
+	onBlur = (e, {focusedSuggestion}) => {
+		if (this.onTabBlur) {
+			this.onTabBlur = false;
+			return;
+		}
+
+		if (focusedSuggestion) this.selectSuggestion(focusedSuggestion);
 		this.setState({focused: false}, () => {
-			if (this.state.inputValue === "") this.selectSuggestion(undefined);
-			else this.selectUnambigious(this.state.suggestions);
+			if (this.tab) {
+				this.refs.autosuggestInput.input.focus();
+				this.onTabBlur = true;
+				this.mainContext.focusNextInput();
+				this.tab = false;
+			} else if ((focusedSuggestion === null && this.state.inputValue === "") ||
+				(this.findUnambigiousSuggestion([focusedSuggestion]))) {
+				this.selectSuggestion(focusedSuggestion);
+			}
 		});
 	}
 
@@ -191,9 +211,26 @@ export default class AutoSuggestWidget extends Component {
 		}
 	}
 
-	onKeyDown = (event) => {
-		const {suggestions} = this.state;
-		if (event.key === "Enter" && suggestions && suggestions.length === 1) this.selectUnambigious(suggestions);
+	onKeyDown = (e) => {
+		this.tab = (e.key === "Tab");
+		this.enter = (e.key === "Enter");
+
+		if (this.tab) {
+			e.preventDefault();
+			this.refs.autosuggestInput.input.blur();
+		}
+
+		if (this.enter) {
+			e.stopPropagation();
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.enter && document.activeElement === this.refs.autosuggestInput.input) {
+			this.mainContext.focusNextInput();
+		}
+		this.enter = false;
+		this.suggestionSelectedFlag = false;
 	}
 
 	render() {
@@ -237,7 +274,8 @@ export default class AutoSuggestWidget extends Component {
 						suggestions={suggestions}
 						getSuggestionValue={this.getSuggestionValue}
 						renderSuggestion={this.renderSuggestion}
-						onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 						onSuggestionSelected={this.onSuggestionSelected}
 						theme={cssClasses}
 					  focusFirstSuggestion={true}
@@ -271,10 +309,10 @@ export default class AutoSuggestWidget extends Component {
 
 		const translations = this.props.registry.translations;
 
-		const suggestionsList = (this.state.suggestions && this.state.suggestions.length) ?
+		const suggestionsList = (this.state.oldSuggestions && this.state.oldSuggestions.length) ?
 			(
 				<ul>
-					{this.state.suggestions.map(suggestion =>
+					{this.state.oldSuggestions.map(suggestion =>
 							<li key={suggestion.key} >
 								<Button bsStyle="link" onClick={() => this.selectSuggestion(suggestion)}>{suggestion.value}</Button>
 								 {this.state.autosuggestSettings.renderMetaInfoListItemAdditional ? <span> {this.state.autosuggestSettings.renderMetaInfoListItemAdditional(this, suggestion)}</span> : null}

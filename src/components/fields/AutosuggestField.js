@@ -112,8 +112,11 @@ export default class AutosuggestField extends Component {
 	}
 
 	onSuggestionSelected = (suggestion) => {
+		if (suggestion === null) suggestion = undefined;
+
 		let formData = this.props.formData;
 		const options = this.props.uiSchema["ui:options"];
+
 		for (let fieldName in options.suggestionReceivers) {
 			// undefined suggestion clears value.
 			let fieldVal = undefined;

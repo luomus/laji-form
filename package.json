@@ -8,7 +8,7 @@
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
     "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/ --copy-files",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
-    "publish": "npm run build:dist && npm run build:lib"
+    "prepublish": "npm run build:dist && npm run build:lib"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -26,7 +26,7 @@
     "react": "*",
     "react-addons-css-transition-group": "*",
     "react-addons-update": "*",
-    "react-autosuggest": "5.1.1",
+    "react-autosuggest": "*",
     "react-bootstrap": "*",
     "react-dom": "*",
     "react-dropzone": "^3.6.0",
