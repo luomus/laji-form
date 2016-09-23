@@ -342,13 +342,13 @@ export default class MapArrayField extends Component {
 
 	onNavItemMouseEnter = (idx) => () => {
 		const {map} = this.refs.map;
-		const layer = map.getDrawLayerById(map.idxsToIds[idx]);
+		const layer = map._getDrawLayerById(map.idxsToIds[idx]);
 		map.updateLayerStyle(layer, {color: "#36B43A"});
 	}
 
 	onNavItemMouseLeave = (idx) => () => {
 		const {map} = this.refs.map;
-		map.updateDrawLayerStyle(map.idxsToIds[idx]);
+		map._updateDrawLayerStyle(map.idxsToIds[idx]);
 	}
 
 	getSchemaForFields = (fields, isInline, style, sibling) => {
