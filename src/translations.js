@@ -1,8 +1,8 @@
-export default {
+﻿export default {
 	submit: {
 		fi: "lähetä",
 		en: "submit",
-		sv: "acceptera"
+		sv: "sänd"
 	},
 	today: {
 		fi: "tänään",
@@ -37,22 +37,22 @@ export default {
 	knownSpeciesName: {
 		fi: "tunnettu nimi",
 		en: "known name",
-		sv: "vetade namet"
+		sv: "känt namn"
 	},
 	unknownSpeciesName: {
 		fi: "tuntematon nimi",
 		en: "unknown name",
-		sv: "inte vetade namet"
+		sv: "okänd namn"
 	},
 	unknownName: {
 		fi: "ei tunnettu nimi",
 		en: "not known name",
-		sv: "inte vetade namet"
+		sv: "okänd namn"
 	},
 	fix: {
 		fi: "korjaa",
 		en: "fix",
-		sv: "fixera"
+		sv: "fixa"
 	},
 	or: {
 		fi: "tai",
@@ -62,17 +62,17 @@ export default {
 	useUnknownName: {
 		fi: "käytä tuntematonta nimeä",
 		en: "use unknown name",
-		sv: "jag pratar inte svenska så bra"
+		sv: "använd okänd namn"
 	},
 	search: {
 		fi: "etsi",
 		en: "search",
-		sv: "söka"
+		sv: "sök"
 	},
 	filter: {
 		fi: "rajaa",
 		en: "filter",
-		sv: "??"
+		sv: "avgräns"
 	},
 	more: {
 		fi: "lisää",
@@ -82,7 +82,7 @@ export default {
 	selectOneOfTheFollowing: {
 		fi: "valitse yksi seuraavista",
 		en: "select one of the following",
-		sv: "picka en av den här"
+		sv: "välj en av följande"
 	},
 	openSpeciedCard: {
 		fi: "avaa lajikortti",
@@ -92,42 +92,41 @@ export default {
 	remove: {
 		fi: "poista",
 		en: "remove",
-		sv: "avslägna"
+		sv: "radera"
 	},
 	close: {
 		fi: "sulje",
 		en: "close",
-		sv: "slut"
+		sv: "stäng"
 	},
 	confirmRemove: {
 		fi: "haluatko varmasti poistaa?",
 		en: "are you sure you want to remove?",
-		sv: "är du säkert du vill avslägna?"
+		sv: "är du säker på att du vill radera?"
 	},
 	map: {
 		fi: "kartta",
 		en: "map",
-		sv: "mappen"
+		sv: "karta"
 	},
 	place: {
 		fi: "paikka",
 		en: "place",
-		sv: "placen"
+		sv: "plats"
 	},
 	dropOrSelectFiles: {
 		fi: "raahaa tähän kuvat tai klikkaa valitaksesi kuvat koneeltasi",
 		en: "drag pictures here or click here to select the pictures from you computer",
-		sv: "???"
+		sv: "dra bilder här eller klick här för att välja bilder från din dator"
 	},
 	selectMoreFields: {
 		fi: "valitse lisää kenttiä",
 		en: "select more fields",
-		sv: "???"
+		sv: "välj flera fält"
 	},
 	pictureError: {
 		fi: "kuvien tallennus epäonnistui. Yritä myöhemmin uudestaan.",
 		en: "saving pictures failed. Please try again later.",
-		sv: "???"
+		sv: "bildlagring misslyckades. Försök igen senare."
 	}
-
 }
