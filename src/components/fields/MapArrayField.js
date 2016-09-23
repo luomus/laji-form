@@ -258,12 +258,12 @@ export default class MapArrayField extends Component {
 						<MapComponent
 							style={state !== SCROLLING ? mapStyle : undefined}
 							ref={"map"}
-							drawData={{featureCollection: {type: "featureCollection", features: this.state.data}}}
+							drawData={{featureCollection: {type: "featureCollection", features: this.state.data},
+							           getPopup: this.getPopup}}
 							activeIdx={this.state.activeIdx}
 							center={[62.3, 25]}
 							zoom={3}
 							onChange={this.onMapChange}
-							getPopup={this.getPopup}
 							onInitializeDrawLayer={this.onInitializeLayer}
 							lang={this.props.registry.lang}
 						/>
