@@ -123,7 +123,9 @@ export default class AutoSuggestWidget extends Component {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const unambigiousSuggestion = this.findUnambigiousSuggestion(suggestions);
-						if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
+						if (!this.state.focused && unambigiousSuggestion) {
+							this.selectSuggestion(unambigiousSuggestion);
+						}
 						else if (this.state.focused) state.suggestions = suggestions;
 						else state.oldSuggestions = suggestions;
 						this.setState(state);
