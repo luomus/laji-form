@@ -162,7 +162,7 @@ export default class NestField extends Component {
 				}
 				errorSchema[wrapperFieldName][fieldName] = errorSchema[fieldName];
 
-				[schemaProperties, errorSchema].forEach((schemaFieldProperty) => {
+				[schemaProperties, errorSchema].forEach(schemaFieldProperty => {
 					delete schemaFieldProperty[fieldName];
 				});
 
@@ -189,9 +189,6 @@ export default class NestField extends Component {
 
 		function getNewSchemaField(title) {
 			return {type: "object", properties: {}, title};
-		}
-		function getNewIdSchemaField(id, fieldName) {
-			return {$id: id + "_" + fieldName};
 		}
 	}
 

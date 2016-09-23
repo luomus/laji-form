@@ -7,7 +7,7 @@ import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import Button from "../Button";
-import { isHidden, getFieldsFinalUiSchema } from "../../utils";
+import { isHidden, getFieldsFinalUiSchema, propertyHasData } from "../../utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -358,7 +358,7 @@ export default class ScopeField extends Component {
 		return glyphFields ?
 			Object.keys(glyphFields).map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = this.propertyHasData(property, this.props.formData);
+				const hasData = propertyHasData(property, this.props.formData);
 				return (
 					<Button key={property} disabled={hasData} classList={["laji-form-scope-field-glyph"]} buttonType={isIncluded ? "primary" : "default"}
 					        onClick={ () => this.toggleAdditionalProperty(property)}>
@@ -379,20 +379,10 @@ export default class ScopeField extends Component {
 		return isIncluded;
 	}
 
-	// TODO need to be careful with the recursion. If ScopeField is used with deeply nested data, we should
-	// consider another solution.
-	propertyHasData = (field, container) => {
-		if (!container) return false;
-		const data = container[field];
-		return (data && data !== "" &&
-			(data.constructor !== Object || Object.keys(data).length > 0) &&
-			(!Array.isArray(data) || data.length > 0) &&
-			(data.constructor !== Object || Object.keys(data).some(_field => this.propertyHasData(_field, data))));
-	}
 
 	toggleAdditionalProperty = (field) => {
 		const isIncluded = this.propertyIsIncluded(field);
-		if (this.propertyHasData(field, this.props.formData))	return;
+		if (propertyHasData(field, this.props.formData))	return;
 		this.setState({additionalFields: update(this.state.additionalFields, {$merge: {[field]: !isIncluded}})},
 			() => {this.setState(this.getStateFromProps(this.props))});
 	}
@@ -402,7 +392,7 @@ export default class ScopeField extends Component {
 			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.forEach(property => {
 				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = this.propertyHasData(property, this.props.formData);
+				const hasData = propertyHasData(property, this.props.formData);
 				list.push(<ElemType
 					key={property}
 					disabled={hasData}

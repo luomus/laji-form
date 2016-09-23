@@ -17,3 +17,18 @@ export function getFieldsFinalUiSchema(uiSchema, field) {
 	}
 }
 
+export function hasData(formData) {
+	if (!formData) return false;
+	else {
+		if (!Array.isArray(formData)) formData = [formData];
+		return formData.some(data => Object.keys(data).some(_field => propertyHasData(_field, data)));
+	}
+}
+
+export function propertyHasData(field, container) {
+	if (!container) return false;
+	const data = container[field];
+	return (data && data !== "" &&
+	(data.constructor !== Object || (Object.keys(data).length > 0 && hasData(data))) &&
+	(!Array.isArray(data) || data.length > 0));
+}

@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import update from "react-addons-update";
+import equals from "deep-equal";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { hasData } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col, Overlay, Popover, ButtonGroup } from "react-bootstrap";
 import Button from "../Button";
@@ -34,7 +36,9 @@ export default class AutoArrayField extends Component {
 			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
 			state.keyCounter = formDataLength + 1;
 		} else if (props.formData && formDataLength >= idxsToKeys.length) {
-			state.idxsToKeys = update(idxsToKeys, {$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)});
+			state.idxsToKeys = update(idxsToKeys,
+				{$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)}
+			);
 			state.keyCounter = keyCounter;
 		}
 
@@ -59,7 +63,11 @@ export default class AutoArrayField extends Component {
 	renderItems = () => {
 		const {registry} = this.props;
 		let data = this.props.formData || [];
-		data = update(data, {$push: [getDefaultFormState(this.props.schema.items, undefined, registry.definitions)]});
+		const defaultData = getDefaultFormState(this.props.schema.items, undefined, registry.definitions);
+		const lastItem = data[data.length - 1];
+		if (hasData(lastItem) && !equals(lastItem, defaultData)) {
+			data = update(data, {$push: [defaultData]});
+		}
 
 		const {SchemaField} = this.props.registry.fields;
 		const {translations} = this.props.registry;

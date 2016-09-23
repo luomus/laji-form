@@ -166,7 +166,9 @@ export default class AutoSuggestWidget extends Component {
 			value = this.props.options.onInputChange(value);
 		}
 		if (value !== this.state.inputValue && !this.suggestionSelectedFlag) {
-			this.setState({inputValue: value, inputInProgress: true});
+			const state = {inputValue: value};
+			if (value !== "") state.inputInProgress = true;
+			this.setState(state);
 		}
 		this.suggestionSelectedFlag = false;
 	}
