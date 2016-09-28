@@ -123,7 +123,7 @@ export default class AdditionalsExpanderField extends Component {
 
 		const text = (options && options.expanderButtonText) ? options.expanderButtonText : this.props.registry.translations.More;
 
-		return <Button onClick={this.showAdditional} classList={["button-right"]}>{text + " ▸" }</Button>;
+		return <Button onClick={this.showAdditional} className="button-right">{text + " ▸" }</Button>;
 	}
 
 	showAdditional = () => {

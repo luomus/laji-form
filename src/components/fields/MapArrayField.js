@@ -6,7 +6,6 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
 import LajiMap from "laji-map";
-import Button from "../Button";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
 

@@ -164,7 +164,7 @@ export default class LajiForm extends Component {
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext
 					}} >
-					<Button type="submit" classList={["btn-info"]}>{translations.Submit}</Button>
+					<Button type="submit">{translations.Submit}</Button>
 					</Form>
 				{this.state.blocking ? <div className="blocking-loader" /> : null}
 				</div>

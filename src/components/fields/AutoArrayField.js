@@ -93,8 +93,8 @@ export default class AutoArrayField extends Component {
 					</div>
 					<div className="auto-array-delete-container">
 						{removable ? (<div>
-							<Button buttonType="danger"
-							        classList={["col-xs-12", "auto-array-delete"]}
+							<Button bsStyle="danger"
+							        className="col-xs-12 auto-array-delete"
 							        ref={"del-" + idx}
 							        onKeyDown={this.onButtonKeyDown(idx)}
 							        onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
@@ -103,8 +103,8 @@ export default class AutoArrayField extends Component {
 									<Popover id="popover-trigger-click">
 										<span>{translations.ConfirmRemove}</span>
 										<ButtonGroup>
-											<Button buttonType="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
-											<Button buttonType="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
+											<Button bsStyle="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
+											<Button bsStyle="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
 										</ButtonGroup>
 									</Popover>
 								</Overlay>

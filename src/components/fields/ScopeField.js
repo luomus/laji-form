@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
@@ -300,17 +300,15 @@ export default class ScopeField extends Component {
 			}
 		}
 
-		const glyph = <Glyphicon glyph="cog" />;
-
 		return (
 			<div>
-				{options.additionalsGroupingPath ? this.renderFieldsModal(list, glyph) : this.renderFieldsDropdown(list, glyph)}
+				{options.additionalsGroupingPath ? this.renderFieldsModal(list) : this.renderFieldsDropdown(list)}
 				{this.renderGlyphFields()}
 			</div>
 		);
 	}
 
-	renderFieldsDropdown(list, glyph) {
+	renderFieldsDropdown(list) {
 		return (
 			<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
 			          bsStyle="info"
@@ -323,7 +321,7 @@ export default class ScopeField extends Component {
 									if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
 									this.preventCloseDropdown = false;
 			           }}>
-				<Button bsRole="toggle" classList={["laji-form-scope-field-glyph"]}>{glyph}</Button>
+				{this.renderFieldsButton()}
 				<Dropdown.Menu>
 					{list}
 				</Dropdown.Menu>
@@ -331,14 +329,12 @@ export default class ScopeField extends Component {
 		);
 	}
 
-	renderFieldsModal(list, glyph) {
+	renderFieldsModal = (list) => {
 		const {translations} = this.props.registry;
 
 		return (
 			<div>
-				<Button onClick={this.onToggleAdditionals} classList={["laji-form-scope-field-glyph"]}>
-					{glyph}
-				</Button>
+				{this.renderFieldsButton()}
 				{this.state.additionalsOpen ?  (
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
 						<Modal.Header closeButton={true} ><Modal.Title>{translations.SelectMoreFields}</Modal.Title></Modal.Header>
@@ -356,6 +352,19 @@ export default class ScopeField extends Component {
 		);
 	}
 
+	renderFieldsButton = () => {
+		const glyph = <Glyphicon glyph="cog" />;
+		const tooltip = <Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>{this.props.registry.translations.SelectMoreFields}</Tooltip>;
+
+		return (
+			<OverlayTrigger overlay={tooltip} placement="left">
+				<Button className="laji-form-scope-field-glyph" onClick={this.onToggleAdditionals}>
+					{glyph}
+				</Button>
+			</OverlayTrigger>
+		);
+	}
+
 	renderGlyphFields = () => {
 		const {glyphFields} = this.props.uiSchema["ui:options"];
 
@@ -364,7 +373,7 @@ export default class ScopeField extends Component {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData);
 				return (
-					<Button key={property} disabled={hasData} classList={["laji-form-scope-field-glyph"]} buttonType={isIncluded ? "primary" : "default"}
+					<Button key={property} disabled={hasData} className="laji-form-scope-field-glyph" bsStyle={isIncluded ? "primary" : "default"}
 					        onClick={ () => this.toggleAdditionalProperty(property)}>
 						<Glyphicon glyph={glyphFields[property]} />
 					</Button>

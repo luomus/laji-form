@@ -83,7 +83,7 @@ export default class TableField extends Component {
 					idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
 					registry={props.registry}
 					errorSchema={props.errorSchema[idx]} /></Col>
-				<Col xs={2}>{((!props.schema.additionalItems && idx) || isAdditional) ? <Button buttonType="danger" classList={["col-xs-12"]} onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
+				<Col xs={2}>{((!props.schema.additionalItems && idx) || isAdditional) ? <Button bsStyle="danger" className="col-xs-12" onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
 			</Row>)
 		});
 
@@ -94,7 +94,7 @@ export default class TableField extends Component {
 	}
 
 	getAddButton = () => {
-		return (<Row><Col xs={2}><Button onClick={ () => { this.addItem() }} classList={["col-xs-12"]} key="add">➕</Button></Col></Row>);
+		return (<Row><Col xs={2}><Button onClick={ () => { this.addItem() }} key="add">➕</Button></Col></Row>);
 	}
 
 	addItem = () => {

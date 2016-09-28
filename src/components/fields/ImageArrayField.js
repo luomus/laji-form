@@ -85,7 +85,7 @@ export default class ImagesArrayField extends Component {
 			this.state.imgURLs.map((dataURL, i) => (
 				<div key={i} className="img-container">
 					<a onClick={this.onImgClick(i)}><img src={dataURL} /></a>
-					<Button buttonType="danger" classList={["img-remove"]} onClick={this.onImgRmClick(i)}>✖</Button>
+					<Button bsStyle="danger" className="img-remove" onClick={this.onImgRmClick(i)}>✖</Button>
 				</div>
 			)) :
 			null;
