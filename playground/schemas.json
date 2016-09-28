@@ -363,10 +363,6 @@
 											}
 										}
 									},
-									"strictFields": [
-										"recordBasis",
-										"taxonConfidence"
-									],
 									"definitions": {
 										"unitType": {
 											"fields": [

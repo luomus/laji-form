@@ -215,7 +215,11 @@ export default class ScopeField extends Component {
 			if (options.strictFields) options.strictFields.forEach(field => { dictionarifiedStrictFields[field] = true });
 
 			Object.keys(formData).forEach((property) => {
-				if (dictionarifiedStrictFields[property] || isEmpty(formData[property])) return;
+				if (dictionarifiedStrictFields[property] ||
+				    isEmpty(formData[property]) ||
+				    (formData.hasOwnProperty(property) &&
+				     schema.properties.hasOwnProperty(property) &&
+				     formData[property] === schema.properties[property].default)) return;
 				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
 					fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
 				}
