@@ -112,6 +112,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onSuggestionsFetchRequested = ({value}) => {
+		value = this.inputValue;
 		if (!value || value.length < 2) return;
 
 		this.setState({isLoading: true});
@@ -165,10 +166,12 @@ export default class AutoSuggestWidget extends Component {
 		if (this.props.options.onInputChange) {
 			value = this.props.options.onInputChange(value);
 		}
-		if (value !== this.state.inputValue && !this.suggestionSelectedFlag) {
+		this.inputChanged = (value !== this.state.inputValue);
+		if (this.inputChanged && !this.suggestionSelectedFlag) {
 			const state = {inputValue: value};
 			if (value !== "") state.inputInProgress = true;
 			this.setState(state);
+			this.inputValue = value; //setState works asynchronously. We need the input value immediately for suggestion fetching.
 		}
 		this.suggestionSelectedFlag = false;
 	}
@@ -252,7 +255,7 @@ export default class AutoSuggestWidget extends Component {
 					const regexp = new RegExp(props.options.preventTypingPattern);
 					if (newValue.match(regexp)) return;
 				}
-				this.onInputChange(newValue, method)
+				this.onInputChange(newValue, method);
 			},
 			onFocus: this.onFocus,
 			onBlur: this.onBlur,
