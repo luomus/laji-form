@@ -1015,7 +1015,7 @@
 	"formData": {
 		"gatheringEvent": {
 			"leg": [
-				"ZDI3MDY5ZmEtZDA4Ny00ZWVjLTlmNjMtMDFlYmNiNTBmZDhm"
+				"MA.308"
 			],
 			"legPublic": true
 		},
@@ -1124,7 +1124,7 @@
 			}
 		],
 		"editors": [
-			"ZDI3MDY5ZmEtZDA4Ny00ZWVjLTlmNjMtMDFlYmNiNTBmZDhm"
+			"MA.308"
 		]
 	}
 }

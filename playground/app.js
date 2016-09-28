@@ -22,7 +22,7 @@ const apiClient = new ApiClientImplementation(
 
 const lajiForm = new LajiForm({
 	...schemas,
-	//formData: {gatheringEvent: {leg: [properties.userToken]}, editors: [properties.userToken]},
+	//formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},
 	onSubmit,
 	apiClient,
 	lang,
