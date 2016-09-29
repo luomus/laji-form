@@ -19,7 +19,7 @@ const FIXED = "FIXED";
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
-		return {[schema.label || fieldName]: units.map(unit => unit.informalNameString)};
+		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
 	}
 }
 
