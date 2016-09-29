@@ -321,7 +321,7 @@ body .laji-form {
 .laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
 	background-color: #d8fbc6;
 }
-.laji-form .laji-form-images a:hover {
+.laji-form .laji-form-images a:hover, .laji-form .laji-form-images a:active {
 	text-decoration: none;
 	color: #337ab7;
 }

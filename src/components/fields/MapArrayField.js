@@ -184,18 +184,18 @@ export default class MapArrayField extends Component {
 		this.refs.map.map.focusToLayer(idx)
 	}
 
-	onItemChange = (formData) => {
-		if (this.state.activeIdx === undefined) return;
+	onItemChange = (idx) => (formData) => {
+		if (idx === undefined || !this.props.formData[idx]) return;
 
 		let newFormData = formData;
 
 		if (this.props.uiSchema["ui:options"].inlineProperties) {
-			newFormData = this.props.formData[this.state.activeIdx];
+			newFormData = this.props.formData[idx];
 			for (let prop in formData) {
 				newFormData = update(newFormData, {[prop]: {$set: formData[prop]}});
 			}
 		}
-		this.props.onChange(update(this.props.formData, {$splice: [[this.state.activeIdx, 1, newFormData]]}));
+		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1, newFormData]]}));
 	}
 
 	onMapChange = (events) => {
@@ -474,7 +474,7 @@ export default class MapArrayField extends Component {
 						errorSchema={itemErrorSchema}
 						uiSchema={uiSchema}
 						registry={registry}
-						onChange={this.onItemChange}
+						onChange={this.onItemChange(idx)}
 						name={undefined} />
 				</div>
 				{sibling ? sibling : null}
