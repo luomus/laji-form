@@ -128,5 +128,15 @@
 		fi: "kuvien tallennus epäonnistui. Yritä myöhemmin uudestaan.",
 		en: "saving pictures failed. Please try again later.",
 		sv: "bildlagring misslyckades. Försök igen senare."
+	},
+	detachUnit: {
+		fi: "siirrä havainto uudelle karttakuviolle.",
+		en: "move the unit to a new map feature",
+		sv: "??"
+	},
+	detachUnitHelp: {
+		fi: "piirrä uusi kuvio irrotettavalle havainnolle.",
+		en: "draw a new feature for the unit being detached.",
+		sv: "??"
 	}
 }

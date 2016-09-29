@@ -5,9 +5,17 @@ import merge from "deepmerge";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
+import { getUpdateObjectFromPath } from "../../utils";
 import LajiMap from "laji-map";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger, Glyphicon, Panel } from "react-bootstrap";
+import Button from "../Button";
+import Context from "../../Context";
+
+const SCROLLING = "SCROLLING";
+const SQUEEZING = "SQUEEZING";
+const FIXED = "FIXED";
+
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
@@ -15,9 +23,42 @@ const popupMappers = {
 	}
 }
 
-const SCROLLING = "SCROLLING";
-const SQUEEZING = "SQUEEZING";
-const FIXED = "FIXED";
+const buttonSettings = {
+	detach: that => idx => {
+		const tooltip = <Tooltip id={`map-array-detach-${idx}`}>{that.props.registry.translations.DetachUnit}</Tooltip>;
+
+		return <OverlayTrigger overlay={tooltip} placement="left" >
+			<Button className="glyph-button" onClick={() => {
+				that.setState({detachUnitMode: true});
+
+				const mapComponent = that.refs.map;
+
+				that.state.scrollState === SCROLLING ?
+					mapComponent.refs.map.scrollIntoView() :
+					window.scrollBy(0, -that.state.inlineContainerScrolledAmount);
+
+				that._onMapChange = events => {
+					events.forEach(e => {
+						switch (e.type) {
+							case "create":
+								const formDataTarget = that.props.uiSchema["ui:options"].buttons.detach.formDataTarget;
+								const activeFormData = that.props.formData[that.state.activeIdx];
+								const popSource = activeFormData[formDataTarget];
+								const popObject = popSource[idx];
+								let newDataItem = update(activeFormData,
+									{[formDataTarget]: {$set: [popObject]}, wgs84Geometry: {$set: e.feature.geometry}});
+								let newFormData = update(that.props.formData, {$push: [newDataItem]});
+								newFormData = update(newFormData, {[that.state.activeIdx]: {[formDataTarget]: {$splice: [[idx, 1]]}}})
+								that._onMapChange = undefined;
+								that.props.onChange(newFormData);
+								that.setState({detachUnitMode: false});
+						}
+					});
+				}
+		}}><Glyphicon glyph="new-window" /></Button></OverlayTrigger>;
+	}
+}
+
 
 export default class MapArrayField extends Component {
 	static propTypes = {
@@ -73,6 +114,15 @@ export default class MapArrayField extends Component {
 		if (this.stateToMerge) {
 			state = merge(state, this.stateToMerge);
 			this.stateToMerge = undefined;
+		}
+
+		const options = this.props.uiSchema["ui:options"] || {};
+		const {buttons} = options;
+
+		if (buttons) for (let button in buttons) {
+			const buttonOptions = buttons[button];
+			const updateObject = getUpdateObjectFromPath(buttonOptions.uiSchemaTarget, buttonSettings[button](this));
+			state.uiSchema = merge(uiSchema, updateObject);
 		}
 
 		if (!this.props.formData || !this.props.formData.length) state = {...state,  ...this.getInlineWidth()};
@@ -144,6 +194,11 @@ export default class MapArrayField extends Component {
 	}
 
 	onMapChange = (events) => {
+		if (this._onMapChange) {
+			this._onMapChange(events);
+			return;
+		}
+
 		let propsChange = undefined;
 		let state = undefined;
 
@@ -183,8 +238,27 @@ export default class MapArrayField extends Component {
 		}
 	}
 
-	componentDidUpdate = () => {
+	componentDidUpdate = (prevProps, prevState) => {
+		window.map = this.refs.map;
 		if (this.refs.map && this.refs.map.map.map) this.refs.map.map.map.invalidateSize();
+
+		if (this.state.detachUnitMode && !prevState.detachUnitMode) {
+			new Context().pushBlockingLoader(true);
+			this.refs.map.map.setDrawData({featureCollection: {type: "featureCollection", features: []}});
+			this.refs.map.map.setData({
+				featureCollection: {type: "featureCollection", features: this.state.data},
+				getPopup: this.getPopup,
+				getFeatureStyle: e => {
+					const color =  (e.featureIdx == this.state.activeIdx) ? "#708e72" : "#9fbcd5";
+					return {color: color, fillColor: color, opacity: 1, fillOpacity: 0.7}
+				}
+			});
+
+		} else if (!this.state.detachUnitMode && prevState.detachUnitMode) {
+			new Context().popBlockingLoader();
+			this.refs.map.map.setData({featureCollection: {type: "featureCollection", features: []}});
+		}
+
 	}
 
 	render() {
@@ -251,11 +325,13 @@ export default class MapArrayField extends Component {
 			/> : null}
 			<Row ref="mapAndSchemasContainer">
 				<div ref="inlineContainer"
-				     className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : undefined)}
+				     className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : "")}
 				     style={state !== SCROLLING ? inlineContainerStyle : null} >
-					<div className={hasInlineProps ? " col-" + colType + "-6" : ""} >
+					<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
+						{this.state.detachUnitMode ? <div className="pass-block"><Panel>{this.props.registry.translations.DetachUnitHelp}</Panel></div> : null}
 						<MapComponent
 							style={state !== SCROLLING ? mapStyle : undefined}
+							className={this.state.detachUnitMode ? "pass-block" : ""}
 							ref={"map"}
 							drawData={{featureCollection: {type: "featureCollection", features: this.state.data},
 							           getPopup: this.getPopup}}
@@ -265,6 +341,7 @@ export default class MapArrayField extends Component {
 							onChange={this.onMapChange}
 							onInitializeDrawLayer={this.onInitializeLayer}
 							lang={this.props.registry.lang}
+						  popupOnHover={true}
 						/>
 						{(state !== SCROLLING) ? <div ref="mapHeightFixer" style={mapHeightFixerStyle} /> : null}
 						{options.popupFields ?

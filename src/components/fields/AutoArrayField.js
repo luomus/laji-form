@@ -5,7 +5,7 @@ import equals from "deep-equal";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { hasData } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import { Row, Col, Overlay, Popover, ButtonGroup } from "react-bootstrap";
+import { Row, Col, Overlay, Popover, ButtonGroup, Glyphicon } from "react-bootstrap";
 import Button from "../Button";
 
 export default class AutoArrayField extends Component {
@@ -91,10 +91,10 @@ export default class AutoArrayField extends Component {
 							registry={this.props.registry}
 							errorSchema={this.props.errorSchema[idx]} />
 					</div>
-					<div className="auto-array-delete-container">
+					<div className="auto-array-buttons-container">
 						{removable ? (<div>
 							<Button bsStyle="danger"
-							        className="col-xs-12 auto-array-delete"
+							        className="col-xs-12 glyph-button"
 							        ref={"del-" + idx}
 							        onKeyDown={this.onButtonKeyDown(idx)}
 							        onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
@@ -110,6 +110,7 @@ export default class AutoArrayField extends Component {
 								</Overlay>
 								: null
 							}
+							{this.renderButtons(idx)}
 						</div>) : undefined}
 					</div>
 				</div>);
@@ -152,5 +153,14 @@ export default class AutoArrayField extends Component {
 		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
 		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}));
 		this.onClearConfirm();
+	}
+
+	renderButtons = (idx) => {
+		const options = this.props.uiSchema["ui:options"];
+
+		const buttons = options.buttons || {};
+		return Object.keys(buttons).map(button => {
+			return buttons[button](idx);
+		});
 	}
 }

@@ -334,7 +334,7 @@ export default class ScopeField extends Component {
 
 		return (
 			<OverlayTrigger overlay={tooltip} placement="left">
-				<Button className="laji-form-scope-field-glyph" onClick={this.onToggleAdditionals}>
+				<Button className="glyph-button" onClick={this.onToggleAdditionals}>
 					{glyph}
 				</Button>
 			</OverlayTrigger>
@@ -349,7 +349,7 @@ export default class ScopeField extends Component {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData);
 				return (
-					<Button key={property} disabled={hasData} className="laji-form-scope-field-glyph" bsStyle={isIncluded ? "primary" : "default"}
+					<Button key={property} disabled={hasData} className="glyph-button" bsStyle={isIncluded ? "primary" : "default"}
 					        onClick={ () => this.toggleAdditionalProperty(property)}>
 						<Glyphicon glyph={glyphFields[property]} />
 					</Button>

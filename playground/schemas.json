@@ -152,6 +152,12 @@
 						"field": "notes"
 					}
 				],
+				"buttons": {
+					"detach": {
+						"formDataTarget": "units",
+						"uiSchemaTarget": "units.ui:options.uiSchema.ui:options.buttons.popToMap"
+					}
+				},
 				"inlineProperties": [
 					"dateBegin",
 					"dateEnd",

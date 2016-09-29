@@ -63,7 +63,7 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
-		this.mainContext = new Context().get("MAIN");
+		this.mainContext = new Context();
 	}
 
 	componentWillReceiveProps(props) {
@@ -133,7 +133,7 @@ export default class AutoSuggestWidget extends Component {
 						this.promiseTimestamp = undefined;
 					}
 				})
-				.catch( error => {
+				.catch(error => {
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({isLoading: false});
 						this.promiseTimestamp = undefined;

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUpdateObjectFromPath } from "../../utils";
 
 export default class ContextInjectionField extends Component {
 	static propTypes = {
@@ -29,19 +30,11 @@ export default class ContextInjectionField extends Component {
 		const injections = props.uiSchema["ui:options"].injections;
 
 		for (let injectionPath in injections) {
-			let update = {};
-			let updatePointer = update;
-			let lastPathName = "";
-			let splittedPath = injectionPath.split('.');
-			splittedPath.forEach((pathStep, i) => {
-				updatePointer[pathStep] = {};
-				if (i < splittedPath.length - 1) updatePointer = updatePointer[pathStep];
-				lastPathName = pathStep;
-			});
-
-			updatePointer[lastPathName] = injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.registry.uiSchemaContext);
-			uiSchema = merge(uiSchema, update);
+			uiSchema = merge(uiSchema,
+				getUpdateObjectFromPath(injectionPath, injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.registry.uiSchemaContext))
+			);
 		}
+
 		return {uiSchema};
 	}
 

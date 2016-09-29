@@ -8,15 +8,13 @@ import { Modal, Row, Col } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
 
-const CONTEXT_KEY = "IMAGE_ARRAY_FIELD";
-
 export default class ImagesArrayField extends Component {
 
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient();
-		this._context = new Context().get(CONTEXT_KEY);
-		this.mainContext = new Context().get("MAIN");
+		this._context = new Context("IMAGE_ARRAY_FIELD");
+		this.mainContext = new Context();
 		this.state = this.getStateFromProps(props);
 	}
 

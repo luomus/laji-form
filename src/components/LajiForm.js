@@ -44,8 +44,6 @@ import ApiClient from "../ApiClient";
 import Context from "../Context";
 import translations from "../translations.js";
 
-const CONTEXT_KEY = "MAIN";
-
 const RC_SWITCH_CLASS = "rc-switch";
 
 const inputTypes = ["input", "select", "textarea"];
@@ -68,7 +66,7 @@ export default class LajiForm extends Component {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
-		this._context = new Context().get(CONTEXT_KEY);
+		this._context = new Context();
 		this._context.blockingLoaderCounter = 0;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
@@ -224,11 +222,15 @@ export default class LajiForm extends Component {
 		}
 	}
 
-	pushBlockingLoader = () => {
+	pushBlockingLoader = (instantly = false) => {
 		this._context.blockingLoaderCounter++;
-		setTimeout(() => {
-			if (this.mounted) this.setState({blocking: this._context.blockingLoaderCounter > 0});
-		}, 500);
+
+		const that = this;
+		function block() {
+			if (that.mounted) that.setState({blocking: that._context.blockingLoaderCounter > 0});
+		}
+
+		instantly ? block() :	setTimeout(block, 500);
 	}
 
 	popBlockingLoader = () => {

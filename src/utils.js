@@ -32,3 +32,18 @@ export function propertyHasData(field, container) {
 	(data.constructor !== Object || (Object.keys(data).length > 0 && hasData(data))) &&
 	(!Array.isArray(data) || data.length > 0));
 }
+
+export function getUpdateObjectFromPath(path, injection) {
+	let update = {};
+	let updatePointer = update;
+	let lastPathName = "";
+	let splittedPath = path.split('.');
+	splittedPath.forEach((pathStep, i) => {
+		updatePointer[pathStep] = {};
+		if (i < splittedPath.length - 1) updatePointer = updatePointer[pathStep];
+		lastPathName = pathStep;
+	});
+
+	updatePointer[lastPathName] = injection;
+	return update;
+}
