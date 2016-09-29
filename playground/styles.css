@@ -17,6 +17,12 @@ body .laji-form {
 	z-index: 2 !important;
 }
 
+.laji-form .pass-block, .laji-form .pass-block .panel {
+	-webkit-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+	-moz-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+}
+
 .laji-form .autosuggest-wrapper {
 	position: relative;
 }
@@ -312,9 +318,12 @@ body .laji-form {
 	border: 2px dashed black;
 	padding: 7px;
 }
-
 .laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
 	background-color: #d8fbc6;
+}
+.laji-form .laji-form-images a:hover {
+	text-decoration: none;
+	color: #337ab7;
 }
 
 .laji-form.image-modal {
