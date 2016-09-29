@@ -4,6 +4,11 @@
 		en: "submit",
 		sv: "sänd"
 	},
+	cancel: {
+		fi: "peru",
+		en: "cancel",
+		sv: "annullera"
+	},
 	today: {
 		fi: "tänään",
 		en: "today",
@@ -130,8 +135,8 @@
 		sv: "bildlagring misslyckades. Försök igen senare."
 	},
 	detachUnit: {
-		fi: "siirrä havainto uudelle karttakuviolle.",
-		en: "move the unit to a new map feature",
+		fi: "irroita havainto uudelle karttakuviolle.",
+		en: "detach the unit to a new map feature",
 		sv: "??"
 	},
 	detachUnitHelp: {

@@ -23,43 +23,6 @@ const popupMappers = {
 	}
 }
 
-const buttonSettings = {
-	detach: that => idx => {
-		const tooltip = <Tooltip id={`map-array-detach-${idx}`}>{that.props.registry.translations.DetachUnit}</Tooltip>;
-
-		return <OverlayTrigger overlay={tooltip} placement="left" >
-			<Button className="glyph-button" onClick={() => {
-				that.setState({detachUnitMode: true});
-
-				const mapComponent = that.refs.map;
-
-				that.state.scrollState === SCROLLING ?
-					mapComponent.refs.map.scrollIntoView() :
-					window.scrollBy(0, -that.state.inlineContainerScrolledAmount);
-
-				that._onMapChange = events => {
-					events.forEach(e => {
-						switch (e.type) {
-							case "create":
-								const formDataTarget = that.props.uiSchema["ui:options"].buttons.detach.formDataTarget;
-								const activeFormData = that.props.formData[that.state.activeIdx];
-								const popSource = activeFormData[formDataTarget];
-								const popObject = popSource[idx];
-								let newDataItem = update(activeFormData,
-									{[formDataTarget]: {$set: [popObject]}, wgs84Geometry: {$set: e.feature.geometry}});
-								let newFormData = update(that.props.formData, {$push: [newDataItem]});
-								newFormData = update(newFormData, {[that.state.activeIdx]: {[formDataTarget]: {$splice: [[idx, 1]]}}})
-								that._onMapChange = undefined;
-								that.props.onChange(newFormData);
-								that.setState({detachUnitMode: false});
-						}
-					});
-				}
-		}}><Glyphicon glyph="new-window" /></Button></OverlayTrigger>;
-	}
-}
-
-
 export default class MapArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -74,6 +37,15 @@ export default class MapArrayField extends Component {
 		super(props);
 		this.state = {...this.getStateFromProps(props), direction: "directionless", inlineOutOfView: false};
 		this.fixedHeight = 300;
+	}
+
+	buttonSettings = {
+		detach: idx => {
+			const tooltip = <Tooltip id={`map-array-detach-${idx}`}>{this.props.registry.translations.DetachUnit}</Tooltip>;
+
+			return <OverlayTrigger overlay={tooltip} placement="left" >
+				<Button className="glyph-button" onClick={() => {this.detach(idx)}}><Glyphicon glyph="new-window" /></Button></OverlayTrigger>;
+		}
 	}
 
 	componentDidMount() {
@@ -121,7 +93,7 @@ export default class MapArrayField extends Component {
 
 		if (buttons) for (let button in buttons) {
 			const buttonOptions = buttons[button];
-			const updateObject = getUpdateObjectFromPath(buttonOptions.uiSchemaTarget, buttonSettings[button](this));
+			const updateObject = getUpdateObjectFromPath(buttonOptions.uiSchemaTarget, this.buttonSettings[button]);
 			state.uiSchema = merge(uiSchema, updateObject);
 		}
 
@@ -159,7 +131,7 @@ export default class MapArrayField extends Component {
 		return {propsChange: formData};
 	}
 
-	onActiveChange = idx => {
+	onActiveChange = (idx) => {
 		let state = {activeIdx: idx};
 		if (this.controlledActiveChange) {
 			this.controlledActiveChange = false;
@@ -168,6 +140,39 @@ export default class MapArrayField extends Component {
 			if (this.state.activeIdx !== undefined) state.direction = (idx > this.state.activeIdx) ? "right" : "left";
 		}
 		return {state};
+	}
+
+	detach = (idx) => {
+			this.setState({detachUnitMode: true});
+
+			const mapComponent = this.refs.map;
+
+			this.state.scrollState === SCROLLING ?
+				mapComponent.refs.map.scrollIntoView() :
+				window.scrollBy(0, -this.state.inlineContainerScrolledAmount);
+
+			this._onMapChange = events => {
+				events.forEach(e => {
+					switch (e.type) {
+						case "create":
+							const formDataTarget = this.props.uiSchema["ui:options"].buttons.detach.formDataTarget;
+							const activeFormData = this.props.formData[this.state.activeIdx];
+							const popSource = activeFormData[formDataTarget];
+							const popObject = popSource[idx];
+							let newDataItem = update(activeFormData,
+								{[formDataTarget]: {$set: [popObject]}, wgs84Geometry: {$set: e.feature.geometry}});
+							let newFormData = update(this.props.formData, {$push: [newDataItem]});
+							newFormData = update(newFormData, {[this.state.activeIdx]: {[formDataTarget]: {$splice: [[idx, 1]]}}})
+							this.props.onChange(newFormData);
+							this.stopDetach();
+					}
+				});
+			}
+	}
+
+	stopDetach = () => {
+		this._onMapChange = undefined;
+		this.setState({detachUnitMode: false});
 	}
 
 	focusToLayer = (idx) => {
@@ -242,8 +247,8 @@ export default class MapArrayField extends Component {
 		window.map = this.refs.map;
 		if (this.refs.map && this.refs.map.map.map) this.refs.map.map.map.invalidateSize();
 
-		if (this.state.detachUnitMode && !prevState.detachUnitMode) {
-			new Context().pushBlockingLoader(true);
+		if (this.state.detachUnitMode) {
+			if (!prevState.detachUnitMode) new Context().pushBlockingLoader(true);
 			this.refs.map.map.setDrawData({featureCollection: {type: "featureCollection", features: []}});
 			this.refs.map.map.setData({
 				featureCollection: {type: "featureCollection", features: this.state.data},
@@ -254,8 +259,8 @@ export default class MapArrayField extends Component {
 				}
 			});
 
-		} else if (!this.state.detachUnitMode && prevState.detachUnitMode) {
-			new Context().popBlockingLoader();
+		} else if (!this.state.detachUnitMode) {
+			if (prevState.detachUnitMode) new Context().popBlockingLoader();
 			this.refs.map.map.setData({featureCollection: {type: "featureCollection", features: []}});
 		}
 
@@ -310,6 +315,10 @@ export default class MapArrayField extends Component {
 			inlineSchemaHeightFixerStyle.height = this.state.inlineSchemaHeight - inlineSchemaStyle.height || 0;
 		}
 
+		const {translations} = this.props.registry;
+
+		const scrollMode = (state !== SCROLLING && !this.state.detachUnitMode);
+
 		return (<div>
 			<TitleField title={title} />
 			{description !== undefined ? <DescriptionField description={description} /> : null}
@@ -325,12 +334,12 @@ export default class MapArrayField extends Component {
 			/> : null}
 			<Row ref="mapAndSchemasContainer">
 				<div ref="inlineContainer"
-				     className={"form-map-inline-container " + ((state !== SCROLLING) ? "out-of-view" : "")}
-				     style={state !== SCROLLING ? inlineContainerStyle : null} >
+				     className={"form-map-inline-container " + (scrollMode ? "out-of-view" : "")}
+				     style={scrollMode ? inlineContainerStyle : null} >
 					<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
-						{this.state.detachUnitMode ? <div className="pass-block"><Panel>{this.props.registry.translations.DetachUnitHelp}</Panel></div> : null}
+						{this.state.detachUnitMode ? <div className="pass-block"><Panel><span>{translations.DetachUnitHelp}</span><Button bsStyle="default" onClick={this.stopDetach}>{translations.Cancel}</Button></Panel></div> : null}
 						<MapComponent
-							style={state !== SCROLLING ? mapStyle : undefined}
+							style={scrollMode ? mapStyle : undefined}
 							className={this.state.detachUnitMode ? "pass-block" : ""}
 							ref={"map"}
 							drawData={{featureCollection: {type: "featureCollection", features: this.state.data},
@@ -343,7 +352,7 @@ export default class MapArrayField extends Component {
 							lang={this.props.registry.lang}
 						  popupOnHover={true}
 						/>
-						{(state !== SCROLLING) ? <div ref="mapHeightFixer" style={mapHeightFixerStyle} /> : null}
+						{scrollMode ? <div ref="mapHeightFixer" style={mapHeightFixerStyle} /> : null}
 						{options.popupFields ?
 							<div style={{display: "none"}}>
 								<Popup data={this.getPopupData(this.state.popupIdx)} ref="popup"/>
@@ -356,8 +365,8 @@ export default class MapArrayField extends Component {
 							<ReactCSSTransitionGroup transitionName={"map-array-" + this.state.direction}
 							                         transitionEnterTimeout={300}
 							                         transitionLeaveTimeout={300}>
-								{hasInlineProps ? this.renderInlineSchemaField(((state !== SCROLLING) ? inlineSchemaStyle : null),
-									(state !== SCROLLING) ?
+								{hasInlineProps ? this.renderInlineSchemaField((scrollMode ? inlineSchemaStyle : null),
+									scrollMode ?
 										<div ref="inlineSchemaHeightFixer"
 										     className={"col-"  + colType + "-6"}
 										     style={inlineSchemaHeightFixerStyle} /> : null)
@@ -366,7 +375,7 @@ export default class MapArrayField extends Component {
 						</div>) : null
 					}
 				</div>
-				{(state !== SCROLLING) ?  <div style={heightFixerStyle} /> : null}
+				{scrollMode ?  <div style={heightFixerStyle} /> : null}
 				<ReactCSSTransitionGroup
 					transitionName={"map-array-" + this.state.direction}
 					transitionEnterTimeout={300}
@@ -595,7 +604,6 @@ export default class MapArrayField extends Component {
 			(colType === "xs" || (window && window.matchMedia && window.matchMedia("(min-width: " + getMinWidthForType(colType) + "px)").matches))
 		);
 	}
-
 
 	updateFromScroll = () => {
 		this.setState(this.getScrollVariables());

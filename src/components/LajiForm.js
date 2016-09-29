@@ -236,7 +236,7 @@ export default class LajiForm extends Component {
 	popBlockingLoader = () => {
 		this._context.blockingLoaderCounter--;
 		if (this._context.blockingLoaderCounter < 0) {
-			throw new Warning("Blocking loader was popped before pushing!");
+			console.warn("laji-form: Blocking loader was popped before pushing!");
 		}
 		this.setState({blocking: this._context.blockingLoaderCounter > 0})
 	}
