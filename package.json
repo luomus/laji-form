@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "dist/laji-form.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "repository": "https://bitbucket.org/luomus/laji-form.js.git",
   "license": "MIT",
   "dependencies": {
+    "deep-equal": "^1.0.1",
     "deepmerge": "*",
     "laji-map": "*",
     "moment": "2.14.1",
