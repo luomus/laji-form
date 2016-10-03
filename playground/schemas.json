@@ -313,7 +313,40 @@
 													"ui:widget": "hidden"
 												},
 												"images": {
-													"ui:field": "imageArray"
+													"ui:field": "imageArray",
+													"ui:options": {
+														"metadataSchemas": {
+															"schema": {
+                                "type": "object",
+                                "properties": {
+                                  "intellectualRights": {
+                                    "type": "string",
+                                    "enum": [
+																			"",
+																			"MY.intellectualRightsUnknown",
+																			"MY.intellectualRightsCC-BY",
+																			"MY.intellectualRightsCC-BY-SA",
+																			"MY.intellectualRightsCC-BY-NC",
+																			"MY.intellectualRightsCC-BY-NC-SA",
+																			"MY.intellectualRightsCC0",
+																			"MY.intellectualRightsODBL",
+																			"MY.intellectualRightsPD",
+																			"MY.intellectualRightsARR"
+																		]
+                                  },
+                                  "capturerVerbatim": {
+																		"type": "array",
+																		"items": {
+																			"type": "string"
+																		}
+																	},
+                                  "intellectualOwner": {
+																		"type": "string"
+																	}
+                                }
+                              }
+														}
+													}
 												},
 												"identifications": {
 													"items": {

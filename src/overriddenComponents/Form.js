@@ -125,7 +125,7 @@ export default class Form extends Component {
 			SchemaField: _SchemaField,
 			TitleField: _TitleField,
 			DescriptionField: _DescriptionField
-		}, this.props.registry.fields);
+		}, ((this.props.registry ? this.props.registry.fields : {}) || {}));
 		let registry = {fields, widgets: {}, definitions: {}};
 		for (let property in this.props.registry) {
 			if (property === "fields") continue;

@@ -43,7 +43,7 @@ export default class MapArrayField extends Component {
 		detach: idx => {
 			const tooltip = <Tooltip id={`map-array-detach-${idx}`}>{this.props.registry.translations.DetachUnit}</Tooltip>;
 
-			return <OverlayTrigger overlay={tooltip} placement="left" >
+			return <OverlayTrigger key={`${this.props.idSchema.$id}-detach-${idx}`} overlay={tooltip} placement="left" >
 				<Button className="glyph-button" onClick={() => {this.detach(idx)}}><Glyphicon glyph="new-window" /></Button></OverlayTrigger>;
 		}
 	}

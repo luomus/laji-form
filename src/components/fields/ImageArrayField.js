@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { Modal, Row, Col } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
+import Form from "../../overriddenComponents/Form";
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 
 export default class ImagesArrayField extends Component {
 
@@ -14,6 +15,8 @@ export default class ImagesArrayField extends Component {
 		super(props);
 		this.apiClient = new ApiClient();
 		this._context = new Context("IMAGE_ARRAY_FIELD");
+		if (!this._context.dataURLs) this._context.dataURLs = {};
+		if (!this._context.metadatas) this._context.metadatas = {};
 		this.mainContext = new Context();
 		this.state = this.getStateFromProps(props);
 	}
@@ -32,7 +35,7 @@ export default class ImagesArrayField extends Component {
 					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
 				})
 			} else if (item.substr(0, 4) !== "data") {
-				imgURLs.push(this._context[item]);
+				imgURLs.push(this._context.dataURLs[item]);
 			} else {
 				imgURLs.push(item);
 			}
@@ -92,16 +95,22 @@ export default class ImagesArrayField extends Component {
 	onImgClick = (i) => () => {
 		const item = this.props.formData[i];
 		const state = {modalOpen: true};
+		const options = this.props.uiSchema["ui:options"];
+		const schemas = options ? options.metadataSchemas : undefined;
 		if (item.match(/MM\./)) {
 			this.apiClient.fetchCached("/images/" + item).then(response => {
+				this._context.metadatas[item] = response;
 				state.modalImgSrc = response.originalURL;
+				state.modalMetadata = this._context.metadatas[item];
 				this.setState(state);
 			})
 		} else if (item.substr(0, 4) !== "data") {
-			state.modalImgSrc = this._context[item];
+			state.modalImgSrc = this._context.dataURLs[item];
+			state.modalMetadata = this._context.metadatas[item] || getDefaultFormState(schemas.schema, undefined, this.props.registry.definitions);
 			this.setState(state);
 		} else {
 			state.modalImgSrc = item;
+			state.modalMetadata = undefined;
 			this.setState(state);
 		}
 	}
@@ -111,12 +120,19 @@ export default class ImagesArrayField extends Component {
 	}
 
 	renderModal = () => {
-		return this.state.modalOpen ?
+		const {state} = this;
+		const options = this.props.uiSchema["ui:options"];
+		const metadataSchemas = options ? options.metadataSchemas : undefined;
+		return state.modalOpen ?
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={() => this.setState({modalOpen: false})}>
 				<Modal.Header closeButton={true} />
 				<Modal.Body>
 					<div className="laji-form image-modal-content">
-						<img src={this.state.modalImgSrc} />
+						<img src={state.modalImgSrc} />
+						{state.modalMetadata && metadataSchemas ? <Form
+							schema={metadataSchemas.schema}
+							uiSchema={metadataSchemas.uiSchema}
+							formData={state.modalMetadata} /> : null}
 					</div>
 				</Modal.Body>
 			</Modal> : null;
@@ -149,7 +165,7 @@ export default class ImagesArrayField extends Component {
 			onChange(update(formData,
 				response.reduce((updateObject, item, idx) => {
 						const id = item.id;
-						this._context[id] = dataURLs[idx];
+						this._context.dataURLs[id] = dataURLs[idx];
 						updateObject.$merge[formDataLength + idx] = id;
 						return updateObject;
 					}, {$merge: {}}))
