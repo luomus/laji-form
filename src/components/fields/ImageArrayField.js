@@ -106,7 +106,7 @@ export default class ImagesArrayField extends Component {
 			})
 		} else if (item.substr(0, 4) !== "data") {
 			state.modalImgSrc = this._context.dataURLs[item];
-			state.modalMetadata = this._context.metadatas[item] || getDefaultFormState(schemas.schema, undefined, this.props.registry.definitions);
+			state.modalMetadata = this._context.metadatas[item] || schemas ? getDefaultFormState(schemas.schema, undefined, this.props.registry.definitions) : undefined;
 			this.setState(state);
 		} else {
 			state.modalImgSrc = item;

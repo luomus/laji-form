@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import Button from "./Button";
 
 import Form from "./../overriddenComponents/Form";
@@ -84,6 +85,10 @@ export default class LajiForm extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
+		setInterval(() => {
+			this.pushBlockingLoader();
+			setTimeout(this.popBlockingLoader, 2000);
+		}, 4000)
 	}
 
 	componentWillUnmount() {
@@ -164,7 +169,12 @@ export default class LajiForm extends Component {
 					}} >
 					<Button type="submit">{translations.Submit}</Button>
 					</Form>
-				{this.state.blocking ? <div className="blocking-loader" /> : null}
+				<ReactCSSTransitionGroup
+						transitionName="blocking-loader-transition"
+						transitionEnterTimeout={200}
+						transitionLeaveTimeout={200}
+					>{this.state.blocking ? <div className="blocking-loader" /> : null}
+				</ReactCSSTransitionGroup>
 				</div>
 		)
 	}
