@@ -65,7 +65,7 @@ export default class AutoArrayField extends Component {
 		let data = this.props.formData || [];
 		const defaultData = getDefaultFormState(this.props.schema.items, undefined, registry.definitions);
 		const lastItem = data[data.length - 1];
-		if (hasData(lastItem) && !equals(lastItem, defaultData)) {
+		if (data.length === 0 || hasData(lastItem) && !equals(lastItem, defaultData)) {
 			data = update(data, {$push: [defaultData]});
 		}
 
