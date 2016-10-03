@@ -126,6 +126,7 @@ body .laji-form {
 }
 
 .laji-form .laji-form-map {
+	position: relative;
 	z-index: 1;
 	height: 600px;
 	margin-bottom: 10px;
