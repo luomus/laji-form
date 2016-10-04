@@ -85,10 +85,6 @@ export default class LajiForm extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		setInterval(() => {
-			this.pushBlockingLoader();
-			setTimeout(this.popBlockingLoader, 2000);
-		}, 4000)
 	}
 
 	componentWillUnmount() {
