@@ -28,23 +28,8 @@ export default class AutoArrayField extends Component {
 	}
 
 	getStatefromProps = (props) => {
-		let {idxsToKeys, keyCounter} = this.state;
-		const state = {};
-
-		const formDataLength = props.formData ? props.formData.length : 0;
-		if (!idxsToKeys) {
-			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
-			state.keyCounter = formDataLength + 1;
-		} else if (props.formData && formDataLength >= idxsToKeys.length) {
-			state.idxsToKeys = update(idxsToKeys,
-				{$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)}
-			);
-			state.keyCounter = keyCounter;
-		}
-
 		const options = props.uiSchema["ui:options"];
-		state.confirmDelete = !!options.confirmDelete;
-		return state;
+		return {confirmDelete: !!options.confirmDelete};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -76,13 +61,12 @@ export default class AutoArrayField extends Component {
 		data.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
-			let key = this.state.idxsToKeys[idx];
 
 			rows.push(
-				<div key={"row_" + key} className="auto-array-item" >
+				<div key={"row_" + idx} className="auto-array-item" >
 					<div className="auto-array-schema">
 						<SchemaField
-							key={key}
+							key={idx}
 							formData={item}
 							onChange={this.onChangeForIdx(idx)}
 							schema={this.props.schema.items}
@@ -150,7 +134,6 @@ export default class AutoArrayField extends Component {
 	}
 
 	onRemove = (idx) => {
-		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
 		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}));
 		this.onClearConfirm();
 	}
