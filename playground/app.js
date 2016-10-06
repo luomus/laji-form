@@ -8,6 +8,7 @@ import "./styles.css";
 
 const USE_LOCAL_SCHEMAS = true;
 
+console.log(process.env.NODE_ENV);
 const log = (type) => console.log.bind(console, type);
 
 let lang = "fi";
