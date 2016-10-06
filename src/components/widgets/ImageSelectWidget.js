@@ -128,6 +128,6 @@ export default class ImageSelectWidget extends Component {
 			;
 		}
 		this._context[enumName] = path;
-		return <Isvg key={enumName} src={path.svg}  cacheGetRequests={true}><img src={path.png} /></Isvg>
+		return <Isvg key={enumName} src={path.svg} cacheGetRequests={true}><img src={path.png} /></Isvg>
 	}
 }

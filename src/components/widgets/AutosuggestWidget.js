@@ -226,10 +226,6 @@ export default class AutoSuggestWidget extends Component {
 			e.preventDefault();
 			this.refs.autosuggestInput.input.blur();
 		}
-
-		if (this.enter) {
-			e.stopPropagation();
-		}
 	}
 
 	componentDidUpdate() {

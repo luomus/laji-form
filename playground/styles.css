@@ -76,7 +76,7 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .form-control, .laji-form .rw-input  {
+.laji-form .form-control, .laji-form .rw-input {
 	border-radius: 2px !important;
 }
 .laji-form .form-control:not(textarea), .laji-form .rw-input {
