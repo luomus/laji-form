@@ -297,7 +297,7 @@ export default class ScopeField extends Component {
 									if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
 									this.preventCloseDropdown = false;
 			           }}>
-				{this.renderFieldsButton()}
+				{this.renderFieldsButton("toggle")}
 				<Dropdown.Menu>
 					{list}
 				</Dropdown.Menu>
@@ -328,12 +328,12 @@ export default class ScopeField extends Component {
 		);
 	}
 
-	renderFieldsButton = () => {
+	renderFieldsButton = (bsRole) => {
 		const glyph = <Glyphicon glyph="cog" />;
 		const tooltip = <Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>{this.props.registry.translations.SelectMoreFields}</Tooltip>;
 
 		return (
-			<OverlayTrigger overlay={tooltip} placement="left">
+			<OverlayTrigger overlay={tooltip} placement="left" bsRole={bsRole} >
 				<Button className="glyph-button" onClick={this.onToggleAdditionals}>
 					{glyph}
 				</Button>

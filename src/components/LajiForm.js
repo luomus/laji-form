@@ -32,6 +32,7 @@ import HiddenField from "./fields/HiddenField";
 import InitiallyHiddenField from "./fields/InitiallyHiddenField";
 import ContextInjectionField from "./fields/ContextInjectionField";
 import ImageArrayField from "./fields/ImageArrayField";
+import FilteredEnumStringField from "./fields/FilteredEnumStringField";
 
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
@@ -39,18 +40,20 @@ import DateWidget from "./widgets/DateWidget";
 import TimeWidget from "./widgets/TimeWidget";
 import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
 import HiddenWidget from "./widgets/HiddenWidget";
-import FilteredSelectWidget from "./widgets/FilteredSelectWidget";
+import ImageSelectWidget from "./widgets/ImageSelectWidget";
 
 import ApiClient from "../ApiClient";
 import Context from "../Context";
 import translations from "../translations.js";
 
 const RC_SWITCH_CLASS = "rc-switch";
+const FOCUS_SINK_CLASS = "focus-sink";
 
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
-tabbableSelectors.push("." + RC_SWITCH_CLASS + ":not(." + RC_SWITCH_CLASS + "-disabled)");
-tabbableSelectors = tabbableSelectors.map(type => { return type + ":not(:disabled)" });
+tabbableSelectors.push(`.${RC_SWITCH_CLASS}:not(.${RC_SWITCH_CLASS}-disabled)`);
+tabbableSelectors.push(`.${FOCUS_SINK_CLASS}`);
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
 
 export default class LajiForm extends Component {
 	static propTypes = {
@@ -148,7 +151,8 @@ export default class LajiForm extends Component {
 							initiallyHidden: InitiallyHiddenField,
 							inputTransform: InputTransformerField,
 							injectFromContext: ContextInjectionField,
-							imageArray: ImageArrayField
+							imageArray: ImageArrayField,
+							filteredEnum: FilteredEnumStringField,
 						},
 						widgets: {
 							CheckboxWidget: CheckboxWidget,
@@ -157,7 +161,7 @@ export default class LajiForm extends Component {
 							separatedDateTime: SeparatedDateTimeWidget,
 							autosuggest: AutosuggestWidget,
 							hidden: HiddenWidget,
-							filteredSelect: FilteredSelectWidget
+							imageSelect: ImageSelectWidget
 						},
 						translations,
 						lang: this.props.lang,
@@ -178,7 +182,8 @@ export default class LajiForm extends Component {
 	canFocusNextInput = (inputElem) => {
 		function isTabbableInput(elem) {
 			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-			elem.className.includes(RC_SWITCH_CLASS));
+			elem.className.includes(RC_SWITCH_CLASS) ||
+			elem.className.includes(FOCUS_SINK_CLASS));
 		}
 
 		const formElem = ReactDOM.findDOMNode(this.refs.form);

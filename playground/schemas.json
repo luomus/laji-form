@@ -375,17 +375,30 @@
 													}
 												},
 												"recordBasis": {
-													"ui:widget": {
-														"component": "filteredSelect",
-														"options": {
-															"type": "whitelist",
-															"filter": [
-																"MY.recordBasisHumanObservationSeen",
-																"MY.recordBasisHumanObservationHeard",
-																"MY.recordBasisPreservedSpecimen",
-																"MY.recordBasisHumanObservationHandled",
-																"MY.recordBasisHumanObservationIndirect"
-															]
+													"ui:field": "filteredEnum",
+													"ui:options": {
+														"type": "whitelist",
+														"filter": [
+															"",
+															"MY.recordBasisHumanObservationSeen",
+															"MY.recordBasisHumanObservationHeard",
+															"MY.recordBasisPreservedSpecimen",
+															"MY.recordBasisHumanObservationHandled",
+															"MY.recordBasisHumanObservationIndirect"
+														],
+														"uiSchema": {
+															"ui:widget": {
+																"component": "imageSelect",
+																"options": {
+																	"images": {
+																		"MY.recordBasisHumanObservationSeen": "seen",
+																		"MY.recordBasisHumanObservationHeard": "heard",
+																		"MY.recordBasisPreservedSpecimen": "specimen",
+																		"MY.recordBasisHumanObservationHandled": "handled",
+																		"MY.recordBasisHumanObservationIndirect": "indirect"
+																	}
+																}
+															}
 														}
 													}
 												}
