@@ -16,7 +16,6 @@ const SCROLLING = "SCROLLING";
 const SQUEEZING = "SQUEEZING";
 const FIXED = "FIXED";
 
-
 const popupMappers = {
 	units: (schema, units, fieldName) => {
 		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
@@ -164,6 +163,7 @@ export default class MapArrayField extends Component {
 							let newFormData = update(this.props.formData, {$push: [newDataItem]});
 							newFormData = update(newFormData, {[this.state.activeIdx]: {[formDataTarget]: {$splice: [[idx, 1]]}}})
 							this.props.onChange(newFormData);
+							new Context().clearState();
 							this.stopDetach();
 					}
 				});

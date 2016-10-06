@@ -7,6 +7,7 @@ import { hasData } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col, Overlay, Popover, ButtonGroup, Glyphicon } from "react-bootstrap";
 import Button from "../Button";
+import Context from "../../Context";
 
 export default class AutoArrayField extends Component {
 	static propTypes = {
@@ -19,17 +20,18 @@ export default class AutoArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {stateKeyId: 0};
 		this.state = this.getStatefromProps(props);
+		new Context().addStateClearListener(this.clearState);
 	}
 
 	componentWillReceiveProps(props) {
 		this.setState(this.getStatefromProps(props))
 	}
 
-	getStatefromProps = (props) => {
+	getStatefromProps = (props, defaultState) => {
 		let {idxsToKeys, keyCounter} = this.state;
-		const state = {};
+		const state = defaultState || {};
 
 		const formDataLength = props.formData ? props.formData.length : 0;
 		if (!idxsToKeys) {
@@ -47,6 +49,10 @@ export default class AutoArrayField extends Component {
 		return state;
 	}
 
+	clearState = () => {
+		this.setState({stateKeyId: this.state.stateKeyId++});
+	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		return shouldRender(this, nextProps, nextState);
 	}
@@ -57,7 +63,7 @@ export default class AutoArrayField extends Component {
 				<TitleField title={this.props.schema.title || this.props.name}/>
 				{this.renderItems()}
 			</fieldset>
-		)
+		);
 	}
 
 	renderItems = () => {
@@ -79,10 +85,9 @@ export default class AutoArrayField extends Component {
 			let key = this.state.idxsToKeys[idx];
 
 			rows.push(
-				<div key={"row_" + key} className="auto-array-item" >
+				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="auto-array-item" >
 					<div className="auto-array-schema">
 						<SchemaField
-							key={key}
 							formData={item}
 							onChange={this.onChangeForIdx(idx)}
 							schema={this.props.schema.items}

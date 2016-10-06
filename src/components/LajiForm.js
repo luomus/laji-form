@@ -75,6 +75,9 @@ export default class LajiForm extends Component {
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
 		this._context.focusNextInput = this.focusNextInput;
+		this._context.stateClearListeners = [];
+		this._context.addStateClearListener = (fn) => this._context.stateClearListeners.push(fn);
+		this._context.clearState = (fn) => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
 		this.state = this.getStateFromProps(props);
 	}
 
