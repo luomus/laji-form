@@ -37,7 +37,6 @@ export default class LajiFormWrapper {
 }
 
 class LajiFormApp extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = props;

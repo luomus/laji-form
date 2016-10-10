@@ -15,6 +15,7 @@ export default class ImageSelectWidget extends Component {
 		super(props);
 		this.state = {open: false};
 		this._context = new Context("IMAGES");
+		this.staticImgPath = new Context().staticImgPath;
 	}
 
 	getValIdx = () => {
@@ -121,9 +122,10 @@ export default class ImageSelectWidget extends Component {
 		if (imgName === undefined) return fallback;
 
 		let path = this._context[enumName] || {};
+
 		try {
-			path.svg = require(`../../img/${imgName}.svg`);
-			path.png = require(`../../img/${imgName}.png`);
+			path.svg = `${this.staticImgPath}/${imgName}.svg`;
+			path.png = `${this.staticImgPath}/${imgName}.png`;
 		} catch (e) {
 			;
 		}
