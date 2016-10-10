@@ -27,6 +27,10 @@ export default class LajiFormWrapper {
 		this.app.refs.lajiform.popBlockingLoader();
 	}
 
+	clearState = () => {
+		this.app.clearState();
+	}
+
 	unmount = () => {
 		unmountComponentAtNode(this.rootElem);
 	}

@@ -254,4 +254,8 @@ export default class LajiForm extends Component {
 		}
 		this.setState({blocking: this._context.blockingLoaderCounter > 0})
 	}
+
+	clearState = () => {
+		this._context.clearState();
+	}
 }
