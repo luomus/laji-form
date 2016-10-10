@@ -21,7 +21,7 @@ export default class DateWidget extends Component {
 		/>);
 
 		return this.props.value ? dateTimeWidget :
-			(<div className="form-inline"><FormGroup>{dateTimeWidget}</FormGroup>
+			(<div><FormGroup>{dateTimeWidget}</FormGroup>
 				{showButtons ?
 					(<FormGroup>
 					<ButtonGroup>

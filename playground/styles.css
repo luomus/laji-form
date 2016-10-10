@@ -76,12 +76,17 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .form-control, .laji-form .rw-input {
+.laji-form .form-control, .laji-form .rw-datetimepicker {
 	border-radius: 2px !important;
+}
+.laji-form .form-control:not(textarea) {
+	height: 25px !important;
+}
+.laji-form .rw-input {
+	height: 23px !important;
 }
 .laji-form .form-control:not(textarea), .laji-form .rw-input {
 	padding: 0px 5px;
-	height: 25px !important;
 }
 .laji-form select {
 	padding: 3px 6px !important;
@@ -268,6 +273,11 @@ body .laji-form {
 	display: block;
 	margin: auto;
 }
+
+.laji-form .scope-field-search  .glyphicon {
+	top: -3px
+}
+
 .laji-form .list-group-item:first-child {
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
@@ -321,6 +331,7 @@ body .laji-form {
 	height: 120px;
 	float: left;
 	cursor: pointer;
+	display: table;
 }
 .laji-form .laji-form-images a {
 	width: inherit;
@@ -332,15 +343,27 @@ body .laji-form {
 }
 
 .laji-form .laji-form-drop-zone {
-	border: 2px dashed black;
+	border: 2px dashed #cacaca;
 	padding: 7px;
 }
 .laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
 	background-color: #d8fbc6;
+	border-color: #a7d490;
 }
 .laji-form .laji-form-images a:hover, .laji-form .laji-form-images a:active {
 	text-decoration: none;
 	color: #337ab7;
+}
+.laji-form .laji-form-drop-zone:hover span, .laji-form .laji-form-drop-zone.dragging span {
+	color: #a7d490;
+}
+.laji-form .laji-form-images .glyphicon {
+	font-size: 78px;
+	text-align: center;
+	vertical-align: middle;
+	display: inherit;
+	color: #dedede;
+	display: table-cell;
 }
 
 .laji-form.image-modal {

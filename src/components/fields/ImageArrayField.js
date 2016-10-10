@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
-import { Modal, Row, Col } from "react-bootstrap";
+import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
 import Form from "../../overriddenComponents/Form";
@@ -59,6 +59,8 @@ export default class ImagesArrayField extends Component {
 		const description = options.description;
 		const title = (schema.title === undefined) ? name : schema.title;
 
+		//<a href="#" onClick={e => e.preventDefault()}>{translations.DropOrSelectFiles}</a>
+
 		return (
 			<Row>
 				<Col xs={12}>
@@ -66,6 +68,7 @@ export default class ImagesArrayField extends Component {
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
+						<OverlayTrigger overlay={<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>{translations.DropOrSelectFiles}</Tooltip>}>
 							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 											  accept="image/*"
 											  onDragEnter={() => {this.setState({dragging: true})}}
@@ -73,7 +76,8 @@ export default class ImagesArrayField extends Component {
 											  onDrop={files => {
 													this.setState({dragging: false});
 													this.onFileFormChange(files)}
-												}><a href="#" onClick={e => e.preventDefault()}>{translations.DropOrSelectFiles}</a></DropZone>
+												}><Glyphicon glyph="camera" /></DropZone>
+						</OverlayTrigger>
 						{this.renderModal()}
 					</div>
 				</Col>
