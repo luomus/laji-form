@@ -6,6 +6,7 @@ import DescriptionField from "react-jsonschema-form/lib/components/fields/Descri
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
+import Alert from "../Alert";
 import Form from "../../overriddenComponents/Form";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 
@@ -77,6 +78,7 @@ export default class ImagesArrayField extends Component {
 												}><Glyphicon glyph="camera" /></DropZone>
 						</OverlayTrigger>
 						{this.renderModal()}
+						{this.renderAlert()}
 					</div>
 				</Col>
 			</Row>
@@ -140,6 +142,14 @@ export default class ImagesArrayField extends Component {
 			</Modal> : null;
 	}
 
+	renderAlert = () => {
+		console.log(this.state.alert);
+		return this.state.alert ? (
+			<Alert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
+				{this.props.registry.translations.PictureError}
+			</Alert>) : null;
+	}
+
 	onFileFormChange = (files) => {
 		const {onChange} = this.props;
 		let formData = this.props.formData || [];
@@ -175,15 +185,17 @@ export default class ImagesArrayField extends Component {
 
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
-			alert(this.props.registry.translations.PictureError);
-			onChange(update(this.props.formData,
-				dataURLs.reduce((updateObject, dataURL, idx) => {
-					updateObject.$splice[0].push(formDataLength + idx);
-					return updateObject;
-				}, {$splice: [[]]})
-			));
+			console.log("CATCH!");
+			this.setState({alert: () => {
+				onChange(update(this.props.formData,
+					dataURLs.reduce((updateObject, dataURL, idx) => {
+						updateObject.$splice[0].push(formDataLength + idx);
+						return updateObject;
+					}, {$splice: [[]]})
+				));
 
-			this.mainContext.popBlockingLoader();
+				this.mainContext.popBlockingLoader();
+			}})
 		});
 	}
 
