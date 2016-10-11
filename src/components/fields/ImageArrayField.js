@@ -143,7 +143,6 @@ export default class ImagesArrayField extends Component {
 	}
 
 	renderAlert = () => {
-		console.log(this.state.alert);
 		return this.state.alert ? (
 			<Alert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
 				{this.props.registry.translations.PictureError}
@@ -185,7 +184,6 @@ export default class ImagesArrayField extends Component {
 
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
-			console.log("CATCH!");
 			this.setState({alert: () => {
 				onChange(update(this.props.formData,
 					dataURLs.reduce((updateObject, dataURL, idx) => {
