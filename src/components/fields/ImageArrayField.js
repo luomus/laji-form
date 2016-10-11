@@ -75,7 +75,7 @@ export default class ImagesArrayField extends Component {
 											  onDrop={files => {
 													this.setState({dragging: false});
 													this.onFileFormChange(files)}
-												}><Glyphicon glyph="camera" /></DropZone>
+												}><a href="#" onClick={e => e.preventDefault()}><Glyphicon glyph="camera" /></a></DropZone>
 						</OverlayTrigger>
 						{this.renderModal()}
 						{this.renderAlert()}

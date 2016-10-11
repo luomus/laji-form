@@ -5,7 +5,7 @@ import Button from "./Button";
 export default class Alert extends Component {
 	render() {
 		return (
-			<Modal show={true}>
+			<Modal show={true} enforceFocus={true} onKeyDown={this.onKeyDown}>
 				<Modal.Body>
 					{this.props.children}
 				</Modal.Body>
@@ -14,5 +14,9 @@ export default class Alert extends Component {
 				</Modal.Footer>
 			</Modal>
 		);
+	}
+
+	onKeyDown = (e) => {
+		if (e.key === "Enter" || e.key === "Escape") this.props.onOk();
 	}
 }
