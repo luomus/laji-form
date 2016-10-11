@@ -12,7 +12,9 @@ export default class GridLayoutField extends Component {
 				colType: PropTypes.oneOf(["lg", "md", "sm", "xs"]),
 				maxItemsPerRow: PropTypes.number,
 				showLabels: PropTypes.boolean,
-				limitWidthAlways: PropTypes.boolean
+				limitWidthAlways: PropTypes.boolean,
+				minWidth: PropTypes.number,
+				maxWidth: PropTypes.number
 			})
 		}).isRequired
 	}
@@ -54,6 +56,7 @@ export default class GridLayoutField extends Component {
 		const limitWidth = (options && options.hasOwnProperty("limitWidthAlways")) ? options.limitWidthAlways : false;
 		const neverLimitWidth = (options && options.hasOwnProperty("neverLimitWidth")) ? options.neverLimitWidth : false;
 		const minWidth = (options && options.hasOwnProperty("minWidth")) ? options.minWidth : 2;
+		const maxWidthFromProps = (options && options.hasOwnProperty("maxWidth")) ? options.maxWidth : 12;
 
 		Object.keys(props.schema.properties).forEach(property => {
 			const type = props.schema.properties[property].type;
@@ -66,7 +69,10 @@ export default class GridLayoutField extends Component {
 			if (shouldHaveOwnRow) groupIdx++;
 		});
 
-		const maxWidth = parseInt(12 / groups.reduce((max, group) => (max !== undefined) ? Math.max(max, group.length) : group.length, 0));
+		const maxWidth = Math.min(
+			parseInt(12 / groups.reduce((max, group) => (max !== undefined) ? Math.max(max, group.length) : group.length, 0)),
+			maxWidthFromProps
+		);
 
 		return {...fieldProps, colType, groups, showLabels, limitWidth, neverLimitWidth, maxWidth, minWidth};
 	}

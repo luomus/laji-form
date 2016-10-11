@@ -59,8 +59,6 @@ export default class ImagesArrayField extends Component {
 		const description = options.description;
 		const title = (schema.title === undefined) ? name : schema.title;
 
-		//<a href="#" onClick={e => e.preventDefault()}>{translations.DropOrSelectFiles}</a>
-
 		return (
 			<Row>
 				<Col xs={12}>

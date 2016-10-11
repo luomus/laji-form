@@ -111,8 +111,7 @@
 									"ui:field": "grid",
 									"ui:options": {
 										"colType": "sm",
-										"limitWidthAlways": true,
-										"minWidth": 4
+										"maxWidth": 2
 									},
 									"dateBegin": {
 										"ui:widget": "separatedDateTime"
@@ -239,6 +238,9 @@
 												],
 												"uiSchema": {
 													"ui:field": "grid",
+													"ui:options": {
+														"maxWidth": 2
+													},
 													"dateBegin": {
 														"ui:widget": "separatedDateTime"
 													},
