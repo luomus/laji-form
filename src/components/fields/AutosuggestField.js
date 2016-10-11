@@ -99,7 +99,7 @@ export default class AutosuggestField extends Component {
 
 		const taxonID = (props.formData && props.formData.taxonID) ? props.formData.taxonID : undefined;
 		if (taxonID && (!this.state || !this.state.taxonID || this.state.taxonID !== taxonID)) {
-			new ApiClient().fetch("/taxonomy/" + taxonID).then(response => {
+			new ApiClient().fetch("/taxa/" + taxonID).then(response => {
 				if (this.mounted) this.setState({urlTxt: response.scientificName});
 			});
 		}
