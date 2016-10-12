@@ -17,14 +17,14 @@ const autosuggestSettings = {
 			const taxonID = that.props.formData.taxonID;
 			const tooltipElem = (
 				<Tooltip id={taxonID + "-tooltip"}>
-					{that.props.registry.translations.openSpeciedCard}
+					{that.props.formContext.translations.openSpeciedCard}
 				</Tooltip>
 			);
 			return (that.mounted && that.props.formData && taxonID) ?
 				(
 					<div>
 						<div className="meta-info-taxon">
-							<span className="text-success">{that.props.registry.translations.KnownSpeciesName}</span>
+							<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
 							{that.state.urlTxt ?
 								<div><OverlayTrigger overlay={tooltipElem}>
 									<a href={"http://tun.fi/" + taxonID}

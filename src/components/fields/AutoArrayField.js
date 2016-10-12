@@ -76,7 +76,7 @@ export default class AutoArrayField extends Component {
 		}
 
 		const {SchemaField} = this.props.registry.fields;
-		const {translations} = this.props.registry;
+		const {translations} = this.props.formContext;
 
 		let rows = [];
 		data.forEach((item, idx) => {

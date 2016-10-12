@@ -29,7 +29,7 @@ const lajiForm = new LajiForm({
 	lang,
 	onError: log("errors"),
 	rootElem: document.getElementById("app"),
-	staticImgPath: "/build/"
+	staticImgPath: "/build"
 });
 
 if (!USE_LOCAL_SCHEMAS) {

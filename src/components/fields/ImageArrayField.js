@@ -53,8 +53,8 @@ export default class ImagesArrayField extends Component {
 	}
 
 	render() {
-		const {schema, uiSchema, name, registry} = this.props;
-		const {translations} = registry;
+		const {schema, uiSchema, name, formContext} = this.props;
+		const {translations} = formContext;
 
 		const options = uiSchema["ui:options"] || {};
 		const description = options.description;
@@ -145,7 +145,7 @@ export default class ImagesArrayField extends Component {
 	renderAlert = () => {
 		return this.state.alert ? (
 			<Alert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
-				{this.props.registry.translations.PictureError}
+				{this.props.formContext.translations.PictureError}
 			</Alert>) : null;
 	}
 

@@ -7,7 +7,6 @@ import Isvg from "react-inlinesvg";
 
 export default class ImageSelectWidget extends Component {
 	static propTypes = {
-		component: PropTypes.string.isRequired,
 		options: PropTypes.object.isRequired
 	}
 
