@@ -77,27 +77,30 @@ export default class ImageSelectWidget extends Component {
 		const valueLabel = enumOptions.find(enumOption => enumOption.value === this.props.value).label;
 		const valueLabelElem = <span>{valueLabel}</span>;
 
-		const inputElem = (
+		const InputElem = () => {
+			return (
 				<div>
-					<div id={`${this.props.id}-focus-sink`} className={`form-control focus-sink ${this.state.open ? "focused" : ""}`}
-							 tabIndex="0" bsRole="toggle" />
-					<input id={this.props.id} style={{display: "none"}} />
+					<div id={`${this.props.id}-focus-sink`}
+							 className={`form-control focus-sink ${this.state.open ? "focused" : ""}`}
+							 tabIndex="0" />
+					<input id={this.props.id} style={{display: "none"}}/>
 					<div className="input-content img-value">
 						{this.props.value ? this.renderImg(this.props.value, valueLabelElem) : valueLabelElem}
 					</div>
 					<span className="caret input-content"/>
 				</div>
-		);
+			);
+		}
 
 		return (
 			<div className="laji-form-image-select" onKeyDown={this.onKeyDown}>
 					<Dropdown id={`${this.props.id}-dropdown`} open={this.state.open} onToggle={this.toggle} onClick={this.toggle}>
-						{(valueLabel !== undefined  && valueLabel !== "") ? <OverlayTrigger placement="bottom" overlay={
+						{(valueLabel !== undefined  && valueLabel !== "") ? <OverlayTrigger placement="bottom" bsRole="toggle" overlay={
 							<Tooltip id={`${this.props.id}-image-select`}>{valueLabel}</Tooltip>
 							}>
-							{inputElem}
-						</OverlayTrigger> : inputElem}
-					<Dropdown.Menu id={`${this.props.id}-image-select-menu`} tabIndex="0">
+							<InputElem />
+						</OverlayTrigger> : <InputElem bsRole="toggle" />}
+					<Dropdown.Menu bsRole="menu" id={`${this.props.id}-image-select-menu`} tabIndex="0">
 					{enumOptions.map(enumOption => {
 						const isActive = enumOption.value === this.props.value;
 							return (
