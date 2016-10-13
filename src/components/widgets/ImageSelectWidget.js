@@ -76,30 +76,14 @@ export default class ImageSelectWidget extends Component {
 
 		const valueLabel = enumOptions.find(enumOption => enumOption.value === this.props.value).label;
 		const valueLabelElem = <span>{valueLabel}</span>;
-
-		const InputElem = () => {
-			return (
-				<div>
-					<div id={`${this.props.id}-focus-sink`}
-							 className={`form-control focus-sink ${this.state.open ? "focused" : ""}`}
-							 tabIndex="0" />
-					<input id={this.props.id} style={{display: "none"}}/>
-					<div className="input-content img-value">
-						{this.props.value ? this.renderImg(this.props.value, valueLabelElem) : valueLabelElem}
-					</div>
-					<span className="caret input-content"/>
-				</div>
-			);
-		}
-
 		return (
 			<div className="laji-form-image-select" onKeyDown={this.onKeyDown}>
 					<Dropdown id={`${this.props.id}-dropdown`} open={this.state.open} onToggle={this.toggle} onClick={this.toggle}>
 						{(valueLabel !== undefined  && valueLabel !== "") ? <OverlayTrigger placement="bottom" bsRole="toggle" overlay={
 							<Tooltip id={`${this.props.id}-image-select`}>{valueLabel}</Tooltip>
 							}>
-							<InputElem />
-						</OverlayTrigger> : <InputElem bsRole="toggle" />}
+							<InputElem {...this.props} state={this.state} renderImg={this.renderImg} />
+						</OverlayTrigger> : <InputElem bsRole="toggle" {...this.props} state={this.state} renderImg={this.renderImg} />}
 					<Dropdown.Menu bsRole="menu" id={`${this.props.id}-image-select-menu`} tabIndex="0">
 					{enumOptions.map(enumOption => {
 						const isActive = enumOption.value === this.props.value;
@@ -133,5 +117,22 @@ export default class ImageSelectWidget extends Component {
 		}
 		this._context[enumName] = path;
 		return <Isvg key={enumName} src={path.svg} cacheGetRequests={true}><img src={path.png} /></Isvg>
+	}
+}
+
+class InputElem extends Component {
+	render() {
+		return (
+			<div>
+				<div id={`${this.props.id}-focus-sink`}
+						 className={`form-control focus-sink ${this.props.state.open ? "focused" : ""}`}
+						 tabIndex="0" />
+				<input id={this.props.id} style={{display: "none"}}/>
+				<div className="input-content img-value">
+					{this.props.value ? this.props.renderImg(this.props.value, this.props.valueLabelElem) : this.props.valueLabelElem}
+				</div>
+				<span className="caret input-content"/>
+			</div>
+		);
 	}
 }
