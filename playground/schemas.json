@@ -1126,8 +1126,7 @@
 						"taxonID": "MX.205515",
 						"taxonConfidence": "MY.taxonConfidenceSure",
 						"taste": "",
-						"smell": "",
-						"images": ["MM.33000"]
+						"smell": ""
 					}
 				],
 				"wgs84Geometry": {
