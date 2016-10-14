@@ -1,7 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = {
 	entry: [
@@ -17,8 +16,7 @@ module.exports = {
 	plugins: [
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
 		new webpack.DefinePlugin({'process.env.NODE_ENV': '"development"'}),
-		new CopyWebpackPlugin([{from: path.join(__dirname, "src", "img"), to: "."}]),
-		new DashboardPlugin({port: 8083})
+		new CopyWebpackPlugin([{from: path.join(__dirname, "src", "img"), to: "."}])
 	],
 	module: {
 		loaders: [

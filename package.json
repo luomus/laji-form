@@ -4,8 +4,8 @@
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "dist/laji-form.js",
   "scripts": {
-    "start": "webpack-dashboard -title laji-form.js webpack-dev-server --content-base playground playground/app.js --inline --port 8083",
-    "staging": "webpack-dashboard -title laji-form.js webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
+    "start": "webpack-dev-server --content-base playground playground/app.js --inline --port 8083",
+    "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
     "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "publish-to-npm": "npm version patch && git push && npm run build:dist && npm run build:lib && npm publish"
@@ -63,7 +63,6 @@
     "url-loader": "^0.5.7",
     "util": "^0.10.3",
     "webpack": "^1.13.2",
-    "webpack-dashboard": "^0.2.0",
     "webpack-dev-server": "^1.16.2"
   }
 }
