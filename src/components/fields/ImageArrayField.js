@@ -6,6 +6,7 @@ import DescriptionField from "react-jsonschema-form/lib/components/fields/Descri
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
+import Label from "../Label";
 import Alert from "../Alert";
 import Form from "../../overriddenComponents/Form";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
@@ -63,7 +64,7 @@ export default class ImagesArrayField extends Component {
 		return (
 			<Row>
 				<Col xs={12}>
-					<label>{title}</label>
+					<Label label={title} id={this.props.idSchema.$id}/>
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
