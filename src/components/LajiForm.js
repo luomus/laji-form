@@ -255,10 +255,23 @@ export default class LajiForm extends Component {
 	}
 
 	onKeyDown = (e) => {
+		function isDescendant(parent, child) {
+			var node = child.parentNode;
+			while (node != null) {
+				if (node == parent) {
+					return true;
+				}
+				node = node.parentNode;
+			}
+			return false;
+		}
+
 		if (this._context.blockingLoaderCounter > 0) {
 			e.preventDefault();
 			return;
 		}
+
+		if (isDescendant(document.querySelector(".laji-map"), document.activeElement)) return;
 
 		if (e.key == "Enter" && this.canFocusNextInput(e.target)) {
 			e.preventDefault();
