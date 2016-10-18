@@ -185,19 +185,12 @@ body .laji-form {
 .laji-form .glyph-button {
 	width: 22px;
 	height: 22px;
-	line-height: 5px;
 	font-size: 11px;
-	padding: 5px;
+	padding: 4px 5px;
 	margin: 2px;
 }
 .laji-form .laji-form-scope-field-glyph {
 	line-height: 9px;
-}
-.laji-form .glyphicon {
-	top: 0;
-}
-.laji-form .vector-marker .glyphicon {
-	top: 8px;
 }
 
 .laji-form label strong:not(:empty)+.rc-switch {

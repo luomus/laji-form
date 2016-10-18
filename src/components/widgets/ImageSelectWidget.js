@@ -75,25 +75,24 @@ export default class ImageSelectWidget extends Component {
 		const {enumOptions} = options;
 
 		const valueLabel = enumOptions.find(enumOption => enumOption.value === this.props.value).label;
-		const valueLabelElem = <span>{valueLabel}</span>;
 		return (
 			<div className="laji-form-image-select" onKeyDown={this.onKeyDown}>
 					<Dropdown id={`${this.props.id}-dropdown`} open={this.state.open} onToggle={this.toggle} onClick={this.toggle}>
 						{(valueLabel !== undefined  && valueLabel !== "") ? <OverlayTrigger placement="bottom" bsRole="toggle" overlay={
-							<Tooltip id={`${this.props.id}-image-select`}>{valueLabel}</Tooltip>
+								<Tooltip id={`${this.props.id}-image-select`}>{valueLabel}</Tooltip>
 							}>
-							<InputElem {...this.props} state={this.state} renderImg={this.renderImg} />
+							<span><InputElem {...this.props} state={this.state} renderImg={this.renderImg} /></span>
 						</OverlayTrigger> : <InputElem bsRole="toggle" {...this.props} state={this.state} renderImg={this.renderImg} />}
 					<Dropdown.Menu bsRole="menu" id={`${this.props.id}-image-select-menu`} tabIndex="0">
 					{enumOptions.map(enumOption => {
 						const isActive = enumOption.value === this.props.value;
 							return (
-							<MenuItem key={`${this.props.id}-enum-option-${enumOption.value}`}
-							          id={isActive ? `${this.props.id}-active` : null}
-							          onClick={() => this.props.onChange(enumOption.value)}
-							          active={isActive}>
-								{this.renderImg(enumOption.value, null)}<span className="image-select-label">{enumOption.label}</span>
-							</MenuItem>
+								<MenuItem key={`${this.props.id}-enum-option-${enumOption.value}`}
+													id={isActive ? `${this.props.id}-active` : null}
+													onClick={() => this.props.onChange(enumOption.value)}
+													active={isActive}>
+									{this.renderImg(enumOption.value, null)}<span className="image-select-label">{enumOption.label}</span>
+								</MenuItem>
 							);
 						}
 					)}
