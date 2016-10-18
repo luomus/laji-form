@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import validate from "../validation";
 import Button from "./Button";
 import Label from "./Label";
 
@@ -199,16 +200,17 @@ export default class LajiForm extends Component {
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext
 					}}
-					>
-					<Button type="submit">{translations.Submit}</Button>
-					</Form>
-				<ReactCSSTransitionGroup
-						transitionName="blocking-loader-transition"
-						transitionEnterTimeout={200}
-						transitionLeaveTimeout={200}
-					>{this.state.blocking ? <div className="blocking-loader" /> : null}
-				</ReactCSSTransitionGroup>
-				</div>
+				  validate={validate(this.props.validators)}
+				>
+				<Button type="submit">{translations.Submit}</Button>
+			</Form>
+			<ReactCSSTransitionGroup
+					transitionName="blocking-loader-transition"
+					transitionEnterTimeout={200}
+					transitionLeaveTimeout={200}
+				>{this.state.blocking ? <div className="blocking-loader" /> : null}
+			</ReactCSSTransitionGroup>
+		</div>
 		)
 	}
 
