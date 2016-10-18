@@ -168,6 +168,7 @@ class ArrayField extends Component {
 		const {definitions, fields} = this.props.registry;
 		const {TitleField, DescriptionField} = fields;
 		const itemsSchema = retrieveSchema(schema.items, definitions);
+		const sortable = uiSchema["ui:options"] ? uiSchema["ui:options"].sortable : true;
 
 		return (
 			<fieldset
@@ -189,8 +190,8 @@ class ArrayField extends Component {
 						const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
 						return this.renderArrayFieldItem({
 							index,
-							canMoveUp: index > 0,
-							canMoveDown: index < items.length - 1,
+							canMoveUp: sortable && index > 0,
+							canMoveDown: sortable && index < items.length - 1,
 							itemSchema: itemsSchema,
 							itemIdSchema,
 							itemErrorSchema,
@@ -264,6 +265,7 @@ class ArrayField extends Component {
 			retrieveSchema(item, definitions));
 		const additionalSchema = allowAdditionalItems(schema) ?
 			retrieveSchema(schema.additionalItems, definitions) : null;
+		const sortable = uiSchema["ui:options"] ? uiSchema["ui:options"].sortable : true;
 
 		if (!items || items.length < itemSchemas.length) {
 			// to make sure at least all fixed items are generated
@@ -296,8 +298,8 @@ class ArrayField extends Component {
 						return this.renderArrayFieldItem({
 							index,
 							removable: additional,
-							canMoveUp: index >= itemSchemas.length + 1,
-							canMoveDown: additional && index < items.length - 1,
+							canMoveUp: sortable && index >= itemSchemas.length + 1,
+							canMoveDown: sortable && additional && index < items.length - 1,
 							itemSchema,
 							itemData: item,
 							itemUiSchema,

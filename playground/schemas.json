@@ -204,6 +204,9 @@
 									],
 									"uiSchema": {
 										"habitat": {
+											"ui:options": {
+												"sortable": false
+											},
 											"items": {
 												"ui:field": "injectFromContext",
 												"ui:options": {
