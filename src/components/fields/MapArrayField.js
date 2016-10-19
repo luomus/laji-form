@@ -345,8 +345,6 @@ export default class MapArrayField extends Component {
 							drawData={{featureCollection: {type: "featureCollection", features: this.state.data},
 							           getPopup: this.getPopup}}
 							activeIdx={this.state.activeIdx}
-							center={[62.3, 25]}
-							zoom={3}
 							onChange={this.onMapChange}
 							onInitializeDrawLayer={this.onInitializeLayer}
 							lang={this.props.formContext.lang}
