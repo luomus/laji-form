@@ -199,9 +199,6 @@
 										"images",
 										"notes"
 									],
-									"strictFields": [
-										"eventTime"
-									],
 									"uiSchema": {
 										"habitat": {
 											"ui:options": {
@@ -1112,6 +1109,7 @@
 		"gatherings": [
 			{
 				"predominantTree": "",
+				"dateBegin": "2015-12-01",
 				"units": [
 					{
 						"recordBasis": "MY.recordBasisHumanObservationSeen",

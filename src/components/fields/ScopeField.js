@@ -6,7 +6,7 @@ import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import Button from "../Button";
-import { propertyHasData } from "../../utils";
+import { propertyHasData, hasData } from "../../utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -38,8 +38,6 @@ const scopeFieldSettings = {
  *    defName: <fieldScope>,
  *    defname2: ...
  *  },
- *  strictFields: [<string>] (array of field names that should not be shown even if
- *                            they have value, if they are not in a field scope)
  * }
  *
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
@@ -54,7 +52,6 @@ export default class ScopeField extends Component {
 				fieldScopes: PropTypes.object,
 				fields: PropTypes.arrayOf(PropTypes.string),
 				definitions: PropTypes.object,
-				strictFields: PropTypes.arrayOf(PropTypes.string),
 				uiSchema: PropTypes.object
 			}).isRequired
 		}).isRequired
@@ -125,8 +122,6 @@ export default class ScopeField extends Component {
 
 		const definitions = options.definitions;
 
-		function isEmpty(val) { return val === undefined || val === null || val === "" }
-
 		function addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue) {
 			let fieldScope = scopes[fieldSelector][fieldSelectorValue];
 			if (!fieldScope) return;
@@ -160,12 +155,12 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
-				if (fieldSelectorValues.length > 0 && !isEmpty(fieldSelectorValues[0])) {
+				if (fieldSelectorValues.length > 0 && hasData(fieldSelectorValues[0])) {
 					fieldSelectorValues = update(fieldSelectorValues, {$push: ["+"]});
 				}
 				fieldSelectorValues = update(fieldSelectorValues, {$push: ["*"]});
 				fieldSelectorValues.forEach(fieldSelectorValue => {
-					if (!isEmpty(fieldSelectorValue)) {
+					if (hasData(fieldSelectorValue)) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
 					}
 				});
@@ -187,12 +182,8 @@ export default class ScopeField extends Component {
 		}
 
 		if (props.formData) {
-			let dictionarifiedStrictFields = {};
-			if (options.strictFields) options.strictFields.forEach(field => { dictionarifiedStrictFields[field] = true });
-
 			Object.keys(formData).forEach((property) => {
-				if (dictionarifiedStrictFields[property] ||
-				    isEmpty(formData[property]) ||
+				if (!propertyHasData(property, formData) ||
 				    (formData.hasOwnProperty(property) &&
 				     schema.properties.hasOwnProperty(property) &&
 				     formData[property] === schema.properties[property].default)) return;
@@ -358,12 +349,9 @@ export default class ScopeField extends Component {
 	}
 
 	propertyIsIncluded = (property) => {
-		const strictFields = this.props.uiSchema["ui:options"].strictFields || [];
 		const {additionalFields} = this.state;
 
-		const isStrict = strictFields.includes(property);
-		const isIncluded = ((additionalFields[property] && !isStrict) ||
-		additionalFields[property] === true || (this.state.schema.properties[property] && !isStrict));
+		const isIncluded = (additionalFields[property] === true || this.state.schema.properties[property]);
 
 		return isIncluded;
 	}

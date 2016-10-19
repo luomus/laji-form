@@ -21,7 +21,10 @@ export function hasData(formData) {
 	if (!formData) return false;
 	else {
 		if (!Array.isArray(formData)) formData = [formData];
-		return formData.some(data => Object.keys(data).some(_field => propertyHasData(_field, data)));
+		return formData.some(data => {
+			if (typeof data === "object") return Object.keys(data).some(_field => propertyHasData(_field, data));
+			else return (formData !== undefined && formData !== null);
+		});
 	}
 }
 
