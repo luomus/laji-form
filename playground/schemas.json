@@ -29,7 +29,6 @@
 		},
 		"gatheringEvent": {
 			"ui:field": "nested",
-			"classNames": "panel panel-default panel-body",
 			"ui:options": {
 				"nests": {
 					"legWrapper": {
