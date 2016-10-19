@@ -28,7 +28,7 @@ export default class LajiFormWrapper {
 	}
 
 	clearState = () => {
-		this.app.clearState();
+		this.app.refs.lajiform.clearState();
 	}
 
 	unmount = () => {
