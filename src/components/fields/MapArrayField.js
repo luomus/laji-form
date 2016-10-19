@@ -320,7 +320,7 @@ export default class MapArrayField extends Component {
 		const scrollMode = (state !== SCROLLING && !this.state.detachUnitMode);
 
 		return (<div>
-			<TitleField title={title} />
+			{(title !== "" && title !== undefined) ? <TitleField title={title} /> : null}
 			{description !== undefined ? <DescriptionField description={description} /> : null}
 			{paginationEnabled ? <Pagination
 				className="container"
