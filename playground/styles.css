@@ -284,6 +284,10 @@ body .laji-form {
 	white-space: nowrap;
 }
 
+.laji-form .dropdown-menu>.disabled>a {
+	color: #d4d4d4;
+}
+
 .laji-form .out-of-view {
 	position: fixed;
 	width: 100%;
