@@ -8,7 +8,6 @@ import "./styles.css";
 
 const USE_LOCAL_SCHEMAS = true;
 
-console.log(process.env.NODE_ENV);
 const log = (type) => console.log.bind(console, type);
 
 let lang = "fi";
@@ -29,7 +28,7 @@ const lajiForm = new LajiForm({
 	lang,
 	onError: log("errors"),
 	rootElem: document.getElementById("app"),
-	staticImgPath: "/build/"
+	staticImgPath: "/build"
 });
 
 if (!USE_LOCAL_SCHEMAS) {

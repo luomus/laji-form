@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import validate from "../validation";
 import Button from "./Button";
+import Label from "./Label";
 
 import Form from "./../overriddenComponents/Form";
 import SchemaField from "./../overriddenComponents/fields/SchemaField";
@@ -55,6 +57,32 @@ tabbableSelectors.push(`.${RC_SWITCH_CLASS}:not(.${RC_SWITCH_CLASS}-disabled)`);
 tabbableSelectors.push(`.${FOCUS_SINK_CLASS}`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
 
+function FieldTemplate(props) {
+	const {
+		id,
+		classNames,
+		label,
+		children,
+		errors,
+		help,
+		description,
+		hidden,
+		required,
+		displayLabel,
+		} = props;
+	if (hidden) {
+		return children;
+	}
+	return (
+		<div className={classNames}>
+			{label && displayLabel ? <Label label={label} help={help} required={required} id={id} /> : null}
+			{displayLabel && description ? description : null}
+			{children}
+			{errors}
+		</div>
+	);
+}
+
 export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
@@ -102,7 +130,7 @@ export default class LajiForm extends Component {
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
-		let dictionaries = {}
+		let dictionaries = {};
 		for (let word in translations) {
 			for (let lang in translations[word]) {
 				const translation = translations[word][lang];
@@ -120,66 +148,69 @@ export default class LajiForm extends Component {
 
 	render() {
 		const {translations} = this.state;
-		return  (
+		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form">
 				<Form
 					{...this.props}
 					ref="form"
 					onChange={this.onChange}
-					registry={{
-						fields: {
-							SchemaField: SchemaField,
-							ArrayField: ArrayField,
-							ObjectField: ObjectField,
-							BooleanField: BooleanField,
-							StringField: StringField,
-							nested: NestField,
-							unitTripreport: ArrayBulkField,
-							bulkArray: ArrayBulkField,
-							scoped: ScopeField,
-							tree: SelectTreeField,
-							horizontal: GridLayoutField,
-							grid: GridLayoutField,
-							table: TableField,
-							inject: InjectField,
-							injectDefaultValue: InjectDefaultValueField,
-							expandable: AdditionalsExpanderField,
-							arrayCombiner: ArrayCombinerField,
-							dependentBoolean: DependentBooleanField,
-							dependentDisable: DependentDisableField,
-							mapArray: MapArrayField,
-							autoArray: AutoArrayField,
-							copyValuesArray: CopyValuesArrayField,
-							autosuggest: AutosuggestField,
-							hidden: HiddenField,
-							initiallyHidden: InitiallyHiddenField,
-							inputTransform: InputTransformerField,
-							injectFromContext: ContextInjectionField,
-							imageArray: ImageArrayField,
-							filteredEnum: FilteredEnumStringField,
-						},
-						widgets: {
-							CheckboxWidget: CheckboxWidget,
-							dateTime: DateTimeWidget, date: DateWidget,
-							time: TimeWidget,
-							separatedDateTime: SeparatedDateTimeWidget,
-							autosuggest: AutosuggestWidget,
-							hidden: HiddenWidget,
-							imageSelect: ImageSelectWidget
-						},
+					fields={{
+						SchemaField: SchemaField,
+						ArrayField: ArrayField,
+						ObjectField: ObjectField,
+						BooleanField: BooleanField,
+						StringField: StringField,
+						nested: NestField,
+						unitTripreport: ArrayBulkField,
+						bulkArray: ArrayBulkField,
+						scoped: ScopeField,
+						tree: SelectTreeField,
+						horizontal: GridLayoutField,
+						grid: GridLayoutField,
+						table: TableField,
+						inject: InjectField,
+						injectDefaultValue: InjectDefaultValueField,
+						expandable: AdditionalsExpanderField,
+						arrayCombiner: ArrayCombinerField,
+						dependentBoolean: DependentBooleanField,
+						dependentDisable: DependentDisableField,
+						mapArray: MapArrayField,
+						autoArray: AutoArrayField,
+						copyValuesArray: CopyValuesArrayField,
+						autosuggest: AutosuggestField,
+						hidden: HiddenField,
+						initiallyHidden: InitiallyHiddenField,
+						inputTransform: InputTransformerField,
+						injectFromContext: ContextInjectionField,
+						imageArray: ImageArrayField,
+						filteredEnum: FilteredEnumStringField,
+					}}
+					widgets={{
+						CheckboxWidget: CheckboxWidget,
+						dateTime: DateTimeWidget, date: DateWidget,
+						time: TimeWidget,
+						separatedDateTime: SeparatedDateTimeWidget,
+						autosuggest: AutosuggestWidget,
+						hidden: HiddenWidget,
+						imageSelect: ImageSelectWidget
+					}}
+					FieldTemplate={FieldTemplate}
+					formContext={{
 						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext
-					}} >
-					<Button type="submit">{translations.Submit}</Button>
-					</Form>
-				<ReactCSSTransitionGroup
-						transitionName="blocking-loader-transition"
-						transitionEnterTimeout={200}
-						transitionLeaveTimeout={200}
-					>{this.state.blocking ? <div className="blocking-loader" /> : null}
-				</ReactCSSTransitionGroup>
-				</div>
+					}}
+				  validate={validate(this.props.validators)}
+				>
+				<Button type="submit">{translations.Submit}</Button>
+			</Form>
+			<ReactCSSTransitionGroup
+					transitionName="blocking-loader-transition"
+					transitionEnterTimeout={200}
+					transitionLeaveTimeout={200}
+				>{this.state.blocking ? <div className="blocking-loader" /> : null}
+			</ReactCSSTransitionGroup>
+		</div>
 		)
 	}
 
@@ -226,10 +257,23 @@ export default class LajiForm extends Component {
 	}
 
 	onKeyDown = (e) => {
+		function isDescendant(parent, child) {
+			var node = child.parentNode;
+			while (node != null) {
+				if (node == parent) {
+					return true;
+				}
+				node = node.parentNode;
+			}
+			return false;
+		}
+
 		if (this._context.blockingLoaderCounter > 0) {
 			e.preventDefault();
 			return;
 		}
+
+		if (isDescendant(document.querySelector(".laji-map"), document.activeElement)) return;
 
 		if (e.key == "Enter" && this.canFocusNextInput(e.target)) {
 			e.preventDefault();

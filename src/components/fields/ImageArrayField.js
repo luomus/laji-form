@@ -3,9 +3,11 @@ import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
-import { Modal, Row, Col } from "react-bootstrap";
+import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
+import Label from "../Label";
+import Alert from "../Alert";
 import Form from "../../overriddenComponents/Form";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 
@@ -52,8 +54,8 @@ export default class ImagesArrayField extends Component {
 	}
 
 	render() {
-		const {schema, uiSchema, name, registry} = this.props;
-		const {translations} = registry;
+		const {schema, uiSchema, name, formContext} = this.props;
+		const {translations} = formContext;
 
 		const options = uiSchema["ui:options"] || {};
 		const description = options.description;
@@ -62,10 +64,11 @@ export default class ImagesArrayField extends Component {
 		return (
 			<Row>
 				<Col xs={12}>
-					<label>{title}</label>
+					<Label label={title} id={this.props.idSchema.$id}/>
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
+						<OverlayTrigger overlay={<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>{translations.DropOrSelectFiles}</Tooltip>}>
 							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 											  accept="image/*"
 											  onDragEnter={() => {this.setState({dragging: true})}}
@@ -73,8 +76,10 @@ export default class ImagesArrayField extends Component {
 											  onDrop={files => {
 													this.setState({dragging: false});
 													this.onFileFormChange(files)}
-												}><a href="#" onClick={e => e.preventDefault()}>{translations.DropOrSelectFiles}</a></DropZone>
+												}><a href="#" onClick={e => e.preventDefault()}><Glyphicon glyph="camera" /></a></DropZone>
+						</OverlayTrigger>
 						{this.renderModal()}
+						{this.renderAlert()}
 					</div>
 				</Col>
 			</Row>
@@ -138,6 +143,13 @@ export default class ImagesArrayField extends Component {
 			</Modal> : null;
 	}
 
+	renderAlert = () => {
+		return this.state.alert ? (
+			<Alert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
+				{this.props.formContext.translations.PictureError}
+			</Alert>) : null;
+	}
+
 	onFileFormChange = (files) => {
 		const {onChange} = this.props;
 		let formData = this.props.formData || [];
@@ -173,15 +185,16 @@ export default class ImagesArrayField extends Component {
 
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
-			alert(this.props.registry.translations.PictureError);
-			onChange(update(this.props.formData,
-				dataURLs.reduce((updateObject, dataURL, idx) => {
-					updateObject.$splice[0].push(formDataLength + idx);
-					return updateObject;
-				}, {$splice: [[]]})
-			));
+			this.setState({alert: () => {
+				onChange(update(this.props.formData,
+					dataURLs.reduce((updateObject, dataURL, idx) => {
+						updateObject.$splice[0].push(formDataLength + idx);
+						return updateObject;
+					}, {$splice: [[]]})
+				));
 
-			this.mainContext.popBlockingLoader();
+				this.mainContext.popBlockingLoader();
+			}})
 		});
 	}
 

@@ -306,7 +306,7 @@ export default class ScopeField extends Component {
 	}
 
 	renderFieldsModal = (list) => {
-		const {translations} = this.props.registry;
+		const {translations} = this.props.formContext;
 
 		return (
 			<div>
@@ -330,7 +330,7 @@ export default class ScopeField extends Component {
 
 	renderFieldsButton = (bsRole) => {
 		const glyph = <Glyphicon glyph="cog" />;
-		const tooltip = <Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>{this.props.registry.translations.SelectMoreFields}</Tooltip>;
+		const tooltip = <Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>{this.props.formContext.translations.SelectMoreFields}</Tooltip>;
 
 		return (
 			<OverlayTrigger overlay={tooltip} placement="left" bsRole={bsRole} >

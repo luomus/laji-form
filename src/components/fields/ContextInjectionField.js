@@ -31,7 +31,7 @@ export default class ContextInjectionField extends Component {
 
 		for (let injectionPath in injections) {
 			uiSchema = merge(uiSchema,
-				getUpdateObjectFromPath(injectionPath, injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.registry.uiSchemaContext))
+				getUpdateObjectFromPath(injectionPath, injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.formContext.uiSchemaContext))
 			);
 		}
 

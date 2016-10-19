@@ -24,8 +24,8 @@ export default class DateTimeWidget extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let localeFormats = moment().locale(props.registry.lang)._locale._longDateFormat;
-		const {translations} = props.registry;
+		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
+		const {translations} = props.formContext;
 
 		let format = "";
 		let placeholder = "";
@@ -65,7 +65,7 @@ export default class DateTimeWidget extends Component {
 			}}
 			value={value ? moment(value).toDate() : null}
 			readOnly={readonly}
-			culture={this.props.registry.lang}
+			culture={this.props.formContext.lang}
 		/>);
 	}
 }

@@ -17,10 +17,10 @@ const autosuggestSettings = {
 			return text;
 		},
 		renderUnsuggestedMetaInfo: that => {
-			return <span className="text-danger">{that.props.registry.translations.UnknownSpeciesName}</span>
+			return <span className="text-danger">{that.props.formContext.translations.UnknownSpeciesName}</span>
 		},
 		renderMetaInfoListItemAdditional: (that, suggestion) => {
-			const tooltipElem = <Tooltip id={suggestion.key + "-tooltip"}>{that.props.registry.translations.openSpeciedCard}</Tooltip>;
+			const tooltipElem = <Tooltip id={suggestion.key + "-tooltip"}>{that.props.formContext.translations.openSpeciedCard}</Tooltip>;
 			return (
 				<OverlayTrigger overlay={tooltipElem}>
 					<a href={"http://tun.fi/" + suggestion.key} target="_blank">({suggestion.payload.scientificName})</a>
@@ -34,7 +34,7 @@ const autosuggestSettings = {
 			return suggestion.value;
 		},
 		renderUnsuggestedMetaInfo: that => {
-			return <span className="text-danger">{that.props.registry.translations.UnknownName}</span>
+			return <span className="text-danger">{that.props.formContext.translations.UnknownName}</span>
 		},
 		convertInputValue: that => {
 			let inputValue = that.props.value;
@@ -310,7 +310,7 @@ export default class AutoSuggestWidget extends Component {
 	renderInprogressMetaInfo = () => {
 		if (this.state.isLoading) return null;
 
-		const translations = this.props.registry.translations;
+		const translations = this.props.formContext.translations;
 
 		const suggestionsList = (this.state.oldSuggestions && this.state.oldSuggestions.length) ?
 			(
@@ -324,7 +324,7 @@ export default class AutoSuggestWidget extends Component {
 				</ul>
 			) : null;
 		const fixButton = <Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button>;
-		const continueButton = <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.registry.translations.useUnknownName}</Button>;
+		const continueButton = <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.formContext.translations.useUnknownName}</Button>;
 		return (
 			<div className="text-danger">
 				{suggestionsList ? translations.SelectOneOfTheFollowing : fixButton} <span>{translations.or}</span> {continueButton}

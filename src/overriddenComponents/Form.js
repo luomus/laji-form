@@ -41,9 +41,9 @@ export default class Form extends Component {
 		const formData = getDefaultFormState(schema, props.formData, definitions);
 		const {errors, errorSchema} = mustValidate ?
 			this.validate(formData, schema) : {
-			errors: state.errors || [],
-			errorSchema: state.errorSchema || {}
-		};
+				errors: state.errors || [],
+				errorSchema: state.errorSchema || {}
+			};
 		const idSchema = toIdSchema(schema, uiSchema["ui:rootFieldId"], definitions);
 		return {
 			status: "initial",
@@ -124,19 +124,16 @@ export default class Form extends Component {
 		const fields = Object.assign({
 			SchemaField: _SchemaField,
 			TitleField: _TitleField,
-			DescriptionField: _DescriptionField
-		}, ((this.props.registry ? this.props.registry.fields : {}) || {}));
-		let registry = {fields, widgets: {}, definitions: {}};
-		for (let property in this.props.registry) {
-			if (property === "fields") continue;
-			registry[property] = this.props.registry[property];
-		}
-		return  registry;
-		//return {
-		//	fields,
-		//	widgets: this.props.widgets || {},
-		//	definitions: this.props.schema.definitions || {},
-		//};
+			DescriptionField: _DescriptionField,
+		}, this.props.fields);
+		let registry = {
+			fields,
+			FieldTemplate: this.props.FieldTemplate,
+			widgets: this.props.widgets || {},
+			definitions: this.props.schema.definitions || {},
+			formContext: this.props.formContext || {},
+		};
+		return registry;
 	}
 
 	render() {
@@ -152,7 +149,7 @@ export default class Form extends Component {
 			autocomplete,
 			enctype,
 			acceptcharset
-			} = this.props;
+		} = this.props;
 
 		const {schema, uiSchema, formData, errorSchema, idSchema} = this.state;
 		const registry = this.getRegistry();
@@ -160,15 +157,15 @@ export default class Form extends Component {
 
 		return (
 			<form className={className ? className : "rjsf"}
-			      id={id}
-			      name={name}
-			      method={method}
-			      target={target}
-			      action={action}
-			      autoComplete={autocomplete}
-			      encType={enctype}
-			      acceptCharset={acceptcharset}
-			      onSubmit={this.onSubmit}>
+					id={id}
+					name={name}
+					method={method}
+					target={target}
+					action={action}
+					autoComplete={autocomplete}
+					encType={enctype}
+					acceptCharset={acceptcharset}
+					onSubmit={this.onSubmit}>
 				{this.renderErrors()}
 				<_SchemaField
 					schema={schema}
@@ -193,13 +190,12 @@ if (process.env.NODE_ENV !== "production") {
 		schema: PropTypes.object.isRequired,
 		uiSchema: PropTypes.object,
 		formData: PropTypes.any,
-		registry: PropTypes.shape({
-			widgets: PropTypes.objectOf(PropTypes.oneOfType([
-				PropTypes.func,
-				PropTypes.object,
-			])),
-			fields: PropTypes.objectOf(PropTypes.func)
-		}),
+		widgets: PropTypes.objectOf(PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.object,
+		])),
+		fields: PropTypes.objectOf(PropTypes.func),
+		FieldTemplate: PropTypes.func,
 		onChange: PropTypes.func,
 		onError: PropTypes.func,
 		showErrorList: PropTypes.bool,
@@ -216,5 +212,6 @@ if (process.env.NODE_ENV !== "production") {
 		noValidate: PropTypes.bool,
 		liveValidate: PropTypes.bool,
 		safeRenderCompletion: PropTypes.bool,
+		formContext: PropTypes.object,
 	};
 }

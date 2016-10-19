@@ -21,14 +21,14 @@ export default class DateWidget extends Component {
 		/>);
 
 		return this.props.value ? dateTimeWidget :
-			(<div className="form-inline"><FormGroup>{dateTimeWidget}</FormGroup>
-				{showButtons ?
-					(<FormGroup>
-					<ButtonGroup>
-							<Button onClick={this.setToday}>{this.props.registry.translations.Today}</Button>
-							<Button onClick={this.setYesterday}>{this.props.registry.translations.Yesterday}</Button>
-					</ButtonGroup>
-				</FormGroup>) : null
+			(<div><FormGroup>{dateTimeWidget}</FormGroup>
+				{showButtons ? (
+					<FormGroup bsClass="form-group date-time-buttons">
+						<ButtonGroup>
+								<Button onClick={this.setToday}>{this.props.formContext.translations.Today}</Button>
+								<Button onClick={this.setYesterday}>{this.props.formContext.translations.Yesterday}</Button>
+						</ButtonGroup>
+					</FormGroup>) : null
 					}
 			</div>);
 	}

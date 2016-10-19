@@ -121,7 +121,7 @@ export default class AdditionalsExpanderField extends Component {
 		const options = this.props.uiSchema["ui:options"] ? this.props.uiSchema["ui:options"] : undefined;
 		if (!options || !options.additionalFields || !options.additionalFields.length) return null;
 
-		const text = (options && options.expanderButtonText) ? options.expanderButtonText : this.props.registry.translations.More;
+		const text = (options && options.expanderButtonText) ? options.expanderButtonText : this.props.formContext.translations.More;
 
 		return <Button onClick={this.showAdditional} className="button-right">{text + " ▸" }</Button>;
 	}

@@ -40,7 +40,7 @@ export default class MapArrayField extends Component {
 
 	buttonSettings = {
 		detach: idx => {
-			const tooltip = <Tooltip id={`map-array-detach-${idx}`}>{this.props.registry.translations.DetachUnit}</Tooltip>;
+			const tooltip = <Tooltip id={`map-array-detach-${idx}`}>{this.props.formContext.translations.DetachUnit}</Tooltip>;
 
 			return <OverlayTrigger key={`${this.props.idSchema.$id}-detach-${idx}`} overlay={tooltip} placement="left" >
 				<Button className="glyph-button" onClick={() => {this.detach(idx)}}><Glyphicon glyph="new-window" /></Button></OverlayTrigger>;
@@ -275,7 +275,7 @@ export default class MapArrayField extends Component {
 		const paginationEnabled = !hasInlineProps && navigationEnabled;
 
 		const description = options.description;
-		const title = options.title !== undefined ? options.title : this.props.registry.translations.Map;
+		const title = options.title !== undefined ? options.title : this.props.formContext.translations.Map;
 
 		const inlineContainerStyle = {width: this.state.containerWidth, left: this.state.containerLeft, top: options.topOffset || 0};
 
@@ -315,7 +315,7 @@ export default class MapArrayField extends Component {
 			inlineSchemaHeightFixerStyle.height = this.state.inlineSchemaHeight - inlineSchemaStyle.height || 0;
 		}
 
-		const {translations} = this.props.registry;
+		const {translations} = this.props.formContext;
 
 		const scrollMode = (state !== SCROLLING && !this.state.detachUnitMode);
 
@@ -349,7 +349,7 @@ export default class MapArrayField extends Component {
 							zoom={3}
 							onChange={this.onMapChange}
 							onInitializeDrawLayer={this.onInitializeLayer}
-							lang={this.props.registry.lang}
+							lang={this.props.formContext.lang}
 						  popupOnHover={true}
 						/>
 						{scrollMode ? <div ref="mapHeightFixer" style={mapHeightFixerStyle} /> : null}
@@ -393,7 +393,7 @@ export default class MapArrayField extends Component {
 		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 		const navEnabled = hasInlineProps && navigationEnabled;
 		const colType = this.getColType(this.props);
-		const {translations} = this.props.registry;
+		const {translations} = this.props.formContext;
 
 		return navEnabled ?
 			<div ref="navContainer" className={(colType ? "col-" + colType + "-6" : "col-xs-12") + " laji-form-map-navi"}>
