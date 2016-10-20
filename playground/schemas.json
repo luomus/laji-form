@@ -234,15 +234,14 @@
 																"type": "string",
 																"enum": [
 																	"",
-																	"MY.intellectualRightsUnknown",
-																	"MY.intellectualRightsCC-BY",
-																	"MY.intellectualRightsCC-BY-SA",
-																	"MY.intellectualRightsCC-BY-NC",
-																	"MY.intellectualRightsCC-BY-NC-SA",
-																	"MY.intellectualRightsCC0",
-																	"MY.intellectualRightsODBL",
-																	"MY.intellectualRightsPD",
-																	"MY.intellectualRightsARR"
+																	"MZ.intellectualRightsCC-BY-SA-4.0",
+																	"MZ.intellectualRightsCC-BY-NC-4.0",
+																	"MZ.intellectualRightsCC-BY-NC-SA-4.0",
+																	"MZ.intellectualRightsCC-BY-4.0",
+																	"MZ.intellectualRightsCC0-4.0",
+																	"MZ.intellectualRightsODBL-1.0",
+																	"MZ.intellectualRightsPD",
+																	"MZ.intellectualRightsARR"
 																]
 															},
 															"capturerVerbatim": {
@@ -354,15 +353,14 @@
 																		"type": "string",
 																		"enum": [
 																			"",
-																			"MY.intellectualRightsUnknown",
-																			"MY.intellectualRightsCC-BY",
-																			"MY.intellectualRightsCC-BY-SA",
-																			"MY.intellectualRightsCC-BY-NC",
-																			"MY.intellectualRightsCC-BY-NC-SA",
-																			"MY.intellectualRightsCC0",
-																			"MY.intellectualRightsODBL",
-																			"MY.intellectualRightsPD",
-																			"MY.intellectualRightsARR"
+																			"MZ.intellectualRightsCC-BY-SA-4.0",
+																			"MZ.intellectualRightsCC-BY-NC-4.0",
+																			"MZ.intellectualRightsCC-BY-NC-SA-4.0",
+																			"MZ.intellectualRightsCC-BY-4.0",
+																			"MZ.intellectualRightsCC0-4.0",
+																			"MZ.intellectualRightsODBL-1.0",
+																			"MZ.intellectualRightsPD",
+																			"MZ.intellectualRightsARR"
 																		]
 																	},
 																	"capturerVerbatim": {
@@ -1160,7 +1158,8 @@
 						"taxonID": "MX.205515",
 						"taxonConfidence": "MY.taxonConfidenceSure",
 						"taste": "",
-						"smell": ""
+						"smell": "",
+						"images": ["MM.88404"]
 					}
 				],
 				"wgs84Geometry": {

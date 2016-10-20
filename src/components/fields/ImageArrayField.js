@@ -126,6 +126,7 @@ export default class ImagesArrayField extends Component {
 
 	renderModal = () => {
 		const {state} = this;
+		const {translations} = this.props.registry.formContext;
 		const options = this.props.uiSchema["ui:options"];
 		const metadataSchemas = options ? options.metadataSchemas : undefined;
 		return state.modalOpen ?
@@ -137,7 +138,10 @@ export default class ImagesArrayField extends Component {
 						{state.modalMetadata && metadataSchemas ? <Form
 							schema={metadataSchemas.schema}
 							uiSchema={metadataSchemas.uiSchema}
-							formData={state.modalMetadata} /> : null}
+							formData={state.modalMetadata}
+							onSubmit={this.onImageMetadataUpdate}>
+						<Button type="submit">{translations.Submit}</Button>
+						</Form> : null}
 					</div>
 				</Modal.Body>
 			</Modal> : null;
@@ -174,6 +178,12 @@ export default class ImagesArrayField extends Component {
 				body: formDataBody
 			});
 		}).then(response => {
+			return Promise.all(response.map(item => {
+				return this.apiClient.fetch(`/images/${item.id}`, undefined, {
+					method: "POST"
+				});
+			}));
+		}).then(response => {
 			onChange(update(formData,
 				response.reduce((updateObject, item, idx) => {
 						const id = item.id;
@@ -184,7 +194,7 @@ export default class ImagesArrayField extends Component {
 			);
 
 			this.mainContext.popBlockingLoader();
-		}).catch(() => {
+		}).catch(response => {
 			this.setState({alert: () => {
 				onChange(update(this.props.formData,
 					dataURLs.reduce((updateObject, dataURL, idx) => {
@@ -219,6 +229,20 @@ export default class ImagesArrayField extends Component {
 				});
 			};
 			reader.readAsDataURL(file);
+		});
+	}
+
+	onImageMetadataUpdate = ({formData}) => {
+		this.mainContext.pushBlockingLoader();
+		this.apiClient.fetch(`/images/${formData.id}`, undefined, {
+			method: "PUT",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(formData)
+		}).then(response => {
+			this.mainContext.popBlockingLoader();
 		});
 	}
 }
