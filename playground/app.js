@@ -32,8 +32,8 @@ const lajiForm = new LajiForm({
 });
 
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.519", {lang})
-	         .then(lajiForm.setState);
+	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
+	         .then(({schema, uiSchema, uiSchemaContext}) => lajiForm.setState({schema, uiSchema, uiSchemaContext}));
 }
 
 function onSubmit({formData}) {

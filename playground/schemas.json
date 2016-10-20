@@ -160,7 +160,8 @@
 					"dateEnd",
 					"habitat",
 					"predominantTree",
-					"notes",
+					"locality",
+					"localityDescription",
 					"images"
 				],
 				"inlineUiSchema": {
@@ -180,7 +181,8 @@
 									"predominantTree",
 									"habitat",
 									"images",
-									"notes",
+									"locality",
+									"localityDescription",
 									"eventTime"
 								]
 							}
@@ -192,10 +194,9 @@
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
 									"fields": [
-										"habitat",
-										"predominantTree",
 										"images",
-										"notes"
+										"locality",
+										"localityDescription"
 									],
 									"uiSchema": {
 										"habitat": {
@@ -257,9 +258,6 @@
 													}
 												}
 											}
-										},
-										"notes": {
-											"ui:widget": "textarea"
 										},
 										"eventTime": {
 											"ui:field": "expandable",
@@ -350,11 +348,11 @@
 													"ui:options": {
 														"metadataSchemas": {
 															"schema": {
-                                "type": "object",
-                                "properties": {
-                                  "intellectualRights": {
-                                    "type": "string",
-                                    "enum": [
+																"type": "object",
+																"properties": {
+																	"intellectualRights": {
+																		"type": "string",
+																		"enum": [
 																			"",
 																			"MY.intellectualRightsUnknown",
 																			"MY.intellectualRightsCC-BY",
@@ -366,18 +364,18 @@
 																			"MY.intellectualRightsPD",
 																			"MY.intellectualRightsARR"
 																		]
-                                  },
-                                  "capturerVerbatim": {
+																	},
+																	"capturerVerbatim": {
 																		"type": "array",
 																		"items": {
 																			"type": "string"
 																		}
 																	},
-                                  "intellectualOwner": {
+																	"intellectualOwner": {
 																		"type": "string"
 																	}
-                                }
-                              }
+																}
+															}
 														}
 													}
 												},
@@ -499,7 +497,7 @@
 		"properties": {
 			"editors": {
 				"type": "array",
-				"title": "Editoijat",
+				"title": "Muokkausoikeus",
 				"items": {
 					"type": "string"
 				}
@@ -510,7 +508,7 @@
 				"properties": {
 					"leg": {
 						"type": "array",
-						"title": "Leg",
+						"title": "Havainnoitsijat",
 						"items": {
 							"type": "string"
 						}
@@ -733,9 +731,13 @@
 								]
 							}
 						},
-						"notes": {
+						"locality": {
 							"type": "string",
-							"title": "Lisätiedot"
+							"title": "Paikannimet"
+						},
+						"localityDescription": {
+							"type": "string",
+							"title": "Paikan vapaamuotoinen kuvaus"
 						},
 						"predominantTree": {
 							"type": "string",
@@ -796,7 +798,6 @@
 											"MY.recordBasisMachineObservationAudio",
 											"MY.recordBasisMachineObservationGeologger",
 											"MY.recordBasisMachineObservationSatelliteTransmitter",
-											"MY.recordBasisMachineObservationGMSTransmitter",
 											"MY.recordBasisLiterature"
 										],
 										"enumNames": [
@@ -819,7 +820,6 @@
 											"Laitteen tekemä äänitallenne",
 											"Geopaikannin",
 											"Satelliittipaikannus",
-											"GMS-paikannus",
 											"Kirjallisuustieto"
 										]
 									},
@@ -875,7 +875,7 @@
 									},
 									"taste": {
 										"type": "string",
-										"title": "MY.taste",
+										"title": "Maku",
 										"enum": [
 											"",
 											"MY.tasteNotTasted",
@@ -899,7 +899,7 @@
 									},
 									"smell": {
 										"type": "string",
-										"title": "Smell",
+										"title": "Haju",
 										"enum": [
 											"",
 											"MY.smellNotSmelled",
@@ -955,12 +955,14 @@
 													"enum": [
 														"",
 														"MY.detMethodFreshSample",
-														"MY.detMethodMicroscopy"
+														"MY.detMethodMicroscopy",
+														"MY.detMethodPhoto"
 													],
 													"enumNames": [
 														"",
 														"MY.detMethodFreshSample",
-														"MY.detMethodMicroscopy"
+														"MY.detMethodMicroscopy",
+														"kuva"
 													]
 												}
 											},
