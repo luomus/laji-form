@@ -10,9 +10,8 @@ export default class LajiFormWrapper {
 	}
 
 	onChange = (formData) => {
-		this.setState({formData}, () => {
-			if (this.props.onChange) this.props.onChange(formData)
-		});
+    if (this.props.onChange) this.props.onChange(formData)
+		this.setState({formData});
 	}
 
 	setState = (state) => {
