@@ -216,6 +216,10 @@ export default class LajiForm extends Component {
 		)
 	}
 
+	submit = () => {
+		this.refs.form.onSubmit({preventDefault: () => {;}});
+	}
+
 	canFocusNextInput = (inputElem) => {
 		function isTabbableInput(elem) {
 			return (inputTypes.includes(elem.tagName.toLowerCase()) ||

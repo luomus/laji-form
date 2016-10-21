@@ -9,8 +9,12 @@ export default class LajiFormWrapper {
 		this.app = render(<LajiFormApp {...props} onChange={this.onChange} />, this.rootElem);
 	}
 
+	submit = () => {
+		this.app.refs.lajiform.submit();
+	}
+
 	onChange = (formData) => {
-    if (this.props.onChange) this.props.onChange(formData)
+    if (this.props.onChange) this.props.onChange(formData);
 		this.setState({formData});
 	}
 
