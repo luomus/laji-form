@@ -436,10 +436,14 @@
 									},
 									"fieldScopes": {
 										"informalNameString": {
-											"+": {
+											"*": {
 												"refs": [
 													"unitType",
 													"recordBasis"
+												],
+												"fields": [
+													"countOfOccurrence",
+													"notes"
 												]
 											}
 										}
@@ -455,7 +459,6 @@
 												"unitType": {
 													"MVL.233": {
 														"fields": [
-															"countOfOccurrence",
 															"substrateSpecies",
 															"substrateNotes",
 															"taste",
