@@ -13,7 +13,7 @@ const log = (type) => console.log.bind(console, type);
 let lang = "fi";
 
 const apiClient = new ApiClientImplementation(
-	"https://apitest.laji.fi/v0",
+	"https://beta.laji.fi/v0",
 	properties.accessToken,
 	properties.userToken,
 	lang
@@ -28,7 +28,8 @@ const lajiForm = new LajiForm({
 	lang,
 	onError: log("errors"),
 	rootElem: document.getElementById("app"),
-	staticImgPath: "/build"
+	staticImgPath: "/build",
+	renderSubmit: false
 });
 
 if (!USE_LOCAL_SCHEMAS) {
