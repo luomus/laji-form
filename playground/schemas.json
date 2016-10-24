@@ -438,8 +438,8 @@
 										"informalNameString": {
 											"*": {
 												"refs": [
-													"unitType",
-													"recordBasis"
+													"recordBasis",
+													"unitType"
 												],
 												"fields": [
 													"countOfOccurrence",
