@@ -146,7 +146,7 @@
 						"mapper": "units"
 					},
 					{
-						"field": "notes"
+						"field": "localityDescription"
 					}
 				],
 				"buttons": {
