@@ -61,6 +61,7 @@
 													"ui:options": {
 														"uiSchema": {
 															"items": {
+																"default": {"leg": "", "editors": false},
 																"leg": {
 																	"ui:widget": {
 																		"component": "autosuggest",
@@ -100,30 +101,21 @@
 							"dateEnd"
 						],
 						"uiSchema": {
-							"ui:field": "expandable",
+							"ui:field": "grid",
 							"ui:options": {
-								"additionalFields": [
-									"dateEnd"
-								],
-								"expanderButtonText": "Ilmoita aikaväli",
-								"uiSchema": {
-									"ui:field": "grid",
-									"ui:options": {
-										"colType": "sm",
-										"maxWidth": 2
-									},
-									"dateBegin": {
-										"ui:widget": "separatedDateTime"
-									},
-									"dateEnd": {
-										"ui:widget": {
-											"component": "separatedDateTime",
-											"options": {
-												"showButtons": false
-											}
-										}
+								"colType": "sm",
+								"maxWidth": 2
+							},
+							"dateBegin": {
+								"ui:widget": {
+									"component": "dateTime",
+									"options": {
+										"showButtons": true
 									}
 								}
+							},
+							"dateEnd": {
+								"ui:widget": "dateTime"
 							}
 						}
 					}
@@ -259,29 +251,20 @@
 											}
 										},
 										"eventTime": {
-											"ui:field": "expandable",
+											"ui:field": "grid",
 											"ui:options": {
-												"additionalFields": [
-													"dateEnd"
-												],
-												"uiSchema": {
-													"ui:field": "grid",
-													"ui:options": {
-														"maxWidth": 2
-													},
-													"dateBegin": {
-														"ui:widget": "separatedDateTime"
-													},
-													"dateEnd": {
-														"ui:widget": {
-															"component": "separatedDateTime",
-															"options": {
-																"showButtons": false
-															}
-														}
+												"maxWidth": 2
+											},
+											"dateBegin": {
+												"ui:widget": {
+													"component": "dateTime",
+													"options": {
+														"showButtons": true
 													}
-												},
-												"expanderButtonText": "Ilmoita aikaväli"
+												}
+											},
+											"dateEnd": {
+												"ui:widget": "dateTime"
 											}
 										}
 									}

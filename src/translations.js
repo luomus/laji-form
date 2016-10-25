@@ -143,5 +143,15 @@
 		fi: "piirrä uusi kuvio irrotettavalle havainnolle.",
 		en: "draw a new feature for the unit being detached.",
 		sv: "??"
+	},
+	chooseDate: {
+		fi: "valitse päivämäärä",
+		en: "choose a date",
+		sv: "välja ett datum"
+	},
+	chooseTime: {
+		fi: "valitse kellonaika",
+		en: "choose the time",
+		sv: "välja en tiden"
 	}
 }
