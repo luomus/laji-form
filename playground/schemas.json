@@ -29,76 +29,93 @@
 		},
 		"gatheringEvent": {
 			"ui:field": "nested",
+			"classNames": "well well-sm",
 			"ui:options": {
 				"nests": {
-					"legWrapper": {
-						"title": "",
+					"splittable": {
 						"fields": [
 							"leg",
-							"legPublic",
-							"editors"
+							"editors",
+							"legPublic"
 						],
 						"uiSchema": {
-							"ui:field": "nested",
-							"ui:order": [
-								"",
-								"legPublic"
-							],
+							"ui:field": "split",
 							"ui:options": {
-								"nests": {
-									"": {
-										"fields": [
-											"leg",
-											"editors"
-										],
+								"splits": [
+									{
+										"fields": ["leg", "editors"],
+										"name": "",
+										"md": 4,
+										"lg": 4,
 										"uiSchema": {
-											"ui:field": "dependentBoolean",
+											"ui:field": "nested",
+											"ui:order": [
+												""
+											],
 											"ui:options": {
-												"booleanField": "editors",
-												"booleanDefiner": "leg",
-												"uiSchema": {
-													"ui:field": "arrayCombiner",
-													"ui:options": {
+												"nests": {
+													"": {
+														"fields": [
+															"leg",
+															"editors"
+														],
 														"uiSchema": {
-															"items": {
-																"leg": {
-																	"ui:widget": {
-																		"component": "autosuggest",
-																		"options": {
-																			"autosuggestField": "friends",
-																			"allowNonsuggestedValue": true,
-																			"suggestionReceive": "key",
-																			"preventTypingPattern": "^MA\\.\\d+$"
+															"ui:field": "dependentBoolean",
+															"ui:options": {
+																"booleanField": "editors",
+																"booleanDefiner": "leg",
+																"uiSchema": {
+																	"ui:field": "arrayCombiner",
+																	"ui:options": {
+																		"uiSchema": {
+																			"items": {
+																				"leg": {
+																					"ui:widget": {
+																						"component": "autosuggest",
+																						"options": {
+																							"autosuggestField": "friends",
+																							"allowNonsuggestedValue": true,
+																							"suggestionReceive": "key",
+																							"preventTypingPattern": "^MA\\.\\d+$"
+																						}
+																					}
+																				},
+																				"editors": {
+																					"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
+																				},
+																				"ui:field": "dependentDisable",
+																				"ui:options": {
+																					"disableDefiner": "leg",
+																					"disableField": "editors",
+																					"regexp": "^MA\\.\\d+$"
+																				}
+																			},
+																			"ui:field": "table"
 																		}
 																	}
-																},
-																"editors": {
-																	"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
-																},
-																"ui:field": "dependentDisable",
-																"ui:options": {
-																	"disableDefiner": "leg",
-																	"disableField": "editors",
-																	"regexp": "^MA\\.\\d+$"
 																}
-															},
-															"ui:field": "table"
+															}
 														}
 													}
 												}
 											}
 										}
+									},
+									{
+										"fields": ["legPublic"],
+										"name": ""
 									}
-								}
+								]
 							}
+
 						}
 					},
 					"eventTime": {
-						"title": "",
 						"fields": [
 							"dateBegin",
 							"dateEnd"
 						],
+						"title": "Aika",
 						"uiSchema": {
 							"ui:field": "grid",
 							"ui:options": {
@@ -118,9 +135,6 @@
 							}
 						}
 					}
-				},
-				"uiSchema": {
-					"classNames": "well well-sm"
 				}
 			}
 		},

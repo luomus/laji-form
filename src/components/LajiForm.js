@@ -35,6 +35,7 @@ import InitiallyHiddenField from "./fields/InitiallyHiddenField";
 import ContextInjectionField from "./fields/ContextInjectionField";
 import ImageArrayField from "./fields/ImageArrayField";
 import FilteredEnumStringField from "./fields/FilteredEnumStringField";
+import SplitField from "./fields/SplitField";
 
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
@@ -184,6 +185,7 @@ export default class LajiForm extends Component {
 						injectFromContext: ContextInjectionField,
 						imageArray: ImageArrayField,
 						filteredEnum: FilteredEnumStringField,
+						split: SplitField,
 					}}
 					widgets={{
 						CheckboxWidget: CheckboxWidget,
