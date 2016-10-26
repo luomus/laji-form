@@ -61,7 +61,6 @@
 													"ui:options": {
 														"uiSchema": {
 															"items": {
-																"default": {"leg": "", "editors": false},
 																"leg": {
 																	"ui:widget": {
 																		"component": "autosuggest",
@@ -226,14 +225,15 @@
 																"type": "string",
 																"enum": [
 																	"",
-																	"MZ.intellectualRightsCC-BY-SA-4.0",
-																	"MZ.intellectualRightsCC-BY-NC-4.0",
-																	"MZ.intellectualRightsCC-BY-NC-SA-4.0",
-																	"MZ.intellectualRightsCC-BY-4.0",
-																	"MZ.intellectualRightsCC0-4.0",
-																	"MZ.intellectualRightsODBL-1.0",
-																	"MZ.intellectualRightsPD",
-																	"MZ.intellectualRightsARR"
+																	"MY.intellectualRightsUnknown",
+																	"MY.intellectualRightsCC-BY",
+																	"MY.intellectualRightsCC-BY-SA",
+																	"MY.intellectualRightsCC-BY-NC",
+																	"MY.intellectualRightsCC-BY-NC-SA",
+																	"MY.intellectualRightsCC0",
+																	"MY.intellectualRightsODBL",
+																	"MY.intellectualRightsPD",
+																	"MY.intellectualRightsARR"
 																]
 															},
 															"capturerVerbatim": {
@@ -336,14 +336,15 @@
 																		"type": "string",
 																		"enum": [
 																			"",
-																			"MZ.intellectualRightsCC-BY-SA-4.0",
-																			"MZ.intellectualRightsCC-BY-NC-4.0",
-																			"MZ.intellectualRightsCC-BY-NC-SA-4.0",
-																			"MZ.intellectualRightsCC-BY-4.0",
-																			"MZ.intellectualRightsCC0-4.0",
-																			"MZ.intellectualRightsODBL-1.0",
-																			"MZ.intellectualRightsPD",
-																			"MZ.intellectualRightsARR"
+																			"MY.intellectualRightsUnknown",
+																			"MY.intellectualRightsCC-BY",
+																			"MY.intellectualRightsCC-BY-SA",
+																			"MY.intellectualRightsCC-BY-NC",
+																			"MY.intellectualRightsCC-BY-NC-SA",
+																			"MY.intellectualRightsCC0",
+																			"MY.intellectualRightsODBL",
+																			"MY.intellectualRightsPD",
+																			"MY.intellectualRightsARR"
 																		]
 																	},
 																	"capturerVerbatim": {
@@ -442,6 +443,7 @@
 												"unitType": {
 													"MVL.233": {
 														"fields": [
+															"countOfOccurrence",
 															"substrateSpecies",
 															"substrateNotes",
 															"taste",
@@ -499,7 +501,7 @@
 					},
 					"legPublic": {
 						"type": "boolean",
-						"title": "Näytetäänkö nimi julkisesti?",
+						"title": "Näytetäänkö nimet julkisesti?",
 						"default": true
 					},
 					"dateBegin": {
