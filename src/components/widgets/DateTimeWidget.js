@@ -28,7 +28,6 @@ export default class DateTimeWidget extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		console.log(props);
 		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
 

@@ -275,7 +275,7 @@ export default class MapArrayField extends Component {
 		const paginationEnabled = !hasInlineProps && navigationEnabled;
 
 		const description = options.description;
-		const title = options.title !== undefined ? options.title : this.props.formContext.translations.Map;
+		const title = (options.title !== undefined && options.title !== "") ? options.title : undefined;
 
 		const inlineContainerStyle = {width: this.state.containerWidth, left: this.state.containerLeft, top: options.topOffset || 0};
 
