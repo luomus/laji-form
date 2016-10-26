@@ -28,6 +28,7 @@ export default class DateTimeWidget extends Component {
 	}
 
 	getStateFromProps = (props) => {
+		console.log(props);
 		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
 
@@ -95,6 +96,8 @@ export default class DateTimeWidget extends Component {
 		const {translations} = this.props.formContext;
 
 		const datePicker = (<DateTimePicker
+			calendar={this.state.calendar}
+			time={this.state.time}
 			format={this.state.inputFormat}
 			timeFormat={this.state.timeFormat}
 			placeholder={this.state.placeholder}
