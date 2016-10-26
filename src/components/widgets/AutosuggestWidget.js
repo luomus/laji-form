@@ -193,12 +193,7 @@ export default class AutoSuggestWidget extends Component {
 
 		if (focusedSuggestion) this.selectSuggestion(focusedSuggestion);
 		this.setState({focused: false}, () => {
-			if (this.tab) {
-				this.refs.autosuggestInput.input.focus();
-				this.onTabBlur = true;
-				this.mainContext.focusNextInput();
-				this.tab = false;
-			} else if ((focusedSuggestion === null && this.state.inputValue === "") ||
+		if ((focusedSuggestion === null && this.state.inputValue === "") ||
 				(this.findUnambigiousSuggestion([focusedSuggestion]))) {
 				this.selectSuggestion(focusedSuggestion);
 			}
@@ -219,13 +214,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onKeyDown = (e) => {
-		this.tab = (e.key === "Tab");
 		this.enter = (e.key === "Enter");
-
-		if (this.tab) {
-			e.preventDefault();
-			this.refs.autosuggestInput.input.blur();
-		}
 	}
 
 	componentDidUpdate() {
