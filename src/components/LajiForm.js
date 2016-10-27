@@ -70,7 +70,10 @@ function FieldTemplate(props) {
 		hidden,
 		required,
 		displayLabel,
+		formContext,
 		} = props;
+	const {buttons} = formContext;
+	delete formContext.buttons;
 	if (hidden) {
 		return children;
 	}
@@ -78,7 +81,15 @@ function FieldTemplate(props) {
 		<div className={classNames}>
 			{label && displayLabel ? <Label label={label} help={help} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
-			{children}
+			<div className="laji-form-field-template-item">
+				<div className="laji-form-field-template-schema">
+					{children}
+				</div>
+				{buttons ?
+					<div className="laji-form-field-template-buttons">{buttons}</div> :
+					null
+				}
+			</div>
 			{errors}
 		</div>
 	);

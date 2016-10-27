@@ -96,16 +96,9 @@ export default class ScopeField extends Component {
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		return (
-			<div className="scope-field">
-				<div className="scope-field-schema">
-				<SchemaField {...this.props} {...this.state} />
-				</div>
-				<div className="scope-field-buttons">
-					{this.renderAdditionalsButtons()}
-				</div>
-			</div>
-		);
+
+	 const registry = update(this.props.registry, {formContext: {$merge: {buttons: this.renderAdditionalsButtons()}}});
+		return <SchemaField {...this.props} {...this.state} registry={registry} />;
 	}
 
 	getSchemas = (props) => {

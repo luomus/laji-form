@@ -12,9 +12,10 @@ export default class SplitField extends Component {
 					fields: PropTypes.arrayOf(PropTypes.string).isRequired,
 					uiSchema: PropTypes.object,
 					name: PropTypes.string,
+					lg: PropTypes.integer,
 					md: PropTypes.integer,
-					xs: PropTypes.integer,
-					lg: PropTypes.integer
+					sm: PropTypes.integer,
+					xs: PropTypes.integer
 				})).isRequired
 			}).isRequired
 		})
@@ -28,7 +29,7 @@ export default class SplitField extends Component {
 		return (
 			<Row>
 				{this.props.uiSchema["ui:options"].splits.map((split, i) =>
-					<Col md={split.md} lg={split.lg} xs={split.xs} key={i}>
+					<Col md={split.md} lg={split.lg} xs={split.xs} sm={split.sm} key={i}>
 						{this.renderSplitField(split)}
 					</Col>
 				)}

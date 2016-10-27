@@ -45,19 +45,23 @@ export default class TableField extends Component {
 
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const schemaLength = Object.keys(schemaProps).length;
-		const baseDivision = parseInt(12 / schemaLength);
-		Object.keys(schemaProps).forEach((propName, i) => {
-			let division = baseDivision;
-			if (!i) division = 12 - ((schemaLength - 1) * division);
+		const defaultCol = parseInt(12 / schemaLength);
 
-			labels.push(<Col xs={division} key={propName + "-label"}><Label
+		const options = this.props.uiSchema["ui:options"];
+		const cols = {xs: undefined, sm: undefined, md: undefined,  lg: undefined};
+		Object.keys(cols).forEach(col => {
+			cols[col] = (options && options[col]) ? Math.min(options[col], defaultCol) : defaultCol;
+		});
+
+		Object.keys(schemaProps).forEach(propName => {
+			labels.push(<Col {...cols} key={propName + "-label"}><Label
 			                  label={schemaProps[propName].title || propName}
 			                  disabled={false}
 			                  id={idSchema[propName].$id}
 			                  help={(uiSchema && uiSchema.items[propName] && uiSchema.items[propName]["ui:help"]) ? uiSchema.items[propName]["ui:help"] : undefined}
 			/></Col>)
 		});
-		items.push(<Row key="labels"><Row><Col xs={10}>{labels}</Col><Col xs={2} /></Row></Row>);
+		items.push(<div className="laji-form-field-template-item"><div className="laji-form-field-template-schema">{labels}</div><div className="laji-form-field-template-buttons" /></div>);
 
 		if (formData) formData.forEach((item, idx) => {
 			let itemIdPrefix = props.idSchema.$id + "_" + idx;
@@ -71,20 +75,30 @@ export default class TableField extends Component {
 			if (props.uiSchema.additionalItems && idx >= props.schema.items.length) uiSchema = props.uiSchema.additionalItems;
 			else if (props.uiSchema.items) uiSchema = props.uiSchema.items;
 
-			let uiOptions = {colType: "xs", showLabels: false, neverLimitWidth: true};
+			let uiOptions = {...cols, showLabels: false, neverLimitWidth: true};
 			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
-			items.push(<Row key={idx}>
-				<Col xs={10}><SchemaField
+
+
+			let registry = props.registry;
+
+			registry =update(props.registry, {formContext: {$merge: {buttons: []}}});
+			if ((!props.schema.additionalItems && idx) || isAdditional) {
+				registry =update(props.registry, {formContext: {$merge: {buttons:
+					[<Button bsStyle="danger" onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button>]
+				}}});
+			}
+
+			items.push(
+				<SchemaField
 					formData={item}
 					onChange={this.onChangeForIdx(idx)}
 					schema={schema}
 					uiSchema={uiSchema}
 					idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
-					registry={props.registry}
-					errorSchema={props.errorSchema[idx]} /></Col>
-				<Col xs={2}>{((!props.schema.additionalItems && idx) || isAdditional) ? <Button bsStyle="danger" className="col-xs-12" onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button> : null}</Col>
-			</Row>)
+					registry={registry}
+					errorSchema={props.errorSchema[idx]} />
+			);
 		});
 
 		return (formData && formData.length) ? (<div>

@@ -84,41 +84,40 @@ export default class AutoArrayField extends Component {
 			let removable = idx < data.length - 1;
 			let key = this.state.idxsToKeys[idx];
 
+			const buttons = [removable ? (
+				<div>
+					<Button bsStyle="danger"
+									className="col-xs-12 glyph-button"
+									ref={"del-" + idx}
+									onKeyDown={this.onButtonKeyDown(idx)}
+									onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
+					{this.state.visibleConfirmationIdx === idx ?
+						<Overlay show={true} placement="left"  rootClose={true} onHide={this.onClearConfirm} target={() => ReactDOM.findDOMNode(this.refs["del-" + idx])} >
+							<Popover id="popover-trigger-click">
+								<span>{translations.ConfirmRemove}</span>
+								<ButtonGroup>
+									<Button bsStyle="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
+									<Button bsStyle="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
+								</ButtonGroup>
+							</Popover>
+						</Overlay>
+						: null
+					}
+				</div>
+			) : null];
+			buttons.push(this.renderButtons(idx));
+
+			const registry = update(this.props.registry, {formContext: {$merge: {buttons}}});
 			rows.push(
-				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="auto-array-item" >
-					<div className="auto-array-schema">
-						<SchemaField
-							formData={item}
-							onChange={this.onChangeForIdx(idx)}
-							schema={this.props.schema.items}
-							uiSchema={this.props.uiSchema.items}
-							idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
-							registry={this.props.registry}
-							errorSchema={this.props.errorSchema[idx]} />
-					</div>
-					<div className="auto-array-buttons-container">
-						{removable ? (<div>
-							<Button bsStyle="danger"
-							        className="col-xs-12 glyph-button"
-							        ref={"del-" + idx}
-							        onKeyDown={this.onButtonKeyDown(idx)}
-							        onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
-							{this.state.visibleConfirmationIdx === idx ?
-								<Overlay show={true} placement="left"  rootClose={true} onHide={this.onClearConfirm} target={() => ReactDOM.findDOMNode(this.refs["del-" + idx])} >
-									<Popover id="popover-trigger-click">
-										<span>{translations.ConfirmRemove}</span>
-										<ButtonGroup>
-											<Button bsStyle="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
-											<Button bsStyle="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
-										</ButtonGroup>
-									</Popover>
-								</Overlay>
-								: null
-							}
-							{this.renderButtons(idx)}
-						</div>) : undefined}
-					</div>
-				</div>);
+					<SchemaField
+						formData={item}
+						onChange={this.onChangeForIdx(idx)}
+						schema={this.props.schema.items}
+						uiSchema={this.props.uiSchema.items}
+						idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
+						registry={registry}
+						errorSchema={this.props.errorSchema[idx]} />
+			);
 		});
 		return rows;
 	}

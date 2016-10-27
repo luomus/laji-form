@@ -182,7 +182,7 @@ body .laji-form {
 	padding: 5px;
 	margin: 2px;
 }
-.laji-form .glyph-button {
+.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button {
 	width: 22px;
 	height: 22px;
 	font-size: 11px;
@@ -380,22 +380,6 @@ body .laji-form {
 	right: -8px;
 }
 
-.laji-form .auto-array-item, .laji-form .scope-field  {
-	display: -webkit-box;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: -webkit-flex;
-	display: flex;
-}
-.laji-form .auto-array-schema, .laji-form .scope-field-schema {
-	-webkit-flex-grow: 1;
-	-ms-flex-grow: 1;
-	flex-grow: 1;
-}
-.laji-form .auto-array-buttons-container {
-	width: 25px;
-}
-
 .laji-form .list-group-item.disabled {
 	opacity: .65;
 }
@@ -465,4 +449,21 @@ body .laji-form {
 
 .laji-form .date-time-buttons {
 	width: 130px;
+}
+
+
+.laji-form .laji-form-field-template-item  {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+.laji-form .laji-form-field-template-schema {
+	-webkit-flex-grow: 1;
+	-ms-flex-grow: 1;
+	flex-grow: 1;
+}
+.laji-form .laji-form-field-template-buttons {
+	width: 25px;
 }

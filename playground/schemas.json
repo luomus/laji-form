@@ -45,8 +45,9 @@
 									{
 										"fields": ["leg", "editors"],
 										"name": "",
+										"lg": 3,
 										"md": 4,
-										"lg": 4,
+										"sm": 5,
 										"uiSchema": {
 											"ui:field": "nested",
 											"ui:order": [
@@ -90,7 +91,13 @@
 																					"regexp": "^MA\\.\\d+$"
 																				}
 																			},
-																			"ui:field": "table"
+																			"ui:field": "table",
+																			"ui:options": {
+																				"xs": 6,
+																				"sm": 6,
+																				"md": 6,
+																				"lg": 6
+																			}
 																		}
 																	}
 																}
@@ -339,7 +346,7 @@
 												"ui:field": "grid",
 												"ui:options": {
 													"lg": 1,
-													"md": 2,
+													"md": 1,
 													"sm": 2,
 													"xs": 12
 												},
