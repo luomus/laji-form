@@ -452,19 +452,19 @@ body .laji-form {
 }
 
 
-.laji-form .laji-form-field-template-item  {
+.laji-form .laji-form-field-template-item, .laji-form .array-item  {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
 }
-.laji-form .laji-form-field-template-schema {
+.laji-form .laji-form-field-template-schema, .laji-form .array-item .col-xs-10 {
 	-webkit-flex-grow: 1;
 	-ms-flex-grow: 1;
 	flex-grow: 1;
 }
-.laji-form .laji-form-field-template-buttons {
+.laji-form .laji-form-field-template-buttons, .laji-form .array-item .array-item-toolbox {
 	width: 25px;
 }
 
@@ -484,4 +484,9 @@ body .laji-form {
 .laji-form .date-widget .btn-group .btn {
     height: 25px;
     line-height: 12.5px;
+}
+.array-item-add {
+	width: 28px;
+	float: right;
+	margin-right: -3px;
 }
