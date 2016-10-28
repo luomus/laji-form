@@ -127,14 +127,14 @@ export default class DateTimeWidget extends Component {
 		/>);
 
 		return this.props.options.showButtons ? (
-			<div>
-				<FormGroup>{datePicker}</FormGroup>
-				<FormGroup bsClass="form-group date-time-buttons">
-					<ButtonGroup>
-						<Button onClick={this.setToday}>{translations.Today}</Button>
-						<Button onClick={this.setYesterday}>{translations.Yesterday}</Button>
-					</ButtonGroup>
-				</FormGroup>
+			<div className="date-widget">
+				<div className="date-picker">
+					{datePicker}
+				</div>
+				<ButtonGroup>
+					<Button onClick={this.setToday}>{translations.Today}</Button>
+					<Button onClick={this.setYesterday}>{translations.Yesterday}</Button>
+				</ButtonGroup>
 			</div>
 		) : datePicker;
 	}

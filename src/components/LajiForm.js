@@ -81,8 +81,8 @@ function FieldTemplate(props) {
 		<div className={classNames}>
 			{label && displayLabel ? <Label label={label} help={help} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
-			<div className="laji-form-field-template-item">
-				<div className="laji-form-field-template-schema">
+			<div className={buttons ? "laji-form-field-template-item" : null}>
+				<div className={buttons ? "laji-form-field-template-schema" : null}>
 					{children}
 				</div>
 				{buttons ?

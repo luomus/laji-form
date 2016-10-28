@@ -85,7 +85,7 @@ export default class AutoArrayField extends Component {
 			let key = this.state.idxsToKeys[idx];
 
 			const buttons = [removable ? (
-				<div>
+				<div key={key}>
 					<Button bsStyle="danger"
 									className="col-xs-12 glyph-button"
 									ref={"del-" + idx}
@@ -107,17 +107,23 @@ export default class AutoArrayField extends Component {
 			) : null];
 			buttons.push(this.renderButtons(idx));
 
-			const registry = update(this.props.registry, {formContext: {$merge: {buttons}}});
 			rows.push(
-					<SchemaField
-						formData={item}
-						onChange={this.onChangeForIdx(idx)}
-						schema={this.props.schema.items}
-						uiSchema={this.props.uiSchema.items}
-						idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
-						registry={registry}
-						errorSchema={this.props.errorSchema[idx]} />
-			);
+				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
+					<div className="laji-form-field-template-schema">
+						<SchemaField
+
+							formData={item}
+							onChange={this.onChangeForIdx(idx)}
+							schema={this.props.schema.items}
+							uiSchema={this.props.uiSchema.items}
+							idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
+							registry={registry}
+							errorSchema={this.props.errorSchema[idx]} />
+					</div>
+					<div className="laji-form-field-template-buttons">
+						{buttons}
+					</div>
+				</div>);
 		});
 		return rows;
 	}

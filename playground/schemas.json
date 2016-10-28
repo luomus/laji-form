@@ -126,10 +126,10 @@
 						"uiSchema": {
 							"ui:field": "grid",
 							"ui:options": {
-								"lg": 2,
-								"md": 2,
-								"sm": 3,
-								"xs": 6
+								"lg": {"dateBegin":3, "dateEnd": 2},
+								"md": {"dateBegin":4, "dateEnd": 2},
+								"sm": {"dateBegin":5, "dateEnd": 3},
+								"xs": 12
 							},
 							"dateBegin": {
 								"ui:widget": {
@@ -279,10 +279,10 @@
 										"eventTime": {
 											"ui:field": "grid",
 											"ui:options": {
-												"lg": 4,
-												"md": 2,
-												"sm": 3,
-												"xs": 6
+												"lg": {"dateBegin":7, "dateEnd": 4},
+												"md": {"dateBegin":4, "dateEnd": 2},
+												"sm": {"dateBegin":6, "dateEnd": 3},
+												"xs": 12
 											},
 											"dateBegin": {
 												"ui:widget": {

@@ -85,7 +85,7 @@ body .laji-form {
 .laji-form .rw-input {
 	height: 23px !important;
 }
-.laji-form .form-control:not(textarea), .laji-form .rw-input {
+.laji-form .form-control:not(textarea), .laji-form .rw-input  {
 	padding: 0px 5px;
 }
 .laji-form select {
@@ -466,4 +466,22 @@ body .laji-form {
 }
 .laji-form .laji-form-field-template-buttons {
 	width: 25px;
+}
+
+.laji-form .date-widget {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+.laji-form .date-widget .date-picker {
+	flex: 1;
+}
+.laji-form .date-widget .btn-group {
+	margin-left: 1px;
+}
+.laji-form .date-widget .btn-group .btn {
+    height: 25px;
+    line-height: 12.5px;
 }

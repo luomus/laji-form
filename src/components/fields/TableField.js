@@ -61,7 +61,7 @@ export default class TableField extends Component {
 			                  help={(uiSchema && uiSchema.items[propName] && uiSchema.items[propName]["ui:help"]) ? uiSchema.items[propName]["ui:help"] : undefined}
 			/></Col>)
 		});
-		items.push(<div className="laji-form-field-template-item"><div className="laji-form-field-template-schema">{labels}</div><div className="laji-form-field-template-buttons" /></div>);
+		items.push(<div key="label-row" className="laji-form-field-template-item"><div className="laji-form-field-template-schema">{labels}</div><div className="laji-form-field-template-buttons" /></div>);
 
 		if (formData) formData.forEach((item, idx) => {
 			let itemIdPrefix = props.idSchema.$id + "_" + idx;
@@ -91,6 +91,7 @@ export default class TableField extends Component {
 
 			items.push(
 				<SchemaField
+					key={idx}
 					formData={item}
 					onChange={this.onChangeForIdx(idx)}
 					schema={schema}
