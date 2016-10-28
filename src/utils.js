@@ -31,7 +31,7 @@ export function hasData(formData) {
 export function propertyHasData(field, container) {
 	if (!container) return false;
 	const data = container[field];
-	return (data && data !== "" &&
+	return !!(data && data !== "" &&
 	(data.constructor !== Object || (Object.keys(data).length > 0 && hasData(data))) &&
 	(!Array.isArray(data) || data.length > 0));
 }

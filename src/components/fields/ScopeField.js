@@ -344,7 +344,7 @@ export default class ScopeField extends Component {
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
 
-		const isIncluded = (additionalFields[property] === true || this.state.schema.properties[property]);
+		const isIncluded = !!(additionalFields[property] === true || this.state.schema.properties[property]);
 
 		return isIncluded;
 	}
