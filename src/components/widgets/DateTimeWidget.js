@@ -112,7 +112,6 @@ export default class DateTimeWidget extends Component {
 				 (this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
 					formattedValue = momentValue.format("YYYY-MM-DD");
 				}
-				console.log(value);
 				onChange(!value ? null : formattedValue);
 				this.toggle = undefined;
 				this.timeWritten = false;
