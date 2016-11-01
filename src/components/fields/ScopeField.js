@@ -123,7 +123,7 @@ export default class ScopeField extends Component {
 				let refs = fieldScope.refs;
 				fieldScope = update(fieldScope, {$merge: {refs: undefined}});
 				refs.forEach(ref => {
-					fieldScope = merge(definitions[ref], fieldScope);
+					fieldScope = merge(fieldScope, definitions[ref]);
 				});
 			}
 

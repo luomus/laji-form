@@ -51,7 +51,7 @@ export default class SplitField extends Component {
 		fields.forEach(field => {
 			schema.properties[field] = props.schema.properties[field];
 
-			["uiSchema", "errorSchema", "idSchema", "formData"].forEach(schema => {
+			[...Object.keys(schemas), "uiSchema"].forEach(schema => {
 				const has = props[schema].hasOwnProperty(field);
 				const itemSchema = props[schema][field];
 				if (has) schemas[schema][field] = itemSchema;

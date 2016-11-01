@@ -316,190 +316,171 @@
 								"confirmDelete": true
 							},
 							"items": {
-								"ui:field": "scoped",
-								"classNames": "well well-sm",
+								"ui:field": "flat",
 								"ui:options": {
-									"additionalsGroupingPath": "definitions.unitType.fieldScopes.unitType",
-									"additionalsGroupsTranslator": "taxonGroups",
-									"includeAdditionalFieldsChooserButton": true,
-									"glyphFields": {
-										"images": "camera"
-									},
+									"fields": [
+										"identifications"
+									],
 									"uiSchema": {
-										"ui:field": "autosuggest",
+										"ui:field": "scoped",
+										"classNames": "well well-sm",
 										"ui:options": {
-											"autosuggestField": "taxon",
-											"allowNonsuggestedValue": true,
-											"suggestionInputField": "informalNameString",
-											"suggestionReceivers": {
-												"informalNameString": "value",
-												"unitType": "$taxonGroup",
-												"taxonID": "key"
-											},
-											"inputTransformer": {
-												"regexp": "(.*)\\?$",
-												"transformations": {
-													"taxonConfidence": "MY.taxonConfidenceUnsure"
-												}
+											"additionalsGroupingPath": "fieldScopes.informalNameString.*.fieldScopes.unitType",
+											"additionalsGroupsTranslator": "taxonGroups",
+											"includeAdditionalFieldsChooserButton": true,
+											"glyphFields": {
+												"images": "camera"
 											},
 											"uiSchema": {
-												"ui:field": "grid",
+												"ui:field": "autosuggest",
 												"ui:options": {
-													"lg": 1,
-													"md": 1,
-													"sm": 2,
-													"xs": 12
-												},
-												"unitType": {
-													"ui:field": "hidden"
-												},
-												"taxonID": {
-													"ui:widget": "hidden"
-												},
-												"images": {
-													"ui:field": "imageArray",
-													"ui:options": {
-														"metadataSchemas": {
-															"schema": {
-																"type": "object",
-																"properties": {
-																	"intellectualRights": {
-																		"type": "string",
-																		"enum": [
-																			"",
-																			"MY.intellectualRightsUnknown",
-																			"MY.intellectualRightsCC-BY",
-																			"MY.intellectualRightsCC-BY-SA",
-																			"MY.intellectualRightsCC-BY-NC",
-																			"MY.intellectualRightsCC-BY-NC-SA",
-																			"MY.intellectualRightsCC0",
-																			"MY.intellectualRightsODBL",
-																			"MY.intellectualRightsPD",
-																			"MY.intellectualRightsARR"
-																		]
-																	},
-																	"capturerVerbatim": {
-																		"type": "array",
-																		"items": {
-																			"type": "string"
-																		}
-																	},
-																	"intellectualOwner": {
-																		"type": "string"
-																	}
-																}
-															}
+													"autosuggestField": "taxon",
+													"allowNonsuggestedValue": true,
+													"suggestionInputField": "informalNameString",
+													"suggestionReceivers": {
+														"informalNameString": "value",
+														"_identifications.taxon": "value",
+														"unitType": "$taxonGroup",
+														"taxonID": "key",
+														"_identifications.taxonID": "key"
+													},
+													"inputTransformer": {
+														"regexp": "(.*)\\?$",
+														"transformations": {
+															"taxonConfidence": "MY.taxonConfidenceUnsure"
 														}
-													}
-												},
-												"identifications": {
-													"items": {
-														"ui:field": "autosuggest",
+													},
+													"uiSchema": {
+														"ui:field": "grid",
 														"ui:options": {
-															"autosuggestField": "taxon",
-															"allowNonsuggestedValue": true,
-															"suggestionInputField": "taxon",
-															"suggestionReceivers": {
-																"taxon": "value",
-																"taxonID": "key"
-															},
-															"uiSchema": {
-																"ui:field": "grid",
-																"ui:options": {
-																	"lg": 2,
-																	"md": 2,
-																	"sm": 3,
-																	"xs": 12
-																},
-																"taxonID": {
-																	"ui:widget": "hidden"
-																},
-																"detDate": {
-																	"ui:widget": "date"
+															"lg": 1,
+															"md": 1,
+															"sm": 2,
+															"xs": 12
+														},
+														"_identifications.taxonID": {
+															"ui:widget": "hidden"
+														},
+														"_identifications.detDate": {
+															"ui:widget": "date"
+														},
+														"_identifications.taxon": {
+															"ui:widget": "hidden"
+														},
+														"unitType": {
+															"ui:field": "hidden"
+														},
+														"taxonID": {
+															"ui:widget": "hidden"
+														},
+														"images": {
+															"ui:field": "imageArray",
+															"ui:options": {
+																"metadataSchemas": {
+																	"schema": {
+																		"type": "object",
+																		"properties": {
+																			"intellectualRights": {
+																				"type": "string",
+																				"enum": [
+																					"",
+																					"MY.intellectualRightsUnknown",
+																					"MY.intellectualRightsCC-BY",
+																					"MY.intellectualRightsCC-BY-SA",
+																					"MY.intellectualRightsCC-BY-NC",
+																					"MY.intellectualRightsCC-BY-NC-SA",
+																					"MY.intellectualRightsCC0",
+																					"MY.intellectualRightsODBL",
+																					"MY.intellectualRightsPD",
+																					"MY.intellectualRightsARR"
+																				]
+																			},
+																			"capturerVerbatim": {
+																				"type": "array",
+																				"items": {
+																					"type": "string"
+																				}
+																			},
+																			"intellectualOwner": {
+																				"type": "string"
+																			}
+																		}
+																	}
 																}
 															}
-														}
-													}
-												},
-												"recordBasis": {
-													"ui:field": "filteredEnum",
-													"ui:options": {
-														"type": "whitelist",
-														"filter": [
-															"",
-															"MY.recordBasisHumanObservationSeen",
-															"MY.recordBasisHumanObservationHeard",
-															"MY.recordBasisPreservedSpecimen",
-															"MY.recordBasisHumanObservationHandled",
-															"MY.recordBasisHumanObservationIndirect"
-														],
-														"uiSchema": {
-															"ui:widget": {
-																"component": "imageSelect",
-																"options": {
-																	"images": {
-																		"MY.recordBasisHumanObservationSeen": "seen",
-																		"MY.recordBasisHumanObservationHeard": "heard",
-																		"MY.recordBasisPreservedSpecimen": "specimen",
-																		"MY.recordBasisHumanObservationHandled": "handled",
-																		"MY.recordBasisHumanObservationIndirect": "indirect"
+														},
+														"recordBasis": {
+															"ui:field": "filteredEnum",
+															"ui:options": {
+																"type": "whitelist",
+																"filter": [
+																	"",
+																	"MY.recordBasisHumanObservationSeen",
+																	"MY.recordBasisHumanObservationHeard",
+																	"MY.recordBasisPreservedSpecimen",
+																	"MY.recordBasisHumanObservationHandled",
+																	"MY.recordBasisHumanObservationIndirect"
+																],
+																"uiSchema": {
+																	"ui:widget": {
+																		"component": "imageSelect",
+																		"options": {
+																			"images": {
+																				"MY.recordBasisHumanObservationSeen": "seen",
+																				"MY.recordBasisHumanObservationHeard": "heard",
+																				"MY.recordBasisPreservedSpecimen": "specimen",
+																				"MY.recordBasisHumanObservationHandled": "handled",
+																				"MY.recordBasisHumanObservationIndirect": "indirect"
+																			}
+																		}
 																	}
 																}
 															}
 														}
 													}
 												}
-											}
-										}
-									},
-									"fieldScopes": {
-										"informalNameString": {
-											"*": {
-												"refs": [
-													"recordBasis",
-													"unitType"
-												],
-												"fields": [
-													"countOfOccurrence",
-													"notes"
-												]
-											}
-										}
-									},
-									"definitions": {
-										"unitType": {
-											"fields": [
-												"taxonID",
-												"taxonConfidence",
-												"unitType"
-											],
+											},
 											"fieldScopes": {
-												"unitType": {
-													"MVL.233": {
+												"informalNameString": {
+													"*": {
+														"refs": [
+															"identifications"
+														],
 														"fields": [
-															"countOfOccurrence",
-															"substrateSpecies",
-															"substrateNotes",
-															"taste",
-															"tasteNotes",
-															"smell",
-															"smellNotes"
-														]
+															"unitType",
+															"taxonID",
+															"taxonConfidence",
+															"recordBasis",
+															"countOfOccurrences",
+															"notes"
+														],
+														"fieldScopes": {
+															"unitType": {
+																"MVL.233": {
+																	"fields": [
+																		"countOfOccurrences",
+																		"substrateSpecies",
+																		"substrateNotes",
+																		"taste",
+																		"tasteNotes",
+																		"smell",
+																		"smellNotes"
+																	]
+																}
+															}
+														}
 													}
 												}
-											}
-										},
-										"recordBasis": {
-											"fields": [
-												"recordBasis"
-											],
-											"fieldScopes": {
-												"recordBasis": {
-													"MY.recordBasisPreservedSpecimen": {
-														"fields": [
-															"identifications"
-														]
-													}
+											},
+											"definitions": {
+												"identifications": {
+													"fields": [
+														"_identifications.taxonID",
+														"_identifications.taxon",
+														"_identifications.det",
+														"_identifications.detMethod",
+														"_identifications.detDate"
+													]
 												}
 											}
 										}
@@ -877,9 +858,9 @@
 										"type": "string",
 										"title": "Lisätiedot"
 									},
-									"countOfOccurrence": {
+									"countOfOccurrences": {
 										"type": "string",
-										"title": "MY.countOfOccurrence"
+										"title": "MY.countOfOccurrences"
 									},
 									"substrate": {
 										"type": "string",
@@ -1131,58 +1112,6 @@
 				"predominantTree": "",
 				"dateBegin": "2015-12-01",
 				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "sikurirousku",
-						"unitType": [
-							"MVL.233",
-							"MVL.24",
-							"MVL.61"
-						],
-						"taxonID": "MX.72469",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"taste": "",
-						"smell": ""
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "karvarousku",
-						"unitType": [
-							"MVL.233",
-							"MVL.24",
-							"MVL.61"
-						],
-						"taxonID": "MX.72276",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"taste": "",
-						"smell": ""
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "haaparousku",
-						"unitType": [
-							"MVL.233",
-							"MVL.24",
-							"MVL.61"
-						],
-						"taxonID": "MX.72694",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"taste": "",
-						"smell": ""
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "suppilovahvero",
-						"unitType": [
-							"MVL.233",
-							"MVL.121"
-						],
-						"taxonID": "MX.205515",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"taste": "",
-						"smell": "",
-						"images": ["MM.88404"]
-					}
 				],
 				"wgs84Geometry": {
 					"type": "Point",
@@ -1195,32 +1124,6 @@
 			{
 				"predominantTree": "",
 				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "suippumyrkkyseitikki",
-						"unitType": [
-							"MVL.233",
-							"MVL.24",
-							"MVL.61"
-						],
-						"taxonID": "MX.73119",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"taste": "",
-						"smell": ""
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
-						"informalNameString": "valkokärpässieni",
-						"unitType": [
-							"MVL.233",
-							"MVL.24",
-							"MVL.61"
-						],
-						"taxonID": "MX.72561",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"taste": "",
-						"smell": ""
-					}
 				],
 				"wgs84Geometry": {
 					"type": "Point",

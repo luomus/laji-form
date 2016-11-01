@@ -1,3 +1,5 @@
+import update from 'react-addons-update';
+
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
@@ -49,4 +51,12 @@ export function getUpdateObjectFromPath(path, injection) {
 
 	updatePointer[lastPathName] = injection;
 	return update;
+}
+
+export function immutableDelete(obj, delProp) {
+	const newObj = {};
+	Object.keys(obj).forEach(prop => {
+		if (prop !== delProp) newObj[prop] = obj[prop];
+	});
+	return newObj;
 }
