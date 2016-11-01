@@ -5,7 +5,7 @@ import DateTimeWidget from "./DateTimeWidget";
 export default (props) => (
 	<DateTimeWidget
 		{...props}
-		onChange={value => this.props.onChange(value === null ? null : moment(value).format("YYYY-MM-DD"))}
+		onChange={value => props.onChange(value === null ? null : moment(value).format("YYYY-MM-DD"))}
 		time={false}
 	/>
 );
