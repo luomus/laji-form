@@ -5,7 +5,7 @@ import merge from "deepmerge";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
-import { getUpdateObjectFromPath } from "../../utils";
+import { getUpdateObjectFromPath, hasData } from "../../utils";
 import LajiMap from "laji-map";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger, Glyphicon, Panel } from "react-bootstrap";
@@ -491,7 +491,7 @@ export default class MapArrayField extends Component {
 	}
 
 	getPopup = (idx, openPopupCallback) => {
-		if (!this.refs.popup) return;
+		if (!this.refs.popup || !hasData(this.getPopupData(idx))) return;
 		this.setState({popupIdx: idx}, () => openPopupCallback(this.refs.popup.refs.popup));
 	}
 
