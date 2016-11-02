@@ -442,23 +442,28 @@
 											},
 											"fieldScopes": {
 												"informalNameString": {
-													"*": {
+													"+": {
 														"refs": [
 															"identifications"
-														],
+														]
+													},
+													"*": {
 														"fields": [
 															"unitType",
 															"taxonID",
-															"taxonConfidence",
 															"recordBasis",
-															"countOfOccurrences",
-															"notes"
+															"taxonConfidence"
 														],
 														"fieldScopes": {
 															"unitType": {
-																"MVL.233": {
+																"+": {
 																	"fields": [
 																		"countOfOccurrences",
+																		"notes"
+																	]
+																},
+																"MVL.233": {
+																	"fields": [
 																		"substrateSpecies",
 																		"substrateNotes",
 																		"taste",
