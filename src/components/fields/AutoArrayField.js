@@ -105,7 +105,7 @@ export default class AutoArrayField extends Component {
 					}
 				</div>
 			) : null];
-			buttons.push(this.renderButtons(idx));
+			if (removable) buttons.push(this.renderButtons(idx));
 
 			rows.push(
 				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
