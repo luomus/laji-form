@@ -29,12 +29,12 @@ const lajiForm = new LajiForm({
 	onError: log("errors"),
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
-	renderSubmit: false
+	renderSubmit: true
 });
 
 if (!USE_LOCAL_SCHEMAS) {
 	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
-	         .then(({schema, uiSchema, uiSchemaContext}) => lajiForm.setState({schema, uiSchema, uiSchemaContext}));
+	         .then(({schema, uiSchema, uiSchemaContext}) => lajiForm.setState);
 }
 
 function onSubmit({formData}) {

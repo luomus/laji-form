@@ -34,7 +34,8 @@ export default class FlatField extends Component {
 
 		options.fields.forEach(field => {
 			const innerSchema = props.schema.properties[field];
-			const propertiesName = innerSchema.properties ? "properties" : "items";
+			const isArray = !innerSchema.properties;
+			const propertiesName = isArray ? "items" : "properties";
 			let properties = innerSchema[propertiesName];
 			if (properties.properties) properties = properties.properties;
 
@@ -43,19 +44,39 @@ export default class FlatField extends Component {
 			});
 			state.schema.properties = immutableDelete(state.schema.properties, field);
 
-			["formData", "errorSchema"].forEach(propsField => {
-				if (props[propsField] && props[propsField][field]) {
-					let innerData = props[propsField][field];
-					if (Array.isArray(innerData)) {
-						innerData = innerData[0];
-					}
-
-					Object.keys(innerData).forEach(innerField => {
-						state[propsField] = update(state[propsField], {$merge: {[`_${field}.${innerField}`]: innerData[innerField]}});
-					});
-					state[propsField] = immutableDelete(state[propsField], field);
+			if (props.formData && props.formData[field]) {
+				let innerData = props.formData[field];
+				if (Array.isArray(innerData)) {
+					innerData = innerData[0];
 				}
-			});
+
+				Object.keys(innerData).forEach(innerField => {
+					state.formData = update(state.formData, {$merge: {[`_${field}.${innerField}`]: innerData[innerField]}});
+				});
+				state.formData = immutableDelete(state.formData, field);
+			}
+
+			if (props.errorSchema) {
+				Object.keys(props.errorSchema).forEach(errorField => {
+					if (errorField === field) {
+						if (isArray) {
+							Object.keys(props.errorSchema[errorField]).map(key => props.errorSchema[errorField][key]).forEach(error => {
+								Object.keys(error).forEach(innerError => {
+									state.errorSchema = update(state.errorSchema,
+										{$merge: {[`_${field}.${innerError}`]: (state.errorSchema[`_${field}.${innerError}`] || []).concat([error[innerError]])}});
+								});
+							});
+							state.errorSchema = immutableDelete(state.formData, field);
+						} else {
+							Object.keys(props.errorSchema[errorField]).forEach(innerError => {
+								state.errorSchema = update(state.errorSchema,
+									{$merge: {[`_${field}.${innerError}`]: (state.errorSchema[`_${field}.${innerError}`] || []).concat([props.errorSchema[errorField][innerError]])}});
+							});
+							state.errorSchema = immutableDelete(state.errorSchema, errorField);
+						}
+					}
+				});
+			}
 		});
 
 		if (options.uiSchema) state.uiSchema = options.uiSchema;
@@ -71,7 +92,16 @@ export default class FlatField extends Component {
 			if (item[0] === "_") options.fields.forEach(field => {
 				if (item.includes(`_${field}.`)) {
 					const newItemName = item.replace(`_${field}.`, "");
-					formData = update(formData, {$merge: {[field]: update((formData[field] || {}), {$merge: {[newItemName]: formData[item]}})}});
+					const isArray = (this.props.schema.properties[field].type === "array");
+					const newItemBase = isArray ?
+						((formData[field] && formData[field][0]) ? formData[field][0] : {} || {}) :
+						(formData[field] || {});
+					const updatedItem = update(newItemBase, {$merge: {[newItemName]: formData[item]}});
+					formData = update(formData, isArray ?
+						{[field]: {$set: [updatedItem]}} :
+						{$merge: {[field]: updatedItem}}
+					);
+					formData = immutableDelete(formData, item);
 				}
 			});
 		});
