@@ -38,10 +38,8 @@ const autosuggestSettings = {
 		},
 		convertInputValue: that => {
 			let inputValue = that.props.value;
-			return new ApiClient().fetch("/person/by-id/" + inputValue).then(({inheritedName, preferredName}) => {
-				if (inheritedName && preferredName) return inheritedName + ", " + preferredName;
-				else if (inheritedName || preferredName) return inheritedName || preferredName;
-				else return inputValue;
+			return new ApiClient().fetch("/person/by-id/" + inputValue).then(({fullName}) => {
+				return fullName || inputValue;
 			});
 		}
 	}
