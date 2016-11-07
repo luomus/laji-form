@@ -17,7 +17,6 @@ export default class ImagesArrayField extends Component {
 		super(props);
 		this.apiClient = new ApiClient();
 		this._context = new Context("IMAGE_ARRAY_FIELD");
-		if (!this._context.dataURLs) this._context.dataURLs = {};
 		if (!this._context.metadatas) this._context.metadatas = {};
 		this.mainContext = new Context();
 		this.state = this.getStateFromProps(props);
@@ -30,17 +29,11 @@ export default class ImagesArrayField extends Component {
 	getStateFromProps = (props) => {
 		let imgURLs = [];
 		(props.formData || []).forEach((item, i) => {
-			if (item.substr(0, 3) === "MM.") {
-				imgURLs.push(undefined);
-				this.apiClient.fetchCached("/images/" + item).then(response => {
-					if (!this.mounted) return;
-					this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
-				})
-			} else if (item.substr(0, 4) !== "data") {
-				imgURLs.push(this._context.dataURLs[item]);
-			} else {
-				imgURLs.push(item);
-			}
+			imgURLs.push(undefined);
+			this.apiClient.fetchCached("/images/" + item).then(response => {
+				if (!this.mounted) return;
+				this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
+			})
 		});
 		return {imgURLs};
 	}
@@ -102,22 +95,12 @@ export default class ImagesArrayField extends Component {
 		const state = {modalOpen: true};
 		const options = this.props.uiSchema["ui:options"];
 		const schemas = options ? options.metadataSchemas : undefined;
-		if (item.match(/MM\./)) {
-			this.apiClient.fetchCached("/images/" + item).then(response => {
-				this._context.metadatas[item] = response;
-				state.modalImgSrc = response.originalURL;
-				state.modalMetadata = this._context.metadatas[item];
-				this.setState(state);
-			})
-		} else if (item.substr(0, 4) !== "data") {
-			state.modalImgSrc = this._context.dataURLs[item];
-			state.modalMetadata = this._context.metadatas[item] || schemas ? getDefaultFormState(schemas.schema, undefined, this.props.registry.definitions) : undefined;
+		this.apiClient.fetchCached("/images/" + item).then(response => {
+			this._context.metadatas[item] = response;
+			state.modalImgSrc = response.originalURL;
+			state.modalMetadata = this._context.metadatas[item];
 			this.setState(state);
-		} else {
-			state.modalImgSrc = item;
-			state.modalMetadata = undefined;
-			this.setState(state);
-		}
+		});
 	}
 
 	onImgRmClick = (i) => () => {
@@ -158,20 +141,13 @@ export default class ImagesArrayField extends Component {
 		const {onChange} = this.props;
 		let formData = this.props.formData || [];
 
-		let formDataLength = formData ? formData.length : 0;
-		let dataURLs = undefined;
-
 		this.mainContext.pushBlockingLoader();
 
-		this.processFiles(files).then(filesInfo => {
-			dataURLs = filesInfo.map(fileInfo => fileInfo.dataURL);
-			onChange(update(formData, {$push: dataURLs}));
-
-			const formDataBody = new FormData();
-
-			files.forEach(file => {
-				formDataBody.append("data", file);
-			});
+		this.processFiles(files).then(() => {
+			const formDataBody = files.reduce((body, file) => {
+				body.append("data", file);
+				return body;
+			}, new FormData());
 
 			return this.apiClient.fetch("/images", undefined, {
 				method: "POST",
@@ -184,25 +160,10 @@ export default class ImagesArrayField extends Component {
 				});
 			}));
 		}).then(response => {
-			onChange(update(formData,
-				response.reduce((updateObject, item, idx) => {
-						const id = item.id;
-						this._context.dataURLs[id] = dataURLs[idx];
-						updateObject.$merge[formDataLength + idx] = id;
-						return updateObject;
-					}, {$merge: {}}))
-			);
-
+			onChange(update(formData, {$push: response.map(({id}) => id)}));
 			this.mainContext.popBlockingLoader();
-		}).catch(response => {
+		}).catch(() => {
 			this.setState({alert: () => {
-				onChange(update(this.props.formData,
-					dataURLs.reduce((updateObject, dataURL, idx) => {
-						updateObject.$splice[0].push(formDataLength + idx);
-						return updateObject;
-					}, {$splice: [[]]})
-				));
-
 				this.mainContext.popBlockingLoader();
 			}})
 		});
