@@ -302,15 +302,9 @@ export default class LajiForm extends Component {
 		}
 	}
 
-	pushBlockingLoader = (instantly = false) => {
+	pushBlockingLoader = () => {
 		this._context.blockingLoaderCounter++;
-
-		const that = this;
-		function block() {
-			if (that.mounted) that.setState({blocking: that._context.blockingLoaderCounter > 0});
-		}
-
-		instantly ? block() :	setTimeout(block, 500);
+		if (this.mounted) this.setState({blocking: this._context.blockingLoaderCounter > 0});
 	}
 
 	popBlockingLoader = () => {
