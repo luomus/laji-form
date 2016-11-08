@@ -16,9 +16,14 @@ function CheckboxWidget(props) {
 	} = props;
 
 	function onKeyDown(e) {
+		console.log(e.key);
 		if (!disabled && e.key === " ") {
 			e.preventDefault();
 			onChange(!value);
+		}
+		if (e.key == "Escape") {
+			e.preventDefault();
+			document.activeElement.blur();
 		}
 	}
 

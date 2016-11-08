@@ -489,7 +489,7 @@ body .laji-form {
     height: 25px;
     line-height: 12.5px;
 }
-.array-item-add {
+.laji-form .array-item-add {
 	width: 28px;
 	float: right;
 	margin-right: -3px;
