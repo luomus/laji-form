@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
+import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 import Label from "../../components/Label";
@@ -47,28 +48,36 @@ export default class TableField extends Component {
 		const schemaLength = Object.keys(schemaProps).length;
 		const defaultCol = parseInt(12 / schemaLength);
 
-		const options = this.props.uiSchema["ui:options"];
+		const options = getUiOptions(this.props.uiSchema);
 		const cols = {xs: undefined, sm: undefined, md: undefined,  lg: undefined};
 		Object.keys(cols).forEach(col => {
-			cols[col] = (options && options[col]) ? Math.min(options[col], defaultCol) : defaultCol;
+			cols[col] = options[col] ? Math.min(options[col], defaultCol) : defaultCol;
 		});
 
 		Object.keys(schemaProps).forEach(propName => {
-			labels.push(<Col {...cols} key={propName + "-label"}><Label
-			                  label={schemaProps[propName].title || propName}
-			                  disabled={false}
-			                  id={idSchema[propName].$id}
-			                  help={(uiSchema && uiSchema.items[propName] && uiSchema.items[propName]["ui:help"]) ? uiSchema.items[propName]["ui:help"] : undefined}
-			/></Col>)
+				labels.push(
+				<Col {...cols} key={propName + "-label"}>
+					<Label
+						label={schemaProps[propName].title || propName}
+						disabled={false}
+						id={idSchema[propName].$id}
+						help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
+			</Col>)
 		});
-		items.push(<div key="label-row" className="laji-form-field-template-item"><div className="laji-form-field-template-schema">{labels}</div><div className="laji-form-field-template-buttons" /></div>);
+		items.push(
+			<div key="label-row" className="laji-form-field-template-item">
+				<div className="laji-form-field-template-schema">{labels}</div>
+				<div className="laji-form-field-template-buttons" />
+			</div>
+		);
 
 		if (formData) formData.forEach((item, idx) => {
 			let itemIdPrefix = props.idSchema.$id + "_" + idx;
 
 			const isAdditional = props.schema.additionalItems &&  idx >= props.schema.items.length;
 
-			let schema = (Array.isArray(props.schema.items) && idx < props.schema.items.length) ? props.schema.items[idx] : props.schema.items;
+			let schema = (Array.isArray(props.schema.items) && idx < props.schema.items.length) ?
+				props.schema.items[idx] : props.schema.items;
 			if (isAdditional) schema = props.schema.additionalItems;
 
 			let uiSchema = {};
@@ -76,7 +85,9 @@ export default class TableField extends Component {
 			else if (props.uiSchema.items) uiSchema = props.uiSchema.items;
 
 			let uiOptions = {...cols, showLabels: false, neverLimitWidth: true};
-			if (uiSchema["ui:field"]) uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
+			if (uiSchema["ui:field"]) {
+				uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
+			}
 			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
 
 
@@ -85,7 +96,11 @@ export default class TableField extends Component {
 			registry =update(props.registry, {formContext: {$merge: {buttons: []}}});
 			if ((!props.schema.additionalItems && idx) || isAdditional) {
 				registry =update(props.registry, {formContext: {$merge: {buttons:
-					[<Button bsStyle="danger" onClick={ e => {e.preventDefault(); this.onChange(update(formData, {$splice: [[idx, 1]]})) } }>✖</Button>]
+					[<Button key={`rm-${idx}`} bsStyle="danger"
+					         onClick={ e => {
+										 e.preventDefault();
+										 this.onChange(update(formData, {$splice: [[idx, 1]]})) }
+									 }>✖</Button>]
 				}}});
 			}
 
@@ -123,11 +138,14 @@ export default class TableField extends Component {
 
 	getNewRowArrayItem = () => {
 		let props = this.props;
+		const {formData} = props;
+		const {additionalItems} = props.schema;
 		let schema;
-		if (props.schema.additionalItems && (props.formData && props.formData.length > props.schema.items.length)) {
-			schema = props.schema.additionalItems;
-		} else if (props.schema.additionalItems && (!props.formData || props.formData.length === 0 || props.schema.items[props.formData.length - 1])) {
-			let i = props.formData ? 0 : props.formData.length - 1;
+		if (additionalItems && (formData && formData.length > props.schema.items.length)) {
+			schema = additionalItems;
+		} else if (additionalItems &&
+		          (!formData || formData.length === 0 || props.schema.items[formData.length - 1])) {
+			let i = formData ? 0 : formData.length - 1;
 			schema = props.schema.items[i];
 		} else {
 			schema = props.schema.items;

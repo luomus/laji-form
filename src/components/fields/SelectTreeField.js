@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 
 /**
  * Constructs selects from given tree.
@@ -31,8 +32,7 @@ export default class TreeField extends Component {
 	getStateFromProps(props) {
 		let schema = {"type": "object"};
 		let {uiSchema} = props;
-		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
-			uiSchema["ui:options"].uiSchema : {};
+		uiSchema = getInnerUiSchema(props.uiSchema);
 		let formData = {};
 		let idSchema = {$id: props.idSchema.$id};
 
@@ -41,7 +41,7 @@ export default class TreeField extends Component {
 			dictionarifiedEnums[e] = props.schema.enumNames[i];
 		});
 
-		let {tree, labels} = props.uiSchema["ui:options"];
+		let {tree, labels} = getUiOptions(props.uiSchema);
 
 		let levels = [];
 		let parentsMap = {};
@@ -102,8 +102,6 @@ export default class TreeField extends Component {
 		}
 
 		schema.properties = properties;
-
-		let state = {};
 
 		return {schema, formData, uiSchema, idSchema};
 	}

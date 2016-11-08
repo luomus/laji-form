@@ -3,6 +3,7 @@ import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { FormGroup, ButtonGroup, Button } from "react-bootstrap";
+import { getUiOptions } from "../../utils";
 
 const DATE_TIME_SEPARATOR = ", ";
 
@@ -31,7 +32,7 @@ export default class DateTimeWidget extends Component {
 		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
 
-		const options = this.props.options;
+		const options = getUiOptions(this.props);
 		let showButtons = true;
 		if (options && options.hasOwnProperty("showButtons") && !options.showButtons) showButtons = false;
 
@@ -126,7 +127,9 @@ export default class DateTimeWidget extends Component {
 		  }}
 		/>);
 
-		return this.props.options.showButtons ? (
+		const {showButtons} = getUiOptions(this.props);
+
+		return showButtons ? (
 			<div className="date-widget">
 				<div className="date-picker">
 					{datePicker}

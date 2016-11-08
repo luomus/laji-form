@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { isHidden } from "../../utils";
+import { isHidden, getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
 import { Row , Col } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
@@ -29,11 +29,13 @@ export default class GridLayoutField extends Component {
 
 	getStateFromProps = (props) => {
 		let fieldProps = {...props};
+		const options = getUiOptions(props.uiSchema);
+		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 
 		fieldProps.uiSchema = update(fieldProps.uiSchema, {$merge: {"ui:field": undefined}});
 
-		if (fieldProps.uiSchema["ui:options"] && fieldProps.uiSchema["ui:options"].uiSchema) {
-			fieldProps = update(fieldProps, {$merge: {uiSchema: fieldProps.uiSchema["ui:options"].uiSchema}});
+		if (options.uiSchema) {
+			fieldProps = update(fieldProps, {$merge: {uiSchema: innerUiSchema}});
 			for (let prop in fieldProps.schema.properties) {
 				if (props.uiSchema[prop]) fieldProps = update(fieldProps, {uiSchema: {$merge: {[prop]: props.uiSchema[prop]}}});
 			}
@@ -47,7 +49,6 @@ export default class GridLayoutField extends Component {
 		const groups = [];
 		let groupIdx = 0;
 
-		const options = props.uiSchema["ui:options"];
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 
 		Object.keys(props.schema.properties).forEach(property => {
@@ -78,8 +79,7 @@ export default class GridLayoutField extends Component {
 
 		if (ownRow) return cols;
 
-		const uiSchema = this.props.uiSchema;
-		const options = uiSchema  ? uiSchema["ui:options"] : undefined;
+		const options = getUiOptions(this.props.uiSchema);
 		Object.keys(cols).forEach(col => {
 			const optionCol = options[col];
 			cols[col] = (typeof optionCol === "object") ? optionCol[property] : optionCol;
@@ -94,7 +94,6 @@ export default class GridLayoutField extends Component {
 		let i = 0;
 		let fields = [];
 		this.state.groups.forEach(group => {
-
 			const SchemaField = this.state.registry.fields.SchemaField;
 
 			group.forEach((property, gi) => {
@@ -103,7 +102,7 @@ export default class GridLayoutField extends Component {
 				const ownRow = (type === "array" || type === "object");
 				const cols = this.getCols(ownRow, property);
 
-				const title = this.state.schema.properties[property].title ;
+				const title = this.state.schema.properties[property].title;
 				const name = this.state.showLabels ? (title !== undefined ? title : property) : undefined;
 				let schema = this.state.schema.properties[property];
 				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
@@ -134,7 +133,7 @@ export default class GridLayoutField extends Component {
 		let title = this.props.schema.title || this.props.name;
 		return (
 			<fieldset>
-				{(title !== undefined && title !== "") ? <TitleField title={title} /> : null}
+				{!isNullOrUndefined(title) ? <TitleField title={title} /> : null}
 				<Row>
 					{fields}
 				</Row>

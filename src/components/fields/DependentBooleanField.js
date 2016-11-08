@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 /**
  * Transforms an array field to o boolean field, where each value is true/false according to another array field.
  * Each value is true, if formData[booleanDefiner] == formData[booleanField].
@@ -32,23 +32,20 @@ export default class DependentBooleanField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
-			uiSchema["ui:options"].uiSchema : {};
-
-		let options = props.uiSchema["ui:options"];
-		let booleanField = options.booleanField;
-		let definer = options.booleanDefiner;
+		let {uiSchema, formData} = props;
+		const {booleanField, booleanDefiner} = getUiOptions(uiSchema);
+		uiSchema = getInnerUiSchema(uiSchema);
 
 		let schema = update(props.schema, {properties: {[booleanField]: {items: {$merge: {type: "boolean"}}}}});
 
-		let booleanFieldDataDictionarified = this.getDictionarifiedBooleanFieldData(props.formData);
+		let booleanFieldDataDictionarified = this.getDictionarifiedBooleanFieldData(formData);
 
 		let booleanFieldData = [];
-		if (this.checkFieldSanity(props.formData, definer) && this.checkFieldSanity(props.formData, booleanField)) props.formData[definer].forEach((definerItem) => {
+		if (this.checkFieldSanity(formData, booleanDefiner) &&
+		    this.checkFieldSanity(formData, booleanField)) formData[booleanDefiner].forEach((definerItem) => {
 			booleanFieldData.push(!!booleanFieldDataDictionarified[definerItem]);
 		});
-		const formData = update(props.formData, {[booleanField]: {$set: booleanFieldData}});
+		formData = update(props.formData, {[booleanField]: {$set: booleanFieldData}});
 
 		return {schema, uiSchema, formData};
 	}
@@ -58,17 +55,19 @@ export default class DependentBooleanField extends Component {
 	}
 
 	onChange = (formData) => {
-		let options = this.props.uiSchema["ui:options"];
-		let booleanField = options.booleanField;
-		let definer = options.booleanDefiner;
+		const {booleanField, booleanDefiner} = getUiOptions(this.props.uiSchema);
+		const propsFormData = this.props.formData;
 
 		let origData = this.props.formData[booleanField];
 		// if the change happened in booleanField data, reflect the changes to all booleanField items with same data.
-		if (JSON.stringify(this.props.formData[definer]) === JSON.stringify(formData[definer])) {
-			let dictionarifiedOrigData = this.getDictionarifiedFormData(this.props.formData, booleanField);
-			formData[definer].forEach((definerItem, i) => {
-				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) origData = update(origData, {$splice: [[origData.indexOf(definerItem), 1]]});
-				else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) origData ? (origData = update(origData, {$push: [definerItem]})) : (origData = [definerItem]);
+		if (JSON.stringify(propsFormData[booleanDefiner]) === JSON.stringify(formData[booleanDefiner])) {
+			let dictionarifiedOrigData = this.getDictionarifiedFormData(propsFormData, booleanField);
+			formData[booleanDefiner].forEach((definerItem, i) => {
+				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) {
+					origData = update(origData, {$splice: [[origData.indexOf(definerItem), 1]]});
+				} else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) {
+					origData = origData ? update(origData, {$push: [definerItem]}) : [definerItem];
+				}
 			})
 		}
 

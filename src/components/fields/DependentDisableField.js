@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
 
 /**
  * Disables object field's value according a regexp rule that is matched against another field's value.
@@ -33,26 +34,24 @@ export default class DependentDisableField extends Component {
 
 	getStateFromProps = (props) => {
 		let {uiSchema} = props;
-		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
-			uiSchema["ui:options"].uiSchema : {};
+		uiSchema = getInnerUiSchema(uiSchema);
 		Object.keys(props.uiSchema).forEach(key => {
 			if (key !== "ui:options") {
 				uiSchema = update(uiSchema, {$merge: {[key]: props.uiSchema[key]}})
 			}
 		});
 
-		let options = props.uiSchema["ui:options"];
+		const options = getUiOptions(props.uiSchema);
 
 		if (!options) {
 			return {uiSchema: update(uiSchema, {$merge: {"ui:field": undefined}})};
 		}
+;
+		const {disableField, disableDefiner, regexp} = options;
+		const {formData} = props;
 
-		let disableField = options.disableField;
-		let definer = options.disableDefiner;
-		let regexp = new RegExp(options.regexp);
-
-		if (!props.formData || props.formData[definer] === undefined || props.formData[definer] === null ||
-			(props.formData && props.formData[definer] !== undefined && props.formData[definer] !== null && !props.formData[definer].match(regexp))) {
+		if (!formData || formData[disableDefiner] === undefined || formData[disableDefiner] === null ||
+			(formData && !isNullOrUndefined(formData[disableDefiner]) && !formData[disableDefiner].match(regexp))) {
 			if (!uiSchema[disableField]) uiSchema = update(uiSchema, {$merge: {[disableField]: {}}});
 			uiSchema = update(uiSchema, {[disableField]: {$merge: {"ui:disabled": true}}});
 		}

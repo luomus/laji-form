@@ -153,5 +153,10 @@
 		fi: "valitse kellonaika",
 		en: "choose the time",
 		sv: "välja en tiden"
-	}
+	},
+	others: {
+		fi: "muut",
+		en: "others",
+		sv: "andra"
+	},
 }

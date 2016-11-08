@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 
 export default class SplitField extends Component {
@@ -28,7 +29,7 @@ export default class SplitField extends Component {
 	render() {
 		return (
 			<Row>
-				{this.props.uiSchema["ui:options"].splits.map((split, i) =>
+				{getUiOptions(this.props.uiSchema).splits.map((split, i) =>
 					<Col md={split.md} lg={split.lg} xs={split.xs} sm={split.sm} key={i}>
 						{this.renderSplitField(split)}
 					</Col>
@@ -40,7 +41,6 @@ export default class SplitField extends Component {
 	renderSplitField = ({fields, uiSchema, name}) => {
 		const {props} = this;
 		const schema = {type: "object", properties: {}};
-		const formData = {};
 
 		const schemas = {
 			errorSchema: {},

@@ -5,7 +5,7 @@ import merge from "deepmerge";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
-import { getUpdateObjectFromPath, hasData } from "../../utils";
+import { getUpdateObjectFromPath, hasData, getUiOptions, isEmptyString } from "../../utils";
 import LajiMap from "laji-map";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger, Glyphicon, Panel } from "react-bootstrap";
@@ -80,15 +80,15 @@ export default class MapArrayField extends Component {
 			data.push({type: "Feature", properties: {}, geometry: item.wgs84Geometry});
 		});
 
-		let activeIdx = (this.state && this.state.activeIdx !== undefined) ? this.state.activeIdx : (data.length ? 0 : undefined);
+		let activeIdx = (this.state && this.state.activeIdx !== undefined) ?
+			this.state.activeIdx : (data.length ? 0 : undefined);
 		let state = {...props, schema, uiSchema, data, activeIdx};
 		if (this.stateToMerge) {
 			state = merge(state, this.stateToMerge);
 			this.stateToMerge = undefined;
 		}
 
-		const options = this.props.uiSchema["ui:options"] || {};
-		const {buttons} = options;
+		const {buttons} = getUiOptions(this.props.uiSchema);
 
 		if (buttons) for (let button in buttons) {
 			const buttonOptions = buttons[button];
@@ -267,17 +267,21 @@ export default class MapArrayField extends Component {
 	}
 
 	render() {
-		const options = this.props.uiSchema["ui:options"];
-		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
+		const options = getUiOptions(this.props.uiSchema);
+		const hasInlineProps = options.inlineProperties && options.inlineProperties.length;
 		const colType = this.getColType(this.props);
 
 		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 		const paginationEnabled = !hasInlineProps && navigationEnabled;
 
-		const description = options.description;
-		const title = (options.title !== undefined && options.title !== "") ? options.title : undefined;
+		const {description} = options;
+		const title = (isEmptyString(options.title)) ? options.title : undefined;
 
-		const inlineContainerStyle = {width: this.state.containerWidth, left: this.state.containerLeft, top: options.topOffset || 0};
+		const inlineContainerStyle = {
+			width: this.state.containerWidth,
+			left: this.state.containerLeft,
+			top: options.topOffset || 0
+		};
 
 		let fixedHeight = this.state.fixedHeight;
 
@@ -296,16 +300,21 @@ export default class MapArrayField extends Component {
 		const inlineContentHeight = this.state.inlineSchemaHeight;
 
 		if (state === SQUEEZING &&
-		    ["inlineContainerHeight", "inlineContainerScrolledAmount"].every(stateProp => this.state.hasOwnProperty(stateProp)))
+		    ["inlineContainerHeight", "inlineContainerScrolledAmount"].every(
+			    stateProp => this.state.hasOwnProperty(stateProp))
+		) {
 			inlineContainerHeight = scrolledHeight;
+		}
 
 		if (state !== SCROLLING) {
 			inlineContainerStyle.height = inlineContainerHeight;
 			if (this.state.mapHeight > inlineContainerHeight) {
-				mapStyle.height = Math.max(inlineContainerHeight, (this.state.mapHeight - this.state.inlineContainerScrolledAmount || 0));
+				mapStyle.height = Math.max(inlineContainerHeight,
+					                         (this.state.mapHeight - this.state.inlineContainerScrolledAmount || 0));
 			}
 			if (inlineContentHeight > inlineContainerHeight) {
-				inlineSchemaStyle.height = (inlineContainerHeight > (inlineContentHeight - this.state.inlineContainerScrolledAmount || 0)) ?
+				inlineSchemaStyle.height =
+					(inlineContainerHeight > (inlineContentHeight - this.state.inlineContainerScrolledAmount || 0)) ?
 					inlineContainerHeight :
 					(this.state.inlineSchemaHeight - this.state.inlineContainerScrolledAmount || 0);
 				inlineSchemaStyle.height -= this.state.navContainerHeight;
@@ -337,7 +346,13 @@ export default class MapArrayField extends Component {
 				     className={"form-map-inline-container " + (scrollMode ? "out-of-view" : "")}
 				     style={scrollMode ? inlineContainerStyle : null} >
 					<div className={hasInlineProps ? " col-" + colType + "-6" : ""}>
-						{this.state.detachUnitMode ? <div className="pass-block"><Panel><span>{translations.DetachUnitHelp}</span><Button bsStyle="default" onClick={this.stopDetach}>{translations.Cancel}</Button></Panel></div> : null}
+						{this.state.detachUnitMode ?
+							<div className="pass-block">
+								<Panel>
+									<span>{translations.DetachUnitHelp}</span>
+									<Button bsStyle="default" onClick={this.stopDetach}>{translations.Cancel}</Button>
+								</Panel>
+							</div> : null}
 						<MapComponent
 							style={scrollMode ? mapStyle : undefined}
 							className={this.state.detachUnitMode ? "pass-block" : ""}
@@ -386,8 +401,8 @@ export default class MapArrayField extends Component {
 	}
 
 	renderNav = () => {
-		const options = this.props.uiSchema["ui:options"];
-		const hasInlineProps = options && options.inlineProperties && options.inlineProperties.length;
+		const options = getUiOptions(this.props.uiSchema);
+		const hasInlineProps = options.inlineProperties && options.inlineProperties.length;
 		const navigationEnabled = this.state.data && this.state.data.length > 1 && this.state.activeIdx !== undefined;
 		const navEnabled = hasInlineProps && navigationEnabled;
 		const colType = this.getColType(this.props);
@@ -452,7 +467,7 @@ export default class MapArrayField extends Component {
 
 		let uiSchema = isInline ? this.props.uiSchema["ui:options"].inlineUiSchema : this.state.uiSchema;
 
-		const options = this.props.uiSchema["ui:options"];
+		const options = getUiOptions(this.props.uiSchema);
 		const colType = this.getColType(this.props);
 
 		const SchemaField = this.props.registry.fields.SchemaField;
@@ -486,8 +501,9 @@ export default class MapArrayField extends Component {
 
 	renderSchemaField = () => {
 		const allFields = Object.keys(this.state.schema.properties);
-		let inlineFields = this.props.uiSchema["ui:options"].inlineProperties;
-		return this.getSchemaForFields(inlineFields ? allFields.filter(field => !inlineFields.includes(field)) : allFields);
+		const {inlineProperties} = getUiOptions(this.props.uiSchema);
+		return this.getSchemaForFields(inlineProperties ?
+			allFields.filter(field => !inlineProperties.includes(field)) : allFields);
 	}
 
 	getPopup = (idx, openPopupCallback) => {
@@ -496,11 +512,11 @@ export default class MapArrayField extends Component {
 	}
 
 	getPopupData = (idx) => {
-		const popupOptions = this.props.uiSchema["ui:options"].popupFields;
+		const {popupFields} = getUiOptions(this.props.uiSchema);
 
 		const data = {};
 		if (!this.props.formData) return data;
-		popupOptions.forEach(field => {
+		popupFields.forEach(field => {
 			const fieldName = field.field;
 			const itemFormData = this.props.formData[idx];
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
@@ -525,7 +541,7 @@ export default class MapArrayField extends Component {
 	}
 
 	getScrollVariables = () => {
-		const offset = this.props.uiSchema["ui:options"].topOffset || 0;
+		const offset = getUiOptions(this.props.uiSchema).topOffset || 0;
 
 		const inlineRef = this.refs.inlineContainer;
 		const mapAndSchemasRef = this.refs.mapAndSchemasContainer;
@@ -574,12 +590,8 @@ export default class MapArrayField extends Component {
 	}
 
 	getColType = (props) => {
-		const uiSchema = props.uiSchema;
-		if (uiSchema) {
-			const options = uiSchema["ui:options"];
-			if (options.colType) return options.colType;
-		}
-		return "md";
+		const {colType} = getUiOptions(props.uiSchema);
+		return colType || "md";
 	}
 
 	wideEnoughForFixed = () => {
@@ -594,12 +606,13 @@ export default class MapArrayField extends Component {
 			}
 		}
 
-		const {inlineProperties} = this.props.uiSchema["ui:options"];
+		const {inlineProperties} = getUiOptions(this.props.uiSchema);
 		const colType = this.getColType(this.props);
 
 		return (
 			inlineProperties &&
-			(colType === "xs" || (window && window.matchMedia && window.matchMedia("(min-width: " + getMinWidthForType(colType) + "px)").matches))
+			(colType === "xs" ||
+			 (window && window.matchMedia && window.matchMedia("(min-width: " + getMinWidthForType(colType) + "px)").matches))
 		);
 	}
 

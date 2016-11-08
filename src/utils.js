@@ -60,3 +60,24 @@ export function immutableDelete(obj, delProp) {
 	});
 	return newObj;
 }
+
+export function getUiOptions(uiSchema) {
+	if (uiSchema) {
+		const options = uiSchema["ui:options"] || uiSchema.options;
+		return options ? options : {};
+	}
+	return {};
+}
+
+export function getInnerUiSchema(uiSchema) {
+	return getUiOptions(uiSchema).uiSchema || {};
+}
+
+export function isNullOrUndefined(val) {
+	return val === null || val === undefined;
+}
+
+export function isEmptyString(val) {
+	return val === "" || isNullOrUndefined(val);
+}
+

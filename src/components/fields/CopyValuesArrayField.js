@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 
 export default class CopyValuesArrayField extends Component {
 	static propTypes = {
@@ -22,8 +23,7 @@ export default class CopyValuesArrayField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-		uiSchema = uiSchema["ui:options"].uiSchema;
+		const uiSchema = getInnerUiSchema(props.uiSchema);
 		return {uiSchema};
 	}
 
@@ -32,7 +32,7 @@ export default class CopyValuesArrayField extends Component {
 	}
 
 	onChange = (formData) => {
-		let copyFields = this.props.uiSchema["ui:options"].copy;
+		const copyFields = getUiOptions(this.props.uiSchema).copy;
 		if (formData && this.props.formData && formData.length > this.props.formData.length && formData.length > 1) {
 			let prev = formData[formData.length - 2];
 			let head = formData[formData.length - 1];

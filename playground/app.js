@@ -22,6 +22,32 @@ const apiClient = new ApiClientImplementation(
 
 const lajiForm = new LajiForm({
 	...schemas,
+	//schema: {
+	//	type: "object",
+	//	properties: {
+	//		a: {
+	//			type: "array",
+	//			items: {
+	//			type: "string"
+	//			}
+	//		},
+	//		b: {
+	//			type: "array",
+	//			items: {
+	//				type: "integer"
+	//			}
+	//		}
+	//	}
+	//},
+	//uiSchema: {
+	//	"ui:field": "arrayCombiner",
+	//	"ui:options": {
+	//		uiSchema: {
+	//			"ui:field": "table"
+	//		}
+	//	}
+	//},
+	//formData: [],
 	// formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},
 	onSubmit,
 	apiClient,

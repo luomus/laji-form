@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import update from "react-addons-update";
 import equals from "deep-equal";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { hasData } from "../../utils";
+import { hasData, getUiOptions } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { Row, Col, Overlay, Popover, ButtonGroup, Glyphicon } from "react-bootstrap";
 import Button from "../Button";
@@ -44,8 +44,9 @@ export default class AutoArrayField extends Component {
 			state.keyCounter = keyCounter;
 		}
 
-		const options = props.uiSchema["ui:options"];
+		const options = getUiOptions(props.uiSchema);
 		state.confirmDelete = !!options.confirmDelete;
+
 		return state;
 	}
 
@@ -131,7 +132,9 @@ export default class AutoArrayField extends Component {
 	onChangeForIdx = (idx) => {
 		return (itemFormData) => {
 			if (!this.props.formData || idx === this.props.formData.length) {
-				itemFormData = update(getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions), {$merge: itemFormData});
+				itemFormData = update(
+					getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
+					{$merge: itemFormData});
 			}
 
 			let formData = this.props.formData;
@@ -166,9 +169,7 @@ export default class AutoArrayField extends Component {
 	}
 
 	renderButtons = (idx) => {
-		const options = this.props.uiSchema["ui:options"];
-
-		const buttons = options.buttons || {};
+		const buttons = getUiOptions(this.props.uiSchema).buttons || {};
 		return Object.keys(buttons).map(button => {
 			return buttons[button](idx);
 		});

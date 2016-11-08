@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { shouldRender } from "react-jsonschema-form/lib/utils"
+import { getUiOptions } from "../../utils";
 import Button from "../Button";
 
 export default class ArrayBulkField extends Component {
@@ -25,9 +26,9 @@ export default class ArrayBulkField extends Component {
 
 	getStateFromProps = (props) => {
 		let state = {};
-		let options = props.uiSchema["ui:options"];
+		const {rowAddAmount} = getUiOptions(props.uiSchema);
 		state.rowAddAmount = 10;
-		if (options && options.rowAddAmount && options.rowAddAmount > 0) state.rowAddAmount = options.rowAddAmount;
+		if (rowAddAmount > 0) state.rowAddAmount = rowAddAmount;
 		if (props.formData && props.formData.length > this.state.rowAmount) {
 			state.rowAmount = props.formData.length + state.rowAddAmount - (props.formData.length % state.rowAddAmount);
 		}

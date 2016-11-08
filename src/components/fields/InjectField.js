@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from "react";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import update from "react-addons-update";
+import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, immutableDelete } from "../../utils";
+
 
 /**
  * Inject a schema object property to nested schema.
@@ -37,16 +39,16 @@ export default class InjectField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		const options = props.uiSchema["ui:options"];
-		const injections = options.injections;
-
-		const fields = injections.fields;
-		const target = injections.target;
+		const options = getUiOptions(props.uiSchema);
+		const {injections} = options;
+		const {fields, target} = injections;
 		let {schema, uiSchema, idSchema, formData, errorSchema} = props;
 
 		fields.forEach((fieldName) => {
-			schema = update(schema, {properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target], {$merge: {[fieldName]: schema.properties[fieldName]}})}});
-			delete schema.properties[fieldName];
+			schema = update(schema,
+				{properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target],
+				                        {$merge: {[fieldName]: schema.properties[fieldName]}})}});
+			schema = update(schema, {properties: {$set: immutableDelete(schema.properties, fieldName)}});
 
 			idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema[target].$id + "_" + fieldName}}}});
 			idSchema = update(idSchema, {$merge: {[fieldName]: undefined}});
@@ -92,9 +94,8 @@ export default class InjectField extends Component {
 	}
 
 	onChange = (formData) => {
-		const options = this.props.uiSchema["ui:options"].injections;
-		const fields = options.fields;
-		const target = options.target;
+		const options = getUiOptions(this.props.uiSchema).injections;
+		const {fields, target} = options;
 
 		if (!formData || !formData[target]) {
 			formatToOriginal(this.props);

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
 import { Row, Col, Glyphicon } from "react-bootstrap";
 import Button from "../Button";
 
@@ -10,7 +11,8 @@ import Button from "../Button";
  * uiSchema = {ui:options: {
  *  additionalFields: [<string>]
  *  expanderButtonText: <string>
- *  expanderGlyph: <string> or <boolean> (If boolean and true, default glyph is used, otherwise a bootstrap glyph name must be provided"
+ *  expanderGlyph: <string> or <boolean> (If boolean and true, default glyph is used, otherwise
+ *                                        a bootstrap glyph name must be provided)
  *  uiSchema: <uiSchema> (used for inner schema)
  * }
  *
@@ -42,12 +44,13 @@ export default class AdditionalsExpanderField extends Component {
 
 		let dictionarifiedAdditionals = {};
 
-		if (uiSchema["ui:options"] && uiSchema["ui:options"].additionalFields && uiSchema["ui:options"].additionalFields.length) {
-			uiSchema["ui:options"].additionalFields.forEach((option) => {
+		const {additionalFields} = getUiOptions(uiSchema);
+		if (additionalFields && additionalFields.length) {
+			additionalFields.forEach((option) => {
 				dictionarifiedAdditionals[option] = true;
 			});
 			let showAdditional = this.shouldShowAdditionals(props, dictionarifiedAdditionals);
-			if (!showAdditional && uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].additionalFields) {
+			if (!showAdditional && additionalFields) {
 				let filteredSchema = {};
 				Object.keys(schema.properties).forEach((prop) => {
 					if (!dictionarifiedAdditionals[prop]) filteredSchema[prop] = schema.properties[prop];
@@ -57,8 +60,7 @@ export default class AdditionalsExpanderField extends Component {
 		}
 		schema = update(schema, {title: {$set: undefined}});
 
-		uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
-			props.uiSchema["ui:options"].uiSchema : {};
+		uiSchema = getInnerUiSchema(props.uiSchema);
 
 		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
 	}
@@ -112,16 +114,16 @@ export default class AdditionalsExpanderField extends Component {
 	shouldShowAdditionalsButton = (props) => {
 		if (this.shouldShowAdditionals(props, this.state.dictionarifiedAdditionals)) return false;
 		if (props.formData) for (let property in props.formData) {
-			if (this.state.dictionarifiedAdditionals[property] && (props.formData[property] === undefined || props.formData[property] === null)) return true;
+			if (this.state.dictionarifiedAdditionals[property] && (isNullOrUndefined(props.formData[property]))) return true;
 		}
 		return false;
 	}
 
 	renderButton = () => {
-		const options = this.props.uiSchema["ui:options"] ? this.props.uiSchema["ui:options"] : undefined;
-		if (!options || !options.additionalFields || !options.additionalFields.length) return null;
+		const options = getUiOptions(this.props.uiSchema);
+		if (!options.additionalFields || !options.additionalFields.length) return null;
 
-		const text = (options && options.expanderButtonText) ? options.expanderButtonText : this.props.formContext.translations.More;
+		const text = options.expanderButtonText ? options.expanderButtonText : this.props.formContext.translations.More;
 
 		return <Button onClick={this.showAdditional} className="button-right">{text + " ▸" }</Button>;
 	}

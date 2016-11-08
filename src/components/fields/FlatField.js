@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { immutableDelete } from "../../utils";
+import { immutableDelete, getUiOptions, getInnerUiSchema } from "../../utils";
 
 export default class FlatField extends Component {
 	static propTypes = {
@@ -30,9 +30,9 @@ export default class FlatField extends Component {
 			formData: props.formData
 		};
 
-		const options = props.uiSchema["ui:options"];
+		const {fields, uiSchema} = getUiOptions(props.uiSchema);
 
-		options.fields.forEach(field => {
+		fields.forEach(field => {
 			const innerSchema = props.schema.properties[field];
 			const isArray = !innerSchema.properties;
 			const propertiesName = isArray ? "items" : "properties";
@@ -79,7 +79,7 @@ export default class FlatField extends Component {
 			}
 		});
 
-		if (options.uiSchema) state.uiSchema = options.uiSchema;
+		if (uiSchema) state.uiSchema = uiSchema;
 
 		state.idSchema = toIdSchema(state.schema, props.idSchema.$id, props.registry.definitions);
 
@@ -87,9 +87,9 @@ export default class FlatField extends Component {
 	}
 
 	onChange = (formData) => {
-		const options = this.props.uiSchema["ui:options"];
+		const {fields} = getUiOptions(this.props.uiSchema);
 		Object.keys(formData).forEach(item => {
-			if (item[0] === "_") options.fields.forEach(field => {
+			if (item[0] === "_") fields.forEach(field => {
 				if (item.includes(`_${field}.`)) {
 					const newItemName = item.replace(`_${field}.`, "");
 					const isArray = (this.props.schema.properties[field].type === "array");

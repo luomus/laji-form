@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { getDefaultFormState, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 
 /**
  * Transforms an object schema containing arrays to an array schema containing objects.
@@ -28,14 +29,12 @@ export default class ArrayCombinerField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-		const options = uiSchema["ui:options"] ? uiSchema["ui:options"] : undefined;
-		uiSchema = (uiSchema && uiSchema["ui:options"] && uiSchema["ui:options"].uiSchema) ?
-			uiSchema["ui:options"].uiSchema : {};
+		const uiSchema = getInnerUiSchema(props.uiSchema);
+		const {additionalItemsAmount} = getUiOptions(props.uiSchema);
 
 		let itemSchema = {type: "object", properties: {}};
 		let schema = {type: "array"};
-		if (options && options.additionalItemsAmount) schema.additionalItems = itemSchema;
+		if (additionalItemsAmount) schema.additionalItems = itemSchema;
 		if (props.schema.hasOwnProperty("title")) schema.title = props.schema.title;
 		Object.keys(props.schema.properties).forEach((propertyName) => {
 			let propertyOrigin = props.schema.properties[propertyName];
@@ -46,8 +45,8 @@ export default class ArrayCombinerField extends Component {
 		});
 
 		schema.items = itemSchema;
-		if (options && options.additionalItemsAmount) {
-			schema.items = Array(options.additionalItemsAmount).fill(itemSchema);
+		if (additionalItemsAmount) {
+			schema.items = Array(additionalItemsAmount).fill(itemSchema);
 			schema.additionalItems = itemSchema;
 		}
 

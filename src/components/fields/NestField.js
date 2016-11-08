@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema, immutableDelete } from "../../utils";
 
 /**
  * Makes it possible to extract fields from object schema and
@@ -111,7 +112,9 @@ export default class NestField extends Component {
 				"nests": function(props, propName, componentName) {
 					for (let optionProp in props["ui:options"]) {
 						const prop = props["ui:options"][optionProp];
-						if (!prop.fields || !Array.isArray(prop.fields)) return new Error("Required prop '" + propName + "." + optionProp + ".fields' was not specified in '" + componentName + "'")
+						if (!prop.fields || !Array.isArray(prop.fields)) {
+							return new Error("Required prop '" + propName + "." + optionProp + ".fields' was not specified in '" + componentName + "'");
+						}
 					}
 				},
 				uiSchema: PropTypes.object
@@ -129,7 +132,7 @@ export default class NestField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		const options = props.uiSchema["ui:options"];
+		const options = getUiOptions(props.uiSchema);
 
 		let errorSchema = props.errorSchema;
 		let formData = props.formData;
@@ -148,9 +151,11 @@ export default class NestField extends Component {
 			idSchema[id] = props.idSchema[id];
 		});
 
-		let nests = options.nests;
+		const {nests} = options;
 		Object.keys(nests).forEach((wrapperFieldName) => {
-			schemaProperties = update(schemaProperties, {$merge: {[wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)}});
+			schemaProperties = update(schemaProperties,
+				{$merge: {[wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)}}
+			);
 			errorSchema = update(errorSchema, {$merge: {[wrapperFieldName]: {}}});
 
 			nests[wrapperFieldName].fields.forEach((fieldName) => {
@@ -174,14 +179,20 @@ export default class NestField extends Component {
 						if (!formData[wrapperFieldName]) {
 							formData = update(formData, {$merge: {[wrapperFieldName]: {[fieldName]: formData[fieldName]}}});
 						} else {
-							formData = update(formData, {[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}, [fieldName]: {$set: undefined}});
+							formData = update(formData,
+								{[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}, [fieldName]: {$set: undefined}}
+							);
 						}
 				}
 
 				delete idSchema[fieldName]
 			});
 
-			idSchema[wrapperFieldName] = toIdSchema(schemaProperties[wrapperFieldName], idSchema.$id + "_" + wrapperFieldName, this.props.registry.definitions);
+			idSchema[wrapperFieldName] = toIdSchema(
+				schemaProperties[wrapperFieldName],
+				idSchema.$id + "_" + wrapperFieldName,
+				this.props.registry.definitions
+			);
 		});
 
 		let schema = update(this.props.schema, {properties: {$set: schemaProperties}});
@@ -197,7 +208,7 @@ export default class NestField extends Component {
 	}
 
 	onChange = (formData) => {
-		let nests = this.props.uiSchema["ui:options"].nests;
+		const {nests} = getUiOptions(this.props.uiSchema);
 
 		let dictionarifiedNests = {};
 		Object.keys(nests).forEach((newFieldName) => {

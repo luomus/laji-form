@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions, getInnerUiSchema } from "../../utils";
+import update from "react-addons-update";
 
 export default class InputTransformerField extends Component {
 	static propTypes = {
@@ -22,9 +23,7 @@ export default class InputTransformerField extends Component {
 	}
 
 	getStateFromProps(props) {
-		let uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
-			props.uiSchema["ui:options"].uiSchema : {};
-		return {uiSchema};
+		return {uiSchema: getInnerUiSchema(props.uiSchema)};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -32,7 +31,7 @@ export default class InputTransformerField extends Component {
 	}
 
 	onChange = (formData) => {
-		const rules = this.props.uiSchema["ui:options"].rules;
+		const {rules} = getUiOptions(this.props.uiSchema);
 		for (let field in rules) {
 			const rule = rules[field];
 			const regexp = new RegExp(rule.regexp);

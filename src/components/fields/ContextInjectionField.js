@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUpdateObjectFromPath } from "../../utils";
+import { getUpdateObjectFromPath, getUiOptions, getInnerUiSchema } from "../../utils";
 
 export default class ContextInjectionField extends Component {
 	static propTypes = {
@@ -24,14 +24,16 @@ export default class ContextInjectionField extends Component {
 	}
 
 	getStateFromProps(props) {
-		let uiSchema = (props.uiSchema && props.uiSchema["ui:options"] && props.uiSchema["ui:options"].uiSchema) ?
-			props.uiSchema["ui:options"].uiSchema : {};
+		const options = getUiOptions(props.uiSchema);
+		let uiSchema = getInnerUiSchema(props.uiSchema);
 
-		const injections = props.uiSchema["ui:options"].injections;
+		const {injections} = options;
 
 		for (let injectionPath in injections) {
 			uiSchema = merge(uiSchema,
-				getUpdateObjectFromPath(injectionPath, injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.formContext.uiSchemaContext))
+				getUpdateObjectFromPath(
+					injectionPath,
+					injections[injectionPath].split('.').reduce((o, i)=>o[i], this.props.formContext.uiSchemaContext))
 			);
 		}
 

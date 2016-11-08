@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions } from "../../utils";
 
 /**
  * Injects given fields value as default value to target field.
@@ -37,16 +38,13 @@ export default class InjectDefaultValueField extends Component {
 
 	getStateFromProps = (props) => {
 		let {uiSchema, formData, schema} = props;
-		const options = uiSchema["ui:options"];
-		let fields = options.fields;
-		const target = options.target;
+		const options = getUiOptions(props.uiSchema);
+		const {fields, target} = options;
 		uiSchema = update(uiSchema, {$merge: {"ui:field": undefined}});
 
-		let source = formData;
-		if (options.source) {
-			source = formData[options.source];
-		}
+		let source = options.source ? formData[options.source] : formData;
 
+		if (options.source)
 		fields.forEach(field => {
 				if (schema.properties[target].type === "array") {
 					if (formData && formData[target]) formData[target].forEach((item, i) => {
@@ -67,14 +65,10 @@ export default class InjectDefaultValueField extends Component {
 
 	onChange = (formData) => {
 		let {uiSchema, schema} = this.props;
-		const options = uiSchema["ui:options"];
-		let fields = options.fields;
-		const target = options.target;
+		const options = getUiOptions(uiSchema);
+		const {fields, target} = options;
 
-		let source = formData;
-		if (options.source) {
-			source = formData[options.source];
-		}
+		let source = options.source ? formData[options.source] : formData;
 		fields.forEach(field => {
 			if (source[field] === this.props.formData[field]) return;
 			if (schema.properties[target].type === "array") {

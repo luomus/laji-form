@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getUiOptions } from "../../utils";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
@@ -87,14 +88,21 @@ export default class AutosuggestField extends Component {
 	getStateFromProps = (props) => {
 		let {schema} = props;
 		let propsUiSchema = props.uiSchema;
-		let options = propsUiSchema["ui:options"];
-		options = update(options, {$merge: {onSuggestionSelected: this.onSuggestionSelected, onConfirmUnsuggested: this.onConfirmUnsuggested, onInputChange: this.onInputChange, isValueSuggested: this.isValueSuggested}});
-		if (autosuggestSettings[options.autosuggestField]) {
-			if (autosuggestSettings[options.autosuggestField].renderMetaInfo) options = update(options, {$merge: {onRenderMetaInfo: this.onRenderMetaInfo}});
+		let options = getUiOptions(propsUiSchema);
+		options = update(options, {$merge: {
+			onSuggestionSelected: this.onSuggestionSelected,
+			onConfirmUnsuggested: this.onConfirmUnsuggested,
+			onInputChange: this.onInputChange,
+			isValueSuggested: this.isValueSuggested
+		}});
+		const {autosuggestField, suggestionInputField} = options;
+		const autosuggestSetting = autosuggestSettings[autosuggestField];
+		if (autosuggestSetting && autosuggestSetting.renderMetaInfo) {
+			options = update(options, {$merge: {onRenderMetaInfo: this.onRenderMetaInfo}});
 		}
 
 		let uiSchema = options.uiSchema || {};
-		uiSchema = update(uiSchema, {$merge: {[options.suggestionInputField]: {"ui:widget": {component: "autosuggest", options: options}}}});
+		uiSchema = update(uiSchema, {$merge: {[suggestionInputField]: {"ui:widget": {component: "autosuggest", options}}}});
 		let state = {schema, uiSchema};
 
 		const taxonID = (props.formData && props.formData.taxonID) ? props.formData.taxonID : undefined;
@@ -133,18 +141,17 @@ export default class AutosuggestField extends Component {
 
 	onConfirmUnsuggested = (value) => {
 		let formData = this.props.formData;
-		const options = this.props.uiSchema["ui:options"];
-		Object.keys(this.props.uiSchema["ui:options"].suggestionReceivers).forEach(fieldName => {
+		const {suggestionReceivers, suggestionInputField} = getUiOptions(this.props.uiSchema);
+		Object.keys(suggestionReceivers).forEach(fieldName => {
 			formData = update(formData, {$merge: {[fieldName]: undefined}});
 		})
-		formData = update(formData, {$merge: {[options.suggestionInputField]: value}});
+		formData = update(formData, {$merge: {[suggestionInputField]: value}});
 		this.props.onChange(formData);
 	}
 
 	onInputChange = (value) => {
 		let {formData} = this.props;
-		const options = this.props.uiSchema["ui:options"];
-		const inputTransformer = options.inputTransformer;
+		const inputTransformer = getUiOptions(this.props.uiSchema).inputTransformer;
 		if (inputTransformer) {
 			const regexp = new RegExp(inputTransformer.regexp);
 			if (value.match(regexp)) {
@@ -166,8 +173,9 @@ export default class AutosuggestField extends Component {
 	}
 
 	isValueSuggested = () => {
-		for (let fieldName in this.props.uiSchema["ui:options"].suggestionReceivers) {
-			if (!this.props.formData || !this.props.formData[fieldName]) return false;
+		const {uiSchema, formData} = this.props;
+		for (let fieldName in uiSchema["ui:options"].suggestionReceivers) {
+			if (!formData || !formData[fieldName]) return false;
 		}
 		return true;
 	}

@@ -6,13 +6,17 @@ import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import Button from "../Button";
-import { propertyHasData, hasData } from "../../utils";
+import { propertyHasData, hasData, getUiOptions } from "../../utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
-		translate: taxonGroup => {
+		translate: (that, taxonGroup) => {
+			console.log(that);
+			if (taxonGroup === "+") return new Promise(resolve => resolve(that.props.registry.formContext.translations.Others));
 			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
+			}).catch(() => {
+				return "";
 			})
 		},
 	}
@@ -72,7 +76,7 @@ export default class ScopeField extends Component {
 	}
 
 	getStateFromProps(props) {
-		const options = props.uiSchema["ui:options"];
+		const options = getUiOptions(props.uiSchema);
 
 		const includeAdditionalFieldsChooserButton = !!options.includeAdditionalFieldsChooserButton;
 
@@ -104,7 +108,7 @@ export default class ScopeField extends Component {
 	getSchemas = (props) => {
 		let {schema, uiSchema, formData} = props;
 
-		let options = uiSchema["ui:options"];
+		let options = getUiOptions(uiSchema);
 		let generatedUiSchema = options.uiSchema || {};
 
 		let fieldsToShow = {};
@@ -162,7 +166,7 @@ export default class ScopeField extends Component {
 
 		addFieldScopeFieldsToFieldsToShow(options);
 
-		if (uiSchema["ui:options"] && uiSchema["ui:options"].innerUiField) {
+		if (options.innerUiField) {
 			uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
 		}
 
@@ -209,7 +213,8 @@ export default class ScopeField extends Component {
 	renderAdditionalsButtons = () => {
 		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData).length === 0) return null;
 
-		const options = this.props.uiSchema["ui:options"];
+		const options = getUiOptions(this.props.uiSchema);
+		const {additionalsGroupingPath} = options;
 		let list = [];
 		if (this.state.additionalsOpen) {
 			let translations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
@@ -229,8 +234,8 @@ export default class ScopeField extends Component {
 					additionalProperties[property] = this.props.schema.properties[property];
 			});
 
-			if (options.additionalsGroupingPath) {
-				var groups = options.additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
+			if (additionalsGroupingPath) {
+				var groups = additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
 			}
 
 			let filteredGroups = groups ? Object.keys(groups) : undefined;
@@ -262,7 +267,7 @@ export default class ScopeField extends Component {
 
 		return (
 			<div>
-				{options.additionalsGroupingPath ? this.renderFieldsModal(list) : this.renderFieldsDropdown(list)}
+				{additionalsGroupingPath ? this.renderFieldsModal(list) : this.renderFieldsDropdown(list)}
 				{this.renderGlyphFields()}
 			</div>
 		);
@@ -314,7 +319,12 @@ export default class ScopeField extends Component {
 
 	renderFieldsButton = (bsRole) => {
 		const glyph = <Glyphicon glyph="cog" />;
-		const tooltip = <Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>{this.props.formContext.translations.SelectMoreFields}</Tooltip>;
+		const tooltip = (
+			<Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>
+				{this.props.formContext.translations.SelectMoreFields}
+			</Tooltip>
+		);
+
 
 		return (
 			<OverlayTrigger overlay={tooltip} placement="left" bsRole={bsRole} >
@@ -326,7 +336,7 @@ export default class ScopeField extends Component {
 	}
 
 	renderGlyphFields = () => {
-		const {glyphFields} = this.props.uiSchema["ui:options"];
+		const {glyphFields} = getUiOptions(this.props.uiSchema);
 
 		return glyphFields ?
 			Object.keys(glyphFields).map(property => {
@@ -375,16 +385,17 @@ export default class ScopeField extends Component {
 	}
 
 	translateAdditionalsGroups = () => {
-		let options = this.props.uiSchema["ui:options"];
-		if (options.additionalsGroupingPath) {
-			var groups = Object.keys(options.additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options));
+		let options = getUiOptions(this.props.uiSchema);
+		const {additionalsGroupingPath} = options;
+		if (additionalsGroupingPath) {
+			var groups = Object.keys(additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options));
 		}
 
 		let translations = {};
 		let translationsToKeys = {};
 		let translationCount = 0;
 		groups.forEach(groupName => {
-			scopeFieldSettings[this.state.additionalsGroupsTranslator].translate(groupName).then(translation => {
+			scopeFieldSettings[this.state.additionalsGroupsTranslator].translate(this, groupName).then(translation => {
 				translations[groupName] = translation;
 				translationsToKeys[translation] = groupName;
 				translationCount++;

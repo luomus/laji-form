@@ -3,6 +3,7 @@ import update from "react-addons-update";
 import { ButtonToolbar, Dropdown, MenuItem, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Button from "../Button";
 import Context from "../../Context";
+import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";
 
 export default class ImageSelectWidget extends Component {
@@ -18,11 +19,12 @@ export default class ImageSelectWidget extends Component {
 	}
 
 	getValIdx = () => {
-		return this.props.options.enumOptions.findIndex(option => option.value === this.props.value);
+		return getUiOptions(this.props).enumOptions.findIndex(option => option.value === this.props.value);
 	}
 
 	onKeyDown = (e) => {
 		const {key} = e;
+		const {enumOptions} = getUiOptions(this.props);
 
 		switch (key) {
 			case " ":
@@ -32,8 +34,8 @@ export default class ImageSelectWidget extends Component {
 			case "ArrowDown":
 				if (!this.state.open) {
 					const valIdx = this.getValIdx();
-					if (valIdx < this.props.options.enumOptions.length - 1) {
-						this.props.onChange(this.props.options.enumOptions[valIdx + 1].value);
+					if (valIdx < enumOptions.length - 1) {
+						this.props.onChange(enumOptions[valIdx + 1].value);
 					}
 					e.preventDefault();
 					this.shouldFocusAfterUpdate = true;
@@ -43,7 +45,7 @@ export default class ImageSelectWidget extends Component {
 				if (!this.state.open) {
 					const valIdx = this.getValIdx();
 					if (valIdx > 0) {
-						this.props.onChange(this.props.options.enumOptions[valIdx - 1].value);
+						this.props.onChange(enumOptions[valIdx - 1].value);
 					}
 					e.preventDefault();
 					this.shouldFocusAfterUpdate = true;
@@ -71,8 +73,7 @@ export default class ImageSelectWidget extends Component {
 	}
 
 	render() {
-		const {options} = this.props;
-		const {enumOptions} = options;
+		const {enumOptions} = getUiOptions(this.props);
 
 		const valueLabel = enumOptions.find(enumOption => enumOption.value === this.props.value).label;
 		return (
@@ -103,7 +104,7 @@ export default class ImageSelectWidget extends Component {
 	}
 
 	renderImg = (enumName, fallback) => {
-		const imgName = this.props.options.images[enumName];
+		const imgName = getUiOptions(this.props).images[enumName];
 		if (imgName === undefined) return fallback;
 
 		let path = this._context[enumName] || {};

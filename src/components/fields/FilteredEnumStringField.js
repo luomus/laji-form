@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 
 export default class FilteredEnumStringField extends Component {
 	static propTypes = {
@@ -22,11 +23,10 @@ export default class FilteredEnumStringField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		const options = props.uiSchema["ui:options"];
-		const {filter} = options;
+		const {filter, type} = getUiOptions(props.uiSchema);
+		const uiSchema = getInnerUiSchema(props.uiSchema);
 		const {schema} = props;
 
-		const uiSchema = options.uiSchema ? options.uiSchema : undefined;
 		let enums = [];
 		let enumNames = [];
 
@@ -42,9 +42,9 @@ export default class FilteredEnumStringField extends Component {
 			});
 		}
 
-		if (options.type === "blacklist") {
+		if (type === "blacklist") {
 			filterEnums(item => !item);
-		} else if (options.type === "whitelist") {
+		} else if (type === "whitelist") {
 			filterEnums(item => item);
 		} else throw new Error("FilteredSelectWidget's type must be either 'blacklist' or 'whitelist'");
 		return {schema: {...schema, enum: enums, enumNames}, uiSchema};

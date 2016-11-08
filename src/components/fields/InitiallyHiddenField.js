@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { Row, Col, Collapse } from "react-bootstrap";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getInnerUiSchema } from "../../utils";
 import Button from "../Button";
 
 export default class InitiallyHiddenField extends Component {
@@ -22,10 +23,7 @@ export default class InitiallyHiddenField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-
-		let options = uiSchema["ui:options"];
-		return {uiSchema: (options && options.uiSchema) || undefined}
+		return {uiSchema: getInnerUiSchema(props.uiSchema)};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

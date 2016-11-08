@@ -6,10 +6,10 @@ import DescriptionField from "react-jsonschema-form/lib/components/fields/Descri
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import Button from "../Button";
-import Label from "../Label";
 import Alert from "../Alert";
 import Form from "../../overriddenComponents/Form";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { getUiOptions } from "../../utils";
 
 export default class ImagesArrayField extends Component {
 
@@ -50,18 +50,24 @@ export default class ImagesArrayField extends Component {
 		const {schema, uiSchema, name, formContext} = this.props;
 		const {translations} = formContext;
 
-		const options = uiSchema["ui:options"] || {};
-		const description = options.description;
+		const {description} = getUiOptions(uiSchema);
 		const title = (schema.title === undefined) ? name : schema.title;
+		const {TitleField} = this.props.registry.fields;
+
+		const tooltip = (
+			<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>
+				{translations.DropOrSelectFiles}
+			</Tooltip>
+		);
 
 		return (
 			<Row>
 				<Col xs={12}>
-					<Label label={title} id={this.props.idSchema.$id}/>
+					<TitleField title={title} />
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
-						<OverlayTrigger overlay={<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>{translations.DropOrSelectFiles}</Tooltip>}>
+						<OverlayTrigger overlay={tooltip}>
 							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 											  accept="image/*"
 											  onDragEnter={() => {this.setState({dragging: true})}}
@@ -93,8 +99,6 @@ export default class ImagesArrayField extends Component {
 	onImgClick = (i) => () => {
 		const item = this.props.formData[i];
 		const state = {modalOpen: true};
-		const options = this.props.uiSchema["ui:options"];
-		const schemas = options ? options.metadataSchemas : undefined;
 		this.apiClient.fetchCached("/images/" + item).then(response => {
 			this._context.metadatas[item] = response;
 			state.modalImgSrc = response.originalURL;
@@ -110,8 +114,7 @@ export default class ImagesArrayField extends Component {
 	renderModal = () => {
 		const {state} = this;
 		const {translations} = this.props.registry.formContext;
-		const options = this.props.uiSchema["ui:options"];
-		const metadataSchemas = options ? options.metadataSchemas : undefined;
+		const {metadataSchemas} = getUiOptions(this.props.uiSchema);
 		return state.modalOpen ?
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={() => this.setState({modalOpen: false})}>
 				<Modal.Header closeButton={true} />
