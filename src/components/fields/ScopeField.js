@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
@@ -281,15 +281,16 @@ export default class ScopeField extends Component {
 			          onSelect={(eventKey, event) => {
 									this.preventCloseDropdown = true;
 			          }}
-			          open={this.state.additionalsOpen}
 			          onToggle={(isOpen) => {
 									if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
 									this.preventCloseDropdown = false;
 			           }}>
 				{this.renderFieldsButton("toggle")}
-				<Dropdown.Menu>
-					{list}
-				</Dropdown.Menu>
+				<Collapse in={this.state.additionalsOpen} bsRole="menu">
+					<Dropdown.Menu>
+						{list}
+					</Dropdown.Menu>
+				</Collapse>
 			</Dropdown>
 		);
 	}
