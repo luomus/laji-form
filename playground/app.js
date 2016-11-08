@@ -22,32 +22,6 @@ const apiClient = new ApiClientImplementation(
 
 const lajiForm = new LajiForm({
 	...schemas,
-	//schema: {
-	//	type: "object",
-	//	properties: {
-	//		a: {
-	//			type: "array",
-	//			items: {
-	//			type: "string"
-	//			}
-	//		},
-	//		b: {
-	//			type: "array",
-	//			items: {
-	//				type: "integer"
-	//			}
-	//		}
-	//	}
-	//},
-	//uiSchema: {
-	//	"ui:field": "arrayCombiner",
-	//	"ui:options": {
-	//		uiSchema: {
-	//			"ui:field": "table"
-	//		}
-	//	}
-	//},
-	//formData: [],
 	// formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},
 	onSubmit,
 	apiClient,
@@ -59,8 +33,8 @@ const lajiForm = new LajiForm({
 });
 
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
-	         .then(({schema, uiSchema, uiSchemaContext}) => lajiForm.setState);
+	apiClient.fetch("/forms/JX.652", {lang, format: "schema"})
+	         .then(({schema, uiSchema, uiSchemaContext, validators}) => lajiForm.setState);
 }
 
 function onSubmit({formData}) {
