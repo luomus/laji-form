@@ -210,7 +210,8 @@
 									"fields": [
 										"locality",
 										"localityDescription",
-										"images"
+										"images",
+										"eventTime"
 									],
 									"uiSchema": {
 										"habitat": {
