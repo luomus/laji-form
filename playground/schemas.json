@@ -189,28 +189,28 @@
 									"dateEnd"
 								]
 							},
-							"habitatWrapper": {
+							"placeWrapper": {
 								"title": "Havaintopaikan tiedot",
 								"fields": [
 									"predominantTree",
 									"habitat",
-									"images",
 									"locality",
 									"localityDescription",
+									"images",
 									"eventTime"
 								]
 							}
 						},
 						"uiSchema": {
-							"habitatWrapper": {
+							"placeWrapper": {
 								"ui:field": "scoped",
 								"classNames": "well well-sm",
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
 									"fields": [
-										"images",
 										"locality",
-										"localityDescription"
+										"localityDescription",
+										"images"
 									],
 									"uiSchema": {
 										"habitat": {
