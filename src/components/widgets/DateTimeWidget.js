@@ -15,7 +15,6 @@ export default class DateTimeWidget extends Component {
 		required: false,
 		calendar: true,
 		time: true,
-		options: {showButtons: true}
 	}
 
 	constructor(props) {

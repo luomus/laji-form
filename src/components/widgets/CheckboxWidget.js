@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import Label from "../../components/Label";
+import Label from "../Label";
 import Switch from "rc-switch";
 
 function CheckboxWidget(props) {
@@ -16,7 +16,6 @@ function CheckboxWidget(props) {
 	} = props;
 
 	function onKeyDown(e) {
-		console.log(e.key);
 		if (!disabled && e.key === " ") {
 			e.preventDefault();
 			onChange(!value);

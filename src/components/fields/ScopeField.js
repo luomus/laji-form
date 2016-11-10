@@ -11,7 +11,6 @@ import { propertyHasData, hasData, getUiOptions } from "../../utils";
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (that, taxonGroup) => {
-			console.log(that);
 			if (taxonGroup === "+") return new Promise(resolve => resolve(that.props.registry.formContext.translations.Others));
 			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
@@ -87,8 +86,8 @@ export default class ScopeField extends Component {
 		};
 
 		if (options.additionalsGroupsTranslator) {
-			const prevOptions = (this.props && this.props.uiSchema && this.props.uiSchema["ui:options"]) ?
-				this.props.uiSchema["ui:options"] : {};
+			const prevOptions = getUiOptions(this.props.uiSchema);
+
 			state.additionalsGroupsTranslations =
 				(prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
 				this.state.additionalsGroupsTranslations : {};
@@ -101,8 +100,8 @@ export default class ScopeField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
-	 const registry = update(this.props.registry, {formContext: {$merge: {buttons: this.renderAdditionalsButtons()}}});
-		return <SchemaField {...this.props} {...this.state} registry={registry} />;
+		const uiSchema = update(this.state.uiSchema, {$merge: {"ui:buttons": this.renderAdditionalsButtons()}});
+		return <SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />;
 	}
 
 	getSchemas = (props) => {

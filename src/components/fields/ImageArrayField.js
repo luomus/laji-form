@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-boots
 import DropZone from "react-dropzone";
 import Button from "../Button";
 import Alert from "../Alert";
-import Form from "../../overriddenComponents/Form";
+import Form from "react-jsonschema-form";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 

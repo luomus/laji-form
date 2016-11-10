@@ -102,7 +102,7 @@ export default class AutosuggestField extends Component {
 		}
 
 		let uiSchema = options.uiSchema || {};
-		uiSchema = update(uiSchema, {$merge: {[suggestionInputField]: {"ui:widget": {component: "autosuggest", options}}}});
+		uiSchema = update(uiSchema, {$merge: {[suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}}});
 		let state = {schema, uiSchema};
 
 		const taxonID = (props.formData && props.formData.taxonID) ? props.formData.taxonID : undefined;

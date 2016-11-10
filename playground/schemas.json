@@ -71,14 +71,12 @@
 																		"uiSchema": {
 																			"items": {
 																				"leg": {
-																					"ui:widget": {
-																						"component": "autosuggest",
-																						"options": {
-																							"autosuggestField": "friends",
-																							"allowNonsuggestedValue": true,
-																							"suggestionReceive": "key",
-																							"preventTypingPattern": "^MA\\.\\d+$"
-																						}
+																					"ui:widget": "autosuggest",
+																					"ui:options": {
+																						"autosuggestField": "friends",
+																						"allowNonsuggestedValue": true,
+																						"suggestionReceive": "key",
+																						"preventTypingPattern": "^MA\\.\\d+$"
 																					}
 																				},
 																				"editors": {
@@ -132,11 +130,9 @@
 								"xs": 12
 							},
 							"dateBegin": {
-								"ui:widget": {
-									"component": "dateTime",
-									"options": {
-										"showButtons": true
-									}
+								"ui:widget": "dateTime",
+								"ui:options": {
+									"showButtons": true
 								}
 							},
 							"dateEnd": {
@@ -286,11 +282,9 @@
 												"xs": 12
 											},
 											"dateBegin": {
-												"ui:widget": {
-													"component": "dateTime",
-													"options": {
-														"showButtons": true
-													}
+												"ui:widget": "dateTime",
+												"ui:options": {
+													"showButtons": true
 												}
 											},
 											"dateEnd": {
@@ -423,16 +417,14 @@
 																	"MY.recordBasisHumanObservationIndirect"
 																],
 																"uiSchema": {
-																	"ui:widget": {
-																		"component": "imageSelect",
-																		"options": {
-																			"images": {
-																				"MY.recordBasisHumanObservationSeen": "seen",
-																				"MY.recordBasisHumanObservationHeard": "heard",
-																				"MY.recordBasisPreservedSpecimen": "specimen",
-																				"MY.recordBasisHumanObservationHandled": "handled",
-																				"MY.recordBasisHumanObservationIndirect": "indirect"
-																			}
+																	"ui:widget": "imageSelect",
+																	"ui:options": {
+																		"images": {
+																			"MY.recordBasisHumanObservationSeen": "seen",
+																			"MY.recordBasisHumanObservationHeard": "heard",
+																			"MY.recordBasisPreservedSpecimen": "specimen",
+																			"MY.recordBasisHumanObservationHandled": "handled",
+																			"MY.recordBasisHumanObservationIndirect": "indirect"
 																		}
 																	}
 																}

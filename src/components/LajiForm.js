@@ -5,13 +5,7 @@ import validate from "../validation";
 import Button from "./Button";
 import Label from "./Label";
 
-import Form from "./../overriddenComponents/Form";
-import SchemaField from "./../overriddenComponents/fields/SchemaField";
-import ArrayField from "./../overriddenComponents/fields/ArrayField";
-import ObjectField from "./../overriddenComponents/fields/ObjectField";
-import BooleanField from "./../overriddenComponents/fields/BooleanField";
-import StringField from "./../overriddenComponents/fields/StringField";
-import CheckboxWidget from "./../overriddenComponents/widgets/CheckboxWidget";
+import Form from "react-jsonschema-form";
 
 import NestField from "./fields/NestField";
 import ArrayBulkField from "./fields/ArrayBulkField";
@@ -38,6 +32,7 @@ import FilteredEnumStringField from "./fields/FilteredEnumStringField";
 import SplitField from "./fields/SplitField";
 import FlatField from "./fields/FlatField";
 
+import CheckboxWidget from "./widgets/CheckboxWidget";
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
@@ -66,21 +61,22 @@ function FieldTemplate(props) {
 		label,
 		children,
 		errors,
-		help,
+		rawHelp,
 		description,
 		hidden,
 		required,
 		displayLabel,
-		formContext,
+		uiSchema,
 		} = props;
-	const {buttons} = formContext;
-	delete formContext.buttons;
+
 	if (hidden) {
 		return children;
 	}
+
+	const buttons = uiSchema["ui:buttons"] || undefined;
 	return (
 		<div className={classNames}>
-			{label && displayLabel ? <Label label={label} help={help} required={required} id={id} /> : null}
+			{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
 			<div className={buttons ? "laji-form-field-template-item" : null}>
 				<div className={buttons ? "laji-form-field-template-schema" : null}>
@@ -168,11 +164,6 @@ export default class LajiForm extends Component {
 					ref="form"
 					onChange={this.onChange}
 					fields={{
-						SchemaField: SchemaField,
-						ArrayField: ArrayField,
-						ObjectField: ObjectField,
-						BooleanField: BooleanField,
-						StringField: StringField,
 						nested: NestField,
 						unitTripreport: ArrayBulkField,
 						bulkArray: ArrayBulkField,

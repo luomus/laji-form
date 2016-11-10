@@ -35,7 +35,7 @@
     "react-dom": "^15.3.2",
     "react-dropzone": "^3.6.0",
     "react-inlinesvg": "^0.5.4",
-    "react-jsonschema-form": "0.40",
+    "react-jsonschema-form": "^0.41",
     "react-masonry-component": "^4.2.1",
     "react-spinner": "^0.2.6",
     "react-widgets": "^3.4.4"
