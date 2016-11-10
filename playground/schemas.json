@@ -436,9 +436,13 @@
 											"fieldScopes": {
 												"informalNameString": {
 													"+": {
-														"refs": [
-															"identifications"
-														]
+															"fields": [
+															"_identifications.taxonID",
+															"_identifications.taxon",
+															"_identifications.det",
+															"_identifications.detMethod",
+															"_identifications.detDate"
+															]
 													},
 													"*": {
 														"fields": [
@@ -460,7 +464,9 @@
 																		"substrateSpecies",
 																		"substrateNotes",
 																		"taste",
-																		"tasteNotes",
+																		"tasteNotes"
+																	],
+																	"additionalFields": [
 																		"smell",
 																		"smellNotes"
 																	]
@@ -468,17 +474,6 @@
 															}
 														}
 													}
-												}
-											},
-											"definitions": {
-												"identifications": {
-													"fields": [
-														"_identifications.taxonID",
-														"_identifications.taxon",
-														"_identifications.det",
-														"_identifications.detMethod",
-														"_identifications.detDate"
-													]
 												}
 											}
 										}
