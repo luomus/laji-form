@@ -248,7 +248,10 @@ export default class ScopeField extends Component {
 				let group = groups[groupName];
 				let groupFields = {};
 				const {fields, additionalFields} = group;
-				const combinedFields = additionalFields ? [...fields, ...additionalFields] : fields;
+				const combinedFields = [];
+				[fields, additionalFields].forEach(_fields => {
+					if (_fields) combinedFields.push(..._fields);
+					});
 				combinedFields.forEach(field => {
 					if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
 				});

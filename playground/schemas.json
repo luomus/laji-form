@@ -456,17 +456,16 @@
 																"+": {
 																	"fields": [
 																		"countOfOccurrences",
+																		"sex",
 																		"notes"
 																	]
 																},
 																"MVL.233": {
-																	"fields": [
+																	"additionalFields": [
 																		"substrateSpecies",
 																		"substrateNotes",
 																		"taste",
-																		"tasteNotes"
-																	],
-																	"additionalFields": [
+																		"tasteNotes",
 																		"smell",
 																		"smellNotes"
 																	]
@@ -854,6 +853,32 @@
 									"countOfOccurrences": {
 										"type": "string",
 										"title": "MY.countOfOccurrences"
+									},
+									"sex": {
+										"type": "string",
+										"title": "Sukupuoli",
+										"enum": [
+											"",
+											"MY.sexM",
+											"MY.sexF",
+											"MY.sexU",
+											"MY.sexN",
+											"MY.sexX",
+											"MY.sexW",
+											"MY.sexE",
+											"MY.sexC"
+										],
+										"enumNames": [
+											"",
+											"Koiras",
+											"MY.sexF",
+											"MY.sexU",
+											"MY.sexN",
+											"MY.sexX",
+											"Työläinen",
+											"MY.sexE",
+											"MY.sexC"
+										]
 									},
 									"substrate": {
 										"type": "string",
