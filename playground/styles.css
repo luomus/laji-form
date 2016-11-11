@@ -253,7 +253,6 @@ body .laji-form {
 }
 
 .laji-form .scope-field-modal-item {
-	width: 130px;
 	padding: 5px;
 }
 .laji-form .scope-field-modal-item .list-group-item {
@@ -276,6 +275,10 @@ body .laji-form {
 .laji-form .list-group-item:first-child {
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
+	background-color: #ececec;
+}
+.laji-form .list-group-item:first-child.active {
+	background-color: #255c8c;
 }
 
 .laji-form .dropdown-menu {

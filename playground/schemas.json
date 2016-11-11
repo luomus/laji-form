@@ -444,20 +444,14 @@
 												"taxonConfidence"
 											],
 											"fieldScopes": {
-												"informalNameString": {
+												"unitType": {
 													"+": {
-															"fields": [
+														"fields": [
 															"_identifications.taxonID",
 															"_identifications.taxon",
 															"_identifications.det",
 															"_identifications.detMethod",
-															"_identifications.detDate"
-															]
-													}
-												},
-												"unitType": {
-													"+": {
-														"fields": [
+															"_identifications.detDate",
 															"countOfOccurrences",
 															"sex",
 															"notes"
