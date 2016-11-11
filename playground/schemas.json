@@ -203,6 +203,7 @@
 								"classNames": "well well-sm",
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
+									"additionalsPersistenceId": "gatherings",
 									"fields": [
 										"locality",
 										"localityDescription",
@@ -320,8 +321,10 @@
 										"ui:field": "scoped",
 										"classNames": "well well-sm",
 										"ui:options": {
-											"additionalsGroupingPath": "fieldScopes.informalNameString.*.fieldScopes.unitType",
+											"additionalsGroupingPath": "fieldScopes.unitType",
 											"additionalsGroupsTranslator": "taxonGroups",
+											"additionalsPersistenceKey": "unitType",
+											"additionalsPersistenceId": "gathering_unit_unitType",
 											"includeAdditionalFieldsChooserButton": true,
 											"glyphFields": {
 												"images": "camera"
@@ -433,6 +436,13 @@
 													}
 												}
 											},
+											"fields": [
+												"informalNameString",
+												"unitType",
+												"taxonID",
+												"recordBasis",
+												"taxonConfidence"
+											],
 											"fieldScopes": {
 												"informalNameString": {
 													"+": {
@@ -443,35 +453,25 @@
 															"_identifications.detMethod",
 															"_identifications.detDate"
 															]
-													},
-													"*": {
+													}
+												},
+												"unitType": {
+													"+": {
 														"fields": [
-															"unitType",
-															"taxonID",
-															"recordBasis",
-															"taxonConfidence"
-														],
-														"fieldScopes": {
-															"unitType": {
-																"+": {
-																	"fields": [
-																		"countOfOccurrences",
-																		"sex",
-																		"notes"
-																	]
-																},
-																"MVL.233": {
-																	"additionalFields": [
-																		"substrateSpecies",
-																		"substrateNotes",
-																		"taste",
-																		"tasteNotes",
-																		"smell",
-																		"smellNotes"
-																	]
-																}
-															}
-														}
+															"countOfOccurrences",
+															"sex",
+															"notes"
+														]
+													},
+													"MVL.233": {
+														"additionalFields": [
+															"substrateSpecies",
+															"substrateNotes",
+															"taste",
+															"tasteNotes",
+															"smell",
+															"smellNotes"
+														]
 													}
 												}
 											}

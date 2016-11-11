@@ -42,7 +42,7 @@ import HiddenWidget from "./widgets/HiddenWidget";
 import ImageSelectWidget from "./widgets/ImageSelectWidget";
 
 import ApiClient from "../ApiClient";
-import Context from "../Context";
+import Context, {clear as clearContext} from "../Context";
 import translations from "../translations.js";
 
 const RC_SWITCH_CLASS = "rc-switch";
@@ -308,5 +308,6 @@ export default class LajiForm extends Component {
 
 	clearState = () => {
 		this._context.clearState();
+		clearContext();
 	}
 }

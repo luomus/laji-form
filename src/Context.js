@@ -1,4 +1,4 @@
-const singletonContext = {};
+let singletonContext = {};
 
 /**
  * A singleton context container.
@@ -9,4 +9,9 @@ export default class Context {
 		if (!singletonContext[nameSpace]) singletonContext[nameSpace] = {};
 		return singletonContext[nameSpace];
 	}
+
+}
+
+export function clear() {
+	singletonContext = {};
 }

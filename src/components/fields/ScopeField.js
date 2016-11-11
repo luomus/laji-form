@@ -7,6 +7,7 @@ import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import Button from "../Button";
 import { propertyHasData, hasData, getUiOptions } from "../../utils";
+import Context from "../../Context";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -24,14 +25,19 @@ const scopeFieldSettings = {
 /**
  * Field with fields, which are shown according to recursive scope.
  * uiSchema = {"ui:options": {
+ * additionalsGroupingPath: path to the field scope that defines groups
+ * additionalsGroupsTranslator: one of scopeFieldsSettings translator
+ * additionalsPersistenceId: instances with same persistence id use the same additional fields
+ * additionalsPersistenceKey: form data property value for more fine grained persistence behaviour
  *  uiSchema: <uiSchema> (ui schema for inner schema)
  *  fields: [<string>] (fields that are always shown)
  *  fieldScopes: {
  *   fieldName: {
  *     fieldValue: {
  *       fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
+ *       additionalFields: [<string>] (if grouping is enabled, additional fields are shown only if selected from the list)
  *       refs: [<string>] (root definitions that are merged recursively to this fieldScope)
- *       uiSchema: <uiSchema> (merged recursively to inner uiSchema
+ *       uiSchema: <uiSchema> (merged recursively to inner uiSchema)
  *       fieldScopes: {fieldName: <fieldScope>, fieldName2 ...}
  *     },
  *     fieldValue2, ...
@@ -52,6 +58,8 @@ export default class ScopeField extends Component {
 				includeAdditionalFieldsChooserButton: PropTypes.boolean,
 				additionalsGroupingPath: PropTypes.string,
 				additionalsGroupsTranslator: PropTypes.oneOf(Object.keys(scopeFieldSettings)),
+				additionalsPersistenceId: PropTypes.string,
+				additionalsPersistenceKey: PropTypes.string,
 				fieldScopes: PropTypes.object,
 				fields: PropTypes.arrayOf(PropTypes.string),
 				definitions: PropTypes.object,
@@ -62,8 +70,22 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
+		this._context = new Context("SCOPE_FIELD");
+		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
+		let additionalFields = {};
+		if (this._context[additionalsPersistenceId]) {
+			const contextEntry = this._context[additionalsPersistenceId];
+			if (additionalsPersistenceKey) {
+				const formDataItem = props.formData[additionalsPersistenceKey];
+				props.schema.properties[additionalsPersistenceKey].type === "array" ? formDataItem : [formDataItem].forEach(item => {
+					additionalFields = contextEntry ? (contextEntry[item] || {}) : {};
+				});
+			} else {
+				additionalFields = contextEntry ? (contextEntry || {}) : {};
+			}
+		}
 		this.state = {
-			additionalFields: {},
+			additionalFields,
 			additionalsOpen: false,
 			searchTerm: "",
 			...this.getStateFromProps(props)
@@ -79,9 +101,7 @@ export default class ScopeField extends Component {
 
 		const includeAdditionalFieldsChooserButton = !!options.includeAdditionalFieldsChooserButton;
 
-		const schemas = this.getSchemas(props);
-		const state = {
-			...schemas,
+		let state = {
 			includeAdditionalFieldsChooserButton
 		};
 
@@ -94,6 +114,25 @@ export default class ScopeField extends Component {
 			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;
 		}
 
+		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
+		let additionalFields = (this.state ? this.state.additionalFields : {}) || {};
+		if (this._context[additionalsPersistenceId]) {
+			const contextEntry = this._context[additionalsPersistenceId];
+			let additionalsToAdd = {};
+			if (additionalsPersistenceKey) {
+				const formDataItem = props.formData[additionalsPersistenceKey];
+				(Array.isArray(formDataItem) ? formDataItem : [formDataItem]).forEach(item => {
+					if (contextEntry && contextEntry[item]) additionalsToAdd = contextEntry[item];
+				});
+			} else {
+				if (contextEntry) additionalsToAdd = contextEntry;
+			}
+			additionalFields = {...additionalFields, ...additionalsToAdd};
+		}
+		state.additionalFields = additionalFields;
+
+		state = {...state, ...this.getSchemas(props, state)};
+
 		return state;
 	}
 
@@ -104,7 +143,7 @@ export default class ScopeField extends Component {
 		return <SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />;
 	}
 
-	getSchemas = (props) => {
+	getSchemas = (props, state) => {
 		let {schema, uiSchema, formData} = props;
 
 		let options = getUiOptions(uiSchema);
@@ -169,11 +208,13 @@ export default class ScopeField extends Component {
 			uiOptions.innerUiField = uiSchema["ui:options"].innerUiField;
 		}
 
-		let additionalFields = (this.state && this.state.additionalFields) ? this.state.additionalFields : [];
+		let additionalFields = (state && state.additionalFields) ? state.additionalFields : [];
 		if (additionalFields) {
 			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
-				fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
-				if (this.props.schema.properties[property].type === "boolean") fieldsToShow[property].default = true;
+				fieldsToShow[property] = this.props.schema.properties[property];
+				if (this.props.schema.properties[property].type === "boolean") {
+					fieldsToShow[property] = {...fieldsToShow[property], default: true};
+				}
 			});
 		}
 
@@ -184,7 +225,7 @@ export default class ScopeField extends Component {
 				     schema.properties.hasOwnProperty(property) &&
 				     formData[property] === schema.properties[property].default)) return;
 				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
-					fieldsToShow[property] = {additional: true, ...this.props.schema.properties[property]};
+					fieldsToShow[property] = this.props.schema.properties[property];
 				}
 			})
 		}
@@ -229,7 +270,7 @@ export default class ScopeField extends Component {
 			Object.keys(this.props.schema.properties).forEach(property => {
 				if (!this.state.schema.properties ||
 				    !this.state.schema.properties[property] ||
-				    this.state.schema.properties[property].additional)
+				    this.state.additionalFields[property])
 					additionalProperties[property] = this.props.schema.properties[property];
 			});
 
@@ -251,7 +292,7 @@ export default class ScopeField extends Component {
 				const combinedFields = [];
 				[fields, additionalFields].forEach(_fields => {
 					if (_fields) combinedFields.push(..._fields);
-					});
+				});
 				combinedFields.forEach(field => {
 					if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
 				});
@@ -367,9 +408,27 @@ export default class ScopeField extends Component {
 
 	toggleAdditionalProperty = (field) => {
 		const isIncluded = this.propertyIsIncluded(field);
-		if (propertyHasData(field, this.props.formData))	return;
+		if (propertyHasData(field, this.props.formData))return;
 		this.setState({additionalFields: update(this.state.additionalFields, {$merge: {[field]: !isIncluded}})},
-			() => {this.setState(this.getStateFromProps(this.props))});
+			() => {
+				const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(this.props.uiSchema);
+				const additionalsPersistenceVal = this.props.formData[additionalsPersistenceKey];
+				let contextEntry = this._context[additionalsPersistenceId] || {};
+				if (additionalsPersistenceKey) {
+					const additionalsKeys = ((this.props.schema.properties[additionalsPersistenceKey].type === "array") ?
+							additionalsPersistenceVal :
+							[additionalsPersistenceVal]) ||
+						["undefined"];
+					additionalsKeys.forEach(persistenceKey => {
+						contextEntry[persistenceKey] = this.state.additionalFields;
+						this._context[additionalsPersistenceId] = contextEntry;
+					});
+				} else {
+					contextEntry = this.state.additionalFields;
+					this._context[additionalsPersistenceId] = contextEntry;
+				}
+				this.setState(this.getStateFromProps(this.props));
+			});
 	}
 
 	addAdditionalPropertiesToList = (properties, list, ElemType) => {
