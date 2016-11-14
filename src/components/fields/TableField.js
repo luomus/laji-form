@@ -88,21 +88,15 @@ export default class TableField extends Component {
 			if (uiSchema["ui:field"]) {
 				uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			}
-			uiSchema = update(uiSchema, {$merge: {"ui:field": "grid", "ui:options": uiOptions}});
+			uiSchema = {...uiSchema, "ui:field": "grid", "ui:options": uiOptions};
 
-
-			let registry = props.registry;
-
-			registry =update(props.registry, {formContext: {$merge: {buttons: []}}});
-			if ((!props.schema.additionalItems && idx) || isAdditional) {
-				registry =update(props.registry, {formContext: {$merge: {buttons:
-					[<Button key={`rm-${idx}`} bsStyle="danger"
-					         onClick={ e => {
-										 e.preventDefault();
-										 this.onChange(update(formData, {$splice: [[idx, 1]]})) }
-									 }>✖</Button>]
-				}}});
-			}
+			uiSchema = {...uiSchema, "ui:buttons": ((!props.schema.additionalItems && idx) || isAdditional) ? [
+				<Button key={`rm-${idx}`} bsStyle="danger"
+					onClick={e => {
+						 e.preventDefault();
+						 this.onChange(update(formData, {$splice: [[idx, 1]]}))
+					}}>✖</Button>
+			] : []};
 
 			items.push(
 				<SchemaField
@@ -112,7 +106,7 @@ export default class TableField extends Component {
 					schema={schema}
 					uiSchema={uiSchema}
 					idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
-					registry={registry}
+					registry={props.registry}
 					errorSchema={props.errorSchema[idx]} />
 			);
 		});
@@ -132,7 +126,7 @@ export default class TableField extends Component {
 		if (!this.props.formData) {
 			this.onChange([item]);
 		} else {
-			this.onChange(update(this.props.formData, {$push: [item]}))
+			this.onChange([...this.props.formData, item]);
 		}
 	}
 

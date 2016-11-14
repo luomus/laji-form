@@ -40,7 +40,7 @@ export default class InjectDefaultValueField extends Component {
 		let {uiSchema, formData, schema} = props;
 		const options = getUiOptions(props.uiSchema);
 		const {fields, target} = options;
-		uiSchema = update(uiSchema, {$merge: {"ui:field": undefined}});
+		uiSchema = {...uiSchema, "ui:field": undefined};
 
 		let source = options.source ? formData[options.source] : formData;
 

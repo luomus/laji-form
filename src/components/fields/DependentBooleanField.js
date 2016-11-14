@@ -45,7 +45,7 @@ export default class DependentBooleanField extends Component {
 		    this.checkFieldSanity(formData, booleanField)) formData[booleanDefiner].forEach((definerItem) => {
 			booleanFieldData.push(!!booleanFieldDataDictionarified[definerItem]);
 		});
-		formData = update(props.formData, {[booleanField]: {$set: booleanFieldData}});
+		formData = {...props.formData, [booleanField]: booleanFieldData};
 
 		return {schema, uiSchema, formData};
 	}
@@ -66,12 +66,12 @@ export default class DependentBooleanField extends Component {
 				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) {
 					origData = update(origData, {$splice: [[origData.indexOf(definerItem), 1]]});
 				} else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) {
-					origData = origData ? update(origData, {$push: [definerItem]}) : [definerItem];
+					origData = origData ? [...origData, definerItem] : [definerItem];
 				}
 			})
 		}
 
-		formData = update(formData, {$merge: {[booleanField]: origData}});
+		formData = {...formData, [booleanField]: origData};
 		this.props.onChange(formData);
 	}
 

@@ -38,9 +38,7 @@ export default class AutoArrayField extends Component {
 			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
 			state.keyCounter = formDataLength + 1;
 		} else if (props.formData && formDataLength >= idxsToKeys.length) {
-			state.idxsToKeys = update(idxsToKeys,
-				{$push: Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)}
-			);
+			state.idxsToKeys = [...idxsToKeys, ...Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)];
 			state.keyCounter = keyCounter;
 		}
 
@@ -73,7 +71,7 @@ export default class AutoArrayField extends Component {
 		const defaultData = getDefaultFormState(this.props.schema.items, undefined, registry.definitions);
 		const lastItem = data[data.length - 1];
 		if (data.length === 0 || hasData(lastItem) && !equals(lastItem, defaultData)) {
-			data = update(data, {$push: [defaultData]});
+			data = [...data, defaultData]
 		}
 
 		const {SchemaField} = this.props.registry.fields;
@@ -132,9 +130,10 @@ export default class AutoArrayField extends Component {
 	onChangeForIdx = (idx) => {
 		return (itemFormData) => {
 			if (!this.props.formData || idx === this.props.formData.length) {
-				itemFormData = update(
-					getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
-					{$merge: itemFormData});
+				itemFormData = {
+					...getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
+					...itemFormData
+				}
 			}
 
 			let formData = this.props.formData;

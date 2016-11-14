@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
@@ -72,7 +71,7 @@ export default class SplitField extends Component {
 
 	onChange = (fields) => (formData) => {
 		this.props.onChange(fields.reduce((updatedFormData, field) => {
-				return update(updatedFormData, {[field]: {$set: formData[field]}});
+				return {...updatedFormData, [field]: formData[field]};
 			}, this.props.formData)
 		);
 	}

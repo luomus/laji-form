@@ -163,7 +163,7 @@ export default class ImagesArrayField extends Component {
 				});
 			}));
 		}).then(response => {
-			onChange(update(formData, {$push: response.map(({id}) => id)}));
+			onChange([...formData, ...response.map(({id}) => id)]);
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
 			this.setState({alert: () => {

@@ -18,6 +18,14 @@ export default class GridLayoutField extends Component {
 		}).isRequired
 	}
 
+	static defaultProps = {
+		uiSchema: {
+			"ui:options": {
+				showLabels: true
+			}
+		}
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -32,10 +40,10 @@ export default class GridLayoutField extends Component {
 		const options = getUiOptions(props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 
-		fieldProps.uiSchema = update(fieldProps.uiSchema, {$merge: {"ui:field": undefined}});
+		fieldProps.uiSchema = {...fieldProps.uiSchema, "ui:field": undefined};
 
 		if (options.uiSchema) {
-			fieldProps = update(fieldProps, {$merge: {uiSchema: innerUiSchema}});
+			fieldProps = {...fieldProps, uiSchema: innerUiSchema};
 			for (let prop in fieldProps.schema.properties) {
 				if (props.uiSchema[prop]) fieldProps = update(fieldProps, {uiSchema: {$merge: {[prop]: props.uiSchema[prop]}}});
 			}
@@ -102,10 +110,10 @@ export default class GridLayoutField extends Component {
 				const ownRow = (type === "array" || type === "object");
 				const cols = this.getCols(ownRow, property);
 
-				const title = this.state.schema.properties[property].title;
+				let {title, ...schema} = this.state.schema.properties[property];
 				const name = this.state.showLabels ? (title !== undefined ? title : property) : undefined;
-				let schema = this.state.schema.properties[property];
-				if (!this.state.showLabels) schema = update(schema, {title: {$set: undefined}});
+
+				if (this.state.showLabels) schema = {...schema, title};
 
 				if (!isHidden(this.state.uiSchema, property)) fields.push(
 					<Col key={"div_" + i} {...cols}>
@@ -120,14 +128,13 @@ export default class GridLayoutField extends Component {
 							formData={this.state.formData[property]}
 							registry={this.state.registry}
 							onChange={(data) => {
-									let formData = update(this.state.formData, {$merge: {[property]: data}});
-									props.onChange(formData);
+									props.onChange({...this.state.formData, [property]: data});
 								}}
 						/>
 					</Col>
 				)
 				i++;
-			})
+			});
 		});
 
 		let title = this.props.schema.title || this.props.name;

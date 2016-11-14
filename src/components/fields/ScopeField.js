@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import merge from "deepmerge";
 import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
 import Spinner from "react-spinner";
@@ -164,7 +163,7 @@ export default class ScopeField extends Component {
 
 			while (fieldScope.refs) {
 				let refs = fieldScope.refs;
-				fieldScope = update(fieldScope, {$merge: {refs: undefined}});
+				fieldScope = {...fieldScope, refs: undefined};
 				refs.forEach(ref => {
 					fieldScope = merge(fieldScope, definitions[ref]);
 				});

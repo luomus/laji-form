@@ -109,7 +109,7 @@ export default class MapArrayField extends Component {
 		let item = getDefaultFormState(this.state.schema, undefined, this.props.registry.definitions);
 		item.wgs84Geometry = e.feature.geometry;
 		let {formData} = this.props;
-		const formDataUpdate = (formData && formData.length) ? update(formData, {$push: [item]}) : [item];
+		const formDataUpdate = (formData && formData.length) ? [...formData, item] : [item];
 		return {propsChange: formDataUpdate};
 	}
 
@@ -154,13 +154,13 @@ export default class MapArrayField extends Component {
 				events.forEach(e => {
 					switch (e.type) {
 						case "create":
-							const formDataTarget = this.props.uiSchema["ui:options"].buttons.detach.formDataTarget;
+							const formDataTarget = getUiOptions(this.props.uiSchema).buttons.detach.formDataTarget;
 							const activeFormData = this.props.formData[this.state.activeIdx];
 							const popSource = activeFormData[formDataTarget];
 							const popObject = popSource[idx];
 							let newDataItem = update(activeFormData,
 								{[formDataTarget]: {$set: [popObject]}, wgs84Geometry: {$set: e.feature.geometry}});
-							let newFormData = update(this.props.formData, {$push: [newDataItem]});
+							let newFormData = {...this.props.formData, newDataItem};
 							newFormData = update(newFormData, {[this.state.activeIdx]: {[formDataTarget]: {$splice: [[idx, 1]]}}})
 							this.props.onChange(newFormData);
 							new Context().clearState();
@@ -189,10 +189,10 @@ export default class MapArrayField extends Component {
 
 		let newFormData = formData;
 
-		if (this.props.uiSchema["ui:options"].inlineProperties) {
+		if (getUiOptions(this.props.uiSchema).inlineProperties) {
 			newFormData = this.props.formData[idx];
 			for (let prop in formData) {
-				newFormData = update(newFormData, {[prop]: {$set: formData[prop]}});
+				newFormData = {...newFormData, ...formData};
 			}
 		}
 		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1, newFormData]]}));
@@ -461,7 +461,7 @@ export default class MapArrayField extends Component {
 			if (itemFormData && formData[idx].hasOwnProperty(prop)) itemFormData[prop] = formData[idx][prop];
 			if (errorSchema && errorSchema[idx]) itemErrorSchema[prop] = errorSchema[idx][prop];
 		});
-		let itemSchema = update(this.state.schema, {properties: {$set: itemSchemaProperties}});
+		let itemSchema = {...this.state.schema, properties: itemSchemaProperties};
 		delete itemSchema.title;
 		let itemIdSchema = toIdSchema(this.state.schema, idSchema.$id + "_" + idx, this.props.registry.definitions);
 

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import { ButtonToolbar, Dropdown, MenuItem, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Button from "../Button";
 import Context from "../../Context";

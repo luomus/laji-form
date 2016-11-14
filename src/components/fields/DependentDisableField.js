@@ -52,7 +52,7 @@ export default class DependentDisableField extends Component {
 
 		if (!formData || formData[disableDefiner] === undefined || formData[disableDefiner] === null ||
 			(formData && !isNullOrUndefined(formData[disableDefiner]) && !formData[disableDefiner].match(regexp))) {
-			if (!uiSchema[disableField]) uiSchema = update(uiSchema, {$merge: {[disableField]: {}}});
+			if (!uiSchema[disableField]) uiSchema = {...uiSchema, [disableField]: {}};
 			uiSchema = update(uiSchema, {[disableField]: {$merge: {"ui:disabled": true}}});
 		}
 

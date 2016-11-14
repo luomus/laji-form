@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import merge from "deepmerge";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUpdateObjectFromPath, getUiOptions, getInnerUiSchema } from "../../utils";

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
@@ -55,10 +54,10 @@ export default class AdditionalsExpanderField extends Component {
 				Object.keys(schema.properties).forEach((prop) => {
 					if (!dictionarifiedAdditionals[prop]) filteredSchema[prop] = schema.properties[prop];
 				});
-				schema = update(schema, {properties: {$set: filteredSchema}, "ui:field": {$set: undefined}});
+				schema = {...schema, properties: {filteredSchema, "ui:field": undefined}};
 			}
 		}
-		schema = update(schema, {title: {$set: undefined}});
+		schema = {...schema, title: undefined};
 
 		uiSchema = getInnerUiSchema(props.uiSchema);
 

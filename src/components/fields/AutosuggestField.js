@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
@@ -88,21 +87,21 @@ export default class AutosuggestField extends Component {
 	getStateFromProps = (props) => {
 		let {schema} = props;
 		let propsUiSchema = props.uiSchema;
-		let options = getUiOptions(propsUiSchema);
-		options = update(options, {$merge: {
+		let options = {
+			...getUiOptions(propsUiSchema),
 			onSuggestionSelected: this.onSuggestionSelected,
 			onConfirmUnsuggested: this.onConfirmUnsuggested,
 			onInputChange: this.onInputChange,
 			isValueSuggested: this.isValueSuggested
-		}});
+		};
 		const {autosuggestField, suggestionInputField} = options;
 		const autosuggestSetting = autosuggestSettings[autosuggestField];
 		if (autosuggestSetting && autosuggestSetting.renderMetaInfo) {
-			options = update(options, {$merge: {onRenderMetaInfo: this.onRenderMetaInfo}});
+			options.onRenderMetaInfo = this.onRenderMetaInfo;
 		}
 
 		let uiSchema = options.uiSchema || {};
-		uiSchema = update(uiSchema, {$merge: {[suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}}});
+		uiSchema = {...uiSchema, [suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}};
 		let state = {schema, uiSchema};
 
 		const taxonID = (props.formData && props.formData.taxonID) ? props.formData.taxonID : undefined;
@@ -134,7 +133,7 @@ export default class AutosuggestField extends Component {
 					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
 					suggestionValPath.split('.').reduce((o, i)=>o[i], suggestion);
 			}
-			formData = update(formData, {$merge: {[fieldName]: fieldVal}});
+			formData = {...formData, [fieldName]: fieldVal}
 		}
 		this.props.onChange(formData);
 	}
@@ -143,9 +142,9 @@ export default class AutosuggestField extends Component {
 		let formData = this.props.formData;
 		const {suggestionReceivers, suggestionInputField} = getUiOptions(this.props.uiSchema);
 		Object.keys(suggestionReceivers).forEach(fieldName => {
-			formData = update(formData, {$merge: {[fieldName]: undefined}});
+			formData = {...formData, [fieldName]: undefined};
 		})
-		formData = update(formData, {$merge: {[suggestionInputField]: value}});
+		formData = {...formData, [suggestionInputField]: value};
 		this.props.onChange(formData);
 	}
 
@@ -161,7 +160,7 @@ export default class AutosuggestField extends Component {
 				if (inputTransformer.transformations) for (let transformField in inputTransformer.transformations) {
 					formDataChange[transformField] = inputTransformer.transformations[transformField];
 				}
-				formData = update(formData, {$merge: formDataChange});
+				formData = {...formData, formDataChange};
 				this.props.onChange(formData);
 			}
 		}

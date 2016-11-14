@@ -51,7 +51,7 @@ export default class FlatField extends Component {
 				}
 
 				Object.keys(innerData).forEach(innerField => {
-					state.formData = update(state.formData, {$merge: {[`_${field}.${innerField}`]: innerData[innerField]}});
+					state.formData = {...state.formData, [`_${field}.${innerField}`]: innerData[innerField]};
 				});
 				state.formData = immutableDelete(state.formData, field);
 			}
@@ -62,15 +62,24 @@ export default class FlatField extends Component {
 						if (isArray) {
 							Object.keys(props.errorSchema[errorField]).map(key => props.errorSchema[errorField][key]).forEach(error => {
 								Object.keys(error).forEach(innerError => {
-									state.errorSchema = update(state.errorSchema,
-										{$merge: {[`_${field}.${innerError}`]: (state.errorSchema[`_${field}.${innerError}`] || []).concat([error[innerError]])}});
+									state.errorSchema = {
+										...state.errorSchema,
+										[`_${field}.${innerError}`]: [
+											...(state.errorSchema[`_${field}.${innerError}`] || []),
+											...error[innerError]]
+									};
 								});
 							});
 							state.errorSchema = immutableDelete(state.formData, field);
 						} else {
 							Object.keys(props.errorSchema[errorField]).forEach(innerError => {
-								state.errorSchema = update(state.errorSchema,
-									{$merge: {[`_${field}.${innerError}`]: (state.errorSchema[`_${field}.${innerError}`] || []).concat([props.errorSchema[errorField][innerError]])}});
+								state.errorSchema = {
+									...state.errorSchema,
+									[`_${field}.${innerError}`]: [
+										...(state.errorSchema[`_${field}.${innerError}`] || []),
+										...[props.errorSchema[errorField][innerError]]
+									]
+								};
 							});
 							state.errorSchema = immutableDelete(state.errorSchema, errorField);
 						}
@@ -96,11 +105,8 @@ export default class FlatField extends Component {
 					const newItemBase = isArray ?
 						((formData[field] && formData[field][0]) ? formData[field][0] : {} || {}) :
 						(formData[field] || {});
-					const updatedItem = update(newItemBase, {$merge: {[newItemName]: formData[item]}});
-					formData = update(formData, isArray ?
-						{[field]: {$set: [updatedItem]}} :
-						{$merge: {[field]: updatedItem}}
-					);
+					const updatedItem = {...newItemBase, [newItemName]: formData[item]};
+					formData = {...formData, [field]: isArray ? [updatedItem] : updatedItem};
 					formData = immutableDelete(formData, item);
 				}
 			});

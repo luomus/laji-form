@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { shouldRender } from "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";

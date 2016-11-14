@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema } from "../../utils";
-import update from "react-addons-update";
 
 export default class InputTransformerField extends Component {
 	static propTypes = {
@@ -41,7 +40,7 @@ export default class InputTransformerField extends Component {
 				if (rule.transformations) for (let transformField in rule.transformations) {
 					formDataChange[transformField] = rule.transformations[transformField];
 				}
-				formData = update(formData, {$merge: formDataChange});
+				formData = {...formData, ...formDataChange};
 			}
 		}
 		this.props.onChange(formData);

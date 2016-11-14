@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema, immutableDelete } from "../../utils";
 
@@ -139,7 +138,7 @@ export default class NestField extends Component {
 		let schemaProperties = props.schema.properties;
 		let uiSchema = options.uiSchema ?
 			options.uiSchema :
-			update(props.uiSchema, {$merge: {"ui:field": undefined, classNames: undefined}});
+			{...props.uiSchema, "ui:field": undefined, classNames: undefined};
 
 		let requiredDictionarified = {};
 		if (props.schema.required) props.schema.required.forEach((req) => {
@@ -153,10 +152,8 @@ export default class NestField extends Component {
 
 		const {nests} = options;
 		Object.keys(nests).forEach((wrapperFieldName) => {
-			schemaProperties = update(schemaProperties,
-				{$merge: {[wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)}}
-			);
-			errorSchema = update(errorSchema, {$merge: {[wrapperFieldName]: {}}});
+			schemaProperties = {...schemaProperties, [wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)};
+			errorSchema = {...errorSchema, [wrapperFieldName]: {}};
 
 			nests[wrapperFieldName].fields.forEach((fieldName) => {
 				schemaProperties[wrapperFieldName].properties[fieldName] = schemaProperties[fieldName];
@@ -177,11 +174,12 @@ export default class NestField extends Component {
 
 				if (formData && formData.hasOwnProperty(fieldName)) {
 						if (!formData[wrapperFieldName]) {
-							formData = update(formData, {$merge: {[wrapperFieldName]: {[fieldName]: formData[fieldName]}}});
+							formData = {...formData, [wrapperFieldName]: {[fieldName]: formData[fieldName]}};
 						} else {
-							formData = update(formData,
-								{[wrapperFieldName]: {$merge: {[fieldName]: formData[fieldName]}}, [fieldName]: {$set: undefined}}
-							);
+							formData = {...formData,
+								[wrapperFieldName]: {...formData[wrapperFieldName], [fieldName]: formData[fieldName]},
+								[fieldName]: undefined
+							};
 						}
 				}
 
@@ -195,7 +193,7 @@ export default class NestField extends Component {
 			);
 		});
 
-		let schema = update(this.props.schema, {properties: {$set: schemaProperties}});
+		let schema = {...this.props.schema, properties:  schemaProperties};
 		return {schema, uiSchema, idSchema, errorSchema, formData, onChange: this.onChange};
 
 		function getNewSchemaField(title) {
@@ -219,10 +217,10 @@ export default class NestField extends Component {
 				Object.keys(formData[prop]).forEach((nestedProp) => {
 					if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
 						formData[nestedProp] = formData[prop][nestedProp];
-						formData = update(formData, {$merge: {[nestedProp]: formData[prop][nestedProp]}});
+						formData = {...formData, [nestedProp]: formData[prop][nestedProp]};
 					}
 				});
-				formData = update(formData, {$merge: {[prop]: undefined}})
+				formData = {...formData, [prop]: undefined};
 			}
 		});
 		this.props.onChange(formData);

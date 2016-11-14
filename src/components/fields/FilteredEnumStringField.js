@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 
 export default class FilteredEnumStringField extends Component {
