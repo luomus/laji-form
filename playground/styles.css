@@ -259,7 +259,7 @@ body .laji-form {
 	height: 8px;
 	line-height: 0px;
 }
-.laji-form .scope-field-modal-item span {
+.laji-form.scope-field-modal-item span {
 	font-weight: bold;
 }
 .laji-form .scope-field-search {
@@ -268,16 +268,16 @@ body .laji-form {
 	margin: auto;
 }
 
-.laji-form .scope-field-search  .glyphicon {
+.laji-form .scope-field-search .glyphicon {
 	top: -3px
 }
 
-.laji-form .list-group-item:first-child {
+.laji-form.scope-field-modal-item .list-group-item:first-child {
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
 	background-color: #ececec;
 }
-.laji-form .list-group-item:first-child.active {
+.laji-form.scope-field-modal-item .list-group-item:first-child.active {
 	background-color: #255c8c;
 }
 

@@ -24,7 +24,7 @@
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
     "laji-map": "*",
-    "laji-validate": "0.0.8",
+    "laji-validate": "*",
     "moment": "^2.14.1",
     "rc-switch": "^1.4.2",
     "react": "^15.3.2",

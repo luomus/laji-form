@@ -999,6 +999,10 @@
 	},
 	"validators": {
 		"gatheringEvent": {
+			"dateSpan": {
+				"dateOnly": true,
+				"message": "Aikavälin alun %{dateBegin} pitää olla ennen loppua %{dateEnd}"
+			},
 			"properties": {
 				"dateBegin": {
 					"datetime": {
@@ -1014,6 +1018,37 @@
 						"message": "pitää olla ennen %{date}"
 					}
 				}
+			}
+		},
+		"gatherings": {
+			"items": {
+				"properties": {
+					"units": {
+						"presence": {
+							"message": "Ei voi olla tyhjä"
+						},
+						"items": {
+							"properties": {
+								"identifications": {
+									"items": {
+										"properties": {
+											"detDate": {
+												"datetime": {
+													"latest": "now",
+													"dateOnly": true,
+													"message": "pitää olla ennen %{date}"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"presence": {
+				"message": "Ei voi olla tyhjä"
 			}
 		}
 	},
