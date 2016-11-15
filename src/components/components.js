@@ -4,10 +4,6 @@ import { Button as _Button } from "react-bootstrap";
 import { Overlay, Popover, ButtonGroup } from "react-bootstrap";
 
 export class Button extends Component {
-	static propTypes = {
-		onClick: PropTypes.func.isRequired,
-	}
-
 	render() {
 		let buttonProps = {};
 		buttonProps.bsStyle = "info";
