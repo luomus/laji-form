@@ -144,10 +144,9 @@
 			}
 		},
 		"gatherings": {
-			"ui:field": "mapArray",
+			"ui:field": "altMapArray",
 			"classNames": "panel panel-default panel-body map-field",
 			"ui:options": {
-				"colType": "lg",
 				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
 				"topOffset": 50,
 				"popupFields": [
@@ -174,298 +173,303 @@
 					"localityDescription",
 					"images"
 				],
-				"inlineUiSchema": {
-					"ui:field": "nested",
+				"uiSchema": {
+					"ui:field": "accordionArray",
 					"ui:options": {
-						"nests": {
-							"eventTime": {
-								"title": "Aika",
-								"fields": [
-									"dateBegin",
-									"dateEnd"
-								]
-							},
-							"placeWrapper": {
-								"title": "Havaintopaikan tiedot",
-								"fields": [
-									"predominantTree",
-									"habitat",
-									"locality",
-									"localityDescription",
-									"images",
-									"eventTime"
-								]
-							}
-						},
-						"uiSchema": {
-							"placeWrapper": {
-								"ui:field": "scoped",
-								"classNames": "well well-sm",
-								"ui:options": {
-									"includeAdditionalFieldsChooserButton": true,
-									"additionalsPersistenceId": "gatherings",
+						"headerPrefix": "Paikka "
+					},
+					"items": {
+						"ui:field": "nested",
+						"ui:options": {
+							"nests": {
+								"eventTime": {
+									"title": "Aika",
 									"fields": [
+										"dateBegin",
+										"dateEnd"
+									]
+								},
+								"placeWrapper": {
+									"title": "Havaintopaikan tiedot",
+									"fields": [
+										"predominantTree",
+										"habitat",
 										"locality",
 										"localityDescription",
 										"images",
 										"eventTime"
-									],
-									"uiSchema": {
-										"habitat": {
-											"ui:options": {
-												"sortable": false
-											},
-											"items": {
-												"ui:field": "injectFromContext",
+									]
+								}
+							},
+							"uiSchema": {
+								"ui:order": ["*", "units"],
+								"wgs84GeometryCollection": {
+									"ui:field": "hidden"
+								},
+								"placeWrapper": {
+									"ui:field": "scoped",
+									"classNames": "well well-sm",
+									"ui:options": {
+										"includeAdditionalFieldsChooserButton": true,
+										"additionalsPersistenceId": "gatherings",
+										"fields": [
+											"locality",
+											"localityDescription",
+											"images",
+											"eventTime"
+										],
+										"uiSchema": {
+											"habitat": {
 												"ui:options": {
-													"injections": {
-														"ui:options.tree": "habitat.tree"
-													},
-													"uiSchema": {
-														"ui:field": "tree",
-														"ui:options": {
-															"uiSchema": {
-																"ui:field": "grid",
-																"ui:options": {
-																	"lg": 3,
-																	"md": 3,
-																	"sm": 3,
-																	"xs": 12
+													"sortable": false
+												},
+												"items": {
+													"ui:field": "injectFromContext",
+													"ui:options": {
+														"injections": {
+															"ui:options.tree": "habitat.tree"
+														},
+														"uiSchema": {
+															"ui:field": "tree",
+															"ui:options": {
+																"uiSchema": {
+																	"ui:field": "grid",
+																	"ui:options": {
+																		"lg": 3,
+																		"md": 3,
+																		"sm": 3,
+																		"xs": 12
+																	}
 																}
 															}
 														}
 													}
 												}
-											}
-										},
-										"images": {
-											"ui:field": "imageArray",
-											"ui:options": {
-												"metadataSchemas": {
-													"schema": {
-														"type": "object",
-														"properties": {
-															"intellectualRights": {
-																"type": "string",
-																"enum": [
-																	"",
-																	"MY.intellectualRightsUnknown",
-																	"MY.intellectualRightsCC-BY",
-																	"MY.intellectualRightsCC-BY-SA",
-																	"MY.intellectualRightsCC-BY-NC",
-																	"MY.intellectualRightsCC-BY-NC-SA",
-																	"MY.intellectualRightsCC0",
-																	"MY.intellectualRightsODBL",
-																	"MY.intellectualRightsPD",
-																	"MY.intellectualRightsARR"
-																]
-															},
-															"capturerVerbatim": {
-																"type": "array",
-																"items": {
+											},
+											"images": {
+												"ui:field": "imageArray",
+												"ui:options": {
+													"metadataSchemas": {
+														"schema": {
+															"type": "object",
+															"properties": {
+																"intellectualRights": {
+																	"type": "string",
+																	"enum": [
+																		"",
+																		"MY.intellectualRightsUnknown",
+																		"MY.intellectualRightsCC-BY",
+																		"MY.intellectualRightsCC-BY-SA",
+																		"MY.intellectualRightsCC-BY-NC",
+																		"MY.intellectualRightsCC-BY-NC-SA",
+																		"MY.intellectualRightsCC0",
+																		"MY.intellectualRightsODBL",
+																		"MY.intellectualRightsPD",
+																		"MY.intellectualRightsARR"
+																	]
+																},
+																"capturerVerbatim": {
+																	"type": "array",
+																	"items": {
+																		"type": "string"
+																	}
+																},
+																"intellectualOwner": {
 																	"type": "string"
 																}
-															},
-															"intellectualOwner": {
-																"type": "string"
 															}
 														}
 													}
 												}
-											}
-										},
-										"eventTime": {
-											"ui:field": "grid",
-											"ui:options": {
-												"lg": {"dateBegin":7, "dateEnd": 4},
-												"md": {"dateBegin":4, "dateEnd": 2},
-												"sm": {"dateBegin":6, "dateEnd": 3},
-												"xs": 12
 											},
-											"dateBegin": {
-												"ui:widget": "dateTime",
+											"eventTime": {
+												"ui:field": "grid",
 												"ui:options": {
-													"showButtons": true
+													"lg": {"dateBegin":7, "dateEnd": 4},
+													"md": {"dateBegin":4, "dateEnd": 2},
+													"sm": {"dateBegin":6, "dateEnd": 3},
+													"xs": 12
+												},
+												"dateBegin": {
+													"ui:widget": "dateTime",
+													"ui:options": {
+														"showButtons": true
+													}
+												},
+												"dateEnd": {
+													"ui:widget": "dateTime"
 												}
-											},
-											"dateEnd": {
-												"ui:widget": "dateTime"
 											}
 										}
 									}
-								}
-							}
-						}
-					}
-				}
-			},
-			"items": {
-				"units": {
-					"ui:field": "copyValuesArray",
-					"ui:options": {
-						"copy": [
-							"recordBasis"
-						],
-						"uiSchema": {
-							"ui:field": "autoArray",
+								},"units": {
+							"ui:field": "copyValuesArray",
 							"ui:options": {
-								"confirmDelete": true
-							},
-							"items": {
-								"ui:field": "flat",
-								"ui:options": {
-									"fields": [
-										"identifications"
-									],
-									"uiSchema": {
-										"ui:field": "scoped",
-										"classNames": "well well-sm",
+								"copy": [
+									"recordBasis"
+								],
+								"uiSchema": {
+									"ui:field": "autoArray",
+									"ui:options": {
+										"confirmDelete": true
+									},
+									"items": {
+										"ui:field": "flat",
 										"ui:options": {
-											"additionalsGroupingPath": "fieldScopes.unitType",
-											"additionalsGroupsTranslator": "taxonGroups",
-											"additionalsPersistenceKey": "unitType",
-											"additionalsPersistenceId": "gathering_unit_unitType",
-											"includeAdditionalFieldsChooserButton": true,
-											"glyphFields": {
-												"images": "camera"
-											},
+											"fields": [
+												"identifications"
+											],
 											"uiSchema": {
-												"ui:field": "autosuggest",
+												"ui:field": "scoped",
+												"classNames": "well well-sm",
 												"ui:options": {
-													"autosuggestField": "taxon",
-													"allowNonsuggestedValue": true,
-													"suggestionInputField": "informalNameString",
-													"suggestionReceivers": {
-														"informalNameString": "value",
-														"_identifications.taxon": "value",
-														"unitType": "$taxonGroup",
-														"taxonID": "key",
-														"_identifications.taxonID": "key"
-													},
-													"inputTransformer": {
-														"regexp": "(.*)\\?$",
-														"transformations": {
-															"taxonConfidence": "MY.taxonConfidenceUnsure"
-														}
+													"additionalsGroupingPath": "fieldScopes.unitType",
+													"additionalsGroupsTranslator": "taxonGroups",
+													"additionalsPersistenceKey": "unitType",
+													"additionalsPersistenceId": "gathering_unit_unitType",
+													"includeAdditionalFieldsChooserButton": true,
+													"glyphFields": {
+														"images": "camera"
 													},
 													"uiSchema": {
-														"ui:field": "grid",
+														"ui:field": "autosuggest",
 														"ui:options": {
-															"lg": 1,
-															"md": 1,
-															"sm": 2,
-															"xs": 12
-														},
-														"_identifications.taxonID": {
-															"ui:widget": "hidden"
-														},
-														"_identifications.detDate": {
-															"ui:widget": "date"
-														},
-														"_identifications.taxon": {
-															"ui:widget": "hidden"
-														},
-														"unitType": {
-															"ui:field": "hidden"
-														},
-														"taxonID": {
-															"ui:widget": "hidden"
-														},
-														"images": {
-															"ui:field": "imageArray",
-															"ui:options": {
-																"metadataSchemas": {
-																	"schema": {
-																		"type": "object",
-																		"properties": {
-																			"intellectualRights": {
-																				"type": "string",
-																				"enum": [
-																					"",
-																					"MY.intellectualRightsUnknown",
-																					"MY.intellectualRightsCC-BY",
-																					"MY.intellectualRightsCC-BY-SA",
-																					"MY.intellectualRightsCC-BY-NC",
-																					"MY.intellectualRightsCC-BY-NC-SA",
-																					"MY.intellectualRightsCC0",
-																					"MY.intellectualRightsODBL",
-																					"MY.intellectualRightsPD",
-																					"MY.intellectualRightsARR"
-																				]
-																			},
-																			"capturerVerbatim": {
-																				"type": "array",
-																				"items": {
-																					"type": "string"
+															"autosuggestField": "taxon",
+															"allowNonsuggestedValue": true,
+															"suggestionInputField": "informalNameString",
+															"suggestionReceivers": {
+																"informalNameString": "value",
+																"_identifications.taxon": "value",
+																"unitType": "$taxonGroup",
+																"taxonID": "key",
+																"_identifications.taxonID": "key"
+															},
+															"inputTransformer": {
+																"regexp": "(.*)\\?$",
+																"transformations": {
+																	"taxonConfidence": "MY.taxonConfidenceUnsure"
+																}
+															},
+															"uiSchema": {
+																"ui:field": "grid",
+																"ui:options": {
+																	"lg": 1,
+																	"md": 1,
+																	"sm": 2,
+																	"xs": 12
+																},
+																"_identifications.taxonID": {
+																	"ui:widget": "hidden"
+																},
+																"_identifications.detDate": {
+																	"ui:widget": "date"
+																},
+																"_identifications.taxon": {
+																	"ui:widget": "hidden"
+																},
+																"unitType": {
+																	"ui:field": "hidden"
+																},
+																"taxonID": {
+																	"ui:widget": "hidden"
+																},
+																"images": {
+																	"ui:field": "imageArray",
+																	"ui:options": {
+																		"metadataSchemas": {
+																			"schema": {
+																				"type": "object",
+																				"properties": {
+																					"intellectualRights": {
+																						"type": "string",
+																						"enum": [
+																							"",
+																							"MY.intellectualRightsUnknown",
+																							"MY.intellectualRightsCC-BY",
+																							"MY.intellectualRightsCC-BY-SA",
+																							"MY.intellectualRightsCC-BY-NC",
+																							"MY.intellectualRightsCC-BY-NC-SA",
+																							"MY.intellectualRightsCC0",
+																							"MY.intellectualRightsODBL",
+																							"MY.intellectualRightsPD",
+																							"MY.intellectualRightsARR"
+																						]
+																					},
+																					"capturerVerbatim": {
+																						"type": "array",
+																						"items": {
+																							"type": "string"
+																						}
+																					},
+																					"intellectualOwner": {
+																						"type": "string"
+																					}
 																				}
-																			},
-																			"intellectualOwner": {
-																				"type": "string"
+																			}
+																		}
+																	}
+																},
+																"recordBasis": {
+																	"ui:field": "filteredEnum",
+																	"ui:options": {
+																		"type": "whitelist",
+																		"filter": [
+																			"",
+																			"MY.recordBasisHumanObservationSeen",
+																			"MY.recordBasisHumanObservationHeard",
+																			"MY.recordBasisPreservedSpecimen",
+																			"MY.recordBasisHumanObservationHandled",
+																			"MY.recordBasisHumanObservationIndirect"
+																		],
+																		"uiSchema": {
+																			"ui:widget": "imageSelect",
+																			"ui:options": {
+																				"images": {
+																					"MY.recordBasisHumanObservationSeen": "seen",
+																					"MY.recordBasisHumanObservationHeard": "heard",
+																					"MY.recordBasisPreservedSpecimen": "specimen",
+																					"MY.recordBasisHumanObservationHandled": "handled",
+																					"MY.recordBasisHumanObservationIndirect": "indirect"
+																				}
 																			}
 																		}
 																	}
 																}
 															}
-														},
-														"recordBasis": {
-															"ui:field": "filteredEnum",
-															"ui:options": {
-																"type": "whitelist",
-																"filter": [
-																	"",
-																	"MY.recordBasisHumanObservationSeen",
-																	"MY.recordBasisHumanObservationHeard",
-																	"MY.recordBasisPreservedSpecimen",
-																	"MY.recordBasisHumanObservationHandled",
-																	"MY.recordBasisHumanObservationIndirect"
-																],
-																"uiSchema": {
-																	"ui:widget": "imageSelect",
-																	"ui:options": {
-																		"images": {
-																			"MY.recordBasisHumanObservationSeen": "seen",
-																			"MY.recordBasisHumanObservationHeard": "heard",
-																			"MY.recordBasisPreservedSpecimen": "specimen",
-																			"MY.recordBasisHumanObservationHandled": "handled",
-																			"MY.recordBasisHumanObservationIndirect": "indirect"
-																		}
-																	}
-																}
+														}
+													},
+													"fields": [
+														"informalNameString",
+														"unitType",
+														"taxonID",
+														"recordBasis",
+														"taxonConfidence"
+													],
+													"fieldScopes": {
+														"unitType": {
+															"+": {
+																"fields": [
+																	"_identifications.taxonID",
+																	"_identifications.taxon",
+																	"_identifications.det",
+																	"_identifications.detMethod",
+																	"_identifications.detDate",
+																	"countOfOccurrences",
+																	"sex",
+																	"notes"
+																]
+															},
+															"MVL.233": {
+																"additionalFields": [
+																	"substrateSpecies",
+																	"substrateNotes",
+																	"taste",
+																	"tasteNotes",
+																	"smell",
+																	"smellNotes"
+																]
 															}
 														}
-													}
-												}
-											},
-											"fields": [
-												"informalNameString",
-												"unitType",
-												"taxonID",
-												"recordBasis",
-												"taxonConfidence"
-											],
-											"fieldScopes": {
-												"unitType": {
-													"+": {
-														"fields": [
-															"_identifications.taxonID",
-															"_identifications.taxon",
-															"_identifications.det",
-															"_identifications.detMethod",
-															"_identifications.detDate",
-															"countOfOccurrences",
-															"sex",
-															"notes"
-														]
-													},
-													"MVL.233": {
-														"additionalFields": [
-															"substrateSpecies",
-															"substrateNotes",
-															"taste",
-															"tasteNotes",
-															"smell",
-															"smellNotes"
-														]
 													}
 												}
 											}
@@ -474,6 +478,9 @@
 								}
 							}
 						}
+							}
+						}
+
 					}
 				}
 			}
@@ -519,6 +526,7 @@
 			"gatherings": {
 				"type": "array",
 				"items": {
+					"title": "Paikka",
 					"type": "object",
 					"properties": {
 						"dateBegin": {
@@ -986,9 +994,27 @@
 								"required": []
 							}
 						},
-						"wgs84Geometry": {
+						"wgs84GeometryCollection": {
 							"type": "object",
-							"properties": {}
+							"properties": {
+								"geometries": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"type": {
+												"type": "string"
+											},
+											"coordinates": {
+												"type": "array",
+												"items": {
+													"type": "number"
+												}
+											}
+										}
+									}
+								}
+							}
 						}
 					},
 					"required": []
@@ -1160,11 +1186,15 @@
 				"dateBegin": "2015-12-01",
 				"units": [
 				],
-				"wgs84Geometry": {
-					"type": "Point",
-					"coordinates": [
-						24.995422018084213,
-						60.35710573410569
+				"wgs84GeometryCollection": {
+					"geometries": [
+						{
+							"type": "Point",
+							"coordinates": [
+								24,
+								60
+							]
+						}
 					]
 				}
 			},
@@ -1172,12 +1202,48 @@
 				"predominantTree": "",
 				"units": [
 				],
-				"wgs84Geometry": {
-					"type": "Point",
-					"coordinates": [
-						24.63054593815989,
-						60.26832057836028
+				"wgs84GeometryCollection": {
+					"geometries": [
+						{
+							"type": "Point",
+							"coordinates": [
+								24.63054593815989,
+								60.26832057836028
+							]
+						}
 					]
+				}
+			},
+			{
+				"predominantTree": "",
+				"units": [
+				],
+				"wgs84GeometryCollection": {
+					"geometries": [
+						{
+							"type": "Point",
+							"coordinates": [
+								25.63054593815989,
+								60.26832057836028
+							]
+						}
+					]
+				}
+			},
+			{
+				"predominantTree": "",
+				"units": [
+				],
+				"wgs84GeometryCollection": {
+					"geometries": [
+						{
+							"type": "Point",
+							"coordinates": [
+								24.63054593815989,
+								61.26832057836028
+							]
+						}
+						]
 				}
 			}
 		],

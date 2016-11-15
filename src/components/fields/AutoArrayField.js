@@ -5,9 +5,8 @@ import equals from "deep-equal";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { hasData, getUiOptions } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import { Row, Col, Overlay, Popover, ButtonGroup, Glyphicon } from "react-bootstrap";
-import Button from "../Button";
 import Context from "../../Context";
+import { DeleteButton } from "../components";
 
 export default class AutoArrayField extends Component {
 	static propTypes = {
@@ -81,28 +80,14 @@ export default class AutoArrayField extends Component {
 		data.forEach((item, idx) => {
 			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
-			let key = this.state.idxsToKeys[idx];
 
 			const buttons = [removable ? (
-				<div key={key}>
-					<Button bsStyle="danger"
-									className="col-xs-12 glyph-button"
-									ref={"del-" + idx}
-									onKeyDown={this.onButtonKeyDown(idx)}
-									onClick={this.state.confirmDelete ? this.onConfirmRemove(idx) : this.onRemoveForIdx(idx)}>✖</Button>
-					{this.state.visibleConfirmationIdx === idx ?
-						<Overlay show={true} placement="left"  rootClose={true} onHide={this.onClearConfirm} target={() => ReactDOM.findDOMNode(this.refs["del-" + idx])} >
-							<Popover id="popover-trigger-click">
-								<span>{translations.ConfirmRemove}</span>
-								<ButtonGroup>
-									<Button bsStyle="danger" onClick={this.onRemoveForIdx(idx)}>{translations.Remove}</Button>
-									<Button bsStyle="default" onClick={this.onClearConfirm}>{translations.Close}</Button>
-								</ButtonGroup>
-							</Popover>
-						</Overlay>
-						: null
-					}
-				</div>
+				<DeleteButton
+					key={this.state.idxsToKeys[idx]}
+					confirm={this.state.confirmDelete}
+					onClick={this.onRemoveForIdx(idx)}
+					translations={translations}
+				/>
 			) : null];
 			if (removable) buttons.push(this.renderButtons(idx));
 
@@ -110,7 +95,6 @@ export default class AutoArrayField extends Component {
 				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
 					<div className="laji-form-field-template-schema">
 						<SchemaField
-
 							formData={item}
 							onChange={this.onChangeForIdx(idx)}
 							schema={this.props.schema.items}

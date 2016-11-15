@@ -22,6 +22,7 @@ import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
 import MapArrayField from "./fields/MapArrayField";
+import AltMapArrayField from "./fields/AltMapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
 import InputTransformerField from "./fields/InputTransformerField";
 import HiddenField from "./fields/HiddenField";
@@ -31,6 +32,7 @@ import ImageArrayField from "./fields/ImageArrayField";
 import FilteredEnumStringField from "./fields/FilteredEnumStringField";
 import SplitField from "./fields/SplitField";
 import FlatField from "./fields/FlatField";
+import AccordionArrayField from "./fields/AccordionArrayField";
 
 import CheckboxWidget from "./widgets/CheckboxWidget";
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
@@ -179,6 +181,7 @@ export default class LajiForm extends Component {
 						dependentBoolean: DependentBooleanField,
 						dependentDisable: DependentDisableField,
 						mapArray: MapArrayField,
+						altMapArray: AltMapArrayField,
 						autoArray: AutoArrayField,
 						copyValuesArray: CopyValuesArrayField,
 						autosuggest: AutosuggestField,
@@ -190,6 +193,7 @@ export default class LajiForm extends Component {
 						filteredEnum: FilteredEnumStringField,
 						split: SplitField,
 						flat: FlatField,
+						accordionArray: AccordionArrayField,
 					}}
 					widgets={{
 						CheckboxWidget: CheckboxWidget,
