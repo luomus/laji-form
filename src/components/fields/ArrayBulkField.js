@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { shouldRender } from "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
-import Button from "../Button";
+import { Button } from "../components";
 
 export default class ArrayBulkField extends Component {
 	static propTypes = {

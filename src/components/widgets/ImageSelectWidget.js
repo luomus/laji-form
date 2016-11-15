@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { ButtonToolbar, Dropdown, MenuItem, OverlayTrigger, Tooltip } from "react-bootstrap";
-import Button from "../Button";
+import { Button } from "../components";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";

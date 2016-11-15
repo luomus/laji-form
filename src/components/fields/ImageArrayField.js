@@ -5,8 +5,7 @@ import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
-import Button from "../Button";
-import Alert from "../Alert";
+import { Button, Alert } from "../components";
 import Form from "react-jsonschema-form";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";

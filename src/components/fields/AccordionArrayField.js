@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import { Accordion, Panel } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
-import {LajiButton, DeleteButton} from "../components";
+import { Button, DeleteButton } from "../components";
 
 export default class AccordionArrayField extends Component {
 	constructor(props) {

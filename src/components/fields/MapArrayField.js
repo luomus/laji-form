@@ -9,7 +9,7 @@ import { getUpdateObjectFromPath, hasData, getUiOptions, isEmptyString } from ".
 import LajiMap from "laji-map";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { Pagination, Nav, NavItem, Row, Tooltip, OverlayTrigger, Glyphicon, Panel } from "react-bootstrap";
-import Button from "../Button";
+import { Button } from "../components";
 import Context from "../../Context";
 
 const SCROLLING = "SCROLLING";

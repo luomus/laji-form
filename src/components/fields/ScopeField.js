@@ -4,7 +4,7 @@ import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuIte
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
-import Button from "../Button";
+import { Button } from "../components";
 import { propertyHasData, hasData, getUiOptions } from "../../utils";
 import Context from "../../Context";
 

@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
-import { Row, Col, Glyphicon } from "react-bootstrap";
-import Button from "../Button";
+import { Row, Col } from "react-bootstrap";
+import { Button } from "../components";
 
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:

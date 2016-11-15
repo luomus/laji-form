@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
-import Button from "./Button";
+import { Button } from "./components";
 import Label from "./Label";
 
 import Form from "react-jsonschema-form";

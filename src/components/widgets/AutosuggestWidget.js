@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import InputMetaInfo from "../InputMetaInfo";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner"
 import { getUiOptions } from "../../utils";
@@ -262,6 +261,10 @@ export default class AutoSuggestWidget extends Component {
 			suggestion: "list-group-item",
 			suggestionFocused: "list-group-item active"
 		};
+
+		const InputMetaInfo = ({children, className}) => {
+			return (<div className={"input-meta" + (className ? " " + className : "")}>{children}</div>)
+		}
 
 		return (
 			<div>

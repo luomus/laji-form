@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import Button from "../Button";
+import { Button, DeleteButton } from "../components";
 import Label from "../../components/Label";
 
 export default class TableField extends Component {
