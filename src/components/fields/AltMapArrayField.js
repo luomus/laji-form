@@ -32,7 +32,8 @@ export default class AltMapArrayField extends Component {
 			}
 		};
 
-		const {geometries} = formData[this.state.activeIdx].wgs84GeometryCollection;
+		const geometries = this.state.activeIdx !== undefined ?
+			formData[this.state.activeIdx].wgs84GeometryCollection.geometries :	[];
 
 		return (
 			<div>

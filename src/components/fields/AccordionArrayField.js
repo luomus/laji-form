@@ -11,11 +11,19 @@ export default class AccordionArrayField extends Component {
 		this.state = {activeIdx: props.formData.length ? 0 : undefined};
 	}
 
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps(props) {
+		const options = getUiOptions(props.uiSchema);
+		if (options.hasOwnProperty("activeIdx")) return {activeIdx: options.activeIdx};
+	}
+
 	render() {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 
-		const options = getUiOptions(this.props.uiSchema);
-		const activeIdx = options.hasOwnProperty("activeIdx") ? options.activeIdx : this.state.activeIdx;
+		const activeIdx = this.state.activeIdx;
 
 		const itemsSchema = this.props.schema.items;
 		const {title, ...schema} = itemsSchema;
@@ -73,10 +81,11 @@ export default class AccordionArrayField extends Component {
 		);
 	}
 
-
-
 	onActiveChange = (idx) => {
 		idx = parseInt(idx);
+		if (this.state.activeIdx === idx) {
+			idx = undefined;
+		}
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx) : this.setState({activeIdx: idx});
 	}
