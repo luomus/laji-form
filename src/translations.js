@@ -159,4 +159,9 @@
 		en: "others",
 		sv: "andra"
 	},
+	unitsPartitive: {
+		fi: "havaintoa",
+		en: "units",
+		sv: "??"
+	},
 }

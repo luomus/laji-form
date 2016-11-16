@@ -27,8 +27,10 @@ export default class AltMapArrayField extends Component {
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
-				...options,
-				activeIdx: this.state.activeIdx, onActiveChange: idx => {this.setState({activeIdx: idx})}
+				...getUiOptions(getInnerUiSchema(uiSchema)),
+				activeIdx: this.state.activeIdx,
+				onActiveChange: idx => {this.setState({activeIdx: idx})},
+				getPopupData: this.getPopupData
 			}
 		};
 

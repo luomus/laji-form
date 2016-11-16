@@ -423,7 +423,7 @@ export default class MapArrayField extends Component {
 							         onMouseLeave={this.onNavItemMouseLeave(i)}>
 								{(isActive ? translations.Place + " " : "") + (i + 1)}
 							</NavItem>
-						)
+						);
 
 						return Object.keys(popupData).length ? (
 							<OverlayTrigger key={i + "-tooltip"}

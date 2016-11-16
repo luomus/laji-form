@@ -1,9 +1,24 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { Accordion, Panel } from "react-bootstrap";
+import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions } from "../../utils";
+import { getUiOptions, hasData } from "../../utils";
 import { Button, DeleteButton } from "../components";
+
+const headerFormatters = {
+	units: {
+		render: (that, idx) => {
+			const {props: {formContext: {translations}, formData}} = that;
+			const item = formData[idx];
+			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ? item.units.length : 0;
+			return (
+				<span className="text-muted">
+					{` (${unitsLength} ${translations.unitsPartitive})`}
+				</span>
+			)
+		}
+	}
+};
 
 export default class AccordionArrayField extends Component {
 	constructor(props) {
@@ -70,13 +85,32 @@ export default class AccordionArrayField extends Component {
 	renderHeader = (idx, title) => {
 		const formattedIdx = idx + 1;
 		const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
+
+		const {headerFormatter, getPopupData} = getUiOptions(this.props.uiSchema);
+
+		const popupData = getPopupData(idx);
+
+		const headerText = (
+			<span>
+				<span>{_title}</span>
+				{headerFormatter ? headerFormatters[headerFormatter].render(this, idx) : null}
+			</span>
+		);
+
 		return (
 			<div>
-				<span >{_title}</span>
+				{hasData(popupData) ? (
+					<OverlayTrigger placement="bottom"
+													overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>} >
+						{headerText}
+					</OverlayTrigger>) : (
+					headerText
+					)
+				}
 				<DeleteButton className="pull-right"
-											confirm={true}
-											translations={this.props.formContext.translations}
-											onClick={() => this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))} />
+				              confirm={true}
+				              translations={this.props.formContext.translations}
+				              onClick={() => this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))} />
 			</div>
 		);
 	}
@@ -104,5 +138,19 @@ export default class AccordionArrayField extends Component {
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
 			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
 		}
+	}
+}
+
+class Popup extends Component {
+	render() {
+		const { data } = this.props;
+		return (data && Object.keys(data).length) ? (
+			<ul ref="popup" className="map-data-tooltip">
+				{data ? Object.keys(data).map(fieldName => {
+					const item = data[fieldName];
+					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.join(", ") : item}</li>;
+				}) : null}
+			</ul>
+		) : null;
 	}
 }
