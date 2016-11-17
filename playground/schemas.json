@@ -151,11 +151,13 @@
 				"topOffset": 50,
 				"popupFields": [
 					{
-						"field": "units",
-						"mapper": "units"
+						"field": "informalNameString"
 					},
 					{
-						"field": "localityDescription"
+						"field": "sex"
+					},
+					{
+						"field": "notes"
 					}
 				],
 				"uiSchema": {

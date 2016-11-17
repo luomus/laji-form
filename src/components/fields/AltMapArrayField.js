@@ -15,25 +15,16 @@ const popupMappers = {
 	}
 }
 
-const geometryMappers = {
-	units: (idx, formData) => {
-		const item = formData[idx];
-		let geometries = idx !== undefined ?
-			item.wgs84GeometryCollection.geometries : [];
-		item.units.forEach(unit => {
-			const {unitGathering: {wgs84Geometry}} = unit;
-			if (wgs84Geometry && hasData(wgs84Geometry)) {
-				geometries = [...geometries, wgs84Geometry];
-			}
-		});
-		return geometries;
-	}
-}
 
 export default class AltMapArrayField extends Component {
 	constructor(props) {
 		super(props);
+		this.featureIdxsToItemIdxs = {};
 		this.state = {activeIdx: props.formData.length ? 0 : undefined};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {
@@ -51,7 +42,7 @@ export default class AltMapArrayField extends Component {
 			}
 		};
 
-		const geometries = geometryMappers[geometryMapper](this.state.activeIdx, formData);
+		const geometries = this.geometryMappers[geometryMapper](this.state.activeIdx, formData);
 
 		return (
 			<div>
@@ -75,8 +66,8 @@ export default class AltMapArrayField extends Component {
 								getFeatureStyle: () => {return {color: NORMAL_COLOR, fillColor: NORMAL_COLOR}}
 							}}
 							onChange={this.onMapChange}
-						  markerPopupOffset={45}
-							featurePopupOffset={5}
+						  markerPopupOffset={60}
+							featurePopupOffset={10}
 						  popupOnHover={true}
 						/>
 					</Col>
@@ -133,21 +124,41 @@ export default class AltMapArrayField extends Component {
 			}}}));
 	}
 
+	geometryMappers = {
+		units: (idx, formData) => {
+			const item = formData[idx];
+			this.featureIdxsToItemIdxs = {};
+			let geometries = idx !== undefined ?
+				item.wgs84GeometryCollection.geometries : [];
+			item.units.forEach((unit, i) => {
+				const {unitGathering: {wgs84Geometry}} = unit;
+				if (wgs84Geometry && hasData(wgs84Geometry)) {
+					this.featureIdxsToItemIdxs[geometries.length] = i;
+					geometries = [...geometries, wgs84Geometry];
+				}
+			});
+			return geometries;
+		}
+	}
+
 	getPopup = (idx, openPopupCallback) => {
 		if (!this.refs.popup || !hasData(this.getPopupData(idx))) return;
 		this.setState({popupIdx: idx}, () => openPopupCallback(this.refs.popup.refs.popup));
 	}
 
 	getPopupData = (idx) => {
-		const {popupFields} = getUiOptions(this.props.uiSchema);
+		const {popupFields, geometryMapper} = getUiOptions(this.props.uiSchema);
+		const {formData} = this.props;
 
+		const featureIdxToItemIdxs = this.featureIdxsToItemIdxs;
+		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
 		const data = {};
-		if (!this.props.formData) return data;
+		if (!formData || !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
-			const itemFormData = this.props.formData[idx];
+			const itemFormData = formData[this.state.activeIdx][geometryMapper][itemIdx];
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
-			let fieldSchema = this.props.schema.items.properties;
+			let fieldSchema = this.props.schema.items.properties[geometryMapper].items.properties;
 
 			if (field.mapper && fieldData) {
 				const mappedData = popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
@@ -158,7 +169,6 @@ export default class AltMapArrayField extends Component {
 			} else if (fieldData) {
 				data[fieldSchema[fieldName].title || fieldName] = fieldData;
 			}
-
 		});
 		return data;
 	}
@@ -195,16 +205,18 @@ class MapComponent extends Component {
 		_context.releaseFocus = this.releaseFocus;
 	}
 
-	componentWillReceiveProps(props) {
+	componentWillReceiveProps({drawData, activeIdx, controlSettings, lang}) {
 		if (this.map) {
-			this.map.setDrawData(props.drawData);
-			this.map.setActive(this.map.idxsToIds[props.activeIdx]);
+			this.map.setDrawData(drawData);
+			this.map.setActive(this.map.idxsToIds[activeIdx]);
+			if (controlSettings) this.map.setControlSettings(controlSettings);
+			if (lang !== this.props.lang) this.map.setLang(lang);
 		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		function relevantProps(props) {
-			const {drawData, onChange, ...relevantProps} = props;
+			const {drawData, onChange, controlSettings, lang, ...relevantProps} = props;
 			return relevantProps;
 		}
 
