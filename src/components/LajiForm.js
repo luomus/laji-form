@@ -284,7 +284,8 @@ export default class LajiForm extends Component {
 			return false;
 		}
 
-		if (this._context.blockingLoaderCounter > 0) {
+		if (this._context.blockingLoaderCounter > 0 &&
+			  !isDescendant(document.querySelector(".pass-block"), document.activeElement)) {
 			e.preventDefault();
 			return;
 		}

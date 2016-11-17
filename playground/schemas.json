@@ -147,7 +147,7 @@
 			"ui:field": "altMapArray",
 			"classNames": "panel panel-default panel-body map-field",
 			"ui:options": {
-				"description": "Piirrä kartalle havainto-alueet tai valitse tarkat paikat. Voit piirtää useita havaintoalueita tai valita useita paikkoja. Jokaiseen piirettyyn alueeseen tai valittuun paikkaan voidaan liittää havaintoja ja halutessasi tarkka ajanhetki. Voit siirtyä paikkojen välillä painamalla seuraava ja edellinen-panikkeita tai klikkaamalla aluetta kartalta. Voit halutessasi esimerkiksi ilmoittaa suuremmalta alueelta yleisimmät havainnot, ja valita tarkat paikat tietyille yksittäisille havainnoille.",
+				"geometryMapper": "units",
 				"topOffset": 50,
 				"popupFields": [
 					{
@@ -157,21 +157,6 @@
 					{
 						"field": "localityDescription"
 					}
-				],
-				"buttons": {
-					"detach": {
-						"formDataTarget": "units",
-						"uiSchemaTarget": "units.ui:options.uiSchema.ui:options.buttons.popToMap"
-					}
-				},
-				"inlineProperties": [
-					"dateBegin",
-					"dateEnd",
-					"habitat",
-					"predominantTree",
-					"locality",
-					"localityDescription",
-					"images"
 				],
 				"uiSchema": {
 					"ui:field": "accordionArray",
@@ -329,8 +314,11 @@
 															"additionalsPersistenceId": "gathering_unit_unitType",
 															"includeAdditionalFieldsChooserButton": true,
 															"glyphFields": {
-																"images": "camera",
-																"unitGathering.wgs84Geometry": "map-marker"
+																"camera": {
+																	"show": "images"
+																}, "map-marker": {
+																	"fn": "setLocation"
+																}
 															},
 															"uiSchema": {
 																"ui:field": "autosuggest",
@@ -408,6 +396,12 @@
 																						}
 																					}
 																				}
+																			}
+																		},
+																		"unitGathering": {
+																			"ui:field": "hidden",
+																			"wgs84Geometry": {
+																				"ui:field": "hidden"
 																			}
 																		},
 																		"recordBasis": {
@@ -991,8 +985,11 @@
 										}
 									},
 									"unitGathering": {
-										"wgs84Geometry": {
-											"$ref": "#/definitions/wgs84Geometry"
+										"type": "object",
+										"properties": {
+											"wgs84Geometry": {
+												"$ref": "#/definitions/wgs84Geometry"
+											}
 										}
 									}
 								},

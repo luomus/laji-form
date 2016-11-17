@@ -164,4 +164,9 @@
 		en: "units",
 		sv: "??"
 	},
+	setLocation: {
+		fi: "aseta sijainti",
+		en: "set a location",
+		sv: "??"
+	},
 }

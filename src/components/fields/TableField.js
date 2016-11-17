@@ -91,11 +91,9 @@ export default class TableField extends Component {
 			uiSchema = {...uiSchema, "ui:field": "grid", "ui:options": uiOptions};
 
 			uiSchema = {...uiSchema, "ui:buttons": ((!props.schema.additionalItems && idx) || isAdditional) ? [
-				<Button key={`rm-${idx}`} bsStyle="danger"
-					onClick={e => {
-						 e.preventDefault();
-						 this.onChange(update(formData, {$splice: [[idx, 1]]}))
-					}}>✖</Button>
+				<DeleteButton key={`rm-${idx}`}  translations={props.formContext.translations} onClick={() => {
+					this.onChange(update(formData, {$splice: [[idx, 1]]}))
+				}} />
 			] : []};
 
 			items.push(

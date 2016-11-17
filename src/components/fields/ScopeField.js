@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from "react";
+import update from "react-addons-update";
 import merge from "deepmerge";
 import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
-import { Button } from "../components";
+import { Button, GlyphButton } from "../components";
 import { propertyHasData, hasData, getUiOptions } from "../../utils";
 import Context from "../../Context";
 
@@ -18,6 +19,50 @@ const scopeFieldSettings = {
 				return "";
 			})
 		},
+	}
+}
+
+const buttonSettings = {
+	setLocation: (that, glyph) => {
+		const id = that.props.idSchema.$id;
+		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{that.props.formContext.translations.SetLocation}</Tooltip>;
+
+		return (
+			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={tooltip} placement="left" >
+				<GlyphButton glyph={glyph} onClick={() => {
+					const mapContext = new Context("MAP");
+					const map = mapContext.map;
+					if (map) {
+						mapContext.grabFocus();
+						map.setControlSettings({
+							draw: {
+								marker: true,
+								polyline: false,
+								rectangle: false,
+								polygon: false,
+								circle: false
+							}
+						});
+						map.triggerDrawing("marker");
+						const onChange = map.onChange;
+						map.onChange = (events => {
+							events.forEach(event => {
+								if (event.type === "create") {
+									that.props.onChange(update(
+										that.props.formData,
+										{unitGathering: {$merge: {wgs84Geometry: event.feature.geometry}}}
+									));
+									map.onChange = onChange;
+									map.setControlSettings();
+									mapContext.releaseFocus();
+								}
+							})
+						});
+					}
+				}}
+			  bsStyle={hasData(that.props.formData.unitGathering.wgs84Geometry) ? "primary" : "default"}/>
+			</OverlayTrigger>
+		);
 	}
 }
 
@@ -258,17 +303,18 @@ export default class ScopeField extends Component {
 				additionalProperties[property] = this.props.schema.properties[property];
 		});
 
-		return (
-			<div>
-				{additionalsGroupingPath ? this.renderFieldsModal(additionalProperties) : this.renderFieldsDropdown(additionalProperties)}
-				{this.renderGlyphFields()}
-			</div>
-		);
+		const glyphButtons = this.renderGlyphFields();
+
+		return [
+			additionalsGroupingPath ? this.renderFieldsModal(additionalProperties) : this.renderFieldsDropdown(additionalProperties),
+			...(glyphButtons ? glyphButtons : [])
+		];
 	}
 
 	renderFieldsDropdown(additionalProperties) {
 		return (
-			<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
+			<Dropdown key="socop"
+			        	id={this.props.idSchema.$id + "-scope-field-dropdown"}
 			          bsStyle="info"
 			          pullRight
 			          onSelect={(eventKey, event) => {
@@ -351,7 +397,7 @@ export default class ScopeField extends Component {
 		});
 
 		return (
-			<div>
+			<div key="modal-button">
 				{this.renderFieldsButton()}
 				{this.state.additionalsOpen ? (
 					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
@@ -373,19 +419,16 @@ export default class ScopeField extends Component {
 	}
 
 	renderFieldsButton = (bsRole) => {
-		const glyph = <Glyphicon glyph="cog" />;
+
 		const tooltip = (
 			<Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>
 				{this.props.formContext.translations.SelectMoreFields}
 			</Tooltip>
 		);
 
-
 		return (
-			<OverlayTrigger overlay={tooltip} placement="left" bsRole={bsRole} >
-				<Button className="glyph-button" onClick={this.onToggleAdditionals}>
-					{glyph}
-				</Button>
+			<OverlayTrigger key={`${this.props.idSchema.$id}-test`} overlay={tooltip} placement="left" bsRole={bsRole} >
+				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} />
 			</OverlayTrigger>
 		);
 	}
@@ -394,16 +437,24 @@ export default class ScopeField extends Component {
 		const {glyphFields} = getUiOptions(this.props.uiSchema);
 
 		return glyphFields ?
-			Object.keys(glyphFields).map(property => {
-				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = propertyHasData(property, this.props.formData);
-				return (
-					<Button key={property} disabled={hasData} className="glyph-button" bsStyle={isIncluded ? "primary" : "default"}
-					        onClick={ () => this.toggleAdditionalProperty(property)}>
-						<Glyphicon glyph={glyphFields[property]} />
-					</Button>
-				);
-		}) : null;
+			Object.keys(glyphFields).map(glyph => {
+				const settings = glyphFields[glyph];
+				if (settings.show) {
+					const property = settings.show;
+					const isIncluded = this.propertyIsIncluded(property);
+					const hasData = propertyHasData(property, this.props.formData);
+					return (
+						<GlyphButton key={property}
+						             glyph={glyph}
+						             disabled={hasData}
+						             bsStyle={isIncluded ? "primary" : "default"}
+						             onClick={() => this.toggleAdditionalProperty(property)}
+						/>
+					);
+				} else if (settings.fn) {
+					return buttonSettings[settings.fn](this, glyph);
+				}
+			}) : null;
 	}
 
 	propertyIsIncluded = (property) => {

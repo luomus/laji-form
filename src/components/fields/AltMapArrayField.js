@@ -3,13 +3,30 @@ import update from "react-addons-update";
 import merge from "deepmerge";
 import equals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
-import { Row, Col } from "react-bootstrap";
-import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
+import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { getUiOptions, getInnerUiSchema, hasData, getUpdateObjectFromPath } from "../../utils";
+import { GlyphButton } from "../components";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import Context from "../../Context";
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
 		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
+	}
+}
+
+const geometryMappers = {
+	units: (idx, formData) => {
+		const item = formData[idx];
+		let geometries = idx !== undefined ?
+			item.wgs84GeometryCollection.geometries : [];
+		item.units.forEach(unit => {
+			const {unitGathering: {wgs84Geometry}} = unit;
+			if (wgs84Geometry && hasData(wgs84Geometry)) {
+				geometries = [...geometries, wgs84Geometry];
+			}
+		});
+		return geometries;
 	}
 }
 
@@ -23,7 +40,7 @@ export default class AltMapArrayField extends Component {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, popupOffset} = options;
+		const {popupFields, geometryMapper} = options;
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
@@ -34,14 +51,21 @@ export default class AltMapArrayField extends Component {
 			}
 		};
 
-		const geometries = this.state.activeIdx !== undefined ?
-			formData[this.state.activeIdx].wgs84GeometryCollection.geometries :	[];
+		const geometries = geometryMappers[geometryMapper](this.state.activeIdx, formData);
 
 		return (
 			<div>
 				<Row>
 					<Col xs={6} sm={6} md={6} lg={6}>
+						{this.state.detachUnitMode ?
+							<div className="pass-block">
+								<Panel>
+									<span>{translations.DetachUnitHelp}</span>
+									<Button bsStyle="default" onClick={this.stopDetach}>{translations.Cancel}</Button>
+								</Panel>
+							</div> : null}
 						<MapComponent
+							lang="fi"
 							drawData={{
 								featureCollection: {
 									type: "featureCollection",
@@ -51,8 +75,9 @@ export default class AltMapArrayField extends Component {
 								getFeatureStyle: () => {return {color: NORMAL_COLOR, fillColor: NORMAL_COLOR}}
 							}}
 							onChange={this.onMapChange}
-						  markerPopupOffset={(popupOffset || 0) + 40}
-							featurePopupOffset={popupOffset}
+						  markerPopupOffset={45}
+							featurePopupOffset={5}
+						  popupOnHover={true}
 						/>
 					</Col>
 					<Col xs={6} sm={6} md={6} lg={6}>
@@ -127,7 +152,8 @@ export default class AltMapArrayField extends Component {
 			if (field.mapper && fieldData) {
 				const mappedData = popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
 				for (let label in mappedData) {
-					data[label] = mappedData[label];
+					const item = mappedData[label];
+					if (hasData(item)) data[label] = item;
 				}
 			} else if (fieldData) {
 				data[fieldSchema[fieldName].title || fieldName] = fieldData;
@@ -153,11 +179,20 @@ class Popup extends Component {
 }
 
 class MapComponent extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
 	componentDidMount() {
 		this.map = new LajiMap({
 			...this.props,
 			rootElem: this.refs.map
 		});
+		const _context = new Context("MAP");
+		_context.map = this.map;
+		_context.grabFocus = this.grabFocus;
+		_context.releaseFocus = this.releaseFocus;
 	}
 
 	componentWillReceiveProps(props) {
@@ -169,8 +204,8 @@ class MapComponent extends Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		function relevantProps(props) {
-			const {drawData, onChange, ..._props} = props;
-			return _props;
+			const {drawData, onChange, ...relevantProps} = props;
+			return relevantProps;
 		}
 
 		return shouldRender(
@@ -180,7 +215,20 @@ class MapComponent extends Component {
 		);
 	}
 
+	grabFocus = () => {
+		const mainContext = new Context();
+		mainContext.pushBlockingLoader();
+		this.setState({className: "pass-block"});
+	}
+
+	releaseFocus = () => {
+		const mainContext = new Context();
+		mainContext.popBlockingLoader();
+		this.setState({className: undefined});
+	}
+
 	render() {
-		return (<div className={"laji-form-map " +this.props.className} style={this.props.style} ref="map" />);
+		return (<div className={`laji-form-map ${this.props.className || ""} ${this.state.className || ""}`}
+		             style={this.props.style} ref="map" />);
 	}
 }

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, Popover, ButtonGroup } from "react-bootstrap";
+import { Overlay, Popover, ButtonGroup, Glyphicon } from "react-bootstrap";
 
 export class Button extends Component {
 	render() {
@@ -105,4 +105,13 @@ export class Alert extends Component {
 	onKeyDown = (e) => {
 		if (e.key === "Enter" || e.key === "Escape") this.props.onOk();
 	}
+}
+
+export const GlyphButton = (props) => {
+	const {glyph, ...buttonProps} = props;
+	return (
+		<Button {...buttonProps} className="glyph-button">
+			<Glyphicon glyph={glyph} />
+		</Button>
+	);
 }
