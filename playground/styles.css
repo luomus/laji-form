@@ -145,11 +145,10 @@ body .laji-form {
 }
 
 .laji-form .laji-form-map {
-	position: relative;
 	z-index: 1;
 	height: 600px;
-	margin-bottom: 10px;
 	overflow: hidden;
+	position: relative;
 }
 .laji-form .map-field .field-description {
 	padding-bottom: 15px;
@@ -496,4 +495,7 @@ body .laji-form {
 	width: 28px;
 	float: right;
 	margin-right: -3px;
+}
+button[type=submit] {
+	margin-bottom: 2000px;
 }

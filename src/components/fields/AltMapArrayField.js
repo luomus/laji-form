@@ -2,11 +2,10 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
 import { Row, Col } from "react-bootstrap";
+import { AutoAffix } from "react-overlays";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
-
-
 
 export default class AltMapArrayField extends Component {
 	constructor(props) {
@@ -38,33 +37,29 @@ export default class AltMapArrayField extends Component {
 
 		return (
 			<div>
-				<Row>
+				<Row ref="affix">
 					<Col xs={6} sm={6} md={6} lg={6}>
-						{this.state.detachUnitMode ?
-							<div className="pass-block">
-								<Panel>
-									<span>{translations.DetachUnitHelp}</span>
-									<Button bsStyle="default" onClick={this.stopDetach}>{translations.Cancel}</Button>
-								</Panel>
-							</div> : null}
-						<MapComponent
-							lang="fi"
-							drawData={{
-								featureCollection: {
-									type: "featureCollection",
-									features: (geometries || []).map(geometry => {return {type: "Feature", properties: {}, geometry}})
-								},
-								getPopup: this.getPopup,
-								getFeatureStyle: ({featureIdx}) => {
-									const color = this.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
-									return {color: color, fillColor: color, weight: 4};
-								}
-							}}
-							onChange={this.onMapChange}
-						  markerPopupOffset={40}
-							featurePopupOffset={5}
-						  popupOnHover={true}
-						/>
+						<AutoAffix container={this}>
+							<MapComponent
+								ref="affixTarget"
+								lang="fi"
+								drawData={{
+									featureCollection: {
+										type: "featureCollection",
+										features: (geometries || []).map(geometry => {return {type: "Feature", properties: {}, geometry}})
+									},
+									getPopup: this.getPopup,
+									getFeatureStyle: ({featureIdx}) => {
+										const color = this.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
+										return {color: color, fillColor: color, weight: 4};
+									}
+								}}
+								onChange={this.onMapChange}
+								markerPopupOffset={40}
+								featurePopupOffset={5}
+								popupOnHover={true}
+							/>
+						</AutoAffix>
 					</Col>
 					<Col xs={6} sm={6} md={6} lg={6}>
 						<SchemaField {...this.props} uiSchema={uiSchema} />
@@ -221,6 +216,10 @@ class MapComponent extends Component {
 			relevantProps(nextProps),
 			nextState
 		);
+	}
+
+	componentDidUpdate() {
+		this.map.map.invalidateSize();
 	}
 
 	grabFocus = () => {
