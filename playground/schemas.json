@@ -313,7 +313,8 @@
 												"ui:field": "flat",
 												"ui:options": {
 													"fields": [
-														"identifications"
+														"identifications",
+														"unitGathering"
 													],
 													"uiSchema": {
 														"ui:field": "scoped",
@@ -409,11 +410,11 @@
 																				}
 																			}
 																		},
-																		"unitGathering": {
-																			"ui:field": "hidden",
-																			"wgs84Geometry": {
-																				"ui:field": "hidden"
-																			}
+																		"_unitGathering.wgs84Geometry": {
+																			"ui:field": "hidden"
+																		},
+																		"_unitGathering.dateTime": {
+																			"ui:widget": "dateTime"
 																		},
 																		"recordBasis": {
 																			"ui:field": "filteredEnum",
@@ -463,6 +464,10 @@
 																			"countOfOccurrences",
 																			"sex",
 																			"notes"
+																		],
+																		"additionalFields": [
+																			"_unitGathering.dateTime",
+																			"_unitGathering.biotope"
 																		]
 																	},
 																	"MVL.233": {
@@ -1000,6 +1005,14 @@
 										"properties": {
 											"wgs84Geometry": {
 												"$ref": "#/definitions/wgs84Geometry"
+											},
+											"dateTime": {
+												"type": "string",
+												"title": "Aika"
+											},
+											"biotope": {
+												"type": "string",
+												"title": "Biotooppi"
 											}
 										}
 									}

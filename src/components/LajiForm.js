@@ -198,7 +198,8 @@ export default class LajiForm extends Component {
 					}}
 					widgets={{
 						CheckboxWidget: CheckboxWidget,
-						dateTime: DateTimeWidget, date: DateWidget,
+						dateTime: DateTimeWidget,
+						date: DateWidget,
 						time: TimeWidget,
 						separatedDateTime: SeparatedDateTimeWidget,
 						autosuggest: AutosuggestWidget,

@@ -50,7 +50,7 @@ const buttonSettings = {
 								if (event.type === "create") {
 									that.props.onChange(update(
 										that.props.formData,
-										{unitGathering: {$merge: {wgs84Geometry: event.feature.geometry}}}
+										{$merge: {["_unitGathering.wgs84Geometry"]: event.feature.geometry}}
 									));
 									map.onChange = onChange;
 									map.setControlSettings();
@@ -60,7 +60,7 @@ const buttonSettings = {
 						});
 					}
 				}}
-			  bsStyle={hasData(that.props.formData.unitGathering.wgs84Geometry) ? "primary" : "default"}/>
+			  bsStyle={hasData(that.props.formData["_unitGathering.wgs84Geometry"]) ? "primary" : "default"}/>
 			</OverlayTrigger>
 		);
 	}

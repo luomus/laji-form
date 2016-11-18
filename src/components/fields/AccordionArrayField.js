@@ -66,16 +66,16 @@ export default class AccordionArrayField extends Component {
 			<Accordion onSelect={this.onActiveChange} activeKey={activeIdx}>
 				{(formData || []).map((item, idx) => {
 					let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
-					return (idx === activeIdx) ? (
+					return (
 						<SchemaField
-							{...this.props}
-							formData={item}
-							onChange={this.onChangeForIdx(idx)}
-							schema={schema}
-							uiSchema={this.props.uiSchema.items}
-							idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
-							errorSchema={this.props.errorSchema[idx]} />
-					) : null;
+						{...this.props}
+						formData={item}
+						onChange={this.onChangeForIdx(idx)}
+						schema={schema}
+						uiSchema={this.props.uiSchema.items}
+						idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
+						errorSchema={this.props.errorSchema[idx]} />
+					);
 				}).map((comp, i) => <Panel key={i} header={this.renderHeader(i, title)} eventKey={i}>{comp}</Panel>)}
 			</Accordion>
 			<AddButton
