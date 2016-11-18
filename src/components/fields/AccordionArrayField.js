@@ -20,6 +20,12 @@ const headerFormatters = {
 	}
 };
 
+const popupMappers = {
+	units: (schema, units, fieldName) => {
+		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
+	}
+}
+
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
@@ -86,9 +92,9 @@ export default class AccordionArrayField extends Component {
 		const formattedIdx = idx + 1;
 		const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
 
-		const {headerFormatter, getPopupData} = getUiOptions(this.props.uiSchema);
+		const {headerFormatter} = getUiOptions(this.props.uiSchema);
 
-		const popupData = getPopupData(idx);
+		const popupData = this.getPopupData(idx);
 
 		const headerText = (
 			<span>
@@ -115,6 +121,30 @@ export default class AccordionArrayField extends Component {
 		);
 	}
 
+	getPopupData = (idx) => {
+		const {popupFields} = getUiOptions(this.props.uiSchema);
+
+		const data = {};
+		if (!this.props.formData) return data;
+		popupFields.forEach(field => {
+			const fieldName = field.field;
+			const itemFormData = this.props.formData[idx];
+			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
+			let fieldSchema = this.props.schema.items.properties;
+
+			if (field.mapper && fieldData) {
+				const mappedData = popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
+				for (let label in mappedData) {
+					data[label] = mappedData[label];
+				}
+			} else if (fieldData) {
+				data[fieldSchema[fieldName].title || fieldName] = fieldData;
+			}
+
+		});
+		return data;
+	}
+
 	onActiveChange = (idx) => {
 		idx = parseInt(idx);
 		if (this.state.activeIdx === idx) {
@@ -136,7 +166,7 @@ export default class AccordionArrayField extends Component {
 			let formData = this.props.formData;
 			if (!formData) formData = [];
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
-			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
+			this.props.onChange(formData);
 		}
 	}
 }

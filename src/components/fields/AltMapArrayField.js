@@ -1,19 +1,11 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import merge from "deepmerge";
-import equals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
-import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { getUiOptions, getInnerUiSchema, hasData, getUpdateObjectFromPath } from "../../utils";
-import { GlyphButton } from "../components";
-import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { Row, Col } from "react-bootstrap";
+import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
+import { shouldRender } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 
-const popupMappers = {
-	units: (schema, units, fieldName) => {
-		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
-	}
-}
 
 
 export default class AltMapArrayField extends Component {
@@ -63,11 +55,14 @@ export default class AltMapArrayField extends Component {
 									features: (geometries || []).map(geometry => {return {type: "Feature", properties: {}, geometry}})
 								},
 								getPopup: this.getPopup,
-								getFeatureStyle: () => {return {color: NORMAL_COLOR, fillColor: NORMAL_COLOR}}
+								getFeatureStyle: ({featureIdx}) => {
+									const color = this.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
+									return {color: color, fillColor: color, weight: 4};
+								}
 							}}
 							onChange={this.onMapChange}
-						  markerPopupOffset={60}
-							featurePopupOffset={10}
+						  markerPopupOffset={40}
+							featurePopupOffset={5}
 						  popupOnHover={true}
 						/>
 					</Col>
@@ -77,7 +72,7 @@ export default class AltMapArrayField extends Component {
 				</Row>
 				{popupFields ?
 					<div style={{display: "none"}}>
-						<Popup data={this.getPopupData(this.state.popupIdx)} ref="popup"/>
+						<Popup data={this.getFeaturePopupData(this.state.popupIdx)} ref="popup"/>
 					</div> : null}
 			</div>
 		);
@@ -142,11 +137,12 @@ export default class AltMapArrayField extends Component {
 	}
 
 	getPopup = (idx, openPopupCallback) => {
-		if (!this.refs.popup || !hasData(this.getPopupData(idx))) return;
+		if (!this.refs.popup || !hasData(this.getFeaturePopupData(idx))) return;
 		this.setState({popupIdx: idx}, () => openPopupCallback(this.refs.popup.refs.popup));
 	}
 
-	getPopupData = (idx) => {
+
+	getFeaturePopupData = (idx) => {
 		const {popupFields, geometryMapper} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
 

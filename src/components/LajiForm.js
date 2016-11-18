@@ -76,8 +76,9 @@ function FieldTemplate(props) {
 	}
 
 	const buttons = uiSchema["ui:buttons"] || undefined;
+	const elemId = document.querySelector(`#${id}`) === null ? id : undefined;
 	return (
-		<div className={classNames}>
+		<div className={classNames} id={elemId}>
 			{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
 			<div className={buttons ? "laji-form-field-template-item" : null}>

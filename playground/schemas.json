@@ -163,7 +163,16 @@
 				"uiSchema": {
 					"ui:field": "accordionArray",
 					"ui:options": {
-						"headerFormatter": "units"
+						"headerFormatter": "units",
+						"popupFields": [
+							{
+								"field": "units",
+								"mapper": "units"
+							},
+							{
+								"field": "localityDescription"
+							}
+						]
 					},
 					"items": {
 						"ui:field": "nested",
@@ -1194,6 +1203,33 @@
 				"predominantTree": "",
 				"dateBegin": "2015-12-01",
 				"units": [
+					{
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"informalNameString": "ass",
+						"unitType": [
+							"MVL.2"
+						],
+						"taxonID": "MX.47092",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"sex": "",
+						"taste": "",
+						"smell": "",
+						"unitGathering": {
+							"wgs84Geometry": {
+								"type": "Point",
+								"coordinates": [
+									26.35931923392383,
+									60.848762276287275
+								]
+							}
+						},
+						"identifications": [
+							{
+								"taxon": "ass",
+								"taxonID": "MX.47092"
+							}
+						]
+					}
 				],
 				"wgs84GeometryCollection": {
 					"geometries": [
