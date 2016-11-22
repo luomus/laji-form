@@ -5,7 +5,7 @@ import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuIte
 import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
-import { Button, GlyphButton } from "../components";
+import { GlyphButton } from "../components";
 import { propertyHasData, hasData, getUiOptions } from "../../utils";
 import Context from "../../Context";
 
@@ -25,7 +25,8 @@ const scopeFieldSettings = {
 const buttonSettings = {
 	setLocation: (that, glyph) => {
 		const id = that.props.idSchema.$id;
-		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{that.props.formContext.translations.SetLocation}</Tooltip>;
+		const {translations} = that.props.formContext;
+		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{translations.SetLocation}</Tooltip>;
 
 		return (
 			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={tooltip} placement="left" >
@@ -43,8 +44,19 @@ const buttonSettings = {
 								circle: false
 							}
 						});
-						map.triggerDrawing("marker");
+
 						const onChange = map.onChange;
+
+						function close() {
+							mapContext.hidePanel();
+							map.onChange = onChange;
+							map.setControlSettings();
+							mapContext.releaseFocus();
+						}
+
+						mapContext.showPanel(null, translations.Cancel, close);
+
+						map.triggerDrawing("marker");
 						map.onChange = (events => {
 							events.forEach(event => {
 								if (event.type === "create") {
@@ -52,9 +64,7 @@ const buttonSettings = {
 										that.props.formData,
 										{$merge: {["_unitGathering.wgs84Geometry"]: event.feature.geometry}}
 									));
-									map.onChange = onChange;
-									map.setControlSettings();
-									mapContext.releaseFocus();
+									close();
 								}
 							})
 						});

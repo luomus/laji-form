@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Panel } from "react-bootstrap";
 import { AutoAffix } from "react-overlays";
+import { Button } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -55,7 +56,7 @@ export default class AltMapArrayField extends Component {
 									}
 								}}
 								onChange={this.onMapChange}
-								markerPopupOffset={40}
+								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
 							/>
@@ -120,7 +121,8 @@ export default class AltMapArrayField extends Component {
 			this.featureIdxsToItemIdxs = {};
 			let geometries = idx !== undefined ?
 				item.wgs84GeometryCollection.geometries : [];
-			item.units.forEach((unit, i) => {
+			const units = (item && item.units) ? item.units : [];
+			units.forEach((unit, i) => {
 				const {unitGathering: {wgs84Geometry}} = unit;
 				if (wgs84Geometry && hasData(wgs84Geometry)) {
 					this.featureIdxsToItemIdxs[geometries.length] = i;
@@ -132,10 +134,11 @@ export default class AltMapArrayField extends Component {
 	}
 
 	getPopup = (idx, openPopupCallback) => {
-		if (!this.refs.popup || !hasData(this.getFeaturePopupData(idx))) return;
-		this.setState({popupIdx: idx}, () => openPopupCallback(this.refs.popup.refs.popup));
+		if (!this.refs.popup) return;
+		this.setState({popupIdx: idx}, () => {
+			if (this.refs.popup && hasData(this.getFeaturePopupData(idx))) openPopupCallback(this.refs.popup.refs.popup)
+		});
 	}
-
 
 	getFeaturePopupData = (idx) => {
 		const {popupFields, geometryMapper} = getUiOptions(this.props.uiSchema);
@@ -144,7 +147,7 @@ export default class AltMapArrayField extends Component {
 		const featureIdxToItemIdxs = this.featureIdxsToItemIdxs;
 		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
 		const data = {};
-		if (!formData || !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
+		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
 			const itemFormData = formData[this.state.activeIdx][geometryMapper][itemIdx];
@@ -183,6 +186,11 @@ class MapComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		this._context = new Context("MAP");
+		this._context.grabFocus = this.grabFocus;
+		this._context.releaseFocus = this.releaseFocus;
+		this._context.showPanel = this.showPanel;
+		this._context.hidePanel = this.hidePanel;
 	}
 
 	componentDidMount() {
@@ -190,10 +198,7 @@ class MapComponent extends Component {
 			...this.props,
 			rootElem: this.refs.map
 		});
-		const _context = new Context("MAP");
-		_context.map = this.map;
-		_context.grabFocus = this.grabFocus;
-		_context.releaseFocus = this.releaseFocus;
+		this._context.map = this.map;
 	}
 
 	componentWillReceiveProps({drawData, activeIdx, controlSettings, lang}) {
@@ -234,8 +239,27 @@ class MapComponent extends Component {
 		this.setState({className: undefined});
 	}
 
+	showPanel = (panelTextContent, panelButtonContent, onPanelButtonClick) => {
+		this.setState({panel: true, panelTextContent, panelButtonContent, onPanelButtonClick});
+	}
+
+	hidePanel = () => {
+		this.setState({panel: false});
+	}
+
 	render() {
-		return (<div className={`laji-form-map ${this.props.className || ""} ${this.state.className || ""}`}
-		             style={this.props.style} ref="map" />);
+		return (
+			<div className={"laji-form-map-container" + (this.state.className ? " " + this.state.className : "")}>
+				{this.state.panel ?
+					<div className="pass-block">
+						<Panel>
+							<div>{this.state.panelTextContent}</div>
+							<Button bsStyle="default" onClick={this.state.onPanelButtonClick}>{this.state.panelButtonContent}</Button>
+						</Panel>
+					</div> : null}
+				<div key="map" className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
+		         style={this.props.style} ref="map" />
+			</div>
+		);
 	}
 }

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import ReactDOM from "react-dom";
+import { findDOMNode } from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button } from "./components";
@@ -76,9 +76,8 @@ function FieldTemplate(props) {
 	}
 
 	const buttons = uiSchema["ui:buttons"] || undefined;
-	const elemId = document.querySelector(`#${id}`) === null ? id : undefined;
 	return (
-		<div className={classNames} id={elemId}>
+		<div className={classNames}>
 			{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
 			<div className={buttons ? "laji-form-field-template-item" : null}>
@@ -239,13 +238,13 @@ export default class LajiForm extends Component {
 			elem.className.includes(FOCUS_SINK_CLASS));
 		}
 
-		const formElem = ReactDOM.findDOMNode(this.refs.form);
+		const formElem = findDOMNode(this.refs.form);
 
 		return (formElem.querySelectorAll && isTabbableInput(inputElem));
 	}
 
 	getTabbableFields = (reverse) => {
-		const formElem = ReactDOM.findDOMNode(this.refs.form);
+		const formElem = findDOMNode(this.refs.form);
 
 		const fieldsNodeList = formElem.querySelectorAll(tabbableSelectors.join(", "));
 		let fields = [...fieldsNodeList];

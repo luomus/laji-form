@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, hasData } from "../../utils";
-import { Button, DeleteButton } from "../components";
+import { DeleteButton } from "../components";
 
 const headerFormatters = {
 	units: {
@@ -44,7 +44,8 @@ export default class AccordionArrayField extends Component {
 	render() {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 
-		const activeIdx = this.state.activeIdx;
+		let activeIdx = this.state.activeIdx;
+		if (activeIdx === undefined) activeIdx = -1;
 
 		const itemsSchema = this.props.schema.items;
 		const {title, ...schema} = itemsSchema;

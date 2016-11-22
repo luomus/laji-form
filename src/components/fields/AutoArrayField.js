@@ -93,7 +93,7 @@ export default class AutoArrayField extends Component {
 
 			rows.push(
 				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
-					<div className="laji-form-field-template-schema">
+					<div className={"laji-form-field-template-schema"}>
 						<SchemaField
 							formData={item}
 							onChange={this.onChangeForIdx(idx)}

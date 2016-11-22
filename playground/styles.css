@@ -144,11 +144,13 @@ body .laji-form {
     padding: 1px 5px;
 }
 
-.laji-form .laji-form-map {
+.laji-form .laji-form-map-container {
 	z-index: 1;
+	position: relative;
+}
+.laji-form .laji-form-map {
 	height: 600px;
 	overflow: hidden;
-	position: relative;
 }
 .laji-form .map-field .field-description {
 	padding-bottom: 15px;
@@ -158,10 +160,8 @@ body .laji-form {
 	position: absolute;
 	z-index: 3 !important;
 	top: 3%;
-	width: 300px;
-	margin: 0 auto;
-	left: 0;
-	right: 0;
+	left: 50%;
+	transform: translate(-50%, 0);
 	text-align: center;
 }
 

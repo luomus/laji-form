@@ -298,7 +298,8 @@
 											}
 										}
 									}
-								},"units": {
+								},
+								"units": {
 									"ui:field": "copyValuesArray",
 									"ui:options": {
 										"copy": [
