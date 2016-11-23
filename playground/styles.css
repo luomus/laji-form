@@ -147,6 +147,7 @@ body .laji-form {
 .laji-form .laji-form-map-container {
 	z-index: 1;
 	position: relative;
+	height: 600px;
 }
 .laji-form .laji-form-map {
 	height: 600px;
