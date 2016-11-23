@@ -447,7 +447,7 @@ body .laji-form {
 .laji-form .laji-form-image-select li.active svg path {
 	fill: white !important;
 }
-.laji-form .form-control.focused {
+.laji-form .form-control.focused, .laji-form .highlight {
 	border-color: #66afe9;
 	outline: 0;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
@@ -496,13 +496,4 @@ body .laji-form {
 	width: 28px;
 	float: right;
 	margin-right: -3px;
-}
-button[type=submit] {
-	margin-bottom: 2000px;
-}
-.highlight {
-	border-color: #66afe9;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
