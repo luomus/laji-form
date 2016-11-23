@@ -20,6 +20,13 @@ export default class AltMapArrayField extends Component {
 		return shouldRender(this, nextProps, nextState);
 	}
 
+	componentDidUpdate() {
+		const {geometryMapper} = getUiOptions(this.props.uiSchema);
+		if (!geometryMapper) return;
+		const mapper = this.geometryMappers[geometryMapper];
+		if (mapper.onComponentDidUpdate) mapper.onComponentDidUpdate();
+	}
+
 	render() {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema} = this.props;
@@ -56,6 +63,7 @@ export default class AltMapArrayField extends Component {
 										return {color: color, fillColor: color, weight: 4};
 									}
 								}}
+								onPopupClose={() => {this.setState({popupIdx: undefined})}}
 								onChange={this.onMapChange}
 								markerPopupOffset={45}
 								featurePopupOffset={5}
@@ -142,22 +150,24 @@ export default class AltMapArrayField extends Component {
 
 				const unitIdxs = idxs.filter(idx => idx >= geometriesLength).map(idx => this.featureIdxsToItemIdxs[idx]);
 
-				const updateObject = {[this.state.activeIdx]: {units:
-					unitIdxs.reduce((obj, idx) => {
-						obj[idx] = {
-							unitGathering: {
-								wgs84Geometry: {
-									$set: getDefaultFormState(
-										this.props.schema.items.properties.units.items.properties.unitGathering.properties.wgs84Geometry,
-										undefined,
-										this.props.registry.definitions
-									)
+				const updateObject = {
+					[this.state.activeIdx]: {
+						units: unitIdxs.reduce((obj, idx) => {
+							obj[idx] = {
+								unitGathering: {
+									wgs84Geometry: {
+										$set: getDefaultFormState(
+											this.props.schema.items.properties.units.items.properties.unitGathering.properties.wgs84Geometry,
+											undefined,
+											this.props.registry.definitions
+										)
+									}
 								}
-							}
-						};
-						return obj;
-					}, {})
-				}};
+							};
+							return obj;
+						}, {})
+					}
+				};
 				this.props.onChange(update(formData,
 					updateObject
 				));
@@ -174,20 +184,47 @@ export default class AltMapArrayField extends Component {
 					(idx >= geometriesLength ? unitEditFeatures : thisEditFeatures)[idx] = features[idx];
 				});
 
-				const updateObject = {[this.state.activeIdx]: {units:
-					Object.keys(unitEditFeatures).reduce((obj, idx) => {
-						obj[this.featureIdxsToItemIdxs[idx]] = {unitGathering: {wgs84Geometry: {$set: features[idx].geometry}}};
-						return obj;
-					}, {})
-				}};
+				const updateObject = {
+					[this.state.activeIdx]: {
+						units: Object.keys(unitEditFeatures).reduce((obj, idx) => {
+							obj[this.featureIdxsToItemIdxs[idx]] = {unitGathering: {wgs84Geometry: {$set: features[idx].geometry}}};
+							return obj;
+						}, {})
+					}
+				};
 				this.props.onChange(update(this.props.formData,
 					updateObject
 				));
 
 				this.onEdited({features: thisEditFeatures});
+			},
+			getIdSuffix: (idx) => `units_${idx}`,
+			onComponentDidUpdate: () => {
+				if (this.highlightedElem) {
+					this.highlightedElem.className = this.highlightedElem.className.replace(" highlight", "");
+				}
+
+				const {popupIdx} = this.state;
+				if (popupIdx === undefined) return;
+				const {geometryMapper} = getUiOptions(this.props.uiSchema);
+				const mapper = this.geometryMappers[geometryMapper];
+
+				const idx = this.featureIdxsToItemIdxs[popupIdx];
+
+				if (idx === undefined) {
+					return;
+				}
+
+				const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_${mapper.getIdSuffix(idx)}`;
+				this.highlightedElem = document.querySelector(`#${id} .form-group`);
+
+				if (this.highlightedElem) {
+					this.highlightedElem.className += " highlight"
+				}
 			}
 		}
 	}
+
 
 	getPopup = (idx, openPopupCallback) => {
 		if (!this.refs.popup) return;

@@ -78,7 +78,7 @@ export default class AutoArrayField extends Component {
 
 		let rows = [];
 		data.forEach((item, idx) => {
-			let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
+			let id = this.props.idSchema.$id + "_" + idx;
 			let removable = idx < data.length - 1;
 
 			const buttons = [removable ? (
@@ -99,7 +99,7 @@ export default class AutoArrayField extends Component {
 							onChange={this.onChangeForIdx(idx)}
 							schema={this.props.schema.items}
 							uiSchema={this.props.uiSchema.items}
-							idSchema={toIdSchema(this.props.schema.items, itemIdPrefix, this.props.registry.definitions)}
+							idSchema={toIdSchema(this.props.schema.items, id, this.props.registry.definitions)}
 							registry={registry}
 							errorSchema={this.props.errorSchema[idx]} />
 					</div>

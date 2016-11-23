@@ -56,7 +56,8 @@ tabbableSelectors.push(`.${RC_SWITCH_CLASS}:not(.${RC_SWITCH_CLASS}-disabled)`);
 tabbableSelectors.push(`.${FOCUS_SINK_CLASS}`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
 
-function FieldTemplate(props) {
+class FieldTemplate extends Component {
+render() {
 	const {
 		id,
 		classNames,
@@ -69,15 +70,21 @@ function FieldTemplate(props) {
 		required,
 		displayLabel,
 		uiSchema,
-		} = props;
+		} = this.props;
 
 	if (hidden) {
 		return children;
 	}
 
+	const ids = new Context("IDS");
+	let elemId = undefined;
+	if (!ids[id]  || ids[id] === this) {
+		ids[id] = this;
+		elemId = id;
+	}
 	const buttons = uiSchema["ui:buttons"] || undefined;
 	return (
-		<div className={classNames}>
+		<div className={classNames} id={elemId}>
 			{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
 			<div className={buttons ? "laji-form-field-template-item" : null}>
@@ -92,6 +99,7 @@ function FieldTemplate(props) {
 			{errors}
 		</div>
 	);
+}
 }
 
 export default class LajiForm extends Component {
