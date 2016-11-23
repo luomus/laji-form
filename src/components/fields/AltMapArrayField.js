@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import deepEquals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
 import { Row, Col, Panel } from "react-bootstrap";
 import { AutoAffix } from "react-overlays";
 import { Button } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
-import { shouldRender } from  "react-jsonschema-form/lib/utils";
+import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 
 export default class AltMapArrayField extends Component {
@@ -34,7 +35,7 @@ export default class AltMapArrayField extends Component {
 			}
 		};
 
-		const geometries = this.geometryMappers[geometryMapper](this.state.activeIdx, formData);
+		const geometries = this.geometryMappers[geometryMapper].getData(this.state.activeIdx, formData);
 
 		return (
 			<div>
@@ -75,16 +76,19 @@ export default class AltMapArrayField extends Component {
 	}
 
 	onMapChange = (events) => {
+		const {geometryMapper} = getUiOptions(this.props.uiSchema);
+		const mapper = geometryMapper ? this.geometryMappers[geometryMapper] : undefined;
+
 		events.forEach(e => {
 			switch (e.type) {
 				case "create":
-					this.onAdd(e);
+					(mapper && mapper.onAdd) ? mapper.onAdd(e) : this.onAdd(e);
 					break;
 				case "delete":
-					this.onRemove(e);
+					(mapper && mapper.onRemove) ? mapper.onRemove(e) : this.onRemove(e);
 					break;
 				case "edit":
-					this.onEdited(e);
+					(mapper && mapper.onEdited) ? mapper.onEdited(e) : this.onEdited(e);
 					break;
 			}
 		});
@@ -96,9 +100,9 @@ export default class AltMapArrayField extends Component {
 			{[this.state.activeIdx]: {wgs84GeometryCollection: {geometries: {$push: [geometry]}}}}));
 	}
 
-	onRemove = (e) => {
+	onRemove = ({idxs}) => {
 		let splices = [];
-		e.idxs.sort().reverse().forEach((idx) => {
+		idxs.sort().reverse().forEach((idx) => {
 			splices.push([idx, 1]);
 		});
 		this.props.onChange(update(this.props.formData,
@@ -116,20 +120,72 @@ export default class AltMapArrayField extends Component {
 	}
 
 	geometryMappers = {
-		units: (idx, formData) => {
-			const item = formData[idx];
-			this.featureIdxsToItemIdxs = {};
-			let geometries = idx !== undefined ?
-				item.wgs84GeometryCollection.geometries : [];
-			const units = (item && item.units) ? item.units : [];
-			units.forEach((unit, i) => {
-				const {unitGathering: {wgs84Geometry}} = unit;
-				if (wgs84Geometry && hasData(wgs84Geometry)) {
-					this.featureIdxsToItemIdxs[geometries.length] = i;
-					geometries = [...geometries, wgs84Geometry];
-				}
-			});
-			return geometries;
+		units: {
+			getData: (idx, formData) => {
+				const item = formData[idx];
+				this.featureIdxsToItemIdxs = {};
+				let geometries = idx !== undefined ?
+					item.wgs84GeometryCollection.geometries : [];
+				const units = (item && item.units) ? item.units : [];
+				units.forEach((unit, i) => {
+					const {unitGathering: {wgs84Geometry}} = unit;
+					if (wgs84Geometry && hasData(wgs84Geometry)) {
+						this.featureIdxsToItemIdxs[geometries.length] = i;
+						geometries = [...geometries, wgs84Geometry];
+					}
+				});
+				return geometries;
+			},
+			onRemove: ({idxs}) => {
+				const {formData} = this.props;
+				const geometriesLength = formData[this.state.activeIdx].wgs84GeometryCollection.geometries.length;
+
+				const unitIdxs = idxs.filter(idx => idx >= geometriesLength).map(idx => this.featureIdxsToItemIdxs[idx]);
+
+				const updateObject = {[this.state.activeIdx]: {units:
+					unitIdxs.reduce((obj, idx) => {
+						obj[idx] = {
+							unitGathering: {
+								wgs84Geometry: {
+									$set: getDefaultFormState(
+										this.props.schema.items.properties.units.items.properties.unitGathering.properties.wgs84Geometry,
+										undefined,
+										this.props.registry.definitions
+									)
+								}
+							}
+						};
+						return obj;
+					}, {})
+				}};
+				this.props.onChange(update(formData,
+					updateObject
+				));
+
+				this.onRemove({idxs: idxs.filter(idx => idx < geometriesLength)});
+			},
+			onEdited: ({features}) => {
+				const {formData} = this.props;
+				const geometriesLength = formData[this.state.activeIdx].wgs84GeometryCollection.geometries.length;
+
+				const unitEditFeatures = {};
+				const thisEditFeatures = {};
+				Object.keys(features).forEach(idx => {
+					(idx >= geometriesLength ? unitEditFeatures : thisEditFeatures)[idx] = features[idx];
+				});
+
+				const updateObject = {[this.state.activeIdx]: {units:
+					Object.keys(unitEditFeatures).reduce((obj, idx) => {
+						obj[this.featureIdxsToItemIdxs[idx]] = {unitGathering: {wgs84Geometry: {$set: features[idx].geometry}}};
+						return obj;
+					}, {})
+				}};
+				this.props.onChange(update(this.props.formData,
+					updateObject
+				));
+
+				this.onEdited({features: thisEditFeatures});
+			}
 		}
 	}
 
@@ -147,7 +203,8 @@ export default class AltMapArrayField extends Component {
 		const featureIdxToItemIdxs = this.featureIdxsToItemIdxs;
 		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
 		const data = {};
-		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
+		if (!formData || this.state.activeIdx === undefined ||
+		    !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
 			const itemFormData = formData[this.state.activeIdx][geometryMapper][itemIdx];
@@ -185,7 +242,7 @@ class Popup extends Component {
 class MapComponent extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {featureCollection: {}};
 		this._context = new Context("MAP");
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
@@ -203,11 +260,14 @@ class MapComponent extends Component {
 
 	componentWillReceiveProps({drawData, activeIdx, controlSettings, lang}) {
 		if (this.map) {
-			this.map.setDrawData(drawData);
+			if (!deepEquals(drawData.featureCollection, this.state.featureCollection))  {
+				this.map.setDrawData(drawData);
+			}
 			this.map.setActive(this.map.idxsToIds[activeIdx]);
-			if (controlSettings) this.map.setControlSettings(controlSettings);
+			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) this.map.setControlSettings(controlSettings);
 			if (lang !== this.props.lang) this.map.setLang(lang);
 		}
+		this.setState({featureCollection: drawData.featureCollection, controlSettings});
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -215,7 +275,6 @@ class MapComponent extends Component {
 			const {drawData, onChange, controlSettings, lang, ...relevantProps} = props;
 			return relevantProps;
 		}
-
 		return shouldRender(
 			{props: relevantProps(this.props), state: this.state},
 			relevantProps(nextProps),
