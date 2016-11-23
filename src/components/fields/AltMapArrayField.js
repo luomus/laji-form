@@ -215,7 +215,7 @@ export default class AltMapArrayField extends Component {
 					return;
 				}
 
-				const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_${mapper.getIdSuffix(idx)}`;
+				const id = `_laji-form_${this.props.idSchema.$id}_${this.state.activeIdx}_${mapper.getIdSuffix(idx)}`;
 				this.highlightedElem = document.querySelector(`#${id} .form-group`);
 
 				if (this.highlightedElem) {

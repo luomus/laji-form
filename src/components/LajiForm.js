@@ -77,10 +77,11 @@ render() {
 	}
 
 	const ids = new Context("IDS");
+	const htmlId = `_laji-form_${id}`;
 	let elemId = undefined;
-	if (!ids[id]  || ids[id] === this) {
-		ids[id] = this;
-		elemId = id;
+	if (!ids[htmlId]  || ids[htmlId] === this) {
+		ids[htmlId] = this;
+		elemId = htmlId;
 	}
 	const buttons = uiSchema["ui:buttons"] || undefined;
 	return (
