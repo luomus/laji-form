@@ -124,34 +124,43 @@ export class Affix extends Component {
 	}
 
 	componentDidMount() {
-		window.addEventListener("scroll", () => {
-			const container = this.props.getContainer();
-			if (container) {
-				const containerTop = container.getBoundingClientRect().top;
-				const containerHeight = container.offsetHeight;
-				const containerVisibleHeight = containerHeight + containerTop;
-				const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
-				const scrolled = containerTop < 0;
+		window.addEventListener("scroll", this.onScroll);
+		window.addEventListener("resize", this.onResize);
+	}
 
-				let affixState = TOP;
-				if (scrolled && containerVisibleHeight < wrapperHeight) affixState = BOTTOM;
-				else if (scrolled) affixState = AFFIXED;
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onScroll);
+		window.removeEventListener("resize", this.onResize);
+	}
 
-				if (affixState !== this.state.affixState) {
-					const wrapperNode = findDOMNode(this.refs.wrapper);
-					const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
-					const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : 0;
-					this.setState({affixState: affixState, width, top});
-				}
+	onScroll = () => {
+		const container = this.props.getContainer();
+		if (container) {
+			const containerTop = container.getBoundingClientRect().top;
+			const containerHeight = container.offsetHeight;
+			const containerVisibleHeight = containerHeight + containerTop;
+			const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
+			const scrolled = containerTop < 0;
+
+			let affixState = TOP;
+			if (scrolled && containerVisibleHeight < wrapperHeight) affixState = BOTTOM;
+			else if (scrolled) affixState = AFFIXED;
+
+			if (affixState !== this.state.affixState) {
+				const wrapperNode = findDOMNode(this.refs.wrapper);
+				const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
+				const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : 0;
+				this.setState({affixState: affixState, width, top});
 			}
-		});
-		window.addEventListener("resize", () => {
-			requestAnimationFrame(() => {
-				const positioner = findDOMNode(this.refs.positioner);
-				const width = positioner.getBoundingClientRect().width;
-				this.setState({width});
-			})
-		});
+		}
+	}
+
+	onResize = () => {
+		requestAnimationFrame(() => {
+			const positioner = findDOMNode(this.refs.positioner);
+			const width = positioner.getBoundingClientRect().width;
+			this.setState({width});
+		})
 	}
 
 	render() {
