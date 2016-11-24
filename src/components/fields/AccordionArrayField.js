@@ -4,16 +4,44 @@ import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";
+import Context from "../../Context";
 
 const headerFormatters = {
 	units: {
-		render: (that, idx) => {
+		render: (that, idx, headerElem) => {
 			const {props: {formContext: {translations}, formData}} = that;
 			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ? item.units.length : 0;
+
+			function onMouseEnter() {
+				if (idx === that.state.activeIdx) return;
+				const map = new Context("MAP").map;
+				const gatheringGeometries = (item.wgs84GeometryCollection.geometries || []);
+
+				const unitGeometries = (item.units || [])
+					.filter(unit => unit.unitGathering && hasData(unit.unitGathering.wgs84Geometry))
+					.map(unit => unit.unitGathering.wgs84Geometry);
+
+				const geometries = [...gatheringGeometries, ...unitGeometries]
+					.map(geometry => {return {type: "Feature", properties: {}, geometry}});
+
+				map.setData({
+					featureCollection: {type: "featureCollection", features: geometries},
+					getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"}}
+				});
+			}
+
+			function onMouseLeave() {
+				const map = new Context("MAP").map;
+				map.setData();
+			}
+
 			return (
-				<span className="text-muted">
-					{` (${unitsLength} ${translations.unitsPartitive})`}
+				<span onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+					{headerElem}
+					<span className="text-muted" >
+						{` (${unitsLength} ${translations.unitsPartitive})`}
+					</span>
 				</span>
 			)
 		}
@@ -97,12 +125,8 @@ export default class AccordionArrayField extends Component {
 
 		const popupData = this.getPopupData(idx);
 
-		const headerText = (
-			<span>
-				<span>{_title}</span>
-				{headerFormatter ? headerFormatters[headerFormatter].render(this, idx) : null}
-			</span>
-		);
+		const header =  <span>{_title}</span>;
+		const headerText = headerFormatter ? headerFormatters[headerFormatter].render(this, idx, header) : header;
 
 		return (
 			<div>

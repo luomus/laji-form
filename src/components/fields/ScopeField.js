@@ -68,8 +68,8 @@ const buttonSettings = {
 
 				const layer = getLayer();
 				if (layer) {
-					map.updateLayerStyle(layer, {opacity: 0.5});
-					layer.closePopup();
+					map.updateLayerStyle(layer, {opacity: 0.7});
+					map.map.closePopup();
 					layer.bindTooltip("Vanha sijainti", {permanent: true}).openTooltip();
 				}
 
@@ -80,6 +80,11 @@ const buttonSettings = {
 					map.onChange = onChange;
 					map.setControlSettings();
 					mapContext.releaseFocus();
+
+					if (layer) {
+						map.updateLayerStyle(layer, {opacity: 1});
+						layer.unbindTooltip();
+					}
 				}
 
 				mapContext.showPanel(null, translations.Cancel, close);

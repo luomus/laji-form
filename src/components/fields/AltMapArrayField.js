@@ -65,6 +65,9 @@ export default class AltMapArrayField extends Component {
 										return {color: color, fillColor: color, weight: 4};
 									}
 								}}
+								getDrawingDraftStyle={() => {
+									return {color: "#25B4CA", opacity: 1}
+								}}
 								onPopupClose={() => {this.setState({popupIdx: undefined})}}
 								onChange={this.onMapChange}
 								markerPopupOffset={45}
