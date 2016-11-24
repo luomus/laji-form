@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import ReactDOM from "react-dom";
+import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, Popover, ButtonGroup, Glyphicon } from "react-bootstrap";
+import { Overlay, Popover, ButtonGroup, Glyphicon, Modal } from "react-bootstrap";
 
 export class Button extends Component {
 	render() {
@@ -68,7 +68,7 @@ export class DeleteButton extends Component {
 								onClick={props.confirm ? this.onShowConfirm : this.onClick}>✖</Button>
 				{show ?
 					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
-									 target={() => ReactDOM.findDOMNode(this.refs.del)}>
+									 target={() => findDOMNode(this.refs.del)}>
 						<Popover id="popover-trigger-click">
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
@@ -114,4 +114,66 @@ export const GlyphButton = (props) => {
 			<Glyphicon glyph={glyph} />
 		</Button>
 	);
+}
+
+const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
+export class Affix extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {affixState: false};
+	}
+
+	componentDidMount() {
+		window.addEventListener("scroll", () => {
+			const container = this.props.getContainer();
+			if (container) {
+				const containerTop = container.getBoundingClientRect().top;
+				const containerHeight = container.offsetHeight;
+				const containerVisibleHeight = containerHeight + containerTop;
+				const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
+				const scrolled = containerTop < 0;
+
+				let affixState = TOP;
+				if (scrolled && containerVisibleHeight < wrapperHeight) affixState = BOTTOM;
+				else if (scrolled) affixState = AFFIXED;
+
+				if (affixState !== this.state.affixState) {
+					const wrapperNode = findDOMNode(this.refs.wrapper);
+					const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
+					const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : 0;
+					this.setState({affixState: affixState, width, top});
+				}
+			}
+		});
+		window.addEventListener("resize", () => {
+			requestAnimationFrame(() => {
+				const positioner = findDOMNode(this.refs.positioner);
+				const width = positioner.getBoundingClientRect().width;
+				this.setState({width});
+			})
+		});
+	}
+
+	render() {
+		const {children} = this.props;
+		const {top, width, affixState} = this.state;
+		const style = {};
+		style.position = "relative";
+		if (affixState === AFFIXED) {
+			style.position = "fixed";
+			style.width = width;
+			style.top = top;
+		}
+		else if (affixState === BOTTOM) {
+			style.top = top;
+		}
+		return (
+			<div>
+				<div ref="positioner" />
+				<div ref="wrapper" style={style} className={this.props.className}>
+					{children}
+				</div>
+			</div>
+		);
+	}
 }

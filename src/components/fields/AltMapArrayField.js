@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from "react";
+import { findDOMNode } from "react-dom";
 import update from "react-addons-update";
 import deepEquals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
 import { Row, Col, Panel } from "react-bootstrap";
-import { AutoAffix } from "react-overlays";
-import { Button } from "../components";
+import { Button, Affix } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -48,11 +48,11 @@ export default class AltMapArrayField extends Component {
 
 		return (
 			<div>
-				<Row ref="affix">
+				<Row ref={elem => {this.affix = elem;}}>
 					<Col xs={6} sm={6} md={6} lg={6}>
-						<AutoAffix container={this}>
+						<Affix container={this} getContainer={() => findDOMNode(this.affix)} className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
-								ref="affixTarget"
+								ref="map"
 								lang="fi"
 								drawData={{
 									featureCollection: {
@@ -70,8 +70,10 @@ export default class AltMapArrayField extends Component {
 								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
+							  onFocusGrab={() => {this.setState({focusGrabbed: true})}}
+								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
 							/>
-						</AutoAffix>
+						</Affix>
 					</Col>
 					<Col xs={6} sm={6} md={6} lg={6}>
 						<SchemaField {...this.props} uiSchema={uiSchema} />
@@ -294,8 +296,6 @@ class MapComponent extends Component {
 			...this.props,
 			rootElem: this.refs.map
 		});
-
-		window.map = this.map;
 		this._context.map = this.map;
 	}
 
@@ -330,13 +330,17 @@ class MapComponent extends Component {
 	grabFocus = () => {
 		const mainContext = new Context();
 		mainContext.pushBlockingLoader();
-		this.setState({className: "pass-block"});
+		this.setState({focusGrabbed: true}, () => {
+			if (this.props.onFocusGrab) this.props.onFocusGrab();
+		});
 	}
 
 	releaseFocus = () => {
 		const mainContext = new Context();
 		mainContext.popBlockingLoader();
-		this.setState({className: undefined});
+		this.setState({focusGrabbed: false}, () => {
+			if (this.props.onFocusRelease) this.props.onFocusRelease();
+		});
 	}
 
 	showPanel = (panelTextContent, panelButtonContent, onPanelButtonClick) => {
@@ -349,9 +353,9 @@ class MapComponent extends Component {
 
 	render() {
 		return (
-			<div className={"laji-form-map-container" + (this.state.className ? " " + this.state.className : "")}>
+			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
 				{this.state.panel ?
-					<div className="pass-block">
+					<div className="pass-block" ref="panel">
 						<Panel>
 							<div>{this.state.panelTextContent}</div>
 							<Button bsStyle="default" onClick={this.state.onPanelButtonClick}>{this.state.panelButtonContent}</Button>

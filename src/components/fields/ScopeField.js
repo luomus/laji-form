@@ -29,86 +29,110 @@ const buttonSettings = {
 		const {translations} = that.props.formContext;
 		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{translations.SetLocation}</Tooltip>;
 
-		let layer = undefined;
+		const hasCoordinates = hasData(that.props.formData["_unitGathering.wgs84Geometry"]);
+
+		const mapContext = new Context("MAP");
+		const map = mapContext.map;
+
+		function getLayer() {
+			const {$id} = that.props.idSchema;
+			const splitted = $id.split("_");
+			const idx = parseInt(splitted[splitted.length - 1]);
+
+			const {featureIdxsToItemIdxs} = new Context("MAP_UNITS");
+			let featureIdx = undefined;
+			for (let i in featureIdxsToItemIdxs) {
+				if (featureIdxsToItemIdxs[i] === idx) {
+					featureIdx = i;
+					break;
+				}
+			}
+			if (featureIdx === undefined) return;
+
+			const map = new Context("MAP").map;
+			return map._getDrawLayerById(map.idxsToIds[featureIdx]);
+		}
+
+		function onClick() {
+			if (map) {
+				mapContext.grabFocus();
+				map.setControlSettings({
+					draw: {
+						marker: true,
+						polyline: false,
+						rectangle: false,
+						polygon: false,
+						circle: false
+					}
+				});
+
+				const layer = getLayer();
+				if (layer) {
+					map.updateLayerStyle(layer, {opacity: 0.5});
+					layer.closePopup();
+					layer.bindTooltip("Vanha sijainti", {permanent: true}).openTooltip();
+				}
+
+				const onChange = map.onChange;
+
+				function close() {
+					mapContext.hidePanel();
+					map.onChange = onChange;
+					map.setControlSettings();
+					mapContext.releaseFocus();
+				}
+
+				mapContext.showPanel(null, translations.Cancel, close);
+
+				map.triggerDrawing("marker");
+				map.onChange = (events => {
+					events.forEach(event => {
+						if (event.type === "create") {
+							that.props.onChange(update(
+								that.props.formData,
+								{$merge: {["_unitGathering.wgs84Geometry"]: event.feature.geometry}}
+							));
+							close();
+						}
+					})
+				});
+			}
+		}
+
+		function onMouseEnter() {
+			const layer = getLayer();
+			if (!layer) return;
+
+			let latlng = undefined;
+			for (let fn of ["getLatLng", "getCenter"]) {
+				if (layer[fn]) latlng = layer[fn]();
+			}
+			map.updateLayerStyle(layer, {color: "#75CEFA"});
+
+			if (!latlng) return;
+			layer.fire("mouseover", {latlng});
+			if (!map.map.getBounds().contains(latlng)) {
+				map.map.setView(latlng);
+			}
+		}
+
+		function onMouseLeave() {
+			const map = new Context("MAP").map;
+			const layer = getLayer();
+			if (!layer) return;
+			map.redrawDrawData();
+			layer.fire("mouseout");
+		}
+
 		return (
 			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={tooltip} placement="left" >
-				<GlyphButton glyph={glyph}
-          onClick={() => {
-						const mapContext = new Context("MAP");
-						const map = mapContext.map;
-						if (map) {
-							mapContext.grabFocus();
-							map.setControlSettings({
-								draw: {
-									marker: true,
-									polyline: false,
-									rectangle: false,
-									polygon: false,
-									circle: false
-								}
-							});
-
-							const onChange = map.onChange;
-
-							function close() {
-								mapContext.hidePanel();
-								map.onChange = onChange;
-								map.setControlSettings();
-								mapContext.releaseFocus();
-							}
-
-							mapContext.showPanel(null, translations.Cancel, close);
-
-							map.triggerDrawing("marker");
-							map.onChange = (events => {
-								events.forEach(event => {
-									if (event.type === "create") {
-										that.props.onChange(update(
-											that.props.formData,
-											{$merge: {["_unitGathering.wgs84Geometry"]: event.feature.geometry}}
-										));
-										close();
-									}
-								})
-							});
-						}
-					}}
-					onMouseEnter={() => {
-						const {$id} = that.props.idSchema;
-						const splitted = $id.split("_");
-						const idx = parseInt(splitted[splitted.length - 1]);
-
-						const {featureIdxsToItemIdxs} = new Context("MAP_UNITS");
-						let featureIdx = undefined;
-						for (let i in featureIdxsToItemIdxs) {
-							if (featureIdxsToItemIdxs[i] === idx) {
-								featureIdx = i;
-								break;
-							}
-						}
-						if (featureIdx === undefined) return;
-
-						const map = new Context("MAP").map;
-						layer = map._getDrawLayerById(map.idxsToIds[featureIdx]);
-						let latlng = undefined;
-						for (let fn of ["getLatLng", "getCenter"]) {
-							if (layer[fn]) latlng = layer[fn]();
-						}
-						map.updateLayerStyle(layer, {color: "#75CEFA"});
-
-						if (!latlng) return;
-						layer.fire("mouseover", {latlng});
-						if (!map.map.getBounds().contains(latlng)) {
-							map.map.setView(latlng);
-						}
-					}}
-					onMouseLeave={() => {
-						const map = new Context("MAP").map;
-						if (layer) map.redrawDrawData();
-						layer.fire("mouseout");
-						layer = undefined;
-					}}
-			  bsStyle={hasData(that.props.formData["_unitGathering.wgs84Geometry"]) ? "primary" : "default"}/>
+					<GlyphButton
+						className={hasCoordinates ? "disabled" : ""}
+						onMouseEnter={onMouseEnter}
+						onMouseLeave={onMouseLeave}
+						glyph={glyph}
+						onClick={onClick}
+					bsStyle={hasCoordinates ? "primary" : "default"}/>
 			</OverlayTrigger>
 		);
 	}

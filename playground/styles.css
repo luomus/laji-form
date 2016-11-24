@@ -159,7 +159,7 @@ body .laji-form {
 
 .laji-form .pass-block .panel {
 	position: absolute;
-	z-index: 3 !important;
+	z-index: 500 !important;
 	top: 3%;
 	left: 50%;
 	transform: translate(-50%, 0);
