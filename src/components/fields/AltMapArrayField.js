@@ -75,6 +75,7 @@ export default class AltMapArrayField extends Component {
 								popupOnHover={true}
 							  onFocusGrab={() => {this.setState({focusGrabbed: true})}}
 								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
+							  controlSettings={this.state.activeIdx !== undefined ? {} : {draw: false}}
 							/>
 						</Affix>
 					</Col>
@@ -300,6 +301,11 @@ class MapComponent extends Component {
 			rootElem: this.refs.map
 		});
 		this._context.map = this.map;
+		window.addEventListener("resize", this.onResize);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("resize", this.onResize);
 	}
 
 	componentWillReceiveProps({drawData, activeIdx, controlSettings, lang}) {
@@ -308,6 +314,7 @@ class MapComponent extends Component {
 				this.map.setDrawData(drawData);
 			}
 			this.map.setActive(this.map.idxsToIds[activeIdx]);
+
 			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) this.map.setControlSettings(controlSettings);
 			if (lang !== this.props.lang) this.map.setLang(lang);
 		}
@@ -327,6 +334,10 @@ class MapComponent extends Component {
 	}
 
 	componentDidUpdate() {
+		this.onResize();
+	}
+
+	onResize = () => {
 		this.map.map.invalidateSize();
 	}
 

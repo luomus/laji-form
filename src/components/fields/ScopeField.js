@@ -66,11 +66,13 @@ const buttonSettings = {
 					}
 				});
 
+				const {translations} = that.props.formContext;
+
 				const layer = getLayer();
 				if (layer) {
 					map.updateLayerStyle(layer, {opacity: 0.7});
 					map.map.closePopup();
-					layer.bindTooltip("Vanha sijainti", {permanent: true}).openTooltip();
+					layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 				}
 
 				const onChange = map.onChange;

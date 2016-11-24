@@ -69,6 +69,7 @@ export default class AccordionArrayField extends Component {
 		if (options.hasOwnProperty("activeIdx")) return {activeIdx: options.activeIdx};
 	}
 
+
 	render() {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 
@@ -141,7 +142,7 @@ export default class AccordionArrayField extends Component {
 				<DeleteButton className="pull-right"
 				              confirm={true}
 				              translations={this.props.formContext.translations}
-				              onClick={() => this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}))} />
+				              onClick={this.onDelete(idx)} />
 			</div>
 		);
 	}
@@ -171,10 +172,13 @@ export default class AccordionArrayField extends Component {
 	}
 
 	onActiveChange = (idx) => {
-		idx = parseInt(idx);
+		if (idx !== undefined)  {
+			idx = parseInt(idx);
+		}
 		if (this.state.activeIdx === idx) {
 			idx = undefined;
 		}
+
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx) : this.setState({activeIdx: idx});
 	}
@@ -193,6 +197,12 @@ export default class AccordionArrayField extends Component {
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
 			this.props.onChange(formData);
 		}
+	}
+
+	onDelete = (idx) => () => {
+		const formData = update(this.props.formData, {$splice: [[idx, 1]]});
+		if (!formData.length) this.onActiveChange(undefined);
+		this.props.onChange(formData)
 	}
 }
 

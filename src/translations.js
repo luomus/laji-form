@@ -169,4 +169,9 @@
 		en: "set a location",
 		sv: "??"
 	},
+	currentLocation: {
+		fi: "nykyinen sijainti",
+		en: "current location",
+		sv: "??"
+	},
 }
