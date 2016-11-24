@@ -22,6 +22,7 @@ const scopeFieldSettings = {
 	}
 }
 
+
 const buttonSettings = {
 	setLocation: (that, glyph) => {
 		const id = that.props.idSchema.$id;
@@ -89,11 +90,22 @@ const buttonSettings = {
 
 						const map = new Context("MAP").map;
 						layer = map._getDrawLayerById(map.idxsToIds[featureIdx]);
+						let latlng = undefined;
+						for (let fn of ["getLatLng", "getCenter"]) {
+							if (layer[fn]) latlng = layer[fn]();
+						}
 						map.updateLayerStyle(layer, {color: "#75CEFA"});
+
+						if (!latlng) return;
+						layer.fire("mouseover", {latlng});
+						if (!map.map.getBounds().contains(latlng)) {
+							map.map.setView(latlng);
+						}
 					}}
 					onMouseLeave={() => {
 						const map = new Context("MAP").map;
 						if (layer) map.redrawDrawData();
+						layer.fire("mouseout");
 						layer = undefined;
 					}}
 			  bsStyle={hasData(that.props.formData["_unitGathering.wgs84Geometry"]) ? "primary" : "default"}/>

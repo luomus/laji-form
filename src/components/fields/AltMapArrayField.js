@@ -294,6 +294,8 @@ class MapComponent extends Component {
 			...this.props,
 			rootElem: this.refs.map
 		});
+
+		window.map = this.map;
 		this._context.map = this.map;
 	}
 
