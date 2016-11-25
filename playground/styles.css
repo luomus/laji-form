@@ -147,10 +147,10 @@ body .laji-form {
 .laji-form .laji-form-map-container {
 	z-index: 1;
 	position: relative;
-	height: 600px;
+	height: 100vh;
 }
 .laji-form .laji-form-map {
-	height: 600px;
+	height: 100%;
 	overflow: hidden;
 }
 .laji-form .map-field .field-description {

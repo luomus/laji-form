@@ -133,7 +133,7 @@ export class Affix extends Component {
 		window.removeEventListener("resize", this.onResize);
 	}
 
-	onScroll = () => {
+	getState = () => {
 		const container = this.props.getContainer();
 		if (container) {
 			const containerTop = container.getBoundingClientRect().top;
@@ -146,12 +146,17 @@ export class Affix extends Component {
 			if (scrolled && containerVisibleHeight < wrapperHeight) affixState = BOTTOM;
 			else if (scrolled) affixState = AFFIXED;
 
-			if (affixState !== this.state.affixState) {
-				const wrapperNode = findDOMNode(this.refs.wrapper);
-				const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
-				const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : 0;
-				this.setState({affixState: affixState, width, top});
-			}
+			const wrapperNode = findDOMNode(this.refs.wrapper);
+			const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
+			const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : 0;
+			return {affixState, width, top}
+		}
+	}
+
+	onScroll = () => {
+		const state = this.getState();
+		if (state.affixState !== this.state.affixState) {
+			this.setState(state);
 		}
 	}
 
@@ -159,7 +164,13 @@ export class Affix extends Component {
 		requestAnimationFrame(() => {
 			const positioner = findDOMNode(this.refs.positioner);
 			const width = positioner.getBoundingClientRect().width;
-			this.setState({width});
+
+			const state = {width};
+
+			const _state = this.getState();
+			if (_state.affixState !== TOP) state.top = _state.top;
+
+			this.setState(state);
 		})
 	}
 

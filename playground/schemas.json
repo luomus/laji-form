@@ -1206,6 +1206,9 @@
 		}
 	},
 	"formData": {
+		"editors": [
+			"MA.308"
+		],
 		"gatheringEvent": {
 			"leg": [
 				"MA.308"
@@ -1305,9 +1308,6 @@
 						]
 				}
 			}
-		],
-		"editors": [
-			"MA.308"
 		]
 	}
 }
