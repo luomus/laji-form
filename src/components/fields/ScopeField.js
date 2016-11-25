@@ -32,7 +32,6 @@ const buttonSettings = {
 		const hasCoordinates = hasData(that.props.formData["_unitGathering.wgs84Geometry"]);
 
 		const mapContext = new Context("MAP");
-		const map = mapContext.map;
 
 		function getLayer() {
 			const {$id} = that.props.idSchema;
@@ -49,11 +48,12 @@ const buttonSettings = {
 			}
 			if (featureIdx === undefined) return;
 
-			const map = new Context("MAP").map;
+			const {map} = mapContext;
 			return map._getDrawLayerById(map.idxsToIds[featureIdx]);
 		}
 
 		function onClick() {
+			const {map} = mapContext;
 			if (map) {
 				mapContext.grabFocus();
 				map.setControlSettings({
@@ -107,6 +107,7 @@ const buttonSettings = {
 		}
 
 		function onMouseEnter() {
+			const {map} = mapContext;
 			const layer = getLayer();
 			if (!layer) return;
 
