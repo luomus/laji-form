@@ -287,7 +287,7 @@ class Popup extends Component {
 class MapComponent extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {featureCollection: {}};
+		this.state = this.getStateFromProps(props);
 		this._context = new Context("MAP");
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
@@ -308,7 +308,12 @@ class MapComponent extends Component {
 		window.removeEventListener("resize", this.onResize);
 	}
 
-	componentWillReceiveProps({drawData, activeIdx, controlSettings, lang}) {
+	getStateFromProps = ({drawData, controlSettings}) => {
+		return {featureCollection: drawData.featureCollection, controlSettings}
+	}
+
+	componentWillReceiveProps(props) {
+		const {drawData, activeIdx, controlSettings, lang} = props;
 		if (this.map) {
 			if (!deepEquals(drawData.featureCollection, this.state.featureCollection))  {
 				this.map.setDrawData(drawData);
@@ -318,7 +323,7 @@ class MapComponent extends Component {
 			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) this.map.setControlSettings(controlSettings);
 			if (lang !== this.props.lang) this.map.setLang(lang);
 		}
-		this.setState({featureCollection: drawData.featureCollection, controlSettings});
+		this.setState(this.getStateFromProps(props));
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

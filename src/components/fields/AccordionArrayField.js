@@ -213,7 +213,7 @@ class Popup extends Component {
 			<ul ref="popup" className="map-data-tooltip">
 				{data ? Object.keys(data).map(fieldName => {
 					const item = data[fieldName];
-					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.join(", ") : item}</li>;
+					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.filter(hasData).join(", ") : item}</li>;
 				}) : null}
 			</ul>
 		) : null;
