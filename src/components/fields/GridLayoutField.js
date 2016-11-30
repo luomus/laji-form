@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { isHidden, getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
+import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import { Row , Col } from "react-bootstrap";
 
 export default class GridLayoutField extends Component {
@@ -137,10 +137,11 @@ export default class GridLayoutField extends Component {
 			});
 		});
 
-		let title = this.props.schema.title || this.props.name;
+		const {title} = this.props.schema;
+		let fieldTitle = title !== undefined ? title : this.props.name;
 		return (
 			<fieldset>
-				{!isNullOrUndefined(title) ? <TitleField title={title} /> : null}
+				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} /> : null}
 				<Row>
 					{fields}
 				</Row>

@@ -33,7 +33,7 @@ export default class AltMapArrayField extends Component {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryMapper} = options;
+		const {popupFields, geometryMapper, topOffset} = options;
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
@@ -46,12 +46,19 @@ export default class AltMapArrayField extends Component {
 
 		const geometries = this.geometryMappers[geometryMapper].getData(this.state.activeIdx, formData);
 
+		const colTypes = ["lg", "md", "sm", "xs"];
+		const mapSizes = options.mapSizes ?
+			options.mapSizes :
+			colTypes.reduce((sizes, size) => {sizes[size] = 6; return sizes}, {});
+
+		const schemaSizes = colTypes.reduce((sizes, size) => {sizes[size] = 12 - mapSizes[size]; return sizes}, {});
+
 		return (
 			<div>
 				<Row ref={elem => {this.affix = elem;}}>
-					<Col xs={6} sm={6} md={6} lg={6}>
+					<Col {...mapSizes}>
 						<Affix container={this}
-						       offset={options.topOffset}
+						       offset={topOffset}
 						       getContainer={() => findDOMNode(this.affix)} className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
 								ref="map"
@@ -81,7 +88,7 @@ export default class AltMapArrayField extends Component {
 							/>
 						</Affix>
 					</Col>
-					<Col xs={6} sm={6} md={6} lg={6}>
+					<Col {...schemaSizes}>
 						<SchemaField {...this.props} uiSchema={uiSchema} />
 					</Col>
 				</Row>

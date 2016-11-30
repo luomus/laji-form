@@ -465,7 +465,7 @@ body .laji-form {
 	display: -webkit-flex;
 	display: flex;
 }
-.laji-form .laji-form-field-template-schema, .laji-form .array-item .col-xs-10 {
+.laji-form .laji-form-field-template-schema, .laji-form .array-item .col-xs-9 {
 	-webkit-flex-grow: 1;
 	-ms-flex-grow: 1;
 	flex-grow: 1;
@@ -492,7 +492,7 @@ body .laji-form {
     line-height: 12.5px;
 }
 .laji-form .array-item-add {
-	width: 28px;
+	width: 31px;
 	float: right;
 	margin-right: -3px;
 }

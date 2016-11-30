@@ -33,6 +33,7 @@ import FilteredEnumStringField from "./fields/FilteredEnumStringField";
 import SplitField from "./fields/SplitField";
 import FlatField from "./fields/FlatField";
 import AccordionArrayField from "./fields/AccordionArrayField";
+import ArrayField from "./fields/ArrayField";
 
 import CheckboxWidget from "./widgets/CheckboxWidget";
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
@@ -175,6 +176,7 @@ export default class LajiForm extends Component {
 					ref="form"
 					onChange={this.onChange}
 					fields={{
+						ArrayField: ArrayField,
 						nested: NestField,
 						unitTripreport: ArrayBulkField,
 						bulkArray: ArrayBulkField,
