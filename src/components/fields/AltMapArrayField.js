@@ -50,7 +50,9 @@ export default class AltMapArrayField extends Component {
 			<div>
 				<Row ref={elem => {this.affix = elem;}}>
 					<Col xs={6} sm={6} md={6} lg={6}>
-						<Affix container={this} getContainer={() => findDOMNode(this.affix)} className={this.state.focusGrabbed ? "pass-block" : ""}>
+						<Affix container={this}
+						       offset={options.topOffset}
+						       getContainer={() => findDOMNode(this.affix)} className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
 								ref="map"
 								lang="fi"

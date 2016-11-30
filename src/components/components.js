@@ -136,19 +136,21 @@ export class Affix extends Component {
 	getState = () => {
 		const container = this.props.getContainer();
 		if (container) {
+			const offset = (this.props.offset || 0);
+
 			const containerTop = container.getBoundingClientRect().top;
 			const containerHeight = container.offsetHeight;
 			const containerVisibleHeight = containerHeight + containerTop;
 			const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
-			const scrolled = containerTop < 0;
+			const scrolled = containerTop < offset;
 
 			let affixState = TOP;
-			if (scrolled && containerVisibleHeight < wrapperHeight) affixState = BOTTOM;
+			if (scrolled && containerVisibleHeight < wrapperHeight + offset) affixState = BOTTOM;
 			else if (scrolled) affixState = AFFIXED;
 
 			const wrapperNode = findDOMNode(this.refs.wrapper);
 			const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
-			const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : 0;
+			const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : offset;
 			return {affixState, width, top}
 		}
 	}
