@@ -417,10 +417,13 @@
 																				}
 																			}
 																		},
-																		"_unitGathering.wgs84Geometry": {
+																		"_unitGathering.geometry": {
 																			"ui:field": "hidden"
 																		},
-																		"_unitGathering.dateTime": {
+																		"_unitGathering.dateBegin": {
+																			"ui:widget": "dateTime"
+																		},
+																		"_unitGathering.dateEnd": {
 																			"ui:widget": "dateTime"
 																		},
 																		"recordBasis": {
@@ -448,6 +451,14 @@
 																					}
 																				}
 																			}
+																		},
+																		"hostID": {
+																			"ui:widget": "autosuggest",
+																			"ui:options": {
+																				"autosuggestField": "taxon",
+																				"allowNonsuggestedValue": true,
+																				"suggestionReceive": "key"
+																			}
 																		}
 																	}
 																}
@@ -468,13 +479,24 @@
 																			"_identifications.det",
 																			"_identifications.detMethod",
 																			"_identifications.detDate",
+																			"_identifications.identificationBasis",
 																			"countOfOccurrences",
 																			"sex",
 																			"notes"
 																		],
 																		"additionalFields": [
-																			"_unitGathering.dateTime",
-																			"_unitGathering.biotope"
+																			"_unitGathering.dateBegin",
+																			"_unitGathering.dateEnd",
+																			"_unitGathering.habitatIUCN",
+																			"_unitGathering.habitatDescription",
+																			"preparations",
+																			"nativeStatus"
+																		]
+																	},
+																	"MVL.232": {
+																		"fields": [
+																			"lifeStage",
+																			"hostID"
 																		]
 																	},
 																	"MVL.233": {
@@ -899,6 +921,9 @@
 											"MY.sexC"
 										]
 									},
+									"nativeStatus": {
+										"type": "boolean"
+									},
 									"substrate": {
 										"type": "string",
 										"title": "Kasvualusta"
@@ -966,6 +991,52 @@
 											"type": "string"
 										}
 									},
+									"preparations": {
+										"title": "Preparaatit",
+										"type": "string"
+									},
+									"lifeStage": {
+										"type": "string",
+										"enum": [
+											"",
+											"MY.lifeStageEgg",
+											"MY.lifeStageLarva",
+											"MY.lifeStagePupa",
+											"MY.lifeStageJuvenile",
+											"MY.lifeStageNymph",
+											"MY.lifeStageSubimago",
+											"MY.lifeStageImmature",
+											"MY.lifeStageAdult",
+											"MY.lifeStageFertile",
+											"MY.lifeStageSterile",
+											"MY.lifeStageTadpole",
+											"MY.lifeStageSnag",
+											"MY.lifeStageSeed",
+											"MY.lifeStageLivePlant",
+											"MY.lifeStageDead"
+										],
+										"enumName": [
+											"",
+											"egg",
+											"larva",
+											"pupa",
+											"juvenile",
+											"nymph",
+											"subimago",
+											"Immature",
+											"adult",
+											"fertile",
+											"sterile",
+											"Tadpole",
+											"Snag",
+											"Seed",
+											"Live plant",
+											"Dead"
+										]
+									},
+									"hostID": {
+										"type": "string"
+									},
 									"identifications": {
 										"type": "array",
 										"items": {
@@ -1002,6 +1073,42 @@
 														"MY.detMethodMicroscopy",
 														"kuva"
 													]
+												},
+												"identificationBasis": {
+													"title": "Määritysperuste",
+													"type": "array",
+													"uniqueItems": true,
+													"items": {
+														"type": "string",
+														"enum": [
+															"",
+															"MY.identificationBasisSeen",
+															"MY.identificationBasisHeard",
+															"MY.identificationBasisHandled",
+															"MY.identificationBasisMedia",
+															"MY.identificationBasisFreshSpecimen",
+															"MY.identificationBasisPreservedSpecimen",
+															"MY.identificationBasisMicroscope",
+															"MY.identificationBasisSpores",
+															"MY.identificationBasisChemical",
+															"MY.identificationBasisGenitals",
+															"MY.identificationBasisGenitalPreparate"
+														],
+														"enumNames": [
+															"",
+															"seen",
+															"heard",
+															"handled",
+															"media",
+															"fresh specimen",
+															"preserved specimen",
+															"microscope",
+															"spores",
+															"chemical",
+															"genitals",
+															"genitalPreparate"
+														]
+													}
 												}
 											},
 											"required": []
@@ -1010,16 +1117,24 @@
 									"unitGathering": {
 										"type": "object",
 										"properties": {
-											"wgs84Geometry": {
-												"$ref": "#/definitions/wgs84Geometry"
+											"geometry": {
+												"$ref": "#/definitions/geometry"
 											},
-											"dateTime": {
+											"dateBegin": {
 												"type": "string",
-												"title": ""
+												"title": "Aika"
 											},
-											"biotope": {
+											"dateEnd": {
+												"type": "string",
+												"title": "Aikavälin loppu"
+											},
+											"habitatIUCN": {
 												"type": "string",
 												"title": "Biotooppi"
+											},
+											"habitatDescription": {
+												"type": "string",
+												"title": "Biotoopin kuvaus"
 											}
 										}
 									}
@@ -1033,7 +1148,7 @@
 								"geometries": {
 									"type": "array",
 									"items": {
-										"$ref": "#/definitions/wgs84Geometry"
+										"$ref": "#/definitions/geometry"
 									}
 								}
 							}
@@ -1045,7 +1160,7 @@
 		},
 		"required": [],
 		"definitions": {
-			"wgs84Geometry": {
+			"geometry": {
 				"type": "object",
 				"properties": {
 					"type": {
