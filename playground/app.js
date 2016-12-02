@@ -6,7 +6,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = true;
+const USE_LOCAL_SCHEMAS = false;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -34,7 +34,12 @@ const lajiForm = new LajiForm({
 
 if (!USE_LOCAL_SCHEMAS) {
 	apiClient.fetch("/forms/JX.652", {lang, format: "schema"})
-	         .then(({schema, uiSchema, uiSchemaContext, validators}) => lajiForm.setState);
+	         .then((props) => {
+						 const {schema, uiSchema, uiSchemaContext, validators} = props;
+						 const propsToPass = {schema, uiSchema, uiSchemaContext};
+						 if (!Array.isArray(validators)) propsToPass.validators = validators;
+						 lajiForm.setState(propsToPass)
+					 });
 }
 
 function onSubmit({formData}) {
