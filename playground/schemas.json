@@ -361,9 +361,21 @@
 																	"uiSchema": {
 																		"ui:field": "grid",
 																		"ui:options": {
-																			"lg": 2,
-																			"md": 2,
-																			"sm": 4,
+																			"lg": {
+																				"_identifications.identificationBasis": 4,
+																				"recordBasis": 1,
+																				"*" : 2
+																			},
+																			"md": {
+																				"_identifications.identificationBasis": 4,
+																				"recordBasis": 1,
+																				"*" : 2
+																			},
+																			"sm": {
+																				"_identifications.identificationBasis": 8,
+																				"recordBasis": 2,
+																				"*" : 4
+																			},
 																			"xs": 12
 																		},
 																		"_identifications.taxonID": {
@@ -467,19 +479,19 @@
 																"informalNameString",
 																"unitType",
 																"taxonID",
-																"recordBasis",
-																"taxonConfidence"
+																"taxonConfidence",
+																"recordBasis"
 															],
 															"fieldScopes": {
 																"unitType": {
 																	"+": {
 																		"fields": [
+																			"_identifications.identificationBasis",
 																			"_identifications.taxonID",
 																			"_identifications.taxon",
 																			"_identifications.det",
 																			"_identifications.detMethod",
 																			"_identifications.detDate",
-																			"_identifications.identificationBasis",
 																			"countOfOccurrences",
 																			"sex",
 																			"notes"
@@ -1364,7 +1376,8 @@
 						"identifications": [
 							{
 								"taxon": "ass",
-								"taxonID": "MX.47092"
+								"taxonID": "MX.47092",
+								"identificationBasis": ["MY.identificationBasisHeard", "MY.identificationBasisMedia"]
 							}
 						]
 					}

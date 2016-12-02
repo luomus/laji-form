@@ -55,20 +55,20 @@ export default class GridLayoutField extends Component {
 		}
 
 		const groups = [];
-		let groupIdx = 0;
+		// let groupIdx = 0;
 
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 
-		Object.keys(props.schema.properties).forEach(property => {
-			const type = props.schema.properties[property].type;
-			const shouldHaveOwnRow = (type === "array" || type === "object");
-
-			if (isHidden(props.uiSchema, property)) return;
-			if (shouldHaveOwnRow) groupIdx++;
-			if (!groups[groupIdx]) groups[groupIdx] = [];
-			groups[groupIdx].push(property);
-			if (shouldHaveOwnRow) groupIdx++;
-		});
+		// Object.keys(props.schema.properties).forEach(property => {
+		// 	const type = props.schema.properties[property].type;
+		// 	const shouldHaveOwnRow = (type === "array" || type === "object");
+		//
+		// 	if (isHidden(props.uiSchema, property)) return;
+		// 	if (shouldHaveOwnRow) groupIdx++;
+		// 	if (!groups[groupIdx]) groups[groupIdx] = [];
+		// 	groups[groupIdx].push(property);
+		// 	if (shouldHaveOwnRow) groupIdx++;
+		// });
 
 		return {...fieldProps, groups, showLabels};
 	}
@@ -82,15 +82,24 @@ export default class GridLayoutField extends Component {
 			requirements.indexOf(name) !== -1;
 	}
 
-	getCols = (ownRow, property) => {
+	getCols = (schema, property) => {
 		const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 
-		if (ownRow) return cols;
+		if ((schema.type === "array" && !schema.uniqueItems) || schema.type === "object") {
+			return cols;
+		}
 
 		const options = getUiOptions(this.props.uiSchema);
 		Object.keys(cols).forEach(col => {
 			const optionCol = options[col];
-			cols[col] = (typeof optionCol === "object") ? optionCol[property] : optionCol;
+			if (typeof optionCol === "object") {
+				let selector = undefined;
+				if (optionCol[property]) selector = property;
+				else if (optionCol["*"]) selector = "*";
+				cols[col] = optionCol[selector];
+			} else {
+				cols[col] = optionCol;
+			}
 		});
 
 		return cols;
@@ -98,43 +107,36 @@ export default class GridLayoutField extends Component {
 	
 	render() {
 		let props = {...this.props, ...this.state};
+		const SchemaField = this.state.registry.fields.SchemaField;
 
-		let i = 0;
 		let fields = [];
-		this.state.groups.forEach(group => {
-			const SchemaField = this.state.registry.fields.SchemaField;
+		Object.keys(this.state.schema.properties).forEach((propertyName, i) => {
+			const property = this.state.schema.properties[propertyName];
+			const cols = this.getCols(property, propertyName);
 
-			group.forEach((property, gi) => {
-				const type = this.state.schema.properties[property].type;
+			let {title, ...schema} = property;
+			const name = this.state.showLabels ? (title !== undefined ? title : propertyName) : undefined;
 
-				const ownRow = (type === "array" || type === "object");
-				const cols = this.getCols(ownRow, property);
+			if (this.state.showLabels) schema = {...schema, title};
 
-				let {title, ...schema} = this.state.schema.properties[property];
-				const name = this.state.showLabels ? (title !== undefined ? title : property) : undefined;
-
-				if (this.state.showLabels) schema = {...schema, title};
-
-				if (!isHidden(this.state.uiSchema, property)) fields.push(
-					<Col key={"div_" + i} {...cols}>
-						<SchemaField
-							key={i}
-							name={name}
-							required={this.isRequired(this.state.schema.required, property)}
-							schema={schema}
-							uiSchema={this.state.uiSchema[property]}
-							idSchema={toIdSchema(this.state.idSchema[property], this.state.idSchema.$id + "_" + property, this.props.registry.definitions)}
-							errorSchema={this.state.errorSchema ? (this.state.errorSchema[property] || {}) : {}}
-							formData={this.state.formData[property]}
-							registry={this.state.registry}
-							onChange={(data) => {
-									props.onChange({...this.state.formData, [property]: data});
-								}}
-						/>
-					</Col>
-				)
-				i++;
-			});
+			if (!isHidden(this.state.uiSchema, propertyName)) fields.push(
+				<Col key={"div_" + i} {...cols}>
+					<SchemaField
+						key={i}
+						name={name}
+						required={this.isRequired(this.state.schema.required, propertyName)}
+						schema={schema}
+						uiSchema={this.state.uiSchema[propertyName]}
+						idSchema={toIdSchema(this.state.idSchema[propertyName], this.state.idSchema.$id + "_" + propertyName, this.props.registry.definitions)}
+						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
+						formData={this.state.formData[propertyName]}
+						registry={this.state.registry}
+						onChange={(data) => {
+								props.onChange({...this.state.formData, [propertyName]: data});
+							}}
+					/>
+				</Col>
+			)
 		});
 
 		const {title} = this.props.schema;

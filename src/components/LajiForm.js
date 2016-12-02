@@ -36,6 +36,7 @@ import AccordionArrayField from "./fields/AccordionArrayField";
 import ArrayField from "./fields/ArrayField";
 
 import CheckboxWidget from "./widgets/CheckboxWidget";
+import SelectWidget from "./widgets/SelectWidget";
 import AutosuggestWidget from "./widgets/AutosuggestWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
@@ -208,6 +209,7 @@ export default class LajiForm extends Component {
 					}}
 					widgets={{
 						CheckboxWidget: CheckboxWidget,
+						SelectWidget: SelectWidget,
 						dateTime: DateTimeWidget,
 						date: DateWidget,
 						time: TimeWidget,
