@@ -174,4 +174,9 @@
 		en: "current location",
 		sv: "??"
 	},
+	noResults: {
+		fi: "ei tuloksia",
+		en: "no results",
+		sv: "??"
+	},
 }

@@ -56,7 +56,8 @@ class SelectWidget extends Component {
 			disabled,
 			multiple,
 			autofocus,
-			onChange
+			onChange,
+			formContext
 		} = this.props;
 		const value = this.state;
 		const {enumOptions} = options;
@@ -70,7 +71,8 @@ class SelectWidget extends Component {
 			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),
 			hideResetButton: isEmptyString(this.state.value),
 			renderToggleButton: () => <span className="caret"/>,
-			renderResetButton: () => <span>×</span>
+			renderResetButton: () => <span>×</span>,
+			renderNoResultsFound: () => <span className="text-muted">{formContext.translations.NoResults}</span>
 		}
 
 		return multiple ? (
