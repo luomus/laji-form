@@ -448,7 +448,8 @@
 																					"MY.recordBasisHumanObservationHeard",
 																					"MY.recordBasisPreservedSpecimen",
 																					"MY.recordBasisHumanObservationHandled",
-																					"MY.recordBasisHumanObservationIndirect"
+																					"MY.recordBasisHumanObservationIndirect",
+																					"MY.recordBasisMachineObservation"
 																				],
 																				"uiSchema": {
 																					"ui:widget": "imageSelect",
@@ -458,7 +459,8 @@
 																							"MY.recordBasisHumanObservationHeard": "heard",
 																							"MY.recordBasisPreservedSpecimen": "specimen",
 																							"MY.recordBasisHumanObservationHandled": "handled",
-																							"MY.recordBasisHumanObservationIndirect": "indirect"
+																							"MY.recordBasisHumanObservationIndirect": "indirect",
+																							"MY.recordBasisMachineObservation": "media"
 																						}
 																					}
 																				}
