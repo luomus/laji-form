@@ -23,6 +23,17 @@ const apiClient = new ApiClientImplementation(
 const lajiForm = new LajiForm({
 	...schemas,
 	// formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},
+	formData: {
+  "editors": [
+    "MA.308"
+  ],
+  "gatheringEvent": {
+    "leg": [
+      "MA.308"
+    ]
+  },
+  "formID": "JX.519"
+},
 	onSubmit,
 	apiClient,
 	lang,
@@ -33,7 +44,7 @@ const lajiForm = new LajiForm({
 });
 
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.652", {lang, format: "schema"})
+	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
 	         .then((props) => {
 						 const {schema, uiSchema, uiSchemaContext, validators} = props;
 						 const propsToPass = {schema, uiSchema, uiSchemaContext};

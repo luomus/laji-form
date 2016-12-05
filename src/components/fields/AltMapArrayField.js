@@ -13,9 +13,9 @@ export default class AltMapArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this._context = new Context("MAP_UNITS");
-		this._context.featureIdxsToItemIdxs  = {};
+		this._context.featureIdxsToItemIdxs = {};
 
-		this.state = {activeIdx: props.formData.length ? 0 : undefined};
+		this.state = {activeIdx: 0};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -121,8 +121,14 @@ export default class AltMapArrayField extends Component {
 	}
 
 	onAdd = ({feature: {geometry}}) => {
-		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {wgs84GeometryCollection: {geometries: {$push: [geometry]}}}}));
+		const formData = this.props.formData ||
+			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+		const itemFormData = formData[this.state.activeIdx];
+		const updateObject = itemFormData.wgs84GeometryCollection.geometries ?
+			{wgs84GeometryCollection: {geometries: {$push: [geometry]}}} :
+			{wgs84GeometryCollection: {$merge: {geometries: [geometry]}}};
+		this.props.onChange(update(formData,
+			{[this.state.activeIdx]: updateObject}));
 	}
 
 	onRemove = ({idxs}) => {
@@ -147,9 +153,11 @@ export default class AltMapArrayField extends Component {
 	geometryMappers = {
 		units: {
 			getData: (idx, formData) => {
+				if (!formData) return;
 				const item = formData[idx];
 				this._context.featureIdxsToItemIdxs = {};
-				let geometries = idx !== undefined ?
+				let geometries = (idx !== undefined && item && item.wgs84GeometryCollection &&
+				                  item.wgs84GeometryCollection.geometries) ?
 					item.wgs84GeometryCollection.geometries : [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
@@ -209,6 +217,7 @@ export default class AltMapArrayField extends Component {
 						}, {})
 					}
 				};
+
 				this.props.onChange(update(this.props.formData,
 					updateObject
 				));

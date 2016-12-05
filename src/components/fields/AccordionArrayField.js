@@ -9,14 +9,14 @@ import Context from "../../Context";
 const headerFormatters = {
 	units: {
 		render: (that, idx, headerElem) => {
-			const {props: {formContext: {translations}, formData}} = that;
+			const {props: {formContext: {translations}}, state: {formData}} = that;
 			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ? item.units.length : 0;
 
 			function onMouseEnter() {
 				if (idx === that.state.activeIdx) return;
 				const map = new Context("MAP").map;
-				const gatheringGeometries = (item.wgs84GeometryCollection.geometries || []);
+				const gatheringGeometries = (item && item.wgs84GeometryCollection) ? item.wgs84GeometryCollection.geometries : [];
 
 				const unitGeometries = (item.units || [])
 					.filter(unit => unit.unitGathering && hasData(unit.unitGathering.wgs84Geometry))
@@ -57,7 +57,7 @@ const popupMappers = {
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {activeIdx: props.formData.length ? 0 : undefined};
+		this.state = {activeIdx: 0, ...this.getStateFromProps(props)};
 	}
 
 	componentWillReceiveProps(props) {
@@ -65,13 +65,19 @@ export default class AccordionArrayField extends Component {
 	}
 
 	getStateFromProps(props) {
+		const state = {};
 		const options = getUiOptions(props.uiSchema);
-		if (options.hasOwnProperty("activeIdx")) return {activeIdx: options.activeIdx};
+		if (options.hasOwnProperty("activeIdx")) state.activeIdx = options.activeIdx;
+
+		state.formData = props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)];
+
+		return state;
 	}
 
 
 	render() {
-		const {formData, registry: {fields: {SchemaField}}} = this.props;
+		const {registry: {fields: {SchemaField}}} = this.props;
+		const {formData} = this.state;
 
 		let activeIdx = this.state.activeIdx;
 		if (activeIdx === undefined) activeIdx = -1;
@@ -111,7 +117,7 @@ export default class AccordionArrayField extends Component {
 			<AddButton
 				onClick={() => {
 					this.props.onChange([
-						...this.props.formData,
+						...this.state.formData,
 						getDefaultFormState(schema, undefined, this.props.registry)
 					])
 				}} />
@@ -151,10 +157,10 @@ export default class AccordionArrayField extends Component {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 
 		const data = {};
-		if (!this.props.formData) return data;
+		if (!this.state.formData) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
-			const itemFormData = this.props.formData[idx];
+			const itemFormData = this.state.formData[idx];
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			let fieldSchema = this.props.schema.items.properties;
 
@@ -185,14 +191,14 @@ export default class AccordionArrayField extends Component {
 
 	onChangeForIdx = (idx) => {
 		return (itemFormData) => {
-			if (!this.props.formData || idx === this.props.formData.length) {
+			if (!this.state.formData || idx === this.state.formData.length) {
 				itemFormData = {
 					...getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
 					...itemFormData
 				}
 			}
 
-			let formData = this.props.formData;
+			let formData = this.state.formData;
 			if (!formData) formData = [];
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
 			this.props.onChange(formData);
@@ -200,7 +206,7 @@ export default class AccordionArrayField extends Component {
 	}
 
 	onDelete = (idx) => () => {
-		const formData = update(this.props.formData, {$splice: [[idx, 1]]});
+		const formData = update(this.state.formData, {$splice: [[idx, 1]]});
 		if (!formData.length) this.onActiveChange(undefined);
 		this.props.onChange(formData)
 	}
