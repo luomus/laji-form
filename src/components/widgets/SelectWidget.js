@@ -1,13 +1,9 @@
 import React, {Component, PropTypes} from "react";
-//import Select from "react-select";
 import { SimpleSelect, MultiSelect } from "react-selectize";
 import { Label } from "react-bootstrap";
 
 import {asNumber, shouldRender} from "react-jsonschema-form/lib/utils";
 import {isEmptyString} from "../../utils";
-
-import Context from "../../Context";
-
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -96,10 +92,10 @@ class SelectWidget extends Component {
 		) : (
 			<SimpleSelect
 				{...commonProps}
+				cancelKeyboardEventOnSelection={false}
 				value={this.state.valsToItems[this.state.value]}
 				onValueChange={item => {
 					onChange(processValue(schema.type, item ? item.value : ""));
-					new Context().focusNextInput();
 				}}
 			/>
 		);
