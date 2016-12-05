@@ -29,7 +29,7 @@ const buttonSettings = {
 		const {translations} = that.props.formContext;
 		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{translations.SetLocation}</Tooltip>;
 
-		const hasCoordinates = hasData(that.props.formData["_unitGathering.wgs84Geometry"]);
+		const hasCoordinates = hasData(that.props.formData["_unitGathering.geometry"]);
 
 		const mapContext = new Context("MAP");
 
@@ -97,7 +97,7 @@ const buttonSettings = {
 						if (event.type === "create") {
 							that.props.onChange(update(
 								that.props.formData,
-								{$merge: {["_unitGathering.wgs84Geometry"]: event.feature.geometry}}
+								{$merge: {["_unitGathering.geometry"]: event.feature.geometry}}
 							));
 							close();
 						}

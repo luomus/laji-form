@@ -157,7 +157,7 @@ export class Affix extends Component {
 
 	onScroll = () => {
 		const state = this.getState();
-		if (state.affixState !== this.state.affixState) {
+		if (state && state.affixState !== this.state.affixState) {
 			this.setState(state);
 		}
 	}
