@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions } from "../../utils";
+import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
@@ -11,38 +11,13 @@ const suggestionParsers = {
 	}
 }
 
-const autosuggestSettings = {
-	taxon: {
-		renderMetaInfo: that => {
-			const taxonID = that.props.formData.taxonID;
-			const tooltipElem = (
-				<Tooltip id={taxonID + "-tooltip"}>
-					{that.props.formContext.translations.openSpeciedCard}
-				</Tooltip>
-			);
-			return (that.mounted && that.props.formData && taxonID) ?
-				(
-					<div>
-						<div className="meta-info-taxon">
-							<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
-							{that.state.urlTxt ?
-								<div><OverlayTrigger overlay={tooltipElem}>
-									<a href={"http://tun.fi/" + taxonID}
-									   target="_blank">{that.state.urlTxt}</a>
-								</OverlayTrigger></div> : <Spinner />}
-						</div>
-					</div>
-				) : null
-		}
-	}
-}
-
 /**
  * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutosuggestWidget.
  *
  * uischema = {"ui:options": {
  *  autosuggestField: <string> (field name which is used for api call. The suggestions renderer method is also defined by autosuggestField)
- *  suggestionInputField: <fieldName> (the field which uses autosuggest input)
+ *  suggestionInputField: <fieldName> (the field which is rendered as the autosuggest input)
+ *  suggestionValueField: <fieldName> (the field which the value for autosuggest is pulled from)
  *  suggestionReceivers: {
  *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
  *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
@@ -87,31 +62,24 @@ export default class AutosuggestField extends Component {
 	getStateFromProps = (props) => {
 		let {schema} = props;
 		let propsUiSchema = props.uiSchema;
+		const uiOptions = getUiOptions(propsUiSchema);
 		let options = {
-			...getUiOptions(propsUiSchema),
+			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
 			onConfirmUnsuggested: this.onConfirmUnsuggested,
 			onInputChange: this.onInputChange,
 			isValueSuggested: this.isValueSuggested
 		};
-		const {autosuggestField, suggestionInputField} = options;
-		const autosuggestSetting = autosuggestSettings[autosuggestField];
-		if (autosuggestSetting && autosuggestSetting.renderMetaInfo) {
-			options.onRenderMetaInfo = this.onRenderMetaInfo;
-		}
+		if (options.suggestionValueField && props.formData) options.value = props.formData[options.suggestionValueField];
 
-		let uiSchema = options.uiSchema || {};
-		uiSchema = {...uiSchema, [suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}};
-		let state = {schema, uiSchema};
+		const {suggestionInputField} = uiOptions;
 
-		const taxonID = (props.formData && props.formData.taxonID) ? props.formData.taxonID : undefined;
-		if (taxonID && (!this.state || !this.state.taxonID || this.state.taxonID !== taxonID)) {
-			new ApiClient().fetch("/taxa/" + taxonID).then(response => {
-				if (this.mounted) this.setState({urlTxt: response.scientificName});
-			});
-		}
+		const uiSchema = {
+			...getInnerUiSchema(props.uiSchema),
+			[suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}
+		};
 
-		return state;
+		return {schema, uiSchema};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -122,7 +90,7 @@ export default class AutosuggestField extends Component {
 		if (suggestion === null) suggestion = undefined;
 
 		let formData = this.props.formData;
-		const options = this.props.uiSchema["ui:options"];
+		const options = getUiOptions(this.props.uiSchema);
 
 		for (let fieldName in options.suggestionReceivers) {
 			// undefined suggestion clears value.
@@ -167,13 +135,9 @@ export default class AutosuggestField extends Component {
 		return value;
 	}
 
-	onRenderMetaInfo = () => {
-		return autosuggestSettings[this.props.uiSchema["ui:options"].autosuggestField].renderMetaInfo(this);
-	}
-
 	isValueSuggested = () => {
 		const {uiSchema, formData} = this.props;
-		for (let fieldName in uiSchema["ui:options"].suggestionReceivers) {
+		for (let fieldName in getUiOptions(uiSchema).suggestionReceivers) {
 			if (!formData || !formData[fieldName]) return false;
 		}
 		return true;

@@ -16,6 +16,35 @@ const autosuggestSettings = {
 			}
 			return text;
 		},
+		renderMetaInfo: that => {
+			const options = getUiOptions(that.props);
+			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
+
+			if (value && (!that.state || !that.state.value || that.state.value !== value)) {
+				new ApiClient().fetch("/taxa/" + value).then(response => {
+					if (that.mounted) that.setState({urlTxt: response.scientificName, value: value});
+				});
+			}
+
+			const tooltipElem = (
+				<Tooltip id={value + "-tooltip"}>
+					{that.props.formContext.translations.openSpeciedCard}
+				</Tooltip>
+			);
+			return (that.mounted && value) ?
+				(
+					<div>
+						<div className="meta-info-taxon">
+							<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
+							{that.state.urlTxt ?
+								<div><OverlayTrigger overlay={tooltipElem}>
+									<a href={"http://tun.fi/" + value}
+									   target="_blank">{that.state.urlTxt}</a>
+								</OverlayTrigger></div> : <Spinner />}
+						</div>
+					</div>
+				) : null
+		},
 		renderUnsuggestedMetaInfo: that => {
 			return <span className="text-danger">{that.props.formContext.translations.UnknownSpeciesName}</span>
 		},
@@ -69,7 +98,10 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		const {autosuggestField} = getUiOptions(props);
+		const options = getUiOptions(props);
+		const {autosuggestField} = options;
+
+
 		return {autosuggestSettings: autosuggestSettings[autosuggestField]};
 	}
 
@@ -290,16 +322,11 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	renderMetaInfo = () => {
-		const {onRenderUnsuggestedMetaInfo, onRenderMetaInfo} = getUiOptions(this.props);
 		if (this.state.inputInProgress && !this.state.focused) {
 			return this.renderInprogressMetaInfo();
 		} else if (!this.state.inputInProgress) {
-			if (this.state.unsuggested && onRenderUnsuggestedMetaInfo) {
-				return onRenderUnsuggestedMetaInfo();
-			} else if (this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
+			if (this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
 				return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this);
-			} else if (onRenderMetaInfo) {
-				return onRenderMetaInfo();
 			} else if (this.state.autosuggestSettings.renderMetaInfo) {
 				return this.state.autosuggestSettings.renderMetaInfo(this);
 			}

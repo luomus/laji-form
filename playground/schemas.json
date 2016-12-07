@@ -368,6 +368,7 @@
 																	"autosuggestField": "taxon",
 																	"allowNonsuggestedValue": true,
 																	"suggestionInputField": "informalNameString",
+																	"suggestionValueField": "taxonID",
 																	"suggestionReceivers": {
 																		"informalNameString": "value",
 																		"_identifications.taxon": "value",
