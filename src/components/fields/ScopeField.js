@@ -314,14 +314,14 @@ export default class ScopeField extends Component {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
 
-			if (scopes) Object.keys(scopes).forEach((fieldSelector) => {
+			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
 				if (fieldSelectorValues.length > 0 && hasData(fieldSelectorValues[0])) {
-					fieldSelectorValues = [...fieldSelectorValues, "+"];
+					fieldSelectorValues = ["+", ...fieldSelectorValues];
 				}
-				fieldSelectorValues = [...fieldSelectorValues, "*"];
+				fieldSelectorValues = ["*", ...fieldSelectorValues];
 				fieldSelectorValues.forEach(fieldSelectorValue => {
 					if (hasData(fieldSelectorValue)) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
