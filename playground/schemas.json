@@ -11,7 +11,8 @@
 		"ui:options": {
 			"injections": {
 				"fields": [
-					"editors"
+					"editors",
+					"secureLevel"
 				],
 				"target": "gatheringEvent"
 			},
@@ -36,7 +37,8 @@
 						"fields": [
 							"leg",
 							"editors",
-							"legPublic"
+							"legPublic",
+							"secureLevel"
 						],
 						"uiSchema": {
 							"ui:field": "split",
@@ -108,7 +110,28 @@
 									},
 									{
 										"fields": ["legPublic"],
+										"lg": 2,
+										"md": 3,
+										"sm": 3,
+										"xs": 6,
 										"name": ""
+									},
+									{
+										"fields": ["secureLevel"],
+										"name": "",
+										"lg": 2,
+										"md": 2,
+										"sm": 3,
+										"xs": 6,
+										"uiSchema": {
+											"secureLevel": {
+												"ui:widget": "anyToBoolean",
+												"ui:options": {
+													"trueValue": "MX.secureLevelKM10",
+													"falseValue": "MX.secureLevelNone"
+												}
+											}
+										}
 									}
 								]
 							}
@@ -548,6 +571,34 @@
 				"items": {
 					"type": "string"
 				}
+			},
+			"secureLevel": {
+				"type": "string",
+				"default": "MX.secureLevelNone",
+				"enum": [
+					"",
+					"MX.secureLevelNone",
+					"MX.secureLevelKM1",
+					"MX.secureLevelKM5",
+					"MX.secureLevelKM10",
+					"MX.secureLevelKM25",
+					"MX.secureLevelKM50",
+					"MX.secureLevelKM100",
+					"MX.secureLevelHighest",
+					"MX.secureLevelNoShow"
+				],
+				"enumNames": [
+					"",
+					"None",
+					"1 km",
+					"5 km",
+					"10 km",
+					"25 km",
+					"50 km",
+					"100 km",
+					"Highest",
+					"Not shown at all - used mainly to prevent spam"
+				]
 			},
 			"gatheringEvent": {
 				"type": "object",

@@ -44,6 +44,7 @@ import TimeWidget from "./widgets/TimeWidget";
 import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
 import HiddenWidget from "./widgets/HiddenWidget";
 import ImageSelectWidget from "./widgets/ImageSelectWidget";
+import AnyToBooleanWidget from "./widgets/AnyToBooleanWidget";
 
 import ApiClient from "../ApiClient";
 import Context, {clear as clearContext} from "../Context";
@@ -217,7 +218,8 @@ export default class LajiForm extends Component {
 						separatedDateTime: SeparatedDateTimeWidget,
 						autosuggest: AutosuggestWidget,
 						hidden: HiddenWidget,
-						imageSelect: ImageSelectWidget
+						imageSelect: ImageSelectWidget,
+						anyToBoolean: AnyToBooleanWidget
 					}}
 					FieldTemplate={FieldTemplate}
 					formContext={{
