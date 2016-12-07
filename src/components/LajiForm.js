@@ -121,7 +121,7 @@ export default class LajiForm extends Component {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
-		this._context = new Context();
+		this._context = new Context(this.props.contextId);
 		this._context.blockingLoaderCounter = 0;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;

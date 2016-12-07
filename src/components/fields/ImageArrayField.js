@@ -6,7 +6,7 @@ import DescriptionField from "react-jsonschema-form/lib/components/fields/Descri
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { Button, Alert } from "../components";
-import Form from "react-jsonschema-form";
+import LajiForm from "../LajiForm";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 
@@ -28,11 +28,10 @@ export default class ImagesArrayField extends Component {
 	getStateFromProps = (props) => {
 		let imgURLs = [];
 		(props.formData || []).forEach((item, i) => {
-			imgURLs.push(undefined);
 			this.apiClient.fetchCached("/images/" + item).then(response => {
 				if (!this.mounted) return;
 				this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
-			})
+			});
 		});
 		return {imgURLs};
 	}
@@ -112,7 +111,7 @@ export default class ImagesArrayField extends Component {
 
 	renderModal = () => {
 		const {state} = this;
-		const {translations} = this.props.registry.formContext;
+		const {lang} = this.props.registry.formContext;
 		const {metadataSchemas} = getUiOptions(this.props.uiSchema);
 		return state.modalOpen ?
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={() => this.setState({modalOpen: false})}>
@@ -120,13 +119,14 @@ export default class ImagesArrayField extends Component {
 				<Modal.Body>
 					<div className="laji-form image-modal-content">
 						<img src={state.modalImgSrc} />
-						{state.modalMetadata && metadataSchemas ? <Form
+						{state.modalMetadata && metadataSchemas ? <LajiForm
+							contextId={this.props.idSchema.$id}
 							schema={metadataSchemas.schema}
 							uiSchema={metadataSchemas.uiSchema}
 							formData={state.modalMetadata}
-							onSubmit={this.onImageMetadataUpdate}>
-						<Button type="submit">{translations.Submit}</Button>
-						</Form> : null}
+							onSubmit={this.onImageMetadataUpdate}
+							lang={lang}>
+						</LajiForm> : null}
 					</div>
 				</Modal.Body>
 			</Modal> : null;
@@ -165,9 +165,8 @@ export default class ImagesArrayField extends Component {
 			onChange([...formData, ...response.map(({id}) => id)]);
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
-			this.setState({alert: () => {
-				this.mainContext.popBlockingLoader();
-			}})
+			this.mainContext.popBlockingLoader();
+			this.setState({alert: () => {;}})
 		});
 	}
 
