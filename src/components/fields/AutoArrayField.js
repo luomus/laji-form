@@ -141,7 +141,7 @@ export default class AutoArrayField extends Component {
 	}
 
 	onRemoveForIdx = (idx) => e => {
-		e.preventDefault();
+		if (e) e.preventDefault();
 		this.onRemove(idx);
 	}
 

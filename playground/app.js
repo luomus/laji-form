@@ -6,7 +6,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = true;
+const USE_LOCAL_SCHEMAS = false;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -22,7 +22,7 @@ const apiClient = new ApiClientImplementation(
 
 const lajiForm = new LajiForm({
 	...schemas,
-	// formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},
+	 //formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},
 	onSubmit,
 	apiClient,
 	lang,

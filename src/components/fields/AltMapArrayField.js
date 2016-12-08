@@ -238,7 +238,7 @@ export default class AltMapArrayField extends Component {
 			getIdSuffix: (idx) => `units_${idx}`,
 			onComponentDidUpdate: () => {
 				if (this.highlightedElem) {
-					this.highlightedElem.className = this.highlightedElem.className.replace(" highlight", "");
+					this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
 				}
 
 				const {popupIdx} = this.state;
@@ -256,7 +256,7 @@ export default class AltMapArrayField extends Component {
 				this.highlightedElem = document.querySelector(`#${id} .form-group`);
 
 				if (this.highlightedElem) {
-					this.highlightedElem.className += " highlight"
+					this.highlightedElem.className += " map-highlight"
 				}
 			}
 		}

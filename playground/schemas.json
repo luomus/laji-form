@@ -1393,9 +1393,6 @@
 		}
 	},
 	"formData": {
-		"editors": [
-			"MA.308"
-		],
 		"gatheringEvent": {
 			"leg": [
 				"MA.308"
@@ -1404,11 +1401,55 @@
 		},
 		"gatherings": [
 			{
-				"predominantTree": "",
-				"dateBegin": "2015-12-01",
 				"units": [
 					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"recordBasis": "MY.recordBasisHumanObservation",
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"sex": "",
+						"lifeStage": "",
+						"taste": "",
+						"smell": "",
+						"preservation": "",
+						"plantStatusCode": "",
+						"unitGathering": {
+							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									26.137184965492345,
+									60.7004125979137
+								]
+							}
+						}
+					}
+				],
+				"predominantTree": "",
+				"images": [
+					"MM.88769"
+				],
+				"wgs84GeometryCollection": {
+					"geometries": [
+						{
+							"type": "Point",
+							"coordinates": [
+								24.870703618981512,
+								61.127719772224225
+							]
+						},
+						{
+							"type": "Point",
+							"coordinates": [
+								22.610449396180194,
+								60.96267416530286
+							],
+							"radius": 69736.93332070159
+						}
+					]
+				}
+			},
+			{
+				"units": [
+					{
+						"recordBasis": "MY.recordBasisHumanObservation",
 						"informalNameString": "ass",
 						"unitType": [
 							"MVL.2"
@@ -1416,86 +1457,32 @@
 						"taxonID": "MX.47092",
 						"taxonConfidence": "MY.taxonConfidenceSure",
 						"sex": "",
+						"lifeStage": "",
 						"taste": "",
 						"smell": "",
-						"unitGathering": {
-							"wgs84Geometry": {
-								"type": "Point",
-								"coordinates": [
-									26.35931923392383,
-									60.848762276287275
-								]
-							}
-						},
+						"preservation": "",
+						"plantStatusCode": "",
 						"identifications": [
 							{
 								"taxon": "ass",
-								"taxonID": "MX.47092",
-								"identificationBasis": ["MY.identificationBasisHeard", "MY.identificationBasisMedia"]
+								"taxonID": "MX.47092"
 							}
-						]
+						],
+						"unitGathering": {
+							"geometry": {}
+						}
 					}
 				],
-				"wgs84GeometryCollection": {
-					"geometries": [
-						{
-							"type": "Point",
-							"coordinates": [
-								24,
-								60
-							]
-						}
-					]
-				}
+				"predominantTree": ""
 			},
 			{
-				"predominantTree": "",
-				"units": [
-				],
-				"wgs84GeometryCollection": {
-					"geometries": [
-						{
-							"type": "Point",
-							"coordinates": [
-								24.63054593815989,
-								60.26832057836028
-							]
-						}
-					]
-				}
-			},
-			{
-				"predominantTree": "",
-				"units": [
-				],
-				"wgs84GeometryCollection": {
-					"geometries": [
-						{
-							"type": "Point",
-							"coordinates": [
-								25.63054593815989,
-								60.26832057836028
-							]
-						}
-					]
-				}
-			},
-			{
-				"predominantTree": "",
-				"units": [
-				],
-				"wgs84GeometryCollection": {
-					"geometries": [
-						{
-							"type": "Point",
-							"coordinates": [
-								24.63054593815989,
-								61.26832057836028
-							]
-						}
-						]
-				}
+				"dateBegin": "2016-12-08",
+				"locality": "kekekek",
+				"predominantTree": ""
 			}
+		],
+		"editors": [
+			"MA.308"
 		]
 	}
 }

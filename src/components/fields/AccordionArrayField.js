@@ -13,37 +13,52 @@ const headerFormatters = {
 			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ? item.units.length : 0;
 
-			function onMouseEnter() {
-				if (idx === that.state.activeIdx) return;
-				const map = new Context("MAP").map;
-				const gatheringGeometries = (item && item.wgs84GeometryCollection) ? item.wgs84GeometryCollection.geometries : [];
-
-				const unitGeometries = (item.units || [])
-					.filter(unit => unit.unitGathering && hasData(unit.unitGathering.wgs84Geometry))
-					.map(unit => unit.unitGathering.wgs84Geometry);
-
-				const geometries = [...gatheringGeometries, ...unitGeometries]
-					.map(geometry => {return {type: "Feature", properties: {}, geometry}});
-
-				map.setData({
-					featureCollection: {type: "featureCollection", features: geometries},
-					getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"}}
-				});
-			}
-
-			function onMouseLeave() {
-				const map = new Context("MAP").map;
-				map.setData();
-			}
 
 			return (
-				<span onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+				<span>
 					{headerElem}
-					<span className="text-muted" >
+					<span className="text-muted">
 						{` (${unitsLength} ${translations.unitsPartitive})`}
 					</span>
 				</span>
 			)
+		},
+		onClick: (that, idx) => {
+			if (that.state.activeIdx === idx) {
+				headerFormatters.units.onMouseEnter(that, idx, !!"use the force");
+			} else {
+				headerFormatters.units.onMouseLeave(that, idx);
+			}
+		},
+		onMouseEnter: (that, idx, force) => {
+			const {state: {formData}} = that;
+			const item = formData[idx];
+
+			that.hoveredIdx = idx;
+			if (!force && idx === that.state.activeIdx) return;
+			const map = new Context("MAP").map;
+			const gatheringGeometries = (item && item.wgs84GeometryCollection) ? item.wgs84GeometryCollection.geometries : [];
+
+			const unitGeometries = (item.units || [])
+				.filter(unit => unit.unitGathering && hasData(unit.unitGathering.geometry))
+				.map(unit => unit.unitGathering.geometry);
+
+			const geometries = [...gatheringGeometries, ...unitGeometries]
+				.map(geometry => {
+					return {type: "Feature", properties: {}, geometry}
+				});
+
+			map.setData({
+				featureCollection: {type: "featureCollection", features: geometries},
+				getFeatureStyle: () => {
+					return {opacity: 0.6, color: "#888888"}
+				}
+			});
+		},
+		onMouseLeave: (that) => {
+			const map = new Context("MAP").map;
+			map.setData();
+			that.hoveredIdx = undefined;
 		}
 	}
 };
@@ -52,7 +67,7 @@ const popupMappers = {
 	units: (schema, units, fieldName) => {
 		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
 	}
-}
+};
 
 export default class AccordionArrayField extends Component {
 	constructor(props) {
@@ -132,24 +147,31 @@ export default class AccordionArrayField extends Component {
 
 		const popupData = this.getPopupData(idx);
 
-		const header =  <span>{_title}</span>;
-		const headerText = headerFormatter ? headerFormatters[headerFormatter].render(this, idx, header) : header;
+		const headerTextElem =  <span>{_title}</span>;
 
-		return (
-			<div>
-				{hasData(popupData) ? (
-					<OverlayTrigger placement="bottom"
-													overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>} >
-						{headerText}
-					</OverlayTrigger>) : (
-					headerText
-					)
-				}
-				<DeleteButton className="pull-right"
-				              confirm={true}
-				              translations={this.props.formContext.translations}
-				              onClick={this.onDelete(idx)} />
+		const formatter = headerFormatters[headerFormatter];
+		const headerText = formatter ? formatter.render(this, idx, headerTextElem) : headerTextElem;
+
+		const header = (
+			<div className="laji-map-accordion-header" onClick={() => {this.onActiveChange(idx); formatter.onClick(this, idx);}}
+			     onMouseEnter={() => formatter.onMouseEnter(this, idx)} onMouseLeave={() => formatter.onMouseLeave(this, idx)}>
+				<div className="panel-title">
+					{headerText}
+					<DeleteButton className="pull-right"
+												confirm={true}
+												translations={this.props.formContext.translations}
+												onClick={this.onDelete(idx)} />
+					</div>
 			</div>
+		);
+
+		return hasData(popupData) ? (
+			<OverlayTrigger placement="left"
+											overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
+				{header}
+			</OverlayTrigger>
+		) : (
+			header
 		);
 	}
 
