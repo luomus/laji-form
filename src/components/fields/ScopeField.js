@@ -22,7 +22,6 @@ const scopeFieldSettings = {
 	}
 }
 
-
 const buttonSettings = {
 	setLocation: (that, glyph) => {
 		const id = that.props.idSchema.$id;
@@ -128,7 +127,7 @@ const buttonSettings = {
 			const map = new Context("MAP").map;
 			const layer = getLayer();
 			if (!layer) return;
-			map.redrawDrawData();
+			map.setDrawData(map.drawData);
 			layer.fire("mouseout");
 		}
 
