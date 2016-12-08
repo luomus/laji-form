@@ -397,13 +397,14 @@ export default class ScopeField extends Component {
 			        	id={this.props.idSchema.$id + "-scope-field-dropdown"}
 			          bsStyle="info"
 			          pullRight
+			          open={this.state.additionalsOpen}
 			          onSelect={(eventKey, event) => {
 									this.preventCloseDropdown = true;
 			          }}
 			          onToggle={(isOpen) => {
-									if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
-									this.preventCloseDropdown = false;
-			           }}>
+								if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
+								this.preventCloseDropdown = false;
+							 }}>
 				{this.renderFieldsButton("toggle")}
 				<Collapse in={this.state.additionalsOpen} bsRole="menu">
 					<Dropdown.Menu>
@@ -577,6 +578,7 @@ export default class ScopeField extends Component {
 	}
 
 	additionalPropertiesToList = (properties, ElemType) => {
+		const titles = getUiOptions(this.props.uiSchema).titles || {};
 		return Object.keys(properties)
 			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.map(property => {
@@ -588,7 +590,7 @@ export default class ScopeField extends Component {
 						disabled={hasData}
 						active={isIncluded}
 						onClick={() => this.toggleAdditionalProperty(property)}>
-						{properties[property].title || property}
+						{titles[property] || properties[property].title || property}
 					</ElemType>
 				);
 			});
