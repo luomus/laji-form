@@ -19,7 +19,6 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
-
 const lajiForm = new LajiForm({
 	...schemas,
 	 //formData: {gatheringEvent: {leg: ["MA.308"]}, editors: ["MA.308"]},

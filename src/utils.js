@@ -20,12 +20,17 @@ export function getFieldsFinalUiSchema(uiSchema, field) {
 }
 
 export function hasData(formData) {
-	if (!formData) return false;
+	function hasValue(value)  {
+		return value !== undefined && value !== null && value !== "";
+	}
+	if (!formData && !hasValue(formData)) return false;
 	else {
 		if (!Array.isArray(formData)) formData = [formData];
 		return formData.some(data => {
-			if (typeof data === "object") return Object.keys(data).some(_field => propertyHasData(_field, data));
-			else return (formData !== undefined && formData !== null && formData !== "");
+			if (typeof data === "object") {
+				return Object.keys(data).some(_field => propertyHasData(_field, data));
+			}
+			else return hasValue(data);
 		});
 	}
 }
@@ -35,7 +40,7 @@ export function propertyHasData(field, container) {
 	const data = container[field];
 	return !!(data &&
 	(data.constructor !== Object || (Object.keys(data).length > 0 && hasData(data))) &&
-	(!Array.isArray(data) || data.length > 0));
+	(!Array.isArray(data) || (data.length > 0 && hasData[data])));
 }
 
 export function getUpdateObjectFromPath(path, injection) {
