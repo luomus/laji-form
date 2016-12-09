@@ -76,7 +76,7 @@ export class DeleteButton extends Component {
 									{translations.Remove}
 								</Button>
 								<Button bsStyle="default" onClick={this.onHideConfirm}>
-									{translations.Close}
+									{translations.DontRemove}
 								</Button>
 							</ButtonGroup>
 						</Popover>
