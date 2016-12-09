@@ -98,8 +98,8 @@ export default class AccordionArrayField extends Component {
 		if (activeIdx === undefined) activeIdx = -1;
 
 		const itemsSchema = this.props.schema.items;
-		const {title, ...schema} = itemsSchema;
-		schema.title = "";
+		const schema = {...itemsSchema, title: ""};
+		const title = this.props.schema.title;
 
 		function AddButton({onClick, disabled}) {
 			return (
