@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import update from "react-addons-update";
 import deepEquals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
-import { Row, Col, Panel } from "react-bootstrap";
+import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, Affix } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
@@ -48,12 +48,20 @@ export default class AltMapArrayField extends Component {
 		const colTypes = ["lg", "md", "sm", "xs"];
 		const mapSizes = options.mapSizes ?
 			options.mapSizes :
-			colTypes.reduce((sizes, size) => {sizes[size] = 6; return sizes}, {});
+			colTypes.reduce((sizes, size) => {
+				sizes[size] = 6;
+				return sizes
+			}, {});
 
-		const schemaSizes = colTypes.reduce((sizes, size) => {sizes[size] = 12 - mapSizes[size]; return sizes}, {});
+		const schemaSizes = colTypes.reduce((sizes, size) => {
+			sizes[size] = 12 - mapSizes[size];
+			return sizes
+		}, {});
 
 		const {wgs84GeometryCollection, ...schemaProps} = this.props.schema.items.properties;
 		const schema = {...this.props.schema, items: {...this.props.schema.items, properties: schemaProps}};
+
+		const emptyMode = !formData || !formData.length;
 
 		return (
 			<div>
@@ -80,18 +88,21 @@ export default class AltMapArrayField extends Component {
 									return {color: "#25B4CA", opacity: 1}
 								}}
 								onPopupClose={() => {this.setState({popupIdx: undefined})}}
-								onChange={this.onMapChange}
+								onChange={emptyMode ? this.onMapChangeCreateGathering : this.onMapChange}
 								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
 							  onFocusGrab={() => {this.setState({focusGrabbed: true})}}
 								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
-							  controlSettings={this.state.activeIdx !== undefined ? {} : {draw: false}}
+							  controlSettings={(emptyMode || this.state.activeIdx !== undefined) ? {} : {draw: false}}
 							/>
 						</Affix>
 					</Col>
 					<Col {...schemaSizes}>
-						<SchemaField {...this.props} schema={schema} uiSchema={uiSchema} />
+						{emptyMode ?
+							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
+							<SchemaField {...this.props} schema={schema} uiSchema={uiSchema}/>
+						}
 					</Col>
 				</Row>
 				{popupFields ?
@@ -100,6 +111,18 @@ export default class AltMapArrayField extends Component {
 					</div> : null}
 			</div>
 		);
+	}
+
+	onMapChangeCreateGathering = (events) => {
+		events.forEach(e => {
+			if (e.type === "create") {
+				const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+				formData.wgs84GeometryCollection = {
+					geometries: [e.feature.geometry]
+				};
+				this.props.onChange([formData]);
+			}
+		})
 	}
 
 	onMapChange = (events) => {
