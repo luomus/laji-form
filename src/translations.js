@@ -178,10 +178,5 @@
 		fi: "Ei tuloksia",
 		en: "No results",
 		sv: "??"
-	},
-	dontRemove: {
-		fi: "Älä poista",
-		en: "Don't remove",
-		sv: "??"
-	},
+	}
 }
