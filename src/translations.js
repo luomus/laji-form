@@ -1,187 +1,187 @@
 ﻿export default {
 	submit: {
-		fi: "lähetä",
-		en: "submit",
-		sv: "sänd"
+		fi: "Lähetä",
+		en: "Submit",
+		sv: "Sänd"
 	},
 	cancel: {
-		fi: "peru",
-		en: "cancel",
-		sv: "annullera"
+		fi: "Peru",
+		en: "Cancel",
+		sv: "Annullera"
 	},
 	today: {
-		fi: "tänään",
-		en: "today",
-		sv: "i dag"
+		fi: "Tänään",
+		en: "Today",
+		sv: "I dag"
 	},
 	yesterday: {
-		fi: "eilen",
-		en: "yesterday",
-		sv: "i går"
+		fi: "Eilen",
+		en: "Yesterday",
+		sv: "I går"
 	},
 	datePlaceholderDay: {
-		fi: "pp.kk.vvvv",
-		en: "dd/mm/yyyy",
-		sv: "åååå-mm-dd"
+		fi: "Pp.kk.vvvv",
+		en: "Dd/mm/yyyy",
+		sv: "Åååå-mm-dd"
 	},
 	timePlaceholderDay: {
-		fi: "tt.mm",
-		en: "h:mm AM/PM",
-		sv: "tt:mm"
+		fi: "Tt.mm",
+		en: "H:mm AM/PM",
+		sv: "Tt:mm"
 	},
 	yes: {
-		fi: "kyllä",
-		en: "yes",
-		sv: "ja"
+		fi: "Kyllä",
+		en: "Yes",
+		sv: "Ja"
 	},
 	no: {
-		fi: "ei",
-		en: "no",
-		sv: "nej"
+		fi: "Ei",
+		en: "No",
+		sv: "Nej"
 	},
 	knownSpeciesName: {
-		fi: "tunnettu nimi",
-		en: "known name",
-		sv: "känt namn"
+		fi: "Tunnettu nimi",
+		en: "Known name",
+		sv: "Känt namn"
 	},
 	unknownSpeciesName: {
-		fi: "tuntematon nimi",
-		en: "unknown name",
-		sv: "okänd namn"
+		fi: "Tuntematon nimi",
+		en: "Unknown name",
+		sv: "Okänd namn"
 	},
 	unknownName: {
-		fi: "ei tunnettu nimi",
-		en: "not known name",
-		sv: "okänd namn"
+		fi: "Ei tunnettu nimi",
+		en: "Not known name",
+		sv: "Okänd namn"
 	},
 	fix: {
-		fi: "korjaa",
-		en: "fix",
-		sv: "fixa"
+		fi: "Korjaa",
+		en: "Fix",
+		sv: "Fixa"
 	},
 	or: {
-		fi: "tai",
-		en: "or",
-		sv: "eller"
+		fi: "Tai",
+		en: "Or",
+		sv: "Eller"
 	},
 	useUnknownName: {
-		fi: "käytä tuntematonta nimeä",
-		en: "use unknown name",
-		sv: "använd okänd namn"
+		fi: "Käytä tuntematonta nimeä",
+		en: "Use unknown name",
+		sv: "Använd okänd namn"
 	},
 	search: {
-		fi: "etsi",
-		en: "search",
-		sv: "sök"
+		fi: "Etsi",
+		en: "Search",
+		sv: "Sök"
 	},
 	filter: {
-		fi: "rajaa",
-		en: "filter",
-		sv: "avgräns"
+		fi: "Rajaa",
+		en: "Filter",
+		sv: "Avgräns"
 	},
 	more: {
-		fi: "lisää",
-		en: "more",
-		sv: "mera"
+		fi: "Lisää",
+		en: "More",
+		sv: "Mera"
 	},
 	selectOneOfTheFollowing: {
-		fi: "valitse yksi seuraavista",
-		en: "select one of the following",
-		sv: "välj en av följande"
+		fi: "Valitse yksi seuraavista",
+		en: "Select one of the following",
+		sv: "Välj en av följande"
 	},
 	openSpeciedCard: {
-		fi: "avaa lajikortti",
-		en: "open taxon information",
-		sv: "öppna artkort"
+		fi: "Avaa lajikortti",
+		en: "Open taxon information",
+		sv: "Öppna artkort"
 	},
 	remove: {
-		fi: "poista",
-		en: "remove",
-		sv: "radera"
+		fi: "Poista",
+		en: "Remove",
+		sv: "Radera"
 	},
 	close: {
-		fi: "sulje",
-		en: "close",
-		sv: "stäng"
+		fi: "Sulje",
+		en: "Close",
+		sv: "Stäng"
 	},
 	confirmRemove: {
-		fi: "haluatko varmasti poistaa?",
-		en: "are you sure you want to remove?",
-		sv: "är du säker på att du vill radera?"
+		fi: "Haluatko varmasti poistaa?",
+		en: "Are you sure you want to remove?",
+		sv: "Är du säker på att du vill radera?"
 	},
 	map: {
-		fi: "kartta",
-		en: "map",
-		sv: "karta"
+		fi: "Kartta",
+		en: "Map",
+		sv: "Karta"
 	},
 	place: {
-		fi: "paikka",
-		en: "place",
-		sv: "plats"
+		fi: "Paikka",
+		en: "Place",
+		sv: "Plats"
 	},
 	dropOrSelectFiles: {
-		fi: "raahaa tähän kuvat tai klikkaa valitaksesi kuvat koneeltasi",
-		en: "drag pictures here or click here to select the pictures from you computer",
-		sv: "dra bilder här eller klick här för att välja bilder från din dator"
+		fi: "Raahaa tähän kuvat tai klikkaa valitaksesi kuvat koneeltasi",
+		en: "Drag pictures here or click here to select the pictures from you computer",
+		sv: "Dra bilder här eller klick här för att välja bilder från din dator"
 	},
 	selectMoreFields: {
-		fi: "valitse lisää kenttiä",
-		en: "select more fields",
-		sv: "välj flera fält"
+		fi: "Valitse lisää kenttiä",
+		en: "Select more fields",
+		sv: "Välj flera fält"
 	},
 	pictureError: {
-		fi: "kuvien tallennus epäonnistui. Yritä myöhemmin uudestaan.",
-		en: "saving pictures failed. Please try again later.",
-		sv: "bildlagring misslyckades. Försök igen senare."
+		fi: "Kuvien tallennus epäonnistui. Yritä myöhemmin uudestaan.",
+		en: "Saving pictures failed. Please try again later.",
+		sv: "Bildlagring misslyckades. Försök igen senare."
 	},
 	detachUnit: {
-		fi: "irroita havainto uudelle karttakuviolle.",
-		en: "detach the unit to a new map feature",
+		fi: "Irroita havainto uudelle karttakuviolle.",
+		en: "Detach the unit to a new map feature",
 		sv: "??"
 	},
 	detachUnitHelp: {
-		fi: "piirrä uusi kuvio irrotettavalle havainnolle.",
-		en: "draw a new feature for the unit being detached.",
+		fi: "Piirrä uusi kuvio irrotettavalle havainnolle.",
+		en: "Draw a new feature for the unit being detached.",
 		sv: "??"
 	},
 	chooseDate: {
-		fi: "valitse päivämäärä",
-		en: "choose a date",
-		sv: "välja ett datum"
+		fi: "Valitse päivämäärä",
+		en: "Choose a date",
+		sv: "Välja ett datum"
 	},
 	chooseTime: {
-		fi: "valitse kellonaika",
-		en: "choose the time",
-		sv: "välja en tiden"
+		fi: "Valitse kellonaika",
+		en: "Choose the time",
+		sv: "Välja en tiden"
 	},
 	others: {
-		fi: "muut",
-		en: "others",
-		sv: "andra"
+		fi: "Muut",
+		en: "Others",
+		sv: "Andra"
 	},
 	unitsPartitive: {
-		fi: "havaintoa",
-		en: "units",
+		fi: "Havaintoa",
+		en: "Units",
 		sv: "??"
 	},
 	setLocation: {
-		fi: "aseta sijainti",
-		en: "set a location",
+		fi: "Aseta sijainti",
+		en: "Set a location",
 		sv: "??"
 	},
 	currentLocation: {
-		fi: "nykyinen sijainti",
-		en: "current location",
+		fi: "Nykyinen sijainti",
+		en: "Current location",
 		sv: "??"
 	},
 	noResults: {
-		fi: "ei tuloksia",
-		en: "no results",
+		fi: "Ei tuloksia",
+		en: "No results",
 		sv: "??"
 	},
 	dontRemove: {
-		fi: "älä poista",
-		en: "don't remove",
+		fi: "Älä poista",
+		en: "Don't remove",
 		sv: "??"
 	},
 }
