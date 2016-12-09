@@ -101,15 +101,12 @@ export default class AccordionArrayField extends Component {
 		const schema = {...itemsSchema, title: ""};
 		const title = this.props.schema.title;
 
+		const that = this;
 		function AddButton({onClick, disabled}) {
 			return (
-				<div className="row">
-					<p className="col-xs-2 col-xs-offset-10 array-item-add text-right">
-						<button type="button" className="btn btn-info col-xs-12"
+						<button block type="button" className="btn btn-info col-xs-12 laji-map-accordion-header"
 										tabIndex="-1" onClick={onClick}
-										disabled={disabled} style={{fontWeight: "bold"}}>➕</button>
-					</p>
-				</div>
+										disabled={disabled} style={{fontWeight: "bold"}}>{`➕ ${that.props.formContext.translations.AddPlace}`}</button>
 			);
 		}
 

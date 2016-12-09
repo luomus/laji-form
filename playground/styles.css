@@ -544,6 +544,10 @@ body .laji-form {
 .laji-form .panel-group .panel-heading {
 	padding: 0;
 }
+.laji-form button.laji-map-accordion-header {
+	color: white;
+	margin-top: -16px;
+}
 
 .laji-form .map-highlight {
 	border-color: #66afe9;

@@ -178,5 +178,10 @@
 		fi: "Ei tuloksia",
 		en: "No results",
 		sv: "??"
-	}
+	},
+	addPlace: {
+		fi: "Lisää paikka",
+		en: "Add a place",
+		sv: "??"
+},
 }
