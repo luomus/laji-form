@@ -104,7 +104,7 @@ export default class AccordionArrayField extends Component {
 		const that = this;
 		function AddButton({onClick, disabled}) {
 			return (
-						<button block type="button" className="btn btn-info col-xs-12 laji-map-accordion-header"
+						<button type="button" className="btn btn-info col-xs-12 laji-map-accordion-header"
 										tabIndex="-1" onClick={onClick}
 										disabled={disabled} style={{fontWeight: "bold"}}>{`➕ ${that.props.formContext.translations.AddPlace}`}</button>
 			);

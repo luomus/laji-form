@@ -154,11 +154,6 @@
 		en: "Choose the time",
 		sv: "Välja en tiden"
 	},
-	others: {
-		fi: "Muut",
-		en: "Others",
-		sv: "Andra"
-	},
 	unitsPartitive: {
 		fi: "Havaintoa",
 		en: "Units",
@@ -183,5 +178,10 @@
 		fi: "Lisää paikka",
 		en: "Add a place",
 		sv: "??"
-},
+	},
+	all: {
+		fi: "Kaikki",
+		en: "All",
+		sv: "??"
+	},
 }

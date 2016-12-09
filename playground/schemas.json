@@ -351,6 +351,7 @@
 														"classNames": "well well-sm",
 														"ui:options": {
 															"additionalsGroupingPath": "fieldScopes.unitType",
+															"additionalsGroupingOrderer": "unitType",
 															"additionalsGroupsTranslator": "taxonGroups",
 															"additionalsPersistenceKey": "unitType",
 															"additionalsPersistenceId": "gathering_unit_unitType",
@@ -1375,6 +1376,9 @@
 		}
 	},
 	"formData": {
+		"editors": [
+			"MA.308"
+		],
 		"gatheringEvent": {
 			"leg": [
 				"MA.308"
@@ -1385,15 +1389,17 @@
 			{
 				"units": [
 					{
-						"recordBasis": "MY.recordBasisHumanObservationSeen",
+						"recordBasis": "MY.recordBasisHumanObservation",
 						"unitType": [
 							"MVL.2"
 						],
 						"taxonConfidence": "MY.taxonConfidenceSure",
 						"sex": "",
+						"lifeStage": "",
 						"taste": "",
 						"smell": "",
-						"lifeStage": "",
+						"preservation": "",
+						"plantStatusCode": "",
 						"identifications": [
 							{
 								"taxon": "ass",
@@ -1401,33 +1407,22 @@
 							}
 						],
 						"unitGathering": {
-							"geometry": {
-								"type": "Point",
-								"coordinates": [
-									27.61686367081631,
-									61.56595716216994
-								]
-							}
+							"geometry": {}
 						}
 					}
 				],
-				"predominantTree": "",
 				"wgs84GeometryCollection": {
 					"geometries": [
 						{
 							"type": "Point",
 							"coordinates": [
-								26.507796583055693,
-								60.99648633735806
+								26.497900896159347,
+								61.62158367170537
 							]
 						}
 					]
 				}
 			}
-		],
-		"editors": [
-			"MA.308"
-		],
-		"secureLevel": "MX.secureLevelNone"
+		]
 	}
 }

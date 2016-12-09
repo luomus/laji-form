@@ -324,12 +324,7 @@ body .laji-form {
 	float: none;
 	position: relative;
 }
-
-.laji-form .scope-field-modal-item {
-	padding: 5px;
-}
 .laji-form .scope-field-modal-item .list-group-item {
-	height: 8px;
 	line-height: 0px;
 }
 .laji-form.scope-field-modal-item span {

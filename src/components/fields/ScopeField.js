@@ -3,7 +3,6 @@ import update from "react-addons-update";
 import merge from "deepmerge";
 import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
 import Spinner from "react-spinner";
-import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, getUiOptions, parseDotPath } from "../../utils";
@@ -12,8 +11,8 @@ import Context from "../../Context";
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (that, taxonGroup) => {
-			if (taxonGroup === "+") return new Promise(resolve => resolve(that.props.registry.formContext.translations.Others));
-			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
+			if (taxonGroup === "+") return new Promise(resolve => resolve(that.props.registry.formContext.translations.All));
+			return new ApiClient().fetch("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			}).catch(() => {
 				return "";
@@ -210,7 +209,6 @@ export default class ScopeField extends Component {
 		this.state = {
 			additionalFields,
 			additionalsOpen: false,
-			searchTerm: "",
 			...this.getStateFromProps(props)
 		};
 	}
@@ -262,6 +260,10 @@ export default class ScopeField extends Component {
 		state.additionalFields = additionalFields;
 
 		state = {...state, ...this.getSchemasAndAdditionals(props, state)};
+
+		if (state.additionalsGroupsTranslations) {
+			this.translateAdditionalsGroups(props, state.additionalsGroupsTranslator);
+		}
 
 		return state;
 	}
@@ -362,10 +364,6 @@ export default class ScopeField extends Component {
 		this.props.onChange(data);
 	}
 
-	onSearchChange = ({target: {value}}) => {
-		this.setState({searchTerm: value});
-	}
-
 	onToggleAdditionals = () => {
 		this.setState({additionalsOpen: !this.state.additionalsOpen});
 	}
@@ -420,29 +418,22 @@ export default class ScopeField extends Component {
 		let list = [];
 
 		const options = getUiOptions(this.props.uiSchema);
-		const {additionalsGroupingPath} = options;
+		const {additionalsGroupingPath, additionalsGroupingOrderer} = options;
 
 		let groupTranslations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
 		let translationsToKeys = (this.state.additionalsGroupsTranslationsToKeys) ?
 			this.state.additionalsGroupsTranslationsToKeys :
 		{};
 
-		if (this.state.additionalsGroupsTranslations) {
-			if (!Object.keys(this.state.additionalsGroupsTranslations).length) this.translateAdditionalsGroups();
+		const groups = additionalsGroupingPath ? parseDotPath(options, additionalsGroupingPath) : undefined;
+
+		let groupNames = Object.keys(groups);
+		if (additionalsGroupingOrderer && this.props.formData) {
+			const orderer = this.props.formData[additionalsGroupingOrderer];
+			if (orderer) groupNames = groupNames.sort((a, b) => orderer.indexOf(b) - orderer.indexOf(a));
 		}
 
-		if (additionalsGroupingPath) {
-			var groups = parseDotPath(options, additionalsGroupingPath);
-		}
-
-		let filteredGroups = groups ? Object.keys(groups) : undefined;
-		if (this.state.searchTerm !== "" && Object.keys(groupTranslations).length && groups) {
-			filteredGroups = Object.keys(translationsToKeys)
-				.filter(translation => translation.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
-				.map(translation => translationsToKeys[translation]);
-		}
-
-		if (filteredGroups) filteredGroups.forEach(groupName => {
+		groupNames.forEach(groupName => {
 			let group = groups[groupName];
 			let groupFields = {};
 			const {fields, additionalFields} = group;
@@ -485,12 +476,7 @@ export default class ScopeField extends Component {
 							<Modal.Title>{translations.SelectMoreFields}</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-								<div className="scope-field-search form-group has-feedback">
-									<input className="form-control" onChange={this.onSearchChange}
-												 value={this.state.searchTerm} placeholder={translations.Filter} />
-									<i className="glyphicon glyphicon-search form-control-feedback" />
-								</div>
-							<Masonry options={{transitionDuration: 0}}>{list}</Masonry>
+							{list}
 						</Modal.Body>
 					</Modal>
 				) : null}
@@ -595,8 +581,8 @@ export default class ScopeField extends Component {
 			});
 	}
 
-	translateAdditionalsGroups = () => {
-		let options = getUiOptions(this.props.uiSchema);
+	translateAdditionalsGroups = (props, additionalsGroupsTranslator) => {
+		let options = getUiOptions(props.uiSchema);
 		const {additionalsGroupingPath} = options;
 		if (additionalsGroupingPath) {
 			var groups = Object.keys(parseDotPath(options, additionalsGroupingPath));
@@ -606,7 +592,7 @@ export default class ScopeField extends Component {
 		let translationsToKeys = {};
 		let translationCount = 0;
 		groups.forEach(groupName => {
-			scopeFieldSettings[this.state.additionalsGroupsTranslator].translate(this, groupName).then(translation => {
+			scopeFieldSettings[additionalsGroupsTranslator].translate(this, groupName).then(translation => {
 				translations[groupName] = translation;
 				translationsToKeys[translation] = groupName;
 				translationCount++;
