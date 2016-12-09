@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import Context from "../../Context";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner"
 import { getUiOptions } from "../../utils";
@@ -31,19 +30,19 @@ const autosuggestSettings = {
 					{that.props.formContext.translations.openSpeciedCard}
 				</Tooltip>
 			);
-			return (that.mounted && value) ?
-				(
-					<div>
-						<div className="meta-info-taxon">
-							<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
-							{that.state.urlTxt ?
-								<div><OverlayTrigger overlay={tooltipElem}>
-									<a href={"http://tun.fi/" + value}
-									   target="_blank">{that.state.urlTxt}</a>
-								</OverlayTrigger></div> : <Spinner />}
-						</div>
+
+			return (that.mounted && value) ? (
+				<div>
+					<div className="meta-info-taxon">
+						<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
+						{that.state.urlTxt ?
+							<div><OverlayTrigger overlay={tooltipElem}>
+								<a href={"http://tun.fi/" + value}
+									 target="_blank">{that.state.urlTxt}</a>
+							</OverlayTrigger></div> : <Spinner />}
 					</div>
-				) : null
+				</div>
+			) : null
 		},
 		renderUnsuggestedMetaInfo: that => {
 			return <span className="text-danger">{that.props.formContext.translations.UnknownSpeciesName}</span>
@@ -90,7 +89,6 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
-		this.mainContext = new Context();
 	}
 
 	componentWillReceiveProps(props) {
@@ -227,10 +225,15 @@ export default class AutoSuggestWidget extends Component {
 			return;
 		}
 
-		if (focusedSuggestion) this.selectSuggestion(focusedSuggestion);
+		if (focusedSuggestion) {
+			this.selectSuggestion(focusedSuggestion);
+		} else {
+			console.log(this.state.suggestions);
+			const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
+			if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
+		}
 		this.setState({focused: false}, () => {
-		if ((focusedSuggestion === null && this.state.inputValue === "") ||
-				(this.findUnambigiousSuggestion([focusedSuggestion]))) {
+		if (focusedSuggestion === null && this.state.inputValue === "") {
 				this.selectSuggestion(focusedSuggestion);
 			}
 		});
@@ -251,14 +254,14 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onKeyDown = (e) => {
-		this.enter = (e.key === "Enter");
+		if (e.key === "Enter") {
+			console.log(this.findUnambigiousSuggestion(this.state.suggestions));
+			const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
+			if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
+		}
 	}
 
 	componentDidUpdate() {
-		if (this.enter && document.activeElement === this.refs.autosuggestInput.input) {
-			this.mainContext.focusNextInput();
-		}
-		this.enter = false;
 		this.suggestionSelectedFlag = false;
 	}
 
@@ -312,7 +315,6 @@ export default class AutoSuggestWidget extends Component {
 						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 						onSuggestionSelected={this.onSuggestionSelected}
 						theme={cssClasses}
-					  focusFirstSuggestion={true}
 					/>
 					{isLoading ? <Spinner /> : null }
 				</div>
