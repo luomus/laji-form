@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import { getUiOptions, getInnerUiSchema, parseDotPath } from "../../utils";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
@@ -99,7 +99,7 @@ export default class AutosuggestField extends Component {
 				const suggestionValPath = options.suggestionReceivers[fieldName];
 				fieldVal = (suggestionValPath[0] === "$") ?
 					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
-					suggestionValPath.split('.').reduce((o, i)=>o[i], suggestion);
+					parseDotPath(suggestion, suggestionValPath)
 			}
 			formData = {...formData, [fieldName]: fieldVal}
 		}

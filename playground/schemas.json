@@ -180,7 +180,7 @@
 				},
 				"popupFields": [
 					{
-						"field": "informalNameString"
+						"mapper": "unitTaxon"
 					},
 					{
 						"field": "sex"
@@ -367,13 +367,11 @@
 																"ui:options": {
 																	"autosuggestField": "taxon",
 																	"allowNonsuggestedValue": true,
-																	"suggestionInputField": "informalNameString",
-																	"suggestionValueField": "taxonID",
+																	"suggestionInputField": "_identifications.taxon",
+																	"suggestionValueField": "_identifications.taxonID",
 																	"suggestionReceivers": {
-																		"informalNameString": "value",
 																		"_identifications.taxon": "value",
 																		"unitType": "$taxonGroup",
-																		"taxonID": "key",
 																		"_identifications.taxonID": "key"
 																	},
 																	"inputTransformer": {
@@ -408,14 +406,8 @@
 																		"_identifications.detDate": {
 																			"ui:widget": "date"
 																		},
-																		"_identifications.taxon": {
-																			"ui:widget": "hidden"
-																		},
 																		"unitType": {
 																			"ui:field": "hidden"
-																		},
-																		"taxonID": {
-																			"ui:widget": "hidden"
 																		},
 																		"images": {
 																			"ui:field": "imageArray",
@@ -502,9 +494,9 @@
 																}
 															},
 															"fields": [
-																"informalNameString",
+																"_identifications.taxon",
+																"_identifications.taxonID",
 																"unitType",
-																"taxonID",
 																"taxonConfidence",
 																"recordBasis"
 															],
@@ -513,8 +505,6 @@
 																	"+": {
 																		"fields": [
 																			"_identifications.identificationBasis",
-																			"_identifications.taxonID",
-																			"_identifications.taxon",
 																			"_identifications.det",
 																			"_identifications.detMethod",
 																			"_identifications.detDate",
@@ -923,20 +913,12 @@
 											"Kirjallisuustieto"
 										]
 									},
-									"informalNameString": {
-										"type": "string",
-										"title": "Laji"
-									},
 									"unitType": {
 										"type": "array",
 										"title": "MY.unitType",
 										"items": {
 											"type": "string"
 										}
-									},
-									"taxonID": {
-										"type": "string",
-										"title": "Taksonin tunniste"
 									},
 									"taxonConfidence": {
 										"type": "string",
@@ -1403,65 +1385,15 @@
 			{
 				"units": [
 					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"sex": "",
-						"lifeStage": "",
-						"taste": "",
-						"smell": "",
-						"preservation": "",
-						"plantStatusCode": "",
-						"unitGathering": {
-							"geometry": {
-								"type": "Point",
-								"coordinates": [
-									26.137184965492345,
-									60.7004125979137
-								]
-							}
-						}
-					}
-				],
-				"predominantTree": "",
-				"images": [
-					"MM.88769"
-				],
-				"wgs84GeometryCollection": {
-					"geometries": [
-						{
-							"type": "Point",
-							"coordinates": [
-								24.870703618981512,
-								61.127719772224225
-							]
-						},
-						{
-							"type": "Point",
-							"coordinates": [
-								22.610449396180194,
-								60.96267416530286
-							],
-							"radius": 69736.93332070159
-						}
-					]
-				}
-			},
-			{
-				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"informalNameString": "ass",
+						"recordBasis": "MY.recordBasisHumanObservationSeen",
 						"unitType": [
 							"MVL.2"
 						],
-						"taxonID": "MX.47092",
 						"taxonConfidence": "MY.taxonConfidenceSure",
 						"sex": "",
-						"lifeStage": "",
 						"taste": "",
 						"smell": "",
-						"preservation": "",
-						"plantStatusCode": "",
+						"lifeStage": "",
 						"identifications": [
 							{
 								"taxon": "ass",
@@ -1469,20 +1401,33 @@
 							}
 						],
 						"unitGathering": {
-							"geometry": {}
+							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									27.61686367081631,
+									61.56595716216994
+								]
+							}
 						}
 					}
 				],
-				"predominantTree": ""
-			},
-			{
-				"dateBegin": "2016-12-08",
-				"locality": "kekekek",
-				"predominantTree": ""
+				"predominantTree": "",
+				"wgs84GeometryCollection": {
+					"geometries": [
+						{
+							"type": "Point",
+							"coordinates": [
+								26.507796583055693,
+								60.99648633735806
+							]
+						}
+					]
+				}
 			}
 		],
 		"editors": [
 			"MA.308"
-		]
+		],
+		"secureLevel": "MX.secureLevelNone"
 	}
 }

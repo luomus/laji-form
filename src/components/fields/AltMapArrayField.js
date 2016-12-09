@@ -5,9 +5,19 @@ import deepEquals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, Affix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, parseDotPath } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
+
+const popupMappers = {
+	unitTaxon: (schema, formData) => {
+		try {
+			return {[schema.identifications.items.properties.taxon.title]: formData.identifications[0].taxon}
+		} catch (e) {
+			return {};
+		}
+	}
+};
 
 export default class AltMapArrayField extends Component {
 	constructor(props) {
@@ -298,23 +308,23 @@ export default class AltMapArrayField extends Component {
 
 		const featureIdxToItemIdxs = this._context.featureIdxsToItemIdxs;
 		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
-		const data = {};
+		let data = {};
 		if (!formData || this.state.activeIdx === undefined ||
 		    !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
 			const itemFormData = formData[this.state.activeIdx][geometryMapper][itemIdx];
-			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			let fieldSchema = this.props.schema.items.properties[geometryMapper].items.properties;
-
-			if (field.mapper && fieldData) {
-				const mappedData = popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
+			let fieldData  = itemFormData ? itemFormData[fieldName] : undefined;
+			if (field.mapper) {
+				const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData);
 				for (let label in mappedData) {
 					const item = mappedData[label];
 					if (hasData(item)) data[label] = item;
 				}
 			} else if (fieldData) {
-				data[fieldSchema[fieldName].title || fieldName] = fieldData;
+				const title = fieldSchema[fieldName] || fieldName;
+				data[title] = fieldData;
 			}
 		});
 		return data;

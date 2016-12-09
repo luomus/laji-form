@@ -22,7 +22,7 @@ const autosuggestSettings = {
 
 			if (value && (!that.state || !that.state.value || that.state.value !== value)) {
 				new ApiClient().fetch("/taxa/" + value).then(response => {
-					if (that.mounted) that.setState({urlTxt: response.scientificName, value: value});
+					if (that.mounted) that.setState({urlTxt: response.scientificName, value});
 				});
 			}
 

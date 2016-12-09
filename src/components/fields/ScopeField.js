@@ -6,7 +6,7 @@ import Spinner from "react-spinner";
 import Masonry from "react-masonry-component";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, getUiOptions } from "../../utils";
+import { propertyHasData, hasData, getUiOptions, parseDotPath } from "../../utils";
 import Context from "../../Context";
 
 const scopeFieldSettings = {
@@ -432,7 +432,7 @@ export default class ScopeField extends Component {
 		}
 
 		if (additionalsGroupingPath) {
-			var groups = additionalsGroupingPath.split('.').reduce((o, i)=>o[i], options);
+			var groups = parseDotPath(options, additionalsGroupingPath);
 		}
 
 		let filteredGroups = groups ? Object.keys(groups) : undefined;
@@ -599,7 +599,7 @@ export default class ScopeField extends Component {
 		let options = getUiOptions(this.props.uiSchema);
 		const {additionalsGroupingPath} = options;
 		if (additionalsGroupingPath) {
-			var groups = Object.keys(additionalsGroupingPath.split('.').reduce((o,i)=>o[i], options));
+			var groups = Object.keys(parseDotPath(options, additionalsGroupingPath));
 		}
 
 		let translations = {};

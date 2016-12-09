@@ -86,3 +86,6 @@ export function isEmptyString(val) {
 	return val === "" || isNullOrUndefined(val);
 }
 
+export function parseDotPath(object, dotPath) {
+	return dotPath.split('.').reduce((o, i)=>o[i], object);
+}
