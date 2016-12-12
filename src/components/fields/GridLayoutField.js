@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
-import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { toIdSchema, shouldRender, orderProperties } from  "react-jsonschema-form/lib/utils"
 import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import { Row , Col } from "react-bootstrap";
 
@@ -54,13 +54,13 @@ export default class GridLayoutField extends Component {
 			for (let fieldProp in fieldProps) {
 				fieldProps[fieldProp] = field.state[fieldProp] || field.props[fieldProp];
 			}
-
-			(options.rows || []).forEach((row, i) => {
-				row.forEach(col => {
-					colsToRows[col] = i;
-				});
-			});
 		}
+
+		(options.rows || []).forEach((row, i) => {
+			row.forEach(col => {
+				colsToRows[col] = i;
+			});
+		});
 
 		const groups = [];
 
@@ -119,7 +119,7 @@ export default class GridLayoutField extends Component {
 			}
 		}
 
-		Object.keys(this.state.schema.properties).forEach((propertyName, i) => {
+		orderProperties(Object.keys(this.state.schema.properties), this.props.uiSchema["ui:order"]).forEach((propertyName, i) => {
 			const property = this.state.schema.properties[propertyName];
 			const cols = this.getCols(property, propertyName);
 

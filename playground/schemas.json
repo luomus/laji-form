@@ -330,7 +330,7 @@
 													"identifications.taxon",
 													"identifications.taxonID",
 													"unitType",
-													"countOfOccurrence",
+													"countOfOccurrences",
 													"notes",
 													"geometry"
 												]
@@ -385,26 +385,24 @@
 																"ui:options": {
 																	"lg": {
 																		"_identifications.identificationBasis": 4,
-																		"recordBasis": 1,
 																		"*": 2
 																	},
 																	"md": {
 																		"_identifications.identificationBasis": 4,
-																		"recordBasis": 2,
 																		"*": 2
 																	},
 																	"sm": {
 																		"_identifications.identificationBasis": 8,
-																		"recordBasis": 2,
 																		"*": 4
 																	},
 																	"xs": 12,
 																	"rows": [
 																		[
 																			"_identifications.taxon",
+																			"taxonConfidence",
 																			"_identifications.identificationBasis",
 																			"recordBasis",
-																			"countOfOccurrence",
+																			"countOfOccurrences",
 																			"notes"
 																		]
 																	]
