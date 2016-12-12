@@ -6,7 +6,12 @@ export default ({label, help, children, id}) => {
 
 	const helpGlyph = <span className="label-info laji-form-help-glyph">?</span>;
 
-	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? <span><strong>{label}</strong> {help}</span> : label}</Tooltip>;
+	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
+		<span>
+			<strong>{label}</strong><br />
+			{help}
+		</span>
+	): label}</Tooltip>;
 
 	const labelElem = (
 		<label htmlFor={id}>
