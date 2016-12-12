@@ -228,7 +228,6 @@ export default class AutoSuggestWidget extends Component {
 		if (focusedSuggestion) {
 			this.selectSuggestion(focusedSuggestion);
 		} else {
-			console.log(this.state.suggestions);
 			const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
 			if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
 		}
@@ -255,7 +254,6 @@ export default class AutoSuggestWidget extends Component {
 
 	onKeyDown = (e) => {
 		if (e.key === "Enter") {
-			console.log(this.findUnambigiousSuggestion(this.state.suggestions));
 			const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
 			if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
 		}
