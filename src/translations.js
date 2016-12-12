@@ -7,17 +7,17 @@
 	cancel: {
 		fi: "Peru",
 		en: "Cancel",
-		sv: "Annullera"
+		sv: "Avbryt"
 	},
 	today: {
 		fi: "Tänään",
 		en: "Today",
-		sv: "I dag"
+		sv: "Idag"
 	},
 	yesterday: {
 		fi: "Eilen",
 		en: "Yesterday",
-		sv: "I går"
+		sv: "Igår"
 	},
 	datePlaceholderDay: {
 		fi: "Pp.kk.vvvv",
@@ -42,7 +42,7 @@
 	knownSpeciesName: {
 		fi: "Tunnettu nimi",
 		en: "Known name",
-		sv: "Känt namn"
+		sv: "Känd namn"
 	},
 	unknownSpeciesName: {
 		fi: "Tuntematon nimi",
@@ -77,7 +77,7 @@
 	filter: {
 		fi: "Rajaa",
 		en: "Filter",
-		sv: "Avgräns"
+		sv: "Avgränsa"
 	},
 	more: {
 		fi: "Lisää",
@@ -135,53 +135,53 @@
 		sv: "Bildlagring misslyckades. Försök igen senare."
 	},
 	detachUnit: {
-		fi: "Irroita havainto uudelle karttakuviolle.",
-		en: "Detach the unit to a new map feature",
-		sv: "??"
+		fi: "Irrota havainto uudelle karttakuviolle.",
+		en: "Detach the observation to a new map feature",
+		sv: "Lossa observationen till en ny kartafigur"
 	},
 	detachUnitHelp: {
 		fi: "Piirrä uusi kuvio irrotettavalle havainnolle.",
-		en: "Draw a new feature for the unit being detached.",
-		sv: "??"
+		en: "Draw a new feature for the observation being detached.",
+		sv: "Rita en ny figur för den observationen som lossnat."
 	},
 	chooseDate: {
 		fi: "Valitse päivämäärä",
 		en: "Choose a date",
-		sv: "Välja ett datum"
+		sv: "Välj datum"
 	},
 	chooseTime: {
 		fi: "Valitse kellonaika",
 		en: "Choose the time",
-		sv: "Välja en tiden"
+		sv: "Välj tiden"
 	},
 	unitsPartitive: {
 		fi: "Havaintoa",
-		en: "Units",
-		sv: "??"
+		en: "Observations",
+		sv: "Observationer"
 	},
 	setLocation: {
 		fi: "Aseta sijainti",
 		en: "Set a location",
-		sv: "??"
+		sv: "Ange platsen"
 	},
 	currentLocation: {
 		fi: "Nykyinen sijainti",
 		en: "Current location",
-		sv: "??"
+		sv: "Aktuella platsen"
 	},
 	noResults: {
 		fi: "Ei tuloksia",
 		en: "No results",
-		sv: "??"
+		sv: "Inga resultat"
 	},
 	addPlace: {
 		fi: "Lisää paikka",
 		en: "Add a place",
-		sv: "??"
+		sv: "Lägg till en plats"
 	},
 	all: {
 		fi: "Kaikki",
 		en: "All",
-		sv: "??"
+		sv: "Alla"
 	},
 }
