@@ -208,20 +208,18 @@ export default class AccordionArrayField extends Component {
 		onActiveChange ? onActiveChange(idx) : this.setState({activeIdx: idx});
 	}
 
-	onChangeForIdx = (idx) => {
-		return (itemFormData) => {
-			if (!this.state.formData || idx === this.state.formData.length) {
-				itemFormData = {
-					...getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
-					...itemFormData
-				}
+	onChangeForIdx = (idx) => (itemFormData) => {
+		if (!this.state.formData || idx === this.state.formData.length) {
+			itemFormData = {
+				...getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
+				...itemFormData
 			}
-
-			let formData = this.state.formData;
-			if (!formData) formData = [];
-			formData = update(formData, {$merge: {[idx]: itemFormData}});
-			this.props.onChange(formData);
 		}
+
+		let formData = this.state.formData;
+		if (!formData) formData = [];
+		formData = update(formData, {$merge: {[idx]: itemFormData}});
+		this.props.onChange(formData);
 	}
 
 	onDelete = (idx) => () => {

@@ -28,9 +28,9 @@ export default class AutoArrayField extends Component {
 		this.setState(this.getStatefromProps(props))
 	}
 
-	getStatefromProps = (props, defaultState) => {
+	getStatefromProps = (props) => {
 		let {idxsToKeys, keyCounter} = this.state;
-		const state = defaultState || {};
+		const state = {};
 
 		const formDataLength = props.formData ? props.formData.length : 0;
 		if (!idxsToKeys) {
