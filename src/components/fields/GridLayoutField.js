@@ -42,6 +42,8 @@ export default class GridLayoutField extends Component {
 
 		fieldProps.uiSchema = {...fieldProps.uiSchema, "ui:field": undefined};
 
+		const colsToRows = {};
+
 		if (options.uiSchema) {
 			fieldProps = {...fieldProps, uiSchema: innerUiSchema};
 			for (let prop in fieldProps.schema.properties) {
@@ -52,25 +54,19 @@ export default class GridLayoutField extends Component {
 			for (let fieldProp in fieldProps) {
 				fieldProps[fieldProp] = field.state[fieldProp] || field.props[fieldProp];
 			}
+
+			(options.rows || []).forEach((row, i) => {
+				row.forEach(col => {
+					colsToRows[col] = i;
+				});
+			});
 		}
 
 		const groups = [];
-		// let groupIdx = 0;
 
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 
-		// Object.keys(props.schema.properties).forEach(property => {
-		// 	const type = props.schema.properties[property].type;
-		// 	const shouldHaveOwnRow = (type === "array" || type === "object");
-		//
-		// 	if (isHidden(props.uiSchema, property)) return;
-		// 	if (shouldHaveOwnRow) groupIdx++;
-		// 	if (!groups[groupIdx]) groups[groupIdx] = [];
-		// 	groups[groupIdx].push(property);
-		// 	if (shouldHaveOwnRow) groupIdx++;
-		// });
-
-		return {...fieldProps, groups, showLabels};
+		return {...fieldProps, groups, showLabels, colsToRows};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -106,20 +102,33 @@ export default class GridLayoutField extends Component {
 	}
 	
 	render() {
-		let props = {...this.props, ...this.state};
 		const SchemaField = this.state.registry.fields.SchemaField;
+		const props = {...this.props, ...this.state};
+		const {colsToRows, showLabels} = this.state;
 
-		let fields = [];
+		const rows = [];
+		const lastRow = [];
+
+		function getRow(col) {
+			const colRow = colsToRows[col];
+			if (colRow !== undefined) {
+				if (!rows[colRow]) rows[colRow] = [];
+				return rows[colRow]
+			} else {
+				return lastRow
+			}
+		}
+
 		Object.keys(this.state.schema.properties).forEach((propertyName, i) => {
 			const property = this.state.schema.properties[propertyName];
 			const cols = this.getCols(property, propertyName);
 
 			let {title, ...schema} = property;
-			const name = this.state.showLabels ? (title !== undefined ? title : propertyName) : undefined;
+			const name = showLabels ? (title !== undefined ? title : propertyName) : undefined;
 
-			if (this.state.showLabels) schema = {...schema, title};
+			if (showLabels) schema = {...schema, title};
 
-			if (!isHidden(this.state.uiSchema, propertyName)) fields.push(
+			if (!isHidden(this.state.uiSchema, propertyName)) getRow(propertyName).push(
 				<Col key={"div_" + i} {...cols}>
 					<SchemaField
 						key={i}
@@ -132,21 +141,25 @@ export default class GridLayoutField extends Component {
 						formData={this.state.formData[propertyName]}
 						registry={this.state.registry}
 						onChange={(data) => {
-								props.onChange({...this.state.formData, [propertyName]: data});
-							}}
+							props.onChange({...this.state.formData, [propertyName]: data});
+						}}
 					/>
 				</Col>
 			)
 		});
+
+		rows.push(lastRow);
 
 		const {title} = this.props.schema;
 		let fieldTitle = title !== undefined ? title : this.props.name;
 		return (
 			<fieldset>
 				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} /> : null}
-				<Row>
-					{fields}
-				</Row>
+				{rows.map((row, i) =>
+					<Row key={i}>
+						{row}
+					</Row>
+				)}
 			</fieldset>
 		);
 	}
