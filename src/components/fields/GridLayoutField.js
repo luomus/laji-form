@@ -78,10 +78,11 @@ export default class GridLayoutField extends Component {
 			requirements.indexOf(name) !== -1;
 	}
 
-	getCols = (schema, property) => {
+	getCols = (schema, uiSchema, property) => {
 		const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 
-		if ((schema.type === "array" && !schema.uniqueItems) || schema.type === "object") {
+		if ((schema.type === "array" && !(schema.uniqueItems && schema.items.type === "string" && uiSchema === undefined)) ||
+			schema.type === "object") {
 			return cols;
 		}
 
@@ -106,6 +107,8 @@ export default class GridLayoutField extends Component {
 		const props = {...this.props, ...this.state};
 		const {colsToRows, showLabels} = this.state;
 
+		const {schema, uiSchema} = this.state;
+
 		const rows = [];
 		const lastRow = [];
 
@@ -119,9 +122,10 @@ export default class GridLayoutField extends Component {
 			}
 		}
 
-		orderProperties(Object.keys(this.state.schema.properties), this.props.uiSchema["ui:order"]).forEach((propertyName, i) => {
+		orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach((propertyName, i) => {
 			const property = this.state.schema.properties[propertyName];
-			const cols = this.getCols(property, propertyName);
+			const uiSchemaProperty = uiSchema[propertyName];
+			const cols = this.getCols(property, uiSchemaProperty, propertyName);
 
 			let {title, ...schema} = property;
 			const name = showLabels ? (title !== undefined ? title : propertyName) : undefined;
