@@ -248,6 +248,13 @@ export default class AutoSuggestWidget extends Component {
 			return;
 		}
 
+		if (this.state.inputValue === "") {
+			this.setState({unsuggested: false}, () => {
+				this.props.onChange("");
+			});
+			return;
+		}
+
 		const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
 		this.setState({focused: false}, () => {
 			if (!this.state.inputInProgress) {
