@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Button, Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
-import { GlyphButton } from "../components";
 import Spinner from "react-spinner"
 import { getUiOptions } from "../../utils";
 
@@ -17,6 +16,18 @@ const autosuggestSettings = {
 			return text;
 		},
 		renderMetaInfo: (that, input) => {
+			const content = that.state.autosuggestSettings.getTaxonCardContent(that);
+			return <OverlayTrigger trigger="focus" overlay={content}>{input}</OverlayTrigger>;
+		},
+		renderUnsuggestedMetaInfo: (that, input) => {
+			const tooltip = (
+				<Tooltip id={`${that.props.id}-tooltip`}>{that.props.formContext.translations.UnknownSpeciesName}</Tooltip>
+			)
+			return (
+				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			);
+		},
+		getTaxonCardContent: (that) => {
 			const options = getUiOptions(that.props);
 			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
 
@@ -27,34 +38,35 @@ const autosuggestSettings = {
 			}
 
 			const tooltipElem = (
-				<Tooltip id={`${that.id}-popover-tooltip`}>
+				<Tooltip id={`${that.props.id}-popover-tooltip`}>
 					{that.props.formContext.translations.openSpeciedCard}
 				</Tooltip>
 			);
 
-			const content = (
-				<Popover id={`${that.id}-popover`}>
-						<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
-						{that.state.urlTxt ?
-							<div><OverlayTrigger overlay={tooltipElem}>
-								<a href={"http://tun.fi/" + value}
-									 target="_blank"><i>{that.state.urlTxt}</i></a>
-							</OverlayTrigger></div> : <Spinner />}
-				</Popover>
-			);
-
-			return <OverlayTrigger trigger="focus" overlay={content}>{input}</OverlayTrigger>;
-		},
-		renderUnsuggestedMetaInfo: (that, input) => {
-			const tooltip = (
-				<Tooltip id={`${that.id}-tooltip`}>{that.props.formContext.translations.UnknownSpeciesName}</Tooltip>
-			)
 			return (
-				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+				<Popover id={`${that.props.id}-popover`}>
+					<span className="text-success"><Glyphicon glyph="tag" /> {that.props.formContext.translations.KnownSpeciesName}</span>
+					{that.state.urlTxt ?
+						<div><Glyphicon glyph="tag" style={{visibility: "hidden"}} /> <OverlayTrigger overlay={tooltipElem}>
+							<a href={"http://tun.fi/" + value}
+							   target="_blank"><i>{that.state.urlTxt}</i></a>
+						</OverlayTrigger></div> : <Spinner />}
+				</Popover>
 			);
 		},
 		renderSuccessGlyph: (that) => {
-			return <Glyphicon glyph="tag" />
+			const options = getUiOptions(that.props);
+			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
+
+			const content = that.state.autosuggestSettings.getTaxonCardContent(that);
+
+			return (
+				<a href={"http://tun.fi/" + value} target="_blank">
+					<OverlayTrigger overlay={content} placement="right">
+						<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
+					</OverlayTrigger>
+				</a>
+			);
 		}
 	},
 	friends: {
@@ -64,7 +76,7 @@ const autosuggestSettings = {
 		},
 		renderUnsuggestedMetaInfo: (that, input) => {
 			const tooltip = (
-				<Tooltip id={`${that.id}-tooltip`}>{that.props.formContext.translations.UnknownName}</Tooltip>
+				<Tooltip id={`${that.props.id}-tooltip`}>{that.props.formContext.translations.UnknownName}</Tooltip>
 			)
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
