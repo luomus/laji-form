@@ -47,9 +47,9 @@ const autosuggestSettings = {
 				<Popover id={`${that.props.id}-popover`}>
 					<span className="text-success"><Glyphicon glyph="tag" /> {that.props.formContext.translations.KnownSpeciesName}</span>
 					{that.state.urlTxt ?
-						<div><Glyphicon glyph="tag" style={{visibility: "hidden"}} /> <OverlayTrigger overlay={tooltipElem}>
+						<div><OverlayTrigger overlay={tooltipElem}>
 							<a href={"http://tun.fi/" + value}
-							   target="_blank"><i>{that.state.urlTxt}</i></a>
+							   target="_blank"><Glyphicon glyph="modal-window"/> <i>{that.state.urlTxt}</i></a>
 						</OverlayTrigger></div> : <Spinner />}
 				</Popover>
 			);

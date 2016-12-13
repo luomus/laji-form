@@ -133,7 +133,7 @@ export default class CustomButtonArrayField extends Component {
 
 	onAdd = () => {
 		this.props.onChange([
-			...this.props.formData,
+			...(this.props.formData || []),
 			getDefaultFormState(this.props.schema.items, undefined, this.props.registry)
 		]);
 	}
