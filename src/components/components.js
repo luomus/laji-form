@@ -110,7 +110,7 @@ export class Alert extends Component {
 export const GlyphButton = (props) => {
 	const {glyph, ...buttonProps} = props;
 	return (
-		<Button {...buttonProps} className="glyph-button">
+		<Button {...buttonProps} className={`glyph-button${props.className ? ` ${props.className}` : ""}`}>
 			<Glyphicon glyph={glyph} />
 		</Button>
 	);

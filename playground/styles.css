@@ -52,6 +52,12 @@ body .laji-form {
 .laji-form .autosuggest-container ul {
 	padding-left: 0px;
 }
+.laji-form .autosuggest-wrapper.open .dropdown-menu {
+	display: block;
+}
+.laji-form .autosuggest-wrapper .option-wrapper {
+	padding: 2px;
+}
 
 .laji-form .map-array-directionless-enter {
     opacity: 0.01;
@@ -81,6 +87,12 @@ body .laji-form {
 }
 .laji-form .form-control:not(textarea), .laji-form .react-selectize:not(.multi-select) .react-selectize-control {
 	height: 25px !important;
+}
+.laji-form .form-control-feedback {
+	line-height: 25px;
+	height: 25px;
+	width: 25px;
+	font-size: 10px;
 }
 .laji-form .rw-input {
 	height: 23px !important;

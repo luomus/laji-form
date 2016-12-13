@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Button, Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
+import { GlyphButton } from "../components";
 import Spinner from "react-spinner"
 import { getUiOptions } from "../../utils";
 
@@ -15,7 +16,7 @@ const autosuggestSettings = {
 			}
 			return text;
 		},
-		renderMetaInfo: that => {
+		renderMetaInfo: (that, input) => {
 			const options = getUiOptions(that.props);
 			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
 
@@ -26,34 +27,34 @@ const autosuggestSettings = {
 			}
 
 			const tooltipElem = (
-				<Tooltip id={value + "-tooltip"}>
+				<Tooltip id={`${that.id}-popover-tooltip`}>
 					{that.props.formContext.translations.openSpeciedCard}
 				</Tooltip>
 			);
 
-			return (that.mounted && value) ? (
-				<div>
-					<div className="meta-info-taxon">
+			const content = (
+				<Popover id={`${that.id}-popover`}>
 						<span className="text-success">{that.props.formContext.translations.KnownSpeciesName}</span>
 						{that.state.urlTxt ?
 							<div><OverlayTrigger overlay={tooltipElem}>
 								<a href={"http://tun.fi/" + value}
-									 target="_blank">{that.state.urlTxt}</a>
+									 target="_blank"><i>{that.state.urlTxt}</i></a>
 							</OverlayTrigger></div> : <Spinner />}
-					</div>
-				</div>
-			) : null
-		},
-		renderUnsuggestedMetaInfo: that => {
-			return <span className="text-danger">{that.props.formContext.translations.UnknownSpeciesName}</span>
-		},
-		renderMetaInfoListItemAdditional: (that, suggestion) => {
-			const tooltipElem = <Tooltip id={suggestion.key + "-tooltip"}>{that.props.formContext.translations.openSpeciedCard}</Tooltip>;
-			return (
-				<OverlayTrigger overlay={tooltipElem}>
-					<a href={"http://tun.fi/" + suggestion.key} target="_blank">({suggestion.payload.scientificName})</a>
-				</OverlayTrigger>
+				</Popover>
 			);
+
+			return <OverlayTrigger trigger="focus" overlay={content}>{input}</OverlayTrigger>;
+		},
+		renderUnsuggestedMetaInfo: (that, input) => {
+			const tooltip = (
+				<Tooltip id={`${that.id}-tooltip`}>{that.props.formContext.translations.UnknownSpeciesName}</Tooltip>
+			)
+			return (
+				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			);
+		},
+		renderSuccessGlyph: (that) => {
+			return <Glyphicon glyph="tag" />
 		}
 	},
 	friends: {
@@ -61,14 +62,22 @@ const autosuggestSettings = {
 		renderSuggestion: suggestion => {
 			return suggestion.value;
 		},
-		renderUnsuggestedMetaInfo: that => {
-			return <span className="text-danger">{that.props.formContext.translations.UnknownName}</span>
+		renderUnsuggestedMetaInfo: (that, input) => {
+			const tooltip = (
+				<Tooltip id={`${that.id}-tooltip`}>{that.props.formContext.translations.UnknownName}</Tooltip>
+			)
+			return (
+				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			);
 		},
 		convertInputValue: that => {
 			let inputValue = that.props.value;
 			return new ApiClient().fetch("/person/by-id/" + inputValue).then(({fullName}) => {
 				return fullName || inputValue;
 			});
+		},
+		renderSuccessGlyph: () => {
+			return <Glyphicon glyph="user" />
 		}
 	}
 }
@@ -87,7 +96,7 @@ export default class AutoSuggestWidget extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {isLoading: false, suggestions: [], unsuggested: false, ...this.getStateFromProps(props)};
+		this.state = {isLoading: false, suggestions: [], unsuggested: false, focused: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
 	}
 
@@ -138,7 +147,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	renderSuggestion = (suggestion) => {
-		return (<span>{this.state.autosuggestSettings.renderSuggestion(suggestion)}</span>);
+		return (<span className="simple-option">{this.state.autosuggestSettings.renderSuggestion(suggestion)}</span>);
 	}
 
 	onSuggestionsFetchRequested = ({value}) => {
@@ -179,6 +188,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	selectSuggestion = (suggestion) => {
+		if (!suggestion) return;
 		const {onSuggestionSelected} = getUiOptions(this.props);
 		this.suggestionSelectedFlag = true;
 		let state = {inputInProgress: false, unsuggested: false, inputValue: (suggestion !== undefined && suggestion !== null) ? suggestion.value : ""};
@@ -193,6 +203,7 @@ export default class AutoSuggestWidget extends Component {
 	onSuggestionSelected = (e, {suggestion}) => {
 		e.preventDefault();
 		this.selectSuggestion(suggestion);
+		this.setState({focused: false});
 	}
 
 	onInputChange = (value) => {
@@ -225,21 +236,18 @@ export default class AutoSuggestWidget extends Component {
 			return;
 		}
 
-		if (focusedSuggestion) {
-			this.selectSuggestion(focusedSuggestion);
-		} else {
-			const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
-			if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
-		}
+		const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
 		this.setState({focused: false}, () => {
-		if (focusedSuggestion === null && this.state.inputValue === "") {
+			if (!this.state.inputInProgress) {
+				return;
+			} else if (focusedSuggestion === null && this.state.inputValue === "") {
 				this.selectSuggestion(focusedSuggestion);
+			} else if (unambigiousSuggestion) {
+				this.selectSuggestion(unambigiousSuggestion);
+			} else {
+				this.onConfirmUnsuggested();
 			}
 		});
-	}
-
-	onFix = () => {
-		this.refs.autosuggestInput.input.focus();
 	}
 
 	onConfirmUnsuggested = () => {
@@ -289,10 +297,11 @@ export default class AutoSuggestWidget extends Component {
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
 
 		let cssClasses = {
-			input: "form-control",
-			suggestionsContainer: "list-group autosuggest-container",
-			suggestion: "list-group-item",
-			suggestionFocused: "list-group-item active"
+			suggestionsContainer: "dropdown-menu bootstrap3 react-selectize simple-select",
+			suggestionsList: "list-group",
+			containerOpen: "open",
+			suggestion: "option-wrapper",
+			suggestionFocused: "option-wrapper highlight"
 		};
 
 		const InputMetaInfo = ({children, className}) => {
@@ -300,64 +309,56 @@ export default class AutoSuggestWidget extends Component {
 		}
 
 		return (
-			<div>
-				<div className="autosuggest-wrapper">
-					<Autosuggest
-						ref="autosuggestInput"
-						id={`${this.props.id}-autosuggest`}
-						inputProps={inputProps}
-						suggestions={suggestions}
-						getSuggestionValue={this.getSuggestionValue}
-						renderSuggestion={this.renderSuggestion}
-						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-						onSuggestionSelected={this.onSuggestionSelected}
-						theme={cssClasses}
-					/>
-					{isLoading ? <Spinner /> : null }
-				</div>
-				<InputMetaInfo>{this.renderMetaInfo()}</InputMetaInfo>
+			<div className="autosuggest-wrapper">
+				<Autosuggest
+					ref="autosuggestInput"
+					id={`${this.props.id}-autosuggest`}
+					inputProps={inputProps}
+					renderInputComponent={this.renderInput}
+					suggestions={suggestions}
+					getSuggestionValue={this.getSuggestionValue}
+					renderSuggestion={this.renderSuggestion}
+					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+					onSuggestionSelected={this.onSuggestionSelected}
+					theme={cssClasses}
+				/>
+				{isLoading ? <Spinner /> : null }
 			</div>
 		);
 	}
 
-	renderMetaInfo = () => {
-		if (this.state.inputInProgress && !this.state.focused) {
-			return this.renderInprogressMetaInfo();
-		} else if (!this.state.inputInProgress) {
-			if (this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
-				return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this);
-			} else if (this.state.autosuggestSettings.renderMetaInfo) {
-				return this.state.autosuggestSettings.renderMetaInfo(this);
-			}
+	renderInput = (inputProps) => {
+		let validationState = null;
+
+		const options = getUiOptions(this.props.uiSchema);
+		const value = options.hasOwnProperty("value") ? options.value : this.props.value;
+
+		if ((this.state.inputInProgress && !this.state.focused) || this.state.unsuggested) {
+			validationState = "warning";
+		} else if (value) {
+			validationState = "success";
 		}
-		return null;
-	}
 
-	renderInprogressMetaInfo = () => {
-		if (this.state.isLoading) return null;
-
-		const translations = this.props.formContext.translations;
-
-		const suggestionsList = (this.state.oldSuggestions && this.state.oldSuggestions.length) ?
-			(
-				<ul>
-					{this.state.oldSuggestions.map(suggestion =>
-							<li key={suggestion.key} >
-								<Button bsStyle="link" onClick={() => this.selectSuggestion(suggestion)}>{suggestion.value}</Button>
-								 {this.state.autosuggestSettings.renderMetaInfoListItemAdditional ? <span> {this.state.autosuggestSettings.renderMetaInfoListItemAdditional(this, suggestion)}</span> : null}
-							</li>)
-					}
-				</ul>
-			) : null;
-		const fixButton = <Button bsStyle="link" onClick={this.onFix}>{translations.Fix}</Button>;
-		const continueButton = <Button bsStyle="link" onClick={this.onConfirmUnsuggested}>{this.props.formContext.translations.useUnknownName}</Button>;
-		return (
-			<div className="text-danger">
-				{suggestionsList ? translations.SelectOneOfTheFollowing : fixButton} <span>{translations.or}</span> {continueButton}
-				{suggestionsList}
-			</div>
+		const input = (
+			<FormGroup validationState={validationState}>
+				<FormControl type="text" {...inputProps}/>
+				{!this.state.focused && !this.state.isLoading ?
+					<FormControl.Feedback>{
+						validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
+							this.state.autosuggestSettings.renderSuccessGlyph(this) : null
+					}</FormControl.Feedback> :
+					null
+				}
+			</FormGroup>
 		);
+
+		if (value && !this.state.unsuggested && this.state.autosuggestSettings.renderMetaInfo) {
+			return this.state.autosuggestSettings.renderMetaInfo(this, input);
+		} else if (value && this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
+			return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this, input);
+		} else {
+			return input;
+		}
 	}
 }
-
