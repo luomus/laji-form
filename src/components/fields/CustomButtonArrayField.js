@@ -47,8 +47,15 @@ export default class CustomButtonArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {stateKeyId: 0};
-		this.state = this.getStateFromProps(props);
+		this.state = {
+			stateKeyId: 0,
+
+		};
+		this.state = {
+			...this.state,
+			...this.getStateFromProps(props),
+			formData: props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)]
+		};
 		new Context().addStateClearListener(this.clearState);
 	}
 
@@ -75,6 +82,8 @@ export default class CustomButtonArrayField extends Component {
 			state.keyCounter = keyCounter;
 		}
 
+		state.formData = props.formData;
+
 		return state;
 	}
 
@@ -88,7 +97,7 @@ export default class CustomButtonArrayField extends Component {
 		return (<div>
 			<TitleField title={this.props.schema.title || this.props.name}/>
 			{
-				(this.props.formData || []).map((item, idx) => {
+				this.state.formData.map((item, idx) => {
 					let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 					return (
 						<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
@@ -134,7 +143,7 @@ export default class CustomButtonArrayField extends Component {
 
 	onAdd = () => {
 		this.props.onChange([
-			...(this.props.formData || []),
+			...(this.state.formData || []),
 			getDefaultFormState(this.props.schema.items, undefined, this.props.registry)
 		]);
 	}
@@ -149,7 +158,7 @@ export default class CustomButtonArrayField extends Component {
 		const fields = Object.keys(this.props.schema.items.properties).filter(fieldsFilter);
 		const nestedFilters = filter.filter(f => f.includes("."));
 
-		const {formData} = this.props;
+		const {formData} = this.state;
 		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry);
 
 		const lastIdx = formData.length - 1;
@@ -197,18 +206,19 @@ export default class CustomButtonArrayField extends Component {
 		});
 
 		this.props.onChange([
-			...this.props.formData,
+			...this.state.formData,
 			copyItem
 		]);
 	}
 
 	onChangeForIdx = (idx) => (itemFormData) => {
-		this.props.onChange(update(this.props.formData, {$merge: {[idx]: itemFormData}}))
+		const updateObject = this.state.formData ? {$merge: {[idx]: itemFormData}} : {$set: [itemFormData]};
+		this.props.onChange(update(this.state.formData, updateObject));
 	}
 
 	onRemoveForIdx = (idx) => e => {
 		if (e) e.preventDefault();
 		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
-		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}));
+		this.props.onChange(update(this.state.formData, {$splice: [[idx, 1]]}));
 	}
 }
