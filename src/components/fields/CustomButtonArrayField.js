@@ -83,9 +83,10 @@ export default class CustomButtonArrayField extends Component {
 	}
 
 	render() {
-		const {registry: {fields: {SchemaField}}} = this.props;
+		const {registry: {fields: {SchemaField, TitleField}}} = this.props;
 
 		return (<div>
+			<TitleField title={this.props.schema.title || this.props.name}/>
 			{
 				(this.props.formData || []).map((item, idx) => {
 					let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
