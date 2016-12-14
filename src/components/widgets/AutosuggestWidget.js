@@ -4,6 +4,7 @@ import ApiClient from "../../ApiClient";
 import { Button, Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner"
 import { getUiOptions } from "../../utils";
+import Context from "../../Context";
 
 const autosuggestSettings = {
 	taxon: {
@@ -112,6 +113,7 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, focused: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
+		this.globalContext = new Context();
 	}
 
 	componentWillReceiveProps(props) {
@@ -214,8 +216,11 @@ export default class AutoSuggestWidget extends Component {
 		this.setState(state);
 	}
 
-	onSuggestionSelected = (e, {suggestion}) => {
+	onSuggestionSelected = (e, {suggestion, method}) => {
 		e.preventDefault();
+		if (method === "click") {
+			this.globalContext.focusNextInput();
+		}
 		this.selectSuggestion(suggestion);
 		this.setState({focused: false});
 	}
@@ -342,6 +347,7 @@ export default class AutoSuggestWidget extends Component {
 					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
 					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 					onSuggestionSelected={this.onSuggestionSelected}
+					focusInputOnSuggestionClick={false}
 					theme={cssClasses}
 				/>
 				{isLoading ? <Spinner /> : null }
@@ -383,3 +389,4 @@ export default class AutoSuggestWidget extends Component {
 		}
 	}
 }
+
