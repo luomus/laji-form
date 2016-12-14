@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import merge from "deepmerge";
+import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUpdateObjectFromPath, getUiOptions, getInnerUiSchema, parseDotPath } from "../../utils";
+import { getUiOptions, getInnerUiSchema, parseDotPath } from "../../utils";
 
 export default class ContextInjectionField extends Component {
 	static propTypes = {
@@ -29,11 +29,15 @@ export default class ContextInjectionField extends Component {
 		const {injections} = options;
 
 		for (let injectionPath in injections) {
-			uiSchema = merge(uiSchema,
-				getUpdateObjectFromPath(
-					injectionPath,
-					parseDotPath(this.props.formContext.uiSchemaContext, injections[injectionPath]))
-			);
+			const updateObject = {};
+			const splitted = injectionPath.split(".");
+			const last = splitted.pop();
+			const tail = splitted.reduce((pointer, path) => {
+				pointer[path] = {};
+				return pointer[path]
+			}, updateObject);
+			tail[last] = {$set: parseDotPath(this.props.formContext.uiSchemaContext, injections[injectionPath])};
+			uiSchema = update(uiSchema, updateObject);
 		}
 
 		return {uiSchema};

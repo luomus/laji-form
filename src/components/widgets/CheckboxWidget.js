@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import Label from "../Label";
+import { Label } from "../components";
 import Switch from "rc-switch";
 
 function CheckboxWidget(props) {

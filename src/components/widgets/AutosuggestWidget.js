@@ -45,7 +45,9 @@ const autosuggestSettings = {
 
 			return (
 				<Popover id={`${that.props.id}-popover`}>
-					<span className="text-success"><Glyphicon glyph="tag" /> {that.props.formContext.translations.KnownSpeciesName}</span>
+					<span className="text-success">
+						<Glyphicon glyph="tag" /> {that.props.formContext.translations.KnownSpeciesName}
+					</span>
 					{that.state.urlTxt ?
 						<div><OverlayTrigger overlay={tooltipElem}>
 							<a href={"http://tun.fi/" + value}

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, Popover, ButtonGroup, Glyphicon, Modal } from "react-bootstrap";
+import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal } from "react-bootstrap";
 
 export class Button extends Component {
 	render() {
@@ -198,4 +198,38 @@ export class Affix extends Component {
 			</div>
 		);
 	}
+}
+
+export function Help({help, id}) {
+	const helpGlyph = <span className="label-info laji-form-help-glyph"><strong>?</strong></span>;
+
+	return help ? (
+		<OverlayTrigger placement="right" overlay={<Tooltip id={id}>{help}</Tooltip> }>
+			{helpGlyph}
+		</OverlayTrigger>
+	) : helpGlyph;
+}
+
+export function Label({label, help, children, id}) {
+	const showHelp = label && help;
+
+	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
+		<span>
+			<strong>{label}</strong><br />
+			{help}
+		</span>
+	): label}</Tooltip>;
+
+	const labelElem = (
+		<label htmlFor={id}>
+			<strong>{label}{showHelp ? <Help /> : null}</strong>
+			{children}
+		</label>
+	)
+
+	return (label || help) ? (
+		<OverlayTrigger placement="right" overlay={tooltipElem}>
+			{labelElem}
+		</OverlayTrigger>
+	) : labelElem;
 }

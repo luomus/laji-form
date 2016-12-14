@@ -15,11 +15,13 @@ export default class DependentDisableField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				disableField: PropTypes.string.isRequired,
-				disableDefiner: PropTypes.string.isRequired,
-				regexp: PropTypes.string.isRequired,
+				rules: PropTypes.arrayOf(PropTypes.shape({
+					disableField: PropTypes.string.isRequired,
+					disableDefiner: PropTypes.string.isRequired,
+					regexp: PropTypes.string.isRequired,
+				})).isRequired,
 				uiSchema: PropTypes.object
-			}).isRequired
+			})
 		}).isRequired
 	}
 
@@ -33,30 +35,38 @@ export default class DependentDisableField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-		uiSchema = getInnerUiSchema(uiSchema);
-		Object.keys(props.uiSchema).forEach(key => {
-			if (key !== "ui:options") {
-				uiSchema = update(uiSchema, {$merge: {[key]: props.uiSchema[key]}})
+		let {uiSchema, formData} = props;
+		let newFormData = formData;
+
+		const {rules} = getUiOptions(props.uiSchema);
+		rules.forEach(rule => {
+			const {disableField, disableDefiner, regexp} = rule;
+			const {formData} = props;
+
+			const fieldToMatch = (formData && !isNullOrUndefined(formData[disableDefiner])) ?
+				formData[disableDefiner] : "";
+
+			if (fieldToMatch.match(regexp)) {
+				if (!uiSchema[disableField]) {
+					uiSchema = {...uiSchema, [disableField]: {}};
+				}
+				uiSchema = update(uiSchema, {
+					[disableField]: {
+						$merge: {
+							"ui:disabled": true,
+							"ui:inlineHelp": rule.inlineHelp
+						}
+					}
+				});
+				if (rule.hasOwnProperty("disabledValueToDisplay")) {
+					newFormData = {...formData, [disableField]: rule.disabledValueToDisplay};
+				}
 			}
 		});
 
-		const options = getUiOptions(props.uiSchema);
+		uiSchema = {...uiSchema, "ui:field": undefined, ...getInnerUiSchema(uiSchema)};
 
-		if (!options) {
-			return {uiSchema: update(uiSchema, {$merge: {"ui:field": undefined}})};
-		}
-;
-		const {disableField, disableDefiner, regexp} = options;
-		const {formData} = props;
-
-		if (!formData || formData[disableDefiner] === undefined || formData[disableDefiner] === null ||
-			(formData && !isNullOrUndefined(formData[disableDefiner]) && !formData[disableDefiner].match(regexp))) {
-			if (!uiSchema[disableField]) uiSchema = {...uiSchema, [disableField]: {}};
-			uiSchema = update(uiSchema, {[disableField]: {$merge: {"ui:disabled": true}}});
-		}
-
-		return {uiSchema};
+		return {uiSchema, formData: newFormData};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

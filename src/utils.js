@@ -74,8 +74,13 @@ export function getUiOptions(uiSchema) {
 	return {};
 }
 
-export function getInnerUiSchema(uiSchema) {
-	return getUiOptions(uiSchema).uiSchema || {};
+export function getInnerUiSchema(uiSchema, schema) {
+	return {
+		...uiSchema,
+		"ui:field": undefined,
+		"ui:buttons": undefined,
+		...getUiOptions(uiSchema).uiSchema
+	};
 }
 
 export function isNullOrUndefined(val) {

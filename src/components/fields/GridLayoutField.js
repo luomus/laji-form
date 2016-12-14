@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
+import merge from "deepmerge";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender, orderProperties } from  "react-jsonschema-form/lib/utils"
 import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
@@ -40,22 +41,19 @@ export default class GridLayoutField extends Component {
 		const options = getUiOptions(props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 
-		fieldProps.uiSchema = {...fieldProps.uiSchema, "ui:field": undefined};
+		fieldProps = {...fieldProps, uiSchema: {...fieldProps.uiSchema, "ui:field": undefined, ...innerUiSchema}};
 
-		const colsToRows = {};
+		// Apply nested uiSchemas prop effects virtually without rendering them.
+		while (true) {
+			const uiField = fieldProps.uiSchema["ui:field"];
+			if (!uiField) break;
 
-		if (options.uiSchema) {
-			fieldProps = {...fieldProps, uiSchema: innerUiSchema};
-			for (let prop in fieldProps.schema.properties) {
-				if (props.uiSchema[prop]) fieldProps = update(fieldProps, {uiSchema: {$merge: {[prop]: props.uiSchema[prop]}}});
-			}
-
-			let field = new props.registry.fields[fieldProps.uiSchema["ui:field"]](fieldProps);
-			for (let fieldProp in fieldProps) {
-				fieldProps[fieldProp] = field.state[fieldProp] || field.props[fieldProp];
-			}
+			const field = new props.registry.fields[uiField](fieldProps);
+			const innerfieldProps = {...field.props, ...field.state};
+			fieldProps = {...fieldProps, ...innerfieldProps};
 		}
 
+		const colsToRows = {};
 		(options.rows || []).forEach((row, i) => {
 			row.forEach(col => {
 				colsToRows[col] = i;
@@ -140,7 +138,11 @@ export default class GridLayoutField extends Component {
 						required={this.isRequired(this.state.schema.required, propertyName)}
 						schema={schema}
 						uiSchema={this.state.uiSchema[propertyName]}
-						idSchema={toIdSchema(this.state.idSchema[propertyName], this.state.idSchema.$id + "_" + propertyName, this.props.registry.definitions)}
+						idSchema={toIdSchema(
+							this.state.idSchema[propertyName],
+							 this.state.idSchema.$id + "_" + propertyName,
+						  this.props.registry.definitions
+						)}
 						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
 						formData={this.state.formData[propertyName]}
 						registry={this.state.registry}

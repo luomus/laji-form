@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from "react";
 import { findDOMNode } from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
-import { Button } from "./components";
-import Label from "./Label";
+import { Button, Label, Help } from "./components";
 
 import Form from "react-jsonschema-form";
 
@@ -79,6 +78,7 @@ render() {
 	if (hidden) {
 		return children;
 	}
+	const inlineHelp = uiSchema["ui:inlineHelp"];
 
 	const ids = new Context("IDS");
 	const htmlId = `_laji-form_${id}`;
@@ -94,7 +94,11 @@ render() {
 			{displayLabel && description ? description : null}
 			<div className={buttons ? "laji-form-field-template-item" : null}>
 				<div className={buttons ? "laji-form-field-template-schema" : null}>
-					{children}
+					{inlineHelp ? <div className="pull-left">{children}</div> : children}
+					{inlineHelp ? (
+						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
+						) : null
+					}
 				</div>
 				{buttons ?
 					<div className="laji-form-field-template-buttons">{buttons}</div> :

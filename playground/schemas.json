@@ -78,7 +78,39 @@
 																	"ui:field": "arrayCombiner",
 																	"ui:options": {
 																		"uiSchema": {
+																			"ui:field": "table",
+																			"ui:options": {
+																				"xs": 6,
+																				"sm": 6,
+																				"md": 6,
+																				"lg": 6
+																			},
 																			"items": {
+																				"ui:field": "injectFromContext",
+																				"ui:options":{
+																					"injections": {
+																						"ui:options.rules.0.regexp": "creator"
+																					},
+																					"uiSchema": {
+																						"ui:field": "dependentDisable",
+																						"ui:options": {
+																							"rules": [
+																								{
+																									"disableDefiner": "leg",
+																									"disableField": "editors",
+																									"regexp": "creator is injected here",
+																									"inlineHelp": "Sinulla on pakko olla muokkausoikeus",
+																									"disabledValueToDisplay": true
+																								},
+																								{
+																									"disableDefiner": "leg",
+																									"disableField": "editors",
+																									"regexp": "^((?!(MA\\.\\d)).)*$"
+																								}
+																							]
+																						}
+																					}
+																				},
 																				"leg": {
 																					"ui:widget": "autosuggest",
 																					"ui:options": {
@@ -90,20 +122,7 @@
 																				},
 																				"editors": {
 																					"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
-																				},
-																				"ui:field": "dependentDisable",
-																				"ui:options": {
-																					"disableDefiner": "leg",
-																					"disableField": "editors",
-																					"regexp": "^MA\\.\\d+$"
 																				}
-																			},
-																			"ui:field": "table",
-																			"ui:options": {
-																				"xs": 6,
-																				"sm": 6,
-																				"md": 6,
-																				"lg": 6
 																			}
 																		}
 																	}
@@ -1252,6 +1271,7 @@
 		}
 	},
 	"uiSchemaContext": {
+		"creator": "MA.308",
 		"habitat": {
 			"tree": {
 				"children": {
@@ -1348,11 +1368,13 @@
 	},
 	"formData": {
 		"editors": [
-			"MA.308"
+			"MA.308",
+			"MA.97"
 		],
 		"gatheringEvent": {
 			"leg": [
-				"MA.308"
+				"MA.308",
+				"MA.97"
 			],
 			"legPublic": true
 		},
