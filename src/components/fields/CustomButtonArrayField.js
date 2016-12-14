@@ -48,15 +48,9 @@ export default class CustomButtonArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			stateKeyId: 0,
-
-		};
-		this.state = {
-			...this.state,
 			...this.getStateFromProps(props),
 			formData: props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)]
 		};
-		new Context().addStateClearListener(this.clearState);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -69,26 +63,11 @@ export default class CustomButtonArrayField extends Component {
 
 	getStateFromProps = (props) => {
 		const {confirmDelete} = getUiOptions(props.uiSchema);
-		let {idxsToKeys, keyCounter} = this.state;
 
 		const state = {confirmDelete};
-
-		const formDataLength = props.formData ? props.formData.length : 0;
-		if (!idxsToKeys) {
-			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
-			state.keyCounter = formDataLength + 1;
-		} else if (props.formData && formDataLength >= idxsToKeys.length) {
-			state.idxsToKeys = [...idxsToKeys, ...Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)];
-			state.keyCounter = keyCounter;
-		}
-
 		state.formData = props.formData;
 
 		return state;
-	}
-
-	clearState = () => {
-		this.setState({stateKeyId: this.state.stateKeyId++});
 	}
 
 	render() {
@@ -100,7 +79,7 @@ export default class CustomButtonArrayField extends Component {
 				this.state.formData.map((item, idx) => {
 					let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 					return (
-						<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
+						<div key={idx} className="laji-form-field-template-item">
 							<div className="laji-form-field-template-schema">
 							<SchemaField
 								schema={this.props.schema.items}
@@ -216,7 +195,6 @@ export default class CustomButtonArrayField extends Component {
 
 	onRemoveForIdx = (idx) => e => {
 		if (e) e.preventDefault();
-		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
 		this.props.onChange(update(this.state.formData, {$splice: [[idx, 1]]}));
 	}
 }

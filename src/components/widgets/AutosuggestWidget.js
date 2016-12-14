@@ -29,11 +29,10 @@ const autosuggestSettings = {
 			);
 		},
 		getTaxonCardContent: (that) => {
-			const options = getUiOptions(that.props);
-			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
+			const value = that.getValue();
 
 			if (value && (!that.state || !that.state.value || that.state.value !== value)) {
-				new ApiClient().fetch("/taxa/" + value).then(response => {
+				new ApiClient().fetchCached("/taxa/" + value).then(response => {
 					if (that.mounted) that.setState({urlTxt: response.scientificName, value});
 				});
 			}
@@ -70,7 +69,13 @@ const autosuggestSettings = {
 					</OverlayTrigger>
 				</a>
 			);
-		}
+		},
+		convertInputValue: that => {
+			let value = that.getValue();
+			return new ApiClient().fetchCached("/taxa/" + value).then(({vernacularName}) => {
+				return vernacularName || value;
+			});
+		},
 	},
 	friends: {
 		includePayload: false,
@@ -87,7 +92,7 @@ const autosuggestSettings = {
 		},
 		convertInputValue: that => {
 			let inputValue = that.props.value;
-			return new ApiClient().fetch("/person/by-id/" + inputValue).then(({fullName}) => {
+			return new ApiClient().fetchCached("/person/by-id/" + inputValue).then(({fullName}) => {
 				return fullName || inputValue;
 			});
 		},
@@ -117,14 +122,14 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
+		this.setState(this.getStateFromProps(props), () => {
+			this.triggerConvert(this.props);
+		});
 	}
 
 	getStateFromProps = (props) => {
 		const options = getUiOptions(props);
 		const {autosuggestField} = options;
-
-
 		return {autosuggestSettings: autosuggestSettings[autosuggestField]};
 	}
 
@@ -141,7 +146,7 @@ export default class AutoSuggestWidget extends Component {
 		const {isValueSuggested} = getUiOptions(this.props);
 		if (props.value === undefined || props.value === "") return;
 		const convert = this.state.autosuggestSettings.convertInputValue;
-		if ((this.state.inputValue !== props.value) && convert) {
+		if (convert) {
 			let origValue = props.value;
 			this.setState({isLoading: true});
 			convert(this)
@@ -175,7 +180,7 @@ export default class AutoSuggestWidget extends Component {
 		(() => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.get = this.apiClient.fetch("/autocomplete/" + autosuggestField,
+			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
 				{q: value, includePayload: this.state.autosuggestSettings.includePayload})
 				.then( suggestions => {
 					const state = {isLoading: false};
@@ -355,11 +360,15 @@ export default class AutoSuggestWidget extends Component {
 		);
 	}
 
+	getValue = () => {
+		const options = getUiOptions(this.props);
+		return options.hasOwnProperty("value") ? options.value : this.props.value;
+	}
+
 	renderInput = (inputProps) => {
 		let validationState = null;
 
-		const options = getUiOptions(this.props.uiSchema);
-		const value = options.hasOwnProperty("value") ? options.value : this.props.value;
+		const value = this.getValue();
 
 		if ((this.state.inputInProgress && !this.state.focused) || this.state.unsuggested) {
 			validationState = "warning";

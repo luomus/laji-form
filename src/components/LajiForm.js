@@ -135,6 +135,7 @@ export default class LajiForm extends Component {
 		this._context.addStateClearListener = (fn) => this._context.stateClearListeners.push(fn);
 		this._context.clearState = (fn) => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
 		this.state = this.getStateFromProps(props);
+		this.creator = props.formData.gatheringEvent.leg[0];
 	}
 
 	componentWillReceiveProps(props) {
@@ -179,7 +180,6 @@ export default class LajiForm extends Component {
 	}
 
 	render() {
-
 		const {translations} = this.state;
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form">
@@ -235,7 +235,8 @@ export default class LajiForm extends Component {
 					formContext={{
 						translations,
 						lang: this.props.lang,
-						uiSchemaContext: this.props.uiSchemaContext
+						//uiSchemaContext: this.props.uiSchemaContext
+						uiSchemaContext: {creator: this.creator}
 					}}
 				  validate={validate(this.props.validators)}
 				>
