@@ -10,7 +10,7 @@ const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 
-let lang = "en";
+let lang = "fi";
 
 const apiClient = new ApiClientImplementation(
 	"https://apitest.laji.fi/v0",
@@ -21,7 +21,7 @@ const apiClient = new ApiClientImplementation(
 
 const lajiForm = new LajiForm({
 	...schemas,
-	 //formData: {gatheringEvent: {leg: ["MA.308"]}},
+	 formData: {gatheringEvent: {leg: ["MA.308"]}},
 	onSubmit,
 	apiClient,
 	lang,

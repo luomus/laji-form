@@ -58,20 +58,22 @@ export default class DependentBooleanField extends Component {
 		const {booleanField, booleanDefiner} = getUiOptions(this.props.uiSchema);
 		const propsFormData = this.props.formData;
 
-		let origData = this.props.formData[booleanField];
+		let newData = this.props.formData[booleanField];
 		// if the change happened in booleanField data, reflect the changes to all booleanField items with same data.
 		if (JSON.stringify(propsFormData[booleanDefiner]) === JSON.stringify(formData[booleanDefiner])) {
 			let dictionarifiedOrigData = this.getDictionarifiedFormData(propsFormData, booleanField);
 			formData[booleanDefiner].forEach((definerItem, i) => {
 				if (dictionarifiedOrigData[definerItem] && !formData[booleanField][i]) {
-					origData = update(origData, {$splice: [[origData.indexOf(definerItem), 1]]});
+					newData = update(newData, {$splice: [[newData.indexOf(definerItem), 1]]});
 				} else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) {
-					origData = origData ? [...origData, definerItem] : [definerItem];
+					newData = newData ? [...newData, definerItem] : [definerItem];
 				}
 			})
 		}
 
-		formData = {...formData, [booleanField]: origData};
+		if (newData) newData = newData.filter(item => formData[booleanDefiner].includes(item));
+
+		formData = {...formData, [booleanField]: newData};
 		this.props.onChange(formData);
 	}
 
