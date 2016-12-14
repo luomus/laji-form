@@ -50,7 +50,9 @@ const buttonSettings = {
 			return map._getDrawLayerById(map.idxsToIds[featureIdx]);
 		}
 
+		let active = false;
 		function onClick() {
+			active = true;
 			const {map} = mapContext;
 			if (map) {
 				mapContext.grabFocus();
@@ -85,6 +87,7 @@ const buttonSettings = {
 						map.updateLayerStyle(layer, {opacity: 1});
 						layer.unbindTooltip();
 					}
+					active = false;
 				}
 
 				mapContext.showPanel(null, translations.Cancel, close);
@@ -123,6 +126,8 @@ const buttonSettings = {
 		}
 
 		function onMouseLeave() {
+			if (active) return;
+
 			const map = new Context("MAP").map;
 			const layer = getLayer();
 			if (!layer) return;
@@ -133,7 +138,7 @@ const buttonSettings = {
 		return (
 			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={tooltip} placement="left" >
 					<GlyphButton
-						className={hasCoordinates ? "disabled" : ""}
+						bsStyle={hasCoordinates ? "primary" : "default"}
 						onMouseEnter={onMouseEnter}
 						onMouseLeave={onMouseLeave}
 						glyph={glyph}
