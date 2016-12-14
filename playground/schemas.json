@@ -185,7 +185,6 @@
 		},
 		"gatherings": {
 			"ui:field": "altMapArray",
-			"classNames": "panel panel-default panel-body map-field",
 			"ui:help": "Aloita havaintojen syöttö piirtämällä havaintoalue kartalle",
 			"ui:options": {
 				"geometryMapper": "units",
