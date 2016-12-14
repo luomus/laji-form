@@ -166,9 +166,7 @@ export default class CustomButtonArrayField extends Component {
 
 		function clone(field) {
 			if (!field) return field;
-			if (field.constructor === "object") return Object.assign({}, field);
-			else if (Array.isArray(field)) return field.map(item => clone(item));
-			return field;
+			return JSON.parse(JSON.stringify(field));
 		}
 
 		const copyItem = lastIdx >= 0 ? (() => {
@@ -184,7 +182,7 @@ export default class CustomButtonArrayField extends Component {
 
 			const nested = splitted.reduce((_nested, path) => {
 				_nested = copyItem[path];
-				if  (Array.isArray(_nested)) return _nested[0];
+				return Array.isArray(_nested) ? _nested[0] : _nested;
 			}, copyItem);
 
 			if (type === "blacklist") {

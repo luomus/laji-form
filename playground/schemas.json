@@ -350,7 +350,7 @@
 													"unitType",
 													"countOfOccurrences",
 													"notes",
-													"geometry"
+													"unitGathering.geometry"
 												]
 											}
 										]
