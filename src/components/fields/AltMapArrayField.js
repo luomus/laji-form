@@ -82,7 +82,7 @@ export default class AltMapArrayField extends Component {
 						       getContainer={() => findDOMNode(this.affix)} className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
 								ref="map"
-								lang="fi"
+								lang={this.props.formContext.lang}
 								drawData={{
 									featureCollection: {
 										type: "featureCollection",
