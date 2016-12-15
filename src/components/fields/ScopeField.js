@@ -81,7 +81,7 @@ const buttonSettings = {
 
 			function close() {
 				mapContext.hidePanel();
-				map.setOption("onChange", onChange);
+				mapContext.setOnChange(onChange);
 				map.setControlSettings();
 				mapContext.releaseFocus();
 
