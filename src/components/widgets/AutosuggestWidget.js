@@ -33,7 +33,7 @@ const autosuggestSettings = {
 
 			if (value && (!that.state || !that.state.value || that.state.value !== value)) {
 				new ApiClient().fetchCached("/taxa/" + value).then(response => {
-					if (that.mounted) that.setState({urlTxt: response.scientificName, value});
+					if (that.mounted) that.setState({urlTxt: response.scientificName, value, urlTxtIsCursive: response.cursiveName});
 				});
 			}
 
@@ -49,10 +49,17 @@ const autosuggestSettings = {
 						<Glyphicon glyph="tag" /> {that.props.formContext.translations.KnownSpeciesName}
 					</span>
 					{that.state.urlTxt ?
-						<div><OverlayTrigger overlay={tooltipElem}>
-							<a href={"http://tun.fi/" + value}
-							   target="_blank"><Glyphicon glyph="modal-window"/> <i>{that.state.urlTxt}</i></a>
-						</OverlayTrigger></div> : <Spinner />}
+						<div>
+							<OverlayTrigger overlay={tooltipElem}>
+								<a href={"http://tun.fi/" + value}
+									 target="_blank"><Glyphicon glyph="modal-window"/> {
+										that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> :
+										that.state.urlTxt
+								}</a>
+							</OverlayTrigger>
+						</div> :
+						<Spinner />
+					}
 				</Popover>
 			);
 		},
@@ -72,8 +79,8 @@ const autosuggestSettings = {
 		},
 		convertInputValue: that => {
 			let value = that.getValue();
-			return new ApiClient().fetchCached("/taxa/" + value).then(({vernacularName}) => {
-				return vernacularName || value;
+			return new ApiClient().fetchCached("/taxa/" + value).then(({vernacularName, scientificName}) => {
+				return vernacularName || scientificName || value;
 			});
 		},
 	},
