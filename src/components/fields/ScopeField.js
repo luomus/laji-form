@@ -53,58 +53,58 @@ const buttonSettings = {
 		let active = false;
 		function onClick() {
 			active = true;
+
 			const {map} = mapContext;
-			if (map) {
-				mapContext.grabFocus();
-				map.setControlSettings({
-					draw: {
-						marker: true,
-						polyline: false,
-						rectangle: false,
-						polygon: false,
-						circle: false
-					}
-				});
+			if (!map) return;
 
-				const {translations} = that.props.formContext;
-
-				const layer = getLayer();
-				if (layer) {
-					map.updateLayerStyle(layer, {opacity: 0.7});
-					map.map.closePopup();
-					layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
+			mapContext.grabFocus();
+			map.setControlSettings({
+				draw: {
+					marker: true,
+					polyline: false,
+					rectangle: false,
+					polygon: false,
+					circle: false
 				}
+			});
 
-				const onChange = map.onChange;
+			const {translations} = that.props.formContext;
 
-				function close() {
-					mapContext.hidePanel();
-					map.onChange = onChange;
-					map.setControlSettings();
-					mapContext.releaseFocus();
-
-					if (layer) {
-						map.updateLayerStyle(layer, {opacity: 1});
-						layer.unbindTooltip();
-					}
-					active = false;
-				}
-
-				mapContext.showPanel(null, translations.Cancel, close);
-
-				map.triggerDrawing("marker");
-				map.onChange = (events => {
-					events.forEach(event => {
-						if (event.type === "create") {
-							that.props.onChange(update(
-								that.props.formData,
-								{$merge: {["_unitGathering.geometry"]: event.feature.geometry}}
-							));
-							close();
-						}
-					})
-				});
+			const layer = getLayer();
+			if (layer) {
+				map.updateLayerStyle(layer, {opacity: 0.7});
+				map.map.closePopup();
+				layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 			}
+
+			const onChange = map.onChange;
+
+			function close() {
+				mapContext.hidePanel();
+				map.setOption("onChange", onChange);
+				map.setControlSettings();
+				mapContext.releaseFocus();
+
+				if (layer) {
+					map.updateLayerStyle(layer, {opacity: 1});
+					layer.unbindTooltip();
+				}
+				active = false;
+			}
+
+			map.triggerDrawing("marker");
+			mapContext.showPanel(null, translations.Cancel, close);
+			mapContext.setOnChange(events => {
+				events.forEach(event => {
+					if (event.type === "create") {
+						that.props.onChange(update(
+							that.props.formData,
+							{$merge: {["_unitGathering.geometry"]: event.feature.geometry}}
+						));
+						close();
+					}
+				});
+			});
 		}
 
 		function onMouseEnter() {

@@ -354,6 +354,7 @@ class MapComponent extends Component {
 		this._context.releaseFocus = this.releaseFocus;
 		this._context.showPanel = this.showPanel;
 		this._context.hidePanel = this.hidePanel;
+		this._context.setOnChange = this.setOnChange;
 	}
 
 	componentDidMount() {
@@ -375,6 +376,7 @@ class MapComponent extends Component {
 
 	componentWillReceiveProps(props) {
 		const {drawData, activeIdx, controlSettings, lang} = props;
+		const onChange = this.state.onChange || props.onChange;
 		if (this.map) {
 			if (!deepEquals(drawData.featureCollection, this.state.featureCollection))  {
 				this.map.setDrawData(drawData);
@@ -383,20 +385,15 @@ class MapComponent extends Component {
 
 			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) this.map.setControlSettings(controlSettings);
 			if (lang !== this.props.lang) this.map.setLang(lang);
+			if (onChange !== this.map.onChange) {
+				this.map.setOption("onChange", onChange);
+			}
 		}
 		this.setState(this.getStateFromProps(props));
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		function relevantProps(props) {
-			const {drawData, onChange, controlSettings, lang, ...relevantProps} = props;
-			return relevantProps;
-		}
-		return shouldRender(
-			{props: relevantProps(this.props), state: this.state},
-			relevantProps(nextProps),
-			nextState
-		);
+		return false;
 	}
 
 	componentDidUpdate() {
@@ -423,12 +420,16 @@ class MapComponent extends Component {
 		});
 	}
 
-	showPanel = (panelTextContent, panelButtonContent, onPanelButtonClick) => {
+	showPanel = (panelTextContent, panelButtonContent, onPanelButtonClick, callback) => {
 		this.setState({panel: true, panelTextContent, panelButtonContent, onPanelButtonClick});
 	}
 
 	hidePanel = () => {
 		this.setState({panel: false});
+	}
+
+	setOnChange = (onChange) => {
+		this.setState({onChange});
 	}
 
 	render() {
