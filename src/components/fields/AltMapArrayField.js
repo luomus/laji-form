@@ -68,7 +68,7 @@ export default class AltMapArrayField extends Component {
 			return sizes
 		}, {});
 
-		const {wgs84GeometryCollection, ...schemaProps} = this.props.schema.items.properties;
+		const {geometry, ...schemaProps} = this.props.schema.items.properties;
 		const schema = {...this.props.schema, items: {...this.props.schema.items, properties: schemaProps}};
 
 		const emptyMode = !formData || !formData.length;
@@ -127,7 +127,7 @@ export default class AltMapArrayField extends Component {
 		events.forEach(e => {
 			if (e.type === "create") {
 				const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-				formData.wgs84GeometryCollection = {
+				formData.geometry = {
 					geometries: [e.feature.geometry]
 				};
 				this.props.onChange([formData]);
@@ -160,14 +160,14 @@ export default class AltMapArrayField extends Component {
 
 		const itemFormData = formData[this.state.activeIdx];
 		let updateObject = undefined;
-		if (itemFormData && itemFormData.wgs84GeometryCollection) {
-			if (itemFormData.wgs84GeometryCollection.geometries) {
-				updateObject = {wgs84GeometryCollection: {geometries: {$push: [geometry]}}};
+		if (itemFormData && itemFormData.geometry) {
+			if (itemFormData.geometry.geometries) {
+				updateObject = {geometry: {geometries: {$push: [geometry]}}};
 			} else {
-				updateObject = {$merge: {wgs84GeometryCollection: {geometries: [geometry]}}};
+				updateObject = {$merge: {geometry: {geometries: [geometry]}}};
 			}
 		} else {
-			updateObject = {$merge: {wgs84GeometryCollection: {geometries: [geometry]}}};
+			updateObject = {$merge: {geometry: {geometries: [geometry]}}};
 		}
 		this.props.onChange(update(formData,
 			{[this.state.activeIdx]: updateObject}));
@@ -180,12 +180,12 @@ export default class AltMapArrayField extends Component {
 			splices.push([idx, 1]);
 		});
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {wgs84GeometryCollection: {geometries: {$splice: splices}}}}));
+			{[this.state.activeIdx]: {geometry: {geometries: {$splice: splices}}}}));
 	}
 
 	onEdited = ({features}) => {
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {wgs84GeometryCollection: {
+			{[this.state.activeIdx]: {geometry: {
 				geometries: Object.keys(features).reduce((obj, idx) => {
 					obj[idx] = {$set: features[idx].geometry};
 					return obj;
@@ -199,9 +199,9 @@ export default class AltMapArrayField extends Component {
 				if (!formData) return;
 				const item = formData[idx];
 				this._context.featureIdxsToItemIdxs = {};
-				let geometries = (idx !== undefined && item && item.wgs84GeometryCollection &&
-				                  item.wgs84GeometryCollection.geometries) ?
-					item.wgs84GeometryCollection.geometries : [];
+				let geometries = (idx !== undefined && item && item.geometry &&
+				                  item.geometry.geometries) ?
+					item.geometry.geometries : [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
 					const {unitGathering: {geometry}} = unit;
@@ -214,7 +214,7 @@ export default class AltMapArrayField extends Component {
 			},
 			onRemove: ({idxs}) => {
 				const {formData} = this.props;
-				const geometriesLength = formData[this.state.activeIdx].wgs84GeometryCollection.geometries.length;
+				const geometriesLength = formData[this.state.activeIdx].geometry.geometries.length;
 
 				const unitIdxs = idxs.filter(idx => idx >= geometriesLength).map(idx => this._context.featureIdxsToItemIdxs[idx]);
 
@@ -244,7 +244,7 @@ export default class AltMapArrayField extends Component {
 			},
 			onEdited: ({features}) => {
 				const {formData} = this.props;
-				const geometriesLength = formData[this.state.activeIdx].wgs84GeometryCollection.geometries.length;
+				const geometriesLength = formData[this.state.activeIdx].geometry.geometries.length;
 
 				const unitEditFeatures = {};
 				const thisEditFeatures = {};
