@@ -76,7 +76,7 @@ export default class CustomButtonArrayField extends Component {
 		return (<div>
 			<TitleField title={this.props.schema.title || this.props.name}/>
 			{
-				this.state.formData.map((item, idx) => {
+				(this.state.formData || []).map((item, idx) => {
 					let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
 					return (
 						<div key={idx} className="laji-form-field-template-item">
