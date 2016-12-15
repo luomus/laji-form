@@ -128,7 +128,7 @@ export default class AltMapArrayField extends Component {
 			if (e.type === "create") {
 				const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
 				formData.geometry = {
-					type: "geometryCollection",
+					type: "GeometryCollection",
 					geometries: [e.feature.geometry]
 				};
 				this.props.onChange([formData]);
@@ -166,7 +166,7 @@ export default class AltMapArrayField extends Component {
 				geometries: {$push: [geometry]}
 			}};
 		} else {
-			updateObject = {$merge: {geometry: {type: "geometryCollection", geometries: [geometry]}}};
+			updateObject = {$merge: {geometry: {type: "GeometryCollection", geometries: [geometry]}}};
 		}
 		this.props.onChange(update(formData,
 			{[this.state.activeIdx]: updateObject}));
