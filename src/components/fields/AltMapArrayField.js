@@ -391,10 +391,6 @@ class MapComponent extends Component {
 		this.setState(this.getStateFromProps(props));
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return false;
-	}
-
 	componentDidUpdate() {
 		this.onResize();
 	}
@@ -419,7 +415,7 @@ class MapComponent extends Component {
 		});
 	}
 
-	showPanel = (panelTextContent, panelButtonContent, onPanelButtonClick, callback) => {
+	showPanel = (panelTextContent, panelButtonContent, onPanelButtonClick) => {
 		this.setState({panel: true, panelTextContent, panelButtonContent, onPanelButtonClick});
 	}
 
@@ -434,16 +430,27 @@ class MapComponent extends Component {
 	render() {
 		return (
 			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
-				{this.state.panel ?
-					<div className="pass-block" ref="panel">
-						<Panel>
-							<div>{this.state.panelTextContent}</div>
-							<Button bsStyle="default" onClick={this.state.onPanelButtonClick}>{this.state.panelButtonContent}</Button>
-						</Panel>
-					</div> : null}
-				<div key="map" className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
+				<MapPanel show={this.state.panel}
+									text={this.state.panelTextContent}
+									onClick={this.state.onPanelButtonClick}
+									buttonText={this.state.panelButtonContent} />
+				<div key="map"
+						 className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
 		         style={this.props.style} ref="map" />
 			</div>
 		);
+	}
+}
+
+class MapPanel extends Component {
+	render() {
+		return this.props.show ? (
+			<div className="pass-block">
+				<Panel>
+					<div>{this.props.text}</div>
+					<Button bsStyle="default" onClick={this.props.onClick}>{this.props.buttonText}</Button>
+				</Panel>
+			</div>
+		) : null;
 	}
 }

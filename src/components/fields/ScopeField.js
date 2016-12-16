@@ -95,15 +95,22 @@ const buttonSettings = {
 			map.triggerDrawing("marker");
 			mapContext.showPanel(null, translations.Cancel, close);
 			mapContext.setOnChange(events => {
-				events.forEach(event => {
-					if (event.type === "create") {
-						that.props.onChange(update(
-							that.props.formData,
-							{$merge: {["_unitGathering.geometry"]: event.feature.geometry}}
-						));
-						close();
+				// events.forEach(event => {
+				for (let event of events) {
+					const {type} = event;
+					switch (type) {
+						case "create":
+							that.props.onChange(update(
+								that.props.formData,
+								{$merge: {["_unitGathering.geometry"]: event.feature.geometry}}
+							));
+							close();
+							break;
+						case "delete":
+						case "edit":
+							onChange([event]);
 					}
-				});
+				}
 			});
 		}
 
