@@ -246,7 +246,7 @@
 									"*",
 									"units"
 								],
-								"wgs84GeometryCollection": {
+								"geometry": {
 									"ui:field": "hidden"
 								},
 								"placeWrapper": {
@@ -1192,7 +1192,7 @@
 								"required": []
 							}
 						},
-						"wgs84GeometryCollection": {
+						"geometry": {
 							"type": "array",
 							"title": "MY.wgs84GeometryCollection",
 							"uniqueItems": true,
@@ -1403,7 +1403,7 @@
 						}
 					}
 				],
-				"wgs84GeometryCollection": {
+				"geometry": {
 					"geometries": [
 						{
 							"type": "Point",

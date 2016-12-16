@@ -322,7 +322,7 @@ export default class AltMapArrayField extends Component {
 					if (hasData(item)) data[label] = item;
 				}
 			} else if (fieldData) {
-				const title = fieldSchema[fieldName] || fieldName;
+				const title = fieldSchema[fieldName].title || fieldName;
 				data[title] = fieldData;
 			}
 		});
