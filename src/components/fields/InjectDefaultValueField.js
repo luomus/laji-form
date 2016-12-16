@@ -37,26 +37,10 @@ export default class InjectDefaultValueField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		let {uiSchema, formData, schema} = props;
-		const options = getUiOptions(props.uiSchema);
-		const {fields, target} = options;
+		let {uiSchema} = props;
 		uiSchema = {...uiSchema, "ui:field": undefined};
 
-		let source = options.source ? formData[options.source] : formData;
-
-		if (options.source)
-		fields.forEach(field => {
-				if (schema.properties[target].type === "array") {
-					if (formData && formData[target]) formData[target].forEach((item, i) => {
-						if (item[field] === undefined) {
-							formData = update(formData,
-								{[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
-						}
-					});
-				}
-		});
-
-		return {uiSchema, schema, formData};
+		return {uiSchema};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -70,10 +54,9 @@ export default class InjectDefaultValueField extends Component {
 
 		let source = options.source ? formData[options.source] : formData;
 		fields.forEach(field => {
-			if (source[field] === this.props.formData[field]) return;
 			if (schema.properties[target].type === "array") {
 				if (formData && formData[target]) formData[target].forEach((item, i) => {
-					if (item[field] === undefined || item[field] === this.props.formData[options.source][field]) {
+					if (item[field] === this.props.formData[options.source][field]) {
 						formData = update(formData,
 							{[target]: {$splice: [[i, 1, update(item, {$merge: {[field]: source[field]}})]]}});
 					}
