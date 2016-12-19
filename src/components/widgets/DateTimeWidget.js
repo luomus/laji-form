@@ -79,8 +79,7 @@ export default class DateTimeWidget extends Component {
 	parse = (value) => {
 		if (!value) return undefined;
 		const hasTime = value.includes(DATE_TIME_SEPARATOR);
-		const momentFn = hasTime ? moment : moment.utc;
-		let momentValue = momentFn(value, this.state.format);
+		let momentValue = moment(value, this.state.format);
 		let isoValue = momentValue.toISOString();
 		if (!hasTime) {
 			isoValue = isoValue.split("T")[0];
@@ -104,8 +103,8 @@ export default class DateTimeWidget extends Component {
 				if (p !== false) this.toggle = p; //"time" or "calendar"
 			}}
 			onChange={value => {
-				const momentValue = moment(value).parseZone();
-				let formattedValue = momentValue.toISOString();
+				const momentValue = moment(value);
+				let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
 				if (value !== null && !momentValue.isValid()) {
 					formattedValue = this.props.value;
 				} else if ((!this.toggle && !this.timeWritten) ||
