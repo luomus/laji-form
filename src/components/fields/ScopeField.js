@@ -143,7 +143,7 @@ const buttonSettings = {
 						onMouseLeave={onMouseLeave}
 						glyph={glyph}
 						onClick={onClick}
-					bsStyle={hasCoordinates ? "primary" : "default"}/>
+						bsStyle={hasCoordinates ? "primary" : "default"}/>
 			</OverlayTrigger>
 		);
 	}
@@ -216,6 +216,14 @@ export default class ScopeField extends Component {
 			additionalsOpen: false,
 			...this.getStateFromProps(props)
 		};
+	}
+
+	componentDidMount() {
+		this.mounted = true;
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
 	}
 
 	componentWillReceiveProps(props) {
@@ -601,7 +609,7 @@ export default class ScopeField extends Component {
 				translations[groupName] = translation;
 				translationsToKeys[translation] = groupName;
 				translationCount++;
-				if (translationCount == groups.length) this.setState({
+				if (this.mounted && translationCount == groups.length) this.setState({
 					additionalsGroupsTranslations: translations,
 					additionalsGroupsTranslationsToKeys: translationsToKeys
 				});

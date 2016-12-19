@@ -25,7 +25,11 @@ export default class AltMapArrayField extends Component {
 		this._context = new Context("MAP_UNITS");
 		this._context.featureIdxsToItemIdxs = {};
 
-		this.state = {activeIdx: 0};
+		const initialState = {activeIdx: 0};
+		new Context().addStateClearListener(() => {
+			this.setState(initialState)
+		});
+		this.state = initialState;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

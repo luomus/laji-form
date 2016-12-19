@@ -37,7 +37,7 @@ const headerFormatters = {
 			that.hoveredIdx = idx;
 			if (!force && idx === that.state.activeIdx) return;
 			const map = new Context("MAP").map;
-			const gatheringGeometries = (item && item.wgs84GeometryCollection) ? item.wgs84GeometryCollection.geometries : [];
+			const gatheringGeometries = (item && item.geometry) ? item.geometry.geometries : [];
 
 			const unitGeometries = (item.units || [])
 				.filter(unit => unit.unitGathering && hasData(unit.unitGathering.geometry))
