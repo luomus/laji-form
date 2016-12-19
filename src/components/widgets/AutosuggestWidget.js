@@ -153,19 +153,21 @@ export default class AutoSuggestWidget extends Component {
 
 	triggerConvert = (props) => {
 		const {isValueSuggested} = getUiOptions(this.props);
-		if (props.value === undefined || props.value === "") return;
+		if (props.value === undefined || props.value === "") {
+			this.setState({inputValue: undefined});
+			return;
+		}
 		const convert = this.state.autosuggestSettings.convertInputValue;
 		if (convert) {
-			let origValue = props.value;
 			this.setState({isLoading: true});
 			convert(this)
 				.then(inputValue => {
 					if (!this.mounted) return;
-					this.setState({inputValue: inputValue, origValue: origValue, isLoading: false});
+					this.setState({inputValue: inputValue, isLoading: false});
 				})
 				.catch( () => {
 					if (!this.mounted) return;
-					this.setState({inputValue: undefined, origValue: undefined, isLoading: false, unsuggested: true});
+					this.setState({inputValue: undefined, isLoading: false, unsuggested: true});
 				});
 		} else if (isValueSuggested) {
 			if (!isValueSuggested()) this.setState({unsuggested: true});
