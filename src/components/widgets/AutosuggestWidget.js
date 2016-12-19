@@ -3,7 +3,7 @@ import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Button, Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner"
-import { getUiOptions } from "../../utils";
+import { getUiOptions, isEmptyString } from "../../utils";
 import Context from "../../Context";
 
 const autosuggestSettings = {
@@ -23,7 +23,7 @@ const autosuggestSettings = {
 		renderUnsuggestedMetaInfo: (that, input) => {
 			const tooltip = (
 				<Tooltip id={`${that.props.id}-tooltip`}>{that.props.formContext.translations.UnknownSpeciesName}</Tooltip>
-			)
+			);
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
 			);
@@ -79,6 +79,7 @@ const autosuggestSettings = {
 		},
 		convertInputValue: that => {
 			let value = that.getValue();
+			if (isEmptyString(value) || !value.match(/MX\.\d+/)) return new Promise(resolve => resolve(value));
 			return new ApiClient().fetchCached("/taxa/" + value).then(({vernacularName, scientificName}) => {
 				return vernacularName || scientificName || value;
 			});
@@ -98,9 +99,10 @@ const autosuggestSettings = {
 			);
 		},
 		convertInputValue: that => {
-			let inputValue = that.props.value;
-			return new ApiClient().fetchCached("/person/by-id/" + inputValue).then(({fullName}) => {
-				return fullName || inputValue;
+			let value = that.props.value;
+			if (isEmptyString(value) || !value.match(/MA\.\d+/)) return new Promise(resolve => resolve(value));
+			return new ApiClient().fetchCached("/person/by-id/" + value).then(({fullName}) => {
+				return fullName || value;
 			});
 		},
 		renderSuccessGlyph: () => {

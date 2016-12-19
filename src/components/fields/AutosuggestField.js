@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema, parseDotPath } from "../../utils";
+import { getUiOptions, getInnerUiSchema, parseDotPath, isEmptyString } from "../../utils";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
@@ -70,7 +70,9 @@ export default class AutosuggestField extends Component {
 			onInputChange: this.onInputChange,
 			isValueSuggested: this.isValueSuggested
 		};
-		if (options.suggestionValueField && props.formData) options.value = props.formData[options.suggestionValueField];
+		if (options.suggestionValueField && props.formData && !isEmptyString(props.formData[options.suggestionValueField])) {
+			options.value = props.formData[options.suggestionValueField];
+		}
 
 		const {suggestionInputField} = uiOptions;
 
