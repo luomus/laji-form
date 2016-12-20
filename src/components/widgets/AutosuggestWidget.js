@@ -18,7 +18,7 @@ const autosuggestSettings = {
 		},
 		renderMetaInfo: (that, input) => {
 			const content = that.state.autosuggestSettings.getTaxonCardContent(that);
-			return <OverlayTrigger trigger="focus" overlay={content}>{input}</OverlayTrigger>;
+			return <OverlayTrigger trigger="focus" overlay={content} placement="top">{input}</OverlayTrigger>;
 		},
 		renderUnsuggestedMetaInfo: (that, input) => {
 			const tooltip = (

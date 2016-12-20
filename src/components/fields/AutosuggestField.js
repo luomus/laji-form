@@ -130,7 +130,7 @@ export default class AutosuggestField extends Component {
 				if (inputTransformer.transformations) for (let transformField in inputTransformer.transformations) {
 					formDataChange[transformField] = inputTransformer.transformations[transformField];
 				}
-				formData = {...formData, formDataChange};
+				formData = {...formData, ...formDataChange};
 				this.props.onChange(formData);
 			}
 		}
