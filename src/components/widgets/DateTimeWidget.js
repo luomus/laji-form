@@ -80,10 +80,11 @@ export default class DateTimeWidget extends Component {
 		if (!value) return undefined;
 		const hasTime = value.includes(DATE_TIME_SEPARATOR);
 		let momentValue = moment(value, this.state.format);
-		let isoValue = momentValue.toISOString();
-		if (!hasTime) {
-			isoValue = isoValue.split("T")[0];
+		let isoValue = undefined;
+		if (hasTime) {
+			isoValue = momentValue.toISOString();
 		} else {
+			isoValue = momentValue.format("YYYY-MM-DD");
 		}
 		this.timeWritten = hasTime;
 		return moment(isoValue).toDate();
