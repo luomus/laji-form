@@ -76,10 +76,13 @@ export default class TableField extends Component {
 
 		const schemaLength = schemaPropsArray.length;
 		const defaultCol = parseInt(12 / schemaLength);
+		const defaultWrapperCol= parseInt(12 / (1 + (Object.keys(schemaProps).length  - schemaLength)));
 
-		const cols = {xs: undefined, sm: undefined, md: undefined,  lg: undefined};
+		const cols = {xs: undefined, sm: undefined, md: undefined, lg: undefined};
+		const wrapperCols = Object.assign({}, cols);
 		Object.keys(cols).forEach(col => {
 			cols[col] = options[col] ? Math.min(options[col], defaultCol) : defaultCol;
+			wrapperCols[col] = options[col] ? Math.min(options[col], defaultWrapperCol) : defaultWrapperCol;
 		});
 
 		schemaPropsArray.forEach(propName => {
@@ -129,16 +132,22 @@ export default class TableField extends Component {
 				}} />
 			] : []};
 
+
+
 			items.push(
-				<SchemaField
-					key={idx}
-					formData={item}
-					onChange={this.onChangeForIdx(idx)}
-					schema={schema}
-					uiSchema={uiSchema}
-					idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
-					registry={props.registry}
-					errorSchema={props.errorSchema[idx]} />
+				<Row key={idx}>
+					<Col {...wrapperCols}>
+						<SchemaField
+
+							formData={item}
+							onChange={this.onChangeForIdx(idx)}
+							schema={schema}
+							uiSchema={uiSchema}
+							idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
+							registry={props.registry}
+							errorSchema={props.errorSchema[idx]} />
+					</Col>
+				</Row>
 			);
 		});
 
