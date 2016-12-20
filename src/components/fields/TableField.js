@@ -6,6 +6,22 @@ import { Row, Col } from "react-bootstrap";
 import { Button, DeleteButton } from "../components";
 import Label from "../../components/Label";
 
+const specialRules = {
+	legEditors: {
+		filterProperties: ({properties, formData, uiSchemaContext}) => {
+			if (!uiSchemaContext) return properties;
+			const {creator} = uiSchemaContext;
+
+			return (
+				!formData ||
+				formData.some(item =>
+					item && item.leg && item.leg.match(/MA\.\d+/) && item.leg !== creator
+				)
+			) ? properties : properties.filter(field => field !== "editors");
+		}
+	}
+}
+
 export default class TableField extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
@@ -39,22 +55,34 @@ export default class TableField extends Component {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
 		const {props} = this;
-		const {schema, uiSchema, idSchema, formData} = props;
+		const {schema, uiSchema, formContext: {uiSchemaContext}, idSchema, formData} = props;
 
 		const items = [];
 		const labels = [];
 
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
-		const schemaLength = Object.keys(schemaProps).length;
-		const defaultCol = parseInt(12 / schemaLength);
 
 		const options = getUiOptions(this.props.uiSchema);
+
+		let schemaPropsArray = Object.keys(schemaProps);
+		const optionsSpecialRules = options.specialRules;
+		if (optionsSpecialRules) {
+			(Array.isArray(optionsSpecialRules) ? optionsSpecialRules : [optionsSpecialRules]).forEach(specialRule => {
+				schemaPropsArray = specialRules[specialRule].filterProperties({
+					properties: schemaPropsArray, uiSchema, uiSchemaContext, formData
+				});
+			});
+		}
+
+		const schemaLength = schemaPropsArray.length;
+		const defaultCol = parseInt(12 / schemaLength);
+
 		const cols = {xs: undefined, sm: undefined, md: undefined,  lg: undefined};
 		Object.keys(cols).forEach(col => {
 			cols[col] = options[col] ? Math.min(options[col], defaultCol) : defaultCol;
 		});
 
-		Object.keys(schemaProps).forEach(propName => {
+		schemaPropsArray.forEach(propName => {
 				labels.push(
 				<Col {...cols} key={propName + "-label"}>
 					<Label
@@ -79,6 +107,11 @@ export default class TableField extends Component {
 			let schema = (Array.isArray(props.schema.items) && idx < props.schema.items.length) ?
 				props.schema.items[idx] : props.schema.items;
 			if (isAdditional) schema = props.schema.additionalItems;
+
+			schema = schemaPropsArray.reduce((constructedSchema, prop) => {
+				constructedSchema.properties[prop] = schema.properties[prop];
+				return constructedSchema;
+			}, {type: "object", properties: {}});
 
 			let uiSchema = {};
 			if (props.uiSchema.additionalItems && idx >= props.schema.items.length) uiSchema = props.uiSchema.additionalItems;

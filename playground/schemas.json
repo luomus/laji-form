@@ -80,10 +80,7 @@
 																		"uiSchema": {
 																			"ui:field": "table",
 																			"ui:options": {
-																				"xs": 6,
-																				"sm": 6,
-																				"md": 6,
-																				"lg": 6
+																				"specialRules": "legEditors"
 																			},
 																			"items": {
 																				"ui:field": "injectFromContext",
