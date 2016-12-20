@@ -1395,7 +1395,14 @@
 						"identifications": [
 							{
 								"taxon": "ass",
-								"taxonID": "MX.47092"
+								"taxonID": "MX.47092",
+								"identificationBasis": [
+									"MY.identificationBasisHeard",
+									"MY.identificationBasisSeen"
+								],
+								"detMethod": "MY.detMethodPhoto",
+								"detDate": "2012-02-01",
+								"det": "det"
 							}
 						],
 						"unitGathering": {

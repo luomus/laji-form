@@ -40,7 +40,7 @@ export function propertyHasData(field, container) {
 	const data = container[field];
 	return !!(data &&
 	(data.constructor !== Object || (Object.keys(data).length > 0 && hasData(data))) &&
-	(!Array.isArray(data) || (data.length > 0 && hasData[data])));
+	(!Array.isArray(data) || (data.length > 0 && hasData(data))));
 }
 
 export function getUpdateObjectFromPath(path, injection) {
