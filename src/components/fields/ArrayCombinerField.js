@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { getDefaultFormState, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema } from "../../utils";
+import merge from "deepmerge";
 
 /**
  * Transforms an object schema containing arrays to an array schema containing objects.
@@ -51,7 +52,7 @@ export default class ArrayCombinerField extends Component {
 		}
 
 		function objectsToArray(array, objects) {
-			if (objects) Object.keys(objects).forEach((dataCol) => {
+			if (objects) Object.keys(objects).forEach(dataCol => {
 				if (objects[dataCol]) for (var row in objects[dataCol]) {
 					let val = objects[dataCol][row];
 					if (!array[row]) array[row] = {};
@@ -61,7 +62,30 @@ export default class ArrayCombinerField extends Component {
 			return array;
 		}
 
-		let errorSchema = objectsToArray({}, props.errorSchema);
+		function rotateErrorSchema(rotatedErrorSchema, errorSchema) {
+			if (errorSchema) Object.keys(errorSchema).forEach(property => {
+				const error = errorSchema[property];
+
+				if (property === "__errors") {
+					rotatedErrorSchema.__errors = error;
+				} else {
+					if (error) Object.keys(error).forEach(idx => {
+						if (idx === "__errors") {
+							rotatedErrorSchema.__errors = rotatedErrorSchema.__errors ?
+								[...rotatedErrorSchema.__errors, ...error.__errors] :
+								error.__errors;
+						} else {
+							const propertyError = {[property]: error[idx]};
+							rotatedErrorSchema[idx] = rotatedErrorSchema[idx] ?
+								merge(rotatedErrorSchema[idx], propertyError) : propertyError;
+						}
+					})
+				}
+			});
+			return rotatedErrorSchema;
+		}
+
+		let errorSchema = rotateErrorSchema({}, props.errorSchema);
 		let formData = objectsToArray([], props.formData);
 		formData.forEach((obj) => {
 			Object.keys(itemSchema.properties).forEach((prop) => {
