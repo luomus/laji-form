@@ -8,7 +8,9 @@ import Context from "../../Context";
 
 const autosuggestSettings = {
 	taxon: {
-		includePayload: true,
+		query: {
+			includePayload: true,
+		},
 		renderSuggestion: suggestion => {
 			let text = suggestion.value;
 			if (suggestion.payload.taxonGroupsStr) {
@@ -86,7 +88,9 @@ const autosuggestSettings = {
 		},
 	},
 	friends: {
-		includePayload: false,
+		query: {
+			includeSelf: true,
+		},
 		renderSuggestion: suggestion => {
 			return suggestion.value;
 		},
@@ -192,7 +196,7 @@ export default class AutoSuggestWidget extends Component {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
-				{q: value, includePayload: this.state.autosuggestSettings.includePayload})
+				{q: value, ...(this.state.autosuggestSettings.query || {})})
 				.then( suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
