@@ -129,11 +129,6 @@
 		en: "Select more fields",
 		sv: "Välj flera fält"
 	},
-	pictureError: {
-		fi: "Kuvien tallennus epäonnistui. Yritä myöhemmin uudestaan.",
-		en: "Saving pictures failed. Please try again later.",
-		sv: "Bildlagring misslyckades. Försök igen senare."
-	},
 	detachUnit: {
 		fi: "Irrota havainto uudelle karttakuviolle.",
 		en: "Detach the observation to a new map feature",
@@ -183,5 +178,15 @@
 		fi: "Kaikki",
 		en: "All",
 		sv: "Alla"
+	},
+	saveFail: {
+		fi: "Tallennus epäonnistui. Yritä myöhemmin uudestaan.",
+		en: "Saving failed. Please try again later.",
+		sv: "Lagring misslyckades. Försök igen senare."
+	},
+	saveSuccess: {
+		fi: "Tallennus onnistui!",
+		en: "Saved successfully!",
+		sv: "??!"
 	},
 }

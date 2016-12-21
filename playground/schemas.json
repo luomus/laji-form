@@ -1363,16 +1363,13 @@
 		}
 	},
 	"formData": {
-		"editors": [
-			"MA.308",
-			"MA.97"
-		],
 		"gatheringEvent": {
 			"leg": [
 				"MA.308",
 				"MA.97"
 			],
-			"legPublic": true
+			"legPublic": true,
+			"secureLevel": ""
 		},
 		"gatherings": [
 			{
@@ -1407,6 +1404,7 @@
 						}
 					}
 				],
+				"wgs84GeometryCollection": {},
 				"geometry": {
 					"geometries": [
 						{
@@ -1417,8 +1415,16 @@
 							]
 						}
 					]
-				}
+				},
+				"images": [
+					"MM.88866"
+				],
+				"eventTime": {}
 			}
+		],
+		"editors": [
+			"MA.308",
+			"MA.97"
 		]
 	}
 }

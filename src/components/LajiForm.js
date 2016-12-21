@@ -238,9 +238,12 @@ export default class LajiForm extends Component {
 					}}
 				  validate={validate(this.props.validators)}
 				>
-				<div>{(!this.props.hasOwnProperty("renderSubmit") || this.props.renderSubmit) ?
-					(<Button type="submit">{translations.Submit}</Button>) :
-					null}</div>
+				<div>
+					{this.props.children}
+					{(!this.props.hasOwnProperty("renderSubmit") || this.props.renderSubmit) ?
+						(<Button type="submit">{translations.Submit}</Button>) :
+						null}
+					</div>
 			</Form>
 			<ReactCSSTransitionGroup
 					transitionName="blocking-loader-transition"

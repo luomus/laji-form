@@ -3,11 +3,10 @@ import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
-import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "react-bootstrap";
 import DropZone from "react-dropzone";
-import { Button, Alert } from "../components";
+import { Button, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 
 export default class ImagesArrayField extends Component {
@@ -111,22 +110,45 @@ export default class ImagesArrayField extends Component {
 
 	renderModal = () => {
 		const {state} = this;
-		const {lang} = this.props.registry.formContext;
-		const {metadataSchemas} = getUiOptions(this.props.uiSchema);
+		const {lang, translations} = this.props.registry.formContext;
+
+		const metadataForm = this.state.metadataForm || {};
+
+		if (this.state.modalOpen && !state.metadataForm) {
+			this.apiClient.fetchCached("/forms/JX.111712", {lang, format: "schema"})
+				.then(metadataForm => {
+					if (this.mounted) {
+						this.setState({metadataForm});
+					}
+				});
+		}
+
+		const {metadataSaveSuccess} = this.state;
+
 		return state.modalOpen ?
-			<Modal dialogClassName="laji-form image-modal" show={true} onHide={() => this.setState({modalOpen: false})}>
+			<Modal dialogClassName="laji-form image-modal" show={true}
+			       onHide={() => this.setState({modalOpen: false, metadataSaveSuccess: undefined})}>
 				<Modal.Header closeButton={true} />
 				<Modal.Body>
 					<div className="laji-form image-modal-content">
 						<img src={state.modalImgSrc} />
-						{state.modalMetadata && metadataSchemas ? <LajiForm
-							contextId={this.props.idSchema.$id}
-							schema={metadataSchemas.schema}
-							uiSchema={metadataSchemas.uiSchema}
-							formData={state.modalMetadata}
-							onSubmit={this.onImageMetadataUpdate}
-							lang={lang}>
-						</LajiForm> : null}
+						{state.modalMetadata && metadataForm.schema ?
+							<LajiForm
+								{...metadataForm}
+								contextId={this.props.idSchema.$id}
+								formData={state.modalMetadata}
+								onChange={formData => this.setState({modalMetadata: formData})}
+								onSubmit={this.onImageMetadataUpdate}
+								lang={lang}>
+								{(metadataSaveSuccess !== undefined) ?
+									(
+										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
+											{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
+										</Alert>
+									) : null
+								}
+							</LajiForm>
+						: null}
 					</div>
 				</Modal.Body>
 			</Modal> : null;
@@ -134,9 +156,9 @@ export default class ImagesArrayField extends Component {
 
 	renderAlert = () => {
 		return this.state.alert ? (
-			<Alert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
-				{this.props.formContext.translations.PictureError}
-			</Alert>) : null;
+			<PopupAlert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
+				{this.props.formContext.translations.SaveFail}
+			</PopupAlert>) : null;
 	}
 
 	onFileFormChange = (files) => {
@@ -205,6 +227,10 @@ export default class ImagesArrayField extends Component {
 			body: JSON.stringify(formData)
 		}).then(response => {
 			this.mainContext.popBlockingLoader();
+			this.setState({metadataSaveSuccess: true});
+		}).catch(() => {
+			this.mainContext.popBlockingLoader();
+			this.setState({metadataSaveSuccess: false});
 		});
 	}
 }
