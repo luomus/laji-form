@@ -41,7 +41,7 @@ const autosuggestSettings = {
 
 			const tooltipElem = (
 				<Tooltip id={`${that.props.id}-popover-tooltip`}>
-					{that.props.formContext.translations.openSpeciedCard}
+					{that.props.formContext.translations.OpenSpeciedCard}
 				</Tooltip>
 			);
 

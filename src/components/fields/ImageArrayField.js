@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "reac
 import DropZone from "react-dropzone";
 import { Button, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, parseDotPath } from "../../utils";
 
 export default class ImagesArrayField extends Component {
 
@@ -178,9 +178,15 @@ export default class ImagesArrayField extends Component {
 				body: formDataBody
 			});
 		}).then(response => {
+			const defaultMetadata = this.getDefaultMetadata();
 			return Promise.all(response.map(item => {
 				return this.apiClient.fetch(`/images/${item.id}`, undefined, {
-					method: "POST"
+					method: "POST",
+					headers: {
+						"accept": "application/json",
+						"content-type": "application/json"
+					},
+					body: JSON.stringify(defaultMetadata)
 				});
 			}));
 		}).then(response => {
@@ -221,16 +227,33 @@ export default class ImagesArrayField extends Component {
 		this.apiClient.fetch(`/images/${formData.id}`, undefined, {
 			method: "PUT",
 			headers: {
-				"Accept": "application/json",
-				"Content-Type": "application/json"
+				"accept": "application/json",
+				"content-type": "application/json"
 			},
 			body: JSON.stringify(formData)
 		}).then(response => {
 			this.mainContext.popBlockingLoader();
 			this.setState({metadataSaveSuccess: true});
+			this._context.defaultMetadata = formData;
 		}).catch(() => {
 			this.mainContext.popBlockingLoader();
 			this.setState({metadataSaveSuccess: false});
 		});
+	}
+
+	getDefaultMetadata = () => {
+		const {capturerVerbatimPath} = getUiOptions(this.props.uiSchema);
+		const defaultMetadata = this._context.defaultMetadata || {};
+
+		if (this.mainContext.formData && capturerVerbatimPath && !defaultMetadata.capturerVerbatim) {
+			defaultMetadata.capturerVerbatim = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
+		}
+		if (!this._context.defaultMetadata) {
+			defaultMetadata.intellectualRights = "MZ.intellectualRightsCC-BY-SA-4.0";
+		}
+
+		this._context.defaultMetadata = defaultMetadata;
+
+		return defaultMetadata;
 	}
 }
