@@ -34,7 +34,6 @@ import FlatField from "./fields/FlatField";
 import AccordionArrayField from "./fields/AccordionArrayField";
 import CustomButtonArrayField from "./fields/CustomButtonArrayField";
 import ArrayField from "./fields/ArrayField";
-import StringField from "./fields/StringField";
 
 import CheckboxWidget from "./widgets/CheckboxWidget";
 import SelectWidget from "./widgets/SelectWidget";
@@ -61,55 +60,55 @@ tabbableSelectors.push(`.${FOCUS_SINK_CLASS}`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
 
 class FieldTemplate extends Component {
-	render() {
-		const {
-			id,
-			classNames,
-			label,
-			children,
-			errors,
-			rawHelp,
-			description,
-			hidden,
-			required,
-			displayLabel,
-			uiSchema,
-			} = this.props;
+render() {
+	const {
+		id,
+		classNames,
+		label,
+		children,
+		errors,
+		rawHelp,
+		description,
+		hidden,
+		required,
+		displayLabel,
+		uiSchema,
+		} = this.props;
 
-		if (hidden) {
-			return children;
-		}
-		const inlineHelp = uiSchema["ui:inlineHelp"];
+	if (hidden) {
+		return children;
+	}
+	const inlineHelp = uiSchema["ui:inlineHelp"];
 
-		const ids = new Context("IDS");
-		const htmlId = `_laji-form_${id}`;
-		let elemId = undefined;
-		if (!ids[htmlId]  || ids[htmlId] === this) {
-			ids[htmlId] = this;
-			elemId = htmlId;
-		}
-		const buttons = uiSchema["ui:buttons"] || undefined;
-		return (
-			<div className={classNames} id={elemId}>
-				{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
-				{displayLabel && description ? description : null}
-				<div className={buttons ? "laji-form-field-template-item" : null}>
-					<div className={buttons ? "laji-form-field-template-schema" : null}>
-						{inlineHelp ? <div className="pull-left">{children}</div> : children}
-						{inlineHelp ? (
-							<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
-							) : null
-						}
-					</div>
-					{buttons ?
-						<div className="laji-form-field-template-buttons">{buttons}</div> :
-						null
+	const ids = new Context("IDS");
+	const htmlId = `_laji-form_${id}`;
+	let elemId = undefined;
+	if (!ids[htmlId]  || ids[htmlId] === this) {
+		ids[htmlId] = this;
+		elemId = htmlId;
+	}
+	const buttons = uiSchema["ui:buttons"] || undefined;
+	return (
+		<div className={classNames} id={elemId}>
+			{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
+			{displayLabel && description ? description : null}
+			<div className={buttons ? "laji-form-field-template-item" : null}>
+				<div className={buttons ? "laji-form-field-template-schema" : null}>
+					{inlineHelp ? <div className="pull-left">{children}</div> : children}
+					{inlineHelp ? (
+						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
+						) : null
 					}
 				</div>
-				{errors}
+				{buttons ?
+					<div className="laji-form-field-template-buttons">{buttons}</div> :
+					null
+				}
 			</div>
-		);
-	}
+			{errors}
+		</div>
+	);
+}
 }
 
 export default class LajiForm extends Component {
@@ -190,8 +189,7 @@ export default class LajiForm extends Component {
 					ref="form"
 					onChange={this.onChange}
 					fields={{
-						ArrayField,
-						StringField,
+						ArrayField: ArrayField,
 						nested: NestField,
 						unitTripreport: ArrayBulkField,
 						bulkArray: ArrayBulkField,
@@ -223,8 +221,8 @@ export default class LajiForm extends Component {
 						customButtonArray: CustomButtonArrayField
 					}}
 					widgets={{
-						CheckboxWidget,
-						SelectWidget,
+						CheckboxWidget: CheckboxWidget,
+						SelectWidget: SelectWidget,
 						dateTime: DateTimeWidget,
 						date: DateWidget,
 						time: TimeWidget,
