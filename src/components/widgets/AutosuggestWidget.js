@@ -121,6 +121,7 @@ const autosuggestSettings = {
 		                                         glyph="user"
 		                                         className="form-control-feedback"/>,
 		getFriendProfile: (that) => {
+			return;
 			const value = that.getValue();
 
 			if (value && that.state.imgUrlPerson !== value) {
