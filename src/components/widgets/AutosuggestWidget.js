@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Button, Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
+import { Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner"
 import { getUiOptions, isEmptyString } from "../../utils";
 import Context from "../../Context";
@@ -18,9 +18,20 @@ const autosuggestSettings = {
 			}
 			return text;
 		},
+		convertInputValue: that => {
+			let value = that.getValue();
+			if (isEmptyString(value) || !value.match(/MX\.\d+/)) return new Promise(resolve => resolve(value));
+			return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
+				return vernacularName || scientificName || value;
+			});
+		},
 		renderMetaInfo: (that, input) => {
-			const content = that.state.autosuggestSettings.getTaxonCardContent(that);
-			return <OverlayTrigger trigger="focus" overlay={content} placement="top">{input}</OverlayTrigger>;
+			const content = autosuggestSettings.taxon.getTaxonCardContent(that);
+			return <OverlayTrigger trigger={["hover", "focus"]}
+			                       placement={that.state.focused ? "top" : "right"}
+			                       overlay={content}>
+							{input}
+						</OverlayTrigger>;
 		},
 		renderUnsuggestedMetaInfo: (that, input) => {
 			const tooltip = (
@@ -28,13 +39,23 @@ const autosuggestSettings = {
 			);
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			)
+		},
+		renderSuccessGlyph: (that) => {
+			const options = getUiOptions(that.props);
+			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
+
+			return (
+				<a href={"http://tun.fi/" + value} target="_blank">
+					<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
+				</a>
 			);
 		},
 		getTaxonCardContent: (that) => {
 			const value = that.getValue();
 
 			if (value && (!that.state || !that.state.value || that.state.value !== value)) {
-				new ApiClient().fetchCached("/taxa/" + value).then(response => {
+				new ApiClient().fetchCached(`/taxa/${value}`).then(response => {
 					if (that.mounted) that.setState({urlTxt: response.scientificName, value, urlTxtIsCursive: response.cursiveName});
 				});
 			}
@@ -53,9 +74,9 @@ const autosuggestSettings = {
 					{that.state.urlTxt ?
 						<div>
 							<OverlayTrigger overlay={tooltipElem}>
-								<a href={"http://tun.fi/" + value}
-									 target="_blank"><Glyphicon glyph="modal-window"/> {
-										that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> :
+								<a href={`http://tun.fi/${value}`}
+								   target="_blank"><Glyphicon glyph="modal-window"/> {
+									that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> :
 										that.state.urlTxt
 								}</a>
 							</OverlayTrigger>
@@ -64,28 +85,7 @@ const autosuggestSettings = {
 					}
 				</Popover>
 			);
-		},
-		renderSuccessGlyph: (that) => {
-			const options = getUiOptions(that.props);
-			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
-
-			const content = that.state.autosuggestSettings.getTaxonCardContent(that);
-
-			return (
-				<a href={"http://tun.fi/" + value} target="_blank">
-					<OverlayTrigger overlay={content} placement="right">
-						<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
-					</OverlayTrigger>
-				</a>
-			);
-		},
-		convertInputValue: that => {
-			let value = that.getValue();
-			if (isEmptyString(value) || !value.match(/MX\.\d+/)) return new Promise(resolve => resolve(value));
-			return new ApiClient().fetchCached("/taxa/" + value).then(({vernacularName, scientificName}) => {
-				return vernacularName || scientificName || value;
-			});
-		},
+		}
 	},
 	friends: {
 		query: {
@@ -93,6 +93,21 @@ const autosuggestSettings = {
 		},
 		renderSuggestion: suggestion => {
 			return suggestion.value;
+		},
+		convertInputValue: that => {
+			let value = that.props.value;
+			if (isEmptyString(value) || !value.match(/MA\.\d+/)) return new Promise(resolve => resolve(value));
+			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName}) => {
+				return fullName || value;
+			});
+		},
+		renderMetaInfo: (that, input) => {
+			const content = autosuggestSettings.friends.getFriendProfile(that);
+			return that.state.imgUrl ? (
+				<OverlayTrigger trigger={["hover", "focus"]}
+			                       overlay={content}>
+					{input}
+				</OverlayTrigger>) : input;
 		},
 		renderUnsuggestedMetaInfo: (that, input) => {
 			const tooltip = (
@@ -102,16 +117,26 @@ const autosuggestSettings = {
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
 			);
 		},
-		convertInputValue: that => {
-			let value = that.props.value;
-			if (isEmptyString(value) || !value.match(/MA\.\d+/)) return new Promise(resolve => resolve(value));
-			return new ApiClient().fetchCached("/person/by-id/" + value).then(({fullName}) => {
-				return fullName || value;
-			});
+		renderSuccessGlyph: (that) => <Glyphicon style={{pointerEvents: "auto"}}
+		                                         glyph="user"
+		                                         className="form-control-feedback"/>,
+		getFriendProfile: (that) => {
+			const value = that.getValue();
+
+			if (value && that.state.imgUrlPerson !== value) {
+				new ApiClient().fetchCached(`/person/by-id/${value}/profile`).then(({image}) => {
+					if (that.mounted && image) that.setState({imgUrl: image, imgUrlPerson: value});
+				});
+			}
+
+			return (
+				<Popover id={`${that.props.id}-popover`}>
+					{that.state.imgUrl ?
+						<img src={that.state.imgUrl} style={{width: 70}} /> : <Spinner />
+					}
+				</Popover>
+			);
 		},
-		renderSuccessGlyph: () => {
-			return <Glyphicon glyph="user" />
-		}
 	}
 }
 
