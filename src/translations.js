@@ -187,6 +187,6 @@
 	saveSuccess: {
 		fi: "Tallennus onnistui!",
 		en: "Saved successfully!",
-		sv: "??!"
+		sv: "Lagring lyckades!"
 	},
 }
