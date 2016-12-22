@@ -97,7 +97,6 @@ export default class ImagesArrayField extends Component {
 		const item = this.props.formData[i];
 		const state = {modalOpen: true};
 		this.apiClient.fetch("/images/" + item).then(response => {
-			console.log(response);
 			this._context.metadatas[item] = response;
 			state.modalImgSrc = response.originalURL;
 			state.modalMetadata = this._context.metadatas[item];
