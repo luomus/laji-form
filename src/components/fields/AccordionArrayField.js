@@ -124,7 +124,8 @@ export default class AccordionArrayField extends Component {
 						idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
 						errorSchema={this.props.errorSchema[idx]} />
 					);
-				}).map((comp, i) => <Panel key={i} header={this.renderHeader(i, title)} eventKey={i}>{comp}</Panel>)}
+				}).map((comp, idx) => <Panel key={idx} bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}
+				                           header={this.renderHeader(idx, title)} eventKey={idx}>{comp}</Panel>)}
 			</Accordion>
 			<AddButton
 				onClick={() => {
