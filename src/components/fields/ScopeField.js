@@ -240,8 +240,15 @@ export default class ScopeField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
+		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
+
 		const uiSchema = {...this.state.uiSchema, "ui:buttons": this.renderAdditionalsButton()};
-		return <SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />;
+		return (
+			<div>
+				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />
+				{this.state.additionalsOpen && additionalsGroupingPath ? this.modal : null}
+			</div>
+		);
 	}
 
 	getStateFromProps(props) {
@@ -487,21 +494,18 @@ export default class ScopeField extends Component {
 			}
 		});
 
-		return (
-			<div key="modal-button">
-				{this.renderFieldsButton()}
-				{this.state.additionalsOpen ? (
-					<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
-						<Modal.Header closeButton={true}>
-							<Modal.Title>{translations.SelectMoreFields}</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							{list}
-						</Modal.Body>
-					</Modal>
-				) : null}
-			</div>
+		if (this.state.additionalsOpen) this.modal = (
+			<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
+				<Modal.Header closeButton={true}>
+					<Modal.Title>{translations.SelectMoreFields}</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{list}
+				</Modal.Body>
+			</Modal>
 		);
+
+		return this.renderFieldsButton();
 	}
 
 	renderFieldsButton = (bsRole) => {

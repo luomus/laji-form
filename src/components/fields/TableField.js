@@ -120,17 +120,20 @@ export default class TableField extends Component {
 			if (props.uiSchema.additionalItems && idx >= props.schema.items.length) uiSchema = props.uiSchema.additionalItems;
 			else if (props.uiSchema.items) uiSchema = props.uiSchema.items;
 
-			let uiOptions = {...cols, showLabels: false, neverLimitWidth: true};
+			let uiOptions = {...cols, showLabels: false};
 			if (uiSchema["ui:field"]) {
 				uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
 			}
 			uiSchema = {...uiSchema, "ui:field": "grid", "ui:options": uiOptions};
 
-			uiSchema = {...uiSchema, "ui:buttons": ((!props.schema.additionalItems && idx !== undefined) || isAdditional) ? [
+			const deletable = (!props.schema.additionalItems && idx !== undefined) || isAdditional;
+
+			uiSchema = {...uiSchema, "ui:buttons": deletable ? [
 				<DeleteButton key={`rm-${idx}`}  translations={props.formContext.translations} onClick={() => {
 					this.onChange(update(formData, {$splice: [[idx, 1]]}))
 				}} />
-			] : []};
+			] : [],
+				"ui:buttonsVertical": true};
 
 
 

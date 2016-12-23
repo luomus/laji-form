@@ -5,7 +5,7 @@ import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "react-bootstrap";
 import DropZone from "react-dropzone";
-import { Button, Alert as PopupAlert } from "../components";
+import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, parseDotPath } from "../../utils";
 
@@ -87,7 +87,7 @@ export default class ImagesArrayField extends Component {
 			this.state.imgURLs.map((dataURL, i) => (
 				<div key={i} className="img-container">
 					<a onClick={this.onImgClick(i)}><img src={dataURL} /></a>
-					<Button bsStyle="danger" className="img-remove" onClick={this.onImgRmClick(i)}>✖</Button>
+					<DeleteButton corner={true} translations={this.props.formContext.translations} onClick={this.onImgRmClick(i)}>✖</DeleteButton>
 				</div>
 			)) :
 			null;

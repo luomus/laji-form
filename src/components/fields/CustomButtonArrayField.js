@@ -2,9 +2,8 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { ButtonToolbar } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, hasData, parseDotPath } from "../../utils";
+import { getUiOptions } from "../../utils";
 import { DeleteButton, Button } from "../components";
-import Context from "../../Context";
 
 const buttonDefinitions = {
 	add: (that, options, key) => {
@@ -18,7 +17,7 @@ const buttonDefinitions = {
 	copy: (that, options, key) => {
 		const {text, type, filter} = options;
 		return (
-			<Button key={key} onClick={() => that.onCopy(type, filter)}>
+			<Button key={key} block onClick={() => that.onCopy(type, filter)}>
 				<i className="glyphicon glyphicon-duplicate"/> <strong>{text}</strong>
 			</Button>
 		);
@@ -91,13 +90,12 @@ export default class CustomButtonArrayField extends Component {
 								errorSchema={this.props.errorSchema[idx]}
 							/>
 							</div>
-							<div className="laji-form-field-template-buttons">
-								<DeleteButton
-									confirm={this.state.confirmDelete}
-									onClick={this.onRemoveForIdx(idx)}
-									translations={this.props.formContext.translations}
-								/>
-							</div>
+							<DeleteButton
+								corner={true}
+								confirm={this.state.confirmDelete}
+								onClick={this.onRemoveForIdx(idx)}
+								translations={this.props.formContext.translations}
+							/>
 						</div>
 					);
 				})

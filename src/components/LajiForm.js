@@ -88,12 +88,13 @@ render() {
 		elemId = htmlId;
 	}
 	const buttons = uiSchema["ui:buttons"] || undefined;
+	const vertical = uiSchema["ui:buttonsVertical"];
 	return (
 		<div className={classNames} id={elemId}>
 			{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
 			{displayLabel && description ? description : null}
-			<div className={buttons ? "laji-form-field-template-item" : null}>
-				<div className={buttons ? "laji-form-field-template-schema" : null}>
+			<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
+				<div className={"laji-form-field-template-schema"}>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}
 					{inlineHelp ? (
 						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>

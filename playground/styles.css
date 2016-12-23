@@ -271,11 +271,11 @@ body .laji-form {
 	margin: 2px;
 }
 .laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button {
-	width: 22px;
-	height: 22px;
+	width: 25px;
+	height: 25px;
 	font-size: 11px;
-	padding: 4px 5px;
-	margin: 2px;
+	padding: 3px 1px;
+	margin-bottom: 2px;
 }
 .laji-form .laji-form-scope-field-glyph {
 	line-height: 9px;
@@ -462,12 +462,15 @@ body .laji-form {
 .laji-form .img-container {
 	position: relative;
 }
-.laji-form .img-remove {
+.laji-form .delete-corner {
 	border-radius: 7px !important;
+	padding: 4px 2px !important;
 	top: -9px;
 	position: absolute;
-	padding: 4px 2px !important;
 	right: -8px;
+	width: 15px;
+	height: 15px;
+	line-height: 7.5px;
 }
 
 .laji-form .list-group-item.disabled {
@@ -513,6 +516,7 @@ body .laji-form {
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
+	position: relative;
 }
 .laji-form .laji-form-field-template-schema, .laji-form .array-item .col-xs-9 {
 	-webkit-flex-grow: 1;
@@ -520,7 +524,42 @@ body .laji-form {
 	flex-grow: 1;
 }
 .laji-form .laji-form-field-template-buttons, .laji-form .array-item .array-item-toolbox {
-	width: 25px;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	margin-left: 2px;
+}
+.laji-form .laji-form-field-template-buttons, .laji-form .array-item .array-item-toolbox > * {
+	flex-direction: column;
+	-webkit-flex-direction: column;
+}
+
+@media (max-width: 768px) {
+	.laji-form .laji-form-field-template-item:not(.keep-vertical) {
+		flex-direction: column;
+		-webkit-flex-direction: column;
+	}
+	.laji-form .laji-form-field-template-item .laji-form-field-template-schema {
+		order: 2
+	}
+	.laji-form .laji-form-field-template-item.keep-vertical .laji-form-field-template-schema {
+		order: initial;
+	}
+	.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button {
+		margin-bottom: 0px;
+		margin-left: 2px;
+	}
+	.laji-form .laji-form-field-template-buttons {
+		flex-direction: row-reverse;
+		-webkit-flex-direction: row-reverse;
+		justify-content: space-around;
+	}
+	.laji-form .btn-toolbar .btn {
+		width: 100%;
+		margin-bottom: 2px;
+	}
 }
 
 .laji-form .date-widget {
@@ -559,6 +598,22 @@ body .laji-form {
 	margin-top: -16px;
 }
 
+.laji-form .laji-map-accordion-header .panel-title {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+.laji-form .laji-map-accordion-header .panel-title > *:first-child {
+	-webkit-flex-grow: 1;
+	-ms-flex-grow: 1;
+	flex-grow: 1;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .laji-form .map-highlight {
 	border-color: #66afe9;
 	outline: 0;
@@ -568,3 +623,4 @@ body .laji-form {
 .laji-form .panel-body:not(.laji-map-coordinates) {
 	padding: 8px;
 }
+

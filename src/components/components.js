@@ -58,11 +58,13 @@ export class DeleteButton extends Component {
 	render() {
 		const {props, state} = this;
 		const {show} = state;
-		const {translations} = props;
+		const {translations, corner} = props;
+		let buttonClassName = "glyph-button";
+		buttonClassName += corner ? " delete-corner" : "";
 		return (
 			<div className={props.className}>
 				<Button bsStyle="danger"
-								className="col-xs-12 glyph-button"
+								className={buttonClassName}
 								ref="del"
 								onKeyDown={this.onButtonKeyDown}
 								onClick={props.confirm ? this.onShowConfirm : this.onClick}>✖</Button>
