@@ -10,9 +10,9 @@ import Context from "../../Context";
 
 const scopeFieldSettings = {
 	taxonGroups: {
-		translate: (that, taxonGroup) => {
-			if (taxonGroup === "+") return new Promise(resolve => resolve(that.props.registry.formContext.translations.All));
-			return new ApiClient().fetch("/informal-taxon-groups/" + taxonGroup).then((response) => {
+		translate: (props, taxonGroup) => {
+			if (taxonGroup === "+") return new Promise(resolve => resolve(props.registry.formContext.translations.All));
+			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			}).catch(() => {
 				return "";
@@ -264,8 +264,9 @@ export default class ScopeField extends Component {
 			const prevOptions = getUiOptions(this.props.uiSchema);
 
 			state.additionalsGroupsTranslations =
-				(prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
-				this.state.additionalsGroupsTranslations : {};
+				(this.props.formContext.lang === props.formContext.lang &&
+				 prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
+					this.state.additionalsGroupsTranslations : {};
 			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;
 		}
 
@@ -616,7 +617,7 @@ export default class ScopeField extends Component {
 		let translationsToKeys = {};
 		let translationCount = 0;
 		groups.forEach(groupName => {
-			scopeFieldSettings[additionalsGroupsTranslator].translate(this, groupName).then(translation => {
+			scopeFieldSettings[additionalsGroupsTranslator].translate(props, groupName).then(translation => {
 				translations[groupName] = translation;
 				translationsToKeys[translation] = groupName;
 				translationCount++;

@@ -6,11 +6,21 @@ export default class ApiClient {
 	constructor(baseUrl, accessToken, userToken, lang = "en") {
 		this.BASE_URL =  baseUrl;
 		this.lang = lang;
-		this.baseQuery = {access_token: accessToken, personToken: userToken, lang: this.lang};
+		this.accessToken = accessToken;
+		this.userToken = userToken;
+	}
+
+	setLang (lang) {
+		this.lang = lang;
+	}
+
+	getBaseQuery() {
+		return {access_token: this.accessToken, personToken: this.userToken, lang: this.lang};
 	}
 
 	fetch(path, query, options) {
-		const queryObject = (typeof query == "object") ? merge(this.baseQuery, query) : this.baseQuery;
+		const baseQuery = this.getBaseQuery();
+		const queryObject = (typeof query == "object") ? merge(baseQuery, query) : baseQuery;
 		return fetch(this.BASE_URL + path + "?" + queryString.stringify(queryObject), options).then((response) => {
 			if (response.status >= 400)
 				throw new Error("Request failed");

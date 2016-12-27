@@ -139,6 +139,7 @@ export default class LajiForm extends Component {
 	}
 
 	componentWillReceiveProps(props) {
+		if (props.hasOwnProperty("lang") && this.props.lang !== props.lang) this.apiClient.flushCache();
 		this.setState(this.getStateFromProps(props));
 	}
 

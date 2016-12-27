@@ -1,5 +1,5 @@
 let singletonInstance = null;
-const cache = {};
+let cache = {};
 
 /**
  * ApiClient "interface". Wraps the given apiClient as a singleton object.
@@ -29,5 +29,9 @@ export default class ApiClient {
 		const cacheKey = path + JSON.stringify(query);
 		cache[cacheKey] = cache.hasOwnProperty(cacheKey) ? cache[cacheKey] : this.fetch(path, query);
 		return cache[cacheKey]
+	}
+
+	flushCache() {
+		cache = {};
 	}
 }
