@@ -280,6 +280,9 @@ body .laji-form {
 	padding: 3px 1px;
 	margin-bottom: 2px;
 }
+.laji-form-field-template-buttons {
+	margin-left: 2px;
+}
 .laji-form .laji-form-scope-field-glyph {
 	line-height: 9px;
 }
@@ -571,7 +574,6 @@ body .laji-form {
 	}
 	.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button {
 		margin-bottom: 0px;
-		margin-left: 2px;
 	}
 	.laji-form .laji-form-field-template-buttons {
 		flex-direction: row-reverse;
