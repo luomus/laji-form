@@ -90,8 +90,12 @@ export default class DateTimeWidget extends Component {
 		return moment(isoValue).toDate();
 	}
 
+	onChange = (value) => {
+		this.props.onChange(value, !!"force");
+	}
+
 	render() {
-		const {value, readonly, onChange} = this.props;
+		const {value, readonly} = this.props;
 		const {translations} = this.props.formContext;
 
 		const datePicker = (<DateTimePicker
@@ -112,7 +116,7 @@ export default class DateTimeWidget extends Component {
 				 (this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
 					formattedValue = momentValue.format("YYYY-MM-DD");
 				}
-				onChange(!value ? undefined : formattedValue);
+				this.onChange(!value ? undefined : formattedValue);
 				this.toggle = undefined;
 				this.timeWritten = false;
 			}}
@@ -142,10 +146,10 @@ export default class DateTimeWidget extends Component {
 	}
 
 	setToday = () => {
-		this.props.onChange(moment().format("YYYY-MM-DD"));
+		this.onChange(moment().format("YYYY-MM-DD"));
 	}
 
 	setYesterday = () => {
-		this.props.onChange(moment().subtract(1, "d").format("YYYY-MM-DD"));
+		this.onChange(moment().subtract(1, "d").format("YYYY-MM-DD"));
 	}
 }
