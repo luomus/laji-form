@@ -62,7 +62,7 @@ export class DeleteButton extends Component {
 		let buttonClassName = "glyph-button";
 		buttonClassName += corner ? " delete-corner" : "";
 		return (
-			<div className={props.className}>
+			<div className={props.className} style={this.props.style}>
 				<Button bsStyle="danger"
 								className={buttonClassName}
 								ref="del"

@@ -95,10 +95,14 @@ export default class TableField extends Component {
 						help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
 			</Col>)
 		});
+
+		// Dummy delete button is placed for aligning the labels correctly. Wacky.
 		items.push(
-			<div key="label-row" className="laji-form-field-template-item">
+			<div key="label-row" className="laji-form-field-template-item keep-vertical">
 				<div className="laji-form-field-template-schema">{labels}</div>
-				<div className="laji-form-field-template-buttons" />
+				<div className="laji-form-field-template-buttons">
+					<DeleteButton style={{visibility: "hidden"}} onClick={() => {;}} translations={this.props.formContext.translations} />
+				</div>
 			</div>
 		);
 
