@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { immutableDelete, getUiOptions, getInnerUiSchema } from "../../utils";
+import { toIdSchema, shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import { immutableDelete, getUiOptions } from "../../utils";
 
 export default class FlatField extends Component {
 	static propTypes = {
@@ -34,7 +34,7 @@ export default class FlatField extends Component {
 
 		fields.forEach(field => {
 			const innerSchema = props.schema.properties[field];
-			const isArray = !innerSchema.properties;
+			const isArray = innerSchema.type === "array";
 			const propertiesName = isArray ? "items" : "properties";
 			let properties = innerSchema[propertiesName];
 			if (properties.properties) properties = properties.properties;
@@ -46,6 +46,14 @@ export default class FlatField extends Component {
 
 			if (props.formData && props.formData[field]) {
 				let innerData = props.formData[field];
+
+				if (!innerData && props.schema.properties[field].type === "object") {
+					innerData = getDefaultFormState(props.schema.properties[field], undefined, props.registry);
+				}
+				else if (!innerData && props.schema.properties[field].type === "array") {
+					innerData = [getDefaultFormState(props.schema.properties[field].items, undefined, props.registry)];
+				}
+
 				if (Array.isArray(innerData)) {
 					innerData = innerData[0];
 				}
@@ -60,17 +68,23 @@ export default class FlatField extends Component {
 				Object.keys(props.errorSchema).forEach(errorField => {
 					if (errorField === field) {
 						if (isArray) {
-							Object.keys(props.errorSchema[errorField]).map(key => props.errorSchema[errorField][key]).forEach(error => {
-								Object.keys(error).forEach(innerError => {
-									state.errorSchema = {
-										...state.errorSchema,
-										[`_${field}.${innerError}`]: [
-											...(state.errorSchema[`_${field}.${innerError}`] || []),
-											...error[innerError]]
-									};
-								});
+							Object.keys(props.errorSchema[errorField])
+								.filter(key => key !== "__errors")
+								.map(key => props.errorSchema[errorField][key]).forEach(error => {
+									Object.keys(error).forEach(innerError => {
+										state.errorSchema = {
+											...state.errorSchema,
+											[`_${field}.${innerError}`]: {
+												...(state.errorSchema[`_${field}.${innerError}`] || {}),
+												...error[innerError]
+											}
+										};
+									});
 							});
-							state.errorSchema = immutableDelete(state.formData, field);
+							state.errorSchema = immutableDelete(state.errorSchema, field);
+							if (props.errorSchema[field] && props.errorSchema[field].__errors) {
+								state.errorSchema = {...state.errorSchema, __errors: props.errorSchema[field].__errors};
+							}
 						} else {
 							Object.keys(props.errorSchema[errorField]).forEach(innerError => {
 								state.errorSchema = {
