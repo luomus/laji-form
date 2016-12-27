@@ -5,6 +5,7 @@ import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema
 import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";
 import Context from "../../Context";
+import ApiClient from "../../ApiClient";
 
 const headerFormatters = {
 	units: {
@@ -65,18 +66,40 @@ const headerFormatters = {
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
-		return {[(schema.units ? schema.units.title : undefined) || fieldName]: units.map(unit => unit.informalNameString)};
+		const identifications = units
+			.map(item =>
+				(item && item.identifications && item.identifications[0]) ?
+				item.identifications[0] : undefined)
+			.filter(item => item);
+
+		return Promise.all(
+			identifications.map(identification =>
+				identification.taxonID ?
+				new ApiClient().fetchCached(`/taxa/${identification.taxonID}`).then(({vernacularName, scientificName}) => {
+					return vernacularName || scientificName || identification.taxon;
+				}) : new Promise(resolve => resolve(identification.taxon))
+			)
+		).then(result => {
+			return new Promise(resolve => {
+				resolve({[(schema.units ? schema.units.title : undefined) || fieldName]: result})
+			})
+		});
 	}
 };
 
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {activeIdx: 0, ...this.getStateFromProps(props)};
+		this.state = {activeIdx: 0, ...this.getStateFromProps(props), popups: {}};
 	}
 
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
+		props.formData.forEach((item, idx) => {
+			this.getPopupDataPromise(idx, item).then(popupData => {
+				this.setState({popups: {...this.state.popups, [idx]: popupData}})
+			});
+		});
 	}
 
 	getStateFromProps(props) {
@@ -143,9 +166,9 @@ export default class AccordionArrayField extends Component {
 
 		const {headerFormatter} = getUiOptions(this.props.uiSchema);
 
-		const popupData = this.getPopupData(idx);
+		const popupData = this.state.popups[idx];
 
-		const headerTextElem =  <span>{_title}</span>;
+		const headerTextElem = <span>{_title}</span>;
 
 		const formatter = headerFormatters[headerFormatter];
 		const headerText = formatter ? formatter.render(this, idx, headerTextElem) : headerTextElem;
@@ -173,28 +196,30 @@ export default class AccordionArrayField extends Component {
 		);
 	}
 
-	getPopupData = (idx) => {
+	getPopupDataPromise = (idx, itemFormData) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 
-		const data = {};
-		if (!this.state.formData) return data;
-		popupFields.forEach(field => {
+		if (!this.state.formData) return new Promise(resolve => resolve({}));
+
+		return Promise.all(popupFields.map(field => {
 			const fieldName = field.field;
-			const itemFormData = this.state.formData[idx];
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			let fieldSchema = this.props.schema.items.properties;
 
 			if (field.mapper && fieldData) {
-				const mappedData = popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
-				for (let label in mappedData) {
-					data[label] = mappedData[label];
-				}
+				return popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
 			} else if (fieldData) {
-				data[fieldSchema[fieldName].title || fieldName] = fieldData;
+				return new Promise(resolve => resolve({[fieldSchema[fieldName].title || fieldName]: fieldData}));
 			}
-
+		})).then(fields => {
+			const popupData = fields.reduce((popup, item) => {
+				if (item) Object.keys(item).forEach(label => {
+					popup[label] = item[label];
+				})
+				return popup;
+			}, {});
+			return new Promise(resolve => resolve(popupData));
 		});
-		return data;
 	}
 
 	onActiveChange = (idx) => {
