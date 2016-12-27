@@ -85,9 +85,6 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .react-selectize {
-	overflow: hidden;
-}
 .laji-form .form-control, .laji-form .rw-datetimepicker, .laji-form .react-selectize-control {
 	border-radius: 2px !important;
 }
@@ -127,6 +124,9 @@ body .laji-form {
 	padding-left: 3px;
 	position: relative;
 	top: 1px;
+}
+.laji-form .react-selectize-control {
+	overflow: hidden;
 }
 
 .laji-form .form-group {
