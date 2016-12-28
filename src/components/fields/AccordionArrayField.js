@@ -251,6 +251,7 @@ export default class AccordionArrayField extends Component {
 	onDelete = (idx) => () => {
 		const formData = update(this.state.formData, {$splice: [[idx, 1]]});
 		if (!formData.length) this.onActiveChange(undefined);
+		if (this.state.activeIdx >= formData.length) this.onActiveChange(formData.length - 1);
 		this.props.onChange(formData)
 	}
 }

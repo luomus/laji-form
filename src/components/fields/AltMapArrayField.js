@@ -312,7 +312,7 @@ export default class AltMapArrayField extends Component {
 		const featureIdxToItemIdxs = this._context.featureIdxsToItemIdxs;
 		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
 		let data = {};
-		if (!formData || this.state.activeIdx === undefined ||
+		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx] ||
 		    !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
