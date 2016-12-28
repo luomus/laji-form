@@ -210,7 +210,7 @@ export default class ImagesArrayField extends Component {
 		const {name, size, type} = file;
 		return new Promise(resolve => {
 			const reader = new window.FileReader();
-			reader.onload = (event) => {
+			reader.onload = event => {
 				resolve({
 					dataURL: this.addNameToDataURL(event.target.result, name),
 					name,

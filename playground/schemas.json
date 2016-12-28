@@ -1366,7 +1366,8 @@
 		"gatheringEvent": {
 			"leg": [
 				"MA.308",
-				"MA.97"
+				"MA.97",
+				"testi"
 			],
 			"legPublic": true,
 			"secureLevel": ""
@@ -1390,6 +1391,33 @@
 							{
 								"taxon": "ass",
 								"taxonID": "MX.47092",
+								"identificationBasis": [
+									"MY.identificationBasisHeard",
+									"MY.identificationBasisSeen"
+								],
+								"detMethod": "MY.detMethodPhoto",
+								"detDate": "2012-02-01",
+								"det": "det"
+							}
+						],
+						"unitGathering": {
+							"geometry": {}
+						}
+					},
+					{
+						"recordBasis": "MY.recordBasisHumanObservation",
+						"unitType": [
+						],
+						"taxonConfidence": "MY.taxonConfidenceSure",
+						"sex": "",
+						"lifeStage": "",
+						"taste": "",
+						"smell": "",
+						"preservation": "",
+						"plantStatusCode": "",
+						"identifications": [
+							{
+								"taxon": "test",
 								"identificationBasis": [
 									"MY.identificationBasisHeard",
 									"MY.identificationBasisSeen"

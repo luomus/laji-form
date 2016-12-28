@@ -20,10 +20,13 @@ const autosuggestSettings = {
 		},
 		convertInputValue: that => {
 			let value = that.getValue();
-			if (isEmptyString(value) || !value.match(/MX\.\d+/)) return new Promise(resolve => resolve(value));
+			if (!autosuggestSettings.taxon.isValueSuggested(value)) return new Promise(resolve => resolve(value));
 			return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
 				return vernacularName || scientificName || value;
 			});
+		},
+		isValueSuggested: value => {
+			return !isEmptyString(value) && value.match(/MX\.\d+/);
 		},
 		renderMetaInfo: (that, input) => {
 			const content = autosuggestSettings.taxon.getTaxonCardContent(that);
@@ -100,6 +103,9 @@ const autosuggestSettings = {
 			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName}) => {
 				return fullName || value;
 			});
+		},
+		isValueSuggested: value => {
+			return !isEmptyString(value) && value.match(/MA\.\d+/);
 		},
 		renderMetaInfo: (that, input) => {
 			const content = autosuggestSettings.friends.getFriendProfile(that);
@@ -182,13 +188,17 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	triggerConvert = (props) => {
-		const {isValueSuggested} = getUiOptions(this.props);
+		// const {isValueSuggested} = getUiOptions(this.props);
+		const isValueSuggested = getUiOptions(this.props).isValueSuggested ||
+		                         this.state.autosuggestSettings.isValueSuggested;
+
 		if (props.value === undefined || props.value === "") {
 			this.setState({inputValue: undefined});
 			return;
 		}
+
 		const convert = this.state.autosuggestSettings.convertInputValue;
-		if (convert) {
+		if ((isValueSuggested && isValueSuggested(props.value) && convert) || (!isValueSuggested && convert)) {
 			this.setState({isLoading: true});
 			convert(this)
 				.then(inputValue => {
@@ -223,7 +233,7 @@ export default class AutoSuggestWidget extends Component {
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
 				{q: value, ...(this.state.autosuggestSettings.query || {})})
-				.then( suggestions => {
+				.then(suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const unambigiousSuggestion = this.findUnambigiousSuggestion(suggestions);
@@ -251,13 +261,13 @@ export default class AutoSuggestWidget extends Component {
 
 	selectSuggestion = (suggestion) => {
 		if (!suggestion) return;
-		const {onSuggestionSelected} = getUiOptions(this.props);
+		const {onSuggestionSelected, suggestionReceive} = getUiOptions(this.props);
 		this.suggestionSelectedFlag = true;
 		let state = {inputInProgress: false, unsuggested: false, inputValue: (suggestion !== undefined && suggestion !== null) ? suggestion.value : ""};
 		if (onSuggestionSelected) {
 			onSuggestionSelected(suggestion);
 		} else {
-			this.props.onChange(suggestion.key);
+			this.props.onChange(suggestion[suggestionReceive]);
 		}
 		this.setState(state);
 	}
@@ -417,10 +427,13 @@ export default class AutoSuggestWidget extends Component {
 			validationState = "success";
 		}
 
+		const options = getUiOptions(this.props);
+		const renderMetaInfo = !options.hasOwnProperty("renderMetaInfo") || options.renderMetaInfo;
+
 		const input = (
-			<FormGroup validationState={validationState}>
+			<FormGroup validationState={renderMetaInfo ? validationState : undefined}>
 				<FormControl type="text" {...inputProps}/>
-				{!this.state.focused && !this.state.isLoading ?
+				{!this.state.focused && !this.state.isLoading && renderMetaInfo ?
 					<FormControl.Feedback>{
 						validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
 							this.state.autosuggestSettings.renderSuccessGlyph(this) : null
@@ -430,9 +443,10 @@ export default class AutoSuggestWidget extends Component {
 			</FormGroup>
 		);
 
-		if (value && !this.state.unsuggested && this.state.autosuggestSettings.renderMetaInfo) {
+
+		if (value && !this.state.unsuggested && renderMetaInfo && this.state.autosuggestSettings.renderMetaInfo) {
 			return this.state.autosuggestSettings.renderMetaInfo(this, input);
-		} else if (value && this.state.unsuggested && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
+		} else if (value && this.state.unsuggested && renderMetaInfo && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
 			return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this, input);
 		} else {
 			return input;

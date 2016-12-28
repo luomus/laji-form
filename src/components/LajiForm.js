@@ -33,6 +33,7 @@ import SplitField from "./fields/SplitField";
 import FlatField from "./fields/FlatField";
 import AccordionArrayField from "./fields/AccordionArrayField";
 import CustomButtonArrayField from "./fields/CustomButtonArrayField";
+import SingleItemArrayField from "./fields/SingleItemArrayField";
 import ArrayField from "./fields/ArrayField";
 import StringField from "./fields/StringField";
 
@@ -221,7 +222,8 @@ export default class LajiForm extends Component {
 						split: SplitField,
 						flat: FlatField,
 						accordionArray: AccordionArrayField,
-						customButtonArray: CustomButtonArrayField
+						customButtonArray: CustomButtonArrayField,
+						singleItemArray: SingleItemArrayField
 					}}
 					widgets={{
 						CheckboxWidget,
