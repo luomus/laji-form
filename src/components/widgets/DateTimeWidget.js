@@ -145,11 +145,16 @@ export default class DateTimeWidget extends Component {
 		) : datePicker;
 	}
 
+	getDateWithCurrentTime = (date) => {
+		const time = this.props.value.split("T")[1];
+		return time ? `${date}T${time}` : date;
+	}
+
 	setToday = () => {
-		this.onChange(moment().format("YYYY-MM-DD"));
+		this.onChange(this.getDateWithCurrentTime(moment().format("YYYY-MM-DD")));
 	}
 
 	setYesterday = () => {
-		this.onChange(moment().subtract(1, "d").format("YYYY-MM-DD"));
+		this.onChange(this.getDateWithCurrentTime(moment().subtract(1, "d").format("YYYY-MM-DD")));
 	}
 }
