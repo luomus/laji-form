@@ -80,7 +80,7 @@ class FieldTemplate extends Component {
 			return children;
 		}
 		const inlineHelp = uiSchema["ui:inlineHelp"];
-const ids = new Context("IDS");
+		const ids = new Context("IDS");
 		const htmlId = `_laji-form_${id}`;
 		let elemId = undefined;
 		if (!ids[htmlId]  || ids[htmlId] === this) {
