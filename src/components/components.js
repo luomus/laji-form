@@ -257,12 +257,13 @@ export class StretchAffix extends Component {
 			const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
 			const containerTop = container.getBoundingClientRect().top;
+			const containerBottom = container.getBoundingClientRect().bottom;
 			const containerHeight = container.offsetHeight;
 			const containerVisibleHeight = containerHeight - Math.abs(containerTop);
 			const scrolled = containerTop < topOffset;
 
 			let affixState = TOP;
-			if (scrolled && containerVisibleHeight < viewportHeight) affixState = BOTTOM;
+			if (scrolled && containerVisibleHeight < (viewportHeight - bottomOffset)) affixState = BOTTOM;
 			else if (scrolled) affixState = AFFIXED;
 
 			const wrapperNode = findDOMNode(this.refs.wrapper);
@@ -277,7 +278,7 @@ export class StretchAffix extends Component {
 					- bottomOffset :
 				Math.max(
 					containerVisibleHeight
-						- bottomOffset
+						- Math.max(bottomOffset - containerBottom, 0)
 						- topOffset,
 					0
 				);
