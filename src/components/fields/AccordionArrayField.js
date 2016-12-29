@@ -18,7 +18,8 @@ const headerFormatters = {
 			return (
 				<span>
 					{headerElem}
-					<span className="text-muted">
+					<span key={`header-${that.props.lang}`}
+						className="text-muted">
 						{` (${unitsLength} ${translations.unitsPartitive})`}
 					</span>
 				</span>
@@ -151,6 +152,7 @@ export default class AccordionArrayField extends Component {
 				                           header={this.renderHeader(idx, title)} eventKey={idx}>{comp}</Panel>)}
 			</Accordion>
 			<AddButton
+				key={`add-${this.props.lang}`}
 				onClick={() => {
 					this.props.onChange([
 						...this.state.formData,

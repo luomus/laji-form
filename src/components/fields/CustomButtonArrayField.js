@@ -110,7 +110,7 @@ export default class CustomButtonArrayField extends Component {
 		const {buttons} = getUiOptions(this.props.uiSchema);
 
 		return (
-			<ButtonToolbar>{
+			<ButtonToolbar key={`${this.props.lang}-toolbar`}>{
 				(buttons || []).map((button, i) =>
 					buttonDefinitions[button.name](this, button, i)
 				)
