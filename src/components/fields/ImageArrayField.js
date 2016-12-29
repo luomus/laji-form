@@ -247,6 +247,9 @@ export default class ImagesArrayField extends Component {
 
 		if (this.mainContext.formData && capturerVerbatimPath && !defaultMetadata.capturerVerbatim) {
 			defaultMetadata.capturerVerbatim = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
+			if (Array.isArray(defaultMetadata.capturerVerbatim) && defaultMetadata.capturerVerbatim.length > 1) {
+				defaultMetadata.capturerVerbatim = [defaultMetadata.capturerVerbatim[0]];
+			}
 		}
 		if (!this._context.defaultMetadata) {
 			defaultMetadata.intellectualRights = "MZ.intellectualRightsCC-BY-SA-4.0";
