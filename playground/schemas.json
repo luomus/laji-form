@@ -186,6 +186,7 @@
 			"ui:options": {
 				"geometryMapper": "units",
 				"topOffset": 50,
+				"bottomOffset": 100,
 				"mapSizes": {
 					"lg": 4,
 					"md": 4,

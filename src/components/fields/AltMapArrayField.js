@@ -4,8 +4,8 @@ import update from "react-addons-update";
 import deepEquals from "deep-equal";
 import LajiMap, { NORMAL_COLOR } from "laji-map";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
-import { Button, Affix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, parseDotPath } from "../../utils";
+import { Button, StretchAffix } from "../components";
+import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 
@@ -36,6 +36,14 @@ export default class AltMapArrayField extends Component {
 		return shouldRender(this, nextProps, nextState);
 	}
 
+	componentDidMount() {
+		this.setState({mounted: true});
+	}
+
+	componentWillUnmount() {
+		this.setState({mounted: false});
+	}
+
 	componentDidUpdate() {
 		const {geometryMapper} = getUiOptions(this.props.uiSchema);
 		if (!geometryMapper) return;
@@ -47,7 +55,7 @@ export default class AltMapArrayField extends Component {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryMapper, topOffset} = options;
+		const {popupFields, geometryMapper, topOffset, bottomOffset} = options;
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
@@ -78,12 +86,15 @@ export default class AltMapArrayField extends Component {
 		const emptyMode = !formData || !formData.length;
 
 		return (
-			<div>
-				<Row ref={elem => {this.affix = elem;}}>
+			<div ref="affix">
+				<Row >
 					<Col {...mapSizes}>
-						<Affix container={this}
-						       offset={topOffset}
-						       getContainer={() => findDOMNode(this.affix)} className={this.state.focusGrabbed ? "pass-block" : ""}>
+						<StretchAffix topOffset={topOffset}
+									        bottomOffset={bottomOffset}
+						              getContainer={() => findDOMNode(this.refs.affix)}
+						              onResize={() => this.refs.map.map.map.invalidateSize()}
+						              mounted={this.state.mounted}
+						              className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
 								ref="map"
 								lang={this.props.formContext.lang}
@@ -110,7 +121,7 @@ export default class AltMapArrayField extends Component {
 								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
 							  controlSettings={(emptyMode || this.state.activeIdx !== undefined) ? {} : {draw: false}}
 							/>
-						</Affix>
+						</StretchAffix>
 					</Col>
 					<Col {...schemaSizes}>
 						{emptyMode ?
@@ -366,11 +377,6 @@ class MapComponent extends Component {
 			rootElem: this.refs.map
 		});
 		this._context.map = this.map;
-		window.addEventListener("resize", this.onResize);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener("resize", this.onResize);
 	}
 
 	getStateFromProps = ({drawData, controlSettings}) => {
@@ -393,14 +399,6 @@ class MapComponent extends Component {
 			}
 		}
 		this.setState(this.getStateFromProps(props));
-	}
-
-	componentDidUpdate() {
-		this.onResize();
-	}
-
-	onResize = () => {
-		this.map.map.invalidateSize();
 	}
 
 	grabFocus = () => {

@@ -238,7 +238,7 @@ body .laji-form {
 .laji-form .laji-form-map-container {
 	z-index: 1;
 	position: relative;
-	height: 100vh;
+	height: inherit;
 }
 .laji-form .laji-form-map {
 	height: 100%;
@@ -642,4 +642,6 @@ body .laji-form {
 .laji-form .panel-body:not(.laji-map-coordinates) {
 	padding: 8px;
 }
-
+.laji-form .laji-map .laji-map-coordinates {
+	max-height: 230px;
+}

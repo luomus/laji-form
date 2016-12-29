@@ -138,7 +138,7 @@ export class Affix extends Component {
 	getState = () => {
 		const container = this.props.getContainer();
 		if (container) {
-			const offset = (this.props.offset || 0);
+			const offset = (this.props.topOffset || 0);
 
 			const containerTop = container.getBoundingClientRect().top;
 			const containerHeight = container.offsetHeight;
@@ -197,6 +197,129 @@ export class Affix extends Component {
 				<div ref="wrapper" style={style} className={this.props.className}>
 					{children}
 				</div>
+			</div>
+		);
+	}
+}
+
+
+export class StretchAffix extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
+	componentWillReceiveProps(props) {
+		if (props.mounted && !this.initialized) {
+			this.setState(this.getState());
+			this.initialized = true;
+		}
+	}
+
+	componentDidMount() {
+		window.addEventListener("scroll", this.onScroll);
+		window.addEventListener("resize", this.onResize);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onScroll);
+		window.removeEventListener("resize", this.onResize);
+	}
+
+	onScroll = () => {
+		const state = this.getState();
+		requestAnimationFrame(() => {
+			this.setState(state, () => {
+				if (this.props.onResize) this.props.onResize();
+			});
+		});
+	}
+
+	onResize = () => {
+		requestAnimationFrame(() => {
+			const positioner = findDOMNode(this.refs.positioner);
+			const width = positioner.getBoundingClientRect().width;
+
+			const state = {...this.getState(), width};
+
+			this.setState(state, () => {
+				if (this.props.onResize) this.props.onResize();
+			});
+		})
+	}
+
+	getState = () => {
+		const container = this.props.getContainer();
+		if (container) {
+			const topOffset = this.props.topOffset || 0;
+			const bottomOffset = this.props.bottomOffset || 0;
+
+			const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+			const containerTop = container.getBoundingClientRect().top;
+			const containerHeight = container.offsetHeight;
+			const containerVisibleHeight = containerHeight - Math.abs(containerTop);
+			const scrolled = containerTop < topOffset;
+
+			let affixState = TOP;
+			if (scrolled && containerVisibleHeight < viewportHeight) affixState = BOTTOM;
+			else if (scrolled) affixState = AFFIXED;
+
+			const wrapperNode = findDOMNode(this.refs.wrapper);
+
+			const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
+			const top = topOffset;
+
+			const affixHeight = affixState !== BOTTOM ?
+				viewportHeight
+					- containerTop
+					- Math.max(top - containerTop, 0)
+					- bottomOffset :
+				Math.max(
+					containerVisibleHeight
+						- bottomOffset
+						- topOffset,
+					0
+				);
+			const fixerHeight = affixState !== TOP ?
+				"100vh" :
+			Math.max(viewportHeight - affixHeight, 0);
+
+			return {affixState, width, top, fixerHeight, affixHeight}
+		}
+	}
+
+	render() {
+		const {children} = this.props;
+		const {top, width, affixState, affixHeight, fixerHeight} = this.state;
+
+		const style = {position: "relative"};
+		const fixerStyle = {position: "relative", zIndex: -1};
+
+		style.height = affixHeight;
+		fixerStyle.height = fixerHeight;
+		switch (affixState) {
+			case TOP:
+				break;
+			case AFFIXED:
+				style.position = "fixed";
+				style.width = width;
+				style.top = top;
+				break;
+			case BOTTOM:
+				style.position = "fixed";
+				style.width = width;
+				style.top = top;
+				break;
+		}
+
+		return (
+			<div>
+				<div ref="positioner" />
+				<div ref="wrapper" style={style} className={this.props.className}>
+					{children}
+				</div>
+				<div style={fixerStyle} />
 			</div>
 		);
 	}
