@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema, parseDotPath, isEmptyString } from "../../utils";
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import Spinner from "react-spinner";
-import ApiClient from "../../ApiClient";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
@@ -37,9 +34,9 @@ export default class AutosuggestField extends Component {
 				inputTransformer: PropTypes.shape({
 					regexp: PropTypes.string.isRequired,
 					transformations: PropTypes.object.isRequired
-				}),
-				uiSchema: PropTypes.object
-			}).isRequired
+				})
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 	

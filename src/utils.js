@@ -74,12 +74,13 @@ export function getUiOptions(uiSchema) {
 	return {};
 }
 
-export function getInnerUiSchema(uiSchema, schema) {
+export function getInnerUiSchema(parentUiSchema) {
+	const {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
 	return {
-		...uiSchema,
+		...restOfUiSchema,
 		"ui:field": undefined,
 		"ui:buttons": undefined,
-		...getUiOptions(uiSchema).uiSchema
+		...uiSchema
 	};
 }
 

@@ -126,7 +126,14 @@ export default class TableField extends Component {
 
 			let uiOptions = {...cols, showLabels: false};
 			if (uiSchema["ui:field"]) {
-				uiOptions.uiSchema = {"ui:field": uiSchema["ui:field"], "ui:options": uiSchema["ui:options"]};
+				uiSchema = {
+					...uiSchema,
+					uiSchema: {
+						"ui:field": uiSchema["ui:field"],
+						"ui:options": uiSchema["ui:options"],
+						uiSchema: uiSchema.uiSchema
+					}
+				};
 			}
 			uiSchema = {...uiSchema, "ui:field": "grid", "ui:options": uiOptions};
 

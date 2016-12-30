@@ -14,9 +14,9 @@ export default class ArrayCombinerField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				uiSchema: PropTypes.object,
 				additionalItemsAmount: PropTypes.integer
-			})
+			}),
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 

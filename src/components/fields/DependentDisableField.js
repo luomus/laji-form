@@ -19,9 +19,9 @@ export default class DependentDisableField extends Component {
 					disableField: PropTypes.string.isRequired,
 					disableDefiner: PropTypes.string.isRequired,
 					regexp: PropTypes.string.isRequired,
-				})).isRequired,
-				uiSchema: PropTypes.object
-			})
+				})).isRequired
+			}),
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
