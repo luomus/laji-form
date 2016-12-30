@@ -169,10 +169,10 @@
 		en: "No results",
 		sv: "Inga resultat"
 	},
-	addPlace: {
-		fi: "Lisää paikka",
-		en: "Add a place",
-		sv: "Lägg till en plats"
+	add: {
+		fi: "Lisää",
+		en: "Add",
+		sv: "Lägg"
 	},
 	all: {
 		fi: "Kaikki",

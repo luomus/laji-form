@@ -3,1365 +3,1335 @@
 	"title": "Retkikertomuslomake",
 	"description": "Tällä lomakkeella voit ilmoittaa yhden tai useamman päivän kestäneen retken kaikki havaintotiedot ja mahdollisesti kokoelmanäytteeksi otettujen yksilöiden tiedot.",
 	"uiSchema": {
-		"ui:order": [
-			"gatheringEvent",
-			"gatherings"
-		],
-		"ui:field": "inject",
-		"ui:options": {
-			"injections": {
-				"fields": [
-					"editors",
-					"secureLevel"
-				],
-				"target": "gatheringEvent"
-			},
-			"uiSchema": {
-				"ui:field": "injectDefaultValue",
-				"ui:options": {
-					"fields": [
-						"dateBegin",
-						"dateEnd"
-					],
-					"target": "gatherings",
-					"source": "gatheringEvent"
-				}
-			}
-		},
-		"gatheringEvent": {
-			"ui:field": "nested",
-			"classNames": "well well-sm",
-			"ui:order": [
-				"*",
-				"legPublic",
-				"secureLevel",
-				"eventTime"
-			],
-			"ui:options": {
-				"nests": {
-					"splittable": {
-						"fields": [
-							"leg",
-							"editors"
-						],
-						"uiSchema": {
-							"ui:field": "split",
-							"ui:options": {
-								"splits": [
-									{
-										"fields": [
-											"leg",
-											"editors"
-										],
-										"name": "",
-										"lg": 3,
-										"md": 4,
-										"sm": 5,
-										"uiSchema": {
-											"ui:field": "nested",
-											"ui:order": [
-												""
-											],
-											"ui:options": {
-												"nests": {
-													"": {
-														"fields": [
-															"leg",
-															"editors"
-														],
-														"uiSchema": {
-															"ui:field": "dependentBoolean",
-															"ui:options": {
-																"booleanField": "editors",
-																"booleanDefiner": "leg",
-																"uiSchema": {
-																	"ui:field": "arrayCombiner",
-																	"ui:options": {
-																		"uiSchema": {
-																			"ui:field": "table",
-																			"ui:options": {
-																				"specialRules": "legEditors"
-																			},
-																			"items": {
-																				"ui:field": "injectFromContext",
-																				"ui:options":{
-																					"injections": {
-																						"ui:options.rules.0.regexp": "creator"
-																					},
-																					"uiSchema": {
-																						"ui:field": "dependentDisable",
-																						"ui:options": {
-																							"rules": [
-																								{
-																									"disableDefiner": "leg",
-																									"disableField": "editors",
-																									"regexp": "creator is injected here",
-																									"inlineHelp": "Sinulla on pakko olla muokkausoikeus",
-																									"disabledValueToDisplay": true
-																								},
-																								{
-																									"disableDefiner": "leg",
-																									"disableField": "editors",
-																									"regexp": "^((?!(MA\\.\\d)).)*$"
-																								}
-																							]
-																						}
-																					}
-																				},
-																				"leg": {
-																					"ui:widget": "autosuggest",
-																					"ui:options": {
-																						"autosuggestField": "friends",
-																						"allowNonsuggestedValue": true,
-																						"suggestionReceive": "key",
-																						"preventTypingPattern": "^MA\\.\\d+$"
-																					}
-																				},
-																				"editors": {
-																					"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								]
-							}
-						}
-					},
-					"eventTime": {
-						"fields": [
-							"dateBegin",
-							"dateEnd"
-						],
-						"title": "",
-						"uiSchema": {
-							"ui:field": "grid",
-							"ui:options": {
-								"lg": {
-									"dateBegin": 3,
-									"dateEnd": 2
-								},
-								"md": {
-									"dateBegin": 4,
-									"dateEnd": 2
-								},
-								"sm": {
-									"dateBegin": 5,
-									"dateEnd": 3
-								},
-								"xs": 12
-							},
-							"dateBegin": {
-								"ui:widget": "dateTime",
-								"ui:options": {
-									"showButtons": true
-								}
-							},
-							"dateEnd": {
-								"ui:widget": "dateTime"
-							}
-						}
-					}
-				}
-			},
-			"secureLevel": {
-				"ui:widget": "anyToBoolean",
-				"ui:help": "Huomaa että karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia",
-				"ui:options": {
-					"trueValue": "10 km",
-					"falseValue": "Ei salausta"
-				}
-			}
-		},
-		"gatherings": {
-			"ui:field": "altMapArray",
-			"ui:help": "Aloita havaintojen syöttö piirtämällä havaintoalue kartalle",
-			"ui:options": {
-				"geometryMapper": "units",
-				"topOffset": 50,
-				"bottomOffset": 50,
-				"mapSizes": {
-					"lg": 4,
-					"md": 4,
-					"sm": 6,
-					"xs": 6
-				},
-				"popupFields": [
-					{
-						"mapper": "unitTaxon"
-					},
-					{
-						"field": "sex"
-					},
-					{
-						"field": "notes"
-					}
-				],
-				"uiSchema": {
-					"ui:field": "accordionArray",
-					"ui:options": {
-						"headerFormatter": "units",
-						"popupFields": [
-							{
-								"field": "units",
-								"mapper": "units"
-							},
-							{
-								"field": "localityDescription"
-							}
-						]
-					},
-					"items": {
-						"ui:field": "nested",
-						"ui:options": {
-							"nests": {
-								"eventTime": {
-									"title": "",
-									"fields": [
-										"dateBegin",
-										"dateEnd"
-									]
-								},
-								"placeWrapper": {
-									"title": "Havaintopaikan tiedot",
-									"fields": [
-										"locality",
-										"localityDescription",
-										"images",
-										"eventTime"
-									]
-								}
-							},
-							"uiSchema": {
-								"ui:order": [
-									"*",
-									"units"
-								],
-								"geometry": {
-									"ui:field": "hidden"
-								},
-								"placeWrapper": {
-									"ui:field": "scoped",
-									"classNames": "well well-sm",
-									"ui:options": {
-										"includeAdditionalFieldsChooserButton": true,
-										"additionalsPersistenceId": "gatherings",
-										"fields": [
-											"locality",
-											"localityDescription",
-											"images"
-										],
-										"titles": {
-											"eventTime": "Aika"
-										},
-										"uiSchema": {
-											"images": {
-												"ui:field": "imageArray",
-												"ui:options": {
-													"metadataSchemas": {
-														"schema": {
-															"type": "object",
-															"properties": {
-																"intellectualRights": {
-																	"type": "string",
-																	"enum": [
-																		"",
-																		"MY.intellectualRightsCC-BY",
-																		"MY.intellectualRightsCC0",
-																		"MY.intellectualRightsCC-BY-SA",
-																		"MY.intellectualRightsCC-BY-NC",
-																		"MY.intellectualRightsARR"
-																	]
-																},
-																"captureDateTime": {
-																	"type": "string"
-																},
-																"capturerVerbatim": {
-																	"type": "array",
-																	"items": {
-																		"type": "string"
-																	}
-																},
-																"intellectualOwner": {
-																	"type": "string"
-																}
-															}
-														},
-														"uiSchema": {
-															"captureDateTime": {
-																"ui:widget": "date"
-															}
-														}
-													}
-												}
-											},
-											"eventTime": {
-												"ui:field": "grid",
-												"ui:options": {
-													"lg": {
-														"dateBegin": 6,
-														"dateEnd": 3
-													},
-													"md": {
-														"dateBegin": 7,
-														"dateEnd": 4
-													},
-													"sm": 12,
-													"xs": 12
-												},
-												"dateBegin": {
-													"ui:widget": "dateTime",
-													"ui:options": {
-														"showButtons": true
-													}
-												},
-												"dateEnd": {
-													"ui:widget": "dateTime"
-												}
-											}
-										}
-									}
-								},
-								"units": {
-									"ui:field": "customButtonArray",
-									"ui:options": {
-										"confirmDelete": true,
-										"buttons": [
-											{
-												"name": "add",
-												"text": "Lisää havainto"
-											},
-											{
-												"name": "copy",
-												"text": "Kopioi havainto",
-												"type": "blacklist",
-												"filter": [
-													"identifications.taxon",
-													"identifications.taxonID",
-													"unitType",
-													"countOfOccurrences",
-													"notes",
-													"unitGathering.geometry"
-												]
-											}
-										]
-									},
-									"items": {
-										"ui:field": "flat",
-										"ui:options": {
-											"fields": [
-												"identifications",
-												"unitGathering"
-											],
-											"uiSchema": {
-												"ui:field": "scoped",
-												"classNames": "well well-sm",
-												"ui:options": {
-													"additionalsGroupingPath": "fieldScopes.unitType",
-													"additionalsGroupingOrderer": "unitType",
-													"additionalsGroupsTranslator": "taxonGroups",
-													"additionalsPersistenceKey": "unitType",
-													"additionalsPersistenceId": "gathering_unit_unitType",
-													"includeAdditionalFieldsChooserButton": true,
-													"glyphFields": {
-														"camera": {
-															"show": "images"
-														},
-														"map-marker": {
-															"fn": "setLocation"
-														}
-													},
-													"uiSchema": {
-														"ui:field": "autosuggest",
-														"ui:options": {
-															"autosuggestField": "taxon",
-															"allowNonsuggestedValue": true,
-															"suggestionInputField": "_identifications.taxon",
-															"suggestionValueField": "_identifications.taxonID",
-															"suggestionReceivers": {
-																"_identifications.taxon": "value",
-																"unitType": "$taxonGroup",
-																"_identifications.taxonID": "key"
-															},
-															"inputTransformer": {
-																"regexp": "(.*)\\?$",
-																"transformations": {
-																	"taxonConfidence": "MY.taxonConfidenceUnsure"
-																}
-															},
-															"uiSchema": {
-																"ui:field": "grid",
-																"ui:options": {
-																	"lg": {
-																		"_identifications.identificationBasis": 4,
-																		"*": 2
-																	},
-																	"md": {
-																		"_identifications.identificationBasis": 4,
-																		"*": 2
-																	},
-																	"sm": {
-																		"_identifications.identificationBasis": 8,
-																		"*": 4
-																	},
-																	"xs": 12,
-																	"rows": [
-																		[
-																			"_identifications.taxon",
-																			"taxonConfidence",
-																			"_identifications.identificationBasis",
-																			"recordBasis",
-																			"countOfOccurrences",
-																			"notes"
-																		]
-																	]
-																},
-																"_identifications.taxonID": {
-																	"ui:widget": "hidden"
-																},
-																"_identifications.detDate": {
-																	"ui:widget": "date"
-																},
-																"unitType": {
-																	"ui:field": "hidden"
-																},
-																"images": {
-																	"ui:field": "imageArray",
-																	"ui:options": {
-																		"metadataSchemas": {
-																			"schema": {
-																				"type": "object",
-																				"properties": {
-																					"intellectualRights": {
-																						"type": "string",
-																						"enum": [
-																							"",
-																							"MY.intellectualRightsCC-BY",
-																							"MY.intellectualRightsCC0",
-																							"MY.intellectualRightsCC-BY-SA",
-																							"MY.intellectualRightsCC-BY-NC",
-																							"MY.intellectualRightsARR"
-																						]
-																					},
-																					"captureDateTime": {
-																						"type": "string"
-																					},
-																					"capturerVerbatim": {
-																						"type": "array",
-																						"items": {
-																							"type": "string"
-																						}
-																					},
-																					"intellectualOwner": {
-																						"type": "string"
-																					}
-																				}
-																			},
-																			"uiSchema": {
-																				"captureDateTime": {
-																					"ui:widget": "date"
-																				}
-																			}
-																		}
-																	}
-																},
-																"_unitGathering.geometry": {
-																	"ui:field": "hidden"
-																},
-																"_unitGathering.dateBegin": {
-																	"ui:widget": "dateTime"
-																},
-																"_unitGathering.dateEnd": {
-																	"ui:widget": "dateTime"
-																},
-																"recordBasis": {
-																	"ui:field": "filteredEnum",
-																	"ui:options": {
-																		"type": "whitelist",
-																		"filter": [
-																			"",
-																			"MY.recordBasisHumanObservationPhoto",
-																			"MY.recordBasisPreservedSpecimen",
-																			"MY.recordBasisHumanObservationHandled",
-																			"MY.recordBasisHumanObservation"
-																		],
-																		"uiSchema": {
-																			"ui:widget": "imageSelect",
-																			"ui:options": {
-																				"images": {
-																					"MY.recordBasisHumanObservationPhoto": "media",
-																					"MY.recordBasisPreservedSpecimen": "specimen",
-																					"MY.recordBasisHumanObservationHandled": "handled",
-																					"MY.recordBasisHumanObservation": "seen"
-																				}
-																			}
-																		}
-																	}
-																},
-																"hostID": {
-																	"ui:widget": "autosuggest",
-																	"ui:options": {
-																		"autosuggestField": "taxon",
-																		"allowNonsuggestedValue": true,
-																		"suggestionReceive": "key"
-																	}
-																},
-																"substrateSpecies": {
-																	"ui:widget": "autosuggest",
-																	"ui:options": {
-																		"autosuggestField": "taxon",
-																		"allowNonsuggestedValue": true,
-																		"suggestionReceive": "key"
-																	}
-																}
-															}
-														}
-													},
-													"fields": [
-														"_identifications.taxonID",
-														"_identifications.taxon",
-														"unitType",
-														"taxonConfidence",
-														"recordBasis",
-														"countOfOccurrences",
-														"notes"
-													],
-													"fieldScopes": {
-														"unitType": {
-															"+": {
-																"fields": [
-																	"_identifications.identificationBasis",
-																	"_identifications.det",
-																	"_identifications.detMethod",
-																	"_identifications.detDate",
-																	"sex"
-																],
-																"additionalFields": [
-																	"_unitGathering.dateBegin",
-																	"_unitGathering.dateEnd",
-																	"_unitGathering.habitatIUCN",
-																	"_unitGathering.habitatDescription",
-																	"preservation"
-																]
-															},
-															"MVL.1": {
-																"additionalFields": [
-																	"breeding",
-																	"atlasCode",
-																	"movingStatus",
-																	"twitched"
-																]
-															},
-															"MVL.21": {
-																"additionalFields": [
-																	"nativeStatus",
-																	"plantLifeStage",
-																	"plantStatusCode"
-																]
-															},
-															"MVL.232": {
-																"additionalFields": [
-																	"lifeStage",
-																	"hostID"
-																]
-															},
-															"MVL.233": {
-																"additionalFields": [
-																	"substrate",
-																	"substrateSpecies",
-																	"substrateNotes",
-																	"taste",
-																	"tasteNotes",
-																	"smell",
-																	"smellNotes"
-																]
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	},
-	"schema": {
-		"type": "object",
-		"properties": {
-			"editors": {
-				"type": "array",
-				"title": "Muokkausoikeus",
-				"uniqueItems": true,
-				"items": {
-					"type": "string"
-				}
-			},
-			"secureLevel": {
-				"type": "string",
-				"title": "Karkeistettuna 10 x 10 km² ruutuun",
-				"enum": [
-					"",
-					"MX.secureLevelNone",
-					"MX.secureLevelKM1",
-					"MX.secureLevelKM5",
-					"MX.secureLevelKM10",
-					"MX.secureLevelKM25",
-					"MX.secureLevelKM50",
-					"MX.secureLevelKM100",
-					"MX.secureLevelHighest",
-					"MX.secureLevelNoShow"
-				],
-				"enumNames": [
-					"",
-					"Ei salausta",
-					"1 km",
-					"5 km",
-					"10 km",
-					"25 km",
-					"50 km",
-					"100 km",
-					"Korkein suojaus",
-					"Täyssalaus - käytetään lähinnä spammin estämiseksi"
-				]
-			},
-			"gatheringEvent": {
-				"type": "object",
-				"title": "",
-				"properties": {
-					"leg": {
-						"type": "array",
-						"title": "Havainnoitsijat",
-						"uniqueItems": true,
-						"items": {
-							"type": "string"
-						}
-					},
-					"legPublic": {
-						"type": "boolean",
-						"title": "Näytetäänkö nimet julkisesti?",
-						"default": true
-					},
-					"dateBegin": {
-						"type": "string",
-						"title": "Alku"
-					},
-					"dateEnd": {
-						"type": "string",
-						"title": "Loppu"
-					}
-				},
-				"required": []
-			},
-			"gatherings": {
-				"type": "array",
-				"title": "Paikka",
-				"uniqueItems": true,
-				"items": {
-					"type": "object",
-					"properties": {
-						"dateBegin": {
-							"type": "string",
-							"title": "Alku"
-						},
-						"dateEnd": {
-							"type": "string",
-							"title": "Loppu"
-						},
-						"locality": {
-							"type": "string",
-							"title": "Paikannimet"
-						},
-						"localityDescription": {
-							"type": "string",
-							"title": "Paikan vapaamuotoinen kuvaus"
-						},
-						"images": {
-							"type": "array",
-							"title": "Kuvat havaintopaikasta",
-							"uniqueItems": true,
-							"items": {
-								"type": "string"
-							}
-						},
-						"units": {
-							"type": "array",
-							"title": "Havainnot",
-							"uniqueItems": true,
-							"items": {
-								"type": "object",
-								"properties": {
-									"recordBasis": {
-										"type": "string",
-										"title": "Tietueen tyyppi",
-										"default": "MY.recordBasisHumanObservation",
-										"enum": [
-											"",
-											"MY.recordBasisPreservedSpecimen",
-											"MY.recordBasisFossilSpecimen",
-											"MY.recordBasisSubfossilSpecimen",
-											"MY.recordBasisHumanObservation",
-											"MY.recordBasisMachineObservation",
-											"MY.recordBasisLivingSpecimen",
-											"MY.recordBasisMicrobialSpecimen",
-											"MY.recordBasisHumanObservationSeen",
-											"MY.recordBasisHumanObservationHeard",
-											"MY.recordBasisHumanObservationPhoto",
-											"MY.recordBasisHumanObservationIndirect",
-											"MY.recordBasisHumanObservationHandled",
-											"MY.recordBasisHumanObservationVideo",
-											"MY.recordBasisHumanObservationAudio",
-											"MY.recordBasisMachineObservationVideo",
-											"MY.recordBasisMachineObservationAudio",
-											"MY.recordBasisMachineObservationGeologger",
-											"MY.recordBasisMachineObservationSatelliteTransmitter",
-											"MY.recordBasisLiterature"
-										],
-										"enumNames": [
-											"",
-											"Näyte",
-											"Fossiili",
-											"subfossiili",
-											"Havainto",
-											"Laitteen tekemä havainto",
-											"Elävä näyte",
-											"Mikrobinäyte",
-											"Nähty",
-											"Kuultu",
-											"Valokuvattu",
-											"Epäsuora havainto (jäljet, ulosteet, yms)",
-											"Käsitelty (otettu kiinni, tutkittu ja vapautettu)",
-											"Videoitu",
-											"Äänitetty",
-											"Laitteen tekemä videotallenne",
-											"Laitteen tekemä äänitallenne",
-											"Geopaikannin",
-											"Satelliittipaikannus",
-											"Kirjallisuustieto"
-										]
-									},
-									"unitType": {
-										"type": "array",
-										"title": "Näytteen tyyppi",
-										"uniqueItems": true,
-										"items": {
-											"type": "string"
-										}
-									},
-									"taxonConfidence": {
-										"type": "string",
-										"title": "Määrityksen varmuus",
-										"default": "MY.taxonConfidenceSure",
-										"enum": [
-											"",
-											"MY.taxonConfidenceSure",
-											"MY.taxonConfidenceUnsure"
-										],
-										"enumNames": [
-											"",
-											"Varma",
-											"Epävarma"
-										]
-									},
-									"notes": {
-										"type": "string",
-										"title": "Lisätiedot"
-									},
-									"countOfOccurrences": {
-										"type": "integer",
-										"title": "Määrä"
-									},
-									"sex": {
-										"type": "string",
-										"title": "Sukupuoli",
-										"enum": [
-											"",
-											"MY.sexM",
-											"MY.sexF",
-											"MY.sexU",
-											"MY.sexN",
-											"MY.sexX",
-											"MY.sexW",
-											"MY.sexE",
-											"MY.sexC"
-										],
-										"enumNames": [
-											"",
-											"Koiras",
-											"Naaras",
-											"MY.sexU",
-											"MY.sexN",
-											"MY.sexX",
-											"Työläinen",
-											"MY.sexE",
-											"MY.sexC"
-										]
-									},
-									"lifeStage": {
-										"type": "string",
-										"title": "Elinvaihe",
-										"enum": [
-											"",
-											"MY.lifeStageEgg",
-											"MY.lifeStageLarva",
-											"MY.lifeStagePupa",
-											"MY.lifeStageJuvenile",
-											"MY.lifeStageNymph",
-											"MY.lifeStageSubimago",
-											"MY.lifeStageImmature",
-											"MY.lifeStageAdult",
-											"MY.lifeStageFertile",
-											"MY.lifeStageSterile",
-											"MY.lifeStageTadpole",
-											"MY.lifeStageSnag",
-											"MY.lifeStageSeed",
-											"MY.lifeStageLivePlant",
-											"MY.lifeStageDead"
-										],
-										"enumNames": [
-											"",
-											"muna",
-											"toukka",
-											"kotelo",
-											"nuori",
-											"nymfi",
-											"esiaikuinen",
-											"keskenkasvuinen",
-											"aikuinen",
-											"lisääntymiskykyinen",
-											"lisääntymiskyvytön",
-											"Nuijapää",
-											"Kelo",
-											"Siemen",
-											"Elävä kasvi",
-											"MY.lifeStageDead"
-										]
-									},
-									"hostID": {
-										"type": "string",
-										"title": "Isäntälaji"
-									},
-									"substrate": {
-										"type": "string",
-										"title": "Kasvualusta"
-									},
-									"substrateSpecies": {
-										"type": "string",
-										"title": "Kasvualusta (laji)"
-									},
-									"substrateNotes": {
-										"type": "string",
-										"title": "Muistiinpanoja alustasta"
-									},
-									"taste": {
-										"type": "string",
-										"title": "Maku",
-										"enum": [
-											"",
-											"MY.tasteNotTasted",
-											"MY.tasteNoTaste",
-											"MY.tasteWeak",
-											"MY.tasteModerate",
-											"MY.tasteStrong"
-										],
-										"enumNames": [
-											"",
-											"Ei maistettu",
-											"Ei makua",
-											"heikko",
-											"kohtalainen",
-											"voimakas"
-										]
-									},
-									"tasteNotes": {
-										"type": "string",
-										"title": "Muistiinpanot mausta"
-									},
-									"smell": {
-										"type": "string",
-										"title": "Haju",
-										"enum": [
-											"",
-											"MY.smellNotSmelled",
-											"MY.smellNoSmelled",
-											"MY.smellWeak",
-											"MY.smellModerate",
-											"MY.smellStrong"
-										],
-										"enumNames": [
-											"",
-											"ei haistettu",
-											"ei hajua",
-											"heikko",
-											"kohtalainen",
-											"vahva"
-										]
-									},
-									"smellNotes": {
-										"type": "string",
-										"title": "Muistiinpanot hajusta"
-									},
-									"preservation": {
-										"type": "string",
-										"title": "Säilöntätapa",
-										"enum": [
-											"",
-											"MY.preservationPinned",
-											"MY.preservationGlued",
-											"MY.preservationEthanol",
-											"MY.preservationEthanolPure",
-											"MY.preservationEthanol96",
-											"MY.preservationEthanol80",
-											"MY.preservationEthanol80Pure",
-											"MY.preservationEthanol70",
-											"MY.preservationEthanolDenatured",
-											"MY.preservationFormalin",
-											"MY.preservationEthanolFormalin",
-											"MY.preservationGlycerol",
-											"MY.preservationLiquid",
-											"MY.preservationEulan",
-											"MY.preservationSlide",
-											"MY.preservationSlideEuparal",
-											"MY.preservationSlidePolyviol",
-											"MY.preservationSlideCanadaBalsam",
-											"MY.preservationCriticalPointDrying",
-											"MY.preservationGoldPlated",
-											"MY.preservationFreezeDried",
-											"MY.preservationFrozen",
-											"MY.preservationDry",
-											"MY.preservationStuffed",
-											"MY.preservationParaffin",
-											"MY.preservationPressed",
-											"MY.preservationLiving",
-											"MY.preservationCast",
-											"MY.preservationEthanolExFormalin"
-										],
-										"enumNames": [
-											"",
-											"neulattu",
-											"liimattu",
-											"etanoli (tuntematon %)",
-											"etanoli (tuntematon %) puhdas",
-											"etanoli 96 %",
-											"etanoli 80 %",
-											"etanoli 80 % puhdas",
-											"etanoli 70 %",
-											"denaturoitu etanoli",
-											"formaliini",
-											"etanoli ja formaliini",
-											"glyseroli",
-											"nestenäyte",
-											"Eulan",
-											"objektilasi",
-											"objektilasi - Euparal",
-											"objektilasi - Polyviol",
-											"objektilasi - Kanadabalsami",
-											"MY.preservationCriticalPointDrying",
-											"kullattu",
-											"kylmäkuivattu",
-											"jäädytetty",
-											"MY.preservationDry",
-											"täytetty (stuffed)",
-											"parafiini",
-											"kuivattu ja prässätty",
-											"elävä",
-											"MY.preservationCast",
-											"Etanoli, aiemmin formaliini"
-										]
-									},
-									"plantLifeStage": {
-										"type": "string",
-										"title": "Kasvin elinvaihe"
-									},
-									"plantStatusCode": {
-										"type": "string",
-										"title": "MY.plantStatusCode",
-										"enum": [
-											"",
-											"MY.MY.plantStatusCodeL",
-											"MY.plantStatusCodeA",
-											"MY.plantStatusCodeAV",
-											"MY.plantStatusCodeAOV",
-											"MY.plantStatusCodeAN",
-											"MY.plantStatusCodeANV",
-											"MY.plantStatusCodeANS",
-											"MY.plantStatusCodeT",
-											"MY.plantStatusCodeTV",
-											"MY.plantStatusCodeTOV",
-											"MY.plantStatusCodeTNV",
-											"MY.plantStatusCodeTNS",
-											"MY.plantStatusCodeV",
-											"MY.plantStatusCodeOV",
-											"MY.plantStatusCodeN",
-											"MY.plantStatusCodeNV",
-											"MY.plantStatusCodeNS",
-											"MY.plantStatusCodeE",
-											"MY.plantStatusCodeTE",
-											"MY.plantStatusCodeTVE",
-											"MY.plantStatusCodeTOVE",
-											"MY.plantStatusCodeTNVE",
-											"MY.plantStatusCodeTNSE",
-											"MY.plantStatusCodeTN",
-											"MY.plantStatusCodeTNE",
-											"MY.plantStatusCodeR",
-											"MY.plantStatusCodeC",
-											"MY.plantStatusCodeH",
-											"MY.plantStatusCodeG",
-											"MY.plantStatusCodeF"
-										],
-										"enumNames": [
-											"",
-											"Luonnonvarainen; eri arviota alkuperäisyydestä, tuloajasta tai vakinaisuudesta",
-											"alkuperäinen, vanha tai uusi, ei arviota vakinaisuudesta",
-											"alkuperäinen, ei arviota tuloajasta, vakinainen",
-											"alkuperäinen, vanhaa perua, vakinainen",
-											"alkuperäinen, uutta perua, ei arviota vakinaisuudesta",
-											"alkuperäinen, uutta perua, vakinainen",
-											"alkuperäinen, uutta perua, satunnainen",
-											"tulokas, ei arviota tuloajasta eikä vakinaisuudesta",
-											"tulokas, ei arviota tuloajasta, vakinainen",
-											"muinaistulokas, vakinainen",
-											"uustulokas, vakinainen",
-											"uustulokas, satunnainen",
-											"ei arviota alkuperäisyydestä eikä tuloajasta, vakinainen",
-											"ei arviota alkuperäisyydestä, vanhaa perua, vakinainen",
-											"ei arviota alkuperäisyydestä, uutta perua, ei arviota vakinaisuudesta",
-											"ei arviota alkuperäisyydestä, uutta perua, vakinainen",
-											"ei arviota alkuperäisyydestä, uutta perua, satunnainen",
-											"viljelykarkulainen",
-											"tulokas, viljelykarkulainen",
-											"tulokas, vakiintunut, viljelykarkulainen",
-											"muinaistulokas, vakiintunut, viljelykarkulainen",
-											"uustulokas, vakiintunut, viljelykarkulainen",
-											"uustulokas, satunnainen, viljelykarkulainen",
-											"tulokas, uusi, ei arviota vakinaisuudesta",
-											"tulokas, uusi, ei arviota vakinaisuudesta, viljelykarkulanen",
-											"viljelyjäänne",
-											"Viljelykasvi",
-											"puutarhan sisäkarkulainen (/hort)",
-											"kasvihuonekasvi (tai muu sisäkasvi), oli sitten viljelty tai villi",
-											"Subfossiili, fossiili"
-										]
-									},
-									"breeding": {
-										"type": "boolean",
-										"title": "Pesintä"
-									},
-									"atlasCode": {
-										"type": "string",
-										"title": "Lintuatlaskoodi"
-									},
-									"movingStatus": {
-										"type": "string",
-										"title": "Linnun tila"
-									},
-									"twitched": {
-										"type": "string",
-										"title": "Bongattu"
-									},
-									"nativeStatus": {
-										"type": "boolean",
-										"title": "Luonnonvaraisuus"
-									},
-									"images": {
-										"type": "array",
-										"title": "Kuvat",
-										"uniqueItems": true,
-										"items": {
-											"type": "string"
-										}
-									},
-									"identifications": {
-										"type": "array",
-										"uniqueItems": true,
-										"items": {
-											"type": "object",
-											"properties": {
-												"taxon": {
-													"type": "string",
-													"title": "Taksonin nimi"
-												},
-												"taxonID": {
-													"type": "string",
-													"title": "Taksonin tunniste"
-												},
-												"det": {
-													"type": "string",
-													"title": "Det"
-												},
-												"detDate": {
-													"type": "string",
-													"title": "Määritysajankohta"
-												},
-												"detMethod": {
-													"type": "string",
-													"title": "Määritysmenetelmä",
-													"enum": [
-														"",
-														"MY.detMethodFreshSample",
-														"MY.detMethodMicroscopy",
-														"MY.detMethodPhoto"
-													],
-													"enumNames": [
-														"",
-														"tuorenäyte",
-														"mikroskopia",
-														"kuva"
-													]
-												},
-												"identificationBasis": {
-													"type": "array",
-													"title": "Määritysperuste",
-													"uniqueItems": true,
-													"items": {
-														"type": "string",
-														"enum": [
-															"",
-															"MY.identificationBasisSeen",
-															"MY.identificationBasisHeard",
-															"MY.identificationBasisHandled",
-															"MY.identificationBasisMedia",
-															"MY.identificationBasisFreshSpecimen",
-															"MY.identificationBasisPreservedSpecimen",
-															"MY.identificationBasisMicroscope",
-															"MY.identificationBasisSpores",
-															"MY.identificationBasisChemical",
-															"MY.identificationBasisGenitals",
-															"MY.identificationBasisGenitalPreparate"
-														],
-														"enumNames": [
-															"",
-															"näköhavainto",
-															"kuulohavainto",
-															"käsitelty",
-															"valokuva tai muu media",
-															"tuorenäyte",
-															"säilötty näyte",
-															"mikroskopointi",
-															"itiöt",
-															"kemiallinen",
-															"genitaali",
-															"genitaalipreparaatti"
-														]
-													}
-												}
-											},
-											"required": []
-										}
-									},
-									"unitGathering": {
-										"type": "object",
-										"properties": {
-											"geometry": {
-												"type": "object",
-												"properties": {}
-											},
-											"dateBegin": {
-												"type": "string",
-												"title": "Alku"
-											},
-											"dateEnd": {
-												"type": "string",
-												"title": "Loppu"
-											},
-											"habitatIUCN": {
-												"type": "string",
-												"title": "Biotooppi"
-											},
-											"habitatDescription": {
-												"type": "string",
-												"title": "Habitaatin kuvaus"
-											}
-										},
-										"required": []
-									}
-								},
-								"required": []
-							}
-						},
-						"geometry": {
-							"type": "array",
-							"title": "MY.wgs84Geometrygeometry",
-							"uniqueItems": true,
-							"items": {
-								"type": "object",
-								"properties": {
-									"geometries": {
-										"type": "string",
-										"title": "MY.geometries"
-									}
-								},
-								"required": []
-							}
-						}
-					},
-					"required": []
-				}
-			}
-		},
-		"required": []
-	},
-	"validators": {
-		"gatheringEvent": {
-			"dateSpan": {
-				"dateOnly": true,
-				"message": "Aikavälin alun %{dateBegin} pitää olla ennen loppua %{dateEnd}"
-			},
-			"properties": {
-				"dateBegin": {
-					"datetime": {
-						"latest": "now",
-						"dateOnly": true,
-						"message": "pitää olla ennen %{date}"
-					}
-				},
-				"dateEnd": {
-					"datetime": {
-						"latest": "now",
-						"dateOnly": true,
-						"message": "pitää olla ennen %{date}"
-					}
-				}
-			}
-		},
-		"gatherings": {
-			"items": {
-				"properties": {
-					"units": {
-						"presence": {
-							"message": "Ei voi olla tyhjä"
-						},
-						"items": {
-							"properties": {
-								"identifications": {
-									"items": {
-										"properties": {
-											"detDate": {
-												"datetime": {
-													"latest": "now",
-													"dateOnly": true,
-													"message": "pitää olla ennen %{date}"
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			},
-			"presence": {
-				"message": "Ei voi olla tyhjä"
-			}
-		}
-	},
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:field": "inject",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel"
+        ],
+        "target": "gatheringEvent"
+      },
+      "uiSchema": {
+        "ui:field": "injectDefaultValue",
+        "ui:options": {
+          "fields": [
+            "dateBegin",
+            "dateEnd"
+          ],
+          "target": "gatherings",
+          "source": "gatheringEvent"
+        }
+      }
+    },
+    "gatheringEvent": {
+      "ui:field": "nested",
+      "classNames": "well well-sm",
+      "ui:order": [
+        "*",
+        "legPublic",
+        "secureLevel",
+        "eventTime"
+      ],
+      "ui:options": {
+        "nests": {
+          "splittable": {
+            "fields": [
+              "leg",
+              "editors"
+            ],
+            "uiSchema": {
+              "ui:field": "split",
+              "ui:options": {
+                "splits": [
+                  {
+                    "fields": [
+                      "leg",
+                      "editors"
+                    ],
+                    "name": "",
+                    "lg": 3,
+                    "md": 4,
+                    "sm": 5,
+                    "uiSchema": {
+                      "ui:field": "nested",
+                      "ui:order": [
+                        ""
+                      ],
+                      "ui:options": {
+                        "nests": {
+                          "": {
+                            "fields": [
+                              "leg",
+                              "editors"
+                            ],
+                            "uiSchema": {
+                              "ui:field": "dependentBoolean",
+                              "ui:options": {
+                                "booleanField": "editors",
+                                "booleanDefiner": "leg",
+                                "uiSchema": {
+                                  "ui:field": "arrayCombiner",
+                                  "ui:options": {
+                                    "uiSchema": {
+                                      "ui:field": "table",
+                                      "ui:options": {
+                                        "specialRules": "legEditors"
+                                      },
+                                      "items": {
+                                        "ui:field": "injectFromContext",
+                                        "ui:options": {
+                                          "injections": {
+                                            "ui:options.rules.0.regexp": "creator"
+                                          },
+                                          "uiSchema": {
+                                            "ui:field": "dependentDisable",
+                                            "ui:options": {
+                                              "rules": [
+                                                {
+                                                  "disableDefiner": "leg",
+                                                  "disableField": "editors",
+                                                  "regexp": "creator is injected here",
+                                                  "inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+                                                  "disabledValueToDisplay": true
+                                                },
+                                                {
+                                                  "disableDefiner": "leg",
+                                                  "disableField": "editors",
+                                                  "regexp": "^((?!(MA\\.\\d)).)*$"
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        "leg": {
+                                          "ui:widget": "autosuggest",
+                                          "ui:options": {
+                                            "autosuggestField": "friends",
+                                            "allowNonsuggestedValue": true,
+                                            "suggestionReceive": "key",
+                                            "preventTypingPattern": "^MA\\.\\d+$"
+                                          }
+                                        },
+                                        "editors": {
+                                          "ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "eventTime": {
+            "fields": [
+              "dateBegin",
+              "dateEnd"
+            ],
+            "title": "",
+            "uiSchema": {
+              "ui:field": "grid",
+              "ui:options": {
+                "lg": {
+                  "dateBegin": 3,
+                  "dateEnd": 2
+                },
+                "md": {
+                  "dateBegin": 4,
+                  "dateEnd": 2
+                },
+                "sm": {
+                  "dateBegin": 5,
+                  "dateEnd": 3
+                },
+                "xs": 12
+              },
+              "dateBegin": {
+                "ui:widget": "dateTime",
+                "ui:options": {
+                  "showButtons": true
+                }
+              },
+              "dateEnd": {
+                "ui:widget": "dateTime"
+              }
+            }
+          }
+        }
+      },
+      "secureLevel": {
+        "ui:widget": "anyToBoolean",
+        "ui:help": "Valinta mahdollistaa tarkan paikkatiedon karkeistamisen julkisesta Laji.fi-palvelusta. Huomaathan, että tallentamasi tieto on karkeistamisesta huolimatta viranomaisten käytössä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+        "ui:options": {
+          "trueValue": "MX.secureLevelKM10",
+          "falseValue": "MX.secureLevelNone"
+        }
+      }
+    },
+    "gatherings": {
+      "ui:field": "altMapArray",
+      "ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
+      "ui:options": {
+        "geometryMapper": "units",
+        "topOffset": 50,
+        "bottomOffset": 50,
+        "mapSizes": {
+          "lg": 4,
+          "md": 4,
+          "sm": 6,
+          "xs": 6
+        },
+        "popupFields": [
+          {
+            "mapper": "unitTaxon"
+          },
+          {
+            "field": "sex"
+          },
+          {
+            "field": "notes"
+          }
+        ],
+        "uiSchema": {
+          "ui:field": "accordionArray",
+          "ui:options": {
+            "headerFormatter": "units",
+            "popupFields": [
+              {
+                "field": "units",
+                "mapper": "units"
+              },
+              {
+                "field": "localityDescription"
+              }
+            ]
+          },
+          "items": {
+            "ui:field": "nested",
+            "ui:options": {
+              "nests": {
+                "eventTime": {
+                  "title": "",
+                  "fields": [
+                    "dateBegin",
+                    "dateEnd"
+                  ]
+                },
+                "placeWrapper": {
+                  "title": "Havaintopaikan tiedot",
+                  "fields": [
+                    "locality",
+                    "localityDescription",
+                    "images",
+                    "eventTime"
+                  ]
+                }
+              },
+              "uiSchema": {
+                "ui:order": [
+                  "*",
+                  "units"
+                ],
+                "wgs84GeometryCollection": {
+                  "ui:field": "hidden"
+                },
+                "placeWrapper": {
+                  "ui:field": "scoped",
+                  "classNames": "well well-sm",
+                  "ui:options": {
+                    "includeAdditionalFieldsChooserButton": true,
+                    "additionalsPersistenceId": "gatherings",
+                    "fields": [
+                      "locality",
+                      "localityDescription",
+                      "images"
+                    ],
+                    "titles": {
+                      "eventTime": "Aika"
+                    },
+                    "uiSchema": {
+                      "images": {
+                        "ui:field": "imageArray",
+                        "ui:options": {
+                          "capturerVerbatimPath": "gatheringEvent.leg",
+                          "metadataSchemas": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "intellectualRights": {
+                                  "type": "string",
+                                  "enum": [
+                                    "",
+                                    "MY.intellectualRightsCC-BY",
+                                    "MY.intellectualRightsCC0",
+                                    "MY.intellectualRightsCC-BY-SA",
+                                    "MY.intellectualRightsCC-BY-NC",
+                                    "MY.intellectualRightsARR"
+                                  ]
+                                },
+                                "captureDateTime": {
+                                  "type": "string"
+                                },
+                                "capturerVerbatim": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "intellectualOwner": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "uiSchema": {
+                              "captureDateTime": {
+                                "ui:widget": "date"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "eventTime": {
+                        "ui:field": "grid",
+                        "ui:options": {
+                          "lg": {
+                            "dateBegin": 6,
+                            "dateEnd": 3
+                          },
+                          "md": {
+                            "dateBegin": 7,
+                            "dateEnd": 4
+                          },
+                          "sm": 12,
+                          "xs": 12
+                        },
+                        "dateBegin": {
+                          "ui:widget": "dateTime",
+                          "ui:options": {
+                            "showButtons": true
+                          }
+                        },
+                        "dateEnd": {
+                          "ui:widget": "dateTime"
+                        }
+                      }
+                    }
+                  }
+                },
+                "units": {
+                  "ui:field": "customButtonArray",
+                  "ui:options": {
+                    "confirmDelete": true,
+                    "buttons": [
+                      {
+                        "name": "add",
+                        "text": "Lisää havainto"
+                      },
+                      {
+                        "name": "copy",
+                        "text": "Kopioi havainto",
+                        "type": "blacklist",
+                        "filter": [
+                          "identifications.taxon",
+                          "identifications.taxonID",
+                          "unitType",
+                          "countOfOccurrences",
+                          "notes",
+                          "unitGathering.geometry",
+                          "images"
+                        ]
+                      }
+                    ]
+                  },
+                  "items": {
+                    "ui:field": "flat",
+                    "ui:options": {
+                      "fields": [
+                        "identifications",
+                        "unitGathering"
+                      ],
+                      "uiSchema": {
+                        "ui:field": "scoped",
+                        "classNames": "well well-sm",
+                        "ui:options": {
+                          "additionalsGroupingPath": "fieldScopes.unitType",
+                          "additionalsGroupingOrderer": "unitType",
+                          "additionalsGroupsTranslator": "taxonGroups",
+                          "additionalsPersistenceKey": "unitType",
+                          "additionalsPersistenceId": "gathering_unit_unitType",
+                          "includeAdditionalFieldsChooserButton": true,
+                          "glyphFields": {
+                            "camera": {
+                              "show": "images"
+                            },
+                            "map-marker": {
+                              "fn": "setLocation"
+                            }
+                          },
+                          "uiSchema": {
+                            "ui:field": "autosuggest",
+                            "ui:options": {
+                              "autosuggestField": "taxon",
+                              "allowNonsuggestedValue": true,
+                              "suggestionInputField": "_identifications.taxon",
+                              "suggestionValueField": "_identifications.taxonID",
+                              "suggestionReceivers": {
+                                "_identifications.taxon": "value",
+                                "unitType": "$taxonGroup",
+                                "_identifications.taxonID": "key"
+                              },
+                              "inputTransformer": {
+                                "regexp": "^(.*)\\?$",
+                                "transformations": {
+                                  "taxonConfidence": "MY.taxonConfidenceUnsure"
+                                }
+                              },
+                              "uiSchema": {
+                                "ui:field": "grid",
+                                "ui:options": {
+                                  "lg": {
+                                    "_identifications.identificationBasis": 4,
+                                    "_unitGathering.dateBegin": 3,
+                                    "_unitGathering.dateEnd": 3,
+                                    "*": 2
+                                  },
+                                  "md": {
+                                    "_identifications.identificationBasis": 4,
+                                    "_unitGathering.dateBegin": 4,
+                                    "_unitGathering.dateEnd": 4,
+                                    "_identifications.detDate": 3,
+                                    "*": 2
+                                  },
+                                  "sm": {
+                                    "_identifications.identificationBasis": 8,
+                                    "_unitGathering.dateBegin": 8,
+                                    "_unitGathering.dateEnd": 8,
+                                    "*": 4
+                                  },
+                                  "xs": 12,
+                                  "rows": [
+                                    [
+                                      "_identifications.taxon",
+                                      "taxonConfidence",
+                                      "recordBasis",
+                                      "countOfOccurrences",
+                                      "notes"
+                                    ]
+                                  ]
+                                },
+                                "_identifications.taxonID": {
+                                  "ui:widget": "hidden"
+                                },
+                                "_identifications.detDate": {
+                                  "ui:widget": "date"
+                                },
+                                "unitType": {
+                                  "ui:field": "hidden"
+                                },
+                                "countOfOccurrences": {
+                                  "ui:widget": "updown"
+                                },
+                                "images": {
+                                  "ui:field": "imageArray",
+                                  "ui:options": {
+                                    "metadataSchemas": {
+                                      "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                          "intellectualRights": {
+                                            "type": "string",
+                                            "enum": [
+                                              "",
+                                              "MY.intellectualRightsCC-BY",
+                                              "MY.intellectualRightsCC0",
+                                              "MY.intellectualRightsCC-BY-SA",
+                                              "MY.intellectualRightsCC-BY-NC",
+                                              "MY.intellectualRightsARR"
+                                            ]
+                                          },
+                                          "captureDateTime": {
+                                            "type": "string"
+                                          },
+                                          "capturerVerbatim": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "intellectualOwner": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      },
+                                      "uiSchema": {
+                                        "captureDateTime": {
+                                          "ui:widget": "date"
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "_unitGathering.geometry": {
+                                  "ui:field": "hidden"
+                                },
+                                "_unitGathering.dateBegin": {
+                                  "ui:widget": "dateTime"
+                                },
+                                "_unitGathering.dateEnd": {
+                                  "ui:widget": "dateTime"
+                                },
+                                "recordBasis": {
+                                  "ui:field": "filteredEnum",
+                                  "ui:options": {
+                                    "type": "whitelist",
+                                    "filter": [
+                                      "",
+                                      "MY.recordBasisHumanObservationPhoto",
+                                      "MY.recordBasisPreservedSpecimen",
+                                      "MY.recordBasisHumanObservationHandled",
+                                      "MY.recordBasisHumanObservation"
+                                    ]
+                                  }
+                                },
+                                "hostID": {
+                                  "ui:widget": "autosuggest",
+                                  "ui:options": {
+                                    "autosuggestField": "taxon",
+                                    "allowNonsuggestedValue": true,
+                                    "suggestionReceive": "key"
+                                  }
+                                },
+                                "substrateSpecies": {
+                                  "ui:widget": "autosuggest",
+                                  "ui:options": {
+                                    "autosuggestField": "taxon",
+                                    "allowNonsuggestedValue": true,
+                                    "suggestionReceive": "key"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "fields": [
+                            "_identifications.taxonID",
+                            "_identifications.taxon",
+                            "unitType",
+                            "taxonConfidence",
+                            "recordBasis",
+                            "countOfOccurrences",
+                            "notes"
+                          ],
+                          "fieldScopes": {
+                            "unitType": {
+                              "+": {
+                                "additionalFields": [
+                                  "_identifications.identificationBasis",
+                                  "_identifications.det",
+                                  "_identifications.detMethod",
+                                  "_identifications.detDate",
+                                  "sex",
+                                  "_unitGathering.dateBegin",
+                                  "_unitGathering.dateEnd",
+                                  "_unitGathering.habitatIUCN",
+                                  "_unitGathering.habitatDescription",
+                                  "preservation"
+                                ]
+                              },
+                              "MVL.1": {
+                                "additionalFields": [
+                                  "breeding",
+                                  "atlasCode",
+                                  "movingStatus",
+                                  "twitched"
+                                ]
+                              },
+                              "MVL.21": {
+                                "additionalFields": [
+                                  "nativeStatus",
+                                  "plantLifeStage",
+                                  "plantStatusCode"
+                                ]
+                              },
+                              "MVL.232": {
+                                "additionalFields": [
+                                  "lifeStage",
+                                  "hostID"
+                                ]
+                              },
+                              "MVL.233": {
+                                "additionalFields": [
+                                  "substrate",
+                                  "substrateSpecies",
+                                  "substrateNotes",
+                                  "taste",
+                                  "tasteNotes",
+                                  "smell",
+                                  "smellNotes"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "editors": {
+        "type": "array",
+        "title": "Muokkausoikeus",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      },
+      "secureLevel": {
+        "type": "string",
+        "title": "Havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun",
+        "enum": [
+          "",
+          "MX.secureLevelNone",
+          "MX.secureLevelKM1",
+          "MX.secureLevelKM5",
+          "MX.secureLevelKM10",
+          "MX.secureLevelKM25",
+          "MX.secureLevelKM50",
+          "MX.secureLevelKM100",
+          "MX.secureLevelHighest",
+          "MX.secureLevelNoShow"
+        ],
+        "enumNames": [
+          "",
+          "Ei salausta",
+          "1 km",
+          "5 km",
+          "10 km",
+          "25 km",
+          "50 km",
+          "100 km",
+          "Korkein suojaus",
+          "Täyssalaus - käytetään lähinnä spammin estämiseksi"
+        ]
+      },
+      "gatheringEvent": {
+        "type": "object",
+        "title": "",
+        "properties": {
+          "leg": {
+            "type": "array",
+            "title": "Havainnoijat",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "legPublic": {
+            "type": "boolean",
+            "title": "Havainnoijien nimet ovat julkisia",
+            "default": true
+          },
+          "dateBegin": {
+            "type": "string",
+            "title": "Alku"
+          },
+          "dateEnd": {
+            "type": "string",
+            "title": "Loppu"
+          }
+        },
+        "required": [
+
+        ]
+      },
+      "gatherings": {
+        "type": "array",
+        "title": "Paikka",
+        "uniqueItems": true,
+        "items": {
+          "type": "object",
+          "properties": {
+            "dateBegin": {
+              "type": "string",
+              "title": "Alku"
+            },
+            "dateEnd": {
+              "type": "string",
+              "title": "Loppu"
+            },
+            "locality": {
+              "type": "string",
+              "title": "Paikannimet"
+            },
+            "localityDescription": {
+              "type": "string",
+              "title": "Paikan vapaamuotoinen kuvaus"
+            },
+            "images": {
+              "type": "array",
+              "title": "Kuvat havaintopaikasta",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "units": {
+              "type": "array",
+              "title": "Havainnot",
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "recordBasis": {
+                    "type": "string",
+                    "title": "Havaintotapa",
+                    "default": "MY.recordBasisHumanObservation",
+                    "enum": [
+                      "",
+                      "MY.recordBasisPreservedSpecimen",
+                      "MY.recordBasisFossilSpecimen",
+                      "MY.recordBasisSubfossilSpecimen",
+                      "MY.recordBasisHumanObservation",
+                      "MY.recordBasisMachineObservation",
+                      "MY.recordBasisLivingSpecimen",
+                      "MY.recordBasisMicrobialSpecimen",
+                      "MY.recordBasisHumanObservationSeen",
+                      "MY.recordBasisHumanObservationHeard",
+                      "MY.recordBasisHumanObservationPhoto",
+                      "MY.recordBasisHumanObservationIndirect",
+                      "MY.recordBasisHumanObservationHandled",
+                      "MY.recordBasisHumanObservationVideo",
+                      "MY.recordBasisHumanObservationAudio",
+                      "MY.recordBasisMachineObservationVideo",
+                      "MY.recordBasisMachineObservationAudio",
+                      "MY.recordBasisMachineObservationGeologger",
+                      "MY.recordBasisMachineObservationSatelliteTransmitter",
+                      "MY.recordBasisLiterature"
+                    ],
+                    "enumNames": [
+                      "",
+                      "Näyte",
+                      "Fossiili",
+                      "Subfossiili",
+                      "Havaittu",
+                      "Laitteen tekemä havainto",
+                      "Elävä näyte",
+                      "Mikrobinäyte",
+                      "Nähty",
+                      "Kuultu",
+                      "Valokuvattu",
+                      "Epäsuora havainto (jäljet, ulosteet, yms)",
+                      "Käsitelty (otettu kiinni, tutkittu ja vapautettu)",
+                      "Videoitu",
+                      "Äänitetty",
+                      "Laitteen tekemä videotallenne",
+                      "Laitteen tekemä äänitallenne",
+                      "Geopaikannin",
+                      "Satelliittipaikannus",
+                      "Kirjallisuustieto"
+                    ]
+                  },
+                  "unitType": {
+                    "type": "array",
+                    "title": "Näytteen tyyppi",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "taxonConfidence": {
+                    "type": "string",
+                    "title": "Määrityksen varmuus",
+                    "default": "MY.taxonConfidenceSure",
+                    "enum": [
+                      "",
+                      "MY.taxonConfidenceSure",
+                      "MY.taxonConfidenceUnsure",
+                      "MY.taxonConfidenceSubspeciesUnsure"
+                    ],
+                    "enumNames": [
+                      "",
+                      "Varma",
+                      "Epävarma",
+                      "Alalaji epävarma"
+                    ]
+                  },
+                  "notes": {
+                    "type": "string",
+                    "title": "Lisätiedot"
+                  },
+                  "countOfOccurrences": {
+                    "type": "integer",
+                    "title": "Määrä"
+                  },
+                  "sex": {
+                    "type": "string",
+                    "title": "Sukupuoli",
+                    "enum": [
+                      "",
+                      "MY.sexM",
+                      "MY.sexF",
+                      "MY.sexW",
+                      "MY.sexU",
+                      "MY.sexN",
+                      "MY.sexX",
+                      "MY.sexE",
+                      "MY.sexC"
+                    ],
+                    "enumNames": [
+                      "",
+                      "Koiras",
+                      "Naaras",
+                      "Työläinen",
+                      "Tuntematon",
+                      "Ei sukupuolta",
+                      "Sekoittunut",
+                      "Useita",
+                      "Ristiriitainen"
+                    ]
+                  },
+                  "lifeStage": {
+                    "type": "string",
+                    "title": "Elinvaihe",
+                    "enum": [
+                      "",
+                      "MY.lifeStageEgg",
+                      "MY.lifeStageLarva",
+                      "MY.lifeStagePupa",
+                      "MY.lifeStageJuvenile",
+                      "MY.lifeStageNymph",
+                      "MY.lifeStageSubimago",
+                      "MY.lifeStageImmature",
+                      "MY.lifeStageAdult",
+                      "MY.lifeStageFertile",
+                      "MY.lifeStageSterile",
+                      "MY.lifeStageTadpole",
+                      "MY.lifeStageSnag",
+                      "MY.lifeStageSeed",
+                      "MY.lifeStageLivePlant",
+                      "MY.lifeStageDead"
+                    ],
+                    "enumNames": [
+                      "",
+                      "muna",
+                      "toukka",
+                      "kotelo",
+                      "nuori",
+                      "nymfi",
+                      "esiaikuinen",
+                      "keskenkasvuinen",
+                      "aikuinen",
+                      "lisääntymiskykyinen",
+                      "lisääntymiskyvytön",
+                      "nuijapää",
+                      "kelo",
+                      "siemen",
+                      "elävä kasvi",
+                      "kuollut"
+                    ]
+                  },
+                  "hostID": {
+                    "type": "string",
+                    "title": "Isäntälaji"
+                  },
+                  "substrate": {
+                    "type": "string",
+                    "title": "Kasvualusta"
+                  },
+                  "substrateSpecies": {
+                    "type": "string",
+                    "title": "Kasvualusta (laji)"
+                  },
+                  "substrateNotes": {
+                    "type": "string",
+                    "title": "Kasvualustamuistiinpanot"
+                  },
+                  "taste": {
+                    "type": "string",
+                    "title": "Maku",
+                    "enum": [
+                      "",
+                      "MY.tasteNotTasted",
+                      "MY.tasteNoTaste",
+                      "MY.tasteWeak",
+                      "MY.tasteModerate",
+                      "MY.tasteStrong"
+                    ],
+                    "enumNames": [
+                      "",
+                      "Ei maistettu",
+                      "Ei makua",
+                      "heikko",
+                      "kohtalainen",
+                      "voimakas"
+                    ]
+                  },
+                  "tasteNotes": {
+                    "type": "string",
+                    "title": "Makumuistiinpanot"
+                  },
+                  "smell": {
+                    "type": "string",
+                    "title": "Haju",
+                    "enum": [
+                      "",
+                      "MY.smellNotSmelled",
+                      "MY.smellNoSmelled",
+                      "MY.smellWeak",
+                      "MY.smellModerate",
+                      "MY.smellStrong"
+                    ],
+                    "enumNames": [
+                      "",
+                      "ei haistettu",
+                      "ei hajua",
+                      "heikko",
+                      "kohtalainen",
+                      "vahva"
+                    ]
+                  },
+                  "smellNotes": {
+                    "type": "string",
+                    "title": "Hajumuistiinpanot"
+                  },
+                  "preservation": {
+                    "type": "string",
+                    "title": "Säilöntätapa",
+                    "enum": [
+                      "",
+                      "MY.preservationPinned",
+                      "MY.preservationGlued",
+                      "MY.preservationEthanol",
+                      "MY.preservationEthanolPure",
+                      "MY.preservationEthanol96",
+                      "MY.preservationEthanol80",
+                      "MY.preservationEthanol80Pure",
+                      "MY.preservationEthanol70",
+                      "MY.preservationEthanolDenatured",
+                      "MY.preservationFormalin",
+                      "MY.preservationEthanolFormalin",
+                      "MY.preservationGlycerol",
+                      "MY.preservationLiquid",
+                      "MY.preservationEulan",
+                      "MY.preservationSlide",
+                      "MY.preservationSlideEuparal",
+                      "MY.preservationSlidePolyviol",
+                      "MY.preservationSlideCanadaBalsam",
+                      "MY.preservationCriticalPointDrying",
+                      "MY.preservationGoldPlated",
+                      "MY.preservationFreezeDried",
+                      "MY.preservationFrozen",
+                      "MY.preservationDry",
+                      "MY.preservationStuffed",
+                      "MY.preservationParaffin",
+                      "MY.preservationPressed",
+                      "MY.preservationLiving",
+                      "MY.preservationCast",
+                      "MY.preservationEthanolExFormalin"
+                    ],
+                    "enumNames": [
+                      "",
+                      "neulattu",
+                      "liimattu",
+                      "etanoli (tuntematon %)",
+                      "etanoli (tuntematon %) puhdas",
+                      "etanoli 96 %",
+                      "etanoli 80 %",
+                      "etanoli 80 % puhdas",
+                      "etanoli 70 %",
+                      "denaturoitu etanoli",
+                      "formaliini",
+                      "etanoli ja formaliini",
+                      "glyseroli",
+                      "nestenäyte",
+                      "Eulan",
+                      "objektilasi",
+                      "objektilasi - Euparal",
+                      "objektilasi - Polyviol",
+                      "objektilasi - Kanadabalsami",
+                      "MY.preservationCriticalPointDrying",
+                      "kullattu",
+                      "kylmäkuivattu",
+                      "jäädytetty",
+                      "MY.preservationDry",
+                      "täytetty (stuffed)",
+                      "parafiini",
+                      "kuivattu ja prässätty",
+                      "elävä",
+                      "Valos",
+                      "Etanoli, aiemmin formaliini"
+                    ]
+                  },
+                  "plantLifeStage": {
+                    "type": "string",
+                    "title": "Kasvin elinvaihe"
+                  },
+                  "plantStatusCode": {
+                    "type": "string",
+                    "title": "Kasvin statuskoodi",
+                    "enum": [
+                      "",
+                      "MY.MY.plantStatusCodeL",
+                      "MY.plantStatusCodeA",
+                      "MY.plantStatusCodeAV",
+                      "MY.plantStatusCodeAOV",
+                      "MY.plantStatusCodeAN",
+                      "MY.plantStatusCodeANV",
+                      "MY.plantStatusCodeANS",
+                      "MY.plantStatusCodeT",
+                      "MY.plantStatusCodeTV",
+                      "MY.plantStatusCodeTOV",
+                      "MY.plantStatusCodeTNV",
+                      "MY.plantStatusCodeTNS",
+                      "MY.plantStatusCodeV",
+                      "MY.plantStatusCodeOV",
+                      "MY.plantStatusCodeN",
+                      "MY.plantStatusCodeNV",
+                      "MY.plantStatusCodeNS",
+                      "MY.plantStatusCodeE",
+                      "MY.plantStatusCodeTE",
+                      "MY.plantStatusCodeTVE",
+                      "MY.plantStatusCodeTOVE",
+                      "MY.plantStatusCodeTNVE",
+                      "MY.plantStatusCodeTNSE",
+                      "MY.plantStatusCodeTN",
+                      "MY.plantStatusCodeTNE",
+                      "MY.plantStatusCodeR",
+                      "MY.plantStatusCodeC",
+                      "MY.plantStatusCodeH",
+                      "MY.plantStatusCodeG",
+                      "MY.plantStatusCodeF"
+                    ],
+                    "enumNames": [
+                      "",
+                      "L - luonnonvarainen; ei arviota alkuperäisyydestä, tuloajasta tai vakinaisuudesta",
+                      "A - alkuperäinen, vanha tai uusi, ei arviota vakinaisuudesta",
+                      "AV - alkuperäinen, ei arviota tuloajasta, vakinainen",
+                      "AOV - alkuperäinen, vanhaa perua, vakinainen",
+                      "AN - alkuperäinen, uutta perua, ei arviota vakinaisuudesta",
+                      "ANV - alkuperäinen, uutta perua, vakinainen",
+                      "ANS - alkuperäinen, uutta perua, satunnainen",
+                      "T - tulokas, ei arviota tuloajasta eikä vakinaisuudesta",
+                      "TV - tulokas, ei arviota tuloajasta, vakinainen",
+                      "TOV - muinaistulokas, vakinainen",
+                      "TNV - uustulokas, vakinainen",
+                      "TNS - uustulokas, satunnainen",
+                      "V - ei arviota alkuperäisyydestä eikä tuloajasta, vakinainen",
+                      "OV - ei arviota alkuperäisyydestä, vanhaa perua, vakinainen",
+                      "N - ei arviota alkuperäisyydestä, uutta perua, ei arviota vakinaisuudesta",
+                      "NV - ei arviota alkuperäisyydestä, uutta perua, vakinainen",
+                      "NS - ei arviota alkuperäisyydestä, uutta perua, satunnainen",
+                      "E - viljelykarkulainen",
+                      "TE - tulokas, viljelykarkulainen",
+                      "TVE - tulokas, vakiintunut, viljelykarkulainen",
+                      "TOVE - muinaistulokas, vakiintunut, viljelykarkulainen",
+                      "TNVE - uustulokas, vakiintunut, viljelykarkulainen",
+                      "TNSE - uustulokas, satunnainen, viljelykarkulainen",
+                      "TN - tulokas, uusi, ei arviota vakinaisuudesta",
+                      "TNE - tulokas, uusi, ei arviota vakinaisuudesta, viljelykarkulanen",
+                      "R - viljelyjäänne",
+                      "C - viljelykasvi",
+                      "H - puutarhan sisäkarkulainen (/hort)",
+                      "G - kasvihuonekasvi (tai muu sisäkasvi), oli sitten viljelty tai villi",
+                      "F - subfossiili, fossiili"
+                    ]
+                  },
+                  "breeding": {
+                    "type": "boolean",
+                    "title": "Pesintä"
+                  },
+                  "atlasCode": {
+                    "type": "string",
+                    "title": "Pesimisvarmuusindeksi",
+                    "enum": [
+                      "",
+                      "MY.atlasCodeEnum1",
+                      "MY.atlasCodeEnum2",
+                      "MY.atlasCodeEnum3",
+                      "MY.atlasCodeEnum4",
+                      "MY.atlasCodeEnum5",
+                      "MY.atlasCodeEnum6",
+                      "MY.atlasCodeEnum7",
+                      "MY.atlasCodeEnum8",
+                      "MY.atlasCodeEnum61",
+                      "MY.atlasCodeEnum62",
+                      "MY.atlasCodeEnum63",
+                      "MY.atlasCodeEnum64",
+                      "MY.atlasCodeEnum65",
+                      "MY.atlasCodeEnum66",
+                      "MY.atlasCodeEnum71",
+                      "MY.atlasCodeEnum72",
+                      "MY.atlasCodeEnum73",
+                      "MY.atlasCodeEnum74",
+                      "MY.atlasCodeEnum75",
+                      "MY.atlasCodeEnum81",
+                      "MY.atlasCodeEnum82"
+                    ],
+                    "enumNames": [
+                      "",
+                      "1 Epätodennäköinen pesintä; Havaittu laji paikallisena pesimäaikaan, mutta lähes varmasti se ei pesi ruudussa",
+                      "2 Mahdollinen pesintä; Havaittu yksittäinen lintu kerran (esim. laulava tai soidinääntelevä koiras) lajille sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista",
+                      "3 Mahdollinen pesintä; Havaittu pari kerran sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista",
+                      "4 Todennäköinen pesintä; Havaittu laulava, soidinmenoja esittävä tai muuten samalla paikalla (eli pysyvällä reviirillä) oleskeleva koiras eri päivinä",
+                      "5 Todennäköinen pesintä;  Havaittu samalla paikalla oleskeleva naaras tai pari eri päivinä",
+                      "6 Todennäköinen pesintä; Havaittu lintu tai pari",
+                      "7 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä",
+                      "8 Varma pesintä; Havaittu suora todiste pesinnästä",
+                      "61 Todennäköinen pesintä; Havaittu lintu tai pari käymässä useasti todennäköisellä pesäpaikalla",
+                      "62 Todennäköinen pesintä; Havaittu lintu tai pari rakentamassa pesää",
+                      "63 Todennäköinen pesintä; Havaittu lintu tai pari varoittelemassa",
+                      "64 Todennäköinen pesintä; Havaittu lintu tai pari näyttelemässä siipirikkoa",
+                      "65 Todennäköinen pesintä; Havaittu lintu tai pari hyökkäilemässä",
+                      "66 Todennäköinen pesintä; Nähty pesä, jossa samanvuotista rakennusmateriaalia tai ravintojätettä; ei kuitenkaan varmaa todistetta munista tai poikasista",
+                      "71 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: nähty pesä, jossa on pesitty samana vuonna, koska siinä munia tai niiden kuoria, jätteitä poikasista, sulkatuppien \"hilsettä\", tms.",
+                      "72 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: havaittu linnun menevän pesään tai lähtevän pesästä tavalla, joka selvästi viittaa pesimiseen",
+                      "73 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: havaittu juuri lentokykyiset poikaset tai untuvikot, jotka voidaan katsoa syntyneiksi ruudun alueella",
+                      "74 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: havaittu emo kantamassa ruokaa poikasille tai poikasten ulosteita; pesän voidaan katsoa olevan ruudun alueella",
+                      "75  Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: nähty pesässä hautova emo",
+                      "81 Varma pesintä; Havaittu suora todiste pesinnästä: kuultu poikasten ääntelevän pesässä",
+                      "82 Varma pesintä; Havaittu suora todiste pesinnästä: nähty pesä, jossa munia tai poikasia"
+                    ]
+                  },
+                  "movingStatus": {
+                    "type": "string",
+                    "title": "Linnun tila"
+                  },
+                  "twitched": {
+                    "type": "string",
+                    "title": "Bongattu"
+                  },
+                  "nativeStatus": {
+                    "type": "boolean",
+                    "title": "Luonnonvaraisuus"
+                  },
+                  "images": {
+                    "type": "array",
+                    "title": "Kuvat",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "identifications": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxon": {
+                          "type": "string",
+                          "title": "Nimi"
+                        },
+                        "taxonID": {
+                          "type": "string",
+                          "title": "Taksonin tunniste"
+                        },
+                        "det": {
+                          "type": "string",
+                          "title": "Det"
+                        },
+                        "detDate": {
+                          "type": "string",
+                          "title": "Määritysaika"
+                        },
+                        "detMethod": {
+                          "type": "string",
+                          "title": "Määritystapa",
+                          "enum": [
+                            "",
+                            "MY.detMethodFreshSample",
+                            "MY.detMethodMicroscopy",
+                            "MY.detMethodPhoto"
+                          ],
+                          "enumNames": [
+                            "",
+                            "tuorenäyte",
+                            "mikroskopia",
+                            "kuva"
+                          ]
+                        },
+                        "identificationBasis": {
+                          "type": "array",
+                          "title": "Määritysperuste",
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "",
+                              "MY.identificationBasisSeen",
+                              "MY.identificationBasisHeard",
+                              "MY.identificationBasisHandled",
+                              "MY.identificationBasisMedia",
+                              "MY.identificationBasisFreshSpecimen",
+                              "MY.identificationBasisPreservedSpecimen",
+                              "MY.identificationBasisMicroscope",
+                              "MY.identificationBasisSpores",
+                              "MY.identificationBasisChemical",
+                              "MY.identificationBasisGenitals",
+                              "MY.identificationBasisGenitalPreparate"
+                            ],
+                            "enumNames": [
+                              "",
+                              "näköhavainto",
+                              "kuulohavainto",
+                              "käsitelty",
+                              "valokuva tai muu media",
+                              "tuorenäyte",
+                              "säilötty näyte",
+                              "mikroskopointi",
+                              "itiöt",
+                              "kemiallinen",
+                              "genitaali",
+                              "genitaalipreparaatti"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+
+                      ]
+                    }
+                  },
+                  "unitGathering": {
+                    "type": "object",
+                    "properties": {
+                      "geometry": {
+                        "type": "object",
+                        "properties": {
+
+                        }
+                      },
+                      "dateBegin": {
+                        "type": "string",
+                        "title": "Alku"
+                      },
+                      "dateEnd": {
+                        "type": "string",
+                        "title": "Loppu"
+                      },
+                      "habitatIUCN": {
+                        "type": "string",
+                        "title": "Biotooppi"
+                      },
+                      "habitatDescription": {
+                        "type": "string",
+                        "title": "Biotoopin kuvaus"
+                      }
+                    },
+                    "required": [
+
+                    ]
+                  }
+                },
+                "required": [
+
+                ]
+              }
+            },
+            "wgs84GeometryCollection": {
+              "type": "object",
+              "title": "MY.wgs84GeometryCollection",
+              "properties": {
+                "geometries": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "geometry": {
+                        "type": "object",
+                        "properties": {
+
+                        }
+                      }
+                    },
+                    "required": [
+
+                    ]
+                  }
+                }
+              },
+              "required": [
+
+              ]
+            }
+          },
+          "required": [
+
+          ]
+        }
+      }
+    },
+    "required": [
+
+    ]
+  },
+  "validators": {
+    "gatheringEvent": {
+      "properties": {
+        "leg": {
+          "presence": {
+            "message": "Vähintään yksi havainnoija täytyy ilmoittaa."
+          }
+        }
+      },
+      "presence": true,
+      "dateSpan": {
+        "message": "Aikavälin alun %{dateBegin} pitää olla ennen loppua %{dateEnd}"
+      }
+    },
+    "gatherings": {
+      "items": {
+        "properties": {
+          "units": {
+            "items": {
+              "properties": {
+                "identifications": {
+                  "items": {
+                    "properties": {
+                      "taxon": {
+                        "presence": {
+                          "message": "Nimi on pakollinen"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "presence": {
+              "message": "Vähintään yksi havainto täytyy ilmoittaa."
+            }
+          }
+        }
+      },
+      "presence": {
+        "message": "Vähintään yksi paikka täytyy ilmoittaa."
+      }
+    }
+  },
 	"uiSchemaContext": {
-		"creator": "MA.308",
-		"habitat": {
-			"tree": {
-				"children": {
-					"MY.habitatEnumValue1": {
-						"children": {
-							"MY.habitatEnumValue2": {
-								"children": {
-									"MY.habitatEnumValue3": {
-										"children": {
-											"MY.habitatEnumValue4": {},
-											"MY.habitatEnumValue5": {}
-										},
-										"order": [
-											"MY.habitatEnumValue4",
-											"MY.habitatEnumValue5"
-										]
-									},
-									"MY.habitatEnumValue7": {},
-									"MY.habitatEnumValue15": {}
-								},
-								"order": [
-									"MY.habitatEnumValue3",
-									"MY.habitatEnumValue7",
-									"MY.habitatEnumValue15"
-								]
-							},
-							"MY.habitatEnumValue6": {}
-						},
-						"order": [
-							"MY.habitatEnumValue2",
-							"MY.habitatEnumValue6"
-						]
-					},
-					"MY.habitatEnumValue13": {
-						"children": {
-							"MY.habitatEnumValue14": {},
-							"MY.habitatEnumValue15": {}
-						},
-						"order": [
-							"MY.habitatEnumValue14",
-							"MY.habitatEnumValue15"
-						]
-					},
-					"MY.habitatEnumValue34": {
-						"children": {
-							"MY.habitatEnumValue35": {},
-							"MY.habitatEnumValue36": {},
-							"MY.habitatEnumValue39": {},
-							"MY.habitatEnumValue37": {},
-							"MY.habitatEnumValue38": {},
-							"MY.habitatEnumValue40": {
-								"children": {
-									"MY.habitatEnumValue41": {},
-									"MY.habitatEnumValue42": {},
-									"MY.habitatEnumValue43": {}
-								},
-								"order": [
-									"MY.habitatEnumValue41",
-									"MY.habitatEnumValue42",
-									"MY.habitatEnumValue43"
-								]
-							},
-							"MY.habitatEnumValue44": {
-								"children": {
-									"MY.habitatEnumValue45": {},
-									"MY.habitatEnumValue46": {},
-									"MY.habitatEnumValue47": {}
-								},
-								"order": [
-									"MY.habitatEnumValue45",
-									"MY.habitatEnumValue46",
-									"MY.habitatEnumValue47"
-								]
-							}
-						},
-						"order": [
-							"MY.habitatEnumValue35",
-							"MY.habitatEnumValue36",
-							"MY.habitatEnumValue39",
-							"MY.habitatEnumValue37",
-							"MY.habitatEnumValue38",
-							"MY.habitatEnumValue40",
-							"MY.habitatEnumValue44"
-						]
-					}
-				},
-				"order": [
-					"MY.habitatEnumValue1",
-					"MY.habitatEnumValue13",
-					"MY.habitatEnumValue34"
-				]
-			}
-		}
+		"creator": "MA.308"
 	},
 	"formData": {
 		"gatheringEvent": {
