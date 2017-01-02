@@ -211,7 +211,7 @@ export class StretchAffix extends Component {
 
 	componentWillReceiveProps(props) {
 		if (props.mounted && !this.initialized) {
-			this.setState(this.getState());
+			this.update(this.getState());
 			this.initialized = true;
 		}
 	}
@@ -227,11 +227,8 @@ export class StretchAffix extends Component {
 	}
 
 	onScroll = () => {
-		const state = this.getState();
 		requestAnimationFrame(() => {
-			this.setState(state, () => {
-				if (this.props.onResize) this.props.onResize();
-			});
+			this.update(this.getState());
 		});
 	}
 
@@ -240,12 +237,14 @@ export class StretchAffix extends Component {
 			const positioner = findDOMNode(this.refs.positioner);
 			const width = positioner.getBoundingClientRect().width;
 
-			const state = {...this.getState(), width};
+			this.update({...this.getState(), width});
+		});
+	}
 
-			this.setState(state, () => {
-				if (this.props.onResize) this.props.onResize();
-			});
-		})
+	update = (state) => {
+		this.setState(state, () => {
+			if (this.props.onResize) this.props.onResize();
+		});
 	}
 
 	getState = () => {
