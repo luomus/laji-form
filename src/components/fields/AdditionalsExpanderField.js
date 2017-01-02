@@ -7,13 +7,14 @@ import { Button } from "../components";
 
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:
- * uiSchema = {ui:options: {
- *  additionalFields: [<string>]
- *  expanderButtonText: <string>
- *  expanderGlyph: <string> or <boolean> (If boolean and true, default glyph is used, otherwise
- *                                        a bootstrap glyph name must be provided)
- *  uiSchema: <uiSchema> (used for inner schema)
- * }
+ * uiSchema = {
+ *  ui:options: {
+ * 	 additionalFields: [<string>]
+ * 	 expanderButtonText: <string>
+ * 	 expanderGlyph: <string> or <boolean> (If boolean and true, default glyph is used, otherwise
+ * 	                                       a bootstrap glyph name must be provided)
+ * },
+ * uiSchema: <uiSchema> (used for inner schema)
  *
  * Additional buttons are given as children.
  */
@@ -23,8 +24,8 @@ export default class AdditionalsExpanderField extends Component {
 			"ui:options": PropTypes.shape({
 				additionalFields: PropTypes.arrayOf(PropTypes.string).isRequired,
 				expanderButtonText: PropTypes.string,
-				uiSchema: PropTypes.object
-			}).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 

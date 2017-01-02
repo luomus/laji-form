@@ -6,9 +6,9 @@ export default class FilteredEnumStringField extends Component {
 		uiSchema:PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				type: PropTypes.oneOf(["blacklist", "whitelist"]).isRequired,
-				filter: PropTypes.arrayOf(PropTypes.string).isRequired,
-				uiSchema: PropTypes.object
-			}).isRequired
+				filter: PropTypes.arrayOf(PropTypes.string).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 

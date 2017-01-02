@@ -14,7 +14,6 @@ const headerFormatters = {
 			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ? item.units.length : 0;
 
-
 			return (
 				<span>
 					{headerElem}
@@ -124,12 +123,14 @@ export default class AccordionArrayField extends Component {
 		const schema = {...itemsSchema, title: ""};
 		const title = this.props.schema.title;
 
-		const that = this;
+		const options = getUiOptions(this.props.uiSchema);
+		const addText = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
+
 		function AddButton({onClick, disabled}) {
 			return (
 						<button type="button" className="btn btn-info col-xs-12 laji-map-accordion-header"
 										tabIndex="-1" onClick={onClick}
-										disabled={disabled} style={{fontWeight: "bold"}}>{`➕ ${that.props.formContext.translations.AddPlace}`}</button>
+										disabled={disabled} style={{fontWeight: "bold"}}>{`➕ ${addText}`}</button>
 			);
 		}
 

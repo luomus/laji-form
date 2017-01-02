@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema, immutableDelete } from "../../utils";
+import { getUiOptions } from "../../utils";
 
 /**
  * Makes it possible to extract fields from object schema and
@@ -115,9 +115,9 @@ export default class NestField extends Component {
 							return new Error("Required prop '" + propName + "." + optionProp + ".fields' was not specified in '" + componentName + "'");
 						}
 					}
-				},
-				uiSchema: PropTypes.object
-			})
+				}
+			}),
+			innerUiSchema: PropTypes.object
 		}).isRequired
 	}
 

@@ -7,9 +7,9 @@ export default class CopyValuesArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				copy: PropTypes.arrayOf(PropTypes.string).isRequired,
-				uiSchema: PropTypes.object
-			}).isRequired
+				copy: PropTypes.arrayOf(PropTypes.string).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
@@ -23,8 +23,7 @@ export default class CopyValuesArrayField extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		const uiSchema = getInnerUiSchema(props.uiSchema);
-		return {uiSchema};
+		return {uiSchema: getInnerUiSchema(props.uiSchema)};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

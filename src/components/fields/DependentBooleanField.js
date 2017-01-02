@@ -17,8 +17,8 @@ export default class DependentBooleanField extends Component {
 			"ui:options": PropTypes.shape({
 				booleanField: PropTypes.string.isRequired,
 				booleanDefiner: PropTypes.string.isRequired,
-				uiSchema: PropTypes.object
-			}).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 

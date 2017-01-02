@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, immutableDelete } from "../../utils";
+import { getUiOptions, getInnerUiSchema, immutableDelete } from "../../utils";
 
 
 /**
@@ -24,8 +24,8 @@ export default class InjectField extends Component {
 					fields: PropTypes.arrayOf(PropTypes.string).isRequired,
 					target: PropTypes.string.isRequired
 				}).isRequired,
-				uiSchema: PropTypes.object
-			}).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
@@ -42,7 +42,7 @@ export default class InjectField extends Component {
 		const options = getUiOptions(props.uiSchema);
 		const {injections} = options;
 		const {fields, target} = injections;
-		let {schema, uiSchema, idSchema, formData, errorSchema} = props;
+		let {schema, idSchema, formData, errorSchema} = props;
 
 		fields.forEach((fieldName) => {
 			schema = update(schema,
@@ -80,12 +80,7 @@ export default class InjectField extends Component {
 			}
 		});
 
-		if (options && options.uiSchema) {
-			uiSchema = update(uiSchema, {$merge: {["ui:field"]: options.uiSchema["ui:field"]}});
-			uiSchema = update(uiSchema, {$merge: {["ui:options"]: options.uiSchema["ui:options"]}});
-		} else {
-			uiSchema = update(uiSchema, {$merge: {["ui:field"]: undefined, ["ui:options"]: undefined}});
-		}
+		const uiSchema = getInnerUiSchema(props.uiSchema);
 		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
 

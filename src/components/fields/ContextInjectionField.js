@@ -8,8 +8,8 @@ export default class ContextInjectionField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				injections: PropTypes.object.isRequired,
-				uiSchema: PropTypes.object
-			}).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
