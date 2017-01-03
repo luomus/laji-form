@@ -8,8 +8,10 @@ import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, parseDotPath } from "../../utils";
+import FormField from "../BaseComponent";
 
-export default class ImagesArrayField extends Component {
+@FormField
+export default class ImageArrayField extends Component {
 
 	constructor(props) {
 		super(props);
@@ -17,12 +19,8 @@ export default class ImagesArrayField extends Component {
 		this._context = new Context("IMAGE_ARRAY_FIELD");
 		if (!this._context.metadatas) this._context.metadatas = {};
 		this.mainContext = new Context();
-		this.state = this.getStateFromProps(props);
 	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
 
 	getStateFromProps = (props) => {
 		let imgURLs = [];

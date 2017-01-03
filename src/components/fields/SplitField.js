@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
+import FormField from "../BaseComponent";
 
+@FormField
 export default class SplitField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -19,10 +20,6 @@ export default class SplitField extends Component {
 				})).isRequired
 			}).isRequired
 		})
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

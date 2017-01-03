@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Transforms an array field to o boolean field, where each value is true/false according to another array field.
  * Each value is true, if formData[booleanDefiner] == formData[booleanField].
@@ -11,6 +11,7 @@ import { getUiOptions, getInnerUiSchema } from "../../utils";
  *  uiSchema: <uiSchema> (uiSchema used for each object).
  * }}
  */
+@VirtualSchemaField
 export default class DependentBooleanField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -22,19 +23,9 @@ export default class DependentBooleanField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let {uiSchema, formData} = props;
-		const {booleanField, booleanDefiner} = getUiOptions(uiSchema);
-		uiSchema = getInnerUiSchema(uiSchema);
+		const {booleanField, booleanDefiner} = this.getUiOptions();
 
 		let schema = update(props.schema, {properties: {[booleanField]: {items: {$merge: {type: "boolean"}}}}});
 
@@ -54,8 +45,8 @@ export default class DependentBooleanField extends Component {
 		return shouldRender(this, nextProps, nextState);
 	}
 
-	onChange = (formData) => {
-		const {booleanField, booleanDefiner} = getUiOptions(this.props.uiSchema);
+	onChange(formData) {
+		const {booleanField, booleanDefiner} = this.getUiOptions();
 		const propsFormData = this.props.formData;
 
 		let newData = this.props.formData[booleanField];
@@ -88,15 +79,10 @@ export default class DependentBooleanField extends Component {
 	}
 
 	getDictionarifiedBooleanFieldData = (formData) => {
-		return this.getDictionarifiedFormData(formData, this.props.uiSchema["ui:options"].booleanField)
+		return this.getDictionarifiedFormData(formData, this.getUiOptions().booleanField)
 	}
 
 	checkFieldSanity = (formData, field) => {
 		return formData[field] && Array.isArray(formData[field]);
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

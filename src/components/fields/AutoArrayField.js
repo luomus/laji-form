@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from "react";
-import ReactDOM from "react-dom";
 import update from "react-addons-update";
 import equals from "deep-equal";
-import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
 import { hasData, getUiOptions } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import Context from "../../Context";
 import { DeleteButton } from "../components";
+import FormField from "../BaseComponent";
 
+@FormField
 export default class AutoArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -17,42 +17,13 @@ export default class AutoArrayField extends Component {
 		}).isRequired
 	};
 
-	constructor(props) {
-		super(props);
-		this.state = {stateKeyId: 0};
-		this.state = this.getStatefromProps(props);
-		new Context().addStateClearListener(this.clearState);
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStatefromProps(props))
-	}
-
 	getStatefromProps = (props) => {
-		let {idxsToKeys, keyCounter} = this.state;
 		const state = {};
-
-		const formDataLength = props.formData ? props.formData.length : 0;
-		if (!idxsToKeys) {
-			state.idxsToKeys = Array.from(new Array(formDataLength + 1), (x, i) => i);
-			state.keyCounter = formDataLength + 1;
-		} else if (props.formData && formDataLength >= idxsToKeys.length) {
-			state.idxsToKeys = [...idxsToKeys, ...Array.from(new Array(formDataLength - idxsToKeys.length + 1), (x,i) => keyCounter++)];
-			state.keyCounter = keyCounter;
-		}
 
 		const options = getUiOptions(props.uiSchema);
 		state.confirmDelete = !!options.confirmDelete;
 
 		return state;
-	}
-
-	clearState = () => {
-		this.setState({stateKeyId: this.state.stateKeyId++});
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {
@@ -92,7 +63,7 @@ export default class AutoArrayField extends Component {
 			if (removable) buttons.push(this.renderButtons(idx));
 
 			rows.push(
-				<div key={`${this.state.stateKeyId}-${this.state.idxsToKeys[idx]}`} className="laji-form-field-template-item">
+				<div key={idx} className="laji-form-field-template-item">
 					<div className={"laji-form-field-template-schema"}>
 						<SchemaField
 							formData={item}
@@ -127,17 +98,8 @@ export default class AutoArrayField extends Component {
 		}
 	}
 
-	onConfirmRemove = (idx) => () => {
-		this.setState({visibleConfirmationIdx: idx});
-	}
-
-	onClearConfirm = () => {
-		this.setState({visibleConfirmationIdx: undefined});
-	}
-
 	onButtonKeyDown = (idx) => ({key}) => {
 		if (key === "Enter") this.onRemove(idx);
-		else if (key === "Escape") this.onClearConfirm();
 	}
 
 	onRemoveForIdx = (idx) => e => {
@@ -146,9 +108,7 @@ export default class AutoArrayField extends Component {
 	}
 
 	onRemove = (idx) => {
-		this.setState({idxsToKeys: update(this.state.idxsToKeys, {$splice: [[idx, 1]]})});
 		this.props.onChange(update(this.props.formData, {$splice: [[idx, 1]]}));
-		this.onClearConfirm();
 	}
 
 	renderButtons = (idx) => {

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import { toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions } from "../../utils";
+import { toIdSchema } from  "react-jsonschema-form/lib/utils"
+import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
  * Makes it possible to extract fields from object schema and
@@ -104,6 +104,7 @@ import { getUiOptions } from "../../utils";
  *  }
  *
  */
+@VirtualSchemaField
 export default class NestField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -121,20 +122,10 @@ export default class NestField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
+	getStateFromProps(props) {
+		const options = this.getUiOptions();
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
-		const options = getUiOptions(props.uiSchema);
-
-		let errorSchema = props.errorSchema;
-		let formData = props.formData;
+		let {errorSchema, formData} = props;
 		let schemaProperties = props.schema.properties;
 		let uiSchema = options.uiSchema ?
 			options.uiSchema :
@@ -194,19 +185,15 @@ export default class NestField extends Component {
 		});
 
 		let schema = {...this.props.schema, properties:  schemaProperties};
-		return {schema, uiSchema, idSchema, errorSchema, formData, onChange: this.onChange};
+		return {schema, uiSchema, idSchema, errorSchema, formData};
 
 		function getNewSchemaField(title) {
 			return {type: "object", properties: {}, title};
 		}
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	onChange = (formData) => {
-		const {nests} = getUiOptions(this.props.uiSchema);
+	onChange(formData) {
+		const {nests} = this.getUiOptions();
 
 		let dictionarifiedNests = {};
 		Object.keys(nests).forEach((newFieldName) => {
@@ -224,10 +211,5 @@ export default class NestField extends Component {
 			}
 		});
 		this.props.onChange(formData);
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

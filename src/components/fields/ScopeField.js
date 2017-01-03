@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Glyphicon, Row, Col, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, getUiOptions, parseDotPath } from "../../utils";
 import Context from "../../Context";
+import FormField from "../BaseComponent";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -185,6 +186,7 @@ const buttonSettings = {
  *
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
+@FormField
 export default class ScopeField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -231,10 +233,6 @@ export default class ScopeField extends Component {
 
 	componentWillUnmount() {
 		this.mounted = false;
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
 	}
 
 	render() {
@@ -386,10 +384,6 @@ export default class ScopeField extends Component {
 			uiSchema: generatedUiSchema,
 			additionalFields
 		};
-	}
-
-	onChange = (data) => {
-		this.props.onChange(data);
 	}
 
 	onToggleAdditionals = () => {

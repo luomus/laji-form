@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema, immutableDelete } from "../../utils";
+import { immutableDelete } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
 
 /**
@@ -16,6 +16,7 @@ import { getUiOptions, getInnerUiSchema, immutableDelete } from "../../utils";
  *  ]
  * }}
  */
+@VirtualSchemaField
 export default class InjectField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -29,17 +30,8 @@ export default class InjectField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
-		const options = getUiOptions(props.uiSchema);
+	getStateFromProps(props) {
+		const options = this.getUiOptions();
 		const {injections} = options;
 		const {fields, target} = injections;
 		let {schema, idSchema, formData, errorSchema} = props;
@@ -80,17 +72,12 @@ export default class InjectField extends Component {
 			}
 		});
 
-		const uiSchema = getInnerUiSchema(props.uiSchema);
-		return {schema, uiSchema, idSchema, formData, errorSchema};
+		return {schema, idSchema, formData, errorSchema};
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	onChange = (formData) => {
-		const options = getUiOptions(this.props.uiSchema).injections;
-		const {fields, target} = options;
+	onChange(formData) {
+		const options = this.getUiOptions();
+		const {fields, target} = options.injections;
 
 		if (!formData || !formData[target]) {
 			formatToOriginal(this.props);
@@ -140,11 +127,5 @@ export default class InjectField extends Component {
 	getUpdateFormDataPath = (formData, fieldName) => {
 		return {$merge: {[fieldName]: formData[fieldName]}}
 	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (
-			<SchemaField {...this.props} {...this.state} />
-		)
-	}
 }
+

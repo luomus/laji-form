@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
+import FormField from "../BaseComponent";
 
 const headerFormatters = {
 	units: {
@@ -86,14 +87,14 @@ const popupMappers = {
 	}
 };
 
+@FormField
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {activeIdx: 0, ...this.getStateFromProps(props), popups: {}};
+		this.state = {...this.getStateFromProps(props), activeIdx: 0, popups: {}};
 	}
 
 	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
 		props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, item).then(popupData => {
 				this.setState({popups: {...this.state.popups, [idx]: popupData}})

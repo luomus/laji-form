@@ -1,9 +1,10 @@
-import React, {Component, PropTypes} from "react";
+import React, { Component, PropTypes } from "react";
 import { SimpleSelect, MultiSelect } from "react-selectize";
 import { Label } from "react-bootstrap";
 
-import {asNumber, shouldRender} from "react-jsonschema-form/lib/utils";
+import { asNumber } from "react-jsonschema-form/lib/utils";
 import {isEmptyString} from "../../utils";
+import FormField from "../BaseComponent";
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -21,15 +22,8 @@ function processValue({type, items}, value) {
 }
 
 //TODO doesn't support readonly
+@FormField
 class SelectWidget extends Component {
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
 
 	getStateFromProps = (props) => {
 		const {options: {enumOptions}} = props;
@@ -37,10 +31,6 @@ class SelectWidget extends Component {
 			valsToItems: enumOptions.reduce((map, item) => {map[item.value] = item; return map;}, {}),
 			value: props.value
 		};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

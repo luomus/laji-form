@@ -3,7 +3,9 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender, orderProperties } from  "react-jsonschema-form/lib/utils"
 import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import { Row , Col } from "react-bootstrap";
+import FormField from "../BaseComponent";
 
+@FormField
 export default class GridLayoutField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -25,16 +27,7 @@ export default class GridLayoutField extends Component {
 		}
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let fieldProps = {...props};
 		const options = getUiOptions(props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
@@ -63,10 +56,6 @@ export default class GridLayoutField extends Component {
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
 
 		return {...fieldProps, groups, showLabels, colsToRows};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	isRequired = (requirements, name) => {

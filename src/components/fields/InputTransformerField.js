@@ -1,36 +1,19 @@
 import React, { Component, PropTypes } from "react";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
+@VirtualSchemaField
 export default class InputTransformerField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				rules: PropTypes.object.isRequired,
-				uiSchema: PropTypes.object
-			}).isRequired
+			}).isRequired,
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps(props) {
-		return {uiSchema: getInnerUiSchema(props.uiSchema)};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	onChange = (formData) => {
-		const {rules} = getUiOptions(this.props.uiSchema);
+	onChange(formData) {
+		const {rules} = this.getUiOptions();
 		for (let field in rules) {
 			const rule = rules[field];
 			const regexp = new RegExp(rule.regexp);
@@ -44,15 +27,5 @@ export default class InputTransformerField extends Component {
 			}
 		}
 		this.props.onChange(formData);
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (
-			<SchemaField
-				{...this.props}
-				{...this.state}
-			/>
-		)
 	}
 }

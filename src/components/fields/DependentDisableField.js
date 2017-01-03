@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
+import { isNullOrUndefined } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
  * Disables object field's value according a regexp rule that is matched against another field's value.
@@ -11,6 +11,7 @@ import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
  *  uiSchema: <uiSchema> (uiSchema used for each object).
  * }}
  */
+@VirtualSchemaField
 export default class DependentDisableField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -25,21 +26,11 @@ export default class DependentDisableField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let {uiSchema, formData} = props;
 		let newFormData = formData;
 
-		const {rules} = getUiOptions(props.uiSchema);
-		rules.forEach(rule => {
+		this.getUiOptions().rules.forEach(rule => {
 			const {disableField, disableDefiner, regexp} = rule;
 			const {formData} = props;
 
@@ -64,17 +55,6 @@ export default class DependentDisableField extends Component {
 			}
 		});
 
-		uiSchema = {...uiSchema, "ui:field": undefined, ...getInnerUiSchema(uiSchema)};
-
 		return {uiSchema, formData: newFormData};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema } from "../../utils";
+import FormField from "../BaseComponent";
 
 /**
  * Constructs selects from given tree.
@@ -9,6 +9,7 @@ import { getUiOptions, getInnerUiSchema } from "../../utils";
 *   labels: [<string>]
  * }
  */
+@FormField
 export default class TreeField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -18,15 +19,6 @@ export default class TreeField extends Component {
 				uiSchema: PropTypes.object
 			}).isRequired
 		}).isRequired
-	}
-
-	constructor(props) {
-		super(props);
-		this.state = {uiSchema: {}, onChange: this.onChange, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
 	}
 
 	getStateFromProps(props) {
@@ -106,11 +98,7 @@ export default class TreeField extends Component {
 		return {schema, formData, uiSchema, idSchema};
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	onChange = (formData) => {
+	onChange(formData) {
 		let selectNames = Object.keys(formData).sort((a, b) => {return b - a});
 
 		for (let i in selectNames) {

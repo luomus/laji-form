@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
+@VirtualSchemaField
 export default class FilteredEnumStringField extends Component {
 	static propTypes = {
 		uiSchema:PropTypes.shape({
@@ -12,19 +13,9 @@ export default class FilteredEnumStringField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
-		const {filter, type} = getUiOptions(props.uiSchema);
-		const uiSchema = getInnerUiSchema(props.uiSchema);
+	getStateFromProps(props) {
 		const {schema} = props;
+		const {filter, type} = this.getUiOptions();
 
 		let enums = [];
 		let enumNames = [];
@@ -46,12 +37,6 @@ export default class FilteredEnumStringField extends Component {
 		} else if (type === "whitelist") {
 			filterEnums(item => item);
 		} else throw new Error("FilteredSelectWidget's type must be either 'blacklist' or 'whitelist'");
-		return {schema: {...schema, enum: enums, enumNames}, uiSchema};
+		return {schema: {...schema, enum: enums, enumNames}};
 	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return <SchemaField {...this.props} {...this.state} />;
-	}
-
 }

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import { getDefaultFormState, shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
 import merge from "deepmerge";
+import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
  * Transforms an object schema containing arrays to an array schema containing objects.
@@ -10,6 +10,7 @@ import merge from "deepmerge";
  *  uiSchema: <uiSchema> (uiSchema which is passed to array items)
  * }
  */
+@VirtualSchemaField
 export default class ArrayCombinerField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -20,18 +21,8 @@ export default class ArrayCombinerField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
-		const uiSchema = getInnerUiSchema(props.uiSchema);
-		const {additionalItemsAmount} = getUiOptions(props.uiSchema);
+	getStateFromProps(props) {
+		const {additionalItemsAmount} = this.getUiOptions();
 
 		let itemSchema = {type: "object", properties: {}};
 		let schema = {type: "array"};
@@ -94,14 +85,10 @@ export default class ArrayCombinerField extends Component {
 				}
 			});
 		});
-		return {schema, uiSchema, errorSchema, formData};
+		return {schema, errorSchema, formData};
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	onChange = (formData) => {
+	onChange(formData) {
 		let origArraysContainer = {};
 		if (!formData || formData.length === 0) {
 			Object.keys(this.props.schema.properties).forEach((prop) => {
@@ -117,10 +104,5 @@ export default class ArrayCombinerField extends Component {
 			});
 		}
 		this.props.onChange(origArraysContainer);
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<SchemaField {...this.props} {...this.state} />);
 	}
 }

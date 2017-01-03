@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
  * Injects given fields value as default value to target field.
@@ -16,6 +15,7 @@ import { getUiOptions } from "../../utils";
  *  ]
  * }}
  */
+@VirtualSchemaField
 export default class InjectDefaultValueField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -27,29 +27,9 @@ export default class InjectDefaultValueField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
-		let {uiSchema} = props;
-		uiSchema = {...uiSchema, "ui:field": undefined};
-
-		return {uiSchema};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	onChange = (formData) => {
-		let {uiSchema, schema} = this.props;
-		const options = getUiOptions(uiSchema);
+	onChange(formData) {
+		let {schema} = this.props;
+		const options = this.getUiOptions();
 		const {fields, target} = options;
 
 		let source = options.source ? formData[options.source] : formData;

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema, parseDotPath, isEmptyString } from "../../utils";
+import { getUiOptions, parseDotPath, isEmptyString } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
@@ -23,6 +23,7 @@ const suggestionParsers = {
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
  * }
  */
+@VirtualSchemaField
 export default class AutosuggestField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -40,11 +41,6 @@ export default class AutosuggestField extends Component {
 		}).isRequired
 	}
 	
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
-
 	componentDidMount() {
 		this.mounted = true;
 	}
@@ -52,14 +48,9 @@ export default class AutosuggestField extends Component {
 		this.mounted = false;
 	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let {schema} = props;
-		let propsUiSchema = props.uiSchema;
-		const uiOptions = getUiOptions(propsUiSchema);
+		const uiOptions = getUiOptions(props);
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
@@ -74,15 +65,11 @@ export default class AutosuggestField extends Component {
 		const {suggestionInputField} = uiOptions;
 
 		const uiSchema = {
-			...getInnerUiSchema(props.uiSchema),
+			...props.uiSchema,
 			[suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}
 		};
 
 		return {schema, uiSchema};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	onSuggestionSelected = (suggestion) => {
@@ -107,7 +94,7 @@ export default class AutosuggestField extends Component {
 
 	onConfirmUnsuggested = (value) => {
 		let formData = this.props.formData;
-		const {suggestionReceivers, suggestionInputField} = getUiOptions(this.props.uiSchema);
+		const {suggestionReceivers, suggestionInputField} = this.getUiOptions();
 		Object.keys(suggestionReceivers).forEach(fieldName => {
 			formData = {...formData, [fieldName]: undefined};
 		})
@@ -140,13 +127,5 @@ export default class AutosuggestField extends Component {
 			if (!formData || !formData[fieldName]) return false;
 		}
 		return true;
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<SchemaField
-			{...this.props}
-			{...this.state}
-		/>);
 	}
 }

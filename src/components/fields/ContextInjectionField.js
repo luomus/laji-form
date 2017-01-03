@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, getInnerUiSchema, parseDotPath } from "../../utils";
+import { parseDotPath } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 
+@VirtualSchemaField
 export default class ContextInjectionField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -13,20 +14,9 @@ export default class ContextInjectionField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
 	getStateFromProps(props) {
-		const options = getUiOptions(props.uiSchema);
-		let uiSchema = getInnerUiSchema(props.uiSchema);
-
-		const {injections} = options;
+		let {uiSchema} = props;
+		const {injections} = this.getUiOptions();
 
 		for (let injectionPath in injections) {
 			const updateObject = {};
@@ -41,19 +31,5 @@ export default class ContextInjectionField extends Component {
 		}
 
 		return {uiSchema};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
-	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (
-			<SchemaField
-				{...this.props}
-				{...this.state}
-			/>
-		)
 	}
 }

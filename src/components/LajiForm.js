@@ -20,7 +20,6 @@ import InjectDefaultValueField from "./fields/InjectDefaultValueField";
 import ArrayCombinerField from "./fields/ArrayCombinerField";
 import DependentBooleanField from "./fields/DependentBooleanField";
 import DependentDisableField from "./fields/DependentDisableField";
-import MapArrayField from "./fields/MapArrayField";
 import AltMapArrayField from "./fields/AltMapArrayField";
 import AutosuggestField from "./fields/AutosuggestField";
 import InputTransformerField from "./fields/InputTransformerField";
@@ -208,7 +207,7 @@ export default class LajiForm extends Component {
 						arrayCombiner: ArrayCombinerField,
 						dependentBoolean: DependentBooleanField,
 						dependentDisable: DependentDisableField,
-						mapArray: MapArrayField,
+						mapArray: AltMapArrayField,
 						altMapArray: AltMapArrayField,
 						autoArray: AutoArrayField,
 						copyValuesArray: CopyValuesArrayField,

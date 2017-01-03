@@ -326,197 +326,197 @@
                     "fields": [
                       "identifications",
                       "unitGathering"
-                    ],
-                    "uiSchema": {
-                      "ui:field": "scoped",
-                      "classNames": "well well-sm",
-                      "ui:options": {
-                        "additionalsGroupingPath": "fieldScopes.unitType",
-                        "additionalsGroupingOrderer": "unitType",
-                        "additionalsGroupsTranslator": "taxonGroups",
-                        "additionalsPersistenceKey": "unitType",
-                        "additionalsPersistenceId": "gathering_unit_unitType",
-                        "includeAdditionalFieldsChooserButton": true,
-                        "glyphFields": {
-                          "camera": {
-                            "show": "images"
-                          },
-                          "map-marker": {
-                            "fn": "setLocation"
-                          }
-                        },
-                        "uiSchema": {
-                          "ui:field": "autosuggest",
-                          "ui:options": {
-                            "autosuggestField": "taxon",
-                            "allowNonsuggestedValue": true,
-                            "suggestionInputField": "_identifications.taxon",
-                            "suggestionValueField": "_identifications.taxonID",
-                            "suggestionReceivers": {
-                              "_identifications.taxon": "value",
-                              "unitType": "$taxonGroup",
-                              "_identifications.taxonID": "key"
-                            },
-                            "inputTransformer": {
-                              "regexp": "^(.*)\\?$",
-                              "transformations": {
-                                "taxonConfidence": "MY.taxonConfidenceUnsure"
-                              }
-                            }
-                          },
-                          "uiSchema": {
-                            "ui:field": "grid",
-                            "ui:options": {
-                              "lg": {
-                                "_identifications.identificationBasis": 4,
-                                "_unitGathering.dateBegin": 3,
-                                "_unitGathering.dateEnd": 3,
-                                "*": 2
-                              },
-                              "md": {
-                                "_identifications.identificationBasis": 4,
-                                "_unitGathering.dateBegin": 4,
-                                "_unitGathering.dateEnd": 4,
-                                "_identifications.detDate": 3,
-                                "*": 2
-                              },
-                              "sm": {
-                                "_identifications.identificationBasis": 8,
-                                "_unitGathering.dateBegin": 8,
-                                "_unitGathering.dateEnd": 8,
-                                "*": 4
-                              },
-                              "xs": 12,
-                              "rows": [
-                                [
-                                  "_identifications.taxon",
-                                  "taxonConfidence",
-                                  "recordBasis",
-                                  "countOfOccurrences",
-                                  "notes"
-                                ]
-                              ]
-                            },
-                            "_identifications.taxonID": {
-                              "ui:widget": "hidden"
-                            },
-                            "_identifications.detDate": {
-                              "ui:widget": "date"
-                            },
-                            "unitType": {
-                              "ui:field": "hidden"
-                            },
-                            "countOfOccurrences": {
-                              "ui:widget": "updown"
-                            },
-                            "images": {
-                              "ui:field": "imageArray",
-                              "ui:options": {
-                                "capturerVerbatimPath": "gatheringEvent.leg"
-                              }
-                            },
-                            "_unitGathering.geometry": {
-                              "ui:field": "hidden"
-                            },
-                            "_unitGathering.dateBegin": {
-                              "ui:widget": "dateTime"
-                            },
-                            "_unitGathering.dateEnd": {
-                              "ui:widget": "dateTime"
-                            },
-                            "recordBasis": {
-                              "ui:field": "filteredEnum",
-                              "ui:options": {
-                                "type": "whitelist",
-                                "filter": [
-                                  "",
-                                  "MY.recordBasisHumanObservationPhoto",
-                                  "MY.recordBasisPreservedSpecimen",
-                                  "MY.recordBasisHumanObservationHandled",
-                                  "MY.recordBasisHumanObservation"
-                                ]
-                              }
-                            },
-                            "hostID": {
-                              "ui:widget": "autosuggest",
-                              "ui:options": {
-                                "autosuggestField": "taxon",
-                                "allowNonsuggestedValue": true,
-                                "suggestionReceive": "key"
-                              }
-                            },
-                            "substrateSpecies": {
-                              "ui:widget": "autosuggest",
-                              "ui:options": {
-                                "autosuggestField": "taxon",
-                                "allowNonsuggestedValue": true,
-                                "suggestionReceive": "key"
-                              }
-                            }
-                          }
-                        },
-                        "fields": [
-                          "_identifications.taxonID",
-                          "_identifications.taxon",
-                          "unitType",
-                          "taxonConfidence",
-                          "recordBasis",
-                          "countOfOccurrences",
-                          "notes"
-                        ],
-                        "fieldScopes": {
-                          "unitType": {
-                            "+": {
-                              "additionalFields": [
-                                "_identifications.identificationBasis",
-                                "_identifications.det",
-                                "_identifications.detMethod",
-                                "_identifications.detDate",
-                                "sex",
-                                "_unitGathering.dateBegin",
-                                "_unitGathering.dateEnd",
-                                "_unitGathering.habitatIUCN",
-                                "_unitGathering.habitatDescription",
-                                "preservation"
-                              ]
-                            },
-                            "MVL.1": {
-                              "additionalFields": [
-                                "breeding",
-                                "atlasCode",
-                                "movingStatus",
-                                "twitched"
-                              ]
-                            },
-                            "MVL.21": {
-                              "additionalFields": [
-                                "nativeStatus",
-                                "plantLifeStage",
-                                "plantStatusCode"
-                              ]
-                            },
-                            "MVL.232": {
-                              "additionalFields": [
-                                "lifeStage",
-                                "hostID"
-                              ]
-                            },
-                            "MVL.233": {
-                              "additionalFields": [
-                                "substrate",
-                                "substrateSpecies",
-                                "substrateNotes",
-                                "taste",
-                                "tasteNotes",
-                                "smell",
-                                "smellNotes"
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                    ]
+                  },
+	                "uiSchema": {
+		                "ui:field": "scoped",
+		                "classNames": "well well-sm",
+		                "ui:options": {
+			                "additionalsGroupingPath": "fieldScopes.unitType",
+			                "additionalsGroupingOrderer": "unitType",
+			                "additionalsGroupsTranslator": "taxonGroups",
+			                "additionalsPersistenceKey": "unitType",
+			                "additionalsPersistenceId": "gathering_unit_unitType",
+			                "includeAdditionalFieldsChooserButton": true,
+			                "glyphFields": {
+				                "camera": {
+					                "show": "images"
+				                },
+				                "map-marker": {
+					                "fn": "setLocation"
+				                }
+			                },
+			                "uiSchema": {
+				                "ui:field": "autosuggest",
+				                "ui:options": {
+					                "autosuggestField": "taxon",
+					                "allowNonsuggestedValue": true,
+					                "suggestionInputField": "_identifications.taxon",
+					                "suggestionValueField": "_identifications.taxonID",
+					                "suggestionReceivers": {
+						                "_identifications.taxon": "value",
+						                "unitType": "$taxonGroup",
+						                "_identifications.taxonID": "key"
+					                },
+					                "inputTransformer": {
+						                "regexp": "^(.*)\\?$",
+						                "transformations": {
+							                "taxonConfidence": "MY.taxonConfidenceUnsure"
+						                }
+					                }
+				                },
+				                "uiSchema": {
+					                "ui:field": "grid",
+					                "ui:options": {
+						                "lg": {
+							                "_identifications.identificationBasis": 4,
+							                "_unitGathering.dateBegin": 3,
+							                "_unitGathering.dateEnd": 3,
+							                "*": 2
+						                },
+						                "md": {
+							                "_identifications.identificationBasis": 4,
+							                "_unitGathering.dateBegin": 4,
+							                "_unitGathering.dateEnd": 4,
+							                "_identifications.detDate": 3,
+							                "*": 2
+						                },
+						                "sm": {
+							                "_identifications.identificationBasis": 8,
+							                "_unitGathering.dateBegin": 8,
+							                "_unitGathering.dateEnd": 8,
+							                "*": 4
+						                },
+						                "xs": 12,
+						                "rows": [
+							                [
+								                "_identifications.taxon",
+								                "taxonConfidence",
+								                "recordBasis",
+								                "countOfOccurrences",
+								                "notes"
+							                ]
+						                ]
+					                },
+					                "_identifications.taxonID": {
+						                "ui:widget": "hidden"
+					                },
+					                "_identifications.detDate": {
+						                "ui:widget": "date"
+					                },
+					                "unitType": {
+						                "ui:field": "hidden"
+					                },
+					                "countOfOccurrences": {
+						                "ui:widget": "updown"
+					                },
+					                "images": {
+						                "ui:field": "imageArray",
+						                "ui:options": {
+							                "capturerVerbatimPath": "gatheringEvent.leg"
+						                }
+					                },
+					                "_unitGathering.geometry": {
+						                "ui:field": "hidden"
+					                },
+					                "_unitGathering.dateBegin": {
+						                "ui:widget": "dateTime"
+					                },
+					                "_unitGathering.dateEnd": {
+						                "ui:widget": "dateTime"
+					                },
+					                "recordBasis": {
+						                "ui:field": "filteredEnum",
+						                "ui:options": {
+							                "type": "whitelist",
+							                "filter": [
+								                "",
+								                "MY.recordBasisHumanObservationPhoto",
+								                "MY.recordBasisPreservedSpecimen",
+								                "MY.recordBasisHumanObservationHandled",
+								                "MY.recordBasisHumanObservation"
+							                ]
+						                }
+					                },
+					                "hostID": {
+						                "ui:widget": "autosuggest",
+						                "ui:options": {
+							                "autosuggestField": "taxon",
+							                "allowNonsuggestedValue": true,
+							                "suggestionReceive": "key"
+						                }
+					                },
+					                "substrateSpecies": {
+						                "ui:widget": "autosuggest",
+						                "ui:options": {
+							                "autosuggestField": "taxon",
+							                "allowNonsuggestedValue": true,
+							                "suggestionReceive": "key"
+						                }
+					                }
+				                }
+			                },
+			                "fields": [
+				                "_identifications.taxonID",
+				                "_identifications.taxon",
+				                "unitType",
+				                "taxonConfidence",
+				                "recordBasis",
+				                "countOfOccurrences",
+				                "notes"
+			                ],
+			                "fieldScopes": {
+				                "unitType": {
+					                "+": {
+						                "additionalFields": [
+							                "_identifications.identificationBasis",
+							                "_identifications.det",
+							                "_identifications.detMethod",
+							                "_identifications.detDate",
+							                "sex",
+							                "_unitGathering.dateBegin",
+							                "_unitGathering.dateEnd",
+							                "_unitGathering.habitatIUCN",
+							                "_unitGathering.habitatDescription",
+							                "preservation"
+						                ]
+					                },
+					                "MVL.1": {
+						                "additionalFields": [
+							                "breeding",
+							                "atlasCode",
+							                "movingStatus",
+							                "twitched"
+						                ]
+					                },
+					                "MVL.21": {
+						                "additionalFields": [
+							                "nativeStatus",
+							                "plantLifeStage",
+							                "plantStatusCode"
+						                ]
+					                },
+					                "MVL.232": {
+						                "additionalFields": [
+							                "lifeStage",
+							                "hostID"
+						                ]
+					                },
+					                "MVL.233": {
+						                "additionalFields": [
+							                "substrate",
+							                "substrateSpecies",
+							                "substrateNotes",
+							                "taste",
+							                "tasteNotes",
+							                "smell",
+							                "smellNotes"
+						                ]
+					                }
+				                }
+			                }
+		                }
+	                }
                 }
               }
             }

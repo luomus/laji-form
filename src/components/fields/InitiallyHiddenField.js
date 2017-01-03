@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import { Row, Col, Collapse } from "react-bootstrap";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";
+import FormField from "../BaseComponent";
 
+@FormField
 export default class InitiallyHiddenField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -18,16 +19,8 @@ export default class InitiallyHiddenField extends Component {
 		this.state = {visible: false, ...this.getStateFromProps(props)};
 	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		return {uiSchema: getInnerUiSchema(props.uiSchema)};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	toggleVisibility = () => {

@@ -8,6 +8,7 @@ import { Button, StretchAffix } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
+import FormField from "../BaseComponent";
 
 const popupMappers = {
 	unitTaxon: (schema, formData) => {
@@ -19,6 +20,7 @@ const popupMappers = {
 	}
 };
 
+@FormField
 export default class AltMapArrayField extends Component {
 	constructor(props) {
 		super(props);
@@ -30,10 +32,6 @@ export default class AltMapArrayField extends Component {
 			this.setState(initialState)
 		});
 		this.state = initialState;
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	componentDidMount() {

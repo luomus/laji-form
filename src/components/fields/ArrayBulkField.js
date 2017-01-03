@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import { shouldRender } from "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
+import FormField from "../BaseComponent";
 
+@FormField
 export default class ArrayBulkField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -15,12 +16,7 @@ export default class ArrayBulkField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {rowAmount: 0};
-		this.state = ({...this.state, ...this.getStateFromProps(props)})
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
+		this.state = {rowAmount: 0, ...this.getStateFromProps(props)};
 	}
 
 	getStateFromProps = (props) => {
@@ -32,10 +28,6 @@ export default class ArrayBulkField extends Component {
 			state.rowAmount = props.formData.length + state.rowAddAmount - (props.formData.length % state.rowAddAmount);
 		}
 		return state;
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

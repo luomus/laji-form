@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { Button } from "../components";
+import FormField from "../BaseComponent";
 
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:
@@ -18,6 +18,7 @@ import { Button } from "../components";
  *
  * Additional buttons are given as children.
  */
+@FormField
 export default class AdditionalsExpanderField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -33,10 +34,6 @@ export default class AdditionalsExpanderField extends Component {
 		super(props);
 		this.state = {showAdditional: undefined};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
-	}
-
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
 	}
 
 	getStateFromProps(props) {
@@ -63,10 +60,6 @@ export default class AdditionalsExpanderField extends Component {
 		uiSchema = getInnerUiSchema(props.uiSchema);
 
 		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	render() {

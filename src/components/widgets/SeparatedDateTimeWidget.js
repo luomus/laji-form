@@ -3,18 +3,12 @@ import moment from "moment";
 import { Row, Col, FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
+import FormField from "../BaseComponent";
 
+@FormField
 export default class SeparatedDateTimeWidget extends Component {
-	constructor(props) {
-		super(props);
-		this.state = this.getStateFromProps(props);
-	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let {value} = props;
 		let date, time;
 		if (value) {

@@ -4,9 +4,11 @@ import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { FormGroup, ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions } from "../../utils";
+import FormField from "../BaseComponent";
 
 const DATE_TIME_SEPARATOR = ", ";
 
+@FormField
 export default class DateTimeWidget extends Component {
 	static defaultProps = {
 		type: "text",
@@ -20,14 +22,9 @@ export default class DateTimeWidget extends Component {
 	constructor(props) {
 		super(props);
 		momentLocalizer(moment);
-		this.state = this.getStateFromProps(props);
 	}
 
-	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
-	}
-
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
 

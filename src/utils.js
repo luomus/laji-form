@@ -1,5 +1,3 @@
-import update from 'react-addons-update';
-
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
@@ -66,9 +64,9 @@ export function immutableDelete(obj, delProp) {
 	return newObj;
 }
 
-export function getUiOptions(uiSchema) {
-	if (uiSchema) {
-		const options = uiSchema["ui:options"] || uiSchema.options;
+export function getUiOptions(container) {
+	if (container) {
+		const options = container["ui:options"] || container.options;
 		return options ? options : {};
 	}
 	return {};
@@ -94,4 +92,12 @@ export function isEmptyString(val) {
 
 export function parseDotPath(object, dotPath) {
 	return dotPath.split('.').reduce((o, i)=>o[i], object);
+}
+
+export function getReactComponentName(WrappedComponent) {
+	return (
+		WrappedComponent.displayName ||
+		WrappedComponent.name ||
+		"Component"
+	);
 }
