@@ -308,11 +308,6 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onBlur = (e, {focusedSuggestion}) => {
-		if (this.onTabBlur) {
-			this.onTabBlur = false;
-			return;
-		}
-
 		if (this.state.inputValue === "") {
 			this.setState({unsuggested: false}, () => {
 				this.props.onChange("");
@@ -344,13 +339,6 @@ export default class AutoSuggestWidget extends Component {
 		}
 	}
 
-	onKeyDown = (e) => {
-		if (e.key === "Enter") {
-			const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
-			if (unambigiousSuggestion) this.selectSuggestion(unambigiousSuggestion);
-		}
-	}
-
 	componentDidUpdate() {
 		this.suggestionSelectedFlag = false;
 	}
@@ -374,8 +362,7 @@ export default class AutoSuggestWidget extends Component {
 				this.onInputChange(newValue, method);
 			},
 			onFocus: this.onFocus,
-			onBlur: this.onBlur,
-			onKeyDown: this.onKeyDown
+			onBlur: this.onBlur
 		};
 
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";

@@ -17,7 +17,9 @@ export default class _StringField extends Component {
 
 	onChange = (formData, force) => {
 		this.setState({formData}, () =>  {
-			if (!this.focused || force) this.props.onChange(formData);
+			if (!this.focused || force) {
+				this.props.onChange(formData);
+			}
 		});
 	}
 

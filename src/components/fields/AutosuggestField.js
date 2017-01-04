@@ -75,8 +75,8 @@ export default class AutosuggestField extends Component {
 	onSuggestionSelected = (suggestion) => {
 		if (suggestion === null) suggestion = undefined;
 
-		let formData = this.props.formData;
-		const options = getUiOptions(this.props.uiSchema);
+		let {formData} = this.props;
+		const options = this.getUiOptions();
 
 		for (let fieldName in options.suggestionReceivers) {
 			// undefined suggestion clears value.
@@ -104,7 +104,7 @@ export default class AutosuggestField extends Component {
 
 	onInputChange = (value) => {
 		let {formData} = this.props;
-		const inputTransformer = getUiOptions(this.props.uiSchema).inputTransformer;
+		const inputTransformer = this.getUiOptions().inputTransformer;
 		if (inputTransformer) {
 			const regexp = new RegExp(inputTransformer.regexp);
 			if (value.match(regexp)) {
@@ -122,8 +122,8 @@ export default class AutosuggestField extends Component {
 	}
 
 	isValueSuggested = () => {
-		const {uiSchema, formData} = this.props;
-		for (let fieldName in getUiOptions(uiSchema).suggestionReceivers) {
+		const {formData} = this.props;
+		for (let fieldName in this.getUiOptions().suggestionReceivers) {
 			if (!formData || !formData[fieldName]) return false;
 		}
 		return true;
