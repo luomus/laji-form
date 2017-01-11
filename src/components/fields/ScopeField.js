@@ -7,7 +7,7 @@ import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, getUiOptions, parseDotPath } from "../../utils";
 import Context from "../../Context";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -186,7 +186,7 @@ const buttonSettings = {
  *
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
-@FormField
+@BaseComponent
 export default class ScopeField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

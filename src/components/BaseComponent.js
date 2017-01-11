@@ -27,8 +27,8 @@ export default function BaseComponent(ComposedComponent) {
 			return shouldRender(this, nextProps, nextState);
 		}
 
-		onChange(formData) {
-			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
+		onChange(formData, force) {
+			super.onChange ? super.onChange(formData, force) : this.props.onChange(formData, force);
 		}
 	}
 }

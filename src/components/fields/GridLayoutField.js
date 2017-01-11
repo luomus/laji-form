@@ -3,9 +3,9 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender, orderProperties } from  "react-jsonschema-form/lib/utils"
 import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import { Row , Col } from "react-bootstrap";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class GridLayoutField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

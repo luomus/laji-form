@@ -33,6 +33,7 @@ import FlatField from "./fields/FlatField";
 import AccordionArrayField from "./fields/AccordionArrayField";
 import CustomButtonArrayField from "./fields/CustomButtonArrayField";
 import SingleItemArrayField from "./fields/SingleItemArrayField";
+import _SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import ArrayField from "./fields/ArrayField";
 import StringField from "./fields/StringField";
 
@@ -87,6 +88,7 @@ class FieldTemplate extends Component {
 			ids[htmlId] = this;
 			elemId = htmlId;
 		}
+
 		const buttons = uiSchema["ui:buttons"] || undefined;
 		const vertical = uiSchema["ui:buttonsVertical"];
 		return (
@@ -111,6 +113,19 @@ class FieldTemplate extends Component {
 		);
 	}
 }
+
+//TODO remove once resolving pull request is merged.
+function SchemaField(props) {
+	let {schema} = props;
+	if (props.schema.type === "array" && props.uiSchema && props.uiSchema.items && props.uiSchema.items["ui:field"]) {
+		schema = {...schema, uniqueItems: false};
+	}
+	return <_SchemaField
+		{...props}
+		schema={schema}
+	/>
+}
+
 
 export default class LajiForm extends Component {
 	static propTypes = {
@@ -191,6 +206,7 @@ export default class LajiForm extends Component {
 					ref="form"
 					onChange={this.onChange}
 					fields={{
+						SchemaField,
 						StringField,
 						ArrayField,
 						nested: NestField,

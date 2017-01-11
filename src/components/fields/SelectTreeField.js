@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 /**
  * Constructs selects from given tree.
@@ -9,7 +9,7 @@ import FormField from "../BaseComponent";
 *   labels: [<string>]
  * }
  */
-@FormField
+@BaseComponent
 export default class TreeField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -120,6 +120,7 @@ export default class TreeField extends Component {
 		return (<SchemaField
 			{...this.props}
 			{...this.state}
+			onChange={this.onChange}
 			name=""
 		/>);
 	}

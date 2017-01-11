@@ -3,9 +3,9 @@ import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";
 import SelectWidget from "./SelectWidget";
-import FormField from "../BaseComponent"
+import BaseComponent from "../BaseComponent"
 
-@FormField
+@BaseComponent
 export default class ImageSelectWidget extends Component {
 	static propTypes = {
 		options: PropTypes.object.isRequired

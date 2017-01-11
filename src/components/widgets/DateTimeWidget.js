@@ -4,11 +4,11 @@ import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { FormGroup, ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions } from "../../utils";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const DATE_TIME_SEPARATOR = ", ";
 
-@FormField
+@BaseComponent
 export default class DateTimeWidget extends Component {
 	static defaultProps = {
 		type: "text",

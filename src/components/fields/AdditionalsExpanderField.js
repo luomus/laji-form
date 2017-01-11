@@ -3,7 +3,7 @@ import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { Button } from "../components";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 /**
  * Additionals to hide by default and shown on demand are defined in uiSchema:
@@ -18,7 +18,7 @@ import FormField from "../BaseComponent";
  *
  * Additional buttons are given as children.
  */
-@FormField
+@BaseComponent
 export default class AdditionalsExpanderField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

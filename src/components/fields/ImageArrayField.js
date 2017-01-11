@@ -8,9 +8,9 @@ import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, parseDotPath } from "../../utils";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class ImageArrayField extends Component {
 
 	constructor(props) {

@@ -5,7 +5,7 @@ import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { Button, DeleteButton } from "../components";
 import Label from "../../components/Label";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const specialRules = {
 	legEditors: {
@@ -23,7 +23,7 @@ const specialRules = {
 	}
 }
 
-@FormField
+@BaseComponent
 export default class TableField extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({

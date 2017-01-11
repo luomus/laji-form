@@ -8,7 +8,7 @@ import { Button, StretchAffix } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const popupMappers = {
 	unitTaxon: (schema, formData) => {
@@ -20,7 +20,7 @@ const popupMappers = {
 	}
 };
 
-@FormField
+@BaseComponent
 export default class AltMapArrayField extends Component {
 	constructor(props) {
 		super(props);

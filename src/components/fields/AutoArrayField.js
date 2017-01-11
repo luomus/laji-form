@@ -5,9 +5,9 @@ import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/util
 import { hasData, getUiOptions } from "../../utils";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { DeleteButton } from "../components";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class AutoArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

@@ -5,7 +5,7 @@ import { Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } f
 import Spinner from "react-spinner"
 import { getUiOptions, isEmptyString } from "../../utils";
 import Context from "../../Context";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const autosuggestSettings = {
 	taxon: {
@@ -148,7 +148,7 @@ const autosuggestSettings = {
 	}
 }
 
-@FormField
+@BaseComponent
 export default class AutoSuggestWidget extends Component {
 	static propTypes = {
 		options: PropTypes.shape({

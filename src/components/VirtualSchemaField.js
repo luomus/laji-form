@@ -1,12 +1,12 @@
 import React from "react";
 import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils";
-import FormField from "./BaseComponent";
+import BaseComponent from "./BaseComponent";
 
 /**
  * Virtual SchemaFields are components which are just state transforming machines.
  */
 export default function VirtualSchemaField(ComposedComponent) {
-	@FormField
+	@BaseComponent
 	class VirtualSchemaField extends ComposedComponent {
 
 		static displayName = `${getReactComponentName(ComposedComponent)} (VirtualSchemaField)`;

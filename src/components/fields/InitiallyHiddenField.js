@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from "react";
 import { Row, Col, Collapse } from "react-bootstrap";
 import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class InitiallyHiddenField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

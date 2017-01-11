@@ -4,7 +4,7 @@ import { Label } from "react-bootstrap";
 
 import { asNumber } from "react-jsonschema-form/lib/utils";
 import {isEmptyString} from "../../utils";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 /**
  * This is a silly limitation in the DOM where option change event values are
@@ -22,7 +22,7 @@ function processValue({type, items}, value) {
 }
 
 //TODO doesn't support readonly
-@FormField
+@BaseComponent
 class SelectWidget extends Component {
 
 	getStateFromProps = (props) => {
@@ -31,6 +31,10 @@ class SelectWidget extends Component {
 			valsToItems: enumOptions.reduce((map, item) => {map[item.value] = item; return map;}, {}),
 			value: props.value
 		};
+	}
+
+	onChange = (value) => {
+		this.props.onChange(value, !!"force");
 	}
 
 	render() {
@@ -68,13 +72,13 @@ class SelectWidget extends Component {
 				{...commonProps}
 				values={(this.state.value || []).map(value => this.state.valsToItems[value])}
 				onValuesChange={items => {
-					onChange(processValue(schema.type, (items || []).map(({value}) => value)));
+					this.onChange(processValue(schema.type, (items || []).map(({value}) => value)));
 				}}
 				renderValue = {!multiple ? undefined : item => (
 					<Label bsStyle="primary">
 						<span>{item.label}</span>
 						<span className="multiselect-close" onClick={() => {
-							onChange(processValue(schema.type, this.state.value.filter(val => val !== item.value)));
+							this.onChange(processValue(schema.type, this.state.value.filter(val => val !== item.value)));
 						}}>×</span>
 					</Label>
 				)}
@@ -85,7 +89,7 @@ class SelectWidget extends Component {
 				cancelKeyboardEventOnSelection={false}
 				value={this.state.valsToItems[this.state.value]}
 				onValueChange={item => {
-					onChange(processValue(schema.type, item ? item.value : ""));
+					this.onChange(processValue(schema.type, item ? item.value : ""));
 				}}
 			/>
 		);

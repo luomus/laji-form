@@ -6,7 +6,7 @@ import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const headerFormatters = {
 	units: {
@@ -87,7 +87,7 @@ const popupMappers = {
 	}
 };
 
-@FormField
+@BaseComponent
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
