@@ -260,37 +260,37 @@
 									],
 									"titles": {
 										"eventTime": "Aika"
+									}
+								},
+								"uiSchema": {
+									"images": {
+										"ui:field": "imageArray",
+										"ui:options": {
+											"capturerVerbatimPath": "gatheringEvent.leg"
+										}
 									},
-									"uiSchema": {
-										"images": {
-											"ui:field": "imageArray",
+									"eventTime": {
+										"ui:field": "grid",
+										"ui:options": {
+											"lg": {
+												"dateBegin": 6,
+												"dateEnd": 3
+											},
+											"md": {
+												"dateBegin": 7,
+												"dateEnd": 4
+											},
+											"sm": 12,
+											"xs": 12
+										},
+										"dateBegin": {
+											"ui:widget": "dateTime",
 											"ui:options": {
-												"capturerVerbatimPath": "gatheringEvent.leg"
+												"showButtons": true
 											}
 										},
-										"eventTime": {
-											"ui:field": "grid",
-											"ui:options": {
-												"lg": {
-													"dateBegin": 6,
-													"dateEnd": 3
-												},
-												"md": {
-													"dateBegin": 7,
-													"dateEnd": 4
-												},
-												"sm": 12,
-												"xs": 12
-											},
-											"dateBegin": {
-												"ui:widget": "dateTime",
-												"ui:options": {
-													"showButtons": true
-												}
-											},
-											"dateEnd": {
-												"ui:widget": "dateTime"
-											}
+										"dateEnd": {
+											"ui:widget": "dateTime"
 										}
 									}
 								}
@@ -322,6 +322,7 @@
 								},
 								"items": {
 									"ui:field": "flat",
+									"classNames": "well well-sm",
 									"ui:options": {
 										"fields": [
 											"identifications",
@@ -330,7 +331,6 @@
 									},
 									"uiSchema": {
 										"ui:field": "scoped",
-										"classNames": "well well-sm",
 										"ui:options": {
 											"additionalsGroupingPath": "fieldScopes.unitType",
 											"additionalsGroupingOrderer": "unitType",
@@ -344,113 +344,6 @@
 												},
 												"map-marker": {
 													"fn": "setLocation"
-												}
-											},
-											"uiSchema": {
-												"ui:field": "autosuggest",
-												"ui:options": {
-													"autosuggestField": "taxon",
-													"allowNonsuggestedValue": true,
-													"suggestionInputField": "_identifications.taxon",
-													"suggestionValueField": "_identifications.taxonID",
-													"suggestionReceivers": {
-														"_identifications.taxon": "value",
-														"unitType": "$taxonGroup",
-														"_identifications.taxonID": "key"
-													},
-													"inputTransformer": {
-														"regexp": "^(.*)\\?$",
-														"transformations": {
-															"taxonConfidence": "MY.taxonConfidenceUnsure"
-														}
-													}
-												},
-												"uiSchema": {
-													"ui:field": "grid",
-													"ui:options": {
-														"lg": {
-															"_identifications.identificationBasis": 4,
-															"_unitGathering.dateBegin": 3,
-															"_unitGathering.dateEnd": 3,
-															"*": 2
-														},
-														"md": {
-															"_identifications.identificationBasis": 4,
-															"_unitGathering.dateBegin": 4,
-															"_unitGathering.dateEnd": 4,
-															"_identifications.detDate": 3,
-															"*": 2
-														},
-														"sm": {
-															"_identifications.identificationBasis": 8,
-															"_unitGathering.dateBegin": 8,
-															"_unitGathering.dateEnd": 8,
-															"*": 4
-														},
-														"xs": 12,
-														"rows": [
-															[
-																"_identifications.taxon",
-																"taxonConfidence",
-																"recordBasis",
-																"count",
-																"notes"
-															]
-														]
-													},
-													"_identifications.taxonID": {
-														"ui:widget": "hidden"
-													},
-													"_identifications.detDate": {
-														"ui:widget": "date"
-													},
-													"unitType": {
-														"ui:field": "hidden"
-													},
-													"images": {
-														"ui:field": "imageArray",
-														"ui:options": {
-															"capturerVerbatimPath": "gatheringEvent.leg"
-														}
-													},
-													"_unitGathering.geometry": {
-														"ui:field": "hidden"
-													},
-													"_unitGathering.dateBegin": {
-														"ui:widget": "dateTime"
-													},
-													"_unitGathering.dateEnd": {
-														"ui:widget": "dateTime"
-													},
-													"recordBasis": {
-														"ui:field": "filteredEnum",
-														"ui:options": {
-															"type": "whitelist",
-															"filter": [
-																"",
-																"MY.recordBasisHumanObservationPhoto",
-																"MY.recordBasisPreservedSpecimen",
-																"MY.recordBasisHumanObservationHandled",
-																"MY.recordBasisHumanObservation"
-															]
-														}
-													},
-													"hostID": {
-														"ui:widget": "autosuggest",
-														"ui:options": {
-															"autosuggestField": "taxon",
-															"allowNonsuggestedValue": true,
-															"suggestionReceive": "key"
-														}
-													},
-													"substrateSpecies": {
-														"ui:widget": "autosuggest",
-														"ui:options": {
-															"autosuggestField": "taxon",
-															"allowNonsuggestedValue": true,
-															"suggestionReceive": "key"
-														}
-													}
 												}
 											},
 											"fields": [
@@ -468,7 +361,6 @@
 														"additionalFields": [
 															"_identifications.identificationBasis",
 															"_identifications.det",
-															"_identifications.detMethod",
 															"_identifications.detDate",
 															"sex",
 															"_unitGathering.dateBegin",
@@ -512,6 +404,113 @@
 													}
 												}
 											}
+										},
+										"uiSchema": {
+											"ui:field": "autosuggest",
+											"ui:options": {
+												"autosuggestField": "taxon",
+												"allowNonsuggestedValue": true,
+												"suggestionInputField": "_identifications.taxon",
+												"suggestionValueField": "_identifications.taxonID",
+												"suggestionReceivers": {
+													"_identifications.taxon": "value",
+													"unitType": "$taxonGroup",
+													"_identifications.taxonID": "key"
+												},
+												"inputTransformer": {
+													"regexp": "^(.*)\\?$",
+													"transformations": {
+														"taxonConfidence": "MY.taxonConfidenceUnsure"
+													}
+												}
+											},
+											"uiSchema": {
+												"ui:field": "grid",
+												"ui:options": {
+													"lg": {
+														"_identifications.identificationBasis": 4,
+														"_unitGathering.dateBegin": 3,
+														"_unitGathering.dateEnd": 3,
+														"*": 2
+													},
+													"md": {
+														"_identifications.identificationBasis": 4,
+														"_unitGathering.dateBegin": 4,
+														"_unitGathering.dateEnd": 4,
+														"_identifications.detDate": 3,
+														"*": 2
+													},
+													"sm": {
+														"_identifications.identificationBasis": 8,
+														"_unitGathering.dateBegin": 8,
+														"_unitGathering.dateEnd": 8,
+														"*": 4
+													},
+													"xs": 12,
+													"rows": [
+														[
+															"_identifications.taxon",
+															"taxonConfidence",
+															"recordBasis",
+															"count",
+															"notes"
+														]
+													]
+												},
+												"_identifications.taxonID": {
+													"ui:widget": "hidden"
+												},
+												"_identifications.detDate": {
+													"ui:widget": "date"
+												},
+												"unitType": {
+													"ui:field": "hidden"
+												},
+												"images": {
+													"ui:field": "imageArray",
+													"ui:options": {
+														"capturerVerbatimPath": "gatheringEvent.leg"
+													}
+												},
+												"_unitGathering.geometry": {
+													"ui:field": "hidden"
+												},
+												"_unitGathering.dateBegin": {
+													"ui:widget": "dateTime"
+												},
+												"_unitGathering.dateEnd": {
+													"ui:widget": "dateTime"
+												},
+												"recordBasis": {
+													"ui:field": "filteredEnum",
+													"ui:options": {
+														"type": "whitelist",
+														"filter": [
+															"",
+															"MY.recordBasisHumanObservationPhoto",
+															"MY.recordBasisPreservedSpecimen",
+															"MY.recordBasisHumanObservationHandled",
+															"MY.recordBasisHumanObservation"
+														]
+													}
+												},
+												"hostID": {
+													"ui:widget": "autosuggest",
+													"ui:options": {
+														"autosuggestField": "taxon",
+														"allowNonsuggestedValue": true,
+														"suggestionReceive": "key"
+													}
+												},
+												"substrateSpecies": {
+													"ui:widget": "autosuggest",
+													"ui:options": {
+														"autosuggestField": "taxon",
+														"allowNonsuggestedValue": true,
+														"suggestionReceive": "key"
+													}
+												}
+											}
 										}
 									}
 								}
@@ -525,6 +524,70 @@
 	"schema": {
 		"type": "object",
 		"properties": {
+			"editors": {
+				"type": "array",
+				"title": "Muokkausoikeus",
+				"uniqueItems": true,
+				"items": {
+					"type": "string"
+				}
+			},
+			"secureLevel": {
+				"type": "string",
+				"title": "Havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun",
+				"enum": [
+					"",
+					"MX.secureLevelNone",
+					"MX.secureLevelKM1",
+					"MX.secureLevelKM5",
+					"MX.secureLevelKM10",
+					"MX.secureLevelKM25",
+					"MX.secureLevelKM50",
+					"MX.secureLevelKM100",
+					"MX.secureLevelHighest",
+					"MX.secureLevelNoShow"
+				],
+				"enumNames": [
+					"",
+					"Ei salausta",
+					"1 km",
+					"5 km",
+					"10 km",
+					"25 km",
+					"50 km",
+					"100 km",
+					"Korkein suojaus",
+					"Täyssalaus - käytetään lähinnä spammin estämiseksi"
+				]
+			},
+			"gatheringEvent": {
+				"type": "object",
+				"title": "",
+				"properties": {
+					"leg": {
+						"type": "array",
+						"title": "Havainnoijat",
+						"uniqueItems": true,
+						"items": {
+							"type": "string"
+						}
+					},
+					"legPublic": {
+						"type": "boolean",
+						"title": "Havainnoijien nimet ovat julkisia",
+						"default": true
+					},
+					"dateBegin": {
+						"type": "string",
+						"title": "Alku"
+					},
+					"dateEnd": {
+						"type": "string",
+						"title": "Loppu"
+					}
+				},
+				"required": []
+			},
 			"gatherings": {
 				"type": "array",
 				"title": "Paikka",
@@ -532,218 +595,6 @@
 				"items": {
 					"type": "object",
 					"properties": {
-						"habitat": {
-							"type": "array",
-							"title": "Elinympäristö",
-							"uniqueItems": true,
-							"items": {
-								"type": "string",
-								"enum": [
-									"",
-									"MY.habitatEnumValue1",
-									"MY.habitatEnumValue2",
-									"MY.habitatEnumValue3",
-									"MY.habitatEnumValue4",
-									"MY.habitatEnumValue5",
-									"MY.habitatEnumValue6",
-									"MY.habitatEnumValue7",
-									"MY.habitatEnumValue13",
-									"MY.habitatEnumValue14",
-									"MY.habitatEnumValue15",
-									"MY.habitatEnumValue21",
-									"MY.habitatEnumValue32",
-									"MY.habitatEnumValue33",
-									"MY.habitatEnumValue34",
-									"MY.habitatEnumValue35",
-									"MY.habitatEnumValue36",
-									"MY.habitatEnumValue39",
-									"MY.habitatEnumValue37",
-									"MY.habitatEnumValue38",
-									"MY.habitatEnumValue40",
-									"MY.habitatEnumValue41",
-									"MY.habitatEnumValue42",
-									"MY.habitatEnumValue43",
-									"MY.habitatEnumValue44",
-									"MY.habitatEnumValue45",
-									"MY.habitatEnumValue46",
-									"MY.habitatEnumValue47",
-									"MY.habitatEnumValue48",
-									"MY.habitatEnumValue49",
-									"MY.habitatEnumValue50",
-									"MY.habitatEnumValue51",
-									"MY.habitatEnumValue52",
-									"MY.habitatEnumValue53",
-									"MY.habitatEnumValue54",
-									"MY.habitatEnumValue55",
-									"MY.habitatEnumValue56",
-									"MY.habitatEnumValue57",
-									"MY.habitatEnumValue58",
-									"MY.habitatEnumValue59",
-									"MY.habitatEnumValue60",
-									"MY.habitatEnumValue61",
-									"MY.habitatEnumValue62",
-									"MY.habitatEnumValue63",
-									"MY.habitatEnumValue64",
-									"MY.habitatEnumValue65",
-									"MY.habitatEnumValue66",
-									"MY.habitatEnumValue67",
-									"MY.habitatEnumValue68",
-									"MY.habitatEnumValue69",
-									"MY.habitatEnumValue70",
-									"MY.habitatEnumValue71",
-									"MY.habitatEnumValue72",
-									"MY.habitatEnumValue73",
-									"MY.habitatEnumValue74",
-									"MY.habitatEnumValue75",
-									"MY.habitatEnumValue76",
-									"MY.habitatEnumValue77",
-									"MY.habitatEnumValue78",
-									"MY.habitatEnumValue79",
-									"MY.habitatEnumValue80",
-									"MY.habitatEnumValue81",
-									"MY.habitatEnumValue82",
-									"MY.habitatEnumValue83",
-									"MY.habitatEnumValue84",
-									"MY.habitatEnumValue85",
-									"MY.habitatEnumValue86",
-									"MY.habitatEnumValue87",
-									"MY.habitatEnumValue88",
-									"MY.habitatEnumValue89",
-									"MY.habitatEnumValue90",
-									"MY.habitatEnumValue91",
-									"MY.habitatEnumValue92",
-									"MY.habitatEnumValue93",
-									"MY.habitatEnumValue94",
-									"MY.habitatEnumValue95",
-									"MY.habitatEnumValue96",
-									"MY.habitatEnumValue97",
-									"MY.habitatEnumValue98",
-									"MY.habitatEnumValue99",
-									"MY.habitatEnumValue100",
-									"MY.habitatEnumValue101",
-									"MY.habitatEnumValue102",
-									"MY.habitatEnumValue103",
-									"MY.habitatEnumValue104",
-									"MY.habitatEnumValue105",
-									"MY.habitatEnumValue106",
-									"MY.habitatEnumValue107",
-									"MY.habitatEnumValue108"
-								],
-								"enumNames": [
-									"",
-									"Metsä",
-									"Kangasmetsä",
-									"Kuivahko kangas",
-									"Karu kangas",
-									"Tuore ja lehtomainen kangas",
-									"Lehtometsä",
-									"Tuore ja kuiva lehto",
-									"Suo",
-									"Avosuo",
-									"Letto",
-									"Rehevä neva",
-									"Suolampi (allikko)",
-									"Suonsilmä (rimpi)",
-									"Vesi",
-									"Meri",
-									"Merenpohja",
-									"Meren muta- tai liejupohja",
-									"Meren kallio- tai kivipohja",
-									"Meren hiekka- tai sorapohja",
-									"Järvi",
-									"Karu järvi",
-									"Rehevä järvi",
-									"Suojärvi",
-									"Lampi",
-									"Karu lampi",
-									"Rehevä lampi",
-									"Suolampi",
-									"Joki",
-									"Koski",
-									"Puro",
-									"Lähteikkö",
-									"Kari, luoto tai särkkä",
-									"Tehty vesialue",
-									"Allas",
-									"Rakennettu virtausuoma",
-									"Ranta",
-									"Hietikkoranta",
-									"Niitty- tai luhtaranta",
-									"Kallioranta",
-									"Kivikko- tai soraranta",
-									"Ranta- tai tulvametsä",
-									"Liejukko (avoin tulvaranta)",
-									"Viljelysmaa",
-									"Viljelty pelto",
-									"Puisto tai puutarha",
-									"Niittyytynyt pelto",
-									"Rakennettu ympäristö",
-									"Rakennus tai rakenne",
-									"Kerrostalo",
-									"Pientalo",
-									"Sähkö- tai muu tolppa",
-									"Silta",
-									"Laituri",
-									"Nurmikko",
-									"Tien- tai radanvarsi",
-									"Päälystetty alue",
-									"Muu ihmisen muovaama ympäristö",
-									"Niityt",
-									"Kuiva niitty tai keto",
-									"Tuore niitty",
-									"Hakamaa tai lehdesniitty",
-									"Maankäyttö- ja kaivuualue",
-									"Hiekkakuoppa",
-									"Sorakuoppa",
-									"Kalkkilouhos",
-									"Paljas kalkkimaa",
-									"Kaatopaika",
-									"Täyttömaa",
-									"Turpeenottoalue",
-									"Kallio tai kivikko",
-									"Kalkkikallio",
-									"Serpentiinikallio",
-									"Paljas serpentiinimaa",
-									"Kalliorotko, rotkolaakso tai kuru",
-									"Luola tai halkeama",
-									"Hiekkamaa",
-									"Harju",
-									"Tunturin hiekkapaljastuma",
-									"Tunturi",
-									"Tunturikangas",
-									"Tunturikallio, -louhikko tai -kivikko",
-									"Tunturiniitty",
-									"Tunturikosteikko",
-									"Tunturisuo",
-									"Tunturiranta",
-									"Tunturin lumimaa",
-									"Lumi",
-									"Avolumi"
-								]
-							}
-						},
-						"predominantTree": {
-							"type": "string",
-							"title": "Valtapuulaji",
-							"enum": [
-								"",
-								"MY.predominantTreeSpruce",
-								"MY.predominantTreePine",
-								"MY.predominantTreeBirch",
-								"MY.predominantTreeAlder",
-								"MY.predominantTreeAspen",
-								"MY.predominantTreeOak"
-							],
-							"enumNames": [
-								"",
-								"Kuusi",
-								"Mänty",
-								"Koivu",
-								"Leppä",
-								"Haapa",
-								"Tammi"
-							]
-						},
 						"dateBegin": {
 							"type": "string",
 							"title": "Alku"
@@ -1229,22 +1080,6 @@
 													"type": "string",
 													"title": "Määritysaika"
 												},
-												"detMethod": {
-													"type": "string",
-													"title": "Määritystapa",
-													"enum": [
-														"",
-														"MY.detMethodFreshSample",
-														"MY.detMethodMicroscopy",
-														"MY.detMethodPhoto"
-													],
-													"enumNames": [
-														"",
-														"tuorenäyte",
-														"mikroskopia",
-														"kuva"
-													]
-												},
 												"identificationBasis": {
 													"type": "array",
 													"title": "Määritysperuste",
@@ -1339,70 +1174,6 @@
 					},
 					"required": []
 				}
-			},
-			"editors": {
-				"type": "array",
-				"title": "Muokkausoikeus",
-				"uniqueItems": true,
-				"items": {
-					"type": "string"
-				}
-			},
-			"secureLevel": {
-				"type": "string",
-				"title": "Havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun",
-				"enum": [
-					"",
-					"MX.secureLevelNone",
-					"MX.secureLevelKM1",
-					"MX.secureLevelKM5",
-					"MX.secureLevelKM10",
-					"MX.secureLevelKM25",
-					"MX.secureLevelKM50",
-					"MX.secureLevelKM100",
-					"MX.secureLevelHighest",
-					"MX.secureLevelNoShow"
-				],
-				"enumNames": [
-					"",
-					"Ei salausta",
-					"1 km",
-					"5 km",
-					"10 km",
-					"25 km",
-					"50 km",
-					"100 km",
-					"Korkein suojaus",
-					"Täyssalaus - käytetään lähinnä spammin estämiseksi"
-				]
-			},
-			"gatheringEvent": {
-				"type": "object",
-				"title": "",
-				"properties": {
-					"leg": {
-						"type": "array",
-						"title": "Havainnoijat",
-						"uniqueItems": true,
-						"items": {
-							"type": "string"
-						}
-					},
-					"legPublic": {
-						"type": "boolean",
-						"title": "Havainnoijien nimet ovat julkisia",
-						"default": true
-					},
-					"dateBegin": {
-						"type": "string",
-						"title": "Alku"
-					},
-					"dateEnd": {
-						"type": "string",
-						"title": "Loppu"
-					}
-				},
-				"required": []
 			}
 		},
 		"required": []

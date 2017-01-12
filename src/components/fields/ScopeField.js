@@ -5,7 +5,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, getUiOptions, parseDotPath } from "../../utils";
+import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseDotPath } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
@@ -299,7 +299,7 @@ export default class ScopeField extends Component {
 		let additionalFields = (state && state.additionalFields) ? Object.assign({}, state.additionalFields) : {};
 
 		let options = getUiOptions(uiSchema);
-		let generatedUiSchema = options.uiSchema || {};
+		let generatedUiSchema = getInnerUiSchema(uiSchema);
 
 		let fieldsToShow = {};
 
