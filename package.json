@@ -1,12 +1,12 @@
 {
   "name": "laji-form",
-  "version": "0.0.109",
+  "version": "0.0.113",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "dist/laji-form.js",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline --port 8083",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
-    "build:lib": "rimraf lib && NODE_ENV=production babel -d lib/ src/",
+    "build:lib": "rimraf lib && NODE_ENV=production webpack --config webpack.config.lib.js && rimraf lib/styles.js",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build": "npm run build:lib && npm run build:dist",
     "publish-to-npm": "npm version patch && git push && npm run build && npm publish"
@@ -28,12 +28,12 @@
     "moment": "^2.14.1",
     "rc-switch": "^1.4.2",
     "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "react-addons-css-transition-group": "^15.3.2",
     "react-addons-shallow-compare": "^15.4.1",
     "react-addons-update": "^15.3.2",
     "react-autosuggest": "^7.0.1",
     "react-bootstrap": "^0.30.5",
-    "react-dom": "^15.3.2",
     "react-dropzone": "^3.6.0",
     "react-inlinesvg": "^0.5.4",
     "react-jsonschema-form": "^0.41",
@@ -66,12 +66,15 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "querystring": "^0.2.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "react-transform-hmr": "^1.0.4",
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "util": "^0.10.3",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "webpack-node-externals": "^1.5.4"
   }
 }
