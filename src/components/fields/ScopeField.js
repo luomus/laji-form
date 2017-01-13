@@ -96,7 +96,6 @@ const buttonSettings = {
 			map.triggerDrawing("marker");
 			mapContext.showPanel(null, translations.Cancel, close);
 			mapContext.setOnChange(events => {
-				// events.forEach(event => {
 				for (let event of events) {
 					const {type} = event;
 					switch (type) {
@@ -443,9 +442,6 @@ export default class ScopeField extends Component {
 		const {additionalsGroupingPath, additionalsGroupingOrderer} = options;
 
 		let groupTranslations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
-		let translationsToKeys = (this.state.additionalsGroupsTranslationsToKeys) ?
-			this.state.additionalsGroupsTranslationsToKeys :
-		{};
 
 		const groups = additionalsGroupingPath ? parseDotPath(options, additionalsGroupingPath) : undefined;
 
@@ -456,7 +452,7 @@ export default class ScopeField extends Component {
 		}
 
 		groupNames.forEach(groupName => {
-			let group = groups[groupName];
+			let group = groups[groupName] || {};
 			let groupFields = {};
 			const {fields, additionalFields} = group;
 			const combinedFields = [];
