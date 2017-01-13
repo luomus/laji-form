@@ -6,51 +6,60 @@ import { Button, Label, Help } from "./components";
 
 import Form from "react-jsonschema-form";
 
-import NestField from "./fields/NestField";
-import ArrayBulkField from "./fields/ArrayBulkField";
-import AutoArrayField from "./fields/AutoArrayField";
-import CopyValuesArrayField from "./fields/CopyValuesArrayField";
-import ScopeField from "./fields/ScopeField";
-import SelectTreeField from "./fields/SelectTreeField";
-import AdditionalsExpanderField from "./fields/AdditionalsExpanderField";
-import TableField from "./fields/TableField";
-import GridLayoutField from "./fields/GridLayoutField";
-import InjectField from "./fields/InjectField";
-import InjectDefaultValueField from "./fields/InjectDefaultValueField";
-import ArrayCombinerField from "./fields/ArrayCombinerField";
-import DependentBooleanField from "./fields/DependentBooleanField";
-import DependentDisableField from "./fields/DependentDisableField";
-import AltMapArrayField from "./fields/AltMapArrayField";
-import AutosuggestField from "./fields/AutosuggestField";
-import InputTransformerField from "./fields/InputTransformerField";
-import HiddenField from "./fields/HiddenField";
-import InitiallyHiddenField from "./fields/InitiallyHiddenField";
-import ContextInjectionField from "./fields/ContextInjectionField";
-import ImageArrayField from "./fields/ImageArrayField";
-import FilteredEnumStringField from "./fields/FilteredEnumStringField";
-import SplitField from "./fields/SplitField";
-import FlatField from "./fields/FlatField";
-import AccordionArrayField from "./fields/AccordionArrayField";
-import CustomButtonArrayField from "./fields/CustomButtonArrayField";
-import SingleItemArrayField from "./fields/SingleItemArrayField";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
-import ArrayField from "./fields/ArrayField";
-import StringField from "./fields/StringField";
-
-import CheckboxWidget from "./widgets/CheckboxWidget";
-import SelectWidget from "./widgets/SelectWidget";
-import AutosuggestWidget from "./widgets/AutosuggestWidget";
-import DateTimeWidget from "./widgets/DateTimeWidget";
-import DateWidget from "./widgets/DateWidget";
-import TimeWidget from "./widgets/TimeWidget";
-import SeparatedDateTimeWidget from "./widgets/SeparatedDateTimeWidget";
-import HiddenWidget from "./widgets/HiddenWidget";
-import ImageSelectWidget from "./widgets/ImageSelectWidget";
-import AnyToBooleanWidget from "./widgets/AnyToBooleanWidget";
 
 import ApiClient from "../ApiClient";
 import Context, {clear as clearContext} from "../Context";
 import translations from "../translations.js";
+
+const fields = importLocalComponents("fields", [
+	_SchemaField,
+	"StringField",
+	"ArrayField",
+	"NestField",
+	"ArrayBulkField",
+	"ArrayBulkField",
+	"ScopeField",
+	"SelectTreeField",
+	"GridLayoutField",
+	"GridLayoutField",
+	"TableField",
+	"InjectField",
+	"InjectDefaultValueField",
+	"AdditionalsExpanderField",
+	"ArrayCombinerField",
+	"DependentBooleanField",
+	"DependentDisableField",
+	"AltMapArrayField",
+	"AltMapArrayField",
+	"AutoArrayField",
+	"CopyValuesArrayField",
+	"AutosuggestField",
+	"HiddenField",
+	"InitiallyHiddenField",
+	"InputTransformerField",
+	"ContextInjectionField",
+	"ImageArrayField",
+	"SplitField",
+	"FlatField",
+	"AccordionArrayField",
+	"CustomButtonArrayField",
+	"SingleItemArrayField"
+]);
+
+const widgets = importLocalComponents("widgets", [
+	"CheckboxWidget",
+	"SelectWidget",
+	"DateTimeWidget",
+	"DateWidget",
+	"TimeWidget",
+	"SeparatedDateTimeWidget",
+	"AutosuggestWidget",
+	"HiddenWidget",
+	"ImageSelectWidget",
+	"AnyToBooleanWidget"
+]);
+
 
 const RC_SWITCH_CLASS = "rc-switch";
 const FOCUS_SINK_CLASS = "focus-sink";
@@ -126,6 +135,14 @@ function _SchemaField(props) {
 	/>
 }
 
+function importLocalComponents(dir, fieldNames) {
+	return fieldNames.reduce((fields, field) => {
+	fields[field] = (typeof field === "string") ?
+		require(`./${dir}/${field}`).default :
+		field;
+	return fields;
+}, {});
+}
 
 export default class LajiForm extends Component {
 	static propTypes = {
@@ -205,53 +222,8 @@ export default class LajiForm extends Component {
 					{...this.props}
 					ref="form"
 					onChange={this.onChange}
-					fields={{
-						SchemaField: _SchemaField,
-						StringField,
-						ArrayField,
-						nested: NestField,
-						unitTripreport: ArrayBulkField,
-						bulkArray: ArrayBulkField,
-						scoped: ScopeField,
-						tree: SelectTreeField,
-						horizontal: GridLayoutField,
-						grid: GridLayoutField,
-						table: TableField,
-						inject: InjectField,
-						injectDefaultValue: InjectDefaultValueField,
-						expandable: AdditionalsExpanderField,
-						arrayCombiner: ArrayCombinerField,
-						dependentBoolean: DependentBooleanField,
-						dependentDisable: DependentDisableField,
-						mapArray: AltMapArrayField,
-						altMapArray: AltMapArrayField,
-						autoArray: AutoArrayField,
-						copyValuesArray: CopyValuesArrayField,
-						autosuggest: AutosuggestField,
-						hidden: HiddenField,
-						initiallyHidden: InitiallyHiddenField,
-						inputTransform: InputTransformerField,
-						injectFromContext: ContextInjectionField,
-						imageArray: ImageArrayField,
-						filteredEnum: FilteredEnumStringField,
-						split: SplitField,
-						flat: FlatField,
-						accordionArray: AccordionArrayField,
-						customButtonArray: CustomButtonArrayField,
-						singleItemArray: SingleItemArrayField
-					}}
-					widgets={{
-						CheckboxWidget,
-						SelectWidget,
-						dateTime: DateTimeWidget,
-						date: DateWidget,
-						time: TimeWidget,
-						separatedDateTime: SeparatedDateTimeWidget,
-						autosuggest: AutosuggestWidget,
-						hidden: HiddenWidget,
-						imageSelect: ImageSelectWidget,
-						anyToBoolean: AnyToBooleanWidget
-					}}
+					fields={fields}
+					widgets={widgets}
 					FieldTemplate={FieldTemplate}
 					formContext={{
 						translations,

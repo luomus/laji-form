@@ -129,7 +129,7 @@ export default class TableField extends Component {
 					}
 				};
 			}
-			uiSchema = {...uiSchema, "ui:field": "grid", "ui:options": uiOptions};
+			uiSchema = {...uiSchema, "ui:field": "GridLayoutField", "ui:options": uiOptions};
 
 			const deletable = (!props.schema.additionalItems && idx !== undefined) || isAdditional;
 

@@ -1,7 +1,7 @@
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
-	return !uiSchema || uiSchema["ui:widget"] == "hidden" || uiSchema["ui:field"] == "hidden";
+	return !uiSchema || uiSchema["ui:widget"] == "HiddenWidget" || uiSchema["ui:field"] == "HiddenField";
 }
 
 export function getFieldsFinalUiSchema(uiSchema, field) {

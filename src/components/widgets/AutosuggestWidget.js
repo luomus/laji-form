@@ -401,7 +401,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	getValue = () => {
-		const options = getUiOptions(this.props);
+		const options = getUiOptions(this.props);<div class="laji-form-field-template-item">…</div>
 		return options.hasOwnProperty("value") ? options.value : this.props.value;
 	}
 

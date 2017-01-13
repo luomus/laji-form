@@ -3,7 +3,7 @@ import { SimpleSelect, MultiSelect } from "react-selectize";
 import { Label } from "react-bootstrap";
 
 import { asNumber } from "react-jsonschema-form/lib/utils";
-import {isEmptyString} from "../../utils";
+import { isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 /**
@@ -26,10 +26,33 @@ function processValue({type, items}, value) {
 class SelectWidget extends Component {
 
 	getStateFromProps = (props) => {
-		const {options: {enumOptions}} = props;
+		let {options: {enumOptions}} = props;
+
+		const {filter, filterType = "blacklist", labels} = getUiOptions(props);
+
+		if (filter) {
+			const filterEnumsDictionary = {};
+			filter.forEach(_enum => { filterEnumsDictionary[_enum] = true });
+
+			const filterFn = ({value}) => filterEnumsDictionary[value];
+
+			enumOptions = enumOptions.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
+		}
+
+		if (labels) {
+			enumOptions = enumOptions.map(({value, label}) => {
+				return {value, label: labels.hasOwnProperty(value) ? labels[value] : label};
+			});
+		}
+
+		const valsToItems = enumOptions.reduce((map, item) => {
+			map[item.value] = item;
+			return map;
+		}, {});
+
 		return {
-			valsToItems: enumOptions.reduce((map, item) => {map[item.value] = item; return map;}, {}),
-			value: props.value
+			valsToItems,
+			enumOptions
 		};
 	}
 
@@ -41,17 +64,14 @@ class SelectWidget extends Component {
 		const {
 			schema,
 			id,
-			options,
 			required,
 			disabled,
 			multiple,
 			autofocus,
-			onChange,
 			formContext,
 			selectProps
 		} = this.props;
-		const value = this.state;
-		const {enumOptions} = options;
+		const {enumOptions} = this.state;
 
 		const commonProps = {
 			theme: "bootstrap3",
@@ -60,17 +80,17 @@ class SelectWidget extends Component {
 			disabled,
 			autofocus,
 			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),
-			hideResetButton: isEmptyString(this.state.value),
+			hideResetButton: isEmptyString(this.props.value),
 			renderToggleButton: () => <span className="caret"/>,
 			renderResetButton: () => <span>×</span>,
 			renderNoResultsFound: () => <span className="text-muted">{formContext.translations.NoResults}</span>,
 			...(selectProps || {})
-		}
+		};
 
 		return multiple ? (
 			<MultiSelect
 				{...commonProps}
-				values={(this.state.value || []).map(value => this.state.valsToItems[value])}
+				values={(this.props.value || []).map(value => this.state.valsToItems[value])}
 				onValuesChange={items => {
 					this.onChange(processValue(schema.type, (items || []).map(({value}) => value)));
 				}}
@@ -78,7 +98,7 @@ class SelectWidget extends Component {
 					<Label bsStyle="primary">
 						<span>{item.label}</span>
 						<span className="multiselect-close" onClick={() => {
-							this.onChange(processValue(schema.type, this.state.value.filter(val => val !== item.value)));
+							this.onChange(processValue(schema.type, this.props.value.filter(val => val !== item.value)));
 						}}>×</span>
 					</Label>
 				)}
@@ -87,7 +107,7 @@ class SelectWidget extends Component {
 			<SimpleSelect
 				{...commonProps}
 				cancelKeyboardEventOnSelection={false}
-				value={this.state.valsToItems[this.state.value]}
+				value={this.state.valsToItems[this.props.value]}
 				onValueChange={item => {
 					this.onChange(processValue(schema.type, item ? item.value : ""));
 				}}

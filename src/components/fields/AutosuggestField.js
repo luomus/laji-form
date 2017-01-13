@@ -66,7 +66,7 @@ export default class AutosuggestField extends Component {
 
 		const uiSchema = {
 			...props.uiSchema,
-			[suggestionInputField]: {"ui:widget": "autosuggest", "ui:options": options}
+			[suggestionInputField]: {"ui:widget": "AutosuggestWidget", "ui:options": options}
 		};
 
 		return {schema, uiSchema};

@@ -40,7 +40,7 @@ body .laji-form {
 }
 
 .laji-form .autosuggest-wrapper {
-	position: relative;
+	position: absolute;
 }
 .laji-form .autosuggest-wrapper input {
 	padding-right: 27px;

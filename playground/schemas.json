@@ -7,7 +7,7 @@
 			"gatheringEvent",
 			"gatherings"
 		],
-		"ui:field": "inject",
+		"ui:field": "InjectField",
 		"ui:options": {
 			"injections": {
 				"fields": [
@@ -18,7 +18,7 @@
 			}
 		},
 		"uiSchema": {
-			"ui:field": "injectDefaultValue",
+			"ui:field": "InjectDefaultValueField",
 			"ui:options": {
 				"fields": [
 					"dateBegin",
@@ -29,7 +29,7 @@
 			}
 		},
 		"gatheringEvent": {
-			"ui:field": "nested",
+			"ui:field": "NestField",
 			"classNames": "well well-sm",
 			"ui:order": [
 				"*",
@@ -45,7 +45,7 @@
 							"editors"
 						],
 						"uiSchema": {
-							"ui:field": "split",
+							"ui:field": "SplitField",
 							"ui:options": {
 								"splits": [
 									{
@@ -58,7 +58,7 @@
 										"md": 4,
 										"sm": 5,
 										"uiSchema": {
-											"ui:field": "nested",
+											"ui:field": "NestField",
 											"ui:order": [
 												""
 											],
@@ -70,27 +70,27 @@
 															"editors"
 														],
 														"uiSchema": {
-															"ui:field": "dependentBoolean",
+															"ui:field": "DependentBooleanField",
 															"ui:options": {
 																"booleanField": "editors",
 																"booleanDefiner": "leg"
 															},
 															"uiSchema": {
-																"ui:field": "arrayCombiner",
+																"ui:field": "ArrayCombinerField",
 																"uiSchema": {
-																	"ui:field": "table",
+																	"ui:field": "TableField",
 																	"ui:options": {
 																		"specialRules": "legEditors"
 																	},
 																	"items": {
-																		"ui:field": "injectFromContext",
+																		"ui:field": "ContextInjectionField",
 																		"ui:options": {
 																			"injections": {
 																				"ui:options.rules.0.regexp": "creator"
 																			}
 																		},
 																		"uiSchema": {
-																			"ui:field": "dependentDisable",
+																			"ui:field": "DependentDisableField",
 																			"ui:options": {
 																				"rules": [
 																					{
@@ -109,7 +109,7 @@
 																			}
 																		},
 																		"leg": {
-																			"ui:widget": "autosuggest",
+																			"ui:widget": "AutosuggestWidget",
 																			"ui:options": {
 																				"autosuggestField": "friends",
 																				"allowNonsuggestedValue": true,
@@ -140,7 +140,7 @@
 						],
 						"title": "",
 						"uiSchema": {
-							"ui:field": "grid",
+							"ui:field": "GridLayoutField",
 							"ui:options": {
 								"lg": {
 									"dateBegin": 3,
@@ -157,20 +157,20 @@
 								"xs": 12
 							},
 							"dateBegin": {
-								"ui:widget": "dateTime",
+								"ui:widget": "DateTimeWidget",
 								"ui:options": {
 									"showButtons": true
 								}
 							},
 							"dateEnd": {
-								"ui:widget": "dateTime"
+								"ui:widget": "DateTimeWidget"
 							}
 						}
 					}
 				}
 			},
 			"secureLevel": {
-				"ui:widget": "anyToBoolean",
+				"ui:widget": "AnyToBooleanWidget",
 				"ui:help": "Valinta mahdollistaa tarkan paikkatiedon karkeistamisen julkisesta Laji.fi-palvelusta. Huomaathan, että tallentamasi tieto on karkeistamisesta huolimatta viranomaisten käytössä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
 				"ui:options": {
 					"trueValue": "MX.secureLevelKM10",
@@ -179,7 +179,7 @@
 			}
 		},
 		"gatherings": {
-			"ui:field": "altMapArray",
+			"ui:field": "AltMapArrayField",
 			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
 			"ui:options": {
 				"geometryMapper": "units",
@@ -204,7 +204,7 @@
 				]
 			},
 			"uiSchema": {
-				"ui:field": "accordionArray",
+				"ui:field": "AccordionArrayField",
 				"ui:options": {
 					"addTxt": "Lisää paikka",
 					"headerFormatter": "units",
@@ -219,7 +219,7 @@
 					]
 				},
 				"items": {
-					"ui:field": "nested",
+					"ui:field": "NestField",
 					"ui:options": {
 						"nests": {
 							"eventTime": {
@@ -245,10 +245,10 @@
 								"units"
 							],
 							"wgs84GeometryCollection": {
-								"ui:field": "hidden"
+								"ui:field": "HiddenField"
 							},
 							"placeWrapper": {
-								"ui:field": "scoped",
+								"ui:field": "ScopeField",
 								"classNames": "well well-sm",
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
@@ -264,13 +264,13 @@
 								},
 								"uiSchema": {
 									"images": {
-										"ui:field": "imageArray",
+										"ui:field": "ImageArrayField",
 										"ui:options": {
 											"capturerVerbatimPath": "gatheringEvent.leg"
 										}
 									},
 									"eventTime": {
-										"ui:field": "grid",
+										"ui:field": "GridLayoutField",
 										"ui:options": {
 											"lg": {
 												"dateBegin": 6,
@@ -284,19 +284,19 @@
 											"xs": 12
 										},
 										"dateBegin": {
-											"ui:widget": "dateTime",
+											"ui:widget": "DateTimeWidget",
 											"ui:options": {
 												"showButtons": true
 											}
 										},
 										"dateEnd": {
-											"ui:widget": "dateTime"
+											"ui:widget": "DateTimeWidget"
 										}
 									}
 								}
 							},
 							"units": {
-								"ui:field": "customButtonArray",
+								"ui:field": "CustomButtonArrayField",
 								"ui:options": {
 									"confirmDelete": true,
 									"buttons": [
@@ -321,7 +321,7 @@
 									]
 								},
 								"items": {
-									"ui:field": "flat",
+									"ui:field": "FlatField",
 									"classNames": "well well-sm",
 									"ui:options": {
 										"fields": [
@@ -330,7 +330,7 @@
 										]
 									},
 									"uiSchema": {
-										"ui:field": "scoped",
+										"ui:field": "ScopeField",
 										"ui:options": {
 											"additionalsGroupingPath": "fieldScopes.unitType",
 											"additionalsGroupingOrderer": "unitType",
@@ -358,6 +358,7 @@
 											"fieldScopes": {
 												"unitType": {
 													"+": {
+														"title": "Kaikki",
 														"additionalFields": [
 															"_identifications.identificationBasis",
 															"_identifications.det",
@@ -392,6 +393,7 @@
 														]
 													},
 													"MVL.233": {
+														"title": "Sienet",
 														"additionalFields": [
 															"substrate",
 															"substrateSpecies",
@@ -406,7 +408,7 @@
 											}
 										},
 										"uiSchema": {
-											"ui:field": "autosuggest",
+											"ui:field": "AutosuggestField",
 											"ui:options": {
 												"autosuggestField": "taxon",
 												"allowNonsuggestedValue": true,
@@ -425,7 +427,7 @@
 												}
 											},
 											"uiSchema": {
-												"ui:field": "grid",
+												"ui:field": "GridLayoutField",
 												"ui:options": {
 													"lg": {
 														"_identifications.identificationBasis": 4,
@@ -458,31 +460,31 @@
 													]
 												},
 												"_identifications.taxonID": {
-													"ui:widget": "hidden"
+													"ui:widget": "HiddenWidget"
 												},
 												"_identifications.detDate": {
-													"ui:widget": "date"
+													"ui:widget": "DateWidget"
 												},
 												"unitType": {
-													"ui:field": "hidden"
+													"ui:field": "HiddenField"
 												},
 												"images": {
-													"ui:field": "imageArray",
+													"ui:field": "ImageArrayField",
 													"ui:options": {
 														"capturerVerbatimPath": "gatheringEvent.leg"
 													}
 												},
 												"_unitGathering.geometry": {
-													"ui:field": "hidden"
+													"ui:field": "HiddenField"
 												},
 												"_unitGathering.dateBegin": {
-													"ui:widget": "dateTime"
+													"ui:widget": "DateTimeWidget"
 												},
 												"_unitGathering.dateEnd": {
-													"ui:widget": "dateTime"
+													"ui:widget": "DateTimeWidget"
 												},
 												"recordBasis": {
-													"ui:field": "filteredEnum",
+													"ui:field": "FilteredEnumStringField",
 													"ui:options": {
 														"type": "whitelist",
 														"filter": [
@@ -495,7 +497,7 @@
 													}
 												},
 												"hostID": {
-													"ui:widget": "autosuggest",
+													"ui:widget": "AutosuggestWidget",
 													"ui:options": {
 														"autosuggestField": "taxon",
 														"allowNonsuggestedValue": true,
@@ -503,7 +505,7 @@
 													}
 												},
 												"substrateSpecies": {
-													"ui:widget": "autosuggest",
+													"ui:widget": "AutosuggestWidget",
 													"ui:options": {
 														"autosuggestField": "taxon",
 														"allowNonsuggestedValue": true,
@@ -1348,8 +1350,6 @@
 								"taxon": "ass",
 								"taxonID": "MX.47092",
 								"identificationBasis": [
-									"MY.identificationBasisHeard",
-									"MY.identificationBasisHandled"
 								]
 							}
 						],
@@ -1371,8 +1371,6 @@
 							{
 								"taxon": "kiihkenkeonvainikkeet",
 								"identificationBasis": [
-									"MY.identificationBasisHeard",
-									"MY.identificationBasisHandled"
 								]
 							}
 						],
