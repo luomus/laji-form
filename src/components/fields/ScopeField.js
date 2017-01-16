@@ -579,7 +579,6 @@ export default class ScopeField extends Component {
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};
 		return Object.keys(properties)
-			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData);
