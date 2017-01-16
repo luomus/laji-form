@@ -3,8 +3,7 @@ import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import { Button, DeleteButton } from "../components";
-import Label from "../../components/Label";
+import { Button, DeleteButton, Label } from "../components";
 import BaseComponent from "../BaseComponent";
 
 const specialRules = {
