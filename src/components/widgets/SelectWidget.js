@@ -28,7 +28,20 @@ class SelectWidget extends Component {
 	getStateFromProps = (props) => {
 		let {options: {enumOptions}} = props;
 
-		const {filter, filterType = "blacklist", labels} = getUiOptions(props);
+		function sort(enumOptions, order) {
+			if (!Array.isArray(order)) return enumOptions;
+
+			const idxs = order.reduce((idxs, _enum, i) => {
+				idxs[_enum] = i;
+				return idxs;
+			}, {});
+
+			return enumOptions.slice(0).sort((a, b) => {
+				return idxs[a.value] - idxs[b.value];
+			});
+		}
+
+		const {filter, filterType = "blacklist", labels, order} = getUiOptions(props);
 
 		if (filter) {
 			const filterEnumsDictionary = {};
@@ -44,6 +57,9 @@ class SelectWidget extends Component {
 				return {value, label: labels.hasOwnProperty(value) ? labels[value] : label};
 			});
 		}
+
+		if (order) enumOptions = sort(enumOptions, order);
+
 
 		const valsToItems = enumOptions.reduce((map, item) => {
 			map[item.value] = item;
@@ -72,6 +88,7 @@ class SelectWidget extends Component {
 			selectProps
 		} = this.props;
 		const {enumOptions} = this.state;
+
 
 		const commonProps = {
 			theme: "bootstrap3",
@@ -126,6 +143,10 @@ if (process.env.NODE_ENV !== "production") {
 		id: PropTypes.string.isRequired,
 		options: PropTypes.shape({
 			enumOptions: PropTypes.array,
+			order: PropTypes.array,
+			filter: PropTypes.array,
+			filterType: PropTypes.string,
+			labels: PropTypes.array,
 		}).isRequired,
 		value: PropTypes.any,
 		required: PropTypes.bool,
