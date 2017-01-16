@@ -36,7 +36,7 @@
     "react-bootstrap": "^0.30.5",
     "react-dropzone": "^3.6.0",
     "react-inlinesvg": "^0.5.4",
-    "react-jsonschema-form": "^0.41",
+    "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#build",
     "react-select": "^1.0.0-rc.2",
     "react-selectize": "^2.0.3",
     "react-spinner": "^0.2.6",
