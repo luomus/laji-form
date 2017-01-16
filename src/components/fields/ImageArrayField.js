@@ -154,7 +154,7 @@ export default class ImageArrayField extends Component {
 
 	renderAlert = () => {
 		return this.state.alert ? (
-			<PopupAlert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
+			<PopupAlert onOk={() => this.setState({alert: false})}>
 				{this.props.formContext.translations.SaveFail}
 			</PopupAlert>) : null;
 	}
@@ -192,7 +192,7 @@ export default class ImageArrayField extends Component {
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({alert: () => {;}})
+			this.setState({alert: true})
 		});
 	}
 

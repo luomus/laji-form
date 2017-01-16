@@ -3,6 +3,7 @@ import { findDOMNode } from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
+import { isMultiSelect } from "../utils";
 
 import Form from "react-jsonschema-form";
 
@@ -60,7 +61,6 @@ const widgets = importLocalComponents("widgets", [
 	"AnyToBooleanWidget"
 ]);
 
-
 const RC_SWITCH_CLASS = "rc-switch";
 const FOCUS_SINK_CLASS = "focus-sink";
 
@@ -83,6 +83,7 @@ class FieldTemplate extends Component {
 			hidden,
 			required,
 			displayLabel,
+			schema,
 			uiSchema,
 			} = this.props;
 
@@ -98,12 +99,14 @@ class FieldTemplate extends Component {
 			elemId = htmlId;
 		}
 
+		const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
+
 		const buttons = uiSchema["ui:buttons"] || undefined;
 		const vertical = uiSchema["ui:buttonsVertical"];
 		return (
 			<div className={classNames} id={elemId}>
-				{label && displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
-				{displayLabel && description ? description : null}
+				{label && _displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
+				{_displayLabel && description ? description : null}
 				<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
 					<div className={"laji-form-field-template-schema"}>
 						{inlineHelp ? <div className="pull-left">{children}</div> : children}
@@ -123,10 +126,9 @@ class FieldTemplate extends Component {
 	}
 }
 
-//TODO remove once resolving pull request is merged.
 function _SchemaField(props) {
-	let {schema} = props;
-	if (props.schema.type === "array" && props.uiSchema && props.uiSchema.items && props.uiSchema.items["ui:field"]) {
+	let {schema, uiSchema} = props;
+	if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema)) {
 		schema = {...schema, uniqueItems: false};
 	}
 	return <SchemaField
