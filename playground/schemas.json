@@ -357,12 +357,12 @@
 											],
 											"fieldScopes": {
 												"unitType": {
-													"+": {
+													"*": {
 														"title": "Kaikki",
 														"additionalFields": [
-															"_identifications.identificationBasis",
 															"_identifications.det",
 															"_identifications.detDate",
+															"_identifications.identificationBasis",
 															"sex",
 															"_unitGathering.dateBegin",
 															"_unitGathering.dateEnd",
@@ -398,10 +398,10 @@
 															"substrate",
 															"substrateSpecies",
 															"substrateNotes",
-															"taste",
-															"tasteNotes",
 															"smell",
-															"smellNotes"
+															"smellNotes",
+															"taste",
+															"tasteNotes"
 														]
 													}
 												}
@@ -484,15 +484,21 @@
 													"ui:widget": "DateTimeWidget"
 												},
 												"recordBasis": {
-													"ui:field": "FilteredEnumStringField",
 													"ui:options": {
-														"type": "whitelist",
+														"filterType": "whitelist",
 														"filter": [
 															"",
 															"MY.recordBasisHumanObservationPhoto",
 															"MY.recordBasisPreservedSpecimen",
 															"MY.recordBasisHumanObservationHandled",
 															"MY.recordBasisHumanObservation"
+														],
+														"order": [
+															"",
+															"MY.recordBasisHumanObservation",
+															"MY.recordBasisHumanObservationPhoto",
+															"MY.recordBasisPreservedSpecimen",
+															"MY.recordBasisHumanObservationHandled"
 														]
 													}
 												},
@@ -1349,8 +1355,7 @@
 							{
 								"taxon": "ass",
 								"taxonID": "MX.47092",
-								"identificationBasis": [
-								]
+								"identificationBasis": []
 							}
 						],
 						"unitGathering": {
@@ -1370,8 +1375,7 @@
 						"identifications": [
 							{
 								"taxon": "kiihkenkeonvainikkeet",
-								"identificationBasis": [
-								]
+								"identificationBasis": []
 							}
 						],
 						"unitGathering": {
@@ -1392,7 +1396,12 @@
 							]
 						}
 					]
-				}
+				},
+				"predominantTree": "",
+				"images": [
+					"MM.88985"
+				],
+				"eventTime": {}
 			},
 			{
 				"units": [

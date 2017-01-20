@@ -176,17 +176,18 @@ export default class ImageArrayField extends Component {
 				body: formDataBody
 			});
 		}).then(response => {
-			const defaultMetadata = this.getDefaultMetadata();
-			return Promise.all(response.map(item => {
-				return this.apiClient.fetch(`/images/${item.id}`, undefined, {
-					method: "POST",
-					headers: {
-						"accept": "application/json",
-						"content-type": "application/json"
-					},
-					body: JSON.stringify(defaultMetadata)
-				});
-			}));
+			return this.getDefaultMetadataPromise().then(defaultMetadata => {
+				return Promise.all(response.map(item => {
+					return this.apiClient.fetch(`/images/${item.id}`, undefined, {
+						method: "POST",
+						headers: {
+							"accept": "application/json",
+							"content-type": "application/json"
+						},
+						body: JSON.stringify(defaultMetadata)
+					});
+				}));
+			})
 		}).then(response => {
 			onChange([...formData, ...response.map(({id}) => id)]);
 			this.mainContext.popBlockingLoader();
@@ -239,22 +240,44 @@ export default class ImageArrayField extends Component {
 		});
 	}
 
-	getDefaultMetadata = () => {
+	getDefaultMetadataPromise = () => {
+		console.log("GET DEFAULT METADATAPROMISR");
 		const {capturerVerbatimPath} = getUiOptions(this.props.uiSchema);
-		const defaultMetadata = this._context.defaultMetadata || {};
+		let defaultMetadata = this._context.defaultMetadata || {};
 
-		if (this.mainContext.formData && capturerVerbatimPath && !defaultMetadata.capturerVerbatim) {
-			defaultMetadata.capturerVerbatim = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
-			if (Array.isArray(defaultMetadata.capturerVerbatim) && defaultMetadata.capturerVerbatim.length > 1) {
-				defaultMetadata.capturerVerbatim = [defaultMetadata.capturerVerbatim[0]];
-			}
-		}
+		const MACode = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
+
 		if (!this._context.defaultMetadata) {
-			defaultMetadata.intellectualRights = "MZ.intellectualRightsCC-BY-SA-4.0";
+			defaultMetadata = {...defaultMetadata, intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
 		}
 
-		this._context.defaultMetadata = defaultMetadata;
+		return MACode !== undefined ?
+			this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName}) => {
+				const name = fullName || MACode;
+				defaultMetadata = {
+					...defaultMetadata,
+					capturerVerbatim: Array.isArray(name) ? name : [name]
+				};
+				this._context.defaultMetadata = defaultMetadata;
+				return defaultMetadata;
+			}) :
+			new Promise(resolve => {
+				this._context.defaultMetadata = defaultMetadata;
+				resolve(defaultMetadata);
+			});
 
-		return defaultMetadata;
+		// if (this.mainContext.formData && capturerVerbatimPath && !defaultMetadata.capturerVerbatim) {
+		// 	defaultMetadata.capturerVerbatim = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
+		// 	if (Array.isArray(defaultMetadata.capturerVerbatim) && defaultMetadata.capturerVerbatim.length > 1) {
+		// 		defaultMetadata.capturerVerbatim = [defaultMetadata.capturerVerbatim[0]];
+		// 	}
+		// }
+		// if (!this._context.defaultMetadata) {
+		// 	defaultMetadata.intellectualRights = "MZ.intellectualRightsCC-BY-SA-4.0";
+		// }
+		//
+		// this._context.defaultMetadata = defaultMetadata;
+		//
+		// return defaultMetadata;
 	}
 }

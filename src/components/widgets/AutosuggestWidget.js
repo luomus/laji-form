@@ -375,10 +375,6 @@ export default class AutoSuggestWidget extends Component {
 			suggestionFocused: "option-wrapper highlight"
 		};
 
-		const InputMetaInfo = ({children, className}) => {
-			return (<div className={"input-meta" + (className ? " " + className : "")}>{children}</div>)
-		}
-
 		return (
 			<div className="autosuggest-wrapper">
 				<Autosuggest
@@ -419,19 +415,29 @@ export default class AutoSuggestWidget extends Component {
 		const options = getUiOptions(this.props);
 		const renderMetaInfo = !options.hasOwnProperty("renderMetaInfo") || options.renderMetaInfo;
 
+		const getGlyph = (state) => <Glyphicon
+			style={{pointerEvents: "auto"}}
+			glyph={(() => {
+				if (state === "success") return "ok";
+				else if (state === "warning") return "warning-sign";
+				else return "remove";
+			})()}
+			className="form-control-feedback"
+		/>;
+
+		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		const input = (
-			<FormGroup validationState={renderMetaInfo ? validationState : undefined}>
-				<FormControl type="text" {...inputProps}/>
+			<div className={`has-feedback${renderMetaInfo ? ` has-${validationState}` : ""}`}>
+				<input className="form-control" type="text" {...inputProps} />
 				{!this.state.focused && !this.state.isLoading && renderMetaInfo ?
 					<FormControl.Feedback>{
 						validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
-							this.state.autosuggestSettings.renderSuccessGlyph(this) : null
+							this.state.autosuggestSettings.renderSuccessGlyph(this) : getGlyph(validationState)
 					}</FormControl.Feedback> :
 					null
 				}
-			</FormGroup>
+			</div>
 		);
-
 
 		if (value && !this.state.unsuggested && renderMetaInfo && this.state.autosuggestSettings.renderMetaInfo) {
 			return this.state.autosuggestSettings.renderMetaInfo(this, input);
