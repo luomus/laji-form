@@ -85,7 +85,7 @@ export default class AutosuggestField extends Component {
 				const suggestionValPath = options.suggestionReceivers[fieldName];
 				fieldVal = (suggestionValPath[0] === "$") ?
 					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
-					parseJSONPointer(suggestion, suggestionValPath)
+					suggestion[suggestionValPath];
 			}
 			formData = {...formData, [fieldName]: fieldVal}
 		}
