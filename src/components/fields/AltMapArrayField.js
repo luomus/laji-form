@@ -2,13 +2,14 @@ import React, { Component, PropTypes } from "react";
 import { findDOMNode } from "react-dom";
 import update from "react-addons-update";
 import deepEquals from "deep-equal";
-import LajiMap, { NORMAL_COLOR } from "laji-map";
+import LajiMap from "laji-map";
+import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const popupMappers = {
 	unitTaxon: (schema, formData) => {
@@ -20,7 +21,7 @@ const popupMappers = {
 	}
 };
 
-@FormField
+@BaseComponent
 export default class AltMapArrayField extends Component {
 	constructor(props) {
 		super(props);
@@ -96,28 +97,33 @@ export default class AltMapArrayField extends Component {
 							<MapComponent
 								ref="map"
 								lang={this.props.formContext.lang}
-								drawData={{
-									featureCollection: {
-										type: "featureCollection",
-										features: (geometries || []).map(geometry => {return {type: "Feature", properties: {}, geometry}})
+								draw={{
+									data: {
+										featureCollection: {
+											type: "FeatureCollection",
+											features: (geometries || []).map(geometry => {
+												return {type: "Feature", properties: {}, geometry}
+											})
+										},
+										getPopup: this.getPopup,
+										getFeatureStyle: ({featureIdx}) => {
+											this._context.featureIdxsToItemIdxs[featureIdx];
+											const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
+											return {color: color, fillColor: color, weight: 4};
+										}
 									},
-									getPopup: this.getPopup,
-									getFeatureStyle: ({featureIdx}) => {
-										const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
-										return {color: color, fillColor: color, weight: 4};
-									}
-								}}
-								getDrawingDraftStyle={() => {
-									return {color: "#25B4CA", opacity: 1}
+									getDraftStyle: () => {
+										return {color: "#25B4CA", opacity: 1}
+									},
+									onChange: emptyMode ? this.onMapChangeCreateGathering : this.onMapChange
 								}}
 								onPopupClose={() => {this.setState({popupIdx: undefined})}}
-								onChange={emptyMode ? this.onMapChangeCreateGathering : this.onMapChange}
 								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
 							  onFocusGrab={() => {this.setState({focusGrabbed: true})}}
 								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
-							  controlSettings={(emptyMode || this.state.activeIdx !== undefined) ? {} : {draw: false}}
+							  controlSettings={(emptyMode || this.state.activeIdx !== undefined) ? {} : {draw: false, coordinateInput: false}}
 							/>
 						</StretchAffix>
 					</Col>
@@ -377,23 +383,25 @@ class MapComponent extends Component {
 		this._context.map = this.map;
 	}
 
-	getStateFromProps = ({drawData, controlSettings}) => {
-		return {featureCollection: drawData.featureCollection, controlSettings}
+	getStateFromProps = ({draw: {data: {featureCollection}}, controlSettings}) => {
+		return {featureCollection, controlSettings}
 	}
 
 	componentWillReceiveProps(props) {
-		const {drawData, activeIdx, controlSettings, lang} = props;
-		const onChange = this.state.onChange || props.onChange;
+		const {draw: {data, onChange}, controlSettings, lang} = props;
+		const onDrawChange = this.state.onChange || onChange;
 		if (this.map) {
-			if (!deepEquals(drawData.featureCollection, this.state.featureCollection))  {
-				this.map.setDrawData(drawData);
+			if (!deepEquals(data.featureCollection, this.state.featureCollection))  {
+				this.map.setDrawData(data);
 			}
-			this.map.setActive(this.map.idxsToIds[activeIdx]);
+			// this.map.setDraw(props.draw);
 
-			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) this.map.setControlSettings(controlSettings);
+			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) {
+				this.map.setControlSettings(controlSettings);
+			}
 			if (lang !== this.props.lang) this.map.setLang(lang);
-			if (onChange !== this.map.onChange) {
-				this.map.setOption("onChange", onChange);
+			if (onDrawChange !== this.map.onChange) {
+				this.map.setOnDrawChange(onDrawChange);
 			}
 		}
 		this.setState(this.getStateFromProps(props));

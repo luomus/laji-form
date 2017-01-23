@@ -5,14 +5,13 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, getUiOptions, parseDotPath } from "../../utils";
+import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseDotPath, isNullOrUndefined } from "../../utils";
 import Context from "../../Context";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (props, taxonGroup) => {
-			if (taxonGroup === "+") return new Promise(resolve => resolve(props.registry.formContext.translations.All));
 			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			}).catch(() => {
@@ -96,7 +95,6 @@ const buttonSettings = {
 			map.triggerDrawing("marker");
 			mapContext.showPanel(null, translations.Cancel, close);
 			mapContext.setOnChange(events => {
-				// events.forEach(event => {
 				for (let event of events) {
 					const {type} = event;
 					switch (type) {
@@ -186,7 +184,7 @@ const buttonSettings = {
  *
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
-@FormField
+@BaseComponent
 export default class ScopeField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -299,7 +297,7 @@ export default class ScopeField extends Component {
 		let additionalFields = (state && state.additionalFields) ? Object.assign({}, state.additionalFields) : {};
 
 		let options = getUiOptions(uiSchema);
-		let generatedUiSchema = options.uiSchema || {};
+		let generatedUiSchema = getInnerUiSchema(uiSchema);
 
 		let fieldsToShow = {};
 
@@ -443,9 +441,6 @@ export default class ScopeField extends Component {
 		const {additionalsGroupingPath, additionalsGroupingOrderer} = options;
 
 		let groupTranslations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
-		let translationsToKeys = (this.state.additionalsGroupsTranslationsToKeys) ?
-			this.state.additionalsGroupsTranslationsToKeys :
-		{};
 
 		const groups = additionalsGroupingPath ? parseDotPath(options, additionalsGroupingPath) : undefined;
 
@@ -456,7 +451,7 @@ export default class ScopeField extends Component {
 		}
 
 		groupNames.forEach(groupName => {
-			let group = groups[groupName];
+			let group = groups[groupName] || {};
 			let groupFields = {};
 			const {fields, additionalFields} = group;
 			const combinedFields = [];
@@ -584,7 +579,6 @@ export default class ScopeField extends Component {
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};
 		return Object.keys(properties)
-			.sort((a, b) => {return ((properties[a].title || a) < (properties[b].title || b)) ? -1 : 1})
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData);
@@ -603,19 +597,25 @@ export default class ScopeField extends Component {
 	translateAdditionalsGroups = (props, additionalsGroupsTranslator) => {
 		let options = getUiOptions(props.uiSchema);
 		const {additionalsGroupingPath} = options;
-		if (additionalsGroupingPath) {
-			var groups = Object.keys(parseDotPath(options, additionalsGroupingPath));
-		}
+		if (!additionalsGroupingPath) throw new Error("ScopeField translating unknown grouping!");
+		const groups = parseDotPath(options, additionalsGroupingPath);
+		const groupNames = Object.keys(groups).filter(groupName => !isNullOrUndefined(groups[groupName]));
 
 		let translations = {};
 		let translationsToKeys = {};
 		let translationCount = 0;
-		groups.forEach(groupName => {
-			scopeFieldSettings[additionalsGroupsTranslator].translate(props, groupName).then(translation => {
+		groupNames.forEach(groupName => {
+			const title = groups[groupName].title;
+
+			const promise = (!isNullOrUndefined(title)) ?
+				new Promise(resolve => resolve(title)) :
+				scopeFieldSettings[additionalsGroupsTranslator].translate(props, groupName);
+
+			promise.then(translation => {
 				translations[groupName] = translation;
 				translationsToKeys[translation] = groupName;
 				translationCount++;
-				if (this.mounted && translationCount == groups.length) this.setState({
+				if (this.mounted && translationCount == groupNames.length) this.setState({
 					additionalsGroupsTranslations: translations,
 					additionalsGroupsTranslationsToKeys: translationsToKeys
 				});

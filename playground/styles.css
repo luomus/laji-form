@@ -40,7 +40,7 @@ body .laji-form {
 }
 
 .laji-form .autosuggest-wrapper {
-	position: relative;
+	position: absolute;
 }
 .laji-form .autosuggest-wrapper input {
 	padding-right: 27px;
@@ -127,6 +127,9 @@ body .laji-form {
 }
 .laji-form .react-selectize-control {
 	overflow: hidden;
+}
+.simple-value {
+	word-break: break-word;
 }
 
 .laji-form .form-group {

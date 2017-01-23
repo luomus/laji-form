@@ -3,9 +3,8 @@ import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import { Button, DeleteButton } from "../components";
-import Label from "../../components/Label";
-import FormField from "../BaseComponent";
+import { Button, DeleteButton, Label } from "../components";
+import BaseComponent from "../BaseComponent";
 
 const specialRules = {
 	legEditors: {
@@ -23,7 +22,7 @@ const specialRules = {
 	}
 }
 
-@FormField
+@BaseComponent
 export default class TableField extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
@@ -129,7 +128,7 @@ export default class TableField extends Component {
 					}
 				};
 			}
-			uiSchema = {...uiSchema, "ui:field": "grid", "ui:options": uiOptions};
+			uiSchema = {...uiSchema, "ui:field": "GridLayoutField", "ui:options": uiOptions};
 
 			const deletable = (!props.schema.additionalItems && idx !== undefined) || isAdditional;
 

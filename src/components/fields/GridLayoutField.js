@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, shouldRender, orderProperties } from  "react-jsonschema-form/lib/utils"
-import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
+import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString, isMultiSelect } from "../../utils";
 import { Row , Col } from "react-bootstrap";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class GridLayoutField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -66,7 +66,7 @@ export default class GridLayoutField extends Component {
 	getCols = (schema, uiSchema, property) => {
 		const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 
-		if ((schema.type === "array" && !(schema.uniqueItems && schema.items.type === "string" && uiSchema === undefined)) ||
+		if ((schema.type === "array" && !(schema.items && schema.items.enum && isMultiSelect(schema, uiSchema))) ||
 			schema.type === "object") {
 			return cols;
 		}

@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class ArrayBulkField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

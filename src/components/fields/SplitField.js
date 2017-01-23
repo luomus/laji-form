@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from "react";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class SplitField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({

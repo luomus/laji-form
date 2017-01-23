@@ -8,9 +8,9 @@ import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, parseDotPath } from "../../utils";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
-@FormField
+@BaseComponent
 export default class ImageArrayField extends Component {
 
 	constructor(props) {
@@ -154,7 +154,7 @@ export default class ImageArrayField extends Component {
 
 	renderAlert = () => {
 		return this.state.alert ? (
-			<PopupAlert onOk={() => {this.state.alert(); this.setState({alert: undefined});}}>
+			<PopupAlert onOk={() => this.setState({alert: false})}>
 				{this.props.formContext.translations.SaveFail}
 			</PopupAlert>) : null;
 	}
@@ -192,7 +192,7 @@ export default class ImageArrayField extends Component {
 			this.mainContext.popBlockingLoader();
 		}).catch(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({alert: () => {;}})
+			this.setState({alert: true})
 		});
 	}
 

@@ -4,7 +4,7 @@ import { ButtonToolbar } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema, shouldRender } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions } from "../../utils";
 import { DeleteButton, Button } from "../components";
-import FormField from "../BaseComponent";
+import BaseComponent from "../BaseComponent";
 
 const buttonDefinitions = {
 	add: (that, options, key) => {
@@ -25,7 +25,7 @@ const buttonDefinitions = {
 	}
 };
 
-@FormField
+@BaseComponent
 export default class CustomButtonArrayField extends Component {
 	static propTypes = {
 		uiSchema:PropTypes.shape({

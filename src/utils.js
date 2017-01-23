@@ -1,7 +1,8 @@
+import { isMultiSelect as _isMultiSelect } from "react-jsonschema-form/lib/utils";
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
-	return !uiSchema || uiSchema["ui:widget"] == "hidden" || uiSchema["ui:field"] == "hidden";
+	return !uiSchema || uiSchema["ui:widget"] == "HiddenWidget" || uiSchema["ui:field"] == "HiddenField";
 }
 
 export function getFieldsFinalUiSchema(uiSchema, field) {
@@ -99,5 +100,14 @@ export function getReactComponentName(WrappedComponent) {
 		WrappedComponent.displayName ||
 		WrappedComponent.name ||
 		"Component"
+	);
+}
+
+export function isMultiSelect(schema, uiSchema) {
+	return _isMultiSelect(schema) && !(
+		schema.type === "array" &&
+		uiSchema &&
+		uiSchema.items &&
+		uiSchema.items["ui:field"]
 	);
 }
