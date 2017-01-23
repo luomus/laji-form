@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "0.0.120",
+  "version": "0.0.122",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/app.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "build:lib": "rimraf lib && NODE_ENV=production webpack --config webpack.config.lib.js && rimraf lib/styles.js",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build:lib.moment-wrapped": "rimraf lib.moment-wrapped && NODE_ENV=production webpack --config webpack.config.lib.moment-wrapped.js && rimraf lib.moment-wrapped/styles.js",
-    "build": "npm run build:lib && npm run build:dist npm run build:lib.moment-wrapped",
+    "build": "npm run build:lib && npm run build:dist && npm run build:lib.moment-wrapped",
     "publish-to-npm": "npm version patch && git push && npm run build && npm publish"
   },
   "keywords": [
