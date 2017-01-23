@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { getUiOptions, parseDotPath, isEmptyString } from "../../utils";
+import { getUiOptions, parseJSONPointer, isEmptyString } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 const suggestionParsers = {
@@ -85,7 +85,7 @@ export default class AutosuggestField extends Component {
 				const suggestionValPath = options.suggestionReceivers[fieldName];
 				fieldVal = (suggestionValPath[0] === "$") ?
 					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
-					parseDotPath(suggestion, suggestionValPath)
+					parseJSONPointer(suggestion, suggestionValPath)
 			}
 			formData = {...formData, [fieldName]: fieldVal}
 		}

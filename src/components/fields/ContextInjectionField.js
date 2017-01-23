@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { parseDotPath } from "../../utils";
+import { parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
@@ -20,13 +20,13 @@ export default class ContextInjectionField extends Component {
 
 		for (let injectionPath in injections) {
 			const updateObject = {};
-			const splitted = injectionPath.split(".");
+			const splitted = injectionPath.substring(1).split("/");
 			const last = splitted.pop();
 			const tail = splitted.reduce((pointer, path) => {
 				pointer[path] = {};
 				return pointer[path]
 			}, updateObject);
-			tail[last] = {$set: parseDotPath(this.props.formContext.uiSchemaContext, injections[injectionPath])};
+			tail[last] = {$set: parseJSONPointer(this.props.formContext.uiSchemaContext, injections[injectionPath])};
 			uiSchema = update(uiSchema, updateObject);
 		}
 

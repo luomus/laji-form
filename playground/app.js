@@ -20,7 +20,7 @@ const apiClient = new ApiClientImplementation(
 );
 
 const lajiForm = new LajiForm({
-	...schemas,
+	// ...schemas,
 	// formData: {gatheringEvent: {leg: ["MA.308"]}},
 	onSubmit,
 	apiClient,

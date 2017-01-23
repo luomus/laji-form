@@ -127,7 +127,7 @@ export default class CustomButtonArrayField extends Component {
 
 		const fieldsFilter = (type === "blacklist") ? field => !filterDict[field] : field => filterDict[field];
 		const fields = Object.keys(this.props.schema.items.properties).filter(fieldsFilter);
-		const nestedFilters = filter.filter(f => f.includes("."));
+		const nestedFilters = filter.filter(f => f.includes("/"));
 
 		const {formData} = this.state;
 		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry);
@@ -148,7 +148,7 @@ export default class CustomButtonArrayField extends Component {
 		})() : defaultItem;
 
 		nestedFilters.forEach(filter => {
-			const splitted = filter.split(".");
+			const splitted = filter.substring(1).split("/");
 			const last = splitted.pop();
 
 			const nested = splitted.reduce((_nested, path) => {
@@ -157,7 +157,7 @@ export default class CustomButtonArrayField extends Component {
 			}, copyItem);
 
 			if (type === "blacklist") {
-				const nestedSchema = filter.split(".").reduce((nested, path) => {
+				const nestedSchema = splitted.reduce((nested, path) => {
 					if (nested.properties) return nested.properties[path];
 					if (nested.items) return nested.items.properties[path];
 					if (nested[path]) return nested[path];
@@ -165,7 +165,7 @@ export default class CustomButtonArrayField extends Component {
 
 				if (nested) nested[last] = getDefaultFormState(nestedSchema, undefined, this.props.registry);
 			} else {
-				const origNestedField = filter.split(".").reduce((nested, path) => {
+				const origNestedField = splitted.reduce((nested, path) => {
 					if (nested) return nested[path];
 					else if (nested && nested[0]) return nested[0][path];
 					return undefined;

@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "reac
 import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, parseDotPath } from "../../utils";
+import { getUiOptions, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -244,7 +244,7 @@ export default class ImageArrayField extends Component {
 		const defaultMetadata = this._context.defaultMetadata || {};
 
 		if (this.mainContext.formData && capturerVerbatimPath && !defaultMetadata.capturerVerbatim) {
-			defaultMetadata.capturerVerbatim = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
+			defaultMetadata.capturerVerbatim = parseJSONPointer(this.mainContext.formData, capturerVerbatimPath);
 			if (Array.isArray(defaultMetadata.capturerVerbatim) && defaultMetadata.capturerVerbatim.length > 1) {
 				defaultMetadata.capturerVerbatim = [defaultMetadata.capturerVerbatim[0]];
 			}
