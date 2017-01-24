@@ -423,6 +423,9 @@
 													"transformations": {
 														"taxonConfidence": "MY.taxonConfidenceUnsure"
 													}
+												},
+												"query": {
+													"informalTaxonGroup": "MVL.233"
 												}
 											},
 											"uiSchema": {

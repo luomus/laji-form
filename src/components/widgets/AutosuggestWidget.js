@@ -227,14 +227,14 @@ export default class AutoSuggestWidget extends Component {
 	onSuggestionsFetchRequested = ({value}) => {
 		value = this.inputValue;
 		if (!value || value.length < 2) return;
-		const {autosuggestField} = getUiOptions(this.props);
+		const {autosuggestField, query = {}} = getUiOptions(this.props);
 
 		this.setState({isLoading: true});
 		(() => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
-				{q: value, ...(this.state.autosuggestSettings.query || {})})
+				{q: value, ...(this.state.autosuggestSettings.query || {}), ...query})
 				.then(suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
