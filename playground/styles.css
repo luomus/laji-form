@@ -39,28 +39,25 @@ body .laji-form {
 	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 }
 
-/*.laji-form .autosuggest-wrapper {*/
-	/*position: absolute;*/
-/*}*/
-/*.laji-form .autosuggest-wrapper input {*/
-	/*padding-right: 27px;*/
-/*}*/
-/*.laji-form .autosuggest-container {*/
-    /*position: absolute;*/
-    /*z-index: 1;*/
-/*}*/
-/*.laji-form .autosuggest-container ul {*/
-	/*padding-left: 0px;*/
-/*}*/
-/*.laji-form .autosuggest-wrapper.open .dropdown-menu {*/
-	/*display: block;*/
-/*}*/
-/*.laji-form .autosuggest-wrapper .option-wrapper {*/
-	/*padding: 2px;*/
-/*}*/
-/*.laji-form .autosuggest-wrapper .list-group {*/
-	/*margin-bottom: 0px;*/
-/*}*/
+.laji-form .autosuggest-wrapper input {
+	padding-right: 27px;
+}
+.laji-form .autosuggest-container {
+    position: absolute;
+    z-index: 1;
+}
+.laji-form .autosuggest-container ul {
+	padding-left: 0px;
+}
+.laji-form .autosuggest-wrapper.open .dropdown-menu {
+	display: block;
+}
+.laji-form .autosuggest-wrapper .option-wrapper {
+	padding: 2px;
+}
+.laji-form .autosuggest-wrapper .list-group {
+	margin-bottom: 0px;
+}
 
 .laji-form .map-array-directionless-enter {
     opacity: 0.01;
