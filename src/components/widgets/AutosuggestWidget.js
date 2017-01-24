@@ -397,7 +397,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	getValue = () => {
-		const options = getUiOptions(this.props);<div class="laji-form-field-template-item">…</div>
+		const options = getUiOptions(this.props);
 		return options.hasOwnProperty("value") ? options.value : this.props.value;
 	}
 
@@ -415,15 +415,34 @@ export default class AutoSuggestWidget extends Component {
 		const options = getUiOptions(this.props);
 		const renderMetaInfo = !options.hasOwnProperty("renderMetaInfo") || options.renderMetaInfo;
 
-		const getGlyph = (state) => <Glyphicon
-			style={{pointerEvents: "auto"}}
-			glyph={(() => {
-				if (state === "success") return "ok";
-				else if (state === "warning") return "warning-sign";
-				else return "remove";
-			})()}
-			className="form-control-feedback"
-		/>;
+		const getGlyphNameFromState = (state) => {
+			switch (state) {
+				case "success":
+					return "ok";
+					break;
+				case "warning":
+					return "warning-sign";
+					break;
+				case "error":
+					return "remove";
+					break;
+				default:
+					return "";
+					break;
+			}
+		};
+
+		const getGlyph = (state) => {
+			const glyph = getGlyphNameFromState(state);
+
+			return glyph ? (
+				<Glyphicon
+					style={{pointerEvents: "auto"}}
+					glyph={glyph}
+					className="form-control-feedback"
+				/>
+			) : null;
+		}
 
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		const input = (

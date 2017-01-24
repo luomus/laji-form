@@ -15,7 +15,9 @@ import translations from "../translations.js";
 
 const fields = importLocalComponents("fields", [
 	_SchemaField,
-	"StringField",
+	// Disabled until we have time to make it work properly. StringField wrapper was used to optimization:
+	// it caused the onChange-events to trigger events only on blur, not on every key stroke.
+	// "StringField",
 	"ArrayField",
 	"NestField",
 	"ArrayBulkField",
