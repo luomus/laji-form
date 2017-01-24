@@ -179,7 +179,7 @@
 			}
 		},
 		"gatherings": {
-			"ui:field": "AltMapArrayField",
+			"ui:field": "MapArrayField",
 			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
 			"ui:options": {
 				"geometryMapper": "units",

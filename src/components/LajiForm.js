@@ -33,8 +33,7 @@ const fields = importLocalComponents("fields", [
 	"ArrayCombinerField",
 	"DependentBooleanField",
 	"DependentDisableField",
-	"AltMapArrayField",
-	"AltMapArrayField",
+	"MapArrayField",
 	"AutoArrayField",
 	"CopyValuesArrayField",
 	"AutosuggestField",
@@ -62,6 +61,16 @@ const widgets = importLocalComponents("widgets", [
 	"ImageSelectWidget",
 	"AnyToBooleanWidget"
 ]);
+
+function importLocalComponents(dir, fieldNames) {
+	return fieldNames.reduce((fields, field) => {
+		fields[field] = (typeof field === "string") ?
+			require(`./${dir}/${field}`).default :
+			field;
+		return fields;
+	}, {});
+}
+
 
 const RC_SWITCH_CLASS = "rc-switch";
 const FOCUS_SINK_CLASS = "focus-sink";
@@ -137,15 +146,6 @@ function _SchemaField(props) {
 		{...props}
 		schema={schema}
 	/>
-}
-
-function importLocalComponents(dir, fieldNames) {
-	return fieldNames.reduce((fields, field) => {
-	fields[field] = (typeof field === "string") ?
-		require(`./${dir}/${field}`).default :
-		field;
-	return fields;
-}, {});
 }
 
 export default class LajiForm extends Component {

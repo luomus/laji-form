@@ -22,7 +22,7 @@ const popupMappers = {
 };
 
 @BaseComponent
-export default class AltMapArrayField extends Component {
+export default class MapArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this._context = new Context("MAP_UNITS");
