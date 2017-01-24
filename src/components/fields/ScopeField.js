@@ -5,7 +5,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseDotPath, isNullOrUndefined } from "../../utils";
+import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
@@ -27,7 +27,7 @@ const buttonSettings = {
 		const {translations} = that.props.formContext;
 		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{translations.SetLocation}</Tooltip>;
 
-		const hasCoordinates = hasData(that.props.formData["_unitGathering.geometry"]);
+		const hasCoordinates = hasData(that.props.formData["unitGathering/geometry"]);
 
 		const mapContext = new Context("MAP");
 
@@ -101,7 +101,7 @@ const buttonSettings = {
 						case "create":
 							that.props.onChange(update(
 								that.props.formData,
-								{$merge: {["_unitGathering.geometry"]: event.feature.geometry}}
+								{$merge: {["unitGathering/geometry"]: event.feature.geometry}}
 							));
 							close();
 							break;
@@ -442,7 +442,7 @@ export default class ScopeField extends Component {
 
 		let groupTranslations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
 
-		const groups = additionalsGroupingPath ? parseDotPath(options, additionalsGroupingPath) : undefined;
+		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : undefined;
 
 		let groupNames = Object.keys(groups);
 		if (additionalsGroupingOrderer && this.props.formData) {
@@ -598,7 +598,7 @@ export default class ScopeField extends Component {
 		let options = getUiOptions(props.uiSchema);
 		const {additionalsGroupingPath} = options;
 		if (!additionalsGroupingPath) throw new Error("ScopeField translating unknown grouping!");
-		const groups = parseDotPath(options, additionalsGroupingPath);
+		const groups = parseJSONPointer(options, additionalsGroupingPath);
 		const groupNames = Object.keys(groups).filter(groupName => !isNullOrUndefined(groups[groupName]));
 
 		let translations = {};

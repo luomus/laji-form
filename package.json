@@ -1,14 +1,15 @@
 {
   "name": "laji-form",
-  "version": "0.0.118",
+  "version": "0.0.124",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
-  "main": "dist/laji-form.js",
+  "main": "lib/app.js",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline --port 8083",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
     "build:lib": "rimraf lib && NODE_ENV=production webpack --config webpack.config.lib.js && rimraf lib/styles.js",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
-    "build": "npm run build:lib && npm run build:dist",
+    "build:lib.moment-wrapped": "rimraf lib.moment-wrapped && NODE_ENV=production webpack --config webpack.config.lib.moment-wrapped.js && rimraf lib.moment-wrapped/styles.js",
+    "build": "npm run build:lib && npm run build:dist && npm run build:lib.moment-wrapped",
     "publish-to-npm": "npm version patch && git push && npm run build && npm publish"
   },
   "keywords": [

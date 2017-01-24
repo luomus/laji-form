@@ -645,6 +645,3 @@ body .laji-form {
 .laji-form .panel-body:not(.laji-map-coordinates) {
 	padding: 8px;
 }
-.laji-form .laji-map .laji-map-coordinates {
-	max-height: 230px;
-}

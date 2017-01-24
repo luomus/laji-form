@@ -86,7 +86,7 @@
 																		"ui:field": "ContextInjectionField",
 																		"ui:options": {
 																			"injections": {
-																				"ui:options.rules.0.regexp": "creator"
+																				"/ui:options/rules/0/regexp": "creator"
 																			}
 																		},
 																		"uiSchema": {
@@ -266,7 +266,7 @@
 									"images": {
 										"ui:field": "ImageArrayField",
 										"ui:options": {
-											"capturerVerbatimPath": "gatheringEvent.leg"
+											"capturerVerbatimPath": "/gatheringEvent/leg"
 										}
 									},
 									"eventTime": {
@@ -309,12 +309,12 @@
 											"text": "Kopioi havainto",
 											"type": "blacklist",
 											"filter": [
-												"identifications.taxon",
-												"identifications.taxonID",
+												"/identifications/taxon",
+												"/identifications/taxonID",
 												"unitType",
 												"count",
 												"notes",
-												"unitGathering.geometry",
+												"/unitGathering/geometry",
 												"images"
 											]
 										}
@@ -332,7 +332,7 @@
 									"uiSchema": {
 										"ui:field": "ScopeField",
 										"ui:options": {
-											"additionalsGroupingPath": "fieldScopes.unitType",
+											"additionalsGroupingPath": "/fieldScopes/unitType",
 											"additionalsGroupingOrderer": "unitType",
 											"additionalsGroupsTranslator": "taxonGroups",
 											"additionalsPersistenceKey": "unitType",
@@ -347,8 +347,8 @@
 												}
 											},
 											"fields": [
-												"_identifications.taxonID",
-												"_identifications.taxon",
+												"/identifications/taxonID",
+												"/identifications/taxon",
 												"unitType",
 												"taxonConfidence",
 												"recordBasis",
@@ -360,14 +360,14 @@
 													"*": {
 														"title": "Kaikki",
 														"additionalFields": [
-															"_identifications.det",
-															"_identifications.detDate",
-															"_identifications.identificationBasis",
+															"/identifications/det",
+															"/identifications/detDate",
+															"/identifications/identificationBasis",
 															"sex",
-															"_unitGathering.dateBegin",
-															"_unitGathering.dateEnd",
-															"_unitGathering.habitatIUCN",
-															"_unitGathering.habitatDescription",
+															"/unitGathering/dateBegin",
+															"/unitGathering/dateEnd",
+															"/unitGathering/habitatIUCN",
+															"/unitGathering/habitatDescription",
 															"preservation"
 														]
 													},
@@ -395,9 +395,8 @@
 													"MVL.233": {
 														"title": "Sienet",
 														"additionalFields": [
-															"substrate",
+															"/unitGathering/substrate",
 															"substrateSpecies",
-															"substrateNotes",
 															"smell",
 															"smellNotes",
 															"taste",
@@ -412,12 +411,12 @@
 											"ui:options": {
 												"autosuggestField": "taxon",
 												"allowNonsuggestedValue": true,
-												"suggestionInputField": "_identifications.taxon",
-												"suggestionValueField": "_identifications.taxonID",
+												"suggestionInputField": "/identifications/taxon",
+												"suggestionValueField": "/identifications/taxonID",
 												"suggestionReceivers": {
-													"_identifications.taxon": "value",
+													"/identifications/taxon": "value",
 													"unitType": "$taxonGroup",
-													"_identifications.taxonID": "key"
+													"/identifications/taxonID": "key"
 												},
 												"inputTransformer": {
 													"regexp": "^(.*)\\?$",
@@ -430,28 +429,28 @@
 												"ui:field": "GridLayoutField",
 												"ui:options": {
 													"lg": {
-														"_identifications.identificationBasis": 4,
-														"_unitGathering.dateBegin": 3,
-														"_unitGathering.dateEnd": 3,
+														"/identifications/identificationBasis": 4,
+														"/unitGathering/dateBegin": 3,
+														"/unitGathering/dateEnd": 3,
 														"*": 2
 													},
 													"md": {
-														"_identifications.identificationBasis": 4,
-														"_unitGathering.dateBegin": 4,
-														"_unitGathering.dateEnd": 4,
-														"_identifications.detDate": 3,
+														"/identifications/identificationBasis": 4,
+														"/unitGathering/dateBegin": 4,
+														"/unitGathering/dateEnd": 4,
+														"/identifications/detDate": 3,
 														"*": 2
 													},
 													"sm": {
-														"_identifications.identificationBasis": 8,
-														"_unitGathering.dateBegin": 8,
-														"_unitGathering.dateEnd": 8,
+														"/identifications/identificationBasis": 8,
+														"/unitGathering/dateBegin": 8,
+														"/unitGathering/dateEnd": 8,
 														"*": 4
 													},
 													"xs": 12,
 													"rows": [
 														[
-															"_identifications.taxon",
+															"/identifications/taxon",
 															"taxonConfidence",
 															"recordBasis",
 															"count",
@@ -459,10 +458,10 @@
 														]
 													]
 												},
-												"_identifications.taxonID": {
+												"/identifications/taxonID": {
 													"ui:widget": "HiddenWidget"
 												},
-												"_identifications.detDate": {
+												"/identifications/detDate": {
 													"ui:widget": "DateWidget"
 												},
 												"unitType": {
@@ -471,16 +470,16 @@
 												"images": {
 													"ui:field": "ImageArrayField",
 													"ui:options": {
-														"capturerVerbatimPath": "gatheringEvent.leg"
+														"capturerVerbatimPath": "/gatheringEvent/leg"
 													}
 												},
-												"_unitGathering.geometry": {
+												"/unitGathering/geometry": {
 													"ui:field": "HiddenField"
 												},
-												"_unitGathering.dateBegin": {
+												"/unitGathering/dateBegin": {
 													"ui:widget": "DateTimeWidget"
 												},
-												"_unitGathering.dateEnd": {
+												"/unitGathering/dateEnd": {
 													"ui:widget": "DateTimeWidget"
 												},
 												"recordBasis": {
@@ -758,8 +757,6 @@
 											"MY.lifeStageFertile",
 											"MY.lifeStageSterile",
 											"MY.lifeStageTadpole",
-											"MY.lifeStageSnag",
-											"MY.lifeStageSeed",
 											"MY.lifeStageLivePlant",
 											"MY.lifeStageDead",
 											"MY.lifeStageAlive"
@@ -777,8 +774,6 @@
 											"lisääntymiskykyinen",
 											"lisääntymiskyvytön",
 											"nuijapää",
-											"kelo",
-											"siemen",
 											"elävä kasvi",
 											"kuollut",
 											"Elävä"
@@ -788,17 +783,9 @@
 										"type": "string",
 										"title": "Isäntälaji"
 									},
-									"substrate": {
-										"type": "string",
-										"title": "Kasvualusta"
-									},
 									"substrateSpecies": {
 										"type": "string",
 										"title": "Kasvualusta (laji)"
-									},
-									"substrateNotes": {
-										"type": "string",
-										"title": "Kasvualustamuistiinpanot"
 									},
 									"taste": {
 										"type": "string",
@@ -815,9 +802,9 @@
 											"",
 											"Ei maistettu",
 											"Ei makua",
-											"heikko",
-											"kohtalainen",
-											"voimakas"
+											"Heikko",
+											"Kohtalainen",
+											"Voimakas"
 										]
 									},
 									"tasteNotes": {
@@ -837,11 +824,11 @@
 										],
 										"enumNames": [
 											"",
-											"ei haistettu",
-											"ei hajua",
-											"heikko",
-											"kohtalainen",
-											"vahva"
+											"Ei haistettu",
+											"Ei hajua",
+											"Heikko",
+											"Mohtalainen",
+											"Vahva"
 										]
 									},
 									"smellNotes": {
@@ -918,7 +905,39 @@
 									},
 									"plantLifeStage": {
 										"type": "string",
-										"title": "Kasvin elinvaihe"
+										"title": "Kasvin elinvaihe",
+										"enum": [
+											"",
+											"MY.plantLifeStageSterile",
+											"MY.plantLifeStageFertile",
+											"MY.plantLifeStageSeed",
+											"MY.plantLifeStageSprout",
+											"MY.plantLifeStageBud",
+											"MY.plantLifeStageFlower",
+											"MY.plantLifeStageWitheredFlower",
+											"MY.plantLifeStageRipeningFruit",
+											"MY.plantLifeStageRipeFruit",
+											"MY.plantLifeStageDeadSprout",
+											"MY.plantLifeStageSubterranean",
+											"MY.plantLifeStageLivingPlant",
+											"MY.plantLifeStageDeadPlant"
+										],
+										"enumNames": [
+											"",
+											"steriili",
+											"fertiili",
+											"siemen / itiö / hedelmä",
+											"verso",
+											"nuppu",
+											"kukka",
+											"kuihtunut kukka",
+											"kypsyviä siemeniä / hedelmiä / itiöitä",
+											"kypsiä siemeniä / hedelmiä / itiöitä",
+											"kuollut verso",
+											"mukula / sipuli / juuri",
+											"elävä",
+											"kuollut"
+										]
 									},
 									"plantStatusCode": {
 										"type": "string",
@@ -1055,8 +1074,18 @@
 										"title": "Bongattu"
 									},
 									"nativeStatus": {
-										"type": "boolean",
-										"title": "Luonnonvaraisuus"
+										"type": "string",
+										"title": "Luonnonvaraisuus",
+										"enum": [
+											"",
+											"MY.native",
+											"MY.nonNative"
+										],
+										"enumNames": [
+											"",
+											"Luonnonvarainen",
+											"Ei-luonnonvarainen"
+										]
 									},
 									"images": {
 										"type": "array",
@@ -1150,6 +1179,10 @@
 											"habitatDescription": {
 												"type": "string",
 												"title": "Biotoopin kuvaus"
+											},
+											"substrate": {
+												"type": "string",
+												"title": "Kasvualustamuistiinpanot"
 											}
 										},
 										"required": []

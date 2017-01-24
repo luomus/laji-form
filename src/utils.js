@@ -91,8 +91,8 @@ export function isEmptyString(val) {
 	return val === "" || isNullOrUndefined(val);
 }
 
-export function parseDotPath(object, dotPath) {
-	return dotPath.split('.').reduce((o, i)=>o[i], object);
+export function parseJSONPointer(object, jsonPointer) {
+	return jsonPointer.substring(1).split('/').reduce((o, i)=>o[i], object);
 }
 
 export function getReactComponentName(WrappedComponent) {

@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "reac
 import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, parseDotPath } from "../../utils";
+import { getUiOptions, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -191,7 +191,7 @@ export default class ImageArrayField extends Component {
 		}).then(response => {
 			onChange([...formData, ...response.map(({id}) => id)]);
 			this.mainContext.popBlockingLoader();
-		}).catch(() => {
+		}).catch((e) => {
 			this.mainContext.popBlockingLoader();
 			this.setState({alert: true})
 		});
@@ -241,11 +241,10 @@ export default class ImageArrayField extends Component {
 	}
 
 	getDefaultMetadataPromise = () => {
-		console.log("GET DEFAULT METADATAPROMISR");
 		const {capturerVerbatimPath} = getUiOptions(this.props.uiSchema);
 		let defaultMetadata = this._context.defaultMetadata || {};
 
-		const MACode = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
+		const MACode = parseJSONPointer(this.mainContext.formData, capturerVerbatimPath);
 
 		if (!this._context.defaultMetadata) {
 			defaultMetadata = {...defaultMetadata, intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
@@ -265,19 +264,5 @@ export default class ImageArrayField extends Component {
 				this._context.defaultMetadata = defaultMetadata;
 				resolve(defaultMetadata);
 			});
-
-		// if (this.mainContext.formData && capturerVerbatimPath && !defaultMetadata.capturerVerbatim) {
-		// 	defaultMetadata.capturerVerbatim = parseDotPath(this.mainContext.formData, capturerVerbatimPath);
-		// 	if (Array.isArray(defaultMetadata.capturerVerbatim) && defaultMetadata.capturerVerbatim.length > 1) {
-		// 		defaultMetadata.capturerVerbatim = [defaultMetadata.capturerVerbatim[0]];
-		// 	}
-		// }
-		// if (!this._context.defaultMetadata) {
-		// 	defaultMetadata.intellectualRights = "MZ.intellectualRightsCC-BY-SA-4.0";
-		// }
-		//
-		// this._context.defaultMetadata = defaultMetadata;
-		//
-		// return defaultMetadata;
 	}
 }

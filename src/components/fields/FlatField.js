@@ -66,7 +66,7 @@ export default class FlatField extends Component {
 			if (properties.properties) properties = properties.properties;
 
 			if (properties) Object.keys(properties).forEach(innerField => {
-				state.schema = update(state.schema, {properties: {$merge: {[`_${field}.${innerField}`]: properties[innerField]}}});
+				state.schema = update(state.schema, {properties: {$merge: {[`/${field}/${innerField}`]: properties[innerField]}}});
 			});
 			state.schema.properties = immutableDelete(state.schema.properties, field);
 
@@ -85,7 +85,7 @@ export default class FlatField extends Component {
 				}
 
 				Object.keys(innerData).forEach(innerField => {
-					state.formData = {...state.formData, [`_${field}.${innerField}`]: innerData[innerField]};
+					state.formData = {...state.formData, [`/${field}/${innerField}`]: innerData[innerField]};
 				});
 				state.formData = immutableDelete(state.formData, field);
 			}
@@ -100,8 +100,8 @@ export default class FlatField extends Component {
 									Object.keys(error).forEach(innerError => {
 										state.errorSchema = {
 											...state.errorSchema,
-											[`_${field}.${innerError}`]: {
-												...(state.errorSchema[`_${field}.${innerError}`] || {}),
+											[`/${field}/${innerError}`]: {
+												...(state.errorSchema[`/${field}/${innerError}`] || {}),
 												...error[innerError]
 											}
 										};
@@ -115,8 +115,8 @@ export default class FlatField extends Component {
 							Object.keys(props.errorSchema[errorField]).forEach(innerError => {
 								state.errorSchema = {
 									...state.errorSchema,
-									[`_${field}.${innerError}`]: [
-										...(state.errorSchema[`_${field}.${innerError}`] || []),
+									[`/${field}/${innerError}`]: [
+										...(state.errorSchema[`/${field}/${innerError}`] || []),
 										...[props.errorSchema[errorField][innerError]]
 									]
 								};
@@ -136,9 +136,9 @@ export default class FlatField extends Component {
 	onChange(formData) {
 		const {fields} = this.getUiOptions();
 		Object.keys(formData).forEach(item => {
-			if (item[0] === "_") fields.forEach(field => {
-				if (item.includes(`_${field}.`)) {
-					const newItemName = item.replace(`_${field}.`, "");
+			if (item[0] === "/") fields.forEach(field => {
+				if (item.includes(`/${field}/`)) {
+					const newItemName = item.replace(`/${field}/`, "");
 					const isArray = (this.props.schema.properties[field].type === "array");
 					const newItemBase = isArray ?
 						((formData[field] && formData[field][0]) ? formData[field][0] : {} || {}) :
