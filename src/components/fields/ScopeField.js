@@ -27,7 +27,7 @@ const buttonSettings = {
 		const {translations} = that.props.formContext;
 		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{translations.SetLocation}</Tooltip>;
 
-		const hasCoordinates = hasData(that.props.formData["unitGathering/geometry"]);
+		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
 
 		const mapContext = new Context("MAP");
 
@@ -101,7 +101,7 @@ const buttonSettings = {
 						case "create":
 							that.props.onChange(update(
 								that.props.formData,
-								{$merge: {["unitGathering/geometry"]: event.feature.geometry}}
+								{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
 							));
 							close();
 							break;
