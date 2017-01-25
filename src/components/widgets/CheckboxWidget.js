@@ -48,7 +48,8 @@ function CheckboxWidget(props) {
 		<div onClick={onClick}
 		     onKeyDown={onKeyDown}>
 			<Switch
-				value={isNullOrUndefined(value) ? null : value}
+				value={tristate && isNullOrUndefined(value) ? null : value}
+				defaultValue={tristate ? null : false}
 				disabled={disabled}
 				readonly={readonly}
 				onText={registry.formContext.translations.Yes}
