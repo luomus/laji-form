@@ -1365,7 +1365,8 @@
 	"formData": {
 		"gatheringEvent": {
 			"leg": [
-				"MA.308"
+				"MA.308",
+				"MA.317"
 			],
 			"legPublic": true,
 			"dateBegin": "2017-01-11",

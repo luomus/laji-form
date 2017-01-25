@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 import { Label } from "../components";
-import Switch from "rc-switch";
+import { isNullOrUndefined } from "../../utils";
+import Switch from "react-bootstrap-switch";
 
 function CheckboxWidget(props) {
 	const {
@@ -12,13 +13,22 @@ function CheckboxWidget(props) {
 		onChange,
 		help,
 		label,
-		registry
+		registry,
+		readonly,
+		options
 	} = props;
 
+	function getNextVal() {
+		let nextVal = true;
+		if (value === true) nextVal = false;
+		else if (tristate && value === false) nextVal = undefined;
+		return nextVal;
+	}
+
 	function onKeyDown(e) {
-		if (!disabled && e.key === " ") {
+		if (!disabled  && !readonly && e.key === " ") {
 			e.preventDefault();
-			onChange(!value);
+			onChange(getNextVal());
 		}
 		if (e.key == "Escape") {
 			e.preventDefault();
@@ -26,17 +36,28 @@ function CheckboxWidget(props) {
 		}
 	}
 
-	return (<div className={disabled ? "disabled" : ""} onKeyDown={onKeyDown}><Label {...props}>
-		<Switch
-		       id={id}
-		       className={"rc-switch-toggled-" + !!value}
-		       checked={typeof value === "undefined" ? false : value}
-		       required={required}
-		       disabled={disabled}
-		       onChange={value => onChange(value)}
-		       checkedChildren={registry.formContext.translations.Yes}
-		       unCheckedChildren={registry.formContext.translations.No}	/>
-	</Label></div>);
+	function onClick(e) {
+		e.preventDefault();
+		if (disabled || readonly) return;
+		onChange(getNextVal());
+	}
+
+	const tristate = (options || {}).hasOwnProperty("allowUndefined") ? options.allowUndefined : true;
+
+	return (<Label {...props}>
+		<div onClick={onClick}
+		     onKeyDown={onKeyDown}>
+			<Switch
+				value={isNullOrUndefined(value) ? null : value}
+				disabled={disabled}
+				readonly={readonly}
+				onText={registry.formContext.translations.Yes}
+				offText={registry.formContext.translations.No}
+				bsSize="mini"
+				tristate={tristate}
+			/>
+		</div>
+	</Label>);
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -46,6 +67,9 @@ if (process.env.NODE_ENV !== "production") {
 		onChange: PropTypes.func,
 		value: PropTypes.bool,
 		required: PropTypes.bool,
+		options: PropTypes.shape({
+			allowUndefined: PropTypes.boolean
+		})
 	};
 }
 

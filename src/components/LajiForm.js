@@ -72,13 +72,11 @@ function importLocalComponents(dir, fieldNames) {
 }
 
 
-const RC_SWITCH_CLASS = "rc-switch";
-const FOCUS_SINK_CLASS = "focus-sink";
+const SWITCH_CLASS = "bootstrap-switch";
 
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
-tabbableSelectors.push(`.${RC_SWITCH_CLASS}:not(.${RC_SWITCH_CLASS}-disabled)`);
-tabbableSelectors.push(`.${FOCUS_SINK_CLASS}`);
+tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
 
 class FieldTemplate extends Component {
@@ -260,7 +258,7 @@ export default class LajiForm extends Component {
 	canFocusNextInput = (inputElem) => {
 		function isTabbableInput(elem) {
 			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-			elem.className.includes(RC_SWITCH_CLASS) ||
+			elem.className.includes(SWITCH_CLASS) ||
 			elem.className.includes(FOCUS_SINK_CLASS));
 		}
 
