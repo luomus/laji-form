@@ -42,23 +42,24 @@ function CheckboxWidget(props) {
 		onChange(getNextVal());
 	}
 
-	const tristate = (options || {}).hasOwnProperty("allowUndefined") ? options.allowUndefined : true;
+	const {tristate, invert} = {allowUndefined: true, invert: false, ...(options || {})};
 
-	return (<Label {...props}>
-		<div onClick={onClick}
-		     onKeyDown={onKeyDown}>
-			<Switch
-				value={tristate && isNullOrUndefined(value) ? null : value}
-				defaultValue={tristate ? null : false}
-				disabled={disabled}
-				readonly={readonly}
-				onText={registry.formContext.translations.Yes}
-				offText={registry.formContext.translations.No}
-				bsSize="mini"
-				tristate={tristate}
-			/>
-		</div>
-	</Label>);
+	return (
+		<Label {...props}>
+			<div onClick={onClick} onKeyDown={onKeyDown}>
+				<Switch
+					value={tristate && isNullOrUndefined(value) ? null : invert ? !value : value}
+					defaultValue={tristate ? null : false}
+					disabled={disabled}
+					readonly={readonly}
+					onText={registry.formContext.translations.Yes}
+					offText={registry.formContext.translations.No}
+					bsSize="mini"
+					tristate={tristate}
+				/>
+			</div>
+		</Label>
+	);
 }
 
 if (process.env.NODE_ENV !== "production") {
