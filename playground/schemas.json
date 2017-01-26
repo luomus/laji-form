@@ -1390,7 +1390,7 @@
 						}
 					}
 				],
-				"wgs84GeometryCollection": {
+				"geometry": {
 					"type": "GeometryCollection",
 					"geometries": []
 				},
