@@ -86,7 +86,7 @@
 																		"ui:field": "ContextInjectionField",
 																		"ui:options": {
 																			"injections": {
-																				"/ui:options/rules/0/regexp": "creator"
+																				"/ui:options/rules/0/regexp": "/creator"
 																			}
 																		},
 																		"uiSchema": {
@@ -118,7 +118,10 @@
 																			}
 																		},
 																		"editors": {
-																			"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa."
+																			"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
+																			"ui:options": {
+																				"allowUndefined": false
+																			}
 																		}
 																	}
 																}
@@ -174,7 +177,13 @@
 				"ui:help": "Valinta mahdollistaa tarkan paikkatiedon karkeistamisen julkisesta Laji.fi-palvelusta. Huomaathan, että tallentamasi tieto on karkeistamisesta huolimatta viranomaisten käytössä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
 				"ui:options": {
 					"trueValue": "MX.secureLevelKM10",
-					"falseValue": "MX.secureLevelNone"
+					"falseValue": "MX.secureLevelNone",
+					"allowUndefined": false
+				}
+			},
+			"legPublic": {
+				"ui:options": {
+					"allowUndefined": false
 				}
 			}
 		},
@@ -182,6 +191,7 @@
 			"ui:field": "MapArrayField",
 			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
 			"ui:options": {
+				"geometryField": "geometry",
 				"geometryMapper": "units",
 				"topOffset": 50,
 				"bottomOffset": 50,
@@ -349,11 +359,11 @@
 											"fields": [
 												"/identifications/taxonID",
 												"/identifications/taxon",
+												"count",
+												"notes",
 												"unitType",
 												"taxonConfidence",
-												"recordBasis",
-												"count",
-												"notes"
+												"recordBasis"
 											],
 											"fieldScopes": {
 												"unitType": {
@@ -423,9 +433,6 @@
 													"transformations": {
 														"taxonConfidence": "MY.taxonConfidenceUnsure"
 													}
-												},
-												"query": {
-													"informalTaxonGroup": "MVL.233"
 												}
 											},
 											"uiSchema": {
@@ -760,7 +767,6 @@
 											"MY.lifeStageFertile",
 											"MY.lifeStageSterile",
 											"MY.lifeStageTadpole",
-											"MY.lifeStageLivePlant",
 											"MY.lifeStageDead",
 											"MY.lifeStageAlive"
 										],
@@ -777,7 +783,6 @@
 											"lisääntymiskykyinen",
 											"lisääntymiskyvytön",
 											"nuijapää",
-											"elävä kasvi",
 											"kuollut",
 											"Elävä"
 										]
@@ -1073,7 +1078,7 @@
 										"title": "Linnun tila"
 									},
 									"twitched": {
-										"type": "string",
+										"type": "boolean",
 										"title": "Bongattu"
 									},
 									"nativeStatus": {
@@ -1194,26 +1199,9 @@
 								"required": []
 							}
 						},
-						"wgs84GeometryCollection": {
+						"geometry": {
 							"type": "object",
-							"title": "MY.wgs84GeometryCollection",
-							"properties": {
-								"geometries": {
-									"type": "array",
-									"uniqueItems": true,
-									"items": {
-										"type": "object",
-										"properties": {
-											"geometry": {
-												"type": "object",
-												"properties": {}
-											}
-										},
-										"required": []
-									}
-								}
-							},
-							"required": []
+							"properties": {}
 						}
 					},
 					"required": []
@@ -1363,12 +1351,12 @@
 		}
 	},
 	"formData": {
+		"secureLevel": "",
 		"gatheringEvent": {
 			"leg": [
 				"MA.308"
 			],
 			"legPublic": true,
-			"dateBegin": "2017-01-11",
 			"secureLevel": ""
 		},
 		"gatherings": [
@@ -1377,7 +1365,8 @@
 					{
 						"recordBasis": "MY.recordBasisHumanObservation",
 						"unitType": [
-							"MVL.2"
+							"MVL.233",
+							"MVL.121"
 						],
 						"taxonConfidence": "MY.taxonConfidenceSure",
 						"sex": "",
@@ -1385,33 +1374,15 @@
 						"taste": "",
 						"smell": "",
 						"preservation": "",
+						"plantLifeStage": "",
 						"plantStatusCode": "",
 						"atlasCode": "",
+						"nativeStatus": "",
+						"substrateClassification": "",
 						"identifications": [
 							{
-								"taxon": "ass",
-								"taxonID": "MX.47092",
-								"identificationBasis": []
-							}
-						],
-						"unitGathering": {
-							"geometry": {}
-						}
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"sex": "",
-						"lifeStage": "",
-						"taste": "",
-						"smell": "",
-						"preservation": "",
-						"plantStatusCode": "",
-						"atlasCode": "",
-						"identifications": [
-							{
-								"taxon": "kiihkenkeonvainikkeet",
-								"identificationBasis": []
+								"taxon": "kantarelli",
+								"taxonID": "MX.205511"
 							}
 						],
 						"unitGathering": {
@@ -1419,49 +1390,12 @@
 						}
 					}
 				],
-				"wgs84GeometryCollection": {},
-				"locality": "moi moi",
-				"geometry": {
+				"wgs84GeometryCollection": {
 					"type": "GeometryCollection",
-					"geometries": [
-						{
-							"type": "Point",
-							"coordinates": [
-								27.401809931915196,
-								62.816856045584444
-							]
-						}
-					]
+					"geometries": []
 				},
-				"predominantTree": "",
-				"images": [
-					"MM.88985"
-				],
-				"eventTime": {}
-			},
-			{
-				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"sex": "",
-						"lifeStage": "",
-						"taste": "",
-						"smell": "",
-						"preservation": "",
-						"plantStatusCode": "",
-						"atlasCode": "",
-						"identifications": [
-							{}
-						],
-						"unitGathering": {
-							"geometry": {}
-						}
-					}
-				],
-				"wgs84GeometryCollection": {}
+				"predominantTree": ""
 			}
-		],
-		"secureLevel": ""
+		]
 	}
 }

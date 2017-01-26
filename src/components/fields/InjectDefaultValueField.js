@@ -46,12 +46,5 @@ export default class InjectDefaultValueField extends Component {
 
 		this.props.onChange(formData);
 	}
-
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (
-			<SchemaField {...this.props} {...this.state} />
-		)
-	}
 }
 
