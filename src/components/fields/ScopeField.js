@@ -22,10 +22,9 @@ const scopeFieldSettings = {
 }
 
 const buttonSettings = {
-	setLocation: (that, glyph) => {
+	setLocation: (that, {glyph, label}) => {
 		const id = that.props.idSchema.$id;
-		const {translations} = that.props.formContext;
-		const tooltip = <Tooltip id={`${id}-tooltip-${glyph}`}>{translations.SetLocation}</Tooltip>;
+		const tooltip = <Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>;
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
 
@@ -515,24 +514,28 @@ export default class ScopeField extends Component {
 
 	renderGlyphFields = () => {
 		const {glyphFields} = getUiOptions(this.props.uiSchema);
+		const {idSchema} = this.props;
 
 		return glyphFields ?
-			Object.keys(glyphFields).map(glyph => {
-				const settings = glyphFields[glyph];
+		glyphFields.map(settings => {
+				const {glyph, label} = settings;
 				if (settings.show) {
 					const property = settings.show;
 					const isIncluded = this.propertyIsIncluded(property);
 					const hasData = propertyHasData(property, this.props.formData);
+
+					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
 					return (
-						<GlyphButton key={property}
-						             glyph={glyph}
-						             disabled={hasData}
-						             bsStyle={isIncluded ? "primary" : "default"}
-						             onClick={() => this.toggleAdditionalProperty(property)}
-						/>
+						<OverlayTrigger key={property} overlay={tooltip} placement="left">
+							<GlyphButton glyph={glyph}
+													 disabled={hasData}
+													 bsStyle={isIncluded ? "primary" : "default"}
+													 onClick={() => this.toggleAdditionalProperty(property)}
+							/>
+						</OverlayTrigger>
 					);
 				} else if (settings.fn) {
-					return buttonSettings[settings.fn](this, glyph);
+					return buttonSettings[settings.fn](this, settings);
 				}
 			}) : null;
 	}
