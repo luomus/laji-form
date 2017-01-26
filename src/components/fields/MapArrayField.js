@@ -6,7 +6,7 @@ import LajiMap from "laji-map";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -23,6 +23,25 @@ const popupMappers = {
 
 @BaseComponent
 export default class MapArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				geometryField: PropTypes.string.isRequired,
+				// allows custom algorithm for getting geometry data
+				geometryMapper: PropTypes.oneOf(["units"]),
+				topOffset: PropTypes.integer,
+				bottomOffset: PropTypes.integer,
+				popupFields: PropTypes.arrayOf(PropTypes.object),
+				mapSizes: PropTypes.shape({
+					lg: PropTypes.integer,
+					md: PropTypes.integer,
+					sm: PropTypes.integer,
+					xs: PropTypes.integer
+				})
+			})
+		})
+	}
+
 	constructor(props) {
 		super(props);
 		this._context = new Context("MAP_UNITS");
@@ -54,7 +73,7 @@ export default class MapArrayField extends Component {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryMapper, topOffset, bottomOffset} = options;
+		const {popupFields, geometryMapper, geometryField, topOffset, bottomOffset} = options;
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
@@ -79,7 +98,8 @@ export default class MapArrayField extends Component {
 			return sizes
 		}, {});
 
-		const {geometry, ...schemaProps} = this.props.schema.items.properties;
+		// const {[geometryField], ...schemaProps} = this.props.schema.items.properties;
+		const schemaProps = immutableDelete(this.props.schema.items.properties, geometryField);
 		const schema = {...this.props.schema, items: {...this.props.schema.items, properties: schemaProps}};
 
 		const emptyMode = !formData || !formData.length;
@@ -143,10 +163,11 @@ export default class MapArrayField extends Component {
 	}
 
 	onMapChangeCreateGathering = (events) => {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
 		events.forEach(e => {
 			if (e.type === "create") {
 				const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-				formData.geometry = {
+				formData[geometryField] = {
 					type: "GeometryCollection",
 					geometries: [e.feature.geometry]
 				};
@@ -177,15 +198,16 @@ export default class MapArrayField extends Component {
 	onAdd = ({feature: {geometry}}) => {
 		const formData = this.props.formData ||
 			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+		const {geometryField} = getUiOptions(this.props.uiSchema);
 
 		const itemFormData = formData[this.state.activeIdx];
 		let updateObject = undefined;
-		if (itemFormData && itemFormData.geometry && itemFormData.geometry.geometries) {
-			updateObject = {geometry: {
+		if (itemFormData && itemFormData[geometryField] && itemFormData[geometryField].geometries) {
+			updateObject = {[geometryField]: {
 				geometries: {$push: [geometry]}
 			}};
 		} else {
-			updateObject = {$merge: {geometry: {type: "GeometryCollection", geometries: [geometry]}}};
+			updateObject = {$merge: {[geometryField]: {type: "GeometryCollection", geometries: [geometry]}}};
 		}
 		this.props.onChange(update(formData,
 			{[this.state.activeIdx]: updateObject}));
@@ -193,17 +215,20 @@ export default class MapArrayField extends Component {
 
 
 	onRemove = ({idxs}) => {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
 		let splices = [];
 		idxs.sort().reverse().forEach((idx) => {
 			splices.push([idx, 1]);
 		});
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {geometry: {geometries: {$splice: splices}}}}));
+			{[this.state.activeIdx]: {[geometryField]: {geometries: {$splice: splices}}}}));
 	}
 
 	onEdited = ({features}) => {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		let splices = [];
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {geometry: {
+			{[this.state.activeIdx]: {[geometryField]: {
 				geometries: Object.keys(features).reduce((obj, idx) => {
 					obj[idx] = {$set: features[idx].geometry};
 					return obj;
@@ -214,12 +239,13 @@ export default class MapArrayField extends Component {
 	geometryMappers = {
 		units: {
 			getData: (idx, formData) => {
+				const {geometryField} = getUiOptions(this.props.uiSchema);
 				if (!formData) return;
 				const item = formData[idx];
 				this._context.featureIdxsToItemIdxs = {};
-				let geometries = (idx !== undefined && item && item.geometry &&
-				                  item.geometry.geometries) ?
-					item.geometry.geometries : [];
+				let geometries = (idx !== undefined && item && item[geometryField] &&
+				                  item[geometryField].geometries) ?
+					item[geometryField].geometries : [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
 					const {unitGathering: {geometry}} = unit;
@@ -231,8 +257,9 @@ export default class MapArrayField extends Component {
 				return geometries;
 			},
 			onRemove: ({idxs}) => {
+				const {geometryField} = getUiOptions(this.props.uiSchema);
 				const {formData} = this.props;
-				const geometriesLength = formData[this.state.activeIdx].geometry.geometries.length;
+				const geometriesLength = formData[this.state.activeIdx][geometryField].geometries.length;
 
 				const unitIdxs = idxs.filter(idx => idx >= geometriesLength).map(idx => this._context.featureIdxsToItemIdxs[idx]);
 
@@ -261,8 +288,9 @@ export default class MapArrayField extends Component {
 				this.onRemove({idxs: idxs.filter(idx => idx < geometriesLength)});
 			},
 			onEdited: ({features}) => {
+				const {geometryField} = getUiOptions(this.props.uiSchema);
 				const {formData} = this.props;
-				const geometriesLength = formData[this.state.activeIdx].geometry.geometries.length;
+				const geometriesLength = formData[this.state.activeIdx][geometryField].geometries.length;
 
 				const unitEditFeatures = {};
 				const thisEditFeatures = {};
