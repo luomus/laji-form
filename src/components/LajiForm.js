@@ -258,8 +258,7 @@ export default class LajiForm extends Component {
 	canFocusNextInput = (inputElem) => {
 		function isTabbableInput(elem) {
 			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-			elem.className.includes(SWITCH_CLASS) ||
-			elem.className.includes(FOCUS_SINK_CLASS));
+			elem.className.includes(SWITCH_CLASS))
 		}
 
 		const formElem = findDOMNode(this.refs.form);
