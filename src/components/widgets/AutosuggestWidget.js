@@ -304,7 +304,7 @@ export default class AutoSuggestWidget extends Component {
 
 	findUnambigiousSuggestion = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		return suggestions.find(suggestion => (suggestion && suggestion.value === this.state.inputValue));
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === this.state.inputValue.toLowerCase()));
 	}
 
 	onBlur = (e, {focusedSuggestion}) => {
