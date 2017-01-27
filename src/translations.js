@@ -180,13 +180,33 @@
 		sv: "Alla"
 	},
 	saveFail: {
-		fi: "Tallennus epäonnistui. Yritä myöhemmin uudestaan.",
-		en: "Saving failed. Please try again later.",
-		sv: "Lagring misslyckades. Försök igen senare."
+		fi: "Tallennus epäonnistui.",
+		en: "Saving failed.",
+		sv: "Lagring misslyckades."
+	},
+	tryAgainLater: {
+		fi: "Yritä myöhemmin uudestaan.",
+		en: "Please try again later.",
+		sv: "Försök igen senare."
 	},
 	saveSuccess: {
 		fi: "Tallennus onnistui!",
 		en: "Saved successfully!",
 		sv: "Lagring lyckades!"
+	},
+	invalidFileOrTooLarge: {
+		fi: "Kuvatiedosto oli virheellinen tai liian iso.",
+		en: "The file was invalid or too large.",
+		sv: "Filen var ogiltig eller alltför stor."
+	},
+	insufficientSpace: {
+		fi: "Kuvapalvelin ei pysty käsittelemään latauspyyntöä riittämättömän levytilan vuoksi.",
+		en: "The image server can't process the upload request because of insufficient space.",
+		sv: "Bildservern kan inte bearbeta uppladdnings begäran på grund av otillräckligt utrymme."
+	},
+	filesLengthDiffer: {
+		fi: "Kaikki kuvat eivät tallettuneet. Tarkista kuvat.",
+		en: "All the images weren't saved. Please verify the images.",
+		sv: "Alla bilder sparades inte. Vänligen kontrollera bilderna."
 	},
 }

@@ -154,8 +154,8 @@ export default class ImageArrayField extends Component {
 
 	renderAlert = () => {
 		return this.state.alert ? (
-			<PopupAlert onOk={() => this.setState({alert: false})}>
-				{this.props.formContext.translations.SaveFail}
+			<PopupAlert onOk={() => this.setState({alert: false, alertMsg: undefined})}>
+				{` ${this.state.alertMsg}`}
 			</PopupAlert>) : null;
 	}
 
@@ -165,35 +165,60 @@ export default class ImageArrayField extends Component {
 
 		this.mainContext.pushBlockingLoader();
 
+		const fail = translationKey => {
+			this.mainContext.popBlockingLoader();
+			this.setState({alert: true, alertMsg: `${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations[translationKey]}`});
+		};
+
 		this.processFiles(files).then(() => {
 			const formDataBody = files.reduce((body, file) => {
 				body.append("data", file);
 				return body;
 			}, new FormData());
 
-			return this.apiClient.fetch("/images", undefined, {
+			return this.apiClient.fetchRaw("/images", undefined, {
 				method: "POST",
 				body: formDataBody
 			});
 		}).then(response => {
+			if (response.status < 400) {
+				return response.json();
+			} else if (response.status ===  400) {
+				fail("InvalidFileOrTooLarge");
+			} else if (response.status === 503) {
+				fail("InsufficientSpace");
+			} else {
+				fail("TryAgainLater");
+			}
+		}).then(response => {
+			if (!response) return;
 			return this.getDefaultMetadataPromise().then(defaultMetadata => {
 				return Promise.all(response.map(item => {
-					return this.apiClient.fetch(`/images/${item.id}`, undefined, {
+					return this.apiClient.fetchRaw(`/images/${item.id}`, undefined, {
 						method: "POST",
 						headers: {
 							"accept": "application/json",
 							"content-type": "application/json"
 						},
 						body: JSON.stringify(defaultMetadata)
-					});
+					}).then(response => {
+						if (response.status < 400) {
+							return response.json();
+						}
+					})
 				}));
 			})
 		}).then(response => {
-			onChange([...formData, ...response.map(({id}) => id)]);
+			if (!response) return;
+			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
+			onChange([...formData, ...ids]);
 			this.mainContext.popBlockingLoader();
-		}).catch((e) => {
+			if (files.length !== ids.length) {
+				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer})
+			}
+		}).catch(e => {
 			this.mainContext.popBlockingLoader();
-			this.setState({alert: true})
+			this.setState({alert: true, alertMsg: `${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations.TryAgainLater}`})
 		});
 	}
 

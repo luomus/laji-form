@@ -13,15 +13,21 @@ export default class ApiClient {
 	}
 
 	/**
-	 * Implementing apiClient must return a promise.
+	 * Implementing apiClient must return a promise that passes the raw response as 1st arg.
 	 * @param path URL for GET.
 	 * @param query Object, where keys are param names and values are param values.
 	 * @returns a Promise.
 	 */
+	fetchRaw(path, query, options) {
+		return this.apiClient.fetch(path, query, options);
+	}
+
 	fetch(path, query, options) {
-		if (!this.apiClient) throw new Error("You must pass an api client implementation to LajiForm!");
-		return this.apiClient.fetch(path, query, options).then(response => {
-			return response;
+		return this.fetchRaw(path, query, options).then(response => {
+			if (response.status >= 400) {
+				throw new Error("Request failed");
+			}
+			return response.json();
 		});
 	}
 
@@ -30,6 +36,7 @@ export default class ApiClient {
 		cache[cacheKey] = cache.hasOwnProperty(cacheKey) ? cache[cacheKey] : this.fetch(path, query);
 		return cache[cacheKey]
 	}
+
 
 	flushCache() {
 		cache = {};

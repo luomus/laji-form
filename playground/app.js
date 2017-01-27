@@ -38,11 +38,14 @@ if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
 if (!USE_LOCAL_SCHEMAS) {
 	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
-	         .then((props) => {
-						 const {schema, uiSchema, validators} = props;
-						 const propsToPass = {schema, uiSchema};
-						 if (!Array.isArray(validators)) propsToPass.validators = validators;
-						 lajiForm.setState(propsToPass)
+						.then(response => {
+							return response.json();
+						})
+	         .then(props => {
+							const {schema, uiSchema, validators} = props;
+							const propsToPass = {schema, uiSchema};
+							if (!Array.isArray(validators)) propsToPass.validators = validators;
+							lajiForm.setState(propsToPass)
 					 });
 }
 

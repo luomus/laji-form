@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import fetch from "isomorphic-fetch";
 import queryString from "querystring"
 import merge from 'deepmerge';
 
@@ -21,10 +21,6 @@ export default class ApiClient {
 	fetch(path, query, options) {
 		const baseQuery = this.getBaseQuery();
 		const queryObject = (typeof query == "object") ? merge(baseQuery, query) : baseQuery;
-		return fetch(this.BASE_URL + path + "?" + queryString.stringify(queryObject), options).then((response) => {
-			if (response.status >= 400)
-				throw new Error("Request failed");
-			return response.json();
-		});
+		return fetch(`${this.BASE_URL}${path}?${queryString.stringify(queryObject)}`, options);
 	}
 }
