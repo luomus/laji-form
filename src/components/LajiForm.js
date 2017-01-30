@@ -79,60 +79,57 @@ let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
 
-class FieldTemplate extends Component {
-	render() {
-		const {
-			id,
-			classNames,
-			label,
-			children,
-			errors,
-			rawHelp,
-			description,
-			hidden,
-			required,
-			displayLabel,
-			schema,
-			uiSchema,
-			} = this.props;
+function FieldTemplate({
+	id,
+	classNames,
+	label,
+	children,
+	errors,
+	rawHelp,
+	description,
+	hidden,
+	required,
+	displayLabel,
+	schema,
+	uiSchema,
+	}) {
 
-		if (hidden) {
-			return children;
-		}
-		const inlineHelp = uiSchema["ui:inlineHelp"];
-		const ids = new Context("IDS");
-		const htmlId = `_laji-form_${id}`;
-		let elemId = undefined;
-		if (!ids[htmlId]  || ids[htmlId] === this) {
-			ids[htmlId] = this;
-			elemId = htmlId;
-		}
+	if (hidden) {
+		return children;
+	}
+	const inlineHelp = uiSchema["ui:inlineHelp"];
+	const ids = new Context("IDS");
+	const htmlId = `_laji-form_${id}`;
+	let elemId = undefined;
+	if (!ids[htmlId]  || ids[htmlId] === this) {
+		ids[htmlId] = this;
+		elemId = htmlId;
+	}
 
-		const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
+	const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
 
-		const buttons = uiSchema["ui:buttons"] || undefined;
-		const vertical = uiSchema["ui:buttonsVertical"];
-		return (
-			<div className={classNames} id={elemId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
-				{_displayLabel && description ? description : null}
-				<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
-					<div className={"laji-form-field-template-schema"}>
-						{inlineHelp ? <div className="pull-left">{children}</div> : children}
-						{inlineHelp ? (
-							<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
-							) : null
-						}
-					</div>
-					{buttons ?
-						<div className="laji-form-field-template-buttons">{buttons}</div> :
-						null
+	const buttons = uiSchema["ui:buttons"] || undefined;
+	const vertical = uiSchema["ui:buttonsVertical"];
+	return (
+		<div className={classNames} id={elemId}>
+			{label && _displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
+			{_displayLabel && description ? description : null}
+			<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
+				<div className={"laji-form-field-template-schema"}>
+					{inlineHelp ? <div className="pull-left">{children}</div> : children}
+					{inlineHelp ? (
+						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
+						) : null
 					}
 				</div>
-				{errors}
+				{buttons ?
+					<div className="laji-form-field-template-buttons">{buttons}</div> :
+					null
+				}
 			</div>
-		);
-	}
+			{errors}
+		</div>
+	);
 }
 
 function _SchemaField(props) {

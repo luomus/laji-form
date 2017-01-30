@@ -75,6 +75,7 @@ export default class CustomButtonArrayField extends Component {
 						<div key={idx} className="laji-form-field-template-item">
 							<div className="laji-form-field-template-schema">
 							<SchemaField
+								{...this.props}
 								schema={this.props.schema.items}
 								uiSchema={this.props.uiSchema.items}
 								formData={item}

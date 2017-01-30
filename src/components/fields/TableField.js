@@ -82,7 +82,7 @@ export default class TableField extends Component {
 				labels.push(
 				<Col {...cols} key={propName + "-label"}>
 					<Label
-						label={schemaProps[propName].title || propName}
+						label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
 						disabled={false}
 						id={idSchema[propName].$id}
 						help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
@@ -139,13 +139,11 @@ export default class TableField extends Component {
 			] : [],
 				"ui:buttonsVertical": true};
 
-
-
 			items.push(
 				<Row key={idx}>
 					<Col {...wrapperCols}>
 						<SchemaField
-
+							{...this.props}
 							formData={item}
 							onChange={this.onChangeForIdx(idx)}
 							schema={schema}

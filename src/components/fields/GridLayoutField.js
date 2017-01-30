@@ -86,7 +86,7 @@ export default class GridLayoutField extends Component {
 
 		return cols;
 	}
-	
+
 	render() {
 		const SchemaField = this.state.registry.fields.SchemaField;
 		const props = {...this.props, ...this.state};
@@ -120,6 +120,7 @@ export default class GridLayoutField extends Component {
 			if (!isHidden(this.state.uiSchema, propertyName)) getRow(propertyName).push(
 				<Col key={"div_" + i} {...cols}>
 					<SchemaField
+						{...props}
 						key={i}
 						name={name}
 						required={this.isRequired(this.state.schema.required, propertyName)}
