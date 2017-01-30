@@ -101,7 +101,8 @@ export default class AccordionArrayField extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		props.formData.forEach((item, idx) => {
+		const {popupFields} = getUiOptions(this.props.uiSchema);
+		if (popupFields) props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, item).then(popupData => {
 				this.setState({popups: {...this.state.popups, [idx]: popupData}})
 			});
