@@ -13,7 +13,13 @@ const headerFormatters = {
 		render: (that, idx, headerElem) => {
 			const {props: {formContext: {translations}}, state: {formData}} = that;
 			const item = formData[idx];
-			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ? item.units.length : 0;
+			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ?
+				item.units.filter(unit =>
+					unit &&
+					unit.identifications &&
+					unit.identifications[0] &&
+					unit.identifications[0].taxonID).length
+				: 0;
 
 			return (
 				<span>
@@ -154,6 +160,7 @@ export default class AccordionArrayField extends Component {
 			</Accordion>
 			<AddButton
 				onClick={() => {
+					this.onActiveChange(this.props.formData.length);
 					this.props.onChange([
 						...this.state.formData,
 						getDefaultFormState(schema, undefined, this.props.registry)

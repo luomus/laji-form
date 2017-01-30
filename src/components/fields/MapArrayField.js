@@ -213,7 +213,6 @@ export default class MapArrayField extends Component {
 			{[this.state.activeIdx]: updateObject}));
 	}
 
-
 	onRemove = ({idxs}) => {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		let splices = [];
