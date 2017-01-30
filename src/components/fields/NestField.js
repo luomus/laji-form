@@ -118,7 +118,7 @@ export default class NestField extends Component {
 					}
 				}
 			}),
-			innerUiSchema: PropTypes.object
+			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
@@ -127,9 +127,6 @@ export default class NestField extends Component {
 
 		let {errorSchema, formData} = props;
 		let schemaProperties = props.schema.properties;
-		let uiSchema = options.uiSchema ?
-			options.uiSchema :
-			{...props.uiSchema, "ui:field": undefined, classNames: undefined};
 
 		let requiredDictionarified = {};
 		if (props.schema.required) props.schema.required.forEach((req) => {
@@ -159,10 +156,6 @@ export default class NestField extends Component {
 					delete schemaFieldProperty[fieldName];
 				});
 
-				if (nests[wrapperFieldName].uiSchema) {
-					uiSchema[wrapperFieldName] = nests[wrapperFieldName].uiSchema;
-				}
-
 				if (formData && formData.hasOwnProperty(fieldName)) {
 						if (!formData[wrapperFieldName]) {
 							formData = {...formData, [wrapperFieldName]: {[fieldName]: formData[fieldName]}};
@@ -185,7 +178,7 @@ export default class NestField extends Component {
 		});
 
 		let schema = {...this.props.schema, properties:  schemaProperties};
-		return {schema, uiSchema, idSchema, errorSchema, formData};
+		return {schema, idSchema, errorSchema, formData};
 
 		function getNewSchemaField(title) {
 			return {type: "object", properties: {}, title};
