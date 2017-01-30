@@ -21,7 +21,7 @@ function CheckboxWidget(props) {
 	function getNextVal() {
 		let nextVal = true;
 		if (value === true) nextVal = false;
-		else if (tristate && value === false) nextVal = undefined;
+		else if (allowUndefined && value === false) nextVal = undefined;
 		return nextVal;
 	}
 
@@ -42,20 +42,20 @@ function CheckboxWidget(props) {
 		onChange(getNextVal());
 	}
 
-	const {tristate, invert} = {allowUndefined: true, invert: false, ...(options || {})};
+	const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
 
 	return (
 		<Label {...props}>
 			<div onClick={onClick} onKeyDown={onKeyDown}>
 				<Switch
-					value={tristate && isNullOrUndefined(value) ? null : invert ? !value : value}
-					defaultValue={tristate ? null : false}
+					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
+					defaultValue={allowUndefined ? null : false}
 					disabled={disabled}
 					readonly={readonly}
 					onText={registry.formContext.translations.Yes}
 					offText={registry.formContext.translations.No}
 					bsSize="mini"
-					tristate={tristate}
+					tristate={allowUndefined}
 				/>
 			</div>
 		</Label>
