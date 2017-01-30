@@ -74,16 +74,27 @@ export default class MapArrayField extends Component {
 		let {uiSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryMapper, geometryField, topOffset, bottomOffset} = options;
+		const {activeIdx} = this.state;
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
 				...getUiOptions(getInnerUiSchema(uiSchema)),
-				activeIdx: this.state.activeIdx,
+				activeIdx,
 				onActiveChange: idx => {this.setState({activeIdx: idx})}
 			}
 		};
 
-		const geometries = this.geometryMappers[geometryMapper].getData(this.state.activeIdx, formData);
+		const item = formData ? formData[activeIdx] : undefined;
+		let defaultGeometries = (activeIdx !== undefined && item && item[geometryField] &&
+		item[geometryField].geometries) ?
+			item[geometryField].geometries : [];
+
+		const mapper  = geometryMapper ? this.geometryMappers[geometryMapper] : undefined;
+
+		const geometries = [
+			...defaultGeometries,
+			...(mapper ? mapper.getData(this.state.activeIdx, formData, defaultGeometries) : [])
+		];
 
 		const colTypes = ["lg", "md", "sm", "xs"];
 		const mapSizes = options.mapSizes ?
@@ -98,7 +109,6 @@ export default class MapArrayField extends Component {
 			return sizes
 		}, {});
 
-		// const {[geometryField], ...schemaProps} = this.props.schema.items.properties;
 		const schemaProps = immutableDelete(this.props.schema.items.properties, geometryField);
 		const schema = {...this.props.schema, items: {...this.props.schema.items, properties: schemaProps}};
 
@@ -237,23 +247,21 @@ export default class MapArrayField extends Component {
 
 	geometryMappers = {
 		units: {
-			getData: (idx, formData) => {
+			getData: (idx, formData, geometries) => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);
 				if (!formData) return;
 				const item = formData[idx];
 				this._context.featureIdxsToItemIdxs = {};
-				let geometries = (idx !== undefined && item && item[geometryField] &&
-				                  item[geometryField].geometries) ?
-					item[geometryField].geometries : [];
+				let newGeometries = [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
 					const {unitGathering: {geometry}} = unit;
 					if (geometry && hasData(geometry)) {
-						this._context.featureIdxsToItemIdxs[geometries.length] = i;
-						geometries = [...geometries, geometry];
+						this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
+						newGeometries.push(geometry);
 					}
 				});
-				return geometries;
+				return newGeometries;
 			},
 			onRemove: ({idxs}) => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);
