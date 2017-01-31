@@ -393,7 +393,7 @@ body .laji-form {
 .laji-form .laji-form-images {
 	margin-top: 5px;
 }
-.laji-form .laji-form-images div  {
+.laji-form .laji-form-images > div {
 	margin-right: 7px;
 	width: 120px;
 	height: 120px;
