@@ -114,6 +114,28 @@ export default class MapArrayField extends Component {
 
 		const emptyMode = !formData || !formData.length;
 
+		const drawOptions = options.draw === false ? false : {
+			data: {
+				featureCollection: {
+					type: "FeatureCollection",
+					features: (geometries || []).map(geometry => {
+						return {type: "Feature", properties: {}, geometry}
+					})
+				},
+				getPopup: this.getPopup,
+				getFeatureStyle: ({featureIdx}) => {
+					this._context.featureIdxsToItemIdxs[featureIdx];
+					const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
+					return {color: color, fillColor: color, weight: 4};
+				}
+			},
+			getDraftStyle: () => {
+				return {color: "#25B4CA", opacity: 1}
+			},
+			onChange: emptyMode ? this.onMapChangeCreateGathering : this.onMapChange,
+			...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
+		};
+
 		return (
 			<div ref="affix">
 				<Row >
@@ -127,26 +149,7 @@ export default class MapArrayField extends Component {
 							<MapComponent
 								ref="map"
 								lang={this.props.formContext.lang}
-								draw={{
-									data: {
-										featureCollection: {
-											type: "FeatureCollection",
-											features: (geometries || []).map(geometry => {
-												return {type: "Feature", properties: {}, geometry}
-											})
-										},
-										getPopup: this.getPopup,
-										getFeatureStyle: ({featureIdx}) => {
-											this._context.featureIdxsToItemIdxs[featureIdx];
-											const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
-											return {color: color, fillColor: color, weight: 4};
-										}
-									},
-									getDraftStyle: () => {
-										return {color: "#25B4CA", opacity: 1}
-									},
-									onChange: emptyMode ? this.onMapChangeCreateGathering : this.onMapChange
-								}}
+								draw={drawOptions}
 								onPopupClose={() => {this.setState({popupIdx: undefined})}}
 								markerPopupOffset={45}
 								featurePopupOffset={5}
