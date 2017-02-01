@@ -335,17 +335,17 @@
 						}
 					},
 					"units": {
-						"ui:field": "CustomButtonArrayField",
 						"ui:options": {
 							"confirmDelete": true,
+							"deleteCorner": true,
 							"buttons": [
 								{
-									"name": "add",
-									"text": "Lisää havainto"
+									"fn": "add",
+									"label": "Lisää havainto"
 								},
 								{
-									"name": "copy",
-									"text": "Kopioi havainto",
+									"fn": "copy",
+									"label": "Kopioi havainto",
 									"type": "blacklist",
 									"filter": [
 										"/identifications/taxon",
@@ -1755,51 +1755,111 @@
 		}
 	},
 	"formData": {
-		"secureLevel": "",
-		"gatheringEvent": {
-			"leg": [
-				"MA.308"
-			],
-			"legPublic": true,
-			"secureLevel": ""
-		},
-		"gatherings": [
-			{
-				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"unitType": [
-							"MVL.233",
-							"MVL.121"
-						],
-						"taxonConfidence": "MY.taxonConfidenceSure",
-						"sex": "",
-						"lifeStage": "",
-						"taste": "",
-						"smell": "",
-						"preservation": "",
-						"plantLifeStage": "",
-						"plantStatusCode": "",
-						"atlasCode": "",
-						"nativeStatus": "",
-						"substrateClassification": "",
-						"identifications": [
-							{
-								"taxon": "kantarelli",
-								"taxonID": "MX.205511"
-							}
-						],
-						"unitGathering": {
-							"geometry": {}
-						}
-					}
-				],
-				"geometry": {
-					"type": "GeometryCollection",
-					"geometries": []
-				},
-				"predominantTree": ""
-			}
-		]
-	}
+  "gatheringEvent": {
+    "leg": [
+      "MA.308"
+    ],
+    "legPublic": true
+  },
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  25.967771247828892,
+                  63.60409740049241
+                ],
+                [
+                  28.297803272009894,
+                  66.23021632118183
+                ],
+                [
+                  26.855427488734268,
+                  63.61692228839189
+                ],
+                [
+                  26.69020389025914,
+                  63.61666114039119
+                ],
+                [
+                  26.586807912758644,
+                  63.62559112541218
+                ],
+                [
+                  26.483514430970718,
+                  63.625257146652324
+                ],
+                [
+                  28.168418561197015,
+                  63.400848203905866
+                ],
+                [
+                  28.876417347853554,
+                  63.567971313597354
+                ],
+                [
+                  29.617478557251758,
+                  63.326466851130036
+                ],
+                [
+                  29.617478557251758,
+                  63.326466851130036
+                ],
+                [
+                  26.202054282754943,
+                  64.08347696310884
+                ],
+                [
+                  27.63247402276291,
+                  64.19456483650303
+                ],
+                [
+                  28.842039381409798,
+                  62.71343800544763
+                ],
+                [
+                  27.31064791626131,
+                  61.78761720052428
+                ],
+                [
+                  25.423508145948965,
+                  62.238615552682546
+                ],
+                [
+                  26.896700464783063,
+                  63.62614776892873
+                ],
+                [
+                  24.02338827083375,
+                  62.841126846222714
+                ],
+                [
+                  23.983229930655153,
+                  62.84027183245391
+                ],
+                [
+                  25.64753477389493,
+                  62.5167687699438
+                ],
+                [
+                  27,
+                  62.83581124929126
+                ],
+                [
+                  25.967771247828892,
+                  63.60409740049241
+                ]
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
 }

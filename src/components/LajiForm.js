@@ -6,15 +6,46 @@ import { Button, Label, Help } from "./components";
 import { isMultiSelect } from "../utils";
 
 import Form from "react-jsonschema-form";
-
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import _SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import ArrayFieldTemplate from "./ArrayFieldTemplate";
 
 import ApiClient from "../ApiClient";
 import Context, {clear as clearContext} from "../Context";
 import translations from "../translations.js";
 
+class SchemaField extends Component {
+	componentDidMount() {
+		const _context = new Context(this.props.registry.formContext.contextId);
+		const {idToFocus} = _context;
+		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
+			const elem = document.getElementById(`_laji-form_${idToFocus}`);
+			if (elem) {
+				const tabbableFields = getTabbableFields(elem);
+				if (tabbableFields && tabbableFields.length) {
+					tabbableFields[0].focus();
+				}
+			}
+			_context.idToFocus = undefined;
+		}
+	}
+
+	render() {
+		const {props} = this;
+		let {schema, uiSchema} = props;
+		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema)) {
+			schema = {...schema, uniqueItems: false};
+		}
+		return <_SchemaField
+			{...props}
+			// Reset ArrayFieldTemplate
+			registry={{...props.registry, ArrayFieldTemplate}}
+			schema={schema}
+		/>
+	}
+}
+
 const fields = importLocalComponents("fields", [
-	_SchemaField,
+	{SchemaField},
 	// Disabled until we have time to make it work properly. StringField wrapper was used to optimization:
 	// it caused the onChange-events to trigger events only on blur, not on every key stroke.
 	// "StringField",
@@ -45,7 +76,6 @@ const fields = importLocalComponents("fields", [
 	"SplitField",
 	"FlatField",
 	"AccordionArrayField",
-	"CustomButtonArrayField",
 	"SingleItemArrayField"
 ]);
 
@@ -64,9 +94,12 @@ const widgets = importLocalComponents("widgets", [
 
 function importLocalComponents(dir, fieldNames) {
 	return fieldNames.reduce((fields, field) => {
-		fields[field] = (typeof field === "string") ?
-			require(`./${dir}/${field}`).default :
-			field;
+		if (typeof field === "string") {
+			fields[field] = require(`./${dir}/${field}`).default
+		} else {
+			const fieldName = Object.keys(field)[0];
+			fields[fieldName] = field[fieldName]
+		}
 		return fields;
 	}, {});
 }
@@ -132,15 +165,14 @@ function FieldTemplate({
 	);
 }
 
-function _SchemaField(props) {
-	let {schema, uiSchema} = props;
-	if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema)) {
-		schema = {...schema, uniqueItems: false};
-	}
-	return <SchemaField
-		{...props}
-		schema={schema}
-	/>
+function getTabbableFields(elem, reverse) {
+	const formElem = findDOMNode(elem);
+
+	const fieldsNodeList = formElem.querySelectorAll(tabbableSelectors.join(", "));
+	let fields = [...fieldsNodeList];
+
+	if (reverse) fields = fields.reverse();
+	return fields;
 }
 
 export default class LajiForm extends Component {
@@ -224,10 +256,12 @@ export default class LajiForm extends Component {
 					fields={fields}
 					widgets={widgets}
 					FieldTemplate={FieldTemplate}
+					ArrayFieldTemplate={ArrayFieldTemplate}
 					formContext={{
 						translations,
 						lang: this.props.lang,
-						uiSchemaContext: this.props.uiSchemaContext
+						uiSchemaContext: this.props.uiSchemaContext,
+						contextId: this.props.contextId
 					}}
 				  validate={validate(this.props.validators)}
 				>
@@ -263,21 +297,12 @@ export default class LajiForm extends Component {
 		return (formElem.querySelectorAll && isTabbableInput(inputElem));
 	}
 
-	getTabbableFields = (reverse) => {
-		const formElem = findDOMNode(this.refs.form);
-
-		const fieldsNodeList = formElem.querySelectorAll(tabbableSelectors.join(", "));
-		let fields = [...fieldsNodeList];
-
-		if (reverse) fields = fields.reverse();
-		return fields;
-	}
 
 	focusNextInput = (inputElem, reverseDirection) => {
 		if (!inputElem) inputElem = document.activeElement;
 		if (!this.canFocusNextInput(inputElem)) return;
 
-		const fields = this.getTabbableFields(reverseDirection);
+		const fields = getTabbableFields(this.refs.form, reverseDirection);
 
 		let doFocus = false;
 		for (let field of fields) {

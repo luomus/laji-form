@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, hasData } from "../../utils";
+import { getUiOptions, hasData, getInnerUiSchema } from "../../utils";
 import { DeleteButton } from "../components";
+import { getButtons } from "../ArrayFieldTemplate";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
@@ -11,7 +12,7 @@ import BaseComponent from "../BaseComponent";
 const headerFormatters = {
 	units: {
 		render: (that, idx, headerElem) => {
-			const {props: {formContext: {translations}}, state: {formData}} = that;
+			const {props: {formContext: {translations}, formData}} = that;
 			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ?
 				item.units.filter(unit =>
@@ -38,7 +39,7 @@ const headerFormatters = {
 			}
 		},
 		onMouseEnter: (that, idx, force) => {
-			const {state: {formData}} = that;
+			const {props: {formData}} = that;
 			const item = formData[idx];
 
 			that.hoveredIdx = idx;
@@ -97,10 +98,14 @@ const popupMappers = {
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {...this.getStateFromProps(props), activeIdx: 0, popups: {}};
+		this.state = { activeIdx: 0, ...this.getStateFromProps(props), popups: {}};
 	}
 
 	componentWillReceiveProps(props) {
+		if (this.activateNew && props.formData.length !== this.props.formData.length) {
+			this.activateNew = false;
+			this.onActiveChange(props.formData.length - 1);
+		}
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		if (popupFields) props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, item).then(popupData => {
@@ -113,61 +118,64 @@ export default class AccordionArrayField extends Component {
 		const state = {};
 		const options = getUiOptions(props.uiSchema);
 		if (options.hasOwnProperty("activeIdx")) state.activeIdx = options.activeIdx;
-
-		state.formData = props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)];
-
 		return state;
 	}
 
-
 	render() {
-		const {registry: {fields: {SchemaField}}} = this.props;
-		const {formData} = this.state;
+		const {registry: {fields: {ArrayField}}} = this.props;
 
 		let activeIdx = this.state.activeIdx;
 		if (activeIdx === undefined) activeIdx = -1;
 
-		const itemsSchema = this.props.schema.items;
-		const schema = {...itemsSchema, title: ""};
 		const title = this.props.schema.title;
 
 		const options = getUiOptions(this.props.uiSchema);
-		const addText = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
+		const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
 
-		function AddButton({onClick, disabled}) {
+		const that = this;
+		function AccordionArray(props) {
 			return (
-						<button type="button" className="btn btn-info col-xs-12 laji-map-accordion-header"
-										tabIndex="-1" onClick={onClick}
-										disabled={disabled} style={{fontWeight: "bold"}}>{`➕ ${addText}`}</button>
+				<div>
+					<Accordion onSelect={that.onActiveChange} activeKey={activeIdx}>
+						{props.items.map((item, idx) => (
+							<Panel key={idx}
+										 eventKey={idx}
+										 header={that.renderHeader(idx, title)}
+										 bsStyle={that.props.errorSchema.__errors ? "danger" : "default"}>
+								{item.children}
+							</Panel>
+						))}
+					</Accordion>
+					{getButtons(getUiOptions(props.uiSchema).buttons, props)}
+				</div>
 			);
 		}
 
-		return (<div>
-			<Accordion onSelect={this.onActiveChange} activeKey={activeIdx}>
-				{(formData || []).map((item, idx) => {
-					let itemIdPrefix = this.props.idSchema.$id + "_" + idx;
-					return (
-						<SchemaField
-						{...this.props}
-						formData={item}
-						onChange={this.onChangeForIdx(idx)}
-						schema={schema}
-						uiSchema={this.props.uiSchema.items}
-						idSchema={toIdSchema(schema, itemIdPrefix, this.props.registry.definitions)}
-						errorSchema={this.props.errorSchema[idx]} />
-					);
-				}).map((comp, idx) => <Panel key={idx} bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}
-				                           header={this.renderHeader(idx, title)} eventKey={idx}>{comp}</Panel>)}
-			</Accordion>
-			<AddButton
-				onClick={() => {
-					this.onActiveChange(this.props.formData.length);
-					this.props.onChange([
-						...this.state.formData,
-						getDefaultFormState(schema, undefined, this.props.registry)
-					])
-				}} />
-		</div>);
+		return (
+			<ArrayField
+				{...this.props}
+				registry={{
+					...this.props.registry,
+					ArrayFieldTemplate: AccordionArray
+				}}
+				uiSchema={{
+					...this.props.uiSchema,
+					"ui:field": undefined,
+					"ui:options": {
+						...this.props.uiSchema["ui:options"],
+						renderDelete: false,
+						buttons: [
+							{
+								fn: "add",
+								className: "col-xs-12 laji-map-accordion-header",
+								callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback)},
+								label: addLabel
+							}
+						]
+					}
+				}}
+			/>
+		);
 	}
 
 	renderHeader = (idx, title) => {
@@ -184,8 +192,12 @@ export default class AccordionArrayField extends Component {
 		const headerText = formatter ? formatter.render(this, idx, headerTextElem) : headerTextElem;
 
 		const header = (
-			<div className="laji-map-accordion-header" onClick={() => {this.onActiveChange(idx); formatter.onClick(this, idx);}}
-			     onMouseEnter={() => formatter.onMouseEnter(this, idx)} onMouseLeave={() => formatter.onMouseLeave(this, idx)}>
+			<div className="laji-map-accordion-header" onClick={() => {
+					this.onActiveChange(idx);
+					formatter.onClick(this, idx);
+				}}
+				onMouseEnter={() => formatter.onMouseEnter(this, idx)}
+				onMouseLeave={() => formatter.onMouseLeave(this, idx)} >
 				<div className="panel-title">
 					{headerText}
 					<DeleteButton className="pull-right"
@@ -209,7 +221,7 @@ export default class AccordionArrayField extends Component {
 	getPopupDataPromise = (idx, itemFormData) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 
-		if (!this.state.formData) return new Promise(resolve => resolve({}));
+		if (!this.props.formData) return new Promise(resolve => resolve({}));
 
 		return Promise.all(popupFields.map(field => {
 			const fieldName = field.field;
@@ -232,7 +244,7 @@ export default class AccordionArrayField extends Component {
 		});
 	}
 
-	onActiveChange = (idx) => {
+	onActiveChange = (idx, callback) => {
 		if (idx !== undefined)  {
 			idx = parseInt(idx);
 		}
@@ -241,25 +253,11 @@ export default class AccordionArrayField extends Component {
 		}
 
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
-		onActiveChange ? onActiveChange(idx) : this.setState({activeIdx: idx});
-	}
-
-	onChangeForIdx = (idx) => (itemFormData) => {
-		if (!this.state.formData || idx === this.state.formData.length) {
-			itemFormData = {
-				...getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
-				...itemFormData
-			}
-		}
-
-		let formData = this.state.formData;
-		if (!formData) formData = [];
-		formData = update(formData, {$merge: {[idx]: itemFormData}});
-		this.props.onChange(formData);
+		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, callback);
 	}
 
 	onDelete = (idx) => () => {
-		const formData = update(this.state.formData, {$splice: [[idx, 1]]});
+		const formData = update(this.props.formData, {$splice: [[idx, 1]]});
 		if (!formData.length) this.onActiveChange(undefined);
 		if (this.state.activeIdx >= formData.length) this.onActiveChange(formData.length - 1);
 		this.props.onChange(formData)

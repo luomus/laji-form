@@ -6,7 +6,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = false;
+const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -37,7 +37,7 @@ const lajiForm = new LajiForm({
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.111715", {lang, format: "schema"})
+	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
 						.then(response => {
 							return response.json();
 						})

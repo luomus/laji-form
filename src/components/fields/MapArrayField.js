@@ -80,7 +80,7 @@ export default class MapArrayField extends Component {
 			"ui:options": {
 				...getUiOptions(getInnerUiSchema(uiSchema)),
 				activeIdx,
-				onActiveChange: idx => {this.setState({activeIdx: idx})}
+				onActiveChange: (idx, callback) => {this.setState({activeIdx: idx}, callback || undefined)}
 			}
 		};
 

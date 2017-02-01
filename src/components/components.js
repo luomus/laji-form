@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal } from "react-bootstrap";
+import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col } from "react-bootstrap";
 
 export class Button extends Component {
 	render() {
@@ -88,6 +88,10 @@ export class DeleteButton extends Component {
 			</div>
 		)
 	}
+}
+
+export function AddButton({onClick}) {
+	return (<Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>);
 }
 
 export class Alert extends Component {

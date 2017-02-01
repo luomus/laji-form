@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import { Button, DeleteButton, Label } from "../components";
+import { DeleteButton, AddButton, Label } from "../components";
 import BaseComponent from "../BaseComponent";
 
 const specialRules = {
@@ -159,13 +159,9 @@ export default class TableField extends Component {
 		return (
 			<div>
 				{items}
-				{this.getAddButton()}
+				<AddButton onClick={this.addItem} key="add"/>
 			</div>
 		);
-	}
-
-	getAddButton = () => {
-		return (<Row><Col xs={2}><Button onClick={ () => { this.addItem() }} key="add">➕</Button></Col></Row>);
 	}
 
 	addItem = () => {

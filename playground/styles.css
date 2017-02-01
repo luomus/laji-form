@@ -273,7 +273,7 @@ body .laji-form {
 	padding: 5px;
 	margin: 2px;
 }
-.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button {
+.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button:not(.delete-corner) {
 	width: 25px;
 	height: 25px;
 	font-size: 11px;
@@ -493,7 +493,7 @@ body .laji-form {
 	width: 130px;
 }
 
-.laji-form .laji-form-field-template-item, .laji-form .array-item  {
+.laji-form .laji-form-field-template-item {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
@@ -501,41 +501,21 @@ body .laji-form {
 	display: flex;
 	position: relative;
 }
-.laji-form .laji-form-field-template-schema, .laji-form .array-item .col-xs-9 {
+.laji-form .laji-form-field-template-schema {
 	-webkit-flex-grow: 1;
 	-ms-flex-grow: 1;
 	flex-grow: 1;
 }
-.laji-form .laji-form-field-template-buttons, .laji-form .array-item .array-item-toolbox {
+.laji-form .laji-form-field-template-buttons {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
 }
-.laji-form .laji-form-field-template-buttons, .laji-form .array-item .array-item-toolbox > * {
+.laji-form .laji-form-field-template-buttons {
 	flex-direction: column;
 	-webkit-flex-direction: column;
-}
-
-.laji-form .array-item-add {
-	float: right;
-	margin-right: -5px;
-	padding-left: 2px;
-}
-.laji-form .array-item-add .btn-add {
-	height: 25px;
-	width: 25px;
-	float: right;
-	padding: 0px;
-}
-.laji-form .array-item-toolbox {
-	width: 22px;
-	height: 25px;
-}
-.laji-form .array-item-remove {
-	width: 25px;
-	padding: 0px !important;
 }
 
 @media (max-width: 768px) {
