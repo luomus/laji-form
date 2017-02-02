@@ -573,6 +573,9 @@ body .laji-form {
 	color: white;
 	margin-top: -16px;
 }
+.laji-form .laji-map-accordion-header.panel-title {
+	background-color: #e2e2e2;
+}
 
 .laji-form .laji-map-accordion-header .panel-title {
 	display: -webkit-box;
