@@ -4,7 +4,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
 import { getUiOptions, hasData, getInnerUiSchema } from "../../utils";
 import { DeleteButton } from "../components";
-import { getButtons } from "../ArrayFieldTemplate";
+import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
@@ -98,6 +98,7 @@ const popupMappers = {
 export default class AccordionArrayField extends Component {
 	constructor(props) {
 		super(props);
+		this.deleteButtonRefs = {};
 		this.state = { activeIdx: 0, ...this.getStateFromProps(props), popups: {}};
 	}
 
@@ -135,10 +136,11 @@ export default class AccordionArrayField extends Component {
 		const that = this;
 		function AccordionArray(props) {
 			return (
-				<div>
+				<div onKeyDown={onContainerKeyDown(props, callback => that.onActiveChange(that.props.formData.length, callback))}>
 					<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx}>
 						{props.items.map((item, idx) => (
-							<Panel key={idx}
+							<Panel onKeyDown={onItemKeyDown(() => that.deleteButtonRefs[idx])(item)}
+							       key={idx}
 										 eventKey={idx}
 										 header={that.renderHeader(idx, title)}
 										 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
@@ -200,7 +202,8 @@ export default class AccordionArrayField extends Component {
 				onMouseLeave={() => formatter.onMouseLeave(this, idx)} >
 				<div className="panel-title">
 					{headerText}
-					<DeleteButton className="pull-right"
+					<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem}}
+					              className="pull-right"
 												confirm={true}
 												translations={this.props.formContext.translations}
 												onClick={this.onDelete(idx)} />

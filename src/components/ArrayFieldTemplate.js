@@ -64,7 +64,7 @@ export default function ArrayFieldTemplate(props) {
 	const {confirmDelete, deleteCorner, renderDelete = true} = options;
 	const buttons = getButtons(options.buttons, props);
 	return (
-		<div className={props.className} onKeyDown={onKeyDown(props)}>
+		<div className={props.className} onKeyDown={onContainerKeyDown(props)}>
 			<Title title={props.title}/>
 			<Description description={props.description}/>
 			{props.items.map(item => {
@@ -90,14 +90,26 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-function onKeyDown(props) { return (e) => {
+export function onContainerKeyDown(props, callbacker) { return (e) => {
 	if (!e.shiftKey && e.key === "Insert") {
-		new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
-		props.onAddClick(e);
+
+		function onInsert() {
+			new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
+			props.onAddClick(e);
+		}
+
+		if (callbacker) {
+			e.persist();
+			callbacker(() => {
+				onInsert();
+			})
+		} else {
+			onInsert();
+		}
 	}
 }}
 
-function onItemKeyDown(getDeleteButton) { return props => e => {
+export function onItemKeyDown(getDeleteButton) { return props => e => {
 	if (e.shiftKey && e.key === "Delete") {
 		getDeleteButton().onClick(e);
 	}
