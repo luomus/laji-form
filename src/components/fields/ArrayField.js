@@ -2,11 +2,23 @@ import React, { Component } from "react";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getUiOptions } from "../../utils";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import BaseComponent from "../BaseComponent";
+import Context from "../../Context";
 
+@BaseComponent
 export default class _ArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.onCopy = this.onCopy.bind(this);
+		this.state = {
+			formData: props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)]
+		};
+		this._context = new Context(`${props.formContext.contextId}_empty_arrays_${props.idSchema.$id}`);
+		new Context().addStateClearListener(() => {this._context.touched = undefined});
+	}
+
+	getStateFromProps(props) {
+		return {formData: this._context.touched ? props.formData : this.state.formData};
 	}
 
 	render() {
@@ -26,7 +38,14 @@ export default class _ArrayField extends Component {
 			{...props}
 			schema={schema}
 			uiSchema={{...props.uiSchema, "ui:options": {orderable: false, ...props.uiSchema["ui:options"], buttons}}}
+		  formData={this.state.formData}
+		  onChange={this.onChange}
 		/>
+	}
+
+	onChange(formData) {
+		this._context.touched = true;
+		this.props.onChange(formData);
 	}
 
 	buttonDefinitions = {

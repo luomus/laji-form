@@ -141,7 +141,7 @@ export default class AccordionArrayField extends Component {
 							<Panel key={idx}
 										 eventKey={idx}
 										 header={that.renderHeader(idx, title)}
-										 bsStyle={that.props.errorSchema.__errors ? "danger" : "default"}>
+										 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
 								{item.children}
 							</Panel>
 						))}
@@ -251,7 +251,7 @@ export default class AccordionArrayField extends Component {
 		if (this.state.activeIdx === idx) {
 			idx = undefined;
 		}
-		
+
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, callback);
 	}

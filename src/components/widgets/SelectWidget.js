@@ -108,7 +108,7 @@ class SelectWidget extends Component {
 		return multiple ? (
 			<MultiSelect
 				{...commonProps}
-				values={(this.props.value || []).map(value => this.state.valsToItems[value])}
+				value={(this.props.value || []).map(value => this.state.valsToItems[value])}
 				onValuesChange={items => {
 					this.onChange(processValue(schema.type, (items || []).map(({value}) => value)));
 				}}
@@ -127,7 +127,7 @@ class SelectWidget extends Component {
 				cancelKeyboardEventOnSelection={false}
 				value={this.state.valsToItems[this.props.value]}
 				onValueChange={item => {
-					this.onChange(processValue(schema.type, item ? item.value : ""));
+					this.onChange(processValue(schema.type, item ? item.value : undefined));
 				}}
 			/>
 		);
