@@ -494,7 +494,7 @@ class MapPanel extends Component {
 			<div className="pass-block">
 				<Panel>
 					<div>{this.props.text}</div>
-					<Button bsStyle="default" onClick={this.props.onClick}>{this.props.buttonText}</Button>
+					<Button bsStyle="default" onClick={this.props.onCornfirmedClick}>{this.props.buttonText}</Button>
 				</Panel>
 			</div>
 		) : null;

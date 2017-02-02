@@ -194,7 +194,7 @@ export default class AccordionArrayField extends Component {
 		const header = (
 			<div className="laji-map-accordion-header" onClick={() => {
 					this.onActiveChange(idx);
-					formatter.onClick(this, idx);
+					formatter.onCornfirmedClick(this, idx);
 				}}
 				onMouseEnter={() => formatter.onMouseEnter(this, idx)}
 				onMouseLeave={() => formatter.onMouseLeave(this, idx)} >

@@ -64,23 +64,41 @@ export default function ArrayFieldTemplate(props) {
 	const {confirmDelete, deleteCorner, renderDelete = true} = options;
 	const buttons = getButtons(options.buttons, props);
 	return (
-		<div className={props.className}>
+		<div className={props.className} onKeyDown={onKeyDown(props)}>
 			<Title title={props.title}/>
 			<Description description={props.description}/>
-			{props.items.map(item => (
-				<div key={item.index} className="laji-form-field-template-item">
-					<div className="laji-form-field-template-schema">{item.children}</div>
-					{item.hasRemove && renderDelete &&
-					<DeleteButton onClick={item.onDropIndexClick(item.index)}
+			{props.items.map(item => {
+				let deleteButtonRef = undefined;
+				const getDelButton = () => deleteButtonRef;
+				const deleteButton = (
+					<DeleteButton ref={elem => {deleteButtonRef = elem}}
+												onClick={item.onDropIndexClick(item.index)}
 												className="laji-form-field-template-buttons"
 												confirm={confirmDelete}
 												corner={deleteCorner}
 												translations={props.formContext.translations}/>
-					}
-				</div>
-			))}
+				);
+				return (
+					<div key={item.index} className="laji-form-field-template-item" onKeyDown={onItemKeyDown(getDelButton)(item)}>
+						<div className="laji-form-field-template-schema">{item.children}</div>
+						{item.hasRemove && renderDelete && deleteButton }
+					</div>
+				)
+			})}
 			{buttons}
 		</div>
 	);
 }
 
+function onKeyDown(props) { return (e) => {
+	if (!e.shiftKey && e.key === "Insert") {
+		new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
+		props.onAddClick(e);
+	}
+}}
+
+function onItemKeyDown(getDeleteButton) { return props => e => {
+	if (e.shiftKey && e.key === "Delete") {
+		getDeleteButton().onClick(e);
+	}
+}}

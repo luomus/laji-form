@@ -35,24 +35,30 @@ export class DeleteButton extends Component {
 		this.state = {show: false}
 	}
 
-	onButtonKeyDown = ({key}) => {
-		if (key === "Enter") this.onClick();
+	onButtonKeyDown({key}) {
+		if (key === "Enter") this.onCornfirmedClick();
 		else if (key === "Escape") this.setState({show: false});
 	}
 
-	onHideConfirm = () => {
+	onHideConfirm() {
 		this.setState({show: false});
 	}
 
-	onShowConfirm = (e) => {
+	onShowConfirm(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		this.setState({show: true});
+		this.setState({show: true}, () => {
+			findDOMNode(this.refs["confirm-yes"]).focus();
+		});
 	}
 
-	onClick = () => {
+	onCornfirmedClick() {
 		this.props.onClick();
 		this.onHideConfirm();
+	}
+
+	onClick(e) {
+		this.props.confirm ? this.onShowConfirm(e) : this.onCornfirmedClick(e)
 	}
 
 	render() {
@@ -66,18 +72,18 @@ export class DeleteButton extends Component {
 				<Button bsStyle="danger"
 								className={buttonClassName}
 								ref="del"
-								onKeyDown={this.onButtonKeyDown}
-								onClick={props.confirm ? this.onShowConfirm : this.onClick}>✖</Button>
+								onKeyDown={e => this.onButtonKeyDown(e)}
+								onClick={e => this.onClick(e)}>✖</Button>
 				{show ?
-					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
+					<Overlay show={true} placement="left" rootClose={true} onHide={e => this.onHideConfirm(e)}
 									 target={() => findDOMNode(this.refs.del)}>
 						<Popover id="popover-trigger-click">
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onClick}>
+								<Button bsStyle="danger" onClick={e => this.onCornfirmedClick(e)} ref="confirm-yes">
 									{translations.Remove}
 								</Button>
-								<Button bsStyle="default" onClick={this.onHideConfirm}>
+								<Button bsStyle="default" onClick={e => this.onHideConfirm(e)}>
 									{translations.Cancel}
 								</Button>
 							</ButtonGroup>
