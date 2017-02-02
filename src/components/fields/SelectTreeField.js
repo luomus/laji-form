@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 /**
@@ -38,7 +38,7 @@ export default class TreeField extends Component {
 		let levels = [];
 		let parentsMap = {};
 		let childrenMap = {};
-		let orderMap = {}
+		let orderMap = {};
 		function getLevels(tree, depth, root) {
 			childrenMap[root] = {};
 			if (tree.children) Object.keys(tree.children).forEach(key => {
@@ -72,7 +72,7 @@ export default class TreeField extends Component {
 		let searchTerm = props.formData;
 
 		let depth = 0;
-		if (searchTerm !== "") for (let i in levels) {
+		if (!isEmptyString(searchTerm)) for (let i in levels) {
 			let level = levels[i];
 			if (level[searchTerm]) break;
 			depth++;
@@ -82,15 +82,15 @@ export default class TreeField extends Component {
 		let d = depth;
 		while (d >= 0) {
 			formData[d] = n;
-			if (n === "") n = undefined; //object keys can't be "", so root key is in childrenMap 'undefined'.
+			if (isEmptyString(n)) n = undefined; //object keys can't be "", so root key is in childrenMap 'undefined'.
 			addSelect(d, n, Object.keys(childrenMap[parentsMap[n]]));
 			d--;
 			n = parentsMap[n];
 		}
 
-		if (searchTerm !== "" && childrenMap[searchTerm] && Object.keys(childrenMap[searchTerm]).length) {
+		if (!isEmptyString(searchTerm) && childrenMap[searchTerm] && Object.keys(childrenMap[searchTerm]).length) {
 			addSelect(depth + 1, searchTerm, Object.keys(childrenMap[searchTerm]));
-			formData[depth + 1] = "";
+			formData[depth + 1] = undefined;
 		}
 
 		schema.properties = properties;
@@ -104,8 +104,8 @@ export default class TreeField extends Component {
 		for (let i in selectNames) {
 			if (formData[i] !== this.state.formData[i]) {
 				let value;
-					if (formData[i] === "") {
-						value = (i > 0) ? formData[i - 1] : "";
+					if (isEmptyString(formData[i])) {
+						value = (i > 0) ? formData[i - 1] : undefined;
 					} else {
 						value = formData[i];
 					}
