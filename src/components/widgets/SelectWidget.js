@@ -96,6 +96,7 @@ class SelectWidget extends Component {
 			required,
 			disabled,
 			autofocus,
+			firstOptionIndexToHighlight: (index, options, value, search) => !value || isEmptyString(value.value) ? -1 : index,
 			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),
 			hideResetButton: isEmptyString(this.props.value),
 			renderToggleButton: () => <span className="caret"/>,
