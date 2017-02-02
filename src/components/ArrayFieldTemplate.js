@@ -8,7 +8,6 @@ const buttonDefinitions = {
 	add: {
 		glyph: "plus",
 		fn: (e) => (props) => {
-			console.log("add");
 			new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
 			props.onAddClick(e);
 		}
@@ -41,7 +40,12 @@ export function getButtons(buttons, props) {
 
 		return (
 			<Button key={fnName} className={className} onClick={e => {
-				callbacker ? callbacker(() => fn(e)(props, options)) : fn(e)(props, options);
+				if (callbacker) {
+					e.persist();
+					callbacker(() => fn(e)(props, options))
+				} else {
+					fn(e)(props, options);
+				}
 			}} >
 				{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 				<strong>{glyph ? ` ${label}` : label}</strong>

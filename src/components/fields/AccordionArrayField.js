@@ -136,7 +136,7 @@ export default class AccordionArrayField extends Component {
 		function AccordionArray(props) {
 			return (
 				<div>
-					<Accordion onSelect={that.onActiveChange} activeKey={activeIdx}>
+					<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx}>
 						{props.items.map((item, idx) => (
 							<Panel key={idx}
 										 eventKey={idx}
@@ -251,7 +251,7 @@ export default class AccordionArrayField extends Component {
 		if (this.state.activeIdx === idx) {
 			idx = undefined;
 		}
-
+		
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, callback);
 	}
