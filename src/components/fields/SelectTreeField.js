@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
+import Context from "../../Context";
 
 /**
  * Constructs selects from given tree.
@@ -115,13 +116,28 @@ export default class TreeField extends Component {
 		}
 	}
 
+	componentDidUpdate() {
+		if (this.focusNextAfterUpdate) {
+			this.focusNextAfterUpdate = false;
+			new Context().focusNextInput();
+		}
+	}
+
+	onKeyDown = (e) => {
+		if (e.key == "Enter") {
+			e.preventDefault();
+			e.stopPropagation();
+			this.focusNextAfterUpdate = true;
+		}
+	}
+
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<SchemaField
+		return (<div onKeyDown={this.onKeyDown}><SchemaField
 			{...this.props}
 			{...this.state}
 			onChange={this.onChange}
 			name=""
-		/>);
+		/></div>);
 	}
 }
