@@ -93,7 +93,7 @@ export default class MapArrayField extends Component {
 
 		const geometries = [
 			...defaultGeometries,
-			...(mapper ? mapper.getData(this.state.activeIdx, formData, defaultGeometries) : [])
+			...(mapper ? (mapper.getData(this.state.activeIdx, formData, defaultGeometries) || []) : [])
 		];
 
 		const colTypes = ["lg", "md", "sm", "xs"];
