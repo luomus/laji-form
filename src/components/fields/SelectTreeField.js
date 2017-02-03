@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
 
 /**
  * Constructs selects from given tree.
@@ -116,18 +115,13 @@ export default class TreeField extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if (this.focusNextAfterUpdate) {
-			this.focusNextAfterUpdate = false;
-			new Context().focusNextInput();
-		}
-	}
-
 	onKeyDown = (e) => {
-		if (e.key == "Enter") {
+		if (e.key == "Enter" && !e.ctrlKey) {
 			e.preventDefault();
 			e.stopPropagation();
-			this.focusNextAfterUpdate = true;
+			setTimeout(() => {
+				focusNextInput(this.props.formContext.formRef, document.activeElement, e.shiftKey);
+			}, 0);
 		}
 	}
 

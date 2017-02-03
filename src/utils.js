@@ -122,8 +122,6 @@ tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disable
 
 
 export function getTabbableFields(elem, reverse) {
-	// const formElem = findDOMNode(elem);
-
 	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
 	let fields = [...fieldsNodeList];
 
@@ -135,18 +133,47 @@ export function getSchemaElementById(id) {
 	return document.getElementById(`_laji-form_${id}`);
 }
 
-export function canFocusNextInput(root, inputElem) {
-	function isTabbableInput(elem) {
-		return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-		elem.className.includes(SWITCH_CLASS))
-	}
+export function isTabbableInput(elem) {
+	return (elem.id.match(/^_laji-form_/) || inputTypes.includes(elem.tagName.toLowerCase()) ||
+	elem.className.includes(SWITCH_CLASS))
+}
 
+export function canFocusNextInput(root, inputElem) {
 	return (findDOMNode(root).querySelectorAll && isTabbableInput(inputElem));
 }
 
-export function getNearestSchemaElemID(elem) {
+export function findNearestParentSchemaElemID(elem) {
 	while (!elem.id.match(/^_laji-form_/)) {
-		elem = elem.parentElement;
+		elem = elem.parentNode;
 	}
 	return elem;
+}
+
+export function findNearestParentTabbableElem(elem) {
+	while (!isTabbableInput(elem)) {
+		elem = elem.parentNode;
+	}
+	return elem;
+}
+
+export function focusNextInput(formReactNode, inputElem, reverseDirection) {
+	const formElem = findDOMNode(formReactNode);
+	if (!inputElem) inputElem = findNearestParentTabbableElem(document.activeElement);
+
+	if (!canFocusNextInput(formElem, inputElem)) return;
+
+	const fields = getTabbableFields(formElem, reverseDirection);
+
+	let doFocus = false;
+	for (let field of fields) {
+		if (field === inputElem) {
+			doFocus = true;
+			continue;
+		}
+
+		if (doFocus) {
+			field.focus();
+			if (document.activeElement !== inputElem) break;
+		}
+	}
 }

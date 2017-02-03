@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { getTabbableFields, getSchemaElementById, getNearestSchemaElemID } from "../utils";
+import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID } from "../utils";
 
 function onAdd(e, props, idToFocus, delayFocus) {
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
@@ -115,7 +115,7 @@ export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) =
 		}
 	} else if (e.ctrlKey && e.key === "Enter") {
 
-		const nearestSchemaElem = getNearestSchemaElemID(document.activeElement);
+		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeArrayItems = nearestSchemaElem.id.match(/_\d/g);
 		if (!activeArrayItems) return;

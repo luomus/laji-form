@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from "react";
+import { findDOMNode } from "react-dom";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner"
-import { getUiOptions, isEmptyString } from "../../utils";
-import Context from "../../Context";
+import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 const autosuggestSettings = {
@@ -165,7 +165,6 @@ export default class AutoSuggestWidget extends Component {
 		super(props);
 		this.state = {isLoading: false, suggestions: [], unsuggested: false, focused: false, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
-		this.globalContext = new Context();
 	}
 
 	componentWillReceiveProps(props) {
@@ -277,7 +276,7 @@ export default class AutoSuggestWidget extends Component {
 	onSuggestionSelected = (e, {suggestion, method}) => {
 		e.preventDefault();
 		if (method === "click") {
-			this.globalContext.focusNextInput();
+			focusNextInput(this.props.formContext.formRef, document.getElementById(this.props.id));
 		}
 		this.selectSuggestion(suggestion);
 		this.setState({focused: false});

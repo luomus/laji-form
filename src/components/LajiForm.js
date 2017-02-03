@@ -3,7 +3,8 @@ import { findDOMNode } from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
-import { isMultiSelect, getTabbableFields, getSchemaElementById, canFocusNextInput } from "../utils";
+import { isMultiSelect, getTabbableFields, getSchemaElementById,
+	canFocusNextInput, findNearestParentSchemaElemID, focusNextInput } from "../utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
@@ -184,7 +185,6 @@ export default class LajiForm extends Component {
 		this._context.blockingLoaderCounter = 0;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
-		this._context.focusNextInput = this.focusNextInput;
 		this._context.stateClearListeners = [];
 		this._context.addStateClearListener = (fn) => this._context.stateClearListeners.push(fn);
 		this._context.clearState = () => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
@@ -251,7 +251,8 @@ export default class LajiForm extends Component {
 						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext,
-						contextId: this.props.contextId
+						contextId: this.props.contextId,
+						formRef: this.refs.form
 					}}
 				  validate={validate(this.props.validators)}
 				>
@@ -276,38 +277,6 @@ export default class LajiForm extends Component {
 		this.refs.form.onSubmit({preventDefault: () => {;}});
 	}
 
-	// canFocusNextInput = (inputElem) => {
-	// 	function isTabbableInput(elem) {
-	// 		return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-	// 		elem.className.includes(SWITCH_CLASS))
-	// 	}
-	//
-	// 	const formElem = findDOMNode(this.refs.form);
-	//
-	// 	return (formElem.querySelectorAll && isTabbableInput(inputElem));
-	// }
-
-
-	focusNextInput = (inputElem, reverseDirection) => {
-		if (!inputElem) inputElem = document.activeElement;
-		if (!canFocusNextInput(this.refs.form, inputElem)) return;
-
-		const fields = getTabbableFields(findDOMNode(this.refs.form), reverseDirection);
-
-		let doFocus = false;
-		for (let field of fields) {
-			if (field === inputElem) {
-				doFocus = true;
-				continue;
-			}
-
-			if (doFocus) {
-				field.focus();
-				if (document.activeElement !== inputElem) break;
-			}
-		}
-	}
-
 	onKeyDown = (e) => {
 		function isDescendant(parent, child) {
 			var node = child.parentNode;
@@ -321,16 +290,16 @@ export default class LajiForm extends Component {
 		}
 
 		if (this._context.blockingLoaderCounter > 0 &&
-			  !isDescendant(document.querySelector(".pass-block"), document.activeElement)) {
+			  !isDescendant(document.querySelector(".pass-block"), e.target)) {
 			e.preventDefault();
 			return;
 		}
 
-		if (isDescendant(document.querySelector(".laji-map"), document.activeElement)) return;
+		if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
 
 		if (e.key == "Enter" && canFocusNextInput(this.refs.form, e.target)) {
+			focusNextInput(this.refs.form, e.target, e.shiftKey);
 			e.preventDefault();
-			this.focusNextInput(e.target, e.shiftKey);
 		}
 	}
 
