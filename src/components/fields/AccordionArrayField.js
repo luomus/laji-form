@@ -9,6 +9,8 @@ import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
 
+const DELAY_FOCUS = 250;
+
 const headerFormatters = {
 	units: {
 		render: (that, idx, headerElem) => {
@@ -135,8 +137,12 @@ export default class AccordionArrayField extends Component {
 
 		const that = this;
 		function AccordionArray(props) {
+			const buttons = getUiOptions(props.uiSchema).buttons;
+			buttons.forEach(button => {
+				button.delayFocus = DELAY_FOCUS;
+			});
 			return (
-				<div onKeyDown={onContainerKeyDown(props, callback => that.onActiveChange(that.props.formData.length, callback), 250)}>
+				<div onKeyDown={onContainerKeyDown(props, callback => that.onActiveChange(that.props.formData.length, callback), DELAY_FOCUS)}>
 					<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx}>
 						{props.items.map((item, idx) => (
 							<Panel onKeyDown={onItemKeyDown(() => that.deleteButtonRefs[idx])(item)}
@@ -148,7 +154,7 @@ export default class AccordionArrayField extends Component {
 							</Panel>
 						))}
 					</Accordion>
-					{getButtons(getUiOptions(props.uiSchema).buttons, props)}
+					{getButtons(buttons, props)}
 				</div>
 			);
 		}

@@ -4,12 +4,17 @@ import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
 
+function onAdd(e, props, idToFocus, delayFocus) {
+	new Context(props.formContext.contextId).idToFocus = idToFocus;
+	new Context(props.formContext.contextId).delayFocus = delayFocus;
+	props.onAddClick(e);
+}
+
 const buttonDefinitions = {
 	add: {
 		glyph: "plus",
-		fn: (e) => (props) => {
-			new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
-			props.onAddClick(e);
+		fn: (e) => (props, options = {}) => {
+			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, options.delayFocus);
 		}
 	}
 };
@@ -94,10 +99,9 @@ export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) =
 	if (!e.shiftKey && e.key === "Insert") {
 
 		function onInsert() {
-			new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
-			new Context(props.formContext.contextId).delayFocus = delayFocus;
-			props.onAddClick(e);
+			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
 		}
+
 		e.stopPropagation();
 
 		if (callbacker) {
