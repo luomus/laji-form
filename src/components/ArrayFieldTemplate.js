@@ -3,6 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
+import { getTabbableFields, getSchemaElementById, getNearestSchemaElemID } from "../utils";
 
 function onAdd(e, props, idToFocus, delayFocus) {
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
@@ -96,7 +97,7 @@ export default function ArrayFieldTemplate(props) {
 }
 
 export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) => {
-	if (!e.shiftKey && e.key === "Insert") {
+	if (!e.ctrlKey && e.key === "Insert") {
 
 		function onInsert() {
 			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
@@ -112,11 +113,29 @@ export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) =
 		} else {
 			onInsert();
 		}
+	} else if (e.ctrlKey && e.key === "Enter") {
+
+		const nearestSchemaElem = getNearestSchemaElemID(document.activeElement);
+		// Should contain all nested array item ids. We want the last one, which is focused.
+		const activeArrayItems = nearestSchemaElem.id.match(/_\d/g);
+		if (!activeArrayItems) return;
+
+		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
+		const amount = e.shiftKey ? -1 : 1;
+		const elem = getSchemaElementById(`${props.idSchema.$id}_${currentIdx + amount}`);
+
+		if (elem) {
+			const tabbableFields = getTabbableFields(getSchemaElementById(`${props.idSchema.$id}_${currentIdx + amount}`))
+			if (tabbableFields && tabbableFields.length) {
+				tabbableFields[0].focus();
+				e.stopPropagation();
+			}
+		}
 	}
 }}
 
 export function onItemKeyDown(getDeleteButton) { return props => e => {
-	if (e.shiftKey && e.key === "Delete") {
+	if (e.ctrlKey && e.key === "Delete") {
 		getDeleteButton().onClick(e);
 	}
 }}

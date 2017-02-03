@@ -1,3 +1,4 @@
+import { findDOMNode } from "react-dom";
 import { isMultiSelect as _isMultiSelect } from "react-jsonschema-form/lib/utils";
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
@@ -110,4 +111,42 @@ export function isMultiSelect(schema, uiSchema) {
 		uiSchema.items &&
 		uiSchema.items["ui:field"]
 	);
+}
+
+const SWITCH_CLASS = "bootstrap-switch";
+
+const inputTypes = ["input", "select", "textarea"];
+let tabbableSelectors = inputTypes.slice(0);
+tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
+
+
+export function getTabbableFields(elem, reverse) {
+	// const formElem = findDOMNode(elem);
+
+	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
+	let fields = [...fieldsNodeList];
+
+	if (reverse) fields = fields.reverse();
+	return fields;
+}
+
+export function getSchemaElementById(id) {
+	return document.getElementById(`_laji-form_${id}`);
+}
+
+export function canFocusNextInput(root, inputElem) {
+	function isTabbableInput(elem) {
+		return (inputTypes.includes(elem.tagName.toLowerCase()) ||
+		elem.className.includes(SWITCH_CLASS))
+	}
+
+	return (findDOMNode(root).querySelectorAll && isTabbableInput(inputElem));
+}
+
+export function getNearestSchemaElemID(elem) {
+	while (!elem.id.match(/^_laji-form_/)) {
+		elem = elem.parentElement;
+	}
+	return elem;
 }

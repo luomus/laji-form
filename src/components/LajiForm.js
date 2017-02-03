@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
-import { isMultiSelect } from "../utils";
+import { isMultiSelect, getTabbableFields, getSchemaElementById, canFocusNextInput } from "../utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
@@ -20,7 +20,7 @@ class SchemaField extends Component {
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
 			function focus(id) {
-				const elem = document.getElementById(`_laji-form_${id}`);
+				const elem = getSchemaElementById(id);
 				if (elem) {
 					const tabbableFields = getTabbableFields(elem);
 					if (tabbableFields && tabbableFields.length) {
@@ -112,13 +112,6 @@ function importLocalComponents(dir, fieldNames) {
 }
 
 
-const SWITCH_CLASS = "bootstrap-switch";
-
-const inputTypes = ["input", "select", "textarea"];
-let tabbableSelectors = inputTypes.slice(0);
-tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
-
 function FieldTemplate({
 	id,
 	classNames,
@@ -170,16 +163,6 @@ function FieldTemplate({
 			{errors}
 		</div>
 	);
-}
-
-function getTabbableFields(elem, reverse) {
-	const formElem = findDOMNode(elem);
-
-	const fieldsNodeList = formElem.querySelectorAll(tabbableSelectors.join(", "));
-	let fields = [...fieldsNodeList];
-
-	if (reverse) fields = fields.reverse();
-	return fields;
 }
 
 export default class LajiForm extends Component {
@@ -293,23 +276,23 @@ export default class LajiForm extends Component {
 		this.refs.form.onSubmit({preventDefault: () => {;}});
 	}
 
-	canFocusNextInput = (inputElem) => {
-		function isTabbableInput(elem) {
-			return (inputTypes.includes(elem.tagName.toLowerCase()) ||
-			elem.className.includes(SWITCH_CLASS))
-		}
-
-		const formElem = findDOMNode(this.refs.form);
-
-		return (formElem.querySelectorAll && isTabbableInput(inputElem));
-	}
+	// canFocusNextInput = (inputElem) => {
+	// 	function isTabbableInput(elem) {
+	// 		return (inputTypes.includes(elem.tagName.toLowerCase()) ||
+	// 		elem.className.includes(SWITCH_CLASS))
+	// 	}
+	//
+	// 	const formElem = findDOMNode(this.refs.form);
+	//
+	// 	return (formElem.querySelectorAll && isTabbableInput(inputElem));
+	// }
 
 
 	focusNextInput = (inputElem, reverseDirection) => {
 		if (!inputElem) inputElem = document.activeElement;
-		if (!this.canFocusNextInput(inputElem)) return;
+		if (!canFocusNextInput(this.refs.form, inputElem)) return;
 
-		const fields = getTabbableFields(this.refs.form, reverseDirection);
+		const fields = getTabbableFields(findDOMNode(this.refs.form), reverseDirection);
 
 		let doFocus = false;
 		for (let field of fields) {
@@ -345,7 +328,7 @@ export default class LajiForm extends Component {
 
 		if (isDescendant(document.querySelector(".laji-map"), document.activeElement)) return;
 
-		if (e.key == "Enter" && this.canFocusNextInput(e.target)) {
+		if (e.key == "Enter" && canFocusNextInput(this.refs.form, e.target)) {
 			e.preventDefault();
 			this.focusNextInput(e.target, e.shiftKey);
 		}
