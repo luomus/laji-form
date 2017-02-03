@@ -90,13 +90,15 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-export function onContainerKeyDown(props, callbacker) { return (e) => {
+export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) => {
 	if (!e.shiftKey && e.key === "Insert") {
 
 		function onInsert() {
 			new Context(props.formContext.contextId).idToFocus = `${props.idSchema.$id}_${props.items.length}`;
+			new Context(props.formContext.contextId).delayFocus = delayFocus;
 			props.onAddClick(e);
 		}
+		e.stopPropagation();
 
 		if (callbacker) {
 			e.persist();

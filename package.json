@@ -41,7 +41,8 @@
     "react-select": "^1.0.0-rc.2",
     "react-selectize": "^2.0.3",
     "react-spinner": "^0.2.6",
-    "react-widgets": "^3.4.4"
+    "react-widgets": "^3.4.4",
+    "scroll-into-view-if-needed": "^1.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",

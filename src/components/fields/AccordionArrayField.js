@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { Accordion, Panel, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, hasData, getInnerUiSchema } from "../../utils";
+import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -136,7 +136,7 @@ export default class AccordionArrayField extends Component {
 		const that = this;
 		function AccordionArray(props) {
 			return (
-				<div onKeyDown={onContainerKeyDown(props, callback => that.onActiveChange(that.props.formData.length, callback))}>
+				<div onKeyDown={onContainerKeyDown(props, callback => that.onActiveChange(that.props.formData.length, callback), 250)}>
 					<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx}>
 						{props.items.map((item, idx) => (
 							<Panel onKeyDown={onItemKeyDown(() => that.deleteButtonRefs[idx])(item)}

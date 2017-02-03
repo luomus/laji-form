@@ -4,6 +4,7 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect } from "../utils";
+import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
 import _SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -18,14 +19,20 @@ class SchemaField extends Component {
 		const _context = new Context(this.props.registry.formContext.contextId);
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			const elem = document.getElementById(`_laji-form_${idToFocus}`);
-			if (elem) {
-				const tabbableFields = getTabbableFields(elem);
-				if (tabbableFields && tabbableFields.length) {
-					tabbableFields[0].focus();
+			function focus(id) {
+				const elem = document.getElementById(`_laji-form_${id}`);
+				if (elem) {
+					const tabbableFields = getTabbableFields(elem);
+					if (tabbableFields && tabbableFields.length) {
+						tabbableFields[0].focus();
+						scrollIntoViewIfNeeded(elem);
+					}
 				}
 			}
+			const id = idToFocus;
+			_context.delayFocus ? setTimeout(() => focus(id), _context.delayFocus) : focus(id);
 			_context.idToFocus = undefined;
+			_context.delayFocus = undefined;
 		}
 	}
 
