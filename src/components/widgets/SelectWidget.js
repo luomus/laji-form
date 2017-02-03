@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { SimpleSelect, MultiSelect } from "react-selectize";
-import { Label } from "react-bootstrap";
+import { Label, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import { asNumber } from "react-jsonschema-form/lib/utils";
 import { isEmptyString, getUiOptions } from "../../utils";
@@ -80,6 +80,7 @@ class SelectWidget extends Component {
 		const {
 			schema,
 			id,
+			value,
 			required,
 			disabled,
 			multiple,
@@ -96,40 +97,49 @@ class SelectWidget extends Component {
 			required,
 			disabled,
 			autofocus,
-			firstOptionIndexToHighlight: (index, options, value, search) => !value || isEmptyString(value.value) ? -1 : index,
+			firstOptionIndexToHighlight: (index, options, val, search) => !val || isEmptyString(val.value) ? -1 : index,
 			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),
-			hideResetButton: isEmptyString(this.props.value),
+			hideResetButton: isEmptyString(value),
 			renderToggleButton: () => <span className="caret"/>,
 			renderResetButton: () => <span>×</span>,
 			renderNoResultsFound: () => <span className="text-muted">{formContext.translations.NoResults}</span>,
 			...(selectProps || {})
 		};
-
-		return multiple ? (
+		const selectComponent = multiple ? (
 			<MultiSelect
 				{...commonProps}
-				value={(this.props.value || []).map(value => this.state.valsToItems[value])}
+				value={(value || []).map(val => this.state.valsToItems[val])}
 				onValuesChange={items => {
-					this.onChange(processValue(schema.type, (items || []).map(({value}) => value)));
+					this.onChange(processValue(schema.type, (items || []).map(({val}) => val)));
 				}}
-				renderValue = {!multiple ? undefined : item => (
-					<Label bsStyle="primary">
-						<span>{item.label}</span>
-						<span className="multiselect-close" onClick={() => {
-							this.onChange(processValue(schema.type, this.props.value.filter(val => val !== item.value)));
-						}}>×</span>
-					</Label>
-				)}
+				renderValue={!multiple ? undefined : item => (
+						<Label bsStyle="primary">
+							<span>{item.label}</span>
+							<span className="multiselect-close" onClick={() => {
+								this.onChange(processValue(schema.type, value.filter(val => val !== item.value)));
+							}}>×</span>
+						</Label>
+					)}
 			/>
 		) : (
 			<SimpleSelect
 				{...commonProps}
 				cancelKeyboardEventOnSelection={false}
-				value={this.state.valsToItems[this.props.value]}
+				value={this.state.valsToItems[value]}
 				onValueChange={item => {
 					this.onChange(processValue(schema.type, item ? item.value : undefined));
 				}}
 			/>
+		)
+
+		return (!multiple && isEmptyString(value)) ? selectComponent : (
+			<OverlayTrigger placement="bottom" trigger="hover" overlay={
+				<Tooltip id={`${id}-tooltip`}>{this.state.valsToItems[value].label}</Tooltip>
+			}>
+				<div>
+				{selectComponent}
+				</div>
+			</OverlayTrigger>
 		);
 	}
 }
