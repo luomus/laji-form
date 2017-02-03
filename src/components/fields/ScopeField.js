@@ -57,8 +57,9 @@ const buttonSettings = {
 			if (!map) return;
 
 			mapContext.grabFocus();
-			map.setControlSettings({
+			map.setOptions({
 				draw: {
+					...map.draw,
 					marker: true,
 					polyline: false,
 					rectangle: false,
@@ -76,13 +77,25 @@ const buttonSettings = {
 				layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 			}
 
-			const onChange = map.onChange;
+			const onChange = map.draw.onChange;
+
+			let triggerLayer = undefined;
 
 			function close() {
 				mapContext.hidePanel();
 				mapContext.setOnChange(onChange);
-				map.setControlSettings();
+				map.setOptions({
+					draw: {
+						...map.draw,
+						marker: true,
+						polyline: true,
+						rectangle: true,
+						polygon: true,
+						circle: true
+					}
+				});
 				mapContext.releaseFocus();
+				triggerLayer.disable();
 
 				if (layer) {
 					map.updateLayerStyle(layer, {opacity: 1});
@@ -91,7 +104,7 @@ const buttonSettings = {
 				active = false;
 			}
 
-			map.triggerDrawing("marker");
+			triggerLayer = map.triggerDrawing("marker");
 			mapContext.showPanel(null, translations.Cancel, close);
 			mapContext.setOnChange(events => {
 				for (let event of events) {
@@ -136,7 +149,7 @@ const buttonSettings = {
 			const map = new Context("MAP").map;
 			const layer = getLayer();
 			if (!layer) return;
-			map.setDrawData(map.drawData);
+			map.setDraw(map.draw);
 			layer.fire("mouseout");
 		}
 

@@ -6,7 +6,7 @@ import LajiMap from "laji-map";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -80,7 +80,7 @@ export default class MapArrayField extends Component {
 			"ui:options": {
 				...getUiOptions(getInnerUiSchema(uiSchema)),
 				activeIdx,
-				onActiveChange: (idx, callback) => {this.setState({activeIdx: idx}, callback || undefined)}
+				onActiveChange: (idx, callback) => {this.setState({activeIdx: idx}, callback)}
 			}
 		};
 
@@ -185,6 +185,11 @@ export default class MapArrayField extends Component {
 					geometries: [e.feature.geometry]
 				};
 				this.props.onChange([formData]);
+				this.setState({activeIdx: 0}, () => {
+					const node = getSchemaElementById(`${this.props.idSchema.$id}_0`);
+					const tabbables = getTabbableFields(node);
+					if (tabbables && tabbables.length) tabbables[0].focus();
+				});
 			}
 		})
 	}
@@ -432,7 +437,6 @@ class MapComponent extends Component {
 			if (!deepEquals(data.featureCollection, this.state.featureCollection))  {
 				this.map.setDrawData(data);
 			}
-			// this.map.setDraw(props.draw);
 
 			if (controlSettings && !deepEquals(controlSettings, this.state.controlSettings)) {
 				this.map.setControlSettings(controlSettings);
@@ -494,7 +498,7 @@ class MapPanel extends Component {
 			<div className="pass-block">
 				<Panel>
 					<div>{this.props.text}</div>
-					<Button bsStyle="default" onClick={this.props.onCornfirmedClick}>{this.props.buttonText}</Button>
+					<Button bsStyle="default" onClick={this.props.onClick}>{this.props.buttonText}</Button>
 				</Panel>
 			</div>
 		) : null;

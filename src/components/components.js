@@ -36,7 +36,7 @@ export class DeleteButton extends Component {
 	}
 
 	onButtonKeyDown({key}) {
-		if (key === "Enter") this.onCornfirmedClick();
+		if (key === "Enter") this.onConfirmedClick();
 		else if (key === "Escape") this.setState({show: false});
 	}
 
@@ -52,13 +52,13 @@ export class DeleteButton extends Component {
 		});
 	}
 
-	onCornfirmedClick() {
+	onConfirmedClick() {
 		this.props.onClick();
 		this.onHideConfirm();
 	}
 
 	onClick(e) {
-		this.props.confirm ? this.onShowConfirm(e) : this.onCornfirmedClick(e)
+		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick(e)
 	}
 
 	render() {
@@ -80,7 +80,7 @@ export class DeleteButton extends Component {
 						<Popover id="popover-trigger-click">
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={e => this.onCornfirmedClick(e)} ref="confirm-yes">
+								<Button bsStyle="danger" onClick={e => this.onConfirmedClick(e)} ref="confirm-yes">
 									{translations.Remove}
 								</Button>
 								<Button bsStyle="default" onClick={e => this.onHideConfirm(e)}>
