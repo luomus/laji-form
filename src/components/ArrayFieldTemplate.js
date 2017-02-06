@@ -85,7 +85,7 @@ export default function ArrayFieldTemplate(props) {
 												translations={props.formContext.translations}/>
 				);
 				return (
-					<div key={item.index} className="laji-form-field-template-item" onKeyDown={onItemKeyDown(getDelButton)(item)}>
+					<div key={item.index} className="laji-form-field-template-item keep-vertical" onKeyDown={onItemKeyDown(getDelButton)(item)}>
 						<div className="laji-form-field-template-schema">{item.children}</div>
 						{item.hasRemove && renderDelete && deleteButton }
 					</div>
