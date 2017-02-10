@@ -209,4 +209,9 @@
 		en: "All the images weren't saved. Please verify the images.",
 		sv: "Alla bilder sparades inte. Vänligen kontrollera bilderna."
 	},
+	error: {
+		fi: "Virhe",
+		en: "Error",
+		sv: "Fel"
+	}
 }

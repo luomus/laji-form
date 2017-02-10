@@ -5,7 +5,7 @@ import deepEquals from "deep-equal";
 import LajiMap from "laji-map";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
-import { Button, StretchAffix } from "../components";
+import { Button, StretchAffix, Alert } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -71,7 +71,7 @@ export default class MapArrayField extends Component {
 
 	render() {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
-		let {uiSchema} = this.props;
+		let {uiSchema, errorSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryMapper, geometryField, topOffset, bottomOffset} = options;
 		const {activeIdx} = this.state;
@@ -136,6 +136,9 @@ export default class MapArrayField extends Component {
 			...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
 		};
 
+		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
+			errorSchema[activeIdx][geometryField].__errors : null;
+
 		return (
 			<div ref="affix">
 				<Row >
@@ -157,6 +160,7 @@ export default class MapArrayField extends Component {
 							  onFocusGrab={() => {this.setState({focusGrabbed: true})}}
 								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
 							  controlSettings={(emptyMode || this.state.activeIdx !== undefined) ? {} : {draw: false, coordinateInput: false}}
+							  panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
 							/>
 						</StretchAffix>
 					</Col>
@@ -478,12 +482,19 @@ class MapComponent extends Component {
 	}
 
 	render() {
+		const controlledPanel = this.props.panel ?
+			<MapPanel bsStyle={this.props.panel.bsStyle || undefined}
+			          header={this.props.panel.header}
+								text={this.props.panel.panelTextContent} />
+			: null;
+
 		return (
 			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
-				<MapPanel show={this.state.panel}
+				{controlledPanel}
+				{this.state.panel ? <MapPanel show={this.state.panel}
 									text={this.state.panelTextContent}
 									onClick={this.state.onPanelButtonClick}
-									buttonText={this.state.panelButtonContent} />
+									buttonText={this.state.panelButtonContent} /> : null}
 				<div key="map"
 						 className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
 		         style={this.props.style} ref="map" />
@@ -494,13 +505,16 @@ class MapComponent extends Component {
 
 class MapPanel extends Component {
 	render() {
-		return this.props.show ? (
+		return (
 			<div className="pass-block">
-				<Panel>
+				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header}>
 					<div>{this.props.text}</div>
-					<Button bsStyle="default" onClick={this.props.onClick}>{this.props.buttonText}</Button>
+					{this.props.buttonText ?
+						<Button bsStyle="default" onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+						null
+					}
 				</Panel>
 			</div>
-		) : null;
+		);
 	}
 }
