@@ -168,15 +168,16 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	componentWillReceiveProps(props) {
+		const prevValue = this.state.value;
 		this.setState(this.getStateFromProps(props), () => {
-			this.triggerConvert(this.props);
+			if (props.value !== prevValue) this.triggerConvert(this.props);
 		});
 	}
 
 	getStateFromProps(props) {
 		const options = getUiOptions(props);
 		const {autosuggestField} = options;
-		return {autosuggestSettings: autosuggestSettings[autosuggestField]};
+		return {autosuggestSettings: autosuggestSettings[autosuggestField], value: props.value};
 	}
 
 	componentDidMount() {
@@ -189,7 +190,6 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	triggerConvert = (props) => {
-		// const {isValueSuggested} = getUiOptions(this.props);
 		const isValueSuggested = getUiOptions(this.props).isValueSuggested ||
 		                         this.state.autosuggestSettings.isValueSuggested;
 
