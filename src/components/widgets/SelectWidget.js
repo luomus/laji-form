@@ -132,7 +132,7 @@ class SelectWidget extends Component {
 			/>
 		)
 
-		return (!multiple && isEmptyString(value)) ? selectComponent : (
+		return (multiple || isEmptyString(value)) ? selectComponent : (
 			<OverlayTrigger placement="bottom" trigger="hover" overlay={
 				<Tooltip id={`${id}-tooltip`}>{this.state.valsToItems[value].label}</Tooltip>
 			}>
@@ -157,7 +157,7 @@ if (process.env.NODE_ENV !== "production") {
 			order: PropTypes.array,
 			filter: PropTypes.array,
 			filterType: PropTypes.string,
-			labels: PropTypes.array,
+			labels: PropTypes.object,
 		}).isRequired,
 		value: PropTypes.any,
 		required: PropTypes.bool,

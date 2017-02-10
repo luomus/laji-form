@@ -14,7 +14,15 @@ export default class _ArrayField extends Component {
 			formData: props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)]
 		};
 		this._context = new Context(`${props.formContext.contextId}_empty_arrays_${props.idSchema.$id}`);
-		new Context().addStateClearListener(() => {this._context.touched = undefined});
+		new Context().addStateClearListener(() => {this.clear();});
+	}
+
+	clear() {
+		this._context.touched = undefined;
+	}
+
+	componentWillUnmount() {
+		this.clear();
 	}
 
 	getStateFromProps(props) {

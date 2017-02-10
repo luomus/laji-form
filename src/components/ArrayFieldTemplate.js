@@ -56,7 +56,7 @@ export function getButtons(buttons, props) {
 				{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 				<strong>{glyph ? ` ${label}` : label}</strong>
 			</Button>
-		)
+		);
 	});
 	return (
 		<ButtonToolbar key="buttons">{buttonElems}</ButtonToolbar>
@@ -87,7 +87,7 @@ export default function ArrayFieldTemplate(props) {
 				return (
 					<div key={item.index} className="laji-form-field-template-item keep-vertical" onKeyDown={onItemKeyDown(getDelButton)(item)}>
 						<div className="laji-form-field-template-schema">{item.children}</div>
-						{item.hasRemove && renderDelete && deleteButton }
+						{item.hasRemove && renderDelete && deleteButton}
 					</div>
 				)
 			})}

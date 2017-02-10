@@ -15,40 +15,6 @@ export default class FlatField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this.state = {onChange: this.onChange, ...this.getStateFromProps(props)};
-
-		const {fields} = this.getUiOptions();
-		let {formData} = props;
-		let changed = false;
-		if (fields) fields.forEach(field => {
-			const innerSchema = props.schema.properties[field];
-			const isArray = innerSchema.type === "array";
-			if (!formData[field]) {
-				const defaultItem = getDefaultFormState(
-					isArray ?
-						{type: "object", properties: innerSchema.items.properties} :
-						innerSchema.properties
-				);
-				formData = {
-					...formData,
-					[field]: isArray ? [defaultItem] : defaultItem};
-				changed = true;
-			}
-		});
-		if (changed) {
-			this.filledFormData = formData;
-		}
-	}
-
-	componentWillMount() {
-		if (this.filledFormData) {
-			this.props.onChange(this.filledFormData);
-			this.filledFormData = undefined;
-		}
-	}
-
 	getStateFromProps(props) {
 		const state = {
 			schema: props.schema,
