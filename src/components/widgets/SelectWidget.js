@@ -133,7 +133,7 @@ class SelectWidget extends Component {
 		)
 
 		return (multiple || isEmptyString(value)) ? selectComponent : (
-			<OverlayTrigger placement="bottom" trigger="hover" overlay={
+			<OverlayTrigger placement="top" trigger="hover" overlay={
 				<Tooltip id={`${id}-tooltip`}>{this.state.valsToItems[value].label}</Tooltip>
 			}>
 				<div>
