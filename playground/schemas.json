@@ -1787,25 +1787,13 @@
 						],
 						"unitGathering": {
 							"geometry": {
-								"type": "GeometryCollection",
-								"geometries": [
-									{
-										"type": "Point",
-										"coordinates": [
-											28.235094953851745,
-											64.24593714920141
-										]
-									},
-									{
-										"type": "Point",
-										"coordinates": [
-											28.245094953851745,
-											64.24593714920141
-										]
-									}
+								"type": "Point",
+								"coordinates": [
+									28.235094953851745,
+									64.24593714920141
 								]
 							}
-							}
+						}
 					},
 					{
 						"recordBasis": "MY.recordBasisHumanObservation",

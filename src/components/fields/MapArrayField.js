@@ -282,11 +282,8 @@ export default class MapArrayField extends Component {
 				units.forEach((unit, i) => {
 					const {unitGathering: {geometry}} = unit;
 					if (geometry && hasData(geometry)) {
-						const geometriesParsed = parseGeometries(geometry);
-						geometriesParsed.forEach((geom, j) => {
-							this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length + j] = i;
-						});
-						newGeometries = [...newGeometries, ...geometriesParsed];
+						this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
+						newGeometries.push(geometry);
 					}
 				});
 				return newGeometries;
