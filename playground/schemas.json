@@ -1787,11 +1787,6 @@
 						],
 						"unitGathering": {
 							"geometry": {
-								"type": "Point",
-								"coordinates": [
-									28.235094953851745,
-									64.24593714920141
-								]
 							}
 						}
 					},
