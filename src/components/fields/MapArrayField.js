@@ -21,6 +21,17 @@ const popupMappers = {
 	}
 };
 
+function parseGeometries(geometry) {
+	return ((geometry.type === "GeometryCollection") ? geometry.geometries : [geometry]).reduce((geometries, _geometry) => {
+		if (geometry.type === "GeometryCollection") {
+			geometries = [...geometries, ...parseGeometries(_geometry)];
+		} else {
+			geometries.push(geometry);
+		}
+		return geometries;
+	}, []);
+}
+
 @BaseComponent
 export default class MapArrayField extends Component {
 	static propTypes = {
@@ -85,9 +96,11 @@ export default class MapArrayField extends Component {
 		};
 
 		const item = formData ? formData[activeIdx] : undefined;
-		let defaultGeometries = (activeIdx !== undefined && item && item[geometryField] &&
-		item[geometryField].geometries) ?
-			item[geometryField].geometries : [];
+
+		let defaultGeometries = [];
+		if (activeIdx !== undefined && item && item[geometryField] && item[geometryField].type) {
+			defaultGeometries = parseGeometries(item[geometryField]);
+		}
 
 		const mapper  = geometryMapper ? this.geometryMappers[geometryMapper] : undefined;
 
@@ -269,8 +282,11 @@ export default class MapArrayField extends Component {
 				units.forEach((unit, i) => {
 					const {unitGathering: {geometry}} = unit;
 					if (geometry && hasData(geometry)) {
-						this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
-						newGeometries.push(geometry);
+						const geometriesParsed = parseGeometries(geometry);
+						geometriesParsed.forEach((geom, j) => {
+							this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length + j] = i;
+						});
+						newGeometries = [...newGeometries, ...geometriesParsed];
 					}
 				});
 				return newGeometries;
