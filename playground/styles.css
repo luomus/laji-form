@@ -192,7 +192,7 @@ body .laji-form {
 	height: 23px;
 }
 .laji-form .react-selectize.bootstrap3.root-node .react-selectize-control .react-selectize-search-field-and-selected-values {
-	min-height: 23px;
+	flex-wrap: nowrap;
 }
 
 .laji-form legend {
@@ -601,4 +601,15 @@ body .laji-form {
 }
 .laji-form .panel-body:not(.laji-map-dialog) {
 	padding: 8px;
+}
+
+.simple-value {
+	height: 23px;
+}
+
+.simple-value span {
+	height: 23px;
+	line-height: 23px;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }

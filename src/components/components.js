@@ -369,15 +369,15 @@ export function Label({label, help, children, id}) {
 	) : labelElem;
 }
 
-const NullTooltip = (
-	<div />
-)
+function NullTooltip(props) {
+	return <div />
+}
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 	return (
 		<OverlayTrigger placement={placement} trigger={trigger} key={`${id}-overlay`} overlay={
-			(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : NullTooltip
+			(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
 		}>
 			{children}
 		</OverlayTrigger>

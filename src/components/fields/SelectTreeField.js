@@ -129,7 +129,7 @@ export default class TreeField extends Component {
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<div onKeyDown={this.onKeyDown} ref="container"><SchemaField
+		return (<div onKeyDown={this.onKeyDown}><SchemaField
 			{...this.props}
 			{...this.state}
 			onChange={this.onChange}
