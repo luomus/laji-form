@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import { findDOMNode } from "react-dom";
 import { getUiOptions, getInnerUiSchema, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
@@ -116,18 +117,19 @@ export default class TreeField extends Component {
 	}
 
 	onKeyDown = (e) => {
+		const activeElem = document.activeElement;
 		if (e.key == "Enter" && !e.ctrlKey) {
 			e.preventDefault();
 			e.stopPropagation();
 			setTimeout(() => {
-				focusNextInput(this.props.formContext.formRef, document.activeElement, e.shiftKey);
+				focusNextInput(this.props.formContext.getFormRef(), document.activeElement, e.shiftKey);
 			}, 0);
 		}
 	}
 
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
-		return (<div onKeyDown={this.onKeyDown}><SchemaField
+		return (<div onKeyDown={this.onKeyDown} ref="container"><SchemaField
 			{...this.props}
 			{...this.state}
 			onChange={this.onChange}

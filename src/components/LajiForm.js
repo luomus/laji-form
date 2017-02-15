@@ -252,7 +252,7 @@ export default class LajiForm extends Component {
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext,
 						contextId: this.props.contextId,
-						formRef: this.refs.form
+						getFormRef: () => this.refs.form
 					}}
 				  validate={validate(this.props.validators)}
 				>

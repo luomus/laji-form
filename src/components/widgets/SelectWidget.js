@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { SimpleSelect, MultiSelect } from "react-selectize";
-import { Label, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Label } from "react-bootstrap";
+import { TooltipComponent } from "../components";
 
 import { asNumber } from "react-jsonschema-form/lib/utils";
 import { isEmptyString, getUiOptions } from "../../utils";
@@ -107,6 +108,7 @@ class SelectWidget extends Component {
 		};
 		const selectComponent = multiple ? (
 			<MultiSelect
+				key={`${id}-select`}
 				{...commonProps}
 				value={(value || []).map(val => this.state.valsToItems[val])}
 				onValuesChange={items => {
@@ -123,6 +125,7 @@ class SelectWidget extends Component {
 			/>
 		) : (
 			<SimpleSelect
+				key={`${id}-select`}
 				{...commonProps}
 				cancelKeyboardEventOnSelection={false}
 				value={this.state.valsToItems[value]}
@@ -130,16 +133,15 @@ class SelectWidget extends Component {
 					this.onChange(processValue(schema.type, item ? item.value : undefined));
 				}}
 			/>
-		)
+		);
 
-		return (multiple || isEmptyString(value)) ? selectComponent : (
-			<OverlayTrigger placement="top" trigger="hover" overlay={
-				<Tooltip id={`${id}-tooltip`}>{this.state.valsToItems[value].label}</Tooltip>
-			}>
+		return (
+			<TooltipComponent placement="top" trigger="hover"
+			                  tooltip={(multiple || isEmptyString(value)) ? undefined : this.state.valsToItems[value].label} >
 				<div>
-				{selectComponent}
+					{selectComponent}
 				</div>
-			</OverlayTrigger>
+			</TooltipComponent>
 		);
 	}
 }
