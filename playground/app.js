@@ -42,8 +42,8 @@ if (!USE_LOCAL_SCHEMAS) {
 							return response.json();
 						})
 	         .then(props => {
-							const {schema, uiSchema, validators} = props;
-							const propsToPass = {schema, uiSchema};
+							const {schema, uiSchema, validators, uiSchemaContext} = props;
+							const propsToPass = {schema, uiSchema, uiSchemaContext};
 							if (!Array.isArray(validators)) propsToPass.validators = validators;
 							lajiForm.setState(propsToPass)
 					 });

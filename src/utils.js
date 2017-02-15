@@ -177,3 +177,19 @@ export function focusNextInput(formReactNode, inputElem, reverseDirection) {
 		}
 	}
 }
+
+export function getNestedTailUiSchema(uiSchema) {
+	while (uiSchema.uiSchema) {
+		uiSchema = uiSchema.uiSchema;
+	}
+	return uiSchema;
+}
+
+export function getNestedUiFieldsList(uiSchema) {
+	const list = [];
+	while (uiSchema.uiSchema && uiSchema.uiSchema["ui:field"]) {
+		list.push(uiSchema.uiSchema["ui:field"]);
+		uiSchema = uiSchema.uiSchema;
+	}
+	return list;
+}

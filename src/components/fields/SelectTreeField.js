@@ -131,7 +131,6 @@ export default class TreeField extends Component {
 			{...this.props}
 			{...this.state}
 			onChange={this.onChange}
-			name=""
 		/></div>);
 	}
 }

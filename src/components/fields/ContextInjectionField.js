@@ -26,7 +26,7 @@ export default class ContextInjectionField extends Component {
 				pointer[path] = {};
 				return pointer[path]
 			}, updateObject);
-			tail[last] = {$set: parseJSONPointer(this.props.formContext.uiSchemaContext, injections[injectionPath])};
+			tail[last] = {$set: parseJSONPointer(props.formContext.uiSchemaContext, injections[injectionPath])};
 			uiSchema = update(uiSchema, updateObject);
 		}
 
