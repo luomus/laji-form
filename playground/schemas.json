@@ -1668,6 +1668,119 @@
 	},
 	"uiSchemaContext": {
 		"creator": "MA.308",
+		"substrateClassification": {
+			"tree": {
+				"children": {
+					"MY.substrateGround": {
+						"children": {
+							"MY.substrateGroundLowShrubs": {},
+							"MY.substrateGroundLichens": {},
+							"MY.substrateGroundHerbs": {},
+							"MY.substrateGroundMosses": {},
+							"MY.substrateGroundSphagnum": {},
+							"MY.substrateGroundGrassy": {},
+							"MY.substrateGroundNeedleLitter": {},
+							"MY.substrateGroundLeafLitter": {},
+							"MY.substrateGroundMixedLitter": {},
+							"MY.substrateGroundSandySoil": {},
+							"MY.substrateGroundGravelSoil": {},
+							"MY.substrateGroundClayeySoil": {},
+							"MY.substrateGroundHeathHumus": {},
+							"MY.substrateGroundMull": {},
+							"MY.substrateGroundPeat": {},
+							"MY.substrateGroundBurnedSoil": {}
+						},
+						"order": [
+							"MY.substrateGroundLowShrubs",
+							"MY.substrateGroundLichens",
+							"MY.substrateGroundHerbs",
+							"MY.substrateGroundMosses",
+							"MY.substrateGroundSphagnum",
+							"MY.substrateGroundGrassy",
+							"MY.substrateGroundNeedleLitter",
+							"MY.substrateGroundLeafLitter",
+							"MY.substrateGroundMixedLitter",
+							"MY.substrateGroundSandySoil",
+							"MY.substrateGroundGravelSoil",
+							"MY.substrateGroundClayeySoil",
+							"MY.substrateGroundHeathHumus",
+							"MY.substrateGroundMull",
+							"MY.substrateGroundPeat",
+							"MY.substrateGroundBurnedSoil"
+						]
+					},
+					"MY.substrateLivingTree": {
+						"children": {
+							"MY.substrateLivingTreeTrunk": {},
+							"MY.substrateLivingTreeBase": {},
+							"MY.substrateLivingTreeRoots": {},
+							"MY.substrateLivingTreeBranch": {},
+							"MY.substrateLivingTreeDeadBranch": {},
+							"MY.substrateLivingTreeDeadLimb": {},
+							"MY.substrateLivingTreeLeaf": {},
+							"MY.substrateLivingTreeNeedle": {}
+						},
+						"order": [
+							"MY.substrateLivingTreeTrunk",
+							"MY.substrateLivingTreeBase",
+							"MY.substrateLivingTreeRoots",
+							"MY.substrateLivingTreeBranch",
+							"MY.substrateLivingTreeDeadBranch",
+							"MY.substrateLivingTreeDeadLimb",
+							"MY.substrateLivingTreeLeaf",
+							"MY.substrateLivingTreeNeedle"
+						]
+					},
+					"MY.substrateDeadWood": {
+						"children": {
+							"MY.substrateDeadWoodStandingTreeTrunk": {},
+							"MY.substrateDeadWoodStandingTreeBranch": {},
+							"MY.substrateDeadWoodStandingTreeBase": {},
+							"MY.substrateDeadWoodFallenTreeTrunk": {},
+							"MY.substrateDeadWoodFallenTreeBranch": {},
+							"MY.substrateDeadWoodUpturnedRoots": {},
+							"MY.substrateDeadWoodDeadRoots": {},
+							"MY.substrateDeadWoodStump": {},
+							"MY.substrateDeadWoodFallenBranch": {},
+							"MY.substrateDeadWoodCone": {},
+							"MY.substrateDeadWoodTwigs": {},
+							"MY.substrateDeadWoodBark": {},
+							"MY.substrateDeadWoodSawdust": {},
+							"MY.substrateDeadWoodPieceOfWood": {},
+							"MY.substrateDeadWoodLoggingResidue": {},
+							"MY.substrateDeadWoodLog": {},
+							"MY.substrateDeadWoodDriftwood": {},
+							"MY.substrateDeadWoodConstructionWood": {}
+						},
+						"order": [
+							"MY.substrateDeadWoodStandingTreeTrunk",
+							"MY.substrateDeadWoodStandingTreeBranch",
+							"MY.substrateDeadWoodStandingTreeBase",
+							"MY.substrateDeadWoodFallenTreeTrunk",
+							"MY.substrateDeadWoodFallenTreeBranch",
+							"MY.substrateDeadWoodUpturnedRoots",
+							"MY.substrateDeadWoodDeadRoots",
+							"MY.substrateDeadWoodStump",
+							"MY.substrateDeadWoodFallenBranch",
+							"MY.substrateDeadWoodCone",
+							"MY.substrateDeadWoodTwigs",
+							"MY.substrateDeadWoodBark",
+							"MY.substrateDeadWoodSawdust",
+							"MY.substrateDeadWoodPieceOfWood",
+							"MY.substrateDeadWoodLoggingResidue",
+							"MY.substrateDeadWoodLog",
+							"MY.substrateDeadWoodDriftwood",
+							"MY.substrateDeadWoodConstructionWood"
+						]
+					}
+				},
+				"order": [
+					"MY.substrateGround",
+					"MY.substrateLivingTree",
+					"MY.substrateDeadWood"
+				]
+			}
+		},
 		"habitat": {
 			"tree": {
 				"children": {
