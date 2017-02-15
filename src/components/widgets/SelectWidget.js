@@ -136,7 +136,7 @@ class SelectWidget extends Component {
 		);
 
 		return (
-			<TooltipComponent placement="top"
+			<TooltipComponent placement="top" trigger="hover"
 			                  tooltip={(multiple || isEmptyString(value)) ? undefined : this.state.valsToItems[value].label} >
 				<div>
 					{selectComponent}
