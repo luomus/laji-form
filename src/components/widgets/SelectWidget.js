@@ -26,7 +26,7 @@ function processValue({type, items}, value) {
 @BaseComponent
 class SelectWidget extends Component {
 
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		let {options: {enumOptions}} = props;
 
 		function sort(enumOptions, order) {
@@ -73,7 +73,7 @@ class SelectWidget extends Component {
 		};
 	}
 
-	onChange = (value) => {
+	onChange(value) {
 		this.props.onChange(value, !!"force");
 	}
 
@@ -81,7 +81,6 @@ class SelectWidget extends Component {
 		const {
 			schema,
 			id,
-			value,
 			required,
 			disabled,
 			multiple,
@@ -91,6 +90,7 @@ class SelectWidget extends Component {
 		} = this.props;
 		const {enumOptions} = this.state;
 
+		const value = multiple ? this.props.value.filter(value => value !== undefined) : this.props.value;
 
 		const commonProps = {
 			theme: "bootstrap3",
@@ -106,19 +106,20 @@ class SelectWidget extends Component {
 			renderNoResultsFound: () => <span className="text-muted">{formContext.translations.NoResults}</span>,
 			...(selectProps || {})
 		};
+
 		const selectComponent = multiple ? (
 			<MultiSelect
 				key={`${id}-select`}
 				{...commonProps}
-				value={(value || []).map(val => this.state.valsToItems[val])}
+				values={(value || []).map(val => this.state.valsToItems[val])}
 				onValuesChange={items => {
-					this.onChange(processValue(schema.type, (items || []).map(({val}) => val)));
+					this.onChange(processValue(schema.type, (items || []).map(({value}) => value)));
 				}}
 				renderValue={!multiple ? undefined : item => (
 						<Label bsStyle="primary">
 							<span>{item.label}</span>
 							<span className="multiselect-close" onClick={() => {
-								this.onChange(processValue(schema.type, value.filter(val => val !== item.value)));
+								this.onChange(processValue(schema.type, this.props.value.filter(val => val !== item.value)));
 							}}>×</span>
 						</Label>
 					)}

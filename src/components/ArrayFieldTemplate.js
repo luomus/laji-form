@@ -34,6 +34,7 @@ export function getButtons(buttons, props) {
 		if (fnName === "add") addBtnAdded = true;
 		if (fnName !== "add" || props.canAdd) return _button;
 	}
+
 	let _buttons = buttons.map(handleButton).filter(btn => btn);
 
 	if (!addBtnAdded && props.canAdd) _buttons = [handleButton({fn: "add"}), ..._buttons];

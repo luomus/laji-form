@@ -127,6 +127,14 @@ body .laji-form {
 }
 .simple-value {
 	word-break: break-word;
+	height: 23px;
+}
+
+.simple-value span {
+	height: 23px;
+	line-height: 23px;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .laji-form .form-group {
@@ -191,7 +199,10 @@ body .laji-form {
 	margin: 0px;
 	height: 23px;
 }
-.laji-form .react-selectize.bootstrap3.root-node .react-selectize-control .react-selectize-search-field-and-selected-values {
+.laji-form .react-selectize .react-selectize-control .react-selectize-search-field-and-selected-values {
+	min-height: 23px;
+}
+.laji-form .react-selectize:not(.multi-select) .react-selectize-control .react-selectize-search-field-and-selected-values {
 	flex-wrap: nowrap;
 }
 
@@ -603,13 +614,3 @@ body .laji-form {
 	padding: 8px;
 }
 
-.simple-value {
-	height: 23px;
-}
-
-.simple-value span {
-	height: 23px;
-	line-height: 23px;
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
