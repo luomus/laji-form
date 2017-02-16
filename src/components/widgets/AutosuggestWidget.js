@@ -276,7 +276,7 @@ export default class AutoSuggestWidget extends Component {
 	onSuggestionSelected = (e, {suggestion, method}) => {
 		e.preventDefault();
 		if (method === "click") {
-			focusNextInput(this.props.formContext.formRef, document.getElementById(this.props.id));
+			focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
 		}
 		this.selectSuggestion(suggestion);
 		this.setState({focused: false});
