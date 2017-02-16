@@ -24,7 +24,7 @@ const lajiForm = new LajiForm({
 		uiSchemaContext: schemas.uiSchemaContext,
 		formData: schemas.formData
 	}),
-	// formData: {gatheringEvent: {leg: ["MA.308"]}},
+	formData: {gatheringEvent: {leg: ["MA.308"]}},
 	onSubmit,
 	apiClient,
 	lang,
@@ -37,7 +37,7 @@ const lajiForm = new LajiForm({
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.652", {lang, format: "schema"})
+	apiClient.fetch("/forms/JX.519", {lang, format: "schema"})
 						.then(response => {
 							return response.json();
 						})

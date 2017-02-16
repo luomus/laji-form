@@ -35,12 +35,27 @@ export default class _ArrayField extends Component {
 		if (props.uiSchema.items && props.uiSchema.items["ui:field"]) {
 			schema = {...schema, uniqueItems: false};
 		}
+
+		const that = this;
+		function rulesSatisfied(btn) {
+			return Object.keys(btn.rules || {}).every(ruleName => {
+				const ruleVal = btn.rules[ruleName];
+				if (ruleName === "minLength") {
+					return that.state.formData.length >= ruleVal;
+				}
+			})
+		}
+
 		const buttons = (getUiOptions(props.uiSchema).buttons || []).map(button => {
 			const fnName = button.fn;
-			return (this.buttonDefinitions[fnName]) ?
-				{...this.buttonDefinitions[fnName], ...button , fn: this.buttonDefinitions[fnName].fn, fnName} :
-				button;
-		});
+			if (this.buttonDefinitions[fnName]) {
+				return rulesSatisfied(this.buttonDefinitions[fnName]) ?
+					{...this.buttonDefinitions[fnName], ...button , fn: this.buttonDefinitions[fnName].fn, fnName} :
+					null;
+			} else {
+				return button;
+			}
+		}).filter(btn => btn);
 
 		return <ArrayField
 			{...props}
@@ -59,7 +74,10 @@ export default class _ArrayField extends Component {
 	buttonDefinitions = {
 		copy: {
 			glyph: "duplicate",
-			fn: e => this.onCopy
+			fn: e => this.onCopy,
+			rules: {
+				minLength:  1
+			}
 		}
 	}
 
@@ -73,7 +91,7 @@ export default class _ArrayField extends Component {
 		const fields = Object.keys(this.props.schema.items.properties).filter(fieldsFilter);
 		const nestedFilters = filter.filter(f => f.includes("/"));
 
-		const {formData} = this.props;
+		const {formData} = this.state;
 		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry);
 
 		const lastIdx = formData.length - 1;
@@ -118,8 +136,8 @@ export default class _ArrayField extends Component {
 			}
 		});
 
-		this.props.onChange([
-			...this.props.formData,
+		this.onChange([
+			...this.state.formData,
 			copyItem
 		]);
 	}
