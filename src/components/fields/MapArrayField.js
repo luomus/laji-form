@@ -104,19 +104,18 @@ export default class MapArrayField extends Component {
 			defaultGeometries = parseGeometries(item[geometryField]);
 		}
 
-		const mapper  = geometryMapper ? this.geometryMappers[geometryMapper] : undefined;
+		const mapper = geometryMapper ? this.geometryMappers[geometryMapper] : undefined;
 
-		const geometries = [
-			...defaultGeometries,
-			...(mapper ? (mapper.getData(this.state.activeIdx, formData, defaultGeometries) || []) : [])
-		];
+		const geometries = (mapper ?
+				mapper.getData() : defaultGeometries)
+			|| [];
 
 		const colTypes = ["lg", "md", "sm", "xs"];
 		const mapSizes = options.mapSizes ?
 			options.mapSizes :
 			colTypes.reduce((sizes, size) => {
 				sizes[size] = 6;
-				return sizes
+				return sizes;
 			}, {});
 
 		const schemaSizes = colTypes.reduce((sizes, size) => {
@@ -269,11 +268,20 @@ export default class MapArrayField extends Component {
 
 	geometryMappers = {
 		units: {
-			getData: (idx, formData, geometries) => {
+			getData: () => {
+				const {formData} = this.props;
+				const idx = this.state.activeIdx;
 				const {geometryField} = getUiOptions(this.props.uiSchema);
 				if (!formData) return;
+
 				const item = formData[idx];
 				this._context.featureIdxsToItemIdxs = {};
+
+				let geometries = [];
+				if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
+					geometries = parseGeometries(item[geometryField]);
+				}
+
 				let newGeometries = [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
@@ -283,7 +291,7 @@ export default class MapArrayField extends Component {
 						newGeometries.push(geometry);
 					}
 				});
-				return newGeometries;
+				return [...geometries, ...newGeometries];
 			},
 			onRemove: ({idxs}) => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);
@@ -293,29 +301,34 @@ export default class MapArrayField extends Component {
 
 				const unitIdxs = idxs.filter(idx => idx >= geometriesLength).map(idx => this._context.featureIdxsToItemIdxs[idx]);
 
-				const updateObject = {
-					[this.state.activeIdx]: {
-						units: unitIdxs.reduce((obj, idx) => {
-							obj[idx] = {
-								unitGathering: {
-									geometry: {
-										$set: getDefaultFormState(
-											this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
-											undefined,
-											this.props.registry.definitions
-										)
-									}
+				let splices = [];
+				idxs.filter(idx => idx < geometriesLength).sort().reverse().forEach((idx) => {
+					splices.push([idx, 1]);
+				});
+
+				const item = this.props.formData[this.state.activeIdx];
+				let updateObject = {[this.state.activeIdx]: {
+					[geometryField]: item && item[geometryField] && item[geometryField].type === "GeometryCollection" ?
+						{geometries: {$splice: splices}} : {$set: undefined},
+					units: unitIdxs.reduce((obj, idx) => {
+						obj[idx] = {
+							unitGathering: {
+								geometry: {
+									$set: getDefaultFormState(
+										this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
+										undefined,
+										this.props.registry.definitions
+									)
 								}
-							};
-							return obj;
-						}, {})
-					}
-				};
+							}
+						};
+						return obj;
+					}, {})
+				}};
+
 				this.props.onChange(update(formData,
 					updateObject
 				));
-
-				this.onRemove({idxs: idxs.filter(idx => idx < geometriesLength)});
 			},
 			onEdited: ({features}) => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);

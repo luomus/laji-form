@@ -259,7 +259,7 @@ export default class LajiForm extends Component {
 				<div>
 					{this.props.children}
 					{(!this.props.hasOwnProperty("renderSubmit") || this.props.renderSubmit) ?
-						(<Button type="submit">{translations.Submit}</Button>) :
+						(<Button id="submit" type="submit">{translations.Submit}</Button>) :
 						null}
 					</div>
 			</Form>

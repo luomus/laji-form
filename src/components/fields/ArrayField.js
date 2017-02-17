@@ -26,7 +26,10 @@ export default class _ArrayField extends Component {
 	}
 
 	getStateFromProps(props) {
-		return {formData: this._context.touched ? props.formData : this.state.formData};
+		return {
+			formData: (this._context.touched || (props.formData && props.formData.length)) ?
+				props.formData : this.state.formData
+		};
 	}
 
 	render() {
@@ -43,7 +46,7 @@ export default class _ArrayField extends Component {
 				if (ruleName === "minLength") {
 					return that.state.formData.length >= ruleVal;
 				}
-			})
+			});
 		}
 
 		const buttons = (getUiOptions(props.uiSchema).buttons || []).map(button => {
