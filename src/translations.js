@@ -197,7 +197,7 @@
 	invalidFileOrTooLarge: {
 		fi: "Kuvatiedosto oli virheellinen tai liian iso.",
 		en: "The file was invalid or too large.",
-		sv: "Filen var ogiltig eller alltför stor."
+		sv: "Filen var ogiltig eller för stor."
 	},
 	insufficientSpace: {
 		fi: "Kuvapalvelin ei pysty käsittelemään latauspyyntöä riittämättömän levytilan vuoksi.",
@@ -205,7 +205,7 @@
 		sv: "Bildservern kan inte bearbeta uppladdnings begäran på grund av otillräckligt utrymme."
 	},
 	filesLengthDiffer: {
-		fi: "Kaikki kuvat eivät tallettuneet. Tarkista kuvat.",
+		fi: "Kaikki kuvat eivät tallentuneet. Tarkista kuvat.",
 		en: "All the images weren't saved. Please verify the images.",
 		sv: "Alla bilder sparades inte. Vänligen kontrollera bilderna."
 	},
