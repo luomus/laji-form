@@ -99,6 +99,8 @@ class SelectWidget extends Component {
 			disabled,
 			autofocus,
 			firstOptionIndexToHighlight: (index, options, val, search) => !val || isEmptyString(val.value) ? -1 : index,
+			highlightedUid: this.state.uid,
+			onHighlightedUidChange: (uid) => this.setState({uid}),
 			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),
 			hideResetButton: isEmptyString(value),
 			renderToggleButton: () => <span className="caret"/>,
@@ -113,7 +115,9 @@ class SelectWidget extends Component {
 				{...commonProps}
 				values={(value || []).map(val => this.state.valsToItems[val])}
 				onValuesChange={items => {
-					this.onChange(processValue(schema.type, (items || []).map(({value}) => value)));
+					this.setState({uid: undefined},
+						() => this.onChange(processValue(schema.type, (items || []).map(({value}) => value)))
+					);
 				}}
 				renderValue={!multiple ? undefined : item => (
 						<Label bsStyle="primary">
