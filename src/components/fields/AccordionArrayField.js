@@ -49,7 +49,7 @@ const headerFormatters = {
 			const map = new Context("MAP").map;
 			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
 
-			const unitGeometries = (item.units || [])
+			const unitGeometries = [...(item && item.units ? item.units : [])]
 				.filter(unit => unit.unitGathering && hasData(unit.unitGathering.geometry))
 				.map(unit => unit.unitGathering.geometry);
 
@@ -203,8 +203,8 @@ export default class AccordionArrayField extends Component {
 			<div className="laji-map-accordion-header" onClick={() => {
 					this.onActiveChange(idx);
 				}}
-				onMouseEnter={() => formatter.onMouseEnter(this, idx)}
-				onMouseLeave={() => formatter.onMouseLeave(this, idx)} >
+				onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx)}}
+				onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx)}} >
 				<div className="panel-title">
 					{headerText}
 					<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem}}

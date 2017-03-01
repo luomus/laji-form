@@ -191,7 +191,7 @@
 			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
 			"ui:options": {
 				"geometryField": "geometry",
-				"geometryMapper": "units",
+				"geometryMapper": "lineTransect",
 				"topOffset": 50,
 				"bottomOffset": 50,
 				"mapSizes": {
@@ -216,7 +216,6 @@
 				"ui:field": "AccordionArrayField",
 				"ui:options": {
 					"addTxt": "Lisää paikka",
-					"headerFormatter": "units",
 					"popupFields": [
 						{
 							"field": "units",
@@ -1605,6 +1604,11 @@
 						],
 						"unitGathering": {
 							"geometry": {
+								"type": "Point",
+								"coordinates": [
+									28.225094953851745,
+									63.24593714920141
+								]
 							}
 						}
 					},

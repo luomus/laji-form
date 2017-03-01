@@ -44,7 +44,7 @@ export default class _ArrayField extends Component {
 			return Object.keys(btn.rules || {}).every(ruleName => {
 				const ruleVal = btn.rules[ruleName];
 				if (ruleName === "minLength") {
-					return that.state.formData.length >= ruleVal;
+					return (that.state.formData || []).length >= ruleVal;
 				}
 			});
 		}

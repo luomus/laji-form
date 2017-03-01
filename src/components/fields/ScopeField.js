@@ -52,12 +52,22 @@ const buttonSettings = {
 		let active = false;
 		function onClick() {
 			active = true;
-
+			const {translations} = that.props.formContext;
 			const {map} = mapContext;
 			if (!map) return;
 
 			mapContext.grabFocus();
-			map.setOptions({
+
+			const onChange = map.draw.onChange;
+
+			let triggerLayer = map.triggerDrawing("marker");
+
+			mapContext.showPanel({
+				panelButtonContent: translations.Cancel,
+				onPanelButtonClick: close,
+				buttonBsStyle: "danger"
+			});
+			mapContext.setMapState({
 				draw: {
 					...map.draw,
 					marker: true,
@@ -65,26 +75,38 @@ const buttonSettings = {
 					rectangle: false,
 					polygon: false,
 					circle: false
+				},
+				onChange: events => {
+					for (let event of events) {
+						const {type} = event;
+						switch (type) {
+							case "create":
+								that.props.onChange(update(
+									that.props.formData,
+									{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
+								));
+								close();
+								break;
+							case "delete":
+							case "edit":
+								onChange([event]);
+						}
+					}
 				}
+			}, () => {
+				mapContext.setOnUpdateMap(() => {
+					const layer = getLayer();
+					if (layer) {
+						map.updateLayerStyle(layer, {opacity: 0.7});
+						map.map.closePopup();
+						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
+					}
+				})
 			});
 
-			const {translations} = that.props.formContext;
-
-			const layer = getLayer();
-			if (layer) {
-				map.updateLayerStyle(layer, {opacity: 0.7});
-				map.map.closePopup();
-				layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-			}
-
-			const onChange = map.draw.onChange;
-
-			let triggerLayer = undefined;
-
 			function close() {
-				mapContext.hidePanel();
-				mapContext.setOnChange(onChange);
-				map.setOptions({
+				mapContext.setMapState({
+					onChange,
 					draw: {
 						...map.draw,
 						marker: true,
@@ -93,41 +115,25 @@ const buttonSettings = {
 						polygon: true,
 						circle: true
 					}
-				});
-				mapContext.releaseFocus();
-				triggerLayer.disable();
-
-				if (layer) {
-					map.updateLayerStyle(layer, {opacity: 1});
-					layer.unbindTooltip();
-				}
-				active = false;
-			}
-
-			triggerLayer = map.triggerDrawing("marker");
-			mapContext.showPanel(null, translations.Cancel, close);
-			mapContext.setOnChange(events => {
-				for (let event of events) {
-					const {type} = event;
-					switch (type) {
-						case "create":
-							that.props.onChange(update(
-								that.props.formData,
-								{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
-							));
-							close();
-							break;
-						case "delete":
-						case "edit":
-							onChange([event]);
+				}, () => {
+					mapContext.setOnUpdateMap(undefined);
+					mapContext.hidePanel();
+					mapContext.releaseFocus();
+					triggerLayer.disable();
+					const layer = getLayer();
+					if (layer) {
+						map.updateLayerStyle(layer, {opacity: 1});
+						layer.unbindTooltip();
 					}
-				}
-			});
+					active = false;
+				});
+			}
 		}
 
+		let layer = undefined;
 		function onMouseEnter() {
 			const {map} = mapContext;
-			const layer = getLayer();
+			layer = getLayer();
 			if (!layer) return;
 
 			let latlng = undefined;
@@ -144,12 +150,7 @@ const buttonSettings = {
 		}
 
 		function onMouseLeave() {
-			if (active) return;
-
-			const map = new Context("MAP").map;
-			const layer = getLayer();
-			if (!layer) return;
-			map.setDraw(map.draw);
+			if (active || !layer) return;
 			layer.fire("mouseout");
 		}
 
