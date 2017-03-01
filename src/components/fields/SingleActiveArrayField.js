@@ -213,9 +213,10 @@ export default class SingleActiveArrayField extends Component {
 			if (activeIdx === undefined) activeIdx = -1;
 
 			const title = this.props.schema.title;
+			const {translations} =this.props.formContext;
 
 			const options = getUiOptions(this.props.uiSchema);
-			const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
+			const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : translations.Add;
 
 			const that = this;
 			function PaginationArray(props) {
@@ -233,12 +234,12 @@ export default class SingleActiveArrayField extends Component {
 									<Pager.Item previous href="#"
 															disabled={activeIdx === 0}
 															onClick={() => that.onActiveChange(activeIdx - 1)}>
-										&larr; Edellinen</Pager.Item>
+										&larr; {translations.Previous}</Pager.Item>
 									{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
 									<Pager.Item next href="#"
 															disabled={activeIdx === that.props.formData.length - 1}
 															onClick={() => that.onActiveChange(activeIdx + 1)}>
-										Seuraava  &rarr;</Pager.Item>
+										{translations.Next}  &rarr;</Pager.Item>
 								</Pager>
 							</div>
 						}>
