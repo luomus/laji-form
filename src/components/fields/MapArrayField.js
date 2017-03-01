@@ -7,7 +7,7 @@ import { segmentsToGeometry, geometryToLinesAsSegments } from "laji-map/lib/util
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix, Alert } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols } from "../../utils";
 import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -100,15 +100,9 @@ export default class MapArrayField extends Component {
 
 		const mapOptions = this.geometryMappers[geometryMapper].getOptions(options);
 
-		const colTypes = ["lg", "md", "sm", "xs"];
-		const mapSizes = options.mapSizes ?
-			options.mapSizes :
-			colTypes.reduce((sizes, size) => {
-				sizes[size] = 6;
-				return sizes;
-			}, {});
+		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
-		const schemaSizes = colTypes.reduce((sizes, size) => {
+		const schemaSizes = ["lg", "md", "sm", "xs"].reduce((sizes, size) => {
 			sizes[size] = 12 - mapSizes[size];
 			return sizes
 		}, {});
@@ -158,60 +152,6 @@ export default class MapArrayField extends Component {
 			</div>
 		);
 	}
-
-	// onMapChange = (events) => {
-	// 	const {geometryMapper} = getUiOptions(this.props.uiSchema);
-	// 	const mapper = geometryMapper ? this.geometryMappers[geometryMapper] : undefined;
-	//
-	// 	events.forEach(e => {
-	// 		switch (e.type) {
-	// 			case "create":
-	// 				(mapper && mapper.onAdd) ? mapper.onAdd(e) : this.onAdd(e);
-	// 				break;
-	// 			case "delete":
-	// 				(mapper && mapper.onRemove) ? mapper.onRemove(e) : this.onRemove(e);
-	// 				break;
-	// 			case "edit":
-	// 				(mapper && mapper.onEdited) ? mapper.onEdited(e) : this.onEdited(e);
-	// 				break;
-	// 		}
-	// 	});
-	// }
-
-	// onAdd = ({feature: {geometry}}) => {
-	// 	const formData = this.props.formData ||
-	// 		[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
-	// 	const {geometryField} = getUiOptions(this.props.uiSchema);
-	//
-	// 	const itemFormData = formData[this.state.activeIdx];
-	// 	this.props.onChange(update(formData,
-	// 		{[this.state.activeIdx]: {$merge: {[geometryField]: {type: "GeometryCollection", geometries: [
-	// 			...parseGeometries(itemFormData[geometryField]), geometry
-	// 		]}}}}));
-	// }
-
-	// onRemove = ({idxs}) => {
-	// 	const {geometryField} = getUiOptions(this.props.uiSchema);
-	// 	let splices = [];
-	// 	idxs.sort().reverse().forEach((idx) => {
-	// 		splices.push([idx, 1]);
-	// 	});
-	// 	const item = this.props.formData[this.state.activeIdx];
-	// 	this.props.onChange(update(this.props.formData,
-	// 		{[this.state.activeIdx]: {[geometryField]: item && item.type === "GeometryCollection" ?
-	// 			{geometries: {$splice: splices}} : {$set: undefined}}}));
-	// }
-
-	// onEdited = ({features}) => {
-	// 	const {geometryField} = getUiOptions(this.props.uiSchema);
-	// 	this.props.onChange(update(this.props.formData,
-	// 		{[this.state.activeIdx]: {[geometryField]: {
-	// 			geometries: Object.keys(features).reduce((obj, idx) => {
-	// 				obj[idx] = {$set: features[idx].geometry};
-	// 				return obj;
-	// 			}, {})
-	// 		}}}));
-	// }
 
 	geometryMappers = {
 		units: {

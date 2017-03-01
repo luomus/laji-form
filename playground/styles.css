@@ -577,8 +577,9 @@ body .laji-form {
 	cursor: pointer;
 	color: rgb(51, 51, 51);
 }
-.laji-form .panel-group .panel-heading {
+.laji-form .panel-heading, .laji-form .pager {
 	padding: 0;
+	margin: 0;
 }
 .laji-form button.laji-map-accordion-header {
 	color: white;
@@ -594,6 +595,11 @@ body .laji-form {
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
+}
+.laji-form .pager .panel-title {
+	display: -webkit-inline-flex;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
 }
 .laji-form .laji-map-accordion-header .panel-title > *:first-child {
 	-webkit-flex-grow: 1;

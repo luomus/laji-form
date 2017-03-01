@@ -193,3 +193,10 @@ export function getNestedUiFieldsList(uiSchema) {
 	}
 	return list;
 }
+
+export function getBootstrapCols(width) {
+	return ["lg", "md", "sm", "xs"].reduce((o, c) => {
+		o[c] = width;
+		return o;
+	}, {});
+}

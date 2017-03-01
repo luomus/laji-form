@@ -83,8 +83,9 @@ const fields = importLocalComponents("fields", [
 	"ImageArrayField",
 	"SplitField",
 	"FlatField",
-	"AccordionArrayField",
-	"SingleItemArrayField"
+	"SingleActiveArrayField",
+	"SingleItemArrayField",
+	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
 
 const widgets = importLocalComponents("widgets", [
@@ -103,10 +104,14 @@ const widgets = importLocalComponents("widgets", [
 function importLocalComponents(dir, fieldNames) {
 	return fieldNames.reduce((fields, field) => {
 		if (typeof field === "string") {
-			fields[field] = require(`./${dir}/${field}`).default
+			fields[field] = require(`./${dir}/${field}`).default;
 		} else {
 			const fieldName = Object.keys(field)[0];
-			fields[fieldName] = field[fieldName]
+			if (typeof field[fieldName] === "string") {
+				fields[fieldName] = require(`./${dir}/${field[fieldName]}`).default;
+			} else {
+				fields[fieldName] = field[fieldName]
+			}
 		}
 		return fields;
 	}, {});

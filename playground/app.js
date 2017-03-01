@@ -8,7 +8,7 @@ import { geometryToLinesAsSegments } from "laji-map/lib/utils";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = true;
+const USE_LOCAL_SCHEMAS = app;
 
 const log = (type) => console.log.bind(console, type);
 

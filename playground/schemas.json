@@ -213,9 +213,10 @@
 				]
 			},
 			"uiSchema": {
-				"ui:field": "AccordionArrayField",
+				"ui:field": "SingleActiveArrayField",
 				"ui:options": {
-					"addTxt": "Lisää paikka",
+					"renderer": "pager",
+					"canAdd": false,
 					"popupFields": [
 						{
 							"field": "units",

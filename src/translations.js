@@ -213,5 +213,15 @@
 		fi: "Virhe",
 		en: "Error",
 		sv: "Fel"
-	}
+	},
+	next: {
+		fi: "Seuraava",
+		en: "Next",
+		sv: "Nästa"
+	},
+	previous: {
+		fi: "Edellinen",
+		en: "Previous",
+		sv: "Tidigare"
+	},
 }

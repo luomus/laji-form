@@ -6,6 +6,7 @@ import Context from "../Context";
 import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID } from "../utils";
 
 function onAdd(e, props, idToFocus, delayFocus) {
+	if (getUiOptions(props.uiSchema).canAdd === false) return;
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 	new Context(props.formContext.contextId).delayFocus = delayFocus;
 	props.onAddClick(e);
@@ -32,7 +33,7 @@ export function getButtons(buttons, props) {
 		if (!_button.fnName) _button.fnName = fnName;
 		if (definition) _button.fn = buttonDefinitions[fnName].fn;
 		if (fnName === "add") addBtnAdded = true;
-		if (fnName !== "add" || props.canAdd) return _button;
+		if (!(fnName === "add" && (!props.canAdd || getUiOptions(props.uiSchema).canAdd === false))) return _button;
 	}
 
 	let _buttons = buttons.map(handleButton).filter(btn => btn);
@@ -97,7 +98,7 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) => {
+export function onContainerKeyDown(props, insertCallforward, navigateCallForward, delayFocus) { return (e) => {
 	if (!e.ctrlKey && e.key === "Insert") {
 
 		function onInsert() {
@@ -106,16 +107,17 @@ export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) =
 
 		e.stopPropagation();
 
-		if (callbacker) {
+		const canAdd = props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
+
+		if (canAdd && insertCallforward) {
 			e.persist();
-			callbacker(() => {
+			insertCallforward(() => {
 				onInsert();
 			})
-		} else {
+		} else if (canAdd) {
 			onInsert();
 		}
 	} else if (e.ctrlKey && e.key === "Enter") {
-
 		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeArrayItems = nearestSchemaElem.id.match(/_\d/g);
@@ -123,14 +125,26 @@ export function onContainerKeyDown(props, callbacker, delayFocus) { return (e) =
 
 		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
 		const amount = e.shiftKey ? -1 : 1;
-		const elem = getSchemaElementById(`${props.idSchema.$id}_${currentIdx + amount}`);
 
-		if (elem) {
-			const tabbableFields = getTabbableFields(getSchemaElementById(`${props.idSchema.$id}_${currentIdx + amount}`))
-			if (tabbableFields && tabbableFields.length) {
-				tabbableFields[0].focus();
-				e.stopPropagation();
+		function focusFirstOf(idx) {
+			const elem = getSchemaElementById(`${props.idSchema.$id}_${idx}`);
+
+			if (elem) {
+				const tabbableFields = getTabbableFields(getSchemaElementById(`${props.idSchema.$id}_${idx}`))
+				if (tabbableFields && tabbableFields.length) {
+					tabbableFields[0].focus();
+					e.stopPropagation();
+				}
 			}
+		}
+		const nextIdx = currentIdx + amount;
+		if  (navigateCallForward) {
+			e.persist();
+			navigateCallForward(() => {
+				focusFirstOf(nextIdx);
+			}, nextIdx)
+		} else {
+			focusFirstOf(nextIdx);
 		}
 	}
 }}
