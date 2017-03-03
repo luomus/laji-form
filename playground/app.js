@@ -3,7 +3,7 @@ import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
 
-import { geometryToLinesAsSegments } from "laji-map/lib/utils";
+import { geoJSONLineToLatLngSegmentArrays } from "laji-map/lib/utils";
 
 import "../src/styles";
 import "./styles.css";
@@ -176,7 +176,7 @@ const lineTransect =
 		}
 	};
 
-const lineTransectGeometries = geometryToLinesAsSegments(lineTransect.geometry)
+const lineTransectGeometries = geoJSONLineToLatLngSegmentArrays(lineTransect.geometry)
 	.reduce((flattened, array) => [...flattened, ...array], [])
 	.reduce((gatherings, coordPair) =>
 		[...gatherings, {geometry: {type: "LineString", coordinates: coordPair.map(coordinate => coordinate.reverse())}}],

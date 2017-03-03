@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import update from "react-addons-update";
 import deepEquals from "deep-equal";
 import LajiMap from "laji-map";
-import { segmentsToGeometry, geometryToLinesAsSegments } from "laji-map/lib/utils";
+import { latLngSegmentsToGeoJSONGeometry, geoJSONLineToLatLngSegmentArrays } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix, Alert } from "../components";
@@ -353,7 +353,7 @@ export default class MapArrayField extends Component {
 			getOptions: (options) => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);
 				const {formData} = this.props;
-				const lineTransect = segmentsToGeometry(formData.map(item => item.geometry.coordinates));
+				const lineTransect = latLngSegmentsToGeoJSONGeometry(formData.map(item => item.geometry.coordinates));
 				return {
 					lineTransect: {
 						feature: {geometry: lineTransect},
