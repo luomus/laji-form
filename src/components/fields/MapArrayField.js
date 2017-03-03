@@ -42,7 +42,7 @@ export default class MapArrayField extends Component {
 			"ui:options": PropTypes.shape({
 				geometryField: PropTypes.string.isRequired,
 				// allows custom algorithm for getting geometry data
-				geometryMapper: PropTypes.oneOf(["units", "lineTransect"]).isRequired,
+				geometryMapper: PropTypes.oneOf(["units", "lineTransect"]),
 				topOffset: PropTypes.integer,
 				bottomOffset: PropTypes.integer,
 				popupFields: PropTypes.arrayOf(PropTypes.object),
@@ -77,17 +77,19 @@ export default class MapArrayField extends Component {
 	}
 
 	componentDidUpdate() {
-		const {geometryMapper} = getUiOptions(this.props.uiSchema);
-		if (!geometryMapper) return;
-		const mapper = this.geometryMappers[geometryMapper];
+		const mapper = this.getGeometryMapper(this.props);
 		if (mapper.onComponentDidUpdate) mapper.onComponentDidUpdate();
+	}
+
+	getGeometryMapper = (props) => {
+		return this.geometryMappers[getUiOptions(props.uiSchema).geometryMapper || "default"];
 	}
 
 	render() {
 		const {formData, registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryMapper, geometryField, topOffset, bottomOffset} = options;
+		const {popupFields, geometryField, topOffset, bottomOffset} = options;
 		const {activeIdx} = this.state;
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
@@ -98,7 +100,7 @@ export default class MapArrayField extends Component {
 			}
 		};
 
-		const mapOptions = this.geometryMappers[geometryMapper].getOptions(options);
+		const mapOptions = this.getGeometryMapper(this.props).getOptions(options);
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
@@ -153,8 +155,80 @@ export default class MapArrayField extends Component {
 		);
 	}
 
+	//TODO geometrymappers abuse each others criss and cross. All the other mappers should extend default mapper.
 	geometryMappers = {
+		default:{
+			getOptions: (options) => {
+				return this.geometryMappers.units.getOptions(options);
+			},
+			onMapChangeCreateGathering: (events) => this.geometryMappers.units.onMapChangeCreateGathering(events),
+			getData: () => {
+				const {formData} = this.props;
+				const idx = this.state.activeIdx;
+				const {geometryField} = getUiOptions(this.props.uiSchema);
+				if (!formData) return;
+
+				const item = formData[idx];
+				this._context.featureIdxsToItemIdxs = {};
+
+				let geometries = [];
+				if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
+					geometries = parseGeometries(item[geometryField]);
+				}
+				return geometries;
+			},
+			onChange: (events) => {
+				const mapper = this.geometryMappers.default;
+
+				events.forEach(e => {
+					switch (e.type) {
+						case "create":
+							mapper.onAdd(e);
+							break;
+						case "delete":
+							mapper.onRemove(e);
+							break;
+						case "edit":
+							mapper.onEdited(e);
+							break;
+					}
+				});
+			},
+			onAdd: ({feature: {geometry}}) => {
+				const formData = this.props.formData ||
+					[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+				const {geometryField} = getUiOptions(this.props.uiSchema);
+
+				const itemFormData = formData[this.state.activeIdx];
+				this.props.onChange(update(formData,
+					{[this.state.activeIdx]: {$merge: {[geometryField]: {type: "GeometryCollection", geometries: [
+						...parseGeometries(itemFormData[geometryField]), geometry
+					]}}}}));
+			},
+			onRemove: ({idxs}) => {
+				const {geometryField} = getUiOptions(this.props.uiSchema);
+				let splices = [];
+				idxs.sort().reverse().forEach((idx) => {
+					splices.push([idx, 1]);
+				});
+				const item = this.props.formData[this.state.activeIdx];
+				this.props.onChange(update(this.props.formData,
+					{[this.state.activeIdx]: {[geometryField]: item && item.type === "GeometryCollection" ?
+						{geometries: {$splice: splices}} : {$set: undefined}}}));
+			},
+			onEdited: ({features}) => {
+				const {geometryField} = getUiOptions(this.props.uiSchema);
+				this.props.onChange(update(this.props.formData,
+					{[this.state.activeIdx]: {[geometryField]: {
+						geometries: Object.keys(features).reduce((obj, idx) => {
+							obj[idx] = {$set: features[idx].geometry};
+							return obj;
+						}, {})
+					}}}));
+			}
+		},
 		units: {
+			field: "units",
 			getOptions: (options) => {
 				const mapper = this.geometryMappers.units;
 				const {formData} = this.props;
@@ -193,16 +267,11 @@ export default class MapArrayField extends Component {
 			getData: () => {
 				const {formData} = this.props;
 				const idx = this.state.activeIdx;
-				const {geometryField} = getUiOptions(this.props.uiSchema);
 				if (!formData) return;
 
 				const item = formData[idx];
-				this._context.featureIdxsToItemIdxs = {};
 
-				let geometries = [];
-				if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
-					geometries = parseGeometries(item[geometryField]);
-				}
+				const geometries = this.geometryMappers.default.getData();
 
 				let newGeometries = [];
 				const units = (item && item.units) ? item.units : [];
@@ -244,6 +313,7 @@ export default class MapArrayField extends Component {
 						this.props.onChange([formData]);
 						this.setState({activeIdx: 0}, () => {
 							const node = getSchemaElementById(`${this.props.idSchema.$id}_0`);
+							if (!node) return;
 							const tabbables = getTabbableFields(node);
 							if (tabbables && tabbables.length) tabbables[0].focus();
 						});
@@ -332,8 +402,6 @@ export default class MapArrayField extends Component {
 
 				const {popupIdx} = this.state;
 				if (popupIdx === undefined) return;
-				const {geometryMapper} = getUiOptions(this.props.uiSchema);
-				const mapper = this.geometryMappers[geometryMapper];
 
 				const idx = this._context.featureIdxsToItemIdxs[popupIdx];
 
@@ -419,18 +487,21 @@ export default class MapArrayField extends Component {
 	}
 
 	getFeaturePopupData = (idx) => {
-		const {popupFields, geometryMapper} = getUiOptions(this.props.uiSchema);
+		const {popupFields} = getUiOptions(this.props.uiSchema);
+		const geometryMapperField = this.getGeometryMapper(this.props).field;
 		const {formData} = this.props;
+
+		if (!geometryMapperField) return false;
 
 		const featureIdxToItemIdxs = this._context.featureIdxsToItemIdxs;
 		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
 		let data = {};
 		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx] ||
-		    !formData[this.state.activeIdx][geometryMapper] || itemIdx === undefined) return data;
+		    !formData[this.state.activeIdx][geometryMapperField] || itemIdx === undefined) return data;
 		popupFields.forEach(field => {
 			const fieldName = field.field;
-			const itemFormData = formData[this.state.activeIdx][geometryMapper][itemIdx];
-			let fieldSchema = this.props.schema.items.properties[geometryMapper].items.properties;
+			const itemFormData = formData[this.state.activeIdx][geometryMapperField][itemIdx];
+			let fieldSchema = this.props.schema.items.properties[geometryMapperField].items.properties;
 			let fieldData  = itemFormData ? itemFormData[fieldName] : undefined;
 			if (field.mapper) {
 				const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData);

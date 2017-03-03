@@ -8,7 +8,7 @@ import { geoJSONLineToLatLngSegmentArrays } from "laji-map/lib/utils";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = app;
+const USE_LOCAL_SCHEMAS = true;
 
 const log = (type) => console.log.bind(console, type);
 
@@ -188,7 +188,7 @@ const lajiForm = new LajiForm({
 		formData: schemas.formData
 	}),
 	formData: {gatheringEvent: {leg: ["MA.308"]}},
-	formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
+	// formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,
 	lang,
@@ -201,7 +201,7 @@ const lajiForm = new LajiForm({
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
 if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.652", {lang, format: "schema"})
+	apiClient.fetch("/forms/JX.123608", {lang, format: "schema"})
 						.then(response => {
 							return response.json();
 						})
