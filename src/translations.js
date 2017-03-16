@@ -64,6 +64,11 @@
 		en: "Or",
 		sv: "Eller"
 	},
+	and: {
+		fi: "Ja",
+		en: "And",
+		sv: "Och"
+	},
 	useUnknownName: {
 		fi: "Käytä tuntematonta nimeä",
 		en: "Use unknown name",
@@ -194,10 +199,25 @@
 		en: "Saved successfully!",
 		sv: "Lagring lyckades!"
 	},
-	invalidFileOrTooLarge: {
-		fi: "Kuvatiedosto oli virheellinen tai liian iso.",
-		en: "The file was invalid or too large.",
-		sv: "Filen var ogiltig eller för stor."
+	Mb: {
+		fi: "Mt",
+		en: "Mb",
+		sv: "Mb"
+	},
+	allowedFileFormats: {
+		fi: "Sallitut kuvaformaatit ovat",
+		en: "Allowed image formats are",
+		sv: "Tillåtna filformat för bilder är"
+	},
+	allowedFileSize: {
+		fi: "Kuvan suurin sallittu koko on",
+		en: "The maximum allowed file size is",
+		sv: "Den största tillåtna storleken på en bild är"
+	},
+	invalidFile: {
+		fi: "Kuvatiedosto oli virheellinen.",
+		en: "The file was invalid.",
+		sv: "Filen var ogiltig."
 	},
 	insufficientSpace: {
 		fi: "Kuvapalvelin ei pysty käsittelemään latauspyyntöä riittämättömän levytilan vuoksi.",
