@@ -97,6 +97,7 @@ const widgets = importLocalComponents("widgets", [
 	"SeparatedDateTimeWidget",
 	"AutosuggestWidget",
 	"HiddenWidget",
+	"PlainTextWidget",
 	"ImageSelectWidget",
 	"AnyToBooleanWidget"
 ]);

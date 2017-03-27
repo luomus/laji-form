@@ -276,11 +276,13 @@ export default class MapArrayField extends Component {
 				let newGeometries = [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
-					const {unitGathering: {geometry}} = unit;
-					if (geometry && hasData(geometry)) {
-						this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
-						newGeometries.push(geometry);
-					}
+				  if (unit.unitGathering) {
+            const {unitGathering: {geometry}} = unit;
+            if (geometry && hasData(geometry)) {
+              this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
+              newGeometries.push(geometry);
+            }
+          }
 				});
 				return [...geometries, ...newGeometries];
 			},
