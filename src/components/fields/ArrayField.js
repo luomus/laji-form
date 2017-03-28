@@ -66,7 +66,7 @@ export default class _ArrayField extends Component {
 		const nestedFilters = filter.filter(f => f.includes("/"));
 
 		const {formData} = this.props;
-		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry);
+		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry,definitions);
 
 		const lastIdx = formData.length - 1;
 		const lastItem = formData[lastIdx];
@@ -99,7 +99,7 @@ export default class _ArrayField extends Component {
 					if (nested[path]) return nested[path];
 				}, this.props.schema.items);
 
-				if (nested) nested[last] = getDefaultFormState(nestedSchema, undefined, this.props.registry);
+				if (nested) nested[last] = getDefaultFormState(nestedSchema, undefined, this.props.registry.definitions);
 			} else {
 				const origNestedField = splitted.reduce((nested, path) => {
 					if (nested) return nested[path];

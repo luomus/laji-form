@@ -7,14 +7,14 @@ import { isMultiSelect, getTabbableFields, getSchemaElementById,
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
-import _SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 
 import ApiClient from "../ApiClient";
 import Context from "../Context";
 import translations from "../translations.js";
 
-class SchemaField extends Component {
+class _SchemaField extends Component {
 	componentDidMount() {
 		function focus(id) {
 			const elem = getSchemaElementById(id);
@@ -43,7 +43,7 @@ class SchemaField extends Component {
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema)) {
 			schema = {...schema, uniqueItems: false};
 		}
-		return <_SchemaField
+		return <SchemaField
 			{...props}
 			// Reset ArrayFieldTemplate
 			registry={{...props.registry, ArrayFieldTemplate}}
@@ -53,7 +53,7 @@ class SchemaField extends Component {
 }
 
 const fields = importLocalComponents("fields", [
-	{SchemaField},
+	{SchemaField: _SchemaField},
 	// Disabled until we have time to make it work properly. StringField wrapper was used to optimization:
 	// it caused the onChange-events to trigger events only on blur, not on every key stroke.
 	// "StringField",
@@ -85,6 +85,7 @@ const fields = importLocalComponents("fields", [
 	"FlatField",
 	"SingleActiveArrayField",
 	"SingleItemArrayField",
+	"UnitRapidField",
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
 

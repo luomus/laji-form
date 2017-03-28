@@ -1,7 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { shouldRender } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Transforms an array field to o boolean field, where each value is true/false according to another array field.
@@ -40,10 +39,6 @@ export default class DependentBooleanField extends Component {
 		formData = {...props.formData, [booleanField]: booleanFieldData};
 
 		return {schema, uiSchema, formData};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return shouldRender(this, nextProps, nextState);
 	}
 
 	onChange(formData) {

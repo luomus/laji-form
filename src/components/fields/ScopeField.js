@@ -510,7 +510,6 @@ export default class ScopeField extends Component {
 	}
 
 	renderFieldsButton = (bsRole) => {
-
 		const tooltip = (
 			<Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>
 				{this.props.formContext.translations.SelectMoreFields}
