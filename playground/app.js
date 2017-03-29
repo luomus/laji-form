@@ -187,8 +187,8 @@ const lajiForm = new LajiForm({
 		uiSchemaContext: schemas.uiSchemaContext,
 		formData: schemas.formData
 	}),
-	formData: {gatheringEvent: {leg: ["MA.308"]}},
-	// formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
+	// formData: {gatheringEvent: {leg: ["MA.308"]}},
+	formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,
 	lang,
@@ -214,5 +214,5 @@ if (!USE_LOCAL_SCHEMAS) {
 }
 
 function onSubmit({formData}) {
-	console.log(formData);
+        console.log(formData);
 }
