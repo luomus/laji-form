@@ -8,7 +8,7 @@ import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix, Alert } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols } from "../../utils";
-import { shouldRender, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { shouldRender, getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
@@ -132,10 +132,10 @@ export default class MapArrayField extends Component {
 								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
-							  onFocusGrab={() => {this.setState({focusGrabbed: true})}}
+								onFocusGrab={() => {this.setState({focusGrabbed: true})}}
 								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
-							  panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
-							  draw={false}
+								panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
+								draw={false}
 								{...mapOptions}
 							/>
 						</StretchAffix>
@@ -276,13 +276,13 @@ export default class MapArrayField extends Component {
 				let newGeometries = [];
 				const units = (item && item.units) ? item.units : [];
 				units.forEach((unit, i) => {
-				  if (unit.unitGathering) {
-            const {unitGathering: {geometry}} = unit;
-            if (geometry && hasData(geometry)) {
-              this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
-              newGeometries.push(geometry);
-            }
-          }
+					if (unit.unitGathering) {
+						const {unitGathering: {geometry}} = unit;
+						if (geometry && hasData(geometry)) {
+							this._context.featureIdxsToItemIdxs[geometries.length + newGeometries.length] = i;
+							newGeometries.push(geometry);
+						}
+					}
 				});
 				return [...geometries, ...newGeometries];
 			},
@@ -504,7 +504,7 @@ export default class MapArrayField extends Component {
 			const fieldName = field.field;
 			const itemFormData = formData[this.state.activeIdx][geometryMapperField][itemIdx];
 			let fieldSchema = this.props.schema.items.properties[geometryMapperField].items.properties;
-			let fieldData  = itemFormData ? itemFormData[fieldName] : undefined;
+			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			if (field.mapper) {
 				const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData);
 				for (let label in mappedData) {
@@ -585,7 +585,7 @@ class MapComponent extends Component {
 		};
 
 		if (this.props.draw) {
-			options.draw =  {...this.props.draw, onChange: this.state.onChange || this.props.draw.onChange};
+			options.draw = {...this.props.draw, onChange: this.state.onChange || this.props.draw.onChange};
 		}
 
 		this.map.setOptions(options);
@@ -646,7 +646,7 @@ class MapComponent extends Component {
 									buttonText={this.state.panelButtonContent} /> : null}
 				<div key="map"
 						 className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
-		         style={this.props.style} ref="map" />
+				     style={this.props.style} ref="map" />
 			</div>
 		);
 	}

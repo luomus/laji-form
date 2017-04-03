@@ -355,7 +355,7 @@ export default class ScopeField extends Component {
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
-				if (!Array.isArray(fieldSelectorValues))  fieldSelectorValues = [fieldSelectorValues];
+				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
 				if (fieldSelectorValues.length > 0 && hasData(fieldSelectorValues[0])) {
 					fieldSelectorValues = ["+", ...fieldSelectorValues];
 				}
@@ -482,7 +482,7 @@ export default class ScopeField extends Component {
 						<ListGroup>{
 							[
 								(groupTranslations[groupName] !== undefined ? (
-									<ListGroupItem  key={groupName + "-list"} active={someActive} onClick={() => {
+									<ListGroupItem key={groupName + "-list"} active={someActive} onClick={() => {
 											this.toggleAdditionalProperty(Object.keys(groupFields)
 												.filter(field => {return this.propertyIsIncluded(field) === someActive}))
 										}}>
