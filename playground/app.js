@@ -1,4 +1,4 @@
-import LajiForm from "../src/app"
+import LajiForm from "../src/app";
 import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
@@ -10,7 +10,7 @@ import "./styles.css";
 
 const USE_LOCAL_SCHEMAS = true;
 
-const log = (type) => console.log.bind(console, type);
+const log = (type) => console.log.bind(console, type); // eslint-disable-line
 
 let lang = "fi";
 
@@ -206,13 +206,13 @@ if (!USE_LOCAL_SCHEMAS) {
 							return response.json();
 						})
 	         .then(props => {
-							const {schema, uiSchema, validators, uiSchemaContext} = props;
-							const propsToPass = {schema, uiSchema, uiSchemaContext: {...uiSchemaContext, creator: schemas.uiSchemaContext.creator}};
-							if (!Array.isArray(validators)) propsToPass.validators = validators;
-							lajiForm.setState(propsToPass)
+		const {schema, uiSchema, validators, uiSchemaContext} = props;
+		const propsToPass = {schema, uiSchema, uiSchemaContext: {...uiSchemaContext, creator: schemas.uiSchemaContext.creator}};
+		if (!Array.isArray(validators)) propsToPass.validators = validators;
+		lajiForm.setState(propsToPass);
 					 });
 }
 
 function onSubmit({formData}) {
-        console.log(formData);
+	console.log(formData); // eslint-disable-line
 }
