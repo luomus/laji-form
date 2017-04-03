@@ -1,7 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var nodeExternals = require('webpack-node-externals');
+var nodeExternals = require("webpack-node-externals");
 
 module.exports = {
 	entry: {
@@ -16,10 +16,10 @@ module.exports = {
 	plugins: [
 		new ExtractTextPlugin("[name].css", {allChunks: true}),
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
-		new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
+		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"production\""}),
 		new webpack.ProvidePlugin({
-      'moment':     'moment'
-    })
+			"moment":     "moment"
+		})
 	],
 	target: "node",
 	externals: [nodeExternals({

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import { findDOMNode } from "react-dom";
 import { getUiOptions, getInnerUiSchema, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
@@ -58,12 +57,12 @@ export default class TreeField extends Component {
 			let select = {"type": "string", "enum": [""], enumNames: [""]};
 
 			let order = orderMap[key];
-			if (order) childrenKeys.sort((a, b) => {return order.indexOf(a) - order.indexOf(b)});
+			if (order) childrenKeys.sort((a, b) => {return order.indexOf(a) - order.indexOf(b);});
 
 			childrenKeys.forEach(key => {
 				select.enum.push(key);
 				select.enumNames.push(dictionarifiedEnums[key]);
-			})
+			});
 			select.title = (labels && labels[depth]) ? labels[depth] : "";
 
 			properties[depth] = select;
@@ -100,16 +99,16 @@ export default class TreeField extends Component {
 	}
 
 	onChange(formData) {
-		let selectNames = Object.keys(formData).sort((a, b) => {return b - a});
+		let selectNames = Object.keys(formData).sort((a, b) => {return b - a;});
 
 		for (let i in selectNames) {
 			if (formData[i] !== this.state.formData[i]) {
 				let value;
-					if (isEmptyString(formData[i])) {
-						value = (i > 0) ? formData[i - 1] : undefined;
-					} else {
-						value = formData[i];
-					}
+				if (isEmptyString(formData[i])) {
+					value = (i > 0) ? formData[i - 1] : undefined;
+				} else {
+					value = formData[i];
+				}
 				this.props.onChange(value);
 				break;
 			}
@@ -117,7 +116,6 @@ export default class TreeField extends Component {
 	}
 
 	onKeyDown = (e) => {
-		const activeElem = document.activeElement;
 		if (e.key == "Enter" && !e.ctrlKey) {
 			e.preventDefault();
 			e.stopPropagation();

@@ -34,7 +34,7 @@ export default class ApiClient {
 	fetchCached(path, query) {
 		const cacheKey = path + JSON.stringify(query);
 		cache[cacheKey] = cache.hasOwnProperty(cacheKey) ? cache[cacheKey] : this.fetch(path, query);
-		return cache[cacheKey]
+		return cache[cacheKey];
 	}
 
 

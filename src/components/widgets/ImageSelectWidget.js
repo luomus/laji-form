@@ -3,7 +3,7 @@ import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";
 import SelectWidget from "./SelectWidget";
-import BaseComponent from "../BaseComponent"
+import BaseComponent from "../BaseComponent";
 
 @BaseComponent
 export default class ImageSelectWidget extends Component {
@@ -26,7 +26,7 @@ export default class ImageSelectWidget extends Component {
 					renderOption: item => <div>{this.renderImg(item.value, item.label)} <span>{item.label}</span></div>
 				}}
 			/>
-		)
+		);
 	}
 
 	renderImg = (enumName, fallback) => {
@@ -38,10 +38,9 @@ export default class ImageSelectWidget extends Component {
 		try {
 			path.svg = `${this.staticImgPath}/${imgName}.svg`;
 			path.png = `${this.staticImgPath}/${imgName}.png`;
-		} catch (e) {
-			;
+		} finally {
+			this._context[enumName] = path;
+			return <span className="select-icon"><Isvg key={enumName} src={path.svg} cacheGetRequests={true}><img src={path.png} /></Isvg></span>;
 		}
-		this._context[enumName] = path;
-		return <span className="select-icon"><Isvg key={enumName} src={path.svg} cacheGetRequests={true}><img src={path.png} /></Isvg></span>
 	}
 }

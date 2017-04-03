@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { isNullOrUndefined } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";

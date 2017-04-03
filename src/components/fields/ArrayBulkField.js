@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
@@ -37,7 +37,7 @@ export default class ArrayBulkField extends Component {
 				{this.renderItems()}
 				<Button onClick={this.onAddClick}>Lisää havaintorivejä</Button><br/>
 			</fieldset>
-		)
+		);
 	}
 
 	renderItems = () => {
@@ -70,8 +70,8 @@ export default class ArrayBulkField extends Component {
 			let formData = this.props.formData;
 			if (!formData) formData = [];
 			formData[idx] = itemFormData;
-			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
-		}
+			this.props.onChange(formData.filter(item => {return Object.keys(item).length;}));
+		};
 	}
 
 	onAddClick = (event) => {

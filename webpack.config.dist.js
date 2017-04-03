@@ -15,7 +15,7 @@ module.exports = {
 	plugins: [
 		new ExtractTextPlugin("[name].css", {allChunks: true}),
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
-		new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'})
+		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"production\""})
 	],
 	module: {
 		loaders: [

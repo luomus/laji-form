@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
@@ -24,7 +24,7 @@ export default class ContextInjectionField extends Component {
 			const last = splitted.pop();
 			const tail = splitted.reduce((pointer, path) => {
 				pointer[path] = {};
-				return pointer[path]
+				return pointer[path];
 			}, updateObject);
 			tail[last] = {$set: parseJSONPointer(props.formContext.uiSchemaContext, injections[injectionPath])};
 			uiSchema = update(uiSchema, updateObject);

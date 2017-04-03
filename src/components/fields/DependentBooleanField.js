@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { shouldRender } from  "react-jsonschema-form/lib/utils"
+import { shouldRender } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Transforms an array field to o boolean field, where each value is true/false according to another array field.
@@ -59,7 +59,7 @@ export default class DependentBooleanField extends Component {
 				} else if (!dictionarifiedOrigData[definerItem] && formData[booleanField][i]) {
 					newData = newData ? [...newData, definerItem] : [definerItem];
 				}
-			})
+			});
 		}
 
 		if (newData) newData = newData.filter(item => formData[booleanDefiner].includes(item));
@@ -79,7 +79,7 @@ export default class DependentBooleanField extends Component {
 	}
 
 	getDictionarifiedBooleanFieldData = (formData) => {
-		return this.getDictionarifiedFormData(formData, this.getUiOptions().booleanField)
+		return this.getDictionarifiedFormData(formData, this.getUiOptions().booleanField);
 	}
 
 	checkFieldSanity = (formData, field) => {

@@ -47,7 +47,7 @@ export function getUpdateObjectFromPath(path, injection) {
 	let update = {};
 	let updatePointer = update;
 	let lastPathName = "";
-	let splittedPath = path.split('.');
+	let splittedPath = path.split(".");
 	splittedPath.forEach((pathStep, i) => {
 		updatePointer[pathStep] = {};
 		if (i < splittedPath.length - 1) updatePointer = updatePointer[pathStep];
@@ -93,7 +93,7 @@ export function isEmptyString(val) {
 }
 
 export function parseJSONPointer(object, jsonPointer) {
-	return jsonPointer.substring(1).split('/').reduce((o, i)=>o[i], object);
+	return jsonPointer.substring(1).split("/").reduce((o, i)=>o[i], object);
 }
 
 export function getReactComponentName(WrappedComponent) {
@@ -118,7 +118,7 @@ const SWITCH_CLASS = "bootstrap-switch";
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)` });
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled)`; });
 
 
 export function getTabbableFields(elem, reverse) {
@@ -135,7 +135,7 @@ export function getSchemaElementById(id) {
 
 export function isTabbableInput(elem) {
 	return (elem.id.match(/^_laji-form_/) || inputTypes.includes(elem.tagName.toLowerCase()) ||
-	elem.className.includes(SWITCH_CLASS))
+	elem.className.includes(SWITCH_CLASS));
 }
 
 export function canFocusNextInput(root, inputElem) {

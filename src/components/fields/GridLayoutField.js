@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
-import { toIdSchema, shouldRender, orderProperties } from  "react-jsonschema-form/lib/utils"
+import { toIdSchema, orderProperties } from  "react-jsonschema-form/lib/utils";
 import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString, isMultiSelect, getNestedUiFieldsList } from "../../utils";
 import { Row , Col } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
@@ -102,9 +102,9 @@ export default class GridLayoutField extends Component {
 			const colRow = colsToRows[col];
 			if (colRow !== undefined) {
 				if (!rows[colRow]) rows[colRow] = [];
-				return rows[colRow]
+				return rows[colRow];
 			} else {
-				return lastRow
+				return lastRow;
 			}
 		}
 
@@ -140,7 +140,7 @@ export default class GridLayoutField extends Component {
 						}}
 					/>
 				</Col>
-			)
+			);
 		});
 
 		rows.push(lastRow);

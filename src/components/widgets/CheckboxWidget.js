@@ -5,14 +5,9 @@ import Switch from "react-bootstrap-switch";
 
 function CheckboxWidget(props) {
 	const {
-		schema,
-		id,
 		value,
-		required,
 		disabled,
 		onChange,
-		help,
-		label,
 		registry,
 		readonly,
 		options

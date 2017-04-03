@@ -1,6 +1,6 @@
 import LajiForm from "./components/LajiForm";
 import React, { Component } from "react";
-import { render, unmountComponentAtNode } from "react-dom"
+import { render, unmountComponentAtNode } from "react-dom";
 
 export default class LajiFormWrapper {
 	constructor(props) {
@@ -14,7 +14,7 @@ export default class LajiFormWrapper {
 	}
 
 	onChange = (formData) => {
-    if (this.props.onChange) this.props.onChange(formData);
+		if (this.props.onChange) this.props.onChange(formData);
 		this.setState({formData});
 	}
 

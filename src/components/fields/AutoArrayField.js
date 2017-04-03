@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import equals from "deep-equal";
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { hasData, getUiOptions } from "../../utils";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { DeleteButton } from "../components";
 import BaseComponent from "../BaseComponent";
 
@@ -41,7 +41,7 @@ export default class AutoArrayField extends Component {
 		const defaultData = getDefaultFormState(this.props.schema.items, undefined, registry.definitions);
 		const lastItem = data[data.length - 1];
 		if (data.length === 0 || hasData(lastItem) && !equals(lastItem, defaultData)) {
-			data = [...data, defaultData]
+			data = [...data, defaultData];
 		}
 
 		const {SchemaField} = this.props.registry.fields;
@@ -88,14 +88,14 @@ export default class AutoArrayField extends Component {
 				itemFormData = {
 					...getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions),
 					...itemFormData
-				}
+				};
 			}
 
 			let formData = this.props.formData;
 			if (!formData) formData = [];
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
-			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
-		}
+			this.props.onChange(formData.filter(item => {return Object.keys(item).length;}));
+		};
 	}
 
 	onButtonKeyDown = (idx) => ({key}) => {

@@ -1,4 +1,4 @@
-import lajiValidate from 'laji-validate';
+import lajiValidate from "laji-validate";
 
 export default (validators) => (data, errors) => {
 	if (validators) {
@@ -7,7 +7,7 @@ export default (validators) => (data, errors) => {
 		for(k in result) {
 			for (l in result[k]) {
 				messages.push({
-					property: 'instance.' + k,
+					property: "instance." + k,
 					message: result[k][l]
 				});
 			}

@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils"
-import { getUiOptions, hasData, getBootstrapCols } from "../../utils";
-import { DeleteButton, Button } from "../components";
+import { getUiOptions, hasData } from "../../utils";
+import { DeleteButton } from "../components";
 import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -31,7 +30,7 @@ const headerFormatters = {
 						{` (${unitsLength} ${translations.unitsPartitive})`}
 					</span>
 				</span>
-			)
+			);
 		},
 		onClick: (that, idx) => {
 			if (that.state.activeIdx === idx) {
@@ -55,13 +54,13 @@ const headerFormatters = {
 
 			const geometries = [...gatheringGeometries, ...unitGeometries]
 				.map(geometry => {
-					return {type: "Feature", properties: {}, geometry}
+					return {type: "Feature", properties: {}, geometry};
 				});
 
 			map.setData({
 				featureCollection: {type: "featureCollection", features: geometries},
 				getFeatureStyle: () => {
-					return {opacity: 0.6, color: "#888888"}
+					return {opacity: 0.6, color: "#888888"};
 				}
 			});
 		},
@@ -90,8 +89,8 @@ const popupMappers = {
 			)
 		).then(result => {
 			return new Promise(resolve => {
-				resolve({[(schema.units ? schema.units.title : undefined) || fieldName]: result})
-			})
+				resolve({[(schema.units ? schema.units.title : undefined) || fieldName]: result});
+			});
 		});
 	}
 };
@@ -122,7 +121,7 @@ export default class SingleActiveArrayField extends Component {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		if (popupFields) props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, item).then(popupData => {
-				this.setState({popups: {...this.state.popups, [idx]: popupData}})
+				this.setState({popups: {...this.state.popups, [idx]: popupData}});
 			});
 		});
 	}
@@ -141,23 +140,23 @@ export default class SingleActiveArrayField extends Component {
 
 	renderers = {
 		accordion: () => {
-				const {registry: {fields: {ArrayField}}} = this.props;
+			const {registry: {fields: {ArrayField}}} = this.props;
 
-				let activeIdx = this.state.activeIdx;
-				if (activeIdx === undefined) activeIdx = -1;
+			let activeIdx = this.state.activeIdx;
+			if (activeIdx === undefined) activeIdx = -1;
 
-				const title = this.props.schema.title;
+			const title = this.props.schema.title;
 
-				const options = getUiOptions(this.props.uiSchema);
-				const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
+			const options = getUiOptions(this.props.uiSchema);
+			const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
 
-				const that = this;
-				function AccordionArray(props) {
-					const buttons = getUiOptions(props.uiSchema).buttons;
-					buttons.forEach(button => {
-						button.delayFocus = DELAY_FOCUS;
-					});
-					return (
+			const that = this;
+			function AccordionArray(props) {
+				const buttons = getUiOptions(props.uiSchema).buttons;
+				buttons.forEach(button => {
+					button.delayFocus = DELAY_FOCUS;
+				});
+				return (
 						<div onKeyDown={onContainerKeyDown(
 							props,
 							callback => that.onActiveChange(that.props.formData.length, callback),
@@ -177,10 +176,10 @@ export default class SingleActiveArrayField extends Component {
 							</Accordion>
 							{getButtons(buttons, props)}
 						</div>
-					);
-				}
+				);
+			}
 
-				return (
+			return (
 					<ArrayField
 						{...this.props}
 						registry={{
@@ -197,17 +196,17 @@ export default class SingleActiveArrayField extends Component {
 									{
 										fn: "add",
 										className: "col-xs-12 laji-map-accordion-header",
-										callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback)},
+										callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
 										label: addLabel
 									}
 								]
 							}
 						}}
 					/>
-				);
+			);
 		},
 		pager: () => {
-			const {registry: {fields: {ArrayField, TitleField}}} = this.props;
+			const {registry: {fields: {ArrayField}}} = this.props;
 
 			let activeIdx = this.state.activeIdx;
 			if (activeIdx === undefined) activeIdx = -1;
@@ -267,7 +266,7 @@ export default class SingleActiveArrayField extends Component {
 								{
 									fn: "add",
 									className: "col-xs-12 laji-map-accordion-header",
-									callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback)},
+									callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
 									label: addLabel
 								}
 							]
@@ -293,13 +292,13 @@ export default class SingleActiveArrayField extends Component {
 
 		const header = (
 			<div className="laji-map-accordion-header" onClick={() => {
-					this.onActiveChange(idx);
-				}}
-				onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx)}}
-				onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx)}} >
+				this.onActiveChange(idx);
+			}}
+				onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx);}}
+				onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx);}} >
 				<div className="panel-title">
 					{headerText}
-					<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem}}
+					<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem;}}
 					              className="pull-right"
 												confirm={true}
 												translations={this.props.formContext.translations}
@@ -337,7 +336,7 @@ export default class SingleActiveArrayField extends Component {
 			const popupData = fields.reduce((popup, item) => {
 				if (item) Object.keys(item).forEach(label => {
 					popup[label] = item[label];
-				})
+				});
 				return popup;
 			}, {});
 			return new Promise(resolve => resolve(popupData));
@@ -360,7 +359,7 @@ export default class SingleActiveArrayField extends Component {
 		const formData = update(this.props.formData, {$splice: [[idx, 1]]});
 		if (!formData.length) this.onActiveChange(undefined);
 		if (this.state.activeIdx >= formData.length) this.onActiveChange(formData.length - 1);
-		this.props.onChange(formData)
+		this.props.onChange(formData);
 	}
 }
 

@@ -1,12 +1,12 @@
-import React, { Component, PropTypes } from "react";
-import { getUiOptions, parseJSONPointer, isEmptyString } from "../../utils";
+import { Component, PropTypes } from "react";
+import { getUiOptions, isEmptyString } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
 		return suggestion.payload.informalTaxonGroups.map(item => item.id);
 	}
-}
+};
 
 /**
  * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutosuggestWidget.
@@ -87,7 +87,7 @@ export default class AutosuggestField extends Component {
 					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
 					suggestion[suggestionValPath];
 			}
-			formData = {...formData, [fieldName]: fieldVal}
+			formData = {...formData, [fieldName]: fieldVal};
 		}
 		this.props.onChange(formData);
 	}
@@ -97,7 +97,7 @@ export default class AutosuggestField extends Component {
 		const {suggestionReceivers, suggestionInputField} = this.getUiOptions();
 		Object.keys(suggestionReceivers).forEach(fieldName => {
 			formData = {...formData, [fieldName]: undefined};
-		})
+		});
 		formData = {...formData, [suggestionInputField]: value};
 		this.props.onChange(formData);
 	}

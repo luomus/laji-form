@@ -16,10 +16,10 @@ const scopeFieldSettings = {
 				return response.name;
 			}).catch(() => {
 				return "";
-			})
+			});
 		},
 	}
-}
+};
 
 const buttonSettings = {
 	setLocation: (that, {glyph, label}) => {
@@ -80,16 +80,16 @@ const buttonSettings = {
 					for (let event of events) {
 						const {type} = event;
 						switch (type) {
-							case "create":
-								that.props.onChange(update(
+						case "create":
+							that.props.onChange(update(
 									that.props.formData,
 									{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
 								));
-								close();
-								break;
-							case "delete":
-							case "edit":
-								onChange([event]);
+							close();
+							break;
+						case "delete":
+						case "edit":
+							onChange([event]);
 						}
 					}
 				}
@@ -101,7 +101,7 @@ const buttonSettings = {
 						map.map.closePopup();
 						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 					}
-				})
+				});
 			});
 
 			function close() {
@@ -161,12 +161,11 @@ const buttonSettings = {
 						onMouseEnter={onMouseEnter}
 						onMouseLeave={onMouseLeave}
 						glyph={glyph}
-						onClick={onClick}
-						bsStyle={hasCoordinates ? "primary" : "default"}/>
+						onClick={onClick} />
 			</OverlayTrigger>
 		);
 	}
-}
+};
 
 /**
  * Field with fields, which are shown according to recursive scope.
@@ -344,7 +343,7 @@ export default class ScopeField extends Component {
 			}
 
 			if (fieldScope.fieldScopes) {
-				addFieldScopeFieldsToFieldsToShow(fieldScope)
+				addFieldScopeFieldsToFieldsToShow(fieldScope);
 			}
 		}
 		
@@ -424,16 +423,14 @@ export default class ScopeField extends Component {
 	renderFieldsDropdown(additionalProperties) {
 		return (
 			<Dropdown key="socop"
-			        	id={this.props.idSchema.$id + "-scope-field-dropdown"}
+			          id={this.props.idSchema.$id + "-scope-field-dropdown"}
 			          bsStyle="info"
 			          pullRight
 			          open={this.state.additionalsOpen}
-			          onSelect={(eventKey, event) => {
-									this.preventCloseDropdown = true;
-			          }}
+			          onSelect={() => { this.preventCloseDropdown = true; }}
 			          onToggle={(isOpen) => {
-								if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
-								this.preventCloseDropdown = false;
+				if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
+				this.preventCloseDropdown = false;
 							 }}>
 				{this.renderFieldsButton("toggle")}
 				<Collapse in={this.state.additionalsOpen} bsRole="menu">
@@ -480,17 +477,17 @@ export default class ScopeField extends Component {
 				list.push(
 					<div key={groupName} className="scope-field-modal-item">
 						<ListGroup>{
-							[
+						[
 								(groupTranslations[groupName] !== undefined ? (
 									<ListGroupItem key={groupName + "-list"} active={someActive} onClick={() => {
-											this.toggleAdditionalProperty(Object.keys(groupFields)
-												.filter(field => {return this.propertyIsIncluded(field) === someActive}))
-										}}>
+										this.toggleAdditionalProperty(Object.keys(groupFields)
+												.filter(field => {return this.propertyIsIncluded(field) === someActive;}));
+									}}>
 										<strong>{groupTranslations[groupName]}</strong>
 									</ListGroupItem>
 								) : <Spinner key={groupName + "-list"}/>),
-								...groupsList
-							]
+							...groupsList
+						]
 						}</ListGroup>
 					</div>
 				);
@@ -532,14 +529,14 @@ export default class ScopeField extends Component {
 
 		return glyphFields ?
 		glyphFields.map(settings => {
-				const {glyph, label} = settings;
-				if (settings.show) {
-					const property = settings.show;
-					const isIncluded = this.propertyIsIncluded(property);
-					const hasData = propertyHasData(property, this.props.formData);
+			const {glyph, label} = settings;
+			if (settings.show) {
+				const property = settings.show;
+				const isIncluded = this.propertyIsIncluded(property);
+				const hasData = propertyHasData(property, this.props.formData);
 
-					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
-					return (
+				const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
+				return (
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
 													 disabled={hasData}
@@ -547,11 +544,11 @@ export default class ScopeField extends Component {
 													 onClick={() => this.toggleAdditionalProperty(property)}
 							/>
 						</OverlayTrigger>
-					);
-				} else if (settings.fn) {
-					return buttonSettings[settings.fn](this, settings);
-				}
-			}) : null;
+				);
+			} else if (settings.fn) {
+				return buttonSettings[settings.fn](this, settings);
+			}
+		}) : null;
 	}
 
 	propertyIsIncluded = (property) => {

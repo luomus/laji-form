@@ -46,7 +46,7 @@ class SelectWidget extends Component {
 
 		if (filter) {
 			const filterEnumsDictionary = {};
-			filter.forEach(_enum => { filterEnumsDictionary[_enum] = true });
+			filter.forEach(_enum => { filterEnumsDictionary[_enum] = true; });
 
 			const filterFn = ({value}) => filterEnumsDictionary[value];
 
@@ -98,7 +98,7 @@ class SelectWidget extends Component {
 			required,
 			disabled,
 			autofocus,
-			firstOptionIndexToHighlight: (index, options, val, search) => !val || isEmptyString(val.value) ? -1 : index,
+			firstOptionIndexToHighlight: (index, options, val) => !val || isEmptyString(val.value) ? -1 : index,
 			highlightedUid: this.state.uid,
 			onHighlightedUidChange: (uid) => this.setState({uid}),
 			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),

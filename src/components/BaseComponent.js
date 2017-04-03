@@ -1,4 +1,3 @@
-import React from "react";
 import { shouldRender } from "react-jsonschema-form/lib/utils";
 import { getReactComponentName } from "../utils";
 
@@ -30,5 +29,5 @@ export default function BaseComponent(ComposedComponent) {
 		onChange(formData, force) {
 			super.onChange ? super.onChange(formData, force) : this.props.onChange(formData, force);
 		}
-	}
+	};
 }

@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField"
+import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
@@ -11,7 +11,7 @@ import { getUiOptions, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 const MAX_IMAGE_SIZE = 20000000;
-const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/bmp', 'image/tiff', 'image/gif', 'application/pdf'];
+const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif", "application/pdf"];
 
 @BaseComponent
 export default class ImageArrayField extends Component {
@@ -62,29 +62,30 @@ export default class ImageArrayField extends Component {
 		);
 
 		return (
-      <Row>
-      	<Col xs={12}>
-      		<TitleField title={title} />
+			<Row>
+				<Col xs={12}>
+					<TitleField title={title} />
 					{description !== undefined ? <DescriptionField description={description} /> : null}
-      		<div className="laji-form-images">
+					<div className="laji-form-images">
 						{this.renderImgs()}
-      				<OverlayTrigger overlay={tooltip}>
-      					<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
-      					          accept="image/*, application/pdf"
-      					          onDragEnter={() => {this.setState({dragging: true})}}
-      					          onDragLeave={() => {this.setState({dragging: false})}}
-      					          onDrop={files => {
-															this.setState({dragging: false});
-															this.onFileFormChange(files)}
-													}>
-									<a href="#" onClick={e => e.preventDefault()}><Glyphicon glyph="camera" /></a>
-								</DropZone>
-      				</OverlayTrigger>
+						<OverlayTrigger overlay={tooltip}>
+							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
+							          accept="image/*, application/pdf"
+							          onDragEnter={() => {this.setState({dragging: true});}}
+							          onDragLeave={() => {this.setState({dragging: false});}}
+							          onDrop={files => {
+							              this.setState({dragging: false});
+							              this.onFileFormChange(files);
+							            }
+							          }>
+								<a href="#" onClick={e => e.preventDefault()}><Glyphicon glyph="camera" /></a>
+							</DropZone>
+						</OverlayTrigger>
 						{this.renderModal()}
 						{this.renderAlert()}
-      		</div>
-      	</Col>
-      </Row>
+					</div>
+				</Col>
+			</Row>
 		);
 	}
 
@@ -197,9 +198,9 @@ export default class ImageArrayField extends Component {
 			}, new FormData());
 
 			if (noValidData && invalidFile) {
-				fail("AllowedFileFormats", this.getAllowedImageFormatsAsString() + '.');
+				fail("AllowedFileFormats", this.getAllowedImageFormatsAsString() + ".");
 			} else if (noValidData && fileTooLarge){
-				fail("AllowedFileSize", this.getMaxFileSizeAsString() + '.');
+				fail("AllowedFileSize", this.getMaxFileSizeAsString() + ".");
 			} else {
 				return this.apiClient.fetchRaw("/images", undefined, {
 					method: "POST",
@@ -232,20 +233,20 @@ export default class ImageArrayField extends Component {
 						if (response.status < 400) {
 							return response.json();
 						}
-					})
+					});
 				}));
-			})
+			});
 		}).then(response => {
 			if (!response) return;
 			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
 			onChange([...formData, ...ids]);
 			this.mainContext.popBlockingLoader();
 			if (files.length !== ids.length) {
-				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer})
+				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer});
 			}
-		}).catch(e => {
+		}).catch(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({alert: true, alertMsg: `${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations.TryAgainLater}`})
+			this.setState({alert: true, alertMsg: `${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations.TryAgainLater}`});
 		});
 	}
 
@@ -282,7 +283,7 @@ export default class ImageArrayField extends Component {
 				"content-type": "application/json"
 			},
 			body: JSON.stringify(formData)
-		}).then(response => {
+		}).then(() => {
 			this.mainContext.popBlockingLoader();
 			this.setState({metadataSaveSuccess: true});
 			this._context.defaultMetadata = formData;
@@ -330,12 +331,12 @@ export default class ImageArrayField extends Component {
 	}
 
 	getAllowedImageFormatsAsString = () => {
-		let formats = '';
+		let formats = "";
 
 		for (let i = 0; i < ALLOWED_FILE_TYPES.length; i++) {
-			formats += ALLOWED_FILE_TYPES[i].split('/')[1];
+			formats += ALLOWED_FILE_TYPES[i].split("/")[1];
 			if (i < ALLOWED_FILE_TYPES.length - 2) {
-				formats += ', ';
+				formats += ", ";
 			} else if (i === ALLOWED_FILE_TYPES.length - 2) {
 				formats += ` ${this.props.formContext.translations.and} `;
 			}

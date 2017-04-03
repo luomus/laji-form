@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import VirtualSchemaField from "../VirtualSchemaField";
 

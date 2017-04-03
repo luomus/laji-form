@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from "react";
-import { toIdSchema } from  "react-jsonschema-form/lib/utils"
+import { Component, PropTypes } from "react";
+import { toIdSchema } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -148,7 +148,7 @@ export default class NestField extends Component {
 				if (requiredDictionarified[fieldName]) {
 					schemaProperties[wrapperFieldName].required ?
 						schemaProperties[wrapperFieldName].required.push(fieldName) :
-						(schemaProperties[wrapperFieldName].required = [fieldName])
+						(schemaProperties[wrapperFieldName].required = [fieldName]);
 				}
 				errorSchema[wrapperFieldName][fieldName] = errorSchema[fieldName];
 
@@ -157,17 +157,17 @@ export default class NestField extends Component {
 				});
 
 				if (formData && formData.hasOwnProperty(fieldName)) {
-						if (!formData[wrapperFieldName]) {
-							formData = {...formData, [wrapperFieldName]: {[fieldName]: formData[fieldName]}};
-						} else {
-							formData = {...formData,
-								[wrapperFieldName]: {...formData[wrapperFieldName], [fieldName]: formData[fieldName]},
-								[fieldName]: undefined
-							};
-						}
+					if (!formData[wrapperFieldName]) {
+						formData = {...formData, [wrapperFieldName]: {[fieldName]: formData[fieldName]}};
+					} else {
+						formData = {...formData,
+							[wrapperFieldName]: {...formData[wrapperFieldName], [fieldName]: formData[fieldName]},
+							[fieldName]: undefined
+						};
+					}
 				}
 
-				delete idSchema[fieldName]
+				delete idSchema[fieldName];
 			});
 
 			idSchema[wrapperFieldName] = toIdSchema(

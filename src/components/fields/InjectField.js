@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import update from "react-addons-update";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
@@ -120,12 +120,12 @@ export default class InjectField extends Component {
 
 	getUpdateSchemaPropertiesPath = (schema, $operation) => {
 		if (schema.type === "object") return {properties: $operation};
-		else if (schema.type === "array") return {items: {properties: $operation}}
+		else if (schema.type === "array") return {items: {properties: $operation}};
 		else throw "schema is not object or array";
 	}
 
 	getUpdateFormDataPath = (formData, fieldName) => {
-		return {$merge: {[fieldName]: formData[fieldName]}}
+		return {$merge: {[fieldName]: formData[fieldName]}};
 	}
 }
 

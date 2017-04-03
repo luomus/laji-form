@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField"
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getUiOptions, getInnerUiSchema, isNullOrUndefined } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { Button } from "../components";
@@ -59,7 +59,7 @@ export default class AdditionalsExpanderField extends Component {
 
 		uiSchema = getInnerUiSchema(props.uiSchema);
 
-		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals}
+		return {schema, uiSchema, name: undefined, dictionarifiedAdditionals};
 	}
 
 	render() {
@@ -88,7 +88,7 @@ export default class AdditionalsExpanderField extends Component {
 					{...this.props}
 					{...this.state}
 				/>
-		)
+		);
 	}
 
 	shouldShowAdditionals = (props, dictionarifiedAdditionals) => {
@@ -122,6 +122,6 @@ export default class AdditionalsExpanderField extends Component {
 	}
 
 	showAdditional = () => {
-		this.setState({showAdditional: true}, () => {this.componentWillReceiveProps(this.props)});
+		this.setState({showAdditional: true}, () => {this.componentWillReceiveProps(this.props);});
 	}
 }

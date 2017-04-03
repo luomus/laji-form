@@ -1,3 +1,3 @@
 import React from "react";
 
-export default () => { return null; }
+export default () => { return <div />; };

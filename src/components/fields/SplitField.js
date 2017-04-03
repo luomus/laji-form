@@ -68,8 +68,7 @@ export default class SplitField extends Component {
 
 	onChange = (fields) => (formData) => {
 		this.props.onChange(fields.reduce((updatedFormData, field) => {
-				return {...updatedFormData, [field]: formData[field]};
-			}, this.props.formData)
-		);
+			return {...updatedFormData, [field]: formData[field]};
+		}, this.props.formData));
 	}
 }

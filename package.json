@@ -10,7 +10,8 @@
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build:lib.moment-wrapped": "rimraf lib.moment-wrapped && NODE_ENV=production webpack --config webpack.config.lib.moment-wrapped.js && rimraf lib.moment-wrapped/styles.js",
     "build": "npm run build:lib && npm run build:dist && npm run build:lib.moment-wrapped",
-    "publish-to-npm": "npm version patch && git push && npm run build && npm publish"
+    "publish-to-npm": "npm version patch && git push && npm run build && npm publish",
+    "lint": "eslint src"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
+    "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.5",
     "babel-plugin-array-includes": "^2.0.3",
     "babel-plugin-react-transform": "^2.0.2",
@@ -61,6 +63,8 @@
     "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.25.0",
     "es6-promise": "^4.0.5",
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^6.10.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "isomorphic-fetch": "^2.2.1",

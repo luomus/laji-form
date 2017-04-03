@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import StringField from "react-jsonschema-form/lib/components/fields/StringField";
 
 export default class _StringField extends Component {

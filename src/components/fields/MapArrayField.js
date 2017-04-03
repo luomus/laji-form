@@ -3,19 +3,19 @@ import { findDOMNode } from "react-dom";
 import update from "react-addons-update";
 import deepEquals from "deep-equal";
 import LajiMap from "laji-map";
-import { latLngSegmentsToGeoJSONGeometry, geoJSONLineToLatLngSegmentArrays } from "laji-map/lib/utils";
+import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
-import { Button, StretchAffix, Alert } from "../components";
+import { Button, StretchAffix } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols } from "../../utils";
-import { shouldRender, getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
 const popupMappers = {
 	unitTaxon: (schema, formData) => {
 		try {
-			return {[schema.identifications.items.properties.taxon.title]: formData.identifications[0].taxon}
+			return {[schema.identifications.items.properties.taxon.title]: formData.identifications[0].taxon};
 		} catch (e) {
 			return {};
 		}
@@ -63,7 +63,7 @@ export default class MapArrayField extends Component {
 
 		const initialState = {activeIdx: 0};
 		new Context().addStateClearListener(() => {
-			this.setState(initialState)
+			this.setState(initialState);
 		});
 		this.state = initialState;
 	}
@@ -86,7 +86,7 @@ export default class MapArrayField extends Component {
 	}
 
 	render() {
-		const {formData, registry: {fields: {SchemaField}}} = this.props;
+		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset} = options;
@@ -96,7 +96,7 @@ export default class MapArrayField extends Component {
 			"ui:options": {
 				...getUiOptions(getInnerUiSchema(uiSchema)),
 				activeIdx,
-				onActiveChange: (idx, callback) => {this.setState({activeIdx: idx}, callback)}
+				onActiveChange: (idx, callback) => {this.setState({activeIdx: idx}, callback);}
 			}
 		};
 
@@ -106,7 +106,7 @@ export default class MapArrayField extends Component {
 
 		const schemaSizes = ["lg", "md", "sm", "xs"].reduce((sizes, size) => {
 			sizes[size] = 12 - mapSizes[size];
-			return sizes
+			return sizes;
 		}, {});
 
 		const schemaProps = immutableDelete(this.props.schema.items.properties, geometryField);
@@ -128,12 +128,12 @@ export default class MapArrayField extends Component {
 							<MapComponent
 								ref="map"
 								lang={this.props.formContext.lang}
-								onPopupClose={() => {this.setState({popupIdx: undefined})}}
+								onPopupClose={() => {this.setState({popupIdx: undefined});}}
 								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
-								onFocusGrab={() => {this.setState({focusGrabbed: true})}}
-								onFocusRelease={() => {this.setState({focusGrabbed: false})}}
+								onFocusGrab={() => {this.setState({focusGrabbed: true});}}
+								onFocusRelease={() => {this.setState({focusGrabbed: false});}}
 								panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
 								draw={false}
 								{...mapOptions}
@@ -182,15 +182,15 @@ export default class MapArrayField extends Component {
 
 				events.forEach(e => {
 					switch (e.type) {
-						case "create":
-							mapper.onAdd(e);
-							break;
-						case "delete":
-							mapper.onRemove(e);
-							break;
-						case "edit":
-							mapper.onEdited(e);
-							break;
+					case "create":
+						mapper.onAdd(e);
+						break;
+					case "delete":
+						mapper.onRemove(e);
+						break;
+					case "edit":
+						mapper.onEdited(e);
+						break;
 					}
 				});
 			},
@@ -237,26 +237,26 @@ export default class MapArrayField extends Component {
 				const emptyMode = !formData || !formData.length;
 
 				const draw = options.draw === false ? false : {
-						data: {
-							featureCollection: {
-								type: "FeatureCollection",
-								features: (geometries || []).map(geometry => {
-									return {type: "Feature", properties: {}, geometry}
-								})
-							},
-							getPopup: this.getPopup,
-							getFeatureStyle: ({featureIdx}) => {
-								this._context.featureIdxsToItemIdxs[featureIdx];
-								const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
-								return {color: color, fillColor: color, weight: 4};
-							}
+					data: {
+						featureCollection: {
+							type: "FeatureCollection",
+							features: (geometries || []).map(geometry => {
+								return {type: "Feature", properties: {}, geometry};
+							})
 						},
-						getDraftStyle: () => {
-							return {color: "#25B4CA", opacity: 1}
-						},
-						onChange: emptyMode ? mapper.onMapChangeCreateGathering : mapper.onChange,
-						...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
-					};
+						getPopup: this.getPopup,
+						getFeatureStyle: ({featureIdx}) => {
+							this._context.featureIdxsToItemIdxs[featureIdx];
+							const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
+							return {color: color, fillColor: color, weight: 4};
+						}
+					},
+					getDraftStyle: () => {
+						return {color: "#25B4CA", opacity: 1};
+					},
+					onChange: emptyMode ? mapper.onMapChangeCreateGathering : mapper.onChange,
+					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
+				};
 
 
 				const controlSettings = (emptyMode || this.state.activeIdx !== undefined) ?
@@ -289,8 +289,8 @@ export default class MapArrayField extends Component {
 			onChange: (events) => {
 				const mapper = this.geometryMappers.units;
 
-			events.forEach(e => {
-				switch (e.type) {
+				events.forEach(e => {
+					switch (e.type) {
 					case "create":
 						mapper.onAdd(e);
 						break;
@@ -300,8 +300,8 @@ export default class MapArrayField extends Component {
 					case "edit":
 						mapper.onEdited(e);
 						break;
-				}
-			});
+					}
+				});
 			},
 			onMapChangeCreateGathering: (events) => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);
@@ -320,7 +320,7 @@ export default class MapArrayField extends Component {
 							if (tabbables && tabbables.length) tabbables[0].focus();
 						});
 					}
-				})
+				});
 			},
 			onAdd: ({feature: {geometry}}) => {
 				const formData = this.props.formData ||
@@ -383,16 +383,16 @@ export default class MapArrayField extends Component {
 				});
 
 				const updateObject = {
-						[this.state.activeIdx]: {
-							[geometryField]: {$set: {
-								type: "GeometryCollection",
-								geometries: geometries.map((geometry, i) => thisEditGeometries[i] ? thisEditGeometries[i] : geometries[i])}
-							},
-							units: Object.keys(unitEditGeometries).reduce((o, i) => {
-								o[this._context.featureIdxsToItemIdxs[i]] = {unitGathering: {geometry: {$set: unitEditGeometries[i]}}}
-								return o;
-							}, {})
-						}
+					[this.state.activeIdx]: {
+						[geometryField]: {$set: {
+							type: "GeometryCollection",
+							geometries: geometries.map((geometry, i) => thisEditGeometries[i] ? thisEditGeometries[i] : geometries[i])}
+						},
+						units: Object.keys(unitEditGeometries).reduce((o, i) => {
+							o[this._context.featureIdxsToItemIdxs[i]] = {unitGathering: {geometry: {$set: unitEditGeometries[i]}}};
+							return o;
+						}, {})
+					}
 				};
 
 				this.props.onChange(update(this.props.formData, updateObject));
@@ -415,12 +415,12 @@ export default class MapArrayField extends Component {
 				this.highlightedElem = document.querySelector(`#${id} .form-group`);
 
 				if (this.highlightedElem) {
-					this.highlightedElem.className += " map-highlight"
+					this.highlightedElem.className += " map-highlight";
 				}
 			}
 		},
 		lineTransect: {
-			getOptions: (options) => {
+			getOptions: () => {
 				const {geometryField} = getUiOptions(this.props.uiSchema);
 				const {formData} = this.props;
 				const lineTransect = latLngSegmentsToGeoJSONGeometry(formData.map(item => item.geometry.coordinates));
@@ -434,28 +434,32 @@ export default class MapArrayField extends Component {
 							let formDataChanged = false;
 							events.forEach(e => {
 								switch (e.type) {
-									case "create":
-										formDataChanged = true;
-										const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-										newItem[geometryField] = e.geometry;
-										formData = update(formData, {
-											$splice: [[e.idx, 0, newItem]]
-										});
-										break;
-									case "edit":
-										formDataChanged = true;
-										formData = update(formData, {
-											[e.idx]: {
-												[geometryField]: {$set: e.geometry}
-											}
-										});
-										break;
-									case "delete":
-										formDataChanged = true;
-										formData = update(formData, {$splice: [[e.idx, 1]]});
-										break;
-									case "active":
-										state.activeIdx = e.idx;
+								case "create": {
+									formDataChanged = true;
+									const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+									newItem[geometryField] = e.geometry;
+									formData = update(formData, {
+										$splice: [[e.idx, 0, newItem]]
+									});
+									break;
+								}
+								case "edit": {
+									formDataChanged = true;
+									formData = update(formData, {
+										[e.idx]: {
+											[geometryField]: {$set: e.geometry}
+										}
+									});
+									break;
+								}
+								case "delete": {
+									formDataChanged = true;
+									formData = update(formData, {$splice: [[e.idx, 1]]});
+									break;
+								}
+								case "active": {
+									state.activeIdx = e.idx;
+								}
 								}
 							});
 							const afterState = () => {
@@ -475,7 +479,7 @@ export default class MapArrayField extends Component {
 							map.map.map.fitBounds(map.map._corridorLayer.getBounds());
 						}, 0);
 					}
-				}
+				};
 			}
 		}
 	}
@@ -484,7 +488,7 @@ export default class MapArrayField extends Component {
 	getPopup = (idx, openPopupCallback) => {
 		if (!this.refs.popup) return;
 		this.setState({popupIdx: idx}, () => {
-			if (this.refs.popup && hasData(this.getFeaturePopupData(idx))) openPopupCallback(this.refs.popup.refs.popup)
+			if (this.refs.popup && hasData(this.getFeaturePopupData(idx))) openPopupCallback(this.refs.popup.refs.popup);
 		});
 	}
 
@@ -563,14 +567,14 @@ class MapComponent extends Component {
 		function filter(original) {
 			return Object.keys(original).reduce((filtered, key) => {
 					// Nested checking should be more generic, but this should be enough for now.
-					if (key === "draw" || key === "data") {
-						filtered[key] = filter(original[key]);
-					} else if (typeof original[key] !== "function") {
-						filtered[key] = original[key];
-					}
+				if (key === "draw" || key === "data") {
+					filtered[key] = filter(original[key]);
+				} else if (typeof original[key] !== "function") {
+					filtered[key] = original[key];
+				}
 
-					return filtered;
-				}, {});
+				return filtered;
+			}, {});
 		}
 
 		return [[this.props, nextProps], [this.state, nextState]].some(compareObjects =>

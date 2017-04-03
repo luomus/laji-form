@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from "react";
-import { findDOMNode } from "react-dom";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,
-	canFocusNextInput, findNearestParentSchemaElemID, focusNextInput } from "../utils";
+	canFocusNextInput, focusNextInput } from "../utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
@@ -12,29 +11,31 @@ import _SchemaField from "react-jsonschema-form/lib/components/fields/SchemaFiel
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 
 import ApiClient from "../ApiClient";
-import Context, {clear as clearContext} from "../Context";
+import Context from "../Context";
 import translations from "../translations.js";
 
 class SchemaField extends Component {
 	componentDidMount() {
+		function focus(id) {
+			const elem = getSchemaElementById(id);
+			if (elem) {
+				const tabbableFields = getTabbableFields(elem);
+				if (tabbableFields && tabbableFields.length) {
+					tabbableFields[0].focus();
+					scrollIntoViewIfNeeded(elem);
+				}
+			}
+		}
+
 		const _context = new Context(this.props.registry.formContext.contextId);
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			function focus(id) {
-				const elem = getSchemaElementById(id);
-				if (elem) {
-					const tabbableFields = getTabbableFields(elem);
-					if (tabbableFields && tabbableFields.length) {
-						tabbableFields[0].focus();
-						scrollIntoViewIfNeeded(elem);
-					}
-				}
-			}
 			const id = idToFocus;
 			_context.delayFocus ? setTimeout(() => focus(id), _context.delayFocus) : focus(id);
 			_context.idToFocus = undefined;
 			_context.delayFocus = undefined;
 		}
+
 	}
 
 	render() {
@@ -48,7 +49,7 @@ class SchemaField extends Component {
 			// Reset ArrayFieldTemplate
 			registry={{...props.registry, ArrayFieldTemplate}}
 			schema={schema}
-		/>
+		/>;
 	}
 }
 
@@ -111,7 +112,7 @@ function importLocalComponents(dir, fieldNames) {
 			if (typeof field[fieldName] === "string") {
 				fields[fieldName] = require(`./${dir}/${field[fieldName]}`).default;
 			} else {
-				fields[fieldName] = field[fieldName]
+				fields[fieldName] = field[fieldName];
 			}
 		}
 		return fields;
@@ -276,11 +277,11 @@ export default class LajiForm extends Component {
 				>{this.state.blocking ? <div className="blocking-loader" /> : null}
 			</ReactCSSTransitionGroup>
 		</div>
-		)
+		);
 	}
 
 	submit = () => {
-		this.refs.form.onSubmit({preventDefault: () => {;}});
+		this.refs.form.onSubmit({preventDefault: () => {}});
 	}
 
 	onKeyDown = (e) => {
@@ -317,9 +318,9 @@ export default class LajiForm extends Component {
 	popBlockingLoader = () => {
 		this._context.blockingLoaderCounter--;
 		if (this._context.blockingLoaderCounter < 0) {
-			console.warn("laji-form: Blocking loader was popped before pushing!");
+			console.warn("laji-form: Blocking loader was popped before pushing!"); // eslint-disable-line
 		}
-		this.setState({blocking: this._context.blockingLoaderCounter > 0})
+		this.setState({blocking: this._context.blockingLoaderCounter > 0});
 	}
 
 	clearState = () => {

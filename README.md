@@ -81,3 +81,5 @@ cp properties.json.example properties.json
 ```
 
 Then put the API access token you got in your email to ```properties.json```. Put also your user access token there.
+
+Try to keep the code style consistent - ```npm run lint``` should pass without errors.

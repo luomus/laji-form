@@ -11,7 +11,7 @@ function PlainTextWidget({id, value}) {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  PlainTextWidget.propTypes = {
+	PlainTextWidget.propTypes = {
 		id: PropTypes.string.isRequired,
 		value: PropTypes.string,
 	};

@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
-import { FormGroup, ButtonGroup, Button } from "react-bootstrap";
+import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
@@ -27,10 +27,6 @@ export default class DateTimeWidget extends Component {
 	getStateFromProps(props) {
 		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
-
-		const options = getUiOptions(this.props);
-		let showButtons = true;
-		if (options && options.hasOwnProperty("showButtons") && !options.showButtons) showButtons = false;
 
 		let dateFormat = "";
 		let timeFormat = "";

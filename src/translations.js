@@ -244,4 +244,4 @@
 		en: "Previous",
 		sv: "Tidigare"
 	},
-}
+};

@@ -20,7 +20,7 @@ const specialRules = {
 			) ? properties : properties.filter(field => field !== "editors");
 		}
 	}
-}
+};
 
 @BaseComponent
 export default class TableField extends Component {
@@ -40,8 +40,8 @@ export default class TableField extends Component {
 			let formData = this.props.formData;
 			if (!formData) formData = [];
 			formData = update(formData, {$merge: {[idx]: itemFormData}});
-			this.props.onChange(formData.filter(item => {return Object.keys(item).length}));
-		}
+			this.props.onChange(formData.filter(item => {return Object.keys(item).length;}));
+		};
 	}
 
 	render() {
@@ -79,14 +79,14 @@ export default class TableField extends Component {
 		});
 
 		schemaPropsArray.forEach(propName => {
-				labels.push(
+			labels.push(
 				<Col {...cols} key={propName + "-label"}>
 					<Label
 						label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
 						disabled={false}
 						id={idSchema[propName].$id}
 						help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
-			</Col>)
+			</Col>);
 		});
 
 		// Dummy delete button is placed for aligning the labels correctly. Wacky.
@@ -94,7 +94,7 @@ export default class TableField extends Component {
 			<div key="label-row" className="laji-form-field-template-item keep-vertical">
 				<div className="laji-form-field-template-schema">{labels}</div>
 				<div className="laji-form-field-template-buttons">
-					<DeleteButton style={{visibility: "hidden"}} onClick={() => {;}} translations={this.props.formContext.translations} />
+					<DeleteButton style={{visibility: "hidden"}} onClick={() => {}} translations={this.props.formContext.translations} />
 				</div>
 			</div>
 		);
@@ -134,7 +134,7 @@ export default class TableField extends Component {
 
 			uiSchema = {...uiSchema, "ui:buttons": deletable ? [
 				<DeleteButton key={`rm-${idx}`}  translations={props.formContext.translations} onClick={() => {
-					this.onChange(update(formData, {$splice: [[idx, 1]]}))
+					this.onChange(update(formData, {$splice: [[idx, 1]]}));
 				}} />
 			] : [],
 				"ui:buttonsVertical": true};

@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import update from "react-addons-update";
-import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -72,7 +72,7 @@ export default class FlatField extends Component {
 											}
 										};
 									});
-							});
+								});
 							state.errorSchema = immutableDelete(state.errorSchema, field);
 							if (props.errorSchema[field] && props.errorSchema[field].__errors) {
 								state.errorSchema = {...state.errorSchema, __errors: props.errorSchema[field].__errors};

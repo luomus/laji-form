@@ -50,7 +50,7 @@ export function getButtons(buttons, props) {
 			<Button key={fnName} className={className} onClick={e => {
 				if (callbacker) {
 					e.persist();
-					callbacker(() => fn(e)(props, options))
+					callbacker(() => fn(e)(props, options));
 				} else {
 					fn(e)(props, options);
 				}
@@ -79,7 +79,7 @@ export default function ArrayFieldTemplate(props) {
 				let deleteButtonRef = undefined;
 				const getDelButton = () => deleteButtonRef;
 				const deleteButton = (
-					<DeleteButton ref={elem => {deleteButtonRef = elem}}
+					<DeleteButton ref={elem => {deleteButtonRef = elem;}}
 												onClick={item.onDropIndexClick(item.index)}
 												className="laji-form-field-template-buttons"
 												confirm={confirmDelete}
@@ -91,7 +91,7 @@ export default function ArrayFieldTemplate(props) {
 						<div className="laji-form-field-template-schema">{item.children}</div>
 						{item.hasRemove && renderDelete && deleteButton}
 					</div>
-				)
+				);
 			})}
 			{buttons}
 		</div>
@@ -99,11 +99,23 @@ export default function ArrayFieldTemplate(props) {
 }
 
 export function onContainerKeyDown(props, insertCallforward, navigateCallForward, delayFocus) { return (e) => {
-	if (!e.ctrlKey && e.key === "Insert") {
+	function onInsert() {
+		onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
+	}
 
-		function onInsert() {
-			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
+	function focusFirstOf(idx) {
+		const elem = getSchemaElementById(`${props.idSchema.$id}_${idx}`);
+
+		if (elem) {
+			const tabbableFields = getTabbableFields(getSchemaElementById(`${props.idSchema.$id}_${idx}`));
+			if (tabbableFields && tabbableFields.length) {
+				tabbableFields[0].focus();
+				e.stopPropagation();
+			}
 		}
+	}
+
+	if (!e.ctrlKey && e.key === "Insert") {
 
 		e.stopPropagation();
 
@@ -113,7 +125,7 @@ export function onContainerKeyDown(props, insertCallforward, navigateCallForward
 			e.persist();
 			insertCallforward(() => {
 				onInsert();
-			})
+			});
 		} else if (canAdd) {
 			onInsert();
 		}
@@ -126,31 +138,20 @@ export function onContainerKeyDown(props, insertCallforward, navigateCallForward
 		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
 		const amount = e.shiftKey ? -1 : 1;
 
-		function focusFirstOf(idx) {
-			const elem = getSchemaElementById(`${props.idSchema.$id}_${idx}`);
-
-			if (elem) {
-				const tabbableFields = getTabbableFields(getSchemaElementById(`${props.idSchema.$id}_${idx}`))
-				if (tabbableFields && tabbableFields.length) {
-					tabbableFields[0].focus();
-					e.stopPropagation();
-				}
-			}
-		}
 		const nextIdx = currentIdx + amount;
 		if  (navigateCallForward) {
 			e.persist();
 			navigateCallForward(() => {
 				focusFirstOf(nextIdx);
-			}, nextIdx)
+			}, nextIdx);
 		} else {
 			focusFirstOf(nextIdx);
 		}
 	}
-}}
+};}
 
-export function onItemKeyDown(getDeleteButton) { return props => e => {
+export function onItemKeyDown(getDeleteButton) { return () => e => {
 	if (e.ctrlKey && e.key === "Delete") {
 		getDeleteButton().onClick(e);
 	}
-}}
+};}

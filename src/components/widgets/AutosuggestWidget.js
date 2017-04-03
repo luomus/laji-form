@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from "react";
-import { findDOMNode } from "react-dom";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Tooltip, OverlayTrigger, FormControl, FormGroup, Popover, Glyphicon } from "react-bootstrap";
-import Spinner from "react-spinner"
+import { Tooltip, OverlayTrigger, FormControl, Popover, Glyphicon } from "react-bootstrap";
+import Spinner from "react-spinner";
 import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
@@ -43,7 +42,7 @@ const autosuggestSettings = {
 			);
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
-			)
+			);
 		},
 		renderSuccessGlyph: (that) => {
 			const options = getUiOptions(that.props);
@@ -119,34 +118,35 @@ const autosuggestSettings = {
 		renderUnsuggestedMetaInfo: (that, input) => {
 			const tooltip = (
 				<Tooltip id={`${that.props.id}-tooltip`}>{that.props.formContext.translations.UnknownName}</Tooltip>
-			)
+			);
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
 			);
 		},
-		renderSuccessGlyph: (that) => <Glyphicon style={{pointerEvents: "auto"}}
+		renderSuccessGlyph: () => <Glyphicon style={{pointerEvents: "auto"}}
 		                                         glyph="user"
 		                                         className="form-control-feedback"/>,
-		getFriendProfile: (that) => {
+		// getFriendProfile: (that) => {
+		getFriendProfile: () => {
 			return;
-			const value = that.getValue();
-
-			if (value && that.state.imgUrlPerson !== value) {
-				new ApiClient().fetchCached(`/person/by-id/${value}/profile`).then(({image}) => {
-					if (that.mounted && image) that.setState({imgUrl: image, imgUrlPerson: value});
-				});
-			}
-
-			return (
-				<Popover id={`${that.props.id}-popover`}>
-					{that.state.imgUrl ?
-						<img src={that.state.imgUrl} style={{width: 70}} /> : <Spinner />
-					}
-				</Popover>
-			);
+		// 	const value = that.getValue();
+		//
+		// 	if (value && that.state.imgUrlPerson !== value) {
+		// 		new ApiClient().fetchCached(`/person/by-id/${value}/profile`).then(({image}) => {
+		// 			if (that.mounted && image) that.setState({imgUrl: image, imgUrlPerson: value});
+		// 		});
+		// 	}
+		//
+		// 	return (
+		// 		<Popover id={`${that.props.id}-popover`}>
+		// 			{that.state.imgUrl ?
+		// 				<img src={that.state.imgUrl} style={{width: 70}} /> : <Spinner />
+		// 			}
+		// 		</Popover>
+		// 	);
 		},
 	}
-}
+};
 
 @BaseComponent
 export default class AutoSuggestWidget extends Component {
@@ -247,7 +247,7 @@ export default class AutoSuggestWidget extends Component {
 						this.promiseTimestamp = undefined;
 					}
 				})
-				.catch(error => {
+				.catch(() => {
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({isLoading: false});
 						this.promiseTimestamp = undefined;
@@ -416,18 +416,14 @@ export default class AutoSuggestWidget extends Component {
 
 		const getGlyphNameFromState = (state) => {
 			switch (state) {
-				case "success":
-					return "ok";
-					break;
-				case "warning":
-					return "warning-sign";
-					break;
-				case "error":
-					return "remove";
-					break;
-				default:
-					return "";
-					break;
+			case "success":
+				return "ok";
+			case "warning":
+				return "warning-sign";
+			case "error":
+				return "remove";
+			default:
+				return "";
 			}
 		};
 
@@ -441,7 +437,7 @@ export default class AutoSuggestWidget extends Component {
 					className="form-control-feedback"
 				/>
 			) : null;
-		}
+		};
 
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		const input = (

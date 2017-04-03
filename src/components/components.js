@@ -32,7 +32,7 @@ export class DeleteButton extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {show: false}
+		this.state = {show: false};
 	}
 
 	onButtonKeyDown({key}) {
@@ -58,7 +58,7 @@ export class DeleteButton extends Component {
 	}
 
 	onClick(e) {
-		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick(e)
+		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick(e);
 	}
 
 	render() {
@@ -92,7 +92,7 @@ export class DeleteButton extends Component {
 					: null
 				}
 			</div>
-		)
+		);
 	}
 }
 
@@ -126,7 +126,7 @@ export const GlyphButton = (props) => {
 			<Glyphicon glyph={glyph} />
 		</Button>
 	);
-}
+};
 
 const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
 export class Affix extends Component {
@@ -163,7 +163,7 @@ export class Affix extends Component {
 			const wrapperNode = findDOMNode(this.refs.wrapper);
 			const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
 			const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : offset;
-			return {affixState, width, top}
+			return {affixState, width, top};
 		}
 	}
 
@@ -185,7 +185,7 @@ export class Affix extends Component {
 			if (_state.affixState !== TOP) state.top = _state.top;
 
 			this.setState(state);
-		})
+		});
 	}
 
 	render() {
@@ -295,7 +295,7 @@ export class StretchAffix extends Component {
 				"100vh" :
 			Math.max(viewportHeight - affixHeight, 0);
 
-			return {affixState, width, top, fixerHeight, affixHeight}
+			return {affixState, width, top, fixerHeight, affixHeight};
 		}
 	}
 
@@ -309,18 +309,18 @@ export class StretchAffix extends Component {
 		style.height = affixHeight;
 		fixerStyle.height = fixerHeight;
 		switch (affixState) {
-			case TOP:
-				break;
-			case AFFIXED:
-				style.position = "fixed";
-				style.width = width;
-				style.top = top;
-				break;
-			case BOTTOM:
-				style.position = "fixed";
-				style.width = width;
-				style.top = top;
-				break;
+		case TOP:
+			break;
+		case AFFIXED:
+			style.position = "fixed";
+			style.width = width;
+			style.top = top;
+			break;
+		case BOTTOM:
+			style.position = "fixed";
+			style.width = width;
+			style.top = top;
+			break;
 		}
 
 		return (
@@ -360,7 +360,7 @@ export function Label({label, help, children, id}) {
 			<strong>{label}{showHelp ? <Help /> : null}</strong>
 			{children}
 		</label>
-	)
+	);
 
 	return (label || help) ? (
 		<OverlayTrigger placement="right" overlay={tooltipElem}>
@@ -369,8 +369,8 @@ export function Label({label, help, children, id}) {
 	) : labelElem;
 }
 
-function NullTooltip(props) {
-	return <div />
+function NullTooltip() {
+	return <div />;
 }
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
@@ -382,5 +382,5 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 			{children}
 		</OverlayTrigger>
 
-	)
+	);
 }

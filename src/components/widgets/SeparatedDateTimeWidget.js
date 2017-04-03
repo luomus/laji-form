@@ -1,5 +1,4 @@
-import React, { Component, PropTypes } from "react";
-import moment from "moment";
+import React, { Component } from "react";
 import { Row, Col, FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";

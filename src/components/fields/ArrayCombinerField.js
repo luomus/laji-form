@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from "react";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import { Component, PropTypes } from "react";
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -70,7 +70,7 @@ export default class ArrayCombinerField extends Component {
 							rotatedErrorSchema[idx] = rotatedErrorSchema[idx] ?
 								merge(rotatedErrorSchema[idx], propertyError) : propertyError;
 						}
-					})
+					});
 				}
 			});
 			return rotatedErrorSchema;

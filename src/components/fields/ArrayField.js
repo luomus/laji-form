@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getUiOptions } from "../../utils";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils"
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 
@@ -66,7 +66,7 @@ export default class _ArrayField extends Component {
 			uiSchema={{...props.uiSchema, "ui:options": {orderable: false, ...props.uiSchema["ui:options"], buttons}}}
 		  formData={this.state.formData}
 		  onChange={this.onChange}
-		/>
+		/>;
 	}
 
 	onChange(formData) {
@@ -77,7 +77,7 @@ export default class _ArrayField extends Component {
 	buttonDefinitions = {
 		copy: {
 			glyph: "duplicate",
-			fn: e => this.onCopy,
+			fn: () => this.onCopy,
 			rules: {
 				minLength:  1
 			}
@@ -106,11 +106,11 @@ export default class _ArrayField extends Component {
 		}
 
 		const copyItem = lastIdx >= 0 ? (() => {
-				return fields.reduce((item, field) => {
-					item[field] = clone(lastItem[field]);
-					return item;
-				}, defaultItem)
-			})() : defaultItem;
+			return fields.reduce((item, field) => {
+				item[field] = clone(lastItem[field]);
+				return item;
+			}, defaultItem);
+		})() : defaultItem;
 
 		nestedFilters.forEach(filter => {
 			const splitted = filter.substring(1).split("/");
