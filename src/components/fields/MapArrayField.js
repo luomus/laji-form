@@ -157,7 +157,7 @@ export default class MapArrayField extends Component {
 
 	//TODO geometrymappers abuse each others criss and cross. All the other mappers should extend default mapper.
 	geometryMappers = {
-		default:{
+		default: {
 			getOptions: (options) => {
 				return this.geometryMappers.units.getOptions(options);
 			},
@@ -467,7 +467,7 @@ export default class MapArrayField extends Component {
 									this.props.onChange(formData);
 								}
 							};
-							state ?	this.setState(state, afterState()) : afterState();
+							Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
 						}
 					},
 					controlSettings: {
@@ -541,7 +541,6 @@ class Popup extends Component {
 class MapComponent extends Component {
 	constructor(props) {
 		super(props);
-		// this.state = this.getStateFromProps(props);
 		this.state = {};
 		this._context = new Context("MAP");
 		this._context.grabFocus = this.grabFocus;
@@ -561,13 +560,13 @@ class MapComponent extends Component {
 		if (this.props.mountCallback) this.props.mountCallback();
 	}
 
-	// Rendering doesn't update map, so we don't want to rerender on map prop changes.
+	// Rendering doesn't update map, so we don't want to rerender on map prop changes. Map is updated with componentDidUpdate()
 	shouldComponentUpdate(nextProps, nextState) {
 		//Filter functions because deep-equal handles them as unequal always.
 		function filter(original) {
 			return Object.keys(original).reduce((filtered, key) => {
-					// Nested checking should be more generic, but this should be enough for now.
-				if (key === "draw" || key === "data") {
+				// We don't check for object type recursively, because we know that only these objects contain functions.
+				if (key === "draw" || key === "data" || key === "lineTransect") {
 					filtered[key] = filter(original[key]);
 				} else if (typeof original[key] !== "function") {
 					filtered[key] = original[key];
