@@ -63,6 +63,9 @@ module.exports = {
 				test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/,
 				loader: "file-loader?name=[name].[ext]",
 			},
+		],
+		noParse: [
+			/node_modules\/proj4\/dist\/proj4\.js/
 		]
 	}
 };

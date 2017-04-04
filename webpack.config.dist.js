@@ -46,6 +46,9 @@ module.exports = {
 				test: /\.(ttf|eot|svg|png|jpg|gif)(\?v=[0-9].[0-9].[0-9])?$/,
 				loader: "file-loader?name=images/[name].[ext]"
 			},
+		],
+		noParse: [
+			/node_modules\/proj4\/dist\/proj4\.js/
 		]
 	}
 };

@@ -119,7 +119,6 @@ function importLocalComponents(dir, fieldNames) {
 	}, {});
 }
 
-
 function FieldTemplate({
 	id,
 	classNames,
