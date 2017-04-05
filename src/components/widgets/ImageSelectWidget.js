@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import Context from "../../Context";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, getContext } from "../../utils";
 import Isvg from "react-inlinesvg";
 import SelectWidget from "./SelectWidget";
 import BaseComponent from "../BaseComponent";
@@ -11,10 +10,10 @@ export default class ImageSelectWidget extends Component {
 		options: PropTypes.object.isRequired
 	}
 
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
-		this._context = new Context("IMAGES");
-		this.staticImgPath = new Context().staticImgPath;
+		this._context = getContext(context, "IMAGES");
+		this.staticImgPath = getContext(context).staticImgPath;
 	}
 
 	render() {

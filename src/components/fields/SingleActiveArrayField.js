@@ -4,7 +4,6 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstra
 import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
-import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
 
@@ -45,7 +44,7 @@ const headerFormatters = {
 
 			that.hoveredIdx = idx;
 			if (!force && idx === that.state.activeIdx) return;
-			const map = new Context("MAP").map;
+			const map = that.getContext("MAP").map;
 			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
 
 			const unitGeometries = [...(item && item.units ? item.units : [])]
@@ -65,7 +64,7 @@ const headerFormatters = {
 			});
 		},
 		onMouseLeave: (that) => {
-			const map = new Context("MAP").map;
+			const map = that.getContext("MAP").map;
 			map.setData();
 			that.hoveredIdx = undefined;
 		}
@@ -159,6 +158,7 @@ export default class SingleActiveArrayField extends Component {
 				return (
 						<div onKeyDown={onContainerKeyDown(
 							props,
+							that.context,
 							callback => that.onActiveChange(that.props.formData.length, callback),
 							(callback, idx) => that.onActiveChange(idx, callback),
 							DELAY_FOCUS)
@@ -174,7 +174,7 @@ export default class SingleActiveArrayField extends Component {
 									</Panel>
 								))}
 							</Accordion>
-							{getButtons(buttons, props)}
+							{getButtons(buttons, that)}
 						</div>
 				);
 			}
@@ -224,6 +224,7 @@ export default class SingleActiveArrayField extends Component {
 				return (
 					<div onKeyDown={onContainerKeyDown(
 						props,
+						that.context,
 						callback => that.onActiveChange(that.props.formData.length, callback),
 						(callback, idx) => that.onActiveChange(idx, callback),
 					)}>
@@ -243,7 +244,7 @@ export default class SingleActiveArrayField extends Component {
 							</div>
 						}>
 							{props.items[activeIdx].children}
-							{getButtons(buttons, props)}
+							{getButtons(buttons, props, that.context)}
 						</Panel>
 					</div>
 				);

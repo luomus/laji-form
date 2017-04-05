@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import update from "react-addons-update";
 import ApiClient from "../../ApiClient";
-import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, parseJSONPointer } from "../../utils";
+import { getUiOptions, parseJSONPointer, getContext } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 const MAX_IMAGE_SIZE = 20000000;
@@ -16,12 +15,12 @@ const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff"
 @BaseComponent
 export default class ImageArrayField extends Component {
 
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
 		this.apiClient = new ApiClient();
-		this._context = new Context("IMAGE_ARRAY_FIELD");
+		this._context = getContext(context, "IMAGE_ARRAY_FIELD");
 		if (!this._context.metadatas) this._context.metadatas = {};
-		this.mainContext = new Context();
+		this.mainContext = getContext(context);
 	}
 
 

@@ -200,3 +200,10 @@ export function getBootstrapCols(width) {
 		return o;
 	}, {});
 }
+
+export function getContext(context, nameSpace) {
+	if (!context.root[nameSpace]) {
+		context.root[nameSpace] = {};
+	}
+	return context.root[nameSpace];
+}
