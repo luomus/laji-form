@@ -8,7 +8,8 @@ import { geoJSONLineToLatLngSegmentArrays } from "laji-map/lib/utils";
 import "../src/styles";
 import "./styles.css";
 
-const USE_LOCAL_SCHEMAS = true;
+// set to undefined to use the local schemas
+const SCHEMA_ID = "JX.123608";
 
 const log = (type) => console.log.bind(console, type); // eslint-disable-line
 
@@ -183,7 +184,7 @@ const lineTransectGeometries = geoJSONLineToLatLngSegmentArrays(lineTransect.geo
 	[]);
 
 const lajiForm = new LajiForm({
-	...(USE_LOCAL_SCHEMAS ? schemas : {
+	...(SCHEMA_ID === undefined ? schemas : {
 		uiSchemaContext: schemas.uiSchemaContext,
 		formData: schemas.formData
 	}),
@@ -200,8 +201,8 @@ const lajiForm = new LajiForm({
 
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
-if (!USE_LOCAL_SCHEMAS) {
-	apiClient.fetch("/forms/JX.123608", {lang, format: "schema"})
+if (SCHEMA_ID !== undefined) {
+	apiClient.fetch(`/forms/${SCHEMA_ID}`, {lang, format: "schema"})
 						.then(response => {
 							return response.json();
 						})
