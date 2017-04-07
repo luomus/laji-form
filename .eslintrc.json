@@ -41,7 +41,8 @@
             "error",
             {"checkLoops": false}
         ],
-        "react/no-find-dom-node": "off"
+        "react/no-find-dom-node": "off",
+        "no-console": "off"
     },
     "plugins": [
         "react"

@@ -11,7 +11,8 @@
     "build:lib.moment-wrapped": "rimraf lib.moment-wrapped && NODE_ENV=production webpack --config webpack.config.lib.moment-wrapped.js && rimraf lib.moment-wrapped/styles.js",
     "build": "npm run build:lib && npm run build:dist && npm run build:lib.moment-wrapped",
     "publish-to-npm": "npm version patch && git push && npm run build && npm publish",
-    "lint": "eslint src playground"
+    "push-to-git": "npm run lint && git push",
+    "lint": "eslint -c .eslintrc.prod.json src playground"
   },
   "keywords": [
     "react-jsonschema-form",
