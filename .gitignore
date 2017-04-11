@@ -6,3 +6,6 @@ dist
 properties.json
 diff
 react-jsonschema-form-copys
+.vim*
+*.swp
+.tern-project
