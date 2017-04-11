@@ -475,7 +475,7 @@ export default class MapArrayField extends Component {
 					mountCallback: () => {
 						const map = this.getContext("MAP");
 						setTimeout(() => {
-							map.map.map.fitBounds(map.map._corridorLayer.getBounds());
+							map.map.map.fitBounds(map.map._corridorLayerGroup.getBounds());
 						}, 0);
 					}
 				};
