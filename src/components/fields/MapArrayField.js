@@ -484,7 +484,7 @@ export default class MapArrayField extends Component {
 	}
 
 
-	getPopup = (idx, openPopupCallback) => {
+	getPopup = (idx, feature, openPopupCallback) => {
 		if (!this.refs.popup) return;
 		this.setState({popupIdx: idx}, () => {
 			if (this.refs.popup && hasData(this.getFeaturePopupData(idx))) openPopupCallback(this.refs.popup.refs.popup);
