@@ -3,20 +3,18 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,
-	canFocusNextInput, focusNextInput, getContext } from "../utils";
+	canFocusNextInput, focusNextInput } from "../utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
-import BaseComponent from "./BaseComponent";
 
 import Form from "react-jsonschema-form";
 import _SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 
 import ApiClient from "../ApiClient";
+import Context from "../Context";
 import translations from "../translations.js";
 
-@BaseComponent
 class SchemaField extends Component {
-
 	componentDidMount() {
 		function focus(id) {
 			const elem = getSchemaElementById(id);
@@ -29,13 +27,13 @@ class SchemaField extends Component {
 			}
 		}
 
-		const context = this.getContext();
-		const {idToFocus} = context;
+		const _context = new Context(this.props.registry.formContext.contextId);
+		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
 			const id = idToFocus;
-			context.delayFocus ? setTimeout(() => focus(id), context.delayFocus) : focus(id);
-			context.idToFocus = undefined;
-			context.delayFocus = undefined;
+			_context.delayFocus ? setTimeout(() => focus(id), _context.delayFocus) : focus(id);
+			_context.idToFocus = undefined;
+			_context.delayFocus = undefined;
 		}
 
 	}
@@ -121,61 +119,57 @@ function importLocalComponents(dir, fieldNames) {
 	}, {});
 }
 
-@BaseComponent
-class FieldTemplate extends Component {
-	render() {
-		const {
-			id,
-			classNames,
-			label,
-			children,
-			errors,
-			rawHelp,
-			description,
-			hidden,
-			required,
-			displayLabel,
-			schema,
-			uiSchema,
-		} = this.props;
+function FieldTemplate({
+	id,
+	classNames,
+	label,
+	children,
+	errors,
+	rawHelp,
+	description,
+	hidden,
+	required,
+	displayLabel,
+	schema,
+	uiSchema,
+	}) {
 
-		if (hidden) {
-			return children;
-		}
-		const inlineHelp = uiSchema["ui:inlineHelp"];
-		const ids = this.getContext("IDS");
-		const htmlId = `_laji-form_${id}`;
-		let elemId = undefined;
-		if (!ids[htmlId] || ids[htmlId] === this) {
-			ids[htmlId] = this;
-			elemId = htmlId;
-		}
+	if (hidden) {
+		return children;
+	}
+	const inlineHelp = uiSchema["ui:inlineHelp"];
+	const ids = new Context("IDS");
+	const htmlId = `_laji-form_${id}`;
+	let elemId = undefined;
+	if (!ids[htmlId]  || ids[htmlId] === this) {
+		ids[htmlId] = this;
+		elemId = htmlId;
+	}
 
-		const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
+	const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
 
-		const buttons = uiSchema["ui:buttons"] || undefined;
-		const vertical = uiSchema["ui:buttonsVertical"];
-		return (
-			<div className={classNames} id={elemId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} required={required} id={id}/> : null}
-				{_displayLabel && description ? description : null}
-				<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
-					<div className={"laji-form-field-template-schema"}>
-						{inlineHelp ? <div className="pull-left">{children}</div> : children}
-						{inlineHelp ? (
-							<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`}/></div>
+	const buttons = uiSchema["ui:buttons"] || undefined;
+	const vertical = uiSchema["ui:buttonsVertical"];
+	return (
+		<div className={classNames} id={elemId}>
+			{label && _displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
+			{_displayLabel && description ? description : null}
+			<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
+				<div className={"laji-form-field-template-schema"}>
+					{inlineHelp ? <div className="pull-left">{children}</div> : children}
+					{inlineHelp ? (
+						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
 						) : null
-						}
-					</div>
-					{buttons ?
-						<div className="laji-form-field-template-buttons">{buttons}</div> :
-						null
 					}
 				</div>
-				{errors}
+				{buttons ?
+					<div className="laji-form-field-template-buttons">{buttons}</div> :
+					null
+				}
 			</div>
-		);
-	}
+			{errors}
+		</div>
+	);
 }
 
 export default class LajiForm extends Component {
@@ -189,20 +183,11 @@ export default class LajiForm extends Component {
 		lang: "en"
 	}
 
-	static childContextTypes = {
-		root: React.PropTypes.object,
-	}
-
-	getChildContext() {
-		return {root: this.rootContext};
-	}
-
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
-		this.rootContext = {};
-		this._context = getContext({root: this.rootContext});
+		this._context = new Context(this.props.contextId);
 		this._context.blockingLoaderCounter = 0;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
@@ -272,6 +257,7 @@ export default class LajiForm extends Component {
 						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext,
+						contextId: this.props.contextId,
 						getFormRef: () => this.refs.form
 					}}
 				  validate={validate(this.props.validators)}
@@ -340,4 +326,3 @@ export default class LajiForm extends Component {
 		this._context.clearState();
 	}
 }
-

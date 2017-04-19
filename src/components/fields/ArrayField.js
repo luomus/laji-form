@@ -1,19 +1,20 @@
 import React, { Component } from "react";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
-import { getUiOptions, getContext } from "../../utils";
+import { getUiOptions } from "../../utils";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import BaseComponent from "../BaseComponent";
+import Context from "../../Context";
 
 @BaseComponent
 export default class _ArrayField extends Component {
-	constructor(props,context) {
+	constructor(props) {
 		super(props);
 		this.onCopy = this.onCopy.bind(this);
 		this.state = {
 			formData: props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)]
 		};
-		this._context = getContext(context, `${props.idSchema.$id}_empty_arrays`);
-		getContext(context).addStateClearListener(() => {this.clear();});
+		this._context = new Context(`${props.formContext.contextId}_empty_arrays_${props.idSchema.$id}`);
+		new Context().addStateClearListener(() => {this.clear();});
 	}
 
 	clear() {
@@ -59,11 +60,8 @@ export default class _ArrayField extends Component {
 			}
 		}).filter(btn => btn);
 
-		// Context passing to ArrayFieldTemplate fails, because of this issue: https://github.com/facebook/react/issues/3392.
-		// We are hijacking the formContext to pass the React context forward.
 		return <ArrayField
 			{...props}
-			formContext={{...props.formContext, _context: this.context}}
 			schema={schema}
 			uiSchema={{...props.uiSchema, "ui:options": {orderable: false, ...props.uiSchema["ui:options"], buttons}}}
 		  formData={this.state.formData}

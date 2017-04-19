@@ -5,7 +5,8 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getContext } from "../../utils";
+import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined } from "../../utils";
+import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
 const scopeFieldSettings = {
@@ -27,14 +28,14 @@ const buttonSettings = {
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
 
-		const mapContext = that.getContext("MAP");
+		const mapContext = new Context("MAP");
 
 		function getLayer() {
 			const {$id} = that.props.idSchema;
 			const splitted = $id.split("_");
 			const idx = parseInt(splitted[splitted.length - 1]);
 
-			const {featureIdxsToItemIdxs} = this.getContext("MAP_UNITS");
+			const {featureIdxsToItemIdxs} = new Context("MAP_UNITS");
 			let featureIdx = undefined;
 			for (let i in featureIdxsToItemIdxs) {
 				if (featureIdxsToItemIdxs[i] === idx) {
@@ -213,9 +214,9 @@ export default class ScopeField extends Component {
 		}).isRequired
 	}
 
-	constructor(props, context) {
+	constructor(props) {
 		super(props);
-		this._context = getContext(context, "SCOPE_FIELD");
+		this._context = new Context("SCOPE_FIELD");
 		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
 		let additionalFields = {};
 		if (this._context[additionalsPersistenceId]) {

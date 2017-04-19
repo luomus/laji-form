@@ -7,8 +7,9 @@ import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, getContext } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
 const popupMappers = {
@@ -55,13 +56,13 @@ export default class MapArrayField extends Component {
 		})
 	}
 
-	constructor(props, context) {
+	constructor(props) {
 		super(props);
-		this._context = getContext(context, "MAP_UNITS");
+		this._context = new Context("MAP_UNITS");
 		this._context.featureIdxsToItemIdxs = {};
 
 		const initialState = {activeIdx: 0};
-		getContext(context).addStateClearListener(() => {
+		new Context().addStateClearListener(() => {
 			this.setState(initialState);
 		});
 		this.state = initialState;
@@ -473,7 +474,7 @@ export default class MapArrayField extends Component {
 						lineTransect: true
 					},
 					mountCallback: () => {
-						const map = this.getContext("MAP");
+						const map = new Context("MAP");
 						setTimeout(() => {
 							map.map.map.fitBounds(map.map._corridorLayerGroup.getBounds());
 						}, 0);
@@ -537,12 +538,11 @@ class Popup extends Component {
 	}
 }
 
-@BaseComponent
 class MapComponent extends Component {
-	constructor(props, context) {
+	constructor(props) {
 		super(props);
 		this.state = {};
-		this._context = getContext(context, "MAP");
+		this._context = new Context("MAP");
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
 		this._context.showPanel = this.showPanel;
@@ -600,7 +600,7 @@ class MapComponent extends Component {
 	}
 
 	grabFocus = () => {
-		const mainContext = this.getContext();
+		const mainContext = new Context();
 		mainContext.pushBlockingLoader();
 		this.setState({focusGrabbed: true}, () => {
 			if (this.props.onFocusGrab) this.props.onFocusGrab();
@@ -608,7 +608,7 @@ class MapComponent extends Component {
 	}
 
 	releaseFocus = () => {
-		const mainContext = this.getContext();
+		const mainContext = new Context();
 		mainContext.popBlockingLoader();
 		this.setState({focusGrabbed: false}, () => {
 			if (this.props.onFocusRelease) this.props.onFocusRelease();

@@ -1,26 +1,27 @@
 import React from "react";
 import { Button, DeleteButton } from "./components";
-import { getUiOptions, getContext } from "../utils";
+import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
+import Context from "../Context";
 import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID } from "../utils";
 
-function onAdd(e, props, context, idToFocus, delayFocus) {
+function onAdd(e, props, idToFocus, delayFocus) {
 	if (getUiOptions(props.uiSchema).canAdd === false) return;
-	getContext(context).idToFocus = idToFocus;
-	getContext(context).delayFocus = delayFocus;
+	new Context(props.formContext.contextId).idToFocus = idToFocus;
+	new Context(props.formContext.contextId).delayFocus = delayFocus;
 	props.onAddClick(e);
 }
 
 const buttonDefinitions = {
 	add: {
 		glyph: "plus",
-		fn: (e) => (props, context, options = {}) => {
-			onAdd(e, props, context, `${props.idSchema.$id}_${props.items.length}`, options.delayFocus);
+		fn: (e) => (props, options = {}) => {
+			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, options.delayFocus);
 		}
 	}
 };
 
-export function getButtons(buttons, props, context) {
+export function getButtons(buttons, props) {
 	if (!buttons) return;
 
 	let addBtnAdded = false;
@@ -49,9 +50,9 @@ export function getButtons(buttons, props, context) {
 			<Button key={fnName} className={className} onClick={e => {
 				if (callbacker) {
 					e.persist();
-					callbacker(() => fn(e)(props, context, options));
+					callbacker(() => fn(e)(props, options));
 				} else {
-					fn(e)(props, context, options);
+					fn(e)(props, options);
 				}
 			}} >
 				{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
@@ -64,16 +65,14 @@ export function getButtons(buttons, props, context) {
 	);
 }
 
-// Context passing to ArrayFieldTemplate fails, because of this issue: https://github.com/facebook/react/issues/3392.
-// Context is passed here in formContext by ArrayField.
 export default function ArrayFieldTemplate(props) {
 	const Title = props.TitleField;
 	const Description = props.DescriptionField;
 	const options = getUiOptions(props.uiSchema);
 	const {confirmDelete, deleteCorner, renderDelete = true} = options;
-	const buttons = getButtons(options.buttons, props, props.formContext._context);
+	const buttons = getButtons(options.buttons, props);
 	return (
-		<div className={props.className} onKeyDown={onContainerKeyDown(props, props.formContext._context)}>
+		<div className={props.className} onKeyDown={onContainerKeyDown(props)}>
 			<Title title={props.title}/>
 			<Description description={props.description}/>
 			{props.items.map(item => {
@@ -99,9 +98,9 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-export function onContainerKeyDown(props, context, insertCallforward, navigateCallForward, delayFocus) { return (e) => {
+export function onContainerKeyDown(props, insertCallforward, navigateCallForward, delayFocus) { return (e) => {
 	function onInsert() {
-		onAdd(e, props, context, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
+		onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
 	}
 
 	function focusFirstOf(idx) {
