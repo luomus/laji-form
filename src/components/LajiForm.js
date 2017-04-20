@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from "react";
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import ReactCSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,

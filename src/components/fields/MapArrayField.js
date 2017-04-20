@@ -1,6 +1,7 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
-import update from "react-addons-update";
+import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import LajiMap from "laji-map";
 import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";

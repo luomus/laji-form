@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
 

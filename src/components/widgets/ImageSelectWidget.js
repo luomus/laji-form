@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";

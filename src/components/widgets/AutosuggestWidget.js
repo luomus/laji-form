@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Tooltip, OverlayTrigger, FormControl, Popover, Glyphicon } from "react-bootstrap";

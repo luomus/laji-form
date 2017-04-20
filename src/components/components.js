@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
 import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col } from "react-bootstrap";

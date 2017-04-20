@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import update from "immutability-helper";
 import equals from "deep-equal";
 import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { hasData, getUiOptions } from "../../utils";

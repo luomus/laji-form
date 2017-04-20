@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
 import { getUiOptions, hasData } from "../../utils";
 import { DeleteButton } from "../components";

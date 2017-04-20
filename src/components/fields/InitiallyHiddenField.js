@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Row, Col, Collapse } from "react-bootstrap";
 import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";

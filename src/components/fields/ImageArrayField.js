@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import update from "react-addons-update";
+import update from "immutability-helper";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";

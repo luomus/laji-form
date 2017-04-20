@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { SimpleSelect, MultiSelect } from "react-selectize";
 import { Label } from "react-bootstrap";
 import { TooltipComponent } from "../components";

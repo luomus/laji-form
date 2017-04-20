@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from "react";
-import update from "react-addons-update";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import update from "immutability-helper";
 import merge from "deepmerge";
 import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
 import Spinner from "react-spinner";

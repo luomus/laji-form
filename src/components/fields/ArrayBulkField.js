@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
