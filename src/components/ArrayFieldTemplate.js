@@ -108,7 +108,7 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 		const elem = getSchemaElementById(`${props.idSchema.$id}_${idx}`);
 
 		if (elem) {
-			const tabbableFields = getTabbableFields(getSchemaElementById(`${props.idSchema.$id}_${idx}`));
+			const tabbableFields = getTabbableFields(elem);
 			if (tabbableFields && tabbableFields.length) {
 				tabbableFields[0].focus();
 				e.stopPropagation();
@@ -135,7 +135,7 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 	} else if (e.ctrlKey && e.key === "Enter") {
 		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
-		const activeArrayItems = nearestSchemaElem.id.match(/_\d/g);
+		const activeArrayItems = nearestSchemaElem.id.match(/_\d+/g);
 		if (!activeArrayItems) return;
 
 		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));

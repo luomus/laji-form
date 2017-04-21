@@ -262,10 +262,10 @@ function AccordionArrayFieldTemplate(arrayFieldTemplateProps) {
 				<Accordion onSelect={key => this.onActiveChange(key)} activeKey={activeIdx === undefined ? -1 : activeIdx}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel onKeyDown={onItemKeyDown(() => this.deleteButtonRefs[idx])(item)}
-									 key={idx}
-									 eventKey={idx}
-									 header={this.renderAccordionHeader(idx, title)}
-									 bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}>
+						       key={idx}
+						       eventKey={idx}
+						       header={this.renderAccordionHeader(idx, title)}
+						       bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}>
 							{item.children}
 						</Panel>
 					))}
@@ -292,24 +292,27 @@ function PagerArrayFieldTemplate(arrayTemplateFieldProps) {
 				<div className="laji-map-accordion-header">
 					<Pager>
 						<Pager.Item previous href="#"
-												disabled={activeIdx <= 0 || activeIdx === undefined}
-												onClick={() => this.onActiveChange(activeIdx - 1)}>
+						            disabled={activeIdx <= 0 || activeIdx === undefined}
+						            onClick={() => this.onActiveChange(activeIdx - 1)}>
 							&larr; {translations.Previous}</Pager.Item>
 						{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
 						<Pager.Item next href="#"
-												disabled={activeIdx >= this.props.formData.length - 1 || activeIdx === undefined}
-												onClick={() => this.onActiveChange(activeIdx + 1)}>
+						            disabled={activeIdx >= this.props.formData.length - 1 || activeIdx === undefined}
+						            onClick={() => this.onActiveChange(activeIdx + 1)}>
 							{translations.Next}  &rarr;</Pager.Item>
 					</Pager>
 				</div>
 			}>
+			<div key={activeIdx}>
 				{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+			</div>
 				{getButtons(buttons, arrayTemplateFieldProps)}
 			</Panel>
 		</div>
 	);
 }
 
+// 'this' is binded to SingleActiveArrayField class context.
 function renderAccordionHeader(idx, title) {
 	const popupData = this.state.popups[idx];
 

@@ -1,4 +1,3 @@
-import { shouldRender } from "react-jsonschema-form/lib/utils";
 import { getReactComponentName } from "../utils";
 
 /**
@@ -21,10 +20,6 @@ export default function BaseComponent(ComposedComponent) {
 				super.componentWillReceiveProps(props);
 			}
 		}
-
-		//shouldComponentUpdate(nextProps, nextState) {
-		//	return shouldRender(this, nextProps, nextState);
-		//}
 
 		onChange(formData) {
 			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
