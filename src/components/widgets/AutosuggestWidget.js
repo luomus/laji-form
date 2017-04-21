@@ -307,7 +307,7 @@ export default class AutoSuggestWidget extends Component {
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === this.state.inputValue.toLowerCase()));
 	}
 
-	onBlur = (e, {focusedSuggestion}) => {
+	onBlur = (e, {highlightedSuggestion}) => {
 		if (this.state.inputValue === "") {
 			this.setState({unsuggested: false}, () => {
 				this.props.onChange("");
@@ -319,8 +319,8 @@ export default class AutoSuggestWidget extends Component {
 		this.setState({focused: false}, () => {
 			if (!this.state.inputInProgress) {
 				return;
-			} else if (focusedSuggestion === null && this.state.inputValue === "") {
-				this.selectSuggestion(focusedSuggestion);
+			} else if (highlightedSuggestion === null && this.state.inputValue === "") {
+				this.selectSuggestion(highlightedSuggestion);
 			} else if (unambigiousSuggestion) {
 				this.selectSuggestion(unambigiousSuggestion);
 			} else {
@@ -372,7 +372,7 @@ export default class AutoSuggestWidget extends Component {
 			suggestionsList: "list-group",
 			containerOpen: "open",
 			suggestion: "option-wrapper",
-			suggestionFocused: "option-wrapper highlight"
+			suggestionHighlighted: "option-wrapper highlight"
 		};
 
 		return (
