@@ -195,7 +195,7 @@ export default class NestField extends Component {
 		});
 		Object.keys(formData).forEach((prop) => {
 			if (dictionarifiedNests[prop]) {
-				Object.keys(formData[prop]).forEach((nestedProp) => {
+				Object.keys(formData[prop] || {}).forEach((nestedProp) => {
 					if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
 						formData[nestedProp] = formData[prop][nestedProp];
 						formData = {...formData, [nestedProp]: formData[prop][nestedProp]};

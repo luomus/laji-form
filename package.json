@@ -38,7 +38,7 @@
     "react-dom": "^15.5.0",
     "react-dropzone": "^3.6.0",
     "react-inlinesvg": "^0.5.4",
-    "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#build",
+    "react-jsonschema-form": "0.46.0",
     "react-selectize": "^2.0.3",
     "react-spinner": "^0.2.6",
     "react-transition-group": "^1.1.1",

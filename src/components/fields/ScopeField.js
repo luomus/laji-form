@@ -402,7 +402,7 @@ export default class ScopeField extends Component {
 	}
 
 	renderAdditionalsButton = () => {
-		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData).length === 0) return null;
+		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData || {}).length === 0) return null;
 
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 

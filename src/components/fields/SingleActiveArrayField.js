@@ -104,14 +104,19 @@ export default class SingleActiveArrayField extends Component {
 				renderer: PropTypes.oneOf(["accordion", "pager"]),
 				activeIdx: PropTypes.integer,
 				addTxt: PropTypes.string
-			}).isRequired
+			})
 		})
 	}
 
 	constructor(props) {
 		super(props);
 		this.deleteButtonRefs = {};
-		this.state = { activeIdx: 0, ...this.getStateFromProps(props), popups: {}};
+		this.state = {
+			activeIdx: (props.formData && props.formData.length) ? 0 : undefined, 
+			...this.getStateFromProps(props), popups: {}
+		};
+		this.AccordionArrayFieldTemplate = AccordionArrayFieldTemplate.bind(this);
+		this.PagerArrayFieldTemplate = PagerArrayFieldTemplate.bind(this);
 	}
 
 	componentWillReceiveProps(props) {
@@ -136,126 +141,26 @@ export default class SingleActiveArrayField extends Component {
 
 	render() {
 		const renderer = getUiOptions(this.props.uiSchema).renderer || "accordion";
-		return this.renderers[renderer]();
-	}
+		let ArrayFieldTemplate = undefined;
+		if (renderer === "accordion") {
+			ArrayFieldTemplate = this.AccordionArrayFieldTemplate;
+		} else if (renderer === "pager") {
+			ArrayFieldTemplate = this.PagerArrayFieldTemplate;
+		} else {
+			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
+		}
 
-	renderers = {
-		accordion: () => {
-			const {registry: {fields: {ArrayField}}} = this.props;
+		const options = getUiOptions(this.props.uiSchema);
+		const addLabel = options.hasOwnProperty("addTxt") ? 
+			options.addTxt : this.props.formContext.translations.Add;
 
-			let activeIdx = this.state.activeIdx;
-			if (activeIdx === undefined) activeIdx = -1;
-
-			const title = this.props.schema.title;
-
-			const options = getUiOptions(this.props.uiSchema);
-			const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : this.props.formContext.translations.Add;
-
-			const that = this;
-			function AccordionArray(props) {
-				const buttons = getUiOptions(props.uiSchema).buttons;
-				buttons.forEach(button => {
-					button.delayFocus = DELAY_FOCUS;
-				});
-				return (
-						<div onKeyDown={onContainerKeyDown(
-							props,
-							callback => that.onActiveChange(that.props.formData.length, callback),
-							(callback, idx) => that.onActiveChange(idx, callback),
-							DELAY_FOCUS)
-						}>
-							<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx}>
-								{props.items.map((item, idx) => (
-									<Panel onKeyDown={onItemKeyDown(() => that.deleteButtonRefs[idx])(item)}
-												 key={idx}
-												 eventKey={idx}
-												 header={that.renderAccordionHeader(idx, title)}
-												 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-										{item.children}
-									</Panel>
-								))}
-							</Accordion>
-							{getButtons(buttons, props)}
-						</div>
-				);
-			}
-
-			return (
-					<ArrayField
-						{...this.props}
-						registry={{
-							...this.props.registry,
-							ArrayFieldTemplate: AccordionArray
-						}}
-						uiSchema={{
-							...this.props.uiSchema,
-							"ui:field": undefined,
-							"ui:options": {
-								...this.props.uiSchema["ui:options"],
-								renderDelete: false,
-								buttons: [
-									{
-										fn: "add",
-										className: "col-xs-12 laji-map-accordion-header",
-										callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
-										label: addLabel
-									}
-								]
-							}
-						}}
-					/>
-			);
-		},
-		pager: () => {
-			const {registry: {fields: {ArrayField}}} = this.props;
-
-			let activeIdx = this.state.activeIdx;
-			if (activeIdx === undefined) activeIdx = -1;
-
-			const title = this.props.schema.title;
-			const {translations} =this.props.formContext;
-
-			const options = getUiOptions(this.props.uiSchema);
-			const addLabel = options.hasOwnProperty("addTxt") ? options.addTxt : translations.Add;
-
-			const that = this;
-			function PaginationArray(props) {
-				const buttons = getUiOptions(props.uiSchema).buttons;
-
-				return (
-					<div onKeyDown={onContainerKeyDown(
-						props,
-						callback => that.onActiveChange(that.props.formData.length, callback),
-						(callback, idx) => that.onActiveChange(idx, callback),
-					)}>
-						<Panel header={
-							<div className="laji-map-accordion-header">
-								<Pager>
-									<Pager.Item previous href="#"
-															disabled={activeIdx === 0}
-															onClick={() => that.onActiveChange(activeIdx - 1)}>
-										&larr; {translations.Previous}</Pager.Item>
-									{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
-									<Pager.Item next href="#"
-															disabled={activeIdx === that.props.formData.length - 1}
-															onClick={() => that.onActiveChange(activeIdx + 1)}>
-										{translations.Next}  &rarr;</Pager.Item>
-								</Pager>
-							</div>
-						}>
-							{props.items[activeIdx].children}
-							{getButtons(buttons, props)}
-						</Panel>
-					</div>
-				);
-			}
-
-			return (
+		const {registry: {fields: {ArrayField}}} = this.props;
+		return (
 				<ArrayField
 					{...this.props}
 					registry={{
 						...this.props.registry,
-						ArrayFieldTemplate: PaginationArray
+						ArrayFieldTemplate
 					}}
 					uiSchema={{
 						...this.props.uiSchema,
@@ -274,47 +179,6 @@ export default class SingleActiveArrayField extends Component {
 						}
 					}}
 				/>
-			);
-		}
-	}
-
-	renderAccordionHeader = (idx, title) => {
-		const formattedIdx = idx + 1;
-		const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
-
-		const {headerFormatter} = getUiOptions(this.props.uiSchema);
-
-		const popupData = this.state.popups[idx];
-
-		const headerTextElem = <span>{_title}</span>;
-
-		const formatter = headerFormatters[headerFormatter];
-		const headerText = formatter ? formatter.render(this, idx, headerTextElem) : headerTextElem;
-
-		const header = (
-			<div className="laji-map-accordion-header" onClick={() => {
-				this.onActiveChange(idx);
-			}}
-				onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx);}}
-				onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx);}} >
-				<div className="panel-title">
-					{headerText}
-					<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem;}}
-					              className="pull-right"
-												confirm={true}
-												translations={this.props.formContext.translations}
-												onClick={this.onDelete(idx)} />
-					</div>
-			</div>
-		);
-
-		return hasData(popupData) ? (
-			<OverlayTrigger placement="left"
-											overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
-				{header}
-			</OverlayTrigger>
-		) : (
-			header
 		);
 	}
 
@@ -377,3 +241,109 @@ class Popup extends Component {
 		) : null;
 	}
 }
+
+// 'this' is binded to SingleActiveArrayField class context.
+function AccordionArrayFieldTemplate(arrayFieldTemplateProps) {
+	this.renderAccordionHeader = renderAccordionHeader.bind(this);
+
+	const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
+	buttons.forEach(button => {
+		button.delayFocus = DELAY_FOCUS;
+	});
+	const activeIdx = this.state.activeIdx;
+	const title = this.props.schema.title;
+	return (
+			<div onKeyDown={onContainerKeyDown({
+				props: arrayFieldTemplateProps,
+				insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
+				navigateCallforward: (callback, idx) => this.onActiveChange(idx, callback),
+				delayFocus: DELAY_FOCUS
+			})}>
+				<Accordion onSelect={key => this.onActiveChange(key)} activeKey={activeIdx === undefined ? -1 : activeIdx}>
+					{arrayFieldTemplateProps.items.map((item, idx) => (
+						<Panel onKeyDown={onItemKeyDown(() => this.deleteButtonRefs[idx])(item)}
+									 key={idx}
+									 eventKey={idx}
+									 header={this.renderAccordionHeader(idx, title)}
+									 bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}>
+							{item.children}
+						</Panel>
+					))}
+				</Accordion>
+				{getButtons(buttons, arrayFieldTemplateProps)}
+			</div>
+	);
+}
+
+// 'this' is binded to SingleActiveArrayField class context.
+function PagerArrayFieldTemplate(arrayTemplateFieldProps) {
+	const {translations} = this.props.formContext;
+	const buttons = getUiOptions(arrayTemplateFieldProps.uiSchema).buttons;
+	const activeIdx = this.state.activeIdx;
+	const title = this.props.schema.title || "";
+
+	return (
+		<div onKeyDown={onContainerKeyDown({
+			props: arrayTemplateFieldProps,
+			insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
+			navigateCallforward:	(callback, idx) => this.onActiveChange(idx, callback),
+		})}>
+			<Panel header={
+				<div className="laji-map-accordion-header">
+					<Pager>
+						<Pager.Item previous href="#"
+												disabled={activeIdx <= 0 || activeIdx === undefined}
+												onClick={() => this.onActiveChange(activeIdx - 1)}>
+							&larr; {translations.Previous}</Pager.Item>
+						{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
+						<Pager.Item next href="#"
+												disabled={activeIdx >= this.props.formData.length - 1 || activeIdx === undefined}
+												onClick={() => this.onActiveChange(activeIdx + 1)}>
+							{translations.Next}  &rarr;</Pager.Item>
+					</Pager>
+				</div>
+			}>
+				{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+				{getButtons(buttons, arrayTemplateFieldProps)}
+			</Panel>
+		</div>
+	);
+}
+
+function renderAccordionHeader(idx, title) {
+	const popupData = this.state.popups[idx];
+
+	const formattedIdx = idx + 1;
+	const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
+	const {headerFormatter} = getUiOptions(this.props.uiSchema);
+	const headerTextElem = <span>{_title}</span>;
+	const formatter = headerFormatters[headerFormatter];
+	const headerText = formatter ? formatter.render(this, idx, headerTextElem) : headerTextElem;
+
+	const header = (
+		<div className="laji-map-accordion-header" onClick={() => {
+			this.onActiveChange(idx);
+		}}
+			onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx);}}
+			onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx);}} >
+			<div className="panel-title">
+				{headerText}
+				<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem;}}
+											className="pull-right"
+											confirm={true}
+											translations={this.props.formContext.translations}
+											onClick={this.onDelete(idx)} />
+				</div>
+		</div>
+	);
+
+	return hasData(popupData) ? (
+		<OverlayTrigger placement="left"
+										overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
+			{header}
+		</OverlayTrigger>
+	) : (
+		header
+	);
+}
+

@@ -22,12 +22,12 @@ export default function BaseComponent(ComposedComponent) {
 			}
 		}
 
-		shouldComponentUpdate(nextProps, nextState) {
-			return shouldRender(this, nextProps, nextState);
-		}
+		//shouldComponentUpdate(nextProps, nextState) {
+		//	return shouldRender(this, nextProps, nextState);
+		//}
 
-		onChange(formData, force) {
-			super.onChange ? super.onChange(formData, force) : this.props.onChange(formData, force);
+		onChange(formData) {
+			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
 		}
 	};
 }

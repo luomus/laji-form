@@ -36,7 +36,6 @@ class SchemaField extends Component {
 			_context.idToFocus = undefined;
 			_context.delayFocus = undefined;
 		}
-
 	}
 
 	render() {

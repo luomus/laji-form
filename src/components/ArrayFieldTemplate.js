@@ -5,11 +5,12 @@ import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
 import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID } from "../utils";
 
+
 function onAdd(e, props, idToFocus, delayFocus) {
-	if (getUiOptions(props.uiSchema).canAdd === false) return;
+	if (!props.canAdd || getUiOptions(props.uiSchema).canAdd === false) return;
+	props.onAddClick(e);
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 	new Context(props.formContext.contextId).delayFocus = delayFocus;
-	props.onAddClick(e);
 }
 
 const buttonDefinitions = {
@@ -38,7 +39,7 @@ export function getButtons(buttons, props) {
 
 	let _buttons = buttons.map(handleButton).filter(btn => btn);
 
-	if (!addBtnAdded && props.canAdd) _buttons = [handleButton({fn: "add"}), ..._buttons];
+	if (!addBtnAdded && props.canAdd && getUiOptions(props.uiSchema).canAdd !== false) _buttons = [handleButton({fn: "add"}), ..._buttons];
 
 	const buttonElems = _buttons.map(button => {
 		let {fn, fnName, glyph, label, className, callbacker, ...options} = button;
@@ -72,7 +73,7 @@ export default function ArrayFieldTemplate(props) {
 	const {confirmDelete, deleteCorner, renderDelete = true} = options;
 	const buttons = getButtons(options.buttons, props);
 	return (
-		<div className={props.className} onKeyDown={onContainerKeyDown(props)}>
+		<div className={props.className} onKeyDown={onContainerKeyDown({props})}>
 			<Title title={props.title}/>
 			<Description description={props.description}/>
 			{props.items.map(item => {
@@ -98,8 +99,8 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-export function onContainerKeyDown(props, insertCallforward, navigateCallForward, delayFocus) { return (e) => {
-	function onInsert() {
+export function onContainerKeyDown({props, insertCallforward, navigateCallforward, delayFocus}) { return (e) => {
+	function afterInsert() {
 		onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
 	}
 
@@ -121,13 +122,15 @@ export function onContainerKeyDown(props, insertCallforward, navigateCallForward
 
 		const canAdd = props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
 
-		if (canAdd && insertCallforward) {
-			e.persist();
-			insertCallforward(() => {
-				onInsert();
-			});
-		} else if (canAdd) {
-			onInsert();
+		if (canAdd) {
+			if (insertCallforward) {
+				e.persist();
+				insertCallforward(() => {
+					afterInsert();
+				});
+			} else {
+				afterInsert();
+			}
 		}
 	} else if (e.ctrlKey && e.key === "Enter") {
 		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
@@ -139,9 +142,9 @@ export function onContainerKeyDown(props, insertCallforward, navigateCallForward
 		const amount = e.shiftKey ? -1 : 1;
 
 		const nextIdx = currentIdx + amount;
-		if  (navigateCallForward) {
+		if  (navigateCallforward) {
 			e.persist();
-			navigateCallForward(() => {
+			navigateCallforward(() => {
 				focusFirstOf(nextIdx);
 			}, nextIdx);
 		} else {
