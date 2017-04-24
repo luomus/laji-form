@@ -1,6 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { toIdSchema } from  "react-jsonschema-form/lib/utils";
+import { immutableDelete } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -193,17 +194,24 @@ export default class NestField extends Component {
 		Object.keys(nests).forEach((newFieldName) => {
 			dictionarifiedNests[newFieldName] = true;
 		});
-		Object.keys(formData).forEach((prop) => {
-			if (dictionarifiedNests[prop]) {
-				Object.keys(formData[prop] || {}).forEach((nestedProp) => {
-					if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
-						formData[nestedProp] = formData[prop][nestedProp];
-						formData = {...formData, [nestedProp]: formData[prop][nestedProp]};
-					}
-				});
-				formData = {...formData, [prop]: undefined};
-			}
-		});
+
+
+		let nestedPropsFound = false;
+		do {
+			nestedPropsFound = false;
+			Object.keys(formData).forEach((prop) => {
+				if (dictionarifiedNests[prop]) {
+					Object.keys(formData[prop] || {}).forEach((nestedProp) => {
+						if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
+							formData = {...formData, [nestedProp]: formData[prop][nestedProp]};
+						}
+					});
+					formData = immutableDelete(formData, prop);
+					nestedPropsFound = true;
+				}
+			});
+		} while (nestedPropsFound);
+
 		this.props.onChange(formData);
 	}
 }
