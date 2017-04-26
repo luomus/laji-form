@@ -29,7 +29,7 @@
     "immutability-helper": "^2.1.2",
     "laji-map": "*",
     "laji-validate": "*",
-    "moment": "^2.14.1",
+    "moment": "*",
     "prop-types": "^15.5.8",
     "react": "^15.5.0",
     "react-autosuggest": "^9.0.1",

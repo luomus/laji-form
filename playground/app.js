@@ -189,7 +189,7 @@ const lajiForm = new LajiForm({
 		formData: schemas.formData
 	}),
 	//formData: {gatheringEvent: {leg: ["MA.308"]}},
-	formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
+	//formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,
 	lang,

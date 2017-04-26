@@ -15,6 +15,8 @@ import ApiClient from "../ApiClient";
 import Context from "../Context";
 import translations from "../translations.js";
 
+window.moment = require("moment");
+
 class SchemaField extends Component {
 	componentDidMount() {
 		function focus(id) {

@@ -38,7 +38,7 @@ export default class GridLayoutField extends Component {
 		// Apply nested uiSchemas prop effects virtually without rendering them.
 		while (true) {
 			const uiField = fieldProps.uiSchema["ui:field"];
-			if (!uiField) break;
+			if (uiField === undefined) break;
 
 			const field = new props.registry.fields[uiField](fieldProps);
 			const innerfieldProps = {...field.props, ...field.state};
@@ -134,7 +134,7 @@ export default class GridLayoutField extends Component {
 						  this.props.registry.definitions
 						)}
 						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
-						formData={this.state.formData[propertyName]}
+						formData={this.state.formData ? this.state.formData[propertyName] : undefined}
 						registry={this.state.registry}
 						onChange={(data) => {
 							props.onChange({...this.state.formData, [propertyName]: data});
