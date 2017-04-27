@@ -3,33 +3,12 @@ import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getUiOptions } from "../../utils";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
 
 @BaseComponent
 export default class _ArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.onCopy = this.onCopy.bind(this);
-		this.state = {
-			formData: props.formData || [getDefaultFormState(props.schema.items, undefined, props.registry)]
-		};
-		this._context = new Context(`${props.formContext.contextId}_empty_arrays_${props.idSchema.$id}`);
-		new Context().addStateClearListener(() => {this.clear();});
-	}
-
-	clear() {
-		this._context.touched = undefined;
-	}
-
-	componentWillUnmount() {
-		this.clear();
-	}
-
-	getStateFromProps(props) {
-		return {
-			formData: (this._context.touched || (props.formData && props.formData.length)) ?
-				props.formData : this.state.formData
-		};
 	}
 
 	render() {
@@ -39,12 +18,11 @@ export default class _ArrayField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
-		const that = this;
 		function rulesSatisfied(btn) {
 			return Object.keys(btn.rules || {}).every(ruleName => {
 				const ruleVal = btn.rules[ruleName];
 				if (ruleName === "minLength") {
-					return (that.state.formData || []).length >= ruleVal;
+					return (props.formData || []).length >= ruleVal;
 				}
 			});
 		}
@@ -64,14 +42,7 @@ export default class _ArrayField extends Component {
 			{...props}
 			schema={schema}
 			uiSchema={{...props.uiSchema, "ui:options": {orderable: false, ...props.uiSchema["ui:options"], buttons}}}
-		  formData={this.state.formData}
-		  onChange={this.onChange}
 		/>;
-	}
-
-	onChange(formData) {
-		this._context.touched = true;
-		this.props.onChange(formData);
 	}
 
 	buttonDefinitions = {
@@ -94,7 +65,7 @@ export default class _ArrayField extends Component {
 		const fields = Object.keys(this.props.schema.items.properties).filter(fieldsFilter);
 		const nestedFilters = filter.filter(f => f.includes("/"));
 
-		const {formData} = this.state;
+		const {formData} = this.props;
 		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry);
 
 		const lastIdx = formData.length - 1;
@@ -139,8 +110,8 @@ export default class _ArrayField extends Component {
 			}
 		});
 
-		this.onChange([
-			...this.state.formData,
+		this.props.onChange([
+			...this.props.formData,
 			copyItem
 		]);
 	}
