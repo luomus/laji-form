@@ -15,8 +15,6 @@ import ApiClient from "../ApiClient";
 import Context from "../Context";
 import translations from "../translations.js";
 
-window.moment = require("moment");
-
 class SchemaField extends Component {
 	componentDidMount() {
 		function focus(id) {
@@ -263,6 +261,7 @@ export default class LajiForm extends Component {
 						getFormRef: () => this.refs.form
 					}}
 				  validate={validate(this.props.validators)}
+					safeRenderCompletion={true}
 				>
 				<div>
 					{this.props.children}
