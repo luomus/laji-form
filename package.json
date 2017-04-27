@@ -38,7 +38,7 @@
     "react-dom": "^15.5.0",
     "react-dropzone": "^3.12.3",
     "react-inlinesvg": "git+https://github.com/loadsmart/react-inlinesvg.git",
-    "react-jsonschema-form": "^0.46.0",
+    "react-jsonschema-form": "^0.47.0",
     "react-selectize": "^2.0.3",
     "react-spinner": "^0.2.7",
     "react-transition-group": "^1.1.1",
