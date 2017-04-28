@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import ReactCSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,
@@ -188,7 +187,7 @@ export default class LajiForm extends Component {
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
 		this._context = new Context(this.props.contextId);
-		this._context.blockingLoaderCounter = 0;
+		this.blockingLoaderCounter = 0;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
 		this._context.stateClearListeners = [];
@@ -261,7 +260,6 @@ export default class LajiForm extends Component {
 						getFormRef: () => this.refs.form
 					}}
 				  validate={validate(this.props.validators)}
-					safeRenderCompletion={true}
 				>
 				<div>
 					{this.props.children}
@@ -270,12 +268,7 @@ export default class LajiForm extends Component {
 						null}
 					</div>
 			</Form>
-			<ReactCSSTransitionGroup
-					transitionName="blocking-loader-transition"
-					transitionEnterTimeout={200}
-					transitionLeaveTimeout={200}
-				>{this.state.blocking ? <div className="blocking-loader" /> : null}
-			</ReactCSSTransitionGroup>
+			<div ref="blockingLoader" className="blocking-loader" />
 		</div>
 		);
 	}
@@ -296,7 +289,7 @@ export default class LajiForm extends Component {
 			return false;
 		}
 
-		if (this._context.blockingLoaderCounter > 0 &&
+		if (this.blockingLoaderCounter > 0 &&
 			  !isDescendant(document.querySelector(".pass-block"), e.target)) {
 			e.preventDefault();
 			return;
@@ -311,16 +304,30 @@ export default class LajiForm extends Component {
 	}
 
 	pushBlockingLoader = () => {
-		this._context.blockingLoaderCounter++;
-		if (this.mounted) this.setState({blocking: this._context.blockingLoaderCounter > 0});
+		this.blockingLoaderCounter++;
+		if (this.mounted) {
+			if (this.blockingLoaderCounter === 1) {
+				this.refs.blockingLoader.className = "blocking-loader enter-start";
+				setImmediate(() => {
+					this.refs.blockingLoader.className = "blocking-loader entering";
+				});
+			}
+		}
 	}
 
 	popBlockingLoader = () => {
-		this._context.blockingLoaderCounter--;
-		if (this._context.blockingLoaderCounter < 0) {
+		this.blockingLoaderCounter--;
+		if (this.blockingLoaderCounter < 0) {
 			console.warn("laji-form: Blocking loader was popped before pushing!");
+		} else if (this.blockingLoaderCounter === 0) {
+			this.refs.blockingLoader.className = "blocking-loader leave-start";
+			setImmediate(() => {
+				this.refs.blockingLoader.className = "blocking-loader leaving";
+			});
+			setTimeout(() => {
+				this.refs.blockingLoader.className = "blocking-loader";
+			}, 200); // should match css transition time.
 		}
-		this.setState({blocking: this._context.blockingLoaderCounter > 0});
 	}
 
 	clearState = () => {
