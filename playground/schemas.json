@@ -1318,5 +1318,90 @@
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "MHL.1"
-	}
+	},
+	"formData": {
+  "secureLevel": "MX.secureLevelNone",
+  "gatheringEvent": {
+    "leg": [
+      "MA.308"
+    ],
+    "legPublic": true
+  },
+  "gatherings": [
+    {
+      "units": [
+        {
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "unitType": [
+            "MVL.61",
+            "MVL.233",
+            "MVL.24"
+          ],
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "identifications": [
+            {
+              "taxon": "jyvästatti",
+              "taxonID": "MX.72737"
+            }
+          ],
+          "unitGathering": {
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                26.123642789296074,
+                61.19680156605881
+              ]
+            }
+          }
+        },
+        {
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "unitType": [
+            "MVL.2"
+          ],
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "identifications": [
+            {
+              "taxon": "ass",
+              "taxonID": "MX.47092"
+            }
+          ],
+          "unitGathering": {
+            "geometry": {}
+          }
+        },
+        {
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "unitType": [
+            "MVL.232",
+            "MVL.234"
+          ],
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "hostID": "MX.46533",
+          "identifications": [
+            {
+              "taxon": "tomaatin ruosteäkämäpunkki",
+              "taxonID": "MX.53029"
+            }
+          ],
+          "unitGathering": {
+            "geometry": {}
+          }
+        }
+      ],
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [
+              27.118552188517775,
+              62.32105086485055
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
 }

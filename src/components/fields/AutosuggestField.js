@@ -62,6 +62,9 @@ export default class AutosuggestField extends Component {
 		if (options.suggestionValueField && props.formData && !isEmptyString(props.formData[options.suggestionValueField])) {
 			options.value = props.formData[options.suggestionValueField];
 		}
+		if (options.suggestionInputField && props.formData && !isEmptyString(props.formData[options.suggestionInputField])) {
+			options.inputValue = props.formData[options.suggestionInputField];
+		}
 
 		const {suggestionInputField} = uiOptions;
 

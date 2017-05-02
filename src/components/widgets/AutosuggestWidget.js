@@ -21,10 +21,13 @@ const autosuggestSettings = {
 		},
 		convertInputValue: that => {
 			let value = that.getValue();
-			if (!autosuggestSettings.taxon.isValueSuggested(value)) return new Promise(resolve => resolve(value));
-			return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
-				return vernacularName || scientificName || value;
-			});
+			const {inputValue} = getUiOptions(that.props);
+			if (inputValue) return new Promise(resolve => resolve(inputValue));
+			else {
+				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
+					return vernacularName || scientificName || value;
+				});
+			}
 		},
 		isValueSuggested: value => {
 			return !isEmptyString(value) && value.match(/MX\.\d+/);
@@ -283,13 +286,20 @@ export default class AutoSuggestWidget extends Component {
 		this.setState({focused: false});
 	}
 
-	onInputChange = (value) => {
-		const {onInputChange} = getUiOptions(this.props);
+	onInputChange = (value, method) => {
+		const {onInputChange, preventTypingPattern} = getUiOptions(this.props);
+
 		if (onInputChange) {
 			value = onInputChange(value);
 		}
+
 		this.inputChanged = (value !== this.state.inputValue);
 		if (this.inputChanged && !this.suggestionSelectedFlag) {
+			if (method === "type" && preventTypingPattern)  {
+				const regexp = new RegExp(preventTypingPattern);
+				if (value.match(regexp)) return;
+			}
+
 			const state = {inputValue: value};
 			if (value !== "") state.inputInProgress = true;
 			this.setState(state);
@@ -346,7 +356,6 @@ export default class AutoSuggestWidget extends Component {
 	render() {
 		const {props} = this;
 		let {suggestions, inputValue, isLoading} = this.state;
-		const {preventTypingPattern} = getUiOptions(props);
 
 		const inputProps = {
 			id: this.props.id,
@@ -354,13 +363,7 @@ export default class AutoSuggestWidget extends Component {
 			readOnly: props.readonly,
 			disabled: props.disabled,
 			placeholder: props.placeholder,
-			onChange: (e, {newValue, method}) => {
-				if (method === "type" && preventTypingPattern) {
-					const regexp = new RegExp(preventTypingPattern);
-					if (newValue.match(regexp)) return;
-				}
-				this.onInputChange(newValue, method);
-			},
+			onChange: (e, {newValue, method}) => this.onInputChange(newValue, method),
 			onFocus: this.onFocus,
 			onBlur: this.onBlur
 		};
