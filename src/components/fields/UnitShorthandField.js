@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getInnerUiSchema, getUiOptions } from "../../utils";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import { GlyphButton } from "../components";
+import { Button, GlyphButton } from "../components";
+import { Tooltip, OverlayTrigger, Glyphicon } from "react-bootstrap";
 
 @BaseComponent
 export default class LineTransectUnitCodeField extends Component {
@@ -17,52 +19,77 @@ export default class LineTransectUnitCodeField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {showSchema: false};
+		this.state = {...this.state, ...this.getStateFromProps(props)};
 	}
 
-	getToggleButton = () => {
+	getStateFromProps = (props) => {
+		let {showSchema} = this.state;
+		if (!this.state.showSchema && !isEmptyString(props.formData[getUiOptions(props.uiSchema).shorthandField])) {
+			showSchema = true;
+		}
+		return {showSchema};
+	}
+
+	getShowSchemaButton = () => {
 		return (
 			<GlyphButton
-				key={`${this.props.idSchema.$id}-toggle-code-reader`}
-				bsStyle={this.state.showSchema ? "default" : "primary"}
+				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
+				bsStyle={this.state.showSchema ? "default" : "info"}
 				onClick={() => {
 					new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id
 					this.setState({showSchema: !this.state.showSchema});
 				}}
-				glyph="text-background"
+				glyph="resize-small"
 			/>
 		);
 	}
 
 	onCodeChange = (formData) => {
 		new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id
-		this.props.onChange(formData);
+		this.props.onChange(getDefaultFormState(this.props.schema, formData, this.props.registry.definitions));
 		this.setState({showSchema: true});
 	}
 
 	render() {
-		const toggleButton = this.getToggleButton();
 		const {SchemaField} = this.props.registry.fields;
+		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
+		const toggleButton = this.getShowSchemaButton();
 		return !this.state.showSchema ? (
 				<div className="laji-form-field-template-item">
-					<CodeReader onChange={this.onCodeChange} formID={getUiOptions(this.props.uiSchema).formID} className="laji-form-field-template-schema" />
+					<CodeReader onChange={this.onCodeChange} value={this.props.formData[shorthandFieldName]} formID={getUiOptions(this.props.uiSchema).formID} className="laji-form-field-template-schema" />
 					<div className="laji-form-field-template-buttons">{toggleButton}</div>
 				</div>
-			) :
-			<SchemaField 
-				{...this.props} 
-				uiSchema={{
-					...this.props.uiSchema, 
-					...getInnerUiSchema(this.props.uiSchema),
-					"ui:buttons": [...(this.props.uiSchema["ui:buttons"] || []), toggleButton]
-				}} />;
+			) : (
+				<div>
+					<SchemaField 
+						{...this.props} 
+						uiSchema={{
+							[shorthandFieldName]: {"ui:widget": "HiddenWidget"},
+							...this.props.uiSchema, 
+							...getInnerUiSchema(this.props.uiSchema),
+							"ui:buttons": [toggleButton]
+						}} />
+				</div>
+			);
 	}
 }
 
+@BaseComponent
 class CodeReader extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
+		this.state = this.getStateFromProps(props);
 		this.apiClient = new ApiClient();
+	}
+
+	getStateFromProps = (props) => {
+		console.log(props.value);
+		let state = this.state;
+		if (this.state.value === "" && !isEmptyString(props.value)) {
+			state.value = props.value;
+		}
+		return state;
 	}
 
 	componentDidMount() {

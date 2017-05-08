@@ -9,9 +9,9 @@ import "../src/styles";
 import "./styles.css";
 
 // set to undefined to use the local schemas
-const SCHEMA_ID = "JX.519";
+const SCHEMA_ID = "MHL.1";
 
-const log = (type) => console.log.bind(console, type); // eslint-disable-line
+const log = (type) => console.info.bind(console, type);
 
 let lang = "fi";
 
@@ -215,5 +215,5 @@ if (SCHEMA_ID !== undefined) {
 }
 
 function onSubmit({formData}) {
-	console.log(formData); // eslint-disable-line
+	console.info(formData);
 }

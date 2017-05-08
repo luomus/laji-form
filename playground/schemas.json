@@ -295,22 +295,25 @@
 							]
 						},
 						"items": {
-							"ui:field": "ContextInjectionField",
+							"ui:field": "FlatField",
+							"classNames": "well well-sm",
 							"ui:options": {
-								"injections": {
-									"/ui:options/formId": "/formID"
-								}
+								"fields": [
+									"identifications",
+									"unitGathering"
+								]
 							},
 							"uiSchema": {
-								"ui:field": "LineTransectUnitCodeField",
-								"classNames": "well well-sm",
+								"ui:field": "ContextInjectionField",
+								"ui:options": {
+									"injections": {
+										"/ui:options/formID": "/formID"
+									}
+								},
 								"uiSchema": {
-									"ui:field": "FlatField",
+									"ui:field": "UnitRapidField",
 									"ui:options": {
-										"fields": [
-											"identifications",
-											"unitGathering"
-										]
+										"shorthandField": "shortHandText"
 									},
 									"uiSchema": {
 										"ui:field": "ScopeField",
@@ -334,13 +337,16 @@
 												}
 											],
 											"fields": [
+												"shortHandText",
 												"/identifications/taxonID",
 												"/identifications/taxon",
+												"lineTransectObsType",
+												"lineTransectRouteFieldType",
 												"count",
+												"pairCount",
+												"broodSize",
 												"notes",
-												"unitType",
-												"taxonConfidence",
-												"recordBasis"
+												"lineTransectPairCountChanged"
 											],
 											"fieldScopes": {
 												"unitType": {
@@ -429,10 +435,13 @@
 													"xs": 12,
 													"rows": [
 														[
+															"shortHandText",
 															"/identifications/taxon",
-															"taxonConfidence",
-															"recordBasis",
+															"lineTransectObsType",
+															"lineTransectRouteFieldType",
 															"count",
+															"pairCount",
+															"broodSize",
 															"notes"
 														]
 													]
@@ -1249,6 +1258,68 @@
 											"Kaivuu",
 											"Maaston peseminen"
 										]
+									},
+									"shortHandText": {
+										"type": "string",
+										"title": "Pika"
+									},
+									"lineTransectObsType": {
+										"type": "string",
+										"title": "Laatu",
+										"enum": [
+											"",
+											"MY.lineTransectObsTypeSong",
+											"MY.lineTransectObsTypeOtherSound",
+											"MY.lineTransectObsTypeSeen",
+											"MY.lineTransectObsTypeSeenMale",
+											"MY.lineTransectObsTypeSeenFemale",
+											"MY.lineTransectObsTypeFlyingOverhead",
+											"MY.lineTransectObsTypeFlock",
+											"MY.lineTransectObsTypeFlockFlyingOverhead",
+											"MY.lineTransectObsTypeSeenPair",
+											"MY.lineTransectObsTypeSeenBrood",
+											"MY.lineTransectObsTypeSeenNest"
+										],
+										"enumNames": [
+											"",
+											"Laulava",
+											"Muuten ääntelevä",
+											"Näköhavainto",
+											"Koiras",
+											"Naaras",
+											"Ylilentävä",
+											"Parvi",
+											"Lentoparvi",
+											"Pari",
+											"Poikue",
+											"Pesä"
+										]
+									},
+									"lineTransectRouteFieldType": {
+										"type": "string",
+										"title": "Sarka",
+										"enum": [
+											"",
+											"MY.lineTransectRouteFieldTypeInner",
+											"MY.lineTransectRouteFieldTypeOuter"
+										],
+										"enumNames": [
+											"",
+											"P - Pääsarka",
+											"A - Apusarka"
+										]
+									},
+									"pairCount": {
+										"type": "string",
+										"title": "Parimäärä"
+									},
+									"broodSize": {
+										"type": "string",
+										"title": "Pesuekoko"
+									},
+									"lineTransectPairCountChanged": {
+										"type": "boolean",
+										"title": "Parimäärä muuttettu"
 									}
 								},
 								"required": []
@@ -1320,88 +1391,481 @@
 		"formID": "MHL.1"
 	},
 	"formData": {
-  "secureLevel": "MX.secureLevelNone",
-  "gatheringEvent": {
-    "leg": [
-      "MA.308"
-    ],
-    "legPublic": true
-  },
-  "gatherings": [
-    {
-      "units": [
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.61",
-            "MVL.233",
-            "MVL.24"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "identifications": [
-            {
-              "taxon": "jyvästatti",
-              "taxonID": "MX.72737"
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                26.123642789296074,
-                61.19680156605881
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092"
-            }
-          ],
-          "unitGathering": {
-            "geometry": {}
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.232",
-            "MVL.234"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "hostID": "MX.46533",
-          "identifications": [
-            {
-              "taxon": "tomaatin ruosteäkämäpunkki",
-              "taxonID": "MX.53029"
-            }
-          ],
-          "unitGathering": {
-            "geometry": {}
-          }
-        }
-      ],
-      "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              27.118552188517775,
-              62.32105086485055
-            ]
-          }
-        ]
-      }
-    }
-  ]
+	  "secureLevel": "MX.secureLevelNone",
+	  "routeDirectionAdhered": true,
+	  "gatheringEvent": {
+		"leg": [
+		  "MA.308"
+		],
+		"legPublic": true
+	  },
+	  "gatherings": [
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.157287504315256,
+				60.34655421503672
+			  ],
+			  [
+				21.15678433144307,
+				60.34614401991599
+			  ]
+			]
+		  },
+		  "units": [
+			{
+			  "shortHandText": "LLX",
+			  "identifications": [
+				{
+				  "taxon": "Luscinia luscinia",
+				  "taxonID": "MX.32819"
+				}
+			  ],
+			  "lineTransectObsType": "MY.lineTransectObsTypeSong",
+			  "lineTransectRouteFieldType": "MY.lineTransectRouteFieldTypeOuter",
+			  "pairCount": 1,
+			  "individualCount": 1
+			}
+		  ]
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15678433144307,
+				60.34614401991599
+			  ],
+			  [
+				21.1563868147306,
+				60.34552880507621
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.1563868147306,
+				60.34552880507621
+			  ],
+			  [
+				21.156566806174656,
+				60.34470299207118
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156566806174656,
+				60.34470299207118
+			  ],
+			  [
+				21.156482091085234,
+				60.344290352202826
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156482091085234,
+				60.344290352202826
+			  ],
+			  [
+				21.15613798335356,
+				60.34337868792245
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15613798335356,
+				60.34337868792245
+			  ],
+			  [
+				21.156313087412702,
+				60.342757202965046
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156313087412702,
+				60.342757202965046
+			  ],
+			  [
+				21.156765676899003,
+				60.34217954900388
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156765676899003,
+				60.34217954900388
+			  ],
+			  [
+				21.156905700792887,
+				60.34139914916323
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156905700792887,
+				60.34139914916323
+			  ],
+			  [
+				21.141900757371932,
+				60.34207383577048
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.141900757371932,
+				60.34207383577048
+			  ],
+			  [
+				21.14722082495724,
+				60.35220250593295
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.14722082495724,
+				60.35220250593295
+			  ],
+			  [
+				21.15428199814939,
+				60.35265561890472
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15428199814939,
+				60.35265561890472
+			  ],
+			  [
+				21.15518005849613,
+				60.35172002755225
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15518005849613,
+				60.35172002755225
+			  ],
+			  [
+				21.156060714497833,
+				60.35070498030439
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156060714497833,
+				60.35070498030439
+			  ],
+			  [
+				21.155598254361283,
+				60.349567801687066
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.155598254361283,
+				60.349567801687066
+			  ],
+			  [
+				21.15571311030641,
+				60.348927995578975
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15571311030641,
+				60.348927995578975
+			  ],
+			  [
+				21.156081954122108,
+				60.348818484876894
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156081954122108,
+				60.348818484876894
+			  ],
+			  [
+				21.156418335113436,
+				60.3481833110709
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156418335113436,
+				60.3481833110709
+			  ],
+			  [
+				21.15639787901864,
+				60.34758975702712
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15639787901864,
+				60.34758975702712
+			  ],
+			  [
+				21.156119235688795,
+				60.34737293227256
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156119235688795,
+				60.34737293227256
+			  ],
+			  [
+				21.156426499450255,
+				60.34689888545418
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.156426499450255,
+				60.34689888545418
+			  ],
+			  [
+				21.157287504315256,
+				60.34655421503672
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.16600879222582,
+				60.350812760742066
+			  ],
+			  [
+				21.164326272295323,
+				60.35647983491509
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.164326272295323,
+				60.35647983491509
+			  ],
+			  [
+				21.154235194954964,
+				60.35609820278726
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.154235194954964,
+				60.35609820278726
+			  ],
+			  [
+				21.154710382444886,
+				60.35309916588957
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.154710382444886,
+				60.35309916588957
+			  ],
+			  [
+				21.155520789498848,
+				60.35318206361015
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.155520789498848,
+				60.35318206361015
+			  ],
+			  [
+				21.157097007968765,
+				60.35288979857322
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.157097007968765,
+				60.35288979857322
+			  ],
+			  [
+				21.15772408307389,
+				60.35293318439105
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.15772408307389,
+				60.35293318439105
+			  ],
+			  [
+				21.159632767429812,
+				60.352734132459105
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.159632767429812,
+				60.352734132459105
+			  ],
+			  [
+				21.161532523190917,
+				60.350993213287765
+			  ]
+			]
+		  }
+		},
+		{
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				21.161532523190917,
+				60.350993213287765
+			  ],
+			  [
+				21.16600879222582,
+				60.350812760742066
+			  ]
+			]
+		  }
+		}
+	  ]
+	}
 }
-}
+

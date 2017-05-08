@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,
-	canFocusNextInput, focusNextInput } from "../utils";
+	canFocusNextInput, focusNextInput, getNestedTailUiSchema, getUiOptions } from "../utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
@@ -43,6 +43,7 @@ class _SchemaField extends Component {
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema)) {
 			schema = {...schema, uniqueItems: false};
 		}
+
 		return <SchemaField
 			{...props}
 			// Reset ArrayFieldTemplate
@@ -85,7 +86,8 @@ const fields = importLocalComponents("fields", [
 	"FlatField",
 	"SingleActiveArrayField",
 	"SingleItemArrayField",
-	"UnitRapidField",
+	"UnitShorthandField",
+	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
 
