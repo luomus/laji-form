@@ -425,7 +425,7 @@ export default class ScopeField extends Component {
 		return (
 			<Dropdown key="socop"
 			          id={this.props.idSchema.$id + "-scope-field-dropdown"}
-			          bsStyle="info"
+			          bsStyle="primary"
 			          pullRight
 			          open={this.state.additionalsOpen}
 			          onSelect={() => { this.preventCloseDropdown = true; }}

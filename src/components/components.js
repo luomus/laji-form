@@ -8,7 +8,7 @@ export class Button extends Component {
 	render() {
 		return (
 			<_Button
-			bsStyle="info"
+			bsStyle="primary"
 			{...this.props}
 			>{this.props.children}</_Button>
 		);

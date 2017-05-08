@@ -34,7 +34,7 @@ export default class LineTransectUnitCodeField extends Component {
 		return (
 			<GlyphButton
 				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
-				bsStyle={this.state.showSchema ? "default" : "info"}
+				bsStyle={this.state.showSchema ? "default" : "primary"}
 				onClick={() => {
 					new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id
 					this.setState({showSchema: !this.state.showSchema});
