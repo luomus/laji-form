@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,
-	canFocusNextInput, focusNextInput, getNestedTailUiSchema, getUiOptions } from "../utils";
+	canFocusNextInput, focusNextInput } from "../utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
@@ -44,11 +44,24 @@ class _SchemaField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
+		if (uiSchema && uiSchema.uiSchema && uiSchema["ui:buttons"]) {
+			uiSchema = {
+				...uiSchema,
+				"ui:buttons": undefined,
+				uiSchema: {
+					...uiSchema.uiSchema,
+					"ui:buttons": uiSchema["ui:buttons"]
+				}
+			}
+		}
+
+
 		return <SchemaField
 			{...props}
 			// Reset ArrayFieldTemplate
 			registry={{...props.registry, ArrayFieldTemplate}}
 			schema={schema}
+			uiSchema={uiSchema}
 		/>;
 	}
 }

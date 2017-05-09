@@ -75,11 +75,20 @@ export function getUiOptions(container) {
 }
 
 export function getInnerUiSchema(parentUiSchema) {
-	const {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
+	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
+	if (uiSchema && parentUiSchema["ui:buttons"]) {
+			uiSchema = {
+			...uiSchema,
+			"ui:buttons": [
+				...(uiSchema["ui:buttons"] || []),
+				...parentUiSchema["ui:buttons"]
+			]
+		};
+	}
 	return {
 		...restOfUiSchema,
 		"ui:field": undefined,
-		"ui:buttons": undefined,
+		"ui:buttons": uiSchema ? undefined : parentUiSchema["ui:buttons"],
 		...uiSchema
 	};
 }

@@ -251,7 +251,7 @@ export default class ScopeField extends Component {
 
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
-		const uiSchema = {...this.state.uiSchema, "ui:buttons": this.renderAdditionalsButton()};
+		const uiSchema = {...this.state.uiSchema, "ui:buttons": [...(this.state.uiSchema["ui:buttons"] || []), this.renderAdditionalsButton()]};
 		return (
 			<div>
 				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />

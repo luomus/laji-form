@@ -9,7 +9,7 @@ import { Button, GlyphButton } from "../components";
 import { Tooltip, OverlayTrigger, Glyphicon } from "react-bootstrap";
 
 @BaseComponent
-export default class LineTransectUnitCodeField extends Component {
+export default class UnitShorthandField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			uiSchema: PropTypes.object
@@ -30,7 +30,7 @@ export default class LineTransectUnitCodeField extends Component {
 		return {showSchema};
 	}
 
-	getShowSchemaButton = () => {
+	getToggleButton = () => {
 		return (
 			<GlyphButton
 				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
@@ -53,7 +53,7 @@ export default class LineTransectUnitCodeField extends Component {
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
-		const toggleButton = this.getShowSchemaButton();
+		const toggleButton = this.getToggleButton();
 		return !this.state.showSchema ? (
 				<div className="laji-form-field-template-item">
 					<CodeReader onChange={this.onCodeChange} value={this.props.formData[shorthandFieldName]} formID={getUiOptions(this.props.uiSchema).formID} className="laji-form-field-template-schema" />
@@ -65,9 +65,7 @@ export default class LineTransectUnitCodeField extends Component {
 						{...this.props} 
 						uiSchema={{
 							[shorthandFieldName]: {"ui:widget": "HiddenWidget"},
-							...this.props.uiSchema, 
-							...getInnerUiSchema(this.props.uiSchema),
-							"ui:buttons": [toggleButton]
+							...getInnerUiSchema({...this.props.uiSchema, "ui:buttons": [toggleButton]})
 						}} />
 				</div>
 			);
