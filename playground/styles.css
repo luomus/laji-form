@@ -639,3 +639,18 @@ body .laji-form {
 	border-bottom-left-radius: 0px;
 	border-top-right-radius: 0px;
 }
+
+.laji-form .bootstrap-switch {
+    border-radius: 2px;
+    margin-top: 4px;
+}
+.laji-form .bootstrap-switch-container {
+    border-radius: 2px;
+}
+.laji-form .bootstrap-switch-container span {
+    height: 24px;
+}
+.laji-form .bootstrap-switch .bootstrap-switch-handle-on {
+    border-top-left-radius: 1px;
+    border-bottom-left-radius: 1px;
+}
