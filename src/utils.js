@@ -1,5 +1,5 @@
 import { findDOMNode } from "react-dom";
-import { isMultiSelect as _isMultiSelect } from "react-jsonschema-form/lib/utils";
+import { isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
@@ -17,6 +17,19 @@ export function getFieldsFinalUiSchema(uiSchema, field) {
 			uiSchemaPointer = undefined;
 		}
 	}
+}
+
+export function isDefaultData(formData, schema, registry) {
+	function propIsDefaultData(field, value) {
+		return value === getDefaultFormState(field, undefined, registry);
+	}
+	if (!Array.isArray(formData)) formData = [formData];
+	return formData.some(data => {
+		if (typeof data === "object") {
+			return Object.keys(data).some(_field => propIsDefaultData(schema.properties[_field], data));
+		}
+		else return propIsDefaultData(schema, data)
+	});
 }
 
 export function hasData(formData) {

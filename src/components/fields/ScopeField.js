@@ -6,7 +6,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
@@ -356,12 +356,12 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
-				if (fieldSelectorValues.length > 0 && hasData(fieldSelectorValues[0])) {
+				if (fieldSelectorValues.length > 0 && hasData(fieldSelectorValues[0]) && !isDefaultData(fieldSelectorValues[0], schema.properties[fieldSelector], props.registry.definitions)) {
 					fieldSelectorValues = ["+", ...fieldSelectorValues];
 				}
 				fieldSelectorValues = ["*", ...fieldSelectorValues];
 				fieldSelectorValues.forEach(fieldSelectorValue => {
-					if (hasData(fieldSelectorValue)) {
+					if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions)) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
 					}
 				});
@@ -533,7 +533,7 @@ export default class ScopeField extends Component {
 			if (settings.show) {
 				const property = settings.show;
 				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = propertyHasData(property, this.props.formData);
+				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
 				const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
 				return (
@@ -553,9 +553,7 @@ export default class ScopeField extends Component {
 
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
-
 		const isIncluded = !!(additionalFields[property] === true || this.state.schema.properties[property]);
-
 		return isIncluded;
 	}
 
@@ -565,7 +563,6 @@ export default class ScopeField extends Component {
 		const state = {additionalFields: this.state.additionalFields};
 		fields.forEach(field => {
 			const isIncluded = this.propertyIsIncluded(field);
-			if (propertyHasData(field, this.props.formData)) return;
 			state.additionalFields = {...state.additionalFields, [field]: !isIncluded};
 		});
 		this.setState(state,
@@ -595,7 +592,7 @@ export default class ScopeField extends Component {
 		return Object.keys(properties)
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = propertyHasData(property, this.props.formData);
+				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 				return (
 					<ElemType
 						key={property}
