@@ -579,9 +579,6 @@ export default class ScopeField extends Component {
 						contextEntry[persistenceKey] = this.state.additionalFields;
 						this._context[additionalsPersistenceId] = contextEntry;
 					});
-				} else {
-					contextEntry = this.state.additionalFields;
-					this._context[additionalsPersistenceId] = contextEntry;
 				}
 				this.setState(this.getStateFromProps(this.props));
 			});
