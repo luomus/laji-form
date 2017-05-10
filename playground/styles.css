@@ -17,20 +17,20 @@ body .laji-form {
 .laji-form .blocking-loader.entering,
 .laji-form .blocking-loader.leave-start,
 .laji-form .blocking-loader.leaving {
-    transition: opacity 200ms ease-in;
+	transition: opacity 200ms ease-in;
 }
 .laji-form .blocking-loader.enter-start {
-    opacity: 0;
+	opacity: 0;
 }
 .laji-form .blocking-loader.entering {
 	opacity: 0.5;
 }
 .laji-form .blocking-loader.leave-start {
-    opacity: 0.5;
+	opacity: 0.5;
 }
 .laji-form .blocking-loader.leaving {
 	opacity: 0.0;
- }
+}
 
 .laji-form .pass-block {
 	z-index: 1052 !important;
@@ -46,8 +46,8 @@ body .laji-form {
 	padding-right: 27px;
 }
 .laji-form .autosuggest-container {
-    position: absolute;
-    z-index: 1;
+	position: absolute;
+	z-index: 1;
 }
 .laji-form .autosuggest-container ul {
 	padding-left: 0px;
@@ -63,21 +63,21 @@ body .laji-form {
 }
 
 .laji-form .map-array-directionless-enter {
-    opacity: 0.01;
+	opacity: 0.01;
 }
 .laji-form .map-array-directionless-enter.map-array-directionless-enter-active {
-    opacity: 1;
-    transition: opacity .3s ease-in;
+	opacity: 1;
+	transition: opacity .3s ease-in;
 }
 .laji-form .map-array-left-enter {
-    transform: translate3d(-100%, 0, 0);
+	transform: translate3d(-100%, 0, 0);
 }
 .laji-form .map-array-right-enter {
-    transform: translate3d(100%, 0, 0);
+	transform: translate3d(100%, 0, 0);
 }
 .laji-form .map-array-left-enter.map-array-left-enter-active, .map-array-right-enter.map-array-right-enter-active {
-    transform: translate3d(0, 0, 0);
-    transition: all 300ms;
+	transform: translate3d(0, 0, 0);
+	transition: all 300ms;
 }
 .laji-form .map-array-directionless-leave, .map-array-left-leave, .map-array-right-leave {
 	visibility: hidden;
@@ -106,12 +106,15 @@ body .laji-form {
 .laji-form select {
 	padding: 3px 6px !important;
 }
+.laji-form .bootstrap-switch.wrapper {
+	margin-top: 6px;
+}
 .laji-form .react-selectize.bootstrap3.dropdown-menu .option-wrapper.highlight {
 	background: #337ab7;
 	color: white;
 }
 .laji-form .react-selectize.dropdown-menu .option-wrapper {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 .laji-form .react-selectize.bootstrap3.dropdown-menu .option-wrapper * {
 	padding: 2px 3px;
@@ -141,7 +144,7 @@ body .laji-form {
 }
 
 .laji-form .form-group {
-	margin-bottom: 3px;
+	margin-bottom: 0;
 }
 
 .laji-form button {
@@ -216,11 +219,16 @@ body .laji-form {
 	font-size: 13px;
 	white-space: nowrap;
 	margin-bottom: 0px;
+	margin-top: 4px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 .laji-form .field-description {
 	font-size: 13px;
+}
+
+.laji-form .well {
+	margin-bottom: 6px;
 }
 
 .laji-form .input-meta {
@@ -243,10 +251,10 @@ body .laji-form {
 }
 
 .laji-form .laji-form-help-glyph {
-    margin-left: 5px;
-    border-radius:9px;
-    color: white;
-    padding: 1px 5px;
+	margin-left: 5px;
+	border-radius:9px;
+	color: white;
+	padding: 1px 5px;
 }
 
 .laji-form .laji-form-map-container {
@@ -571,8 +579,8 @@ body .laji-form {
 	margin-left: 1px;
 }
 .laji-form .date-widget .btn-group .btn {
-    height: 25px;
-    line-height: 12.5px;
+	height: 25px;
+	line-height: 12.5px;
 }
 
 .laji-form .laji-map-accordion-header {
