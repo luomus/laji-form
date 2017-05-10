@@ -44,7 +44,7 @@ export default class DateTimeWidget extends Component {
 		dateFormat = dateFormat.replace("YYYY", "Y");
 
 		let inputFormat = dateFormat;
-		const format = `${dateFormat}${DATE_TIME_SEPARATOR}${timeFormat}`;
+		const format = `${dateFormat}${dateFormat ? DATE_TIME_SEPARATOR : ""}${timeFormat}`;
 
 		if (props.value) {
 			const splitted = props.value.split("T");
@@ -71,7 +71,7 @@ export default class DateTimeWidget extends Component {
 
 	parse = (value) => {
 		if (!value) return undefined;
-		const hasTime = value.includes(DATE_TIME_SEPARATOR);
+		const hasTime = value.includes(DATE_TIME_SEPARATOR) || this.state.time && !this.state.calendar;
 		let momentValue = moment(value, this.state.format);
 		let isoValue = undefined;
 		if (hasTime) {
