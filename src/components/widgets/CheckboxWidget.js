@@ -66,7 +66,9 @@ if (process.env.NODE_ENV !== "production") {
 		value: PropTypes.bool,
 		required: PropTypes.bool,
 		options: PropTypes.shape({
-			allowUndefined: PropTypes.boolean
+			allowUndefined: PropTypes.boolean,
+      invert: PropTypes.boolean,
+      undefinedValue: PropTypes.any
 		})
 	};
 }
