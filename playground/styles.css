@@ -106,9 +106,6 @@ body .laji-form {
 .laji-form select {
 	padding: 3px 6px !important;
 }
-.laji-form .bootstrap-switch.wrapper {
-	margin-top: 6px;
-}
 .laji-form .react-selectize.bootstrap3.dropdown-menu .option-wrapper.highlight {
 	background: #337ab7;
 	color: white;
@@ -648,15 +645,15 @@ body .laji-form {
 	border-top-right-radius: 0px;
 }
 
-.laji-form .bootstrap-switch {
+.laji-form label .bootstrap-switch {
     border-radius: 2px;
-    margin-top: 4px;
+    margin-top: 5px;
 }
 .laji-form .bootstrap-switch-container {
     border-radius: 2px;
 }
 .laji-form .bootstrap-switch-container span {
-    height: 24px;
+    height: 23px;
 }
 .laji-form .bootstrap-switch .bootstrap-switch-handle-on {
     border-top-left-radius: 1px;

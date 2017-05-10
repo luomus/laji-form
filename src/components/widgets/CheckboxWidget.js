@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Label } from "../components";
-import { isNullOrUndefined } from "../../utils";
+import { isNullOrUndefined, isEmptyString } from "../../utils";
 import Switch from "react-bootstrap-switch";
 
 function CheckboxWidget(props) {
@@ -40,20 +40,24 @@ function CheckboxWidget(props) {
 
 	const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
 
-	return (
+	const checkbox = (
+		<div onClick={onClick} onKeyDown={onKeyDown}>
+			<Switch
+				value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
+				defaultValue={allowUndefined ? null : false}
+				disabled={disabled}
+				readonly={readonly}
+				onText={registry.formContext.translations.Yes}
+				offText={registry.formContext.translations.No}
+				bsSize="mini"
+				tristate={allowUndefined}
+			/>
+		</div>
+	);
+
+	return isEmptyString(props.label) ? checkbox :(
 		<Label {...props}>
-			<div onClick={onClick} onKeyDown={onKeyDown}>
-				<Switch
-					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
-					defaultValue={allowUndefined ? null : false}
-					disabled={disabled}
-					readonly={readonly}
-					onText={registry.formContext.translations.Yes}
-					offText={registry.formContext.translations.No}
-					bsSize="mini"
-					tristate={allowUndefined}
-				/>
-			</div>
+			{checkbox}
 		</Label>
 	);
 }
