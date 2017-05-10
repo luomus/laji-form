@@ -97,7 +97,12 @@ export default class MapArrayField extends Component {
 			"ui:options": {
 				...getUiOptions(getInnerUiSchema(uiSchema)),
 				activeIdx,
-				onActiveChange: (idx, callback) => {this.setState({activeIdx: idx}, callback);}
+				onActiveChange: (idx, callback) => {
+					this.setState({activeIdx: idx}, () => {
+						this.getGeometryMapper(this.props).onActiveChange(idx);
+						if (callback) callback();
+					});
+				}
 			}
 		};
 
@@ -475,12 +480,19 @@ export default class MapArrayField extends Component {
 						lineTransect: true
 					},
 					mountCallback: () => {
-						const map = new Context("MAP");
-						setTimeout(() => {
-							map.map.map.fitBounds(map.map._corridorLayerGroup.getBounds());
+						const {map} = new Context("MAP");
+						setImmediate(() => {
+							this.geometryMappers.lineTransect.onActiveChange(0);
 						}, 0);
 					}
 				};
+			},
+			onActiveChange: idx => {
+				const {map} = new Context("MAP");
+				map.map.fitBounds(map._allCorridors[idx].getBounds());
+			},
+			onComponentDidUpdate: () => {
+				this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
 			}
 		}
 	}
