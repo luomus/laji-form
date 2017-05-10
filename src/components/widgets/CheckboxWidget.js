@@ -38,14 +38,14 @@ function CheckboxWidget(props) {
 		onChange(getNextVal());
 	}
 
-	const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
+	const {allowUndefined, invert, undefinedValue} = {allowUndefined: true, invert: false, undefinedValue: null, ...(options || {})};
 
 	return (
 		<Label {...props}>
 			<div onClick={onClick} onKeyDown={onKeyDown}>
 				<Switch
-					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
-					defaultValue={allowUndefined ? null : false}
+					value={allowUndefined && isNullOrUndefined(value) ? undefinedValue : invert ? !value : value}
+					defaultValue={allowUndefined ? undefinedValue : false}
 					disabled={disabled}
 					readonly={readonly}
 					onText={registry.formContext.translations.Yes}
