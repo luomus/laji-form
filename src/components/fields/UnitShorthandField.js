@@ -63,10 +63,7 @@ export default class UnitShorthandField extends Component {
 				<div>
 					<SchemaField 
 						{...this.props} 
-						uiSchema={{
-							[shorthandFieldName]: {"ui:widget": "HiddenWidget"},
-							...getInnerUiSchema({...this.props.uiSchema, "ui:buttons": [toggleButton]})
-						}} />
+						uiSchema={getInnerUiSchema({...this.props.uiSchema, "ui:buttons": [toggleButton]})} />
 				</div>
 			);
 	}

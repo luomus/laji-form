@@ -634,3 +634,5 @@ export default class ScopeField extends Component {
 		});
 	}
 }
+
+new Context("VIRTUAL_SCHEMA_NAMES").ScopeField = true;

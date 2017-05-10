@@ -1,6 +1,7 @@
 import React from "react";
 import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils";
 import BaseComponent from "./BaseComponent";
+import Context from "../Context";
 
 /**
  * Virtual SchemaFields are components which are just state transforming machines.
@@ -9,7 +10,7 @@ export default function VirtualSchemaField(ComposedComponent) {
 	@BaseComponent
 	class VirtualSchemaField extends ComposedComponent {
 
-		static displayName = `${getReactComponentName(ComposedComponent)} (VirtualSchemaField)`;
+		static displayName = getReactComponentName(ComposedComponent);
 
 		getUiOptions() {
 			return getUiOptions(this.props.uiSchema);
@@ -41,5 +42,6 @@ export default function VirtualSchemaField(ComposedComponent) {
 		}
 
 	}
+	new Context("VIRTUAL_SCHEMA_NAMES")[getReactComponentName(VirtualSchemaField)] = true;
 	return VirtualSchemaField;
 }

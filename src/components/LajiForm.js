@@ -44,7 +44,7 @@ class _SchemaField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
-		if (uiSchema && uiSchema.uiSchema && uiSchema["ui:buttons"]) {
+		if (uiSchema && uiSchema["ui:field"] && uiSchema.uiSchema && new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && uiSchema["ui:buttons"]) {
 			uiSchema = {
 				...uiSchema,
 				"ui:buttons": undefined,

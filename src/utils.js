@@ -1,5 +1,6 @@
 import { findDOMNode } from "react-dom";
 import { isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import Context from "./Context";
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
@@ -89,7 +90,7 @@ export function getUiOptions(container) {
 
 export function getInnerUiSchema(parentUiSchema) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && parentUiSchema["ui:buttons"]) {
+	if (uiSchema && new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && parentUiSchema["ui:buttons"]) {
 			uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
