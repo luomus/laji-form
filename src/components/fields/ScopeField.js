@@ -152,6 +152,8 @@ const buttonSettings = {
 
 		function onMouseLeave() {
 			if (active || !layer) return;
+			const {map} = mapContext;
+			map.updateLayerStyle(layer, {color: "#55AEFA"});
 			layer.fire("mouseout");
 		}
 
