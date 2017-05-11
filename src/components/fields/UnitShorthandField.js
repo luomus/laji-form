@@ -91,7 +91,6 @@ class CodeReader extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		console.log(props.value);
 		let state = this.state;
 		if (this.state.value === "" && !isEmptyString(props.value)) {
 			state.value = props.value;

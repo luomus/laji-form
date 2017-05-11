@@ -208,7 +208,7 @@ if (SCHEMA_ID !== undefined) {
 						})
 	         .then(props => {
 		const {schema, uiSchema, validators, uiSchemaContext} = props;
-		const propsToPass = {schema, uiSchema, uiSchemaContext: {...uiSchemaContext, creator: schemas.uiSchemaContext.creator}};
+		const propsToPass = {schema, uiSchema, uiSchemaContext: {...schemas.uiSchemaContext, ...uiSchemaContext}};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;
 		lajiForm.setState(propsToPass);
 					 });
