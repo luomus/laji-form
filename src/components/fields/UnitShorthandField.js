@@ -13,6 +13,10 @@ import { Tooltip, OverlayTrigger, Glyphicon } from "react-bootstrap";
 export default class UnitShorthandField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				shorthandField: PropTypes.string.isRequired,
+				formID: PropTypes.string.isRequired,
+			}).isRequired,
 			uiSchema: PropTypes.object
 		})
 	}
