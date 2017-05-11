@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import update from "immutability-helper";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
@@ -51,19 +52,26 @@ export default class UnitShorthandField extends Component {
 	}
 
 	render() {
+		const {uiSchema} = this.props;
 		const {SchemaField} = this.props.registry.fields;
 		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
 		const toggleButton = this.getToggleButton();
+
+		//let help = uiSchema && uiSchema.properties && uiSchema.properties[shorthandFieldName] && uiSchema.properties[shorthandFieldName]["ui:help"];
+		const tailUiSchema = getNestedTailUiSchema(uiSchema);
+		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:help"];
+		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:help": {$set: undefined}}});
+
 		return !this.state.showSchema ? (
 				<div className="laji-form-field-template-item">
-					<CodeReader onChange={this.onCodeChange} value={this.props.formData[shorthandFieldName]} formID={getUiOptions(this.props.uiSchema).formID} className="laji-form-field-template-schema" />
+					<CodeReader onChange={this.onCodeChange} value={this.props.formData[shorthandFieldName]} formID={getUiOptions(this.props.uiSchema).formID} className="laji-form-field-template-schema" help={help} />
 					<div className="laji-form-field-template-buttons">{toggleButton}</div>
 				</div>
 			) : (
 				<div>
 					<SchemaField 
 						{...this.props} 
-						uiSchema={getInnerUiSchema({...this.props.uiSchema, "ui:buttons": [toggleButton]})} />
+						uiSchema={getInnerUiSchema({...uiSchemaWithoutHelp, "ui:buttons": [toggleButton]})} />
 				</div>
 			);
 	}
@@ -97,18 +105,23 @@ class CodeReader extends Component {
 	}
 
 	render() {
-		return <input type="text" 
-			ref="input"
-			className="form-control" 
-			value={this.state.value}
-			onChange={({target: {value}}) => this.setState({value})}
-			onBlur={this.getCode}
-			onKeyDown={e => {
-				if (e.key === "Enter") {
-					this.getCode();
-				}
-			}}
-			/>;
+		return (
+			<div>
+				<input type="text" 
+				ref="input"
+				className="form-control" 
+				value={this.state.value}
+				onChange={({target: {value}}) => this.setState({value})}
+				onBlur={this.getCode}
+				onKeyDown={e => {
+					if (e.key === "Enter") {
+						this.getCode();
+					}
+				}}
+			/>
+			<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
+		</div>
+		);
 	}
 
 	getCode = () => {

@@ -1,23 +1,11 @@
 import { findDOMNode } from "react-dom";
 import { isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "./Context";
+import update from "immutability-helper";
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
 	return !uiSchema || uiSchema["ui:widget"] == "HiddenWidget" || uiSchema["ui:field"] == "HiddenField";
-}
-
-export function getFieldsFinalUiSchema(uiSchema, field) {
-	let uiSchemaPointer = uiSchema;
-	while (uiSchemaPointer) {
-		if (uiSchemaPointer[field]) return uiSchemaPointer[field];
-		const options = uiSchemaPointer["ui:options"];
-		if (options && options.uiSchema) {
-			uiSchemaPointer = options.uiSchema;
-		} else {
-			uiSchemaPointer = undefined;
-		}
-	}
 }
 
 export function isDefaultData(formData, schema, registry) {
@@ -206,6 +194,19 @@ export function getNestedTailUiSchema(uiSchema) {
 		uiSchema = uiSchema.uiSchema;
 	}
 	return uiSchema;
+}
+
+export function updateTailUiSchema(uiSchema, updateObject) {
+	let tailPointer = {};
+	let root = tailPointer;
+	let uiSchemaPointer = uiSchema;
+	while (uiSchemaPointer.uiSchema) {
+		uiSchemaPointer = uiSchemaPointer.uiSchema;
+		tailPointer.uiSchema = {};
+		if (uiSchemaPointer.uiSchema) tailPointer = tailPointer.uiSchema;
+	}
+	tailPointer.uiSchema = updateObject;
+	return update(uiSchema, root);
 }
 
 export function getNestedUiFieldsList(uiSchema) {
