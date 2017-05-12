@@ -9,8 +9,6 @@ import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
 
-const DELAY_FOCUS = 250;
-
 const headerFormatters = {
 	units: {
 		render: (that, idx, headerElem) => {
@@ -120,10 +118,6 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (this.activateNew && props.formData.length !== this.props.formData.length) {
-			this.activateNew = false;
-			this.onActiveChange(props.formData.length - 1);
-		}
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		if (popupFields) props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, item).then(popupData => {
@@ -212,6 +206,7 @@ export default class SingleActiveArrayField extends Component {
 		if (idx !== undefined)  {
 			idx = parseInt(idx);
 		}
+
 		if (this.state.activeIdx === idx) {
 			idx = undefined;
 		}
@@ -247,17 +242,13 @@ function AccordionArrayFieldTemplate(arrayFieldTemplateProps) {
 	this.renderAccordionHeader = renderAccordionHeader.bind(this);
 
 	const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
-	buttons.forEach(button => {
-		button.delayFocus = DELAY_FOCUS;
-	});
 	const activeIdx = this.state.activeIdx;
 	const title = this.props.schema.title;
 	return (
 			<div onKeyDown={onContainerKeyDown({
 				props: arrayFieldTemplateProps,
 				insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
-				navigateCallforward: (callback, idx) => this.onActiveChange(idx, callback),
-				delayFocus: DELAY_FOCUS
+				navigateCallforward: (callback, idx) => this.onActiveChange(idx, callback)
 			})}>
 				<Accordion onSelect={key => this.onActiveChange(key)} activeKey={activeIdx === undefined ? -1 : activeIdx}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (

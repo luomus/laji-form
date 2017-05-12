@@ -189,6 +189,17 @@ export function focusNextInput(formReactNode, inputElem, reverseDirection) {
 	}
 }
 
+export function focusById(id) {
+		const elem = getSchemaElementById(id);
+		if (elem) {
+			const tabbableFields = getTabbableFields(elem);
+			if (tabbableFields && tabbableFields.length) {
+				tabbableFields[0].focus();
+				e.stopPropagation();
+			}
+		}
+}
+
 export function getNestedTailUiSchema(uiSchema) {
 	while (uiSchema.uiSchema) {
 		uiSchema = uiSchema.uiSchema;

@@ -30,10 +30,8 @@ class _SchemaField extends Component {
 		const _context = new Context(this.props.registry.formContext.contextId);
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			const id = idToFocus;
-			_context.delayFocus ? setTimeout(() => focus(id), _context.delayFocus) : focus(id);
+			focus(_context.idToFocus);
 			_context.idToFocus = undefined;
-			_context.delayFocus = undefined;
 		}
 	}
 

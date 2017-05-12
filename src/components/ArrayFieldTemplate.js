@@ -3,21 +3,20 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID } from "../utils";
+import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID, focusById } from "../utils";
 
 
-function onAdd(e, props, idToFocus, delayFocus) {
+function onAdd(e, props, idToFocus) {
 	if (!props.canAdd || getUiOptions(props.uiSchema).canAdd === false) return;
 	props.onAddClick(e);
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
-	new Context(props.formContext.contextId).delayFocus = delayFocus;
 }
 
 const buttonDefinitions = {
 	add: {
 		glyph: "plus",
 		fn: (e) => (props, options = {}) => {
-			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, options.delayFocus);
+			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
 		}
 	}
 };
@@ -99,21 +98,13 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-export function onContainerKeyDown({props, insertCallforward, navigateCallforward, delayFocus}) { return (e) => {
+export function onContainerKeyDown({props, insertCallforward, navigateCallforward}) { return (e) => {
 	function afterInsert() {
-		onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`, delayFocus);
+		onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
 	}
 
 	function focusFirstOf(idx) {
-		const elem = getSchemaElementById(`${props.idSchema.$id}_${idx}`);
-
-		if (elem) {
-			const tabbableFields = getTabbableFields(elem);
-			if (tabbableFields && tabbableFields.length) {
-				tabbableFields[0].focus();
-				e.stopPropagation();
-			}
-		}
+		focusById(`${props.idSchema.$id}_${idx}`)
 	}
 
 	if (!e.ctrlKey && e.key === "Insert") {
