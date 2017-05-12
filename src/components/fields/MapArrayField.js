@@ -71,17 +71,17 @@ export default class MapArrayField extends Component {
 
 	componentDidMount() {
 		this.setState({mounted: true});
-		const mapper = this.getGeometryMapper(this.props);
-		if (mapper.onComponentDidMount) mapper.onComponentDidMount();
+		const {onComponentDidMount} = this.getGeometryMapper(this.props);
+		if (onComponentDidMount) onComponentDidMount();
 	}
 
 	componentWillUnmount() {
 		this.setState({mounted: false});
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(...params) {
 		const mapper = this.getGeometryMapper(this.props);
-		if (mapper.onComponentDidUpdate) mapper.onComponentDidUpdate();
+		if (mapper.onComponentDidUpdate) mapper.onComponentDidUpdate(...params);
 	}
 
 	getGeometryMapper = (props) => {
@@ -495,7 +495,12 @@ export default class MapArrayField extends Component {
 				map._openTooltipFor(idx);
 				focusById(`${this.props.idSchema.$id}_${idx}`);
 			},
-			onComponentDidMount: () => {
+			onComponentDidUpdate: (prevProps, prevState) => {
+				if (prevState.activeIdx !== this.state.activeIdx) {
+					this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
+				}
+			},
+			onComponentDidMount: (prevProps, prevState) => {
 				this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
 			}
 		}

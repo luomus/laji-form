@@ -216,6 +216,7 @@ export default class SingleActiveArrayField extends Component {
 			focusById(`${that.props.idSchema.$id}_${idx}`);
 			callback && callback();
 		}
+
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx, _callback) : this.setState({activeIdx: idx}, _callback);
 	}

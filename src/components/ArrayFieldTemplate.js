@@ -133,6 +133,7 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 		const amount = e.shiftKey ? -1 : 1;
 
 		const nextIdx = currentIdx + amount;
+		if (nextIdx >= props.items.length || nextIdx < 0) return;
 		if  (navigateCallforward) {
 			e.persist();
 			navigateCallforward(() => {
