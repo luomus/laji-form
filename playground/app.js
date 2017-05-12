@@ -186,10 +186,10 @@ const lineTransectGeometries = geoJSONLineToLatLngSegmentArrays(lineTransect.geo
 const lajiForm = new LajiForm({
 	...(SCHEMA_ID === undefined ? schemas : {
 		uiSchemaContext: schemas.uiSchemaContext,
-		formData: schemas.formData
+		//formData: schemas.formData
 	}),
 	//formData: {gatheringEvent: {leg: ["MA.308"]}},
-	//formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
+	formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,
 	lang,
@@ -208,7 +208,7 @@ if (SCHEMA_ID !== undefined) {
 						})
 	         .then(props => {
 		const {schema, uiSchema, validators, uiSchemaContext} = props;
-		const propsToPass = {schema, uiSchema, uiSchemaContext: {...uiSchemaContext, creator: schemas.uiSchemaContext.creator}};
+		const propsToPass = {schema, uiSchema, uiSchemaContext: {...schemas.uiSchemaContext, ...uiSchemaContext}};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;
 		lajiForm.setState(propsToPass);
 					 });

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import update from "immutability-helper";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
@@ -12,6 +13,10 @@ import { Tooltip, OverlayTrigger, Glyphicon, FormGroup, HelpBlock } from "react-
 export default class UnitShorthandField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				shorthandField: PropTypes.string.isRequired,
+				formID: PropTypes.string.isRequired,
+			}).isRequired,
 			uiSchema: PropTypes.object
 		})
 	}
@@ -51,15 +56,23 @@ export default class UnitShorthandField extends Component {
 	}
 
 	render() {
+		const {uiSchema} = this.props;
 		const {SchemaField} = this.props.registry.fields;
 		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
 		const toggleButton = this.getToggleButton();
+
+		//let help = uiSchema && uiSchema.properties && uiSchema.properties[shorthandFieldName] && uiSchema.properties[shorthandFieldName]["ui:help"];
+		const tailUiSchema = getNestedTailUiSchema(uiSchema);
+		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:help"];
+		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:help": {$set: undefined}}});
+
 		return !this.state.showSchema ? (
 				<div className="laji-form-field-template-item">
 					<CodeReader translations={this.props.formContext.translations}
 					            onChange={this.onCodeChange} 
 					            value={this.props.formData[shorthandFieldName]} 
 					            formID={getUiOptions(this.props.uiSchema).formID} 
+					            help={help} 
 					            className="laji-form-field-template-schema" />
 					<div className="laji-form-field-template-buttons">{toggleButton}</div>
 				</div>
@@ -67,7 +80,7 @@ export default class UnitShorthandField extends Component {
 				<div>
 					<SchemaField 
 						{...this.props} 
-						uiSchema={getInnerUiSchema({...this.props.uiSchema, "ui:buttons": [toggleButton]})} />
+						uiSchema={getInnerUiSchema({...uiSchemaWithoutHelp, "ui:buttons": [toggleButton]})} />
 				</div>
 			);
 	}
@@ -127,6 +140,7 @@ class CodeReader extends Component {
 					</HelpBlock>
 					) : null
 				}
+			<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
 			</FormGroup>
 		);
 	}

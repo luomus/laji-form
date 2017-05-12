@@ -106,7 +106,7 @@ export default class MapArrayField extends Component {
 			}
 		};
 
-		const mapOptions = this.getGeometryMapper(this.props).getOptions(options);
+		const mapOptions = {...this.getGeometryMapper(this.props).getOptions(options), ...options.mapOptions};
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
@@ -423,7 +423,12 @@ export default class MapArrayField extends Component {
 				if (this.highlightedElem) {
 					this.highlightedElem.className += " map-highlight";
 				}
-			}
+			},
+			onActiveChange: idx => {
+				if (idx === undefined) return;
+				const {map} = new Context("MAP");
+				if (Object.keys(map.drawLayerGroup._layers).length) map.map.fitBounds(map.drawLayerGroup.getBounds());
+			},
 		},
 		lineTransect: {
 			getOptions: () => {
@@ -434,6 +439,7 @@ export default class MapArrayField extends Component {
 					lineTransect: {
 						feature: {geometry: lineTransect},
 						activeIdx: this.state.activeIdx,
+						keepActiveTooltipOpen: true,
 						onChange: (events) => {
 							let state = {};
 							let formData = this.props.formData;
@@ -478,18 +484,13 @@ export default class MapArrayField extends Component {
 					},
 					controlSettings: {
 						lineTransect: true
-					},
-					mountCallback: () => {
-						const {map} = new Context("MAP");
-						setImmediate(() => {
-							this.geometryMappers.lineTransect.onActiveChange(0);
-						}, 0);
 					}
 				};
 			},
 			onActiveChange: idx => {
 				const {map} = new Context("MAP");
 				map.map.fitBounds(map._allCorridors[idx].getBounds());
+				map._openTooltipFor(idx);
 			},
 			onComponentDidUpdate: () => {
 				this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
@@ -570,7 +571,6 @@ class MapComponent extends Component {
 			...this.props
 		});
 		this._context.map = this.map;
-		if (this.props.mountCallback) this.props.mountCallback();
 	}
 
 	// Rendering doesn't update map, so we don't want to rerender on map prop changes. Map is updated with componentDidUpdate()

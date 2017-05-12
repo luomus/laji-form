@@ -37,7 +37,7 @@ const headerFormatters = {
 			if (that.state.activeIdx === idx) {
 				headerFormatters.units.onMouseEnter(that, idx, !!"use the force");
 			} else {
-				headerFormatters.units.onMouseLeave(that, idx);
+				headerFormatters.units.onMouseLeave(that);
 			}
 		},
 		onMouseEnter: (that, idx, force) => {
@@ -326,6 +326,7 @@ function renderAccordionHeader(idx, title) {
 	const header = (
 		<div className="laji-map-accordion-header" onClick={() => {
 			this.onActiveChange(idx);
+			formatter.onClick(this, idx);
 		}}
 			onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx);}}
 			onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx);}} >
