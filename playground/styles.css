@@ -42,7 +42,7 @@ body .laji-form {
 	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 }
 
-.laji-form .autosuggest-wrapper input {
+.laji-form .fetcher-input input {
 	padding-right: 27px;
 }
 .laji-form .autosuggest-container {
@@ -52,13 +52,13 @@ body .laji-form {
 .laji-form .autosuggest-container ul {
 	padding-left: 0px;
 }
-.laji-form .autosuggest-wrapper.open .dropdown-menu {
+.laji-form .fetcher-input .dropdown-menu {
 	display: block;
 }
-.laji-form .autosuggest-wrapper .option-wrapper {
+.laji-form .fetcher-input .option-wrapper {
 	padding: 2px;
 }
-.laji-form .autosuggest-wrapper .list-group {
+.laji-form .fetcher-input .list-group {
 	margin-bottom: 0px;
 }
 
@@ -322,7 +322,7 @@ body .laji-form {
 	top: initial;
 	float: right;
 }
-.laji-form .autosuggest-wrapper .react-spinner {
+.laji-form .fetcher-input .react-spinner {
 	width: 25px;
 	right: -9px;
 	bottom: -20px;

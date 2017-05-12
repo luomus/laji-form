@@ -5,8 +5,8 @@ import { getInnerUiSchema, getUiOptions, isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import { Button, GlyphButton } from "../components";
-import { Tooltip, OverlayTrigger, Glyphicon } from "react-bootstrap";
+import { Button, GlyphButton, FetcherInput } from "../components";
+import { Tooltip, OverlayTrigger, Glyphicon, FormGroup, HelpBlock } from "react-bootstrap";
 
 @BaseComponent
 export default class UnitShorthandField extends Component {
@@ -56,7 +56,11 @@ export default class UnitShorthandField extends Component {
 		const toggleButton = this.getToggleButton();
 		return !this.state.showSchema ? (
 				<div className="laji-form-field-template-item">
-					<CodeReader onChange={this.onCodeChange} value={this.props.formData[shorthandFieldName]} formID={getUiOptions(this.props.uiSchema).formID} className="laji-form-field-template-schema" />
+					<CodeReader translations={this.props.formContext.translations}
+					            onChange={this.onCodeChange} 
+					            value={this.props.formData[shorthandFieldName]} 
+					            formID={getUiOptions(this.props.uiSchema).formID} 
+					            className="laji-form-field-template-schema" />
 					<div className="laji-form-field-template-buttons">{toggleButton}</div>
 				</div>
 			) : (
@@ -79,7 +83,6 @@ class CodeReader extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		console.log(props.value);
 		let state = this.state;
 		if (this.state.value === "" && !isEmptyString(props.value)) {
 			state.value = props.value;
@@ -89,32 +92,56 @@ class CodeReader extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		this.refs.input.focus();
+		if (this.inputRef) this.inputRef.focus();
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
 	}
-
+	
 	render() {
-		return <input type="text" 
-			ref="input"
-			className="form-control" 
-			value={this.state.value}
-			onChange={({target: {value}}) => this.setState({value})}
-			onBlur={this.getCode}
-			onKeyDown={e => {
-				if (e.key === "Enter") {
-					this.getCode();
+		const {translations} = this.props;
+
+		let validationState = "default";
+		if (this.state.failed === true) validationState = "warning";
+		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
+
+		return (
+			<FormGroup validationState={this.state.failed ? "error" : undefined}>
+				<FetcherInput
+					getRef={n => {this.inputRef = n;}}
+					loading={this.state.loading}
+					value={this.state.value}
+					validationState={validationState}
+					onChange={({target: {value}}) => {if (this.mounted) this.setState({value})}}
+					onBlur={this.getCode}
+					onKeyDown={e => {
+						if (e.key === "Enter") {
+							this.getCode();
+						}
+					}}
+				/>
+				{this.state.failed ? (
+					<HelpBlock>
+						{translations.InvalidUnitCode}
+					</HelpBlock>
+					) : null
 				}
-			}}
-			/>;
+			</FormGroup>
+		);
 	}
 
 	getCode = () => {
 		const {value} = this.state;
-		value.length >= 3 && this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID}).then(response => {
-			this.mounted && this.props.onChange(response.payload.unit);
-		});
+		if (this.mounted) this.setState({loading: true});
+		if (!isEmptyString(this.props.value) && (!this.value || this.value.length < 3)) {
+			if (this.mounted) this.setState({failed: false, loading: false}, this.props.onChange(undefined));
+		} else if (value.length >= 3) {
+			this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID}).then(response => {
+					this.props.onChange(response.payload.unit)
+			}).catch(e => {
+					if (this.mounted) this.setState({failed: true, loading: false});
+			});
+		}
 	}
 }

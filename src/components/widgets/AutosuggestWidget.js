@@ -5,6 +5,7 @@ import ApiClient from "../../ApiClient";
 import { Tooltip, OverlayTrigger, FormControl, Popover, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
+import { FetcherInput } from "../components";
 import BaseComponent from "../BaseComponent";
 
 const autosuggestSettings = {
@@ -394,7 +395,6 @@ export default class AutoSuggestWidget extends Component {
 					focusInputOnSuggestionClick={false}
 					theme={cssClasses}
 				/>
-				{isLoading ? <Spinner /> : null }
 			</div>
 		);
 	}
@@ -444,17 +444,19 @@ export default class AutoSuggestWidget extends Component {
 		};
 
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
+		let glyph = undefined;
+		if (!this.state.focused && !this.state.isLoading && renderMetaInfo) {
+		glyph = validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
+			this.state.autosuggestSettings.renderSuccessGlyph(this) : getGlyph(validationState);
+
+		}
 		const input = (
-			<div className={`has-feedback${renderMetaInfo ? ` has-${validationState}` : ""}`}>
-				<input className="form-control" type="text" {...inputProps} />
-				{!this.state.focused && !this.state.isLoading && renderMetaInfo ?
-					<FormControl.Feedback>{
-						validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
-							this.state.autosuggestSettings.renderSuccessGlyph(this) : getGlyph(validationState)
-					}</FormControl.Feedback> :
-					null
-				}
-			</div>
+			<FetcherInput 
+				{...inputProps} 
+				glyph={glyph} 
+				loading={this.state.isLoading} 
+				validationState={renderMetaInfo ? validationState : undefined} 
+			/>
 		);
 
 		if (value && !this.state.unsuggested && renderMetaInfo && this.state.autosuggestSettings.renderMetaInfo) {

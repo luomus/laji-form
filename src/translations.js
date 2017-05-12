@@ -244,4 +244,9 @@
 		en: "Previous",
 		sv: "Tidigare"
 	},
+	invalidUnitCode: {
+		fi: "Virheellinen koodi.",
+		en: "Invalid code.",
+		sv: "Ogiltig kod."
+	},
 };

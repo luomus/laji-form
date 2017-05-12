@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col } from "react-bootstrap";
+import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl } from "react-bootstrap";
+import Spinner from "react-spinner";
 
 export class Button extends Component {
 	render() {
@@ -374,5 +375,15 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 			{children}
 		</OverlayTrigger>
 
+	);
+}
+
+export function FetcherInput({loading, children, validationState, glyph, getRef, ...inputProps}) {
+	return (
+		<div className={`fetcher-input has-feedback${validationState ? ` has-${validationState}` : ""}`}>
+			<input className="form-control" type="text" {...inputProps} ref={r => {if (getRef) getRef(r)}} />
+			{glyph ?  <FormControl.Feedback>{glyph}</FormControl.Feedback> : null }
+			{loading ? <Spinner /> : null }
+		</div>
 	);
 }
