@@ -8,7 +8,7 @@ import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -491,6 +491,7 @@ export default class MapArrayField extends Component {
 				const {map} = new Context("MAP");
 				map.map.fitBounds(map._allCorridors[idx].getBounds());
 				map._openTooltipFor(idx);
+				focusById(`${this.props.idSchema.$id}_${idx}`);
 			},
 			onComponentDidUpdate: () => {
 				this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);

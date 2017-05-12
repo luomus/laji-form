@@ -104,7 +104,7 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 	}
 
 	function focusFirstOf(idx) {
-		focusById(`${props.idSchema.$id}_${idx}`)
+		focusById(`${props.idSchema.$id}_${idx}`) && e.stopPropagation();
 	}
 
 	if (!e.ctrlKey && e.key === "Insert") {

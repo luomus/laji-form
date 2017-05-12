@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
-import { getUiOptions, hasData } from "../../utils";
+import { getUiOptions, hasData, focusById } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -211,8 +211,13 @@ export default class SingleActiveArrayField extends Component {
 			idx = undefined;
 		}
 
+		const that = this;
+		function _callback() {
+			focusById(`${that.props.idSchema.$id}_${idx}`);
+			callback && callback();
+		}
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
-		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, callback);
+		onActiveChange ? onActiveChange(idx, _callback) : this.setState({activeIdx: idx}, _callback);
 	}
 
 	onDelete = (idx) => () => {
@@ -255,7 +260,7 @@ function AccordionArrayFieldTemplate(arrayFieldTemplateProps) {
 						<Panel onKeyDown={onItemKeyDown(() => this.deleteButtonRefs[idx])(item)}
 						       key={idx}
 						       eventKey={idx}
-						       header={this.renderAccordionHeader(idx, title)}
+						       header={this.renderAccordionHeader(idx, title, this.props.idSchema.$id)}
 						       bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}>
 							{item.children}
 						</Panel>
@@ -304,7 +309,7 @@ function PagerArrayFieldTemplate(arrayTemplateFieldProps) {
 }
 
 // 'this' is binded to SingleActiveArrayField class context.
-function renderAccordionHeader(idx, title) {
+function renderAccordionHeader(idx, title, id) {
 	const popupData = this.state.popups[idx];
 
 	const formattedIdx = idx + 1;
@@ -316,6 +321,7 @@ function renderAccordionHeader(idx, title) {
 
 	const header = (
 		<div className="laji-map-accordion-header" onClick={() => {
+			const {activeIdx} = this.state;
 			this.onActiveChange(idx);
 			formatter.onClick(this, idx);
 		}}

@@ -2,6 +2,8 @@ import { findDOMNode } from "react-dom";
 import { isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "./Context";
 import update from "immutability-helper";
+import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
+
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
@@ -190,14 +192,15 @@ export function focusNextInput(formReactNode, inputElem, reverseDirection) {
 }
 
 export function focusById(id) {
-		const elem = getSchemaElementById(id);
-		if (elem) {
-			const tabbableFields = getTabbableFields(elem);
-			if (tabbableFields && tabbableFields.length) {
-				tabbableFields[0].focus();
-				e.stopPropagation();
-			}
+	const elem = getSchemaElementById(id);
+	if (elem) {
+		const tabbableFields = getTabbableFields(elem);
+		if (tabbableFields && tabbableFields.length) {
+			tabbableFields[0].focus();
+			scrollIntoViewIfNeeded(elem);
+			return true; // success status
 		}
+	}
 }
 
 export function getNestedTailUiSchema(uiSchema) {

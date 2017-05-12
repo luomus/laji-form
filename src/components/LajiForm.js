@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { isMultiSelect, getTabbableFields, getSchemaElementById,
-	canFocusNextInput, focusNextInput } from "../utils";
-import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
+	canFocusNextInput, focusNextInput, focusById } from "../utils";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -16,21 +15,10 @@ import translations from "../translations.js";
 
 class _SchemaField extends Component {
 	componentDidMount() {
-		function focus(id) {
-			const elem = getSchemaElementById(id);
-			if (elem) {
-				const tabbableFields = getTabbableFields(elem);
-				if (tabbableFields && tabbableFields.length) {
-					tabbableFields[0].focus();
-					scrollIntoViewIfNeeded(elem);
-				}
-			}
-		}
-
 		const _context = new Context(this.props.registry.formContext.contextId);
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			focus(_context.idToFocus);
+			focusById(_context.idToFocus);
 			_context.idToFocus = undefined;
 		}
 	}
