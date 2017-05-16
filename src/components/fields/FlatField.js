@@ -51,7 +51,7 @@ export default class FlatField extends Component {
 					innerData = innerData[0];
 				}
 
-				Object.keys(innerData).forEach(innerField => {
+				Object.keys(innerData || {}).forEach(innerField => {
 					state.formData = {...state.formData, [`/${field}/${innerField}`]: innerData[innerField]};
 				});
 				state.formData = immutableDelete(state.formData, field);

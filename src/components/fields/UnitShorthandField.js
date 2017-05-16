@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
@@ -41,15 +41,17 @@ export default class UnitShorthandField extends Component {
 				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
 				bsStyle={this.state.showSchema ? "default" : "primary"}
 				onClick={() => {
-					new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id
-					this.setState({showSchema: !this.state.showSchema});
+					const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
+					this.setState({showSchema: !this.state.showSchema}, () => {
+						focusById(this.props.idSchema.$id);
+					});
 				}}
 				glyph="resize-small"
 			/>
 		);
 	}
 
-	onCodeChange = (formData) => {
+	onCodeChange = (formData = {}) => {
 		new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id
 		this.props.onChange(getDefaultFormState(this.props.schema, formData, this.props.registry.definitions));
 		this.setState({showSchema: true});
@@ -61,7 +63,6 @@ export default class UnitShorthandField extends Component {
 		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
 		const toggleButton = this.getToggleButton();
 
-		//let help = uiSchema && uiSchema.properties && uiSchema.properties[shorthandFieldName] && uiSchema.properties[shorthandFieldName]["ui:help"];
 		const tailUiSchema = getNestedTailUiSchema(uiSchema);
 		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:help"];
 		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:help": {$set: undefined}}});
@@ -73,6 +74,7 @@ export default class UnitShorthandField extends Component {
 					            value={this.props.formData[shorthandFieldName]} 
 					            formID={getUiOptions(this.props.uiSchema).formID} 
 					            help={help} 
+											id={`_laji-form_${this.props.idSchema[shorthandFieldName].$id}`}
 					            className="laji-form-field-template-schema" />
 					<div className="laji-form-field-template-buttons">{toggleButton}</div>
 				</div>
@@ -105,7 +107,6 @@ class CodeReader extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		if (this.inputRef) this.inputRef.focus();
 	}
 
 	componentWillUnmount() {
@@ -122,12 +123,12 @@ class CodeReader extends Component {
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				<FetcherInput
-					getRef={n => {this.inputRef = n;}}
+					id={this.props.id}
 					loading={this.state.loading}
 					value={this.state.value}
 					validationState={validationState}
 					onChange={({target: {value}}) => {if (this.mounted) this.setState({value})}}
-					onBlur={this.getCode}
+					onBlur={() => this.getCode()}
 					onKeyDown={e => {
 						if (e.key === "Enter") {
 							this.getCode();
@@ -147,14 +148,17 @@ class CodeReader extends Component {
 
 	getCode = () => {
 		const {value} = this.state;
-		if (this.mounted) this.setState({loading: true});
-		if (!isEmptyString(this.props.value) && (!this.value || this.value.length < 3)) {
-			if (this.mounted) this.setState({failed: false, loading: false}, this.props.onChange(undefined));
+		if (!isEmptyString(this.props.value) && isEmptyString(value) && (!this.value || this.value.length < 3)) {
+			this.mounted && this.setState({loading: true});
+			this.mounted && this.setState({failed: false, loading: false}, () => {
+				isEmptyString(this.value) && this.props.onChange(undefined);
+			});
 		} else if (value.length >= 3) {
+			this.mounted && this.setState({loading: true});
 			this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID}).then(response => {
 					this.props.onChange(response.payload.unit)
 			}).catch(e => {
-					if (this.mounted) this.setState({failed: true, loading: false});
+					this.mounted && this.setState({failed: true, loading: false});
 			});
 		}
 	}
