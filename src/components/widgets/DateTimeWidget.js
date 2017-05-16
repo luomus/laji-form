@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
-import momentLocalizer from "react-widgets/lib/localizers/moment";
+//import momentLocalizer from "react-widgets/lib/localizers/moment";
+import momentLocalizer from "react-widgets-moment"
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -92,7 +93,7 @@ export default class DateTimeWidget extends Component {
 		const {translations} = this.props.formContext;
 
 		const datePicker = (<DateTimePicker
-			calendar={this.state.calendar}
+			date={this.state.calendar}
 			time={this.state.time}
 			format={this.state.inputFormat}
 			timeFormat={this.state.timeFormat}

@@ -85,7 +85,7 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .form-control, .laji-form .rw-datetimepicker, .laji-form .react-selectize-control {
+.laji-form .form-control, .laji-form .rw-widget-container, .laji-form .react-selectize-control {
 	border-radius: 2px !important;
 }
 .laji-form .form-control:not(textarea), .laji-form .react-selectize:not(.multi-select) .react-selectize-control {
@@ -97,7 +97,7 @@ body .laji-form {
 	width: 25px;
 	font-size: 10px;
 }
-.laji-form .rw-input {
+.laji-form .rw-widget-container.rw-widget-picker, .laji-form .rw-input {
 	height: 23px !important;
 }
 .laji-form .form-control:not(textarea), .laji-form .rw-input  {
