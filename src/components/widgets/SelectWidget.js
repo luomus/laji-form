@@ -94,7 +94,6 @@ class SelectWidget extends Component {
 			selectProps
 		} = this.props;
 		const {enumOptions} = this.state;
-		console.log(this.props.formContext.translations.NoResults);
 
 		const commonOptions = {
 			value: this.state.value,

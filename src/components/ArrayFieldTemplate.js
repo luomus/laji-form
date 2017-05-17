@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { getTabbableFields, getSchemaElementById, findNearestParentSchemaElemID, focusById } from "../utils";
+import { getTabbableFields, findNearestParentSchemaElemID, focusById, focusNextInput } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {
@@ -15,7 +15,7 @@ function onAdd(e, props, idToFocus) {
 const buttonDefinitions = {
 	add: {
 		glyph: "plus",
-		fn: (e) => (props, options = {}) => {
+		fn: (e) => (props) => {
 			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
 		}
 	}
@@ -107,7 +107,10 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 		focusById(`${props.idSchema.$id}_${idx}`) && e.stopPropagation();
 	}
 
-	if (!e.ctrlKey && e.key === "Insert") {
+	if (!e.altKey) return;
+
+	switch (e.key) {
+	case "Insert": {
 
 		e.stopPropagation();
 
@@ -123,30 +126,39 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 				afterInsert();
 			}
 		}
-	} else if (e.ctrlKey && e.key === "Enter") {
+		break;
+	}
+	case "PageUp":
+	case "PageDown": {
 		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeArrayItems = nearestSchemaElem.id.match(/_\d+/g);
 		if (!activeArrayItems) return;
 
 		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
-		const amount = e.shiftKey ? -1 : 1;
+		const amount = e.key === "PageUp" ? -1 : 1;
 
 		const nextIdx = currentIdx + amount;
-		if (nextIdx >= props.items.length || nextIdx < 0) return;
-		if  (navigateCallforward) {
-			e.persist();
-			navigateCallforward(() => {
+		const dir = nextIdx < currentIdx;
+
+		if (nextIdx >= 0 && nextIdx < props.items.length) {
+			e.stopPropagation();
+			if (navigateCallforward) {
+				e.persist();
+				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
+			} else {
 				focusFirstOf(nextIdx);
-			}, nextIdx);
+			}
 		} else {
-			focusFirstOf(nextIdx);
+			e.stopPropagation();
+			focusNextInput(props.formContext.getFormRef(), getTabbableFields(nearestSchemaElem)[0], dir);
 		}
+	}
 	}
 };}
 
 export function onItemKeyDown(getDeleteButton) { return () => e => {
-	if (e.ctrlKey && e.key === "Delete") {
+	if (e.altKey && e.key === "Delete") {
 		getDeleteButton().onClick(e);
 	}
 };}

@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
-import { isMultiSelect, getTabbableFields, getSchemaElementById,
-	canFocusNextInput, focusNextInput, focusById } from "../utils";
+import { isMultiSelect, canFocusNextInput, focusNextInput, focusById } from "../utils";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -38,7 +37,7 @@ class _SchemaField extends Component {
 					...uiSchema.uiSchema,
 					"ui:buttons": uiSchema["ui:buttons"]
 				}
-			}
+			};
 		}
 
 
@@ -203,7 +202,7 @@ export default class LajiForm extends Component {
 		this.setState(this.getStateFromProps(props));
 	}
 
-	getStateFromProps = (props) => {
+	getStateFromProps(props) {
 		this._context.staticImgPath = props.staticImgPath;
 		this._context.formData = props.formData;
 		return {translations: this.translations[props.lang]};
@@ -248,7 +247,7 @@ export default class LajiForm extends Component {
 			<div onKeyDown={this.onKeyDown} className="laji-form">
 				<Form
 					{...this.props}
-					ref="form"
+					ref={form => {this.formRef = form;}}
 					onChange={this.onChange}
 					fields={fields}
 					widgets={widgets}
@@ -259,7 +258,7 @@ export default class LajiForm extends Component {
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext,
 						contextId: this.props.contextId,
-						getFormRef: () => this.refs.form
+						getFormRef: () => this.formRef
 					}}
 				  validate={validate(this.props.validators)}
 				>
@@ -270,13 +269,13 @@ export default class LajiForm extends Component {
 						null}
 					</div>
 			</Form>
-			<div ref="blockingLoader" className="blocking-loader" />
+			<div ref={elem => {this.blockingLoaderRef = elem;}} className="blocking-loader" />
 		</div>
 		);
 	}
 
 	submit = () => {
-		this.refs.form.onSubmit({preventDefault: () => {}});
+		this.formRef.onSubmit({preventDefault: () => {}});
 	}
 
 	onKeyDown = (e) => {
@@ -299,9 +298,11 @@ export default class LajiForm extends Component {
 
 		if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
 
-		if (e.key == "Enter" && canFocusNextInput(this.refs.form, e.target)) {
-			focusNextInput(this.refs.form, e.target, e.shiftKey);
+		if (e.altKey && e.key == "Enter" && canFocusNextInput(this.formRef, e.target)) {
+			focusNextInput(this.formRef, e.target, e.shiftKey);
 			e.preventDefault();
+		} else if (e.key === "PageUp" || e.key === "PageDown") {
+			focusNextInput(this.formRef, e.target, e.key === "PageUp");
 		}
 	}
 
@@ -309,9 +310,9 @@ export default class LajiForm extends Component {
 		this.blockingLoaderCounter++;
 		if (this.mounted) {
 			if (this.blockingLoaderCounter === 1) {
-				this.refs.blockingLoader.className = "blocking-loader enter-start";
+				this.blockingLoaderRef.className = "blocking-loader enter-start";
 				setImmediate(() => {
-					this.refs.blockingLoader.className = "blocking-loader entering";
+					this.blockingLoaderRef.className = "blocking-loader entering";
 				});
 			}
 		}
@@ -322,12 +323,12 @@ export default class LajiForm extends Component {
 		if (this.blockingLoaderCounter < 0) {
 			console.warn("laji-form: Blocking loader was popped before pushing!");
 		} else if (this.blockingLoaderCounter === 0) {
-			this.refs.blockingLoader.className = "blocking-loader leave-start";
+			this.blockingLoaderRef.className = "blocking-loader leave-start";
 			setImmediate(() => {
-				this.refs.blockingLoader.className = "blocking-loader leaving";
+				this.blockingLoaderRef.className = "blocking-loader leaving";
 			});
 			setTimeout(() => {
-				this.refs.blockingLoader.className = "blocking-loader";
+				this.blockingLoaderRef.className = "blocking-loader";
 			}, 200); // should match css transition time.
 		}
 	}
