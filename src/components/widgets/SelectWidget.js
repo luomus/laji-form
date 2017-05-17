@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { SimpleSelect, MultiSelect } from "react-selectize";
+import { findDOMNode } from "react-dom";
+import Combobox from "react-widgets/lib/Combobox";
+import Multiselect from "react-widgets/lib/Multiselect";
 import { Label } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 
@@ -29,6 +31,10 @@ class SelectWidget extends Component {
 
 	getStateFromProps(props) {
 		let {options: {enumOptions}} = props;
+		if (enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {
+			enumOptions = enumOptions.slice(1);
+		}
+
 
 		function sort(enumOptions, order) {
 			if (!Array.isArray(order)) return enumOptions;
@@ -70,12 +76,9 @@ class SelectWidget extends Component {
 
 		return {
 			valsToItems,
-			enumOptions
+			enumOptions,
+			value: props.value
 		};
-	}
-
-	onChange(value) {
-		this.props.onChange(value, !!"force");
 	}
 
 	render() {
@@ -84,66 +87,52 @@ class SelectWidget extends Component {
 			id,
 			required,
 			disabled,
+			readonly,
 			multiple,
 			autofocus,
 			formContext,
 			selectProps
 		} = this.props;
 		const {enumOptions} = this.state;
+		console.log(this.props.formContext.translations.NoResults);
 
-		const value = multiple ? this.props.value.filter(value => value !== undefined) : this.props.value;
-
-		const commonProps = {
-			theme: "bootstrap3",
-			id,
-			required,
+		const commonOptions = {
+			value: this.state.value,
+			data: enumOptions,
+			onChange: value => this.setState({value}),
+			valueField: "value",
+			textField: "label",
 			disabled,
-			autofocus,
-			firstOptionIndexToHighlight: (index, options, val) => !val || isEmptyString(val.value) ? -1 : index,
-			highlightedUid: this.state.uid,
-			onHighlightedUidChange: (uid) => this.setState({uid}),
-			options: enumOptions.filter(item => item.value !== "" && item.label !== ""),
-			hideResetButton: isEmptyString(value),
-			renderToggleButton: () => <span className="caret"/>,
-			renderResetButton: () => <span>×</span>,
-			renderNoResultsFound: () => <span className="text-muted">{formContext.translations.NoResults}</span>,
-			...(selectProps || {})
+			readOnly: readonly,
+			filter: "contains",
+			messages: {
+				open: this.props.formContext.translations.Open,
+				emptyList: this.props.formContext.translations.NoResults,
+				emptyFilter: this.props.formContext.translations.NoResults
+			},
+			suggest: true
 		};
 
 		const selectComponent = multiple ? (
-			<MultiSelect
-				key={`${id}-select`}
-				{...commonProps}
-				values={(value || []).map(val => this.state.valsToItems[val])}
-				onValuesChange={items => {
-					this.setState({uid: undefined},
-						() => this.onChange(processValue(schema.type, (items || []).map(({value}) => value)))
-					);
-				}}
-				renderValue={!multiple ? undefined : item => (
-						<Label bsStyle="primary">
-							<span>{item.label}</span>
-							<span className="multiselect-close" onClick={() => {
-								this.onChange(processValue(schema.type, this.props.value.filter(val => val !== item.value)));
-							}}>×</span>
-						</Label>
-					)}
-			/>
+			<Multiselect {...commonOptions} />
 		) : (
-			<SimpleSelect
-				key={`${id}-select`}
-				{...commonProps}
-				cancelKeyboardEventOnSelection={false}
-				value={this.state.valsToItems[value]}
-				onValueChange={item => {
-					this.onChange(processValue(schema.type, item ? item.value : undefined));
-				}}
+			<Combobox
+				{...commonOptions}
+				ref={"combo"}
+				onFocus={() => this.setState({open: true}, () => {
+					findDOMNode(this.refs.combo.refs.inner.refs.input).select();
+				})}
+				onBlur={() => this.setState({open: false})}
+				open={this.state.open}
+				onToggle={() => {}}
+				onChange={value => this.setState({value})}
+				onSelect={() => this.setState({open: false})}
 			/>
 		);
 
 		return (
 			<TooltipComponent placement="top" trigger="hover"
-			                  tooltip={(multiple || isEmptyString(value)) ? undefined : this.state.valsToItems[value].label} >
+			                  tooltip={(multiple || isEmptyString(this.props.value)) ? undefined : this.state.valsToItems[this.props.value].label} >
 				<div>
 					{selectComponent}
 				</div>

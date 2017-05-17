@@ -372,11 +372,11 @@ export default class AutoSuggestWidget extends Component {
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
 
 		let cssClasses = {
-			suggestionsContainer: "dropdown-menu bootstrap3 react-selectize simple-select",
-			suggestionsList: "list-group",
-			containerOpen: "open",
-			suggestion: "option-wrapper",
-			suggestionHighlighted: "option-wrapper highlight"
+			suggestionsContainer: "rw-popup-container rw-popup-animation-box",
+			suggestionsContainerOpen: "rw-popup",
+			suggestionsList: "rw-list",
+			suggestion: "rw-list-option",
+			suggestionHighlighted: "rw-list-option rw-state-focus"
 		};
 
 		return (

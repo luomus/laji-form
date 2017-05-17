@@ -249,4 +249,9 @@
 		en: "Invalid code.",
 		sv: "Ogiltig kod."
 	},
+	open: {
+		fi: "Avaa",
+		en: "Open",
+		sv: "Öppna"
+	}
 };

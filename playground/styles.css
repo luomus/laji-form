@@ -52,6 +52,10 @@ body .laji-form {
 .laji-form .autosuggest-container ul {
 	padding-left: 0px;
 }
+.laji-form .autosuggest-wrapper .rw-popup {
+    left: 0px;
+    right: 0px;
+}
 .laji-form .fetcher-input .dropdown-menu {
 	display: block;
 }
@@ -85,10 +89,10 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .form-control, .laji-form .rw-widget-container, .laji-form .react-selectize-control {
+.laji-form .form-control, .laji-form .rw-widget-container {
 	border-radius: 2px !important;
 }
-.laji-form .form-control:not(textarea), .laji-form .react-selectize:not(.multi-select) .react-selectize-control {
+.laji-form .form-control:not(textarea) {
 	height: 25px !important;
 }
 .laji-form .form-control-feedback {
@@ -106,38 +110,25 @@ body .laji-form {
 .laji-form select {
 	padding: 3px 6px !important;
 }
-.laji-form .react-selectize.bootstrap3.dropdown-menu .option-wrapper.highlight {
-	background: #337ab7;
-	color: white;
-}
-.laji-form .react-selectize.dropdown-menu .option-wrapper {
-	white-space: nowrap;
-}
-.laji-form .react-selectize.bootstrap3.dropdown-menu .option-wrapper * {
-	padding: 2px 3px;
-}
-.laji-form .react-selectize .label {
-	margin: 1px;
-	font-size: 12px;
-}
-.laji-form .multiselect-close {
-	padding-left: 3px;
-	position: relative;
-	top: 1px;
-}
-.laji-form .react-selectize-control {
-	overflow: hidden;
-}
-.simple-value {
-	word-break: break-word;
-	height: 23px;
+
+.laji-form .rw-multiselect-tag {
+	background-color: #337ab7;
+    font-weight: bold;
+    height: 19px;
+    margin-top: 2px;
+    margin-left: 1px;
 }
 
-.simple-value span {
-	height: 23px;
-	line-height: 23px;
-	text-overflow: ellipsis;
-	overflow: hidden;
+.laji-form .rw-input-reset {
+    height: 23px;
+}
+
+.laji-form .rw-multiselect-taglist span, .laji-form .rw-multiselect-taglist .rw-btn {
+    color: white;
+}
+.laji-form .rw-list-option.rw-state-focus:not(.rw-state-selected) {
+	background-color: #e6e6e6;
+	border-color: #e6e6e6;
 }
 
 .laji-form .form-group {
@@ -148,65 +139,8 @@ body .laji-form {
 	line-height: 14px;
 	white-space: normal;
 }
-.laji-form button:not(.list-group-item), .laji-form .react-selectize-control {
+.laji-form button:not(.list-group-item) {
 	border-radius: 2px;
-}
-.laji-form .react-selectize {
-	width: auto;
-}
-.laji-form .react-selectize-control {
-	/*copy pasted from bootstrap .form-control*/
-	color: #555;
-	background-color: #fff;
-	background-image: none;
-	border: 1px solid #ccc !important;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	/**/
-	padding: 0 !important;
-}
-.laji-form .react-selectize.open .react-selectize-control {
-	border-color: #66afe9 !important;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-}
-.laji-form .react-selectize:not(.multi-select) .react-selectize-control > * {
-	padding: 0;
-	min-height: 25px !important;
-	height: 25px !important;
-}
-.laji-form .react-selectize.dropdown-menu:not(.tethered) {
-	width: auto;
-	min-width: 100%;
-	border-radius: 2px;
-	margin-top: 2px;
-}
-.laji-form .react-selectize.root-node .react-selectize-control .react-selectize-reset-button-container {
-	width: 8px;
-	height: 23px;
-}
-.laji-form .react-selectize.root-node .react-selectize-control .react-selectize-toggle-button-container {
-	width: 18px;
-	height: 23px;
-}
-.laji-form .react-selectize.root-node .react-selectize-control .react-selectize-search-field-and-selected-values .value-wrapper {
-	height: 23px;
-}
-.laji-form .react-selectize.root-node .react-selectize-control .react-selectize-search-field-and-selected-values .resizable-input {
-	padding: 0px;
-	margin: 0px;
-	height: 23px;
-}
-.laji-form .react-selectize .react-selectize-control .react-selectize-search-field-and-selected-values {
-	min-height: 23px;
-}
-.laji-form .react-selectize:not(.multi-select) .react-selectize-control .react-selectize-search-field-and-selected-values {
-	flex-wrap: nowrap;
 }
 
 .laji-form legend {
@@ -628,7 +562,7 @@ body .laji-form {
 	padding: 8px;
 }
 
-.has-error .rw-widget, .laji-form .has-error .react-selectize-control {
+.laji-form .has-error .rw-widget {
 	border-color: #a94442 !important;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
