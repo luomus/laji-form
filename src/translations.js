@@ -253,5 +253,40 @@
 		fi: "Avaa",
 		en: "Open",
 		sv: "Öppna"
+	},
+	shortcuts: {
+		fi: "Pikanäppäimet",
+		en: "Shortcuts",
+		sv: "Kortkommandos"
+	},
+	navigate: {
+		fi: "Liiku seuraavaan kenttään",
+		en: "Navigate to the next field",
+		sv: "??"
+	},
+	navigateReverse: {
+		fi: "Liiku edelliseen kenttään",
+		en: "Navigate to the previous field",
+		sv: "??"
+	},
+	navigateArray: {
+		fi: "Liiku seuraavaan toisteiseen kenttään",
+		en: "Navigate to the next array item",
+		sv: "??"
+	},
+	navigateArrayReverse: {
+		fi: "Liiku edelliseen toisteiseen kenttään",
+		en: "Navigate to the previous array item",
+		sv: "??"
+	},
+	insert: {
+		fi: "Lisää uusi kenttä",
+		en: "Add a new item to an array",
+		sv: "??"
+	},
+	delete: {
+		fi: "Poista toisteinen kenttä",
+		en: "Remove the focused array item",
+		sv: "??"
 	}
 };

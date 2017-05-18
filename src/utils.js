@@ -19,7 +19,7 @@ export function isDefaultData(formData, schema, registry) {
 		if (typeof data === "object") {
 			return Object.keys(data).some(_field => propIsDefaultData(schema.properties[_field], data));
 		}
-		else return propIsDefaultData(schema, data)
+		else return propIsDefaultData(schema, data);
 	});
 }
 
@@ -81,7 +81,7 @@ export function getUiOptions(container) {
 export function getInnerUiSchema(parentUiSchema) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
 	if (uiSchema && new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && parentUiSchema["ui:buttons"]) {
-			uiSchema = {
+		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
 				...(uiSchema["ui:buttons"] || []),
@@ -237,4 +237,50 @@ export function getBootstrapCols(width) {
 		o[c] = width;
 		return o;
 	}, {});
+}
+
+export function handleKeysWith(keyHandlers = [], keyFunctions = {}, e, additionalParams = {}) {
+	function isDescendant(parent, child) {
+		var node = child.parentNode;
+		while (node != null) {
+			if (node == parent) {
+				return true;
+			}
+			node = node.parentNode;
+		}
+		return false;
+	}
+
+	if (new Context().blockingLoaderCounter > 0 &&
+			!isDescendant(document.querySelector(".pass-block"), e.target)) {
+		e.preventDefault();
+		return;
+	}
+
+	if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
+
+	keyHandlers.some(keyHandler => {
+		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
+			const _context = new Context();
+			if ("keyTimeouts" in _context && _context.keyTimeouts) {
+				_context.keyTimeouts.forEach(timeout => clearTimeout(timeout));
+			}
+			_context.keyTimeouts = [];
+
+			const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
+			const eventHandled = returnValue !== undefined ? returnValue : true;
+			if (!eventHandled) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			return eventHandled;
+		}
+	});
+}
+
+export function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+export function decapitalizeFirstLetter(string) {
+	return string.charAt(0).toLowerCase() + string.slice(1);
 }

@@ -251,7 +251,7 @@ function AccordionArrayFieldTemplate(arrayFieldTemplateProps) {
 	const activeIdx = this.state.activeIdx;
 	const title = this.props.schema.title;
 	return (
-			<div onKeyDown={onContainerKeyDown({
+			<div className="laji-form-single-active-array" onKeyDown={onContainerKeyDown({
 				props: arrayFieldTemplateProps,
 				insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
 				navigateCallforward: (callback, idx) => this.onActiveChange(idx, callback)
@@ -280,7 +280,7 @@ function PagerArrayFieldTemplate(arrayTemplateFieldProps) {
 	const title = this.props.schema.title || "";
 
 	return (
-		<div onKeyDown={onContainerKeyDown({
+		<div className="laji-form-single-active-array" onKeyDown={onContainerKeyDown({
 			props: arrayTemplateFieldProps,
 			insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
 			navigateCallforward:	(callback, idx) => this.onActiveChange(idx, callback),

@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { getTabbableFields, findNearestParentSchemaElemID, focusById, focusNextInput } from "../utils";
+import { findNearestParentSchemaElemID, focusById, handleKeysWith } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {
@@ -98,21 +98,36 @@ export default function ArrayFieldTemplate(props) {
 	);
 }
 
-export function onContainerKeyDown({props, insertCallforward, navigateCallforward}) { return (e) => {
-	function afterInsert() {
-		onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
-	}
+const arrayKeyFunctions = {
+	navigateArray: function (e, {reverse, props, navigateCallforward}) {
+		function focusFirstOf(idx) {
+			focusById(`${props.idSchema.$id}_${idx}`) && e.stopPropagation();
+		}
 
-	function focusFirstOf(idx) {
-		focusById(`${props.idSchema.$id}_${idx}`) && e.stopPropagation();
-	}
+		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
+		// Should contain all nested array item ids. We want the last one, which is focused.
+		const activeArrayItems = nearestSchemaElem.id.match(/_\d+/g);
+		if (!activeArrayItems) return;
 
-	if (!e.altKey) return;
+		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
+		const amount = reverse ? -1 : 1;
 
-	switch (e.key) {
-	case "Insert": {
+		const nextIdx = currentIdx + amount;
 
-		e.stopPropagation();
+		if (nextIdx >= 0 && nextIdx < props.items.length) {
+			if (navigateCallforward) {
+				e.persist();
+				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
+			} else {
+				focusFirstOf(nextIdx);
+			}
+			return true;
+		}
+	},
+	insert: function (e, {props, insertCallforward}) {
+		function afterInsert() {
+			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
+		}
 
 		const canAdd = props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
 
@@ -125,40 +140,23 @@ export function onContainerKeyDown({props, insertCallforward, navigateCallforwar
 			} else {
 				afterInsert();
 			}
-		}
-		break;
-	}
-	case "PageUp":
-	case "PageDown": {
-		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
-		// Should contain all nested array item ids. We want the last one, which is focused.
-		const activeArrayItems = nearestSchemaElem.id.match(/_\d+/g);
-		if (!activeArrayItems) return;
-
-		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
-		const amount = e.key === "PageUp" ? -1 : 1;
-
-		const nextIdx = currentIdx + amount;
-		const dir = nextIdx < currentIdx;
-
-		if (nextIdx >= 0 && nextIdx < props.items.length) {
-			e.stopPropagation();
-			if (navigateCallforward) {
-				e.persist();
-				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
-			} else {
-				focusFirstOf(nextIdx);
-			}
-		} else {
-			e.stopPropagation();
-			focusNextInput(props.formContext.getFormRef(), getTabbableFields(nearestSchemaElem)[0], dir);
+			return true;
 		}
 	}
+};
+
+const arrayItemKeyFunctions = {
+	delete: function(e, {getDeleteButton}) {
+		getDeleteButton().onClick(e);
+		return true;
 	}
+};
+
+
+export function onContainerKeyDown({props, insertCallforward, navigateCallforward}) { return (e) => {
+	handleKeysWith(new Context().keyHandlers, arrayKeyFunctions, e, {props, insertCallforward, navigateCallforward});
 };}
 
 export function onItemKeyDown(getDeleteButton) { return () => e => {
-	if (e.altKey && e.key === "Delete") {
-		getDeleteButton().onClick(e);
-	}
+	handleKeysWith(new Context().keyHandlers, arrayItemKeyFunctions, e, {getDeleteButton});
 };}

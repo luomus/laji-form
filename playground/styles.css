@@ -519,7 +519,7 @@ body .laji-form {
 	cursor: pointer;
 	color: rgb(51, 51, 51);
 }
-.laji-form .panel-heading, .laji-form .pager {
+.laji-form .laji-form-single-active-array .panel-heading, .laji-form .pager {
 	padding: 0;
 	margin: 0;
 }
@@ -593,4 +593,15 @@ body .laji-form {
 .laji-form .bootstrap-switch .bootstrap-switch-handle-on {
     border-top-left-radius: 1px;
     border-bottom-left-radius: 1px;
+}
+.laji-form .shortcut-help {
+	position: fixed;
+	bottom: 5px;
+	z-index: 1;
+	-webkit-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+	-moz-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+}
+.laji-form .hidden {
+	display: none;
 }

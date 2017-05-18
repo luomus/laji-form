@@ -4,22 +4,29 @@
 	"description": "<p>Tällä lomakkeella voit ilmoittaa yhden tai useamman päivän kestäneen retken kaikki havaintotiedot ja mahdollisesti kokoelmanäytteeksi otettujen yksilöiden tiedot.</p><p><a target=\"_blank\" href=\"https://beta.laji.fi/about/1107\">Käyttöohjeet</a></p>",
 	"uiSchema": {
 		"ui:shortcuts": {
-			"alt+enter": {
-				"fn": "navigate"
+			"alt": {
+				"fn": "help",
+				"delay": 1
 			},
-			"alt+shift+enter": {
+			"alt+shift+Enter": {
+				"fn": "navigate",
+				"reverse": true
+			},
+			"alt+Enter": {
 				"fn": "navigate"
 			},
 			"alt+PageUp": {
 				"fn": "navigateArray",
-				"direction": "forward"
+				"reverse": true
 			},
-			"alt+PageUp": {
-				"fn": "navigateArray",
-				"direction": "backward"
+			"alt+PageDown": {
+				"fn": "navigateArray"
 			},
 			"alt+Insert": {
 				"fn": "insert"
+			},
+			"alt+Delete": {
+				"fn": "delete"
 			}
 		},
 		"ui:order": [

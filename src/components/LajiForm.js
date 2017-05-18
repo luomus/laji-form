@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
-import { isMultiSelect, canFocusNextInput, focusNextInput, focusById } from "../utils";
+import { Panel, Table } from "react-bootstrap";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter } from "../utils";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -189,6 +191,7 @@ export default class LajiForm extends Component {
 		this.translations = this.constructTranslations();
 		this._context = new Context(this.props.contextId);
 		this.blockingLoaderCounter = 0;
+		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
 		this._context.stateClearListeners = [];
@@ -205,11 +208,14 @@ export default class LajiForm extends Component {
 	getStateFromProps(props) {
 		this._context.staticImgPath = props.staticImgPath;
 		this._context.formData = props.formData;
+		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
+		this._context.keyHandlers = this.keyHandlers;
 		return {translations: this.translations[props.lang]};
 	}
 
 	componentDidMount() {
 		this.mounted = true;
+		focusById("root");
 	}
 
 	componentWillUnmount() {
@@ -217,13 +223,6 @@ export default class LajiForm extends Component {
 	}
 
 	constructTranslations = () => {
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
-		function decapitalizeFirstLetter(string) {
-			return string.charAt(0).toLowerCase() + string.slice(1);
-		}
-
 		let dictionaries = {};
 		for (let word in translations) {
 			for (let lang in translations[word]) {
@@ -243,6 +242,7 @@ export default class LajiForm extends Component {
 
 	render() {
 		const {translations} = this.state;
+		const shortcuts = this.props.uiSchema["ui:shortcuts"];
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form">
 				<Form
@@ -270,6 +270,23 @@ export default class LajiForm extends Component {
 					</div>
 			</Form>
 			<div ref={elem => {this.blockingLoaderRef = elem;}} className="blocking-loader" />
+			{shortcuts ? 
+				<Panel ref={elem => {this.shortcutHelpRef = elem;}} className="shortcut-help z-depth-3 hidden" bsStyle="info" header={<h3>{translations.Shortcuts}</h3>}>
+					<Table fill>
+						<tbody className="well">{
+							Object.keys(shortcuts).map((keyCombo, idx) => {
+								const {fn, ...rest} = shortcuts[keyCombo];
+								if (fn === "help") return;
+								return (
+									<tr key={idx}>
+										<td>{keyCombo.split("+").map(capitalizeFirstLetter).join(" + ")}</td><td>{translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")]}</td>
+									</tr>
+								);
+							})
+						}</tbody>
+					</Table>
+				</Panel> 
+			: null}
 		</div>
 		);
 	}
@@ -278,36 +295,60 @@ export default class LajiForm extends Component {
 		this.formRef.onSubmit({preventDefault: () => {}});
 	}
 
-	onKeyDown = (e) => {
-		function isDescendant(parent, child) {
-			var node = child.parentNode;
-			while (node != null) {
-				if (node == parent) {
-					return true;
+	keyFunctions = {
+		navigate: (e, {reverse}) => {
+			focusNextInput(this.formRef, e.target, reverse);
+			return true;
+		},
+		navigateArray: (...params) => this.keyFunctions.navigate(...params),
+		help: (_, {delay}) => {
+			const node = findDOMNode(this.shortcutHelpRef);
+			
+			const that = this;
+			function dismiss() {
+				if (that.helpVisible) {
+					node.className += " hidden";
 				}
-				node = node.parentNode;
+				that.helpVisible = false;
+				document.removeEventListener("keyup", dismiss);
+				clearTimeout(that.helpTimeout);
 			}
+
+			this.helpTimeout = setTimeout(() => {
+				if (!that.helpVisible) {
+					node.className = node.className.replace(" hidden", "");
+					that.helpVisible = true;
+				}
+			}, delay * 1000);
+			document.addEventListener("keyup", dismiss);
+			const _context = new Context();
+			if (!_context.keyTimeouts) _context.keyTimeouts = [];
+			_context.keyTimeouts.push(this.helpTimeout);
 			return false;
 		}
+	}
 
-		if (this.blockingLoaderCounter > 0 &&
-			  !isDescendant(document.querySelector(".pass-block"), e.target)) {
-			e.preventDefault();
-			return;
-		}
+	getKeyHandlers = (shortcuts = {}) => {
+		return Object.keys(shortcuts).reduce((list, keyCombo) => {
+			const shortcut = shortcuts[keyCombo];
+			list.push(keyCombo.split("+").reduce((keyHandler, key) => {
+				keyHandler.conditions.push(e => 
+					(key === "alt" && e.altKey) || (key === "shift" && e.shiftKey) || (key === "ctrl" && e.ctrlKey) || e.key === key
+				);
+				return keyHandler;
+			}, {...shortcut, conditions: []}));
+			return list;
+		}, []);
+	}
 
-		if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
-
-		if (e.altKey && e.key == "Enter" && canFocusNextInput(this.formRef, e.target)) {
-			focusNextInput(this.formRef, e.target, e.shiftKey);
-			e.preventDefault();
-		} else if (e.key === "PageUp" || e.key === "PageDown") {
-			focusNextInput(this.formRef, e.target, e.key === "PageUp");
-		}
+	onKeyDown = (e) => {
+		//Tee tää sama oikealla onContainerKeyDownissa. Mieti pitääkö ylläoleva hoitaa tässä fn:ssä.
+		handleKeysWith(this.keyHandlers, this.keyFunctions, e);
 	}
 
 	pushBlockingLoader = () => {
 		this.blockingLoaderCounter++;
+		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		if (this.mounted) {
 			if (this.blockingLoaderCounter === 1) {
 				this.blockingLoaderRef.className = "blocking-loader enter-start";
@@ -320,6 +361,7 @@ export default class LajiForm extends Component {
 
 	popBlockingLoader = () => {
 		this.blockingLoaderCounter--;
+		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		if (this.blockingLoaderCounter < 0) {
 			console.warn("laji-form: Blocking loader was popped before pushing!");
 		} else if (this.blockingLoaderCounter === 0) {
