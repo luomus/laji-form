@@ -29,7 +29,7 @@ function parseGeometries(geometry) {
 			.reduce((geometries, _geometry) => {
 				if (geometry.type === "GeometryCollection") {
 					geometries = [...geometries, ...parseGeometries(_geometry)];
-				} else {
+				} else if ("type" in geometry) {
 					geometries.push(geometry);
 				}
 				return geometries;
@@ -43,7 +43,7 @@ export default class MapArrayField extends Component {
 			"ui:options": PropTypes.shape({
 				geometryField: PropTypes.string.isRequired,
 				// allows custom algorithm for getting geometry data
-				geometryMapper: PropTypes.oneOf(["units", "lineTransect"]),
+				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect"]),
 				topOffset: PropTypes.integer,
 				bottomOffset: PropTypes.integer,
 				popupFields: PropTypes.arrayOf(PropTypes.object),
@@ -167,7 +167,33 @@ export default class MapArrayField extends Component {
 	geometryMappers = {
 		default: {
 			getOptions: (options) => {
-				return this.geometryMappers.units.getOptions(options);
+				const mapper = this.geometryMappers.default;
+				const {formData} = this.props;
+				const geometries = mapper.getData();
+
+				const emptyMode = !formData || !formData.length;
+
+				const draw = options.draw === false ? false : {
+					data: {
+						featureCollection: {
+							type: "FeatureCollection",
+							features: (geometries || []).map(geometry => {
+								return {type: "Feature", properties: {}, geometry};
+							})
+						}
+					},
+					getDraftStyle: () => {
+						return {color: "#25B4CA", opacity: 1};
+					},
+					onChange: emptyMode ? mapper.onMapChangeCreateGathering : mapper.onChange,
+					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
+				};
+
+
+				const controlSettings = (emptyMode || this.state.activeIdx !== undefined) ?
+					{} : {draw: false, coordinateInput: false};
+
+				return {draw, controlSettings, emptyMode};
 			},
 			onMapChangeCreateGathering: (events) => this.geometryMappers.units.onMapChangeCreateGathering(events),
 			getData: () => {
@@ -183,6 +209,7 @@ export default class MapArrayField extends Component {
 				if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
 					geometries = parseGeometries(item[geometryField]);
 				}
+
 				return geometries;
 			},
 			onChange: (events) => {
@@ -203,7 +230,6 @@ export default class MapArrayField extends Component {
 				});
 			},
 			onAdd: ({feature: {geometry}}) => {
-				console.log(geometry);
 				const formData = this.props.formData ||
 					[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
 				const {geometryField} = getUiOptions(this.props.uiSchema);

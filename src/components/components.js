@@ -245,9 +245,12 @@ export class StretchAffix extends Component {
 	}
 
 	update = (state) => {
-		this.setState(state, () => {
+		const afterStateChange = () => {
 			if (this.props.onResize) this.props.onResize();
-		});
+		}
+		state ? this.setState(state, () => {
+			afterStateChange();
+		}) : afterStateChange;
 	}
 
 	getState = () => {

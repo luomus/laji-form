@@ -262,10 +262,8 @@ class AccordionArrayFieldTemplate extends Component {
 
 	addChildKeyHandler() {
 		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-		console.log(that.state.activeIdx);
 		if (this.childKeyHandler) new Context().removeKeyHandler(this.childKeyHandler);
 		if (that.state.activeIdx) {
-			console.log("adding child handler for " + that.state.activeIdx);
 			this.childKeyHandler = onItemKeyDown(() => that.deleteButtonRefs[that.state.activeIdx]);
 			new Context().addKeyHandler(this.childKeyHandler);
 		}
