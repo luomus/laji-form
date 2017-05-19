@@ -113,8 +113,8 @@ export default class SingleActiveArrayField extends Component {
 			activeIdx: (props.formData && props.formData.length) ? 0 : undefined, 
 			...this.getStateFromProps(props), popups: {}
 		};
-		this.AccordionArrayFieldTemplate = AccordionArrayFieldTemplate.bind(this);
 		this.PagerArrayFieldTemplate = PagerArrayFieldTemplate.bind(this);
+		new Context(`ARRAY_${this.props.idSchema.$id}`).instance = this;
 	}
 
 	componentWillReceiveProps(props) {
@@ -137,7 +137,7 @@ export default class SingleActiveArrayField extends Component {
 		const renderer = getUiOptions(this.props.uiSchema).renderer || "accordion";
 		let ArrayFieldTemplate = undefined;
 		if (renderer === "accordion") {
-			ArrayFieldTemplate = this.AccordionArrayFieldTemplate;
+			ArrayFieldTemplate = AccordionArrayFieldTemplate;
 		} else if (renderer === "pager") {
 			ArrayFieldTemplate = this.PagerArrayFieldTemplate;
 		} else {
@@ -243,33 +243,63 @@ class Popup extends Component {
 	}
 }
 
-// 'this' is binded to SingleActiveArrayField class context.
-function AccordionArrayFieldTemplate(arrayFieldTemplateProps) {
-	this.renderAccordionHeader = renderAccordionHeader.bind(this);
+class AccordionArrayFieldTemplate extends Component {
 
-	const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
-	const activeIdx = this.state.activeIdx;
-	const title = this.props.schema.title;
-	return (
-			<div className="laji-form-single-active-array" onKeyDown={onContainerKeyDown({
-				props: arrayFieldTemplateProps,
-				insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
-				navigateCallforward: (callback, idx) => this.onActiveChange(idx, callback)
-			})}>
-				<Accordion onSelect={key => this.onActiveChange(key)} activeKey={activeIdx === undefined ? -1 : activeIdx}>
-					{arrayFieldTemplateProps.items.map((item, idx) => (
-						<Panel onKeyDown={onItemKeyDown(() => this.deleteButtonRefs[idx])(item)}
-						       key={idx}
-						       eventKey={idx}
-						       header={this.renderAccordionHeader(idx, title, this.props.idSchema.$id)}
-						       bsStyle={this.props.errorSchema[idx] ? "danger" : "default"}>
-							{item.children}
-						</Panel>
-					))}
-				</Accordion>
-				{getButtons(buttons, arrayFieldTemplateProps)}
-			</div>
-	);
+	componentDidMount() {
+		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+		this.keyHandler = onContainerKeyDown({
+			getProps: () => this.props,
+			insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
+			navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
+		});
+		new Context().addKeyHandler(this.keyHandler);
+		this.addChildKeyHandler();
+	}
+
+	componentDidUpdate() {
+		this.addChildKeyHandler();
+	}
+
+	addChildKeyHandler() {
+		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+		console.log(that.state.activeIdx);
+		if (this.childKeyHandler) new Context().removeKeyHandler(this.childKeyHandler);
+		if (that.state.activeIdx) {
+			console.log("adding child handler for " + that.state.activeIdx);
+			this.childKeyHandler = onItemKeyDown(() => that.deleteButtonRefs[that.state.activeIdx]);
+			new Context().addKeyHandler(this.childKeyHandler);
+		}
+	}
+
+	componentWillUnmount() {
+		new Context().removeKeyHandler(this.keyHandler);
+		new Context().removeKeyHandler(this.childKeyHandler);
+	}
+
+	render() {
+		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+		const arrayFieldTemplateProps = this.props;
+		that.renderAccordionHeader = renderAccordionHeader.bind(that);
+
+		const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
+		const activeIdx = that.state.activeIdx;
+		const title = that.props.schema.title;
+		return (
+				<div className="laji-form-single-active-array">
+					<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx === undefined ? -1 : activeIdx}>
+						{arrayFieldTemplateProps.items.map((item, idx) => (
+							<Panel key={idx}
+										 eventKey={idx}
+										 header={that.renderAccordionHeader(idx, title, that.props.idSchema.$id)}
+										 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
+								{item.children}
+							</Panel>
+						))}
+					</Accordion>
+					{getButtons(buttons, arrayFieldTemplateProps)}
+				</div>
+		);
+	}
 }
 
 // 'this' is binded to SingleActiveArrayField class context.

@@ -27,6 +27,10 @@
 			},
 			"alt+Delete": {
 				"fn": "delete"
+			},
+			"shift+Enter": {
+				"fn": "insert",
+				"target": "$"
 			}
 		},
 		"ui:order": [

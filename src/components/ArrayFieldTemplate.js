@@ -71,8 +71,10 @@ export default function ArrayFieldTemplate(props) {
 	const options = getUiOptions(props.uiSchema);
 	const {confirmDelete, deleteCorner, renderDelete = true} = options;
 	const buttons = getButtons(options.buttons, props);
+	//onKeyDown={onContainerKeyDown({props})}
+	//onKeyDown={onItemKeyDown(getDelButton)(item)}
 	return (
-		<div className={props.className} onKeyDown={onContainerKeyDown({props})}>
+		<div className={props.className}>
 			<Title title={props.title}/>
 			<Description description={props.description}/>
 			{props.items.map(item => {
@@ -87,7 +89,7 @@ export default function ArrayFieldTemplate(props) {
 												translations={props.formContext.translations}/>
 				);
 				return (
-					<div key={item.index} className="laji-form-field-template-item keep-vertical" onKeyDown={onItemKeyDown(getDelButton)(item)}>
+					<div key={item.index} className="laji-form-field-template-item keep-vertical">
 						<div className="laji-form-field-template-schema">{item.children}</div>
 						{item.hasRemove && renderDelete && deleteButton}
 					</div>
@@ -114,7 +116,7 @@ const arrayKeyFunctions = {
 
 		const nextIdx = currentIdx + amount;
 
-		if (nextIdx >= 0 && nextIdx < props.items.length) {
+		if (nextIdx >= 0 || nextIdx <= props.items.length) {
 			if (navigateCallforward) {
 				e.persist();
 				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
@@ -147,16 +149,17 @@ const arrayKeyFunctions = {
 
 const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton}) {
+		console.log("delete");
 		getDeleteButton().onClick(e);
 		return true;
 	}
 };
 
 
-export function onContainerKeyDown({props, insertCallforward, navigateCallforward}) { return (e) => {
-	handleKeysWith(new Context().keyHandlers, arrayKeyFunctions, e, {props, insertCallforward, navigateCallforward});
+export function onContainerKeyDown({getProps, insertCallforward, navigateCallforward}) { return (e) => {
+	handleKeysWith(new Context().keyHandlers, arrayKeyFunctions, e, {props: getProps(), insertCallforward, navigateCallforward});
 };}
 
-export function onItemKeyDown(getDeleteButton) { return () => e => {
+export function onItemKeyDown(getDeleteButton) { return e => {
 	handleKeysWith(new Context().keyHandlers, arrayItemKeyFunctions, e, {getDeleteButton});
 };}

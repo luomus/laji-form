@@ -190,13 +190,29 @@ export default class LajiForm extends Component {
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
 		this._context = new Context(this.props.contextId);
+
 		this.blockingLoaderCounter = 0;
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
+
 		this._context.stateClearListeners = [];
 		this._context.addStateClearListener = (fn) => this._context.stateClearListeners.push(fn);
 		this._context.clearState = () => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
+
+		this._context.keyHandleListeners = [];
+		this._context.addKeyHandler = (keyHandler) => this._context.keyHandleListeners.push(keyHandler);
+		this._context.removeKeyHandler = (keyHandler) => {
+			const idx = this._context.keyHandleListeners.indexOf(keyHandler);
+			if (idx >= 0) {
+				this._context.keyHandleListeners.splice(idx, 1);
+			}
+		};
+
+		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
+		this._context.keyHandlers = this.keyHandlers;
+		this._context.addKeyHandler(e => handleKeysWith(this.keyHandlers, this.keyFunctions, e));
+
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -208,8 +224,6 @@ export default class LajiForm extends Component {
 	getStateFromProps(props) {
 		this._context.staticImgPath = props.staticImgPath;
 		this._context.formData = props.formData;
-		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
-		this._context.keyHandlers = this.keyHandlers;
 		return {translations: this.translations[props.lang]};
 	}
 
@@ -342,8 +356,7 @@ export default class LajiForm extends Component {
 	}
 
 	onKeyDown = (e) => {
-		//Tee tää sama oikealla onContainerKeyDownissa. Mieti pitääkö ylläoleva hoitaa tässä fn:ssä.
-		handleKeysWith(this.keyHandlers, this.keyFunctions, e);
+		this._context.keyHandleListeners.slice(0).reverse().some(keyHandleListener => keyHandleListener(e));
 	}
 
 	pushBlockingLoader = () => {

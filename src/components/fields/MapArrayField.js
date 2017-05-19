@@ -203,6 +203,7 @@ export default class MapArrayField extends Component {
 				});
 			},
 			onAdd: ({feature: {geometry}}) => {
+				console.log(geometry);
 				const formData = this.props.formData ||
 					[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
 				const {geometryField} = getUiOptions(this.props.uiSchema);
