@@ -239,18 +239,21 @@ export function getBootstrapCols(width) {
 	}, {});
 }
 
-export function handleKeysWith(keyHandlers = [], keyFunctions = {}, e, additionalParams = {}) {
-	function isDescendant(parent, child) {
-		var node = child.parentNode;
-		while (node != null) {
-			if (node == parent) {
-				return true;
-			}
-			node = node.parentNode;
+export function isDescendant(parent, child) {
+	var node = child.parentNode;
+	while (node != null) {
+		if (node == parent) {
+			return true;
 		}
-		return false;
+		node = node.parentNode;
 	}
+	return false;
+}
 
+
+export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) {
+	//console.log(new Context().keyHandlers);
+	//console.log(new Context().keyHandleListeners);
 	if (new Context().blockingLoaderCounter > 0 &&
 			!isDescendant(document.querySelector(".pass-block"), e.target)) {
 		e.preventDefault();
@@ -259,7 +262,22 @@ export function handleKeysWith(keyHandlers = [], keyFunctions = {}, e, additiona
 
 	if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
 
-	keyHandlers.some(keyHandler => {
+	new Context().keyHandlers.forEach(keyHandler => {
+		if (keyHandler.target) {
+			console.log(keyHandler.target);
+			console.log(id.match(keyHandler.target));
+		}
+		if ("target" in keyHandler && id.match(keyHandler.target)) {
+			console.log("ID MATCH");
+		}
+		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(keyHandler.target) && keyHandler.conditions.every(condition => condition(e))) {
+			console.log("HIGH PRIORITY!!!");
+			//console.log("candidate");
+			//console.log(keyHandler);
+		}
+	});
+
+	new Context().keyHandlers.some(keyHandler => {
 		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
 			const _context = new Context();
 			if ("keyTimeouts" in _context && _context.keyTimeouts) {
@@ -269,7 +287,7 @@ export function handleKeysWith(keyHandlers = [], keyFunctions = {}, e, additiona
 
 			const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
 			const eventHandled = returnValue !== undefined ? returnValue : true;
-			if (eventHandled) {
+			if (!eventHandled) {
 				e.preventDefault();
 				e.stopPropagation();
 			}

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemID, focusById, handleKeysWith } from "../utils";
+import { findNearestParentSchemaElemID, focusById, handleKeysWith, getSchemaElementById, isDescendant } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {
@@ -65,39 +65,70 @@ export function getButtons(buttons, props) {
 	);
 }
 
-export default function ArrayFieldTemplate(props) {
-	const Title = props.TitleField;
-	const Description = props.DescriptionField;
-	const options = getUiOptions(props.uiSchema);
-	const {confirmDelete, deleteCorner, renderDelete = true} = options;
-	const buttons = getButtons(options.buttons, props);
-	//onKeyDown={onContainerKeyDown({props})}
-	//onKeyDown={onItemKeyDown(getDelButton)(item)}
-	return (
-		<div className={props.className}>
-			<Title title={props.title}/>
-			<Description description={props.description}/>
-			{props.items.map(item => {
-				let deleteButtonRef = undefined;
-				const getDelButton = () => deleteButtonRef;
-				const deleteButton = (
-					<DeleteButton ref={elem => {deleteButtonRef = elem;}}
-												onClick={item.onDropIndexClick(item.index)}
-												className="laji-form-field-template-buttons"
-												confirm={confirmDelete}
-												corner={deleteCorner}
-												translations={props.formContext.translations}/>
-				);
-				return (
-					<div key={item.index} className="laji-form-field-template-item keep-vertical">
-						<div className="laji-form-field-template-schema">{item.children}</div>
-						{item.hasRemove && renderDelete && deleteButton}
-					</div>
-				);
-			})}
-			{buttons}
-		</div>
-	);
+export default class ArrayFieldTemplate extends Component {
+	componentDidMount() {
+		this.keyHandler = onContainerKeyDown({
+			getProps: () => this.props
+		});
+		new Context().addKeyHandler(this.props.idSchema.$id, onContainerKeyDown({
+			getProps: () => this.props
+		}));
+		this.childKeyHandlers = [];
+		this.addChildKeyHandlers();
+	}
+
+	componentDidUpdate() {
+		this.addChildKeyHandlers();
+	}
+
+	addChildKeyHandlers() {
+		if (this.childKeyHandlers) this.childKeyHandlers.forEach(childKeyHandler => new Context().removeKeyHandler(childKeyHandler));
+		this.props.items.forEach((item, i) => {
+			this.childKeyHandlers.push(`${this.props.idSchema.$id}_${i}`);
+			new Context().addKeyHandler(`${this.props.idSchema.$id}_${i}`, onItemKeyDown(`${this.props.idSchema.$id}_${i}`, () => this.deleteButtonRefs[i]));
+		});
+	}
+
+	componentWillUnmount() {
+		new Context().removeKeyHandler(this.props.idSchema.$id);
+		if (this.childKeyHandlers) {
+			this.childKeyHandlers.forEach(id => new Context().removeKeyHandler(id));
+		}
+		
+	}
+
+	render() {
+		const {props} = this;
+		const Title = props.TitleField;
+		const Description = props.DescriptionField;
+		const options = getUiOptions(props.uiSchema);
+		const {confirmDelete, deleteCorner, renderDelete = true} = options;
+		const buttons = getButtons(options.buttons, props);
+		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
+		return (
+			<div className={props.className}>
+				<Title title={props.title}/>
+				<Description description={props.description}/>
+				{props.items.map((item, i) => {
+					const deleteButton = (
+						<DeleteButton ref={elem => {this.deleteButtonRefs[i] = elem;}}
+													onClick={item.onDropIndexClick(item.index)}
+													className="laji-form-field-template-buttons"
+													confirm={confirmDelete}
+													corner={deleteCorner}
+													translations={props.formContext.translations}/>
+					);
+					return (
+						<div key={item.index} className="laji-form-field-template-item keep-vertical">
+							<div className="laji-form-field-template-schema">{item.children}</div>
+							{item.hasRemove && renderDelete && deleteButton}
+						</div>
+					);
+				})}
+				{buttons}
+			</div>
+		);
+	}
 }
 
 const arrayKeyFunctions = {
@@ -116,7 +147,7 @@ const arrayKeyFunctions = {
 
 		const nextIdx = currentIdx + amount;
 
-		if (nextIdx >= 0 || nextIdx <= props.items.length) {
+		if (amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < props.items.length) {
 			if (navigateCallforward) {
 				e.persist();
 				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
@@ -148,8 +179,13 @@ const arrayKeyFunctions = {
 };
 
 const arrayItemKeyFunctions = {
-	delete: function(e, {getDeleteButton}) {
-		console.log("delete");
+	delete: function(e, {getDeleteButton, id}) {
+		if (!isDescendant(getSchemaElementById(id), e.target)) {
+			return;
+		}
+		if (!getDeleteButton) return;
+		const deleteButton = getDeleteButton();
+		if (!deleteButton || !deleteButton.onClick) return;
 		getDeleteButton().onClick(e);
 		return true;
 	}
@@ -157,9 +193,9 @@ const arrayItemKeyFunctions = {
 
 
 export function onContainerKeyDown({getProps, insertCallforward, navigateCallforward}) { return (e) => {
-	handleKeysWith(new Context().keyHandlers, arrayKeyFunctions, e, {props: getProps(), insertCallforward, navigateCallforward});
+	handleKeysWith(arrayKeyFunctions, e, {props: getProps(), insertCallforward, navigateCallforward});
 };}
 
-export function onItemKeyDown(getDeleteButton) { return e => {
-	handleKeysWith(new Context().keyHandlers, arrayItemKeyFunctions, e, {getDeleteButton});
+export function onItemKeyDown(id, getDeleteButton) { return e => {
+	handleKeysWith(arrayItemKeyFunctions, e, {id, getDeleteButton});
 };}

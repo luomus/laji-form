@@ -200,18 +200,15 @@ export default class LajiForm extends Component {
 		this._context.addStateClearListener = (fn) => this._context.stateClearListeners.push(fn);
 		this._context.clearState = () => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
 
-		this._context.keyHandleListeners = [];
-		this._context.addKeyHandler = (keyHandler) => this._context.keyHandleListeners.push(keyHandler);
-		this._context.removeKeyHandler = (keyHandler) => {
-			const idx = this._context.keyHandleListeners.indexOf(keyHandler);
-			if (idx >= 0) {
-				this._context.keyHandleListeners.splice(idx, 1);
-			}
+		this._context.keyHandleListeners = {};
+		this._context.addKeyHandler = (id, keyFunctions) => this._context.keyHandleListeners[id] = e => handleKeysWith(id, keyFunctions, e);
+		this._context.removeKeyHandler = (id) => {
+			delete this._context.keyHandleListeners[id];
 		};
 
 		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
 		this._context.keyHandlers = this.keyHandlers;
-		this._context.addKeyHandler(e => handleKeysWith(this.keyHandlers, this.keyFunctions, e));
+		this._context.addKeyHandler("root", this.keyFunctions);
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -356,7 +353,9 @@ export default class LajiForm extends Component {
 	}
 
 	onKeyDown = (e) => {
-		this._context.keyHandleListeners.slice(0).reverse().some(keyHandleListener => keyHandleListener(e));
+		for (let id in this._context.keyHandleListeners) {
+			this._context.keyHandleListeners[id](e);
+		}
 	}
 
 	pushBlockingLoader = () => {

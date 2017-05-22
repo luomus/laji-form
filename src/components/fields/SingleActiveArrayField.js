@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
-import { getUiOptions, hasData, focusById } from "../../utils";
+import { getUiOptions, hasData, focusById, getReactComponentName } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -113,7 +113,6 @@ export default class SingleActiveArrayField extends Component {
 			activeIdx: (props.formData && props.formData.length) ? 0 : undefined, 
 			...this.getStateFromProps(props), popups: {}
 		};
-		this.PagerArrayFieldTemplate = PagerArrayFieldTemplate.bind(this);
 		new Context(`ARRAY_${this.props.idSchema.$id}`).instance = this;
 	}
 
@@ -139,7 +138,7 @@ export default class SingleActiveArrayField extends Component {
 		if (renderer === "accordion") {
 			ArrayFieldTemplate = AccordionArrayFieldTemplate;
 		} else if (renderer === "pager") {
-			ArrayFieldTemplate = this.PagerArrayFieldTemplate;
+			ArrayFieldTemplate = PagerArrayFieldTemplate;
 		} else {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
@@ -243,37 +242,44 @@ class Popup extends Component {
 	}
 }
 
-class AccordionArrayFieldTemplate extends Component {
+function handlesButtons(ComposedComponent) {
+	return class SingleActiveArrayTemplateField extends ComposedComponent {
+		static displayName = getReactComponentName(ComposedComponent);
 
-	componentDidMount() {
-		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-		this.keyHandler = onContainerKeyDown({
-			getProps: () => this.props,
-			insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
-			navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
-		});
-		new Context().addKeyHandler(this.keyHandler);
-		this.addChildKeyHandler();
-	}
-
-	componentDidUpdate() {
-		this.addChildKeyHandler();
-	}
-
-	addChildKeyHandler() {
-		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-		if (this.childKeyHandler) new Context().removeKeyHandler(this.childKeyHandler);
-		if (that.state.activeIdx) {
-			this.childKeyHandler = onItemKeyDown(() => that.deleteButtonRefs[that.state.activeIdx]);
-			new Context().addKeyHandler(this.childKeyHandler);
+		componentDidMount() {
+			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+			this.keyHandler = onContainerKeyDown({
+				getProps: () => this.props,
+				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
+				navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
+			});
+			new Context().addKeyHandler(this.props.idSchema.$id, this.keyHandler);
+			this.addChildKeyHandler();
 		}
-	}
 
-	componentWillUnmount() {
-		new Context().removeKeyHandler(this.keyHandler);
-		new Context().removeKeyHandler(this.childKeyHandler);
-	}
+		componentDidUpdate() {
+			this.addChildKeyHandler();
+		}
 
+		addChildKeyHandler() {
+			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+			if (this.childKeyHandler) new Context().removeKeyHandler(this.childKeyHandler);
+			if (that.state.activeIdx !== undefined) {
+				this.childKeyHandler = onItemKeyDown(() => that.deleteButtonRefs[that.state.activeIdx]);
+				new Context().addKeyHandler(`${this.props.idSchema.$id}_${that.state.activeIdx}`, this.childKeyHandler);
+			}
+		}
+
+		componentWillUnmount() {
+			new Context().removeKeyHandler(this.keyHandler);
+			new Context().removeKeyHandler(this.childKeyHandler);
+		}
+
+	}
+}
+
+@handlesButtons
+class AccordionArrayFieldTemplate extends Component {
 	render() {
 		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
 		const arrayFieldTemplateProps = this.props;
@@ -300,41 +306,41 @@ class AccordionArrayFieldTemplate extends Component {
 	}
 }
 
-// 'this' is binded to SingleActiveArrayField class context.
-function PagerArrayFieldTemplate(arrayTemplateFieldProps) {
-	const {translations} = this.props.formContext;
-	const buttons = getUiOptions(arrayTemplateFieldProps.uiSchema).buttons;
-	const activeIdx = this.state.activeIdx;
-	const title = this.props.schema.title || "";
+@handlesButtons
+class PagerArrayFieldTemplate extends Component {
+	render() {
+		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+		const	arrayTemplateFieldProps = this.props;
+		const {translations} = that.props.formContext;
+		const buttons = getUiOptions(arrayTemplateFieldProps.uiSchema).buttons;
+		const activeIdx = that.state.activeIdx;
+		const title = that.props.schema.title || "";
 
-	return (
-		<div className="laji-form-single-active-array" onKeyDown={onContainerKeyDown({
-			props: arrayTemplateFieldProps,
-			insertCallforward: callback => this.onActiveChange(this.props.formData.length, callback),
-			navigateCallforward:	(callback, idx) => this.onActiveChange(idx, callback),
-		})}>
-			<Panel header={
-				<div className="laji-map-accordion-header">
-					<Pager>
-						<Pager.Item previous href="#"
-						            disabled={activeIdx <= 0 || activeIdx === undefined}
-						            onClick={() => this.onActiveChange(activeIdx - 1)}>
-							&larr; {translations.Previous}</Pager.Item>
-						{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
-						<Pager.Item next href="#"
-						            disabled={activeIdx >= this.props.formData.length - 1 || activeIdx === undefined}
-						            onClick={() => this.onActiveChange(activeIdx + 1)}>
-							{translations.Next}  &rarr;</Pager.Item>
-					</Pager>
+		return (
+			<div className="laji-form-single-active-array">
+				<Panel header={
+					<div className="laji-map-accordion-header">
+						<Pager>
+							<Pager.Item previous href="#"
+													disabled={activeIdx <= 0 || activeIdx === undefined}
+													onClick={() => that.onActiveChange(activeIdx - 1)}>
+								&larr; {translations.Previous}</Pager.Item>
+							{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
+							<Pager.Item next href="#"
+													disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
+													onClick={() => that.onActiveChange(activeIdx + 1)}>
+								{translations.Next}  &rarr;</Pager.Item>
+						</Pager>
+					</div>
+				}>
+				<div key={activeIdx}>
+					{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
 				</div>
-			}>
-			<div key={activeIdx}>
-				{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+					{getButtons(buttons, arrayTemplateFieldProps)}
+				</Panel>
 			</div>
-				{getButtons(buttons, arrayTemplateFieldProps)}
-			</Panel>
-		</div>
-	);
+		);
+	}
 }
 
 // 'this' is binded to SingleActiveArrayField class context.
