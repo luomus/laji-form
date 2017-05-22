@@ -155,11 +155,15 @@ export function canFocusNextInput(root, inputElem) {
 	return (findDOMNode(root).querySelectorAll && isTabbableInput(inputElem));
 }
 
-export function findNearestParentSchemaElemID(elem) {
+export function findNearestParentSchemaElem(elem) {
 	while (!elem.id.match(/^_laji-form_/)) {
 		elem = elem.parentNode;
 	}
 	return elem;
+}
+
+export function findNearestParentSchemaElemId(elem) {
+	return findNearestParentSchemaElem(elem).id.replace("_laji-form_", "");
 }
 
 export function findNearestParentTabbableElem(elem) {
@@ -250,10 +254,15 @@ export function isDescendant(parent, child) {
 	return false;
 }
 
+export function getKeyHandlerTargetId(target = "") {
+	while (target.match(/%\{(.*)\}/)) {
+		const key = /%\{(.*)\}/.exec(target)[1];
+		target = target.replace(`%{${key}}`, new Context()[key]);
+	}
+	return target;
+}
 
 export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) {
-	//console.log(new Context().keyHandlers);
-	//console.log(new Context().keyHandleListeners);
 	if (new Context().blockingLoaderCounter > 0 &&
 			!isDescendant(document.querySelector(".pass-block"), e.target)) {
 		e.preventDefault();
@@ -262,36 +271,30 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 
 	if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
 
-	new Context().keyHandlers.forEach(keyHandler => {
-		if (keyHandler.target) {
-			console.log(keyHandler.target);
-			console.log(id.match(keyHandler.target));
+	function handleKey(keyHandler) {
+		const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
+		const eventHandled = returnValue !== undefined ? returnValue : true;
+		if (!eventHandled) {
+			e.preventDefault();
+			e.stopPropagation();
 		}
-		if ("target" in keyHandler && id.match(keyHandler.target)) {
-			console.log("ID MATCH");
-		}
-		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(keyHandler.target) && keyHandler.conditions.every(condition => condition(e))) {
-			console.log("HIGH PRIORITY!!!");
-			//console.log("candidate");
-			//console.log(keyHandler);
+		return eventHandled;
+	}
+
+	const _context = new Context();
+
+	const highPriorityHandled = _context.keyHandlers.some(keyHandler => {
+		let target = getKeyHandlerTargetId(keyHandler.target);
+		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
+			return handleKey(keyHandler);
 		}
 	});
 
-	new Context().keyHandlers.some(keyHandler => {
-		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
-			const _context = new Context();
-			if ("keyTimeouts" in _context && _context.keyTimeouts) {
-				_context.keyTimeouts.forEach(timeout => clearTimeout(timeout));
-			}
-			_context.keyTimeouts = [];
+	if (highPriorityHandled) return highPriorityHandled;
 
-			const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
-			const eventHandled = returnValue !== undefined ? returnValue : true;
-			if (!eventHandled) {
-				e.preventDefault();
-				e.stopPropagation();
-			}
-			return eventHandled;
+	return _context.keyHandlers.some(keyHandler => {
+		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
+			return handleKey(keyHandler);
 		}
 	});
 }

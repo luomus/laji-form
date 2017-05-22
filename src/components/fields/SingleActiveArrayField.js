@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName } from "../../utils";
 import { DeleteButton } from "../components";
-import { getButtons, onContainerKeyDown, onItemKeyDown } from "../ArrayFieldTemplate";
+import { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
@@ -113,7 +113,9 @@ export default class SingleActiveArrayField extends Component {
 			activeIdx: (props.formData && props.formData.length) ? 0 : undefined, 
 			...this.getStateFromProps(props), popups: {}
 		};
-		new Context(`ARRAY_${this.props.idSchema.$id}`).instance = this;
+		const id = `${this.props.idSchema.$id}`;
+		new Context()[`${id}.activeIdx`] = this.state.activeIdx;
+		new Context(`ARRAY_${id}`).instance = this;
 	}
 
 	componentWillReceiveProps(props) {
@@ -212,7 +214,9 @@ export default class SingleActiveArrayField extends Component {
 
 		const that = this;
 		function _callback() {
-			focusById(`${that.props.idSchema.$id}_${idx}`);
+			const id = that.props.idSchema.$id;
+			focusById(`${id}_${idx}`);
+			new Context()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
 
@@ -248,12 +252,11 @@ function handlesButtons(ComposedComponent) {
 
 		componentDidMount() {
 			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-			this.keyHandler = onContainerKeyDown({
+			new Context().addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
 				navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
 			});
-			new Context().addKeyHandler(this.props.idSchema.$id, this.keyHandler);
 			this.addChildKeyHandler();
 		}
 
@@ -263,16 +266,17 @@ function handlesButtons(ComposedComponent) {
 
 		addChildKeyHandler() {
 			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-			if (this.childKeyHandler) new Context().removeKeyHandler(this.childKeyHandler);
+			if (this.childKeyHandlerId) new Context().removeKeyHandler(this.childKeyHandlerId);
 			if (that.state.activeIdx !== undefined) {
-				this.childKeyHandler = onItemKeyDown(() => that.deleteButtonRefs[that.state.activeIdx]);
-				new Context().addKeyHandler(`${this.props.idSchema.$id}_${that.state.activeIdx}`, this.childKeyHandler);
+				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
+				this.childKeyHandlerId = id;
+				new Context().addKeyHandler(id, arrayItemKeyFunctions, {id,  getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
 			}
 		}
 
 		componentWillUnmount() {
-			new Context().removeKeyHandler(this.keyHandler);
-			new Context().removeKeyHandler(this.childKeyHandler);
+			new Context().removeKeyHandler(this.props.idSchema.$id);
+			new Context().removeKeyHandler(this.childKeyHandlerId);
 		}
 
 	}

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { Panel, Table } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter } from "../utils";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId } from "../utils";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -201,7 +201,7 @@ export default class LajiForm extends Component {
 		this._context.clearState = () => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
 
 		this._context.keyHandleListeners = {};
-		this._context.addKeyHandler = (id, keyFunctions) => this._context.keyHandleListeners[id] = e => handleKeysWith(id, keyFunctions, e);
+		this._context.addKeyHandler = (id, keyFunctions, additionalParams) => this._context.keyHandleListeners[id] = e => handleKeysWith(id, keyFunctions, e, additionalParams);
 		this._context.removeKeyHandler = (id) => {
 			delete this._context.keyHandleListeners[id];
 		};
@@ -209,6 +209,11 @@ export default class LajiForm extends Component {
 		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
 		this._context.keyHandlers = this.keyHandlers;
 		this._context.addKeyHandler("root", this.keyFunctions);
+		this._context.keyHandlerTargets = Object.keys(this.keyHandlers).reduce((targets, keyCombo) => {
+			const handler = this.keyHandlers[keyCombo];
+			if ("target" in handler) targets[handler.target] = handler;
+			return targets;
+		}, {});
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -286,11 +291,18 @@ export default class LajiForm extends Component {
 					<Table fill>
 						<tbody className="well">{
 							Object.keys(shortcuts).map((keyCombo, idx) => {
-								const {fn, ...rest} = shortcuts[keyCombo];
+								const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
 								if (fn === "help") return;
+								let translation = "";
+								if (translation) translation = label;
+								else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];
+								if  (targetLabel) translation = `${translation} ${targetLabel}`;
 								return (
 									<tr key={idx}>
-										<td>{keyCombo.split("+").map(capitalizeFirstLetter).join(" + ")}</td><td>{translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")]}</td>
+										<td>{keyCombo.split("+").map(key => {
+											if (key === " ") key = "space";
+											return capitalizeFirstLetter(key)
+										}).join(" + ")}</td><td>{translation}</td>
 									</tr>
 								);
 							})
@@ -342,19 +354,58 @@ export default class LajiForm extends Component {
 	getKeyHandlers = (shortcuts = {}) => {
 		return Object.keys(shortcuts).reduce((list, keyCombo) => {
 			const shortcut = shortcuts[keyCombo];
+			const specials = {
+				alt: false,
+				ctrl: false,
+				shift: false,
+			};
+
 			list.push(keyCombo.split("+").reduce((keyHandler, key) => {
-				keyHandler.conditions.push(e => 
-					(key === "alt" && e.altKey) || (key === "shift" && e.shiftKey) || (key === "ctrl" && e.ctrlKey) || e.key === key
+				if (specials.hasOwnProperty(key)) {
+					specials[key] = true;
+				}
+
+				keyHandler.conditions.push(e =>  
+					e.key === key || (specials.hasOwnProperty(key) && ((specials[key] && e[`${key}Key`]) || (!specials[key] && !e[`${key}Key`])))
 				);
+
 				return keyHandler;
 			}, {...shortcut, conditions: []}));
+
+			for (let special in specials) {
+				if (!specials[special]) list[list.length - 1].conditions.push(e => {
+					return !e[`${special}Key`];
+				});
+			}
+
 			return list;
 		}, []);
 	}
 
 	onKeyDown = (e) => {
-		for (let id in this._context.keyHandleListeners) {
-			this._context.keyHandleListeners[id](e);
+		if ("keyTimeouts" in this._context && this._context.keyTimeouts) {
+			this._context.keyTimeouts.forEach(timeout => clearTimeout(timeout));
+		}
+		this._context.keyTimeouts = [];
+
+		const currentId = findNearestParentSchemaElemId(e.target);
+
+		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
+			if (currentId.startsWith(id)) return true;
+			return; 
+		}).sort((a, b) => {
+			return a.length < b.length;
+		});
+
+		const targets = Object.keys(this._context.keyHandlerTargets).filter(id => {
+			return this._context.keyHandlerTargets[id].conditions.every(condition => condition(e));
+		}).map(getKeyHandlerTargetId);
+		order = [...targets, ...order];
+
+		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id](e));
+
+		if (!handled && e.key === "Enter") {
+			e.preventDefault();
 		}
 	}
 

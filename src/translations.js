@@ -288,5 +288,10 @@
 		fi: "Poista toisteinen kenttä",
 		en: "Remove the focused array item",
 		sv: "??"
-	}
+	},
+	insertTarget: {
+		fi: "Lisää uusi",
+		en: "Add a new",
+		sv: "??"
+	},
 };

@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemID, focusById, handleKeysWith, getSchemaElementById, isDescendant } from "../utils";
+import { findNearestParentSchemaElem, focusById, handleKeysWith, getSchemaElementById, isDescendant } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {
@@ -67,12 +67,9 @@ export function getButtons(buttons, props) {
 
 export default class ArrayFieldTemplate extends Component {
 	componentDidMount() {
-		this.keyHandler = onContainerKeyDown({
+		new Context().addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 			getProps: () => this.props
 		});
-		new Context().addKeyHandler(this.props.idSchema.$id, onContainerKeyDown({
-			getProps: () => this.props
-		}));
 		this.childKeyHandlers = [];
 		this.addChildKeyHandlers();
 	}
@@ -84,8 +81,9 @@ export default class ArrayFieldTemplate extends Component {
 	addChildKeyHandlers() {
 		if (this.childKeyHandlers) this.childKeyHandlers.forEach(childKeyHandler => new Context().removeKeyHandler(childKeyHandler));
 		this.props.items.forEach((item, i) => {
-			this.childKeyHandlers.push(`${this.props.idSchema.$id}_${i}`);
-			new Context().addKeyHandler(`${this.props.idSchema.$id}_${i}`, onItemKeyDown(`${this.props.idSchema.$id}_${i}`, () => this.deleteButtonRefs[i]));
+			const id = `${this.props.idSchema.$id}_${i}`;
+			this.childKeyHandlers.push(id);
+			new Context().addKeyHandler(id, arrayItemKeyFunctions, {id, getDeleteButton: () => this.deleteButtonRefs[i]});
 		});
 	}
 
@@ -94,7 +92,6 @@ export default class ArrayFieldTemplate extends Component {
 		if (this.childKeyHandlers) {
 			this.childKeyHandlers.forEach(id => new Context().removeKeyHandler(id));
 		}
-		
 	}
 
 	render() {
@@ -131,13 +128,13 @@ export default class ArrayFieldTemplate extends Component {
 	}
 }
 
-const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, props, navigateCallforward}) {
+export const arrayKeyFunctions = {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward}) {
 		function focusFirstOf(idx) {
-			focusById(`${props.idSchema.$id}_${idx}`) && e.stopPropagation();
+			focusById(`${getProps().idSchema.$id}_${idx}`) && e.stopPropagation();
 		}
 
-		const nearestSchemaElem = findNearestParentSchemaElemID(document.activeElement);
+		const nearestSchemaElem = findNearestParentSchemaElem(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeArrayItems = nearestSchemaElem.id.match(/_\d+/g);
 		if (!activeArrayItems) return;
@@ -147,7 +144,7 @@ const arrayKeyFunctions = {
 
 		const nextIdx = currentIdx + amount;
 
-		if (amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < props.items.length) {
+		if (amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < getProps().items.length) {
 			if (navigateCallforward) {
 				e.persist();
 				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
@@ -156,8 +153,10 @@ const arrayKeyFunctions = {
 			}
 			return true;
 		}
+		return false;
 	},
-	insert: function (e, {props, insertCallforward}) {
+	insert: function (e, {getProps, insertCallforward}) {
+		const props = getProps();
 		function afterInsert() {
 			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
 		}
@@ -178,7 +177,7 @@ const arrayKeyFunctions = {
 	}
 };
 
-const arrayItemKeyFunctions = {
+export const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton, id}) {
 		if (!isDescendant(getSchemaElementById(id), e.target)) {
 			return;
@@ -190,12 +189,3 @@ const arrayItemKeyFunctions = {
 		return true;
 	}
 };
-
-
-export function onContainerKeyDown({getProps, insertCallforward, navigateCallforward}) { return (e) => {
-	handleKeysWith(arrayKeyFunctions, e, {props: getProps(), insertCallforward, navigateCallforward});
-};}
-
-export function onItemKeyDown(id, getDeleteButton) { return e => {
-	handleKeysWith(arrayItemKeyFunctions, e, {id, getDeleteButton});
-};}
