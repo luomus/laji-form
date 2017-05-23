@@ -253,6 +253,7 @@ function handlesButtons(ComposedComponent) {
 		componentDidMount() {
 			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
 			new Context().addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+				getId: () => `${this.props.idSchema.$id}_${that.state.activeIdx}`,
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
 				navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)

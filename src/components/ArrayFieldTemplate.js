@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElem, focusById, getSchemaElementById, isDescendant } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {
@@ -129,14 +129,14 @@ export default class ArrayFieldTemplate extends Component {
 }
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, navigateCallforward}) {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward, getId}) {
 		function focusFirstOf(idx) {
 			focusById(`${getProps().idSchema.$id}_${idx}`) && e.stopPropagation();
 		}
 
-		const nearestSchemaElem = findNearestParentSchemaElem(document.activeElement);
+		const nearestSchemaElemId = getId && getId() || findNearestParentSchemaElemId(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
-		const activeArrayItems = nearestSchemaElem.id.match(/_\d+/g);
+		const activeArrayItems = nearestSchemaElemId.match(/_\d+/g);
 		if (!activeArrayItems) return;
 
 		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
