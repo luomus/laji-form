@@ -885,6 +885,53 @@
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "MHL.1"
+	},
+	"formData": {
+	  "gatheringEvent": {
+		"leg": [
+		  "MA.308"
+		],
+		"legPublic": true,
+		"dateBegin": "2017-05-23"
+	  },
+	  "editors": [],
+	  "secureLevel": "MX.secureLevelNone",
+	  "gatherings": [
+		{
+		  "images": [],
+		  "units": [
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "unitGathering": {
+				"geometry": {}
+			  },
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092"
+				}
+			  ]
+			}
+		  ],
+		  "geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+			  {
+				"type": "Point",
+				"coordinates": [
+				  27.170841451122595,
+				  64.54526624516768
+				]
+			  }
+			]
+		  }
+		}
+	  ]
 	}
 }
 

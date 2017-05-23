@@ -35,8 +35,8 @@ const autosuggestSettings = {
 		},
 		renderMetaInfo: (that, input) => {
 			const content = autosuggestSettings.taxon.getTaxonCardContent(that);
-			return <OverlayTrigger trigger={["hover", "focus"]}
-			                       placement={that.state.focused ? "top" : "right"}
+			return <OverlayTrigger delay={1} trigger={["focus"]}
+			                       placement={"top"}
 			                       overlay={content}>
 							{input}
 						</OverlayTrigger>;
@@ -82,11 +82,10 @@ const autosuggestSettings = {
 					{that.state.urlTxt ?
 						<div>
 							<OverlayTrigger overlay={tooltipElem}>
-								<a href={`http://tun.fi/${value}`}
-								   target="_blank" rel="noopener noreferrer"><Glyphicon glyph="modal-window"/> {
-									that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> :
-										that.state.urlTxt
-								}</a>
+								<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
+									<Glyphicon glyph="modal-window"/> 
+									{that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> : that.state.urlTxt}
+								</a>
 							</OverlayTrigger>
 						</div> :
 						<Spinner />
