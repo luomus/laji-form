@@ -211,9 +211,9 @@ export default class LajiForm extends Component {
 		this._context.addKeyHandler("root", this.keyFunctions);
 		this._context.keyHandlerTargets = Object.keys(this.keyHandlers).reduce((targets, keyCombo) => {
 			const handler = this.keyHandlers[keyCombo];
-			if ("target" in handler) targets[handler.target] = handler;
+			if ("target" in handler) targets.push({id: handler.target, handler});
 			return targets;
-		}, {});
+		}, []);
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -397,9 +397,9 @@ export default class LajiForm extends Component {
 			return a.length < b.length;
 		});
 
-		const targets = Object.keys(this._context.keyHandlerTargets).filter(id => {
-			return this._context.keyHandlerTargets[id].conditions.every(condition => condition(e));
-		}).map(getKeyHandlerTargetId);
+		const targets = this._context.keyHandlerTargets.filter(({handler}) => {
+			return handler.conditions.every(condition => condition(e));
+		}).map(({id}) => getKeyHandlerTargetId(id));
 		order = [...targets, ...order];
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id](e));
