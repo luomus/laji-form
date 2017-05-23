@@ -3,27 +3,10 @@ import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import Combobox from "react-widgets/lib/Combobox";
 import Multiselect from "react-widgets/lib/Multiselect";
-import { Label } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 
-import { asNumber } from "react-jsonschema-form/lib/utils";
 import { isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
-
-/**
- * This is a silly limitation in the DOM where option change event values are
- * always retrieved as strings.
- */
-function processValue({type, items}, value) {
-	if (type === "array" && items && ["number", "integer"].includes(items.type)) {
-		return value.map(asNumber);
-	} else if (type === "boolean") {
-		return value === "true";
-	} else if (type === "number") {
-		return asNumber(value);
-	}
-	return value;
-}
 
 //TODO doesn't support readonly
 @BaseComponent
@@ -83,19 +66,16 @@ class SelectWidget extends Component {
 
 	render() {
 		const {
-			schema,
 			id,
-			required,
 			disabled,
 			readonly,
 			multiple,
-			autofocus,
 			formContext,
-			selectProps
 		} = this.props;
 		const {enumOptions} = this.state;
 
 		const commonOptions = {
+			id,
 			value: this.state.value,
 			data: enumOptions,
 			onChange: value => this.setState({value}),
@@ -105,9 +85,9 @@ class SelectWidget extends Component {
 			readOnly: readonly,
 			filter: "contains",
 			messages: {
-				open: this.props.formContext.translations.Open,
-				emptyList: this.props.formContext.translations.NoResults,
-				emptyFilter: this.props.formContext.translations.NoResults
+				open: formContext.translations.Open,
+				emptyList: formContext.translations.NoResults,
+				emptyFilter: formContext.translations.NoResults
 			},
 			suggest: true
 		};
@@ -117,9 +97,9 @@ class SelectWidget extends Component {
 		) : (
 			<Combobox
 				{...commonOptions}
-				ref={"combo"}
+				ref={elem => this.comboRef = elem}
 				onFocus={() => this.setState({open: true}, () => {
-					findDOMNode(this.refs.combo.refs.inner.refs.input).select();
+					findDOMNode(this.comboRef.refs.inner.refs.input).select();
 				})}
 				onBlur={() => this.setState({open: false})}
 				open={this.state.open}

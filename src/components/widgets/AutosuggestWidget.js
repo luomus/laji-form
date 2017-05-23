@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Autosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Tooltip, OverlayTrigger, FormControl, Popover, Glyphicon } from "react-bootstrap";
+import { Tooltip, OverlayTrigger, Popover, Glyphicon } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
 import { FetcherInput } from "../components";
@@ -54,7 +54,7 @@ const autosuggestSettings = {
 			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
 
 			return (
-				<a href={"http://tun.fi/" + value} target="_blank">
+				<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
 					<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
 				</a>
 			);
@@ -83,7 +83,7 @@ const autosuggestSettings = {
 						<div>
 							<OverlayTrigger overlay={tooltipElem}>
 								<a href={`http://tun.fi/${value}`}
-								   target="_blank"><Glyphicon glyph="modal-window"/> {
+								   target="_blank" rel="noopener noreferrer"><Glyphicon glyph="modal-window"/> {
 									that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> :
 										that.state.urlTxt
 								}</a>
@@ -356,7 +356,7 @@ export default class AutoSuggestWidget extends Component {
 
 	render() {
 		const {props} = this;
-		let {suggestions, inputValue, isLoading} = this.state;
+		let {suggestions, inputValue} = this.state;
 
 		const inputProps = {
 			id: this.props.id,
@@ -382,7 +382,6 @@ export default class AutoSuggestWidget extends Component {
 		return (
 			<div className="autosuggest-wrapper">
 				<Autosuggest
-					ref="autosuggestInput"
 					id={`${this.props.id}-autosuggest`}
 					inputProps={inputProps}
 					renderInputComponent={this.renderInput}
@@ -446,9 +445,8 @@ export default class AutoSuggestWidget extends Component {
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		let glyph = undefined;
 		if (!this.state.focused && !this.state.isLoading && renderMetaInfo) {
-		glyph = validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
-			this.state.autosuggestSettings.renderSuccessGlyph(this) : getGlyph(validationState);
-
+			glyph = validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
+				this.state.autosuggestSettings.renderSuccessGlyph(this) : getGlyph(validationState);
 		}
 		const input = (
 			<FetcherInput 

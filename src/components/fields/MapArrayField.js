@@ -527,7 +527,7 @@ export default class MapArrayField extends Component {
 					this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
 				}
 			},
-			onComponentDidMount: (prevProps, prevState) => {
+			onComponentDidMount: () => {
 				this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
 			}
 		}

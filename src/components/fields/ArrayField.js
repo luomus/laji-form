@@ -66,7 +66,7 @@ export default class _ArrayField extends Component {
 		const nestedFilters = filter.filter(f => f.includes("/"));
 
 		const {formData} = this.props;
-		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry,definitions);
+		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
 
 		const lastIdx = formData.length - 1;
 		const lastItem = formData[lastIdx];

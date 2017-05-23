@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import update from "immutability-helper";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import { Button, GlyphButton, FetcherInput } from "../components";
-import { Tooltip, OverlayTrigger, Glyphicon, FormGroup, HelpBlock } from "react-bootstrap";
+import { GlyphButton, FetcherInput } from "../components";
+import { FormGroup, HelpBlock } from "react-bootstrap";
 
 @BaseComponent
 export default class UnitShorthandField extends Component {
@@ -41,7 +40,6 @@ export default class UnitShorthandField extends Component {
 				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
 				bsStyle={this.state.showSchema ? "default" : "primary"}
 				onClick={() => {
-					const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
 					this.setState({showSchema: !this.state.showSchema}, () => {
 						focusById(this.props.idSchema.$id);
 					});
@@ -52,7 +50,7 @@ export default class UnitShorthandField extends Component {
 	}
 
 	onCodeChange = (formData = {}) => {
-		new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id
+		new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id;
 		this.props.onChange(getDefaultFormState(this.props.schema, formData, this.props.registry.definitions));
 		this.setState({showSchema: true});
 	}
@@ -127,7 +125,7 @@ class CodeReader extends Component {
 					loading={this.state.loading}
 					value={this.state.value}
 					validationState={validationState}
-					onChange={({target: {value}}) => {if (this.mounted) this.setState({value})}}
+					onChange={({target: {value}}) => {if (this.mounted) this.setState({value});}}
 					onBlur={() => this.getCode()}
 					onKeyDown={e => {
 						if (e.key === "Enter") {
@@ -156,9 +154,9 @@ class CodeReader extends Component {
 		} else if (value.length >= 3) {
 			this.mounted && this.setState({loading: true});
 			this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID}).then(response => {
-					this.props.onChange(response.payload.unit)
-			}).catch(e => {
-					this.mounted && this.setState({failed: true, loading: false});
+				this.props.onChange(response.payload.unit);
+			}).catch(() => {
+				this.mounted && this.setState({failed: true, loading: false});
 			});
 		}
 	}

@@ -236,7 +236,7 @@ class Popup extends Component {
 	render() {
 		const { data } = this.props;
 		return (data && Object.keys(data).length) ? (
-			<ul ref="popup" className="map-data-tooltip">
+			<ul className="map-data-tooltip">
 				{data ? Object.keys(data).map(fieldName => {
 					const item = data[fieldName];
 					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.filter(hasData).join(", ") : item}</li>;
@@ -279,7 +279,7 @@ function handlesButtons(ComposedComponent) {
 			new Context().removeKeyHandler(this.childKeyHandlerId);
 		}
 
-	}
+	};
 }
 
 @handlesButtons
@@ -348,7 +348,7 @@ class PagerArrayFieldTemplate extends Component {
 }
 
 // 'this' is binded to SingleActiveArrayField class context.
-function renderAccordionHeader(idx, title, id) {
+function renderAccordionHeader(idx, title) {
 	const popupData = this.state.popups[idx];
 
 	const formattedIdx = idx + 1;
@@ -360,7 +360,6 @@ function renderAccordionHeader(idx, title, id) {
 
 	const header = (
 		<div className="laji-map-accordion-header" onClick={() => {
-			const {activeIdx} = this.state;
 			this.onActiveChange(idx);
 			formatter.onClick(this, idx);
 		}}

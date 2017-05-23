@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
-//import momentLocalizer from "react-widgets/lib/localizers/moment";
-import momentLocalizer from "react-widgets-moment"
+import momentLocalizer from "react-widgets-moment";
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";

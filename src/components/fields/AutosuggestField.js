@@ -19,7 +19,7 @@ const suggestionParsers = {
  *  suggestionReceivers: {
  *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
  *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
- *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "payload.informalgroups.0}
+ *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "payload.informalgroups.0"}
  *                                         If fieldName start  with '$', then a function from autosuggestFieldSettings parses the suggestion. Example: $taxonGroup
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
  * }

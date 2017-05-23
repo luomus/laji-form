@@ -247,7 +247,7 @@ export class StretchAffix extends Component {
 	update = (state) => {
 		const afterStateChange = () => {
 			if (this.props.onResize) this.props.onResize();
-		}
+		};
 		state ? this.setState(state, () => {
 			afterStateChange();
 		}) : afterStateChange;
@@ -381,10 +381,10 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 	);
 }
 
-export function FetcherInput({loading, children, validationState, glyph, getRef, ...inputProps}) {
+export function FetcherInput({loading, validationState, glyph, getRef, ...inputProps}) {
 	return (
 		<div className={`fetcher-input has-feedback${validationState ? ` has-${validationState}` : ""}`}>
-			<input className="form-control" type="text" {...inputProps} ref={r => {if (getRef) getRef(r)}} />
+			<input className="form-control" type="text" {...inputProps} ref={r => {if (getRef) getRef(r);}} />
 			{glyph ?  <FormControl.Feedback>{glyph}</FormControl.Feedback> : null }
 			{loading ? <Spinner /> : null }
 		</div>

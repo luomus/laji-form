@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElem, focusById, handleKeysWith, getSchemaElementById, isDescendant } from "../utils";
+import { findNearestParentSchemaElem, focusById, getSchemaElementById, isDescendant } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {

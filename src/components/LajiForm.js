@@ -301,7 +301,7 @@ export default class LajiForm extends Component {
 									<tr key={idx}>
 										<td>{keyCombo.split("+").map(key => {
 											if (key === " ") key = "space";
-											return capitalizeFirstLetter(key)
+											return capitalizeFirstLetter(key);
 										}).join(" + ")}</td><td>{translation}</td>
 									</tr>
 								);

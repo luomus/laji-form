@@ -7,7 +7,7 @@ export default (props) => (
 	<DateTimeWidget
 		{...props}
 		onChange={value => {
-			props.onChange(isEmptyString(value)  ? null : (moment(value).format("HH:mm")))
+			props.onChange(isEmptyString(value)  ? null : (moment(value).format("HH:mm")));
 		}
 		}
 		calendar={false}
