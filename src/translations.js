@@ -294,4 +294,14 @@
 		en: "Add a new",
 		sv: "??"
 	},
+	navigateArrayTarget: {
+		fi: "Liiku seuraavaan",
+		en: "Navigate to the next",
+		sv: "??"
+	},
+	navigateArrayReverseTarget: {
+		fi: "Liike edelliseen",
+		en: "Navigate to the previous",
+		sv: "??"
+	},
 };
