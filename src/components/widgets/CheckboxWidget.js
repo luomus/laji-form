@@ -22,7 +22,7 @@ function CheckboxWidget(props) {
 	}
 
 	function onKeyDown(e) {
-		if (!disabled  && !readonly && e.key === " ") {
+		if (!disabled  && !readonly && e.key === " " && ["shift", "alt", "ctrl"].every(special => !e[`${special}Key`])) {
 			e.preventDefault();
 			onChange(getNextVal());
 		}
