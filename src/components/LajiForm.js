@@ -260,7 +260,7 @@ export default class LajiForm extends Component {
 		const {translations} = this.state;
 		const shortcuts = this.props.uiSchema["ui:shortcuts"];
 		return (
-			<div onKeyDown={this.onKeyDown} className="laji-form">
+			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
 				<Form
 					{...this.props}
 					ref={form => {this.formRef = form;}}

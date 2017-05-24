@@ -156,14 +156,15 @@ export function canFocusNextInput(root, inputElem) {
 }
 
 export function findNearestParentSchemaElem(elem) {
-	while (!elem.id.match(/^_laji-form_/)) {
+	while (elem && !("id" in elem ? elem.id : "").match(/^_laji-form_/)) {
 		elem = elem.parentNode;
 	}
 	return elem;
 }
 
 export function findNearestParentSchemaElemId(elem) {
-	return findNearestParentSchemaElem(elem).id.replace("_laji-form_", "");
+	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById("_laji-form_root");
+	return nearestParentSchemaElem.id.replace("_laji-form_", "");
 }
 
 export function findNearestParentTabbableElem(elem) {
