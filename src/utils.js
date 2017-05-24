@@ -280,7 +280,7 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 	function handleKey(keyHandler) {
 		const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
 		const eventHandled = returnValue !== undefined ? returnValue : true;
-		if (!eventHandled) {
+		if (eventHandled) {
 			e.preventDefault();
 			e.stopPropagation();
 		}
