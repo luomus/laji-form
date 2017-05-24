@@ -4,6 +4,7 @@ var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	entry: [
+		"babel-polyfill",
 		path.join(__dirname, "playground", "app"),
 	],
 	output: {
@@ -11,11 +12,12 @@ module.exports = {
 		filename: "main.js"
 	},
 	devServer: {
-		outputpath: path.join(__dirname, 'build')
+		outputpath: path.join(__dirname, "build"),
+		disableHostCheck: true
 	},
 	plugins: [
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
-		new webpack.DefinePlugin({'process.env.NODE_ENV': '"development"'}),
+		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"development\""}),
 		new CopyWebpackPlugin([{from: path.join(__dirname, "src", "img"), to: "."}])
 	],
 	module: {
