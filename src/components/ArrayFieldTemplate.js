@@ -129,13 +129,12 @@ export default class ArrayFieldTemplate extends Component {
 }
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, navigateCallforward, getId}) {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward}) {
 		function focusIdx(idx) {
 			focusById(`${getProps().idSchema.$id}_${idx}`);
 		}
 
-		const activeSchemaElementId = findNearestParentSchemaElemId(document.activeElement);
-		const nearestSchemaElemId = getId && getId() || activeSchemaElementId;
+		const nearestSchemaElemId = findNearestParentSchemaElemId(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
 		const currentIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
