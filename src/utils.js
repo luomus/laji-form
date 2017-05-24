@@ -131,7 +131,7 @@ const SWITCH_CLASS = "bootstrap-switch";
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly])`; });
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly]):not(.leaflet-control-layers-selector)`; });
 
 
 export function getTabbableFields(elem, reverse) {

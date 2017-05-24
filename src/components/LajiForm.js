@@ -320,6 +320,7 @@ export default class LajiForm extends Component {
 
 	keyFunctions = {
 		navigate: (e, {reverse}) => {
+			console.log("navigate");
 			focusNextInput(this.formRef, e.target, reverse);
 			return true;
 		},
@@ -401,6 +402,7 @@ export default class LajiForm extends Component {
 			return handler.conditions.every(condition => condition(e));
 		}).map(({id}) => getKeyHandlerTargetId(id));
 		order = [...targets, ...order];
+		console.log(order);
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id](e));
 
