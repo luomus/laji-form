@@ -518,7 +518,7 @@ export default class MapArrayField extends Component {
 			},
 			onActiveChange: idx => {
 				const {map} = new Context("MAP");
-				map.map.fitBounds(map._allCorridors[idx].getBounds());
+				map.map.fitBounds(map._allCorridors[idx].getBounds(), {maxZoom: 13});
 				map._openTooltipFor(idx);
 				focusById(`${this.props.idSchema.$id}_${idx}`);
 			},
