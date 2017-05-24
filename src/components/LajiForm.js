@@ -404,7 +404,7 @@ export default class LajiForm extends Component {
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id](e));
 
-		if (!handled && e.key === "Enter") {
+		if (!handled && e.key === "Enter" && (!document.activeElement || document.activeElement.type !== "textarea")) {
 			e.preventDefault();
 		}
 	}
