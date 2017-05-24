@@ -289,10 +289,16 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 
 	const _context = new Context();
 
+	let triedToHandle = false;
+
 	const highPriorityHandled = _context.keyHandlers.some(keyHandler => {
 		let target = getKeyHandlerTargetId(keyHandler.target);
 		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
-			return handleKey(keyHandler);
+			if (!handleKey(keyHandler)) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			return true;
 		}
 	});
 

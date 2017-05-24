@@ -130,30 +130,38 @@ export default class ArrayFieldTemplate extends Component {
 
 export const arrayKeyFunctions = {
 	navigateArray: function (e, {reverse, getProps, navigateCallforward, getId}) {
-		function focusFirstOf(idx) {
-			focusById(`${getProps().idSchema.$id}_${idx}`) && e.stopPropagation();
+		function focusIdx(idx) {
+			focusById(`${getProps().idSchema.$id}_${idx}`);
 		}
 
-		const nearestSchemaElemId = getId && getId() || findNearestParentSchemaElemId(document.activeElement);
+		const activeSchemaElementId = findNearestParentSchemaElemId(document.activeElement);
+		const nearestSchemaElemId = getId && getId() || activeSchemaElementId;
 		// Should contain all nested array item ids. We want the last one, which is focused.
-		const activeArrayItems = nearestSchemaElemId.match(/_\d+/g);
-		if (!activeArrayItems) return;
+		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
+		const currentIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
 
-		const currentIdx = parseInt(activeArrayItems[activeArrayItems.length - 1].replace("_", ""));
-		const amount = reverse ? -1 : 1;
-
-		const nextIdx = currentIdx + amount;
-
-		if (amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < getProps().items.length) {
-			if (navigateCallforward) {
-				e.persist();
-				navigateCallforward(() => focusFirstOf(nextIdx), nextIdx);
-			} else {
-				focusFirstOf(nextIdx);
+		if (currentIdx === undefined) {
+			if (getProps().items.length > 0) {
+				focusIdx(0);
+				return true;
 			}
-			return true;
+			return false;
+		} else {
+			const amount = reverse ? -1 : 1;
+
+			const nextIdx = currentIdx + amount;
+
+			if (amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < getProps().items.length) {
+				if (navigateCallforward) {
+					e.persist();
+					navigateCallforward(() => focusIdx(nextIdx), nextIdx);
+				} else {
+					focusIdx(nextIdx);
+				}
+				return true;
+			}
+			return false;
 		}
-		return false;
 	},
 	insert: function (e, {getProps, insertCallforward}) {
 		const props = getProps();
