@@ -271,7 +271,7 @@ function handlesButtons(ComposedComponent) {
 			if (that.state.activeIdx !== undefined) {
 				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
 				this.childKeyHandlerId = id;
-				new Context().addKeyHandler(id, arrayItemKeyFunctions, {id,  getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
+				new Context().addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
 			}
 		}
 

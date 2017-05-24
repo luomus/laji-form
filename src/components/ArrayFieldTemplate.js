@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields } from "../utils";
 
 
 function onAdd(e, props, idToFocus) {
@@ -83,7 +83,7 @@ export default class ArrayFieldTemplate extends Component {
 		this.props.items.forEach((item, i) => {
 			const id = `${this.props.idSchema.$id}_${i}`;
 			this.childKeyHandlers.push(id);
-			new Context().addKeyHandler(id, arrayItemKeyFunctions, {id, getDeleteButton: () => this.deleteButtonRefs[i]});
+			new Context().addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
 		});
 	}
 
@@ -178,14 +178,35 @@ export const arrayKeyFunctions = {
 };
 
 export const arrayItemKeyFunctions = {
-	delete: function(e, {getDeleteButton, id}) {
+	delete: function(e, {getDeleteButton, id, getProps}) {
 		if (!isDescendant(getSchemaElementById(id), e.target)) {
 			return;
 		}
+
 		if (!getDeleteButton) return;
+
 		const deleteButton = getDeleteButton();
 		if (!deleteButton || !deleteButton.onClick) return;
-		getDeleteButton().onClick(e);
+
+		const {items, idSchema, formContext: {getFormRef}} = getProps();
+
+		const activeId = findNearestParentSchemaElemId(document.activeElement);
+		const idxsMatch = activeId.match(/_\d+/g);
+		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
+		const prevElem = getNextInput(getFormRef(), getTabbableFields(getSchemaElementById(`${idSchema.$id}_${idx}`))[0], !!"reverse");
+		
+		getDeleteButton().onClick(e, (deleted) => {
+			if (deleted) {
+				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
+				if (idxToFocus >= 0) {
+					focusById( `${idSchema.$id}_${idxToFocus}`);
+				} else {
+					if (prevElem) prevElem.focus();
+				}
+			} else {
+				focusById(`${activeId}`);
+			}
+		});
 		return true;
 	}
 };

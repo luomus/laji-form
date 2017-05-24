@@ -174,7 +174,7 @@ export function findNearestParentTabbableElem(elem) {
 	return elem;
 }
 
-export function focusNextInput(formReactNode, inputElem, reverseDirection) {
+export function getNextInput(formReactNode, inputElem, reverseDirection) {
 	const formElem = findDOMNode(formReactNode);
 	if (!inputElem) inputElem = findNearestParentTabbableElem(document.activeElement);
 
@@ -190,10 +190,15 @@ export function focusNextInput(formReactNode, inputElem, reverseDirection) {
 		}
 
 		if (doFocus) {
-			field.focus();
+			return field;
 			if (document.activeElement !== inputElem) break;
 		}
 	}
+}
+
+export function focusNextInput(...params) {
+	const field = getNextInput(...params);
+	if (field) field.focus();
 }
 
 export function focusById(id) {
