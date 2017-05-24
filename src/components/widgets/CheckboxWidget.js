@@ -41,7 +41,7 @@ function CheckboxWidget(props) {
 	const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
 
 	const checkbox = (
-		<div onClick={onClick} onKeyDown={onKeyDown}>
+		<div onClick={onClick} onKeyDown={onKeyDown} className="checkbox-container">
 			<Switch
 				value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
 				defaultValue={allowUndefined ? null : false}

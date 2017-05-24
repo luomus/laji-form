@@ -609,3 +609,6 @@ body .laji-form {
 .laji-form .hidden {
 	display: none;
 }
+.laji-form .checkbox-container {
+	display: table;
+}
