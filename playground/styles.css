@@ -3,6 +3,10 @@ body .laji-form {
 	position: relative;
 }
 
+.laji-form:focus {
+	outline: none;
+}
+
 .laji-form .blocking-loader.enter-start,
 .laji-form .blocking-loader.entering,
 .laji-form .blocking-loader.leave-start,
