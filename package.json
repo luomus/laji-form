@@ -41,7 +41,6 @@
     "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#build",
     "react-spinner": "^0.2.7",
     "react-transition-group": "^1.1.1",
-    "react-addons-css-transition-group": "*",
     "react-widgets": "^3.4.4",
     "scroll-into-view-if-needed": "^1.1.0"
   },
