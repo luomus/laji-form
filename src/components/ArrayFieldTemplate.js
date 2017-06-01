@@ -4,6 +4,7 @@ import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
 import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields } from "../utils";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 
 function onAdd(e, props, idToFocus) {
@@ -99,29 +100,47 @@ export default class ArrayFieldTemplate extends Component {
 		const Title = props.TitleField;
 		const Description = props.DescriptionField;
 		const options = getUiOptions(props.uiSchema);
-		const {confirmDelete, deleteCorner, renderDelete = true} = options;
+		const {confirmDelete, deleteCorner, renderDelete = true, orderable, nonRemovables = [], nonOrderables = []} = options;
 		const buttons = getButtons(options.buttons, props);
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
+
+
+		const SortableList = SortableContainer(({items}) => (
+			<div>
+				{items.map((item, i) => 
+					<SortableItem key={i} index={i} item={item} disabled={(!props.items[i].hasMoveDown && !props.items[i].hasMoveUp) || nonOrderables.includes(i)} />
+				)}
+			</div>)
+		);
+		const SortableItem = SortableElement(({item}) => item);
+
+		const items = props.items.map((item, i) => {
+			const deleteButton = (
+				<DeleteButton ref={elem => {this.deleteButtonRefs[i] = elem;}}
+											onClick={item.onDropIndexClick(item.index)}
+											className="laji-form-field-template-buttons"
+											confirm={confirmDelete}
+											corner={deleteCorner}
+											translations={props.formContext.translations}/>
+			);
+			return (
+				<div key={item.index} className="laji-form-field-template-item keep-vertical">
+					<div className="laji-form-field-template-schema">{item.children}</div>
+					{item.hasRemove && !nonRemovables.includes(item.index) && renderDelete && deleteButton}
+				</div>
+			);
+
+		});
+
 		return (
 			<div className={props.className}>
 				<Title title={props.title}/>
 				<Description description={props.description}/>
-				{props.items.map((item, i) => {
-					const deleteButton = (
-						<DeleteButton ref={elem => {this.deleteButtonRefs[i] = elem;}}
-													onClick={item.onDropIndexClick(item.index)}
-													className="laji-form-field-template-buttons"
-													confirm={confirmDelete}
-													corner={deleteCorner}
-													translations={props.formContext.translations}/>
-					);
-					return (
-						<div key={item.index} className="laji-form-field-template-item keep-vertical">
-							<div className="laji-form-field-template-schema">{item.children}</div>
-							{item.hasRemove && renderDelete && deleteButton}
-						</div>
-					);
-				})}
+				{
+					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={200} items={items} onSortEnd={({oldIndex, newIndex}) => 
+						props.items[oldIndex].onReorderClick(oldIndex, newIndex)
+					} /> : items
+				}
 				{buttons}
 			</div>
 		);

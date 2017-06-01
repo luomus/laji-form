@@ -16,7 +16,7 @@ export default class AutoArrayField extends Component {
 	}
 
 	getStateFromProps(props) {
-		const {formData, schema, registry} = props;
+		const {formData, schema, uiSchema, registry} = props;
 
 		const state = {formData};
 
@@ -24,6 +24,7 @@ export default class AutoArrayField extends Component {
 		if (formData && (formData.length === 0 || !deepEquals(formData[formData.length - 1], emptyItem))) {
 			state.formData = [...formData, emptyItem];
 		}
+		state.uiSchema = {...uiSchema, "ui:options": {...(uiSchema["ui:options"] || {}), nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]}};
 		return state;
 	}
 
