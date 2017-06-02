@@ -191,7 +191,6 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 
 		if (doFocus) {
 			return field;
-			if (document.activeElement !== inputElem) break;
 		}
 	}
 }
@@ -288,8 +287,6 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 	}
 
 	const _context = new Context();
-
-	let triedToHandle = false;
 
 	const highPriorityHandled = _context.keyHandlers.some(keyHandler => {
 		let target = getKeyHandlerTargetId(keyHandler.target);
