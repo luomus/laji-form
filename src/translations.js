@@ -300,8 +300,13 @@
 		sv: "??"
 	},
 	navigateArrayReverseTarget: {
-		fi: "Liike edelliseen",
+		fi: "Liiku edelliseen",
 		en: "Navigate to the previous",
 		sv: "??"
 	},
+	textareaHint: {
+		fi: "Ctrl + Enter lisää uuden rivin",
+		en: "Ctrl + Enter adds a new row",
+		sv: "Ctrl + enter lägger till en ny rad"
+	}
 };

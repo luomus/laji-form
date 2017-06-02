@@ -94,6 +94,7 @@ const fields = importLocalComponents("fields", [
 const widgets = importLocalComponents("widgets", [
 	"CheckboxWidget",
 	"SelectWidget",
+	"TextareaWidget",
 	"DateTimeWidget",
 	"DateWidget",
 	"TimeWidget",
