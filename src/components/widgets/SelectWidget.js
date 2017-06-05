@@ -77,7 +77,7 @@ class SelectWidget extends Component {
 			id,
 			value: this.state.value,
 			data: enumOptions,
-			onChange: value => this.setState({value}),
+			onChange: ({value}) => this.props.onChange(value),
 			valueField: "value",
 			textField: "label",
 			disabled,
@@ -98,7 +98,6 @@ class SelectWidget extends Component {
 				ref={elem => this.comboRef = elem}
 				open={this.state.open}
 				onToggle={() => {}}
-				onChange={value => this.setState({value})}
 				suggest={true}
 				onClick={() => this.setState({open: true})}
 				onFocus={() => this.setState({open: true}, () => {
