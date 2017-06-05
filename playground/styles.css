@@ -93,7 +93,7 @@ body .laji-form {
 	width: 0px;
 }
 
-.laji-form .form-control, .laji-form .rw-widget-container, .laji-form .rw-datetimepicker {
+.laji-form .form-control, .laji-form .rw-widget, .laji-form .rw-widget-container, .laji-form .rw-list-option {
 	border-radius: 2px !important;
 }
 .laji-form .form-control:not(textarea) {
