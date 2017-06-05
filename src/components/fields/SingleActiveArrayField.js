@@ -19,7 +19,7 @@ const headerFormatters = {
 					unit &&
 					unit.identifications &&
 					unit.identifications[0] &&
-					unit.identifications[0].taxonID).length
+					unit.identifications[0].taxon).length
 				: 0;
 
 			return (
