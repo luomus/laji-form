@@ -131,7 +131,6 @@ function FieldTemplate({
 	rawHelp,
 	description,
 	hidden,
-	required,
 	displayLabel,
 	schema,
 	uiSchema,
@@ -155,7 +154,7 @@ function FieldTemplate({
 	const vertical = uiSchema["ui:buttonsVertical"];
 	return (
 		<div className={classNames} id={elemId}>
-			{label && _displayLabel ? <Label label={label} help={rawHelp} required={required} id={id} /> : null}
+			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} /> : null}
 			{_displayLabel && description ? description : null}
 			<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
 				<div className={"laji-form-field-template-schema"}>

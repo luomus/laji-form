@@ -56,13 +56,6 @@ export default class _ArrayField extends Component {
 	}
 
 	onCopy(props, {type, filter}) {
-		const filterDict = filter.reduce((dict, f) => {
-			dict[f] = true;
-			return dict;
-		}, {});
-
-		const fieldsFilter = (type === "blacklist") ? field => !filterDict[field] : field => filterDict[field];
-		const fields = Object.keys(this.props.schema.items.properties).filter(fieldsFilter);
 		const nestedFilters = filter.filter(f => f.includes("/"));
 
 		const {formData} = this.props;
@@ -71,17 +64,7 @@ export default class _ArrayField extends Component {
 		const lastIdx = formData.length - 1;
 		const lastItem = formData[lastIdx];
 
-		function clone(field) {
-			if (!field) return field;
-			return JSON.parse(JSON.stringify(field));
-		}
-
-		const copyItem = lastIdx >= 0 ? (() => {
-			return fields.reduce((item, field) => {
-				item[field] = clone(lastItem[field]);
-				return item;
-			}, defaultItem);
-		})() : defaultItem;
+		const copyItem = lastIdx >= 0 ? Object.assign(defaultItem, lastItem) : defaultItem;
 
 		nestedFilters.forEach(filter => {
 			const splitted = filter.substring(1).split("/");
@@ -89,21 +72,20 @@ export default class _ArrayField extends Component {
 
 			const nested = splitted.reduce((_nested, path) => {
 				_nested = copyItem[path];
-				return Array.isArray(_nested) ? _nested[0] : _nested;
+				return _nested;
 			}, copyItem);
-
 			if (type === "blacklist") {
 				const nestedSchema = splitted.reduce((nested, path) => {
-					if (nested.properties) return nested.properties[path];
-					if (nested.items) return nested.items.properties[path];
-					if (nested[path]) return nested[path];
+					if ("properties" in nested) return nested.properties[path];
+					if ("items" in nested) return nested.items.properties[path];
+					if (path in nested) return nested[path];
 				}, this.props.schema.items);
 
 				if (nested) nested[last] = getDefaultFormState(nestedSchema, undefined, this.props.registry.definitions);
 			} else {
 				const origNestedField = splitted.reduce((nested, path) => {
-					if (nested) return nested[path];
-					else if (nested && nested[0]) return nested[0][path];
+					if (nested !== undefined) return nested[path];
+					else if (nested && nested[0] !== undefined) return nested[0][path];
 					return undefined;
 				}, lastItem);
 				if (nested) nested[last] = origNestedField;
