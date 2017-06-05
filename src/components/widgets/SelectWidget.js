@@ -77,7 +77,6 @@ class SelectWidget extends Component {
 			id,
 			value: this.state.value,
 			data: enumOptions,
-			onChange: ({value}) => this.props.onChange(value),
 			valueField: "value",
 			textField: "label",
 			disabled,
@@ -91,10 +90,14 @@ class SelectWidget extends Component {
 		};
 
 		const selectComponent = multiple ? (
-			<Multiselect {...commonOptions} />
+			<Multiselect 
+				{...commonOptions}
+				onChange={(values) => this.props.onChange(values.map(({value}) => value))}
+			/>
 		) : (
 			<Combobox
 				{...commonOptions}
+				onChange={({value}) => this.props.onChange(value)}
 				ref={elem => this.comboRef = elem}
 				open={this.state.open}
 				onToggle={() => {}}
