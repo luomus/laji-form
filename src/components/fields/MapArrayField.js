@@ -8,7 +8,7 @@ import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -63,6 +63,8 @@ export default class MapArrayField extends Component {
 		this._context.featureIdxsToItemIdxs = {};
 
 		const initialState = {activeIdx: 0};
+		const options = getUiOptions(props.uiSchema);
+		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
 		new Context().addStateClearListener(() => {
 			this.setState(initialState);
 		});
@@ -294,7 +296,7 @@ export default class MapArrayField extends Component {
 				};
 
 
-				const controlSettings = (emptyMode || this.state.activeIdx !== undefined) ?
+				const controlSettings = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
 					{} : {draw: false, coordinateInput: false};
 
 				return {draw, controlSettings, emptyMode};
