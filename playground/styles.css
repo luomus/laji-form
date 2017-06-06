@@ -554,6 +554,7 @@ body .laji-form {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+	width: 0px; /** Ellipsis overflowing doesn't work without fixed width **/
 }
 
 .laji-form .map-highlight, .laji-form.reorder-active {

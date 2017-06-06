@@ -289,7 +289,7 @@
 				"ui:field": "AccordionArrayField",
 				"ui:options": {
 					"addTxt": "Lisää paikka",
-					"headerFormatter": "units",
+					"headerFormatters": ["units", "locality"],
 					"popupFields": [
 						{
 							"field": "units",

@@ -11,7 +11,7 @@ import BaseComponent from "../BaseComponent";
 
 const headerFormatters = {
 	units: {
-		render: (that, idx, headerElem) => {
+		render: (that, idx) => {
 			const {props: {formContext: {translations}, formData}} = that;
 			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ?
@@ -23,11 +23,8 @@ const headerFormatters = {
 				: 0;
 
 			return (
-				<span>
-					{headerElem}
-					<span className="text-muted">
-						{` (${unitsLength} ${translations.unitsPartitive})`}
-					</span>
+				<span className="text-muted">
+					{` (${unitsLength} ${translations.unitsPartitive})`}
 				</span>
 			);
 		},
@@ -353,18 +350,31 @@ function renderAccordionHeader(idx, title) {
 
 	const formattedIdx = idx + 1;
 	const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
-	const {headerFormatter} = getUiOptions(this.props.uiSchema);
-	const headerTextElem = <span>{_title}</span>;
-	const formatter = headerFormatters[headerFormatter];
-	const headerText = formatter ? formatter.render(this, idx, headerTextElem) : headerTextElem;
+
+	// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
+	const options = getUiOptions(this.props.uiSchema);
+	let _headerFormatters = options.headerFormatters || options.headerFormatter || [];
+	if (_headerFormatters && !Array.isArray(_headerFormatters)) _headerFormatters = [_headerFormatters];
+
+
+	const formatters = _headerFormatters.map(formatter => {
+		if (headerFormatters[formatter]) return headerFormatters[formatter];
+		else return {
+			render: (that, idx) => {
+				return <span className="text-muted">{that.props.formData[idx][formatter]}</span>;
+			}
+		};
+	});
+
+	const headerText = <span>{_title}{formatters.map((formatter, i) => <span key={i}> {formatter.render(this, idx)}</span>)}</span>;
 
 	const header = (
 		<div className="laji-map-accordion-header" onClick={() => {
 			this.onActiveChange(idx);
-			formatter.onClick(this, idx);
+			formatters.forEach(formatter => {formatter.onClick && formatter.onClick(this, idx);});
 		}}
-			onMouseEnter={() => {if (formatter) formatter.onMouseEnter(this, idx);}}
-			onMouseLeave={() => {if (formatter) formatter.onMouseLeave(this, idx);}} >
+			onMouseEnter={() => {formatters.forEach(formatter => {formatter.onMouseEnter && formatter.onMouseEnter(this, idx);});}}
+			onMouseLeave={() => {formatters.forEach(formatter => {formatter.onMouseLeave && formatter.onMouseLeave(this, idx);});}} >
 			<div className="panel-title">
 				{headerText}
 				<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem;}}
