@@ -8,7 +8,6 @@ import { TooltipComponent } from "../components";
 import { isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
-//TODO doesn't support readonly
 @BaseComponent
 class SelectWidget extends Component {
 
@@ -78,7 +77,6 @@ class SelectWidget extends Component {
 			id,
 			value: this.state.value,
 			data: enumOptions,
-			onChange: value => this.setState({value}),
 			valueField: "value",
 			textField: "label",
 			disabled,
@@ -88,24 +86,35 @@ class SelectWidget extends Component {
 				open: formContext.translations.Open,
 				emptyList: formContext.translations.NoResults,
 				emptyFilter: formContext.translations.NoResults
-			},
-			suggest: true
+			}
 		};
 
 		const selectComponent = multiple ? (
-			<Multiselect {...commonOptions} />
+			<Multiselect 
+				{...commonOptions}
+				onChange={(values) => this.props.onChange(values.map(({value}) => value))}
+			/>
 		) : (
 			<Combobox
 				{...commonOptions}
+				onChange={({value}) => this.props.onChange(value)}
 				ref={elem => this.comboRef = elem}
+				open={this.state.open}
+				onToggle={() => {}}
+				suggest={true}
+				onClick={() => this.setState({open: true})}
 				onFocus={() => this.setState({open: true}, () => {
 					findDOMNode(this.comboRef.refs.inner.refs.input).select();
 				})}
-				onBlur={() => this.setState({open: false})}
-				open={this.state.open}
-				onToggle={() => {}}
-				onChange={value => this.setState({value})}
-				onSelect={() => this.setState({open: false})}
+				onBlur={() => {
+					this.setState({open: false});
+				}}
+				onSelect={() => {
+					this.state.open && setImmediate(() => this.setState({open: false}));
+				}}
+				onKeyDown={() => {
+					!this.state.open && this.setState({open: true});
+				}}
 			/>
 		);
 

@@ -26,10 +26,6 @@ function CheckboxWidget(props) {
 			e.preventDefault();
 			onChange(getNextVal());
 		}
-		if (e.key === "Escape") {
-			e.preventDefault();
-			document.activeElement.blur();
-		}
 	}
 
 	function onClick(e) {

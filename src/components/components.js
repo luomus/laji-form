@@ -63,7 +63,7 @@ export class DeleteButton extends Component {
 
 	componentWillUnmount() {
 		if (this.callback && !this.callbackCalled) {
-				this.callback(this.deleted);
+			this.callback(this.deleted);
 		}
 	}
 

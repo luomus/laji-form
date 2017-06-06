@@ -131,8 +131,7 @@ const SWITCH_CLASS = "bootstrap-switch";
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly]):not(.leaflet-control-layers-selector)`; });
-
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector)`; });
 
 export function getTabbableFields(elem, reverse) {
 	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
@@ -191,7 +190,6 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 
 		if (doFocus) {
 			return field;
-			if (document.activeElement !== inputElem) break;
 		}
 	}
 }
@@ -288,8 +286,6 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 	}
 
 	const _context = new Context();
-
-	let triedToHandle = false;
 
 	const highPriorityHandled = _context.keyHandlers.some(keyHandler => {
 		let target = getKeyHandlerTargetId(keyHandler.target);
