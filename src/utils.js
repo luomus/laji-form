@@ -141,8 +141,8 @@ export function getTabbableFields(elem, reverse) {
 	return fields;
 }
 
-export function getSchemaElementById(id) {
-	return document.getElementById(`_laji-form_${id}`);
+export function getSchemaElementById(contextId, id) {
+	return document.getElementById(`_laji-form_${contextId}_${id}`);
 }
 
 export function isTabbableInput(elem) {
@@ -161,9 +161,9 @@ export function findNearestParentSchemaElem(elem) {
 	return elem;
 }
 
-export function findNearestParentSchemaElemId(elem) {
-	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById("_laji-form_root");
-	return nearestParentSchemaElem.id.replace("_laji-form_", "");
+export function findNearestParentSchemaElemId(contextId, elem) {
+	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
+	return nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "");
 }
 
 export function findNearestParentTabbableElem(elem) {
@@ -199,8 +199,8 @@ export function focusNextInput(...params) {
 	if (field) field.focus();
 }
 
-export function focusById(id) {
-	const elem = getSchemaElementById(id);
+export function focusById(contextId, id) {
+	const elem = getSchemaElementById(contextId, id);
 	if (elem) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
@@ -258,16 +258,16 @@ export function isDescendant(parent, child) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(target = "") {
+export function getKeyHandlerTargetId(context, target = "") {
 	while (target.match(/%\{(.*)\}/)) {
 		const key = /%\{(.*)\}/.exec(target)[1];
-		target = target.replace(`%{${key}}`, new Context()[key]);
+		target = target.replace(`%{${key}}`, context[key]);
 	}
 	return target;
 }
 
-export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) {
-	if (new Context().blockingLoaderCounter > 0 &&
+export function handleKeysWith(context, id, keyFunctions = {}, e, additionalParams = {}) {
+	if (context.blockingLoaderCounter > 0 &&
 			!isDescendant(document.querySelector(".pass-block"), e.target)) {
 		e.preventDefault();
 		return;
@@ -285,10 +285,9 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 		return eventHandled;
 	}
 
-	const _context = new Context();
 
-	const highPriorityHandled = _context.keyHandlers.some(keyHandler => {
-		let target = getKeyHandlerTargetId(keyHandler.target);
+	const highPriorityHandled = context.keyHandlers.some(keyHandler => {
+		let target = getKeyHandlerTargetId(context, keyHandler.target);
 		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
 			if (!handleKey(keyHandler)) {
 				e.preventDefault();
@@ -300,7 +299,7 @@ export function handleKeysWith(id, keyFunctions = {}, e, additionalParams = {}) 
 
 	if (highPriorityHandled) return highPriorityHandled;
 
-	return _context.keyHandlers.some(keyHandler => {
+	return context.keyHandlers.some(keyHandler => {
 		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
 			return handleKey(keyHandler);
 		}

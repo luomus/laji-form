@@ -21,7 +21,7 @@ export default class ImageArrayField extends Component {
 		this.apiClient = new ApiClient();
 		this._context = new Context("IMAGE_ARRAY_FIELD");
 		if (!this._context.metadatas) this._context.metadatas = {};
-		this.mainContext = new Context();
+		this.mainContext = this.getContext();
 	}
 
 

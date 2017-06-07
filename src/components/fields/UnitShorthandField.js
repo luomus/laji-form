@@ -4,7 +4,6 @@ import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
-import Context from "../../Context";
 import { GlyphButton, FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 
@@ -41,7 +40,7 @@ export default class UnitShorthandField extends Component {
 				bsStyle={this.state.showSchema ? "default" : "primary"}
 				onClick={() => {
 					this.setState({showSchema: !this.state.showSchema}, () => {
-						focusById(this.props.idSchema.$id);
+						focusById(this.props.formContext.contextId, this.props.idSchema.$id);
 					});
 				}}
 				glyph="resize-small"
@@ -50,7 +49,7 @@ export default class UnitShorthandField extends Component {
 	}
 
 	onCodeChange = (formData = {}) => {
-		new Context(this.props.registry.formContext.contextId).idToFocus = this.props.idSchema.$id;
+		this.getContext().idToFocus = this.props.idSchema.$id;
 		this.props.onChange(getDefaultFormState(this.props.schema, formData, this.props.registry.definitions));
 		this.setState({showSchema: true});
 	}

@@ -59,13 +59,13 @@ export default class MapArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this._context = new Context("MAP_UNITS");
+		this._context = new Context(`${props.formContext.contextId}_MAP_UNITS`);
 		this._context.featureIdxsToItemIdxs = {};
 
 		const initialState = {activeIdx: 0};
 		const options = getUiOptions(props.uiSchema);
 		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
-		new Context().addStateClearListener(() => {
+		this.getContext().addStateClearListener(() => {
 			this.setState(initialState);
 		});
 		this.state = initialState;
@@ -137,6 +137,7 @@ export default class MapArrayField extends Component {
 						              className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
 								ref="map"
+								contextId={this.props.formContext.contextId}
 								lang={this.props.formContext.lang}
 								onPopupClose={() => {this.setState({popupIdx: undefined});}}
 								markerPopupOffset={45}
@@ -351,7 +352,7 @@ export default class MapArrayField extends Component {
 						};
 						this.props.onChange([formData]);
 						this.setState({activeIdx: 0}, () => {
-							const node = getSchemaElementById(`${this.props.idSchema.$id}_0`);
+							const node = getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0`);
 							if (!node) return;
 							const tabbables = getTabbableFields(node);
 							if (tabbables && tabbables.length) tabbables[0].focus();
@@ -457,7 +458,7 @@ export default class MapArrayField extends Component {
 			},
 			onActiveChange: idx => {
 				if (idx === undefined) return;
-				const {map} = new Context("MAP");
+				const {map} = new Context(`${this.props.formContext.contextId}_MAP`);
 				if (Object.keys(map.drawLayerGroup._layers).length) map.map.fitBounds(map.drawLayerGroup.getBounds());
 			},
 		},
@@ -519,10 +520,10 @@ export default class MapArrayField extends Component {
 				};
 			},
 			onActiveChange: idx => {
-				const {map} = new Context("MAP");
+				const {map} = new Context(`${this.props.formContext.contextId}_MAP`);
 				map.map.fitBounds(map._allCorridors[idx].getBounds(), {maxZoom: 13});
 				map._openTooltipFor(idx);
-				focusById(`${this.props.idSchema.$id}_${idx}`);
+				focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`);
 			},
 			onComponentDidUpdate: (prevProps, prevState) => {
 				if (prevState.activeIdx !== this.state.activeIdx) {
@@ -593,7 +594,8 @@ class MapComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
-		this._context = new Context("MAP");
+		this.mainContext = new Context(props.contextId);
+		this._context = new Context(`${props.contextId}_MAP`);
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
 		this._context.showPanel = this.showPanel;
@@ -650,16 +652,14 @@ class MapComponent extends Component {
 	}
 
 	grabFocus = () => {
-		const mainContext = new Context();
-		mainContext.pushBlockingLoader();
+		this.mainContext.pushBlockingLoader();
 		this.setState({focusGrabbed: true}, () => {
 			if (this.props.onFocusGrab) this.props.onFocusGrab();
 		});
 	}
 
 	releaseFocus = () => {
-		const mainContext = new Context();
-		mainContext.popBlockingLoader();
+		this.mainContext.popBlockingLoader();
 		this.setState({focusGrabbed: false}, () => {
 			if (this.props.onFocusRelease) this.props.onFocusRelease();
 		});

@@ -67,8 +67,12 @@ export function getButtons(buttons, props) {
 }
 
 export default class ArrayFieldTemplate extends Component {
+	constructor(props) {
+		super(props);
+		this._context = new Context(this.props.formContext.contextId);
+	}
 	componentDidMount() {
-		new Context().addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+		this._context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 			getProps: () => this.props
 		});
 		this.childKeyHandlers = [];
@@ -80,18 +84,18 @@ export default class ArrayFieldTemplate extends Component {
 	}
 
 	addChildKeyHandlers() {
-		if (this.childKeyHandlers) this.childKeyHandlers.forEach(childKeyHandler => new Context().removeKeyHandler(childKeyHandler));
+		if (this.childKeyHandlers) this.childKeyHandlers.forEach(childKeyHandler => this._context.removeKeyHandler(childKeyHandler));
 		this.props.items.forEach((item, i) => {
 			const id = `${this.props.idSchema.$id}_${i}`;
 			this.childKeyHandlers.push(id);
-			new Context().addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
+			this._context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
 		});
 	}
 
 	componentWillUnmount() {
-		new Context().removeKeyHandler(this.props.idSchema.$id);
+		this._context.removeKeyHandler(this.props.idSchema.$id);
 		if (this.childKeyHandlers) {
-			this.childKeyHandlers.forEach(id => new Context().removeKeyHandler(id));
+			this.childKeyHandlers.forEach(id => this._context.removeKeyHandler(id));
 		}
 	}
 
@@ -150,10 +154,10 @@ export default class ArrayFieldTemplate extends Component {
 export const arrayKeyFunctions = {
 	navigateArray: function (e, {reverse, getProps, navigateCallforward}) {
 		function focusIdx(idx) {
-			focusById(`${getProps().idSchema.$id}_${idx}`);
+			focusById(getProps().formContext.contextId, `${getProps().idSchema.$id}_${idx}`);
 		}
 
-		const nearestSchemaElemId = findNearestParentSchemaElemId(document.activeElement);
+		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
 		const currentIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
@@ -205,7 +209,7 @@ export const arrayKeyFunctions = {
 
 export const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton, id, getProps}) {
-		if (!isDescendant(getSchemaElementById(id), e.target)) {
+		if (!isDescendant(getSchemaElementById(getProps().formContext.contextId, id), e.target)) {
 			return;
 		}
 
@@ -214,23 +218,23 @@ export const arrayItemKeyFunctions = {
 		const deleteButton = getDeleteButton();
 		if (!deleteButton || !deleteButton.onClick) return;
 
-		const {items, idSchema, formContext: {getFormRef}} = getProps();
+		const {items, idSchema, formContext: {getFormRef, contextId}} = getProps();
 
-		const activeId = findNearestParentSchemaElemId(document.activeElement);
+		const activeId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
 		const idxsMatch = activeId.match(/_\d+/g);
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
-		const prevElem = getNextInput(getFormRef(), getTabbableFields(getSchemaElementById(`${idSchema.$id}_${idx}`))[0], !!"reverse");
+		const prevElem = getNextInput(getFormRef(), getTabbableFields(getSchemaElementById(contextId, `${idSchema.$id}_${idx}`))[0], !!"reverse");
 		
 		getDeleteButton().onClick(e, (deleted) => {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
 				if (idxToFocus >= 0) {
-					focusById( `${idSchema.$id}_${idxToFocus}`);
+					focusById(contextId, `${idSchema.$id}_${idxToFocus}`);
 				} else {
 					if (prevElem) prevElem.focus();
 				}
 			} else {
-				focusById(`${activeId}`);
+				focusById(contextId, `${activeId}`);
 			}
 		});
 		return true;

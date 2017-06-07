@@ -16,10 +16,11 @@ import translations from "../translations.js";
 
 class _SchemaField extends Component {
 	componentDidMount() {
-		const _context = new Context(this.props.registry.formContext.contextId);
+		const contextId = this.props.registry.formContext.contextId;
+		const _context = new Context(contextId);
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			focusById(_context.idToFocus);
+			focusById(contextId, _context.idToFocus);
 			_context.idToFocus = undefined;
 		}
 	}
@@ -134,14 +135,15 @@ function FieldTemplate({
 	displayLabel,
 	schema,
 	uiSchema,
+	formContext
 	}) {
 
 	if (hidden) {
 		return children;
 	}
 	const inlineHelp = uiSchema["ui:inlineHelp"];
-	const ids = new Context("IDS");
-	const htmlId = `_laji-form_${id}`;
+	const ids = new Context(`${formContext.contextId}_IDS`);
+	const htmlId = `_laji-form_${formContext.contextId}_${id}`;
 	let elemId = undefined;
 	if (!ids[htmlId]  || ids[htmlId] === this) {
 		ids[htmlId] = this;
@@ -174,6 +176,15 @@ function FieldTemplate({
 	);
 }
 
+// Each form should have a unique id to keep Context private.
+let id = 0;
+function getNewId() {
+	const _id = id;
+	id++;
+	return _id;
+}
+
+
 export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
@@ -189,7 +200,8 @@ export default class LajiForm extends Component {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
 		this.translations = this.constructTranslations();
-		this._context = new Context(this.props.contextId);
+		this._id = getNewId();
+		this._context = new Context(this._id);
 
 		this.blockingLoaderCounter = 0;
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
@@ -201,7 +213,7 @@ export default class LajiForm extends Component {
 		this._context.clearState = () => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
 
 		this._context.keyHandleListeners = {};
-		this._context.addKeyHandler = (id, keyFunctions, additionalParams) => this._context.keyHandleListeners[id] = e => handleKeysWith(id, keyFunctions, e, additionalParams);
+		this._context.addKeyHandler = (id, keyFunctions, additionalParams) => this._context.keyHandleListeners[id] = e => handleKeysWith(this._context, id, keyFunctions, e, additionalParams);
 		this._context.removeKeyHandler = (id) => {
 			delete this._context.keyHandleListeners[id];
 		};
@@ -231,7 +243,7 @@ export default class LajiForm extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		focusById("root");
+		focusById(this._id, "root");
 	}
 
 	componentWillUnmount() {
@@ -273,7 +285,7 @@ export default class LajiForm extends Component {
 						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext,
-						contextId: this.props.contextId,
+						contextId: this._id,
 						getFormRef: () => this.formRef
 					}}
 				  validate={validate(this.props.validators)}
@@ -344,7 +356,7 @@ export default class LajiForm extends Component {
 				}
 			}, delay * 1000);
 			document.addEventListener("keyup", dismiss);
-			const _context = new Context();
+			const _context = new Context(this._id);
 			if (!_context.keyTimeouts) _context.keyTimeouts = [];
 			_context.keyTimeouts.push(this.helpTimeout);
 			return false;
@@ -388,7 +400,7 @@ export default class LajiForm extends Component {
 		}
 		this._context.keyTimeouts = [];
 
-		const currentId = findNearestParentSchemaElemId(e.target);
+		const currentId = findNearestParentSchemaElemId(this._id, e.target);
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;
@@ -399,7 +411,7 @@ export default class LajiForm extends Component {
 
 		const targets = this._context.keyHandlerTargets.filter(({handler}) => {
 			return handler.conditions.every(condition => condition(e));
-		}).map(({id}) => getKeyHandlerTargetId(id));
+		}).map(({id}) => getKeyHandlerTargetId(this._context, id));
 		order = [...targets, ...order];
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id](e));

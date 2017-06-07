@@ -1,7 +1,8 @@
 import { getReactComponentName } from "../utils";
+import Context from "../Context";
 
 /**
- * A base component that unifies state management and some optimization.
+ * A base form component that unifies state management and some optimization.
  */
 export default function BaseComponent(ComposedComponent) {
 	return class BaseComponent extends ComposedComponent {
@@ -23,6 +24,10 @@ export default function BaseComponent(ComposedComponent) {
 
 		onChange(formData) {
 			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
+		}
+
+		getContext() {
+			return new Context(this.props.formContext.contextId);
 		}
 	};
 }

@@ -29,14 +29,14 @@ const buttonSettings = {
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
 
-		const mapContext = new Context("MAP");
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
 		function getLayer() {
 			const {$id} = that.props.idSchema;
 			const splitted = $id.split("_");
 			const idx = parseInt(splitted[splitted.length - 1]);
 
-			const {featureIdxsToItemIdxs} = new Context("MAP_UNITS");
+			const {featureIdxsToItemIdxs} = new Context(`${that.props.formContext.contextId}_MAP_UNITS`);
 			let featureIdx = undefined;
 			for (let i in featureIdxsToItemIdxs) {
 				if (featureIdxsToItemIdxs[i] === idx) {
@@ -219,7 +219,7 @@ export default class ScopeField extends Component {
 
 	constructor(props) {
 		super(props);
-		this._context = new Context("SCOPE_FIELD");
+		this._context = new Context(`${props.formContext.contextId}_SCOPE_FIELD`);
 		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
 		let additionalFields = {};
 		if (this._context[additionalsPersistenceId]) {

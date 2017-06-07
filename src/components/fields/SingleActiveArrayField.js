@@ -41,7 +41,7 @@ const headerFormatters = {
 
 			that.hoveredIdx = idx;
 			if (!force && idx === that.state.activeIdx) return;
-			const map = new Context("MAP").map;
+			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
 			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
 
 			const unitGeometries = [...(item && item.units ? item.units : [])]
@@ -61,7 +61,7 @@ const headerFormatters = {
 			});
 		},
 		onMouseLeave: (that) => {
-			const map = new Context("MAP").map;
+			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
 			map.setData();
 			that.hoveredIdx = undefined;
 		}
@@ -111,8 +111,8 @@ export default class SingleActiveArrayField extends Component {
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
-		new Context()[`${id}.activeIdx`] = this.state.activeIdx;
-		new Context(`ARRAY_${id}`).instance = this;
+		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
+		new Context(`${props.formContext.contextId}_ARRAY_${id}`).instance = this;
 	}
 
 	componentWillReceiveProps(props) {
@@ -212,8 +212,8 @@ export default class SingleActiveArrayField extends Component {
 		const that = this;
 		function _callback() {
 			const id = that.props.idSchema.$id;
-			focusById(`${id}_${idx}`);
-			new Context()[`${id}.activeIdx`] = idx;
+			focusById(that.props.formContext.contextId, `${id}_${idx}`);
+			that.getContext()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
 
@@ -248,8 +248,8 @@ function handlesButtons(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
-			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-			new Context().addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+			const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
 				navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
@@ -262,18 +262,18 @@ function handlesButtons(ComposedComponent) {
 		}
 
 		addChildKeyHandler() {
-			const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
-			if (this.childKeyHandlerId) new Context().removeKeyHandler(this.childKeyHandlerId);
+			const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+			if (this.childKeyHandlerId) new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId);
 			if (that.state.activeIdx !== undefined) {
 				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
 				this.childKeyHandlerId = id;
-				new Context().addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
+				new Context(this.props.formContext.contextId).addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
 			}
 		}
 
 		componentWillUnmount() {
-			new Context().removeKeyHandler(this.props.idSchema.$id);
-			new Context().removeKeyHandler(this.childKeyHandlerId);
+			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id);
+			new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId);
 		}
 
 	};
@@ -282,7 +282,7 @@ function handlesButtons(ComposedComponent) {
 @handlesButtons
 class AccordionArrayFieldTemplate extends Component {
 	render() {
-		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
 		const arrayFieldTemplateProps = this.props;
 		that.renderAccordionHeader = renderAccordionHeader.bind(that);
 
@@ -310,7 +310,7 @@ class AccordionArrayFieldTemplate extends Component {
 @handlesButtons
 class PagerArrayFieldTemplate extends Component {
 	render() {
-		const that = new Context(`ARRAY_${this.props.idSchema.$id}`).instance;
+		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
 		const buttons = getUiOptions(arrayTemplateFieldProps.uiSchema).buttons;
