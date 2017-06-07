@@ -142,6 +142,7 @@ export default class ImageArrayField extends Component {
 						{state.modalMetadata && metadataForm.schema ?
 							<LajiForm
 								{...metadataForm}
+								uiSchema={{...metadataForm.uiSchema, "ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})}}}
 								contextId={this.props.idSchema.$id}
 								formData={state.modalMetadata}
 								onChange={formData => this.setState({modalMetadata: formData})}

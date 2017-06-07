@@ -227,6 +227,8 @@ export default class LajiForm extends Component {
 			return targets;
 		}, []);
 
+		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
+
 		this.state = this.getStateFromProps(props);
 	}
 
