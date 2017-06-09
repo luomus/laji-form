@@ -1477,7 +1477,7 @@
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "MHL.1",
-		"activeGatheringIdx": 0
+		"activeGatheringIdx": 1
 	},
 	"formData": {
 	  "gatheringEvent": {
@@ -1490,6 +1490,22 @@
 	  "editors": [],
 	  "secureLevel": "MX.secureLevelNone",
 	  "gatherings": [
+		{
+		  "images": [ ],
+		  "units": [ ],
+		  "geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+			  {
+				"type": "Point",
+				"coordinates": [
+				  26.170841451122595,
+				  63.54526624516768
+				]
+			  }
+			]
+		  }
+		},
 		{
 		  "images": [
 			"MM.89524"

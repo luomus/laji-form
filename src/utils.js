@@ -181,14 +181,18 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 
 	const fields = getTabbableFields(formElem, reverseDirection);
 
-	let doFocus = false;
+	let found = false;
 	for (let field of fields) {
 		if (field === inputElem) {
-			doFocus = true;
+			found = true;
 			continue;
 		}
 
-		if (doFocus) {
+		if (found) {
+			// Skip hidden fields.
+			if (!field.offsetParent) {
+				continue;
+			}
 			return field;
 		}
 	}
