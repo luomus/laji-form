@@ -342,8 +342,10 @@ export default class LajiForm extends Component {
 			const node = findDOMNode(this.shortcutHelpRef);
 			
 			const that = this;
-			function dismiss() {
+			function dismiss(e) {
 				if (that.helpVisible) {
+					e.preventDefault();
+					e.stopPropagation();
 					node.className += " hidden";
 				}
 				that.helpVisible = false;
