@@ -56,29 +56,35 @@ export default class _ArrayField extends Component {
 	}
 
 	onCopy(props, {type, filter}) {
-		const nestedFilters = filter.filter(f => f.includes("/"));
+		const nestedFilters = filter;
 
 		const {formData} = this.props;
-		const defaultItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-
 		const lastIdx = formData.length - 1;
 		const lastItem = formData[lastIdx];
-
-		const copyItem = lastIdx >= 0 ? Object.assign(defaultItem, lastItem) : defaultItem;
+		const defaultItem = getDefaultFormState(this.props.schema.items, lastItem, this.props.registry.definitions);
 
 		nestedFilters.forEach(filter => {
-			const splitted = filter.substring(1).split("/");
+			const splitted = filter.includes("/") ? filter.substring(1).split("/") : [filter];
 			const last = splitted.pop();
 
 			const nested = splitted.reduce((_nested, path) => {
-				_nested = copyItem[path];
-				return _nested;
-			}, copyItem);
+				return (typeof _nested === "object" && _nested !== null) ? _nested[path] : undefined;
+			}, defaultItem);
 			if (type === "blacklist") {
-				const nestedSchema = splitted.reduce((nested, path) => {
-					if ("properties" in nested) return nested.properties[path];
-					if ("items" in nested) return nested.items.properties[path];
-					if (path in nested) return nested[path];
+				const nestedSchema = [...splitted, last].reduce((nested, path) => {
+					let item = nested;
+					while (true) {
+						let lastItem = item;
+						if (typeof item === "object" && item !== null) {
+							if (item.type === "object" && "properties" in item) {
+								item = item.properties;
+							} else if (item.type === "array" && "items" in item) {
+								item =  item.items;
+							}
+						}
+						if (item === lastItem) break;
+					}
+					return (path in item) ? item[path] : item;
 				}, this.props.schema.items);
 
 				if (nested) nested[last] = getDefaultFormState(nestedSchema, undefined, this.props.registry.definitions);
@@ -94,7 +100,7 @@ export default class _ArrayField extends Component {
 
 		this.props.onChange([
 			...this.props.formData,
-			copyItem
+			defaultItem
 		]);
 	}
 }
