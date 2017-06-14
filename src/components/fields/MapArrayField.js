@@ -615,11 +615,11 @@ class MapComponent extends Component {
 	// Rendering doesn't update map, so we don't want to rerender on map prop changes. Map is updated with componentDidUpdate()
 	shouldComponentUpdate(nextProps, nextState) {
 		//Filter functions because deep-equal handles them as unequal always.
-		function filter(original) {
+		function filterFunctions(original) {
 			return Object.keys(original).reduce((filtered, key) => {
 				// We don't check for object type recursively, because we know that only these objects contain functions.
 				if (key === "draw" || key === "data" || key === "lineTransect") {
-					filtered[key] = filter(original[key]);
+					filtered[key] = filterFunctions(original[key]);
 				} else if (typeof original[key] !== "function") {
 					filtered[key] = original[key];
 				}
@@ -628,8 +628,17 @@ class MapComponent extends Component {
 			}, {});
 		}
 
+		function filterProps(original) {
+			if (original && original.lineTransect) {
+				let {lineTransect, ...filtered} = original; //eslint-disable-line
+				filtered.lineTransectIdx = lineTransect.activeIdx;
+				return filtered;
+			}
+			return original;
+		}
+
 		return [[this.props, nextProps], [this.state, nextState]].some(compareObjects =>
-			!deepEquals(...compareObjects.map(filter))
+			!deepEquals(...compareObjects.map(filterProps).map(filterFunctions))
 		);
 	}
 
@@ -642,6 +651,11 @@ class MapComponent extends Component {
 		if (this.props.draw) {
 			options.draw = {...this.props.draw, onChange: this.state.onChange || this.props.draw.onChange};
 		}
+
+		if (options.lineTransect && "activeIdx" in options.lineTransect) {
+			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
+		}
+		options.lineTransect = undefined;
 
 		this.map.setOptions(options);
 
