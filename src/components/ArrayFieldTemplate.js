@@ -47,15 +47,18 @@ export function getButtons(buttons, props) {
 			(glyph ? ` ${label}` : label) :
 			"";
 
+
+		const onClick = e => {
+			if (callbacker) {
+				e.persist();
+				callbacker(() => fn(e)(props, options));
+			} else {
+				fn(e)(props, options);
+			}
+		};
+
 		return (
-			<Button key={fnName} className={className} onClick={e => {
-				if (callbacker) {
-					e.persist();
-					callbacker(() => fn(e)(props, options));
-				} else {
-					fn(e)(props, options);
-				}
-			}} >
+			<Button key={fnName} className={className} onClick={onClick} >
 				{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 				<strong>{glyph ? ` ${label}` : label}</strong>
 			</Button>
@@ -99,6 +102,10 @@ export default class ArrayFieldTemplate extends Component {
 		}
 	}
 
+	onSort = ({oldIndex, newIndex}) => {
+		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex);
+	}
+
 	render() {
 		const {props} = this;
 		const Title = props.TitleField;
@@ -118,9 +125,11 @@ export default class ArrayFieldTemplate extends Component {
 		);
 		const SortableItem = SortableElement(({item}) => item);
 
+		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
+
 		const items = props.items.map((item, i) => {
 			const deleteButton = (
-				<DeleteButton ref={elem => {this.deleteButtonRefs[i] = elem;}}
+				<DeleteButton ref={getRefFor(i)}
 											onClick={item.onDropIndexClick(item.index)}
 											className="laji-form-field-template-buttons"
 											confirm={confirmDelete}
@@ -141,9 +150,7 @@ export default class ArrayFieldTemplate extends Component {
 				<Title title={props.title}/>
 				<Description description={props.description}/>
 				{
-					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={200} items={items} onSortEnd={({oldIndex, newIndex}) => 
-						props.items[oldIndex].onReorderClick(oldIndex, newIndex)
-					} /> : items
+					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={200} items={items} onSortEnd={this.onSort} /> : items
 				}
 				{buttons}
 			</div>

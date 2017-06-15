@@ -281,21 +281,28 @@ function handlesButtons(ComposedComponent) {
 
 @handlesButtons
 class AccordionArrayFieldTemplate extends Component {
+	constructor(props) {
+		super(props);
+		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+		that.renderAccordionHeader = renderAccordionHeader.bind(that);
+	}
 	render() {
 		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
 		const arrayFieldTemplateProps = this.props;
-		that.renderAccordionHeader = renderAccordionHeader.bind(that);
 
 		const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
 		const activeIdx = that.state.activeIdx;
 		const title = that.props.schema.title;
+
+		const onSelect = key => that.onActiveChange(key);
+		const header = idx => that.renderAccordionHeader(idx, title, that.props.idSchema.$id);
 		return (
 				<div className="laji-form-single-active-array">
-					<Accordion onSelect={key => that.onActiveChange(key)} activeKey={activeIdx === undefined ? -1 : activeIdx}>
+					<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
 						{arrayFieldTemplateProps.items.map((item, idx) => (
 							<Panel key={idx}
 										 eventKey={idx}
-										 header={that.renderAccordionHeader(idx, title, that.props.idSchema.$id)}
+										 header={header(idx)}
 										 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
 								{item.children}
 							</Panel>
@@ -317,6 +324,9 @@ class PagerArrayFieldTemplate extends Component {
 		const activeIdx = that.state.activeIdx;
 		const title = that.props.schema.title || "";
 
+		const navigatePrev = () => that.onActiveChange(activeIdx - 1);
+		const navigateNext = () => that.onActiveChange(activeIdx + 1);
+
 		return (
 			<div className="laji-form-single-active-array">
 				<Panel header={
@@ -324,12 +334,12 @@ class PagerArrayFieldTemplate extends Component {
 						<Pager>
 							<Pager.Item previous href="#"
 													disabled={activeIdx <= 0 || activeIdx === undefined}
-													onClick={() => that.onActiveChange(activeIdx - 1)}>
+													onClick={navigatePrev}>
 								&larr; {translations.Previous}</Pager.Item>
 							{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
 							<Pager.Item next href="#"
 													disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
-													onClick={() => that.onActiveChange(activeIdx + 1)}>
+													onClick={navigateNext}>
 								{translations.Next}  &rarr;</Pager.Item>
 						</Pager>
 					</div>
@@ -368,16 +378,32 @@ function renderAccordionHeader(idx, title) {
 
 	const headerText = <span>{_title}{formatters.map((formatter, i) => <span key={i}> {formatter.render(this, idx)}</span>)}</span>;
 
+	const onHeaderClick = () => {
+		this.onActiveChange(idx);
+		formatters.forEach(formatter => {formatter.onClick && formatter.onClick(this, idx);});
+	};
+
+	const onMouseEnter = () => {
+		formatters.forEach(formatter => {
+			formatter.onMouseEnter && formatter.onMouseEnter(this, idx);
+		});
+	};
+
+	const onMouseLeave = () => {
+		formatters.forEach(formatter => {
+			formatter.onMouseLeave && formatter.onMouseLeave(this, idx);
+		});
+	};
+
+	const getDeleteButtonRef = elem => {this.deleteButtonRefs[idx] = elem;};
+
 	const header = (
-		<div className="laji-map-accordion-header" onClick={() => {
-			this.onActiveChange(idx);
-			formatters.forEach(formatter => {formatter.onClick && formatter.onClick(this, idx);});
-		}}
-			onMouseEnter={() => {formatters.forEach(formatter => {formatter.onMouseEnter && formatter.onMouseEnter(this, idx);});}}
-			onMouseLeave={() => {formatters.forEach(formatter => {formatter.onMouseLeave && formatter.onMouseLeave(this, idx);});}} >
+		<div className="laji-map-accordion-header" onClick={onHeaderClick}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave} >
 			<div className="panel-title">
 				{headerText}
-				<DeleteButton ref={elem => {this.deleteButtonRefs[idx] = elem;}}
+				<DeleteButton ref={getDeleteButtonRef}
 											className="pull-right"
 											confirm={true}
 											translations={this.props.formContext.translations}

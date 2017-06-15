@@ -42,6 +42,7 @@
             {"checkLoops": false}
         ],
         "react/no-find-dom-node": "off",
+        "react/jsx-no-bind": 2,
         "no-console": "off"
     },
     "plugins": [

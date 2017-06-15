@@ -270,6 +270,12 @@ export default class LajiForm extends Component {
 		this._context.formData = formData;
 	}
 
+	getRef = form => {this.formRef = form;}
+
+	getBlockerRef = elem => {this.blockingLoaderRef = elem;}
+
+	getPanelRef = elem => {this.shortcutHelpRef = elem;}
+
 	render() {
 		const {translations} = this.state;
 		const shortcuts = this.props.uiSchema["ui:shortcuts"];
@@ -277,7 +283,7 @@ export default class LajiForm extends Component {
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
 				<Form
 					{...this.props}
-					ref={form => {this.formRef = form;}}
+					ref={this.getRef}
 					onChange={this.onChange}
 					fields={fields}
 					widgets={widgets}
@@ -299,9 +305,9 @@ export default class LajiForm extends Component {
 						null}
 					</div>
 			</Form>
-			<div ref={elem => {this.blockingLoaderRef = elem;}} className="blocking-loader" />
+			<div ref={this.getBlockerRef} className="blocking-loader" />
 			{shortcuts ? 
-				<Panel ref={elem => {this.shortcutHelpRef = elem;}} className="shortcut-help z-depth-3 hidden" bsStyle="info" header={<h3>{translations.Shortcuts}</h3>}>
+				<Panel ref={this.getPanelRef} className="shortcut-help z-depth-3 hidden" bsStyle="info" header={<h3>{translations.Shortcuts}</h3>}>
 					<Table fill>
 						<tbody className="well">{
 							Object.keys(shortcuts).map((keyCombo, idx) => {

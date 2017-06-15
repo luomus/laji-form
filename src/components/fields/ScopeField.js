@@ -417,17 +417,23 @@ export default class ScopeField extends Component {
 	}
 
 	renderFieldsDropdown(additionalProperties) {
+		const onSelect = () => { 
+			this.preventCloseDropdown = true;
+		};
+
+		const onToggle = (isOpen) => {
+			if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
+			this.preventCloseDropdown = false;
+		};
+
 		return (
 			<Dropdown key="socop"
 			          id={this.props.idSchema.$id + "-scope-field-dropdown"}
 			          bsStyle="primary"
 			          pullRight
 			          open={this.state.additionalsOpen}
-			          onSelect={() => { this.preventCloseDropdown = true; }}
-			          onToggle={(isOpen) => {
-				if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
-				this.preventCloseDropdown = false;
-							 }}>
+			          onSelect={onSelect}
+			          onToggle={onToggle}>
 				{this.renderFieldsButton("toggle")}
 				<Collapse in={this.state.additionalsOpen} bsRole="menu">
 					<Dropdown.Menu>
@@ -470,20 +476,24 @@ export default class ScopeField extends Component {
 			let groupsList = this.additionalPropertiesToList(groupFields, ListGroupItem);
 			if (groupsList.length) {
 				const someActive = Object.keys(groupFields).some(this.propertyIsIncluded);
+
+				const onListGroupClick = () => {
+					this.toggleAdditionalProperty(Object.keys(groupFields)
+							.filter(field => {return this.propertyIsIncluded(field) === someActive;}));
+				};
+
+				const listGroup = [
+						(groupTranslations[groupName] !== undefined ? (
+							<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>
+								<strong>{groupTranslations[groupName]}</strong>
+							</ListGroupItem>
+						) : <Spinner key={groupName + "-list"}/>),
+					...groupsList
+				];
 				list.push(
 					<div key={groupName} className="scope-field-modal-item">
 						<ListGroup>{
-						[
-								(groupTranslations[groupName] !== undefined ? (
-									<ListGroupItem key={groupName + "-list"} active={someActive} onClick={() => {
-										this.toggleAdditionalProperty(Object.keys(groupFields)
-												.filter(field => {return this.propertyIsIncluded(field) === someActive;}));
-									}}>
-										<strong>{groupTranslations[groupName]}</strong>
-									</ListGroupItem>
-								) : <Spinner key={groupName + "-list"}/>),
-							...groupsList
-						]
+							listGroup	
 						}</ListGroup>
 					</div>
 				);
@@ -531,12 +541,13 @@ export default class ScopeField extends Component {
 				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
 				const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
+				const onButtonClick = () => this.toggleAdditionalProperty(property);
 				return (
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
 													 disabled={hasData}
 													 bsStyle={isIncluded ? "primary" : "default"}
-													 onClick={() => this.toggleAdditionalProperty(property)}
+													 onClick={onButtonClick}
 							/>
 						</OverlayTrigger>
 				);
@@ -585,12 +596,13 @@ export default class ScopeField extends Component {
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
+				const onClick = () => this.toggleAdditionalProperty(property);
 				return (
 					<ElemType
 						key={property}
 						disabled={hasData}
 						active={isIncluded}
-						onClick={() => this.toggleAdditionalProperty(property)}>
+						onClick={onClick}>
 						{titles[property] || properties[property].title || property}
 					</ElemType>
 				);

@@ -87,9 +87,27 @@ export default class DateTimeWidget extends Component {
 		this.props.onChange(value, !!"force");
 	}
 
+	onToggle = p => {
+		if (p !== false) this.toggle = p; //"time" or "calendar"
+	}
+
 	render() {
 		const {value, readonly} = this.props;
 		const {translations} = this.props.formContext;
+
+		const onChange = value => {
+			const momentValue = moment(value);
+			let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
+			if (value !== null && !momentValue.isValid()) {
+				formattedValue = this.props.value;
+			} else if ((!this.toggle && !this.timeWritten) ||
+			 (this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
+				formattedValue = momentValue.format("YYYY-MM-DD");
+			}
+			this.onChange(!value ? undefined : formattedValue);
+			this.toggle = undefined;
+			this.timeWritten = false;
+		};
 
 		const datePicker = (<DateTimePicker
 			calendar={this.state.calendar}
@@ -97,22 +115,8 @@ export default class DateTimeWidget extends Component {
 			format={this.state.inputFormat}
 			timeFormat={this.state.timeFormat}
 			placeholder={this.state.placeholder}
-			onToggle={p => {
-				if (p !== false) this.toggle = p; //"time" or "calendar"
-			}}
-			onChange={value => {
-				const momentValue = moment(value);
-				let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
-				if (value !== null && !momentValue.isValid()) {
-					formattedValue = this.props.value;
-				} else if ((!this.toggle && !this.timeWritten) ||
-				 (this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
-					formattedValue = momentValue.format("YYYY-MM-DD");
-				}
-				this.onChange(!value ? undefined : formattedValue);
-				this.toggle = undefined;
-				this.timeWritten = false;
-			}}
+			onToggle={this.onToggle}
+			onChange={onChange}
 			value={value ? moment(value).toDate() : null}
 			parse={this.parse}
 			readOnly={readonly}

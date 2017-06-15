@@ -3,10 +3,13 @@ import moment from "moment";
 import DateTimeWidget from "./DateTimeWidget";
 import { isEmptyString } from "../../utils";
 
+const onChange = onChange => value => {
+	onChange(isEmptyString(value)  ? null : (moment(value).format("YYYY-MM-DD")));
+};
 export default (props) => (
 	<DateTimeWidget
 		{...props}
-		onChange={value => props.onChange(isEmptyString(value) ? null : moment(value).format("YYYY-MM-DD"))}
+		onChange={onChange(props.onChange)}
 		time={false}
 	/>
 );

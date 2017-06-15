@@ -34,15 +34,17 @@ export default class UnitShorthandField extends Component {
 	}
 
 	getToggleButton = () => {
+		const onClick = () => {
+			this.setState({showSchema: !this.state.showSchema}, () => {
+				focusById(this.props.formContext.contextId, this.props.idSchema.$id);
+			});
+		};
+
 		return (
 			<GlyphButton
 				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
 				bsStyle={this.state.showSchema ? "default" : "primary"}
-				onClick={() => {
-					this.setState({showSchema: !this.state.showSchema}, () => {
-						focusById(this.props.formContext.contextId, this.props.idSchema.$id);
-					});
-				}}
+				onClick={onClick}
 				glyph="resize-small"
 			/>
 		);
@@ -117,6 +119,16 @@ class CodeReader extends Component {
 		if (this.state.failed === true) validationState = "warning";
 		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
 
+		const onChange = ({target: {value}}) => {
+			if (this.mounted) this.setState({value});
+		};
+
+		const onKeyDown = e => {
+			if (e.key === "Enter") {
+				this.getCode();
+			}
+		};
+
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				<FetcherInput
@@ -124,13 +136,9 @@ class CodeReader extends Component {
 					loading={this.state.loading}
 					value={this.state.value}
 					validationState={validationState}
-					onChange={({target: {value}}) => {if (this.mounted) this.setState({value});}}
-					onBlur={() => this.getCode()}
-					onKeyDown={e => {
-						if (e.key === "Enter") {
-							this.getCode();
-						}
-					}}
+					onChange={onChange}
+					onBlur={this.getCode}
+					onKeyDown={onKeyDown}
 				/>
 				{this.state.failed ? (
 					<HelpBlock>

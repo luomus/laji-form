@@ -90,12 +90,14 @@ export default class TableField extends Component {
 			</Col>);
 		});
 
+		const dummyClick = () => {};
+
 		// Dummy delete button is placed for aligning the labels correctly. Wacky.
 		items.push(
 			<div key="label-row" className="laji-form-field-template-item keep-vertical">
 				<div className="laji-form-field-template-schema"><Row><Col {...wrapperCols}>{labels}</Col></Row></div>
 				<div className="laji-form-field-template-buttons">
-					<DeleteButton style={{visibility: "hidden"}} onClick={() => {}} translations={this.props.formContext.translations} />
+					<DeleteButton style={{visibility: "hidden"}} onClick={dummyClick} translations={this.props.formContext.translations} />
 				</div>
 			</div>
 		);
@@ -133,10 +135,12 @@ export default class TableField extends Component {
 
 			const deletable = (!props.schema.additionalItems && idx !== undefined) || isAdditional;
 
+			const onDeleteClick = () => {
+				this.onChange(update(formData, {$splice: [[idx, 1]]}));
+			};
+
 			uiSchema = {...uiSchema, "ui:buttons": deletable ? [
-				<DeleteButton key={`rm-${idx}`}  translations={props.formContext.translations} onClick={() => {
-					this.onChange(update(formData, {$splice: [[idx, 1]]}));
-				}} />
+				<DeleteButton key={`rm-${idx}`}  translations={props.formContext.translations} onClick={onDeleteClick} />
 			] : [],
 				"ui:buttonsVertical": true};
 

@@ -28,12 +28,12 @@ export class DeleteButton extends Component {
 		this.state = {show: false};
 	}
 
-	onButtonKeyDown({key}) {
+	onButtonKeyDown = ({key}) => {
 		if (key === "Enter") this.onConfirmedClick();
 		else if (key === "Escape") this.setState({show: false});
 	}
 
-	onHideConfirm() {
+	onHideConfirm = () => {
 		this.setState({show: false}, () => {
 			if (this.callback) {
 				this.callback(this.deleted);
@@ -42,7 +42,7 @@ export class DeleteButton extends Component {
 		});
 	}
 
-	onShowConfirm(e) {
+	onShowConfirm = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
 		this.setState({show: true}, () => {
@@ -50,18 +50,18 @@ export class DeleteButton extends Component {
 		});
 	}
 
-	onConfirmedClick() {
+	onConfirmedClick = () => {
 		this.props.onClick();
 		this.onHideConfirm();
 		this.deleted = true;
 	}
 
-	onClick(e, callback) {
+	onClick = (e, callback) => {
 		this.callback = callback;
 		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick();
 	}
 
-	componentWillUnmount() {
+	componentWillUnmount = () => {
 		if (this.callback && !this.callbackCalled) {
 			this.callback(this.deleted);
 		}
@@ -73,23 +73,25 @@ export class DeleteButton extends Component {
 		const {translations, corner} = props;
 		let buttonClassName = "glyph-button";
 		buttonClassName += corner ? " delete-corner" : "";
+		const getOverlayTarget = () => findDOMNode(this.refs.del);
+		const onClick = e => this.onClick(e);
 		return (
 			<div className={props.className} style={this.props.style}>
 				<Button bsStyle="danger"
 								className={buttonClassName}
 								ref="del"
-								onKeyDown={e => this.onButtonKeyDown(e)}
-								onClick={e => this.onClick(e)}>✖</Button>
+								onKeyDown={this.onButtonKeyDown}
+								onClick={onClick}>✖</Button>
 				{show ?
-					<Overlay show={true} placement="left" rootClose={true} onHide={e => this.onHideConfirm(e)}
-									 target={() => findDOMNode(this.refs.del)}>
+					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
+									 target={getOverlayTarget}>
 						<Popover id="popover-trigger-click">
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={e => this.onConfirmedClick(e)} ref="confirm-yes">
+								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref="confirm-yes">
 									{translations.Remove}
 								</Button>
-								<Button bsStyle="default" onClick={e => this.onHideConfirm(e)}>
+								<Button bsStyle="default" onClick={this.onHideConfirm}>
 									{translations.Cancel}
 								</Button>
 							</ButtonGroup>
@@ -395,9 +397,10 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 }
 
 export function FetcherInput({loading, validationState, glyph, getRef, ...inputProps}) {
+	const _getRef = r => {if (getRef) getRef(r);};
 	return (
 		<div className={`fetcher-input has-feedback${validationState ? ` has-${validationState}` : ""}`}>
-			<input className="form-control" type="text" {...inputProps} ref={r => {if (getRef) getRef(r);}} />
+			<input className="form-control" type="text" {...inputProps} ref={_getRef} />
 			{glyph ?  <FormControl.Feedback>{glyph}</FormControl.Feedback> : null }
 			{loading ? <Spinner /> : null }
 		</div>

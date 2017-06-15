@@ -125,26 +125,32 @@ export default class MapArrayField extends Component {
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
 
+		const getContainer = () => findDOMNode(this.refs.affix);
+		const onResize = () => this.refs.map.map.map.invalidateSize();
+		const onPopupClose = () => {this.setState({popupIdx: undefined});};
+		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
+		const onFocusRelease = () => {this.setState({focusGrabbed: false});};
+
 		return (
 			<div ref="affix">
 				<Row >
 					<Col {...mapSizes}>
 						<StretchAffix topOffset={topOffset}
 									        bottomOffset={bottomOffset}
-						              getContainer={() => findDOMNode(this.refs.affix)}
-						              onResize={() => this.refs.map.map.map.invalidateSize()}
+						              getContainer={getContainer}
+						              onResize={onResize}
 						              mounted={this.state.mounted}
 						              className={this.state.focusGrabbed ? "pass-block" : ""}>
 							<MapComponent
 								ref="map"
 								contextId={this.props.formContext.contextId}
 								lang={this.props.formContext.lang}
-								onPopupClose={() => {this.setState({popupIdx: undefined});}}
+								onPopupClose={onPopupClose}
 								markerPopupOffset={45}
 								featurePopupOffset={5}
 								popupOnHover={true}
-								onFocusGrab={() => {this.setState({focusGrabbed: true});}}
-								onFocusRelease={() => {this.setState({focusGrabbed: false});}}
+								onFocusGrab={onFocusGrab}
+								onFocusRelease={onFocusRelease}
 								panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
 								draw={false}
 								{...mapOptions}
@@ -540,7 +546,7 @@ export default class MapArrayField extends Component {
 	getPopup = (idx, feature, openPopupCallback) => {
 		if (!this.refs.popup) return;
 		this.setState({popupIdx: idx}, () => {
-			if (this.refs.popup && hasData(this.getFeaturePopupData(idx))) openPopupCallback(this.refs.popup.refs.popup);
+			this.refs.popup && hasData(this.getFeaturePopupData(idx)) && openPopupCallback(this.refs.popup.refs.popup);
 		});
 	}
 
@@ -680,7 +686,7 @@ class MapComponent extends Component {
 
 class Map extends Component {
 	componentDidMount() {
-		const {className, style, ...options} = this.props;
+		const {className, style, ...options} = this.props; // eslint-disable-line no-unused-vars
 		this.map = new LajiMap({
 			rootElem: this.refs.map,
 			...options
@@ -702,8 +708,8 @@ class Map extends Component {
 			}, {});
 		}
 
-		const {className, style, ...options} = this.props;
-		const {className: prevClassName, style: prevStyle, ...prevOptions} = prevProps; // eslint-disable-line
+		const {className, style, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {className: prevClassName, style: prevStyle, ...prevOptions} = prevProps; // eslint-disable-line no-unused-vars
 
 		if (options.lineTransect && "activeIdx" in options.lineTransect) {
 			this.map.setLTActiveIdx(options.lineTransect.activeIdx);

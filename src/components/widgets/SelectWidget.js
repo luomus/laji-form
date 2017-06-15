@@ -63,6 +63,26 @@ class SelectWidget extends Component {
 		};
 	}
 
+	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => value))
+
+	selectOnChange = ({value}) => this.props.onChange(value)
+
+	onClick = () => this.setState({open: true})
+
+	onFocus = () => this.setState({open: true}, () => {
+		findDOMNode(this.comboRef.refs.inner.refs.input).select();
+	})
+	
+	onBlur = () => this.setState({open: false})
+	
+	onSelect = () => this.state.open && setImmediate(() => this.setState({open: false}))
+	
+	onKeyDown = () =>  this.state.open && this.setState({open: true})
+	
+	onToggle = () => {};
+
+	getRef = elem => this.comboRef = elem;
+
 	render() {
 		const {
 			id,
@@ -89,32 +109,25 @@ class SelectWidget extends Component {
 			}
 		};
 
+
 		const selectComponent = multiple ? (
 			<Multiselect 
 				{...commonOptions}
-				onChange={(values) => this.props.onChange(values.map(({value}) => value))}
+				onChange={this.multiSelectOnChange}
 			/>
 		) : (
 			<Combobox
 				{...commonOptions}
-				onChange={({value}) => this.props.onChange(value)}
-				ref={elem => this.comboRef = elem}
+				onChange={this.selectOnChange}
+				ref={this.getRef}
 				open={this.state.open}
-				onToggle={() => {}}
+				onToggle={this.onToggle}
 				suggest={true}
-				onClick={() => this.setState({open: true})}
-				onFocus={() => this.setState({open: true}, () => {
-					findDOMNode(this.comboRef.refs.inner.refs.input).select();
-				})}
-				onBlur={() => {
-					this.setState({open: false});
-				}}
-				onSelect={() => {
-					this.state.open && setImmediate(() => this.setState({open: false}));
-				}}
-				onKeyDown={() => {
-					!this.state.open && this.setState({open: true});
-				}}
+				onClick={this.onClick}
+				onFocus={this.onFocus}
+				onBlur={this.onBlur}
+				onSelect={this.onSelect}
+				onKeyDown={this.onKeyDown}
 			/>
 		);
 

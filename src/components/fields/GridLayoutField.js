@@ -89,6 +89,10 @@ export default class GridLayoutField extends Component {
 		return cols;
 	}
 
+	onChange = (propertyName) => (formData) => {
+		this.props.onChange({...this.state.formData, [propertyName]: formData});
+	}
+
 	render() {
 		const SchemaField = this.state.registry.fields.SchemaField;
 		const props = {...this.props, ...this.state};
@@ -136,9 +140,7 @@ export default class GridLayoutField extends Component {
 						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
 						formData={this.state.formData ? this.state.formData[propertyName] : undefined}
 						registry={this.state.registry}
-						onChange={(data) => {
-							props.onChange({...this.state.formData, [propertyName]: data});
-						}}
+						onChange={this.onChange(propertyName)}
 					/>
 				</Col>
 			);

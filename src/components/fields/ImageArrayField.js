@@ -61,6 +61,14 @@ export default class ImageArrayField extends Component {
 			</Tooltip>
 		);
 
+		const onDragEnter = () => {this.setState({dragging: true});};
+		const onDragLeave = () => {this.setState({dragging: false});};
+		const onDrop = files => {
+			this.setState({dragging: false});
+			this.onFileFormChange(files);
+		};
+		const onGlyphClick = e => e.preventDefault();
+
 		return (
 			<Row>
 				<Col xs={12}>
@@ -69,16 +77,13 @@ export default class ImageArrayField extends Component {
 					<div className="laji-form-images">
 						{this.renderImgs()}
 						<OverlayTrigger overlay={tooltip}>
-							<DropZone ref="dropzone" className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
+							<DropZone className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 							          accept="image/*, application/pdf"
-							          onDragEnter={() => {this.setState({dragging: true});}}
-							          onDragLeave={() => {this.setState({dragging: false});}}
-							          onDrop={files => {
-							              this.setState({dragging: false});
-							              this.onFileFormChange(files);
-							            }
+							          onDragEnter={onDragEnter}
+							          onDragLeave={onDragLeave}
+							          onDrop={onDrop
 												}>
-								<a href="#" onClick={e => e.preventDefault()}><Glyphicon glyph="camera" /></a>
+								<a href="#" onClick={onGlyphClick}><Glyphicon glyph="camera" /></a>
 							</DropZone>
 						</OverlayTrigger>
 						{this.renderModal()}
@@ -131,10 +136,13 @@ export default class ImageArrayField extends Component {
 		}
 
 		const {metadataSaveSuccess} = this.state;
+		
+		const onHide = () => this.setState({modalOpen: false, metadataSaveSuccess: undefined});
+		const onChange = formData => this.setState({modalMetadata: formData});
 
 		return state.modalOpen ?
 			<Modal dialogClassName="laji-form image-modal" show={true}
-			       onHide={() => this.setState({modalOpen: false, metadataSaveSuccess: undefined})}>
+			       onHide={onHide}>
 				<Modal.Header closeButton={true} />
 				<Modal.Body>
 					<div className="laji-form image-modal-content">
@@ -145,7 +153,7 @@ export default class ImageArrayField extends Component {
 								uiSchema={{...metadataForm.uiSchema, "ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})}}}
 								contextId={this.props.idSchema.$id}
 								formData={state.modalMetadata}
-								onChange={formData => this.setState({modalMetadata: formData})}
+								onChange={onChange}
 								onSubmit={this.onImageMetadataUpdate}
 								lang={lang}>
 								{(metadataSaveSuccess !== undefined) ? (
@@ -162,8 +170,9 @@ export default class ImageArrayField extends Component {
 	}
 
 	renderAlert = () => {
+		const onOk = () => this.setState({alert: false, alertMsg: undefined});
 		return this.state.alert ? (
-      <PopupAlert onOk={() => this.setState({alert: false, alertMsg: undefined})}>
+      <PopupAlert onOk={onOk}>
 				{` ${this.state.alertMsg}`}
       </PopupAlert>) : null;
 	}
