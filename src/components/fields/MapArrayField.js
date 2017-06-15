@@ -126,7 +126,7 @@ export default class MapArrayField extends Component {
 			errorSchema[activeIdx][geometryField].__errors : null;
 
 		const getContainer = () => findDOMNode(this.refs.affix);
-		const onResize = () => this.refs.map.map.map.invalidateSize();
+		const onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true});
 		const onPopupClose = () => {this.setState({popupIdx: undefined});};
 		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
 		const onFocusRelease = () => {this.setState({focusGrabbed: false});};
