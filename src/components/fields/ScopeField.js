@@ -65,8 +65,8 @@ const buttonSettings = {
 
 			mapContext.showPanel({
 				panelButtonContent: translations.Cancel,
-				onPanelButtonClick: close,
-				buttonBsStyle: "danger"
+				panelButtonOnClick: close,
+				panelButtonBsStyle: "danger"
 			});
 			mapContext.setMapState({
 				draw: {
@@ -75,25 +75,25 @@ const buttonSettings = {
 					polyline: false,
 					rectangle: false,
 					polygon: false,
-					circle: false
-				},
-				onChange: events => {
-					for (let event of events) {
-						const {type} = event;
-						switch (type) {
-						case "create":
-							that.props.onChange(update(
-									that.props.formData,
-									{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
-								));
-							close();
-							break;
-						case "delete":
-						case "edit":
-							onChange([event]);
+					circle: false,
+					onChange: events => {
+						for (let event of events) {
+							const {type} = event;
+							switch (type) {
+							case "create":
+								that.props.onChange(update(
+										that.props.formData,
+										{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
+									));
+								close();
+								break;
+							case "delete":
+							case "edit":
+								onChange([event]);
+							}
 						}
 					}
-				}
+				},
 			}, () => {
 				mapContext.setOnUpdateMap(() => {
 					const layer = getLayer();
@@ -106,17 +106,10 @@ const buttonSettings = {
 			});
 
 			function close() {
-				mapContext.setMapState({
-					onChange,
-					draw: {
-						...map.draw,
-						marker: true,
-						polyline: true,
-						rectangle: true,
-						polygon: true,
-						circle: true
-					}
-				}, () => {
+				mapContext.hidePanel();
+				mapContext.releaseFocus();
+				triggerLayer.disable();
+				mapContext.setMapState(undefined, () => {
 					mapContext.setOnUpdateMap(undefined);
 					mapContext.hidePanel();
 					mapContext.releaseFocus();

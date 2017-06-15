@@ -296,7 +296,6 @@ export default class MapArrayField extends Component {
 					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
 				};
 
-
 				const controlSettings = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
 					{} : {draw: false, coordinateInput: false};
 
@@ -516,6 +515,7 @@ export default class MapArrayField extends Component {
 					},
 					controlSettings: {
 						lineTransect: true
+
 					}
 				};
 			},
@@ -593,7 +593,7 @@ class Popup extends Component {
 class MapComponent extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {mapOptions: {}};
 		this.mainContext = new Context(props.contextId);
 		this._context = new Context(`${props.contextId}_MAP`);
 		this._context.grabFocus = this.grabFocus;
@@ -605,60 +605,11 @@ class MapComponent extends Component {
 	}
 
 	componentDidMount() {
-		this.map = new LajiMap({
-			rootElem: this.refs.map,
-			...this.props
-		});
+		this.map = this.refs.map.map;
 		this._context.map = this.map;
 	}
 
-	// Rendering doesn't update map, so we don't want to rerender on map prop changes. Map is updated with componentDidUpdate()
-	shouldComponentUpdate(nextProps, nextState) {
-		//Filter functions because deep-equal handles them as unequal always.
-		function filterFunctions(original) {
-			return Object.keys(original).reduce((filtered, key) => {
-				// We don't check for object type recursively, because we know that only these objects contain functions.
-				if (key === "draw" || key === "data" || key === "lineTransect") {
-					filtered[key] = filterFunctions(original[key]);
-				} else if (typeof original[key] !== "function") {
-					filtered[key] = original[key];
-				}
-
-				return filtered;
-			}, {});
-		}
-
-		function filterProps(original) {
-			if (original && original.lineTransect) {
-				let {lineTransect, ...filtered} = original; //eslint-disable-line
-				filtered.lineTransectIdx = lineTransect.activeIdx;
-				return filtered;
-			}
-			return original;
-		}
-
-		return [[this.props, nextProps], [this.state, nextState]].some(compareObjects =>
-			!deepEquals(...compareObjects.map(filterProps).map(filterFunctions))
-		);
-	}
-
 	componentDidUpdate() {
-		const options = {
-			...this.props,
-			...this.state,
-		};
-
-		if (this.props.draw) {
-			options.draw = {...this.props.draw, onChange: this.state.onChange || this.props.draw.onChange};
-		}
-
-		if (options.lineTransect && "activeIdx" in options.lineTransect) {
-			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
-		}
-		options.lineTransect = undefined;
-
-		this.map.setOptions(options);
-
 		if (this._callback) this._callback();
 		this._callback = undefined;
 
@@ -689,7 +640,7 @@ class MapComponent extends Component {
 
 	setMapState = (options, callback) => {
 		this._callback = callback;
-		this.setState(options);
+		this.setState({mapOptions: options});
 	}
 
 	setOnUpdateMap = (fn) => {
@@ -697,24 +648,82 @@ class MapComponent extends Component {
 	}
 
 	render() {
-		const controlledPanel = this.props.panel ?
-			<MapPanel bsStyle={this.props.panel.bsStyle || undefined}
-			          buttonBsStyle={this.props.panel.buttonBsStyle}
-			          header={this.props.panel.header}
-								text={this.props.panel.panelTextContent} />
+		const {panel, contextId, ...mapOptions} = this.props; // eslint-disable-line
+
+		const controlledPanel = panel ?
+			<MapPanel bsStyle={panel.bsStyle || undefined}
+			          buttonBsStyle={panel.buttonBsStyle}
+			          header={panel.header}
+								text={panel.panelTextContent} />
 			: null;
 
 		return (
 			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
 				{controlledPanel}
-				{this.state.panel ? <MapPanel show={this.state.panel}
-									text={this.state.panelTextContent}
-									onClick={this.state.onPanelButtonClick}
-									buttonText={this.state.panelButtonContent} /> : null}
-				<div key="map"
-						 className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
-				     style={this.props.style} ref="map" />
+				{this.state.panel ?
+						<MapPanel show={this.state.panel}
+						          text={this.state.panelTextContent}
+						          onClick={this.state.panelButtonOnClick}
+						          buttonText={this.state.panelButtonContent}
+						          buttonBsStyle={this.state.panelButtonBsStyle}
+							/> : null
+				}
+				<Map className={this.props.className}
+				     style={this.props.style} 
+				     ref="map" 
+				     {...{...mapOptions, ...this.state.mapOptions}}
+				/>
 			</div>
+		);
+	}
+}
+
+class Map extends Component {
+	componentDidMount() {
+		const {className, style, ...options} = this.props;
+		this.map = new LajiMap({
+			rootElem: this.refs.map,
+			...options
+		});
+	}
+
+	componentDidUpdate(prevProps) {
+		function filterFunctions(original) {
+			if (typeof original === "function" || typeof original !== "object" || Array.isArray(original) || original === null) return undefined;
+			return Object.keys(original).reduce((filtered, key) => {
+				// We don't check for object type recursively, because we know that only these objects contain functions.
+				if (key === "draw" || key === "data" || key === "lineTransect") {
+					filtered[key] = filterFunctions(original[key]);
+				} else if (typeof original[key] !== "function") {
+					filtered[key] = original[key];
+				}
+
+				return filtered;
+			}, {});
+		}
+
+		const {className, style, ...options} = this.props;
+		const {className: prevClassName, style: prevStyle, ...prevOptions} = prevProps; // eslint-disable-line
+
+		if (options.lineTransect && "activeIdx" in options.lineTransect) {
+			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
+		}
+		options.lineTransect = undefined;
+
+		Object.keys(options).forEach(key => {
+			if (!deepEquals(...[options, prevOptions].map(_options => _options[key]).map(filterFunctions))) {
+				if (options[key] !== prevOptions[key]) {
+					this.map.setOption(key, options[key]);
+				}
+			}
+		});
+	}
+
+	render() {
+		return (
+			<div key="map"
+				 className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
+				 style={this.props.style} ref="map" />
 		);
 	}
 }
