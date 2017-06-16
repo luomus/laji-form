@@ -27,8 +27,8 @@ class _SchemaField extends Component {
 
 	render() {
 		const {props} = this;
-		let {schema, uiSchema} = props;
-		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema)) {
+		let {schema, uiSchema, registry} = props;
+		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
 			schema = {...schema, uniqueItems: false};
 		}
 
@@ -43,11 +43,14 @@ class _SchemaField extends Component {
 			};
 		}
 
+		// Reset ArrayFieldTemplate
+		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
+			registry = {...registry, ArrayFieldTemplate};
+		}
 
 		return <SchemaField
 			{...props}
-			// Reset ArrayFieldTemplate
-			registry={{...props.registry, ArrayFieldTemplate}}
+			registry={registry}
 			schema={schema}
 			uiSchema={uiSchema}
 		/>;
@@ -189,6 +192,7 @@ export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
 		uiSchemaContext: PropTypes.object,
+		settings: PropTypes.object,
 		validators: PropTypes.object
 	}
 
@@ -228,6 +232,10 @@ export default class LajiForm extends Component {
 		}, []);
 
 		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
+
+		this.settingSavers = {};
+		this._context.addSettingSaver = (key, fn) => this.settingSavers[key] = fn;
+		this._context.removeSettingSaver = (key) => this.settingSavers[key] = undefined;
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -293,6 +301,7 @@ export default class LajiForm extends Component {
 						translations,
 						lang: this.props.lang,
 						uiSchemaContext: this.props.uiSchemaContext,
+						settings: this.props.settings,
 						contextId: this._id,
 						getFormRef: () => this.formRef
 					}}
@@ -462,5 +471,12 @@ export default class LajiForm extends Component {
 
 	clearState = () => {
 		this._context.clearState();
+	}
+
+	getSettings = () => {
+		return Object.keys(this.settingSavers).reduce((settings, key) => {
+			settings[key] = this.settingSavers[key]();
+			return settings;
+		}, {});
 	}
 }

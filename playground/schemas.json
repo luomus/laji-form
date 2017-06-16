@@ -269,6 +269,7 @@
 			"uiSchema": {
 				"ui:field": "MapArrayField",
 				"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
+				"ui:settings": ["/mapOptions/tileLayerName"],
 				"ui:options": {
 					"geometryField": "geometry",
 					"geometryMapper": "units",
@@ -1478,6 +1479,9 @@
 		"creator": "MA.308",
 		"formID": "MHL.1",
 		"activeGatheringIdx": 1
+	},
+	"settings": {
+		"#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite"
 	},
 	"formData": {
   "gatheringEvent": {

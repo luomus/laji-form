@@ -34,6 +34,10 @@ export default class LajiFormWrapper {
 		this.app.refs.lajiform.clearState();
 	}
 
+	getSettings = () => {
+		return this.app.refs.lajiform.getSettings();
+	}
+
 	unmount = () => {
 		unmountComponentAtNode(this.rootElem);
 	}

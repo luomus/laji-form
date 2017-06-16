@@ -92,6 +92,7 @@ export function getInnerUiSchema(parentUiSchema) {
 	return {
 		...restOfUiSchema,
 		"ui:field": undefined,
+		"ui:settings": undefined,
 		"ui:buttons": uiSchema ? undefined : parentUiSchema["ui:buttons"],
 		...uiSchema
 	};
@@ -105,8 +106,12 @@ export function isEmptyString(val) {
 	return val === "" || isNullOrUndefined(val);
 }
 
-export function parseJSONPointer(object, jsonPointer) {
-	return jsonPointer.substring(1).split("/").reduce((o, i)=>o[i], object);
+export function parseJSONPointer(object, jsonPointer, createParents) {
+	const splitPath = jsonPointer.split("/").filter(s => !isEmptyString(s));
+	return splitPath.reduce((o, s)=> {
+		if (!(s in o) && createParents) o[s] = {};
+		return o[s];
+	}, object);
 }
 
 export function getReactComponentName(WrappedComponent) {

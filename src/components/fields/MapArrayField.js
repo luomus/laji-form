@@ -110,7 +110,7 @@ export default class MapArrayField extends Component {
 			}
 		};
 
-		const mapOptions = {...this.getGeometryMapper(this.props).getOptions(options), ...options.mapOptions};
+		const mapOptions = {...this.getGeometryMapper(this.props).getOptions(options), ...options.mapOptions, ...(this.state.mapOptions || {})};
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 

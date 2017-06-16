@@ -9,7 +9,7 @@ import "../src/styles";
 import "./styles.css";
 
 // set to undefined to use the local schemas
-const SCHEMA_ID = "MHL.1";
+const SCHEMA_ID = undefined;
 
 const log = (type) => console.info.bind(console, type);
 
@@ -186,10 +186,11 @@ const lineTransectGeometries = geoJSONLineToLatLngSegmentArrays(lineTransect.geo
 const lajiForm = new LajiForm({
 	...(SCHEMA_ID === undefined ? schemas : {
 		uiSchemaContext: schemas.uiSchemaContext,
-		formData: schemas.formData
+		settings: schemas.settings,
+		formData: schemas.formData,
 	}),
 	//formData: {gatheringEvent: {leg: ["MA.308"]}},
-	formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
+	//formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,
 	lang,
@@ -207,8 +208,13 @@ if (SCHEMA_ID !== undefined) {
 							return response.json();
 						})
 	         .then(props => {
-		const {schema, uiSchema, validators, uiSchemaContext} = props;
-		const propsToPass = {schema, uiSchema, uiSchemaContext: {...schemas.uiSchemaContext, ...uiSchemaContext}};
+		const {schema, uiSchema, validators, uiSchemaContext, settings} = props;
+		const propsToPass = {
+			schema, 
+			uiSchema, 
+			uiSchemaContext: {...schemas.uiSchemaContext, ...uiSchemaContext},
+			settings: {...schemas.settings, ...settings}
+		};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;
 		lajiForm.setState(propsToPass);
 					 });
