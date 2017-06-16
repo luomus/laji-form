@@ -65,9 +65,6 @@ export default class MapArrayField extends Component {
 		const initialState = {activeIdx: 0};
 		const options = getUiOptions(props.uiSchema);
 		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
-		this.getContext().addStateClearListener(() => {
-			this.setState(initialState);
-		});
 		this.state = initialState;
 	}
 

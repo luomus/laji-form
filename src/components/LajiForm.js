@@ -212,10 +212,6 @@ export default class LajiForm extends Component {
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
 
-		this._context.stateClearListeners = [];
-		this._context.addStateClearListener = (fn) => this._context.stateClearListeners.push(fn);
-		this._context.clearState = () => this._context.stateClearListeners.forEach(stateClearFn => stateClearFn());
-
 		this._context.keyHandleListeners = {};
 		this._context.addKeyHandler = (id, keyFunctions, additionalParams) => this._context.keyHandleListeners[id] = e => handleKeysWith(this._context, id, keyFunctions, e, additionalParams);
 		this._context.removeKeyHandler = (id) => {
@@ -467,10 +463,6 @@ export default class LajiForm extends Component {
 				this.blockingLoaderRef.className = "blocking-loader";
 			}, 200); // should match css transition time.
 		}
-	}
-
-	clearState = () => {
-		this._context.clearState();
 	}
 
 	getSettings = () => {
