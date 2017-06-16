@@ -19,8 +19,9 @@ export default class ContextInjectionField extends Component {
 		let {uiSchema} = props;
 		const {injections} = this.getUiOptions();
 
+		let	injected = false;
+		const updateObject = {};
 		for (let injectionPath in injections) {
-			const updateObject = {};
 			const splitted = injectionPath.substring(1).split("/");
 			const last = splitted.pop();
 			const tail = splitted.reduce((pointer, path) => {
@@ -28,8 +29,9 @@ export default class ContextInjectionField extends Component {
 				return pointer[path];
 			}, updateObject);
 			tail[last] = {$set: parseJSONPointer(props.formContext.uiSchemaContext, injections[injectionPath])};
-			uiSchema = update(uiSchema, updateObject);
+			injected = true;
 		}
+		if (injected) uiSchema = update(uiSchema, updateObject);
 
 		return {uiSchema};
 	}
