@@ -617,20 +617,26 @@ class MapComponent extends Component {
 
 		this.map.setEventListeners({
 			tileLayerChange: ({tileLayerName}) => {
-				if (this.props.onOptionsChanged) this.props.onOptionsChanged({...this.state.mapOptions, tileLayerName});
+				this.setState({mapOptions: {...this.state.mapOptions, tileLayerName}});
 			},
 			overlaysChange: ({overlayNames}) => {
-				if (this.props.onOptionsChanged) this.props.onOptionsChanged({...this.state.mapOptions, overlayNames});
+				this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
 			},
 			tileLayerOpacityChange: ({tileLayerOpacity}) => {
-				if (this.props.onOptionsChanged) this.props.onOptionsChanged({...this.state.mapOptions, tileLayerOpacity});
+				this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
 			}
 		});
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps, prevState) {
 		if (this._callback) this._callback();
 		this._callback = undefined;
+
+		if  (this.props.onOptionsChanged && ["tileLayerName", "tileLayerOpacity", "overlayNames"].some(name => 
+			!deepEquals(...[this.state, prevState].map(state => state.mapOptions[name]))
+		)) {
+			this.props.onOptionsChanged(this.state.mapOptions);
+		}
 
 		if (this._permaCallback) this._permaCallback();
 	}

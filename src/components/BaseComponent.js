@@ -27,7 +27,7 @@ export default function BaseComponent(ComposedComponent) {
 					if (this.getSettingsKey(props, key) in settings) {
 						const last = key.match(/.*\/(.*)/, "$1")[1];
 						const withoutLast = key.match(/(.*)\/.*/, "$1")[1];
-						const lastContainer = parseJSONPointer(state, withoutLast || "/", !!"safely");
+						const lastContainer = parseJSONPointer(state, withoutLast || "/", "createParents");
 						lastContainer[last] = settings[this.getSettingsKey(props, key)];
 					}
 				});

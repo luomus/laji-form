@@ -269,7 +269,7 @@
 			"uiSchema": {
 				"ui:field": "MapArrayField",
 				"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
-				"ui:settings": ["/mapOptions/tileLayerName"],
+				"ui:settings": ["/mapOptions/tileLayerName", "/mapOptions/tileLayerOpacity",  "/mapOptions/overlayNames"],
 				"ui:options": {
 					"geometryField": "geometry",
 					"geometryMapper": "units",
