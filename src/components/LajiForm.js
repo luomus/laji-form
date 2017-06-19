@@ -232,6 +232,7 @@ export default class LajiForm extends Component {
 		this.settingSavers = {};
 		this._context.addSettingSaver = (key, fn) => this.settingSavers[key] = fn;
 		this._context.removeSettingSaver = (key) => this.settingSavers[key] = undefined;
+		this._context.onSettingsChange = this.onSettingsChange;
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -470,5 +471,9 @@ export default class LajiForm extends Component {
 			settings[key] = this.settingSavers[key]();
 			return settings;
 		}, {});
+	}
+	
+	onSettingsChange = () => {
+		if (this.props.onSettingsChange) this.props.onSettingsChange(this.getSettings());
 	}
 }

@@ -197,7 +197,8 @@ const lajiForm = new LajiForm({
 	onError: log("errors"),
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
-	renderSubmit: true
+	renderSubmit: true,
+	onSettingsChange: console.log
 });
 
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
