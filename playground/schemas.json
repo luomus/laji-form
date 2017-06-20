@@ -1481,7 +1481,10 @@
 		"activeGatheringIdx": 1
 	},
 	"settings": {
-		"#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite"
+		"#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
+		"#root_gatherings$MapArrayField/mapOptions/overlayNames": [
+			"geobiologicalProvinces"
+		]
 	},
 	"formData": {
   "gatheringEvent": {

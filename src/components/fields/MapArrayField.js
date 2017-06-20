@@ -128,7 +128,7 @@ export default class MapArrayField extends Component {
 		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
 		const onFocusRelease = () => {this.setState({focusGrabbed: false});};
 		const onOptionsChanged = options => {
-			this.setState({mapOptions: options});
+			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
 		};
 
 		return (
@@ -622,7 +622,7 @@ class MapComponent extends Component {
 			overlaysChange: ({overlayNames}) => {
 				this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
 			},
-			tileLayerOpacityChange: ({tileLayerOpacity}) => {
+			tileLayerOpacityChangeEnd: ({tileLayerOpacity}) => {
 				this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
 			}
 		});
