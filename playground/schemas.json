@@ -1484,7 +1484,8 @@
 		"#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
 		"#root_gatherings$MapArrayField/mapOptions/overlayNames": [
 			"geobiologicalProvinces"
-		]
+		],
+		"#root_gatherings$MapArrayField/mapOptions/tileLayerOpacity": 0.9
 	},
 	"formData": {
   "gatheringEvent": {

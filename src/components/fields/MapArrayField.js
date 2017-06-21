@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
 import deepEquals from "deep-equal";
-import LajiMap from "laji-map";
+import LajiMap from "laji-map/lib/map";
 import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";

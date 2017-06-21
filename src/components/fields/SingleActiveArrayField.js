@@ -366,7 +366,6 @@ function renderAccordionHeader(idx, title) {
 	let _headerFormatters = options.headerFormatters || options.headerFormatter || [];
 	if (_headerFormatters && !Array.isArray(_headerFormatters)) _headerFormatters = [_headerFormatters];
 
-
 	const formatters = _headerFormatters.map(formatter => {
 		if (headerFormatters[formatter]) return headerFormatters[formatter];
 		else return {
