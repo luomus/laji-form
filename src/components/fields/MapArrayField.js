@@ -528,7 +528,9 @@ export default class MapArrayField extends Component {
 			},
 			onActiveChange: idx => {
 				const {map} = new Context(`${this.props.formContext.contextId}_MAP`);
-				map.map.fitBounds(map._allCorridors[idx].getBounds(), {maxZoom: 13});
+				setImmediate(() =>
+					map.map.fitBounds(map._allCorridors[idx].getBounds(), {maxZoom: map._getDefaultCRSLayers().includes(map.tileLayer) ? 16 : 13})
+				);
 				map._openTooltipFor(idx);
 				focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`);
 			},
@@ -733,7 +735,7 @@ class Map extends Component {
 		if (options.lineTransect && "activeIdx" in options.lineTransect) {
 			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
 		}
-		options.lineTransect = undefined;
+		delete options.lineTransect;
 
 		Object.keys(options).forEach(key => {
 			if (!deepEquals(...[options, prevOptions].map(_options => _options[key]).map(filterFunctions))) {
