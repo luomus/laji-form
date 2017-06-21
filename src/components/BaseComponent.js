@@ -1,3 +1,4 @@
+import deepEquals from "deep-equal";
 import { getReactComponentName, parseJSONPointer } from "../utils";
 import Context from "../Context";
 
@@ -26,7 +27,7 @@ export default function BaseComponent(ComposedComponent) {
 					if (this.getSettingsKey(props, key) in settings) {
 						const last = key.match(/.*\/(.*)/, "$1")[1];
 						const withoutLast = key.match(/(.*)\/.*/, "$1")[1];
-						const lastContainer = parseJSONPointer(state, withoutLast || "/", !!"safely");
+						const lastContainer = parseJSONPointer(state, withoutLast || "/", "createParents");
 						lastContainer[last] = settings[this.getSettingsKey(props, key)];
 					}
 				});
@@ -53,6 +54,18 @@ export default function BaseComponent(ComposedComponent) {
 		updateSettingSaver(props) {
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach(key => {
 				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => parseJSONPointer(this.state, key, !!"safely"));
+			});
+		}
+
+		componentDidUpdate(prevProps, prevState) {
+			if (super.componentDidUpdate) {
+				super.componentDidUpdate(prevProps, prevState);
+			}
+
+			if (this.props.uiSchema) (this.props.uiSchema["ui:settings"] || []).some(key => {
+				if (!deepEquals(...[prevState, this.state].map(state => parseJSONPointer(state, key, !!"safely")))) {
+					this.getContext().onSettingsChange();
+				}
 			});
 		}
 

@@ -127,6 +127,9 @@ export default class MapArrayField extends Component {
 		const onPopupClose = () => {this.setState({popupIdx: undefined});};
 		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
 		const onFocusRelease = () => {this.setState({focusGrabbed: false});};
+		const onOptionsChanged = options => {
+			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
+		};
 
 		return (
 			<div ref="affix">
@@ -150,6 +153,7 @@ export default class MapArrayField extends Component {
 								onFocusRelease={onFocusRelease}
 								panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
 								draw={false}
+								onOptionsChanged={onOptionsChanged}
 								{...mapOptions}
 							/>
 						</StretchAffix>
@@ -610,11 +614,29 @@ class MapComponent extends Component {
 	componentDidMount() {
 		this.map = this.refs.map.map;
 		this._context.map = this.map;
+
+		this.map.setEventListeners({
+			tileLayerChange: ({tileLayerName}) => {
+				this.setState({mapOptions: {...this.state.mapOptions, tileLayerName}});
+			},
+			overlaysChange: ({overlayNames}) => {
+				this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
+			},
+			tileLayerOpacityChangeEnd: ({tileLayerOpacity}) => {
+				this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
+			}
+		});
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps, prevState) {
 		if (this._callback) this._callback();
 		this._callback = undefined;
+
+		if  (this.props.onOptionsChanged && ["tileLayerName", "tileLayerOpacity", "overlayNames"].some(name => 
+			!deepEquals(...[this.state, prevState].map(state => state.mapOptions[name]))
+		)) {
+			this.props.onOptionsChanged(this.state.mapOptions);
+		}
 
 		if (this._permaCallback) this._permaCallback();
 	}

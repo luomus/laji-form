@@ -106,10 +106,16 @@ export function isEmptyString(val) {
 	return val === "" || isNullOrUndefined(val);
 }
 
-export function parseJSONPointer(object, jsonPointer, createParents) {
+export function parseJSONPointer(object, jsonPointer, safeMode) {
 	const splitPath = jsonPointer.split("/").filter(s => !isEmptyString(s));
-	return splitPath.reduce((o, s)=> {
-		if (!(s in o) && createParents) o[s] = {};
+	return splitPath.reduce((o, s, i)=> {
+		if (!(s in o) && safeMode) {
+			if (safeMode === "createParents") {
+				o[s] = {};
+			} else if (i < splitPath.length - 1) {
+				return {};
+			}
+		}
 		return o[s];
 	}, object);
 }
