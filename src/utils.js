@@ -300,7 +300,6 @@ export function handleKeysWith(context, id, keyFunctions = {}, e, additionalPara
 		return eventHandled;
 	}
 
-
 	const highPriorityHandled = context.keyHandlers.some(keyHandler => {
 		let target = getKeyHandlerTargetId(context, keyHandler.target);
 		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {

@@ -213,9 +213,27 @@ export default class LajiForm extends Component {
 		this._context.popBlockingLoader = this.popBlockingLoader;
 
 		this._context.keyHandleListeners = {};
-		this._context.addKeyHandler = (id, keyFunctions, additionalParams) => this._context.keyHandleListeners[id] = e => handleKeysWith(this._context, id, keyFunctions, e, additionalParams);
-		this._context.removeKeyHandler = (id) => {
-			delete this._context.keyHandleListeners[id];
+		this._context.keyHandleIdFunctions = [];
+		this._context.addKeyHandler = (id, keyFunctions, additionalParams) => {
+			if (!this._context.keyHandleListeners[id]) this._context.keyHandleListeners[id] = [];
+			const handleKey = e => handleKeysWith(this._context, id, keyFunctions, e, additionalParams);
+			this._context.keyHandleIdFunctions.push({id, keyFunctions, handleKey});
+			this._context.keyHandleListeners[id].push(handleKey);
+		};
+
+		this._context.removeKeyHandler = (_id, _keyFunctions) => {
+			//delete this._context.keyHandleListeners[id];
+			for (let i in this._context.keyHandleIdFunctions) {
+				const idFunction = this._context.keyHandleIdFunctions[i];
+				const {id, keyFunctions, handleKey} = idFunction;
+				if (id ===  _id && _keyFunctions === keyFunctions) {
+					this._context.keyHandleIdFunctions.splice(i, 1);
+					this._context.keyHandleListeners[id] = this._context.keyHandleListeners[id].filter(_handleKey =>
+						_handleKey !== handleKey
+					);
+				}
+			}
+
 		};
 
 		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
@@ -430,7 +448,7 @@ export default class LajiForm extends Component {
 		}).map(({id}) => getKeyHandlerTargetId(this._context, id));
 		order = [...targets, ...order];
 
-		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id](e));
+		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
 
 		if (!handled && e.key === "Enter" && (!document.activeElement || document.activeElement.type !== "textarea")) {
 			e.preventDefault();

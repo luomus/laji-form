@@ -263,7 +263,7 @@ function handlesButtons(ComposedComponent) {
 
 		addChildKeyHandler() {
 			const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
-			if (this.childKeyHandlerId) new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId);
+			if (this.childKeyHandlerId) new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
 			if (that.state.activeIdx !== undefined) {
 				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
 				this.childKeyHandlerId = id;
@@ -272,8 +272,8 @@ function handlesButtons(ComposedComponent) {
 		}
 
 		componentWillUnmount() {
-			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id);
-			new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId);
+			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
+			new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
 		}
 
 	};

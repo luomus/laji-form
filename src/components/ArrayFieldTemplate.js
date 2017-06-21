@@ -87,10 +87,10 @@ export default class ArrayFieldTemplate extends Component {
 	}
 
 	addChildKeyHandlers() {
-		if (this.childKeyHandlers) this.childKeyHandlers.forEach(childKeyHandler => this._context.removeKeyHandler(childKeyHandler));
+		if (this.childKeyHandlers) this.childKeyHandlers.forEach(({id, keyFunction}) => this._context.removeKeyHandler(id, keyFunction));
 		this.props.items.forEach((item, i) => {
 			const id = `${this.props.idSchema.$id}_${i}`;
-			this.childKeyHandlers.push(id);
+			this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
 			this._context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
 		});
 	}
@@ -98,7 +98,7 @@ export default class ArrayFieldTemplate extends Component {
 	componentWillUnmount() {
 		this._context.removeKeyHandler(this.props.idSchema.$id);
 		if (this.childKeyHandlers) {
-			this.childKeyHandlers.forEach(id => this._context.removeKeyHandler(id));
+			this.childKeyHandlers.forEach(({id, keyFunction}) => this._context.removeKeyHandler(id, keyFunction));
 		}
 	}
 
