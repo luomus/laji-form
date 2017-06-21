@@ -308,5 +308,10 @@
 		fi: "Ctrl + Enter lisää uuden rivin",
 		en: "Ctrl + Enter adds a new row",
 		sv: "Ctrl + enter lägger till en ny rad"
+	},
+	splitLineTransectByMetersTarget: {
+		fi: "Pätkäise linja metriluvulla",
+		en: "Split line transect by meters",
+		sv: "Dela line transekt metrisk talet"
 	}
 };

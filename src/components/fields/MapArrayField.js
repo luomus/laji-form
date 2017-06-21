@@ -70,12 +70,15 @@ export default class MapArrayField extends Component {
 
 	componentDidMount() {
 		this.setState({mounted: true});
+		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		const {onComponentDidMount} = this.getGeometryMapper(this.props);
+		this.map = this.refs.map.refs.map.map;
 		if (onComponentDidMount) onComponentDidMount();
 	}
 
 	componentWillUnmount() {
 		this.setState({mounted: false});
+		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 	}
 
 	componentDidUpdate(...params) {
@@ -464,8 +467,7 @@ export default class MapArrayField extends Component {
 			},
 			onActiveChange: idx => {
 				if (idx === undefined) return;
-				const {map} = new Context(`${this.props.formContext.contextId}_MAP`);
-				if (Object.keys(map.drawLayerGroup._layers).length) map.map.fitBounds(map.drawLayerGroup.getBounds());
+				if (Object.keys(this.map.drawLayerGroup._layers).length) this.map.map.fitBounds(this.map.drawLayerGroup.getBounds());
 			},
 		},
 		lineTransect: {
@@ -527,11 +529,10 @@ export default class MapArrayField extends Component {
 				};
 			},
 			onActiveChange: idx => {
-				const {map} = new Context(`${this.props.formContext.contextId}_MAP`);
 				setImmediate(() =>
-					map.map.fitBounds(map._allCorridors[idx].getBounds(), {maxZoom: map._getDefaultCRSLayers().includes(map.tileLayer) ? 16 : 13})
+					this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
 				);
-				map._openTooltipFor(idx);
+				this.map._openTooltipFor(idx);
 				focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`);
 			},
 			onComponentDidUpdate: (prevProps, prevState) => {
@@ -545,6 +546,13 @@ export default class MapArrayField extends Component {
 		}
 	}
 
+
+	mapKeyFunctions = {
+		splitLineTransectByMeters: () => {
+			if (getUiOptions(this.props.uiSchema).geometryMapper !== "lineTransect") return false;
+			this.map.splitLTByMeters(this.state.activeIdx);
+		}
+	};
 
 	getPopup = (idx, feature, openPopupCallback) => {
 		if (!this.refs.popup) return;
