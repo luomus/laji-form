@@ -375,6 +375,7 @@ export default class LajiForm extends Component {
 				}
 				that.helpVisible = false;
 				document.removeEventListener("keyup", dismiss);
+				window.removeEventListener("blur", dismiss);
 				clearTimeout(that.helpTimeout);
 			}
 
@@ -385,6 +386,7 @@ export default class LajiForm extends Component {
 				}
 			}, delay * 1000);
 			document.addEventListener("keyup", dismiss);
+			window.addEventListener("blur", dismiss);
 			const _context = new Context(this._id);
 			if (!_context.keyTimeouts) _context.keyTimeouts = [];
 			_context.keyTimeouts.push(this.helpTimeout);
@@ -442,11 +444,8 @@ export default class LajiForm extends Component {
 			return handler.conditions.every(condition => condition(e));
 		}).map(({id}) => getKeyHandlerTargetId(this._context, id));
 		order = [...targets, ...order];
-		console.log(order);
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
-
-		console.log(handled);
 
 		const activeElement = document.activeElement;
 		if (!handled && e.key === "Enter" && (!activeElement || (activeElement.tagName.toLowerCase() !== "textarea" && !activeElement.className.includes("laji-map-input")))) {
