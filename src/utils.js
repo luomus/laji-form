@@ -142,7 +142,7 @@ const SWITCH_CLASS = "bootstrap-switch";
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector)`; });
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`; });
 
 export function getTabbableFields(elem, reverse) {
 	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
@@ -221,9 +221,10 @@ export function focusById(contextId, id) {
 		if (tabbableFields && tabbableFields.length) {
 			tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem);
-			return true; // success status
+			return true;
 		}
 	}
+	return false;
 }
 
 export function getNestedTailUiSchema(uiSchema) {

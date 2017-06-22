@@ -364,10 +364,8 @@ export default class LajiForm extends Component {
 
 	keyFunctions = {
 		navigate: (e, {reverse}) => {
-			focusNextInput(this.formRef, e.target, reverse);
-			return true;
+			return focusNextInput(this.formRef, e.target, reverse);
 		},
-		navigateArray: (...params) => this.keyFunctions.navigate(...params),
 		help: (_, {delay}) => {
 			const node = findDOMNode(this.shortcutHelpRef);
 			
@@ -450,7 +448,8 @@ export default class LajiForm extends Component {
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
 
-		if (!handled && e.key === "Enter" && (!document.activeElement || document.activeElement.type !== "textarea")) {
+		const activeElement = document.activeElement;
+		if (!handled && e.key === "Enter" && (!activeElement || (activeElement.tagName.toLowerCase() !== "textarea" && !activeElement.className.includes("laji-map-input")))) {
 			e.preventDefault();
 		}
 	}
