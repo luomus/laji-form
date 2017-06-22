@@ -327,3 +327,10 @@ export function capitalizeFirstLetter(string) {
 export function decapitalizeFirstLetter(string) {
 	return string.charAt(0).toLowerCase() + string.slice(1);
 }
+
+export function stringifyKeyCombo(keyCombo = "") {
+	return keyCombo.split("+").map(key => {
+		if (key === " ") key = "space";
+		return capitalizeFirstLetter(key);
+	}).join(" + ");
+}

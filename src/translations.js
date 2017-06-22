@@ -305,9 +305,9 @@
 		sv: "??"
 	},
 	textareaHint: {
-		fi: "Ctrl + Enter lisää uuden rivin",
-		en: "Ctrl + Enter adds a new row",
-		sv: "Ctrl + enter lägger till en ny rad"
+		fi: "Lisää uuden rivin tekstikenttään",
+		en: "Adds a new row to the textarea",
+		sv: "Lägger till en ny rad i textområdet"
 	},
 	splitLineTransectByMetersTarget: {
 		fi: "Pätkäise linja metriluvulla",

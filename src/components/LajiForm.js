@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { Panel, Table } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId } from "../utils";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo } from "../utils";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -336,17 +336,14 @@ export default class LajiForm extends Component {
 						<tbody className="well">{
 							Object.keys(shortcuts).map((keyCombo, idx) => {
 								const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
-								if (fn === "help") return;
+								if (["help", "textareaRowInsert"].includes(fn)) return;
 								let translation = "";
 								if (translation) translation = label;
 								else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];
 								if  (targetLabel) translation = `${translation} ${targetLabel}`;
 								return (
 									<tr key={idx}>
-										<td>{keyCombo.split("+").map(key => {
-											if (key === " ") key = "space";
-											return capitalizeFirstLetter(key);
-										}).join(" + ")}</td><td>{translation}</td>
+										<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
 									</tr>
 								);
 							})
@@ -445,8 +442,11 @@ export default class LajiForm extends Component {
 			return handler.conditions.every(condition => condition(e));
 		}).map(({id}) => getKeyHandlerTargetId(this._context, id));
 		order = [...targets, ...order];
+		console.log(order);
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
+
+		console.log(handled);
 
 		const activeElement = document.activeElement;
 		if (!handled && e.key === "Enter" && (!activeElement || (activeElement.tagName.toLowerCase() !== "textarea" && !activeElement.className.includes("laji-map-input")))) {
