@@ -606,6 +606,8 @@ body .laji-form {
 	-webkit-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 	-moz-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
+	max-height: 90%;
+	overflow: auto;
 }
 .laji-form .hidden {
 	display: none;
