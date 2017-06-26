@@ -364,16 +364,22 @@ export default class LajiForm extends Component {
 			return focusNextInput(this.formRef, e.target, reverse);
 		},
 		help: (_, {delay}) => {
+
+			if (this.helpStarted) return true;
+
+			this.helpStarted = true;
+
 			const node = findDOMNode(this.shortcutHelpRef);
 			
 			const that = this;
 			function dismiss(e) {
+				e.preventDefault();
+				e.stopPropagation();
 				if (that.helpVisible) {
-					e.preventDefault();
-					e.stopPropagation();
 					node.className += " hidden";
 				}
 				that.helpVisible = false;
+				that.helpStarted = false;
 				document.removeEventListener("keyup", dismiss);
 				window.removeEventListener("blur", dismiss);
 				clearTimeout(that.helpTimeout);
@@ -387,9 +393,6 @@ export default class LajiForm extends Component {
 			}, delay * 1000);
 			document.addEventListener("keyup", dismiss);
 			window.addEventListener("blur", dismiss);
-			const _context = new Context(this._id);
-			if (!_context.keyTimeouts) _context.keyTimeouts = [];
-			_context.keyTimeouts.push(this.helpTimeout);
 			return false;
 		}
 	}
