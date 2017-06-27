@@ -75,7 +75,7 @@ class SelectWidget extends Component {
 	
 	onBlur = () => this.setState({open: false})
 	
-	onSelect = () => this.state.open && setImmediate(() => this.setState({open: false}))
+	onSelect = () => this.state.open && this.getContext().setImmediate(() => this.setState({open: false}))
 	
 	onKeyDown = () =>  this.state.open && this.setState({open: true})
 	

@@ -120,7 +120,7 @@ export default class TreeField extends Component {
 		if (e.key == "Enter" && !e.ctrlKey) {
 			e.preventDefault();
 			e.stopPropagation();
-			setImmediate(() => {
+			this.getContext().setImmediate(() => {
 				focusNextInput(this.props.formContext.getFormRef(), document.activeElement, e.shiftKey);
 			});
 		}

@@ -252,6 +252,10 @@ export default class LajiForm extends Component {
 		this._context.removeSettingSaver = (key) => this.settingSavers[key] = undefined;
 		this._context.onSettingsChange = this.onSettingsChange;
 
+		this._context.setImmediate = this.setImmediate;
+		this._context.setTimeout = this.setTimeout;
+		this._context.addEventListener = this.addEventListener;
+
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -476,11 +480,11 @@ export default class LajiForm extends Component {
 			console.warn("laji-form: Blocking loader was popped before pushing!");
 		} else if (this.blockingLoaderCounter === 0) {
 			this.blockingLoaderRef.className = "blocking-loader leave-start";
-			setImmediate(() => {
-				this.blockingLoaderRef.className = "blocking-loader leaving";
+			this.setImmediate(() => {
+				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "blocking-loader leaving";
 			});
-			setTimeout(() => {
-				this.blockingLoaderRef.className = "blocking-loader";
+			this.setTimeout(() => {
+				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "blocking-loader";
 			}, 200); // should match css transition time.
 		}
 	}
@@ -502,9 +506,27 @@ export default class LajiForm extends Component {
 		this.eventListeners.push([target, name ,fn]);
 	}
 
+	setTimeout = (fn, time) => {
+		if (!this.timeouts) this.timeouts = [];
+
+		this.timeouts.push(setTimeout(fn, time));
+	}
+
+	setImmediate = (fn) => {
+		if (!this.immediates) this.immediates = [];
+
+		this.immediates.push(setImmediate(fn));
+	}
+
 	destroy = () => {
 		if (this.eventListeners) this.eventListeners.forEach(([target, name, fn]) => {
 			target.removeEventListener(name, fn);
+		});
+		if (this.timeouts) this.timeouts.forEach((timeout) => {
+			clearTimeout(timeout);
+		});
+		if (this.immediates) this.immediates.forEach((immediate) => {
+			clearImmediate(immediate);
 		});
 		this.eventListeners = undefined;
 	}
