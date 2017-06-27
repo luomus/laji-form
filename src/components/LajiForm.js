@@ -387,12 +387,12 @@ export default class LajiForm extends Component {
 
 			this.helpTimeout = setTimeout(() => {
 				if (!that.helpVisible) {
-					node.className = node.className.replace(" hidden", "");
+					if (node) node.className = node.className.replace(" hidden", "");
 					that.helpVisible = true;
 				}
 			}, delay * 1000);
-			document.addEventListener("keyup", dismiss);
-			window.addEventListener("blur", dismiss);
+			this.addEventListener(document, "keyup", dismiss);
+			this.addEventListener(window, "blur", dismiss);
 			return false;
 		}
 	}
@@ -494,5 +494,18 @@ export default class LajiForm extends Component {
 	
 	onSettingsChange = () => {
 		if (this.props.onSettingsChange) this.props.onSettingsChange(this.getSettings());
+	}
+
+	addEventListener = (target, name, fn ) => {
+		if (!this.eventListeners) this.eventListeners = [];
+		target.addEventListener(name, fn);
+		this.eventListeners.push([target, name ,fn]);
+	}
+
+	destroy = () => {
+		if (this.eventListeners) this.eventListeners.forEach(([target, name, fn]) => {
+			target.removeEventListener(name, fn);
+		});
+		this.eventListeners = undefined;
 	}
 }

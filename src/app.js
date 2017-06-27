@@ -34,9 +34,12 @@ export default class LajiFormWrapper {
 		return this.app.refs.lajiform.getSettings();
 	}
 
-	unmount = () => {
+	destroy = () => {
+		this.app.refs.lajiform.destroy();
 		unmountComponentAtNode(this.rootElem);
 	}
+
+	unmount = this.destroy
 }
 
 class LajiFormApp extends Component {
