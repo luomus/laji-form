@@ -210,29 +210,6 @@ export default class ScopeField extends Component {
 		}).isRequired
 	}
 
-	constructor(props) {
-		super(props);
-		this._context = new Context(`${props.formContext.contextId}_SCOPE_FIELD`);
-		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
-		let additionalFields = {};
-		if (this._context[additionalsPersistenceId]) {
-			const contextEntry = this._context[additionalsPersistenceId];
-			if (additionalsPersistenceKey) {
-				const formDataItem = props.formData[additionalsPersistenceKey];
-				props.schema.properties[additionalsPersistenceKey].type === "array" ? formDataItem : [formDataItem].forEach(item => {
-					additionalFields = contextEntry ? (contextEntry[item] || {}) : {};
-				});
-			} else {
-				additionalFields = contextEntry ? (contextEntry || {}) : {};
-			}
-		}
-		this.state = {
-			additionalFields,
-			additionalsOpen: false,
-			...this.getStateFromProps(props)
-		};
-	}
-
 	componentDidMount() {
 		this.mounted = true;
 	}
@@ -255,6 +232,13 @@ export default class ScopeField extends Component {
 		);
 	}
 
+	componentDidUpdate(nextProps) {
+		if (!this.state.additionalsGroupsTranslations || nextProps.formContext.lang !== this.props.formContext.lang ||
+			getUiOptions(nextProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
+			this.translateAdditionalsGroups(nextProps);
+		}
+	}
+
 	getStateFromProps(props) {
 		const options = getUiOptions(props.uiSchema);
 
@@ -264,38 +248,31 @@ export default class ScopeField extends Component {
 			includeAdditionalFieldsChooserButton
 		};
 
-		if (options.additionalsGroupsTranslator) {
-			const prevOptions = getUiOptions(this.props.uiSchema);
-
-			state.additionalsGroupsTranslations =
-				(this.props.formContext.lang === props.formContext.lang &&
-				 prevOptions.additionalsGroupsTranslator === options.additionalsGroupsTranslator && this.state) ?
-					this.state.additionalsGroupsTranslations : {};
-			state.additionalsGroupsTranslator = options.additionalsGroupsTranslator;
-		}
-
 		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
 		let additionalFields = (this.state ? this.state.additionalFields : {}) || {};
-		if (this._context[additionalsPersistenceId]) {
-			const contextEntry = this._context[additionalsPersistenceId];
+
+		if (additionalsPersistenceId) {
+			const mainContext = this.getContext();
+			const contextName = `scopeField_${additionalsPersistenceId}`;
+			if (!mainContext[contextName]) mainContext[contextName] = {};
+			this._context = mainContext[contextName];
+		}
+
+		if (this._context) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceKey) {
 				const formDataItem = props.formData[additionalsPersistenceKey];
 				(Array.isArray(formDataItem) ? formDataItem : [formDataItem]).forEach(item => {
-					if (contextEntry && contextEntry[item]) additionalsToAdd = contextEntry[item];
+					if (this._context && this._context[item]) additionalsToAdd = this._context[item];
 				});
 			} else {
-				if (contextEntry) additionalsToAdd = contextEntry;
+				if (this._context) additionalsToAdd = this._context;
 			}
 			additionalFields = {...additionalFields, ...additionalsToAdd};
 		}
 		state.additionalFields = additionalFields;
 
 		state = {...state, ...this.getSchemasAndAdditionals(props, state)};
-
-		if (state.additionalsGroupsTranslations) {
-			this.translateAdditionalsGroups(props, state.additionalsGroupsTranslator);
-		}
 
 		return state;
 	}
@@ -367,7 +344,7 @@ export default class ScopeField extends Component {
 
 		if (additionalFields) {
 			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
-				fieldsToShow[property] = this.props.schema.properties[property];
+				fieldsToShow[property] = props.schema.properties[property];
 			});
 		}
 
@@ -378,7 +355,7 @@ export default class ScopeField extends Component {
 				     schema.properties.hasOwnProperty(property) &&
 				     formData[property] === schema.properties[property].default)) return;
 				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
-					fieldsToShow[property] = this.props.schema.properties[property];
+					fieldsToShow[property] = props.schema.properties[property];
 				}
 			});
 		}
@@ -452,7 +429,7 @@ export default class ScopeField extends Component {
 		const options = getUiOptions(this.props.uiSchema);
 		const {additionalsGroupingPath, additionalsGroupingOrderer} = options;
 
-		let groupTranslations = (this.state.additionalsGroupsTranslator) ? this.state.additionalsGroupsTranslations : {};
+		let groupTranslations = this.state.additionalsGroupsTranslations || {};
 
 		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : undefined;
 
@@ -575,7 +552,7 @@ export default class ScopeField extends Component {
 			() => {
 				const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(this.props.uiSchema);
 				const additionalsPersistenceVal = this.props.formData[additionalsPersistenceKey];
-				let contextEntry = this._context[additionalsPersistenceId] || {};
+				let contextEntry = this._context || {};
 				if (additionalsPersistenceKey) {
 					const additionalsKeys = ((this.props.schema.properties[additionalsPersistenceKey].type === "array") ?
 							additionalsPersistenceVal :
@@ -583,7 +560,7 @@ export default class ScopeField extends Component {
 						["undefined"];
 					additionalsKeys.forEach(persistenceKey => {
 						contextEntry[persistenceKey] = this.state.additionalFields;
-						this._context[additionalsPersistenceId] = contextEntry;
+						this.getContext()[ `scopeField_${additionalsPersistenceId}`] = contextEntry;
 					});
 				}
 				this.setState(this.getStateFromProps(this.props));
@@ -609,9 +586,9 @@ export default class ScopeField extends Component {
 			});
 	}
 
-	translateAdditionalsGroups = (props, additionalsGroupsTranslator) => {
+	translateAdditionalsGroups = (props) => {
 		let options = getUiOptions(props.uiSchema);
-		const {additionalsGroupingPath} = options;
+		const {additionalsGroupingPath, additionalsGroupsTranslator} = options;
 		if (!additionalsGroupingPath) throw new Error("ScopeField translating unknown grouping!");
 		const groups = parseJSONPointer(options, additionalsGroupingPath);
 		const groupNames = Object.keys(groups).filter(groupName => !isNullOrUndefined(groups[groupName]));
@@ -630,10 +607,12 @@ export default class ScopeField extends Component {
 				translations[groupName] = translation;
 				translationsToKeys[translation] = groupName;
 				translationCount++;
-				if (this.mounted && translationCount == groupNames.length) this.setState({
-					additionalsGroupsTranslations: translations,
-					additionalsGroupsTranslationsToKeys: translationsToKeys
-				});
+				if (this.mounted && translationCount == groupNames.length) {
+					this.setState({
+						additionalsGroupsTranslations: translations,
+						additionalsGroupsTranslationsToKeys: translationsToKeys
+					});
+				}
 			});
 		});
 	}

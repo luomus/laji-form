@@ -425,6 +425,7 @@
 								},
 								"uiSchema": {
 									"ui:field": "ScopeField",
+									"ui:settings": ["%additionalFields/scopeField_gathering_unit_unitType"], 
 									"ui:options": {
 										"additionalsGroupingPath": "/fieldScopes/unitType",
 										"additionalsGroupingOrderer": "unitType",
@@ -1481,11 +1482,16 @@
 		"activeGatheringIdx": 1
 	},
 	"settings": {
-		"#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
-		"#root_gatherings$MapArrayField/mapOptions/overlayNames": [
-			"geobiologicalProvinces"
-		],
-		"#root_gatherings$MapArrayField/mapOptions/tileLayerOpacity": 0.8
+	  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
+	  "#root_gatherings$MapArrayField/mapOptions/tileLayerOpacity": 0.8,
+	  "#root_gatherings$MapArrayField/mapOptions/overlayNames": [
+		"geobiologicalProvinces"
+	  ],
+	  "%additionalFields/scopeField_gathering_unit_unitType": {
+		"MVL.2": {
+		  "/unitGathering/substrate": true
+		}
+	  }
 	},
 	"formData": {
   "gatheringEvent": {
