@@ -249,21 +249,21 @@ export default class ScopeField extends Component {
 		};
 
 		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
-		let additionalFields = (this.state ? this.state.additionalFields : {}) || {};
+		let additionalFields = additionalsPersistenceKey ? {} : (this.state ? this.state.additionalFields : {});
 
 		if (additionalsPersistenceId) {
 			const mainContext = this.getContext();
-			const contextName = `scopeField_${additionalsPersistenceId}`;
-			if (!mainContext[contextName]) mainContext[contextName] = {};
-			this._context = mainContext[contextName];
+			this._context = mainContext[ `scopeField_${additionalsPersistenceId}`];
 		}
 
 		if (this._context) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceKey) {
 				const formDataItem = props.formData[additionalsPersistenceKey];
-				(Array.isArray(formDataItem) ? formDataItem : [formDataItem]).forEach(item => {
-					if (this._context && this._context[item]) additionalsToAdd = this._context[item];
+				let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
+				if (items.length === 0) items = ["undefined"];
+				items.forEach(item => {
+					if (this._context && this._context[item]) additionalsToAdd = {...additionalsToAdd, ...this._context[item]};
 				});
 			} else {
 				if (this._context) additionalsToAdd = this._context;
@@ -543,29 +543,30 @@ export default class ScopeField extends Component {
 
 	toggleAdditionalProperty = (fields) => {
 		if (!Array.isArray(fields)) fields = [fields];
-		const state = {additionalFields: this.state.additionalFields};
-		fields.forEach(field => {
-			const isIncluded = this.propertyIsIncluded(field);
-			state.additionalFields = {...state.additionalFields, [field]: !isIncluded};
-		});
-		this.setState(state,
-			() => {
-				const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(this.props.uiSchema);
-				const additionalsPersistenceVal = this.props.formData[additionalsPersistenceKey];
-				let contextEntry = this._context || {};
-				if (additionalsPersistenceKey) {
-					const additionalsKeys = ((this.props.schema.properties[additionalsPersistenceKey].type === "array") ?
-							additionalsPersistenceVal :
-							[additionalsPersistenceVal]) ||
-						["undefined"];
-					additionalsKeys.forEach(persistenceKey => {
-						contextEntry[persistenceKey] = this.state.additionalFields;
-						this.getContext()[ `scopeField_${additionalsPersistenceId}`] = contextEntry;
-					});
-				}
-				this.setState(this.getStateFromProps(this.props));
-			});
+		const additionalFields = fields.reduce((additionalFields, field) => {
+			return {...additionalFields, [field]: !this.propertyIsIncluded(field)};
+		}, this.state.additionalFields);
+
+		if (this.context) {
+			const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(this.props.uiSchema);
+			const additionalsPersistenceVal = this.props.formData[additionalsPersistenceKey];
+			let contextEntry = this._context || {};
+			if (additionalsPersistenceKey) {
+				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceKey].type === "array") ?
+						additionalsPersistenceVal :
+						[additionalsPersistenceVal]);
+				if (additionalsKeys.length === 0) additionalsKeys = ["undefined"];
+				additionalsKeys.forEach(persistenceKey => {
+					contextEntry[persistenceKey] = additionalFields;
+				});
+				this.getContext()[ `scopeField_${additionalsPersistenceId}`] = contextEntry;
+			} else if (additionalsPersistenceId) {
+				this.getContext()[ `scopeField_${additionalsPersistenceId}`] = additionalFields;
+			}
+		} 
+		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
 	}
+
 
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};
@@ -589,7 +590,7 @@ export default class ScopeField extends Component {
 	translateAdditionalsGroups = (props) => {
 		let options = getUiOptions(props.uiSchema);
 		const {additionalsGroupingPath, additionalsGroupsTranslator} = options;
-		if (!additionalsGroupingPath) throw new Error("ScopeField translating unknown grouping!");
+		if (!additionalsGroupingPath) return;
 		const groups = parseJSONPointer(options, additionalsGroupingPath);
 		const groupNames = Object.keys(groups).filter(groupName => !isNullOrUndefined(groups[groupName]));
 
