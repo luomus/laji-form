@@ -1480,7 +1480,7 @@
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "MHL.1",
-		"activeGatheringIdx": 1
+		"activeGatheringIdx": null
 	},
 	"settings": {
 	  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",

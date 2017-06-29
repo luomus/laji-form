@@ -186,7 +186,7 @@ export default class MapArrayField extends Component {
 
 				const emptyMode = !formData || !formData.length;
 
-				const draw = (options.draw === false || (this.state.activeIdx === undefined && !emptyMode)) ? false : {
+				const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
 					data: {
 						featureCollection: {
 							type: "FeatureCollection",
@@ -284,7 +284,7 @@ export default class MapArrayField extends Component {
 
 				const emptyMode = !formData || !formData.length;
 
-				const draw = (options.draw === false || (this.state.activeIdx === undefined && !emptyMode)) ? false : {
+				const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
 					data: {
 						featureCollection: {
 							type: "FeatureCollection",
