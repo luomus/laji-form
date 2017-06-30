@@ -1,28 +1,29 @@
 import React, { Component } from "react";
-import BaseComponent from "../BaseComponent";
+import update from "immutability-helper";
+import VirtualSchemaField from "../VirtualSchemaField";
+import { getUiOptions } from "../../utils";
 
-@BaseComponent
+@VirtualSchemaField
 export default class SingleItemArrayField extends Component {
 	getStateFromProps(props) {
+		const {activeIdx} = getUiOptions(props.uiSchema);
 		return {
+			name: undefined,
 			schema: {title: props.schema.title, ...props.schema.items},
 			uiSchema: props.uiSchema.items,
-			formData: props.formData ? props.formData[0] : undefined
+			formData: props.formData && activeIdx !== undefined ? props.formData[activeIdx] : undefined
 		};
 	}
 
-	onChange(formData) {
-		this.props.onChange([formData]);
+	render() {
+		const {uiSchema, registry: {fields: {SchemaField}}} = this.props;
+
+		const {activeIdx} = this.getUiOptions(uiSchema);
+
+		return activeIdx === undefined ? null : <SchemaField {...this.props} {...this.state} />;
 	}
 
-	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		return (
-			<SchemaField
-				{...this.props}
-				{...this.state}
-				onChange={this.onChange}
-			/>
-		);
+	onChange(formData) {
+		this.props.onChange(update(this.props.formData, {[this.getUiOptions().activeIdx || 0]: {$set: formData}}));
 	}
 }

@@ -96,7 +96,7 @@ export default class SingleActiveArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				renderer: PropTypes.oneOf(["accordion", "pager"]),
+				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled"]),
 				activeIdx: PropTypes.integer,
 				addTxt: PropTypes.string
 			})
@@ -112,7 +112,6 @@ export default class SingleActiveArrayField extends Component {
 		};
 		const id = `${this.props.idSchema.$id}`;
 		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
-		new Context(`${props.formContext.contextId}_ARRAY_${id}`).instance = this;
 	}
 
 	componentWillReceiveProps(props) {
@@ -138,6 +137,8 @@ export default class SingleActiveArrayField extends Component {
 			ArrayFieldTemplate = AccordionArrayFieldTemplate;
 		} else if (renderer === "pager") {
 			ArrayFieldTemplate = PagerArrayFieldTemplate;
+		} else if (renderer === "uncontrolled") {
+			ArrayFieldTemplate = UncontrolledArrayFieldTemplate;
 		} else {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
@@ -146,10 +147,13 @@ export default class SingleActiveArrayField extends Component {
 		const addLabel = options.hasOwnProperty("addTxt") ? 
 			options.addTxt : this.props.formContext.translations.Add;
 
+		const formContext = {...this.props.formContext, this: this};
+
 		const {registry: {fields: {ArrayField}}} = this.props;
 		return (
 				<ArrayField
 					{...this.props}
+					formContext={formContext}
 					registry={{
 						...this.props.registry,
 						ArrayFieldTemplate
@@ -248,7 +252,7 @@ function handlesButtons(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
-			const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+			const that = this.props.formContext.this;
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
@@ -262,7 +266,7 @@ function handlesButtons(ComposedComponent) {
 		}
 
 		addChildKeyHandler() {
-			const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+			const that = this.props.formContext.this;
 			if (this.childKeyHandlerId) new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
 			if (that.state.activeIdx !== undefined) {
 				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
@@ -281,13 +285,8 @@ function handlesButtons(ComposedComponent) {
 
 @handlesButtons
 class AccordionArrayFieldTemplate extends Component {
-	constructor(props) {
-		super(props);
-		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
-		that.renderAccordionHeader = renderAccordionHeader.bind(that);
-	}
 	render() {
-		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+		const that = this.props.formContext.this;
 		const arrayFieldTemplateProps = this.props;
 
 		const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
@@ -295,7 +294,7 @@ class AccordionArrayFieldTemplate extends Component {
 		const title = that.props.schema.title;
 
 		const onSelect = key => that.onActiveChange(key);
-		const header = idx => that.renderAccordionHeader(idx, title, that.props.idSchema.$id);
+		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
 		return (
 				<div className="laji-form-single-active-array">
 					<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
@@ -317,7 +316,7 @@ class AccordionArrayFieldTemplate extends Component {
 @handlesButtons
 class PagerArrayFieldTemplate extends Component {
 	render() {
-		const that = new Context(`${this.props.formContext.contextId}_ARRAY_${this.props.idSchema.$id}`).instance;
+		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
 		const buttons = getUiOptions(arrayTemplateFieldProps.uiSchema).buttons;
@@ -354,15 +353,25 @@ class PagerArrayFieldTemplate extends Component {
 	}
 }
 
-// 'this' is binded to SingleActiveArrayField class context.
-function renderAccordionHeader(idx, title) {
-	const popupData = this.state.popups[idx];
+@handlesButtons
+class UncontrolledArrayFieldTemplate extends Component {
+	render() {
+		const that = this.props.formContext.this;
+		const	arrayTemplateFieldProps = this.props;
+		const activeIdx = that.state.activeIdx;
+
+		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null;
+	}
+}
+
+function renderAccordionHeader(that, idx, title) {
+	const popupData = that.state.popups[idx];
 
 	const formattedIdx = idx + 1;
 	const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
 
 	// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
-	const options = getUiOptions(this.props.uiSchema);
+	const options = getUiOptions(that.props.uiSchema);
 	let _headerFormatters = options.headerFormatters || options.headerFormatter || [];
 	if (_headerFormatters && !Array.isArray(_headerFormatters)) _headerFormatters = [_headerFormatters];
 
@@ -375,26 +384,26 @@ function renderAccordionHeader(idx, title) {
 		};
 	});
 
-	const headerText = <span>{_title}{formatters.map((formatter, i) => <span key={i}> {formatter.render(this, idx)}</span>)}</span>;
+	const headerText = <span>{_title}{formatters.map((formatter, i) => <span key={i}> {formatter.render(that, idx)}</span>)}</span>;
 
 	const onHeaderClick = () => {
-		this.onActiveChange(idx);
-		formatters.forEach(formatter => {formatter.onClick && formatter.onClick(this, idx);});
+		that.onActiveChange(idx);
+		formatters.forEach(formatter => {formatter.onClick && formatter.onClick(that, idx);});
 	};
 
 	const onMouseEnter = () => {
 		formatters.forEach(formatter => {
-			formatter.onMouseEnter && formatter.onMouseEnter(this, idx);
+			formatter.onMouseEnter && formatter.onMouseEnter(that, idx);
 		});
 	};
 
 	const onMouseLeave = () => {
 		formatters.forEach(formatter => {
-			formatter.onMouseLeave && formatter.onMouseLeave(this, idx);
+			formatter.onMouseLeave && formatter.onMouseLeave(that, idx);
 		});
 	};
 
-	const getDeleteButtonRef = elem => {this.deleteButtonRefs[idx] = elem;};
+	const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
 
 	const header = (
 		<div className="laji-map-accordion-header" onClick={onHeaderClick}
@@ -405,8 +414,8 @@ function renderAccordionHeader(idx, title) {
 				<DeleteButton ref={getDeleteButtonRef}
 											className="pull-right"
 											confirm={true}
-											translations={this.props.formContext.translations}
-											onClick={this.onDelete(idx)} />
+											translations={that.props.formContext.translations}
+											onClick={that.onDelete(idx)} />
 				</div>
 		</div>
 	);

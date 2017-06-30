@@ -346,6 +346,80 @@ export class StretchAffix extends Component {
 	}
 }
 
+export class Stretch extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
+	componentWillReceiveProps(props) {
+		if (props.mounted && !this.initialized) {
+			this.update(this.getState());
+			this.initialized = true;
+		}
+	}
+
+	componentDidMount() {
+		window.addEventListener("scroll", this.onScroll);
+		window.addEventListener("resize", this.onResize);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onScroll);
+	}
+
+	onScroll = () => {
+		requestAnimationFrame(this.update);
+	}
+
+	update = () => {
+		const state = this.getState();
+		const afterStateChange = () => {
+			if (this.props.onResize) this.props.onResize();
+		};
+		state ? this.setState(state, () => {
+			afterStateChange();
+		}) : afterStateChange;
+	}
+
+	getState = () => {
+		const container = this.props.getContainer();
+
+		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+		const bottomInvisibleHeight = Math.min(viewportHeight - container.getBoundingClientRect().top - container.offsetHeight, 0);
+		return {
+			containerHeight: container.offsetHeight,
+			height: Math.max(
+					container.offsetHeight
+				+ Math.min(container.getBoundingClientRect().top, 0)
+					+ Math.min(bottomInvisibleHeight, 0),
+				0),
+			top: Math.max(-container.getBoundingClientRect().top, 0),
+		};
+	}
+
+	render() {
+		const {children} = this.props;
+
+		const wrapperStyle = {
+			height: this.state.containerHeight,
+		};
+		const style = {
+			position: "relative",
+			top: this.state.top,
+			height: this.state.height,
+		};
+
+		return (
+			<div ref="wrapper" style={wrapperStyle} className={this.props.className}>
+				<div style={style}>
+					{children}
+				</div>
+			</div>
+		);
+	}
+}
+
 export function Help({help, id}) {
 	const helpGlyph = <span className="label-info laji-form-help-glyph"><strong>?</strong></span>;
 

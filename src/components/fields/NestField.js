@@ -127,64 +127,28 @@ export default class NestField extends Component {
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 
-		let {errorSchema, formData} = props;
-		let schemaProperties = props.schema.properties;
-
-		let requiredDictionarified = {};
-		if (props.schema.required) props.schema.required.forEach((req) => {
-			requiredDictionarified[req] = true;
-		});
-
-		const idSchema = {};
-		Object.keys(props.idSchema).forEach(id => {
-			idSchema[id] = props.idSchema[id];
-		});
+		let {schema, uiSchema, idSchema, errorSchema, formData} = props;
 
 		const {nests} = options;
+
 		Object.keys(nests).forEach((wrapperFieldName) => {
-			schemaProperties = {...schemaProperties, [wrapperFieldName]: getNewSchemaField(nests[wrapperFieldName].title)};
-			errorSchema = {...errorSchema, [wrapperFieldName]: {}};
+			const nest = nests[wrapperFieldName];
+			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, registry: props.registry}, nests[wrapperFieldName].fields, nest.title);
+			schema = {...schema, required: nestedProps.schema.required, properties: {...schema.properties, [wrapperFieldName]: nestedProps.schema}};
+			idSchema = {...idSchema, [wrapperFieldName]: nestedProps.idSchema};
+			errorSchema = {...errorSchema, [wrapperFieldName]: nestedProps.errorSchema};
+			formData = {...formData, [wrapperFieldName]: nestedProps.formData};
 
-			nests[wrapperFieldName].fields.forEach((fieldName) => {
-				schemaProperties[wrapperFieldName].properties[fieldName] = schemaProperties[fieldName];
-				if (requiredDictionarified[fieldName]) {
-					schemaProperties[wrapperFieldName].required ?
-						schemaProperties[wrapperFieldName].required.push(fieldName) :
-						(schemaProperties[wrapperFieldName].required = [fieldName]);
-				}
-				errorSchema[wrapperFieldName][fieldName] = errorSchema[fieldName];
-
-				[schemaProperties, errorSchema].forEach(schemaFieldProperty => {
-					delete schemaFieldProperty[fieldName];
-				});
-
-				if (formData && formData.hasOwnProperty(fieldName)) {
-					if (!formData[wrapperFieldName]) {
-						formData = {...formData, [wrapperFieldName]: {[fieldName]: formData[fieldName]}};
-					} else {
-						formData = {...formData,
-							[wrapperFieldName]: {...formData[wrapperFieldName], [fieldName]: formData[fieldName]},
-							[fieldName]: undefined
-						};
-					}
-				}
-
+			nests[wrapperFieldName].fields.forEach(fieldName => {
+				delete schema.properties[fieldName];
+				if (schema.required) schema.required = schema.required.filter(requiredField => requiredField !== fieldName);
+				delete errorSchema[fieldName];
 				delete idSchema[fieldName];
+				delete formData[fieldName];
 			});
-
-			idSchema[wrapperFieldName] = toIdSchema(
-				schemaProperties[wrapperFieldName],
-				idSchema.$id + "_" + wrapperFieldName,
-				this.props.registry.definitions
-			);
 		});
 
-		let schema = {...this.props.schema, properties:  schemaProperties};
-		return {schema, idSchema, errorSchema, formData};
-
-		function getNewSchemaField(title) {
-			return {type: "object", properties: {}, title};
-		}
+		return {schema, uiSchema, idSchema, errorSchema, formData};
 	}
 
 	onChange(formData) {
@@ -194,7 +158,6 @@ export default class NestField extends Component {
 		Object.keys(nests).forEach((newFieldName) => {
 			dictionarifiedNests[newFieldName] = true;
 		});
-
 
 		let nestedPropsFound = false;
 		do {
@@ -214,4 +177,52 @@ export default class NestField extends Component {
 
 		this.props.onChange(formData);
 	}
+}
+
+export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {definitions}}, fields, title) {
+	const newSchema = {type: "object", properties: {}, title};
+	const newErrorSchema = {};
+	const newFormData = {};
+	const newUiSchema = {...uiSchema};
+
+	const fieldsDictionarified = {};
+
+	fields.forEach((fieldName) => {
+		[[schema.properties, newSchema.properties],
+		 [uiSchema, newUiSchema],
+		 [errorSchema, newErrorSchema],
+		 [formData, newFormData]
+		].forEach(([originalPropContainer, newPropContainer]) => {
+			if (originalPropContainer && originalPropContainer[fieldName]) newPropContainer[fieldName] = originalPropContainer[fieldName];
+		});
+		fieldsDictionarified[fieldName] = true;
+	});
+
+	if (uiSchema["ui:order"]) newUiSchema["ui:order"] = uiSchema["ui:order"].filter(ord => fieldsDictionarified[ord] || ord === "*");
+	if (schema.required) newSchema.required = schema.required.filter(req => fieldsDictionarified[req]);
+
+	const newIdSchema = toIdSchema(
+		newSchema,
+		//TODO HM??
+		idSchema.$id,
+		//idSchema.$id + "_" + wrapperFieldName,
+		definitions
+	);
+
+	const newOnChange = formData => {
+		let newFormData = fields.reduce((_formData, field) => {
+			_formData = {..._formData, [field]: formData[field]};
+			return _formData;
+		}, formData);
+		return onChange(newFormData);
+	};
+
+	return {
+		schema: newSchema, 
+		uiSchema: newUiSchema, 
+		idSchema: newIdSchema,
+		errorSchema: newErrorSchema,
+		formData: newFormData,
+		onChange: onChange ? newOnChange : undefined
+	};
 }

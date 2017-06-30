@@ -7,11 +7,12 @@ import LajiMap from "laji-map/lib/map";
 import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
-import { Button, StretchAffix } from "../components";
+import { Button, StretchAffix, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined } from "../../utils";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
+import { getPropsForFields } from "./NestField";
 
 const popupMappers = {
 	unitTaxon: (schema, formData) => {
@@ -94,12 +95,11 @@ export default class MapArrayField extends Component {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryField, topOffset, bottomOffset} = options;
+		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = []} = options;
+		let { belowUiSchema } = options;
 		const {activeIdx} = this.state;
-		uiSchema = {
-			...getInnerUiSchema(uiSchema),
-			"ui:options": {
-				...getUiOptions(getInnerUiSchema(uiSchema)),
+
+		const activeIdxProps = {
 				activeIdx,
 				onActiveChange: (idx, callback) => {
 					this.setState({activeIdx: idx}, () => {
@@ -107,8 +107,22 @@ export default class MapArrayField extends Component {
 						if (callback) callback();
 					});
 				}
+		};
+		uiSchema = {
+			...getInnerUiSchema(uiSchema),
+			"ui:options": {
+				...getUiOptions(getInnerUiSchema(uiSchema)),
+				...activeIdxProps
 			}
 		};
+		if (belowUiSchema) belowUiSchema = {
+			...belowUiSchema,
+			"ui:options": {
+				...getUiOptions(getInnerUiSchema(belowUiSchema)),
+				...activeIdxProps
+			}
+		};
+
 
 		const mapOptions = {...this.getGeometryMapper(this.props).getOptions(options), ...options.mapOptions, ...(this.state.mapOptions || {})};
 
@@ -122,6 +136,54 @@ export default class MapArrayField extends Component {
 		const schemaProps = immutableDelete(this.props.schema.items.properties, geometryField);
 		const schema = {...this.props.schema, items: {...this.props.schema.items, properties: schemaProps}};
 
+		const getChildProps = () => {
+			return {
+				schema: schema.items,
+				uiSchema: uiSchema.items,
+				idSchema: toIdSchema(
+					schema.items,
+					`${this.props.idSchema.$id}_${this.state.activeIdx}`,
+					this.props.registry.definitions
+				),
+				formData: (this.props.formData || [])[this.state.activeIdx],
+				errorSchema: this.props.errorSchema[this.state.activeIdx] || {},
+				registry: this.props.registry,
+				formContext: this.props.formContext
+			}
+		};
+
+		const putChildsToParents = (props) => {
+			return {
+				schema: {...schema, items: props.schema},
+				uiSchema: {...uiSchema, items: props.uiSchema},
+				idSchema: this.props.idSchema,
+				formData: update((this.props.formData || []), {$merge: {[this.state.activeIdx]: props.formData}}),
+				errorSchema: props.errorSchema ? 
+				update((this.props.errorSchema || []), {$merge: {[this.state.activeIdx]: props.errorSchema}}) : 
+				this.props.errorSchema,
+				onChange: formData => {
+					this.props.onChange(formData.map((item, idx) => {
+						return {
+							...(this.props.formData[idx] || getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)), 
+							...item
+						};
+					}));
+				}
+			};
+		};
+
+		const defaultProps = {...this.props, schema, uiSchema};
+		const overrideProps = propsToPassToInlineSchema.reduce((_props, field) => {
+			_props[field] = this.props[field];
+			return _props;
+		}, {});
+
+		const inlineSchemaProps = belowFields ? putChildsToParents(getPropsForFields(getChildProps(), Object.keys(schema.items.properties).filter(field => !belowFields.includes(field)))) : defaultProps;
+		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(getChildProps(), belowFields)) : null;
+
+		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} {...overrideProps} />;
+		const belowSchema = belowSchemaProps ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
 
@@ -134,37 +196,53 @@ export default class MapArrayField extends Component {
 			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
 		};
 
+		const map = (
+			<MapComponent
+				ref="map"
+				contextId={this.props.formContext.contextId}
+				lang={this.props.formContext.lang}
+				onPopupClose={onPopupClose}
+				markerPopupOffset={45}
+				featurePopupOffset={5}
+				popupOnHover={true}
+				onFocusGrab={onFocusGrab}
+				onFocusRelease={onFocusRelease}
+				panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
+				draw={false}
+				onOptionsChanged={onOptionsChanged}
+				{...mapOptions}
+			/>
+		);
+
+		const wrapperProps = {
+			getContainer,
+			topOffset,
+			bottomOffset,
+			onResize,
+			mounted: this.state.mounted,
+			className: this.state.focusGrabbed ? "pass-block" : ""
+		};
+
+		const wrappedMap = belowSchema ? (
+			<Stretch {...wrapperProps}>
+				{map}
+			</Stretch>
+		) : (
+			<StretchAffix {...wrapperProps}>
+				{map}
+			</StretchAffix>
+		);
+
 		return (
-			<div ref="affix">
-				<Row >
+			<div>
+				<Row>
 					<Col {...mapSizes}>
-						<StretchAffix topOffset={topOffset}
-									        bottomOffset={bottomOffset}
-						              getContainer={getContainer}
-						              onResize={onResize}
-						              mounted={this.state.mounted}
-						              className={this.state.focusGrabbed ? "pass-block" : ""}>
-							<MapComponent
-								ref="map"
-								contextId={this.props.formContext.contextId}
-								lang={this.props.formContext.lang}
-								onPopupClose={onPopupClose}
-								markerPopupOffset={45}
-								featurePopupOffset={5}
-								popupOnHover={true}
-								onFocusGrab={onFocusGrab}
-								onFocusRelease={onFocusRelease}
-								panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
-								draw={false}
-								onOptionsChanged={onOptionsChanged}
-								{...mapOptions}
-							/>
-						</StretchAffix>
+						{wrappedMap}
 					</Col>
-					<Col {...schemaSizes}>
+					<Col {...schemaSizes} ref="affix">
 						{mapOptions.emptyMode ?
 							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
-							<SchemaField {...this.props} schema={schema} uiSchema={uiSchema}/>
+							inlineSchema
 						}
 					</Col>
 				</Row>
@@ -172,6 +250,9 @@ export default class MapArrayField extends Component {
 					<div style={{display: "none"}}>
 						<Popup data={this.getFeaturePopupData(this.state.popupIdx)} ref="popup"/>
 					</div> : null}
+				<Row>
+					{belowSchema}
+				</Row>
 			</div>
 		);
 	}
