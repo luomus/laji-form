@@ -275,6 +275,8 @@
 					"geometryMapper": "units",
 					"belowFields": ["units"],
 					"propsToPassToInlineSchema": ["errorSchema", "formData"],
+					"resizeTimeout": 210,
+					"minHeight": 500,
 					"topOffset": 50,
 					"bottomOffset": 50,
 					"mapSizes": {

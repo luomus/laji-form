@@ -85,6 +85,14 @@ export default class MapArrayField extends Component {
 	componentDidUpdate(...params) {
 		const mapper = this.getGeometryMapper(this.props);
 		if (mapper.onComponentDidUpdate) mapper.onComponentDidUpdate(...params);
+		if (this.refs.stretch) {
+			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
+			if (resizeTimeout) {
+				this.getContext().setTimeout(this.refs.stretch.update, resizeTimeout);
+			} else {
+				this.refs.stretch.update();
+			}
+		}
 	}
 
 	getGeometryMapper = (props) => {
@@ -129,7 +137,7 @@ export default class MapArrayField extends Component {
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
 		const schemaSizes = ["lg", "md", "sm", "xs"].reduce((sizes, size) => {
-			sizes[size] = 12 - mapSizes[size];
+			sizes[size] = 12 - mapSizes[size] || 12;
 			return sizes;
 		}, {});
 
@@ -224,7 +232,7 @@ export default class MapArrayField extends Component {
 		};
 
 		const wrappedMap = belowSchema ? (
-			<Stretch {...wrapperProps} minHeight={500}>
+			<Stretch {...wrapperProps} minHeight={getUiOptions(this.props.uiSchema).minHeight} ref="stretch">
 				{map}
 			</Stretch>
 		) : (
