@@ -224,7 +224,7 @@ export default class MapArrayField extends Component {
 		};
 
 		const wrappedMap = belowSchema ? (
-			<Stretch {...wrapperProps}>
+			<Stretch {...wrapperProps} minHeight={500}>
 				{map}
 			</Stretch>
 		) : (
