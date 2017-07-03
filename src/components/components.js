@@ -417,6 +417,11 @@ export class Stretch extends Component {
 			height: this.state.height,
 		};
 
+		if (this.refs.wrapper && this.props.getContainer().getBoundingClientRect().top !== findDOMNode(this.refs.wrapper).getBoundingClientRect().top) {
+			style.top = undefined;
+			style.height = "100%";
+		}
+
 		return (
 			<div ref="wrapper" style={wrapperStyle} className={this.props.className}>
 				<div style={style}>
