@@ -235,10 +235,8 @@ body .laji-form {
 	height: 25px;
 	font-size: 11px;
 	padding: 3px 1px;
-	margin-bottom: 2px;
-}
-.laji-form-field-template-buttons {
-	margin-left: 2px;
+	margin-bottom: 1px;
+	margin-left: 1px;
 }
 .laji-form .laji-form-scope-field-glyph {
 	line-height: 9px;
@@ -469,10 +467,9 @@ body .laji-form {
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
-}
-.laji-form .laji-form-field-template-buttons {
-	flex-direction: column;
-	-webkit-flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	align-content: flex-start;
 }
 
 @media (max-width: 768px) {
