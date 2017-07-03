@@ -60,8 +60,9 @@ export default class MapArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this._context = new Context(`${props.formContext.contextId}_MAP_UNITS`);
+		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
 		this._context.featureIdxsToItemIdxs = {};
+		this._context.setState = (state, callback) => this.setState(state, callback);
 
 		const initialState = {activeIdx: 0};
 		const options = getUiOptions(props.uiSchema);
@@ -204,21 +205,26 @@ export default class MapArrayField extends Component {
 			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
 		};
 
+
+		const mapPropsToPass = {
+			contextId: this.props.formContext.contextId,
+			lang: this.props.formContext.lang,
+			onPopupClose: onPopupClose,
+			markerPopupOffset: 45,
+			featurePopupOffset: 5,
+			popupOnHover: true,
+			onFocusGrab: onFocusGrab,
+			onFocusRelease: onFocusRelease,
+			panel: errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null,
+			draw: false,
+			controlSettings: true,
+			onOptionsChanged: onOptionsChanged,
+			...mapOptions
+		};
 		const map = (
 			<MapComponent
 				ref="map"
-				contextId={this.props.formContext.contextId}
-				lang={this.props.formContext.lang}
-				onPopupClose={onPopupClose}
-				markerPopupOffset={45}
-				featurePopupOffset={5}
-				popupOnHover={true}
-				onFocusGrab={onFocusGrab}
-				onFocusRelease={onFocusRelease}
-				panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
-				draw={false}
-				onOptionsChanged={onOptionsChanged}
-				{...mapOptions}
+				{...mapPropsToPass}
 			/>
 		);
 
@@ -802,13 +808,15 @@ class MapComponent extends Component {
 	}
 }
 
-class Map extends Component {
+export class Map extends Component {
 	componentDidMount() {
-		const {className, style, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
 		this.map = new LajiMap({
 			rootElem: this.refs.map,
 			...options
 		});
+
+		if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -826,8 +834,8 @@ class Map extends Component {
 			}, {});
 		}
 
-		const {className, style, ...options} = this.props; // eslint-disable-line no-unused-vars
-		const {className: prevClassName, style: prevStyle, ...prevOptions} = prevProps; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {className: prevClassName, style: prevStyle, onComponentDidMount: prevOnComponentDidMount, ...prevOptions} = prevProps; // eslint-disable-line no-unused-vars
 
 		if (options.lineTransect && "activeIdx" in options.lineTransect) {
 			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
