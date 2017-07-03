@@ -249,7 +249,9 @@ export default class LajiForm extends Component {
 
 		this.settingSavers = {};
 		this._context.addSettingSaver = (key, fn) => this.settingSavers[key] = fn;
-		this._context.removeSettingSaver = (key) => this.settingSavers[key] = undefined;
+		this._context.removeSettingSaver = (key) => {
+			delete this.settingSavers[key];
+		}
 		this._context.onSettingsChange = this.onSettingsChange;
 
 		this._context.setImmediate = this.setImmediate;
