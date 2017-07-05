@@ -383,25 +383,29 @@ export class Stretch extends Component {
 	}
 
 	getState = () => {
-		let container = this.props.getContainer();
+		const {getContainer, topOffset = 0, bottomOffset = 0, minHeight} = this.props;
+		let container = getContainer();
 
 		let containerHeight = container.offsetHeight;
-		if (this.props.minHeight && containerHeight < 500) {
+		if (minHeight && containerHeight < 500) {
 			containerHeight = 500;
 			container = this.refs.wrapper;
 		}
 
 		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-		const bottomInvisibleHeight = Math.min(viewportHeight - container.getBoundingClientRect().top - containerHeight, 0);
+		const bottomDist = viewportHeight - container.getBoundingClientRect().top - containerHeight;
+		const bottomInvisibleHeight = Math.min(bottomDist, 0);
 
 		return {
 			containerHeight,
 			height: Math.max(
 					containerHeight
-				+ Math.min(container.getBoundingClientRect().top, 0)
-					+ Math.min(bottomInvisibleHeight, 0),
+					+ Math.min(container.getBoundingClientRect().top, 0)
+					+ Math.min(bottomInvisibleHeight, 0)
+					- (container.getBoundingClientRect().top < topOffset ? Math.min(topOffset - container.getBoundingClientRect().top, topOffset) : 0)
+					- (bottomDist < bottomOffset ? Math.min(bottomOffset - bottomDist, bottomOffset) : 0),
 				0),
-			top: Math.max(-container.getBoundingClientRect().top, 0),
+			top: Math.max(-container.getBoundingClientRect().top + topOffset, 0)
 		};
 	}
 
