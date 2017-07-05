@@ -273,8 +273,14 @@
 				"ui:options": {
 					"geometryField": "geometry",
 					"geometryMapper": "units",
-					"belowFields": ["units"],
 					"propsToPassToInlineSchema": ["errorSchema", "formData"],
+					"belowFields": ["units"],
+					"belowUiSchemaRoot": {
+						"ui:field": "SingleActiveArrayField",
+						"ui:options": {
+							"renderer": "uncontrolled"
+						}
+					},
 					"resizeTimeout": 210,
 					"minHeight": 500,
 					"topOffset": 50,
@@ -295,14 +301,106 @@
 						{
 							"field": "notes"
 						}
-					],
-					"belowUiSchema": {
-						"ui:field": "SingleActiveArrayField",
+					]
+				},
+				"uiSchema": {
+					"ui:field": "AccordionArrayField",
+					"ui:options": {
+						"addTxt": "Lisää paikka",
+						"headerFormatters": ["units", "locality"],
+						"popupFields": [
+							{
+								"field": "units",
+								"mapper": "units"
+							},
+							{
+								"field": "localityDescription"
+							}
+						]
+					},
+					"items": {
+						"ui:field": "NestField",
 						"ui:options": {
-							"renderer": "uncontrolled"
+							"nests": {
+								"eventTime": {
+									"title": "",
+									"fields": [
+										"dateBegin",
+										"dateEnd"
+									],
+									"rootUiSchema": {
+										"ui:field": "GridLayoutField",
+										"ui:options": {
+											"lg": {
+												"dateBegin": 6,
+												"dateEnd": 3
+											},
+											"md": {
+												"dateBegin": 7,
+												"dateEnd": 4
+											},
+											"sm": 12,
+											"xs": 12
+										}
+									}
+								},
+								"placeWrapper": {
+									"title": "Havaintopaikan tiedot",
+									"fields": [
+										"locality",
+										"localityDescription",
+										"images",
+										"eventTime",
+										"weather",
+										"notes"
+									]
+								}
+							}
 						},
-						"items": {
-							"units": {
+						"ui:order": [
+							"*",
+							"units"
+						],
+						"wgs84GeometryCollection": {
+							"ui:field": "HiddenField"
+						},
+						"placeWrapper": {
+							"ui:field": "ScopeField",
+							"classNames": "well well-sm",
+							"ui:settings": ["%additionalFields/scopeField_gatherings"], 
+							"ui:options": {
+								"includeAdditionalFieldsChooserButton": true,
+								"additionalsPersistenceId": "gatherings",
+								"fields": [
+									"locality",
+									"localityDescription",
+									"images",
+									"weather",
+									"notes"
+								],
+								"titles": {
+									"eventTime": "Aika"
+								}
+							},
+							"uiSchema": {
+								"images": {
+									"ui:field": "ImageArrayField",
+									"ui:options": {
+										"capturerVerbatimPath": "/gatheringEvent/leg"
+									}
+								}
+							}
+						},
+						"dateBegin": {
+							"ui:widget": "DateTimeWidget",
+							"ui:options": {
+								"showButtons": true
+							}
+						},
+						"dateEnd": {
+							"ui:widget": "DateTimeWidget"
+						},
+						"units": {
 								"ui:options": {
 									"confirmDelete": true,
 									"deleteCorner": true,
@@ -534,106 +632,6 @@
 									}
 								}
 							}
-						}
-					}
-				},
-				"uiSchema": {
-					"ui:field": "AccordionArrayField",
-					"ui:options": {
-						"addTxt": "Lisää paikka",
-						"headerFormatters": ["units", "locality"],
-						"popupFields": [
-							{
-								"field": "units",
-								"mapper": "units"
-							},
-							{
-								"field": "localityDescription"
-							}
-						]
-					},
-					"items": {
-						"ui:field": "NestField",
-						"ui:options": {
-							"nests": {
-								"eventTime": {
-									"title": "",
-									"fields": [
-										"dateBegin",
-										"dateEnd"
-									]
-								},
-								"placeWrapper": {
-									"title": "Havaintopaikan tiedot",
-									"fields": [
-										"locality",
-										"localityDescription",
-										"images",
-										"eventTime",
-										"weather",
-										"notes"
-									]
-								}
-							}
-						},
-						"ui:order": [
-							"*",
-							"units"
-						],
-						"wgs84GeometryCollection": {
-							"ui:field": "HiddenField"
-						},
-						"placeWrapper": {
-							"ui:field": "ScopeField",
-							"classNames": "well well-sm",
-							"ui:settings": ["%additionalFields/scopeField_gatherings"], 
-							"ui:options": {
-								"includeAdditionalFieldsChooserButton": true,
-								"additionalsPersistenceId": "gatherings",
-								"fields": [
-									"locality",
-									"localityDescription",
-									"images",
-									"weather",
-									"notes"
-								],
-								"titles": {
-									"eventTime": "Aika"
-								}
-							},
-							"uiSchema": {
-								"images": {
-									"ui:field": "ImageArrayField",
-									"ui:options": {
-										"capturerVerbatimPath": "/gatheringEvent/leg"
-									}
-								},
-								"eventTime": {
-									"ui:field": "GridLayoutField",
-									"ui:options": {
-										"lg": {
-											"dateBegin": 6,
-											"dateEnd": 3
-										},
-										"md": {
-											"dateBegin": 7,
-											"dateEnd": 4
-										},
-										"sm": 12,
-										"xs": 12
-									},
-									"dateBegin": {
-										"ui:widget": "DateTimeWidget",
-										"ui:options": {
-											"showButtons": true
-										}
-									},
-									"dateEnd": {
-										"ui:widget": "DateTimeWidget"
-									}
-								}
-							}
-						}
 					}
 				}
 			}

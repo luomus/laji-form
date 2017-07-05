@@ -28,6 +28,7 @@ class _SchemaField extends Component {
 	render() {
 		const {props} = this;
 		let {schema, uiSchema, registry} = props;
+
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
 			schema = {...schema, uniqueItems: false};
 		}

@@ -60,8 +60,9 @@ export default class MapArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this._context = new Context(`${props.formContext.contextId}_MAP_UNITS`);
+		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
 		this._context.featureIdxsToItemIdxs = {};
+		this._context.setState = (state, callback) => this.setState(state, callback);
 
 		const initialState = {activeIdx: 0};
 		const options = getUiOptions(props.uiSchema);
@@ -104,7 +105,7 @@ export default class MapArrayField extends Component {
 		let {uiSchema, errorSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = []} = options;
-		let { belowUiSchema } = options;
+		let { belowUiSchemaRoot } = options;
 		const {activeIdx} = this.state;
 
 		const activeIdxProps = {
@@ -120,17 +121,8 @@ export default class MapArrayField extends Component {
 			...getInnerUiSchema(uiSchema),
 			"ui:options": {
 				...getUiOptions(getInnerUiSchema(uiSchema)),
-				...activeIdxProps
 			}
 		};
-		if (belowUiSchema) belowUiSchema = {
-			...belowUiSchema,
-			"ui:options": {
-				...getUiOptions(getInnerUiSchema(belowUiSchema)),
-				...activeIdxProps
-			}
-		};
-
 
 		const mapOptions = {...this.getGeometryMapper(this.props).getOptions(options), ...options.mapOptions, ...(this.state.mapOptions || {})};
 
@@ -186,16 +178,22 @@ export default class MapArrayField extends Component {
 			return _props;
 		}, {});
 
-		const inlineSchemaProps = belowFields ? putChildsToParents(getPropsForFields(getChildProps(), Object.keys(schema.items.properties).filter(field => !belowFields.includes(field)))) : defaultProps;
+		const inlineSchemaProps = putChildsToParents(getPropsForFields(getChildProps(), Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))));
 		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(getChildProps(), belowFields)) : null;
 
-		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} {...overrideProps} />;
-		const belowSchema = belowSchemaProps ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+		let inlineUiSchema = inlineSchemaProps ? {...inlineSchemaProps.uiSchema, items: {...uiSchema.items, ...inlineSchemaProps.uiSchema.items}} : defaultProps.uiSchema;
+		let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot}: undefined;
+
+		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
+		if (belowUiSchema) belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
+		
+		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
+		const belowSchema = belowFields ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
 
-		const getContainer = () => findDOMNode(belowSchema ? this.refs._stretch : this.refs.affix);
+		const getContainer = () => findDOMNode(this.refs.affix);
 		const onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true});
 		const onPopupClose = () => {this.setState({popupIdx: undefined});};
 		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
@@ -204,21 +202,25 @@ export default class MapArrayField extends Component {
 			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
 		};
 
+		const mapPropsToPass = {
+			contextId: this.props.formContext.contextId,
+			lang: this.props.formContext.lang,
+			onPopupClose: onPopupClose,
+			markerPopupOffset: 45,
+			featurePopupOffset: 5,
+			popupOnHover: true,
+			onFocusGrab: onFocusGrab,
+			onFocusRelease: onFocusRelease,
+			panel: errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null,
+			draw: false,
+			controlSettings: true,
+			onOptionsChanged: onOptionsChanged,
+			...mapOptions
+		};
 		const map = (
 			<MapComponent
 				ref="map"
-				contextId={this.props.formContext.contextId}
-				lang={this.props.formContext.lang}
-				onPopupClose={onPopupClose}
-				markerPopupOffset={45}
-				featurePopupOffset={5}
-				popupOnHover={true}
-				onFocusGrab={onFocusGrab}
-				onFocusRelease={onFocusRelease}
-				panel={errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null}
-				draw={false}
-				onOptionsChanged={onOptionsChanged}
-				{...mapOptions}
+				{...mapPropsToPass}
 			/>
 		);
 
@@ -242,12 +244,12 @@ export default class MapArrayField extends Component {
 		);
 
 		return (
-			<div ref="affix">
+			<div>
 				<Row>
 					<Col {...mapSizes}>
 						{wrappedMap}
 					</Col>
-					<Col {...schemaSizes} ref="_stretch">
+					<Col {...schemaSizes} ref="affix">
 						{mapOptions.emptyMode ?
 							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
 							inlineSchema
@@ -802,13 +804,15 @@ class MapComponent extends Component {
 	}
 }
 
-class Map extends Component {
+export class Map extends Component {
 	componentDidMount() {
-		const {className, style, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
 		this.map = new LajiMap({
 			rootElem: this.refs.map,
 			...options
 		});
+
+		if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -826,8 +830,8 @@ class Map extends Component {
 			}, {});
 		}
 
-		const {className, style, ...options} = this.props; // eslint-disable-line no-unused-vars
-		const {className: prevClassName, style: prevStyle, ...prevOptions} = prevProps; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {className: prevClassName, style: prevStyle, onComponentDidMount: prevOnComponentDidMount, ...prevOptions} = prevProps; // eslint-disable-line no-unused-vars
 
 		if (options.lineTransect && "activeIdx" in options.lineTransect) {
 			this.map.setLTActiveIdx(options.lineTransect.activeIdx);

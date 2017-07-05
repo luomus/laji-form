@@ -138,13 +138,16 @@ export default class NestField extends Component {
 			idSchema = {...idSchema, [wrapperFieldName]: nestedProps.idSchema};
 			errorSchema = {...errorSchema, [wrapperFieldName]: nestedProps.errorSchema};
 			formData = {...formData, [wrapperFieldName]: nestedProps.formData};
+			uiSchema = {...uiSchema, [wrapperFieldName]: {...(uiSchema[wrapperFieldName] || {}), ...nestedProps.uiSchema}};
+			if (nest.rootUiSchema) {
+				uiSchema = {...uiSchema, [wrapperFieldName]: {...(nest.rootUiSchema || {}), ...(uiSchema[wrapperFieldName] || {})}};
+			}
 
 			nests[wrapperFieldName].fields.forEach(fieldName => {
-				delete schema.properties[fieldName];
+				[schema.properties, errorSchema, idSchema, formData, uiSchema].forEach(container => {
+					delete container[fieldName];
+				});
 				if (schema.required) schema.required = schema.required.filter(requiredField => requiredField !== fieldName);
-				delete errorSchema[fieldName];
-				delete idSchema[fieldName];
-				delete formData[fieldName];
 			});
 		});
 
@@ -183,13 +186,16 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 	const newSchema = {type: "object", properties: {}, title};
 	const newErrorSchema = {};
 	const newFormData = {};
-	const newUiSchema = {...uiSchema};
+	const newUiSchema = ["classNames"].reduce((_uiSchema, prop) => {
+		if (prop in _uiSchema) _uiSchema[prop] = uiSchema[prop];
+		return _uiSchema;
+	}, {});
 
 	const fieldsDictionarified = {};
 
 	fields.forEach((fieldName) => {
 		[[schema.properties, newSchema.properties],
-		 [uiSchema, newUiSchema],
+			[uiSchema, newUiSchema],
 		 [errorSchema, newErrorSchema],
 		 [formData, newFormData]
 		].forEach(([originalPropContainer, newPropContainer]) => {
@@ -203,9 +209,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 
 	const newIdSchema = toIdSchema(
 		newSchema,
-		//TODO HM??
 		idSchema.$id,
-		//idSchema.$id + "_" + wrapperFieldName,
 		definitions
 	);
 
@@ -223,6 +227,6 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		idSchema: newIdSchema,
 		errorSchema: newErrorSchema,
 		formData: newFormData,
-		onChange: onChange ? newOnChange : undefined
+		onChange: onChange? newOnChange : undefined
 	};
 }
