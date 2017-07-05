@@ -9,6 +9,7 @@ import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
+import { Map } from "./MapArrayField";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -31,12 +32,12 @@ const buttonSettings = {
 
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
-		function getLayer() {
+		function getLayer(map) {
 			const {$id} = that.props.idSchema;
 			const splitted = $id.split("_");
 			const idx = parseInt(splitted[splitted.length - 1]);
 
-			const {featureIdxsToItemIdxs} = new Context(`${that.props.formContext.contextId}_MAP_UNITS`);
+			const {featureIdxsToItemIdxs} = new Context(`${that.props.formContext.contextId}_MAP_CONTAINER`);
 			let featureIdx = undefined;
 			for (let i in featureIdxsToItemIdxs) {
 				if (featureIdxsToItemIdxs[i] === idx) {
@@ -46,88 +47,71 @@ const buttonSettings = {
 			}
 			if (featureIdx === undefined) return;
 
-			const {map} = mapContext;
 			return map._getDrawLayerById(map.idxsToIds[featureIdx]);
 		}
 
 		let active = false;
 		function onClick() {
 			active = true;
-			const {translations} = that.props.formContext;
+			const {translations, contextId} = that.props.formContext;
 			const {map} = mapContext;
 			if (!map) return;
 
-			mapContext.grabFocus();
+			let modalMap = undefined;
+			let triggerLayer = undefined;
 
-			const onChange = map.draw.onChange;
-
-			let triggerLayer = map.triggerDrawing("marker");
-
-			mapContext.showPanel({
-				panelButtonContent: translations.Cancel,
-				panelButtonOnClick: close,
-				panelButtonBsStyle: "danger"
-			});
-			mapContext.setMapState({
-				draw: {
-					...map.draw,
-					marker: true,
-					polyline: false,
-					rectangle: false,
-					polygon: false,
-					circle: false,
-					onChange: events => {
-						for (let event of events) {
-							const {type} = event;
-							switch (type) {
-							case "create":
-								that.props.onChange(update(
-										that.props.formData,
-										{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
-									));
-								close();
-								break;
-							case "delete":
-							case "edit":
-								onChange([event]);
+			const {rootElem, ...mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			that.setState({
+				map: {
+					...mapOptions,
+					draw: {
+						...map.draw,
+						marker: true,
+						polyline: false,
+						rectangle: false,
+						polygon: false,
+						circle: false,
+						onChange: events => {
+							for (let event of events) {
+								const {type} = event;
+								switch (type) {
+								case "create":
+									that.props.onChange(update(
+											that.props.formData,
+											{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
+										));
+									close();
+									break;
+								case "delete":
+								case "edit":
+									map.draw.onChange([event]);
+								}
 							}
 						}
+					},
+					onComponentDidMount: (map) => {
+						modalMap = map;
+						triggerLayer = modalMap.triggerDrawing("marker");
+						const layer = getLayer(modalMap);
+						if (layer) {
+							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
+							modalMap.updateLayerStyle(layer, {opacity: 0.7});
+						}
 					}
-				},
-			}, () => {
-				mapContext.setOnUpdateMap(() => {
-					const layer = getLayer();
-					if (layer) {
-						map.updateLayerStyle(layer, {opacity: 0.7});
-						map.map.closePopup();
-						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-					}
-				});
+				}
 			});
 
+
 			function close() {
-				mapContext.hidePanel();
-				mapContext.releaseFocus();
 				triggerLayer.disable();
-				mapContext.setMapState(undefined, () => {
-					mapContext.setOnUpdateMap(undefined);
-					mapContext.hidePanel();
-					mapContext.releaseFocus();
-					triggerLayer.disable();
-					const layer = getLayer();
-					if (layer) {
-						map.updateLayerStyle(layer, {opacity: 1});
-						layer.unbindTooltip();
-					}
-					active = false;
-				});
+				that.setState({map: undefined});
 			}
 		}
 
 		let layer = undefined;
 		function onMouseEnter() {
 			const {map} = mapContext;
-			layer = getLayer();
+			layer = getLayer(map);
 			if (!layer) return;
 
 			let latlng = undefined;
@@ -224,10 +208,23 @@ export default class ScopeField extends Component {
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
 		const uiSchema = {...this.state.uiSchema, "ui:buttons": [...(this.state.uiSchema["ui:buttons"] || []), this.renderAdditionalsButton()]};
+		const {translations} = this.props.formContext;
+		const onHide = () => this.setState({map: undefined});
+
 		return (
 			<div>
 				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />
 				{this.state.additionalsOpen && additionalsGroupingPath ? this.modal : null}
+				{this.state.map ? (
+					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide}>
+						<Modal.Header closeButton={true} closeLabel={translations.Cancel} >
+							<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<Map {...this.state.map} />
+						</Modal.Body>
+					</Modal>
+				) : null}
 			</div>
 		);
 	}

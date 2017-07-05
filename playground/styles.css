@@ -195,7 +195,7 @@ body .laji-form {
 .laji-form .laji-form-map-container {
 	z-index: 1;
 	position: relative;
-	height: inherit;
+	height: 100%;
 }
 .laji-form .laji-form-map {
 	height: 100%;
@@ -611,4 +611,13 @@ body .laji-form {
 }
 .laji-form .checkbox-container {
 	display: table;
+}
+
+.laji-form.map-dialog .modal-content, .laji-form.map-dialog .modal-body {
+	width: auto;
+	height: inherit;
+}
+.laji-form.map-dialog {
+	width: 90%;
+	height: 90%;
 }

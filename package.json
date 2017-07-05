@@ -34,7 +34,7 @@
     "react-addons-css-transition-group": "*",
     "react-addons-shallow-compare": "*",
     "react-autosuggest": "^9.0.1",
-    "react-bootstrap": "^0.30.9",
+    "react-bootstrap": "^0.31.0",
     "react-bootstrap-switch": "^15.0.4",
     "react-dom": "^15.5.0",
     "react-dropzone": "^3.12.3",

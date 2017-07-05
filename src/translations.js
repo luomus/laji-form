@@ -313,5 +313,10 @@
 		fi: "Pätkäise linja metriluvulla",
 		en: "Split line transect by meters",
 		sv: "Dela line transekt metrisk talet"
+	},
+	setLocationToUnit: {
+		fi: "Aseta havainnolle uusi sijainti",
+		en: "Set a new location for the observation",
+		sv: "Ange en ny plats för observationen"
 	}
 };
