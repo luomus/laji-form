@@ -3,7 +3,12 @@
 	"name": "trip report",
 	"language": "fi",
 	"title": "Retkilomake",
-	"description": "Tällä lomakkeella voit ilmoittaa yhden tai useamman päivän kestäneen retken kaikki havaintotiedot ja mahdollisesti kokoelmanäytteeksi otettujen yksilöiden tiedot.<br><br><a target=\"_blank\" href=\"https://beta.laji.fi/about/1107\">Käyttöohjeet</a>",
+	"description": "Tällä lomakkeella voit ilmoittaa yhden tai useamman päivän kestäneen retken kaikki havaintotiedot ja mahdollisesti kokoelmanäytteeksi otettujen yksilöiden tiedot.",
+	"instructions": {
+		"fi": "https://laji.fi/about/1107",
+		"en": "https://laji.fi/about/1107",
+		"sv": "https://laji.fi/about/1107"
+	},
 	"uiSchema": {
 		"ui:shortcuts": {
 			"alt": {
@@ -16,6 +21,9 @@
 			"shift+Enter": {
 				"fn": "navigate",
 				"reverse": true
+			},
+			"ctrl+Enter": {
+				"fn": "textareaRowInsert"
 			},
 			"alt+ ": {
 				"fn": "navigate"
@@ -56,6 +64,28 @@
 				"fn": "navigateArray",
 				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
 				"targetLabel": "havaintoon"
+			},
+			"alt+h": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+j": {
+				"fn": "navigateArray",
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havaintoon"
+			},
+			"alt+k": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havaintoon"
+			},
+			"alt+l": {
+				"fn": "navigateArray",
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
 			},
 			"alt+n": {
 				"fn": "navigateArray"
@@ -269,20 +299,14 @@
 			"uiSchema": {
 				"ui:field": "MapArrayField",
 				"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
-				"ui:settings": ["/mapOptions/tileLayerName", "/mapOptions/tileLayerOpacity",  "/mapOptions/overlayNames"],
+				"ui:settings": [
+					"/mapOptions/tileLayerName",
+					"/mapOptions/overlayNames",
+					"/mapOptions/tileLayerOpacity"
+				],
 				"ui:options": {
 					"geometryField": "geometry",
 					"geometryMapper": "units",
-					"propsToPassToInlineSchema": ["errorSchema", "formData"],
-					"belowFields": ["units"],
-					"belowUiSchemaRoot": {
-						"ui:field": "SingleActiveArrayField",
-						"ui:options": {
-							"renderer": "uncontrolled"
-						}
-					},
-					"resizeTimeout": 210,
-					"minHeight": 500,
 					"topOffset": 50,
 					"bottomOffset": 50,
 					"mapSizes": {
@@ -301,13 +325,26 @@
 						{
 							"field": "notes"
 						}
-					]
+					],
+					"belowFields": ["units"],
+					"belowUiSchemaRoot": {
+						"ui:field": "SingleActiveArrayField",
+						"ui:options": {
+							"renderer": "uncontrolled"
+						}
+					},
+					"propsToPassToInlineSchema": ["errorSchema", "formData"],
+					"minHeight": 500,
+					"resizeTimeout": 210
 				},
 				"uiSchema": {
 					"ui:field": "AccordionArrayField",
 					"ui:options": {
 						"addTxt": "Lisää paikka",
-						"headerFormatters": ["units", "locality"],
+						"headerFormatters": [
+							"units",
+							"locality"
+						],
 						"popupFields": [
 							{
 								"field": "units",
@@ -327,22 +364,7 @@
 									"fields": [
 										"dateBegin",
 										"dateEnd"
-									],
-									"rootUiSchema": {
-										"ui:field": "GridLayoutField",
-										"ui:options": {
-											"lg": {
-												"dateBegin": 6,
-												"dateEnd": 3
-											},
-											"md": {
-												"dateBegin": 7,
-												"dateEnd": 4
-											},
-											"sm": 12,
-											"xs": 12
-										}
-									}
+									]
 								},
 								"placeWrapper": {
 									"title": "Havaintopaikan tiedot",
@@ -367,7 +389,9 @@
 						"placeWrapper": {
 							"ui:field": "ScopeField",
 							"classNames": "well well-sm",
-							"ui:settings": ["%additionalFields/scopeField_gatherings"], 
+							"ui:settings": [
+								"%additionalFields/scopeField_gatherings"
+							],
 							"ui:options": {
 								"includeAdditionalFieldsChooserButton": true,
 								"additionalsPersistenceId": "gatherings",
@@ -388,250 +412,294 @@
 									"ui:options": {
 										"capturerVerbatimPath": "/gatheringEvent/leg"
 									}
+								},
+								"eventTime": {
+									"ui:field": "GridLayoutField",
+									"ui:options": {
+										"lg": {
+											"dateBegin": 6,
+											"dateEnd": 3
+										},
+										"md": {
+											"dateBegin": 7,
+											"dateEnd": 4
+										},
+										"sm": 12,
+										"xs": 12
+									},
+									"dateBegin": {
+										"ui:widget": "DateTimeWidget",
+										"ui:options": {
+											"showButtons": true
+										}
+									},
+									"dateEnd": {
+										"ui:widget": "DateTimeWidget"
+									}
 								}
 							}
 						},
-						"dateBegin": {
-							"ui:widget": "DateTimeWidget",
-							"ui:options": {
-								"showButtons": true
-							}
-						},
-						"dateEnd": {
-							"ui:widget": "DateTimeWidget"
-						},
 						"units": {
+							"ui:options": {
+								"confirmDelete": true,
+								"deleteCorner": true,
+								"buttons": [
+									{
+										"fn": "add",
+										"label": "Lisää havainto"
+									},
+									{
+										"fn": "copy",
+										"label": "Kopioi havainto",
+										"type": "blacklist",
+										"filter": [
+											"/identifications/0/taxon",
+											"/identifications/0/taxonID",
+											"unitType",
+											"count",
+											"notes",
+											"/unitGathering/geometry",
+											"images",
+											"sex",
+											"lifeStage",
+											"hostID",
+											"substrateSpecies",
+											"taste",
+											"tasteNotes",
+											"smell",
+											"smellNotes",
+											"plantLifeStage",
+											"plantStatusCode",
+											"movingStatus",
+											"/unitGathering/substrate"
+										]
+									}
+								]
+							},
+							"items": {
+								"ui:field": "FlatField",
+								"classNames": "well well-sm",
 								"ui:options": {
-									"confirmDelete": true,
-									"deleteCorner": true,
-									"buttons": [
-										{
-											"fn": "add",
-											"label": "Lisää havainto"
-										},
-										{
-											"fn": "copy",
-											"label": "Kopioi havainto",
-											"type": "blacklist",
-											"filter": [
-												"/identifications/0/taxon",
-												"/identifications/0/taxonID",
-												"unitType",
-												"count",
-												"notes",
-												"/unitGathering/geometry",
-												"images"
-											]
-										}
+									"fields": [
+										"identifications",
+										"unitGathering"
 									]
 								},
-								"items": {
-									"ui:field": "FlatField",
-									"classNames": "well well-sm",
+								"uiSchema": {
+									"ui:field": "ScopeField",
+									"ui:settings": [
+										"%additionalFields/scopeField_gathering_unit_unitType"
+									],
 									"ui:options": {
+										"additionalsGroupingPath": "/fieldScopes/unitType",
+										"additionalsGroupingOrderer": "unitType",
+										"additionalsGroupsTranslator": "taxonGroups",
+										"additionalsPersistenceKey": "unitType",
+										"additionalsPersistenceId": "gathering_unit_unitType",
+										"includeAdditionalFieldsChooserButton": true,
+										"glyphFields": [
+											{
+												"glyph": "camera",
+												"show": "images",
+												"label": "Lisää valokuva"
+											},
+											{
+												"glyph": "map-marker",
+												"fn": "setLocation",
+												"label": "Valitse sijainti"
+											}
+										],
 										"fields": [
-											"identifications",
-											"unitGathering"
-										]
+											"/identifications/taxonID",
+											"/identifications/taxon",
+											"count",
+											"notes",
+											"unitType",
+											"taxonConfidence",
+											"recordBasis"
+										],
+										"fieldScopes": {
+											"unitType": {
+												"*": {
+													"title": "Kaikki",
+													"additionalFields": [
+														"/identifications/det",
+														"/identifications/detDate",
+														"/identifications/identificationBasis",
+														"sex",
+														"/unitGathering/dateBegin",
+														"/unitGathering/dateEnd",
+														"/unitGathering/habitatIUCN",
+														"/unitGathering/habitatDescription",
+														"preservation",
+														"samplingMethod",
+														"breeding"
+													]
+												},
+												"MVL.1": {
+													"additionalFields": [
+														"atlasCode",
+														"movingStatus",
+														"twitched"
+													]
+												},
+												"MVL.21": {
+													"additionalFields": [
+														"nativeStatus",
+														"plantLifeStage",
+														"plantStatusCode"
+													]
+												},
+												"MVL.232": {
+													"additionalFields": [
+														"lifeStage",
+														"hostID"
+													]
+												},
+												"MVL.233": {
+													"title": "Sienet",
+													"additionalFields": [
+														"/unitGathering/substrate",
+														"substrateSpecies",
+														"smell",
+														"smellNotes",
+														"taste",
+														"tasteNotes"
+													]
+												}
+											}
+										}
 									},
 									"uiSchema": {
-										"ui:field": "ScopeField",
+										"ui:field": "AutosuggestField",
 										"ui:options": {
-											"additionalsGroupingPath": "/fieldScopes/unitType",
-											"additionalsGroupingOrderer": "unitType",
-											"additionalsGroupsTranslator": "taxonGroups",
-											"additionalsPersistenceKey": "unitType",
-											"additionalsPersistenceId": "gathering_unit_unitType",
-											"includeAdditionalFieldsChooserButton": true,
-											"glyphFields": [
-												{
-													"glyph": "camera",
-													"show": "images",
-													"label": "Lisää valokuva"
-												},
-												{
-													"glyph": "map-marker",
-													"fn": "setLocation",
-													"label": "Valitse sijainti"
-												}
-											],
-											"fields": [
-												"/identifications/taxonID",
-												"/identifications/taxon",
-												"count",
-												"notes",
-												"unitType",
-												"taxonConfidence",
-												"recordBasis"
-											],
-											"fieldScopes": {
-												"unitType": {
-													"*": {
-														"title": "Kaikki",
-														"additionalFields": [
-															"/identifications/det",
-															"/identifications/detDate",
-															"/identifications/identificationBasis",
-															"sex",
-															"/unitGathering/dateBegin",
-															"/unitGathering/dateEnd",
-															"/unitGathering/habitatIUCN",
-															"/unitGathering/habitatDescription",
-															"preservation",
-															"samplingMethod"
-														]
-													},
-													"MVL.1": {
-														"additionalFields": [
-															"breeding",
-															"atlasCode",
-															"movingStatus",
-															"twitched"
-														]
-													},
-													"MVL.21": {
-														"additionalFields": [
-															"nativeStatus",
-															"plantLifeStage",
-															"plantStatusCode"
-														]
-													},
-													"MVL.232": {
-														"additionalFields": [
-															"lifeStage",
-															"hostID"
-														]
-													},
-													"MVL.233": {
-														"title": "Sienet",
-														"additionalFields": [
-															"/unitGathering/substrate",
-															"substrateSpecies",
-															"smell",
-															"smellNotes",
-															"taste",
-															"tasteNotes"
-														]
-													}
+											"autosuggestField": "taxon",
+											"allowNonsuggestedValue": true,
+											"suggestionInputField": "/identifications/taxon",
+											"suggestionValueField": "/identifications/taxonID",
+											"suggestionReceivers": {
+												"/identifications/taxon": "value",
+												"unitType": "$taxonGroup",
+												"/identifications/taxonID": "key"
+											},
+											"inputTransformer": {
+												"regexp": "^(.*)\\?$",
+												"transformations": {
+													"taxonConfidence": "MY.taxonConfidenceUnsure"
 												}
 											}
 										},
 										"uiSchema": {
-											"ui:field": "AutosuggestField",
+											"ui:field": "GridLayoutField",
 											"ui:options": {
-												"autosuggestField": "taxon",
-												"allowNonsuggestedValue": true,
-												"suggestionInputField": "/identifications/taxon",
-												"suggestionValueField": "/identifications/taxonID",
-												"suggestionReceivers": {
-													"/identifications/taxon": "value",
-													"unitType": "$taxonGroup",
-													"/identifications/taxonID": "key"
+												"lg": {
+													"/identifications/taxonID": 2,
+													"/identifications/taxon": 2,
+													"count": 2,
+													"notes": 2,
+													"unitType": 2,
+													"taxonConfidence": 2,
+													"recordBasis": 2,
+													"/identifications/identificationBasis": 2,
+													"/unitGathering/dateBegin": 3,
+													"/unitGathering/dateEnd": 3,
+													"*": 1
 												},
-												"inputTransformer": {
-													"regexp": "^(.*)\\?$",
-													"transformations": {
-														"taxonConfidence": "MY.taxonConfidenceUnsure"
-													}
+												"md": {
+													"/identifications/taxonID": 2,
+													"/identifications/taxon": 2,
+													"count": 2,
+													"notes": 2,
+													"unitType": 2,
+													"taxonConfidence": 2,
+													"recordBasis": 2,
+													"/identifications/identificationBasis": 2,
+													"/unitGathering/dateBegin": 3,
+													"/unitGathering/dateEnd": 3,
+													"/identifications/detDate": 3,
+													"*": 1
+												},
+												"sm": {
+													"/identifications/identificationBasis": 4,
+													"/unitGathering/dateBegin": 3,
+													"/unitGathering/dateEnd": 3,
+													"*": 2
+												},
+												"xs": 12,
+												"rows": [
+													[
+														"/identifications/taxon",
+														"taxonConfidence",
+														"recordBasis",
+														"count",
+														"notes"
+													]
+												]
+											},
+											"/identifications/taxonID": {
+												"ui:widget": "HiddenWidget"
+											},
+											"/identifications/detDate": {
+												"ui:widget": "DateWidget"
+											},
+											"unitType": {
+												"ui:field": "HiddenField"
+											},
+											"images": {
+												"ui:field": "ImageArrayField",
+												"ui:options": {
+													"capturerVerbatimPath": "/gatheringEvent/leg"
 												}
 											},
-											"uiSchema": {
-												"ui:field": "GridLayoutField",
+											"/unitGathering/geometry": {
+												"ui:field": "HiddenField"
+											},
+											"/unitGathering/dateBegin": {
+												"ui:widget": "DateTimeWidget"
+											},
+											"/unitGathering/dateEnd": {
+												"ui:widget": "DateTimeWidget"
+											},
+											"recordBasis": {
 												"ui:options": {
-													"lg": {
-														"/identifications/identificationBasis": 4,
-														"/unitGathering/dateBegin": 3,
-														"/unitGathering/dateEnd": 3,
-														"*": 2
-													},
-													"md": {
-														"/identifications/identificationBasis": 4,
-														"/unitGathering/dateBegin": 4,
-														"/unitGathering/dateEnd": 4,
-														"/identifications/detDate": 3,
-														"*": 2
-													},
-													"sm": {
-														"/identifications/identificationBasis": 8,
-														"/unitGathering/dateBegin": 8,
-														"/unitGathering/dateEnd": 8,
-														"*": 4
-													},
-													"xs": 12,
-													"rows": [
-														[
-															"/identifications/taxon",
-															"taxonConfidence",
-															"recordBasis",
-															"count",
-															"notes"
-														]
+													"filterType": "whitelist",
+													"filter": [
+														"",
+														"MY.recordBasisHumanObservationPhoto",
+														"MY.recordBasisPreservedSpecimen",
+														"MY.recordBasisHumanObservationHandled",
+														"MY.recordBasisHumanObservation"
+													],
+													"order": [
+														"",
+														"MY.recordBasisHumanObservation",
+														"MY.recordBasisHumanObservationPhoto",
+														"MY.recordBasisPreservedSpecimen",
+														"MY.recordBasisHumanObservationHandled"
 													]
-												},
-												"/identifications/taxonID": {
-													"ui:widget": "HiddenWidget"
-												},
-												"/identifications/detDate": {
-													"ui:widget": "DateWidget"
-												},
-												"unitType": {
-													"ui:field": "HiddenField"
-												},
-												"images": {
-													"ui:field": "ImageArrayField",
-													"ui:options": {
-														"capturerVerbatimPath": "/gatheringEvent/leg"
-													}
-												},
-												"/unitGathering/geometry": {
-													"ui:field": "HiddenField"
-												},
-												"/unitGathering/dateBegin": {
-													"ui:widget": "DateTimeWidget"
-												},
-												"/unitGathering/dateEnd": {
-													"ui:widget": "DateTimeWidget"
-												},
-												"recordBasis": {
-													"ui:options": {
-														"filterType": "whitelist",
-														"filter": [
-															"",
-															"MY.recordBasisHumanObservationPhoto",
-															"MY.recordBasisPreservedSpecimen",
-															"MY.recordBasisHumanObservationHandled",
-															"MY.recordBasisHumanObservation"
-														],
-														"order": [
-															"",
-															"MY.recordBasisHumanObservation",
-															"MY.recordBasisHumanObservationPhoto",
-															"MY.recordBasisPreservedSpecimen",
-															"MY.recordBasisHumanObservationHandled"
-														]
-													}
-												},
-												"hostID": {
-													"ui:widget": "AutosuggestWidget",
-													"ui:options": {
-														"autosuggestField": "taxon",
-														"allowNonsuggestedValue": true,
-														"suggestionReceive": "key"
-													}
-												},
-												"substrateSpecies": {
-													"ui:widget": "AutosuggestWidget",
-													"ui:options": {
-														"autosuggestField": "taxon",
-														"allowNonsuggestedValue": true,
-														"suggestionReceive": "key"
-													}
+												}
+											},
+											"hostID": {
+												"ui:widget": "AutosuggestWidget",
+												"ui:options": {
+													"autosuggestField": "taxon",
+													"allowNonsuggestedValue": true,
+													"suggestionReceive": "key"
+												}
+											},
+											"substrateSpecies": {
+												"ui:widget": "AutosuggestWidget",
+												"ui:options": {
+													"autosuggestField": "taxon",
+													"allowNonsuggestedValue": true,
+													"suggestionReceive": "key"
 												}
 											}
 										}
 									}
 								}
 							}
+						}
 					}
 				}
 			}
@@ -646,7 +714,6 @@
 			"editors": {
 				"type": "array",
 				"title": "Muokkausoikeus",
-				"uniqueItems": true,
 				"items": {
 					"type": "string"
 				}
@@ -671,7 +738,6 @@
 					"leg": {
 						"type": "array",
 						"title": "Havainnoijat",
-						"uniqueItems": true,
 						"items": {
 							"type": "string"
 						}
@@ -695,7 +761,6 @@
 			"gatherings": {
 				"type": "array",
 				"title": "Paikka",
-				"uniqueItems": true,
 				"items": {
 					"type": "object",
 					"properties": {
@@ -718,7 +783,6 @@
 						"images": {
 							"type": "array",
 							"title": "Kuvat havaintopaikasta",
-							"uniqueItems": true,
 							"items": {
 								"type": "string"
 							}
@@ -726,7 +790,6 @@
 						"units": {
 							"type": "array",
 							"title": "Havainnot",
-							"uniqueItems": true,
 							"items": {
 								"type": "object",
 								"properties": {
@@ -752,7 +815,6 @@
 									"unitType": {
 										"type": "array",
 										"title": "Näytteen tyyppi",
-										"uniqueItems": true,
 										"items": {
 											"type": "string"
 										}
@@ -1155,14 +1217,12 @@
 									"images": {
 										"type": "array",
 										"title": "Kuvat",
-										"uniqueItems": true,
 										"items": {
 											"type": "string"
 										}
 									},
 									"identifications": {
 										"type": "array",
-										"uniqueItems": true,
 										"items": {
 											"type": "object",
 											"properties": {
@@ -1222,7 +1282,8 @@
 												}
 											},
 											"required": []
-										}
+										},
+										"minItems": 1
 									},
 									"unitGathering": {
 										"type": "object",
@@ -1230,7 +1291,7 @@
 											"geometry": {
 												"type": "object",
 												"properties": {},
-												"title": "MY.geometry"
+												"title": "MZ.geometry"
 											},
 											"dateBegin": {
 												"type": "string",
@@ -1353,7 +1414,7 @@
 						"geometry": {
 							"type": "object",
 							"properties": {},
-							"title": "MY.geometry"
+							"title": "MZ.geometry"
 						},
 						"weather": {
 							"type": "string",
@@ -1386,6 +1447,9 @@
 					"crossCheck": {
 						"check": "dateEnd",
 						"message": "Alku on pakollinen jos loppu on ilmoitettu."
+					},
+					"presence": {
+						"message": "Alku on pakollinen"
 					}
 				},
 				"dateEnd": {
@@ -1428,17 +1492,8 @@
 						"items": {
 							"properties": {
 								"identifications": {
-									"items": {
-										"properties": {
-											"taxon": {
-												"presence": {
-													"message": "Nimi on pakollinen"
-												}
-											}
-										}
-									},
 									"presence": {
-										"message": "Nimi on pakollinen"
+										"message": "@taxonValidation"
 									}
 								},
 								"unitGathering": {
@@ -1489,7 +1544,7 @@
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "MHL.1",
-		"activeGatheringIdx": 0
+		"activeGatheringIdx": 1
 	},
 	"settings": {
 	  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
@@ -1504,363 +1559,366 @@
 	  }
 	},
 	"formData": {
-  "gatheringEvent": {
-    "leg": [
-      "MA.308"
-    ],
-    "legPublic": true,
-    "dateBegin": "2017-05-23"
-  },
-  "editors": [],
-  "secureLevel": "MX.secureLevelNone",
-  "gatherings": [
-    {
-      "images": [],
-      "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              26.170841451122595,
-              63.54526624516768
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "images": [
-        "MM.89524"
-      ],
-      "units": [
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        },
-        {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "unitType": [
-            "MVL.2"
-          ],
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "images": [],
-          "identifications": [
-            {
-              "taxon": "ass",
-              "taxonID": "MX.47092",
-              "identificationBasis": []
-            }
-          ],
-          "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.606749120436508,
-                62.09818109070839
-              ]
-            }
-          }
-        }
-      ],
-      "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              27.170841451122595,
-              64.54526624516768
-            ]
-          }
-        ]
-      }
-    }
-  ]
+	  "gatheringEvent": {
+		"leg": [
+		  "MA.308"
+		],
+		"legPublic": true,
+		"dateBegin": "2017-05-23"
+	  },
+	  "editors": [],
+	  "secureLevel": "MX.secureLevelNone",
+	  "gatherings": [
+		{
+		  "images": [],
+		  "geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+			  {
+				"type": "Point",
+				"coordinates": [
+				  26.170841451122595,
+				  63.54526624516768
+				]
+			  }
+			]
+		  }
+		},
+		{
+		  "images": [
+			"MM.89524"
+		  ],
+		  "units": [
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				},
+			  "dateBegin": "2012-07-02",
+			  "dateEnd": "2012-07-04"
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				}
+			  }
+			}
+		  ],
+		  "geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+			  {
+				"type": "Point",
+				"coordinates": [
+				  27.170841451122595,
+				  64.54526624516768
+				]
+			  }
+			]
+		  }
+		}
+	  ]
+	}
 }
-}
+
 

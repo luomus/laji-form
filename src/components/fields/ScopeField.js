@@ -97,6 +97,9 @@ const buttonSettings = {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 							modalMap.updateLayerStyle(layer, {opacity: 0.7});
 						}
+						const {drawLayerGroup} = modalMap;
+						const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
+						if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 					}
 				}
 			});
