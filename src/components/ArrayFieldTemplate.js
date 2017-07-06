@@ -74,20 +74,27 @@ export default class ArrayFieldTemplate extends Component {
 		super(props);
 		this._context = new Context(this.props.formContext.contextId);
 	}
+
 	componentDidMount() {
-		this._context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
-			getProps: () => this.props
-		});
-		this.childKeyHandlers = [];
+		this.addKeyHandlers();
 		this.addChildKeyHandlers();
 	}
 
 	componentDidUpdate() {
+		this.addKeyHandlers();
 		this.addChildKeyHandlers();
 	}
 
+	addKeyHandlers() {
+		this._context.removeKeyHandler(this.props.idSchema.$id);
+		this._context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+			getProps: () => this.props
+		});
+	}
+
 	addChildKeyHandlers() {
-		if (this.childKeyHandlers) this.childKeyHandlers.forEach(({id, keyFunction}) => this._context.removeKeyHandler(id, keyFunction));
+		if (!this.childKeyHandlers) this.childKeyHandlers = [];
+		else this.childKeyHandlers.forEach(({id, keyFunction}) => this._context.removeKeyHandler(id, keyFunction));
 		this.props.items.forEach((item, i) => {
 			const id = `${this.props.idSchema.$id}_${i}`;
 			this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
