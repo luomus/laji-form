@@ -193,7 +193,7 @@ export default class MapArrayField extends Component {
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
 
-		const getContainer = () => findDOMNode(this.refs.affix);
+		const getContainer = () => findDOMNode(belowSchema ? this.refs._stretch : this.refs.affix);
 		const onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true});
 		const onPopupClose = () => {this.setState({popupIdx: undefined});};
 		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
@@ -244,12 +244,12 @@ export default class MapArrayField extends Component {
 		);
 
 		return (
-			<div>
+			<div ref="affix">
 				<Row>
 					<Col {...mapSizes}>
 						{wrappedMap}
 					</Col>
-					<Col {...schemaSizes} ref="affix">
+					<Col {...schemaSizes} ref="_stretch">
 						{mapOptions.emptyMode ?
 							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
 							inlineSchema
