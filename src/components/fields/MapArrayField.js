@@ -158,9 +158,9 @@ export default class MapArrayField extends Component {
 				uiSchema: {...uiSchema, items: props.uiSchema},
 				idSchema: this.props.idSchema,
 				formData: update((this.props.formData || []), {$merge: {[this.state.activeIdx]: props.formData}}),
-				errorSchema: props.errorSchema ? 
-				update((this.props.errorSchema || []), {$merge: {[this.state.activeIdx]: props.errorSchema}}) : 
-				this.props.errorSchema,
+				errorSchema: props.errorSchema && Object.keys(props.errorSchema).length ? 
+					update((this.props.errorSchema || []), {$merge: {[this.state.activeIdx]: props.errorSchema}}) : 
+					this.props.errorSchema,
 				onChange: formData => {
 					this.props.onChange(formData.map((item, idx) => {
 						return {

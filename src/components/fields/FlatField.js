@@ -82,10 +82,10 @@ export default class FlatField extends Component {
 							Object.keys(props.errorSchema[errorField]).forEach(innerError => {
 								state.errorSchema = {
 									...state.errorSchema,
-									[`/${field}/${innerError}`]: [
-										...(state.errorSchema[`/${field}/${innerError}`] || []),
-										...[props.errorSchema[errorField][innerError]]
-									]
+									[`/${field}/${innerError}`]: {
+										...(state.errorSchema[`/${field}/${innerError}`] || {}),
+										...props.errorSchema[errorField][innerError]
+									}
 								};
 							});
 							state.errorSchema = immutableDelete(state.errorSchema, errorField);
