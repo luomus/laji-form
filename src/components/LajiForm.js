@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { Button, Label, Help } from "./components";
+import { Button, Label, Help, DeleteButton } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo } from "../utils";
 
@@ -338,7 +338,9 @@ export default class LajiForm extends Component {
 			</Form>
 			<div ref={this.getBlockerRef} className="blocking-loader" />
 			{shortcuts ? 
-				<Panel ref={this.getPanelRef} className="shortcut-help z-depth-3 hidden" bsStyle="info" header={<h3>{translations.Shortcuts}</h3>}>
+					<Panel ref={this.getPanelRef} className="shortcut-help z-depth-3 hidden" bsStyle="info" header={
+						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
+					}>
 					<Table fill>
 						<tbody className="well">{
 							Object.keys(shortcuts).map((keyCombo, idx) => {
@@ -366,6 +368,20 @@ export default class LajiForm extends Component {
 		this.formRef.onSubmit({preventDefault: () => {}});
 	}
 
+	dismissHelp = (e) => {
+		const node = findDOMNode(this.shortcutHelpRef);
+		e.preventDefault();
+		e.stopPropagation();
+		if (this.helpVisible) {
+			node.className += " hidden";
+		}
+		this.helpVisible = false;
+		this.helpStarted = false;
+		document.removeEventListener("keyup", this.dismissHelp);
+		window.removeEventListener("blur", this.dismissHelp);
+		clearTimeout(this.helpTimeout);
+	}
+
 	keyFunctions = {
 		navigate: (e, {reverse}) => {
 			return focusNextInput(this.formRef, e.target, reverse);
@@ -378,28 +394,14 @@ export default class LajiForm extends Component {
 
 			const node = findDOMNode(this.shortcutHelpRef);
 			
-			const that = this;
-			function dismiss(e) {
-				e.preventDefault();
-				e.stopPropagation();
-				if (that.helpVisible) {
-					node.className += " hidden";
-				}
-				that.helpVisible = false;
-				that.helpStarted = false;
-				document.removeEventListener("keyup", dismiss);
-				window.removeEventListener("blur", dismiss);
-				clearTimeout(that.helpTimeout);
-			}
-
 			this.helpTimeout = setTimeout(() => {
-				if (!that.helpVisible) {
+				if (!this.helpVisible) {
 					if (node) node.className = node.className.replace(" hidden", "");
-					that.helpVisible = true;
+					this.helpVisible = true;
 				}
 			}, delay * 1000);
-			this.addEventListener(document, "keyup", dismiss);
-			this.addEventListener(window, "blur", dismiss);
+			this.addEventListener(document, "keyup", this.dismissHelp);
+			this.addEventListener(window, "blur", this.dismissHelp);
 			return false;
 		}
 	}
