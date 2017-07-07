@@ -404,20 +404,22 @@ export default class ScopeField extends Component {
 		};
 
 		return (
-			<Dropdown key="socop"
-			          id={this.props.idSchema.$id + "-scope-field-dropdown"}
-			          bsStyle="primary"
-			          pullRight
-			          open={this.state.additionalsOpen}
-			          onSelect={onSelect}
-			          onToggle={onToggle}>
-				{this.renderFieldsButton("toggle")}
-				<Collapse in={this.state.additionalsOpen} bsRole="menu">
-					<Dropdown.Menu>
-						{this.additionalPropertiesToList(additionalProperties, MenuItem)}
-					</Dropdown.Menu>
-				</Collapse>
-			</Dropdown>
+			<div>
+				<Dropdown key="socop"
+									id={this.props.idSchema.$id + "-scope-field-dropdown"}
+									bsStyle="primary"
+									pullRight
+									open={this.state.additionalsOpen}
+									onSelect={onSelect}
+									onToggle={onToggle}>
+					{this.renderFieldsButton("toggle")}
+					<Collapse in={this.state.additionalsOpen} bsRole="menu">
+						<Dropdown.Menu>
+							{this.additionalPropertiesToList(additionalProperties, MenuItem)}
+						</Dropdown.Menu>
+					</Collapse>
+				</Dropdown>
+			</div>
 		);
 	}
 
