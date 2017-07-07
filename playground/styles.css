@@ -531,6 +531,9 @@ body .laji-form {
 .laji-form .panel:not(.panel-danger) div.laji-map-accordion-header {
 	background-color: #e2e2e2;
 }
+.laji-form .laji-form-single-active-array .panel-body {
+	    background: #f5f5f5;
+	}
 
 .laji-form .laji-map-accordion-header .panel-title {
 	display: -webkit-box;

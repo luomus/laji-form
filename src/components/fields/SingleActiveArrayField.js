@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { Accordion, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
+import { Accordion, PanelGroup, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
@@ -161,6 +161,7 @@ export default class SingleActiveArrayField extends Component {
 					uiSchema={{
 						...this.props.uiSchema,
 						"ui:field": undefined,
+						classNames: undefined,
 						"ui:options": {
 							...this.props.uiSchema["ui:options"],
 							renderDelete: false,
@@ -295,6 +296,7 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const onSelect = key => that.onActiveChange(key);
 		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
+
 		return (
 				<div className="laji-form-single-active-array">
 					<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>

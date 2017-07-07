@@ -388,7 +388,6 @@
 						},
 						"placeWrapper": {
 							"ui:field": "ScopeField",
-							"classNames": "well well-sm",
 							"ui:settings": [
 								"%additionalFields/scopeField_gatherings"
 							],
