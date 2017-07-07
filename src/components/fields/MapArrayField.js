@@ -805,7 +805,15 @@ class MapComponent extends Component {
 
 export class Map extends Component {
 	componentDidMount() {
-		const {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
+		let {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
+
+		// Backward compability for bad settings.
+		["tileLayerName", "overlayNames", "tileLayerOpacity"].forEach(prop => {
+			if (prop in options && options[prop] === undefined) {
+				options = immutableDelete(options, prop);
+			}
+		});
+
 		this.map = new LajiMap({
 			rootElem: this.refs.map,
 			...options

@@ -68,13 +68,15 @@ export default function BaseComponent(ComposedComponent) {
 			this.updateSettingSaver(props);
 		}
 
+		// JSON Parsing will throw exceptions for paths that aren't initialized. This is intentional -
+		// we don't want to save undefined values for settings that are not set.
 		updateSettingSaver(props) {
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach(key => {
 				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						return parseJSONPointer(this.getContext(), key.replace(/^%[^\/]*/, ""), !!"safely");
+						return parseJSONPointer(this.getContext(), key.replace(/^%[^\/]*/, ""));
 					} else {
-						return parseJSONPointer(this.state, key, !!"safely");
+						return parseJSONPointer(this.state, key);
 					}
 				});
 			});

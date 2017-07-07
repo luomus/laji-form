@@ -494,7 +494,11 @@ export default class LajiForm extends Component {
 
 	getSettings = () => {
 		return Object.keys(this.settingSavers).reduce((settings, key) => {
-			settings[key] = this.settingSavers[key]();
+			try {
+				settings[key] = this.settingSavers[key]();
+			} catch (e) {
+				// Swallow failing settings parsing.
+			}
 			return settings;
 		}, {});
 	}
