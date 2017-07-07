@@ -295,7 +295,7 @@ export default class MapArrayField extends Component {
 
 
 				const controlSettings = (emptyMode || this.state.activeIdx !== undefined) ?
-					{} : {draw: false, coordinateInput: false};
+					{drawCopy: true} : {draw: false, coordinateInput: false};
 
 				return {draw, controlSettings, emptyMode};
 			},
@@ -398,7 +398,7 @@ export default class MapArrayField extends Component {
 				};
 
 				const controlSettings = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
-					{} : {draw: false, coordinateInput: false};
+					{drawCopy: true} : {draw: false, coordinateInput: false};
 
 				return {draw, controlSettings, emptyMode};
 			},
@@ -615,7 +615,6 @@ export default class MapArrayField extends Component {
 					},
 					controlSettings: {
 						lineTransect: true
-
 					}
 				};
 			},
