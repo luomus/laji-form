@@ -20,7 +20,7 @@ export default class SingleItemArrayField extends Component {
 
 		const {activeIdx} = this.getUiOptions(uiSchema);
 
-		return activeIdx === undefined ? null : <SchemaField {...this.props} {...this.state} />;
+		return activeIdx === undefined ? null : <SchemaField {...this.props} {...this.state} onChange={this.onChange} />;
 	}
 
 	onChange(formData) {
