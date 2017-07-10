@@ -156,7 +156,7 @@ function FieldTemplate({
 
 	const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
 
-	const buttons = uiSchema["ui:buttons"] || undefined;
+	const buttons = (uiSchema["ui:buttons"] && schema.type !== "array") ? uiSchema["ui:buttons"] : undefined;
 	const vertical = uiSchema["ui:buttonsVertical"];
 	return (
 		<div className={classNames} id={elemId}>

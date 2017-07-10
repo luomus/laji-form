@@ -8,11 +8,12 @@ import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
+import { getButton } from "../ArrayFieldTemplate";
 
 const popupMappers = {
 	unitTaxon: (schema, formData) => {
@@ -186,7 +187,30 @@ export default class MapArrayField extends Component {
 
 		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
 		if (belowUiSchema) belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
-		
+
+		const {addButtonPath, removeAddButtonPath, addTxt = this.props.formContext.translations.Add} = getUiOptions(this.props.uiSchema);
+		if (addButtonPath) {
+			const injectTarget = parseJSONPointer(belowUiSchema, addButtonPath, "createParents");
+			injectTarget["ui:buttons"] = [
+				...(injectTarget["ui:buttons"] || []), 
+				getButton({
+					fn: () => () => {
+						const nextActive = this.props.formData.length;
+						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
+						this.setState({activeIdx: nextActive});
+					}, 
+					key: "_add",
+					label: addTxt,
+					glyph: "plus"
+				})
+			];
+		}
+
+		if (removeAddButtonPath && this.state.activeIdx !== undefined) {
+			const target = parseJSONPointer(inlineUiSchema, `${removeAddButtonPath}/ui:options`, "createParents");
+			target.renderAdd = false;
+		}
+
 		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
 		const belowSchema = belowFields ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 

@@ -22,48 +22,58 @@ const buttonDefinitions = {
 	}
 };
 
-export function getButtons(buttons, props) {
-	if (!buttons) return;
-
-	let addBtnAdded = false;
-
+export function getButton(button, props = {}) {
 	function handleButton(button) {
 		const fnName = button.fn;
 		const definition = buttonDefinitions[fnName];
 		const _button = {...(definition || {}), ...button};
 		if (!_button.fnName) _button.fnName = fnName;
 		if (definition) _button.fn = buttonDefinitions[fnName].fn;
-		if (fnName === "add") addBtnAdded = true;
-		if (!(fnName === "add" && (!props.canAdd || getUiOptions(props.uiSchema).canAdd === false))) return _button;
+		if (!(fnName === "add" && (props.canAdd === false || getUiOptions(props.uiSchema).canAdd === false || getUiOptions(props.uiSchema).renderAdd === false))) return _button;
 	}
 
-	let _buttons = buttons.map(handleButton).filter(btn => btn);
+	button = handleButton(button);
 
-	if (!addBtnAdded && props.canAdd && getUiOptions(props.uiSchema).canAdd !== false) _buttons = [handleButton({fn: "add"}), ..._buttons];
+	if (!button) return;
 
-	const buttonElems = _buttons.map(button => {
-		let {fn, fnName, glyph, label, className, callbacker, ...options} = button;
-		label = label !== undefined ?
-			(glyph ? ` ${label}` : label) :
-			"";
+	let {fn, fnName, glyph, label, className, callbacker, key, ...options} = button;
 
+	label = label !== undefined ?
+		(glyph ? ` ${label}` : label) :
+		"";
 
-		const onClick = e => {
-			if (callbacker) {
-				e.persist();
-				callbacker(() => fn(e)(props, options));
-			} else {
-				fn(e)(props, options);
-			}
-		};
+	const onClick = e => {
+		if (callbacker) {
+			e.persist();
+			callbacker(() => fn(e)(props, options));
+		} else {
+			fn(e)(props, options);
+		}
+	};
 
-		return (
-			<Button key={fnName} className={className} onClick={onClick} >
-				{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
-				<strong>{glyph ? ` ${label}` : label}</strong>
-			</Button>
-		);
-	});
+	return (
+		<Button key={key || fnName} className={className} onClick={onClick} >
+			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
+			<strong>{glyph ? ` ${label}` : label}</strong>
+		</Button>
+	);
+}
+
+export function getButtons(buttons, props) {
+	if (!buttons) return;
+
+	let _buttons = buttons;
+
+	const addBtnAdded = _buttons.some(button => button.fn === "add");
+
+	if (!addBtnAdded && (!props || props.canAdd && getUiOptions(props.uiSchema).canAdd !== false)) _buttons = [{fn: "add"}, ..._buttons];
+
+	let buttonElems = _buttons.map(button => getButton(button, props));
+
+	if (props.uiSchema["ui:buttons"]) {
+		buttonElems = [...buttonElems, ...props.uiSchema["ui:buttons"]];
+	}
+
 	return (
 		<ButtonToolbar key="buttons">{buttonElems}</ButtonToolbar>
 	);

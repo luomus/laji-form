@@ -335,7 +335,10 @@
 					},
 					"propsToPassToInlineSchema": ["errorSchema", "formData"],
 					"minHeight": 500,
-					"resizeTimeout": 210
+					"resizeTimeout": 210,
+					"addButtonPath": "/items/units",
+					"removeAddButtonPath": "/",
+					"addTxt": "Lisää paikka"
 				},
 				"uiSchema": {
 					"ui:field": "AccordionArrayField",
@@ -367,7 +370,7 @@
 									]
 								},
 								"placeWrapper": {
-									"title": "Havaintopaikan tiedot",
+									"title": "",
 									"fields": [
 										"locality",
 										"localityDescription",
