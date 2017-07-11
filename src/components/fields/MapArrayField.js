@@ -110,13 +110,13 @@ export default class MapArrayField extends Component {
 		const {activeIdx} = this.state;
 
 		const activeIdxProps = {
-				activeIdx,
-				onActiveChange: (idx, callback) => {
-					this.setState({activeIdx: idx}, () => {
-						this.getGeometryMapper(this.props).onActiveChange(idx);
-						if (callback) callback();
-					});
-				}
+			activeIdx,
+			onActiveChange: (idx, callback) => {
+				this.setState({activeIdx: idx}, () => {
+					this.getGeometryMapper(this.props).onActiveChange(idx);
+					if (callback) callback();
+				});
+			}
 		};
 		uiSchema = {
 			...getInnerUiSchema(uiSchema),
@@ -150,7 +150,7 @@ export default class MapArrayField extends Component {
 				errorSchema: this.props.errorSchema[this.state.activeIdx] || {},
 				registry: this.props.registry,
 				formContext: this.props.formContext
-			}
+			};
 		};
 
 		const putChildsToParents = (props) => {
@@ -853,7 +853,9 @@ export class Map extends Component {
 
 	componentDidUpdate(prevProps) {
 		function filterFunctions(original) {
-			if (typeof original === "function" || typeof original !== "object" || Array.isArray(original) || original === null) return undefined;
+			if (typeof original === "function") return undefined;
+			else if (Array.isArray(original)) return original.map(filterFunctions);
+			else if (typeof original !== "object" || original === null) return original;
 			return Object.keys(original).reduce((filtered, key) => {
 				// We don't check for object type recursively, because we know that only these objects contain functions.
 				if (key === "draw" || key === "data" || key === "lineTransect") {
@@ -868,10 +870,10 @@ export class Map extends Component {
 
 		const {className, style, onComponentDidMount, hidden, ...options} = this.props; // eslint-disable-line no-unused-vars
 		const {
-			className: prevClassName,
-			style: prevStyle, 
-			onComponentDidMount: prevOnComponentDidMount, 
-			hidden: prevHidden, 
+			className: prevClassName, // eslint-disable-line no-unused-vars
+			style: prevStyle,  // eslint-disable-line no-unused-vars
+			onComponentDidMount: prevOnComponentDidMount,  // eslint-disable-line no-unused-vars
+			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			...prevOptions
 		} = prevProps; // eslint-disable-line no-unused-vars
 
@@ -894,7 +896,7 @@ export class Map extends Component {
 				rootElem: this.refs.map,
 				...options
 			});
-			onComponentDidMount(this.map);
+			if (onComponentDidMount) onComponentDidMount(this.map);
 		}
 	}
 

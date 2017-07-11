@@ -52,7 +52,7 @@ const buttonSettings = {
 		let active = false;
 		function onClick() {
 			active = true;
-			const {translations, contextId} = that.props.formContext;
+			const {translations} = that.props.formContext;
 			const {map} = mapContext;
 			if (!map) return;
 
@@ -145,10 +145,9 @@ const buttonSettings = {
 				onClick={onClick} />
 		);
 
-		let miniMapRef = undefined;
 		const overlay = hasCoordinates ? (
 			<Popover id={`${id}-$tooltip-${glyph}`}>
-				<Map ref={elem => {miniMapRef = elem;} }{...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} />
+				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} />
 			</Popover>
 		) : (
 			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
@@ -164,8 +163,6 @@ const buttonSettings = {
 
 			const geometry = that.props.formData["/unitGathering/geometry"];
 
-			let miniMap = undefined;
-
 			that.setState({
 				miniMap: {
 					...mapOptions,
@@ -174,21 +171,18 @@ const buttonSettings = {
 					zoom: 14,
 					center: geometry.coordinates.slice(0).reverse(),
 					data: [
-						...(map && map.draw ? {
+						...(map && map.draw ? [{
 							...map.draw.data,
 							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
-						} : []),
+						}] : []),
 						{
 							geoData: geometry,
-							getFeatureStyle: () => {return {color: "#55AEFA"};}
+							getFeatureStyle: () => {return {color: "#75CEFA"};}
 						}
-					],
-					onComponentDidMount: map => {
-						miniMap = map;
-					}
+					]
 				}
 			});
-		}
+		};
 
 		return (
 			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={onEntered}>
