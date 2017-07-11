@@ -334,7 +334,7 @@
 						}
 					},
 					"propsToPassToInlineSchema": ["errorSchema", "formData"],
-					"minHeight": 500,
+					"minHeight": 435,
 					"resizeTimeout": 210,
 					"addButtonPath": "/items/units",
 					"removeAddButtonPath": "/",

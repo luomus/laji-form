@@ -387,8 +387,8 @@ export class Stretch extends Component {
 		let container = getContainer();
 
 		let containerHeight = container.offsetHeight;
-		if (minHeight && containerHeight < 500) {
-			containerHeight = 500;
+		if (minHeight && containerHeight < minHeight) {
+			containerHeight = minHeight;
 			container = this.refs.wrapper;
 		}
 

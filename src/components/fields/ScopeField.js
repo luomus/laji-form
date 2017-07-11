@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse, Popover } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
@@ -26,7 +26,6 @@ const scopeFieldSettings = {
 const buttonSettings = {
 	setLocation: (that, {glyph, label}) => {
 		const id = that.props.idSchema.$id;
-		const tooltip = <Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>;
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
 
@@ -137,14 +136,63 @@ const buttonSettings = {
 			layer.fire("mouseout");
 		}
 
+		const button = (
+			<GlyphButton
+				bsStyle={hasCoordinates ? "primary" : "default"}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+				glyph={glyph}
+				onClick={onClick} />
+		);
+
+		let miniMapRef = undefined;
+		const overlay = hasCoordinates ? (
+			<Popover id={`${id}-$tooltip-${glyph}`}>
+				<Map ref={elem => {miniMapRef = elem;} }{...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} />
+			</Popover>
+		) : (
+			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
+		);
+
+		const onEntered = () => {
+			const {map} = mapContext;
+			let mapOptions = {};
+			if (map) {
+				const {rootElem, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+				mapOptions = _mapOptions;
+			}
+
+			const geometry = that.props.formData["/unitGathering/geometry"];
+
+			let miniMap = undefined;
+
+			that.setState({
+				miniMap: {
+					...mapOptions,
+					draw: false,
+					controlSettings: false,
+					zoom: 14,
+					center: geometry.coordinates.slice(0).reverse(),
+					data: [
+						...(map && map.draw ? {
+							...map.draw.data,
+							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
+						} : []),
+						{
+							geoData: geometry,
+							getFeatureStyle: () => {return {color: "#55AEFA"};}
+						}
+					],
+					onComponentDidMount: map => {
+						miniMap = map;
+					}
+				}
+			});
+		}
+
 		return (
-			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={tooltip} placement="left" >
-					<GlyphButton
-						bsStyle={hasCoordinates ? "primary" : "default"}
-						onMouseEnter={onMouseEnter}
-						onMouseLeave={onMouseLeave}
-						glyph={glyph}
-						onClick={onClick} />
+			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={onEntered}>
+				{button}
 			</OverlayTrigger>
 		);
 	}

@@ -191,19 +191,21 @@ export default class MapArrayField extends Component {
 		const {addButtonPath, removeAddButtonPath, addTxt = this.props.formContext.translations.Add} = getUiOptions(this.props.uiSchema);
 		if (addButtonPath) {
 			const injectTarget = parseJSONPointer(belowUiSchema, addButtonPath, "createParents");
-			injectTarget["ui:buttons"] = [
-				...(injectTarget["ui:buttons"] || []), 
-				getButton({
-					fn: () => () => {
-						const nextActive = this.props.formData.length;
-						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
-						this.setState({activeIdx: nextActive});
-					}, 
-					key: "_add",
-					label: addTxt,
-					glyph: "plus"
-				})
-			];
+			if ((injectTarget["ui:buttons"] || []).every(button => {return button.key !== "_add";})) {
+				injectTarget["ui:buttons"] = [
+					...(injectTarget["ui:buttons"] || []), 
+					getButton({
+						fn: () => () => {
+							const nextActive = this.props.formData.length;
+							this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
+							this.setState({activeIdx: nextActive});
+						}, 
+						key: "_add",
+						label: addTxt,
+						glyph: "plus"
+					})
+				];
+			}
 		}
 
 		if (removeAddButtonPath && this.state.activeIdx !== undefined) {
@@ -838,12 +840,15 @@ export class Map extends Component {
 			}
 		});
 
-		this.map = new LajiMap({
-			rootElem: this.refs.map,
-			...options
-		});
+		if (!this.props.hidden) {
+			this.map = new LajiMap({
+				rootElem: this.refs.map,
+				...options
+			});
 
-		if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
+			this.mountCalled = true;
+			if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
+		}
 	}
 
 	componentDidUpdate(prevProps) {
@@ -861,21 +866,36 @@ export class Map extends Component {
 			}, {});
 		}
 
-		const {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
-		const {className: prevClassName, style: prevStyle, onComponentDidMount: prevOnComponentDidMount, ...prevOptions} = prevProps; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, hidden, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {
+			className: prevClassName,
+			style: prevStyle, 
+			onComponentDidMount: prevOnComponentDidMount, 
+			hidden: prevHidden, 
+			...prevOptions
+		} = prevProps; // eslint-disable-line no-unused-vars
 
-		if (options.lineTransect && "activeIdx" in options.lineTransect) {
+		if (this.map && options.lineTransect && "activeIdx" in options.lineTransect) {
 			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
 		}
 		delete options.lineTransect;
 
-		Object.keys(options).forEach(key => {
-			if (!deepEquals(...[options, prevOptions].map(_options => _options[key]).map(filterFunctions))) {
+		if (this.map) Object.keys(options).forEach(key => {
+			if (!deepEquals(...[options, prevOptions].map(_options => filterFunctions(_options)[key]))) {
 				if (options[key] !== prevOptions[key]) {
 					this.map.setOption(key, options[key]);
 				}
 			}
 		});
+
+		if (!hidden && !this.mountCalled) {
+			this.mountCalled = true;
+			this.map = new LajiMap({
+				rootElem: this.refs.map,
+				...options
+			});
+			onComponentDidMount(this.map);
+		}
 	}
 
 	render() {
