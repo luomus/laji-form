@@ -185,7 +185,7 @@ const buttonSettings = {
 		};
 
 		return (
-			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={onEntered}>
+			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={hasCoordinates ? onEntered : undefined}>
 				{button}
 			</OverlayTrigger>
 		);
