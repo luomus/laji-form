@@ -28,6 +28,7 @@ const buttonSettings = {
 		const id = that.props.idSchema.$id;
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
+		const coordinates = hasData ? that.props.formData["/unitGathering/geometry"].coordinates : undefined;
 
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
@@ -95,11 +96,14 @@ const buttonSettings = {
 						if (layer) {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 							modalMap.updateLayerStyle(layer, {opacity: 0.7});
+						} else {
+							const {drawLayerGroup} = modalMap;
+							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
+							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 						}
-						const {drawLayerGroup} = modalMap;
-						const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
-						if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
-					}
+					},
+					center: hasCoordinates ? that.props.formData["/unitGathering/geometry"].coordinates.slice(0).reverse() : mapOptions.center,
+					zoom: hasCoordinates ? 14 : mapOptions.zoom
 				}
 			});
 
@@ -123,7 +127,6 @@ const buttonSettings = {
 			map.updateLayerStyle(layer, {color: "#75CEFA"});
 
 			if (!latlng) return;
-			layer.fire("mouseover", {latlng});
 			if (!map.map.getBounds().contains(latlng)) {
 				map.map.setView(latlng);
 			}
@@ -133,7 +136,6 @@ const buttonSettings = {
 			if (active || !layer) return;
 			const {map} = mapContext;
 			map.updateLayerStyle(layer, {color: "#55AEFA"});
-			layer.fire("mouseout");
 		}
 
 		const button = (
@@ -254,19 +256,25 @@ export default class ScopeField extends Component {
 
 		const uiSchema = {...this.state.uiSchema, "ui:buttons": [...(this.state.uiSchema["ui:buttons"] || []), this.renderAdditionalsButton()]};
 		const {translations} = this.props.formContext;
-		const onHide = () => this.setState({map: undefined});
+
+		const onHide = (e) => {
+			this.setState({map: undefined});
+		}
+
+		let modalMap = undefined;
+		const getMapRef = elem => modalMap = elem;
 
 		return (
 			<div>
 				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />
 				{this.state.additionalsOpen && additionalsGroupingPath ? this.modal : null}
 				{this.state.map ? (
-					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide}>
+					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
 						<Modal.Header closeButton={true} closeLabel={translations.Cancel} >
 							<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							<Map {...this.state.map} />
+							<Map {...this.state.map} ref={getMapRef} />
 						</Modal.Body>
 					</Modal>
 				) : null}
