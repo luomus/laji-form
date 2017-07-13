@@ -386,9 +386,16 @@ export class Stretch extends Component {
 		const {getContainer, topOffset = 0, bottomOffset = 0, minHeight} = this.props;
 		let container = getContainer();
 
+		if (this.refs.wrapper &&
+		    this.props.getContainer().getBoundingClientRect().top !== findDOMNode(this.refs.wrapper).getBoundingClientRect().top) {
+			return {
+				horizontallyAligned: false
+			};
+		}
+
 		let containerHeight = container.offsetHeight;
-		if (minHeight && containerHeight < 500) {
-			containerHeight = 500;
+		if (minHeight && containerHeight < minHeight) {
+			containerHeight = minHeight;
 			container = this.refs.wrapper;
 		}
 
@@ -397,6 +404,7 @@ export class Stretch extends Component {
 		const bottomInvisibleHeight = Math.min(bottomDist, 0);
 
 		return {
+			horizontallyAligned: true,
 			containerHeight,
 			height: Math.max(
 					containerHeight
@@ -417,14 +425,9 @@ export class Stretch extends Component {
 		};
 		const style = {
 			position: "relative",
-			top: this.state.top,
-			height: this.state.height,
+			top: this.state.horizontallyAligned ? this.state.top : undefined,
+			height: this.state.horizontallyAligned ? this.state.height : "100%",
 		};
-
-		if (this.refs.wrapper && this.props.getContainer().getBoundingClientRect().top !== findDOMNode(this.refs.wrapper).getBoundingClientRect().top) {
-			style.top = undefined;
-			style.height = "100%";
-		}
 
 		return (
 			<div ref="wrapper" style={wrapperStyle} className={this.props.className}>

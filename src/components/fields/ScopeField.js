@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse, Popover } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
@@ -26,9 +26,9 @@ const scopeFieldSettings = {
 const buttonSettings = {
 	setLocation: (that, {glyph, label}) => {
 		const id = that.props.idSchema.$id;
-		const tooltip = <Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>;
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
+		const coordinates = hasData ? that.props.formData["/unitGathering/geometry"].coordinates : undefined;
 
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
@@ -53,7 +53,7 @@ const buttonSettings = {
 		let active = false;
 		function onClick() {
 			active = true;
-			const {translations, contextId} = that.props.formContext;
+			const {translations} = that.props.formContext;
 			const {map} = mapContext;
 			if (!map) return;
 
@@ -96,11 +96,14 @@ const buttonSettings = {
 						if (layer) {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 							modalMap.updateLayerStyle(layer, {opacity: 0.7});
+						} else {
+							const {drawLayerGroup} = modalMap;
+							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
+							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 						}
-						const {drawLayerGroup} = modalMap;
-						const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
-						if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
-					}
+					},
+					center: hasCoordinates ? that.props.formData["/unitGathering/geometry"].coordinates.slice(0).reverse() : mapOptions.center,
+					zoom: hasCoordinates ? 14 : mapOptions.zoom
 				}
 			});
 
@@ -124,7 +127,6 @@ const buttonSettings = {
 			map.updateLayerStyle(layer, {color: "#75CEFA"});
 
 			if (!latlng) return;
-			layer.fire("mouseover", {latlng});
 			if (!map.map.getBounds().contains(latlng)) {
 				map.map.setView(latlng);
 			}
@@ -134,17 +136,59 @@ const buttonSettings = {
 			if (active || !layer) return;
 			const {map} = mapContext;
 			map.updateLayerStyle(layer, {color: "#55AEFA"});
-			layer.fire("mouseout");
 		}
 
+		const button = (
+			<GlyphButton
+				bsStyle={hasCoordinates ? "primary" : "default"}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+				glyph={glyph}
+				onClick={onClick} />
+		);
+
+		const overlay = hasCoordinates ? (
+			<Popover id={`${id}-$tooltip-${glyph}`}>
+				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} />
+			</Popover>
+		) : (
+			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
+		);
+
+		const onEntered = () => {
+			const {map} = mapContext;
+			let mapOptions = {};
+			if (map) {
+				const {rootElem, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+				mapOptions = _mapOptions;
+			}
+
+			const geometry = that.props.formData["/unitGathering/geometry"];
+
+			that.setState({
+				miniMap: {
+					...mapOptions,
+					draw: false,
+					controlSettings: false,
+					zoom: 14,
+					center: geometry.coordinates.slice(0).reverse(),
+					data: [
+						...(map && map.draw ? [{
+							...map.draw.data,
+							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
+						}] : []),
+						{
+							geoData: geometry,
+							getFeatureStyle: () => {return {color: "#75CEFA"};}
+						}
+					]
+				}
+			});
+		};
+
 		return (
-			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={tooltip} placement="left" >
-					<GlyphButton
-						bsStyle={hasCoordinates ? "primary" : "default"}
-						onMouseEnter={onMouseEnter}
-						onMouseLeave={onMouseLeave}
-						glyph={glyph}
-						onClick={onClick} />
+			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={hasCoordinates ? onEntered : undefined}>
+				{button}
 			</OverlayTrigger>
 		);
 	}
@@ -212,19 +256,25 @@ export default class ScopeField extends Component {
 
 		const uiSchema = {...this.state.uiSchema, "ui:buttons": [...(this.state.uiSchema["ui:buttons"] || []), this.renderAdditionalsButton()]};
 		const {translations} = this.props.formContext;
-		const onHide = () => this.setState({map: undefined});
+
+		const onHide = (e) => {
+			this.setState({map: undefined});
+		}
+
+		let modalMap = undefined;
+		const getMapRef = elem => modalMap = elem;
 
 		return (
 			<div>
 				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />
 				{this.state.additionalsOpen && additionalsGroupingPath ? this.modal : null}
 				{this.state.map ? (
-					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide}>
+					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
 						<Modal.Header closeButton={true} closeLabel={translations.Cancel} >
 							<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							<Map {...this.state.map} />
+							<Map {...this.state.map} ref={getMapRef} />
 						</Modal.Body>
 					</Modal>
 				) : null}

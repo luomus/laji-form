@@ -297,6 +297,11 @@ class AccordionArrayFieldTemplate extends Component {
 		const onSelect = key => that.onActiveChange(key);
 		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
 
+		// Swallow unknown prop warnings.
+		const buttonsWrapper = props => {
+			return <div>{getButtons(buttons, arrayFieldTemplateProps)}</div>;
+		}
+
 		return (
 				<div className="laji-form-single-active-array">
 					<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
@@ -308,8 +313,8 @@ class AccordionArrayFieldTemplate extends Component {
 								{item.children}
 							</Panel>
 						))}
+						{buttonsWrapper}
 					</Accordion>
-					{getButtons(buttons, arrayFieldTemplateProps)}
 				</div>
 		);
 	}
