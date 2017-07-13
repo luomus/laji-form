@@ -168,7 +168,7 @@ export default class SingleActiveArrayField extends Component {
 							buttons: [
 								{
 									fn: "add",
-									className: "col-xs-12 laji-map-accordion-header",
+									className: "col-xs-12 laji-form-accordion-header",
 									callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
 									label: addLabel
 								}
@@ -298,7 +298,7 @@ class AccordionArrayFieldTemplate extends Component {
 		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
 
 		// Swallow unknown prop warnings.
-		const buttonsWrapper = props => {
+		const ButtonsWrapper = () => {
 			return <div>{getButtons(buttons, arrayFieldTemplateProps)}</div>;
 		}
 
@@ -313,7 +313,7 @@ class AccordionArrayFieldTemplate extends Component {
 								{item.children}
 							</Panel>
 						))}
-						{buttonsWrapper}
+						<ButtonsWrapper />
 					</Accordion>
 				</div>
 		);
@@ -336,7 +336,7 @@ class PagerArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array">
 				<Panel header={
-					<div className="laji-map-accordion-header">
+					<div className="laji-form-accordion-header">
 						<Pager>
 							<Pager.Item previous href="#"
 													disabled={activeIdx <= 0 || activeIdx === undefined}
@@ -413,7 +413,7 @@ function renderAccordionHeader(that, idx, title) {
 	const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
 
 	const header = (
-		<div className="laji-map-accordion-header" onClick={onHeaderClick}
+		<div className="laji-form-accordion-header" onClick={onHeaderClick}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave} >
 			<div className="panel-title">

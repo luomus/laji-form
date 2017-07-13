@@ -388,6 +388,9 @@ body .laji-form {
 	text-align: center;
 	vertical-align: middle;
 }
+.laji-form .darker .laji-form-images .glyphicon {
+	color: #cacaca;
+}
 
 .laji-form.image-modal {
 	width: 90vmin;
@@ -515,7 +518,7 @@ body .laji-form {
 	line-height: 12.5px;
 }
 
-.laji-form .laji-map-accordion-header {
+.laji-form .laji-form-accordion-header {
 	padding: 10px 15px;
 	cursor: pointer;
 	color: rgb(51, 51, 51);
@@ -524,20 +527,27 @@ body .laji-form {
 	padding: 0;
 	margin: 0;
 }
-.laji-form button.laji-map-accordion-header {
+.laji-form button.laji-form-accordion-header {
 	color: white;
 }
-.laji-form .panel:not(.panel-danger) div.laji-map-accordion-header {
+.laji-form .panel:not(.panel-danger) div.laji-form-accordion-header {
 	background-color: #e2e2e2;
 }
+.laji-form-accordion-header.btn {
+	height: 48px;
+}
+
 .laji-form .darker {
 	background-color: #e2e2e2;
+}
+.laji-form .darker legend {
+	border-color: #cacaca;
 }
 .laji-form .laji-form-single-active-array .panel-body {
 	background: #f5f5f5;
 }
 
-.laji-form .laji-map-accordion-header .panel-title {
+.laji-form .laji-form-accordion-header .panel-title {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
@@ -549,7 +559,7 @@ body .laji-form {
 	display: -ms-inline-flexbox;
 	display: inline-flex;
 }
-.laji-form .laji-map-accordion-header .panel-title > *:first-child {
+.laji-form .laji-form-accordion-header .panel-title > *:first-child {
 	-webkit-flex-grow: 1;
 	-ms-flex-grow: 1;
 	flex-grow: 1;
@@ -634,9 +644,6 @@ body .laji-form {
 }
 .laji-form .btn-toolbar {
 	margin-right: 5px;
-}
-.laji-form-single-active-array .panel-group .btn-toolbar .btn {
-	height: 48px;
 }
 .laji-form .panel-group .panel {
 	border-radius: 2px;
