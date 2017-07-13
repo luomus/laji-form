@@ -28,7 +28,6 @@ const buttonSettings = {
 		const id = that.props.idSchema.$id;
 
 		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
-		const coordinates = hasData ? that.props.formData["/unitGathering/geometry"].coordinates : undefined;
 
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
@@ -62,7 +61,7 @@ const buttonSettings = {
 
 			const {rootElem, ...mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
 			that.setState({
-				map: {
+				modalMap: {
 					...mapOptions,
 					draw: {
 						...map.draw,
@@ -109,8 +108,8 @@ const buttonSettings = {
 
 
 			function close() {
-				triggerLayer.disable();
-				that.setState({map: undefined});
+				if (triggerLayer) triggerLayer.disable();
+				that.setState({modalMap: undefined});
 			}
 		}
 
@@ -147,8 +146,9 @@ const buttonSettings = {
 				onClick={onClick} />
 		);
 
+		const {translations} = that.props.formContext;
 		const overlay = hasCoordinates ? (
-			<Popover id={`${id}-$tooltip-${glyph}`}>
+			<Popover id={`${id}-$tooltip-${glyph}`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
 				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} />
 			</Popover>
 		) : (
@@ -257,24 +257,22 @@ export default class ScopeField extends Component {
 		const uiSchema = {...this.state.uiSchema, "ui:buttons": [...(this.state.uiSchema["ui:buttons"] || []), this.renderAdditionalsButton()]};
 		const {translations} = this.props.formContext;
 
-		const onHide = (e) => {
-			this.setState({map: undefined});
-		}
+		const onHide = () => {
+			this.setState({modalMap: undefined});
+		};
 
-		let modalMap = undefined;
-		const getMapRef = elem => modalMap = elem;
 
 		return (
 			<div>
 				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />
 				{this.state.additionalsOpen && additionalsGroupingPath ? this.modal : null}
-				{this.state.map ? (
+				{this.state.modalMap ? (
 					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
-						<Modal.Header closeButton={true} closeLabel={translations.Cancel} >
+						<Modal.Header closeButton={true}>
 							<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							<Map {...this.state.map} ref={getMapRef} />
+							<Map {...this.state.modalMap} />
 						</Modal.Body>
 					</Modal>
 				) : null}

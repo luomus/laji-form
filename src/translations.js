@@ -318,5 +318,10 @@
 		fi: "Aseta havainnolle uusi sijainti",
 		en: "Set a new location for the observation",
 		sv: "Ange en ny plats för observationen"
+	},
+	below: {
+		fi: "alla",
+		en: "below",
+		
 	}
 };

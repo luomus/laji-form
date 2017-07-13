@@ -645,7 +645,7 @@ export default class MapArrayField extends Component {
 				};
 			},
 			onActiveChange: idx => {
-				this._context.setImmediate(() =>
+				this.getContext().setImmediate(() =>
 					this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
 				);
 				this.map._openTooltipFor(idx);

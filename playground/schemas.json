@@ -360,6 +360,7 @@
 					},
 					"items": {
 						"ui:field": "NestField",
+						"classNames": "well",
 						"ui:options": {
 							"nests": {
 								"eventTime": {
