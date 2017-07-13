@@ -61,7 +61,7 @@ export default class CombinedStringField extends Component {
 
 	getStateFromProps(props) {
 		const uiOptions = this.getUiOptions();
-		let {schema, uiSchema, idSchema, errorSchema, formData} = props;
+		let {schema, uiSchema, idSchema, formData} = props;
 
 		uiOptions.combined.forEach(options => {
 			const name = options.name || "";
@@ -73,16 +73,16 @@ export default class CombinedStringField extends Component {
 				return valueArray;
 			}, []);
 
-			schema.properties[name] = {title, type: "string" };
+			schema = {...schema, properties: {...schema.properties, [name]: {title, type: "string" }}};
 			idSchema = toIdSchema(
                 schema,
                 idSchema.$id,
                 props.registry.definitions
             );
-			formData[name] = valueArray.join(delimiter);
+			formData = {...formData, [name]: valueArray.join(delimiter)};
 		});
 		
-		return {schema, uiSchema, idSchema, errorSchema, formData};
+		return {schema, uiSchema, idSchema, formData};
 	}
 
 	onChange(formData) {
