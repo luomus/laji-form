@@ -79,10 +79,9 @@ export default class CombinedStringField extends Component {
                 idSchema.$id,
                 props.registry.definitions
             );
-			idSchema[name] = {$id: idSchema.$id + "_" + name};
 			formData[name] = valueArray.join(delimiter);
 		});
-
+		
 		return {schema, uiSchema, idSchema, errorSchema, formData};
 	}
 
