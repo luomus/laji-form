@@ -287,7 +287,7 @@ export default class MapArrayField extends Component {
 						<Popup data={this.getFeaturePopupData(this.state.popupIdx)} ref="popup"/>
 					</div> : null}
 				<Row>
-					{belowSchema}
+					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
 			</div>
 		);
