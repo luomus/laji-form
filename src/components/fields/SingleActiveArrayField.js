@@ -223,7 +223,8 @@ export default class SingleActiveArrayField extends Component {
 		}
 
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
-		onActiveChange ? onActiveChange(idx, _callback) : this.setState({activeIdx: idx}, _callback);
+		_callback();
+		onActiveChange ? onActiveChange(idx) : this.setState({activeIdx: idx});
 	}
 
 	onDelete = (idx) => () => {
