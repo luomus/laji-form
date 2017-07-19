@@ -420,7 +420,7 @@ function renderAccordionHeader(that, idx, title) {
 				{headerText}
 				<DeleteButton ref={getDeleteButtonRef}
 											className="pull-right"
-											confirm={true}
+											confirm={options.confirmDelete}
 											translations={that.props.formContext.translations}
 											onClick={that.onDelete(idx)} />
 				</div>
