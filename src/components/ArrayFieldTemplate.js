@@ -22,7 +22,7 @@ const buttonDefinitions = {
 	}
 };
 
-export function getButton(button, props = {}) {
+export function getButton(button, props) {
 	function handleButton(button) {
 		const fnName = button.fn;
 		const definition = buttonDefinitions[fnName];
@@ -59,7 +59,7 @@ export function getButton(button, props = {}) {
 	);
 }
 
-export function getButtons(buttons, props) {
+export function getButtons(buttons, props = {}) {
 	if (!buttons) return;
 
 	let _buttons = buttons;
