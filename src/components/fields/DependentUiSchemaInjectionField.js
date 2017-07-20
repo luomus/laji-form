@@ -7,12 +7,11 @@ import VirtualSchemaField from "../VirtualSchemaField";
  */
 
 @VirtualSchemaField
-export default class ConditionField extends Component {
+export default class DependentUiSchemaInjectionField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				field: PropTypes.string,
-				fieldPath: PropTypes.string,
+				field: PropTypes.string.isRequired,
 				regexp: PropTypes.string.isRequired,
 				ifTrueUiSchema: PropTypes.object,
 				ifFalseUiSchema: PropTypes.object
@@ -25,21 +24,7 @@ export default class ConditionField extends Component {
 		const uiOptions = this.getUiOptions();
 		let {uiSchema, formData} = props;
 
-		let value;
-
-		if (uiOptions.field) {
-			value = Array.isArray(formData) ? formData[0][uiOptions.field] : formData[uiOptions.field];
-		} else {
-			const splits = uiOptions.fieldPath.split("/");
-			value = formData;
-			console.log(value);
-			console.log(splits);
-			for (let i = 0; i < splits.length; i++) {
-				console.log(splits[i]);
-				value = value[splits[i]];
-			}
-			console.log(value);
-		}
+		const value = Array.isArray(formData) ? formData[0][uiOptions.field] : formData[uiOptions.field];
 
 		let addedUiSchema = (value && value.match(new RegExp(uiOptions.regex))) ? uiOptions.ifTrueUiSchema : uiOptions.ifFalseUiSchema;
 		if (!addedUiSchema) addedUiSchema = {};
