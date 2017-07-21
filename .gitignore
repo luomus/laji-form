@@ -9,3 +9,4 @@ react-jsonschema-form-copys
 .vim*
 *.swp
 .tern-project
+package-lock.json
