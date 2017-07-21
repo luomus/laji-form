@@ -70,7 +70,6 @@ const fields = importLocalComponents("fields", [
 	"ScopeField",
 	"SelectTreeField",
 	"GridLayoutField",
-	"GridLayoutField",
 	"TableField",
 	"InjectField",
 	"InjectDefaultValueField",
@@ -78,6 +77,7 @@ const fields = importLocalComponents("fields", [
 	"ArrayCombinerField",
 	"DependentBooleanField",
 	"DependentDisableField",
+	"DependentUiSchemaInjectionField",
 	"MapArrayField",
 	"AutoArrayField",
 	"CopyValuesArrayField",
@@ -94,6 +94,7 @@ const fields = importLocalComponents("fields", [
 	"UnitShorthandField",
 	"CombinedStringField",
 	"UiFieldMapperArrayField",
+	"SplitArrayField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);

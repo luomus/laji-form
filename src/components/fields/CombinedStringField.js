@@ -49,11 +49,11 @@ export default class CombinedStringField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				combined: PropTypes.arrayOf(PropTypes.shape({
-					fields: PropTypes.arrayOf(PropTypes.string).isRequired
+					fields: PropTypes.arrayOf(PropTypes.string).isRequired,
+					name: PropTypes.string,
+					title: PropTypes.string,
+					delimiter: PropTypes.string
 				})).isRequired,
-				name: PropTypes.string,
-				title: PropTypes.string,
-				delimiter: PropTypes.string
 			}),
 			uiSchema: PropTypes.object
 		}).isRequired

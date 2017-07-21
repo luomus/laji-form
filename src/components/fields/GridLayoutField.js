@@ -68,7 +68,6 @@ export default class GridLayoutField extends Component {
 		const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 
 		if ((schema.type === "array" && !(schema.items && schema.items.enum && isMultiSelect(schema, uiSchema))) ||
-		    schema.type === "object" ||
 		    (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))) {
 			return cols;
 		}
@@ -133,9 +132,9 @@ export default class GridLayoutField extends Component {
 						schema={schema}
 						uiSchema={this.state.uiSchema[propertyName]}
 						idSchema={toIdSchema(
-							this.state.idSchema[propertyName],
-							 this.state.idSchema.$id + "_" + propertyName,
-						  this.props.registry.definitions
+							property,
+							this.state.idSchema.$id + "_" + propertyName,
+							this.props.registry.definitions
 						)}
 						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
 						formData={this.state.formData ? this.state.formData[propertyName] : undefined}
