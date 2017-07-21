@@ -29,7 +29,7 @@ export default class UiFieldMapperArrayField extends Component {
 	updateChildInstances = (props) => {
 		const {"ui:field": uiField} = getUiOptions(props.uiSchema);
 
-		props.formData.forEach((item, idx) => {
+		(props.formData || []).forEach((item, idx) => {
 			const currentFieldProps = this.childProps[idx];
 			const nextFieldProps = this.getFieldPropsForIdx(props, idx);
 			if (!deepEquals([currentFieldProps, nextFieldProps])) {
@@ -54,15 +54,24 @@ export default class UiFieldMapperArrayField extends Component {
 		};
 	}
 
+	getInstanceForIdx = (props, idx) => {
+		const {"ui:field": uiField} = getUiOptions(props.uiSchema);
+		return new props.registry.fields[uiField](this.getFieldPropsForIdx(props, idx));
+	}
+
 	getStateFromProps(props) {
+		const templateInstance = this.childInstances && this.childInstances.length ? 
+			this.childInstances[0] : 
+			this.getInstanceForIdx(props, undefined);
+
 		const getFieldProp = (field, prop) => field[(prop in field.state) ? "state" : "props"][prop];
 
-		const schema = {...props.schema, items: getFieldProp(this.childInstances[0], "schema")};
+		const schema = {...props.schema, items: getFieldProp(templateInstance, "schema")};
 		const state = {
 			...props,
 			schema,
-			uiSchema: {...props.uiSchema, items: getFieldProp(this.childInstances[0], "uiSchema")},
-			formData: props.formData.map((item, idx) => getFieldProp((this.childInstances[idx]), "formData")),
+			uiSchema: {...props.uiSchema, items: getFieldProp(templateInstance, "uiSchema")},
+			formData: (props.formData || []).map((item, idx) => getFieldProp((this.childInstances[idx]), "formData")),
 			idSchema: toIdSchema(schema, props.idSchema.$id, props.registry.definitions)
 		};
 
@@ -72,8 +81,8 @@ export default class UiFieldMapperArrayField extends Component {
 	onChange(formData) {
 		this.props.onChange(formData.map((item, idx) => {
 			if (!deepEquals(item, this.props.formData[idx])) {
-				this.childInstances[idx].onChange(item); // Will trigger child instance onChange, which will set this.tmpItemFormData.
-
+				const instance = this.childInstances[idx] || this.getInstanceForIdx(this.props, idx);
+				instance.onChange(item); // Will trigger child instance onChange, which will set this.tmpItemFormData.
 				return this.tmpItemFormData;
 			}
 			return item;
