@@ -3,12 +3,12 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 
 function onAdd(e, props, idToFocus) {
-	if (!props.canAdd || getUiOptions(props.uiSchema).canAdd === false) return;
+	if (!canAdd(props)) return;
 	props.onAddClick(e);
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 }
@@ -29,7 +29,7 @@ export function getButton(button, props) {
 		const _button = {...(definition || {}), ...button};
 		if (!_button.fnName) _button.fnName = fnName;
 		if (definition) _button.fn = buttonDefinitions[fnName].fn;
-		if (!(fnName === "add" && (props.canAdd === false || getUiOptions(props.uiSchema).canAdd === false || getUiOptions(props.uiSchema).renderAdd === false))) return _button;
+		if (!(fnName === "add" && (!canAdd(props) || getUiOptions(props.uiSchema).renderAdd === false))) return _button;
 	}
 
 	button = handleButton(button);
@@ -66,7 +66,7 @@ export function getButtons(buttons, props = {}) {
 
 	const addBtnAdded = _buttons.some(button => button.fn === "add");
 
-	if (!addBtnAdded && (!props || props.canAdd && getUiOptions(props.uiSchema).canAdd !== false)) _buttons = [{fn: "add"}, ..._buttons];
+	if (!addBtnAdded && (!props || canAdd(props))) _buttons = [{fn: "add"}, ..._buttons];
 
 	let buttonElems = _buttons.map(button => getButton(button, props));
 
@@ -215,9 +215,7 @@ export const arrayKeyFunctions = {
 			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
 		}
 
-		const canAdd = props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
-
-		if (canAdd) {
+		if (canAdd(props)) {
 			if (insertCallforward) {
 				e.persist();
 				insertCallforward(() => {

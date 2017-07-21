@@ -360,7 +360,6 @@
 					},
 					"items": {
 						"ui:field": "NestField",
-						"classNames": "well",
 						"ui:options": {
 							"nests": {
 								"eventTime": {
@@ -443,52 +442,56 @@
 							}
 						},
 						"units": {
+							"ui:field": "UiFieldMapperArrayField",
 							"ui:options": {
-								"confirmDelete": true,
-								"deleteCorner": true,
-								"buttons": [
-									{
-										"fn": "add",
-										"label": "Lisää havainto"
-									},
-									{
-										"fn": "copy",
-										"label": "Kopioi havainto",
-										"type": "blacklist",
-										"filter": [
-											"/identifications/0/taxon",
-											"/identifications/0/taxonID",
-											"unitType",
-											"count",
-											"notes",
-											"/unitGathering/geometry",
-											"images",
-											"sex",
-											"lifeStage",
-											"hostID",
-											"substrateSpecies",
-											"taste",
-											"tasteNotes",
-											"smell",
-											"smellNotes",
-											"plantLifeStage",
-											"plantStatusCode",
-											"movingStatus",
-											"/unitGathering/substrate"
-										]
-									}
-								]
-							},
-							"items": {
 								"ui:field": "FlatField",
-								"classNames": "well well-sm",
 								"ui:options": {
 									"fields": [
 										"identifications",
 										"unitGathering"
 									]
+								}
+							},
+							"uiSchema": {
+								"ui:field": "SingleActiveArrayField",
+								"ui:options": {
+									"renderer": "table",
+									"confirmDelete": true,
+									"deleteCorner": true,
+									"buttons": [
+										{
+											"fn": "add",
+											"label": "Lisää havainto"
+										},
+										{
+											"fn": "copy",
+											"label": "Kopioi havainto",
+											"type": "blacklist",
+											"filter": [
+												"/identifications/0/taxon",
+												"/identifications/0/taxonID",
+												"unitType",
+												"count",
+												"notes",
+												"/unitGathering/geometry",
+												"images",
+												"sex",
+												"lifeStage",
+												"hostID",
+												"substrateSpecies",
+												"taste",
+												"tasteNotes",
+												"smell",
+												"smellNotes",
+												"plantLifeStage",
+												"plantStatusCode",
+												"movingStatus",
+												"/unitGathering/substrate"
+											]
+										}
+									]
 								},
-								"uiSchema": {
+								"items": {
 									"ui:field": "ScopeField",
 									"ui:settings": [
 										"%additionalFields/scopeField_gathering_unit_unitType"

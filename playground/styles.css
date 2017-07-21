@@ -537,11 +537,17 @@ body .laji-form {
 	height: 48px;
 }
 
+.laji-form .gray {
+	background-color: #f5f5f5;
+}
 .laji-form .darker {
 	background-color: #e2e2e2;
 }
 .laji-form .darker legend {
 	border-color: #cacaca;
+}
+.laji-form .darker th {
+	border-color: #cacaca !important;
 }
 .laji-form .laji-form-single-active-array .panel-body {
 	background: #f5f5f5;

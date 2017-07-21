@@ -334,3 +334,7 @@ export function stringifyKeyCombo(keyCombo = "") {
 		return capitalizeFirstLetter(key);
 	}).join(" + ");
 }
+
+export function canAdd(props) {
+		return props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
+}

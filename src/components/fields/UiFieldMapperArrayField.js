@@ -70,7 +70,7 @@ export default class UiFieldMapperArrayField extends Component {
 		const state = {
 			...props,
 			schema,
-			uiSchema: {...props.uiSchema, items: getFieldProp(templateInstance, "uiSchema")},
+			uiSchema: {...props.uiSchema, items: {...getFieldProp(templateInstance, "uiSchema"), ...props.uiSchema.items}},
 			formData: (props.formData || []).map((item, idx) => getFieldProp((this.childInstances[idx]), "formData")),
 			idSchema: toIdSchema(schema, props.idSchema.$id, props.registry.definitions)
 		};

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { Accordion, PanelGroup, Panel, OverlayTrigger, Tooltip, Pager } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName } from "../../utils";
+import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -96,7 +96,7 @@ export default class SingleActiveArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled"]),
+				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled", "table"]),
 				activeIdx: PropTypes.integer,
 				addTxt: PropTypes.string
 			})
@@ -139,6 +139,8 @@ export default class SingleActiveArrayField extends Component {
 			ArrayFieldTemplate = PagerArrayFieldTemplate;
 		} else if (renderer === "uncontrolled") {
 			ArrayFieldTemplate = UncontrolledArrayFieldTemplate;
+		} else if (renderer === "table") {
+			ArrayFieldTemplate = TableArrayFieldTemplate;
 		} else {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
@@ -150,6 +152,20 @@ export default class SingleActiveArrayField extends Component {
 		const formContext = {...this.props.formContext, this: this};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
+
+		const addButton = {
+			fn: "add",
+			callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
+			label: addLabel
+		};
+
+		let buttons = this.props.uiSchema["ui:options"] ? (this.props.uiSchema["ui:options"].buttons || []) : [];
+
+		if (buttons.every(button => button.fn !== "add")) {
+			buttons = [addButton, ...buttons];
+		}
+
+		if (renderer === "accordion") addButton.className = "col-xs-12 laji-form-accordion-header";
 		return (
 				<ArrayField
 					{...this.props}
@@ -165,14 +181,7 @@ export default class SingleActiveArrayField extends Component {
 						"ui:options": {
 							...this.props.uiSchema["ui:options"],
 							renderDelete: false,
-							buttons: [
-								{
-									fn: "add",
-									className: "col-xs-12 laji-form-accordion-header",
-									callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
-									label: addLabel
-								}
-							]
+							buttons
 						}
 					}}
 				/>
@@ -285,23 +294,23 @@ function handlesButtons(ComposedComponent) {
 	};
 }
 
+// Swallow unknown prop warnings.
+const ButtonsWrapper = ({props}) => {
+	const buttons = getUiOptions(props.uiSchema).buttons;
+	return <div>{getButtons(buttons, props)}</div>;
+};
+
 @handlesButtons
 class AccordionArrayFieldTemplate extends Component {
 	render() {
 		const that = this.props.formContext.this;
 		const arrayFieldTemplateProps = this.props;
 
-		const buttons = getUiOptions(arrayFieldTemplateProps.uiSchema).buttons;
 		const activeIdx = that.state.activeIdx;
 		const title = that.props.schema.title;
 
 		const onSelect = key => that.onActiveChange(key);
 		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
-
-		// Swallow unknown prop warnings.
-		const ButtonsWrapper = () => {
-			return <div>{getButtons(buttons, arrayFieldTemplateProps)}</div>;
-		}
 
 		return (
 				<div className="laji-form-single-active-array">
@@ -314,7 +323,7 @@ class AccordionArrayFieldTemplate extends Component {
 								{item.children}
 							</Panel>
 						))}
-						<ButtonsWrapper />
+						<ButtonsWrapper props={arrayFieldTemplateProps} />
 					</Accordion>
 				</div>
 		);
@@ -369,6 +378,52 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const activeIdx = that.state.activeIdx;
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null;
+	}
+}
+
+@handlesButtons
+class TableArrayFieldTemplate extends Component {
+	render() {
+		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
+		const foundProps = {};
+		const cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
+			if (formData.some(item => {
+				const found = foundProps[prop] || (item.hasOwnProperty(prop) && !isNullOrUndefined(item[prop]) && !isHidden(getNestedTailUiSchema(uiSchema.items), prop));
+				if (found) foundProps[prop] = true;
+				return found;
+			})) {
+				_cols.push(prop);
+			}
+			return _cols;
+		}, []);
+
+		const that = this.props.formContext.this;
+		const activeIdx = that.state.activeIdx;
+
+		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
+		return (
+			<div>
+				<TitleField title={this.props.title}/>
+				<DescriptionField description={this.props.description}/>
+				<Table responsive={true} hover={true} bordered={true}> 
+					<thead>
+						<tr className="darker">
+							{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+						</tr>
+					</thead>
+					<tbody>
+						{items.map((item, idx) => 
+							<tr key={idx} onClick={changeActive(idx)}>{
+								idx === activeIdx ? 
+								<td className="gray" colSpan={cols.length}>{item.children}</td> :
+								cols.map(col => <td key={col}>{formData[idx][col]}</td>)
+							}</tr>)
+						}
+					</tbody>
+				</Table>
+				<ButtonsWrapper props={this.props} />
+			</div>
+		);
 	}
 }
 
