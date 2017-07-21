@@ -32,10 +32,23 @@ export default function VirtualSchemaField(ComposedComponent) {
 			if (super.render) return super.render();
 
 			const SchemaField = this.props.registry.fields.SchemaField;
+
+			const filterProps = props => [
+				"schema",
+				"uiSchema",
+				"idSchema",
+				"formData",
+				"errorSchema",
+				"formContext",
+				"registry"
+			].reduce((_props, prop) => {
+				if (prop in props) _props[prop] = props[prop];
+				return _props;
+			}, {});
+
 			return (
 				<SchemaField
-					{...this.props}
-					{...this.state}
+					{...filterProps({...this.props, ...this.state})}
 					onChange={this.onChange}
 				/>
 			);

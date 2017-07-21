@@ -4,6 +4,7 @@ import Context from "../Context";
 
 /**
  * A base form component that unifies state management and some optimization.
+ * Handles also loading settings & triggering settings change.
  */
 export default function BaseComponent(ComposedComponent) {
 	return class BaseComponent extends ComposedComponent {
@@ -28,7 +29,7 @@ export default function BaseComponent(ComposedComponent) {
 					if (this.getSettingsKey(props, key) in settings) {
 						if (key.match(rule)) {
 							const last = key.match(/.*\/(.*)/, "$1")[1];
-							const withoutLastMatch = key.match(/^(%[^\/]+)?(\/.*)\/.*$/);
+							const withoutLastMatch = key.match(/^(%[^/]+)?(\/.*)\/.*$/);
 							const withoutLast = withoutLastMatch ? withoutLastMatch[2] : "/";
 							const lastContainer = parseJSONPointer(target, withoutLast || "/", "createParents");
 							lastContainer[last] = settings[this.getSettingsKey(props, key)];
@@ -55,16 +56,14 @@ export default function BaseComponent(ComposedComponent) {
 			if (key.match(/^%/)) {
 				return key;
 			} else {
-				return `${settingsId}#${id}\$${uiSchema["ui:field"]}${key}`;
+				return `${settingsId}#${id}$${uiSchema["ui:field"]}${key}`;
 			}
 
 		}
 
 		componentWillReceiveProps(props) {
-			if (this.getStateFromProps) this.setState(this.getStateFromProps(props));
-			if (super.componentWillReceiveProps) {
-				super.componentWillReceiveProps(props);
-			}
+			super.componentWillReceiveProps && super.componentWillReceiveProps(props);
+			this.getStateFromProps && this.setState(this.getStateFromProps(props));
 			this.updateSettingSaver(props);
 		}
 
@@ -74,7 +73,7 @@ export default function BaseComponent(ComposedComponent) {
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach(key => {
 				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						return parseJSONPointer(this.getContext(), key.replace(/^%[^\/]*/, ""));
+						return parseJSONPointer(this.getContext(), key.replace(/^%[^/]*/, ""));
 					} else {
 						return parseJSONPointer(this.state, key);
 					}
@@ -88,7 +87,7 @@ export default function BaseComponent(ComposedComponent) {
 			}
 
 			if (this.props.uiSchema && (this.props.uiSchema["ui:settings"] || []).some(key => {
-				if (key.match(/^%/)) key = key.match(/^%([^\/]*)/)[1];
+				if (key.match(/^%/)) key = key.match(/^%([^/]*)/)[1];
 				if (!deepEquals(...[prevState, this.state].map(state => parseJSONPointer(state, key, !!"safely")))) {
 					return true;
 				}
