@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels } from "../../utils";
-import { isSelect, isMultiSelect, getWidget } from "react-jsonschema-form/lib/utils";
+import { isSelect, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -165,7 +165,15 @@ export default class SingleActiveArrayField extends Component {
 
 		let buttons = this.props.uiSchema["ui:options"] ? (this.props.uiSchema["ui:options"].buttons || []) : [];
 
-		if (buttons.every(button => button.fn !== "add")) {
+		let foundAdd = false;
+		buttons.forEach(button => {
+			if (button.fn === "add") {
+				foundAdd = true;
+				button.callbacker = addButton.callbacker;
+			}
+		});
+
+		if (!foundAdd) {
 			buttons = [addButton, ...buttons];
 		}
 
@@ -180,7 +188,7 @@ export default class SingleActiveArrayField extends Component {
 			}
 		};
 
-		if (renderer === "table" && uiSchema.items.classNames  && !this.state.extraSmall) {
+		if (renderer === "table" && uiSchema.items.classNames  && !this.state.normalRenderingTreshold) {
 			const {classNames: itemsClassNames, ...uiSchemaItems} = uiSchema.items;
 			uiSchema = {
 				...uiSchema,
@@ -211,12 +219,10 @@ export default class SingleActiveArrayField extends Component {
 		if (!normalRenderingTreshold) return;
 		let treshold = bsSizeToPixels(normalRenderingTreshold);
 
-		if (window.innerWidth <= treshold && !this.state.extraSmall) {
-			this.setState({extraSmall: true});
-			that.updateDimensions();
-		} else if (window.innerWidth > treshold && this.state.extraSmall) {
-			this.setState({extraSmall: false});
-			that.updateDimensions();
+		if (window.innerWidth <= treshold && !this.state.normalRenderingTreshold) {
+			this.setState({normalRenderingTreshold: true});
+		} else if (window.innerWidth > treshold && this.state.normalRenderingTreshold) {
+			this.setState({normalRenderingTreshold: false});
 		}
 	}
 
@@ -251,14 +257,12 @@ export default class SingleActiveArrayField extends Component {
 			idx = parseInt(idx);
 		}
 
-		console.log(this.state.activeIdx, idx);
 		if (this.state.activeIdx === idx) {
 			idx = undefined;
 		}
 
 		const that = this;
 		function _callback() {
-			console.log("callback", idx);
 			const id = that.props.idSchema.$id;
 			focusById(that.props.formContext.contextId, `${id}_${idx}`);
 			that.getContext()[`${id}.activeIdx`] = idx;
@@ -442,18 +446,18 @@ class TableArrayFieldTemplate extends Component {
 			if (!normalRenderingTreshold) return;
 			let treshold = bsSizeToPixels(normalRenderingTreshold);
 
-			if (window.innerWidth <= treshold  && !this.state.extraSmall) {
-				this.setState({extraSmall: true});
+			if (window.innerWidth <= treshold  && !this.state.normalRenderingTreshold) {
+				this.setState({normalRenderingTreshold: true});
 				that.updateDimensions();
-			} else if (window.innerWidth > treshold && this.state.extraSmall) {
-				this.setState({extraSmall: false});
+			} else if (window.innerWidth > treshold && this.state.normalRenderingTreshold) {
+				this.setState({normalRenderingTreshold: false});
 				that.updateDimensions();
 			}
 		});
 	}
 
 	render() {
-		if (this.state.extraSmall) {
+		if (this.state.normalRenderingTreshold) {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
@@ -461,7 +465,12 @@ class TableArrayFieldTemplate extends Component {
 		const foundProps = {};
 		const cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
-				const found = foundProps[prop] || (item.hasOwnProperty(prop) && !isNullOrUndefined(item[prop]) && !isHidden(getNestedTailUiSchema(uiSchema.items), prop));
+				const found = foundProps[prop] || (
+					item.hasOwnProperty(prop) && 
+					!isNullOrUndefined(item[prop]) && 
+					(!Array.isArray(item[prop]) || Array.isArray(item[prop]) && !item[prop].every(isNullOrUndefined)) &&
+					!isHidden(getNestedTailUiSchema(uiSchema.items), prop)
+				);
 				if (found) foundProps[prop] = true;
 				return found;
 			})) {
@@ -505,23 +514,42 @@ class TableArrayFieldTemplate extends Component {
 
 		const {itemsClassNames} = getUiOptions(uiSchema);
 
+		// We insert an empty item that will be rendered as a hidden table row with the active idx data filled
+		// in order to keep the layout unaffected during table navigation.
+		let _items = [...items];
+		if (typeof activeIdx === "number" && activeIdx < items.length) {
+			_items.splice(activeIdx + 1, 0, undefined);
+		}
+
 		return (
 			<div>
 				<TitleField title={this.props.title}/>
 				<DescriptionField description={this.props.description}/>
-				<Table responsive={true} hover={true} bordered={true} condensed={true}> 
-					<thead>
-						<tr className="darker">
-							{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
-						</tr>
-					</thead>
+				<Table hover={true} bordered={true} condensed={true}> 
+					{items.length !== 1 || that.state.activeIdx !== 0 ? (
+						<thead>
+							<tr className="darker">
+								{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+							</tr>
+						</thead>
+					) : null}
 					<tbody>
-						{items.map((item, idx) => 
-							<tr key={idx} onClick={changeActive(idx)}>{
-								idx === activeIdx ? 
-								<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td> :
-								cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>)
-							}</tr>)
+						{_items.map((item, idx) => {
+							const style = (typeof activeIdx === "number" && idx === activeIdx + 1) ?
+								{visibility: "collapse", lineHeight: 0, padding: 0} : // Fixes table layout.
+								undefined;
+							const origIdx = idx;
+							if (typeof activeIdx === "number" && idx > activeIdx) {
+								idx = idx - 1;
+							}
+							return (
+								<tr key={origIdx} onClick={changeActive(idx)} style={style}>{
+									(origIdx === activeIdx) ?
+										<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td> :
+										cols.map(col => <td key={col} style={style}>{formatValue(formData[idx], col)}</td>)
+								}</tr>
+							);
+						})
 						}
 					</tbody>
 				</Table>
@@ -596,4 +624,3 @@ function renderAccordionHeader(that, idx, title) {
 		header
 	);
 }
-

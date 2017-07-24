@@ -198,7 +198,7 @@ export default class MapArrayField extends Component {
 						fn: () => () => {
 							const nextActive = this.props.formData.length;
 							this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
-							this.setState({activeIdx: nextActive});
+							this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 						}, 
 						key: "_add",
 						label: addTxt,
