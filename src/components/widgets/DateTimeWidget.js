@@ -157,6 +157,7 @@ export default class DateTimeWidget extends Component {
 	}
 
 	formatValue(value, options, props) {
+		if (!value) return value;
 		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, calendar: true, time: true, value});
 		return dateLocalizer.format(value, format, props.formContext.lang);
 	}
