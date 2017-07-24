@@ -1,61 +1,72 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Label } from "../components";
 import { isNullOrUndefined, isEmptyString } from "../../utils";
 import Switch from "react-bootstrap-switch";
 
-function CheckboxWidget(props) {
-	const {
-		value,
-		disabled,
-		onChange,
-		registry,
-		readonly,
-		options
-	} = props;
+export default class CheckboxWidget extends Component {
+	render(props) {
+		const {
+			value,
+			disabled,
+			onChange,
+			registry,
+			readonly,
+			options,
+			label
+		} = this.props;
 
-	function getNextVal() {
-		let nextVal = true;
-		if (value === true) nextVal = false;
-		else if (allowUndefined && value === false) nextVal = undefined;
-		return nextVal;
-	}
+		function getNextVal() {
+			let nextVal = true;
+			if (value === true) nextVal = false;
+			else if (allowUndefined && value === false) nextVal = undefined;
+			return nextVal;
+		}
 
-	function onKeyDown(e) {
-		if (!disabled  && !readonly && e.key === " " && ["shift", "alt", "ctrl"].every(special => !e[`${special}Key`])) {
+		function onKeyDown(e) {
+			if (!disabled  && !readonly && e.key === " " && ["shift", "alt", "ctrl"].every(special => !e[`${special}Key`])) {
+				e.preventDefault();
+				onChange(getNextVal());
+			}
+		}
+
+		function onClick(e) {
 			e.preventDefault();
+			if (disabled || readonly) return;
 			onChange(getNextVal());
 		}
+
+		const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
+
+		const checkbox = (
+			<div onClick={onClick} onKeyDown={onKeyDown} className="checkbox-container">
+				<Switch
+					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
+					defaultValue={allowUndefined ? null : false}
+					disabled={disabled}
+					readonly={readonly}
+					onText={registry.formContext.translations.Yes}
+					offText={registry.formContext.translations.No}
+					bsSize="mini"
+					tristate={allowUndefined}
+				/>
+			</div>
+		);
+
+		return isEmptyString(label) ? checkbox : (
+			<Label {...this.props}>
+				{checkbox}
+			</Label>
+		);
 	}
 
-	function onClick(e) {
-		e.preventDefault();
-		if (disabled || readonly) return;
-		onChange(getNextVal());
+	formatValue(value, options, props) {
+		return value === undefined  ?
+			"" :
+			value === true ?
+				props.formContext.translations.Yes :
+				props.formContext.translations.No;
 	}
-
-	const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
-
-	const checkbox = (
-		<div onClick={onClick} onKeyDown={onKeyDown} className="checkbox-container">
-			<Switch
-				value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
-				defaultValue={allowUndefined ? null : false}
-				disabled={disabled}
-				readonly={readonly}
-				onText={registry.formContext.translations.Yes}
-				offText={registry.formContext.translations.No}
-				bsSize="mini"
-				tristate={allowUndefined}
-			/>
-		</div>
-	);
-
-	return isEmptyString(props.label) ? checkbox :(
-		<Label {...props}>
-			{checkbox}
-		</Label>
-	);
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -70,6 +81,3 @@ if (process.env.NODE_ENV !== "production") {
 		})
 	};
 }
-
-export default CheckboxWidget;
-

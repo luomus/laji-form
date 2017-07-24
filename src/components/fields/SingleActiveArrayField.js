@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden } from "../../utils";
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString } from "../../utils";
+import { isSelect, isMultiSelect, getWidget } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
 import { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -400,6 +401,35 @@ class TableArrayFieldTemplate extends Component {
 		const activeIdx = that.state.activeIdx;
 
 		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
+
+		const formatValue = (item, col) => {
+			const val = item[col];
+			const _schema = schema.items.properties[col];
+			const {registry} = that.props;
+			const _uiSchema = getNestedTailUiSchema(uiSchema.items)[col] || {};
+			
+			let widget = undefined;
+			if (_uiSchema["ui:widget"]) widget = registry.widgets[_uiSchema["ui:widget"]];
+			else if (_schema.type === "boolean") widget = registry.widgets.CheckboxWidget;
+			
+			let formatter = undefined;
+			if (widget && widget.prototype && widget.prototype.formatValue) formatter = widget.prototype.formatValue;
+			else if (widget && widget.prototype && widget.prototype.__proto__) formatter = widget.prototype.__proto__.formatValue;
+
+			if (formatter) {
+				return formatter(val, getUiOptions(_uiSchema), that.props);
+			} else if (isEmptyString(val)) {
+				return "";
+			} else if (isMultiSelect(_schema)) {
+				return val.map(_val => _schema.items.enumNames[_schema.items.enum.indexOf(_val)]).join(", ");
+			} else if (isSelect(_schema)) {
+				return isEmptyString(val) ? val : _schema.enumNames[_schema.enum.indexOf(val)];
+			} else if (_schema.type === "boolean") {
+				return this.props.formContext.translations[val ? "yes" : "no"];
+			}
+			return val;
+		};
+
 		return (
 			<div>
 				<TitleField title={this.props.title}/>
@@ -415,7 +445,7 @@ class TableArrayFieldTemplate extends Component {
 							<tr key={idx} onClick={changeActive(idx)}>{
 								idx === activeIdx ? 
 								<td className="gray" colSpan={cols.length}>{item.children}</td> :
-								cols.map(col => <td key={col}>{formData[idx][col]}</td>)
+								cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>)
 							}</tr>)
 						}
 					</tbody>

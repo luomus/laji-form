@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
+import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -31,11 +32,11 @@ export default class DateTimeWidget extends Component {
 		let dateFormat = "";
 		let timeFormat = "";
 		let placeholder = "";
-		if (this.props.calendar) {
+		if (props.calendar) {
 			dateFormat += localeFormats.L;
 			placeholder += translations.datePlaceholderDay;
 		}
-		if (this.props.time) {
+		if (props.time) {
 			if (placeholder) placeholder += DATE_TIME_SEPARATOR;
 			placeholder += translations.timePlaceholderDay;
 			timeFormat = localeFormats.LT;
@@ -153,5 +154,10 @@ export default class DateTimeWidget extends Component {
 
 	setYesterday = () => {
 		this.onChange(this.getDateWithCurrentTime(moment().subtract(1, "d").format("YYYY-MM-DD")));
+	}
+
+	formatValue(value, options, props) {
+		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, calendar: true, time: true, value});
+		return dateLocalizer.format(value, format, props.formContext.lang);
 	}
 }

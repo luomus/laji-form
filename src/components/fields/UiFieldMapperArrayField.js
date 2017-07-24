@@ -56,7 +56,6 @@ export default class UiFieldMapperArrayField extends Component {
 
 	getInstanceForIdx = (props, idx) => {
 		const {"ui:field": uiField} = getUiOptions(props.uiSchema);
-		console.log(props);
 		return new props.registry.fields[uiField](this.getFieldPropsForIdx(props, idx));
 	}
 

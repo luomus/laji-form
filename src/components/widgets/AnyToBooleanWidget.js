@@ -1,3 +1,4 @@
+import React from "react";
 import CheckboxWidget from "./CheckboxWidget";
 import { getUiOptions } from "../../utils";
 
@@ -12,6 +13,11 @@ export default function AnyToBooleanWidget(props) {
 		props.onChange(newValue);
 	};
 
-	return CheckboxWidget({...props, schema, value, onChange, label: ""});
+	return <CheckboxWidget 
+		{...props}
+		schema={schema}
+		value={value}
+		onChange={onChange}
+		label={""}
+	/>;
 }
-
