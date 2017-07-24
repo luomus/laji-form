@@ -456,6 +456,7 @@
 								"ui:field": "SingleActiveArrayField",
 								"ui:options": {
 									"renderer": "table",
+									"normalRenderingTreshold": "sm",
 									"confirmDelete": true,
 									"deleteCorner": true,
 									"buttons": [
@@ -493,6 +494,7 @@
 								},
 								"items": {
 									"ui:field": "ScopeField",
+									"classNames": "well well-sm",
 									"ui:settings": [
 										"%additionalFields/scopeField_gathering_unit_unitType"
 									],

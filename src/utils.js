@@ -336,5 +336,20 @@ export function stringifyKeyCombo(keyCombo = "") {
 }
 
 export function canAdd(props) {
-		return props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
+	return props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
+}
+
+export function bsSizeToPixels(bsSize) {
+	switch (bsSize) {
+	case "lg":
+		return 1200;
+	case "md":
+		return 992;
+	case "sm":
+		return 768;
+	case "xs":
+		return 576;
+	default: 
+		throw new Error(`Unknown bootstrap size ${bsSize}. Should be one of 'lg', 'md', 'sm' or 'xs'`);
+	}
 }

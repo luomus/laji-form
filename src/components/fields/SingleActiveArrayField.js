@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString } from "../../utils";
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels } from "../../utils";
 import { isSelect, isMultiSelect, getWidget } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
-import { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
@@ -166,6 +166,29 @@ export default class SingleActiveArrayField extends Component {
 			buttons = [addButton, ...buttons];
 		}
 
+		let uiSchema = {
+			...this.props.uiSchema,
+			"ui:field": undefined,
+			classNames: undefined,
+			"ui:options": {
+				...this.props.uiSchema["ui:options"],
+				renderDelete: false,
+				buttons
+			}
+		};
+
+		if (renderer === "table" && uiSchema.items.classNames  && !this.state.extraSmall) {
+			const {classNames: itemsClassNames, ...uiSchemaItems} = uiSchema.items;
+			uiSchema = {
+				...uiSchema,
+				"ui:options": {
+					...(uiSchema["ui:options"] || {}),
+					itemsClassNames
+				},
+				items: uiSchemaItems
+			};
+		}
+
 		if (renderer === "accordion") addButton.className = "col-xs-12 laji-form-accordion-header";
 		return (
 				<ArrayField
@@ -175,18 +198,23 @@ export default class SingleActiveArrayField extends Component {
 						...this.props.registry,
 						ArrayFieldTemplate
 					}}
-					uiSchema={{
-						...this.props.uiSchema,
-						"ui:field": undefined,
-						classNames: undefined,
-						"ui:options": {
-							...this.props.uiSchema["ui:options"],
-							renderDelete: false,
-							buttons
-						}
-					}}
+					uiSchema={uiSchema}
 				/>
 		);
+	}
+
+	updateDimensions = () => {
+		const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
+		if (!normalRenderingTreshold) return;
+		let treshold = bsSizeToPixels(normalRenderingTreshold);
+
+		if (window.innerWidth <= treshold && !this.state.extraSmall) {
+			this.setState({extraSmall: true});
+			that.updateDimensions();
+		} else if (window.innerWidth > treshold && this.state.extraSmall) {
+			this.setState({extraSmall: false});
+			that.updateDimensions();
+		}
 	}
 
 	getPopupDataPromise = (idx, itemFormData) => {
@@ -270,6 +298,7 @@ function handlesButtons(ComposedComponent) {
 				navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
 			});
 			this.addChildKeyHandler();
+			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentDidUpdate() {
@@ -289,6 +318,7 @@ function handlesButtons(ComposedComponent) {
 		componentWillUnmount() {
 			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
+			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
 	};
@@ -383,7 +413,45 @@ class UncontrolledArrayFieldTemplate extends Component {
 
 @handlesButtons
 class TableArrayFieldTemplate extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
+	componentDidMount() {
+		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
+		window.addEventListener("resize", this.updateDimensions);
+		this.updateDimensions();
+	}
+
+	componentWillUnmount() {
+		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
+		window.removeEventListener("resize", this.updateDimensions);
+	}
+
+	updateDimensions = () => {
+		requestAnimationFrame(() => {
+			const that = this.props.formContext.this;
+			const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
+			if (!normalRenderingTreshold) return;
+			let treshold = bsSizeToPixels(normalRenderingTreshold);
+
+			if (window.innerWidth <= treshold  && !this.state.extraSmall) {
+				this.setState({extraSmall: true});
+				that.updateDimensions();
+			} else if (window.innerWidth > treshold && this.state.extraSmall) {
+				this.setState({extraSmall: false});
+				that.updateDimensions();
+			}
+		});
+	}
+
 	render() {
+		if (this.state.extraSmall) {
+			return <_ArrayFieldTemplate {...this.props} />;
+		}
+
 		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
 		const foundProps = {};
 		const cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
@@ -407,11 +475,11 @@ class TableArrayFieldTemplate extends Component {
 			const _schema = schema.items.properties[col];
 			const {registry} = that.props;
 			const _uiSchema = getNestedTailUiSchema(uiSchema.items)[col] || {};
-			
+
 			let widget = undefined;
 			if (_uiSchema["ui:widget"]) widget = registry.widgets[_uiSchema["ui:widget"]];
 			else if (_schema.type === "boolean") widget = registry.widgets.CheckboxWidget;
-			
+
 			let formatter = undefined;
 			if (widget && widget.prototype && widget.prototype.formatValue) formatter = widget.prototype.formatValue;
 			else if (widget && widget.prototype && widget.prototype.__proto__) formatter = widget.prototype.__proto__.formatValue;
@@ -430,11 +498,13 @@ class TableArrayFieldTemplate extends Component {
 			return val;
 		};
 
+		const {itemsClassNames} = getUiOptions(uiSchema);
+
 		return (
 			<div>
 				<TitleField title={this.props.title}/>
 				<DescriptionField description={this.props.description}/>
-				<Table responsive={true} hover={true} bordered={true}> 
+				<Table responsive={true} hover={true} bordered={true} condensed={true}> 
 					<thead>
 						<tr className="darker">
 							{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
@@ -444,7 +514,7 @@ class TableArrayFieldTemplate extends Component {
 						{items.map((item, idx) => 
 							<tr key={idx} onClick={changeActive(idx)}>{
 								idx === activeIdx ? 
-								<td className="gray" colSpan={cols.length}>{item.children}</td> :
+								<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td> :
 								cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>)
 							}</tr>)
 						}
