@@ -455,6 +455,7 @@
 							"uiSchema": {
 								"ui:field": "SingleActiveArrayField",
 								"ui:options": {
+									"initialActiveIdx": null,
 									"renderer": "table",
 									"normalRenderingTreshold": "sm",
 									"confirmDelete": true,

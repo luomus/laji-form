@@ -107,8 +107,11 @@ export default class SingleActiveArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.deleteButtonRefs = {};
+		const options = getUiOptions(props.uiSchema);
 		this.state = {
-			activeIdx: (props.formData && props.formData.length) ? 0 : undefined, 
+			activeIdx: (props.formData && props.formData.length) ? 
+				("initialActiveIdx" in options) ? options.initialActiveIdx : 0
+				: undefined, 
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
@@ -248,12 +251,14 @@ export default class SingleActiveArrayField extends Component {
 			idx = parseInt(idx);
 		}
 
+		console.log(this.state.activeIdx, idx);
 		if (this.state.activeIdx === idx) {
 			idx = undefined;
 		}
 
 		const that = this;
 		function _callback() {
+			console.log("callback", idx);
 			const id = that.props.idSchema.$id;
 			focusById(that.props.formContext.contextId, `${id}_${idx}`);
 			that.getContext()[`${id}.activeIdx`] = idx;
