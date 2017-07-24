@@ -25,7 +25,7 @@ export default function VirtualSchemaField(ComposedComponent) {
 
 			return {
 				...propsWithInnerUiSchema,
-				...super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema) : propsWithInnerUiSchema,
+				...super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema,
 			};
 		}
 

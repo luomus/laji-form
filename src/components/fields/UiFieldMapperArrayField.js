@@ -56,13 +56,14 @@ export default class UiFieldMapperArrayField extends Component {
 
 	getInstanceForIdx = (props, idx) => {
 		const {"ui:field": uiField} = getUiOptions(props.uiSchema);
+		console.log(props);
 		return new props.registry.fields[uiField](this.getFieldPropsForIdx(props, idx));
 	}
 
-	getStateFromProps(props) {
+	getStateFromProps(props, origProps) {
 		const templateInstance = this.childInstances && this.childInstances.length ? 
 			this.childInstances[0] : 
-			this.getInstanceForIdx(props, undefined);
+			this.getInstanceForIdx(origProps, undefined);
 
 		const getFieldProp = (field, prop) => field[(prop in field.state) ? "state" : "props"][prop];
 
