@@ -71,7 +71,6 @@ const fields = importLocalComponents("fields", [
 	"SelectTreeField",
 	"GridLayoutField",
 	"TableField",
-	"CompactTableField",
 	"InjectField",
 	"InjectDefaultValueField",
 	"AdditionalsExpanderField",
