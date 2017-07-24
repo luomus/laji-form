@@ -1588,7 +1588,23 @@
 				]
 			  }
 			]
-		  }
+		  },
+		  "units": [
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {}
+			  }
+			}
+		  ]
 		},
 		{
 		  "images": [
@@ -1617,8 +1633,53 @@
 					62.09818109070839
 				  ]
 				},
-			  "dateBegin": "2012-07-02",
-			  "dateEnd": "2012-07-04"
+				"dateBegin": "2012-07-02",
+				"dateEnd": "2012-07-04"
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {}
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "identifications": [
+				{
+				  "identificationBasis": [
+					"MY.identificationBasisSeen",
+					"MY.identificationBasisHeard"
+				  ]
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {}
 			  }
 			}
 		  ],

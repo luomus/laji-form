@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden } from "../../utils";
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString } from "../../utils";
 import { DeleteButton } from "../components";
 import { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -388,7 +388,12 @@ class TableArrayFieldTemplate extends Component {
 		const foundProps = {};
 		const cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
-				const found = foundProps[prop] || (item.hasOwnProperty(prop) && !isNullOrUndefined(item[prop]) && !isHidden(getNestedTailUiSchema(uiSchema.items), prop));
+				const found = foundProps[prop] || (
+					item.hasOwnProperty(prop) && 
+					(!Array.isArray(item[prop]) || !item[prop].every(isEmptyString)) && 
+					!isEmptyString(item[prop]) && 
+					!isHidden(getNestedTailUiSchema(uiSchema.items), prop)
+				);
 				if (found) foundProps[prop] = true;
 				return found;
 			})) {
@@ -400,25 +405,40 @@ class TableArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const activeIdx = that.state.activeIdx;
 
-		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
+		const getHeader = () => 
+			<tr className="darker">
+				{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+			</tr>;
+
+		const getChangeActiveIdx = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
+
+		const getItemForIdx = idx => 
+			<tr key={idx} onClick={getChangeActiveIdx(idx)}>{
+				idx === activeIdx ? 
+					<td className="gray" colSpan={cols.length}>{items[idx].children}</td> :
+					cols.map(col => <td key={col}>{formData[idx][col]}</td>)
+			}</tr>;
+
+		const idxs = items.map((item, idx) => idx);
+		const prependingIdxs = activeIdx === undefined ? idxs : idxs.slice(0, activeIdx + 1);
+		const appendingIdxs = activeIdx === undefined ? [] : idxs.slice(activeIdx + 1);
+
 		return (
 			<div>
 				<TitleField title={this.props.title}/>
 				<DescriptionField description={this.props.description}/>
-				<Table responsive={true} hover={true} bordered={true}> 
+				<Table responsive={true} hover={true} bordered={true} condensed={true}> 
 					<thead>
-						<tr className="darker">
-							{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
-						</tr>
+						{activeIdx !== 0 ? getHeader() : null}
 					</thead>
 					<tbody>
-						{items.map((item, idx) => 
-							<tr key={idx} onClick={changeActive(idx)}>{
-								idx === activeIdx ? 
-								<td className="gray" colSpan={cols.length}>{item.children}</td> :
-								cols.map(col => <td key={col}>{formData[idx][col]}</td>)
-							}</tr>)
-						}
+						{prependingIdxs.map(getItemForIdx)}
+					</tbody>
+					<thead>
+						{(activeIdx !== undefined && activeIdx < formData.length - 1 ) ? getHeader() : null}
+					</thead>
+					<tbody>
+						{appendingIdxs.map(getItemForIdx)}
 					</tbody>
 				</Table>
 				<ButtonsWrapper props={this.props} />
