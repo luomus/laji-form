@@ -541,7 +541,7 @@ class TableArrayFieldTemplate extends Component {
 								<tr key={idx} onClick={changeActive(idx)} style={trStyle}>{
 									cols.map(col => <td key={col} style={tdStyle}>{formatValue(formData[idx], col)}</td>)
 								}</tr>,
-								(idx === activeIdx) ? <tr><td key="active" className={itemsClassNames} colSpan={cols.length}>{item.children}</td></tr> : null
+								(idx === activeIdx) ? <tr key="active" onClick={changeActive(idx)}><td className={itemsClassNames} colSpan={cols.length}>{item.children}</td></tr> : null
 							];
 						})
 						}
