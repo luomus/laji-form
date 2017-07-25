@@ -5,7 +5,7 @@ import { isNullOrUndefined, isEmptyString } from "../../utils";
 import Switch from "react-bootstrap-switch";
 
 export default class CheckboxWidget extends Component {
-	render(props) {
+	render() {
 		const {
 			value,
 			disabled,

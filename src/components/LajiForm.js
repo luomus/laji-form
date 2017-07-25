@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { Button, Label, Help, DeleteButton } from "./components";
+import { Button, Label, Help } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo } from "../utils";
 
@@ -255,7 +255,7 @@ export default class LajiForm extends Component {
 		this._context.addSettingSaver = (key, fn) => this.settingSavers[key] = fn;
 		this._context.removeSettingSaver = (key) => {
 			delete this.settingSavers[key];
-		}
+		};
 		this._context.onSettingsChange = this.onSettingsChange;
 
 		this._context.setImmediate = this.setImmediate;

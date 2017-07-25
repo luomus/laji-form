@@ -177,7 +177,7 @@ const lineTransect =
 		}
 	};
 
-const lineTransectGeometries = geoJSONLineToLatLngSegmentArrays(lineTransect.geometry)
+const lineTransectGeometries = geoJSONLineToLatLngSegmentArrays(lineTransect.geometry) // eslint-disable-line
 	.reduce((flattened, array) => [...flattened, ...array], [])
 	.reduce((gatherings, coordPair) =>
 		[...gatherings, {geometry: {type: "LineString", coordinates: coordPair.map(coordinate => coordinate.reverse())}}],
@@ -198,17 +198,15 @@ const lajiForm = new LajiForm({
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
 	renderSubmit: true,
-	onSettingsChange: console.log
+	onSettingsChange: console.info
 });
 
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
 if (SCHEMA_ID !== undefined) {
-	apiClient.fetch(`/forms/${SCHEMA_ID}`, {lang, format: "schema"})
-						.then(response => {
-							return response.json();
-						})
-	         .then(props => {
+	apiClient.fetch(`/forms/${SCHEMA_ID}`, {lang, format: "schema"}).then(response => {
+		return response.json();
+	}).then(props => {
 		const {schema, uiSchema, validators, uiSchemaContext, settings} = props;
 		const propsToPass = {
 			schema, 
@@ -218,7 +216,7 @@ if (SCHEMA_ID !== undefined) {
 		};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;
 		lajiForm.setState(propsToPass);
-					 });
+	});
 }
 
 function onSubmit({formData}) {
