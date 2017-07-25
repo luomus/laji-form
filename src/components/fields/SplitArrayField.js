@@ -11,7 +11,7 @@ export default class SplitArrayField extends Component {
 			"ui:options": PropTypes.shape({
 				splitRule: PropTypes.shape({
 					fieldPath: PropTypes.string.isRequired,
-					regexp: PropTypes.string.isRequired
+					rules: PropTypes.arrayOf(PropTypes.string).isRequired
 				}).isRequired,
 				uiOptions: PropTypes.arrayOf(PropTypes.object)
 			})
@@ -22,54 +22,65 @@ export default class SplitArrayField extends Component {
 		let {schema, uiSchema, formData} = props;
 		const uiOptions = getUiOptions(props.uiSchema);
 
-		const firstFormData = [];
-		const secondFormData = [];
+		const splittedFormData = [];
+		const splittedUiSchemas = [];
+		const splittedSchemas = [];
 
-		for (let i = 0; i < formData.length; i++) {
-			const value = this.getValueFromPath(formData[i], uiOptions.splitRule.fieldPath);
-
-			if (value && value.match(uiOptions.splitRule.regexp)) {
-				firstFormData.push(formData[i]);
-			} else {
-				secondFormData.push(formData[i]);
+		for (let i = 0; i <= uiOptions.splitRule.rules.length; i++) {
+			splittedFormData.push([]);
+			splittedUiSchemas[i] = {...uiSchema, "ui:options": {...uiOptions.uiOptions[i]}};
+			splittedSchemas[i] = {...schema};
+			if (uiOptions.uiOptions[i].title) {
+				splittedSchemas[i].title = uiOptions.uiOptions[i].title;
 			}
 		}
 
-		const firstUiSchema = {...uiSchema, "ui:options": {...uiOptions.uiOptions[0], renderer: "uncontrolled"}};
-		const secondUiSchema = {...uiSchema, "ui:options": {...uiOptions.uiOptions[1], renderer: "uncontrolled"}};
+		for (let i = 0; i < formData.length; i++) {
+			const value = this.getValueFromPath(formData[i], uiOptions.splitRule.fieldPath);
+			let noMatch = true;
 
-		const secondSchema = {...schema};
-		const firstSchema = {...schema};
-		if (uiOptions.uiOptions[1].title) {
-			secondSchema.title = uiOptions.uiOptions[1].title;
+			for (let j = 0; j < uiOptions.splitRule.rules.length; j++) {
+				if (value && value.match(uiOptions.splitRule.rules[j])) {
+					splittedFormData[j].push({...formData[i]});
+					noMatch = false;
+					break;
+				}
+			}
+
+			if (noMatch) splittedFormData[splittedFormData.length - 1].push({...formData[i]});
 		}
 
-		return {firstFormData, secondFormData, firstUiSchema, secondUiSchema, firstSchema, secondSchema};
+		return {splittedSchemas, splittedUiSchemas, splittedFormData};
 	}
 
 	render() {
 		const {props, state} = this;
+		const onChange = [];
+
+		for (let i = 0; i < state.splittedSchemas.length; i++) {
+			onChange[i] = (formData) => {
+				const {state, props} = this;
+				let newFormData = [];
+
+				for (let j = 0; j < state.splittedFormData.length; j++) {
+					if (j !== i) {
+						newFormData = newFormData.concat(state.splittedFormData[j]);
+					} else {
+						newFormData = newFormData.concat(formData);
+						this.setState((state) => {state.splittedFormData[i] = formData; return state;});
+					}
+				}
+				props.onChange(newFormData);
+			};
+		}
 
 		return (
-            <div>
-                <_ArrayField {...props} formData={state.firstFormData} uiSchema={state.firstUiSchema} onChange={this.onFirstChange.bind(this)}/>
-                <_ArrayField {...props} schema={state.secondSchema} formData={state.secondFormData} uiSchema={state.secondUiSchema} onChange={this.onSecondChange.bind(this)}/>
-            </div>
+			<div>
+                {state.splittedSchemas.map((schema, i) =>
+					<_ArrayField key={i} {...props} schema={schema} formData={state.splittedFormData[i]} uiSchema={state.splittedUiSchemas[i]} onChange={onChange[i]}/>
+				)}
+			</div>
 		);
-	}
-
-	onFirstChange(formData) {
-		const {state, props} = this;
-		formData = state.secondFormData.concat(formData);
-		this.setState((state) => {state.firstFormData = formData; return state;});
-		props.onChange(formData);
-	}
-
-	onSecondChange(formData) {
-		const {state, props} = this;
-		formData = state.firstFormData.concat(formData);
-		this.setState((state) => {state.secondFormData = formData; return state;});
-		props.onChange(formData);
 	}
 
 	getValueFromPath = (obj, path) => {
