@@ -9,7 +9,18 @@ export default class UiFieldMapperArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				"ui:field": PropTypes.string,
+				functions: PropTypes.oneOfType([
+					PropTypes.arrayOf(
+						PropTypes.shape({
+							"ui:field": PropTypes.string.isRequired,
+							"ui:options": PropTypes.object
+						}),
+					),
+					PropTypes.shape({
+						"ui:field": PropTypes.string.isRequired,
+						"ui:options": PropTypes.object
+					})
+				])
 			}),
 			uiSchema: PropTypes.object
 		}).isRequired
@@ -18,7 +29,7 @@ export default class UiFieldMapperArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.childProps = [];
-		this.childInstances = [];
+		this.functionOutputProps = [];
 		this.updateChildInstances(props);
 	}
 
@@ -27,26 +38,23 @@ export default class UiFieldMapperArrayField extends Component {
 	}
 
 	updateChildInstances = (props) => {
-		const {"ui:field": uiField} = getUiOptions(props.uiSchema);
-
 		(props.formData || []).forEach((item, idx) => {
 			const currentFieldProps = this.childProps[idx];
 			const nextFieldProps = this.getFieldPropsForIdx(props, idx);
 			if (!deepEquals([currentFieldProps, nextFieldProps])) {
-				this.childInstances[idx] = new props.registry.fields[uiField](nextFieldProps);
+				this.functionOutputProps[idx] = this.applyFunctionsToChildProps(props, nextFieldProps);
 				this.childProps[idx] = nextFieldProps;
 			}
 		});
 	}
 
 	getFieldPropsForIdx = (props, idx) => {
-		const {"ui:field": uiField, "ui:options": uiOptions} = getUiOptions(props.uiSchema);
 		return {
 			...props,
 			schema: props.schema.items,
-			uiSchema: {"ui:field": uiField, "ui:options": uiOptions, uiSchema: props.uiSchema.items},
+			uiSchema: props.uiSchema.items,
 			idSchema: toIdSchema(props.schema.items, `${props.idSchema.$id}_${idx}`, props.registry.definitions),
-			formData: (props.formData  || [])[idx],
+			formData: (props.formData || [])[idx],
 			errorSchema: (props.errorSchema || {})[idx] || {},
 			onChange: formData => {
 				this.tmpItemFormData = formData;
@@ -54,24 +62,31 @@ export default class UiFieldMapperArrayField extends Component {
 		};
 	}
 
-	getInstanceForIdx = (props, idx) => {
-		const {"ui:field": uiField} = getUiOptions(props.uiSchema);
-		return new props.registry.fields[uiField](this.getFieldPropsForIdx(props, idx));
+	applyFunctionsToChildProps = (props, childProps) => {
+		let {functions} = getUiOptions(props.uiSchema);
+
+		return ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
+			_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions}};
+			const {state = {}} = new props.registry.fields[uiField](_props);
+			return {..._props, ...state};
+		}, childProps);
+	}
+
+	getFunctionOutputForIdx = (props, idx) => {
+		return this.applyFunctionsToChildProps(props, this.getFieldPropsForIdx(props, idx));
 	}
 
 	getStateFromProps(props, origProps) {
-		const templateInstance = this.childInstances && this.childInstances.length ? 
-			this.childInstances[0] : 
-			this.getInstanceForIdx(origProps, undefined);
+		const templateOutput = this.functionOutputProps && this.functionOutputProps.length ? 
+			this.functionOutputProps[0] : 
+			this.getFunctionOutputForIdx(origProps, undefined);
 
-		const getFieldProp = (field, prop) => field[(prop in field.state) ? "state" : "props"][prop];
-
-		const schema = {...props.schema, items: getFieldProp(templateInstance, "schema")};
+		const schema = {...props.schema, items: templateOutput.schema};
 		const state = {
 			...props,
 			schema,
-			uiSchema: {...props.uiSchema, items: {...getFieldProp(templateInstance, "uiSchema"), ...props.uiSchema.items}},
-			formData: (props.formData || []).map((item, idx) => getFieldProp((this.childInstances[idx]), "formData")),
+			uiSchema: {...props.uiSchema, items: {...templateOutput.uiSchema, ...props.uiSchema.items}},
+			formData: (props.formData || []).map((item, idx) => this.functionOutputProps[idx].formData),
 			idSchema: toIdSchema(schema, props.idSchema.$id, props.registry.definitions)
 		};
 

@@ -5,6 +5,7 @@ import validate from "../validation";
 import { Button, Label, Help } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo } from "../utils";
+import { deepEquals } from  "react-jsonschema-form/lib/utils";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -15,6 +16,11 @@ import Context from "../Context";
 import translations from "../translations.js";
 
 class _SchemaField extends Component {
+	constructor(props) {
+		super(props);
+		this.updateVirtualInstance(props);
+	}
+
 	componentDidMount() {
 		const contextId = this.props.registry.formContext.contextId;
 		const _context = new Context(contextId);
@@ -25,8 +31,59 @@ class _SchemaField extends Component {
 		}
 	}
 
+	componentWillReceiveProps(props) {
+		this.updateVirtualInstance(props);
+	}
+
+	updateVirtualInstance = (props) => {
+		if ([props, this.props].forEach(_props => _props.uiSchema && (props.uiSchema["ui:functions"] || props.uiSchema["ui:childFunctions"])) || !deepEquals([this.props, props])) {
+			this.functionOutputProps = this.applyFunction(props);
+		}
+	}
+
+	applyFunction = (props) => {
+		let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
+
+		const objectOrArrayAsArray = item => (
+			item ? 
+				(Array.isArray(item) ?
+					item : 
+					[item]) :
+				[]
+		);
+
+		if (childFunctions) {
+			functions = [
+				{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: objectOrArrayAsArray(childFunctions)}},
+				...objectOrArrayAsArray(functions)
+			];
+		}
+
+		if (!functions) return props;
+
+		const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
+			_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions}};
+			const {state = {}} = new props.registry.fields[uiField](_props);
+			return {..._props, ...state};
+		}, {...props, formContext: props.registry.formContext});
+
+		return {
+			...computedProps,
+			uiSchema: {
+				...computedProps.uiSchema,
+				"ui:functions": undefined,
+				"ui:childFunctions": undefined,
+				"ui:field": props.uiSchema["ui:field"],
+				"ui:options": props.uiSchema["ui:options"]
+			}
+		};
+	}
+
 	render() {
-		const {props} = this;
+		const props = this.functionOutputProps || this.props;
+
+		//if (this.props.uiSchema && this.props.uiSchema["ui:childFunctions"]) return <SchemaField {...props} />;
+
 		let {schema, uiSchema, registry} = props;
 
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {

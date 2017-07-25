@@ -197,30 +197,30 @@
 												"specialRules": "legEditors"
 											},
 											"items": {
-												"ui:field": "ContextInjectionField",
-												"ui:options": {
-													"injections": {
-														"/ui:options/rules/0/regexp": "/creator"
+												"ui:functions": {
+													"ui:field": "ContextInjectionField",
+													"ui:options": {
+														"injections": {
+															"/ui:options/rules/0/regexp": "/creator"
+														}
 													}
 												},
-												"uiSchema": {
-													"ui:field": "DependentDisableField",
-													"ui:options": {
-														"rules": [
-															{
-																"disableDefiner": "leg",
-																"disableField": "editors",
-																"regexp": "creator is injected here",
-																"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
-																"disabledValueToDisplay": true
-															},
-															{
-																"disableDefiner": "leg",
-																"disableField": "editors",
-																"regexp": "^((?!(MA\\.\\d)).)*$"
-															}
-														]
-													}
+												"ui:field": "DependentDisableField",
+												"ui:options": {
+													"rules": [
+														{
+															"disableDefiner": "leg",
+															"disableField": "editors",
+															"regexp": "creator is injected here",
+															"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+															"disabledValueToDisplay": true
+														},
+														{
+															"disableDefiner": "leg",
+															"disableField": "editors",
+															"regexp": "^((?!(MA\\.\\d)).)*$"
+														}
+													]
 												},
 												"leg": {
 													"ui:widget": "AutosuggestWidget",
@@ -442,8 +442,7 @@
 							}
 						},
 						"units": {
-							"ui:field": "UiFieldMapperArrayField",
-							"ui:options": {
+							"ui:childFunctions": {
 								"ui:field": "FlatField",
 								"ui:options": {
 									"fields": [
@@ -452,269 +451,267 @@
 									]
 								}
 							},
-							"uiSchema": {
-								"ui:field": "SingleActiveArrayField",
+							"ui:field": "SingleActiveArrayField",
+							"ui:options": {
+								"initialActiveIdx": null,
+								"renderer": "table",
+								"normalRenderingTreshold": "sm",
+								"confirmDelete": true,
+								"deleteCorner": true,
+								"buttons": [
+									{
+										"fn": "add",
+										"label": "Lisää havainto"
+									},
+									{
+										"fn": "copy",
+										"label": "Kopioi havainto",
+										"type": "blacklist",
+										"filter": [
+											"/identifications/0/taxon",
+											"/identifications/0/taxonID",
+											"unitType",
+											"count",
+											"notes",
+											"/unitGathering/geometry",
+											"images",
+											"sex",
+											"lifeStage",
+											"hostID",
+											"substrateSpecies",
+											"taste",
+											"tasteNotes",
+											"smell",
+											"smellNotes",
+											"plantLifeStage",
+											"plantStatusCode",
+											"movingStatus",
+											"/unitGathering/substrate"
+										]
+									}
+								]
+							},
+							"items": {
+								"ui:field": "ScopeField",
+								"classNames": "well well-sm",
+								"ui:settings": [
+									"%additionalFields/scopeField_gathering_unit_unitType"
+								],
+
+								"ui:order": [
+									"/identifications/taxonID",
+									"/identifications/taxon",
+									"count",
+									"notes",
+									"unitType",
+									"taxonConfidence",
+									"recordBasis",
+									"*",
+									"images"
+								],
 								"ui:options": {
-									"initialActiveIdx": null,
-									"renderer": "table",
-									"normalRenderingTreshold": "sm",
-									"confirmDelete": true,
-									"deleteCorner": true,
-									"buttons": [
+									"additionalsGroupingPath": "/fieldScopes/unitType",
+									"additionalsGroupingOrderer": "unitType",
+									"additionalsGroupsTranslator": "taxonGroups",
+									"additionalsPersistenceKey": "unitType",
+									"additionalsPersistenceId": "gathering_unit_unitType",
+									"includeAdditionalFieldsChooserButton": true,
+									"glyphFields": [
 										{
-											"fn": "add",
-											"label": "Lisää havainto"
+											"glyph": "camera",
+											"show": "images",
+											"label": "Lisää valokuva"
 										},
 										{
-											"fn": "copy",
-											"label": "Kopioi havainto",
-											"type": "blacklist",
-											"filter": [
-												"/identifications/0/taxon",
-												"/identifications/0/taxonID",
-												"unitType",
-												"count",
-												"notes",
-												"/unitGathering/geometry",
-												"images",
-												"sex",
-												"lifeStage",
-												"hostID",
-												"substrateSpecies",
-												"taste",
-												"tasteNotes",
-												"smell",
-												"smellNotes",
-												"plantLifeStage",
-												"plantStatusCode",
-												"movingStatus",
-												"/unitGathering/substrate"
-											]
+											"glyph": "map-marker",
+											"fn": "setLocation",
+											"label": "Valitse sijainti"
 										}
-									]
-								},
-								"items": {
-									"ui:field": "ScopeField",
-									"classNames": "well well-sm",
-									"ui:settings": [
-										"%additionalFields/scopeField_gathering_unit_unitType"
 									],
-
-									"ui:order": [
+									"fields": [
 										"/identifications/taxonID",
 										"/identifications/taxon",
 										"count",
 										"notes",
 										"unitType",
 										"taxonConfidence",
-										"recordBasis",
-										"*",
-										"images"
+										"recordBasis"
 									],
-									"ui:options": {
-										"additionalsGroupingPath": "/fieldScopes/unitType",
-										"additionalsGroupingOrderer": "unitType",
-										"additionalsGroupsTranslator": "taxonGroups",
-										"additionalsPersistenceKey": "unitType",
-										"additionalsPersistenceId": "gathering_unit_unitType",
-										"includeAdditionalFieldsChooserButton": true,
-										"glyphFields": [
-											{
-												"glyph": "camera",
-												"show": "images",
-												"label": "Lisää valokuva"
+									"fieldScopes": {
+										"unitType": {
+											"*": {
+												"title": "Kaikki",
+												"additionalFields": [
+													"/identifications/det",
+													"/identifications/detDate",
+													"/identifications/identificationBasis",
+													"sex",
+													"/unitGathering/dateBegin",
+													"/unitGathering/dateEnd",
+													"/unitGathering/habitatIUCN",
+													"/unitGathering/habitatDescription",
+													"preservation",
+													"samplingMethod",
+													"breeding"
+												]
 											},
-											{
-												"glyph": "map-marker",
-												"fn": "setLocation",
-												"label": "Valitse sijainti"
+											"MVL.1": {
+												"additionalFields": [
+													"atlasCode",
+													"movingStatus",
+													"twitched"
+												]
+											},
+											"MVL.21": {
+												"additionalFields": [
+													"nativeStatus",
+													"plantLifeStage",
+													"plantStatusCode"
+												]
+											},
+											"MVL.232": {
+												"additionalFields": [
+													"lifeStage",
+													"hostID"
+												]
+											},
+											"MVL.233": {
+												"title": "Sienet",
+												"additionalFields": [
+													"/unitGathering/substrate",
+													"substrateSpecies",
+													"smell",
+													"smellNotes",
+													"taste",
+													"tasteNotes"
+												]
 											}
-										],
-										"fields": [
-											"/identifications/taxonID",
-											"/identifications/taxon",
-											"count",
-											"notes",
-											"unitType",
-											"taxonConfidence",
-											"recordBasis"
-										],
-										"fieldScopes": {
-											"unitType": {
-												"*": {
-													"title": "Kaikki",
-													"additionalFields": [
-														"/identifications/det",
-														"/identifications/detDate",
-														"/identifications/identificationBasis",
-														"sex",
-														"/unitGathering/dateBegin",
-														"/unitGathering/dateEnd",
-														"/unitGathering/habitatIUCN",
-														"/unitGathering/habitatDescription",
-														"preservation",
-														"samplingMethod",
-														"breeding"
-													]
-												},
-												"MVL.1": {
-													"additionalFields": [
-														"atlasCode",
-														"movingStatus",
-														"twitched"
-													]
-												},
-												"MVL.21": {
-													"additionalFields": [
-														"nativeStatus",
-														"plantLifeStage",
-														"plantStatusCode"
-													]
-												},
-												"MVL.232": {
-													"additionalFields": [
-														"lifeStage",
-														"hostID"
-													]
-												},
-												"MVL.233": {
-													"title": "Sienet",
-													"additionalFields": [
-														"/unitGathering/substrate",
-														"substrateSpecies",
-														"smell",
-														"smellNotes",
-														"taste",
-														"tasteNotes"
-													]
-												}
+										}
+									}
+								},
+								"uiSchema": {
+									"ui:field": "AutosuggestField",
+									"ui:options": {
+										"autosuggestField": "taxon",
+										"allowNonsuggestedValue": true,
+										"suggestionInputField": "/identifications/taxon",
+										"suggestionValueField": "/identifications/taxonID",
+										"suggestionReceivers": {
+											"/identifications/taxon": "value",
+											"unitType": "$taxonGroup",
+											"/identifications/taxonID": "key"
+										},
+										"inputTransformer": {
+											"regexp": "^(.*)\\?$",
+											"transformations": {
+												"taxonConfidence": "MY.taxonConfidenceUnsure"
 											}
 										}
 									},
 									"uiSchema": {
-										"ui:field": "AutosuggestField",
+										"ui:field": "GridLayoutField",
 										"ui:options": {
-											"autosuggestField": "taxon",
-											"allowNonsuggestedValue": true,
-											"suggestionInputField": "/identifications/taxon",
-											"suggestionValueField": "/identifications/taxonID",
-											"suggestionReceivers": {
-												"/identifications/taxon": "value",
-												"unitType": "$taxonGroup",
-												"/identifications/taxonID": "key"
+											"lg": {
+												"/identifications/taxonID": 2,
+												"/identifications/taxon": 2,
+												"count": 2,
+												"notes": 2,
+												"unitType": 2,
+												"taxonConfidence": 2,
+												"recordBasis": 2,
+												"/identifications/identificationBasis": 2,
+												"/unitGathering/dateBegin": 3,
+												"/unitGathering/dateEnd": 3,
+												"*": 1
 											},
-											"inputTransformer": {
-												"regexp": "^(.*)\\?$",
-												"transformations": {
-													"taxonConfidence": "MY.taxonConfidenceUnsure"
-												}
+											"md": {
+												"/identifications/taxonID": 2,
+												"/identifications/taxon": 2,
+												"count": 2,
+												"notes": 2,
+												"unitType": 2,
+												"taxonConfidence": 2,
+												"recordBasis": 2,
+												"/identifications/identificationBasis": 2,
+												"/unitGathering/dateBegin": 3,
+												"/unitGathering/dateEnd": 3,
+												"/identifications/detDate": 3,
+												"*": 1
+											},
+											"sm": {
+												"/identifications/identificationBasis": 4,
+												"/unitGathering/dateBegin": 3,
+												"/unitGathering/dateEnd": 3,
+												"*": 2
+											},
+											"xs": 12,
+											"rows": [
+												[
+													"/identifications/taxon",
+													"taxonConfidence",
+													"recordBasis",
+													"count",
+													"notes"
+												]
+											]
+										},
+										"/identifications/taxonID": {
+											"ui:widget": "HiddenWidget"
+										},
+										"/identifications/detDate": {
+											"ui:widget": "DateWidget"
+										},
+										"unitType": {
+											"ui:field": "HiddenField"
+										},
+										"images": {
+											"ui:field": "ImageArrayField",
+											"ui:options": {
+												"capturerVerbatimPath": "/gatheringEvent/leg"
 											}
 										},
-										"uiSchema": {
-											"ui:field": "GridLayoutField",
+										"/unitGathering/geometry": {
+											"ui:field": "HiddenField"
+										},
+										"/unitGathering/dateBegin": {
+											"ui:widget": "DateTimeWidget"
+										},
+										"/unitGathering/dateEnd": {
+											"ui:widget": "DateTimeWidget"
+										},
+										"recordBasis": {
 											"ui:options": {
-												"lg": {
-													"/identifications/taxonID": 2,
-													"/identifications/taxon": 2,
-													"count": 2,
-													"notes": 2,
-													"unitType": 2,
-													"taxonConfidence": 2,
-													"recordBasis": 2,
-													"/identifications/identificationBasis": 2,
-													"/unitGathering/dateBegin": 3,
-													"/unitGathering/dateEnd": 3,
-													"*": 1
-												},
-												"md": {
-													"/identifications/taxonID": 2,
-													"/identifications/taxon": 2,
-													"count": 2,
-													"notes": 2,
-													"unitType": 2,
-													"taxonConfidence": 2,
-													"recordBasis": 2,
-													"/identifications/identificationBasis": 2,
-													"/unitGathering/dateBegin": 3,
-													"/unitGathering/dateEnd": 3,
-													"/identifications/detDate": 3,
-													"*": 1
-												},
-												"sm": {
-													"/identifications/identificationBasis": 4,
-													"/unitGathering/dateBegin": 3,
-													"/unitGathering/dateEnd": 3,
-													"*": 2
-												},
-												"xs": 12,
-												"rows": [
-													[
-														"/identifications/taxon",
-														"taxonConfidence",
-														"recordBasis",
-														"count",
-														"notes"
-													]
+												"filterType": "whitelist",
+												"filter": [
+													"",
+													"MY.recordBasisHumanObservationPhoto",
+													"MY.recordBasisPreservedSpecimen",
+													"MY.recordBasisHumanObservationHandled",
+													"MY.recordBasisHumanObservation"
+												],
+												"order": [
+													"",
+													"MY.recordBasisHumanObservation",
+													"MY.recordBasisHumanObservationPhoto",
+													"MY.recordBasisPreservedSpecimen",
+													"MY.recordBasisHumanObservationHandled"
 												]
-											},
-											"/identifications/taxonID": {
-												"ui:widget": "HiddenWidget"
-											},
-											"/identifications/detDate": {
-												"ui:widget": "DateWidget"
-											},
-											"unitType": {
-												"ui:field": "HiddenField"
-											},
-											"images": {
-												"ui:field": "ImageArrayField",
-												"ui:options": {
-													"capturerVerbatimPath": "/gatheringEvent/leg"
-												}
-											},
-											"/unitGathering/geometry": {
-												"ui:field": "HiddenField"
-											},
-											"/unitGathering/dateBegin": {
-												"ui:widget": "DateTimeWidget"
-											},
-											"/unitGathering/dateEnd": {
-												"ui:widget": "DateTimeWidget"
-											},
-											"recordBasis": {
-												"ui:options": {
-													"filterType": "whitelist",
-													"filter": [
-														"",
-														"MY.recordBasisHumanObservationPhoto",
-														"MY.recordBasisPreservedSpecimen",
-														"MY.recordBasisHumanObservationHandled",
-														"MY.recordBasisHumanObservation"
-													],
-													"order": [
-														"",
-														"MY.recordBasisHumanObservation",
-														"MY.recordBasisHumanObservationPhoto",
-														"MY.recordBasisPreservedSpecimen",
-														"MY.recordBasisHumanObservationHandled"
-													]
-												}
-											},
-											"hostID": {
-												"ui:widget": "AutosuggestWidget",
-												"ui:options": {
-													"autosuggestField": "taxon",
-													"allowNonsuggestedValue": true,
-													"suggestionReceive": "key"
-												}
-											},
-											"substrateSpecies": {
-												"ui:widget": "AutosuggestWidget",
-												"ui:options": {
-													"autosuggestField": "taxon",
-													"allowNonsuggestedValue": true,
-													"suggestionReceive": "key"
-												}
+											}
+										},
+										"hostID": {
+											"ui:widget": "AutosuggestWidget",
+											"ui:options": {
+												"autosuggestField": "taxon",
+												"allowNonsuggestedValue": true,
+												"suggestionReceive": "key"
+											}
+										},
+										"substrateSpecies": {
+											"ui:widget": "AutosuggestWidget",
+											"ui:options": {
+												"autosuggestField": "taxon",
+												"allowNonsuggestedValue": true,
+												"suggestionReceive": "key"
 											}
 										}
 									}
