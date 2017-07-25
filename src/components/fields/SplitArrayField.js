@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import _ArrayField from "./ArrayField";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
@@ -57,6 +56,8 @@ export default class SplitArrayField extends Component {
 		const {props, state} = this;
 		const onChange = [];
 
+		const {registry: {fields: {ArrayField}}} = this.props;
+
 		for (let i = 0; i < state.splittedSchemas.length; i++) {
 			onChange[i] = (formData) => {
 				const {state, props} = this;
@@ -77,7 +78,12 @@ export default class SplitArrayField extends Component {
 		return (
 			<div>
                 {state.splittedSchemas.map((schema, i) =>
-					<_ArrayField key={i} {...props} schema={schema} formData={state.splittedFormData[i]} uiSchema={state.splittedUiSchemas[i]} onChange={onChange[i]}/>
+					<ArrayField key={i} {...props}
+								schema={schema}
+								idSchema={{...this.props.idSchema, "$id": this.props.idSchema.$id + "_" + i}}
+								formData={state.splittedFormData[i]}
+								uiSchema={state.splittedUiSchemas[i]}
+								onChange={onChange[i]}/>
 				)}
 			</div>
 		);
