@@ -515,7 +515,19 @@ class TableArrayFieldTemplate extends Component {
 			return val;
 		};
 
-		const {itemsClassNames} = getUiOptions(uiSchema);
+		const {itemsClassNames, confirmDelete} = getUiOptions(uiSchema);
+
+		const getDeleteButtonFor = idx => {
+			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
+			return (
+				<td key="delete" className="single-active-array-table-delete">
+					<DeleteButton ref={getDeleteButtonRef}
+												confirm={confirmDelete}
+												translations={this.props.formContext.translations}
+												onClick={that.onDelete(idx)} />
+				</td>
+			);
+		};
 
 		return (
 			<div>
@@ -531,17 +543,20 @@ class TableArrayFieldTemplate extends Component {
 					) : null}
 					<tbody>
 						{items.map((item, idx) => {
-							const trStyle = (idx === activeIdx) ?
-								{visibility: "collapse"} : // We hide the active row from table, but render it to keep table layout steady.
-								undefined;
-							const tdStyle = (idx === activeIdx) ?
-								{lineHeight: 0, paddingBottom: 0, paddingTop: 0} : // Set hidden row height to 0.
+							const className = (idx === activeIdx) ?
+								"single-active-array-table-hidden" : // We hide the active row from table, but render it to keep table layout steady.
 								undefined;
 							return [
-								<tr key={idx} onClick={changeActive(idx)} style={trStyle}>{
-									cols.map(col => <td key={col} style={tdStyle}>{formatValue(formData[idx], col)}</td>)
+								<tr key={idx} onClick={changeActive(idx)} className={className}>{
+									[
+										...cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>),
+										getDeleteButtonFor(idx)
+									]
 								}</tr>,
-								(idx === activeIdx) ? <tr key="active" onClick={changeActive(idx)}><td className={itemsClassNames} colSpan={cols.length}>{item.children}</td></tr> : null
+								(idx === activeIdx) ? <tr key="active" onClick={changeActive(idx)}>
+									<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td>
+									{getDeleteButtonFor(idx)}
+								</tr> : null
 							];
 						})
 						}

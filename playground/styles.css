@@ -654,3 +654,30 @@ body .laji-form {
 .laji-form .panel-group .panel {
 	border-radius: 2px;
 }
+
+.laji-form .single-active-array-table-hidden {
+	visibility: collapse;
+}
+
+.laji-form .single-active-array-table-hidden * {
+	height: 0;
+	line-height: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.laji-form .single-active-array-table-delete {
+	border: 1px solid white;
+	width: 1%;
+	background: white !important;
+	padding: 0px;
+}
+.laji-form .single-active-array-table-delete button {
+	padding: 0px;
+	height: 25px;
+	width: 25px;
+	margin: 1px 0px 0px 2px;
+	line-height: 7px;
+}
