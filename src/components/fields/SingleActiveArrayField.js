@@ -517,13 +517,6 @@ class TableArrayFieldTemplate extends Component {
 
 		const {itemsClassNames} = getUiOptions(uiSchema);
 
-		// We insert an empty item that will be rendered as a hidden table row with the active idx data filled
-		// in order to keep the layout unaffected during table navigation.
-		let _items = [...items];
-		if (typeof activeIdx === "number" && activeIdx < items.length) {
-			_items.splice(activeIdx + 1, 0, undefined);
-		}
-
 		return (
 			<div>
 				<TitleField title={this.props.title}/>
@@ -537,21 +530,19 @@ class TableArrayFieldTemplate extends Component {
 						</thead>
 					) : null}
 					<tbody>
-						{_items.map((item, idx) => {
-							const style = (typeof activeIdx === "number" && idx === activeIdx + 1) ?
-								{visibility: "collapse", lineHeight: 0, padding: 0} : // Fixes table layout.
+						{items.map((item, idx) => {
+							const trStyle = (idx === activeIdx) ?
+								{visibility: "collapse"} : // We hide the active row from table, but render it to keep table layout steady.
 								undefined;
-							const origIdx = idx;
-							if (typeof activeIdx === "number" && idx > activeIdx) {
-								idx = idx - 1;
-							}
-							return (
-								<tr key={origIdx} onClick={changeActive(idx)} style={style}>{
-									(origIdx === activeIdx) ?
-										<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td> :
-										cols.map(col => <td key={col} style={style}>{formatValue(formData[idx], col)}</td>)
-								}</tr>
-							);
+							const tdStyle = (idx === activeIdx) ?
+								{lineHeight: 0, paddingBottom: 0, paddingTop: 0} : // Set hidden row height to 0.
+								undefined;
+							return [
+								<tr key={idx} onClick={changeActive(idx)} style={trStyle}>{
+									cols.map(col => <td key={col} style={tdStyle}>{formatValue(formData[idx], col)}</td>)
+								}</tr>,
+								(idx === activeIdx) ? <tr><td key="active" className={itemsClassNames} colSpan={cols.length}>{item.children}</td></tr> : null
+							];
 						})
 						}
 					</tbody>
