@@ -71,18 +71,19 @@ const headerFormatters = {
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
-		const identifications = units
-			.map(item =>
-				(item && item.identifications && item.identifications[0]) ?
-				item.identifications[0] : undefined)
-			.filter(item => item);
+		const identifications = units.map(item =>
+			(item && item.identifications && item.identifications[0]) ?
+				item.identifications[0] :
+				undefined
+		).filter(item => item);
 
 		return Promise.all(
 			identifications.map(identification =>
 				identification.taxonID ?
-				new ApiClient().fetchCached(`/taxa/${identification.taxonID}`).then(({vernacularName, scientificName}) => {
-					return vernacularName || scientificName || identification.taxon;
-				}) : new Promise(resolve => resolve(identification.taxon))
+					new ApiClient().fetchCached(`/taxa/${identification.taxonID}`).then(({vernacularName, scientificName}) => {
+						return vernacularName || scientificName || identification.taxon;
+					}) : 
+					new Promise(resolve => resolve(identification.taxon))
 			)
 		).then(result => {
 			return new Promise(resolve => {
@@ -202,15 +203,15 @@ export default class SingleActiveArrayField extends Component {
 
 		if (renderer === "accordion") addButton.className = "col-xs-12 laji-form-accordion-header";
 		return (
-				<ArrayField
-					{...this.props}
-					formContext={formContext}
-					registry={{
-						...this.props.registry,
-						ArrayFieldTemplate
-					}}
-					uiSchema={uiSchema}
-				/>
+			<ArrayField
+				{...this.props}
+				formContext={formContext}
+				registry={{
+					...this.props.registry,
+					ArrayFieldTemplate
+				}}
+				uiSchema={uiSchema}
+			/>
 		);
 	}
 
@@ -352,19 +353,19 @@ class AccordionArrayFieldTemplate extends Component {
 		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
 
 		return (
-				<div className="laji-form-single-active-array">
-					<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
-						{arrayFieldTemplateProps.items.map((item, idx) => (
-							<Panel key={idx}
-										 eventKey={idx}
-										 header={header(idx)}
-										 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-								{item.children}
-							</Panel>
-						))}
-						<ButtonsWrapper props={arrayFieldTemplateProps} />
-					</Accordion>
-				</div>
+			<div className="laji-form-single-active-array">
+				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
+					{arrayFieldTemplateProps.items.map((item, idx) => (
+						<Panel key={idx}
+									 eventKey={idx}
+									 header={header(idx)}
+									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
+							{item.children}
+						</Panel>
+					))}
+					<ButtonsWrapper props={arrayFieldTemplateProps} />
+				</Accordion>
+			</div>
 		);
 	}
 }
@@ -387,21 +388,23 @@ class PagerArrayFieldTemplate extends Component {
 				<Panel header={
 					<div className="laji-form-accordion-header">
 						<Pager>
-							<Pager.Item previous href="#"
-													disabled={activeIdx <= 0 || activeIdx === undefined}
-													onClick={navigatePrev}>
+							<Pager.Item previous 
+							            href="#"
+							            disabled={activeIdx <= 0 || activeIdx === undefined}
+							            onClick={navigatePrev}>
 								&larr; {translations.Previous}</Pager.Item>
 							{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
-							<Pager.Item next href="#"
-													disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
-													onClick={navigateNext}>
+							<Pager.Item next 
+							            href="#"
+							            disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
+							            onClick={navigateNext}>
 								{translations.Next}  &rarr;</Pager.Item>
 						</Pager>
 					</div>
 				}>
-				<div key={activeIdx}>
-					{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
-				</div>
+					<div key={activeIdx}>
+						{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+					</div>
 					{getButtons(buttons, arrayTemplateFieldProps)}
 				</Panel>
 			</div>
@@ -522,9 +525,9 @@ class TableArrayFieldTemplate extends Component {
 			return (
 				<td key="delete" className="single-active-array-table-delete">
 					<DeleteButton ref={getDeleteButtonRef}
-												confirm={confirmDelete}
-												translations={this.props.formContext.translations}
-												onClick={that.onDelete(idx)} />
+					              confirm={confirmDelete}
+					              translations={this.props.formContext.translations}
+					              onClick={that.onDelete(idx)} />
 				</td>
 			);
 		};
@@ -547,12 +550,12 @@ class TableArrayFieldTemplate extends Component {
 								"single-active-array-table-hidden" : // We hide the active row from table, but render it to keep table layout steady.
 								undefined;
 							return [
-								<tr key={idx} onClick={changeActive(idx)} className={className}>{
-									[
+								<tr key={idx} onClick={changeActive(idx)} className={className}>
+									{[
 										...cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>),
 										getDeleteButtonFor(idx)
-									]
-								}</tr>,
+									]}
+								</tr>,
 								(idx === activeIdx) ? <tr key="active" onClick={changeActive(idx)}>
 									<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td>
 									{getDeleteButtonFor(idx)}
@@ -616,17 +619,17 @@ function renderAccordionHeader(that, idx, title) {
 			<div className="panel-title">
 				{headerText}
 				<DeleteButton ref={getDeleteButtonRef}
-											className="pull-right"
-											confirm={options.confirmDelete}
-											translations={that.props.formContext.translations}
-											onClick={that.onDelete(idx)} />
-				</div>
+				              className="pull-right"
+				              confirm={options.confirmDelete}
+				              translations={that.props.formContext.translations}
+				              onClick={that.onDelete(idx)} />
+			</div>
 		</div>
 	);
 
 	return hasData(popupData) ? (
 		<OverlayTrigger placement="left"
-										overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
+		                overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
 			{header}
 		</OverlayTrigger>
 	) : (
