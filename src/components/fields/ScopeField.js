@@ -254,30 +254,48 @@ export default class ScopeField extends Component {
 
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
-		const uiSchema = {...this.state.uiSchema, "ui:buttons": [...(this.state.uiSchema["ui:buttons"] || []), this.renderAdditionalsButton()]};
 		const {translations} = this.props.formContext;
 
 		const onHide = () => {
 			this.setState({modalMap: undefined});
 		};
 
+		let uiSchema = {
+			...this.state.uiSchema, 
+			"ui:buttons": [
+				...(this.state.uiSchema["ui:buttons"] || []),
+				this.renderAdditionalsButton()
+			]
+		};
 
-		return (
-			<div>
-				<SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />
-				{this.state.additionalsOpen && additionalsGroupingPath ? this.modal : null}
-				{this.state.modalMap ? (
-					<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
-						<Modal.Header closeButton={true}>
-							<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							<Map {...this.state.modalMap} />
-						</Modal.Body>
-					</Modal>
-				) : null}
-			</div>
-		);
+		const addButton = button => {
+			uiSchema = {
+				...uiSchema,
+				"ui:buttons": [
+					uiSchema["ui:buttons"],
+					button
+				]
+			};
+		};
+
+		if (this.state.additionalsOpen && additionalsGroupingPath) {
+			addButton(this.modal);
+		}
+
+		if (this.state.modalMap) {
+			addButton(
+				<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
+					<Modal.Header closeButton={true}>
+						<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<Map {...this.state.modalMap} />
+					</Modal.Body>
+				</Modal>
+			);
+		}
+
+		return <SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />;
 	}
 
 	componentDidUpdate(nextProps) {
@@ -361,6 +379,10 @@ export default class ScopeField extends Component {
 
 			if (fieldScope.uiSchema) {
 				generatedUiSchema = merge(generatedUiSchema, fieldScope.uiSchema);
+			}
+
+			if (generatedUiSchema["ui:order"]) {
+				generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => field === "*" || fieldsToShow[field]);
 			}
 
 			if (fieldScope.fieldScopes) {
@@ -454,12 +476,12 @@ export default class ScopeField extends Component {
 		return (
 			<div>
 				<Dropdown key="socop"
-									id={this.props.idSchema.$id + "-scope-field-dropdown"}
-									bsStyle="primary"
-									pullRight
-									open={this.state.additionalsOpen}
-									onSelect={onSelect}
-									onToggle={onToggle}>
+				          id={this.props.idSchema.$id + "-scope-field-dropdown"}
+				          bsStyle="primary"
+				          pullRight
+				          open={this.state.additionalsOpen}
+				          onSelect={onSelect}
+				          onToggle={onToggle}>
 					{this.renderFieldsButton("toggle")}
 					<Collapse in={this.state.additionalsOpen} bsRole="menu">
 						<Dropdown.Menu>
@@ -506,15 +528,15 @@ export default class ScopeField extends Component {
 
 				const onListGroupClick = () => {
 					this.toggleAdditionalProperty(Object.keys(groupFields)
-							.filter(field => {return this.propertyIsIncluded(field) === someActive;}));
+					    .filter(field => {return this.propertyIsIncluded(field) === someActive;}));
 				};
 
 				const listGroup = [
-						(groupTranslations[groupName] !== undefined ? (
-							<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>
-								<strong>{groupTranslations[groupName]}</strong>
-							</ListGroupItem>
-						) : <Spinner key={groupName + "-list"}/>),
+					(groupTranslations[groupName] !== undefined ? (
+						<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>
+							<strong>{groupTranslations[groupName]}</strong>
+						</ListGroupItem>
+					) : <Spinner key={groupName + "-list"}/>),
 					...groupsList
 				];
 				list.push(
@@ -560,16 +582,16 @@ export default class ScopeField extends Component {
 		const {idSchema} = this.props;
 
 		return glyphFields ?
-		glyphFields.map(settings => {
-			const {glyph, label} = settings;
-			if (settings.show) {
-				const property = settings.show;
-				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
+			glyphFields.map(settings => {
+				const {glyph, label} = settings;
+				if (settings.show) {
+					const property = settings.show;
+					const isIncluded = this.propertyIsIncluded(property);
+					const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
-				const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
-				const onButtonClick = () => this.toggleAdditionalProperty(property);
-				return (
+					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
+					const onButtonClick = () => this.toggleAdditionalProperty(property);
+					return (
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
 													 disabled={hasData}
@@ -577,11 +599,11 @@ export default class ScopeField extends Component {
 													 onClick={onButtonClick}
 							/>
 						</OverlayTrigger>
-				);
-			} else if (settings.fn) {
-				return buttonSettings[settings.fn](this, settings);
-			}
-		}) : null;
+					);
+				} else if (settings.fn) {
+					return buttonSettings[settings.fn](this, settings);
+				}
+			}) : null;
 	}
 
 	propertyIsIncluded = (property) => {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels } from "../../utils";
-import { isSelect, isMultiSelect } from "react-jsonschema-form/lib/utils";
+import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -463,7 +463,7 @@ class TableArrayFieldTemplate extends Component {
 
 		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
 		const foundProps = {};
-		const cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
+		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
 				const found = foundProps[prop] || (
 					item.hasOwnProperty(prop) && 
@@ -478,6 +478,9 @@ class TableArrayFieldTemplate extends Component {
 			}
 			return _cols;
 		}, []);
+
+		const {"ui:order": order = []} = (uiSchema.items || {});
+		cols = orderProperties(cols, order.filter(field => field === "*" || foundProps[field]));
 
 		const that = this.props.formContext.this;
 		const activeIdx = that.state.activeIdx;

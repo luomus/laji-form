@@ -499,6 +499,18 @@
 									"ui:settings": [
 										"%additionalFields/scopeField_gathering_unit_unitType"
 									],
+
+									"ui:order": [
+										"/identifications/taxonID",
+										"/identifications/taxon",
+										"count",
+										"notes",
+										"unitType",
+										"taxonConfidence",
+										"recordBasis",
+										"*",
+										"images"
+									],
 									"ui:options": {
 										"additionalsGroupingPath": "/fieldScopes/unitType",
 										"additionalsGroupingOrderer": "unitType",
