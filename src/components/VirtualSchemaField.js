@@ -26,6 +26,7 @@ export default function VirtualSchemaField(ComposedComponent) {
 			return {
 				...propsWithInnerUiSchema,
 				...super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema,
+				onChange: this.onChange
 			};
 		}
 
@@ -41,7 +42,8 @@ export default function VirtualSchemaField(ComposedComponent) {
 				"formData",
 				"errorSchema",
 				"formContext",
-				"registry"
+				"registry",
+				"onChange"
 			].reduce((_props, prop) => {
 				if (prop in props) _props[prop] = props[prop];
 				return _props;
@@ -50,7 +52,6 @@ export default function VirtualSchemaField(ComposedComponent) {
 			return (
 				<SchemaField
 					{...filterProps({...this.props, ...this.state})}
-					onChange={this.onChange}
 				/>
 			);
 		}
