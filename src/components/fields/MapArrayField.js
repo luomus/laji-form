@@ -106,7 +106,7 @@ export default class MapArrayField extends Component {
 		let {uiSchema, errorSchema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = []} = options;
-		let { belowUiSchemaRoot } = options;
+		let { belowUiSchemaRoot = {}, inlineUiSchemaRoot = {} } = options;
 		const {activeIdx} = this.state;
 
 		const activeIdxProps = {
@@ -182,7 +182,7 @@ export default class MapArrayField extends Component {
 		const inlineSchemaProps = putChildsToParents(getPropsForFields(getChildProps(), Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))));
 		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(getChildProps(), belowFields)) : null;
 
-		let inlineUiSchema = inlineSchemaProps ? {...inlineSchemaProps.uiSchema, items: {...uiSchema.items, ...inlineSchemaProps.uiSchema.items}} : defaultProps.uiSchema;
+		let inlineUiSchema = inlineSchemaProps ? {...inlineSchemaProps.uiSchema, items: {...inlineUiSchemaRoot, ...uiSchema.items, ...inlineSchemaProps.uiSchema.items}} : defaultProps.uiSchema;
 		let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot}: undefined;
 
 		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
