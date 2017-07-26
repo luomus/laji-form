@@ -120,7 +120,7 @@ export default class ArrayFieldTemplate extends Component {
 	}
 
 	onSort = ({oldIndex, newIndex}) => {
-		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex);
+		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
 	}
 
 	render() {
@@ -132,7 +132,6 @@ export default class ArrayFieldTemplate extends Component {
 		const buttons = getButtons(options.buttons, props);
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
-
 		const SortableList = SortableContainer(({items}) => (
 			<div>
 				{items.map((item, i) => 
@@ -140,6 +139,7 @@ export default class ArrayFieldTemplate extends Component {
 				)}
 			</div>)
 		);
+
 		const SortableItem = SortableElement(({item}) => item);
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
@@ -147,11 +147,11 @@ export default class ArrayFieldTemplate extends Component {
 		const items = props.items.map((item, i) => {
 			const deleteButton = (
 				<DeleteButton ref={getRefFor(i)}
-											onClick={item.onDropIndexClick(item.index)}
-											className="laji-form-field-template-buttons"
-											confirm={confirmDelete}
-											corner={deleteCorner}
-											translations={props.formContext.translations}/>
+				              onClick={item.onDropIndexClick(item.index)}
+				              className="laji-form-field-template-buttons"
+				              confirm={confirmDelete}
+				              corner={deleteCorner}
+				              translations={props.formContext.translations}/>
 			);
 			return (
 				<div key={item.index} className="laji-form-field-template-item keep-vertical">
@@ -159,7 +159,6 @@ export default class ArrayFieldTemplate extends Component {
 					{item.hasRemove && !nonRemovables.includes(item.index) && renderDelete && deleteButton}
 				</div>
 			);
-
 		});
 
 		return (
@@ -167,7 +166,7 @@ export default class ArrayFieldTemplate extends Component {
 				<Title title={props.title}/>
 				<Description description={props.description}/>
 				{
-					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={200} items={items} onSortEnd={this.onSort} /> : items
+					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={10} items={items} onSortEnd={this.onSort} /> : items
 				}
 				{buttons}
 			</div>
