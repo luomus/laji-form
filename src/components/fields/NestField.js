@@ -138,7 +138,11 @@ export default class NestField extends Component {
 			idSchema = {...idSchema, [wrapperFieldName]: nestedProps.idSchema};
 			errorSchema = {...errorSchema, [wrapperFieldName]: nestedProps.errorSchema};
 			formData = {...formData, [wrapperFieldName]: nestedProps.formData};
-			uiSchema = {...uiSchema, [wrapperFieldName]: {...(uiSchema[wrapperFieldName] || {}), ...nestedProps.uiSchema}};
+			uiSchema = {
+				...uiSchema, [wrapperFieldName]: {
+					...(nests[wrapperFieldName] ? nests[wrapperFieldName].uiSchemaRoot : {} || {}), 
+					...(uiSchema[wrapperFieldName] || {}), ...nestedProps.uiSchema}
+			};
 			if (nest.rootUiSchema) {
 				uiSchema = {...uiSchema, [wrapperFieldName]: {...(nest.rootUiSchema || {}), ...(uiSchema[wrapperFieldName] || {})}};
 			}
