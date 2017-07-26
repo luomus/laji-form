@@ -353,6 +353,12 @@
 						]
 					}
 				},
+				"belowUiSchemaRoot": {
+					"ui:field": "SingleActiveArrayField",
+					"ui:options": {
+						"renderer": "uncontrolled"
+					}
+				},
 				"propsToPassToInlineSchema": ["errorSchema", "formData"],
 				"minHeight": 435,
 				"resizeTimeout": 210,
