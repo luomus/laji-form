@@ -48,8 +48,8 @@ export default class ArrayCombinerField extends Component {
 			if (field in _uiSchema) {
 				_uiSchema = {..._uiSchema, items: {...(_uiSchema.items || {}), [field]: _uiSchema[field]}};
 				immutableDelete("_uiSchema", field);
-				return _uiSchema;
 			}
+			return _uiSchema;
 		}, props.uiSchema);
 
 		function objectsToArray(array, objects) {
