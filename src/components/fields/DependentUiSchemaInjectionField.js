@@ -26,7 +26,7 @@ export default class DependentUiSchemaInjectionField extends Component {
 
 		const value = Array.isArray(formData) ? formData[0][uiOptions.field] : formData[uiOptions.field];
 
-		let addedUiSchema = (value && value.match(new RegExp(uiOptions.regex))) ? uiOptions.ifTrueUiSchema : uiOptions.ifFalseUiSchema;
+		let addedUiSchema = (value && value.match(new RegExp(uiOptions.regexp))) ? uiOptions.ifTrueUiSchema : uiOptions.ifFalseUiSchema;
 		if (!addedUiSchema) addedUiSchema = {};
 
 		uiSchema = this.mergeDeep({...uiSchema}, addedUiSchema);

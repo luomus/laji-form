@@ -681,3 +681,7 @@ body .laji-form {
 	margin: 1px 0px 0px 2px;
 	line-height: 7px;
 }
+
+.laji-form .row-container {
+	margin-bottom: 7px;
+}
