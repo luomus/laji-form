@@ -179,60 +179,60 @@
 												"leg",
 												"editors"
 											],
-											"title": ""
+											"title": "",
+											"rootUiSchema": {
+												"ui:functions": [
+													{
+														"ui:field": "DependentBooleanField",
+														"ui:options": {
+															"booleanField": "editors",
+															"booleanDefiner": "leg"
+														}
+													},
+													{
+														"ui:field": "ArrayCombinerField"
+													}
+												],
+												"ui:field": "TableField",
+												"ui:options": {
+													"specialRules": "legEditors"
+												},
+												"items": {
+													"ui:field": "DependentDisableField",
+													"ui:options": {
+														"rules": [
+															{
+																"disableDefiner": "leg",
+																"disableField": "editors",
+																"regexp": "MA.308",
+																"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+																"disabledValueToDisplay": true
+															},
+															{
+																"disableDefiner": "leg",
+																"disableField": "editors",
+																"regexp": "^((?!(MA\\.\\d)).)*$"
+															}
+														]
+													}
+												}
+											}
 										}
 									}
 								},
-								"": {
-									"ui:functions": [
-										{
-											"ui:field": "DependentBooleanField",
-											"ui:options": {
-												"booleanField": "editors",
-												"booleanDefiner": "leg"
-											}
-										}
-									],
-									"ui:field": "ArrayCombinerField",
-									"uiSchema": {
-										"ui:field": "TableField",
-										"ui:options": {
-											"specialRules": "legEditors"
-										},
-										"items": {
-											"ui:field": "DependentDisableField",
-											"ui:options": {
-												"rules": [
-													{
-														"disableDefiner": "leg",
-														"disableField": "editors",
-														"regexp": "MA.308",
-														"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
-														"disabledValueToDisplay": true
-													},
-													{
-														"disableDefiner": "leg",
-														"disableField": "editors",
-														"regexp": "^((?!(MA\\.\\d)).)*$"
-													}
-												]
-											},
-											"leg": {
-												"ui:widget": "AutosuggestWidget",
-												"ui:options": {
-													"autosuggestField": "friends",
-													"allowNonsuggestedValue": true,
-													"suggestionReceive": "key",
-													"preventTypingPattern": "^MA\\.\\d+$"
-												}
-											},
-											"editors": {
-												"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
-												"ui:options": {
-													"allowUndefined": false
-												}
-											}
-										}
+								"leg": {
+									"ui:widget": "AutosuggestWidget",
+									"ui:options": {
+										"autosuggestField": "friends",
+										"allowNonsuggestedValue": true,
+										"suggestionReceive": "key",
+										"preventTypingPattern": "^MA\\.\\d+$"
+									}
+								},
+								"editors": {
+									"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
+									"ui:options": {
+										"allowUndefined": false
 									}
 								}
 							}
@@ -584,129 +584,129 @@
 									}
 								},
 								"uiSchema": {
-									"ui:field": "AutosuggestField",
-									"ui:options": {
-										"autosuggestField": "taxon",
-										"allowNonsuggestedValue": true,
-										"suggestionInputField": "/identifications/taxon",
-										"suggestionValueField": "/identifications/taxonID",
-										"suggestionReceivers": {
-											"/identifications/taxon": "value",
-											"unitType": "$taxonGroup",
-											"/identifications/taxonID": "key"
-										},
-										"inputTransformer": {
-											"regexp": "^(.*)\\?$",
-											"transformations": {
-												"taxonConfidence": "MY.taxonConfidenceUnsure"
+									"ui:functions": {
+										"ui:field": "AutosuggestField",
+										"ui:options": {
+											"autosuggestField": "taxon",
+											"allowNonsuggestedValue": true,
+											"suggestionInputField": "/identifications/taxon",
+											"suggestionValueField": "/identifications/taxonID",
+											"suggestionReceivers": {
+												"/identifications/taxon": "value",
+												"unitType": "$taxonGroup",
+												"/identifications/taxonID": "key"
+											},
+											"inputTransformer": {
+												"regexp": "^(.*)\\?$",
+												"transformations": {
+													"taxonConfidence": "MY.taxonConfidenceUnsure"
+												}
 											}
 										}
 									},
-									"uiSchema": {
-										"ui:field": "GridLayoutField",
-										"ui:options": {
-											"lg": {
-												"/identifications/taxonID": 2,
-												"/identifications/taxon": 2,
-												"count": 2,
-												"notes": 2,
-												"unitType": 2,
-												"taxonConfidence": 2,
-												"recordBasis": 2,
-												"/identifications/identificationBasis": 2,
-												"/unitGathering/dateBegin": 3,
-												"/unitGathering/dateEnd": 3,
-												"*": 1
-											},
-											"md": {
-												"/identifications/taxonID": 2,
-												"/identifications/taxon": 2,
-												"count": 2,
-												"notes": 2,
-												"unitType": 2,
-												"taxonConfidence": 2,
-												"recordBasis": 2,
-												"/identifications/identificationBasis": 2,
-												"/unitGathering/dateBegin": 3,
-												"/unitGathering/dateEnd": 3,
-												"/identifications/detDate": 3,
-												"*": 1
-											},
-											"sm": {
-												"/identifications/identificationBasis": 4,
-												"/unitGathering/dateBegin": 3,
-												"/unitGathering/dateEnd": 3,
-												"*": 2
-											},
-											"xs": 12,
-											"rows": [
-												[
-													"/identifications/taxon",
-													"taxonConfidence",
-													"recordBasis",
-													"count",
-													"notes"
-												]
+									"ui:field": "GridLayoutField",
+									"ui:options": {
+										"lg": {
+											"/identifications/taxonID": 2,
+											"/identifications/taxon": 2,
+											"count": 2,
+											"notes": 2,
+											"unitType": 2,
+											"taxonConfidence": 2,
+											"recordBasis": 2,
+											"/identifications/identificationBasis": 2,
+											"/unitGathering/dateBegin": 3,
+											"/unitGathering/dateEnd": 3,
+											"*": 1
+										},
+										"md": {
+											"/identifications/taxonID": 2,
+											"/identifications/taxon": 2,
+											"count": 2,
+											"notes": 2,
+											"unitType": 2,
+											"taxonConfidence": 2,
+											"recordBasis": 2,
+											"/identifications/identificationBasis": 2,
+											"/unitGathering/dateBegin": 3,
+											"/unitGathering/dateEnd": 3,
+											"/identifications/detDate": 3,
+											"*": 1
+										},
+										"sm": {
+											"/identifications/identificationBasis": 4,
+											"/unitGathering/dateBegin": 3,
+											"/unitGathering/dateEnd": 3,
+											"*": 2
+										},
+										"xs": 12,
+										"rows": [
+											[
+												"/identifications/taxon",
+												"taxonConfidence",
+												"recordBasis",
+												"count",
+												"notes"
 											]
-										},
-										"/identifications/taxonID": {
-											"ui:widget": "HiddenWidget"
-										},
-										"/identifications/detDate": {
-											"ui:widget": "DateWidget"
-										},
-										"unitType": {
-											"ui:field": "HiddenField"
-										},
-										"images": {
-											"ui:field": "ImageArrayField",
-											"ui:options": {
-												"capturerVerbatimPath": "/gatheringEvent/leg"
-											}
-										},
-										"/unitGathering/geometry": {
-											"ui:field": "HiddenField"
-										},
-										"/unitGathering/dateBegin": {
-											"ui:widget": "DateTimeWidget"
-										},
-										"/unitGathering/dateEnd": {
-											"ui:widget": "DateTimeWidget"
-										},
-										"recordBasis": {
-											"ui:options": {
-												"filterType": "whitelist",
-												"filter": [
-													"",
-													"MY.recordBasisHumanObservationPhoto",
-													"MY.recordBasisPreservedSpecimen",
-													"MY.recordBasisHumanObservationHandled",
-													"MY.recordBasisHumanObservation"
-												],
-												"order": [
-													"",
-													"MY.recordBasisHumanObservation",
-													"MY.recordBasisHumanObservationPhoto",
-													"MY.recordBasisPreservedSpecimen",
-													"MY.recordBasisHumanObservationHandled"
-												]
-											}
-										},
-										"hostID": {
-											"ui:widget": "AutosuggestWidget",
-											"ui:options": {
-												"autosuggestField": "taxon",
-												"allowNonsuggestedValue": true,
-												"suggestionReceive": "key"
-											}
-										},
-										"substrateSpecies": {
-											"ui:widget": "AutosuggestWidget",
-											"ui:options": {
-												"autosuggestField": "taxon",
-												"allowNonsuggestedValue": true,
-												"suggestionReceive": "key"
-											}
+										]
+									},
+									"/identifications/taxonID": {
+										"ui:widget": "HiddenWidget"
+									},
+									"/identifications/detDate": {
+										"ui:widget": "DateWidget"
+									},
+									"unitType": {
+										"ui:field": "HiddenField"
+									},
+									"images": {
+										"ui:field": "ImageArrayField",
+										"ui:options": {
+											"capturerVerbatimPath": "/gatheringEvent/leg"
+										}
+									},
+									"/unitGathering/geometry": {
+										"ui:field": "HiddenField"
+									},
+									"/unitGathering/dateBegin": {
+										"ui:widget": "DateTimeWidget"
+									},
+									"/unitGathering/dateEnd": {
+										"ui:widget": "DateTimeWidget"
+									},
+									"recordBasis": {
+										"ui:options": {
+											"filterType": "whitelist",
+											"filter": [
+												"",
+												"MY.recordBasisHumanObservationPhoto",
+												"MY.recordBasisPreservedSpecimen",
+												"MY.recordBasisHumanObservationHandled",
+												"MY.recordBasisHumanObservation"
+											],
+											"order": [
+												"",
+												"MY.recordBasisHumanObservation",
+												"MY.recordBasisHumanObservationPhoto",
+												"MY.recordBasisPreservedSpecimen",
+												"MY.recordBasisHumanObservationHandled"
+											]
+										}
+									},
+									"hostID": {
+										"ui:widget": "AutosuggestWidget",
+										"ui:options": {
+											"autosuggestField": "taxon",
+											"allowNonsuggestedValue": true,
+											"suggestionReceive": "key"
+										}
+									},
+									"substrateSpecies": {
+										"ui:widget": "AutosuggestWidget",
+										"ui:options": {
+											"autosuggestField": "taxon",
+											"allowNonsuggestedValue": true,
+											"suggestionReceive": "key"
 										}
 									}
 								}

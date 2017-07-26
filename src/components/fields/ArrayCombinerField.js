@@ -1,6 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { immutableDelete } from "../../utils";
 import merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -42,6 +43,14 @@ export default class ArrayCombinerField extends Component {
 			schema.items = Array(additionalItemsAmount).fill(itemSchema);
 			schema.additionalItems = itemSchema;
 		}
+
+		const uiSchema = Object.keys(props.schema.properties).reduce((_uiSchema, field) => {
+			if (field in _uiSchema) {
+				_uiSchema = {..._uiSchema, items: {...(_uiSchema.items || {}), [field]: _uiSchema[field]}};
+				immutableDelete("_uiSchema", field);
+				return _uiSchema;
+			}
+		}, props.uiSchema);
 
 		function objectsToArray(array, objects) {
 			if (objects) Object.keys(objects).forEach(dataCol => {
@@ -86,7 +95,7 @@ export default class ArrayCombinerField extends Component {
 				}
 			});
 		});
-		return {schema, errorSchema, formData};
+		return {schema, errorSchema, formData, uiSchema};
 	}
 
 	onChange(formData) {

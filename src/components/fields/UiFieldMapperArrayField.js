@@ -30,14 +30,14 @@ export default class UiFieldMapperArrayField extends Component {
 		super(props);
 		this.childProps = [];
 		this.functionOutputProps = [];
-		this.updateChildInstances(props);
+		this.updateChildProps(props);
 	}
 
 	componentWillReceiveProps(props) {
-		this.updateChildInstances(props);
+		this.updateChildProps(props);
 	}
 
-	updateChildInstances = (props) => {
+	updateChildProps = (props) => {
 		(props.formData || []).forEach((item, idx) => {
 			const currentFieldProps = this.childProps[idx];
 			const nextFieldProps = this.getFieldPropsForIdx(props, idx);
