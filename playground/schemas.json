@@ -194,6 +194,21 @@
 												}
 											}
 										}
+									},
+									"sizeFix": {
+										"fields": [
+											""
+										],
+										"title": "",
+										"rootUiSchema": {
+											"ui:field": "GridLayoutField",
+											"ui:options": {
+												"lg": 3,
+												"md": 3,
+												"sm": 6,
+												"xs": 12
+											}
+										}
 									}
 								}
 							}
