@@ -30,14 +30,14 @@ export default class UiFieldMapperArrayField extends Component {
 		super(props);
 		this.childProps = [];
 		this.functionOutputProps = [];
-		this.updateChildInstances(props);
+		this.updateChildProps(props);
 	}
 
 	componentWillReceiveProps(props) {
-		this.updateChildInstances(props);
+		this.updateChildProps(props);
 	}
 
-	updateChildInstances = (props) => {
+	updateChildProps = (props) => {
 		(props.formData || []).forEach((item, idx) => {
 			const currentFieldProps = this.childProps[idx];
 			const nextFieldProps = this.getFieldPropsForIdx(props, idx);
@@ -96,8 +96,8 @@ export default class UiFieldMapperArrayField extends Component {
 	onChange(formData) {
 		this.props.onChange(formData.map((item, idx) => {
 			if (!deepEquals(item, this.props.formData[idx])) {
-				const instance = this.childInstances[idx] || this.getInstanceForIdx(this.props, idx);
-				instance.onChange(item); // Will trigger child instance onChange, which will set this.tmpItemFormData.
+				const output = this.functionOutputProps[idx] || this.getFunctionOutputForIdx(this.props, idx);
+				output.onChange(item); // Will trigger child instance onChange, which will set this.tmpItemFormData.
 				return this.tmpItemFormData;
 			}
 			return item;
