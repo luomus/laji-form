@@ -152,6 +152,7 @@ const fields = importLocalComponents("fields", [
 	"CombinedStringField",
 	"UiFieldMapperArrayField",
 	"SplitArrayField",
+	"InlineLabelField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
