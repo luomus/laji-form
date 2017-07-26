@@ -184,58 +184,52 @@
 									}
 								},
 								"": {
-									"ui:field": "DependentBooleanField",
-									"ui:options": {
-										"booleanField": "editors",
-										"booleanDefiner": "leg"
-									},
-									"uiSchema": {
-										"ui:field": "ArrayCombinerField",
-										"uiSchema": {
-											"ui:field": "TableField",
+									"ui:functions": [
+										{
+											"ui:field": "DependentBooleanField",
 											"ui:options": {
-												"specialRules": "legEditors"
+												"booleanField": "editors",
+												"booleanDefiner": "leg"
+											}
+										}
+									],
+									"ui:field": "ArrayCombinerField",
+									"uiSchema": {
+										"ui:field": "TableField",
+										"ui:options": {
+											"specialRules": "legEditors"
+										},
+										"items": {
+											"ui:field": "DependentDisableField",
+											"ui:options": {
+												"rules": [
+													{
+														"disableDefiner": "leg",
+														"disableField": "editors",
+														"regexp": "MA.308",
+														"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+														"disabledValueToDisplay": true
+													},
+													{
+														"disableDefiner": "leg",
+														"disableField": "editors",
+														"regexp": "^((?!(MA\\.\\d)).)*$"
+													}
+												]
 											},
-											"items": {
-												"ui:functions": {
-													"ui:field": "ContextInjectionField",
-													"ui:options": {
-														"injections": {
-															"/ui:options/rules/0/regexp": "/creator"
-														}
-													}
-												},
-												"ui:field": "DependentDisableField",
+											"leg": {
+												"ui:widget": "AutosuggestWidget",
 												"ui:options": {
-													"rules": [
-														{
-															"disableDefiner": "leg",
-															"disableField": "editors",
-															"regexp": "creator is injected here",
-															"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
-															"disabledValueToDisplay": true
-														},
-														{
-															"disableDefiner": "leg",
-															"disableField": "editors",
-															"regexp": "^((?!(MA\\.\\d)).)*$"
-														}
-													]
-												},
-												"leg": {
-													"ui:widget": "AutosuggestWidget",
-													"ui:options": {
-														"autosuggestField": "friends",
-														"allowNonsuggestedValue": true,
-														"suggestionReceive": "key",
-														"preventTypingPattern": "^MA\\.\\d+$"
-													}
-												},
-												"editors": {
-													"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
-													"ui:options": {
-														"allowUndefined": false
-													}
+													"autosuggestField": "friends",
+													"allowNonsuggestedValue": true,
+													"suggestionReceive": "key",
+													"preventTypingPattern": "^MA\\.\\d+$"
+												}
+											},
+											"editors": {
+												"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
+												"ui:options": {
+													"allowUndefined": false
 												}
 											}
 										}

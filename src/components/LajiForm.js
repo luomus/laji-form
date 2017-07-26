@@ -62,7 +62,7 @@ class _SchemaField extends Component {
 		if (!functions) return props;
 
 		const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
-			_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions}};
+			_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions, uiSchema: undefined}};
 			const {state = {}} = new props.registry.fields[uiField](_props);
 			return {..._props, ...state};
 		}, {...props, formContext: props.registry.formContext});
@@ -74,7 +74,8 @@ class _SchemaField extends Component {
 				"ui:functions": undefined,
 				"ui:childFunctions": undefined,
 				"ui:field": props.uiSchema["ui:field"],
-				"ui:options": props.uiSchema["ui:options"]
+				"ui:options": props.uiSchema["ui:options"],
+				uiSchema: props.uiSchema.uiSchema
 			}
 		};
 	}
