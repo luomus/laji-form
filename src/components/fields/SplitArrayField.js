@@ -21,17 +21,17 @@ export default class SplitArrayField extends Component {
 		let {schema, uiSchema, formData} = props;
 		const uiOptions = getUiOptions(props.uiSchema);
 
-		const splittedFormData = [];
-		const splittedUiSchemas = [];
-		const splittedSchemas = [];
+		const splitFormData = [];
+		const splitUiSchemas = [];
+		const splitSchemas = [];
+
 
 		for (let i = 0; i <= uiOptions.splitRule.rules.length; i++) {
-			splittedFormData.push([]);
-			splittedUiSchemas[i] = {...uiSchema, "ui:options": {...uiOptions.uiOptions[i]}};
-			splittedSchemas[i] = {...schema};
-			if (uiOptions.uiOptions[i].title) {
-				splittedSchemas[i].title = uiOptions.uiOptions[i].title;
-			}
+			splitFormData.push([]);
+			const addedOptions = uiOptions.uiOptions && uiOptions.uiOptions.length > i ? uiOptions.uiOptions[i] : {};
+			splitUiSchemas[i] = {...uiSchema, "ui:options": {...addedOptions}};
+			splitSchemas[i] = {...schema};
+			if (addedOptions.title) splitSchemas[i].title = addedOptions.title;
 		}
 
 		for (let i = 0; i < formData.length; i++) {
@@ -40,16 +40,16 @@ export default class SplitArrayField extends Component {
 
 			for (let j = 0; j < uiOptions.splitRule.rules.length; j++) {
 				if (value && value.match(uiOptions.splitRule.rules[j])) {
-					splittedFormData[j].push({...formData[i]});
+					splitFormData[j].push({...formData[i]});
 					noMatch = false;
 					break;
 				}
 			}
 
-			if (noMatch) splittedFormData[splittedFormData.length - 1].push({...formData[i]});
+			if (noMatch) splitFormData[splitFormData.length - 1].push({...formData[i]});
 		}
 
-		return {splittedSchemas, splittedUiSchemas, splittedFormData};
+		return {splitSchemas, splitUiSchemas, splitFormData};
 	}
 
 	render() {
@@ -58,17 +58,17 @@ export default class SplitArrayField extends Component {
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
-		for (let i = 0; i < state.splittedSchemas.length; i++) {
+		for (let i = 0; i < state.splitSchemas.length; i++) {
 			onChange[i] = (formData) => {
 				const {state, props} = this;
 				let newFormData = [];
 
-				for (let j = 0; j < state.splittedFormData.length; j++) {
+				for (let j = 0; j < state.splitFormData.length; j++) {
 					if (j !== i) {
-						newFormData = newFormData.concat(state.splittedFormData[j]);
+						newFormData = newFormData.concat(state.splitFormData[j]);
 					} else {
 						newFormData = newFormData.concat(formData);
-						this.setState((state) => {state.splittedFormData[i] = formData; return state;});
+						this.setState((state) => {state.splitFormData[i] = formData; return state;});
 					}
 				}
 				props.onChange(newFormData);
@@ -77,13 +77,15 @@ export default class SplitArrayField extends Component {
 
 		return (
 			<div>
-                {state.splittedSchemas.map((schema, i) =>
-					<ArrayField key={i} {...props}
-								schema={schema}
-								idSchema={{...this.props.idSchema, "$id": this.props.idSchema.$id + "_" + i}}
-								formData={state.splittedFormData[i]}
-								uiSchema={state.splittedUiSchemas[i]}
-								onChange={onChange[i]}/>
+                {state.splitSchemas.map((schema, i) =>
+					<div className={state.splitUiSchemas[i]["ui:options"].classNames}>
+						<ArrayField key={i} {...props}
+									schema={schema}
+									idSchema={{...this.props.idSchema, "$id": this.props.idSchema.$id + "_" + i}}
+									formData={state.splitFormData[i]}
+									uiSchema={state.splitUiSchemas[i]}
+									onChange={onChange[i]}/>
+						</div>
 				)}
 			</div>
 		);
