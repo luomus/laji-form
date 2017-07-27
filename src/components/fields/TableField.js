@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import update from "immutability-helper";
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, updateTailUiSchema } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import { DeleteButton, AddButton, Label } from "../components";
+import { DeleteButton, Label } from "../components";
+import { getButtons, handlesArrayKeys } from "../ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
 
 const specialRules = {
@@ -31,32 +30,12 @@ export default class TableField extends Component {
 		}).isRequired
 	}
 
-	isRequired = (requirements, name) => {
-		return Array.isArray(requirements) &&
-			requirements.indexOf(name) !== -1;
-	}
-
-	onChangeForIdx = (idx) => {
-		return (itemFormData) => {
-			let formData = this.props.formData;
-			if (!formData) formData = [];
-			formData = update(formData, {$merge: {[idx]: itemFormData}});
-			this.props.onChange(formData.filter(item => {return Object.keys(item).length;}));
-		};
-	}
-
 	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-
-		const {props} = this;
-		const {schema, uiSchema, formContext: {uiSchemaContext}, idSchema, formData} = props;
-
-		const items = [];
-		const labels = [];
+		const {schema, uiSchema, formData, registry: {fields: {ArrayField}}, formContext} = this.props;
+		const {uiSchemaContext} = formContext;
 
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
-
-		const options = getUiOptions(this.props.uiSchema);
+		const options = getUiOptions(uiSchema);
 
 		let schemaPropsArray = Object.keys(schemaProps);
 		const optionsSpecialRules = options.specialRules;
@@ -79,8 +58,53 @@ export default class TableField extends Component {
 			wrapperCols[col] = options[col] ? Math.min(options[col], defaultWrapperCol) : defaultWrapperCol;
 		});
 
-		schemaPropsArray.forEach(propName => {
-			labels.push(
+		const itemsUiSchema = {
+			"ui:field": "GridLayoutField", 
+			"ui:options": {...cols, showLabels: false},
+		};
+
+		const itemsSchema = schemaPropsArray.reduce((constructedSchema, prop) => {
+			constructedSchema.properties[prop] = schema.items.properties[prop];
+			return constructedSchema;
+		}, {...schema.items, properties: {}});
+
+		return (
+			<ArrayField
+				{...this.props}
+				schema={{
+					...schema,
+					items: itemsSchema
+				}}
+				uiSchema={{
+					...uiSchema,
+					items: uiSchema.items && uiSchema.items["ui:field"] ? 
+					updateTailUiSchema(uiSchema.items, {$merge: {uiSchema: itemsUiSchema}}) :
+					{...(uiSchema.items || {}), ...itemsUiSchema}
+				}}
+				registry={{
+					...this.props.registry,
+					ArrayFieldTemplate: TableArrayFieldTemplate
+				}}
+				formContext={{
+					...formContext,
+					cols,
+					wrapperCols,
+					schemaPropsArray
+				}}
+			/>
+		);
+	}
+}
+
+@handlesArrayKeys
+class TableArrayFieldTemplate extends Component {
+	render() {
+		const {props} = this;
+		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema} = props;
+		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
+
+		const labels =schemaPropsArray.map(propName => {
+			return (
 				<Col {...cols} key={propName + "-label"}>
 					<Label
 						label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
@@ -90,110 +114,38 @@ export default class TableField extends Component {
 			</Col>);
 		});
 
-		const dummyClick = () => {};
+		const options = getUiOptions(props.uiSchema);
+		const {confirmDelete, deleteCorner, renderDelete = true, nonRemovables = [], buttons} = options;
+		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
-		// Dummy delete button is placed for aligning the labels correctly. Wacky.
-		items.push(
-			<div key="label-row" className="laji-form-field-template-item keep-vertical">
-				<div className="laji-form-field-template-schema"><Row><Col {...wrapperCols}>{labels}</Col></Row></div>
-				<div className="laji-form-field-template-buttons">
-					<DeleteButton style={{visibility: "hidden"}} onClick={dummyClick} translations={this.props.formContext.translations} />
-				</div>
-			</div>
-		);
-
-		if (formData) formData.forEach((item, idx) => {
-			let itemIdPrefix = props.idSchema.$id + "_" + idx;
-
-			const isAdditional = props.schema.additionalItems &&  idx >= props.schema.items.length;
-
-			let schema = (Array.isArray(props.schema.items) && idx < props.schema.items.length) ?
-				props.schema.items[idx] : props.schema.items;
-			if (isAdditional) schema = props.schema.additionalItems;
-
-			schema = schemaPropsArray.reduce((constructedSchema, prop) => {
-				constructedSchema.properties[prop] = schema.properties[prop];
-				return constructedSchema;
-			}, {type: "object", properties: {}});
-
-			let uiSchema = {};
-			if (props.uiSchema.additionalItems && idx >= props.schema.items.length) uiSchema = props.uiSchema.additionalItems;
-			else if (props.uiSchema.items) uiSchema = props.uiSchema.items;
-
-			let uiOptions = {...cols, showLabels: false};
-			if (uiSchema["ui:field"]) {
-				uiSchema = {
-					...uiSchema,
-					uiSchema: {
-						"ui:field": uiSchema["ui:field"],
-						"ui:options": uiSchema["ui:options"],
-						uiSchema: uiSchema.uiSchema
-					}
-				};
-			}
-			uiSchema = {...uiSchema, "ui:field": "GridLayoutField", "ui:options": uiOptions};
-
-			const deletable = (!props.schema.additionalItems && idx !== undefined) || isAdditional;
-
-			const onDeleteClick = () => {
-				this.onChange(update(formData, {$splice: [[idx, 1]]}));
-			};
-
-			uiSchema = {...uiSchema, "ui:buttons": deletable ? [
-				<DeleteButton key={`rm-${idx}`}  translations={props.formContext.translations} onClick={onDeleteClick} />
-			] : [],
-				"ui:buttonsVertical": true};
-
-			items.push(
-				<Row key={idx}>
-					<Col {...wrapperCols}>
-						<SchemaField
-							{...this.props}
-							formData={item}
-							onChange={this.onChangeForIdx(idx)}
-							schema={schema}
-							uiSchema={uiSchema}
-							name=""
-							idSchema={toIdSchema(schema, itemIdPrefix, props.registry.definitions)}
-							registry={props.registry}
-							errorSchema={props.errorSchema[idx]} />
-					</Col>
-				</Row>
-			);
-		});
+		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
 		return (
 			<div>
-				{items}
-				<AddButton onClick={this.addItem} key="add"/>
+				<Row>{labels}</Row>
+				{props.items.map((item, i) => {
+					const deleteButton = (
+						<DeleteButton ref={getRefFor(i)}
+													onClick={item.onDropIndexClick(item.index)}
+													className="laji-form-field-template-buttons"
+													confirm={confirmDelete}
+													corner={deleteCorner}
+													translations={props.formContext.translations}/>
+					);
+					return (
+						<Row key={item.index} >
+							<Col {...wrapperCols}>
+								<div className="laji-form-field-template-item keep-vertical">
+									<div className="laji-form-field-template-schema">{item.children}</div>
+									{item.hasRemove && !nonRemovables.includes(item.index) && renderDelete && deleteButton}
+								</div>
+							</Col>
+						</Row>
+					);
+				}
+				)}
+				{getButtons(buttons, props)}
 			</div>
 		);
 	}
-
-	addItem = () => {
-		let item = this.getNewRowArrayItem();
-		if (!this.props.formData) {
-			this.onChange([item]);
-		} else {
-			this.onChange([...this.props.formData, item]);
-		}
-	}
-
-	getNewRowArrayItem = () => {
-		let props = this.props;
-		const {formData} = props;
-		const {additionalItems} = props.schema;
-		let schema;
-		if (additionalItems && (formData && formData.length > props.schema.items.length)) {
-			schema = additionalItems;
-		} else if (additionalItems &&
-		          (!formData || formData.length === 0 || props.schema.items[formData.length - 1])) {
-			let i = formData ? 0 : formData.length - 1;
-			schema = props.schema.items[i];
-		} else {
-			schema = props.schema.items;
-		}
-		return getDefaultFormState(schema, undefined, props.registry.definitions);
-	}
 }
-

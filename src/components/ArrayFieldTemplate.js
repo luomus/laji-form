@@ -3,7 +3,7 @@ import { Button, DeleteButton } from "./components";
 import { getUiOptions } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 
@@ -79,46 +79,58 @@ export function getButtons(buttons, props = {}) {
 	);
 }
 
-export default class ArrayFieldTemplate extends Component {
-	constructor(props) {
-		super(props);
-		this._context = new Context(this.props.formContext.contextId);
-	}
+export function handlesArrayKeys(ComposedComponent) {
+	return class ArrayFieldTemplateField extends ComposedComponent {
+		static displayName = getReactComponentName(ComposedComponent);
 
-	componentDidMount() {
-		this.addKeyHandlers();
-		this.addChildKeyHandlers();
-	}
-
-	componentDidUpdate() {
-		this.addKeyHandlers();
-		this.addChildKeyHandlers();
-	}
-
-	addKeyHandlers() {
-		this._context.removeKeyHandler(this.props.idSchema.$id);
-		this._context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
-			getProps: () => this.props
-		});
-	}
-
-	addChildKeyHandlers() {
-		if (!this.childKeyHandlers) this.childKeyHandlers = [];
-		else this.childKeyHandlers.forEach(({id, keyFunction}) => this._context.removeKeyHandler(id, keyFunction));
-		this.props.items.forEach((item, i) => {
-			const id = `${this.props.idSchema.$id}_${i}`;
-			this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
-			this._context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
-		});
-	}
-
-	componentWillUnmount() {
-		this._context.removeKeyHandler(this.props.idSchema.$id);
-		if (this.childKeyHandlers) {
-			this.childKeyHandlers.forEach(({id, keyFunction}) => this._context.removeKeyHandler(id, keyFunction));
+		componentDidMount() {
+			this.addKeyHandlers();
+			this.addChildKeyHandlers();
+			if (super.componentDidMount) super.componentDidMount();
 		}
-	}
 
+		componentDidUpdate() {
+			this.addKeyHandlers();
+			this.addChildKeyHandlers();
+			if (super.componentDidUpdate) super.componentDidUpdate();
+		}
+
+		addKeyHandlers() {
+			const context = new Context(this.props.formContext.contextId);
+
+			context.removeKeyHandler(this.props.idSchema.$id);
+			context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+				getProps: () => this.props
+			});
+		}
+
+		addChildKeyHandlers() {
+			const context = new Context(this.props.formContext.contextId);
+
+			if (!this.childKeyHandlers) this.childKeyHandlers = [];
+			else this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
+			this.props.items.forEach((item, i) => {
+				const id = `${this.props.idSchema.$id}_${i}`;
+				this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
+				context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
+			});
+		}
+
+		componentWillUnmount() {
+			const context = new Context(this.props.formContext.contextId);
+
+			context.removeKeyHandler(this.props.idSchema.$id);
+			if (this.childKeyHandlers) {
+				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
+			}
+			if (super.componentWillUnmount) super.componentWillUnmount();
+		}
+
+	};
+}
+
+@handlesArrayKeys
+export default class ArrayFieldTemplate extends Component {
 	onSort = ({oldIndex, newIndex}) => {
 		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
 	}
@@ -128,8 +140,7 @@ export default class ArrayFieldTemplate extends Component {
 		const Title = props.TitleField;
 		const Description = props.DescriptionField;
 		const options = getUiOptions(props.uiSchema);
-		const {confirmDelete, deleteCorner, renderDelete = true, orderable, nonRemovables = [], nonOrderables = []} = options;
-		const buttons = getButtons(options.buttons, props);
+		const {confirmDelete, deleteCorner, renderDelete = true, orderable, nonRemovables = [], nonOrderables = [], buttons} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const SortableList = SortableContainer(({items}) => (

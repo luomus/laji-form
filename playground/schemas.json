@@ -175,30 +175,30 @@
 												"specialRules": "legEditors"
 											},
 											"items": {
-												"ui:functions": {
-													"ui:field": "ContextInjectionField",
-													"ui:options": {
-														"injection": {
-															"ui:options/regexp": "MA.308"
-														}
+												"ui:field": "ContextInjectionField",
+												"ui:options": {
+													"injections": {
+														"/ui:options/rules/0/regexp": "/creator"
 													}
 												},
-												"ui:field": "DependentDisableField",
-												"ui:options": {
-													"rules": [
-														{
-															"disableDefiner": "leg",
-															"disableField": "editors",
-															"regexp": "creator is injected here",
-															"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
-															"disabledValueToDisplay": true
-														},
-														{
-															"disableDefiner": "leg",
-															"disableField": "editors",
-															"regexp": "^((?!(MA\\.\\d)).)*$"
-														}
-													]
+												"uiSchema": {
+													"ui:field": "DependentDisableField",
+													"ui:options": {
+														"rules": [
+															{
+																"disableDefiner": "leg",
+																"disableField": "editors",
+																"regexp": "creator is injected here",
+																"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+																"disabledValueToDisplay": true
+															},
+															{
+																"disableDefiner": "leg",
+																"disableField": "editors",
+																"regexp": "^((?!(MA\\.\\d)).)*$"
+															}
+														]
+													}
 												}
 											}
 										}
@@ -1583,7 +1583,8 @@
 	"formData": {
 	  "gatheringEvent": {
 		"leg": [
-		  "MA.308"
+		  "MA.308",
+		  "MA.97"
 		],
 		"legPublic": true,
 		"dateBegin": "2017-05-23"

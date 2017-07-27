@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, orderProperties } from  "react-jsonschema-form/lib/utils";
-import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString, isMultiSelect, getNestedUiFieldsList } from "../../utils";
+import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString, isMultiSelect, getNestedUiFieldsList, applyFunction } from "../../utils";
 import { Row , Col } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
 
@@ -35,7 +35,9 @@ export default class GridLayoutField extends Component {
 
 		fieldProps = {...fieldProps, uiSchema: {...fieldProps.uiSchema, "ui:field": undefined, ...innerUiSchema}};
 
-		// Apply nested uiSchemas prop effects virtually without rendering them.
+		fieldProps = applyFunction(fieldProps);
+
+		//// Apply nested uiSchemas prop effects virtually without rendering them.
 		while (true) {
 			const uiField = fieldProps.uiSchema["ui:field"];
 			if (uiField === undefined) break;

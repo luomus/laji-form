@@ -353,3 +353,43 @@ export function bsSizeToPixels(bsSize) {
 		throw new Error(`Unknown bootstrap size ${bsSize}. Should be one of 'lg', 'md', 'sm' or 'xs'`);
 	}
 }
+
+
+export function applyFunction(props) {
+	let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
+
+	const objectOrArrayAsArray = item => (
+		item ? 
+			(Array.isArray(item) ?
+				item : 
+				[item]) :
+			[]
+	);
+
+	if (childFunctions) {
+		functions = [
+			{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: objectOrArrayAsArray(childFunctions)}},
+			...objectOrArrayAsArray(functions)
+		];
+	}
+
+	if (!functions) return props;
+
+	const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
+		_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions, uiSchema: undefined}};
+		const {state = {}} = new props.registry.fields[uiField](_props);
+		return {..._props, ...state};
+	}, {...props, formContext: props.registry.formContext});
+
+	return {
+		...computedProps,
+		uiSchema: {
+			...computedProps.uiSchema,
+			"ui:functions": undefined,
+			"ui:childFunctions": undefined,
+			"ui:field": props.uiSchema["ui:field"],
+			"ui:options": props.uiSchema["ui:options"],
+			uiSchema: props.uiSchema.uiSchema
+		}
+	};
+}
