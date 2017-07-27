@@ -313,6 +313,7 @@ function handlesButtons(ComposedComponent) {
 
 		componentDidUpdate() {
 			this.addChildKeyHandler();
+			if (super.componentDidUpdate) super.componentDidUpdate();
 		}
 
 		addChildKeyHandler() {
