@@ -78,8 +78,8 @@ export default class SplitArrayField extends Component {
 		return (
 			<div>
                 {state.splitSchemas.map((schema, i) =>
-					<div className={state.splitUiSchemas[i]["ui:options"].classNames}>
-						<ArrayField key={i} {...props}
+					<div key={i} className={state.splitUiSchemas[i]["ui:options"].classNames}>
+						<ArrayField {...props}
 									schema={schema}
 									idSchema={{...this.props.idSchema, "$id": this.props.idSchema.$id + "_" + i}}
 									formData={state.splitFormData[i]}
