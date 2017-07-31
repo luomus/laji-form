@@ -179,7 +179,7 @@ export default class ArrayFieldTemplate extends Component {
 				{
 					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={10} items={items} onSortEnd={this.onSort} /> : items
 				}
-				{buttons}
+				{getButtons(buttons, props)}
 			</div>
 		);
 	}
