@@ -111,7 +111,7 @@ export default class SingleActiveArrayField extends Component {
 		const options = getUiOptions(props.uiSchema);
 		this.state = {
 			activeIdx: (props.formData && props.formData.length) ? 
-				("initialActiveIdx" in options) ? options.initialActiveIdx : 0
+				("initialActiveIdx" in options && props.formData.length !== 1) ? options.initialActiveIdx : 0
 				: undefined, 
 			...this.getStateFromProps(props), popups: {}
 		};
