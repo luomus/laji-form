@@ -19,6 +19,7 @@ export default class FlatField extends Component {
 	getStateFromProps(props) {
 		const state = {
 			schema: props.schema,
+			uiSchema: props.uiSchema,
 			errorSchema: props.errorSchema,
 			formData: props.formData,
 		};
@@ -34,8 +35,23 @@ export default class FlatField extends Component {
 
 			if (properties) Object.keys(properties).forEach(innerField => {
 				state.schema = update(state.schema, {properties: {$merge: {[`/${field}/${innerField}`]: properties[innerField]}}});
+				if (props.uiSchema[field] && props.uiSchema[field][innerField]) {
+					state.uiSchema = update(state.uiSchema, {$merge: {[`/${field}/${innerField}`]: props.uiSchema[field][innerField]}});
+				}
 			});
 			state.schema.properties = immutableDelete(state.schema.properties, field);
+
+			const {"ui:order": order= []} = state.uiSchema;
+			const orderIdxs = order.reduce((obj, field, idx) => {
+				obj[field] = idx;
+				return obj;
+			}, {});
+
+			if (field in orderIdxs) {
+				const head = order.slice(0, orderIdxs[field]);
+				const tail = order.slice(orderIdxs[field] + 1);
+				state.uiSchema["ui:order"] = [...head, ...Object.keys(properties).map(inner => `/${field}/${inner}`), ...tail];
+			}
 
 			if (props.formData && props.formData[field]) {
 				let innerData = props.formData[field];

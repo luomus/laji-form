@@ -66,9 +66,36 @@ export default class UiFieldMapperArrayField extends Component {
 		let {functions} = getUiOptions(props.uiSchema);
 
 		return ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
-			_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions}};
+			const {
+				"ui:functions": uiFunctions,
+				uiSchema,
+				"ui:field": origUiField,
+				"ui:options": origUiOptions,
+				..._propsUiSchema
+			} = _props.uiSchema;
+
+			_props = {
+				..._props,
+				uiSchema: {
+					..._propsUiSchema,
+					"ui:field": uiField,
+					"ui:options": uiOptions
+				}
+			};
+
 			const {state = {}} = new props.registry.fields[uiField](_props);
-			return {..._props, ...state};
+			return {
+				..._props,
+				...state,
+				uiSchema:  {
+					..._props.uiSchema, 
+					...state.uiSchema,
+					"ui:functions": uiFunctions,
+					"ui:field": origUiField,
+					"ui:options": origUiOptions,
+					uiSchema
+				}
+			};
 		}, childProps);
 	}
 
@@ -85,7 +112,7 @@ export default class UiFieldMapperArrayField extends Component {
 		const state = {
 			...props,
 			schema,
-			uiSchema: {...props.uiSchema, items: {...templateOutput.uiSchema, ...props.uiSchema.items}},
+			uiSchema: {...props.uiSchema, items: {...props.uiSchema.items, ...templateOutput.uiSchema}},
 			formData: (props.formData || []).map((item, idx) => this.functionOutputProps[idx].formData),
 			idSchema: toIdSchema(schema, props.idSchema.$id, props.registry.definitions)
 		};

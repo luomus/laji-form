@@ -498,22 +498,30 @@
 						]
 					},
 					"items": {
+						"ui:functions": {
+							"ui:field": "AutosuggestField",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionInputField": "/identifications/taxon",
+								"suggestionValueField": "/identifications/taxonID",
+								"suggestionReceivers": {
+									"/identifications/taxon": "value",
+									"unitType": "$taxonGroup",
+									"/identifications/taxonID": "key"
+								},
+								"inputTransformer": {
+									"regexp": "^(.*)\\?$",
+									"transformations": {
+										"taxonConfidence": "MY.taxonConfidenceUnsure"
+									}
+								}
+							}
+						},
 						"ui:field": "ScopeField",
 						"classNames": "well well-sm",
 						"ui:settings": [
 							"%additionalFields/scopeField_gathering_unit_unitType"
-						],
-
-						"ui:order": [
-							"/identifications/taxonID",
-							"/identifications/taxon",
-							"count",
-							"notes",
-							"unitType",
-							"taxonConfidence",
-							"recordBasis",
-							"*",
-							"images"
 						],
 						"ui:options": {
 							"additionalsGroupingPath": "/fieldScopes/unitType",
@@ -596,26 +604,6 @@
 							}
 						},
 						"uiSchema": {
-							"ui:functions": {
-								"ui:field": "AutosuggestField",
-								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionInputField": "/identifications/taxon",
-									"suggestionValueField": "/identifications/taxonID",
-									"suggestionReceivers": {
-										"/identifications/taxon": "value",
-										"unitType": "$taxonGroup",
-										"/identifications/taxonID": "key"
-									},
-									"inputTransformer": {
-										"regexp": "^(.*)\\?$",
-										"transformations": {
-											"taxonConfidence": "MY.taxonConfidenceUnsure"
-										}
-									}
-								}
-							},
 							"ui:field": "GridLayoutField",
 							"ui:options": {
 								"lg": {
@@ -661,65 +649,79 @@
 										"notes"
 									]
 								]
-							},
-							"/identifications/taxonID": {
+							}
+						},
+						"ui:order": [
+							"identifications",
+							"count",
+							"notes",
+							"unitType",
+							"taxonConfidence",
+							"recordBasis",
+							"*",
+							"images"
+						],
+						"identifications": {
+							"taxonID": {
 								"ui:widget": "HiddenWidget"
 							},
-							"/identifications/detDate": {
+							"detDate": {
 								"ui:widget": "DateWidget"
-							},
-							"unitType": {
+							}
+						},
+						"unitType": {
+							"ui:field": "HiddenField"
+						},
+						"images": {
+							"ui:field": "ImageArrayField",
+							"ui:options": {
+								"capturerVerbatimPath": "/gatheringEvent/leg"
+							}
+						},
+						"unitGathering": {
+							"geometry": {
 								"ui:field": "HiddenField"
 							},
-							"images": {
-								"ui:field": "ImageArrayField",
-								"ui:options": {
-									"capturerVerbatimPath": "/gatheringEvent/leg"
-								}
-							},
-							"/unitGathering/geometry": {
-								"ui:field": "HiddenField"
-							},
-							"/unitGathering/dateBegin": {
+							"dateBegin": {
 								"ui:widget": "DateTimeWidget"
 							},
-							"/unitGathering/dateEnd": {
+							"dateEnd": {
 								"ui:widget": "DateTimeWidget"
-							},
-							"recordBasis": {
-								"ui:options": {
-									"filterType": "whitelist",
-									"filter": [
-										"",
-										"MY.recordBasisHumanObservationPhoto",
-										"MY.recordBasisPreservedSpecimen",
-										"MY.recordBasisHumanObservationHandled",
-										"MY.recordBasisHumanObservation"
-									],
-									"order": [
-										"",
-										"MY.recordBasisHumanObservation",
-										"MY.recordBasisHumanObservationPhoto",
-										"MY.recordBasisPreservedSpecimen",
-										"MY.recordBasisHumanObservationHandled"
-									]
-								}
-							},
-							"hostID": {
-								"ui:widget": "AutosuggestWidget",
-								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionReceive": "key"
-								}
-							},
-							"substrateSpecies": {
-								"ui:widget": "AutosuggestWidget",
-								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionReceive": "key"
-								}
+							}
+						},
+						"recordBasis": {
+							"ui:options": {
+								"filterType": "whitelist",
+								"filter": [
+									"",
+									"MY.recordBasisHumanObservationPhoto",
+									"MY.recordBasisPreservedSpecimen",
+									"MY.recordBasisHumanObservationHandled",
+									"MY.recordBasisHumanObservation"
+								],
+								"order": [
+									"",
+									"MY.recordBasisHumanObservation",
+									"MY.recordBasisHumanObservationPhoto",
+									"MY.recordBasisPreservedSpecimen",
+									"MY.recordBasisHumanObservationHandled"
+								]
+							}
+						},
+						"hostID": {
+							"ui:widget": "AutosuggestWidget",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionReceive": "key"
+							}
+						},
+						"substrateSpecies": {
+							"ui:widget": "AutosuggestWidget",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionReceive": "key"
 							}
 						}
 					}

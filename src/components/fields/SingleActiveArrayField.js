@@ -473,6 +473,7 @@ class TableArrayFieldTemplate extends Component {
 					item.hasOwnProperty(prop) && 
 					!isNullOrUndefined(item[prop]) && 
 					(!Array.isArray(item[prop]) || Array.isArray(item[prop]) && !item[prop].every(isNullOrUndefined)) &&
+					!isHidden(uiSchema.items, prop) &&
 					!isHidden(getNestedTailUiSchema(uiSchema.items), prop)
 				);
 				if (found) foundProps[prop] = true;
@@ -483,8 +484,8 @@ class TableArrayFieldTemplate extends Component {
 			return _cols;
 		}, []);
 
-		const {"ui:order": order = []} = (uiSchema.items || {});
-		cols = orderProperties(cols, order.filter(field => field === "*" || foundProps[field]));
+		const {"ui:order": order} = (uiSchema.items || {});
+		if (order) cols = orderProperties(cols, order.filter(field => field === "*" || foundProps[field]));
 
 		const that = this.props.formContext.this;
 		const activeIdx = that.state.activeIdx;
@@ -495,7 +496,7 @@ class TableArrayFieldTemplate extends Component {
 			const val = item[col];
 			const _schema = schema.items.properties[col];
 			const {registry} = that.props;
-			const _uiSchema = getNestedTailUiSchema(uiSchema.items)[col] || {};
+			const _uiSchema = uiSchema.items[col] || getNestedTailUiSchema(uiSchema.items)[col] || {};
 
 			let widget = undefined;
 			if (_uiSchema["ui:widget"]) widget = registry.widgets[_uiSchema["ui:widget"]];
@@ -503,7 +504,7 @@ class TableArrayFieldTemplate extends Component {
 
 			let formatter = undefined;
 			if (widget && widget.prototype && widget.prototype.formatValue) formatter = widget.prototype.formatValue;
-			else if (widget && widget.prototype && widget.prototype.__proto__) formatter = widget.prototype.__proto__.formatValue;
+			else if (widget && widget.prototype && widget.prototype.__proto__ && widget.prototype.__proto__.formatValue) formatter = widget.prototype.__proto__.formatValue;
 
 			if (formatter) {
 				return formatter(val, getUiOptions(_uiSchema), that.props);
