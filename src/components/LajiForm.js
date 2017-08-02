@@ -36,7 +36,7 @@ class _SchemaField extends Component {
 	}
 
 	updateVirtualInstance = (props) => {
-		if ([props, this.props].forEach(_props => _props.uiSchema && (props.uiSchema["ui:functions"] || props.uiSchema["ui:childFunctions"])) || !deepEquals([this.props, props])) {
+		if ([props, this.props].forEach(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) || !deepEquals([this.props, props])) {
 			this.functionOutputProps = this.applyFunction(props);
 		}
 	}
