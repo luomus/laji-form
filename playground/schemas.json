@@ -151,7 +151,7 @@
 							"ui:field": "NestField",
 							"ui:options": {
 								"nests": {
-									"": {
+									"_legEditor": {
 										"fields": [
 											"leg",
 											"editors"
@@ -203,9 +203,9 @@
 											}
 										}
 									},
-									"sizeFix": {
+									"legEditorSizeFixer": {
 										"fields": [
-											""
+											"_legEditor"
 										],
 										"title": "",
 										"rootUiSchema": {
