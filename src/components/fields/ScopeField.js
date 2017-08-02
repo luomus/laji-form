@@ -284,7 +284,7 @@ export default class ScopeField extends Component {
 
 		if (this.state.modalMap) {
 			addButton(
-				<Modal show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
+				<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
 					<Modal.Header closeButton={true}>
 						<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 					</Modal.Header>
@@ -550,7 +550,7 @@ export default class ScopeField extends Component {
 		});
 
 		if (this.state.additionalsOpen) this.modal = (
-			<Modal show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
+			<Modal key="fields-modal" show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
 				<Modal.Header closeButton={true}>
 					<Modal.Title>{translations.SelectMoreFields}</Modal.Title>
 				</Modal.Header>
