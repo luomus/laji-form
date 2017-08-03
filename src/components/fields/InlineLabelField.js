@@ -62,10 +62,10 @@ export default class InlineLabelField extends Component {
 	    const fieldCols = this.getCols(options, "field");
 
 		return (
-		    <Row>
-                <Col {...titleCols}><span>{this.props.schema.title}</span></Col>
-                <Col {...fieldCols}><SchemaField {...this.props} {...this.state}/></Col>
-            </Row>
+			<Row>
+				<Col {...titleCols}><span>{this.props.schema.title}</span></Col>
+				<Col {...fieldCols}><SchemaField {...this.props} {...this.state}/></Col>
+			</Row>
 		);
 	}
 
