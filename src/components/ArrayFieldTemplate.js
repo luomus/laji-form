@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, DeleteButton } from "./components";
-import { getUiOptions } from "../utils";
+import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
 import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName } from "../utils";
@@ -186,28 +186,28 @@ export default class ArrayFieldTemplate extends Component {
 }
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, navigateCallforward}) {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx}) {
 		function focusIdx(idx) {
-			focusById(getProps().formContext.contextId, `${getProps().idSchema.$id}_${idx}`);
+			focusByIdx ? focusByIdx(idx) : focusById(getProps().formContext.contextId, `${getProps().idSchema.$id}_${idx}`);
 		}
 
 		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
-		const currentIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
+		const focusedIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
 
-		if (currentIdx === undefined) {
-			if (getProps().items.length > 0) {
-				focusIdx(0);
-				return true;
-			}
-			return false;
+		const currentIdx = getCurrentIdx ? getCurrentIdx() : focusedIdx;
+
+		if (isNullOrUndefined(currentIdx) && getProps().items.length > 0) {
+			focusIdx(reverse ? getProps().items.length - 1 : 0);
+			return true;
 		} else {
-			const amount = reverse ? -1 : 1;
+			let amount = 0;
+			if (focusedIdx === currentIdx) amount = reverse ? -1 : 1;
 
 			const nextIdx = currentIdx + amount;
 
-			if (amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < getProps().items.length) {
+			if (amount === 0 || amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < getProps().items.length) {
 				if (navigateCallforward) {
 					e.persist();
 					navigateCallforward(() => focusIdx(nextIdx), nextIdx);
@@ -216,8 +216,8 @@ export const arrayKeyFunctions = {
 				}
 				return true;
 			}
-			return false;
 		}
+		return false;
 	},
 	insert: function (e, {getProps, insertCallforward}) {
 		const props = getProps();

@@ -305,7 +305,10 @@ function handlesButtons(ComposedComponent) {
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
-				navigateCallforward: (callback, idx) => that.onActiveChange(idx, callback)
+				getCurrentIdx: () => that.state.activeIdx,
+				focusByIdx: (idx) => idx === that.state.activeIdx ?
+					focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`) :
+					this.props.formContext.this.onActiveChange(idx)
 			});
 			this.addChildKeyHandler();
 			if (super.componentDidMount) super.componentDidMount();
