@@ -11,31 +11,31 @@ export default class InlineLabelField extends Component {
 			"ui:options": PropTypes.shape({
 				lg: PropTypes.oneOfType([
 					PropTypes.shape({
-						label: PropTypes.integer,
-						field: PropTypes.integer
+						label: PropTypes.number,
+						field: PropTypes.number
 					}),
-					PropTypes.integer
+					PropTypes.number
 				]).isRequired,
 				md: PropTypes.oneOfType([
 					PropTypes.shape({
-						label: PropTypes.integer,
-						field: PropTypes.integer
+						label: PropTypes.number,
+						field: PropTypes.number
 					}),
-					PropTypes.integer
+					PropTypes.number
 				]).isRequired,
 				sm: PropTypes.oneOfType([
 					PropTypes.shape({
-						label: PropTypes.integer,
-						field: PropTypes.integer
+						label: PropTypes.number,
+						field: PropTypes.number
 					}),
-					PropTypes.integer
+					PropTypes.number
 				]).isRequired,
 				xs: PropTypes.oneOfType([
 					PropTypes.shape({
-						label: PropTypes.integer,
-						field: PropTypes.integer
+						label: PropTypes.number,
+						field: PropTypes.number
 					}),
-					PropTypes.integer
+					PropTypes.number
 				]).isRequired
 			}).isRequired
 		})
