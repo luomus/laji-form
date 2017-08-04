@@ -501,13 +501,17 @@ class TableArrayFieldTemplate extends Component {
 			const {registry} = that.props;
 			const _uiSchema = uiSchema.items[col] || getNestedTailUiSchema(uiSchema.items)[col] || {};
 
-			let widget = undefined;
-			if (_uiSchema["ui:widget"]) widget = registry.widgets[_uiSchema["ui:widget"]];
-			else if (_schema.type === "boolean") widget = registry.widgets.CheckboxWidget;
+			let formatterComponent = undefined;
+			if (_uiSchema["ui:widget"]) formatterComponent = registry.widgets[_uiSchema["ui:widget"]];
+			else if (_schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
+			else if (_uiSchema["ui:field"]) formatterComponent = registry.fields[_uiSchema["ui:field"]];
 
 			let formatter = undefined;
-			if (widget && widget.prototype && widget.prototype.formatValue) formatter = widget.prototype.formatValue;
-			else if (widget && widget.prototype && widget.prototype.__proto__ && widget.prototype.__proto__.formatValue) formatter = widget.prototype.__proto__.formatValue;
+			if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
+				formatter = formatterComponent.prototype.formatValue;
+			} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
+				formatter = formatterComponent.prototype.__proto__.formatValue;
+			}
 
 			if (formatter) {
 				return formatter(val, getUiOptions(_uiSchema), that.props);
@@ -541,7 +545,7 @@ class TableArrayFieldTemplate extends Component {
 			<div>
 				<TitleField title={this.props.title}/>
 				<DescriptionField description={this.props.description}/>
-				<Table hover={true} bordered={true} condensed={true}> 
+				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (
 						<thead>
 							<tr className="darker">

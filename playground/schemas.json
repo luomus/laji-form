@@ -1595,21 +1595,6 @@
 	  "secureLevel": "MX.secureLevelNone",
 	  "gatherings": [
 		{
-		  "images": [],
-		  "geometry": {
-			"type": "GeometryCollection",
-			"geometries": [
-			  {
-				"type": "Point",
-				"coordinates": [
-				  26.170841451122595,
-				  63.54526624516768
-				]
-			  }
-			]
-		  }
-		},
-		{
 		  "images": [
 			"MM.89524"
 		  ],
@@ -1620,7 +1605,37 @@
 				"MVL.2"
 			  ],
 			  "taxonConfidence": "MY.taxonConfidenceSure",
-			  "images": [],
+			  "images": [
+				"MM.89524"
+			  ],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				},
+			  "dateBegin": "2012-07-02",
+			  "dateEnd": "2012-07-04"
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [
+				"MM.89524"
+			  ],
 			  "identifications": [
 				{
 				  "taxon": "ass",
@@ -1649,6 +1664,21 @@
 				"coordinates": [
 				  27.170841451122595,
 				  64.54526624516768
+				]
+			  }
+			]
+		  }
+		},
+		{
+		  "images": [],
+		  "geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+			  {
+				"type": "Point",
+				"coordinates": [
+				  26.170841451122595,
+				  63.54526624516768
 				]
 			  }
 			]
