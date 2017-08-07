@@ -7,7 +7,6 @@ import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/
 import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
-import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
 
 const headerFormatters = {
@@ -79,10 +78,6 @@ const popupMappers = {
 
 		return Promise.all(
 			identifications.map(identification =>
-				identification.taxonID ?
-					new ApiClient().fetchCached(`/taxa/${identification.taxonID}`).then(({vernacularName, scientificName}) => {
-						return vernacularName || scientificName || identification.taxon;
-					}) : 
 					new Promise(resolve => resolve(identification.taxon))
 			)
 		).then(result => {
@@ -119,10 +114,18 @@ export default class SingleActiveArrayField extends Component {
 		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
+	componentDidMount() {
+		this.updatePopups(this.props);
+	}
+
 	componentWillReceiveProps(props) {
+		this.updatePopups(props);
+	}
+
+	updatePopups = (props) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		if (popupFields) props.formData.forEach((item, idx) => {
-			this.getPopupDataPromise(idx, item).then(popupData => {
+			this.getPopupDataPromise(idx, props, item).then(popupData => {
 				this.setState({popups: {...this.state.popups, [idx]: popupData}});
 			});
 		});
@@ -227,15 +230,15 @@ export default class SingleActiveArrayField extends Component {
 		}
 	}
 
-	getPopupDataPromise = (idx, itemFormData) => {
-		const {popupFields} = getUiOptions(this.props.uiSchema);
+	getPopupDataPromise = (idx, props, itemFormData) => {
+		const {popupFields} = getUiOptions(props.uiSchema);
 
 		if (!this.props.formData) return new Promise(resolve => resolve({}));
 
 		return Promise.all(popupFields.map(field => {
 			const fieldName = field.field;
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
-			let fieldSchema = this.props.schema.items.properties;
+			let fieldSchema = props.schema.items.properties;
 
 			if (field.mapper && fieldData) {
 				return popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
