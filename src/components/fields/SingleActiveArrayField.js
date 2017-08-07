@@ -491,6 +491,7 @@ class TableArrayFieldTemplate extends Component {
 		if (order) cols = orderProperties(cols, order.filter(field => field === "*" || foundProps[field]));
 
 		const that = this.props.formContext.this;
+		const {registry, errorSchema} = that.props;
 		const activeIdx = that.state.activeIdx;
 
 		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
@@ -498,7 +499,6 @@ class TableArrayFieldTemplate extends Component {
 		const formatValue = (item, col) => {
 			const val = item[col];
 			const _schema = schema.items.properties[col];
-			const {registry} = that.props;
 			const _uiSchema = uiSchema.items[col] || getNestedTailUiSchema(uiSchema.items)[col] || {};
 
 			let formatterComponent = undefined;
@@ -555,9 +555,10 @@ class TableArrayFieldTemplate extends Component {
 					) : null}
 					<tbody>
 						{items.map((item, idx) => {
-							const className = (idx === activeIdx) ?
+							let className = (idx === activeIdx) ?
 								"single-active-array-table-hidden" : // We hide the active row from table, but render it to keep table layout steady.
 								undefined;
+							if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 							return [
 								<tr key={idx} onClick={changeActive(idx)} className={className}>
 									{[
