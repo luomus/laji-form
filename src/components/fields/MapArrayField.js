@@ -27,15 +27,15 @@ const popupMappers = {
 
 function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
-			.filter(geometry => geometry)
-			.reduce((geometries, _geometry) => {
-				if (geometry.type === "GeometryCollection") {
-					geometries = [...geometries, ...parseGeometries(_geometry)];
-				} else if ("type" in geometry) {
-					geometries.push(geometry);
-				}
-				return geometries;
-			}, []);
+		.filter(geometry => geometry)
+		.reduce((geometries, _geometry) => {
+			if (geometry.type === "GeometryCollection") {
+				geometries = [...geometries, ...parseGeometries(_geometry)];
+			} else if ("type" in geometry) {
+				geometries.push(geometry);
+			}
+			return geometries;
+		}, []);
 }
 
 @BaseComponent
@@ -815,19 +815,19 @@ class MapComponent extends Component {
 			<MapPanel bsStyle={panel.bsStyle || undefined}
 			          buttonBsStyle={panel.buttonBsStyle}
 			          header={panel.header}
-								text={panel.panelTextContent} />
+			          text={panel.panelTextContent} />
 			: null;
 
 		return (
 			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
 				{controlledPanel}
 				{this.state.panel ?
-						<MapPanel show={this.state.panel}
-						          text={this.state.panelTextContent}
-						          onClick={this.state.panelButtonOnClick}
-						          buttonText={this.state.panelButtonContent}
-						          buttonBsStyle={this.state.panelButtonBsStyle}
-							/> : null
+					<MapPanel show={this.state.panel}
+					          text={this.state.panelTextContent}
+					          onClick={this.state.panelButtonOnClick}
+					          buttonText={this.state.panelButtonContent}
+					          buttonBsStyle={this.state.panelButtonBsStyle}
+					/> : null
 				}
 				<Map className={this.props.className}
 				     style={this.props.style} 
@@ -838,6 +838,8 @@ class MapComponent extends Component {
 		);
 	}
 }
+
+let singletonMap = undefined;
 
 export class Map extends Component {
 	componentDidMount() {
@@ -851,17 +853,30 @@ export class Map extends Component {
 		});
 
 		if (!this.props.hidden) {
-			this.map = new LajiMap({
-				rootElem: this.refs.map,
-				...options
-			});
-
+			this.initializeMap(options);
 			this.mountCalled = true;
 			if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
 		}
 	}
 
 	componentDidUpdate(prevProps) {
+
+		const {className, style, onComponentDidMount, hidden, singleton, ...options} = this.props; // eslint-disable-line no-unused-vars
+
+		if (this.map && options.lineTransect && "activeIdx" in options.lineTransect) {
+			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
+		}
+		delete options.lineTransect;
+
+		this.setOptions(prevProps, options);
+
+		if (!hidden && !this.map) {
+			this.initializeMap(options);
+			if (onComponentDidMount) onComponentDidMount(this.map);
+		}
+	}
+
+	setOptions = (prevOptions, options) => {
 		function filterFunctions(original) {
 			if (typeof original === "function") return undefined;
 			else if (Array.isArray(original)) return original.map(filterFunctions);
@@ -878,35 +893,43 @@ export class Map extends Component {
 			}, {});
 		}
 
-		const {className, style, onComponentDidMount, hidden, ...options} = this.props; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, hidden, singleton, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
 			style: prevStyle,  // eslint-disable-line no-unused-vars
 			onComponentDidMount: prevOnComponentDidMount,  // eslint-disable-line no-unused-vars
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
-			...prevOptions
-		} = prevProps; // eslint-disable-line no-unused-vars
+			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
+			..._prevOptions
+		} = prevOptions; // eslint-disable-line no-unused-vars
+	
 
-		if (this.map && options.lineTransect && "activeIdx" in options.lineTransect) {
-			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
-		}
-		delete options.lineTransect;
-
-		if (this.map) Object.keys(options).forEach(key => {
-			if (!deepEquals(...[options, prevOptions].map(_options => filterFunctions(_options)[key]))) {
-				if (options[key] !== prevOptions[key]) {
-					this.map.setOption(key, options[key]);
+		if (this.map) Object.keys(_options).forEach(key => {
+			if (!deepEquals(...[_options, _prevOptions].map(__options => filterFunctions(__options)[key]))) {
+				if (_options[key] !== _prevOptions[key]) {
+					this.map.setOption(key, _options[key]);
 				}
 			}
 		});
+	}
 
-		if (!hidden && !this.mountCalled) {
-			this.mountCalled = true;
+	initializeMap = (options) => {
+		if (this.props.singleton) {
+			if (!singletonMap) {
+				singletonMap = new LajiMap({
+					rootElem: this.refs.map,
+					...options
+				});
+				this.map = singletonMap;
+			} else {
+				this.map = singletonMap;
+				this.setOptions(singletonMap.getOptions(), {...options, rootElem: this.refs.map});
+			}
+		} else {
 			this.map = new LajiMap({
 				rootElem: this.refs.map,
 				...options
 			});
-			if (onComponentDidMount) onComponentDidMount(this.map);
 		}
 	}
 

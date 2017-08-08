@@ -149,7 +149,7 @@ const buttonSettings = {
 		const {translations} = that.props.formContext;
 		const overlay = hasCoordinates ? (
 			<Popover id={`${id}-$tooltip-${glyph}`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} />
+				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true}/>
 			</Popover>
 		) : (
 			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
@@ -289,7 +289,7 @@ export default class ScopeField extends Component {
 						<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<Map {...this.state.modalMap} />
+						<Map {...this.state.modalMap} singleton={true} />
 					</Modal.Body>
 				</Modal>
 			);
