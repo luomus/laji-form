@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import update from "immutability-helper";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
@@ -22,19 +22,9 @@ export default class ImageArrayField extends Component {
 		this._context = new Context("IMAGE_ARRAY_FIELD");
 		if (!this._context.metadatas) this._context.metadatas = {};
 		this.mainContext = this.getContext();
+		this.state = {};
 	}
 
-
-	getStateFromProps = (props) => {
-		let imgURLs = [];
-		(props.formData || []).forEach((item, i) => {
-			this.apiClient.fetchCached("/images/" + item).then(response => {
-				if (!this.mounted) return;
-				this.setState({imgURLs: update(this.state.imgURLs, {[i]: {$set: response.squareThumbnailURL}})});
-			});
-		});
-		return {imgURLs};
-	}
 
 	componentDidMount() {
 		this.mounted = true;
@@ -95,14 +85,12 @@ export default class ImageArrayField extends Component {
 	}
 
 	renderImgs = () => {
-		return this.state.imgURLs ?
-			this.state.imgURLs.map((dataURL, i) => (
-				<div key={i} className="img-container">
-					<a onClick={this.onImgClick(i)}><img src={dataURL} /></a>
-					<DeleteButton corner={true} translations={this.props.formContext.translations} onClick={this.onImgRmClick(i)}>✖</DeleteButton>
-				</div>
-			)) :
-			null;
+		return this.props.formData.map((item, i) => (
+			<div key={i} className="img-container">
+				<a onClick={this.onImgClick(i)}><Thumbnail id={item} /></a>
+				<DeleteButton corner={true} translations={this.props.formContext.translations} onClick={this.onImgRmClick(i)}>✖</DeleteButton>
+			</div>
+		));
 	}
 
 	onImgClick = (i) => () => {
@@ -353,5 +341,40 @@ export default class ImageArrayField extends Component {
 		}
 
 		return formats;
+	}
+
+	formatValue(value) {
+		return <Thumbnail id={value} />;
+	}
+}
+
+class Thumbnail extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.state = {};
+		this.updateURL(props);
+	}
+
+	componentDidMount() {
+		this.mounted = true;
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
+	componentWillReceiveProps(props) {
+		this.updateURL(props);
+	}
+
+	updateURL = ({id}) => {
+		new ApiClient().fetchCached("/images/" + id).then(response => {
+			if (!this.mounted) return;
+			this.setState({url: response.squareThumbnailURL});
+		});
+	}
+
+	render() {
+		return <img src={this.state.url} />;
 	}
 }

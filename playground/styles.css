@@ -660,12 +660,13 @@ body .laji-form {
 }
 
 .laji-form .single-active-array-table-hidden * {
-	height: 0;
-	line-height: 0;
-	margin-top: 0;
-	margin-bottom: 0;
-	padding-top: 0;
-	padding-bottom: 0;
+	height: 0 !important;
+	line-height: 0 !important;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	vertical-align: top !important;
 }
 
 .laji-form .single-active-array-table-delete {
@@ -680,6 +681,9 @@ body .laji-form {
 	width: 25px;
 	margin: 1px 0px 0px 2px;
 	line-height: 7px;
+}
+.laji-form .single-active-array-table td > img {
+	height: 15px;
 }
 
 .laji-form .row-container {

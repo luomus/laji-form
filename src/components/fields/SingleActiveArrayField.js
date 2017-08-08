@@ -7,7 +7,6 @@ import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/
 import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import Context from "../../Context";
-import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
 
 const headerFormatters = {
@@ -79,10 +78,6 @@ const popupMappers = {
 
 		return Promise.all(
 			identifications.map(identification =>
-				identification.taxonID ?
-					new ApiClient().fetchCached(`/taxa/${identification.taxonID}`).then(({vernacularName, scientificName}) => {
-						return vernacularName || scientificName || identification.taxon;
-					}) : 
 					new Promise(resolve => resolve(identification.taxon))
 			)
 		).then(result => {
@@ -119,10 +114,18 @@ export default class SingleActiveArrayField extends Component {
 		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
+	componentDidMount() {
+		this.updatePopups(this.props);
+	}
+
 	componentWillReceiveProps(props) {
+		this.updatePopups(props);
+	}
+
+	updatePopups = (props) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		if (popupFields) props.formData.forEach((item, idx) => {
-			this.getPopupDataPromise(idx, item).then(popupData => {
+			this.getPopupDataPromise(idx, props, item).then(popupData => {
 				this.setState({popups: {...this.state.popups, [idx]: popupData}});
 			});
 		});
@@ -227,15 +230,15 @@ export default class SingleActiveArrayField extends Component {
 		}
 	}
 
-	getPopupDataPromise = (idx, itemFormData) => {
-		const {popupFields} = getUiOptions(this.props.uiSchema);
+	getPopupDataPromise = (idx, props, itemFormData) => {
+		const {popupFields} = getUiOptions(props.uiSchema);
 
 		if (!this.props.formData) return new Promise(resolve => resolve({}));
 
 		return Promise.all(popupFields.map(field => {
 			const fieldName = field.field;
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
-			let fieldSchema = this.props.schema.items.properties;
+			let fieldSchema = props.schema.items.properties;
 
 			if (field.mapper && fieldData) {
 				return popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
@@ -491,6 +494,7 @@ class TableArrayFieldTemplate extends Component {
 		if (order) cols = orderProperties(cols, order.filter(field => field === "*" || foundProps[field]));
 
 		const that = this.props.formContext.this;
+		const {registry, errorSchema} = that.props;
 		const activeIdx = that.state.activeIdx;
 
 		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
@@ -498,16 +502,19 @@ class TableArrayFieldTemplate extends Component {
 		const formatValue = (item, col) => {
 			const val = item[col];
 			const _schema = schema.items.properties[col];
-			const {registry} = that.props;
 			const _uiSchema = uiSchema.items[col] || getNestedTailUiSchema(uiSchema.items)[col] || {};
 
-			let widget = undefined;
-			if (_uiSchema["ui:widget"]) widget = registry.widgets[_uiSchema["ui:widget"]];
-			else if (_schema.type === "boolean") widget = registry.widgets.CheckboxWidget;
+			let formatterComponent = undefined;
+			if (_uiSchema["ui:widget"]) formatterComponent = registry.widgets[_uiSchema["ui:widget"]];
+			else if (_schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
+			else if (_uiSchema["ui:field"]) formatterComponent = registry.fields[_uiSchema["ui:field"]];
 
 			let formatter = undefined;
-			if (widget && widget.prototype && widget.prototype.formatValue) formatter = widget.prototype.formatValue;
-			else if (widget && widget.prototype && widget.prototype.__proto__ && widget.prototype.__proto__.formatValue) formatter = widget.prototype.__proto__.formatValue;
+			if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
+				formatter = formatterComponent.prototype.formatValue;
+			} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
+				formatter = formatterComponent.prototype.__proto__.formatValue;
+			}
 
 			if (formatter) {
 				return formatter(val, getUiOptions(_uiSchema), that.props);
@@ -541,7 +548,7 @@ class TableArrayFieldTemplate extends Component {
 			<div>
 				<TitleField title={this.props.title}/>
 				<DescriptionField description={this.props.description}/>
-				<Table hover={true} bordered={true} condensed={true}> 
+				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (
 						<thead>
 							<tr className="darker">
@@ -551,9 +558,10 @@ class TableArrayFieldTemplate extends Component {
 					) : null}
 					<tbody>
 						{items.map((item, idx) => {
-							const className = (idx === activeIdx) ?
+							let className = (idx === activeIdx) ?
 								"single-active-array-table-hidden" : // We hide the active row from table, but render it to keep table layout steady.
 								undefined;
+							if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 							return [
 								<tr key={idx} onClick={changeActive(idx)} className={className}>
 									{[
