@@ -3,9 +3,10 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
-import { Panel, Table } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo } from "../utils";
+import { Panel, Table, ListGroup, ListGroupItem } from "react-bootstrap";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById } from "../utils";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
+import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -82,8 +83,6 @@ class _SchemaField extends Component {
 
 	render() {
 		const props = this.functionOutputProps || this.props;
-
-		//if (this.props.uiSchema && this.props.uiSchema["ui:childFunctions"]) return <SchemaField {...props} />;
 
 		let {schema, uiSchema, registry} = props;
 
@@ -242,6 +241,44 @@ function FieldTemplate({
 	);
 }
 
+const ErrorListTemplate = (clickHandler) => ({errorSchema, schema, formContext: {translations}}) => {
+	function walkErrors(path, id, errorSchema) {
+		const {__errors, ...properties} = errorSchema;
+		let errors = (__errors || []).map(_error => {
+			const _schema = parseJSONPointer(schema, path);
+			return {
+				label: _schema.title,
+				error: _error,
+				id: id
+			};
+		});
+		Object.keys(properties).forEach(prop => {
+			let _path = path;
+			if (prop.match(/^\d+$/)) _path = `${_path}/items`;
+			else _path = `${_path}/properties/${prop}`;
+			errors = [...errors, ...walkErrors(_path, `${id}_${prop}`, errorSchema[prop])];
+		});
+		return errors;
+	}
+
+	const _errors = walkErrors("", "root", errorSchema);
+	const _clickHandler = () => clickHandler(id);
+	return (
+		<Panel className="laji-form-error-list" bsStyle="danger" header={
+			<h3>{translations.Errors}</h3>
+		}>
+			<ListGroup fill>
+				{_errors.map(({label, error, id}, i) => 
+					<ListGroupItem key={i} onClick={() => clickHandler(id)}>
+						<b>{label}:</b> {error}
+					</ListGroupItem>
+				)}
+			</ListGroup>
+		</Panel>
+	);
+};
+
+
 // Each form should have a unique id to keep Context private.
 let id = 0;
 function getNewId() {
@@ -317,6 +354,43 @@ export default class LajiForm extends Component {
 		};
 		this._context.onSettingsChange = this.onSettingsChange;
 
+		this.errorClickHandler = (id) => {
+			const idParts = id.split("_");
+
+			// Some components focus asynchronously (due to state changes etc), so we go reduce
+			// the focus handlers to a promise chain.
+			let _id = "";
+			idParts.reduce((promise, idPart) => {
+				return promise.then(() => {
+					_id = _id ? `${_id}_${idPart}` : idPart;
+					return (this.FocusHandlers[_id] || []).reduce((_promise, fn) => {
+						const status = fn(); // Either undefined or a Promise.
+						return status && status.then ? status : Promise.resolve();
+					}, Promise.resolve());
+				});
+			}, Promise.resolve()).then(() => {
+				const elem = getSchemaElementById(this._id, id);
+				elem && scrollIntoViewIfNeeded(elem);
+				elem.className = `${elem.className} highlight-error-start`;
+				this._context.setImmediate(() => {
+					if (!elem)  return;
+					elem.className = elem.className.replace("highlight-error-start", "highlight-error");
+					this._context.setTimeout(() => {
+						if (elem) elem.className = elem.className.replace(" highlight-error", "");
+					}, 200); // Should match the time in styles.
+				});
+			});
+		};
+
+		this.FocusHandlers = {};
+		this._context.addFocusHandler = (id, fn) => {
+			if (!this.FocusHandlers[id]) this.FocusHandlers[id] = [];
+			this.FocusHandlers[id].push(fn);
+		};
+		this._context.removeFocusHandler = (id, fn) => {
+			this.FocusHandlers[id] = this.FocusHandlers[id].filter(_fn => fn !== _fn);
+		};
+
 		this._context.setImmediate = this.setImmediate;
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
@@ -381,6 +455,7 @@ export default class LajiForm extends Component {
 					widgets={widgets}
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
+					ErrorList={ErrorListTemplate(this.errorClickHandler)}
 					formContext={{
 						translations,
 						lang: this.props.lang,

@@ -617,15 +617,21 @@ body .laji-form {
     border-top-left-radius: 1px;
     border-bottom-left-radius: 1px;
 }
-.laji-form .shortcut-help {
+.laji-form .laji-form-error-list, .laji-form .shortcut-help {
 	position: fixed;
-	bottom: 5px;
 	z-index: 1030;
 	-webkit-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 	-moz-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 	max-height: 90%;
 	overflow: auto;
+}
+.laji-form .laji-form-error-list {
+	top: 5px;
+	right: 5px;
+}
+.laji-form .shortcut-help {
+	bottom: 5px;
 }
 .laji-form .hidden {
 	display: none;
@@ -688,4 +694,17 @@ body .laji-form {
 
 .laji-form .row-container {
 	margin-bottom: 7px;
+}
+
+.laji-form .highlight-error-start {
+	background-color: #ebccd1;
+	border-radius: 2px;
+}
+
+.laji-form .highlight-error {
+	background-color: inherit;
+	border-radius: 2px;
+	transition: background-color 200ms linear;
+	-webkit-transition: background-color 200ms linear;
+	-ms-transition: background-color 200ms linear;
 }

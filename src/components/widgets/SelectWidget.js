@@ -11,6 +11,14 @@ import BaseComponent from "../BaseComponent";
 @BaseComponent
 class SelectWidget extends Component {
 
+	componentDidMount() {
+		this.getContext().addFocusHandler(this.props.id, this.onFocus);
+	}
+
+	componentWillUnmount() {
+		this.getContext().removeFocusHandler(this.props.id, this.onFocus);
+	}
+
 	getStateFromProps(props) {
 		let {options: {enumOptions}} = props;
 		if (enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {

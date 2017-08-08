@@ -25,6 +25,18 @@ export default class DateTimeWidget extends Component {
 		momentLocalizer(moment);
 	}
 
+	componentDidMount() {
+		this.getContext().addFocusHandler(this.props.id, this.focus);
+	}
+
+	componentWillUnmount() {
+		this.getContext().removeFocusHandler(this.props.id, this.focus);
+	}
+
+	focus = () => {
+		this.dateTimePickerRef.focus();
+	}
+
 	getStateFromProps(props) {
 		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
@@ -93,7 +105,7 @@ export default class DateTimeWidget extends Component {
 	}
 
 	render() {
-		const {value, readonly} = this.props;
+		const {value, readonly, id} = this.props;
 		const {translations} = this.props.formContext;
 
 		const onChange = value => {
@@ -110,7 +122,9 @@ export default class DateTimeWidget extends Component {
 			this.timeWritten = false;
 		};
 
+		const getRef = (elem) => { this.dateTimePickerRef = elem; };
 		const datePicker = (<DateTimePicker
+			ref={getRef}
 			calendar={this.state.calendar}
 			time={this.state.time}
 			format={this.state.inputFormat}

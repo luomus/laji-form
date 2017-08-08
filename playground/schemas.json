@@ -306,6 +306,7 @@
 				"/mapOptions/tileLayerOpacity"
 			],
 			"ui:options": {
+				"activeIdx": 1,
 				"geometryField": "geometry",
 				"geometryMapper": "units",
 				"topOffset": 50,
@@ -318,7 +319,7 @@
 				},
 				"popupFields": [
 					{
-						"mapper": "unitTaxon"
+						"field": "taxon"
 					},
 					{
 						"field": "sex"
@@ -459,7 +460,6 @@
 					},
 					"ui:field": "SingleActiveArrayField",
 					"ui:options": {
-						"initialActiveIdx": null,
 						"renderer": "table",
 						"normalRenderingTreshold": "sm",
 						"confirmDelete": true,
@@ -503,12 +503,12 @@
 							"ui:options": {
 								"autosuggestField": "taxon",
 								"allowNonsuggestedValue": true,
-								"suggestionInputField": "/identifications/taxon",
-								"suggestionValueField": "/identifications/taxonID",
+								"suggestionInputField": "identifications_0_taxon",
+								"suggestionValueField": "identifications_0_taxonID",
 								"suggestionReceivers": {
-									"/identifications/taxon": "value",
+									"identifications_0_taxon": "value",
 									"unitType": "$taxonGroup",
-									"/identifications/taxonID": "key"
+									"identifications_0_taxonID": "key"
 								},
 								"inputTransformer": {
 									"regexp": "^(.*)\\?$",
@@ -543,8 +543,8 @@
 								}
 							],
 							"fields": [
-								"/identifications/taxonID",
-								"/identifications/taxon",
+								"identifications_0_taxonID",
+								"identifications_0_taxon",
 								"count",
 								"notes",
 								"unitType",
@@ -556,14 +556,14 @@
 									"*": {
 										"title": "Kaikki",
 										"additionalFields": [
-											"/identifications/det",
-											"/identifications/detDate",
-											"/identifications/identificationBasis",
+											"identifications_0_det",
+											"identifications_0_detDate",
+											"identifications_0_identificationBasis",
 											"sex",
-											"/unitGathering/dateBegin",
-											"/unitGathering/dateEnd",
-											"/unitGathering/habitatIUCN",
-											"/unitGathering/habitatDescription",
+											"unitGathering_dateBegin",
+											"unitGathering_dateEnd",
+											"unitGathering_habitatIUCN",
+											"unitGathering_habitatDescription",
 											"preservation",
 											"samplingMethod",
 											"breeding"
@@ -592,7 +592,7 @@
 									"MVL.233": {
 										"title": "Sienet",
 										"additionalFields": [
-											"/unitGathering/substrate",
+											"unitGathering_substrate",
 											"substrateSpecies",
 											"smell",
 											"smellNotes",
@@ -607,42 +607,42 @@
 							"ui:field": "GridLayoutField",
 							"ui:options": {
 								"lg": {
-									"/identifications/taxonID": 2,
-									"/identifications/taxon": 2,
+									"identifications_0_taxonID": 2,
+									"identifications_0_taxon": 2,
 									"count": 2,
 									"notes": 2,
 									"unitType": 2,
 									"taxonConfidence": 2,
 									"recordBasis": 2,
-									"/identifications/identificationBasis": 2,
-									"/unitGathering/dateBegin": 3,
-									"/unitGathering/dateEnd": 3,
+									"identifications_0_identificationBasis": 2,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
 									"*": 1
 								},
 								"md": {
-									"/identifications/taxonID": 2,
-									"/identifications/taxon": 2,
+									"identifications_0_taxonID": 2,
+									"identifications_0_taxon": 2,
 									"count": 2,
 									"notes": 2,
 									"unitType": 2,
 									"taxonConfidence": 2,
 									"recordBasis": 2,
-									"/identifications/identificationBasis": 2,
-									"/unitGathering/dateBegin": 3,
-									"/unitGathering/dateEnd": 3,
-									"/identifications/detDate": 3,
+									"identifications_0_identificationBasis": 2,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
+									"identifications_0_detDate": 3,
 									"*": 1
 								},
 								"sm": {
-									"/identifications/identificationBasis": 4,
-									"/unitGathering/dateBegin": 3,
-									"/unitGathering/dateEnd": 3,
+									"identifications_0_identificationBasis": 4,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
 									"*": 2
 								},
 								"xs": 12,
 								"rows": [
 									[
-										"/identifications/taxon",
+										"identifications_0_taxon",
 										"taxonConfidence",
 										"recordBasis",
 										"count",
@@ -675,7 +675,7 @@
 						"images": {
 							"ui:field": "ImageArrayField",
 							"ui:options": {
-								"capturerVerbatimPath": "/gatheringEvent/leg"
+								"capturerVerbatimPath": "gatheringEvent_leg"
 							}
 						},
 						"unitGathering": {
@@ -1520,6 +1520,11 @@
 										"message": "@taxonValidation"
 									}
 								},
+								"taxonConfidence": {
+									"format": {
+									"pattern": "MY.taxonConfidenceUnsure"
+									}
+								},
 								"unitGathering": {
 									"properties": {
 										"dateBegin": {
@@ -1578,7 +1583,7 @@
 	  ],
 	  "%additionalFields/scopeField_gathering_unit_unitType": {
 		"MVL.2": {
-		  "/unitGathering/substrate": true
+		  "unitGathering_substrate": true
 		}
 	  }
 	},
@@ -1595,6 +1600,7 @@
 	  "secureLevel": "MX.secureLevelNone",
 	  "gatherings": [
 		{
+          "dateBegin": "2018-02-01",
 		  "images": [
 			"MM.89524"
 		  ],
@@ -1623,7 +1629,7 @@
 					62.09818109070839
 				  ]
 				},
-			  "dateBegin": "2012-07-02",
+			  "dateBegin": "2012-07-05",
 			  "dateEnd": "2012-07-04"
 			  }
 			},
@@ -1656,18 +1662,7 @@
 			  }
 			}
 		  ],
-		  "geometry": {
-			"type": "GeometryCollection",
-			"geometries": [
-			  {
-				"type": "Point",
-				"coordinates": [
-				  27.170841451122595,
-				  64.54526624516768
-				]
-			  }
-			]
-		  }
+		  "geometry": "60:25/"
 		},
 		{
 		  "images": [],

@@ -322,6 +322,11 @@
 	below: {
 		fi: "alla",
 		en: "below",
-		
-	}
+		sv: "Ange en ny plats för observationen"
+	},
+	errors: {
+		fi: "virheet",
+		en: "errors",
+		sv: "fels"
+	},
 };

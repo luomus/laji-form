@@ -53,7 +53,7 @@ export default class UiFieldMapperArrayField extends Component {
 			...props,
 			schema: props.schema.items,
 			uiSchema: props.uiSchema.items,
-			idSchema: toIdSchema(props.schema.items, `${props.idSchema.$id}_${idx}`, props.registry.definitions),
+			idSchema: props.idSchema,
 			formData: (props.formData || [])[idx],
 			errorSchema: (props.errorSchema || {})[idx] || {},
 			onChange: formData => {
@@ -87,7 +87,7 @@ export default class UiFieldMapperArrayField extends Component {
 			return {
 				..._props,
 				...state,
-				uiSchema:  {
+				uiSchema: {
 					..._props.uiSchema, 
 					...state.uiSchema,
 					"ui:functions": uiFunctions,
@@ -114,7 +114,7 @@ export default class UiFieldMapperArrayField extends Component {
 			schema,
 			uiSchema: {...props.uiSchema, items: {...props.uiSchema.items, ...templateOutput.uiSchema}},
 			formData: (props.formData || []).map((item, idx) => this.functionOutputProps[idx].formData),
-			idSchema: toIdSchema(schema, props.idSchema.$id, props.registry.definitions),
+			idSchema: templateOutput.idSchema,
 			errorSchema: Object.keys((props.errorSchema || {})).reduce((errorSchema, item, idx) => {
 				errorSchema[idx] = this.functionOutputProps[idx].errorSchema;
 				return errorSchema;

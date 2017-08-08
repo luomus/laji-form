@@ -131,13 +131,32 @@ export default class NestField extends Component {
 
 		const {nests} = options;
 
+		const nestedPropsMap = {};
+
+		const nestNames = Object.keys(nests).reduce((names, name) => {
+			names[name] = true;
+			return names;
+		}, {});
+
 		Object.keys(nests).forEach((wrapperFieldName) => {
 			const nest = nests[wrapperFieldName];
 			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, registry: props.registry}, nests[wrapperFieldName].fields, nest.title);
+			nestedPropsMap[wrapperFieldName] = nestedProps;
+
 			schema = {...schema, required: nestedProps.schema.required, properties: {...schema.properties, [wrapperFieldName]: nestedProps.schema}};
-			idSchema = {...idSchema, [wrapperFieldName]: nestedProps.idSchema};
+
+			let nestedIdSchema = nestedProps.idSchema;
+			nest.fields.forEach(field => {
+				if (nestNames[field]) {
+					nestedIdSchema[field] = nestedPropsMap[field].idSchema;
+				}
+			});
+			idSchema = {...idSchema, [wrapperFieldName]: nestedIdSchema};
+
 			errorSchema = {...errorSchema, [wrapperFieldName]: nestedProps.errorSchema};
+
 			formData = {...formData, [wrapperFieldName]: nestedProps.formData};
+
 			uiSchema = {
 				...uiSchema, [wrapperFieldName]: {
 					...(nests[wrapperFieldName] ? nests[wrapperFieldName].uiSchemaRoot : {} || {}), 

@@ -299,7 +299,7 @@ class Popup extends Component {
 	}
 }
 
-function handlesButtons(ComposedComponent) {
+function handlesButtonsAndFocus(ComposedComponent) {
 	return class SingleActiveArrayTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
 
@@ -330,11 +330,34 @@ function handlesButtons(ComposedComponent) {
 				this.childKeyHandlerId = id;
 				new Context(this.props.formContext.contextId).addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
 			}
+
+			this.removeFocusHandlers();
+			this.focusHandlers = [];
+			for (let i = 0; i < this.props.items.length; i++) {
+				this.focusHandlers.push(() => {
+					if (that.state.activeIdx !== i) return new Promise(resolve => {
+						that.onActiveChange(i, callback => resolve());
+					});
+				});
+				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
+			}
+
+			this.prevLength = this.props.items.length;
+		}
+
+		removeFocusHandlers() {
+			const that = this.props.formContext.this;
+			if (this.focusHandlers) {
+				this.focusHandlers.forEach((handler, i) => {
+					new Context(this.props.formContext.contextId).removeFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
+				});
+			}
 		}
 
 		componentWillUnmount() {
 			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
+			this.removeFocusHandlers();
 			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
@@ -347,7 +370,7 @@ const ButtonsWrapper = ({props}) => {
 	return <div>{getButtons(buttons, props)}</div>;
 };
 
-@handlesButtons
+@handlesButtonsAndFocus
 class AccordionArrayFieldTemplate extends Component {
 	render() {
 		const that = this.props.formContext.this;
@@ -377,7 +400,7 @@ class AccordionArrayFieldTemplate extends Component {
 	}
 }
 
-@handlesButtons
+@handlesButtonsAndFocus
 class PagerArrayFieldTemplate extends Component {
 	render() {
 		const that = this.props.formContext.this;
@@ -419,7 +442,7 @@ class PagerArrayFieldTemplate extends Component {
 	}
 }
 
-@handlesButtons
+@handlesButtonsAndFocus
 class UncontrolledArrayFieldTemplate extends Component {
 	render() {
 		const that = this.props.formContext.this;
@@ -430,7 +453,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 	}
 }
 
-@handlesButtons
+@handlesButtonsAndFocus
 class TableArrayFieldTemplate extends Component {
 
 	constructor(props) {
