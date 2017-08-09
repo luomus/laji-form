@@ -243,13 +243,17 @@ function FieldTemplate({
 	);
 }
 
-const ErrorListTemplate = (that, clickHandler) => class ErrorListTemplate extends Component {
+class ErrorListTemplate extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {expanded: true, popped: true};
 	}
+
 	render() {
-		const	{errorSchema, schema, formContext: {translations}} = this.props;
+		const	{errorSchema, schema, formContext: {translations, contextId}} = this.props;
+		const that = new Context(contextId).formInstance;
+		const clickHandler = that.errorClickHandler;
+
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;
 			let errors = (__errors || []).map(_error => {
@@ -313,7 +317,7 @@ const ErrorListTemplate = (that, clickHandler) => class ErrorListTemplate extend
 			</Panel>
 		);
 	}
-};
+}
 
 
 // Each form should have a unique id to keep Context private.
@@ -343,6 +347,7 @@ export default class LajiForm extends Component {
 		this.translations = this.constructTranslations();
 		this._id = getNewId();
 		this._context = new Context(this._id);
+		this._context.formInstance = this;
 		this.propagateSubmit = true;
 
 		this.blockingLoaderCounter = 0;
@@ -510,7 +515,7 @@ export default class LajiForm extends Component {
 					widgets={widgets}
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
-					ErrorList={ErrorListTemplate(this, this.errorClickHandler)}
+					ErrorList={ErrorListTemplate}
 					formContext={{
 						translations,
 						lang: this.props.lang,
