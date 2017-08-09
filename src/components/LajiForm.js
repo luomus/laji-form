@@ -272,14 +272,19 @@ const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Comp
 		const _errors = walkErrors("", "root", errorSchema);
 		const collapseToggle = () => this.setState({expanded: !this.state.expanded});
 		return (
-			<Panel collapsible expanded={this.state.expanded} className="laji-form-clickable-panel laji-form-error-list" bsStyle="danger" header={
+			<Panel collapsible expanded={this.state.expanded} 
+				className="laji-form-clickable-panel laji-form-error-list" 
+				bsStyle="danger" 
+				header={
 				<div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
 					<div className="panel-title">
 						{translations.Errors}
 						<span className="pull-right"><Glyphicon glyph={this.state.expanded ? "minus" : "plus"} /></span>
 					</div>
 				</div>
-			}>
+				}
+				footer={translations.ErrorFooter}
+			>
 				<ListGroup fill>
 					{_errors.map(({label, error, id}, i) =>  {
 						const _clickHandler = () => clickHandler(id);
