@@ -282,6 +282,7 @@ class ErrorListTemplate extends Component {
 		};
 		const refresh = () => {
 			that.submit(!"don`t propagate");
+  		if (!this.state.expanded) this.setState({expanded: true});
 		};
 
 		return (
