@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { Button, Label, Help } from "./components";
+import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById } from "../utils";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
@@ -246,7 +246,7 @@ function FieldTemplate({
 const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {expanded: true};
+		this.state = {expanded: true, popped: true};
 	}
 	render() {
 		const	{errorSchema, schema, formContext: {translations}} = this.props;
@@ -271,15 +271,22 @@ const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Comp
 
 		const _errors = walkErrors("", "root", errorSchema);
 		const collapseToggle = () => this.setState({expanded: !this.state.expanded});
+		const poppedToggle = (e) => {
+			e.stopPropagation();
+			this.setState({popped: !this.state.popped});
+		}
 		return (
 			<Panel collapsible expanded={this.state.expanded} 
-				className="laji-form-clickable-panel laji-form-error-list" 
+				className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}`}
 				bsStyle="danger" 
 				header={
 				<div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
 					<div className="panel-title">
 						{translations.Errors}
-						<span className="pull-right"><Glyphicon glyph={this.state.expanded ? "minus" : "plus"} /></span>
+						<span className="pull-right">
+							<GlyphButton glyph={this.state.expanded ? "minus" : "plus"} bsStyle="link" />
+							<GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} />
+						</span>
 					</div>
 				</div>
 				}
@@ -514,7 +521,7 @@ export default class LajiForm extends Component {
 			</Form>
 			<div ref={this.getBlockerRef} className="blocking-loader" />
 			{shortcuts ? 
-					<Panel ref={this.getPanelRef} className="shortcut-help z-depth-3 hidden" bsStyle="info" header={
+					<Panel ref={this.getPanelRef} className="shortcut-help laji-form-popped z-depth-3 hidden" bsStyle="info" header={
 						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
 					}>
 					<Table fill>

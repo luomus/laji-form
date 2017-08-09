@@ -616,7 +616,7 @@ body .laji-form {
     border-top-left-radius: 1px;
     border-bottom-left-radius: 1px;
 }
-.laji-form .laji-form-error-list, .laji-form .shortcut-help {
+.laji-form .laji-form-popped {
 	position: fixed;
 	z-index: 1030;
 	-webkit-box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
@@ -629,9 +629,11 @@ body .laji-form {
 	top: 5px;
 	right: 5px;
 }
-.laji-form-error-list .glyphicon {
+.laji-form-error-list .laji-form-error-list-expand {
 	font-size: 12px;
-	padding-left: 10px;
+}
+.laji-form .laji-form-error-list .pull-right > * {
+	margin-left: 5px;
 }
 
 .laji-form .shortcut-help {
