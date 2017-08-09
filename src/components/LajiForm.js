@@ -236,7 +236,9 @@ function FieldTemplate({
 					null
 				}
 			</div>
-			{errors}
+			<div id={`laji-form-error-container-${id}`}>
+				{errors}
+			</div>
 		</div>
 	);
 }
@@ -385,8 +387,10 @@ export default class LajiForm extends Component {
 					}, Promise.resolve());
 				});
 			}, Promise.resolve()).then(() => {
-				const elem = getSchemaElementById(this._id, id);
-				elem && scrollIntoViewIfNeeded(elem);
+				const container = getSchemaElementById(this._id, id);
+				const elem = document.querySelector(`#laji-form-error-container-${id}`) || container;
+				if (!elem) return;
+				scrollIntoViewIfNeeded(elem);
 				elem.className = `${elem.className} highlight-error-start`;
 				this._context.setImmediate(() => {
 					if (!elem)  return;

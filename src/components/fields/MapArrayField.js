@@ -247,7 +247,11 @@ export default class MapArrayField extends Component {
 			popupOnHover: true,
 			onFocusGrab: onFocusGrab,
 			onFocusRelease: onFocusRelease,
-			panel: errors ? {header: this.props.formContext.translations.Error, panelTextContent: errors, bsStyle: "danger"} : null,
+			panel: errors ? {
+				header: this.props.formContext.translations.Error,
+				panelTextContent: <div id={`laji-form-error-container-${this.props.idSchema.$id}_${activeIdx}_${geometryField}`}>{errors}</div>,
+				bsStyle: "danger"
+			} : null,
 			draw: false,
 			controlSettings: true,
 			onOptionsChanged: onOptionsChanged,
@@ -947,7 +951,7 @@ class MapPanel extends Component {
 		return (
 			<div className="pass-block">
 				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header}>
-					<div>{this.props.text}</div>
+					{this.props.text}
 					{this.props.buttonText ?
 						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 						null
