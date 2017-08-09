@@ -201,8 +201,6 @@ const lajiForm = new LajiForm({
 	onSettingsChange: console.info
 });
 
-lajiForm.submit();
-
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 
 if (SCHEMA_ID !== undefined) {

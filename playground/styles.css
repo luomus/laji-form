@@ -517,13 +517,12 @@ body .laji-form {
 	height: 25px;
 	line-height: 12.5px;
 }
-
-.laji-form .laji-form-accordion-header {
+.laji-form .laji-form-clickable-panel-header {
 	padding: 10px 15px;
 	cursor: pointer;
 	color: rgb(51, 51, 51);
 }
-.laji-form .laji-form-single-active-array .panel-heading, .laji-form .pager {
+.laji-form .laji-form-clickable-panel .panel-heading, .laji-form .pager {
 	padding: 0;
 	margin: 0;
 }
@@ -630,6 +629,11 @@ body .laji-form {
 	top: 5px;
 	right: 5px;
 }
+.laji-form-error-list .glyphicon {
+	font-size: 12px;
+	padding-left: 10px;
+}
+
 .laji-form .shortcut-help {
 	bottom: 5px;
 }

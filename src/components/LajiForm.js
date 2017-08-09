@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help } from "./components";
-import { Panel, Table, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById } from "../utils";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
@@ -241,41 +241,57 @@ function FieldTemplate({
 	);
 }
 
-const ErrorListTemplate = (clickHandler) => ({errorSchema, schema, formContext: {translations}}) => {
-	function walkErrors(path, id, errorSchema) {
-		const {__errors, ...properties} = errorSchema;
-		let errors = (__errors || []).map(_error => {
-			const _schema = parseJSONPointer(schema, path);
-			return {
-				label: _schema.title,
-				error: _error,
-				id: id
-			};
-		});
-		Object.keys(properties).forEach(prop => {
-			let _path = path;
-			if (prop.match(/^\d+$/)) _path = `${_path}/items`;
-			else _path = `${_path}/properties/${prop}`;
-			errors = [...errors, ...walkErrors(_path, `${id}_${prop}`, errorSchema[prop])];
-		});
-		return errors;
+const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {expanded: true};
 	}
+	render() {
+		const	{errorSchema, schema, formContext: {translations}} = this.props;
+		function walkErrors(path, id, errorSchema) {
+			const {__errors, ...properties} = errorSchema;
+			let errors = (__errors || []).map(_error => {
+				const _schema = parseJSONPointer(schema, path);
+				return {
+					label: _schema.title,
+					error: _error,
+					id: id
+				};
+			});
+			Object.keys(properties).forEach(prop => {
+				let _path = path;
+				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
+				else _path = `${_path}/properties/${prop}`;
+				errors = [...errors, ...walkErrors(_path, `${id}_${prop}`, errorSchema[prop])];
+			});
+			return errors;
+		}
 
-	const _errors = walkErrors("", "root", errorSchema);
-	const _clickHandler = () => clickHandler(id);
-	return (
-		<Panel className="laji-form-error-list" bsStyle="danger" header={
-			<h3>{translations.Errors}</h3>
-		}>
-			<ListGroup fill>
-				{_errors.map(({label, error, id}, i) => 
-					<ListGroupItem key={i} onClick={() => clickHandler(id)}>
-						<b>{label}:</b> {error}
-					</ListGroupItem>
-				)}
-			</ListGroup>
-		</Panel>
-	);
+		const _errors = walkErrors("", "root", errorSchema);
+		const collapseToggle = () => this.setState({expanded: !this.state.expanded});
+		return (
+			<Panel collapsible expanded={this.state.expanded} className="laji-form-clickable-panel laji-form-error-list" bsStyle="danger" header={
+				<div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
+					<div className="panel-title">
+						{translations.Errors}
+						<span className="pull-right"><Glyphicon glyph={this.state.expanded ? "minus" : "plus"} /></span>
+					</div>
+				</div>
+			}>
+				<ListGroup fill>
+					{_errors.map(({label, error, id}, i) =>  {
+						const _clickHandler = () => clickHandler(id);
+						return (
+							<ListGroupItem key={i} onClick={_clickHandler}>
+								<b>{label}:</b> {error}
+							</ListGroupItem>
+						);
+					}
+					)}
+				</ListGroup>
+			</Panel>
+		);
+	}
 };
 
 
