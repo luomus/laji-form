@@ -243,7 +243,7 @@ function FieldTemplate({
 	);
 }
 
-const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Component {
+const ErrorListTemplate = (that, clickHandler) => class ErrorListTemplate extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {expanded: true, popped: true};
@@ -270,11 +270,16 @@ const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Comp
 		}
 
 		const _errors = walkErrors("", "root", errorSchema);
+
 		const collapseToggle = () => this.setState({expanded: !this.state.expanded});
 		const poppedToggle = (e) => {
 			e.stopPropagation();
 			this.setState({popped: !this.state.popped});
-		}
+		};
+		const refresh = () => {
+			that.submit(!"don`t propagate");
+		};
+
 		return (
 			<Panel collapsible expanded={this.state.expanded} 
 				className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}`}
@@ -290,7 +295,9 @@ const ErrorListTemplate = (clickHandler) => class ErrorListTemplate extends Comp
 					</div>
 				</div>
 				}
-				footer={translations.ErrorFooter}
+				footer={
+					<Button onClick={refresh}><Glyphicon glyph="refresh" /> {translations.RefreshErrors}</Button>
+				}
 			>
 				<ListGroup fill>
 					{_errors.map(({label, error, id}, i) =>  {
@@ -336,6 +343,7 @@ export default class LajiForm extends Component {
 		this.translations = this.constructTranslations();
 		this._id = getNewId();
 		this._context = new Context(this._id);
+		this.propagateSubmit = true;
 
 		this.blockingLoaderCounter = 0;
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
@@ -497,11 +505,12 @@ export default class LajiForm extends Component {
 					{...this.props}
 					ref={this.getRef}
 					onChange={this.onChange}
+					onSubmit={this.onSubmit}
 					fields={fields}
 					widgets={widgets}
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
-					ErrorList={ErrorListTemplate(this.errorClickHandler)}
+					ErrorList={ErrorListTemplate(this, this.errorClickHandler)}
 					formContext={{
 						translations,
 						lang: this.props.lang,
@@ -547,8 +556,14 @@ export default class LajiForm extends Component {
 		);
 	}
 
-	submit = () => {
+	onSubmit = (...props) => {
+		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
+	}
+
+	submit = (propagate = true) => {
+		this.propagateSubmit = propagate;
 		this.formRef.onSubmit({preventDefault: () => {}});
+		this.propagateSubmit = true;
 	}
 
 	dismissHelp = (e) => {

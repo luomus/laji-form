@@ -329,9 +329,9 @@
 		en: "errors",
 		sv: "fels"
 	},
-	errorFooter: {
-		fi: "koita tallettaa lomake uudestaan päivittääksesi virhelistan",
-		en: "try to save the form again in order to refresh the error list",
-		sv: "försök att spara formuläret igen för att uppdatera fellistan"
+	refreshErrors: {
+		fi: "Päivitä virheet",
+		en: "Refresh the errors",
+		sv: "Uppdatera felen"
 	},
 };
