@@ -394,16 +394,30 @@ export default class LajiForm extends Component {
 			}, Promise.resolve()).then(() => {
 				const container = getSchemaElementById(this._id, id);
 				const elem = document.querySelector(`#laji-form-error-container-${id}`) || container;
+				const input = document.querySelector(`#${id}`);
+
+				if (input) input.focus();
+
 				if (!elem) return;
+
 				scrollIntoViewIfNeeded(elem);
-				elem.className = `${elem.className} highlight-error-start`;
-				this._context.setImmediate(() => {
-					if (!elem)  return;
-					elem.className = elem.className.replace("highlight-error-start", "highlight-error");
+
+				let timeout = undefined;
+				const flash = (count = 1) => {
+					if (count <= 0) return;
+					elem.className = `${elem.className} highlight-error-start`;
 					this._context.setTimeout(() => {
-						if (elem) elem.className = elem.className.replace(" highlight-error", "");
-					}, 200); // Should match the time in styles.
-				});
+						if (!elem)  return;
+						elem.className = elem.className.replace("highlight-error-start", "highlight-error");
+						if (timeout) this._context.clearTimeout(timeout);
+						timeout = this._context.setTimeout(() => {
+							if (elem) elem.className = elem.className.replace(" highlight-error", "");
+							count = count - 1;
+							flash(count);
+						}, 300);
+					}, 50);
+				};
+				flash(2);
 			});
 		};
 

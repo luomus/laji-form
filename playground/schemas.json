@@ -1492,6 +1492,11 @@
 		"gatherings": {
 			"items": {
 				"properties": {
+					"notes": {
+						"format": {
+							"pattern": "sdlfkj"
+						}
+					},
 					"dateBegin": {
 						"datetime": {
 							"latest": "now",
@@ -1600,6 +1605,7 @@
 	  "secureLevel": "MX.secureLevelNone",
 	  "gatherings": [
 		{
+				"notes": "test",
           "dateBegin": "2018-02-01",
 		  "images": [
 			"MM.89524"
