@@ -43,7 +43,7 @@ class _SchemaField extends Component {
 	}
 
 	applyFunction = (props) => {
-		let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
+		let {"ui:functions": functions, "ui:childFunctions": childFunctions, ..._uiSchema} = (props.uiSchema || {});
 
 		const objectOrArrayAsArray = item => (
 			item ? 
@@ -62,23 +62,13 @@ class _SchemaField extends Component {
 
 		if (!functions) return props;
 
-		const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
-			_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions, uiSchema: undefined}};
-			const {state = {}} = new props.registry.fields[uiField](_props);
+		const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, uiFn) => {
+			_props = {..._props, uiSchema: {...uiFn, uiSchema: _props.uiSchema}};
+			const {state = {}} = new props.registry.fields[uiFn["ui:field"]](_props);
 			return {..._props, ...state};
-		}, {...props, formContext: props.registry.formContext});
+		}, {...props, uiSchema: _uiSchema, formContext: props.registry.formContext});
 
-		return {
-			...computedProps,
-			uiSchema: {
-				...computedProps.uiSchema,
-				"ui:functions": undefined,
-				"ui:childFunctions": undefined,
-				"ui:field": props.uiSchema["ui:field"],
-				"ui:options": props.uiSchema["ui:options"],
-				uiSchema: props.uiSchema.uiSchema
-			}
-		};
+		return computedProps;
 	}
 
 	render() {

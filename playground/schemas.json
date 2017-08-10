@@ -175,30 +175,32 @@
 												"specialRules": "legEditors"
 											},
 											"items": {
-												"ui:field": "ContextInjectionField",
-												"ui:options": {
-													"injections": {
-														"/ui:options/rules/0/regexp": "/creator"
-													}
-												},
-												"uiSchema": {
-													"ui:field": "DependentDisableField",
-													"ui:options": {
-														"rules": [
-															{
-																"disableDefiner": "leg",
-																"disableField": "editors",
-																"regexp": "creator is injected here",
-																"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
-																"disabledValueToDisplay": true
-															},
-															{
-																"disableDefiner": "leg",
-																"disableField": "editors",
-																"regexp": "^((?!(MA\\.\\d)).)*$"
+												"ui:functions": [
+													{
+														"ui:field": "ContextInjectionField",
+														"ui:options": {
+															"injections": {
+																"/ui:options/rules/0/regexp": "/creator"
 															}
-														]
+														}
 													}
+												],
+												"ui:field": "DependentDisableField",
+												"ui:options": {
+													"rules": [
+														{
+															"disableDefiner": "leg",
+															"disableField": "editors",
+															"regexp": "creator is injected here",
+															"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+															"disabledValueToDisplay": true
+														},
+														{
+															"disableDefiner": "leg",
+															"disableField": "editors",
+															"regexp": "^((?!(MA\\.\\d)).)*$"
+														}
+													]
 												}
 											}
 										}

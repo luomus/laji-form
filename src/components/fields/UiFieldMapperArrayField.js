@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { toIdSchema, deepEquals } from  "react-jsonschema-form/lib/utils";
+import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -52,7 +52,7 @@ export default class UiFieldMapperArrayField extends Component {
 		return {
 			...props,
 			schema: props.schema.items,
-			uiSchema: props.uiSchema.items,
+			uiSchema: props.uiSchema.uiSchema.items,
 			idSchema: props.idSchema,
 			formData: (props.formData || [])[idx],
 			errorSchema: (props.errorSchema || {})[idx] || {},

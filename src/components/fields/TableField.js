@@ -58,15 +58,35 @@ export default class TableField extends Component {
 			wrapperCols[col] = options[col] ? Math.min(options[col], defaultWrapperCol) : defaultWrapperCol;
 		});
 
+		const itemsSchema = schemaPropsArray.reduce((constructedSchema, prop) => {
+			constructedSchema.properties[prop] = schema.items.properties[prop];
+			return constructedSchema;
+		}, {...schema.items, properties: {}});
+
 		const itemsUiSchema = {
 			"ui:field": "GridLayoutField", 
 			"ui:options": {...cols, showLabels: false},
 		};
 
-		const itemsSchema = schemaPropsArray.reduce((constructedSchema, prop) => {
-			constructedSchema.properties[prop] = schema.items.properties[prop];
-			return constructedSchema;
-		}, {...schema.items, properties: {}});
+		let _uiSchema = uiSchema;
+
+		if (uiSchema.items) {
+			if (uiSchema.items.uiSchema) {
+				_uiSchema = {
+					..._uiSchema,
+					items: updateTailUiSchema(uiSchema.items, {$merge: {uiSchema: itemsUiSchema}})
+				};
+			} else if (uiSchema.items["ui:field"] || uiSchema.items["ui:functions"]) {
+				_uiSchema = {
+					..._uiSchema,
+					items:  {
+						..._uiSchema.items,
+						uiSchema: itemsUiSchema
+					}
+				};
+			}
+
+		}
 
 		return (
 			<ArrayField
@@ -75,12 +95,7 @@ export default class TableField extends Component {
 					...schema,
 					items: itemsSchema
 				}}
-				uiSchema={{
-					...uiSchema,
-					items: uiSchema.items && uiSchema.items["ui:field"] ? 
-					updateTailUiSchema(uiSchema.items, {$merge: {uiSchema: itemsUiSchema}}) :
-					{...(uiSchema.items || {}), ...itemsUiSchema}
-				}}
+				uiSchema={_uiSchema}
 				registry={{
 					...this.props.registry,
 					ArrayFieldTemplate: TableArrayFieldTemplate
