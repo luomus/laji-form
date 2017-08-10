@@ -270,7 +270,8 @@ class ErrorListTemplate extends Component {
 			e.stopPropagation();
 			this.setState({popped: !this.state.popped});
 		};
-		const refresh = () => {
+		const revalidate = () => {
+			const that = new Context(this.props.formContext.contextId).formInstance;
 			that.submit(!"don`t propagate");
 			if (!this.state.expanded) this.setState({expanded: true});
 		};
@@ -292,7 +293,7 @@ class ErrorListTemplate extends Component {
 				</div>
 				}
 				footer={
-					<Button onClick={refresh}><Glyphicon glyph="refresh" /> {translations.RefreshErrors}</Button>
+					<Button onClick={revalidate}><Glyphicon glyph="refresh" /> {translations.Revalidate}</Button>
 				}
 			>
 				<ListGroup fill>
@@ -357,7 +358,6 @@ export default class LajiForm extends Component {
 		};
 
 		this._context.removeKeyHandler = (_id, _keyFunctions) => {
-			//delete this._context.keyHandleListeners[id];
 			for (let i in this._context.keyHandleIdFunctions) {
 				const idFunction = this._context.keyHandleIdFunctions[i];
 				const {id, keyFunctions, handleKey} = idFunction;
@@ -589,9 +589,11 @@ export default class LajiForm extends Component {
 		navigate: (e, {reverse}) => {
 			return focusNextInput(this.formRef, e.target, reverse);
 		},
-		help: (_, {delay}) => {
-
-			if (this.helpStarted) return true;
+		help: (e, {delay}) => {
+			if (this.helpStarted) {
+				this.dismissHelp(e);
+				return false;
+			}
 
 			this.helpStarted = true;
 
@@ -606,6 +608,10 @@ export default class LajiForm extends Component {
 			this.addEventListener(document, "keyup", this.dismissHelp);
 			this.addEventListener(window, "blur", this.dismissHelp);
 			return false;
+		},
+
+		revalidate: () => {
+			this.submit(!"don`t propagate");
 		}
 	}
 

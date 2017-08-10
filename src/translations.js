@@ -329,7 +329,7 @@
 		en: "errors",
 		sv: "fels"
 	},
-	refreshErrors: {
+	revalidate: {
 		fi: "Päivitä virheet",
 		en: "Refresh the errors",
 		sv: "Uppdatera felen"

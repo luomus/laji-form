@@ -115,7 +115,11 @@
 				"fn": "insert",
 				"target": "root_gatherings",
 				"targetLabel": "paikka"
+			},
+			"alt+F5": {
+				"fn": "revalidate"
 			}
+
 		},
 		"ui:order": [
 			"gatheringEvent",
