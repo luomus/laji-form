@@ -102,12 +102,12 @@ export default class SingleActiveArrayField extends Component {
 
 	constructor(props) {
 		super(props);
+		const {formData, uiSchema, schema} = props;
 		this.deleteButtonRefs = {};
-		const options = getUiOptions(props.uiSchema);
+		const options = getUiOptions(uiSchema);
+		const formDataLength = (formData || []).length
 		this.state = {
-			activeIdx: (props.formData && props.formData.length) ? 
-				("initialActiveIdx" in options && props.formData.length !== 1) ? options.initialActiveIdx : 0
-				: undefined, 
+			activeIdx: (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx,
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
@@ -560,10 +560,11 @@ class TableArrayFieldTemplate extends Component {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
 			return (
 				<td key="delete" className="single-active-array-table-delete">
-					<DeleteButton ref={getDeleteButtonRef}
+					{this.props.items[idx].hasRemove && <DeleteButton ref={getDeleteButtonRef}
 					              confirm={confirmDelete}
 					              translations={this.props.formContext.translations}
 					              onClick={that.onDelete(idx)} />
+					}
 				</td>
 			);
 		};
