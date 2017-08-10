@@ -243,7 +243,7 @@ export default class AutoSuggestWidget extends Component {
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const unambigiousSuggestion = this.findUnambigiousSuggestion(suggestions);
 						if (!this.state.focused && unambigiousSuggestion) {
-							this.selectSuggestion(unambigiousSuggestion);
+							this.selectSuggestion({...unambigiousSuggestion, value});
 						}
 						else if (this.state.focused) state.suggestions = suggestions;
 						else state.oldSuggestions = suggestions;
@@ -332,7 +332,7 @@ export default class AutoSuggestWidget extends Component {
 			} else if (highlightedSuggestion === null && this.state.inputValue === "") {
 				this.selectSuggestion(highlightedSuggestion);
 			} else if (unambigiousSuggestion) {
-				this.selectSuggestion(unambigiousSuggestion);
+				this.selectSuggestion({...unambigiousSuggestion, value: this.state.inputValue});
 			} else {
 				this.onConfirmUnsuggested();
 			}
