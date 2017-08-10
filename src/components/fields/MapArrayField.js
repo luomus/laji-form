@@ -266,8 +266,8 @@ export default class MapArrayField extends Component {
 
 		const wrapperProps = {
 			getContainer,
-			topOffset,
-			bottomOffset,
+			topOffset: topOffset === undefined ? this.props.formContext.topOffset : topOffset,
+			bottomOffset: bottomOffset === undefined ? this.props.formContext.bottomOffset : bottomOffset,
 			onResize,
 			mounted: this.state.mounted,
 			className: this.state.focusGrabbed ? "pass-block" : ""

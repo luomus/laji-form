@@ -272,12 +272,13 @@ class ErrorListTemplate extends Component {
 		};
 		const refresh = () => {
 			that.submit(!"don`t propagate");
-  		if (!this.state.expanded) this.setState({expanded: true});
+			if (!this.state.expanded) this.setState({expanded: true});
 		};
 
 		return (
 			<Panel collapsible expanded={this.state.expanded} 
 				className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}`}
+				style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}
 				bsStyle="danger" 
 				header={
 				<div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
@@ -513,7 +514,9 @@ export default class LajiForm extends Component {
 						uiSchemaContext: this.props.uiSchemaContext,
 						settings: this.props.settings,
 						contextId: this._id,
-						getFormRef: () => this.formRef
+						getFormRef: () => this.formRef,
+						topOffset: this.props.topOffset, 
+						bottomOffset: this.props.bottomOffset
 					}}
 				  validate={validate(this.props.validators)}
 				>
@@ -526,9 +529,15 @@ export default class LajiForm extends Component {
 			</Form>
 			<div ref={this.getBlockerRef} className="blocking-loader" />
 			{shortcuts ? 
-					<Panel ref={this.getPanelRef} className="shortcut-help laji-form-popped z-depth-3 hidden" bsStyle="info" header={
-						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-					}>
+					<Panel 
+						ref={this.getPanelRef} 
+						className="shortcut-help laji-form-popped z-depth-3 hidden" 
+						style={{bottom: (this.props.bottomOffset || 0) + 5}}
+						bsStyle="info" 
+						header={
+							<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
+						}
+					>
 					<Table fill>
 						<tbody className="well">{
 							Object.keys(shortcuts).map((keyCombo, idx) => {

@@ -311,8 +311,6 @@
 				"activeIdx": 1,
 				"geometryField": "geometry",
 				"geometryMapper": "units",
-				"topOffset": 50,
-				"bottomOffset": 50,
 				"mapSizes": {
 					"lg": 4,
 					"md": 4,
