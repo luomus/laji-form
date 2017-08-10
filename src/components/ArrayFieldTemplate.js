@@ -98,7 +98,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		addKeyHandlers() {
 			const context = new Context(this.props.formContext.contextId);
 
-			context.removeKeyHandler(this.props.idSchema.$id);
+			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props
 			});
@@ -119,7 +119,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		componentWillUnmount() {
 			const context = new Context(this.props.formContext.contextId);
 
-			context.removeKeyHandler(this.props.idSchema.$id);
+			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			if (this.childKeyHandlers) {
 				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
 			}
