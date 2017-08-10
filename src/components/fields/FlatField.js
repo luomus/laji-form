@@ -130,17 +130,17 @@ export default class FlatField extends Component {
 
 	onChange(formData) {
 		const {fields} = this.getUiOptions();
-		Object.keys(formData).forEach(item => {
-			if (item.includes("_")) fields.forEach(field => {
-				if (item.includes(`${field}_`)) {
-					const newItemName = item.replace(`${field}_`, "");
+		Object.keys(formData).forEach(prop => {
+			if (prop.includes("_")) fields.forEach(field => {
+				if (prop.includes(`${field}_`)) {
 					const isArray = (this.props.schema.properties[field].type === "array");
+					const newItemName = prop.replace(`${field}_${isArray ? "0_" : ""}`, "");
 					const newItemBase = isArray ?
 						((formData[field] && formData[field][0]) ? formData[field][0] : {} || {}) :
 						(formData[field] || {});
-					const updatedItem = {...newItemBase, [newItemName]: formData[item]};
+					const updatedItem = {...newItemBase, [newItemName]: formData[prop]};
 					formData = {...formData, [field]: isArray ? [updatedItem] : updatedItem};
-					formData = immutableDelete(formData, item);
+					formData = immutableDelete(formData, prop);
 				}
 			});
 		});
