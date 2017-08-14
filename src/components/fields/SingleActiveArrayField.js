@@ -588,7 +588,7 @@ class TableArrayFieldTemplate extends Component {
 								undefined;
 							if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 							return [
-								<tr key={idx} onClick={changeActive(idx)} className={className}>
+								<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0}>
 									{[
 										...cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>),
 										getDeleteButtonFor(idx)
