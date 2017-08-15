@@ -197,6 +197,7 @@ function FieldTemplate({
 		return children;
 	}
 	const inlineHelp = uiSchema["ui:inlineHelp"];
+	const belowHelp = uiSchema["ui:belowHelp"];
 	const ids = new Context(`${formContext.contextId}_IDS`);
 	const htmlId = `_laji-form_${formContext.contextId}_${id}`;
 	let elemId = undefined;
@@ -226,6 +227,10 @@ function FieldTemplate({
 					null
 				}
 			</div>
+			{belowHelp ? 
+				<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
+				null
+			}
 			<div id={`laji-form-error-container-${id}`}>
 				{errors}
 			</div>

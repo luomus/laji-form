@@ -63,8 +63,8 @@ export default class UnitShorthandField extends Component {
 		const toggleButton = this.getToggleButton();
 
 		const tailUiSchema = getNestedTailUiSchema(uiSchema);
-		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:help"];
-		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:help": {$set: undefined}}});
+		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:belowHelp"];
+		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:belowHelp": {$set: undefined}}});
 
 		return !this.state.showSchema ? (
 				<div className="laji-form-field-template-item">
