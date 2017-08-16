@@ -421,7 +421,7 @@ export class Stretch extends Component {
 		const {children} = this.props;
 
 		const wrapperStyle = {
-			height: this.state.containerHeight,
+			height: this.state.horizontallyAligned ? this.state.containerHeight : this.props.minHeight,
 		};
 		const style = {
 			position: "relative",

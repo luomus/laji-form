@@ -243,7 +243,7 @@ export default class SingleActiveArrayField extends Component {
 			if (field.mapper && fieldData) {
 				return popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
 			} else if (fieldData) {
-				return new Promise(resolve => resolve({[fieldSchema[fieldName].title || fieldName]: fieldData}));
+				return new Promise(resolve => resolve({[fieldSchema  && fieldSchema[fieldName] ? fieldSchema[fieldName].title : fieldName]: fieldData}));
 			}
 		})).then(fields => {
 			const popupData = fields.reduce((popup, item) => {

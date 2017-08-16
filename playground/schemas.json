@@ -1,14 +1,126 @@
 {
-	"id": "MHL.3",
-	"name": "Talvilintulaskenta",
+	"id": "JX.519",
+	"name": "trip report",
 	"language": "fi",
-	"title": "Talvilintulaskenta",
-	"collectionID": "HR.39",
-	"description": "",
-	"features": [
-		"MHL.featurePrepopulateWithInformalTaxonGroups"
-	],
+	"title": "Retkilomake",
+	"description": "Tällä lomakkeella voit ilmoittaa yhden tai useamman päivän kestäneen retken kaikki havaintotiedot ja mahdollisesti kokoelmanäytteeksi otettujen yksilöiden tiedot.",
+	"instructions": {
+		"fi": "https://laji.fi/about/1107",
+		"en": "https://laji.fi/about/1107",
+		"sv": "https://laji.fi/about/1107"
+	},
 	"uiSchema": {
+		"ui:shortcuts": {
+			"alt": {
+				"fn": "help",
+				"delay": 1
+			},
+			"Enter": {
+				"fn": "navigate"
+			},
+			"shift+Enter": {
+				"fn": "navigate",
+				"reverse": true
+			},
+			"ctrl+Enter": {
+				"fn": "textareaRowInsert"
+			},
+			"alt+ ": {
+				"fn": "navigate"
+			},
+			"alt+shift+ ": {
+				"fn": "navigate",
+				"reverse": true
+			},
+			"alt+PageDown": {
+				"fn": "navigateArray",
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+PageUp": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+ArrowRight": {
+				"fn": "navigateArray",
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+ArrowLeft": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+ArrowUp": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havaintoon"
+			},
+			"alt+ArrowDown": {
+				"fn": "navigateArray",
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havaintoon"
+			},
+			"alt+h": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+j": {
+				"fn": "navigateArray",
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havaintoon"
+			},
+			"alt+k": {
+				"fn": "navigateArray",
+				"reverse": true,
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havaintoon"
+			},
+			"alt+l": {
+				"fn": "navigateArray",
+				"target": "root_gatherings",
+				"targetLabel": "paikkaan"
+			},
+			"alt+n": {
+				"fn": "navigateArray"
+			},
+			"alt+p": {
+				"fn": "navigateArray",
+				"reverse": true
+			},
+			"alt+Insert": {
+				"fn": "insert"
+			},
+			"alt+i": {
+				"fn": "insert"
+			},
+			"alt+Delete": {
+				"fn": "delete"
+			},
+			"alt+d": {
+				"fn": "delete"
+			},
+			"alt+u": {
+				"fn": "insert",
+				"target": "root_gatherings_%{root_gatherings.activeIdx}_units",
+				"targetLabel": "havainto"
+			},
+			"alt+g": {
+				"fn": "insert",
+				"target": "root_gatherings",
+				"targetLabel": "paikka"
+			},
+			"alt+F5": {
+				"fn": "revalidate"
+			}
+
+		},
 		"ui:order": [
 			"gatheringEvent",
 			"gatherings"
@@ -38,132 +150,134 @@
 						"fields": [
 							"leg",
 							"editors"
-						]
-					},
-					"eventTime": {
-						"fields": [
-							"dateBegin",
-							"dateEnd"
 						],
-						"title": ""
-					}
-				}
-			},
-			"legEditor": {
-				"ui:field": "SplitField",
-				"ui:options": {
-					"splits": [
-						{
-							"fields": [
-								"leg",
-								"editors"
-							],
-							"name": "",
-							"lg": 3,
-							"md": 4,
-							"sm": 5,
-							"uiSchema": {
-								"ui:field": "NestField",
-								"ui:options": {
-									"nests": {
-										"": {
-											"fields": [
-												"leg",
-												"editors"
+						"rootUiSchema": {
+							"ui:field": "NestField",
+							"ui:options": {
+								"nests": {
+									"_legEditor": {
+										"fields": [
+											"leg",
+											"editors"
+										],
+										"title": "",
+										"rootUiSchema": {
+											"ui:functions": [
+												{
+													"ui:field": "DependentBooleanField",
+													"ui:options": {
+														"booleanField": "editors",
+														"booleanDefiner": "leg"
+													}
+												},
+												{
+													"ui:field": "ArrayCombinerField"
+												}
 											],
-											"title": ""
-										}
-									}
-								},
-								"": {
-									"ui:field": "DependentBooleanField",
-									"ui:options": {
-										"booleanField": "editors",
-										"booleanDefiner": "leg"
-									},
-									"uiSchema": {
-										"ui:field": "ArrayCombinerField",
-										"uiSchema": {
 											"ui:field": "TableField",
 											"ui:options": {
 												"specialRules": "legEditors"
 											},
 											"items": {
-												"ui:field": "ContextInjectionField",
-												"ui:options": {
-													"injections": {
-														"/ui:options/rules/0/regexp": "/creator"
-													}
-												},
-												"uiSchema": {
-													"ui:field": "DependentDisableField",
-													"ui:options": {
-														"rules": [
-															{
-																"disableDefiner": "leg",
-																"disableField": "editors",
-																"regexp": "creator is injected here",
-																"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
-																"disabledValueToDisplay": true
-															},
-															{
-																"disableDefiner": "leg",
-																"disableField": "editors",
-																"regexp": "^((?!(MA\\.\\d)).)*$"
+												"ui:functions": [
+													{
+														"ui:field": "ContextInjectionField",
+														"ui:options": {
+															"injections": {
+																"/ui:options/rules/0/regexp": "/creator"
 															}
-														]
+														}
 													}
-												},
-												"leg": {
-													"ui:widget": "AutosuggestWidget",
-													"ui:options": {
-														"autosuggestField": "friends",
-														"allowNonsuggestedValue": true,
-														"suggestionReceive": "key",
-														"preventTypingPattern": "^MA\\.\\d+$"
-													}
-												},
-												"editors": {
-													"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
-													"ui:options": {
-														"allowUndefined": false
-													}
+												],
+												"ui:field": "DependentDisableField",
+												"ui:options": {
+													"rules": [
+														{
+															"disableDefiner": "leg",
+															"disableField": "editors",
+															"regexp": "creator is injected here",
+															"inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+															"disabledValueToDisplay": true
+														},
+														{
+															"disableDefiner": "leg",
+															"disableField": "editors",
+															"regexp": "^((?!(MA\\.\\d)).)*$"
+														}
+													]
 												}
+											}
+										}
+									},
+									"legEditorSizeFixer": {
+										"fields": [
+											"_legEditor"
+										],
+										"title": "",
+										"rootUiSchema": {
+											"ui:field": "GridLayoutField",
+											"ui:options": {
+												"lg": 3,
+												"md": 3,
+												"sm": 6,
+												"xs": 12
 											}
 										}
 									}
 								}
 							}
 						}
-					]
+					},
+					"eventTime": {
+						"fields": [
+							"dateBegin",
+							"dateEnd"
+						],
+						"title": "",
+						"rootUiSchema": {
+							"ui:field": "GridLayoutField",
+							"ui:options": {
+								"lg": {
+									"dateBegin": 3,
+									"dateEnd": 2
+								},
+								"md": {
+									"dateBegin": 4,
+									"dateEnd": 2
+								},
+								"sm": {
+									"dateBegin": 5,
+									"dateEnd": 3
+								},
+								"xs": 12
+							}
+						}
+					}
 				}
 			},
-			"eventTime": {
-				"ui:field": "GridLayoutField",
+			"leg": {
+				"ui:widget": "AutosuggestWidget",
 				"ui:options": {
-					"lg": {
-						"dateBegin": 3,
-						"dateEnd": 2
-					},
-					"md": {
-						"dateBegin": 4,
-						"dateEnd": 2
-					},
-					"sm": {
-						"dateBegin": 5,
-						"dateEnd": 3
-					},
-					"xs": 12
-				},
-				"dateBegin": {
-					"ui:widget": "DateTimeWidget",
-					"ui:options": {
-						"showButtons": true
-					}
-				},
-				"dateEnd": {
-					"ui:widget": "DateTimeWidget"
+					"autosuggestField": "friends",
+					"allowNonsuggestedValue": true,
+					"suggestionReceive": "key",
+					"preventTypingPattern": "^MA\\.\\d+$"
 				}
+			},
+			"editors": {
+				"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
+				"ui:options": {
+					"allowUndefined": false
+				}
+			},
+			"dateBegin": {
+				"ui:widget": "DateTimeWidget",
+				"ui:options": {
+					"showButtons": true
+				}
+			},
+			"dateEnd": {
+				"ui:widget": "DateTimeWidget"
 			},
 			"secureLevel": {
 				"ui:widget": "AnyToBooleanWidget",
@@ -182,700 +296,436 @@
 			}
 		},
 		"gatherings": {
-			"ui:field": "UiFieldMapperArrayField",
-			"ui:options": {
-				"functions": [
-					{
-						"ui:field": "FlatField",
-						"ui:options": {
-							"fields": [
-								"gatheringFact"
-							]
-						},
-						"uiSchema": {
-							"_propsUiSchema": []
-						}
-					},
-					{
-						"ui:field": "NestField",
-						"ui:options": {
-							"nests": {
-								"weather": {
-									"title": "",
-									"fields": [
-										"gatheringFact_meanTemperature",
-										"gatheringFact_wind",
-										"gatheringFact_visibility",
-										"gatheringFact_cloudAndRain",
-										"gatheringFact_snowCover",
-										"gatheringFact_iceCover",
-										"gatheringFact_waterbodies"
-									]
-								},
-								"berriesAndCones": {
-									"title": "",
-									"fields": [
-										"gatheringFact_sorbusBerriesEarlyFall",
-										"gatheringFact_sorbusBerriesAtCensus",
-										"gatheringFact_spruceConesAtCensus",
-										"gatheringFact_pineConesAtCensus"
-									]
-								},
-								"additionalRouteInfo": {
-									"title": "Lisätietoja laskentatulokseen vaikuttaneista tekijöistä",
-									"fields": [
-										"gatheringFact_snowAndIceOnTrees",
-										"gatheringFact_typeOfSnowCover"
-									]
-								},
-								"abundanceInfo": {
-									"title": "Marjalintuhuippu",
-									"fields": [
-										"gatheringFact_abundanceBOMGAR",
-										"gatheringFact_abundancePINENU",
-										"gatheringFact_abundanceTURPIL"
-									]
-								},
-								"routeLengthByBiotope": {
-									"title": "Reitin pituus (m)",
-									"fields": [
-										"gatheringFact_routeLengthBiotopeA",
-										"gatheringFact_routeLengthBiotopeB",
-										"gatheringFact_routeLengthBiotopeC",
-										"gatheringFact_routeLengthBiotopeD",
-										"gatheringFact_routeLengthBiotopeE",
-										"gatheringFact_routeLengthBiotopeF",
-										"gatheringFact_routeLengthBiotopeG",
-										"gatheringFact_routeLengthBiotopeH",
-										"gatheringFact_routeLength"
-									]
-								},
-								"routeLengthChangeByBiotope": {
-									"title": "Reitin muutokset (m)",
-									"fields": [
-										"gatheringFact_routeLengthChangeBiotopeA",
-										"gatheringFact_routeLengthChangeBiotopeB",
-										"gatheringFact_routeLengthChangeBiotopeC",
-										"gatheringFact_routeLengthChangeBiotopeD",
-										"gatheringFact_routeLengthChangeBiotopeE",
-										"gatheringFact_routeLengthChangeBiotopeF",
-										"gatheringFact_routeLengthChangeBiotopeG",
-										"gatheringFact_routeLengthChangeBiotopeH",
-										"gatheringFact_routeLengthChange"
-									]
-								},
-								"routeLengthAndChange": {
-									"title": "Reitin tiedot",
-									"fields": [
-										"routeLengthByBiotope",
-										"routeLengthChangeByBiotope"
-									]
-								}
-							}
-						}
-					}
-				]
-			},
-			"uiSchema": {
-				"ui:field": "MapArrayField",
-				"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
+			"ui:functions": {
+				"ui:field": "ContextInjectionField",
 				"ui:options": {
-					"geometryField": "geometry",
-					"geometryMapper": "default",
-					"topOffset": 50,
-					"bottomOffset": 50,
-					"mapSizes": {
-						"lg": 4,
-						"md": 4,
-						"sm": 6,
-						"xs": 12
-					},
-					"popupFields": [],
-					"belowFields": [
-						"routeLengthAndChange",
-						"units"
-					],
-					"belowUiSchemaRoot": [],
-					"minHeight": 435,
-					"resizeTimeout": 210
+					"injections": {
+						"/ui:options/activeIdx": "/activeGatheringIdx"
+					}
+				}
+			},
+			"ui:field": "MapArrayField",
+			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
+			"ui:settings": [
+				"/mapOptions/tileLayerName",
+				"/mapOptions/overlayNames",
+				"/mapOptions/tileLayerOpacity"
+			],
+			"ui:options": {
+				"activeIdx": 1,
+				"geometryField": "geometry",
+				"geometryMapper": "units",
+				"mapSizes": {
+					"lg": 4,
+					"md": 4,
+					"sm": 6,
+					"xs": 12
 				},
-				"uiSchema": {
-					"ui:field": "SingleItemArrayField",
-					"ui:options": {
-						"buttons": [],
-						"showButtons": false,
-						"renderDelete": false,
-						"canAdd": false,
-						"hasRemove": false
+				"popupFields": [
+					{
+						"field": "taxon"
 					},
-					"items": {
-						"ui:field": "NestField",
-						"ui:order": [
-							"*",
-							"weather",
-							"berriesAndCones",
-							"additionalRouteInfo",
-							"abundanceInfo"
+					{
+						"field": "sex"
+					},
+					{
+						"field": "notes"
+					}
+				],
+				"belowFields": ["units"],
+				"belowUiSchemaRoot": {
+					"ui:field": "SingleActiveArrayField",
+					"ui:options": {
+						"renderer": "uncontrolled"
+					}
+				},
+				"inlineUiSchemaRoot": {
+					"ui:field": "AccordionArrayField",
+					"ui:options": {
+						"addTxt": "Lisää paikka",
+						"headerFormatters": [
+							"units",
+							"locality"
 						],
-						"ui:options": {
-							"nests": {
-								"eventTime": {
-									"title": "",
-									"fields": [
-										"dateBegin",
-										"dateEnd"
-									]
-								},
-								"wayOfTravelFields": {
-									"title": "",
-									"fields": [
-										"gatheringFact_wayOfTravel",
-										"gatheringFact_wayOfTravelNotes"
-									]
-								},
-								"placeWrapper": {
-									"title": "Havaintopaikan tiedot",
-									"fields": [
-										"biologicalProvince",
-										"municipality",
-										"locality",
-										"localityDescription",
-										"habitat",
-										"images",
-										"eventTime",
-										"observationDays",
-										"wayOfTravelFields",
-										"gatheringFact_descriptionBiotopeF",
-										"gatheringFact_observerCount",
-										"gatheringFact_observerID",
-										"gatheringFact_routeID",
-										"routeLengthByBiotope",
-										"routeLengthChangeByBiotope"
-									]
+						"popupFields": [
+							{
+								"field": "units",
+								"mapper": "units"
+							},
+							{
+								"field": "localityDescription"
+							}
+						]
+					}
+				},
+				"belowUiSchemaRoot": {
+					"ui:field": "SingleActiveArrayField",
+					"ui:options": {
+						"renderer": "uncontrolled"
+					}
+				},
+				"propsToPassToInlineSchema": ["errorSchema", "formData"],
+				"minHeight": 435,
+				"resizeTimeout": 210,
+				"addButtonPath": "/items/units",
+				"removeAddButtonPath": "/",
+				"addTxt": "Lisää paikka"
+			},
+			"items": {
+				"ui:field": "NestField",
+				"ui:options": {
+					"nests": {
+						"eventTime": {
+							"title": "",
+							"fields": [
+								"dateBegin",
+								"dateEnd"
+							],
+							"uiSchemaRoot": {
+								"ui:field": "GridLayoutField",
+								"ui:options": {
+									"lg": {
+										"dateBegin": 6,
+										"dateEnd": 3
+									},
+									"md": {
+										"dateBegin": 7,
+										"dateEnd": 4
+									},
+									"sm": 12,
+									"xs": 12
 								}
 							}
 						},
 						"placeWrapper": {
-							"ui:field": "ScopeField",
-							"classNames": "well well-sm",
-							"ui:options": {
-								"includeAdditionalFieldsChooserButton": false,
-								"additionalsPersistenceId": "gatherings",
-								"fields": [
-									"biologicalProvince",
-									"municipality",
-									"locality",
-									"localityDescription",
-									"habitat",
-									"images",
-									"observationDays",
-									"gatheringFact_routeID",
-									"gatheringFact_observerID",
-									"gatheringFact_observerCount",
-									"wayOfTravelFields",
-									"gatheringFact_descriptionBiotopeF"
-								]
-							},
-							"uiSchema": {
-								"images": {
-									"ui:field": "ImageArrayField",
-									"ui:options": {
-										"capturerVerbatimPath": "/gatheringEvent/leg"
+							"title": "",
+							"fields": [
+								"locality",
+								"localityDescription",
+								"images",
+								"eventTime",
+								"weather",
+								"notes"
+							],
+							"rootUiSchema": {
+								"ui:field": "ScopeField",
+								"ui:settings": [
+									"%additionalFields/scopeField_gatherings"
+								],
+								"ui:options": {
+									"includeAdditionalFieldsChooserButton": true,
+									"additionalsPersistenceId": "gatherings",
+									"fields": [
+										"locality",
+										"localityDescription",
+										"images",
+										"weather",
+										"notes"
+									],
+									"titles": {
+										"eventTime": "Aika"
 									}
+								}
+							}
+						}
+					}
+				},
+				"ui:order": [
+					"*",
+					"units"
+				],
+				"wgs84GeometryCollection": {
+					"ui:field": "HiddenField"
+				},
+				"images": {
+					"ui:field": "ImageArrayField",
+					"ui:options": {
+						"capturerVerbatimPath": "/gatheringEvent/leg"
+					}
+				},
+				"dateBegin": {
+					"ui:widget": "DateTimeWidget",
+					"ui:options": {
+						"showButtons": true
+					}
+				},
+				"dateEnd": {
+					"ui:widget": "DateTimeWidget"
+				},
+				"units": {
+					"ui:childFunctions": {
+						"ui:field": "FlatField",
+						"ui:options": {
+							"fields": [
+								"identifications",
+								"unitGathering"
+							]
+						}
+					},
+					"ui:field": "SingleActiveArrayField",
+					"ui:options": {
+						"renderer": "table",
+						"normalRenderingTreshold": "sm",
+						"confirmDelete": true,
+						"deleteCorner": true,
+						"buttons": [
+							{
+								"fn": "add",
+								"label": "Lisää havainto"
+							},
+							{
+								"fn": "copy",
+								"label": "Kopioi havainto",
+								"type": "blacklist",
+								"filter": [
+									"/identifications/0/taxon",
+									"/identifications/0/taxonID",
+									"unitType",
+									"count",
+									"notes",
+									"/unitGathering/geometry",
+									"images",
+									"sex",
+									"lifeStage",
+									"hostID",
+									"substrateSpecies",
+									"taste",
+									"tasteNotes",
+									"smell",
+									"smellNotes",
+									"plantLifeStage",
+									"plantStatusCode",
+									"movingStatus",
+									"/unitGathering/substrate"
+								]
+							}
+						]
+					},
+					"items": {
+						"ui:functions": {
+							"ui:field": "AutosuggestField",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionInputField": "identifications_0_taxon",
+								"suggestionValueField": "identifications_0_taxonID",
+								"suggestionReceivers": {
+									"identifications_0_taxon": "value",
+									"unitType": "$taxonGroup",
+									"identifications_0_taxonID": "key"
 								},
-								"wayOfTravelFields": {
-									"ui:field": "DependentUiSchemaInjectionField",
-									"ui:options": {
-										"field": "gatheringFact_wayOfTravel",
-										"regexp": "^WBC.wayOfTravelEnum2$",
-										"ifFalseUiSchema": {
-											"gatheringFact_wayOfTravelNotes": {
-												"ui:widget": "HiddenWidget"
-											}
-										}
-									},
-									"uiSchema": {
-										"ui:field": "GridLayoutField",
-										"ui:options": {
-											"lg": 6,
-											"md": 6,
-											"sm": 6,
-											"xs": 12,
-											"rows": [
-												[
-													"gatheringFact_wayOfTravel",
-													"gatheringFact_wayOfTravelNotes"
-												]
-											]
-										}
+								"inputTransformer": {
+									"regexp": "^(.*)\\?$",
+									"transformations": {
+										"taxonConfidence": "MY.taxonConfidenceUnsure"
 									}
 								}
 							}
 						},
-						"weather": {
+						"ui:field": "ScopeField",
+						"classNames": "well well-sm",
+						"ui:settings": [
+							"%additionalFields/scopeField_gathering_unit_unitType"
+						],
+						"ui:options": {
+							"additionalsGroupingPath": "/fieldScopes/unitType",
+							"additionalsGroupingOrderer": "unitType",
+							"additionalsGroupsTranslator": "taxonGroups",
+							"additionalsPersistenceKey": "unitType",
+							"additionalsPersistenceId": "gathering_unit_unitType",
+							"includeAdditionalFieldsChooserButton": true,
+							"glyphFields": [
+								{
+									"glyph": "camera",
+									"show": "images",
+									"label": "Lisää valokuva"
+								},
+								{
+									"glyph": "map-marker",
+									"fn": "setLocation",
+									"label": "Valitse sijainti"
+								}
+							],
+							"fields": [
+								"identifications_0_taxonID",
+								"identifications_0_taxon",
+								"count",
+								"notes",
+								"unitType",
+								"taxonConfidence",
+								"recordBasis"
+							],
+							"fieldScopes": {
+								"unitType": {
+									"*": {
+										"title": "Kaikki",
+										"additionalFields": [
+											"identifications_0_det",
+											"identifications_0_detDate",
+											"identifications_0_identificationBasis",
+											"sex",
+											"unitGathering_dateBegin",
+											"unitGathering_dateEnd",
+											"unitGathering_habitatIUCN",
+											"unitGathering_habitatDescription",
+											"preservation",
+											"samplingMethod",
+											"breeding"
+										]
+									},
+									"MVL.1": {
+										"additionalFields": [
+											"atlasCode",
+											"movingStatus",
+											"twitched"
+										]
+									},
+									"MVL.21": {
+										"additionalFields": [
+											"nativeStatus",
+											"plantLifeStage",
+											"plantStatusCode"
+										]
+									},
+									"MVL.232": {
+										"additionalFields": [
+											"lifeStage",
+											"hostID"
+										]
+									},
+									"MVL.233": {
+										"title": "Sienet",
+										"additionalFields": [
+											"unitGathering_substrate",
+											"substrateSpecies",
+											"smell",
+											"smellNotes",
+											"taste",
+											"tasteNotes"
+										]
+									}
+								}
+							}
+						},
+						"uiSchema": {
 							"ui:field": "GridLayoutField",
-							"classNames": "well well-sm",
 							"ui:options": {
 								"lg": {
-									"gatheringFact_meanTemperature": 6,
-									"*": 4
+									"identifications_0_taxonID": 2,
+									"identifications_0_taxon": 2,
+									"count": 2,
+									"notes": 2,
+									"unitType": 2,
+									"taxonConfidence": 2,
+									"recordBasis": 2,
+									"identifications_0_identificationBasis": 2,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
+									"*": 1
 								},
 								"md": {
-									"gatheringFact_meanTemperature": 6,
-									"*": 4
+									"identifications_0_taxonID": 2,
+									"identifications_0_taxon": 2,
+									"count": 2,
+									"notes": 2,
+									"unitType": 2,
+									"taxonConfidence": 2,
+									"recordBasis": 2,
+									"identifications_0_identificationBasis": 2,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
+									"identifications_0_detDate": 3,
+									"*": 1
 								},
 								"sm": {
-									"gatheringFact_meanTemperature": 6,
-									"*": 4
+									"identifications_0_identificationBasis": 4,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
+									"*": 2
 								},
 								"xs": 12,
 								"rows": [
 									[
-										"gatheringFact_meanTemperature"
-									],
-									[
-										"gatheringFact_wind",
-										"gatheringFact_visibility",
-										"gatheringFact_cloudAndRain"
-									],
-									[
-										"gatheringFact_snowCover",
-										"gatheringFact_iceCover",
-										"gatheringFact_waterbodies"
+										"identifications_0_taxon",
+										"taxonConfidence",
+										"recordBasis",
+										"count",
+										"notes"
 									]
 								]
 							}
 						},
-						"berriesAndCones": {
-							"ui:field": "GridLayoutField",
-							"classNames": "well well-sm",
-							"ui:options": {
-								"lg": 6,
-								"md": 6,
-								"sm": 6,
-								"xs": 12,
-								"rows": [
-									[
-										"gatheringFact_sorbusBerriesEarlyFall",
-										"gatheringFact_sorbusBerriesAtCensus"
-									],
-									[
-										"gatheringFact_spruceConesAtCensus",
-										"gatheringFact_pineConesAtCensus"
-									]
-								]
-							}
-						},
-						"additionalRouteInfo": {
-							"ui:field": "GridLayoutField",
-							"classNames": "well well-sm",
-							"ui:options": {
-								"lg": 6,
-								"md": 6,
-								"sm": 6,
-								"xs": 12,
-								"rows": [
-									[
-										"gatheringFact_snowAndIceOnTrees",
-										"gatheringFact_typeOfSnowCover"
-									]
-								]
-							}
-						},
-						"abundanceInfo": {
-							"ui:field": "GridLayoutField",
-							"classNames": "well well-sm",
-							"ui:options": {
-								"lg": 4,
-								"md": 4,
-								"sm": 4,
-								"xs": 12,
-								"rows": [
-									[
-										"gatheringFact_abundanceBOMGAR",
-										"gatheringFact_abundancePINENU",
-										"gatheringFact_abundanceTURPIL"
-									]
-								]
-							}
-						},
-						"routeLengthAndChange": {
-							"classNames": "well well-sm",
-							"routeLengthByBiotope": {
-								"ui:field": "InlineLabelField",
-								"classNames": "row-container",
-								"ui:options": {
-									"lg": {
-										"label": 2,
-										"field": 7
-									},
-									"md": {
-										"label": 2,
-										"field": 7
-									},
-									"sm": {
-										"label": 2,
-										"field": 7
-									},
-									"xs": 12
-								},
-								"uiSchema": {
-									"ui:field": "GridLayoutField",
-									"ui:options": {
-										"removable": false,
-										"showLabels": false,
-										"lg": {
-											"gatheringFact_routeLength": 4,
-											"*": 1
-										},
-										"md": {
-											"gatheringFact_routeLength": 4,
-											"*": 1
-										},
-										"sm": {
-											"gatheringFact_routeLength": 4,
-											"*": 1
-										},
-										"xs": 12
-									},
-									"rows": [
-										[
-											"gatheringFact_routeLengthBiotopeA",
-											"gatheringFact_routeLengthBiotopeB",
-											"gatheringFact_routeLengthBiotopeC",
-											"gatheringFact_routeLengthBiotopeD",
-											"gatheringFact_routeLengthBiotopeE",
-											"gatheringFact_routeLengthBiotopeF",
-											"gatheringFact_routeLengthBiotopeG",
-											"gatheringFact_routeLengthBiotopeH",
-											"gatheringFact_routeLength"
-										]
-									],
-									"gatheringFact_routeLengthBiotopeA": {
-										"ui:placeholder": "A"
-									},
-									"gatheringFact_routeLengthBiotopeB": {
-										"ui:placeholder": "B"
-									},
-									"gatheringFact_routeLengthBiotopeC": {
-										"ui:placeholder": "C"
-									},
-									"gatheringFact_routeLengthBiotopeD": {
-										"ui:placeholder": "D"
-									},
-									"gatheringFact_routeLengthBiotopeE": {
-										"ui:placeholder": "E"
-									},
-									"gatheringFact_routeLengthBiotopeF": {
-										"ui:placeholder": "F"
-									},
-									"gatheringFact_routeLengthBiotopeG": {
-										"ui:placeholder": "G"
-									},
-									"gatheringFact_routeLengthBiotopeH": {
-										"ui:placeholder": "H"
-									},
-									"gatheringFact_routeLength": {
-										"ui:placeholder": "yhteensä"
-									}
-								}
+						"ui:order": [
+							"identifications",
+							"count",
+							"notes",
+							"unitType",
+							"taxonConfidence",
+							"recordBasis",
+							"*",
+							"images"
+						],
+						"identifications": {
+							"taxonID": {
+								"ui:widget": "HiddenWidget"
 							},
-							"routeLengthChangeByBiotope": {
-								"ui:field": "InlineLabelField",
-								"classNames": "row-container",
-								"ui:options": {
-									"lg": {
-										"label": 2,
-										"field": 7
-									},
-									"md": {
-										"label": 2,
-										"field": 7
-									},
-									"sm": {
-										"label": 2,
-										"field": 7
-									},
-									"xs": 12
-								},
-								"uiSchema": {
-									"ui:field": "GridLayoutField",
-									"ui:options": {
-										"removable": false,
-										"showLabels": false,
-										"lg": {
-											"gatheringFact_routeLengthChange": 4,
-											"*": 1
-										},
-										"md": {
-											"gatheringFact_routeLengthChange": 4,
-											"*": 1
-										},
-										"sm": {
-											"gatheringFact_routeLengthChange": 4,
-											"*": 1
-										},
-										"xs": 12
-									},
-									"rows": [
-										[
-											"gatheringFact_routeLengthChangeBiotopeA",
-											"gatheringFact_routeLengthChangeBiotopeB",
-											"gatheringFact_routeLengthChangeBiotopeC",
-											"gatheringFact_routeLengthChangeBiotopeD",
-											"gatheringFact_routeLengthChangeBiotopeE",
-											"gatheringFact_routeLengthChangeBiotopeF",
-											"gatheringFact_routeLengthChangeBiotopeG",
-											"gatheringFact_routeLengthChangeBiotopeH",
-											"gatheringFact_routeLengthChange"
-										]
-									],
-									"gatheringFact_routeLengthChangeBiotopeA": {
-										"ui:placeholder": "A"
-									},
-									"gatheringFact_routeLengthChangeBiotopeB": {
-										"ui:placeholder": "B"
-									},
-									"gatheringFact_routeLengthChangeBiotopeC": {
-										"ui:placeholder": "C"
-									},
-									"gatheringFact_routeLengthChangeBiotopeD": {
-										"ui:placeholder": "D"
-									},
-									"gatheringFact_routeLengthChangeBiotopeE": {
-										"ui:placeholder": "E"
-									},
-									"gatheringFact_routeLengthChangeBiotopeF": {
-										"ui:placeholder": "F"
-									},
-									"gatheringFact_routeLengthChangeBiotopeG": {
-										"ui:placeholder": "G"
-									},
-									"gatheringFact_routeLengthChangeBiotopeH": {
-										"ui:placeholder": "H"
-									},
-									"gatheringFact_routeLengthChange": {
-										"ui:placeholder": "yhteensä"
-									}
-								}
+							"detDate": {
+								"ui:widget": "DateWidget"
 							}
 						},
-						"units": {
-							"ui:field": "SplitArrayField",
-							"classNames": "well well-sm",
+						"unitType": {
+							"ui:field": "HiddenField"
+						},
+						"images": {
+							"ui:field": "ImageArrayField",
 							"ui:options": {
-								"splitRule": {
-									"fieldPath": "identifications/0/taxonID",
-									"rules": [
-										"^MX\\.6\\w*$",
-										"^MX\\.\\w*$"
-									]
-								},
-								"uiOptions": [
-									{
-										"title": "Havainnot",
-										"removable": false,
-										"addable": false
-									},
-									{
-										"title": "Nisäkkäät",
-										"removable": false,
-										"addable": false
-									},
-									{
-										"title": "Lisälajit",
-										"removable": true,
-										"addable": true,
-										"buttons": [
-											{
-												"fn": "add",
-												"label": "Lisää havainto"
-											}
-										]
-									}
-								]
+								"capturerVerbatimPath": "gatheringEvent_leg"
+							}
+						},
+						"unitGathering": {
+							"geometry": {
+								"ui:field": "HiddenField"
 							},
-							"items": {
-								"ui:field": "FlatField",
-								"classNames": "unit row-container",
-								"ui:options": {
-									"fields": [
-										"identifications",
-										"unitFact"
-									]
-								},
-								"uiSchema": {
-									"ui:field": "NestField",
-									"ui:options": {
-										"nests": {
-											"taxon": {
-												"fields": [
-													"identifications_0_taxonID",
-													"identifications_0_taxonVerbatim"
-												]
-											},
-											"allCounts": {
-												"fields": [
-													"unitFact_individualCountBiotypeA",
-													"unitFact_individualCountBiotypeB",
-													"unitFact_individualCountBiotypeC",
-													"unitFact_individualCountBiotypeD",
-													"unitFact_individualCountBiotypeE",
-													"unitFact_individualCountBiotypeF",
-													"unitFact_individualCountBiotypeG",
-													"unitFact_individualCountBiotypeH",
-													"count"
-												]
-											}
-										}
-									},
-									"uiSchema": {
-										"ui:field": "ScopeField",
-										"ui:options": {
-											"includeAdditionalFieldsChooserButton": false,
-											"fields": [
-												"taxon",
-												"allCounts",
-												"notes",
-												"unitType",
-												"recordBasis"
-											]
-										},
-										"uiSchema": {
-											"ui:field": "GridLayoutField",
-											"ui:options": {
-												"removable": false,
-												"showLabels": false,
-												"lg": {
-													"taxon": 2,
-													"allCounts": 7,
-													"*": 3
-												},
-												"md": {
-													"taxon": 2,
-													"allCounts": 7,
-													"*": 3
-												},
-												"sm": {
-													"taxon": 2,
-													"allCounts": 7,
-													"*": 3
-												},
-												"xs": 12,
-												"rows": [
-													[
-														"taxon",
-														"identifications",
-														"allCounts",
-														"notes"
-													]
-												]
-											},
-											"ui:order": [
-												"taxon",
-												"allCounts",
-												"notes",
-												"*"
-											],
-											"taxon": {
-												"ui:field": "DependentUiSchemaInjectionField",
-												"ui:options": {
-													"field": "identifications_0_taxonID",
-													"regexp": "^MX\\.\\w*$",
-													"ifTrueUiSchema": {
-														"identifications_0_taxonVerbatim": {
-															"ui:widget": "PlainTextWidget"
-														}
-													}
-												},
-												"uiSchema": {
-													"ui:field": "GridLayoutField",
-													"ui:options": {
-														"showLabels": false
-													},
-													"identifications_0_taxonID": {
-														"ui:widget": "HiddenWidget"
-													}
-												}
-											},
-											"allCounts": {
-												"ui:field": "GridLayoutField",
-												"ui:options": {
-													"removable": false,
-													"showLabels": false,
-													"lg": {
-														"count": 4,
-														"*": 1
-													},
-													"md": {
-														"count": 4,
-														"*": 1
-													},
-													"sm": {
-														"count": 4,
-														"*": 1
-													},
-													"xs": 12,
-													"rows": [
-														[
-															"identifications_0_taxonVerbatim",
-															"allCounts",
-															"notes"
-														]
-													]
-												},
-												"ui:order": [
-													"unitFact_individualCountBiotypeA",
-													"unitFact_individualCountBiotypeB",
-													"unitFact_individualCountBiotypeC",
-													"unitFact_individualCountBiotypeD",
-													"unitFact_individualCountBiotypeE",
-													"unitFact_individualCountBiotypeF",
-													"unitFact_individualCountBiotypeG",
-													"unitFact_individualCountBiotypeH",
-													"count",
-													"*"
-												],
-												"unitFact_individualCountBiotypeA": {
-													"ui:placeholder": "A"
-												},
-												"unitFact_individualCountBiotypeB": {
-													"ui:placeholder": "B"
-												},
-												"unitFact_individualCountBiotypeC": {
-													"ui:placeholder": "C"
-												},
-												"unitFact_individualCountBiotypeD": {
-													"ui:placeholder": "D"
-												},
-												"unitFact_individualCountBiotypeE": {
-													"ui:placeholder": "E"
-												},
-												"unitFact_individualCountBiotypeF": {
-													"ui:placeholder": "F"
-												},
-												"unitFact_individualCountBiotypeG": {
-													"ui:placeholder": "G"
-												},
-												"unitFact_individualCountBiotypeH": {
-													"ui:placeholder": "H"
-												},
-												"count": {
-													"ui:placeholder": "yhteensä"
-												}
-											},
-											"notes": {
-												"ui:placeholder": "lisätiedot"
-											},
-											"unitType": {
-												"ui:field": "HiddenField"
-											},
-											"recordBasis": {
-												"ui:field": "HiddenField"
-											}
-										}
-									}
-								}
+							"dateBegin": {
+								"ui:widget": "DateTimeWidget"
+							},
+							"dateEnd": {
+								"ui:widget": "DateTimeWidget"
+							}
+						},
+						"recordBasis": {
+							"ui:options": {
+								"filterType": "whitelist",
+								"filter": [
+									"",
+									"MY.recordBasisHumanObservationPhoto",
+									"MY.recordBasisPreservedSpecimen",
+									"MY.recordBasisHumanObservationHandled",
+									"MY.recordBasisHumanObservation"
+								],
+								"order": [
+									"",
+									"MY.recordBasisHumanObservation",
+									"MY.recordBasisHumanObservationPhoto",
+									"MY.recordBasisPreservedSpecimen",
+									"MY.recordBasisHumanObservationHandled"
+								]
+							}
+						},
+						"hostID": {
+							"ui:widget": "AutosuggestWidget",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionReceive": "key"
+							}
+						},
+						"substrateSpecies": {
+							"ui:widget": "AutosuggestWidget",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionReceive": "key"
 							}
 						}
 					}
@@ -883,1543 +733,8 @@
 			}
 		}
 	},
-	"prepopulateWithInformalTaxonGroups": [
-		"MVL.181",
-		"MVL.162"
-	],
-	"prepopulatedDocument": {
-		"gatherings": [
-			{
-				"units": [
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.37637",
-								"taxonVerbatim": "kangaskäärme",
-								"taxon": "Coronella austriaca"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.37639",
-								"taxonVerbatim": "rantakäärme",
-								"taxon": "Natrix natrix"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.37641",
-								"taxonVerbatim": "kyy",
-								"taxon": "Vipera berus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.37632",
-								"taxonVerbatim": "vaskitsa",
-								"taxon": "Anguis fragilis"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.201133",
-								"taxonVerbatim": "hietasisilisko",
-								"taxon": "Lacerta agilis"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.37635",
-								"taxonVerbatim": "sisilisko",
-								"taxon": "Zootoca vivipara"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60724",
-								"taxonVerbatim": "apollo",
-								"taxon": "Parnassius apollo"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60725",
-								"taxonVerbatim": "pikkuapollo",
-								"taxon": "Parnassius mnemosyne"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60728",
-								"taxonVerbatim": "purjeperhonen",
-								"taxon": "Iphiclides podalirius"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60730",
-								"taxonVerbatim": "ritariperhonen",
-								"taxon": "Papilio machaon"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60735",
-								"taxonVerbatim": "mansikkakirjosiipi",
-								"taxon": "Pyrgus malvae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60736",
-								"taxonVerbatim": "tummakirjosiipi",
-								"taxon": "Pyrgus alveus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60738",
-								"taxonVerbatim": "tunturikirjosiipi",
-								"taxon": "Pyrgus andromedae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60739",
-								"taxonVerbatim": "suokirjosiipi",
-								"taxon": "Pyrgus centaureae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60742",
-								"taxonVerbatim": "heinähiipijä",
-								"taxon": "Heteropterus morpheus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60744",
-								"taxonVerbatim": "keltatäplähiipijä",
-								"taxon": "Carterocephalus palaemon"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60745",
-								"taxonVerbatim": "mustatäplähiipijä",
-								"taxon": "Carterocephalus silvicola"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60749",
-								"taxonVerbatim": "lauhahiipijä",
-								"taxon": "Thymelicus lineola"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60751",
-								"taxonVerbatim": "valkotäpläpaksupää",
-								"taxon": "Hesperia comma"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60755",
-								"taxonVerbatim": "piippopaksupää",
-								"taxon": "Ochlodes sylvanus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60761",
-								"taxonVerbatim": "tummavirnaperhonen",
-								"taxon": "Leptidea juvernica"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60763",
-								"taxonVerbatim": "virnaperhonen",
-								"taxon": "Leptidea sinapis"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60767",
-								"taxonVerbatim": "auroraperhonen",
-								"taxon": "Anthocharis cardamines"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60769",
-								"taxonVerbatim": "aroauroraperhonen",
-								"taxon": "Euchloe ausonia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60772",
-								"taxonVerbatim": "pihlajaperhonen",
-								"taxon": "Aporia crataegi"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60775",
-								"taxonVerbatim": "kaaliperhonen",
-								"taxon": "Pieris brassicae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60777",
-								"taxonVerbatim": "naurisperhonen",
-								"taxon": "Pieris rapae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60778",
-								"taxonVerbatim": "lanttuperhonen",
-								"taxon": "Pieris napi"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60780",
-								"taxonVerbatim": "vuorisinappiperhonen",
-								"taxon": "Pontia callidice"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60781",
-								"taxonVerbatim": "sinappiperhonen",
-								"taxon": "Pontia edusa"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60782",
-								"taxonVerbatim": "arosinappiperhonen",
-								"taxon": "Pontia chloridice"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60785",
-								"taxonVerbatim": "vaaleakeltaperhonen",
-								"taxon": "Colias hyale"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60786",
-								"taxonVerbatim": "lapinkeltaperhonen",
-								"taxon": "Colias hecla"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60788",
-								"taxonVerbatim": "tunturikeltaperhonen",
-								"taxon": "Colias tyche"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60791",
-								"taxonVerbatim": "suokeltaperhonen",
-								"taxon": "Colias palaeno"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60792",
-								"taxonVerbatim": "etelänkeltaperhonen",
-								"taxon": "Colias crocea"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60794",
-								"taxonVerbatim": "sitruunaperhonen",
-								"taxon": "Gonepteryx rhamni"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60953",
-								"taxonVerbatim": "täpläpapurikko",
-								"taxon": "Pararge aegeria"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60956",
-								"taxonVerbatim": "ruostepapurikko",
-								"taxon": "Lasiommata megera"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60957",
-								"taxonVerbatim": "tummapapurikko",
-								"taxon": "Lasiommata maera"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60958",
-								"taxonVerbatim": "metsäpapurikko",
-								"taxon": "Lasiommata petropolitana"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60960",
-								"taxonVerbatim": "kirjopapurikko",
-								"taxon": "Lopinga achine"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60963",
-								"taxonVerbatim": "saraikkoniittyperhonen",
-								"taxon": "Coenonympha tullia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60965",
-								"taxonVerbatim": "idänniittyperhonen",
-								"taxon": "Coenonympha glycerion"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60967",
-								"taxonVerbatim": "ruskoniittyperhonen",
-								"taxon": "Coenonympha hero"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60968",
-								"taxonVerbatim": "keltaniittyperhonen",
-								"taxon": "Coenonympha pamphilus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60976",
-								"taxonVerbatim": "idänhäränsilmä",
-								"taxon": "Hyponephele lycaon"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60974",
-								"taxonVerbatim": "tummahäränsilmä",
-								"taxon": "Maniola jurtina"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60970",
-								"taxonVerbatim": "tesmaperhonen",
-								"taxon": "Aphantopus hyperantus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60979",
-								"taxonVerbatim": "metsänokiperhonen",
-								"taxon": "Erebia ligea"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60980",
-								"taxonVerbatim": "idännokiperhonen",
-								"taxon": "Erebia euryale"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60982",
-								"taxonVerbatim": "suonokiperhonen",
-								"taxon": "Erebia embla"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60983",
-								"taxonVerbatim": "kairanokiperhonen",
-								"taxon": "Erebia disa"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60984",
-								"taxonVerbatim": "",
-								"taxon": "Erebia medusa"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60986",
-								"taxonVerbatim": "lapinnokiperhonen",
-								"taxon": "Erebia pandrose"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60993",
-								"taxonVerbatim": "hietaheinäperhonen",
-								"taxon": "Hipparchia semele"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60995",
-								"taxonVerbatim": "sarakylmänperhonen",
-								"taxon": "Oeneis norna"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60996",
-								"taxonVerbatim": "paljakkakylmänperhonen",
-								"taxon": "Oeneis bore"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60997",
-								"taxonVerbatim": "rämekylmänperhonen",
-								"taxon": "Oeneis jutta"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60876",
-								"taxonVerbatim": "keisarinviitta",
-								"taxon": "Argynnis paphia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60877",
-								"taxonVerbatim": "orvokkihopeatäplä",
-								"taxon": "Argynnis aglaja"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60878",
-								"taxonVerbatim": "ketohopeatäplä",
-								"taxon": "Argynnis adippe"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60879",
-								"taxonVerbatim": "rinnehopeatäplä",
-								"taxon": "Argynnis niobe"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60880",
-								"taxonVerbatim": "etelänhopeatäplä",
-								"taxon": "Argynnis laodice"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60882",
-								"taxonVerbatim": "helmihopeatäplä",
-								"taxon": "Issoria lathonia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60884",
-								"taxonVerbatim": "angervohopeatäplä",
-								"taxon": "Brenthis ino"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60887",
-								"taxonVerbatim": "rämehopeatäplä",
-								"taxon": "Boloria eunomia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60889",
-								"taxonVerbatim": "pursuhopeatäplä",
-								"taxon": "Boloria euphrosyne"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60890",
-								"taxonVerbatim": "niittyhopeatäplä",
-								"taxon": "Boloria selene"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60891",
-								"taxonVerbatim": "lehtohopeatäplä",
-								"taxon": "Boloria titania"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60892",
-								"taxonVerbatim": "tundrahopeatäplä",
-								"taxon": "Boloria chariclea"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60893",
-								"taxonVerbatim": "muurainhopeatäplä",
-								"taxon": "Boloria freija"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60894",
-								"taxonVerbatim": "pohjanhopeatäplä",
-								"taxon": "Boloria polaris"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60895",
-								"taxonVerbatim": "purohopeatäplä",
-								"taxon": "Boloria thore"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60898",
-								"taxonVerbatim": "rahkahopeatäplä",
-								"taxon": "Boloria frigga"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60899",
-								"taxonVerbatim": "kääpiöhopeatäplä",
-								"taxon": "Boloria improba"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60902",
-								"taxonVerbatim": "tunturihopeatäplä",
-								"taxon": "Boloria napaea"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60904",
-								"taxonVerbatim": "suohopeatäplä",
-								"taxon": "Boloria aquilonaris"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60944",
-								"taxonVerbatim": "haapaperhonen",
-								"taxon": "Limenitis populi"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60945",
-								"taxonVerbatim": "kuusamaperhonen",
-								"taxon": "Limenitis camilla"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60948",
-								"taxonVerbatim": "häiveperhonen",
-								"taxon": "Apatura iris"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60949",
-								"taxonVerbatim": "pikkuhäiveperhonen",
-								"taxon": "Apatura ilia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60908",
-								"taxonVerbatim": "karttaperhonen",
-								"taxon": "Araschnia levana"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60910",
-								"taxonVerbatim": "amiraaliperhonen",
-								"taxon": "Vanessa atalanta"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60911",
-								"taxonVerbatim": "ohdakeperhonen",
-								"taxon": "Vanessa cardui"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60914",
-								"taxonVerbatim": "neitoperhonen",
-								"taxon": "Aglais io"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60916",
-								"taxonVerbatim": "nokkosperhonen",
-								"taxon": "Aglais urticae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60918",
-								"taxonVerbatim": "kirsikkaperhonen",
-								"taxon": "Nymphalis polychloros"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60919",
-								"taxonVerbatim": "isonokkosperhonen",
-								"taxon": "Nymphalis xanthomelas"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60920",
-								"taxonVerbatim": "suruvaippa",
-								"taxon": "Nymphalis antiopa"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60922",
-								"taxonVerbatim": "valkotäplänokkosperhonen",
-								"taxon": "Nymphalis vaualbum"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60925",
-								"taxonVerbatim": "herukkaperhonen",
-								"taxon": "Polygonia c-album"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60930",
-								"taxonVerbatim": "lapinverkkoperhonen",
-								"taxon": "Euphydryas iduna"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60931",
-								"taxonVerbatim": "kirjoverkkoperhonen",
-								"taxon": "Euphydryas maturna"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60934",
-								"taxonVerbatim": "punakeltaverkkoperhonen",
-								"taxon": "Euphydryas aurinia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60937",
-								"taxonVerbatim": "täpläverkkoperhonen",
-								"taxon": "Melitaea cinxia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60938",
-								"taxonVerbatim": "tummaverkkoperhonen",
-								"taxon": "Melitaea diamina"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60939",
-								"taxonVerbatim": "ratamoverkkoperhonen",
-								"taxon": "Melitaea athalia"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60799",
-								"taxonVerbatim": "ruostenopsasiipi",
-								"taxon": "Thecla betulae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60803",
-								"taxonVerbatim": "tamminopsasiipi",
-								"taxon": "Favonius quercus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60808",
-								"taxonVerbatim": "jalavanopsasiipi",
-								"taxon": "Satyrium w-album"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60809",
-								"taxonVerbatim": "tuominopsasiipi",
-								"taxon": "Satyrium pruni"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60811",
-								"taxonVerbatim": "kangasperhonen",
-								"taxon": "Callophrys rubi"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60816",
-								"taxonVerbatim": "pikkukultasiipi",
-								"taxon": "Lycaena phlaeas"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60817",
-								"taxonVerbatim": "luhtakultasiipi",
-								"taxon": "Lycaena helle"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60818",
-								"taxonVerbatim": "isokultasiipi",
-								"taxon": "Lycaena dispar"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60819",
-								"taxonVerbatim": "loistokultasiipi",
-								"taxon": "Lycaena virgaureae"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60820",
-								"taxonVerbatim": "tummakultasiipi",
-								"taxon": "Lycaena tityrus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60821",
-								"taxonVerbatim": "ketokultasiipi",
-								"taxon": "Lycaena hippothoe"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60825",
-								"taxonVerbatim": "pikkusinisiipi",
-								"taxon": "Cupido minimus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60827",
-								"taxonVerbatim": "kannussinisiipi",
-								"taxon": "Cupido argiades"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60828",
-								"taxonVerbatim": "luhtakannussinisiipi",
-								"taxon": "Cupido alcetas"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60830",
-								"taxonVerbatim": "paatsamasinisiipi",
-								"taxon": "Celastrina argiolus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60833",
-								"taxonVerbatim": "harjusinisiipi",
-								"taxon": "Scolitantides vicrama"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60836",
-								"taxonVerbatim": "kalliosinisiipi",
-								"taxon": "Scolitantides orion"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60838",
-								"taxonVerbatim": "virnasinisiipi",
-								"taxon": "Glaucopsyche alexis"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60841",
-								"taxonVerbatim": "muurahaissinisiipi",
-								"taxon": "Phengaris arion"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60854",
-								"taxonVerbatim": "kangassinisiipi",
-								"taxon": "Plebejus argus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60855",
-								"taxonVerbatim": "ketosinisiipi",
-								"taxon": "Plebejus idas"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60862",
-								"taxonVerbatim": "huhtasinisiipi",
-								"taxon": "Aricia nicias"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60859",
-								"taxonVerbatim": "lehtosinisiipi",
-								"taxon": "Aricia artaxerxes"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60863",
-								"taxonVerbatim": "ruskosinisiipi",
-								"taxon": "Eumedonia eumedon"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60865",
-								"taxonVerbatim": "niittysinisiipi",
-								"taxon": "Cyaniris semiargus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60856",
-								"taxonVerbatim": "tundrasinisiipi",
-								"taxon": "Agriades aquilo"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60858",
-								"taxonVerbatim": "juolukkasinisiipi",
-								"taxon": "Agriades optilete"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60866",
-								"taxonVerbatim": "hopeasinisiipi",
-								"taxon": "Polyommatus amandus"
-							}
-						]
-					},
-					{
-						"recordBasis": "MY.recordBasisHumanObservation",
-						"identifications": [
-							{
-								"taxonID": "MX.60867",
-								"taxonVerbatim": "hohtosinisiipi",
-								"taxon": "Polyommatus icarus"
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"extra": {
-		"habitat": {
-			"altParent": {
-				"MY.habitatEnumValue1": [],
-				"MY.habitatEnumValue14": [],
-				"MY.habitatEnumValue24": [],
-				"MY.habitatEnumValue27": [],
-				"MY.habitatEnumValue36": [],
-				"MY.habitatEnumValue44": [],
-				"MY.habitatEnumValue55": [],
-				"MY.habitatEnumValue2": [
-					"MY.habitatEnumValue1"
-				],
-				"MY.habitatEnumValue3": [
-					"MY.habitatEnumValue2"
-				],
-				"MY.habitatEnumValue4": [
-					"MY.habitatEnumValue2"
-				],
-				"MY.habitatEnumValue5": [
-					"MY.habitatEnumValue2"
-				],
-				"MY.habitatEnumValue6": [
-					"MY.habitatEnumValue2"
-				],
-				"MY.habitatEnumValue7": [
-					"MY.habitatEnumValue1"
-				],
-				"MY.habitatEnumValue8": [
-					"MY.habitatEnumValue7"
-				],
-				"MY.habitatEnumValue9": [
-					"MY.habitatEnumValue7"
-				],
-				"MY.habitatEnumValue10": [
-					"MY.habitatEnumValue7"
-				],
-				"MY.habitatEnumValue11": [
-					"MY.habitatEnumValue7"
-				],
-				"MY.habitatEnumValue12": [
-					"MY.habitatEnumValue7"
-				],
-				"MY.habitatEnumValue13": [
-					"MY.habitatEnumValue1"
-				],
-				"MY.habitatEnumValue15": [
-					"MY.habitatEnumValue14"
-				],
-				"MY.habitatEnumValue16": [
-					"MY.habitatEnumValue15"
-				],
-				"MY.habitatEnumValue17": [
-					"MY.habitatEnumValue15"
-				],
-				"MY.habitatEnumValue18": [
-					"MY.habitatEnumValue15"
-				],
-				"MY.habitatEnumValue19": [
-					"MY.habitatEnumValue14"
-				],
-				"MY.habitatEnumValue20": [
-					"MY.habitatEnumValue19"
-				],
-				"MY.habitatEnumValue21": [
-					"MY.habitatEnumValue19"
-				],
-				"MY.habitatEnumValue22": [
-					"MY.habitatEnumValue19"
-				],
-				"MY.habitatEnumValue23": [
-					"MY.habitatEnumValue19"
-				],
-				"MY.habitatEnumValue25": [
-					"MY.habitatEnumValue24"
-				],
-				"MY.habitatEnumValue26": [
-					"MY.habitatEnumValue24"
-				],
-				"MY.habitatEnumValue28": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue29": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue30": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue31": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue32": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue33": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue34": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue35": [
-					"MY.habitatEnumValue27"
-				],
-				"MY.habitatEnumValue87": [
-					"MY.habitatEnumValue36"
-				],
-				"MY.habitatEnumValue37": [
-					"MY.habitatEnumValue87"
-				],
-				"MY.habitatEnumValue38": [
-					"MY.habitatEnumValue87"
-				],
-				"MY.habitatEnumValue39": [
-					"MY.habitatEnumValue87"
-				],
-				"MY.habitatEnumValue40": [
-					"MY.habitatEnumValue87"
-				],
-				"MY.habitatEnumValue41": [
-					"MY.habitatEnumValue36"
-				],
-				"MY.habitatEnumValue42": [
-					"MY.habitatEnumValue36"
-				],
-				"MY.habitatEnumValue43": [
-					"MY.habitatEnumValue36"
-				],
-				"MY.habitatEnumValue45": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue46": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue47": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue48": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue49": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue50": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue51": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue52": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue53": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue54": [
-					"MY.habitatEnumValue44"
-				],
-				"MY.habitatEnumValue56": [
-					"MY.habitatEnumValue55"
-				],
-				"MY.habitatEnumValue57": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue58": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue59": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue60": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue61": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue62": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue63": [
-					"MY.habitatEnumValue56"
-				],
-				"MY.habitatEnumValue64": [
-					"MY.habitatEnumValue55"
-				],
-				"MY.habitatEnumValue65": [
-					"MY.habitatEnumValue55"
-				],
-				"MY.habitatEnumValue66": [
-					"MY.habitatEnumValue55"
-				],
-				"MY.habitatEnumValue67": [
-					"MY.habitatEnumValue66"
-				],
-				"MY.habitatEnumValue68": [
-					"MY.habitatEnumValue66"
-				],
-				"MY.habitatEnumValue69": [
-					"MY.habitatEnumValue66"
-				],
-				"MY.habitatEnumValue70": [
-					"MY.habitatEnumValue66"
-				],
-				"MY.habitatEnumValue71": [
-					"MY.habitatEnumValue55"
-				],
-				"MY.habitatEnumValue72": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue73": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue74": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue75": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue76": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue77": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue78": [
-					"MY.habitatEnumValue71"
-				],
-				"MY.habitatEnumValue79": [
-					"MY.habitatEnumValue55"
-				],
-				"MY.habitatEnumValue80": [
-					"MY.habitatEnumValue79"
-				],
-				"MY.habitatEnumValue81": [
-					"MY.habitatEnumValue79"
-				],
-				"MY.habitatEnumValue82": [
-					"MY.habitatEnumValue79"
-				],
-				"MY.habitatEnumValue83": [
-					"MY.habitatEnumValue79"
-				],
-				"MY.habitatEnumValue84": [
-					"MY.habitatEnumValue79"
-				],
-				"MY.habitatEnumValue85": [
-					"MY.habitatEnumValue79"
-				],
-				"MY.habitatEnumValue86": [
-					"MY.habitatEnumValue79"
-				]
-			}
-		}
-	},
 	"attributes": {
-		"id": "MHL.3"
+		"id": "JX.519"
 	},
 	"schema": {
 		"type": "object",
@@ -2436,28 +751,12 @@
 				"title": "Havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun",
 				"default": "MX.secureLevelNone",
 				"enum": [
-					"",
 					"MX.secureLevelNone",
-					"MX.secureLevelKM1",
-					"MX.secureLevelKM5",
-					"MX.secureLevelKM10",
-					"MX.secureLevelKM25",
-					"MX.secureLevelKM50",
-					"MX.secureLevelKM100",
-					"MX.secureLevelHighest",
-					"MX.secureLevelNoShow"
+					"MX.secureLevelKM10"
 				],
 				"enumNames": [
-					"",
 					"Ei salausta",
-					"1 km",
-					"5 km",
-					"10 km",
-					"25 km",
-					"50 km",
-					"100 km",
-					"Korkein suojaus",
-					"Täyssalaus - käytetään lähinnä spammin estämiseksi"
+					"10 km"
 				]
 			},
 			"gatheringEvent": {
@@ -2489,7 +788,7 @@
 			},
 			"gatherings": {
 				"type": "array",
-				"title": "",
+				"title": "Paikka",
 				"items": {
 					"type": "object",
 					"properties": {
@@ -2500,63 +799,6 @@
 						"dateEnd": {
 							"type": "string",
 							"title": "Loppu"
-						},
-						"biologicalProvince": {
-							"type": "string",
-							"title": "Eliömaakunta",
-							"default": "",
-							"enum": [
-								"",
-								"Ahvenanmaa",
-								"Varsinais-Suomi",
-								"Uusimaa",
-								"Etelä-Karjala",
-								"Satakunta",
-								"Etelä-Häme",
-								"Etelä-Savo",
-								"Laatokan Karjala",
-								"Etelä-Pohjanmaa",
-								"Pohjois-Häme",
-								"Pohjois-Savo",
-								"Pohjois-Karjala",
-								"Keski-Pohjanmaa",
-								"Kainuu",
-								"Oulun Pohjanmaa",
-								"Perä-Pohjanmaa",
-								"Koillismaa",
-								"Kittilän Lappi",
-								"Sompion Lappi",
-								"Enontekiön Lappi",
-								"Inarin Lappi"
-							],
-							"enumNames": [
-								"",
-								"Ahvenanmaa (A)",
-								"Varsinais-Suomi (V)",
-								"Uusimaa (U)",
-								"Etelä-Karjala (EK)",
-								"Satakunta (St)",
-								"Etelä-Häme (EH)",
-								"Etelä-Savo (ES)",
-								"Laatokan Karjala (LK)",
-								"Etelä-Pohjanmaa (EP)",
-								"Pohjois-Häme (PH)",
-								"Pohjois-Savo (PS)",
-								"Pohjois-Karjala (PK)",
-								"Keski-Pohjanmaa (KP)",
-								"Kainuu (Kn)",
-								"Eteläinen PP (Oulun Pohjanmaa, PPe)",
-								"Pohjoinen PP (Perä-Pohjanmaa, PPp)",
-								"Koillismaa (Kuusamo, Ks)",
-								"Kittilän Lappi (Läntinen KemL, KiL)",
-								"Sompion Lappi (Itäinen KemL, SoL)",
-								"Enontekiön Lappi (EnL)",
-								"Inarin Lappi (InL)"
-							]
-						},
-						"municipality": {
-							"type": "string",
-							"title": "Kunta"
 						},
 						"locality": {
 							"type": "string",
@@ -2573,630 +815,6 @@
 								"type": "string"
 							}
 						},
-						"habitat": {
-							"type": "array",
-							"title": "Biotooppi",
-							"uniqueItems": true,
-							"items": {
-								"type": "string",
-								"enum": [
-									"",
-									"MY.habitatEnumValue1",
-									"MY.habitatEnumValue2",
-									"MY.habitatEnumValue3",
-									"MY.habitatEnumValue4",
-									"MY.habitatEnumValue5",
-									"MY.habitatEnumValue6",
-									"MY.habitatEnumValue7",
-									"MY.habitatEnumValue8",
-									"MY.habitatEnumValue9",
-									"MY.habitatEnumValue10",
-									"MY.habitatEnumValue11",
-									"MY.habitatEnumValue12",
-									"MY.habitatEnumValue13",
-									"MY.habitatEnumValue14",
-									"MY.habitatEnumValue15",
-									"MY.habitatEnumValue16",
-									"MY.habitatEnumValue17",
-									"MY.habitatEnumValue18",
-									"MY.habitatEnumValue19",
-									"MY.habitatEnumValue20",
-									"MY.habitatEnumValue21",
-									"MY.habitatEnumValue22",
-									"MY.habitatEnumValue23",
-									"MY.habitatEnumValue24",
-									"MY.habitatEnumValue25",
-									"MY.habitatEnumValue26",
-									"MY.habitatEnumValue27",
-									"MY.habitatEnumValue28",
-									"MY.habitatEnumValue29",
-									"MY.habitatEnumValue30",
-									"MY.habitatEnumValue31",
-									"MY.habitatEnumValue32",
-									"MY.habitatEnumValue33",
-									"MY.habitatEnumValue34",
-									"MY.habitatEnumValue35",
-									"MY.habitatEnumValue36",
-									"MY.habitatEnumValue87",
-									"MY.habitatEnumValue37",
-									"MY.habitatEnumValue38",
-									"MY.habitatEnumValue39",
-									"MY.habitatEnumValue40",
-									"MY.habitatEnumValue41",
-									"MY.habitatEnumValue42",
-									"MY.habitatEnumValue43",
-									"MY.habitatEnumValue44",
-									"MY.habitatEnumValue45",
-									"MY.habitatEnumValue46",
-									"MY.habitatEnumValue47",
-									"MY.habitatEnumValue48",
-									"MY.habitatEnumValue49",
-									"MY.habitatEnumValue50",
-									"MY.habitatEnumValue51",
-									"MY.habitatEnumValue52",
-									"MY.habitatEnumValue53",
-									"MY.habitatEnumValue54",
-									"MY.habitatEnumValue55",
-									"MY.habitatEnumValue56",
-									"MY.habitatEnumValue57",
-									"MY.habitatEnumValue58",
-									"MY.habitatEnumValue59",
-									"MY.habitatEnumValue60",
-									"MY.habitatEnumValue61",
-									"MY.habitatEnumValue62",
-									"MY.habitatEnumValue63",
-									"MY.habitatEnumValue64",
-									"MY.habitatEnumValue65",
-									"MY.habitatEnumValue66",
-									"MY.habitatEnumValue67",
-									"MY.habitatEnumValue68",
-									"MY.habitatEnumValue69",
-									"MY.habitatEnumValue70",
-									"MY.habitatEnumValue71",
-									"MY.habitatEnumValue72",
-									"MY.habitatEnumValue73",
-									"MY.habitatEnumValue74",
-									"MY.habitatEnumValue75",
-									"MY.habitatEnumValue76",
-									"MY.habitatEnumValue77",
-									"MY.habitatEnumValue78",
-									"MY.habitatEnumValue79",
-									"MY.habitatEnumValue80",
-									"MY.habitatEnumValue81",
-									"MY.habitatEnumValue82",
-									"MY.habitatEnumValue83",
-									"MY.habitatEnumValue84",
-									"MY.habitatEnumValue85",
-									"MY.habitatEnumValue86"
-								],
-								"enumNames": [
-									"",
-									"Metsät",
-									"Kangasmetsät",
-									"Tuore kangas",
-									"Lehtomainen kangas",
-									"Kuivahko kangas",
-									"Karukkokangas",
-									"Lehdot",
-									"Kuiva lehto",
-									"Tuore lehto",
-									"Kostea lehto",
-									"Jalopuulehto",
-									"Tunturikoivulehto",
-									"Tunturikoivikko, ei lehto",
-									"Suot",
-									"Avosuot",
-									"Letto",
-									"Neva",
-									"Avoluhta",
-									"Puustoiset suot",
-									"Räme",
-									"Korpi",
-									"Pensaikkoluhta",
-									"Metsäluhta",
-									"Vedet",
-									"Lähteikkö",
-									"Puro tai noro (kausikuiva)",
-									"Rannat",
-									"Tulvametsä ja metsäluhta",
-									"Rantapensaikko",
-									"Luhtaranta",
-									"Niittyranta",
-									"Ruovikko",
-									"Sora-, somerikko- tai kivikkoranta",
-									"Hietikkoranta",
-									"Avoin tulvaranta",
-									"Kalliot ja kivikot",
-									"Karut tai keskiravinteinen kalliot (\"tavalliset kalliot\")",
-									"Jäkäläkallio tai -kivikko",
-									"Varpu-heinäkallio tai -kivikko",
-									"Niukkapuustoinen kallio tai kivikko",
-									"Kalliometsä",
-									"Kalkkikallio tai -louhos, myös paljas kalkkimaa",
-									"Serpentiinikallio tai -maa",
-									"Kallioketo",
-									"Tunturipaljakat",
-									"Tunturikangas",
-									"Tunturiniitty",
-									"Lumenviipymä",
-									"Tunturikangaspensaikko",
-									"Paljakan lähteikkö tai tihkupinta",
-									"Paljakan kallio tai kivikko",
-									"Paljakan suo",
-									"Paljakan järvi tai lampi (sis. ranta)",
-									"Paljakan virtavesi (sis. ranta)",
-									"Jyrkänne tai pahta",
-									"Perinneympäristöt tai muut ihmisen muuttamat ympäristöt",
-									"Perinneympäristöt",
-									"Kuiva niitty tai keto",
-									"Nummi",
-									"Tuore niitty",
-									"Hakamaa, lehdesniitty tai metsälaidun",
-									"Kostea niitty (muu kuin rantaniitty)",
-									"Suoniitty",
-									"Kallioketo",
-									"Oja tai muu kaivanto  (sis. ojanpientareet, metsäojat)",
-									"Tienvieri (piennar, luiska) ja -pohja",
-									"Viljelymaat",
-									"Pelto",
-									"Kylvönurmi",
-									"Puu- tai pensasviljelmä",
-									"Hylätty pelto",
-									"Puistot, pihamaat, puutarhat",
-									"Puisto",
-									"Kartanopuisto",
-									"Hautausmaa",
-									"Pihamaa",
-									"Puutarha",
-									"Avoin nurmialue",
-									"Pensaikko",
-									"Uuselinympäristöt",
-									"Tienvieri (piennar, luiska) ja -pohja",
-									"Maankaatopaikka",
-									"Täyttömaa-alue",
-									"Hiekka- tai sorakuoppa",
-									"Turpeennostoalue",
-									"Louhos- tai kaivosalue",
-									"Joutomaa (sis. satamat, ratapihat)"
-								]
-							}
-						},
-						"observationDays": {
-							"type": "integer",
-							"title": "Havaintopäivien lukumäärä"
-						},
-						"gatheringFact": {
-							"type": "object",
-							"properties": {
-								"abundanceBOMGAR": {
-									"type": "string",
-									"title": "Tilhi",
-									"enum": [
-										"",
-										"WBC.speciesAbundanceEnum0",
-										"WBC.speciesAbundanceEnum1",
-										"WBC.speciesAbundanceEnum2",
-										"WBC.speciesAbundanceEnum3"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ohi",
-										"2 = samanaikainen",
-										"3 = nähtävästi vasta tulossa"
-									]
-								},
-								"abundancePINENU": {
-									"type": "string",
-									"title": "Taviokuurna",
-									"enum": [
-										"",
-										"WBC.speciesAbundanceEnum0",
-										"WBC.speciesAbundanceEnum1",
-										"WBC.speciesAbundanceEnum2",
-										"WBC.speciesAbundanceEnum3"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ohi",
-										"2 = samanaikainen",
-										"3 = nähtävästi vasta tulossa"
-									]
-								},
-								"abundanceTURPIL": {
-									"type": "string",
-									"title": "Räkättirastas",
-									"enum": [
-										"",
-										"WBC.speciesAbundanceEnum0",
-										"WBC.speciesAbundanceEnum1",
-										"WBC.speciesAbundanceEnum2",
-										"WBC.speciesAbundanceEnum3"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ohi",
-										"2 = samanaikainen",
-										"3 = nähtävästi vasta tulossa"
-									]
-								},
-								"cloudAndRain": {
-									"type": "string",
-									"title": "Pilvisyys ja sade",
-									"enum": [
-										"",
-										"WBC.cloudAndRainEnum0",
-										"WBC.cloudAndRainEnum1",
-										"WBC.cloudAndRainEnum2",
-										"WBC.cloudAndRainEnum3",
-										"WBC.cloudAndRainEnum4"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = enimmäkseen kirkasta",
-										"2 = vaihtelevaa pilvisyyttä",
-										"3 = enimmäkseen täyspilvistä",
-										"4 = ajoittain sadetta tai pyryä"
-									]
-								},
-								"descriptionBiotopeF": {
-									"type": "string",
-									"title": "Mitä biotooppiin Muu (F) kuuluu"
-								},
-								"iceCover": {
-									"type": "string",
-									"title": "Jääpeite",
-									"enum": [
-										"",
-										"WBC.iceCoverEnum0",
-										"WBC.iceCoverEnum1",
-										"WBC.iceCoverEnum2",
-										"WBC.iceCoverEnum3",
-										"WBC.iceCoverEnum4"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = vesistöt sulat",
-										"2 = vain rannat/lahdet jäässä",
-										"3 = joitakin sulapaikkoja",
-										"4 = vesistöt kokonaan jäässä"
-									]
-								},
-								"meanTemperature": {
-									"type": "integer",
-									"title": "Keskilämpötila (asteen tarkkuus)"
-								},
-								"observerCount": {
-									"type": "integer",
-									"title": "Laskijoita"
-								},
-								"observerID": {
-									"type": "integer",
-									"title": "Havainnoijanumero"
-								},
-								"pineConesAtCensus": {
-									"type": "string",
-									"title": "Männynkäpyjä laskenta-aikaan",
-									"enum": [
-										"",
-										"WBC.berriesAndConesEnum0",
-										"WBC.berriesAndConesEnum1",
-										"WBC.berriesAndConesEnum2",
-										"WBC.berriesAndConesEnum3",
-										"WBC.berriesAndConesEnum4",
-										"WBC.berriesAndConesEnum5",
-										"WBC.berriesAndConesEnum6"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ei lainkaan",
-										"2 = hyvin vähän",
-										"3 = vähän",
-										"4 = kohtalaisesti",
-										"5 = runsaasti",
-										"6 = hyvin runsaasti"
-									]
-								},
-								"routeID": {
-									"type": "integer",
-									"title": "Reitin numero"
-								},
-								"routeLength": {
-									"type": "integer",
-									"title": "Reitin pituus (m)"
-								},
-								"routeLengthBiotopeA": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeA"
-								},
-								"routeLengthBiotopeB": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeB"
-								},
-								"routeLengthBiotopeC": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeC"
-								},
-								"routeLengthBiotopeD": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeD"
-								},
-								"routeLengthBiotopeE": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeE"
-								},
-								"routeLengthBiotopeF": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeF"
-								},
-								"routeLengthBiotopeG": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeG"
-								},
-								"routeLengthBiotopeH": {
-									"type": "integer",
-									"title": "WBC.routeLengthBiotopeH"
-								},
-								"routeLengthChange": {
-									"type": "integer",
-									"title": "Reitin muutokset (m)"
-								},
-								"routeLengthChangeBiotopeA": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeA"
-								},
-								"routeLengthChangeBiotopeB": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeB"
-								},
-								"routeLengthChangeBiotopeC": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeC"
-								},
-								"routeLengthChangeBiotopeD": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeD"
-								},
-								"routeLengthChangeBiotopeE": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeE"
-								},
-								"routeLengthChangeBiotopeF": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeF"
-								},
-								"routeLengthChangeBiotopeG": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeG"
-								},
-								"routeLengthChangeBiotopeH": {
-									"type": "integer",
-									"title": "WBC.routeLengthChangeBiotopeH"
-								},
-								"snowAndIceOnTrees": {
-									"type": "string",
-									"title": "Puissa oleva lumi ja jääkarsta",
-									"enum": [
-										"",
-										"WBC.snowAndIceOnTreesEnum0",
-										"WBC.snowAndIceOnTreesEnum1",
-										"WBC.snowAndIceOnTreesEnum2",
-										"WBC.snowAndIceOnTreesEnum3"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ei ollenkaan",
-										"2 = vähän",
-										"3 = huomattava määrä"
-									]
-								},
-								"snowCover": {
-									"type": "string",
-									"title": "Lumipeite",
-									"enum": [
-										"",
-										"WBC.snowCoverEnum0",
-										"WBC.snowCoverEnum1",
-										"WBC.snowCoverEnum2",
-										"WBC.snowCoverEnum3",
-										"WBC.snowCoverEnum4",
-										"WBC.snowCoverEnum5",
-										"WBC.snowCoverEnum6",
-										"WBC.snowCoverEnum7",
-										"WBC.snowCoverEnum8"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ei lunta",
-										"2 = lunta vain paikoitellen",
-										"3 = alle 5 cm",
-										"4 = 5-10 cm",
-										"5 = 11-20 cm",
-										"6 = 21-50 cm",
-										"7 = 51-100 cm",
-										"8 = yli 1 m"
-									]
-								},
-								"sorbusBerriesAtCensus": {
-									"type": "string",
-									"title": "Pihlajanmarjoja laskenta-aikaan",
-									"enum": [
-										"",
-										"WBC.berriesAndConesEnum0",
-										"WBC.berriesAndConesEnum1",
-										"WBC.berriesAndConesEnum2",
-										"WBC.berriesAndConesEnum3",
-										"WBC.berriesAndConesEnum4",
-										"WBC.berriesAndConesEnum5",
-										"WBC.berriesAndConesEnum6"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ei lainkaan",
-										"2 = hyvin vähän",
-										"3 = vähän",
-										"4 = kohtalaisesti",
-										"5 = runsaasti",
-										"6 = hyvin runsaasti"
-									]
-								},
-								"sorbusBerriesEarlyFall": {
-									"type": "string",
-									"title": "Pihlajanmarjoja alkusyksyllä",
-									"enum": [
-										"",
-										"WBC.berriesAndConesEnum0",
-										"WBC.berriesAndConesEnum1",
-										"WBC.berriesAndConesEnum2",
-										"WBC.berriesAndConesEnum3",
-										"WBC.berriesAndConesEnum4",
-										"WBC.berriesAndConesEnum5",
-										"WBC.berriesAndConesEnum6"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ei lainkaan",
-										"2 = hyvin vähän",
-										"3 = vähän",
-										"4 = kohtalaisesti",
-										"5 = runsaasti",
-										"6 = hyvin runsaasti"
-									]
-								},
-								"spruceConesAtCensus": {
-									"type": "string",
-									"title": "Kuusenkäpyjä laskenta-aikaan",
-									"enum": [
-										"",
-										"WBC.berriesAndConesEnum0",
-										"WBC.berriesAndConesEnum1",
-										"WBC.berriesAndConesEnum2",
-										"WBC.berriesAndConesEnum3",
-										"WBC.berriesAndConesEnum4",
-										"WBC.berriesAndConesEnum5",
-										"WBC.berriesAndConesEnum6"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = ei lainkaan",
-										"2 = hyvin vähän",
-										"3 = vähän",
-										"4 = kohtalaisesti",
-										"5 = runsaasti",
-										"6 = hyvin runsaasti"
-									]
-								},
-								"typeOfSnowCover": {
-									"type": "string",
-									"title": "Maassa olevan lumen laatu",
-									"enum": [
-										"",
-										"WBC.typeOfSnowCoverEnum0",
-										"WBC.typeOfSnowCoverEnum1",
-										"WBC.typeOfSnowCoverEnum2"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa tai ei lunta",
-										"1 = lumi pehmeää",
-										"2 = lumessa kova hankikerros"
-									]
-								},
-								"visibility": {
-									"type": "string",
-									"title": "Näkyvyys",
-									"enum": [
-										"",
-										"WBC.visibilityEnum0",
-										"WBC.visibilityEnum1",
-										"WBC.visibilityEnum2",
-										"WBC.visibilityEnum3",
-										"WBC.visibilityEnum4"
-									],
-									"enumNames": [
-										"",
-										"ei tietoa",
-										"hyvä",
-										"hyvä-kohtalainen",
-										"kohtalainen-huono",
-										"huono"
-									]
-								},
-								"waterbodies": {
-									"type": "string",
-									"title": "Vesistöt",
-									"enum": [
-										"",
-										"WBC.waterbodiesEnum0",
-										"WBC.waterbodiesEnum1",
-										"WBC.waterbodiesEnum2",
-										"WBC.waterbodiesEnum3",
-										"WBC.waterbodiesEnum4",
-										"WBC.waterbodiesEnum5"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = meren rantaa",
-										"2 = järven rantaa",
-										"3 = joen vartta",
-										"4 = edellisten yhdistelmä",
-										"5 = ei vesistöjä"
-									]
-								},
-								"wayOfTravel": {
-									"type": "string",
-									"title": "Kulkutapa",
-									"enum": [
-										"",
-										"WBC.wayOfTravelEnum0",
-										"WBC.wayOfTravelEnum1",
-										"WBC.wayOfTravelEnum2"
-									],
-									"enumNames": [
-										"",
-										"jalkaisin",
-										"suksilla",
-										"muu, mikä:"
-									]
-								},
-								"wayOfTravelNotes": {
-									"type": "string",
-									"title": "Kulkutavan kuvaus"
-								},
-								"wind": {
-									"type": "string",
-									"title": "Tuuli",
-									"enum": [
-										"",
-										"WBC.windEnum0",
-										"WBC.windEnum1",
-										"WBC.windEnum2",
-										"WBC.windEnum3",
-										"WBC.windEnum4"
-									],
-									"enumNames": [
-										"",
-										"0 = ei tietoa",
-										"1 = tyyntä-heikkoa",
-										"2 = heikkoa-kohtalaista",
-										"3 = kohtalaista-navakkaa",
-										"4 = navakkaa-kovaa"
-									]
-								}
-							},
-							"required": []
-						},
 						"units": {
 							"type": "array",
 							"title": "Havainnot",
@@ -3205,7 +823,22 @@
 								"properties": {
 									"recordBasis": {
 										"type": "string",
-										"title": "Havaintotapa"
+										"title": "Havaintotapa",
+										"default": "MY.recordBasisHumanObservation",
+										"enum": [
+											"",
+											"MY.recordBasisPreservedSpecimen",
+											"MY.recordBasisHumanObservation",
+											"MY.recordBasisHumanObservationPhoto",
+											"MY.recordBasisHumanObservationHandled"
+										],
+										"enumNames": [
+											"",
+											"Näyte",
+											"Havaittu",
+											"Valokuvattu",
+											"Käsitelty (otettu kiinni, tutkittu ja vapautettu)"
+										]
 									},
 									"unitType": {
 										"type": "array",
@@ -3213,6 +846,23 @@
 										"items": {
 											"type": "string"
 										}
+									},
+									"taxonConfidence": {
+										"type": "string",
+										"title": "Määrityksen varmuus",
+										"default": "MY.taxonConfidenceSure",
+										"enum": [
+											"",
+											"MY.taxonConfidenceSure",
+											"MY.taxonConfidenceUnsure",
+											"MY.taxonConfidenceSubspeciesUnsure"
+										],
+										"enumNames": [
+											"",
+											"Varma",
+											"Epävarma",
+											"Alalaji epävarma"
+										]
 									},
 									"notes": {
 										"type": "string",
@@ -3222,69 +872,585 @@
 										"type": "string",
 										"title": "Määrä"
 									},
-									"unitFact": {
-										"type": "object",
-										"properties": {
-											"individualCountBiotypeA": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeA"
-											},
-											"individualCountBiotypeB": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeB"
-											},
-											"individualCountBiotypeC": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeC"
-											},
-											"individualCountBiotypeD": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeD"
-											},
-											"individualCountBiotypeE": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeE"
-											},
-											"individualCountBiotypeF": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeF"
-											},
-											"individualCountBiotypeG": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeG"
-											},
-											"individualCountBiotypeH": {
-												"type": "string",
-												"title": "WBC.individualCountBiotypeH"
-											}
-										},
-										"required": []
+									"sex": {
+										"type": "string",
+										"title": "Sukupuoli",
+										"enum": [
+											"",
+											"MY.sexM",
+											"MY.sexF",
+											"MY.sexW",
+											"MY.sexU",
+											"MY.sexN",
+											"MY.sexX",
+											"MY.sexE",
+											"MY.sexC"
+										],
+										"enumNames": [
+											"",
+											"Koiras",
+											"Naaras",
+											"Työläinen",
+											"Tuntematon",
+											"Soveltumaton",
+											"Gynandromorfi",
+											"Eri sukupuolia",
+											"Ristiriitainen"
+										]
+									},
+									"lifeStage": {
+										"type": "string",
+										"title": "Elinvaihe",
+										"enum": [
+											"",
+											"MY.lifeStageEgg",
+											"MY.lifeStageLarva",
+											"MY.lifeStagePupa",
+											"MY.lifeStageJuvenile",
+											"MY.lifeStageNymph",
+											"MY.lifeStageSubimago",
+											"MY.lifeStageImmature",
+											"MY.lifeStageAdult",
+											"MY.lifeStageFertile",
+											"MY.lifeStageSterile",
+											"MY.lifeStageTadpole",
+											"MY.lifeStageDead",
+											"MY.lifeStageAlive"
+										],
+										"enumNames": [
+											"",
+											"muna",
+											"toukka",
+											"kotelo",
+											"nuori",
+											"nymfi",
+											"esiaikuinen",
+											"keskenkasvuinen",
+											"aikuinen",
+											"lisääntymiskykyinen",
+											"lisääntymiskyvytön",
+											"nuijapää",
+											"kuollut",
+											"elävä"
+										]
+									},
+									"hostID": {
+										"type": "string",
+										"title": "Isäntälaji"
+									},
+									"substrateSpecies": {
+										"type": "string",
+										"title": "Kasvualusta (laji)"
+									},
+									"taste": {
+										"type": "string",
+										"title": "Maku",
+										"enum": [
+											"",
+											"MY.tasteNotTasted",
+											"MY.tasteNoTaste",
+											"MY.tasteWeak",
+											"MY.tasteModerate",
+											"MY.tasteStrong"
+										],
+										"enumNames": [
+											"",
+											"Ei maistettu",
+											"Ei makua",
+											"Mieto",
+											"Kohtalainen",
+											"Voimakas"
+										]
+									},
+									"tasteNotes": {
+										"type": "string",
+										"title": "Makumuistiinpanot"
+									},
+									"smell": {
+										"type": "string",
+										"title": "Haju",
+										"enum": [
+											"",
+											"MY.smellNotSmelled",
+											"MY.smellNoSmelled",
+											"MY.smellWeak",
+											"MY.smellModerate",
+											"MY.smellStrong"
+										],
+										"enumNames": [
+											"",
+											"Ei haistettu",
+											"Ei hajua",
+											"Heikko",
+											"Kohtalainen",
+											"Vahva"
+										]
+									},
+									"smellNotes": {
+										"type": "string",
+										"title": "Hajumuistiinpanot"
+									},
+									"preservation": {
+										"type": "string",
+										"title": "Säilöntätapa",
+										"enum": [
+											"",
+											"MY.preservationPinned",
+											"MY.preservationGlued",
+											"MY.preservationEthanol",
+											"MY.preservationEthanolPure",
+											"MY.preservationEthanol96",
+											"MY.preservationEthanol80",
+											"MY.preservationEthanol80Pure",
+											"MY.preservationEthanol70",
+											"MY.preservationEthanolDenatured",
+											"MY.preservationFormalin",
+											"MY.preservationEthanolFormalin",
+											"MY.preservationGlycerol",
+											"MY.preservationLiquid",
+											"MY.preservationEulan",
+											"MY.preservationSlide",
+											"MY.preservationSlideEuparal",
+											"MY.preservationSlidePolyviol",
+											"MY.preservationSlideCanadaBalsam",
+											"MY.preservationCriticalPointDrying",
+											"MY.preservationGoldPlated",
+											"MY.preservationFreezeDried",
+											"MY.preservationFrozen",
+											"MY.preservationDry",
+											"MY.preservationStuffed",
+											"MY.preservationParaffin",
+											"MY.preservationPressed",
+											"MY.preservationLiving",
+											"MY.preservationCast",
+											"MY.preservationEthanolExFormalin"
+										],
+										"enumNames": [
+											"",
+											"neulattu",
+											"liimattu",
+											"etanoli (tuntematon %)",
+											"etanoli (tuntematon %) puhdas",
+											"etanoli 96 %",
+											"etanoli 80 %",
+											"etanoli 80 % puhdas",
+											"etanoli 70 %",
+											"denaturoitu etanoli",
+											"formaliini",
+											"etanoli ja formaliini",
+											"glyseroli",
+											"nestenäyte",
+											"Eulan",
+											"objektilasi",
+											"objektilasi - Euparal",
+											"objektilasi - Polyviol",
+											"objektilasi - Kanadabalsami",
+											"MY.preservationCriticalPointDrying",
+											"kullattu",
+											"kylmäkuivattu",
+											"jäädytetty",
+											"MY.preservationDry",
+											"täytetty (stuffed)",
+											"parafiini",
+											"kuivattu ja prässätty",
+											"elävä",
+											"Valos",
+											"Etanoli, aiemmin formaliini"
+										]
+									},
+									"plantLifeStage": {
+										"type": "string",
+										"title": "Kasvin elinvaihe",
+										"enum": [
+											"",
+											"MY.plantLifeStageSterile",
+											"MY.plantLifeStageFertile",
+											"MY.plantLifeStageSeed",
+											"MY.plantLifeStageSprout",
+											"MY.plantLifeStageBud",
+											"MY.plantLifeStageFlower",
+											"MY.plantLifeStageWitheredFlower",
+											"MY.plantLifeStageRipeningFruit",
+											"MY.plantLifeStageRipeFruit",
+											"MY.plantLifeStageDeadSprout",
+											"MY.plantLifeStageSubterranean",
+											"MY.plantLifeStageLivingPlant",
+											"MY.plantLifeStageDeadPlant"
+										],
+										"enumNames": [
+											"",
+											"steriili",
+											"fertiili",
+											"siemen / itiö / hedelmä",
+											"verso",
+											"nuppu",
+											"kukka",
+											"kuihtunut kukka",
+											"kypsyviä siemeniä / hedelmiä / itiöitä",
+											"kypsiä siemeniä / hedelmiä / itiöitä",
+											"kuollut verso",
+											"mukula / sipuli / juuri",
+											"elävä",
+											"kuollut"
+										]
+									},
+									"plantStatusCode": {
+										"type": "string",
+										"title": "Kasvin statuskoodi",
+										"enum": [
+											"",
+											"MY.MY.plantStatusCodeL",
+											"MY.plantStatusCodeA",
+											"MY.plantStatusCodeAV",
+											"MY.plantStatusCodeAOV",
+											"MY.plantStatusCodeAN",
+											"MY.plantStatusCodeANV",
+											"MY.plantStatusCodeANS",
+											"MY.plantStatusCodeT",
+											"MY.plantStatusCodeTV",
+											"MY.plantStatusCodeTOV",
+											"MY.plantStatusCodeTNV",
+											"MY.plantStatusCodeTNS",
+											"MY.plantStatusCodeV",
+											"MY.plantStatusCodeOV",
+											"MY.plantStatusCodeN",
+											"MY.plantStatusCodeNV",
+											"MY.plantStatusCodeNS",
+											"MY.plantStatusCodeE",
+											"MY.plantStatusCodeTE",
+											"MY.plantStatusCodeTVE",
+											"MY.plantStatusCodeTOVE",
+											"MY.plantStatusCodeTNVE",
+											"MY.plantStatusCodeTNSE",
+											"MY.plantStatusCodeTN",
+											"MY.plantStatusCodeTNE",
+											"MY.plantStatusCodeR",
+											"MY.plantStatusCodeC",
+											"MY.plantStatusCodeH",
+											"MY.plantStatusCodeG",
+											"MY.plantStatusCodeF"
+										],
+										"enumNames": [
+											"",
+											"L - luonnonvarainen; ei arviota alkuperäisyydestä, tuloajasta tai vakinaisuudesta",
+											"A - alkuperäinen, vanha tai uusi, ei arviota vakinaisuudesta",
+											"AV - alkuperäinen, ei arviota tuloajasta, vakinainen",
+											"AOV - alkuperäinen, vanhaa perua, vakinainen",
+											"AN - alkuperäinen, uutta perua, ei arviota vakinaisuudesta",
+											"ANV - alkuperäinen, uutta perua, vakinainen",
+											"ANS - alkuperäinen, uutta perua, satunnainen",
+											"T - tulokas, ei arviota tuloajasta eikä vakinaisuudesta",
+											"TV - tulokas, ei arviota tuloajasta, vakinainen",
+											"TOV - muinaistulokas, vakinainen",
+											"TNV - uustulokas, vakinainen",
+											"TNS - uustulokas, satunnainen",
+											"V - ei arviota alkuperäisyydestä eikä tuloajasta, vakinainen",
+											"OV - ei arviota alkuperäisyydestä, vanhaa perua, vakinainen",
+											"N - ei arviota alkuperäisyydestä, uutta perua, ei arviota vakinaisuudesta",
+											"NV - ei arviota alkuperäisyydestä, uutta perua, vakinainen",
+											"NS - ei arviota alkuperäisyydestä, uutta perua, satunnainen",
+											"E - viljelykarkulainen",
+											"TE - tulokas, viljelykarkulainen",
+											"TVE - tulokas, vakiintunut, viljelykarkulainen",
+											"TOVE - muinaistulokas, vakiintunut, viljelykarkulainen",
+											"TNVE - uustulokas, vakiintunut, viljelykarkulainen",
+											"TNSE - uustulokas, satunnainen, viljelykarkulainen",
+											"TN - tulokas, uusi, ei arviota vakinaisuudesta",
+											"TNE - tulokas, uusi, ei arviota vakinaisuudesta, viljelykarkulanen",
+											"R - viljelyjäänne",
+											"C - viljelykasvi",
+											"H - puutarhan sisäkarkulainen (/hort)",
+											"G - kasvihuonekasvi (tai muu sisäkasvi), oli sitten viljelty tai villi",
+											"F - subfossiili, fossiili"
+										]
+									},
+									"breeding": {
+										"type": "boolean",
+										"title": "Pesintä"
+									},
+									"atlasCode": {
+										"type": "string",
+										"title": "Pesimisvarmuusindeksi",
+										"enum": [
+											"",
+											"MY.atlasCodeEnum1",
+											"MY.atlasCodeEnum2",
+											"MY.atlasCodeEnum3",
+											"MY.atlasCodeEnum4",
+											"MY.atlasCodeEnum5",
+											"MY.atlasCodeEnum6",
+											"MY.atlasCodeEnum7",
+											"MY.atlasCodeEnum8",
+											"MY.atlasCodeEnum61",
+											"MY.atlasCodeEnum62",
+											"MY.atlasCodeEnum63",
+											"MY.atlasCodeEnum64",
+											"MY.atlasCodeEnum65",
+											"MY.atlasCodeEnum66",
+											"MY.atlasCodeEnum71",
+											"MY.atlasCodeEnum72",
+											"MY.atlasCodeEnum73",
+											"MY.atlasCodeEnum74",
+											"MY.atlasCodeEnum75",
+											"MY.atlasCodeEnum81",
+											"MY.atlasCodeEnum82"
+										],
+										"enumNames": [
+											"",
+											"1 Epätodennäköinen pesintä; Havaittu laji paikallisena pesimäaikaan, mutta lähes varmasti se ei pesi ruudussa",
+											"2 Mahdollinen pesintä; Havaittu yksittäinen lintu kerran (esim. laulava tai soidinääntelevä koiras) lajille sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista",
+											"3 Mahdollinen pesintä; Havaittu pari kerran sopivassa pesimäympäristössä, ja lajin pesintä ruudussa on mahdollista",
+											"4 Todennäköinen pesintä; Havaittu laulava, soidinmenoja esittävä tai muuten samalla paikalla (eli pysyvällä reviirillä) oleskeleva koiras eri päivinä",
+											"5 Todennäköinen pesintä;  Havaittu samalla paikalla oleskeleva naaras tai pari eri päivinä",
+											"6 Todennäköinen pesintä; Havaittu lintu tai pari",
+											"7 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä",
+											"8 Varma pesintä; Havaittu suora todiste pesinnästä",
+											"61 Todennäköinen pesintä; Havaittu lintu tai pari käymässä useasti todennäköisellä pesäpaikalla",
+											"62 Todennäköinen pesintä; Havaittu lintu tai pari rakentamassa pesää",
+											"63 Todennäköinen pesintä; Havaittu lintu tai pari varoittelemassa",
+											"64 Todennäköinen pesintä; Havaittu lintu tai pari näyttelemässä siipirikkoa",
+											"65 Todennäköinen pesintä; Havaittu lintu tai pari hyökkäilemässä",
+											"66 Todennäköinen pesintä; Nähty pesä, jossa samanvuotista rakennusmateriaalia tai ravintojätettä; ei kuitenkaan varmaa todistetta munista tai poikasista",
+											"71 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: nähty pesä, jossa on pesitty samana vuonna, koska siinä munia tai niiden kuoria, jätteitä poikasista, sulkatuppien \"hilsettä\", tms.",
+											"72 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: havaittu linnun menevän pesään tai lähtevän pesästä tavalla, joka selvästi viittaa pesimiseen",
+											"73 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: havaittu juuri lentokykyiset poikaset tai untuvikot, jotka voidaan katsoa syntyneiksi ruudun alueella",
+											"74 Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: havaittu emo kantamassa ruokaa poikasille tai poikasten ulosteita; pesän voidaan katsoa olevan ruudun alueella",
+											"75  Varma pesintä; Havaittu epäsuora todiste varmasta pesinnästä: nähty pesässä hautova emo",
+											"81 Varma pesintä; Havaittu suora todiste pesinnästä: kuultu poikasten ääntelevän pesässä",
+											"82 Varma pesintä; Havaittu suora todiste pesinnästä: nähty pesä, jossa munia tai poikasia"
+										]
+									},
+									"movingStatus": {
+										"type": "string",
+										"title": "Linnun tila"
+									},
+									"twitched": {
+										"type": "boolean",
+										"title": "Bongattu"
+									},
+									"nativeStatus": {
+										"type": "string",
+										"title": "Luonnonvaraisuus",
+										"enum": [
+											"",
+											"MY.native",
+											"MY.nonNative"
+										],
+										"enumNames": [
+											"",
+											"Luonnonvarainen",
+											"Ei-luonnonvarainen"
+										]
+									},
+									"images": {
+										"type": "array",
+										"title": "Kuvat",
+										"items": {
+											"type": "string"
+										}
 									},
 									"identifications": {
 										"type": "array",
 										"items": {
 											"type": "object",
 											"properties": {
-												"taxonVerbatim": {
+												"taxon": {
 													"type": "string",
-													"title": "Taksoni sanatarkasti"
+													"title": "Nimi"
 												},
 												"taxonID": {
 													"type": "string",
 													"title": "Taksonin tunniste"
+												},
+												"det": {
+													"type": "string",
+													"title": "Määrittäjä (det.)"
+												},
+												"detDate": {
+													"type": "string",
+													"title": "Määritysaika"
+												},
+												"identificationBasis": {
+													"type": "array",
+													"title": "Määritysperuste",
+													"uniqueItems": true,
+													"items": {
+														"type": "string",
+														"enum": [
+															"",
+															"MY.identificationBasisSeen",
+															"MY.identificationBasisHeard",
+															"MY.identificationBasisHandled",
+															"MY.identificationBasisMedia",
+															"MY.identificationBasisFreshSpecimen",
+															"MY.identificationBasisPreservedSpecimen",
+															"MY.identificationBasisMicroscope",
+															"MY.identificationBasisSpores",
+															"MY.identificationBasisChemical",
+															"MY.identificationBasisGenitals",
+															"MY.identificationBasisGenitalPreparate",
+															"MY.identificationBasisDNA"
+														],
+														"enumNames": [
+															"",
+															"näköhavainto",
+															"kuulohavainto",
+															"käsitelty",
+															"valokuva tai muu media",
+															"tuorenäyte",
+															"säilötty / kuivattu näyte",
+															"mikroskopointi",
+															"itiöt",
+															"kemiallinen",
+															"genitaali",
+															"genitaalipreparaatti",
+															"DNA-määritys"
+														]
+													}
 												}
 											},
 											"required": []
-										}
+										},
+										"minItems": 1
+									},
+									"unitGathering": {
+										"type": "object",
+										"properties": {
+											"geometry": {
+												"type": "object",
+												"properties": {},
+												"title": "MZ.geometry"
+											},
+											"dateBegin": {
+												"type": "string",
+												"title": "Alku"
+											},
+											"dateEnd": {
+												"type": "string",
+												"title": "Loppu"
+											},
+											"habitatIUCN": {
+												"type": "string",
+												"title": "Biotooppi"
+											},
+											"habitatDescription": {
+												"type": "string",
+												"title": "Biotoopin kuvaus"
+											},
+											"substrate": {
+												"type": "string",
+												"title": "Kasvualustamuistiinpanot"
+											}
+										},
+										"required": []
+									},
+									"samplingMethod": {
+										"type": "string",
+										"title": "Keruumenetelmä",
+										"enum": [
+											"",
+											"MY.samplingMethodLight",
+											"MY.samplingMethodPitfall",
+											"MY.samplingMethodNet",
+											"MY.samplingMethodMalaise",
+											"MY.samplingMethodSoilsample",
+											"MY.samplingMethodSweeping",
+											"MY.samplingMethodBait",
+											"MY.samplingMethodBaittrap",
+											"MY.samplingMethodFeromonetrap",
+											"MY.samplingMethodWindowtrap",
+											"MY.samplingMethodPantrap",
+											"MY.samplingMethodYellowpan",
+											"MY.samplingMethodYellowWindowTrap",
+											"MY.samplingMethodYellowtrap",
+											"MY.samplingMethodTrap",
+											"MY.samplingMethodLightTrap",
+											"MY.samplingMethodMistnet",
+											"MY.samplingMethodHand",
+											"MY.samplingMethodCarnet",
+											"MY.samplingMethodDropping",
+											"MY.samplingMethodExovo",
+											"MY.samplingMethodElarva",
+											"MY.samplingMethodEpupa",
+											"MY.samplingMethodReared",
+											"MY.samplingMethodEclectortrap",
+											"MY.samplingMethodSifting",
+											"MY.samplingMethodBoard",
+											"MY.samplingMethodDrag",
+											"MY.samplingMethodTriangleDrag",
+											"MY.samplingMethodFishNet",
+											"MY.samplingMethodElectrofishing",
+											"MY.samplingMethodAngleFishing",
+											"MY.samplingMethodFishTrap",
+											"MY.samplingMethodSeine",
+											"MY.samplingMethodTrawling",
+											"MY.samplingMethodOther",
+											"MY.samplingMethodDiving",
+											"MY.samplingMethodBeamTrawl",
+											"MY.samplingMethodDigging",
+											"MY.samplingMethodWashing"
+										],
+										"enumNames": [
+											"",
+											"Valo",
+											"Kuoppapyydys",
+											"Haavi",
+											"Malaise",
+											"Maaperänäyte",
+											"Lyöntihaavi",
+											"Syötti",
+											"Syöttiansa",
+											"Feromoniansa",
+											"Ikkunapyydys",
+											"Maljapyydys",
+											"Keltamalja",
+											"Keltainen ikkunapyydys",
+											"Keltainen liimapyydys",
+											"Ansa (määrittelemätön)",
+											"Valoansa",
+											"Lintuverkko",
+											"Käsin",
+											"Autohaavi",
+											"Ravistelu",
+											"Kasvatettu, munasta",
+											"Kasvatettu, toukasta",
+											"Kasvatettu, kotelosta",
+											"Kasvatettu",
+											"Eclector",
+											"Seulos",
+											"Lautapyydys",
+											"Hara",
+											"Kolmiohara",
+											"Kalaverkko",
+											"Sähkökalastus",
+											"Onkiminen",
+											"Katiska tai rysä",
+											"Nuotta",
+											"Troolaus",
+											"Muu",
+											"Sukeltamalla",
+											"Puomitrooli",
+											"Kaivuu",
+											"Maaston peseminen"
+										]
 									}
 								},
 								"required": []
-							}
+							},
+							"minItems": 1
 						},
 						"geometry": {
 							"type": "object",
 							"properties": {},
 							"title": "MZ.geometry"
+						},
+						"weather": {
+							"type": "string",
+							"title": "Sää"
+						},
+						"notes": {
+							"type": "string",
+							"title": "Lisätiedot"
 						}
 					},
 					"required": []
@@ -3294,16 +1460,6 @@
 		"required": []
 	},
 	"validators": {
-		"secureLevel": {
-			"crossCheck": {
-				"check": "identifications/0/taxonID",
-				"mustBeEmpty": true,
-				"onlyWhenCheckIn": [
-					"MX.60769"
-				],
-				"message": "Olet ilmoittanut havaintoja harvinaisesta lajista."
-			}
-		},
 		"gatheringEvent": {
 			"properties": {
 				"leg": {
@@ -3312,53 +1468,92 @@
 					}
 				},
 				"dateBegin": {
+					"datetime": {
+						"latest": "now",
+						"message": "Päivämäärä ei voi olla tulevaisuudessa."
+					},
+					"crossCheck": {
+						"check": "dateEnd",
+						"message": "Alku on pakollinen jos loppu on ilmoitettu."
+					},
 					"presence": {
-						"message": "Alkupäivämäärä täytyy ilmoittaa."
+						"message": "Alku on pakollinen"
 					}
 				},
 				"dateEnd": {
-					"presence": {
-						"message": "@dateEndValidation"
+					"datetime": {
+						"latest": "now",
+						"message": "Päivämäärä ei voi olla tulevaisuudessa."
+					},
+					"compareDate": {
+						"isAfter": "dateBegin",
+						"message": "Aikavälin alun %{value} pitää olla ennen loppua %{key}"
 					}
 				}
 			},
-			"presence": true,
-			"dateSpan": {
-				"message": "Aikavälin alun %{dateBegin} pitää olla ennen loppua %{dateEnd}"
-			}
+			"presence": true
 		},
 		"gatherings": {
 			"items": {
 				"properties": {
-					"observationDays": {
-						"presence": {
-							"message": "Havaintopäivien lukumäärä täytyy ilmoittaa"
+					"notes": {
+						"format": {
+							"pattern": "sdlfkj"
+						}
+					},
+					"dateBegin": {
+						"datetime": {
+							"latest": "now",
+							"message": "Päivämäärä ei voi olla tulevaisuudessa."
 						},
-						"numericality": {
-							"greaterThanOrEqualTo": 1,
-							"message": "Havaintopäivien määrän täytyy olla suurempi kuin 0"
+						"crossCheck": {
+							"check": "dateEnd",
+							"message": "Alku on pakollinen jos loppu on ilmoitettu."
+						}
+					},
+					"dateEnd": {
+						"datetime": {
+							"latest": "now",
+							"message": "Päivämäärä ei voi olla tulevaisuudessa."
+						},
+						"compareDate": {
+							"isAfter": "dateBegin",
+							"message": "Aikavälin alun %{value} pitää olla ennen loppua %{key}"
 						}
 					},
 					"units": {
 						"items": {
 							"properties": {
-								"count": {
-									"crossCheck": {
-										"check": "identifications/0/taxonID",
-										"mustBeEmpty": true,
-										"onlyWhenCheckIn": [
-											"MX.60767"
-										],
-										"message": "Olet ilmoittanut havaintoja harvinaisesta lajista."
+								"identifications": {
+									"presence": {
+										"message": "@taxonValidation"
 									}
 								},
-								"identifications": {
-									"items": {
-										"properties": {
-											"taxonVerbatim": {
-												"presence": {
-													"message": "Nimi on pakollinen"
-												}
+								"taxonConfidence": {
+									"format": {
+									"pattern": "MY.taxonConfidenceUnsure"
+									}
+								},
+								"unitGathering": {
+									"properties": {
+										"dateBegin": {
+											"datetime": {
+												"latest": "now",
+												"message": "Päivämäärä ei voi olla tulevaisuudessa."
+											},
+											"crossCheck": {
+												"check": "dateEnd",
+												"message": "Alku on pakollinen jos loppu on ilmoitettu."
+											}
+										},
+										"dateEnd": {
+											"datetime": {
+												"latest": "now",
+												"message": "Päivämäärä ei voi olla tulevaisuudessa."
+											},
+											"compareDate": {
+												"isAfter": "dateBegin",
+												"message": "Aikavälin alun %{value} pitää olla ennen loppua %{key}"
 											}
 										}
 									}
@@ -3373,7 +1568,7 @@
 						"geometry": {
 							"requireShape": true,
 							"message": {
-								"missingGeometries": "Paikalla täytyy olla vähintään yksi kuvio."
+								"missingGeometries": "Vähintään yksi paikka täytyy ilmoittaa."
 							}
 						}
 					}
@@ -3385,271 +1580,116 @@
 		}
 	},
 	"uiSchemaContext": {
-		"habitat": {
-			"tree": {
-				"children": {
-					"MY.habitatEnumValue1": {
-						"children": {
-							"MY.habitatEnumValue2": {
-								"children": {
-									"MY.habitatEnumValue3": {},
-									"MY.habitatEnumValue4": {},
-									"MY.habitatEnumValue5": {},
-									"MY.habitatEnumValue6": {}
-								},
-								"order": [
-									"MY.habitatEnumValue3",
-									"MY.habitatEnumValue4",
-									"MY.habitatEnumValue5",
-									"MY.habitatEnumValue6"
-								]
-							},
-							"MY.habitatEnumValue7": {
-								"children": {
-									"MY.habitatEnumValue8": {},
-									"MY.habitatEnumValue9": {},
-									"MY.habitatEnumValue10": {},
-									"MY.habitatEnumValue11": {},
-									"MY.habitatEnumValue12": {}
-								},
-								"order": [
-									"MY.habitatEnumValue8",
-									"MY.habitatEnumValue9",
-									"MY.habitatEnumValue10",
-									"MY.habitatEnumValue11",
-									"MY.habitatEnumValue12"
-								]
-							},
-							"MY.habitatEnumValue13": {}
-						},
-						"order": [
-							"MY.habitatEnumValue2",
-							"MY.habitatEnumValue7",
-							"MY.habitatEnumValue13"
-						]
-					},
-					"MY.habitatEnumValue14": {
-						"children": {
-							"MY.habitatEnumValue15": {
-								"children": {
-									"MY.habitatEnumValue16": {},
-									"MY.habitatEnumValue17": {},
-									"MY.habitatEnumValue18": {}
-								},
-								"order": [
-									"MY.habitatEnumValue16",
-									"MY.habitatEnumValue17",
-									"MY.habitatEnumValue18"
-								]
-							},
-							"MY.habitatEnumValue19": {
-								"children": {
-									"MY.habitatEnumValue20": {},
-									"MY.habitatEnumValue21": {},
-									"MY.habitatEnumValue22": {},
-									"MY.habitatEnumValue23": {}
-								},
-								"order": [
-									"MY.habitatEnumValue20",
-									"MY.habitatEnumValue21",
-									"MY.habitatEnumValue22",
-									"MY.habitatEnumValue23"
-								]
-							}
-						},
-						"order": [
-							"MY.habitatEnumValue15",
-							"MY.habitatEnumValue19"
-						]
-					},
-					"MY.habitatEnumValue24": {
-						"children": {
-							"MY.habitatEnumValue25": {},
-							"MY.habitatEnumValue26": {}
-						},
-						"order": [
-							"MY.habitatEnumValue25",
-							"MY.habitatEnumValue26"
-						]
-					},
-					"MY.habitatEnumValue27": {
-						"children": {
-							"MY.habitatEnumValue28": {},
-							"MY.habitatEnumValue29": {},
-							"MY.habitatEnumValue30": {},
-							"MY.habitatEnumValue31": {},
-							"MY.habitatEnumValue32": {},
-							"MY.habitatEnumValue33": {},
-							"MY.habitatEnumValue34": {},
-							"MY.habitatEnumValue35": {}
-						},
-						"order": [
-							"MY.habitatEnumValue28",
-							"MY.habitatEnumValue29",
-							"MY.habitatEnumValue30",
-							"MY.habitatEnumValue31",
-							"MY.habitatEnumValue32",
-							"MY.habitatEnumValue33",
-							"MY.habitatEnumValue34",
-							"MY.habitatEnumValue35"
-						]
-					},
-					"MY.habitatEnumValue36": {
-						"children": {
-							"MY.habitatEnumValue87": {
-								"children": {
-									"MY.habitatEnumValue37": {},
-									"MY.habitatEnumValue38": {},
-									"MY.habitatEnumValue39": {},
-									"MY.habitatEnumValue40": {}
-								},
-								"order": [
-									"MY.habitatEnumValue37",
-									"MY.habitatEnumValue38",
-									"MY.habitatEnumValue39",
-									"MY.habitatEnumValue40"
-								]
-							},
-							"MY.habitatEnumValue41": {},
-							"MY.habitatEnumValue42": {},
-							"MY.habitatEnumValue43": {}
-						},
-						"order": [
-							"MY.habitatEnumValue87",
-							"MY.habitatEnumValue41",
-							"MY.habitatEnumValue42",
-							"MY.habitatEnumValue43"
-						]
-					},
-					"MY.habitatEnumValue44": {
-						"children": {
-							"MY.habitatEnumValue45": {},
-							"MY.habitatEnumValue46": {},
-							"MY.habitatEnumValue47": {},
-							"MY.habitatEnumValue48": {},
-							"MY.habitatEnumValue49": {},
-							"MY.habitatEnumValue50": {},
-							"MY.habitatEnumValue51": {},
-							"MY.habitatEnumValue52": {},
-							"MY.habitatEnumValue53": {},
-							"MY.habitatEnumValue54": {}
-						},
-						"order": [
-							"MY.habitatEnumValue45",
-							"MY.habitatEnumValue46",
-							"MY.habitatEnumValue47",
-							"MY.habitatEnumValue48",
-							"MY.habitatEnumValue49",
-							"MY.habitatEnumValue50",
-							"MY.habitatEnumValue51",
-							"MY.habitatEnumValue52",
-							"MY.habitatEnumValue53",
-							"MY.habitatEnumValue54"
-						]
-					},
-					"MY.habitatEnumValue55": {
-						"children": {
-							"MY.habitatEnumValue56": {
-								"children": {
-									"MY.habitatEnumValue57": {},
-									"MY.habitatEnumValue58": {},
-									"MY.habitatEnumValue59": {},
-									"MY.habitatEnumValue60": {},
-									"MY.habitatEnumValue61": {},
-									"MY.habitatEnumValue62": {},
-									"MY.habitatEnumValue63": {}
-								},
-								"order": [
-									"MY.habitatEnumValue57",
-									"MY.habitatEnumValue58",
-									"MY.habitatEnumValue59",
-									"MY.habitatEnumValue60",
-									"MY.habitatEnumValue61",
-									"MY.habitatEnumValue62",
-									"MY.habitatEnumValue63"
-								]
-							},
-							"MY.habitatEnumValue64": {},
-							"MY.habitatEnumValue65": {},
-							"MY.habitatEnumValue66": {
-								"children": {
-									"MY.habitatEnumValue67": {},
-									"MY.habitatEnumValue68": {},
-									"MY.habitatEnumValue69": {},
-									"MY.habitatEnumValue70": {}
-								},
-								"order": [
-									"MY.habitatEnumValue67",
-									"MY.habitatEnumValue68",
-									"MY.habitatEnumValue69",
-									"MY.habitatEnumValue70"
-								]
-							},
-							"MY.habitatEnumValue71": {
-								"children": {
-									"MY.habitatEnumValue72": {},
-									"MY.habitatEnumValue73": {},
-									"MY.habitatEnumValue74": {},
-									"MY.habitatEnumValue75": {},
-									"MY.habitatEnumValue76": {},
-									"MY.habitatEnumValue77": {},
-									"MY.habitatEnumValue78": {}
-								},
-								"order": [
-									"MY.habitatEnumValue72",
-									"MY.habitatEnumValue73",
-									"MY.habitatEnumValue74",
-									"MY.habitatEnumValue75",
-									"MY.habitatEnumValue76",
-									"MY.habitatEnumValue77",
-									"MY.habitatEnumValue78"
-								]
-							},
-							"MY.habitatEnumValue79": {
-								"children": {
-									"MY.habitatEnumValue80": {},
-									"MY.habitatEnumValue81": {},
-									"MY.habitatEnumValue82": {},
-									"MY.habitatEnumValue83": {},
-									"MY.habitatEnumValue84": {},
-									"MY.habitatEnumValue85": {},
-									"MY.habitatEnumValue86": {}
-								},
-								"order": [
-									"MY.habitatEnumValue80",
-									"MY.habitatEnumValue81",
-									"MY.habitatEnumValue82",
-									"MY.habitatEnumValue83",
-									"MY.habitatEnumValue84",
-									"MY.habitatEnumValue85",
-									"MY.habitatEnumValue86"
-								]
-							}
-						},
-						"order": [
-							"MY.habitatEnumValue56",
-							"MY.habitatEnumValue64",
-							"MY.habitatEnumValue65",
-							"MY.habitatEnumValue66",
-							"MY.habitatEnumValue71",
-							"MY.habitatEnumValue79"
-						]
-					}
-				},
-				"order": [
-					"MY.habitatEnumValue1",
-					"MY.habitatEnumValue14",
-					"MY.habitatEnumValue24",
-					"MY.habitatEnumValue27",
-					"MY.habitatEnumValue36",
-					"MY.habitatEnumValue44",
-					"MY.habitatEnumValue55"
-				]
-			}
-		}
+		"creator": "MA.308",
+		"formID": "MHL.1",
+		"activeGatheringIdx": 1
 	},
-	"uiSchemaContext": {
-		"creator": "MA.308"
+	"settings": {
+	  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
+	  "#root_gatherings$MapArrayField/mapOptions/tileLayerOpacity": 0.8,
+	  "#root_gatherings$MapArrayField/mapOptions/overlayNames": [
+		"geobiologicalProvinces"
+	  ],
+	  "%additionalFields/scopeField_gathering_unit_unitType": {
+		"MVL.2": {
+		  "unitGathering_substrate": true
+		}
+	  }
+	},
+	"formData": {
+	  "gatheringEvent": {
+		"leg": [
+		  "MA.308",
+		  "MA.97"
+		],
+		"legPublic": true,
+		"dateBegin": "2017-05-23"
+	  },
+	  "editors": [],
+	  "secureLevel": "MX.secureLevelNone",
+	  "gatherings": [
+		{
+				"notes": "test",
+          "dateBegin": "2018-02-01",
+		  "images": [
+			"MM.89524"
+		  ],
+		  "units": [
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [
+				"MM.89524"
+			  ],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				},
+			  "dateBegin": "2012-07-05",
+			  "dateEnd": "2012-07-04"
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "unitType": [
+				"MVL.2"
+			  ],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [
+				"MM.89524"
+			  ],
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": []
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					24.606749120436508,
+					62.09818109070839
+				  ]
+				},
+			  "dateBegin": "2012-07-02",
+			  "dateEnd": "2012-07-04"
+			  }
+			}
+		  ],
+		  "geometry": "60:25/"
+		},
+		{
+		  "images": [],
+		  "geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+			  {
+				"type": "Point",
+				"coordinates": [
+				  26.170841451122595,
+				  63.54526624516768
+				]
+			  }
+			]
+		  }
+		}
+	  ]
 	}
 }
 
