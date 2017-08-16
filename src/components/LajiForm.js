@@ -595,10 +595,7 @@ export default class LajiForm extends Component {
 			return focusNextInput(this.formRef, e.target, reverse);
 		},
 		help: (e, {delay}) => {
-			if (this.helpStarted) {
-				this.dismissHelp(e);
-				return false;
-			}
+			if (this.helpStarted) return false;
 
 			this.helpStarted = true;
 
