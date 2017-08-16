@@ -105,7 +105,7 @@ export default class SingleActiveArrayField extends Component {
 		const {formData, uiSchema, schema} = props;
 		this.deleteButtonRefs = {};
 		const options = getUiOptions(uiSchema);
-		const formDataLength = (formData || []).length
+		const formDataLength = (formData || []).length;
 		this.state = {
 			activeIdx: (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx,
 			...this.getStateFromProps(props), popups: {}
@@ -336,7 +336,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			for (let i = 0; i < this.props.items.length; i++) {
 				this.focusHandlers.push(() => {
 					if (that.state.activeIdx !== i) return new Promise(resolve => {
-						that.onActiveChange(i, callback => resolve());
+						that.onActiveChange(i, () => resolve());
 					});
 				});
 				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
@@ -576,9 +576,12 @@ class TableArrayFieldTemplate extends Component {
 				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (
 						<thead>
-							<tr className="darker">
-								{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
-							</tr>
+								<tr className="darker">
+									{[
+										...cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>),
+										<th key="_delete" className="single-active-array-table-delete" />
+									]}
+								</tr>
 						</thead>
 					) : null}
 					<tbody>
