@@ -683,7 +683,7 @@ body .laji-form {
 
 .laji-form .single-active-array-table-delete {
 	border: 1px solid white;
-	width: 1%;
+	width: 1px;
 	background: white !important;
 	padding: 0px;
 }
