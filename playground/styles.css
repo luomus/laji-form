@@ -494,7 +494,7 @@ body .laji-form {
 		-webkit-flex-direction: row-reverse;
 		justify-content: space-around;
 	}
-	.laji-form .btn-toolbar .btn {
+	.laji-form .btn-toolbar:not(.desktop-layout) .btn {
 		width: 100%;
 		margin-bottom: 2px;
 	}

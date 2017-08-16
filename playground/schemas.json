@@ -176,7 +176,8 @@
 											],
 											"ui:field": "TableField",
 											"ui:options": {
-												"specialRules": "legEditors"
+												"specialRules": "legEditors",
+												"ui:buttonsDesktopLayout": true
 											},
 											"items": {
 												"ui:functions": [

@@ -75,7 +75,9 @@ export function getButtons(buttons, props = {}) {
 	}
 
 	return (
-		<ButtonToolbar key="buttons">{buttonElems}</ButtonToolbar>
+		<ButtonToolbar className={getUiOptions(props.uiSchema)["ui:buttonsDesktopLayout"] ? "desktop-layout" : undefined} key="buttons">
+			{buttonElems}
+		</ButtonToolbar>
 	);
 }
 
