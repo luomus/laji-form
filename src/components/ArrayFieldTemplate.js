@@ -177,7 +177,7 @@ export default class ArrayFieldTemplate extends Component {
 				<Title title={props.title}/>
 				<Description description={props.description}/>
 				{
-					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={10} items={items} onSortEnd={this.onSort} /> : items
+					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={100} items={items} onSortEnd={this.onSort} /> : items
 				}
 				{getButtons(buttons, props)}
 			</div>
