@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels } from "../../utils";
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, 
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
@@ -135,6 +136,30 @@ export default class SingleActiveArrayField extends Component {
 		const state = {};
 		const options = getUiOptions(props.uiSchema);
 		if (options.hasOwnProperty("activeIdx")) state.activeIdx = options.activeIdx;
+
+		const {titleFormat} = options;
+
+		const title = "ui:title" in props.uiSchema ? props.uiSchema["ui:title" ] : props.schema.title;
+		state.getTitle = (idx) => {
+			if (!titleFormat) return title;
+
+			const formatters = {
+				idx: idx + 1,
+				title: props.schema.title
+			};
+				
+			return Object.keys(formatters).reduce((_title, key) => {
+				[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
+					while (_title.includes(replacePattern)) {
+						const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
+							decapitalizeFirstLetter : capitalizeFirstLetter;
+						_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
+					}
+				});
+				return _title;
+			}, titleFormat);
+		};
+
 		return state;
 	}
 
@@ -377,10 +402,9 @@ class AccordionArrayFieldTemplate extends Component {
 		const arrayFieldTemplateProps = this.props;
 
 		const activeIdx = that.state.activeIdx;
-		const title = that.props.schema.title;
 
 		const onSelect = key => that.onActiveChange(key);
-		const header = idx => renderAccordionHeader(that, idx, title, that.props.idSchema.$id);
+		const header = idx => renderAccordionHeader(that, idx);
 
 		return (
 			<div className="laji-form-single-active-array">
@@ -407,9 +431,8 @@ class PagerArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
-		const buttons = getUiOptions(arrayTemplateFieldProps.uiSchema).buttons;
+		const {buttons} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
-		const title = that.props.schema.title || "";
 
 		const navigatePrev = () => that.onActiveChange(activeIdx - 1);
 		const navigateNext = () => that.onActiveChange(activeIdx + 1);
@@ -424,7 +447,7 @@ class PagerArrayFieldTemplate extends Component {
 							            disabled={activeIdx <= 0 || activeIdx === undefined}
 							            onClick={navigatePrev}>
 								&larr; {translations.Previous}</Pager.Item>
-							{activeIdx !== undefined ? <div className="panel-title">{`${activeIdx + 1}. ${title}`}</div> : null}
+							{activeIdx !== undefined ? <div className="panel-title">{that.state.getTitle(activeIdx)}</div> : null}
 							<Pager.Item next 
 							            href="#"
 							            disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
@@ -449,8 +472,14 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
+		const {TitleField} =  arrayTemplateFieldProps;
 
-		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null;
+		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
+			<div>
+				<TitleField title={that.state.getTitle(activeIdx)} />
+				{arrayTemplateFieldProps.items[activeIdx].children} 
+			</div>
+			: null;
 	}
 }
 
@@ -571,7 +600,7 @@ class TableArrayFieldTemplate extends Component {
 
 		return (
 			<div>
-				<TitleField title={this.props.title}/>
+				<TitleField title={that.state.getTitle(that.state.activeIdx)}/>
 				<DescriptionField description={this.props.description}/>
 				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (
@@ -612,11 +641,8 @@ class TableArrayFieldTemplate extends Component {
 	}
 }
 
-function renderAccordionHeader(that, idx, title) {
+function renderAccordionHeader(that, idx) {
 	const popupData = that.state.popups[idx];
-
-	const formattedIdx = idx + 1;
-	const _title = title ? `${title} ${formattedIdx}` : formattedIdx;
 
 	// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
 	const options = getUiOptions(that.props.uiSchema);
@@ -632,7 +658,7 @@ function renderAccordionHeader(that, idx, title) {
 		};
 	});
 
-	const headerText = <span>{_title}{formatters.map((formatter, i) => <span key={i}> {formatter.render(that, idx)}</span>)}</span>;
+	const headerText = <span>{that.state.getTitle(idx)}{formatters.map((formatter, i) => <span key={i}> {formatter.render(that, idx)}</span>)}</span>;
 
 	const onHeaderClick = () => {
 		that.onActiveChange(idx);

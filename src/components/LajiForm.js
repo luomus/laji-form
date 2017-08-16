@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById } from "../utils";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 
 import ApiClient from "../ApiClient";
@@ -105,8 +106,11 @@ class _SchemaField extends Component {
 	}
 }
 
+const _TitleField = props => isEmptyString(props.title) ? null : <TitleField {...props} />;
+
 const fields = importLocalComponents("fields", [
 	{SchemaField: _SchemaField},
+	{TitleField: _TitleField},
 	// Disabled until we have time to make it work properly. StringField wrapper was used to optimization:
 	// it caused the onChange-events to trigger events only on blur, not on every key stroke.
 	// "StringField",
