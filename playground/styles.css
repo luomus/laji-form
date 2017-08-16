@@ -627,7 +627,22 @@ body .laji-form {
 }
 .laji-form .laji-form-error-list {
 	top: 5px;
-	right: 5px;
+	left: 5px;
+}
+.laji-form .laji-form-error-list .panel-heading {
+	background-color: #bd362f;
+}
+.laji-form .laji-form-error-list .panel-title {
+	color: white;
+}
+.laji-form .laji-form-error-list .btn-link {
+	color: white;
+}
+.laji-form .laji-form-error-list .btn-link:hover {
+	color: #dddddd;
+}
+.laji-form .laji-form-error-list .btn-link:focus {
+	outline: none;
 }
 .laji-form-error-list .laji-form-error-list-expand {
 	font-size: 12px;
