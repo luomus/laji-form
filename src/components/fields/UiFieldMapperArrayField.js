@@ -72,7 +72,7 @@ export default class UiFieldMapperArrayField extends Component {
 				"ui:field": origUiField,
 				"ui:options": origUiOptions,
 				..._propsUiSchema
-			} = _props.uiSchema;
+			} = _props.uiSchema || {};
 
 			_props = {
 				..._props,
