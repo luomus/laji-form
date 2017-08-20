@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
+import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, 
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
+import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 
@@ -178,33 +180,11 @@ export default class SingleActiveArrayField extends Component {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
-		const options = getUiOptions(this.props.uiSchema);
-		const addLabel = options.hasOwnProperty("addTxt") ? 
-			options.addTxt : this.props.formContext.translations.Add;
-
 		const formContext = {...this.props.formContext, this: this};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
-		const addButton = {
-			fn: "add",
-			callbacker: (callback) => {this.onActiveChange(this.props.formData.length, callback);},
-			label: addLabel
-		};
-
 		let buttons = this.props.uiSchema["ui:options"] ? (this.props.uiSchema["ui:options"].buttons || []) : [];
-
-		let foundAdd = false;
-		buttons.forEach(button => {
-			if (button.fn === "add") {
-				foundAdd = true;
-				button.callbacker = addButton.callbacker;
-			}
-		});
-
-		if (!foundAdd) {
-			buttons = [addButton, ...buttons];
-		}
 
 		let uiSchema = {
 			...this.props.uiSchema,
@@ -213,7 +193,10 @@ export default class SingleActiveArrayField extends Component {
 			"ui:options": {
 				...this.props.uiSchema["ui:options"],
 				renderDelete: false,
-				buttons
+				buttons,
+				buttonDefinitions: this.props.uiSchema["ui:options"].buttonDefinitions ? 
+					merge(this.buttonDefinitions, getUiOptions(this.props.uiSchema).buttonDefinitions) :
+					this.buttonDefinitions
 			}
 		};
 
@@ -229,7 +212,6 @@ export default class SingleActiveArrayField extends Component {
 			};
 		}
 
-		if (renderer === "accordion") addButton.className = "col-xs-12 laji-form-accordion-header";
 		return (
 			<ArrayField
 				{...this.props}
@@ -307,6 +289,37 @@ export default class SingleActiveArrayField extends Component {
 		if (!formData.length) this.onActiveChange(undefined);
 		if (this.state.activeIdx >= formData.length) this.onActiveChange(formData.length - 1);
 		this.props.onChange(formData);
+	}
+
+	buttonDefinitions = {
+
+		add: {
+			callback: () => this.onActiveChange(this.props.formData.length),
+			className: (!getUiOptions(this.props.uiSchema).renderer || getUiOptions(this.props.uiSchema).renderer === "accordion") ?
+				"col-xs-12 laji-form-accordion-header" :
+				undefined
+		},
+		copy: {
+			fn: () => (...params) => {
+				const idx = this.state.activeIdx !== undefined ?
+					this.state.activeIdx :
+					this.props.formData.length - 1;
+				this.props.onChange([
+					...this.props.formData.slice(0, idx),
+					copyItemFunction(this, this.props.formData[idx])(...params),
+					...this.props.formData.slice(idx)
+				]);
+			},
+			callback: () => {
+				const idx = this.state.activeIdx !== undefined ?
+					this.state.activeIdx :
+					this.props.formData.length - 1;
+				this.onActiveChange(idx + 1);
+			},
+			rules: {
+				minLength: 1
+			}
+		}
 	}
 }
 

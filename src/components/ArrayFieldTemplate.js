@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Button, DeleteButton } from "./components";
+import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
 import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
-
 
 function onAdd(e, props, idToFocus) {
 	if (!canAdd(props)) return;
@@ -22,13 +22,28 @@ const buttonDefinitions = {
 	}
 };
 
-export function getButton(button, props) {
+export function getButton(button, props = {}) {
 	function handleButton(button) {
+		function rulesSatisfied(btn) {
+			return Object.keys(btn.rules || {}).every(ruleName => {
+				const ruleVal = btn.rules[ruleName];
+				if (ruleName === "minLength") {
+					return (props.formData || []).length >= ruleVal;
+				}
+			});
+		}
+
 		const fnName = button.fn;
-		const definition = buttonDefinitions[fnName];
+		const _buttonDefinitions = props.uiSchema && getUiOptions(props.uiSchema).buttonDefinitions ? 
+			merge(buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions) :
+			buttonDefinitions;
+		const definition = _buttonDefinitions[fnName];
 		const _button = {...(definition || {}), ...button};
+
+		if (!rulesSatisfied(_button)) return;
+
 		if (!_button.fnName) _button.fnName = fnName;
-		if (definition) _button.fn = buttonDefinitions[fnName].fn;
+		if (definition) _button.fn = _buttonDefinitions[fnName].fn;
 		if (!(fnName === "add" && (!canAdd(props) || getUiOptions(props.uiSchema).renderAdd === false))) return _button;
 	}
 
@@ -36,18 +51,23 @@ export function getButton(button, props) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callbacker, key, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, callback, key, ...options} = button;
 
 	label = label !== undefined ?
 		(glyph ? ` ${label}` : label) :
 		"";
 
 	const onClick = e => {
-		if (callbacker) {
+		let _fn = () => fn(e)(props, options);
+		const __fn = !callback ? _fn : () => {
+			_fn();
+			callback();
+		}
+		if (callforward) {
 			e.persist();
-			callbacker(() => fn(e)(props, options));
+			callforward(__fn);
 		} else {
-			fn(e)(props, options);
+			__fn();
 		}
 	};
 
@@ -179,7 +199,9 @@ export default class ArrayFieldTemplate extends Component {
 				<Title title={props.title}/>
 				<Description description={props.description}/>
 				{
-					orderable ? <SortableList helperClass="laji-form reorder-active" pressDelay={100} items={items} onSortEnd={this.onSort} /> : items
+					orderable ? 
+						<SortableList helperClass="laji-form reorder-active" pressDelay={100} items={items} onSortEnd={this.onSort} /> :
+						items
 				}
 				{getButtons(buttons, props)}
 			</div>
