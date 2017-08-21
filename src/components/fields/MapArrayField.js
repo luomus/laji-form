@@ -198,22 +198,24 @@ export default class MapArrayField extends Component {
 		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
 		if (belowUiSchema) belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
 
-		const {addButtonPath, removeAddButtonPath, addTxt = this.props.formContext.translations.Add} = getUiOptions(this.props.uiSchema);
+		const {addButtonPath, removeAddButtonPath} = getUiOptions(this.props.uiSchema);
 		if (addButtonPath) {
-			const injectTarget = parseJSONPointer(belowUiSchema, addButtonPath, "createParents");
-			if ((injectTarget["ui:buttons"] || []).every(button => {return button.key !== "_add";})) {
-				injectTarget["ui:buttons"] = [
-					...(injectTarget["ui:buttons"] || []), 
-					getButton({
+			const injectTarget = parseJSONPointer(belowUiSchema, `${addButtonPath}/ui:options`, "createParents");
+			const buttons = uiSchema["ui:options"].buttons || [];
+			const injectButtons = injectTarget.buttons || [];
+			if ((injectButtons).every(button => {return button.key !== "_add";})) {
+				injectTarget.buttons = [
+					...injectButtons, 
+					{
+						...(buttons.find(button => button.fn === "add") || {}),
 						fn: () => () => {
 							const nextActive = this.props.formData.length;
 							this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
 							this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 						}, 
 						key: "_add",
-						label: addTxt,
 						glyph: "plus"
-					})
+					}
 				];
 			}
 		}
@@ -221,6 +223,8 @@ export default class MapArrayField extends Component {
 		if (removeAddButtonPath && this.state.activeIdx !== undefined) {
 			const target = parseJSONPointer(inlineUiSchema, `${removeAddButtonPath}/ui:options`, "createParents");
 			target.renderAdd = false;
+		} else {
+			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 
 		const inlineSchema = <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_inline`}{...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;

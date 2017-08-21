@@ -97,8 +97,7 @@ export default class SingleActiveArrayField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled", "table"]),
-				activeIdx: PropTypes.integer,
-				addTxt: PropTypes.string
+				activeIdx: PropTypes.integer
 			})
 		})
 	}
@@ -292,7 +291,6 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	buttonDefinitions = {
-
 		add: {
 			callback: () => this.onActiveChange(this.props.formData.length),
 			className: (!getUiOptions(this.props.uiSchema).renderer || getUiOptions(this.props.uiSchema).renderer === "accordion") ?

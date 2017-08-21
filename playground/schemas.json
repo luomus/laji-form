@@ -15,6 +15,9 @@
 				"fn": "help",
 				"delay": 1
 			},
+			"alt+F5": {
+				"fn": "revalidate"
+			},
 			"Enter": {
 				"fn": "navigate"
 			},
@@ -115,11 +118,7 @@
 				"fn": "insert",
 				"target": "root_gatherings",
 				"targetLabel": "paikka"
-			},
-			"alt+F5": {
-				"fn": "revalidate"
 			}
-
 		},
 		"ui:order": [
 			"gatheringEvent",
@@ -180,16 +179,14 @@
 												"ui:buttonsDesktopLayout": true
 											},
 											"items": {
-												"ui:functions": [
-													{
-														"ui:field": "ContextInjectionField",
-														"ui:options": {
-															"injections": {
-																"/ui:options/rules/0/regexp": "/creator"
-															}
+												"ui:functions": {
+													"ui:field": "ContextInjectionField",
+													"ui:options": {
+														"injections": {
+															"/ui:options/rules/0/regexp": "/creator"
 														}
 													}
-												],
+												},
 												"ui:field": "DependentDisableField",
 												"ui:options": {
 													"rules": [
@@ -266,7 +263,7 @@
 				}
 			},
 			"editors": {
-				"ui:help": "Jos syötät havainnon tekijäksi tunnistetun käyttäjän, ja käyttäjä on lisännyt sinut kaveriksesi, voit antaa kyseiselle käyttäjälle oikeuden muokata tätä retkikertomusta. Lisäksi tämän retkikertomuksen havainnot näkyvät kyseiselle käyttäjälle hänen omien havaintojensa joukossa.",
+				"ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
 				"ui:options": {
 					"allowUndefined": false
 				}
@@ -313,7 +310,6 @@
 				"/mapOptions/tileLayerOpacity"
 			],
 			"ui:options": {
-				"activeIdx": 1,
 				"geometryField": "geometry",
 				"geometryMapper": "units",
 				"mapSizes": {
@@ -322,9 +318,15 @@
 					"sm": 6,
 					"xs": 12
 				},
+				"buttons": [
+					{
+						"fn": "add",
+						"label": "Lisää paikka"
+					}
+				],
 				"popupFields": [
 					{
-						"field": "taxon"
+						"mapper": "taxon"
 					},
 					{
 						"field": "sex"
@@ -333,17 +335,18 @@
 						"field": "notes"
 					}
 				],
-				"belowFields": ["units"],
+				"belowFields": [
+					"units"
+				],
 				"belowUiSchemaRoot": {
-					"ui:field": "SingleActiveArrayField",
+					"ui:field": "SingleItemArrayField",
 					"ui:options": {
-						"renderer": "uncontrolled"
+						"titleFormat": "Paikan %{idx} havainnot"
 					}
 				},
 				"inlineUiSchemaRoot": {
 					"ui:field": "AccordionArrayField",
 					"ui:options": {
-						"addTxt": "Lisää paikka",
 						"headerFormatters": [
 							"units",
 							"locality"
@@ -356,21 +359,18 @@
 							{
 								"field": "localityDescription"
 							}
-						]
+						],
+						"titleFormat": "%{Title} %{idx}"
 					}
 				},
-				"belowUiSchemaRoot": {
-					"ui:field": "SingleActiveArrayField",
-					"ui:options": {
-						"renderer": "uncontrolled"
-					}
-				},
-				"propsToPassToInlineSchema": ["errorSchema", "formData"],
+				"propsToPassToInlineSchema": [
+					"errorSchema",
+					"formData"
+				],
 				"minHeight": 435,
 				"resizeTimeout": 210,
 				"addButtonPath": "/items/units",
-				"removeAddButtonPath": "/",
-				"addTxt": "Lisää paikka"
+				"removeAddButtonPath": "/"
 			},
 			"items": {
 				"ui:field": "NestField",
@@ -399,7 +399,7 @@
 							}
 						},
 						"placeWrapper": {
-							"title": "",
+							"title": "Havaintopaikan tiedot",
 							"fields": [
 								"locality",
 								"localityDescription",
@@ -464,11 +464,10 @@
 						}
 					},
 					"ui:field": "SingleActiveArrayField",
+					"ui:title": "",
 					"ui:options": {
 						"renderer": "table",
 						"normalRenderingTreshold": "sm",
-						"confirmDelete": true,
-						"deleteCorner": true,
 						"buttons": [
 							{
 								"fn": "add",
@@ -481,23 +480,17 @@
 								"filter": [
 									"/identifications/0/taxon",
 									"/identifications/0/taxonID",
-									"unitType",
 									"count",
 									"notes",
 									"/unitGathering/geometry",
 									"images",
 									"sex",
-									"lifeStage",
-									"hostID",
-									"substrateSpecies",
 									"taste",
 									"tasteNotes",
 									"smell",
 									"smellNotes",
-									"plantLifeStage",
 									"plantStatusCode",
-									"movingStatus",
-									"/unitGathering/substrate"
+									"movingStatus"
 								]
 							}
 						]
@@ -527,6 +520,16 @@
 						"classNames": "well well-sm",
 						"ui:settings": [
 							"%additionalFields/scopeField_gathering_unit_unitType"
+						],
+						"ui:order": [
+							"identifications",
+							"count",
+							"notes",
+							"unitType",
+							"taxonConfidence",
+							"recordBasis",
+							"*",
+							"images"
 						],
 						"ui:options": {
 							"additionalsGroupingPath": "/fieldScopes/unitType",
@@ -563,7 +566,7 @@
 										"additionalFields": [
 											"identifications_0_det",
 											"identifications_0_detDate",
-											"identifications_0_identificationBasis",
+											"identifications_0identificationBasis",
 											"sex",
 											"unitGathering_dateBegin",
 											"unitGathering_dateEnd",
@@ -619,7 +622,7 @@
 									"unitType": 2,
 									"taxonConfidence": 2,
 									"recordBasis": 2,
-									"identifications_0_identificationBasis": 2,
+									"identifications_0identificationBasis": 2,
 									"unitGathering_dateBegin": 3,
 									"unitGathering_dateEnd": 3,
 									"*": 1
@@ -632,14 +635,14 @@
 									"unitType": 2,
 									"taxonConfidence": 2,
 									"recordBasis": 2,
-									"identifications_0_identificationBasis": 2,
+									"identifications_0identificationBasis": 2,
 									"unitGathering_dateBegin": 3,
 									"unitGathering_dateEnd": 3,
 									"identifications_0_detDate": 3,
 									"*": 1
 								},
 								"sm": {
-									"identifications_0_identificationBasis": 4,
+									"identifications_0identificationBasis": 4,
 									"unitGathering_dateBegin": 3,
 									"unitGathering_dateEnd": 3,
 									"*": 2
@@ -656,16 +659,6 @@
 								]
 							}
 						},
-						"ui:order": [
-							"identifications",
-							"count",
-							"notes",
-							"unitType",
-							"taxonConfidence",
-							"recordBasis",
-							"*",
-							"images"
-						],
 						"identifications": {
 							"taxonID": {
 								"ui:widget": "HiddenWidget"
@@ -680,7 +673,7 @@
 						"images": {
 							"ui:field": "ImageArrayField",
 							"ui:options": {
-								"capturerVerbatimPath": "gatheringEvent_leg"
+								"capturerVerbatimPath": "/gatheringEvent/leg"
 							}
 						},
 						"unitGathering": {
@@ -1497,11 +1490,6 @@
 		"gatherings": {
 			"items": {
 				"properties": {
-					"notes": {
-						"format": {
-							"pattern": "sdlfkj"
-						}
-					},
 					"dateBegin": {
 						"datetime": {
 							"latest": "now",
@@ -1528,11 +1516,6 @@
 								"identifications": {
 									"presence": {
 										"message": "@taxonValidation"
-									}
-								},
-								"taxonConfidence": {
-									"format": {
-									"pattern": "MY.taxonConfidenceUnsure"
 									}
 								},
 								"unitGathering": {
@@ -1584,18 +1567,6 @@
 		"creator": "MA.308",
 		"formID": "MHL.1",
 		"activeGatheringIdx": 1
-	},
-	"settings": {
-	  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "googleSatellite",
-	  "#root_gatherings$MapArrayField/mapOptions/tileLayerOpacity": 0.8,
-	  "#root_gatherings$MapArrayField/mapOptions/overlayNames": [
-		"geobiologicalProvinces"
-	  ],
-	  "%additionalFields/scopeField_gathering_unit_unitType": {
-		"MVL.2": {
-		  "unitGathering_substrate": true
-		}
-	  }
 	},
 	"formData": {
 	  "gatheringEvent": {
