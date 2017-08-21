@@ -426,7 +426,7 @@ class AccordionArrayFieldTemplate extends Component {
 									 eventKey={idx}
 									 header={header(idx)}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-							{item.children}
+							{idx === activeIdx ? item.children : null}
 						</Panel>
 					))}
 					<ButtonsWrapper props={arrayFieldTemplateProps} />
