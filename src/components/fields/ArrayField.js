@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import update from "immutability-helper";
 import merge from "deepmerge";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -9,44 +10,44 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 	const nestedFilters = filter;
 
 	const {schema, registry} = that.props;
-	const defaultItem = getDefaultFormState(schema.items, copyItem, registry.definitions);
+	const defaultItem = getDefaultFormState(schema.items, undefined, registry.definitions);
 
-	nestedFilters.forEach(filter => {
+	const source = type === "blacklist" ? defaultItem : copyItem;
+
+	const filtered = nestedFilters.reduce((target, filter) => {
 		const splitted = filter.includes("/") ? filter.substring(1).split("/") : [filter];
-		const last = splitted.pop();
+		const splittedWithoutLast = splitted.slice(0);
+		const last = splittedWithoutLast.pop();
 
-		const nested = splitted.reduce((_nested, path) => {
-			return (typeof _nested === "object" && _nested !== null) ? _nested[path] : undefined;
-		}, defaultItem);
-		if (type === "blacklist") {
-			const nestedSchema = [...splitted, last].reduce((nested, path) => {
-				let item = nested;
-				while (true) {
-					let copyItem = item;
-					if (typeof item === "object" && item !== null) {
-						if (item.type === "object" && "properties" in item) {
-							item = item.properties;
-						} else if (item.type === "array" && "items" in item) {
-							item =  item.items;
-						}
-					}
-					if (item === copyItem) break;
-				}
-				return (path in item) ? item[path] : item;
-			}, schema.items);
-
-			if (nested) nested[last] = getDefaultFormState(nestedSchema, undefined, registry.definitions);
-		} else {
-			const origNestedField = splitted.reduce((nested, path) => {
-				if (nested !== undefined) return nested[path];
-				else if (nested && nested[0] !== undefined) return nested[0][path];
-				return undefined;
-			}, copyItem);
-			if (nested) nested[last] = origNestedField;
+		let hasValue = false;
+		let nestedPointer = source;
+		for (let path of splitted) {
+			if (nestedPointer && path in nestedPointer) {
+				nestedPointer = nestedPointer[path];
+				hasValue = true;
+			} else {
+				hasValue = false;
+				break;
+			}
 		}
-	});
 
-	return defaultItem;
+		if (!hasValue) return target;
+
+		let pointer = undefined;
+		let value = source;
+		const updateObject = splittedWithoutLast.reduce((updateObject, path) => {
+			updateObject[path] = {};
+			pointer = updateObject[path];
+			value = value[path];
+			return pointer;
+		}, {});
+
+		updateObject[last] = {$set: value[last]};
+
+		return update(target, updateObject);
+	}, type === "blacklist" ? copyItem : defaultItem);
+
+	return filtered;
 };
 
 @BaseComponent
