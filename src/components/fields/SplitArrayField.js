@@ -18,38 +18,43 @@ export default class SplitArrayField extends Component {
 	};
 
 	getStateFromProps(props) {
-		let {schema, uiSchema, formData} = props;
+		let {schema, uiSchema, errorSchema, formData} = props;
 		const uiOptions = getUiOptions(props.uiSchema);
 
 		const splitFormData = [];
 		const splitUiSchemas = [];
 		const splitSchemas = [];
-
+		const splitErrorSchemas = [];
 
 		for (let i = 0; i <= uiOptions.splitRule.rules.length; i++) {
 			splitFormData.push([]);
 			const addedOptions = uiOptions.uiOptions && uiOptions.uiOptions.length > i ? uiOptions.uiOptions[i] : {};
 			splitUiSchemas[i] = {...uiSchema, "ui:options": {...addedOptions}};
 			splitSchemas[i] = {...schema};
+			splitErrorSchemas[i] = {};
 			if (addedOptions.title) splitSchemas[i].title = addedOptions.title;
 		}
 
 		for (let i = 0; i < formData.length; i++) {
 			const value = this.getValueFromPath(formData[i], uiOptions.splitRule.fieldPath);
-			let noMatch = true;
+			let match = -1;
 
 			for (let j = 0; j < uiOptions.splitRule.rules.length; j++) {
 				if (value && value.match(uiOptions.splitRule.rules[j])) {
-					splitFormData[j].push({...formData[i]});
-					noMatch = false;
+					match = j;
 					break;
 				}
 			}
+			if (match === -1) { match = splitFormData.length - 1; }
 
-			if (noMatch) splitFormData[splitFormData.length - 1].push({...formData[i]});
+			if (errorSchema[i]) {
+				splitErrorSchemas[match][splitFormData[match].length] = {...errorSchema[i]};
+			}
+
+			splitFormData[match].push({...formData[i]});
 		}
 
-		return {splitSchemas, splitUiSchemas, splitFormData};
+		return {splitSchemas, splitUiSchemas, splitFormData, splitErrorSchemas};
 	}
 
 	render() {
@@ -84,6 +89,7 @@ export default class SplitArrayField extends Component {
 									idSchema={{...this.props.idSchema, "$id": this.props.idSchema.$id + "_" + i}}
 									formData={state.splitFormData[i]}
 									uiSchema={state.splitUiSchemas[i]}
+									errorSchema={state.splitErrorSchemas[i]}
 									onChange={onChange[i]}/>
 						</div>
 				)}
