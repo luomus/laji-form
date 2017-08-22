@@ -715,6 +715,12 @@ body .laji-form {
 	margin-bottom: 7px;
 }
 
+@media (max-width: 767px) {
+	.laji-form .xs-hidden-label label {
+		display: none;
+	}
+}
+
 .laji-form .highlight-error-start {
 	background-color: #ebccd1;
 	border-radius: 2px;
