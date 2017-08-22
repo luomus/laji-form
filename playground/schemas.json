@@ -538,6 +538,7 @@
 							"additionalsPersistenceKey": "unitType",
 							"additionalsPersistenceId": "gathering_unit_unitType",
 							"includeAdditionalFieldsChooserButton": true,
+							"geometryField": "unitGathering_geometry",
 							"glyphFields": [
 								{
 									"glyph": "camera",
