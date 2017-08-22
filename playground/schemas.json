@@ -476,21 +476,21 @@
 							{
 								"fn": "copy",
 								"label": "Kopioi havainto",
-								"type": "blacklist",
+								"type": "whitelist",
 								"filter": [
-									"/identifications/0/taxon",
-									"/identifications/0/taxonID",
-									"count",
-									"notes",
-									"/unitGathering/geometry",
-									"images",
-									"sex",
-									"taste",
-									"tasteNotes",
-									"smell",
-									"smellNotes",
-									"plantStatusCode",
-									"movingStatus"
+									"recordBasis",
+									"unitType",
+									"taxonConfidence",
+									"lifeStage",
+									"preservation",
+									"plantLifeStage",
+									"breeding",
+									"atlasCode",
+									"twitched",
+									"nativeStatus",
+									"identifications_0_det",
+									"identifications_0_detDate",
+									"identifications_0_idenficationBasis"
 								]
 							}
 						]
@@ -538,6 +538,7 @@
 							"additionalsPersistenceKey": "unitType",
 							"additionalsPersistenceId": "gathering_unit_unitType",
 							"includeAdditionalFieldsChooserButton": true,
+							"geometryField": "unitGathering_geometry",
 							"glyphFields": [
 								{
 									"glyph": "camera",
@@ -1565,8 +1566,7 @@
 	},
 	"uiSchemaContext": {
 		"creator": "MA.308",
-		"formID": "MHL.1",
-		"activeGatheringIdx": 1
+		"formID": "MHL.1"
 	},
 	"formData": {
 	  "gatheringEvent": {
@@ -1642,6 +1642,50 @@
 			  "dateBegin": "2012-07-02",
 			  "dateEnd": "2012-07-04"
 			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservationPhoto",
+			  "unitType": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [
+				"MM.89524"
+			  ],
+			  "notes": "1",
+			  "count": "123",
+			  "sex": "MY.sexF",
+			  "lifeStage": "MY.lifeStageLarva",
+			  "hostID": "aasui",
+			  "substrateSpecies": "123",
+			  "taste": "MY.tasteNotTasted",
+			  "tasteNotes": "3",
+			  "smellNotes": "123",
+			  "preservation": "MY.preservationEthanol",
+			  "plantLifeStage": "MY.plantLifeStageFertile",
+			  "plantStatusCode": "MY.MY.plantStatusCodeL",
+			  "breeding": true,
+			  "atlasCode": "MY.atlasCodeEnum1",
+			  "movingStatus": "3",
+			  "twitched": true,
+			  "nativeStatus": "MY.native",
+			  "samplingMethod": "MY.samplingMethodPitfall",
+			  "smell": "MY.smellNoSmelled",
+			  "identifications": [
+				{
+				  "taxon": "ass",
+				  "taxonID": "MX.47092",
+				  "identificationBasis": [],
+				  "det": "m'",
+				  "detDate": "2012-02-01"
+				}
+			  ],
+			  "unitGathering": {
+				"geometry": {},
+				"dateBegin": "2012-07-02",
+				"dateEnd": "2012-07-04",
+				"habitatIUCN": "2",
+				"habitatDescription": "1",
+				"substrate": "23"
+			  }
 			}
 		  ],
 		  "geometry": "60:25/"
@@ -1661,8 +1705,8 @@
 			]
 		  }
 		}
+
 	  ]
 	}
 }
-
 

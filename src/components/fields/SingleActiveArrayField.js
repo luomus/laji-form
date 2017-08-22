@@ -303,9 +303,9 @@ export default class SingleActiveArrayField extends Component {
 					this.state.activeIdx :
 					this.props.formData.length - 1;
 				this.props.onChange([
-					...this.props.formData.slice(0, idx),
+					...this.props.formData.slice(0, idx + 1),
 					copyItemFunction(this, this.props.formData[idx])(...params),
-					...this.props.formData.slice(idx)
+					...this.props.formData.slice(idx + 1)
 				]);
 			},
 			callback: () => {

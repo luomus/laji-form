@@ -27,7 +27,9 @@ const buttonSettings = {
 	setLocation: (that, {glyph, label}) => {
 		const id = that.props.idSchema.$id;
 
-		const hasCoordinates = hasData(that.props.formData["/unitGathering/geometry"]);
+		const {geometryField = "unitGathering_geometry"} = getUiOptions(that.uiSchema);
+
+		const hasCoordinates = hasData(that.props.formData[geometryField]);
 
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
@@ -77,7 +79,7 @@ const buttonSettings = {
 								case "create":
 									that.props.onChange(update(
 											that.props.formData,
-											{$merge: {["/unitGathering/geometry"]: event.feature.geometry}}
+											{$merge: {[geometryField]: event.feature.geometry}}
 										));
 									close();
 									break;
@@ -101,7 +103,7 @@ const buttonSettings = {
 							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 						}
 					},
-					center: hasCoordinates ? that.props.formData["/unitGathering/geometry"].coordinates.slice(0).reverse() : mapOptions.center,
+					center: hasCoordinates ? that.props.formData[geometryField].coordinates.slice(0).reverse() : mapOptions.center,
 					zoom: hasCoordinates ? 14 : mapOptions.zoom
 				}
 			});
@@ -163,7 +165,7 @@ const buttonSettings = {
 				mapOptions = _mapOptions;
 			}
 
-			const geometry = that.props.formData["/unitGathering/geometry"];
+			const geometry = that.props.formData[geometryField];
 
 			that.setState({
 				miniMap: {
