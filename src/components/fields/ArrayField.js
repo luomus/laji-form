@@ -66,7 +66,7 @@ export default class _ArrayField extends Component {
 				"ui:options": {
 					orderable: false, 
 					...props.uiSchema["ui:options"], 
-					buttonDefinitions: props.uiSchema["ui:options"].buttonDefinitions ? 
+					buttonDefinitions: getUiOptions(props.uiSchema).buttonDefinitions ?
 						merge(this.buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions) :
 						this.buttonDefinitions
 				}
