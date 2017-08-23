@@ -36,7 +36,8 @@ export default class InlineLabelField extends Component {
 						field: PropTypes.number
 					}),
 					PropTypes.number
-				]).isRequired
+				]).isRequired,
+				showChildLabels: PropTypes.boolean
 			}).isRequired
 		})
 	};
@@ -63,8 +64,13 @@ export default class InlineLabelField extends Component {
 
 		return (
 			<Row>
-				<Col {...titleCols}><span>{this.props.schema.title}</span></Col>
-				<Col {...fieldCols}><SchemaField {...this.props} {...this.state}/></Col>
+				<Col {...titleCols}>
+                    {options.showChildLabels ? <label className="hidden-xs"><strong>&nbsp;</strong></label> : null}
+                    <div>{this.props.schema.title}</div>
+				</Col>
+				<Col {...fieldCols}>
+					<SchemaField {...this.props} {...this.state}/>
+				</Col>
 			</Row>
 		);
 	}
