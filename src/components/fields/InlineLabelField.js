@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
 import { Row , Col } from "react-bootstrap";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
@@ -62,11 +63,17 @@ export default class InlineLabelField extends Component {
 	    const titleCols = this.getCols(options, "label");
 	    const fieldCols = this.getCols(options, "field");
 
+		const tooltip = <Tooltip id={this.props.idSchema.$id + "_tooltip"}>{this.props.schema.title}</Tooltip>
+
 		return (
 			<Row>
 				<Col {...titleCols}>
                     {options.showChildLabels ? <label className="hidden-xs"><strong>&nbsp;</strong></label> : null}
-					<div><label><strong>{this.props.schema.title}</strong></label></div>
+					<div>
+						<OverlayTrigger overlay={tooltip}>
+							<label><strong>{this.props.schema.title}</strong></label>
+						</OverlayTrigger>
+					</div>
 				</Col>
 				<Col {...fieldCols}>
 					<SchemaField {...this.props} {...this.state}/>
