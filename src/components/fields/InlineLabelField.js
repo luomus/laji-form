@@ -66,7 +66,7 @@ export default class InlineLabelField extends Component {
 			<Row>
 				<Col {...titleCols}>
                     {options.showChildLabels ? <label className="hidden-xs"><strong>&nbsp;</strong></label> : null}
-                    <div>{this.props.schema.title}</div>
+					<div><label><strong>{this.props.schema.title}</strong></label></div>
 				</Col>
 				<Col {...fieldCols}>
 					<SchemaField {...this.props} {...this.state}/>
