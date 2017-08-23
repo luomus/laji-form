@@ -25,7 +25,6 @@ class SelectWidget extends Component {
 			enumOptions = enumOptions.slice(1);
 		}
 
-
 		function sort(enumOptions, order) {
 			if (!Array.isArray(order)) return enumOptions;
 
@@ -73,21 +72,25 @@ class SelectWidget extends Component {
 
 	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => value))
 
-	selectOnChange = ({value}) => this.props.onChange(value)
+	selectOnChange = (item) => {
+		item.value ? this.props.onChange(item.value) : this.setState({value: item});
+	}
 
-	onClick = () => this.setState({open: true})
+	onClick = () => {
+		this.setState({open: true});
+	}
 
 	onFocus = () => this.setState({open: true}, () => {
 		findDOMNode(this.comboRef.refs.inner.refs.input).select();
 	})
-	
-	onBlur = () => this.setState({open: false})
-	
-	onSelect = () => this.state.open && this.getContext().setImmediate(() => this.setState({open: false}))
-	
-	onKeyDown = () =>  this.state.open && this.setState({open: true})
-	
-	onToggle = () => {};
+
+	onSelect = () => {
+		this.state.open && this.getContext().setImmediate(() => this.setState({open: false}))
+	}
+
+	onToggle = () => {
+		this.setState({open: false});
+	};
 
 	getRef = elem => this.comboRef = elem;
 
@@ -130,12 +133,10 @@ class SelectWidget extends Component {
 				ref={this.getRef}
 				open={this.state.open}
 				onToggle={this.onToggle}
-				suggest={true}
 				onClick={this.onClick}
 				onFocus={this.onFocus}
-				onBlur={this.onBlur}
 				onSelect={this.onSelect}
-				onKeyDown={this.onKeyDown}
+				suggest={true}
 			/>
 		);
 
