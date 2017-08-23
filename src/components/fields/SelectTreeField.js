@@ -11,7 +11,7 @@ import BaseComponent from "../BaseComponent";
  * }
  */
 @BaseComponent
-export default class TreeField extends Component {
+export default class SelectTreeField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -23,7 +23,7 @@ export default class TreeField extends Component {
 	}
 
 	getStateFromProps(props) {
-		let schema = {"type": "object"};
+		let schema = {"type": "object", title: props.schema.title};
 		let {uiSchema} = props;
 		uiSchema = getInnerUiSchema(props.uiSchema);
 		let formData = {};
