@@ -604,6 +604,7 @@ body .laji-form {
 }
 .laji-form .bootstrap-switch-container span {
     height: 23px;
+	white-space: nowrap;
 }
 .laji-form .bootstrap-switch .bootstrap-switch-handle-on {
     border-top-left-radius: 1px;
