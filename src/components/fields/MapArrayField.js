@@ -293,7 +293,7 @@ export default class MapArrayField extends Component {
 					<Col {...mapSizes}>
 						{wrappedMap}
 					</Col>
-					<Col {...schemaSizes} ref="_stretch">
+					<Col {...schemaSizes} ref="_stretch" style={{zIndex: 1}}>
 						{mapOptions.emptyMode ?
 							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
 							inlineSchema

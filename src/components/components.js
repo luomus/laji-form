@@ -270,7 +270,13 @@ export class StretchAffix extends Component {
 
 	getState = () => {
 		const container = this.props.getContainer();
+		let horizontallyAligned = true;
 		if (container) {
+			if (this.refs.wrapper &&
+					container.getBoundingClientRect().top !== findDOMNode(this.refs.wrapper).getBoundingClientRect().top) {
+				horizontallyAligned = false;
+			}
+
 			const topOffset = this.props.topOffset || 0;
 			const bottomOffset = this.props.bottomOffset || 0;
 
@@ -315,10 +321,9 @@ export class StretchAffix extends Component {
 		const {top, width, affixState, affixHeight, fixerHeight} = this.state;
 
 		const style = {position: "relative"};
-		const fixerStyle = {position: "relative", zIndex: -1};
+		const fixerStyle = {position: "relative", zIndex: -1, height: fixerHeight};
 
 		style.height = affixHeight;
-		fixerStyle.height = fixerHeight;
 		switch (affixState) {
 		case TOP:
 			break;

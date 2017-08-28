@@ -464,6 +464,7 @@ body .laji-form {
 	-webkit-flex-grow: 1;
 	-ms-flex-grow: 1;
 	flex-grow: 1;
+	flex-basis: 0%;
 }
 .laji-form .laji-form-field-template-buttons {
 	display: -webkit-box;
@@ -477,23 +478,14 @@ body .laji-form {
 }
 
 @media (max-width: 768px) {
-	.laji-form .laji-form-field-template-item:not(.keep-vertical) {
-		flex-direction: column;
-		-webkit-flex-direction: column;
-	}
-	.laji-form .laji-form-field-template-item .laji-form-field-template-schema {
-		order: 2
-	}
-	.laji-form .laji-form-field-template-item.keep-vertical .laji-form-field-template-schema {
-		order: initial;
-	}
 	.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button {
 		margin-bottom: 0px;
 	}
 	.laji-form .laji-form-field-template-buttons {
-		flex-direction: row-reverse;
+		flex-direction: column;
 		-webkit-flex-direction: row-reverse;
-		justify-content: space-around;
+		justify-content: flex-start;
+		
 	}
 	.laji-form .btn-toolbar:not(.desktop-layout) .btn {
 		width: 100%;

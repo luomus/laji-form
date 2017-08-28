@@ -214,12 +214,19 @@ function FieldTemplate({
 
 	const buttons = (uiSchema["ui:buttons"] && schema.type !== "array") ? uiSchema["ui:buttons"] : undefined;
 	const vertical = uiSchema["ui:buttonsVertical"];
+
+	let containerClassName, schemaClassName, buttonsClassName;
+	if (buttons && buttons.length) {
+		containerClassName = "laji-form-field-template-item" + (vertical ? " keep-vertical" : "");
+		schemaClassName = "laji-form-field-template-schema";
+		buttonsClassName = "laji-form-field-template-buttons";
+	}
 	return (
 		<div className={classNames} id={elemId}>
 			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} /> : null}
 			{_displayLabel && description ? description : null}
-			<div className={"laji-form-field-template-item" + (vertical ? " keep-vertical" : "")}>
-				<div className={"laji-form-field-template-schema"}>
+			<div className={containerClassName}>
+				<div className={schemaClassName}>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}
 					{inlineHelp ? (
 						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
@@ -227,7 +234,7 @@ function FieldTemplate({
 					}
 				</div>
 				{buttons ?
-					<div className="laji-form-field-template-buttons">{buttons}</div> :
+					<div className={buttonsClassName}>{buttons}</div> :
 					null
 				}
 			</div>
