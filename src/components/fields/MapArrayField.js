@@ -241,6 +241,7 @@ export default class MapArrayField extends Component {
 		const onOptionsChanged = options => {
 			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
 		};
+		const getAligmentAnchor = () => this.refs._stretch;
 
 		const mapPropsToPass = {
 			contextId: this.props.formContext.contextId,
@@ -274,15 +275,16 @@ export default class MapArrayField extends Component {
 			bottomOffset: bottomOffset === undefined ? this.props.formContext.bottomOffset : bottomOffset,
 			onResize,
 			mounted: this.state.mounted,
-			className: this.state.focusGrabbed ? "pass-block" : ""
+			className: this.state.focusGrabbed ? "pass-block" : "",
+			minHeight: getUiOptions(this.props.uiSchema).minHeight
 		};
 
 		const wrappedMap = belowSchema ? (
-			<Stretch {...wrapperProps} minHeight={getUiOptions(this.props.uiSchema).minHeight} ref="stretch">
+			<Stretch {...wrapperProps}  ref="stretch">
 				{map}
 			</Stretch>
 		) : (
-			<StretchAffix {...wrapperProps}>
+			<StretchAffix {...wrapperProps} getAligmentAnchor={getAligmentAnchor}>
 				{map}
 			</StretchAffix>
 		);
@@ -293,7 +295,7 @@ export default class MapArrayField extends Component {
 					<Col {...mapSizes}>
 						{wrappedMap}
 					</Col>
-					<Col {...schemaSizes} ref="_stretch" style={{zIndex: 1}}>
+					<Col {...schemaSizes} ref="_stretch">
 						{mapOptions.emptyMode ?
 							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
 							inlineSchema
