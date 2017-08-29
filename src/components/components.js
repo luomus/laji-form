@@ -271,9 +271,10 @@ export class StretchAffix extends Component {
 	getState = () => {
 		const container = this.props.getContainer();
 		let horizontallyAligned = true;
+		const aligmentAnchor = this.props.getAligmentAnchor ? this.props.getAligmentAnchor() : undefined;
 		if (container) {
-			if (this.refs.wrapper &&
-					container.getBoundingClientRect().top !== findDOMNode(this.refs.wrapper).getBoundingClientRect().top) {
+			if (aligmentAnchor &&
+					container.getBoundingClientRect().top !== findDOMNode(aligmentAnchor).getBoundingClientRect().top) {
 				horizontallyAligned = false;
 			}
 
@@ -282,6 +283,7 @@ export class StretchAffix extends Component {
 
 			const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
+			// These calculations are correct only when horizontally aligned.
 			const containerTop = container.getBoundingClientRect().top;
 			const containerBottom = container.getBoundingClientRect().bottom;
 			const containerHeight = container.offsetHeight;
@@ -295,30 +297,38 @@ export class StretchAffix extends Component {
 			const wrapperNode = findDOMNode(this.refs.wrapper);
 
 			const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
-			const top = topOffset;
 
-			const affixHeight = affixState !== BOTTOM ?
-				viewportHeight
-					- containerTop
-					- Math.max(top - containerTop, 0)
-					- bottomOffset :
-				Math.max(
-					containerVisibleHeight
-						- Math.max(bottomOffset - containerBottom, 0)
-						- topOffset,
-					0
-				);
-			const fixerHeight = affixState !== TOP ?
-				"100vh" :
-			Math.max(viewportHeight - affixHeight, 0);
+			let affixHeight, fixerHeight, top;
+			if (horizontallyAligned) {
+				top = topOffset;
 
-			return {affixState, width, top, fixerHeight, affixHeight};
+				affixHeight = affixState !== BOTTOM ?
+					viewportHeight
+						- containerTop
+						- Math.max(top - containerTop, 0)
+						- bottomOffset :
+					Math.max(
+						containerVisibleHeight
+							- Math.max(bottomOffset - containerBottom, 0)
+							- topOffset,
+						0
+					);
+
+				fixerHeight = affixState !== TOP ?
+					"100vh" :
+				Math.max(viewportHeight - affixHeight, 0);
+			} else {
+				affixHeight = this.props.minHeight;
+				fixerHeight = 0;
+			}
+
+			return {affixState, width, top, fixerHeight, affixHeight, horizontallyAligned};
 		}
 	}
 
 	render() {
 		const {children} = this.props;
-		const {top, width, affixState, affixHeight, fixerHeight} = this.state;
+		const {top, width, affixState, affixHeight, fixerHeight, horizontallyAligned} = this.state;
 
 		const style = {position: "relative"};
 		const fixerStyle = {position: "relative", zIndex: -1, height: fixerHeight};
@@ -328,12 +338,12 @@ export class StretchAffix extends Component {
 		case TOP:
 			break;
 		case AFFIXED:
-			style.position = "fixed";
+			if (horizontallyAligned) style.position = "fixed";
 			style.width = width;
 			style.top = top;
 			break;
 		case BOTTOM:
-			style.position = "fixed";
+			if (horizontallyAligned) style.position = "fixed";
 			style.width = width;
 			style.top = top;
 			break;
