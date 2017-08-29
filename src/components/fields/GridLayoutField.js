@@ -116,6 +116,9 @@ export default class GridLayoutField extends Component {
 
 		orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach((propertyName, i) => {
 			const property = this.state.schema.properties[propertyName];
+
+			if (!property) return;
+
 			const uiSchemaProperty = uiSchema[propertyName];
 			const cols = this.getCols(property, uiSchemaProperty, propertyName);
 
