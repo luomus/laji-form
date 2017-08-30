@@ -6,14 +6,19 @@ import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import { GlyphButton, FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
+import { Autosuggest } from "../widgets/AutosuggestWidget";
+import deepEquals from "deep-equal";
+
+const LINE_TRANSECT_ID = "MHL.1";
 
 @BaseComponent
 export default class UnitShorthandField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				shorthandField: PropTypes.string.isRequired,
+				shorthandField: PropTypes.string,
 				formID: PropTypes.string.isRequired,
+				showSchema: PropTypes.bool
 			}).isRequired,
 			uiSchema: PropTypes.object
 		})
@@ -21,13 +26,19 @@ export default class UnitShorthandField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {showSchema: false};
+		this.state = {showSchema: getUiOptions(props.uiSchema).showSchema};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
 	}
 
 	getStateFromProps = (props) => {
 		let {showSchema} = this.state;
-		if (!this.state.showSchema && !isEmptyString(props.formData[getUiOptions(props.uiSchema).shorthandField])) {
+		const isEmpty = () => {
+			return this.props.schema.properties.shorthandField ? 
+				isEmptyString(props.formData[getUiOptions(props.uiSchema).shorthandField]) :
+				deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
+		};
+
+		if (!this.state.showSchema && !isEmpty()) {
 			showSchema = true;
 		}
 		return {showSchema};
@@ -57,7 +68,7 @@ export default class UnitShorthandField extends Component {
 	}
 
 	render() {
-		const {uiSchema} = this.props;
+		const {uiSchema, formContext} = this.props;
 		const {SchemaField} = this.props.registry.fields;
 		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
 		const toggleButton = this.getToggleButton();
@@ -66,24 +77,28 @@ export default class UnitShorthandField extends Component {
 		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:belowHelp"];
 		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:belowHelp": {$set: undefined}}});
 
+		// TODO use container id if doesn't have shorthandFieldName? Solve global id conflict problem first.
+		const id = shorthandFieldName ? this.props.idSchema[shorthandFieldName].$id : `${this.props.idSchema.$id}_shortHandField`;
+
 		return !this.state.showSchema ? (
-				<div className="laji-form-field-template-item">
-					<CodeReader translations={this.props.formContext.translations}
-					            onChange={this.onCodeChange} 
-					            value={this.props.formData[shorthandFieldName]} 
-					            formID={getUiOptions(this.props.uiSchema).formID} 
-					            help={help} 
-											id={`_laji-form_${this.props.idSchema[shorthandFieldName].$id}`}
-					            className="laji-form-field-template-schema" />
-					<div className="laji-form-field-template-buttons">{toggleButton}</div>
-				</div>
-			) : (
-				<div>
-					<SchemaField 
-						{...this.props} 
-						uiSchema={getInnerUiSchema({...uiSchemaWithoutHelp, "ui:buttons": [toggleButton]})} />
-				</div>
-			);
+			<div className="laji-form-field-template-item">
+				<CodeReader translations={this.props.formContext.translations}
+										onChange={this.onCodeChange} 
+										value={this.props.formData[shorthandFieldName]} 
+										formID={getUiOptions(this.props.uiSchema).formID} 
+										help={help} 
+										id={shorthandFieldName ? `_laji-form_${id}` : `_laji-form_${id}`}
+										formContext={formContext}
+										className="laji-form-field-template-schema" />
+				<div className="laji-form-field-template-buttons">{toggleButton}</div>
+			</div>
+		) : (
+			<div>
+				<SchemaField 
+					{...this.props} 
+					uiSchema={getInnerUiSchema({...uiSchemaWithoutHelp, "ui:buttons": [toggleButton]})} />
+			</div>
+		);
 	}
 }
 
@@ -119,8 +134,12 @@ class CodeReader extends Component {
 		if (this.state.failed === true) validationState = "warning";
 		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
 
-		const onChange = ({target: {value}}) => {
+		const onFetcherInputChange = ({target: {value}}) => {
 			if (this.mounted) this.setState({value});
+		};
+
+		const onAutosuggestChange = (formData) => {
+			this.props.onChange(formData);
 		};
 
 		const onKeyDown = e => {
@@ -129,17 +148,46 @@ class CodeReader extends Component {
 			}
 		};
 
-		return (
-			<FormGroup validationState={this.state.failed ? "error" : undefined}>
+		const {formID, formContext} = this.props;
+
+		const onSuggestionSelected = ({payload: {unit}}) => {
+			if (formContext.formDataTransformers) {
+				unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+					const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
+					return state.formData;
+				}, unit)
+			}
+			this.props.onChange(unit);
+		};
+
+		const inputElem = (formID === LINE_TRANSECT_ID) ? (
 				<FetcherInput
 					id={this.props.id}
 					loading={this.state.loading}
 					value={this.state.value}
 					validationState={validationState}
-					onChange={onChange}
+					onChange={onFetcherInputChange}
 					onBlur={this.getCode}
 					onKeyDown={onKeyDown}
 				/>
+		) : (
+			<Autosuggest
+				autosuggestField="unit"
+				query={{
+					formID,
+					includeNonMatching: true
+				}}
+				onSuggestionSelected={onSuggestionSelected}
+				onChange={onAutosuggestChange}
+				formContext={formContext}
+				allowNonsuggestedValue={false}
+				highlightFirstSuggestion={true}
+			/>
+		);
+
+		return (
+			<FormGroup validationState={this.state.failed ? "error" : undefined}>
+				{inputElem}
 				{this.state.failed ? (
 					<HelpBlock>
 						{translations.InvalidUnitCode}
@@ -160,7 +208,8 @@ class CodeReader extends Component {
 			});
 		} else if (value.length >= 3) {
 			this.mounted && this.setState({loading: true});
-			this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID}).then(response => {
+
+			this.apiClient.fetchCached("/autocomplete/unit", {q: value, formID: this.props.formID, includePayload: true}).then(response => {
 				this.props.onChange(response.payload.unit);
 			}).catch(() => {
 				this.mounted && this.setState({failed: true, loading: false});

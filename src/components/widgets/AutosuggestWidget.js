@@ -1,28 +1,33 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Autosuggest from "react-autosuggest";
+import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Tooltip, OverlayTrigger, Popover, Glyphicon } from "react-bootstrap";
-import Spinner from "react-spinner";
+import { Tooltip, OverlayTrigger, Glyphicon } from "react-bootstrap";
 import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
 import { FetcherInput } from "../components";
 import BaseComponent from "../BaseComponent";
 
-const autosuggestSettings = {
-	taxon: {
-		query: {
-			includePayload: true,
-		},
-		renderSuggestion: suggestion => {
-			let text = suggestion.value;
-			if (suggestion.payload.taxonGroupsStr) {
-				text += " (" + suggestion.payload.taxonGroupsStr + ")";
+@BaseComponent
+export default class _AutosuggestWidget extends Component {
+	render() {
+		if (this.props.options) {
+			switch (this.props.options.autosuggestField) {
+			case "taxon":
+				return <TaxonAutosuggestWidget {...this.props} />;
+			case "friends":
+				return <FriendsAutosuggestWidget {...this.props} />;
 			}
-			return text;
-		},
-		convertInputValue: that => {
-			let value = that.getValue();
-			const {inputValue} = getUiOptions(that.props);
+		}
+		return <Autosuggest {...this.props} />;
+	}
+}
+
+function TaxonAutosuggestWidget(props) {
+	const options = {
+		convertInputValue: () => {
+			const options = getUiOptions(props);
+			let value = value in options ? value : props.value;
+			const {inputValue} = getUiOptions(props);
 			if (inputValue) return new Promise(resolve => resolve(inputValue));
 			else {
 				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
@@ -33,25 +38,17 @@ const autosuggestSettings = {
 		isValueSuggested: value => {
 			return !isEmptyString(value) && value.match(/MX\.\d+/);
 		},
-		renderMetaInfo: (that, input) => {
-			const content = autosuggestSettings.taxon.getTaxonCardContent(that);
-			return <OverlayTrigger delay={1} trigger={["focus"]}
-			                       placement={"top"}
-			                       overlay={content}>
-							{input}
-						</OverlayTrigger>;
-		},
-		renderUnsuggestedMetaInfo: (that, input) => {
+		renderUnsuggested: (input) => {
 			const tooltip = (
-				<Tooltip id={`${that.props.id}-tooltip`}>{that.props.formContext.translations.UnknownSpeciesName}</Tooltip>
+				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
 			);
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
 			);
 		},
-		renderSuccessGlyph: (that) => {
-			const options = getUiOptions(that.props);
-			const value = options.hasOwnProperty("value") ? options.value : that.props.value;
+		renderSuccessGlyph: () => {
+			const options = getUiOptions(props);
+			const value = options.hasOwnProperty("value") ? options.value : props.value;
 
 			return (
 				<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
@@ -59,50 +56,20 @@ const autosuggestSettings = {
 				</a>
 			);
 		},
-		getTaxonCardContent: (that) => {
-			const value = that.getValue();
+	};
 
-			if (value && (!that.state || !that.state.value || that.state.value !== value)) {
-				new ApiClient().fetchCached(`/taxa/${value}`).then(response => {
-					if (that.mounted) that.setState({urlTxt: response.scientificName, value, urlTxtIsCursive: response.cursiveName});
-				});
-			}
+	const {options: propsOptions, ...propsWithoutOptions} = props;
 
-			const tooltipElem = (
-				<Tooltip id={`${that.props.id}-popover-tooltip`}>
-					{that.props.formContext.translations.OpenSpeciedCard}
-				</Tooltip>
-			);
+	return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+}
 
-			return (
-				<Popover id={`${that.props.id}-popover`}>
-					<span className="text-success">
-						<Glyphicon glyph="tag" /> {that.props.formContext.translations.KnownSpeciesName}
-					</span>
-					{that.state.urlTxt ?
-						<div>
-							<OverlayTrigger overlay={tooltipElem}>
-								<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-									<Glyphicon glyph="modal-window"/> 
-									{that.state.urlTxtIsCursive ? <i>{that.state.urlTxt}</i> : that.state.urlTxt}
-								</a>
-							</OverlayTrigger>
-						</div> :
-						<Spinner />
-					}
-				</Popover>
-			);
-		}
-	},
-	friends: {
+function FriendsAutosuggestWidget(props) {
+	const options = {
 		query: {
 			includeSelf: true,
 		},
-		renderSuggestion: suggestion => {
-			return suggestion.value;
-		},
-		convertInputValue: that => {
-			let value = that.props.value;
+		convertInputValue: () => {
+			let value = props.value;
 			if (isEmptyString(value) || !value.match(/MA\.\d+/)) return new Promise(resolve => resolve(value));
 			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName}) => {
 				return fullName || value;
@@ -111,17 +78,9 @@ const autosuggestSettings = {
 		isValueSuggested: value => {
 			return !isEmptyString(value) && value.match(/MA\.\d+/);
 		},
-		renderMetaInfo: (that, input) => {
-			const content = autosuggestSettings.friends.getFriendProfile(that);
-			return that.state.imgUrl ? (
-				<OverlayTrigger trigger={["hover", "focus"]}
-			                       overlay={content}>
-					{input}
-				</OverlayTrigger>) : input;
-		},
-		renderUnsuggestedMetaInfo: (that, input) => {
+		renderUnsuggested: (input) => {
 			const tooltip = (
-				<Tooltip id={`${that.props.id}-tooltip`}>{that.props.formContext.translations.UnknownName}</Tooltip>
+				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownName}</Tooltip>
 			);
 			return (
 				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
@@ -130,39 +89,26 @@ const autosuggestSettings = {
 		renderSuccessGlyph: () => <Glyphicon style={{pointerEvents: "auto"}}
 		                                         glyph="user"
 		                                         className="form-control-feedback"/>,
-		// getFriendProfile: (that) => {
-		getFriendProfile: () => {
-			return;
-		// 	const value = that.getValue();
-		//
-		// 	if (value && that.state.imgUrlPerson !== value) {
-		// 		new ApiClient().fetchCached(`/person/by-id/${value}/profile`).then(({image}) => {
-		// 			if (that.mounted && image) that.setState({imgUrl: image, imgUrlPerson: value});
-		// 		});
-		// 	}
-		//
-		// 	return (
-		// 		<Popover id={`${that.props.id}-popover`}>
-		// 			{that.state.imgUrl ?
-		// 				<img src={that.state.imgUrl} style={{width: 70}} /> : <Spinner />
-		// 			}
-		// 		</Popover>
-		// 	);
-		},
-	}
-};
+	};
+
+	const {options: propsOptions, ...propsWithoutOptions} = props;
+
+	return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+}
 
 @BaseComponent
-export default class AutoSuggestWidget extends Component {
+export class Autosuggest extends Component {
 	static propTypes = {
-		options: PropTypes.shape({
-			autosuggestField: PropTypes.string.isRequired,
-			allowNonsuggestedValue: PropTypes.boolean,
-			onSuggestionSelected: PropTypes.function,
-			onConfirmUnsuggested: PropTypes.function,
-			onInputChange: PropTypes.function,
-			uiSchema: PropTypes.object
-		}).isRequired
+		autosuggestField: PropTypes.string,
+		allowNonsuggestedValue: PropTypes.bool,
+		onSuggestionSelected: PropTypes.func,
+		onConfirmUnsuggested: PropTypes.func,
+		onInputChange: PropTypes.func,
+		uiSchema: PropTypes.object
+	}
+
+	static defaultProps = {
+		allowNonsuggestedValue: true,
 	}
 
 	constructor(props) {
@@ -179,9 +125,7 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	getStateFromProps(props) {
-		const options = getUiOptions(props);
-		const {autosuggestField} = options;
-		return {autosuggestSettings: autosuggestSettings[autosuggestField], value: props.value};
+		return {value: props.value};
 	}
 
 	componentDidMount() {
@@ -194,23 +138,22 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	triggerConvert = (props) => {
-		const isValueSuggested = getUiOptions(this.props).isValueSuggested ||
-		                         this.state.autosuggestSettings.isValueSuggested;
+		let isValueSuggested = this.props.isValueSuggested;
 
 		if (props.value === undefined || props.value === "") {
 			this.setState({inputValue: undefined});
 			return;
 		}
 
-		const convert = this.state.autosuggestSettings.convertInputValue;
-		if ((isValueSuggested && isValueSuggested(props.value) && convert) || (!isValueSuggested && convert)) {
+		let convert = this.props.convertInputValue;
+		if ((isValueSuggested && isValueSuggested(this.props.value) && convert) || (!isValueSuggested && convert)) {
 			this.setState({isLoading: true});
 			convert(this)
 				.then(inputValue => {
 					if (!this.mounted) return;
 					this.setState({inputValue: inputValue, isLoading: false});
 				})
-				.catch( () => {
+				.catch(() => {
 					if (!this.mounted) return;
 					this.setState({inputValue: undefined, isLoading: false, unsuggested: true});
 				});
@@ -224,26 +167,28 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	renderSuggestion = (suggestion) => {
-		return (<span className="simple-option">{this.state.autosuggestSettings.renderSuggestion(suggestion)}</span>);
+		let renderSuggestion = this.props.renderSuggestion;
+		if (!renderSuggestion) renderSuggestion = suggestion => suggestion.value;
+		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
 	}
 
 	onSuggestionsFetchRequested = ({value}) => {
 		value = this.inputValue;
 		if (!value || value.length < 2) return;
-		const {autosuggestField, query = {}} = getUiOptions(this.props);
+		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
 		(() => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
-				{q: value, ...(this.state.autosuggestSettings.query || {}), ...query})
+				{q: value, includePayload: true, ...query})
 				.then(suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
-						const unambigiousSuggestion = this.findUnambigiousSuggestion(suggestions);
-						if (!this.state.focused && unambigiousSuggestion) {
-							this.selectSuggestion({...unambigiousSuggestion, value});
+						const exactMatch = this.findExactMatch(suggestions);
+						if (!this.state.focused && exactMatch) {
+							this.selectSuggestion({...exactMatch, value});
 						}
 						else if (this.state.focused) state.suggestions = suggestions;
 						else state.oldSuggestions = suggestions;
@@ -255,6 +200,7 @@ export default class AutoSuggestWidget extends Component {
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({isLoading: false});
 						this.promiseTimestamp = undefined;
+						this.onSuggestionsClearRequested();
 					}
 				});
 		})();
@@ -266,13 +212,11 @@ export default class AutoSuggestWidget extends Component {
 
 	selectSuggestion = (suggestion) => {
 		if (!suggestion) return;
-		const {onSuggestionSelected, suggestionReceive} = getUiOptions(this.props);
+		const {onSuggestionSelected} = this.props;
 		this.suggestionSelectedFlag = true;
 		let state = {inputInProgress: false, unsuggested: false, inputValue: (suggestion !== undefined && suggestion !== null) ? suggestion.value : ""};
 		if (onSuggestionSelected) {
 			onSuggestionSelected(suggestion);
-		} else {
-			this.props.onChange(suggestion[suggestionReceive]);
 		}
 		this.setState(state);
 	}
@@ -280,14 +224,14 @@ export default class AutoSuggestWidget extends Component {
 	onSuggestionSelected = (e, {suggestion, method}) => {
 		e.preventDefault();
 		if (method === "click") {
-			focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
+			if ("id" in this.props) focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
 		}
 		this.selectSuggestion(suggestion);
 		this.setState({focused: false});
 	}
 
 	onInputChange = (value, method) => {
-		const {onInputChange, preventTypingPattern} = getUiOptions(this.props);
+		const {onInputChange, preventTypingPattern} = this.props;
 
 		if (onInputChange) {
 			value = onInputChange(value);
@@ -312,9 +256,9 @@ export default class AutoSuggestWidget extends Component {
 		this.setState({focused: true});
 	}
 
-	findUnambigiousSuggestion = (suggestions) => {
+	findExactMatch = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === this.state.inputValue.toLowerCase()));
+		return suggestions.find(suggestion => (suggestion && suggestion.payload && suggestion.payload.matchType === "exactMatches"));
 	}
 
 	onBlur = (e, {highlightedSuggestion}) => {
@@ -325,14 +269,14 @@ export default class AutoSuggestWidget extends Component {
 			return;
 		}
 
-		const unambigiousSuggestion = this.findUnambigiousSuggestion(this.state.suggestions);
+		const exactMatch = this.findExactMatch(this.state.suggestions);
 		this.setState({focused: false}, () => {
 			if (!this.state.inputInProgress) {
 				return;
 			} else if (highlightedSuggestion === null && this.state.inputValue === "") {
 				this.selectSuggestion(highlightedSuggestion);
-			} else if (unambigiousSuggestion) {
-				this.selectSuggestion({...unambigiousSuggestion, value: this.state.inputValue});
+			} else if (exactMatch) {
+				this.selectSuggestion({...exactMatch, value: this.state.inputValue});
 			} else {
 				this.onConfirmUnsuggested();
 			}
@@ -340,11 +284,12 @@ export default class AutoSuggestWidget extends Component {
 	}
 
 	onConfirmUnsuggested = () => {
-		const {onConfirmUnsuggested} = getUiOptions(this.props);
+		const {onConfirmUnsuggested, allowNonsuggestedValue} = this.props;
+		if (!allowNonsuggestedValue) return;
 		this.setState({inputInProgress: false, unsuggested: true});
 		if (onConfirmUnsuggested) {
 			onConfirmUnsuggested(this.state.inputValue);
-		} else {
+		} else if  (this.props.onChange) {
 			this.props.onChange(this.state.inputValue);
 		}
 	}
@@ -380,7 +325,7 @@ export default class AutoSuggestWidget extends Component {
 
 		return (
 			<div className="autosuggest-wrapper">
-				<Autosuggest
+				<ReactAutosuggest
 					id={`${this.props.id}-autosuggest`}
 					inputProps={inputProps}
 					renderInputComponent={this.renderInput}
@@ -391,21 +336,17 @@ export default class AutoSuggestWidget extends Component {
 					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 					onSuggestionSelected={this.onSuggestionSelected}
 					focusInputOnSuggestionClick={false}
+					highlightFirstSuggestion={this.props.highlightFirstSuggestion}
 					theme={cssClasses}
 				/>
 			</div>
 		);
 	}
 
-	getValue = () => {
-		const options = getUiOptions(this.props);
-		return options.hasOwnProperty("value") ? options.value : this.props.value;
-	}
-
 	renderInput = (inputProps) => {
 		let validationState = null;
 
-		const value = this.getValue();
+		const value = this.props.value;
 
 		if ((this.state.inputInProgress && !this.state.focused) || this.state.unsuggested) {
 			validationState = "warning";
@@ -413,8 +354,7 @@ export default class AutoSuggestWidget extends Component {
 			validationState = "success";
 		}
 
-		const options = getUiOptions(this.props);
-		const renderMetaInfo = !options.hasOwnProperty("renderMetaInfo") || options.renderMetaInfo;
+		let renderSuggested = this.props.renderSuggested;
 
 		const getGlyphNameFromState = (state) => {
 			switch (state) {
@@ -443,23 +383,25 @@ export default class AutoSuggestWidget extends Component {
 
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		let glyph = undefined;
-		if (!this.state.focused && !this.state.isLoading && renderMetaInfo) {
-			glyph = validationState === "success" && this.state.autosuggestSettings.renderSuccessGlyph ?
-				this.state.autosuggestSettings.renderSuccessGlyph(this) : getGlyph(validationState);
+		let {renderSuccessGlyph, renderUnsuggested} = this.props;
+
+		if (!this.state.focused && !this.state.isLoading) {
+			glyph = (validationState === "success" && renderSuccessGlyph) ?
+				renderSuccessGlyph(this) : getGlyph(validationState);
 		}
 		const input = (
 			<FetcherInput 
 				{...inputProps} 
 				glyph={glyph} 
 				loading={this.state.isLoading} 
-				validationState={renderMetaInfo ? validationState : undefined} 
+				validationState={validationState} 
 			/>
 		);
 
-		if (value && !this.state.unsuggested && renderMetaInfo && this.state.autosuggestSettings.renderMetaInfo) {
-			return this.state.autosuggestSettings.renderMetaInfo(this, input);
-		} else if (value && this.state.unsuggested && renderMetaInfo && this.state.autosuggestSettings.renderUnsuggestedMetaInfo) {
-			return this.state.autosuggestSettings.renderUnsuggestedMetaInfo(this, input);
+		if (value && !this.state.unsuggested && renderSuggested) {
+			return renderSuggested(input);
+		} else if (value && this.state.unsuggested && renderUnsuggested) {
+			return renderUnsuggested(input);
 		} else {
 			return input;
 		}

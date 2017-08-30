@@ -496,168 +496,183 @@
 						]
 					},
 					"items": {
-						"ui:functions": {
-							"ui:field": "AutosuggestField",
-							"ui:options": {
-								"autosuggestField": "taxon",
-								"allowNonsuggestedValue": true,
-								"suggestionInputField": "identifications_0_taxon",
-								"suggestionValueField": "identifications_0_taxonID",
-								"suggestionReceivers": {
-									"identifications_0_taxon": "value",
-									"unitType": "$taxonGroup",
-									"identifications_0_taxonID": "key"
-								},
-								"inputTransformer": {
-									"regexp": "^(.*)\\?$",
-									"transformations": {
-										"taxonConfidence": "MY.taxonConfidenceUnsure"
+						"ui:functions": [
+							{
+								"ui:field": "AutosuggestField",
+								"ui:options": {
+									"autosuggestField": "taxon",
+									"allowNonsuggestedValue": true,
+									"suggestionInputField": "identifications_0_taxon",
+									"suggestionValueField": "identifications_0_taxonID",
+									"suggestionReceivers": {
+										"identifications_0_taxon": "value",
+										"unitType": "$taxonGroup",
+										"identifications_0_taxonID": "key"
+									},
+									"inputTransformer": {
+										"regexp": "^(.*)\\?$",
+										"transformations": {
+											"taxonConfidence": "MY.taxonConfidenceUnsure"
+										}
+									}
+								}
+							},
+							{
+								"ui:field": "ContextInjectionField",
+								"ui:options": {
+									"injections": {
+										"/ui:options/formID": "/formID"
 									}
 								}
 							}
-						},
-						"ui:field": "ScopeField",
+						],
+						"ui:field": "UnitShorthandField",
 						"classNames": "well well-sm",
-						"ui:settings": [
-							"%additionalFields/scopeField_gathering_unit_unitType"
-						],
-						"ui:order": [
-							"identifications",
-							"count",
-							"notes",
-							"unitType",
-							"taxonConfidence",
-							"recordBasis",
-							"*",
-							"images"
-						],
 						"ui:options": {
-							"additionalsGroupingPath": "/fieldScopes/unitType",
-							"additionalsGroupingOrderer": "unitType",
-							"additionalsGroupsTranslator": "taxonGroups",
-							"additionalsPersistenceKey": "unitType",
-							"additionalsPersistenceId": "gathering_unit_unitType",
-							"includeAdditionalFieldsChooserButton": true,
-							"geometryField": "unitGathering_geometry",
-							"glyphFields": [
-								{
-									"glyph": "camera",
-									"show": "images",
-									"label": "Lisää valokuva"
-								},
-								{
-									"glyph": "map-marker",
-									"fn": "setLocation",
-									"label": "Valitse sijainti"
-								}
+						},
+						"uiSchema": {
+							"ui:field": "ScopeField",
+							"ui:settings": [
+								"%additionalFields/scopeField_gathering_unit_unitType"
 							],
-							"fields": [
-								"identifications_0_taxonID",
+							"ui:order": [
 								"identifications_0_taxon",
 								"count",
 								"notes",
 								"unitType",
 								"taxonConfidence",
-								"recordBasis"
+								"recordBasis",
+								"*",
+								"images"
 							],
-							"fieldScopes": {
-								"unitType": {
-									"*": {
-										"title": "Kaikki",
-										"additionalFields": [
-											"identifications_0_det",
-											"identifications_0_detDate",
-											"identifications_0identificationBasis",
-											"sex",
-											"unitGathering_dateBegin",
-											"unitGathering_dateEnd",
-											"unitGathering_habitatIUCN",
-											"unitGathering_habitatDescription",
-											"preservation",
-											"samplingMethod",
-											"breeding"
-										]
+							"ui:options": {
+								"additionalsGroupingPath": "/fieldScopes/unitType",
+								"additionalsGroupingOrderer": "unitType",
+								"additionalsGroupsTranslator": "taxonGroups",
+								"additionalsPersistenceKey": "unitType",
+								"additionalsPersistenceId": "gathering_unit_unitType",
+								"includeAdditionalFieldsChooserButton": true,
+								"geometryField": "unitGathering_geometry",
+								"glyphFields": [
+									{
+										"glyph": "camera",
+										"show": "images",
+										"label": "Lisää valokuva"
 									},
-									"MVL.1": {
-										"additionalFields": [
-											"atlasCode",
-											"movingStatus",
-											"twitched"
-										]
-									},
-									"MVL.21": {
-										"additionalFields": [
-											"nativeStatus",
-											"plantLifeStage",
-											"plantStatusCode"
-										]
-									},
-									"MVL.232": {
-										"additionalFields": [
-											"lifeStage",
-											"hostID"
-										]
-									},
-									"MVL.233": {
-										"title": "Sienet",
-										"additionalFields": [
-											"unitGathering_substrate",
-											"substrateSpecies",
-											"smell",
-											"smellNotes",
-											"taste",
-											"tasteNotes"
-										]
+									{
+										"glyph": "map-marker",
+										"fn": "setLocation",
+										"label": "Valitse sijainti"
+									}
+								],
+								"fields": [
+									"identifications_0_taxonID",
+									"identifications_0_taxon",
+									"count",
+									"notes",
+									"unitType",
+									"taxonConfidence",
+									"recordBasis"
+								],
+								"fieldScopes": {
+									"unitType": {
+										"*": {
+											"title": "Kaikki",
+											"additionalFields": [
+												"identifications_0_det",
+												"identifications_0_detDate",
+												"identifications_0identificationBasis",
+												"sex",
+												"unitGathering_dateBegin",
+												"unitGathering_dateEnd",
+												"unitGathering_habitatIUCN",
+												"unitGathering_habitatDescription",
+												"preservation",
+												"samplingMethod",
+												"breeding"
+											]
+										},
+										"MVL.1": {
+											"additionalFields": [
+												"atlasCode",
+												"movingStatus",
+												"twitched"
+											]
+										},
+										"MVL.21": {
+											"additionalFields": [
+												"nativeStatus",
+												"plantLifeStage",
+												"plantStatusCode"
+											]
+										},
+										"MVL.232": {
+											"additionalFields": [
+												"lifeStage",
+												"hostID"
+											]
+										},
+										"MVL.233": {
+											"title": "Sienet",
+											"additionalFields": [
+												"unitGathering_substrate",
+												"substrateSpecies",
+												"smell",
+												"smellNotes",
+												"taste",
+												"tasteNotes"
+											]
+										}
 									}
 								}
-							}
-						},
-						"uiSchema": {
-							"ui:field": "GridLayoutField",
-							"ui:options": {
-								"lg": {
-									"identifications_0_taxonID": 2,
-									"identifications_0_taxon": 2,
-									"count": 2,
-									"notes": 2,
-									"unitType": 2,
-									"taxonConfidence": 2,
-									"recordBasis": 2,
-									"identifications_0identificationBasis": 2,
-									"unitGathering_dateBegin": 3,
-									"unitGathering_dateEnd": 3,
-									"*": 1
-								},
-								"md": {
-									"identifications_0_taxonID": 2,
-									"identifications_0_taxon": 2,
-									"count": 2,
-									"notes": 2,
-									"unitType": 2,
-									"taxonConfidence": 2,
-									"recordBasis": 2,
-									"identifications_0identificationBasis": 2,
-									"unitGathering_dateBegin": 3,
-									"unitGathering_dateEnd": 3,
-									"identifications_0_detDate": 3,
-									"*": 1
-								},
-								"sm": {
-									"identifications_0identificationBasis": 4,
-									"unitGathering_dateBegin": 3,
-									"unitGathering_dateEnd": 3,
-									"*": 2
-								},
-								"xs": 12,
-								"rows": [
-									[
-										"identifications_0_taxon",
-										"taxonConfidence",
-										"recordBasis",
-										"count",
-										"notes"
+							},
+							"uiSchema": {
+								"ui:field": "GridLayoutField",
+								"ui:options": {
+									"lg": {
+										"identifications_0_taxonID": 2,
+										"identifications_0_taxon": 2,
+										"count": 2,
+										"notes": 2,
+										"unitType": 2,
+										"taxonConfidence": 2,
+										"recordBasis": 2,
+										"identifications_0identificationBasis": 2,
+										"unitGathering_dateBegin": 3,
+										"unitGathering_dateEnd": 3,
+										"*": 1
+									},
+									"md": {
+										"identifications_0_taxonID": 2,
+										"identifications_0_taxon": 2,
+										"count": 2,
+										"notes": 2,
+										"unitType": 2,
+										"taxonConfidence": 2,
+										"recordBasis": 2,
+										"identifications_0identificationBasis": 2,
+										"unitGathering_dateBegin": 3,
+										"unitGathering_dateEnd": 3,
+										"identifications_0_detDate": 3,
+										"*": 1
+									},
+									"sm": {
+										"identifications_0identificationBasis": 4,
+										"unitGathering_dateBegin": 3,
+										"unitGathering_dateEnd": 3,
+										"*": 2
+									},
+									"xs": 12,
+									"rows": [
+										[
+											"identifications_0_taxon",
+											"taxonConfidence",
+											"recordBasis",
+											"count",
+											"notes"
+										]
 									]
-								]
+								}
 							}
 						},
 						"identifications": {
@@ -1566,7 +1581,7 @@
 	},
 	"uiSchemaContext": {
 		"creator": "MA.308",
-		"formID": "MHL.1"
+		"formID": "JX.519"
 	},
 	"formData": {
 	  "gatheringEvent": {
@@ -1641,50 +1656,6 @@
 				},
 			  "dateBegin": "2012-07-02",
 			  "dateEnd": "2012-07-04"
-			  }
-			},
-			{
-			  "recordBasis": "MY.recordBasisHumanObservationPhoto",
-			  "unitType": [],
-			  "taxonConfidence": "MY.taxonConfidenceSure",
-			  "images": [
-				"MM.89524"
-			  ],
-			  "notes": "1",
-			  "count": "123",
-			  "sex": "MY.sexF",
-			  "lifeStage": "MY.lifeStageLarva",
-			  "hostID": "aasui",
-			  "substrateSpecies": "123",
-			  "taste": "MY.tasteNotTasted",
-			  "tasteNotes": "3",
-			  "smellNotes": "123",
-			  "preservation": "MY.preservationEthanol",
-			  "plantLifeStage": "MY.plantLifeStageFertile",
-			  "plantStatusCode": "MY.MY.plantStatusCodeL",
-			  "breeding": true,
-			  "atlasCode": "MY.atlasCodeEnum1",
-			  "movingStatus": "3",
-			  "twitched": true,
-			  "nativeStatus": "MY.native",
-			  "samplingMethod": "MY.samplingMethodPitfall",
-			  "smell": "MY.smellNoSmelled",
-			  "identifications": [
-				{
-				  "taxon": "ass",
-				  "taxonID": "MX.47092",
-				  "identificationBasis": [],
-				  "det": "m'",
-				  "detDate": "2012-02-01"
-				}
-			  ],
-			  "unitGathering": {
-				"geometry": {},
-				"dateBegin": "2012-07-02",
-				"dateEnd": "2012-07-04",
-				"habitatIUCN": "2",
-				"habitatDescription": "1",
-				"substrate": "23"
 			  }
 			}
 		  ],
