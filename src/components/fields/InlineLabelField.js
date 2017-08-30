@@ -51,10 +51,7 @@ export default class InlineLabelField extends Component {
 			options: getUiOptions(props.uiSchema)
 		};
 
-		return {
-			...propsWithInnerUiSchema,
-			...super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema,
-		};
+		return {...propsWithInnerUiSchema};
 	}
 
 	render() {
@@ -63,7 +60,7 @@ export default class InlineLabelField extends Component {
 	    const titleCols = this.getCols(options, "label");
 	    const fieldCols = this.getCols(options, "field");
 
-		const tooltip = <Tooltip id={this.props.idSchema.$id + "_tooltip"}>{this.props.schema.title}</Tooltip>
+		const tooltip = <Tooltip id={this.props.idSchema.$id + "_tooltip"}>{this.props.schema.title}</Tooltip>;
 
 		return (
 			<Row>
