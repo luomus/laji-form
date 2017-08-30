@@ -94,6 +94,10 @@ export default class ExtraLabelRowField extends Component {
 			} else {
 				cols[col] = optionCol;
 			}
+
+			if (cols[col] === 0) {
+				cols[col + "Hidden"] = true;
+			}
 		});
 
 		return cols;
