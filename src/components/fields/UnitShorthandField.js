@@ -160,6 +160,12 @@ class CodeReader extends Component {
 			this.props.onChange(unit);
 		};
 
+		const renderSuggestion = (suggestion) => {
+			return suggestion.payload.isNonMatching ? 
+				<span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span> : 
+				suggestion.value;
+		}
+
 		const inputElem = (formID === LINE_TRANSECT_ID) ? (
 				<FetcherInput
 					id={this.props.id}
@@ -178,6 +184,7 @@ class CodeReader extends Component {
 					includeNonMatching: true
 				}}
 				onSuggestionSelected={onSuggestionSelected}
+				renderSuggestion={renderSuggestion}
 				onChange={onAutosuggestChange}
 				formContext={formContext}
 				allowNonsuggestedValue={false}

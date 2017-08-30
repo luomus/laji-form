@@ -57,8 +57,8 @@ body .laji-form {
 	padding-left: 0px;
 }
 .laji-form .autosuggest-wrapper .rw-popup {
-    left: 0px;
-    right: 0px;
+	left: initial;
+	right: initial;
 }
 .laji-form .fetcher-input .dropdown-menu {
 	display: block;
