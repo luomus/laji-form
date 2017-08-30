@@ -62,7 +62,7 @@ export function getButton(button, props = {}) {
 		const __fn = !callback ? _fn : () => {
 			_fn();
 			callback();
-		}
+		};
 		if (callforward) {
 			e.persist();
 			callforward(__fn);

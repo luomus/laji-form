@@ -85,7 +85,7 @@ class SelectWidget extends Component {
 	})
 
 	onSelect = () => {
-		this.state.open && this.getContext().setImmediate(() => this.setState({open: false}))
+		this.state.open && this.getContext().setImmediate(() => this.setState({open: false}));
 	}
 
 	onToggle = () => {

@@ -1,7 +1,6 @@
 import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
-import { orderProperties } from  "react-jsonschema-form/lib/utils";
-import { getUiOptions } from "../../utils";
+import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { renderGrid } from "./GridLayoutField";
 
 export function ObjectFieldTemplate(props) {

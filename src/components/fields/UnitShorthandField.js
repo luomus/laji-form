@@ -155,7 +155,7 @@ class CodeReader extends Component {
 				unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
 					const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
 					return state.formData;
-				}, unit)
+				}, unit);
 			}
 			this.props.onChange(unit);
 		};
