@@ -164,7 +164,7 @@ class CodeReader extends Component {
 			return suggestion.payload.isNonMatching ? 
 				<span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span> : 
 				suggestion.value;
-		}
+		};
 
 		const inputElem = (formID === LINE_TRANSECT_ID) ? (
 				<FetcherInput

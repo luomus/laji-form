@@ -6,12 +6,12 @@ import deepmerge from "deepmerge";
 const rulePropType = PropTypes.shape({
 	field: PropTypes.string.isRequired,
 	regexp: PropTypes.string.isRequired,
-})
+});
 
 const operationPropType = PropTypes.shape({
 	type: PropTypes.oneOf(["merge", "wrap"]),
 	uiSchema: PropTypes.object.isRequired,
-})
+});
 
 const casePropType = PropTypes.shape({
 	rules: PropTypes.oneOf([
@@ -69,7 +69,7 @@ export default class ConditionalField extends Component {
 
 		let computedUiSchema = uiSchema;
 		(Array.isArray(cases) ? cases : [cases]).some(({rules = [], operations = []}) => {
-			const passes = (Array.isArray(rules) ? rules : [rules]).every(this.checkRule(props))
+			const passes = (Array.isArray(rules) ? rules : [rules]).every(this.checkRule(props));
 			if (passes)  {
 				computedUiSchema = (Array.isArray(operations) ? operations : [operations]).reduce((_uiSchema, op) => {
 					switch (op.type) {
