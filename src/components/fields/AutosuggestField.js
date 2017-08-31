@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 const suggestionParsers = {
@@ -19,8 +19,9 @@ const suggestionParsers = {
  *  suggestionReceivers: {
  *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
  *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
- *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "payload.informalgroups.0"}
+ *   }                                              suggestionReceivers: {someFieldName: "key", someFieldName2: "/payload/informalgroups/0"}
  *                                         If fieldName start  with '$', then a function from autosuggestFieldSettings parses the suggestion. Example: $taxonGroup
+ *                                         If fieldName start  with '/', it is handled as a JSON pointer.
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
  * }
  */
@@ -59,14 +60,15 @@ export default class AutosuggestField extends Component {
 			onInputChange: this.onInputChange,
 			isValueSuggested: this.isValueSuggested
 		};
-		if (options.suggestionValueField && props.formData && !isEmptyString(props.formData[options.suggestionValueField])) {
-			options.value = props.formData[options.suggestionValueField];
-		}
-		if (options.suggestionInputField && props.formData && !isEmptyString(props.formData[options.suggestionInputField])) {
-			options.inputValue = props.formData[options.suggestionInputField];
+		const {suggestionValueField, suggestionInputField} = options;
+
+		if (suggestionValueField && props.formData && !isEmptyString(props.formData[suggestionValueField])) {
+			options.value = props.formData[suggestionValueField];
 		}
 
-		const {suggestionInputField} = uiOptions;
+		if (suggestionInputField && props.formData && !isEmptyString(props.formData[suggestionInputField])) {
+			options.inputValue = props.formData[suggestionInputField];
+		}
 
 		const uiSchema = {
 			...props.uiSchema,
@@ -87,9 +89,13 @@ export default class AutosuggestField extends Component {
 			let fieldVal = undefined;
 			if (typeof suggestion === "object") {
 				const suggestionValPath = options.suggestionReceivers[fieldName];
-				fieldVal = (suggestionValPath[0] === "$") ?
-					suggestionParsers[suggestionValPath.substring(1)](suggestion) :
-					suggestion[suggestionValPath];
+				if (suggestionValPath[0] === "$") {
+					fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
+				} else if (suggestionValPath[0] === "/") {
+					fieldVal = parseJSONPointer(suggestion, suggestionValPath);
+				} else {
+					fieldVal = suggestion[suggestionValPath];
+				}
 			}
 			formData = {...formData, [fieldName]: fieldVal};
 		}
