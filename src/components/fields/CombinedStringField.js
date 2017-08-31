@@ -61,7 +61,7 @@ export default class CombinedStringField extends Component {
 
 	getStateFromProps(props) {
 		const uiOptions = this.getUiOptions();
-		let {schema, uiSchema, idSchema, formData} = props;
+		let {schema, idSchema, formData} = props;
 
 		uiOptions.combined.forEach(options => {
 			const name = options.name || "";
@@ -70,6 +70,7 @@ export default class CombinedStringField extends Component {
 
 			const valueArray = options.fields.reduce((valueArray, field) => {
 				if (formData[field]) { valueArray.push(formData[field]); }
+				schema = {...schema, properties: immutableDelete(schema.properties, field)};
 				return valueArray;
 			}, []);
 
@@ -82,7 +83,7 @@ export default class CombinedStringField extends Component {
 			formData = {...formData, [name]: valueArray.join(delimiter)};
 		});
 		
-		return {schema, uiSchema, idSchema, formData};
+		return {schema, idSchema, formData};
 	}
 
 	onChange(formData) {
