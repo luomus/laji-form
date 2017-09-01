@@ -476,6 +476,7 @@ body .laji-form {
 	flex-wrap: wrap;
 	justify-content: flex-end;
 	align-content: flex-start;
+	max-width: 52px;
 }
 
 @media (max-width: 768px) {
