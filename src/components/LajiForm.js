@@ -136,7 +136,6 @@ const fields = importLocalComponents("fields", [
 	"ArrayCombinerField",
 	"DependentBooleanField",
 	"DependentDisableField",
-	"DependentUiSchemaInjectionField",
 	"MapArrayField",
 	"AutoArrayField",
 	"CopyValuesArrayField",
