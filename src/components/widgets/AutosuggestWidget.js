@@ -323,6 +323,10 @@ export class Autosuggest extends Component {
 			suggestionHighlighted: "rw-list-option rw-state-focus"
 		};
 
+		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props ?
+			this.props.hightlightFirstSuggestion :
+			!this.props.allowNonsuggestedValue;
+
 		return (
 			<div className="autosuggest-wrapper">
 				<ReactAutosuggest
@@ -336,7 +340,7 @@ export class Autosuggest extends Component {
 					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 					onSuggestionSelected={this.onSuggestionSelected}
 					focusInputOnSuggestionClick={false}
-					highlightFirstSuggestion={this.props.highlightFirstSuggestion}
+					highlightFirstSuggestion={highlightFirstSuggestion}
 					theme={cssClasses}
 				/>
 			</div>
