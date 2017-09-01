@@ -709,10 +709,9 @@ body .laji-form {
 	margin-bottom: 7px;
 }
 
-@media (max-width: 767px) {
-	.laji-form .xs-hidden-label label {
-		display: none;
-	}
+.laji-form .column-group [class^=col-] {
+	padding-right: 1px;
+	padding-left: 1px;
 }
 
 .laji-form .highlight-error-start {
