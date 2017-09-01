@@ -736,7 +736,9 @@ export default class LajiForm extends Component {
 	setTimeout = (fn, time) => {
 		if (!this.timeouts) this.timeouts = [];
 
-		this.timeouts.push(setTimeout(fn, time));
+		const timeout = setTimeout(fn, time);
+		this.timeouts.push(timeout);
+		return timeout;
 	}
 
 	setImmediate = (fn) => {

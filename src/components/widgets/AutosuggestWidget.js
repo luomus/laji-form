@@ -65,7 +65,7 @@ class TaxonCardOverlay extends Component {
 		const popoverMouseOut = () => {
 			popoverMouseIn = false;
 			if (popoverTimeout) {
-				new Context(formContext.contextId).clearTimeout(overlayTimeout);
+				clearTimeout(overlayTimeout);
 			}
 			popoverTimeout = new Context(formContext.contextId).setTimeout(() => {
 				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
@@ -103,7 +103,7 @@ class TaxonCardOverlay extends Component {
 		const overlayMouseOut = () => {
 			overlayMouseIn = false;
 			if (overlayTimeout) {
-				new Context(formContext.contextId).clearTimeout(overlayTimeout);
+				clearTimeout(overlayTimeout);
 			}
 			overlayTimeout = new Context(formContext.contextId).setTimeout(() => {
 				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
@@ -297,7 +297,8 @@ export class Autosuggest extends Component {
 		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
-		(() => {
+
+		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
@@ -322,7 +323,13 @@ export class Autosuggest extends Component {
 						this.onSuggestionsClearRequested();
 					}
 				});
-		})();
+		};
+
+		const context = new Context(this.props.formContext.contextId);
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+		}
+		this.timeout = context.setTimeout(request, 400);
 	}
 
 	onSuggestionsClearRequested = () => {
