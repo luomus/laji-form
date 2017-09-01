@@ -494,14 +494,28 @@ function NullTooltip() {
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export function TooltipComponent({tooltip, children, id, placement, trigger}) {
-	return (
-		<OverlayTrigger placement={placement} trigger={trigger} key={`${id}-overlay`} overlay={
+	let overlayRef = undefined;
+	let getOverlayRef = ref => {
+		overlayRef = ref;
+	}
+
+	const overlay = (
+		<OverlayTrigger ref={getOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 			(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
 		}>
 			{children}
 		</OverlayTrigger>
-
 	);
+	return (trigger === "hover") ? (() => {
+		const onMouseOver = () => overlayRef.show();
+		const onMouseOut = () => overlayRef.hide();
+		return (
+			<div onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+				{overlay}
+			</div>
+		);
+	})() : overlay;
+
 }
 
 export function FetcherInput({loading, validationState, glyph, getRef, ...inputProps}) {
