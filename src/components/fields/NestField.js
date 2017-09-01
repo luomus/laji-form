@@ -222,7 +222,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		 [errorSchema, newErrorSchema],
 		 [formData, newFormData]
 		].forEach(([originalPropContainer, newPropContainer]) => {
-			if (originalPropContainer && originalPropContainer[fieldName]) newPropContainer[fieldName] = originalPropContainer[fieldName];
+			if (originalPropContainer && (originalPropContainer[fieldName] || originalPropContainer[fieldName] === 0)) newPropContainer[fieldName] = originalPropContainer[fieldName];
 		});
 		fieldsDictionarified[fieldName] = true;
 	});
