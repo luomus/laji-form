@@ -18,10 +18,10 @@ const casePropType = PropTypes.shape({
 		rulePropType,
 		PropTypes.arrayOf(rulePropType)
 	]),
-	operations: PropTypes.oneOf(
+	operations: PropTypes.oneOf([
 		operationPropType,
 		PropTypes.arrayOf(operationPropType)
-	)
+	])
 });
 
 /**
@@ -36,12 +36,16 @@ const casePropType = PropTypes.shape({
  *		],
  *		operations: [ // All the operations are performed if all rules pass.
  *			{
- *				type: "merge" or "wrap". "merge" deeply merges the uiSchema to  the nested uiSchema.
- *				                         "wrap" sets the nested uiSchema as uiSchema.uiSchema.
+ *				type: "merge" or "wrap" "replace". "merge" deeply merges the conditional uiSchema to the nested uiSchema.
+ *				                                   "wrap" sets the nested uiSchema inside conditional uiSchema.
+ *				                                   "replace" (default) replaces nested uiSchema with conditional uiSchema.
+ *				uiSchema: conditional uiSchema to use.
  *			}
  *		]
  *	]
- * }}
+ * }
+ * uiSchema: nested uiSchema
+ * }
  */
 @VirtualSchemaField
 export default class ConditionalField extends Component {

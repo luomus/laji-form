@@ -307,6 +307,7 @@ export class Autosuggest extends Component {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const exactMatch = this.findExactMatch(suggestions);
+						console.log(suggestions, exactMatch);
 						if (!this.state.focused && exactMatch) {
 							this.selectSuggestion({...exactMatch, value});
 						}
