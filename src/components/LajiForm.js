@@ -312,7 +312,7 @@ class ErrorListTemplate extends Component {
 					<div className="panel-title">
 						{translations.Errors}
 						<span className="pull-right">
-							<GlyphButton glyph={this.state.expanded ? "minus" : "plus"} bsStyle="link" />
+							<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
 							<GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} />
 						</span>
 					</div>
@@ -431,7 +431,7 @@ export default class LajiForm extends Component {
 				});
 			}, Promise.resolve()).then(() => {
 				const container = getSchemaElementById(this._id, id);
-				const elem = document.querySelector(`#laji-form-error-container-${id}`) || container;
+				const elem = container || document.querySelector(`#laji-form-error-container-${id}`);
 				const input = document.querySelector(`#${id}`);
 
 				if (input) input.focus();
@@ -440,22 +440,8 @@ export default class LajiForm extends Component {
 
 				scrollIntoViewIfNeeded(elem);
 
-				let timeout = undefined;
-				const flash = (count = 1) => {
-					if (count <= 0) return;
-					elem.className = `${elem.className} highlight-error-start`;
-					this._context.setTimeout(() => {
-						if (!elem)  return;
-						elem.className = elem.className.replace("highlight-error-start", "highlight-error");
-						if (timeout) this._context.clearTimeout(timeout);
-						timeout = this._context.setTimeout(() => {
-							if (elem) elem.className = elem.className.replace(" highlight-error", "");
-							count = count - 1;
-							flash(count);
-						}, 300);
-					}, 50);
-				};
-				flash(2);
+				if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
+				this.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
 			});
 		};
 
