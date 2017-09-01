@@ -62,7 +62,7 @@ export function getButton(button, props = {}) {
 		const __fn = !callback ? _fn : () => {
 			_fn();
 			callback();
-		}
+		};
 		if (callforward) {
 			e.persist();
 			callforward(__fn);
@@ -147,6 +147,16 @@ export function handlesArrayKeys(ComposedComponent) {
 	};
 }
 
+const SortableList = SortableContainer(({items, itemProps, nonOrderables}) => (
+	<div>
+		{items.map((item, i) => 
+			<SortableItem key={i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
+		)}
+	</div>)
+);
+
+const SortableItem = SortableElement(({item}) => item);
+
 @handlesArrayKeys
 export default class ArrayFieldTemplate extends Component {
 	onSort = ({oldIndex, newIndex}) => {
@@ -160,16 +170,6 @@ export default class ArrayFieldTemplate extends Component {
 		const options = getUiOptions(props.uiSchema);
 		const {confirmDelete, deleteCorner, renderDelete = true, orderable, nonRemovables = [], nonOrderables = [], buttons} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
-
-		const SortableList = SortableContainer(({items}) => (
-			<div>
-				{items.map((item, i) => 
-					<SortableItem key={i} index={i} item={item} disabled={(!props.items[i].hasMoveDown && !props.items[i].hasMoveUp) || nonOrderables.includes(i)} />
-				)}
-			</div>)
-		);
-
-		const SortableItem = SortableElement(({item}) => item);
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
@@ -196,7 +196,12 @@ export default class ArrayFieldTemplate extends Component {
 				<Description description={props.description}/>
 				{
 					orderable ? 
-						<SortableList helperClass="laji-form reorder-active" pressDelay={100} items={items} onSortEnd={this.onSort} /> :
+						<SortableList helperClass="laji-form reorder-active" 
+						              pressDelay={100} 
+						              items={items} 
+						              onSortEnd={this.onSort} 
+						              itemProps={props.items} 
+						              nonOrderables={nonOrderables} /> :
 						items
 				}
 				{getButtons(buttons, props)}

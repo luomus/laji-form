@@ -56,16 +56,16 @@ export default class InlineLabelField extends Component {
 
 	render() {
 		const SchemaField = this.state.registry.fields.SchemaField;
-	    const options = getUiOptions(this.props.uiSchema);
-	    const titleCols = this.getCols(options, "label");
-	    const fieldCols = this.getCols(options, "field");
+		const options = getUiOptions(this.props.uiSchema);
+		const titleCols = this.getCols(options, "label");
+		const fieldCols = this.getCols(options, "field");
 
 		const tooltip = <Tooltip id={this.props.idSchema.$id + "_tooltip"}>{this.props.schema.title}</Tooltip>;
 
 		return (
 			<Row>
 				<Col {...titleCols}>
-                    {options.showChildLabels ? <label className="hidden-xs"><strong>&nbsp;</strong></label> : null}
+					{options.showChildLabels ? <label className="hidden-xs"><strong>&nbsp;</strong></label> : null}
 					<div>
 						<OverlayTrigger overlay={tooltip}>
 							<label><strong>{this.props.schema.title}</strong></label>

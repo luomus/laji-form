@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -21,7 +21,7 @@ export default class FlatField extends Component {
 		}).isRequired
 	}
 
-	getStateFromProps(props) {
+	getStateFromProps(props, origProps) {
 		const state = {
 			schema: props.schema,
 			uiSchema: props.uiSchema,
@@ -124,6 +124,14 @@ export default class FlatField extends Component {
 				});
 			}
 		});
+
+		const {formDataTransformers = []} = props.formContext;
+		state.formContext = {
+			...props.formContext, 
+			formDataTransformers: [
+				...formDataTransformers, 
+				{"ui:field": "FlatField", props: origProps}
+			]};
 
 		return state;
 	}

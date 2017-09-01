@@ -118,7 +118,8 @@ export default class UiFieldMapperArrayField extends Component {
 			errorSchema: Object.keys((props.errorSchema || {})).reduce((errorSchema, item, idx) => {
 				errorSchema[idx] = this.functionOutputProps[idx].errorSchema;
 				return errorSchema;
-			}, {})
+			}, {}),
+			formContext: templateOutput.formContext
 		};
 
 		return state;

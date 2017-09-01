@@ -66,7 +66,15 @@ class _SchemaField extends Component {
 		const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, uiFn) => {
 			_props = {..._props, uiSchema: {...uiFn, uiSchema: _props.uiSchema}};
 			const {state = {}} = new props.registry.fields[uiFn["ui:field"]](_props);
-			return {..._props, ...state};
+			return {
+				..._props, 
+				...state, 
+				registry: {
+					..._props.registry, 
+					...state.registry,
+					formContext: state.formContext || props.registry.formContext
+				}
+			};
 		}, {...props, uiSchema: _uiSchema, formContext: props.registry.formContext});
 
 		return computedProps;
@@ -148,6 +156,7 @@ const fields = importLocalComponents("fields", [
 	"SplitArrayField",
 	"InlineLabelField",
 	"ExtraLabelRowField",
+	"ConditionalField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);

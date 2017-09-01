@@ -43,7 +43,7 @@ export default class ExtraLabelRowField extends Component {
 
 		return (
 			<div>
-                {title ? <TitleField title={title} /> : null}
+				{title ? <TitleField title={title} /> : null}
 				<Row>{cols}</Row>
 				<SchemaField {...this.props} {...this.state}/>
 			</div>
@@ -66,7 +66,7 @@ export default class ExtraLabelRowField extends Component {
 				</Col>
 			);
 		} else {
-			const tooltip = <Tooltip id={this.props.idSchema.$id + "_label_" +  i + "_tooltip"}>{value}</Tooltip>;
+			const tooltip = <Tooltip id={this.props.idSchema.$id + "_label_" + i + "_tooltip"}>{value}</Tooltip>;
 
 			return (
 				<Col {...cols} key={i}>
