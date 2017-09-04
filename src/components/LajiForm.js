@@ -156,6 +156,7 @@ const fields = importLocalComponents("fields", [
 	"InlineLabelField",
 	"ExtraLabelRowField",
 	"ConditionalField",
+	"SumField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
