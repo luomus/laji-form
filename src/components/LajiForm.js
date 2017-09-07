@@ -266,9 +266,11 @@ class ErrorListTemplate extends Component {
 	}
 
 	render() {
-		const	{errorSchema, schema, formContext: {translations, contextId}} = this.props;
+		const {errorSchema, schema, formContext} = this.props;
+		const {contextId, translations} = formContext;
 		const that = new Context(contextId).formInstance;
 		const clickHandler = that.errorClickHandler;
+		const showWarnings = !!formContext.contextState.showWarnings;
 
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;
@@ -302,15 +304,21 @@ class ErrorListTemplate extends Component {
 			if (!this.state.expanded) this.setState({expanded: true});
 		};
 
+		const submitWithWarnings = () => {
+			this.props.formContext.setSkipWarnings(true);
+			that.submit();
+			this.props.formContext.setSkipWarnings(false);
+		};
+
 		return (
 			<Panel collapsible expanded={this.state.expanded} 
 				className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}`}
 				style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}
-				bsStyle="danger" 
+				bsStyle={showWarnings ? "warning" : "danger"}
 				header={
 				<div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
 					<div className="panel-title">
-						{translations.Errors}
+						{showWarnings ? translations.Warnings : translations.Errors}
 						<span className="pull-right">
 							<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
 							<GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} />
@@ -319,7 +327,11 @@ class ErrorListTemplate extends Component {
 				</div>
 				}
 				footer={
-					<Button onClick={revalidate}><Glyphicon glyph="refresh" /> {translations.Revalidate}</Button>
+					<div>
+					{showWarnings ? <Button onClick={submitWithWarnings}>{translations.SubmitWithWarnings}</Button> :
+						<Button onClick={revalidate}><Glyphicon glyph="refresh" /> {translations.Revalidate}</Button>
+					}
+					</div>
 				}
 			>
 				<ListGroup fill>
@@ -353,7 +365,8 @@ export default class LajiForm extends Component {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
 		uiSchemaContext: PropTypes.object,
 		settings: PropTypes.object,
-		validators: PropTypes.object
+		validators: PropTypes.object,
+		warnings: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -508,6 +521,22 @@ export default class LajiForm extends Component {
 	render() {
 		const {translations} = this.state;
 		const shortcuts = this.props.uiSchema["ui:shortcuts"];
+		const contextState = {};
+
+		const formContext = {
+			translations,
+			contextState,
+			lang: this.props.lang,
+			uiSchemaContext: this.props.uiSchemaContext,
+			settings: this.props.settings,
+			contextId: this._id,
+			getFormRef: () => this.formRef,
+			topOffset: this.props.topOffset,
+			bottomOffset: this.props.bottomOffset,
+			setSkipWarnings: (skip) => contextState["skipWarnings"] = skip,
+			setShowWarnings: (show) => contextState["showWarnings"] = show
+		};
+
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
 				<Form
@@ -520,17 +549,8 @@ export default class LajiForm extends Component {
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
-					formContext={{
-						translations,
-						lang: this.props.lang,
-						uiSchemaContext: this.props.uiSchemaContext,
-						settings: this.props.settings,
-						contextId: this._id,
-						getFormRef: () => this.formRef,
-						topOffset: this.props.topOffset, 
-						bottomOffset: this.props.bottomOffset
-					}}
-				  validate={validate(this.props.validators)}
+					formContext={formContext}
+					validate={validate(this.props.validators, this.props.warnings, formContext)}
 				>
 				<div>
 					{this.props.children}

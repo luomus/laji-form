@@ -628,6 +628,9 @@ body .laji-form {
 .laji-form .laji-form-error-list .panel-heading {
 	background-color: #bd362f;
 }
+.laji-form .laji-form-error-list.panel-warning .panel-heading {
+	background-color: #f0ad4e;
+}
 .laji-form .laji-form-error-list .panel-title {
 	color: white;
 }

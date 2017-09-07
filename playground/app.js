@@ -207,7 +207,7 @@ if (SCHEMA_ID !== undefined) {
 	apiClient.fetch(`/forms/${SCHEMA_ID}`, {lang, format: "schema"}).then(response => {
 		return response.json();
 	}).then(props => {
-		const {schema, uiSchema, validators, uiSchemaContext, settings, prepopulatedDocument} = props;
+		const {schema, uiSchema, validators, warnings, uiSchemaContext, settings, prepopulatedDocument} = props;
 		const propsToPass = {
 			schema, 
 			uiSchema, 
@@ -215,6 +215,7 @@ if (SCHEMA_ID !== undefined) {
 			settings: {...schemas.settings, ...settings}
 		};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;
+		if (!Array.isArray(warnings)) propsToPass.warnings = warnings;
 		if (prepopulatedDocument) propsToPass.formData = prepopulatedDocument;
 		lajiForm.setState(propsToPass);
 	});
