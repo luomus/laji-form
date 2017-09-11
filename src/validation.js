@@ -1,22 +1,24 @@
 import lajiValidate from "laji-validate";
 
 export default (validators, warnings, context) => (data, errors) => {
-	context.setShowWarnings(false);
-
 	if (validators) {
 		let result = lajiValidate(data, validators);
 		let messages = getMessages(result);
 
-		if (messages.length < 1 && !context.contextState.skipWarnings) {
-			result = lajiValidate(data, warnings);
-			messages = getMessages(result);
-			context.setShowWarnings(true);
+		if (messages.length > 0) {
+			context.setShowWarnings(false);
+			return toErrorSchema(messages);
 		}
-
-		return toErrorSchema(messages);
-	} else {
-		return errors;
 	}
+
+	if (warnings && !context.contextState.skipWarnings) {
+		let result = lajiValidate(data, warnings);
+		let messages = getMessages(result);
+		context.setShowWarnings(true);
+		return toErrorSchema(messages);
+	}
+
+	return errors;
 };
 
 function getMessages(result) {
