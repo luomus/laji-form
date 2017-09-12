@@ -613,7 +613,7 @@ class TableArrayFieldTemplate extends Component {
 			<div>
 				<TitleField title={that.state.getTitle(that.state.activeIdx)}/>
 				<DescriptionField description={this.props.description}/>
-				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
+				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table" responsive={true}>
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (
 						<thead>
 								<tr className="darker">
