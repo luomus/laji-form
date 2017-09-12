@@ -224,6 +224,7 @@ function FieldTemplate({
 
 	const buttons = (uiSchema["ui:buttons"] && schema.type !== "array") ? uiSchema["ui:buttons"] : undefined;
 	const vertical = uiSchema["ui:buttonsVertical"];
+	const errorClassName = formContext.contextState.showWarnings ? " laji-form-warning-container" : "";
 
 	let containerClassName, schemaClassName, buttonsClassName;
 	if (buttons && buttons.length) {
@@ -232,7 +233,7 @@ function FieldTemplate({
 		buttonsClassName = "laji-form-field-template-buttons";
 	}
 	return (
-		<div className={classNames} id={elemId}>
+		<div className={classNames + errorClassName} id={elemId}>
 			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} /> : null}
 			{_displayLabel && description ? description : null}
 			<div className={containerClassName}>
@@ -339,7 +340,7 @@ class ErrorListTemplate extends Component {
 						const _clickHandler = () => clickHandler(id);
 						return (
 							<ListGroupItem key={i} onClick={_clickHandler}>
-								<b>{label}:</b> {error}
+								{label ? <b>{label}:</b> : null} {error}
 							</ListGroupItem>
 						);
 					}
@@ -471,6 +472,7 @@ export default class LajiForm extends Component {
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
+		this._contextState = {};
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -521,11 +523,10 @@ export default class LajiForm extends Component {
 	render() {
 		const {translations} = this.state;
 		const shortcuts = this.props.uiSchema["ui:shortcuts"];
-		const contextState = {};
 
 		const formContext = {
 			translations,
-			contextState,
+			contextState: this._contextState,
 			lang: this.props.lang,
 			uiSchemaContext: this.props.uiSchemaContext,
 			settings: this.props.settings,
@@ -533,8 +534,8 @@ export default class LajiForm extends Component {
 			getFormRef: () => this.formRef,
 			topOffset: this.props.topOffset,
 			bottomOffset: this.props.bottomOffset,
-			setSkipWarnings: (skip) => contextState["skipWarnings"] = skip,
-			setShowWarnings: (show) => contextState["showWarnings"] = show
+			setSkipWarnings: (skip) => this._contextState["skipWarnings"] = skip,
+			setShowWarnings: (show) => this._contextState["showWarnings"] = show
 		};
 
 		return (
