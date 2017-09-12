@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, 
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, parseJSONPointer,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
@@ -741,7 +741,7 @@ class SplitArrayFieldTemplate extends Component {
 		}
 
 		for (let i = 0; i < props.formData.length; i++) {
-			const value = this.getValueFromPath(props.formData[i], uiOptions.splitRule.fieldPath);
+			const value = parseJSONPointer(props.formData[i], uiOptions.splitRule.fieldPath);
 			let match = -1;
 
 			for (let j = 0; j < uiOptions.splitRule.rules.length; j++) {
@@ -770,16 +770,5 @@ class SplitArrayFieldTemplate extends Component {
 				)}
 			</div>
 		);
-	}
-
-	getValueFromPath = (obj, path) => {
-		const splits = path.split("/");
-
-		for (let i = 0; i < splits.length; i++) {
-			if (!obj[splits[i]]) return "";
-
-			obj = obj[splits[i]];
-		}
-		return obj;
 	}
 }
