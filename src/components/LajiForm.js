@@ -152,7 +152,6 @@ const fields = importLocalComponents("fields", [
 	"UnitShorthandField",
 	"CombinedStringField",
 	"UiFieldMapperArrayField",
-	"SplitArrayField",
 	"InlineLabelField",
 	"ExtraLabelRowField",
 	"ConditionalField",
