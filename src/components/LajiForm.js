@@ -340,7 +340,7 @@ class ErrorListTemplate extends Component {
 						const _clickHandler = () => clickHandler(id);
 						return (
 							<ListGroupItem key={i} onClick={_clickHandler}>
-								<b>{label}:</b> {error}
+								{label ? <b>{label}:</b> : null} {error}
 							</ListGroupItem>
 						);
 					}
