@@ -15,7 +15,7 @@ const suggestionParsers = {
  * uischema = {"ui:options": {
  *  autosuggestField: <string> (field name which is used for api call. The suggestions renderer method is also defined by autosuggestField)
  *  suggestionInputField: <fieldName> (the field which is rendered as the autosuggest input)
- *  suggestionValueField: <fieldName> (the field which the value for autosuggest is pulled from)
+ *  suggestionValueField: <fieldName>|[<fieldName>] (the field which the value for autosuggest is pulled from. Can be an array in priority order.)
  *  suggestionReceivers: {
  *    <fieldName>: <suggestion path>,     (when an autosuggestion is selected, these fields receive the autosuggestions value defined by suggestion path.
  *    <fieldName2>: <suggestion path 2>,   Example: autosuggestion = {key: "MLV.2", value: "kalalokki", payload: {informalGroups: ["linnut"]}}
@@ -62,9 +62,12 @@ export default class AutosuggestField extends Component {
 		};
 		const {suggestionValueField, suggestionInputField} = options;
 
-		if (suggestionValueField && props.formData && !isEmptyString(props.formData[suggestionValueField])) {
-			options.value = props.formData[suggestionValueField];
-		}
+		(Array.isArray(suggestionValueField) ? suggestionValueField : [suggestionValueField]).some(_suggestionValueField => {
+			if (_suggestionValueField && props.formData && !isEmptyString(props.formData[_suggestionValueField])) {
+				options.value = props.formData[_suggestionValueField];
+				return true;
+			}
+		})
 
 		if (suggestionInputField && props.formData && !isEmptyString(props.formData[suggestionInputField])) {
 			options.inputValue = props.formData[suggestionInputField];
