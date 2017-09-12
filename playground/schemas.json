@@ -360,7 +360,8 @@
 								"field": "localityDescription"
 							}
 						],
-						"titleFormat": "%{Title} %{idx}"
+						"titleFormat": "%{Title} %{idx}",
+						"confirmDelete": true
 					}
 				},
 				"propsToPassToInlineSchema": [
@@ -370,7 +371,8 @@
 				"minHeight": 435,
 				"resizeTimeout": 210,
 				"addButtonPath": "/items/units",
-				"removeAddButtonPath": "/"
+				"removeAddButtonPath": "/",
+				"addTxt": "Lisää paikka"
 			},
 			"items": {
 				"ui:field": "NestField",
@@ -459,7 +461,8 @@
 						"ui:options": {
 							"fields": [
 								"identifications",
-								"unitGathering"
+								"unitGathering",
+								"unitFact"
 							]
 						}
 					},
@@ -468,6 +471,7 @@
 					"ui:options": {
 						"renderer": "table",
 						"normalRenderingTreshold": "sm",
+						"confirmDelete": true,
 						"buttons": [
 							{
 								"fn": "add",
@@ -490,7 +494,12 @@
 									"nativeStatus",
 									"identifications_0_det",
 									"identifications_0_detDate",
-									"identifications_0_idenficationBasis"
+									"identifications_0_identificationBasis",
+									"samplingMethod",
+									"unitGathering_habitatIUCN",
+									"unitGathering_habitatDescription",
+									"unitGathering_dateBegin",
+									"unitGathering_dateEnd"
 								]
 							}
 						]
@@ -503,11 +512,11 @@
 									"autosuggestField": "taxon",
 									"allowNonsuggestedValue": true,
 									"suggestionInputField": "identifications_0_taxon",
-									"suggestionValueField": "identifications_0_taxonID",
+									"suggestionValueField": ["identifications_0_taxonID", "unitFact_autocompleteSelectedTaxonID"],
 									"suggestionReceivers": {
 										"identifications_0_taxon": "value",
 										"unitType": "$taxonGroup",
-										"identifications_0_taxonID": "key"
+										"unitFact_autocompleteSelectedTaxonID": "key"
 									},
 									"inputTransformer": {
 										"regexp": "^(.*)\\?$",
@@ -527,23 +536,24 @@
 							}
 						],
 						"ui:field": "UnitShorthandField",
-						"classNames": "well well-sm",
 						"ui:options": {
+							"formID": "formID is injected here"
 						},
+						"ui:order": [
+							"identifications",
+							"count",
+							"notes",
+							"unitType",
+							"taxonConfidence",
+							"recordBasis",
+							"*",
+							"images"
+						],
+						"classNames": "well well-sm",
 						"uiSchema": {
 							"ui:field": "ScopeField",
 							"ui:settings": [
 								"%additionalFields/scopeField_gathering_unit_unitType"
-							],
-							"ui:order": [
-								"identifications_0_taxon",
-								"count",
-								"notes",
-								"unitType",
-								"taxonConfidence",
-								"recordBasis",
-								"*",
-								"images"
 							],
 							"ui:options": {
 								"additionalsGroupingPath": "/fieldScopes/unitType",
@@ -552,7 +562,6 @@
 								"additionalsPersistenceKey": "unitType",
 								"additionalsPersistenceId": "gathering_unit_unitType",
 								"includeAdditionalFieldsChooserButton": true,
-								"geometryField": "unitGathering_geometry",
 								"glyphFields": [
 									{
 										"glyph": "camera",
@@ -566,7 +575,7 @@
 									}
 								],
 								"fields": [
-									"identifications_0_taxonID",
+									"unitFact_autocompleteSelectedTaxonID",
 									"identifications_0_taxon",
 									"count",
 									"notes",
@@ -581,7 +590,7 @@
 											"additionalFields": [
 												"identifications_0_det",
 												"identifications_0_detDate",
-												"identifications_0identificationBasis",
+												"identifications_0_identificationBasis",
 												"sex",
 												"unitGathering_dateBegin",
 												"unitGathering_dateEnd",
@@ -589,7 +598,9 @@
 												"unitGathering_habitatDescription",
 												"preservation",
 												"samplingMethod",
-												"breeding"
+												"breeding",
+												"maleIndividualCount",
+												"femaleIndividualCount"
 											]
 										},
 										"MVL.1": {
@@ -630,34 +641,34 @@
 								"ui:field": "GridLayoutField",
 								"ui:options": {
 									"lg": {
-										"identifications_0_taxonID": 2,
+										"unitFact_autocompleteSelectedTaxonID": 2,
 										"identifications_0_taxon": 2,
 										"count": 2,
 										"notes": 2,
 										"unitType": 2,
 										"taxonConfidence": 2,
 										"recordBasis": 2,
-										"identifications_0identificationBasis": 2,
+										"identifications_0_identificationBasis": 2,
 										"unitGathering_dateBegin": 3,
 										"unitGathering_dateEnd": 3,
 										"*": 1
 									},
 									"md": {
-										"identifications_0_taxonID": 2,
+										"unitFact_autocompleteSelectedTaxonID": 2,
 										"identifications_0_taxon": 2,
 										"count": 2,
 										"notes": 2,
 										"unitType": 2,
 										"taxonConfidence": 2,
 										"recordBasis": 2,
-										"identifications_0identificationBasis": 2,
+										"identifications_0_identificationBasis": 2,
 										"unitGathering_dateBegin": 3,
 										"unitGathering_dateEnd": 3,
 										"identifications_0_detDate": 3,
 										"*": 1
 									},
 									"sm": {
-										"identifications_0identificationBasis": 4,
+										"identifications_0_identificationBasis": 4,
 										"unitGathering_dateBegin": 3,
 										"unitGathering_dateEnd": 3,
 										"*": 2
@@ -675,10 +686,12 @@
 								}
 							}
 						},
-						"identifications": {
-							"taxonID": {
+						"unitFact": {
+							"autocompleteSelectedTaxonID": {
 								"ui:widget": "HiddenWidget"
-							},
+							}
+						},
+						"identifications": {
 							"detDate": {
 								"ui:widget": "DateWidget"
 							}
@@ -833,7 +846,7 @@
 								"properties": {
 									"recordBasis": {
 										"type": "string",
-										"title": "Havaintotapa",
+										"title": "Havainnointitapa",
 										"default": "MY.recordBasisHumanObservation",
 										"enum": [
 											"",
@@ -1033,7 +1046,10 @@
 											"MY.preservationPressed",
 											"MY.preservationLiving",
 											"MY.preservationCast",
-											"MY.preservationEthanolExFormalin"
+											"MY.preservationEthanolExFormalin",
+											"MY.preservationMercuricChloride",
+											"MY.preservationBouinSolution",
+											"MY.preservationPampelsFluid"
 										],
 										"enumNames": [
 											"",
@@ -1065,7 +1081,10 @@
 											"kuivattu ja prässätty",
 											"elävä",
 											"Valos",
-											"Etanoli, aiemmin formaliini"
+											"Etanoli, aiemmin formaliini",
+											"Sublimaatti",
+											"Bouin liuos",
+											"Pampelin neste"
 										]
 									},
 									"plantLifeStage": {
@@ -1259,6 +1278,15 @@
 											"type": "string"
 										}
 									},
+									"unitFact": {
+										"type": "object",
+										"properties": {
+											"autocompleteSelectedTaxonID": {
+												"type": "string",
+												"title": "Taksonin tunniste"
+											}
+										}
+									},
 									"identifications": {
 										"type": "array",
 										"items": {
@@ -1267,10 +1295,6 @@
 												"taxon": {
 													"type": "string",
 													"title": "Nimi"
-												},
-												"taxonID": {
-													"type": "string",
-													"title": "Taksonin tunniste"
 												},
 												"det": {
 													"type": "string",
@@ -1303,17 +1327,17 @@
 														],
 														"enumNames": [
 															"",
-															"näköhavainto",
-															"kuulohavainto",
-															"käsitelty",
-															"valokuva tai muu media",
-															"tuorenäyte",
-															"säilötty / kuivattu näyte",
-															"mikroskopointi",
-															"itiöt",
-															"kemiallinen",
-															"genitaali",
-															"genitaalipreparaatti",
+															"Näköhavainto",
+															"Kuulohavainto",
+															"Käsitelty",
+															"Valokuva tai muu media",
+															"Tuorenäyte",
+															"Säilötty / kuivattu näyte",
+															"Mikroskopointi",
+															"Itiöt",
+															"Kemiallinen",
+															"Genitaali",
+															"Genitaalipreparaatti",
 															"DNA-määritys"
 														]
 													}
@@ -1443,6 +1467,14 @@
 											"Kaivuu",
 											"Maaston peseminen"
 										]
+									},
+									"maleIndividualCount": {
+										"type": "integer",
+										"title": "Koiraiden yksilömäärä"
+									},
+									"femaleIndividualCount": {
+										"type": "integer",
+										"title": "Naaraiden yksilömäärä"
 									}
 								},
 								"required": []
@@ -1579,6 +1611,7 @@
 			}
 		}
 	},
+	"warnings": {},
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "JX.519"
@@ -1611,10 +1644,12 @@
 			  "images": [
 				"MM.89524"
 			  ],
+			  "unitFact": {
+				  "autocompleteSelectedTaxonID": "MX.47092"
+			  },
 			  "identifications": [
 				{
 				  "taxon": "ass",
-				  "taxonID": "MX.47092",
 				  "identificationBasis": []
 				}
 			  ],
@@ -1639,10 +1674,13 @@
 			  "images": [
 				"MM.89524"
 			  ],
+			  "unitFact": {
+				  "autocompleteSelectedTaxonID": "MX.47092"
+			  },
 			  "identifications": [
 				{
 				  "taxon": "ass",
-				  "taxonID": "MX.47092",
+				  "taxonID": "MX.1",
 				  "identificationBasis": []
 				}
 			  ],
