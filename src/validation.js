@@ -1,22 +1,38 @@
 import lajiValidate from "laji-validate";
 
-export default (validators) => (data, errors) => {
+export default (validators, warnings, context) => (data, errors) => {
 	if (validators) {
-		var result = lajiValidate(data, validators), k, l;
-		var messages = [];
-		for(k in result) {
-			for (l in result[k]) {
-				messages.push({
-					property: "instance." + k,
-					message: result[k][l]
-				});
-			}
+		let result = lajiValidate(data, validators);
+		let messages = getMessages(result);
+
+		if (messages.length > 0) {
+			context.setShowWarnings(false);
+			return toErrorSchema(messages);
 		}
-		return toErrorSchema(messages);
-	} else {
-		return errors;
 	}
+
+	if (warnings && !context.contextState.skipWarnings) {
+		let result = lajiValidate(data, warnings);
+		let messages = getMessages(result);
+		context.setShowWarnings(true);
+		return toErrorSchema(messages);
+	}
+
+	return errors;
 };
+
+function getMessages(result) {
+	const messages = [];
+	for(let k in result) {
+		for (let l in result[k]) {
+			messages.push({
+				property: "instance." + k,
+				message: result[k][l]
+			});
+		}
+	}
+	return messages;
+}
 
 
 // these are taken from react-jsonschema-form to convert error messages to wanted form

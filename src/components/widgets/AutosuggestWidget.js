@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Tooltip, OverlayTrigger, Glyphicon } from "react-bootstrap";
+import { Tooltip, OverlayTrigger, Glyphicon, Popover } from "react-bootstrap";
+import Spinner from "react-spinner";
 import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
 import { FetcherInput } from "../components";
 import BaseComponent from "../BaseComponent";
+import Context from "../../Context";
 
 @BaseComponent
 export default class _AutosuggestWidget extends Component {
@@ -22,45 +24,164 @@ export default class _AutosuggestWidget extends Component {
 	}
 }
 
-function TaxonAutosuggestWidget(props) {
-	const options = {
-		convertInputValue: () => {
-			const options = getUiOptions(props);
-			let value = value in options ? value : props.value;
-			const {inputValue} = getUiOptions(props);
-			if (inputValue) return new Promise(resolve => resolve(inputValue));
-			else {
-				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
-					return vernacularName || scientificName || value;
-				});
+class TaxonCardOverlay extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {converted: false};
+	}
+
+	componentWillMount() {
+		this.mounted = true;
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+	componentWillReceiveProps({value}) {
+		let urlTxt = "", urlTxtIsCursive = false;
+		isEmptyString(value) ? 
+			this.setState({urlTxt, urlTxtIsCursive}) :
+			new ApiClient().fetchCached(`/taxa/${value}`).then(response => {
+				this.mounted && this.setState({urlTxt: response.scientificName, value, urlTxtIsCursive: response.cursiveName});
+			});
+	}
+
+	render() {
+		const {id, formContext, value, children, placement} = this.props;
+		const {urlTxt, urlTxtIsCursive} = this.state;
+
+		const tooltipElem = (
+			<Tooltip id={`${id}-popover-tooltip`}>
+				{formContext.translations.OpenSpeciedCard}
+			</Tooltip>
+		);
+
+
+		let popoverMouseIn = false;
+		const popoverMouseOver = () => {
+			popoverMouseIn = true;
+		}
+		let popoverTimeout = undefined;
+		const popoverMouseOut = () => {
+			popoverMouseIn = false;
+			if (popoverTimeout) {
+				clearTimeout(overlayTimeout);
 			}
-		},
-		isValueSuggested: value => {
-			return !isEmptyString(value) && value.match(/MX\.\d+/);
-		},
-		renderUnsuggested: (input) => {
-			const tooltip = (
-				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
-			);
-			return (
-				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
-			);
-		},
-		renderSuccessGlyph: () => {
-			const options = getUiOptions(props);
-			const value = options.hasOwnProperty("value") ? options.value : props.value;
+			popoverTimeout = new Context(formContext.contextId).setTimeout(() => {
+				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
+			}, 200);
+		}
 
-			return (
-				<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
-					<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
-				</a>
-			);
-		},
-	};
+		const popover = (
+			<Popover id={`${id}-popover`} onMouseOver={popoverMouseOver} onMouseOut={popoverMouseOut}>
+				<span className="text-success">
+					<Glyphicon glyph="tag" /> {formContext.translations.KnownSpeciesName}
+				</span>
+				{this.state.urlTxt ?
+					<div>
+						<OverlayTrigger overlay={tooltipElem}>
+							<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
+								<Glyphicon glyph="modal-window"/> {urlTxtIsCursive ? <i>{urlTxt}</i> : urlTxt}
+							</a>
+						</OverlayTrigger>
+					</div> :
+					<Spinner />
+				}
+			</Popover>
+		);
 
-	const {options: propsOptions, ...propsWithoutOptions} = props;
+		let overlayRef = undefined;
+		const getOverlayRef = elem => {
+			overlayRef = elem;
+		};
+		let overlayMouseIn = undefined;
+		const overlayMouseOver = () => {
+			overlayMouseIn = true;
+			overlayRef.show();
+		}
+		let overlayTimeout = undefined;
+		const overlayMouseOut = () => {
+			overlayMouseIn = false;
+			if (overlayTimeout) {
+				clearTimeout(overlayTimeout);
+			}
+			overlayTimeout = new Context(formContext.contextId).setTimeout(() => {
+				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
+			}, 200);
+		};
 
-	return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+		return (
+			<div onMouseOver={overlayMouseOver} onMouseOut={overlayMouseOut}>
+				<OverlayTrigger delay={1}
+				                trigger={[]} 
+				                placement={placement || "top"}
+												ref={getOverlayRef}
+				                overlay={popover}>
+					{children}
+				</OverlayTrigger>
+			</div>
+		);
+
+	}
+}
+
+class TaxonAutosuggestWidget extends Component {
+	convertInputValue = (value) => {
+		const {inputValue} = getUiOptions(this.props);
+		if (inputValue) return new Promise(resolve => resolve(inputValue));
+		else {
+			return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
+				return vernacularName || scientificName || value;
+			});
+		}
+	}
+
+	isValueSuggested = (value) => {
+		return !isEmptyString(value) && value.match(/MX\.\d+/);
+	}
+	
+	renderUnsuggested = (props) => (input) => {
+		const tooltip = (
+			<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
+		);
+		return (
+			<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+		);
+	}
+
+	renderSuggested = (input) => {
+		const options = getUiOptions(this.props);
+		const value = "value" in options ? options.value : this.props.value;
+		return (
+			<TaxonCardOverlay value={value} formContext={this.props.formContext} id={this.props.id} trigger="hover">
+				{input}
+			</TaxonCardOverlay>
+		);
+	}
+
+	renderSuccessGlyph = (value) => {
+		return (
+			<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
+				<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
+			</a>
+		);
+	}
+
+	render() {
+		const {props} = this;
+
+		const options = {
+			convertInputValue: this.convertInputValue,
+			isValueSuggested: this.isValueSuggested,
+			renderSuggested: this.renderSuggested,
+			renderUnsuggested: this.renderUnsuggested(props),
+			renderSuccessGlyph: this.renderSuccessGlyph,
+		};
+
+		const {options: propsOptions, ...propsWithoutOptions} = props;
+
+		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+	}
 }
 
 function FriendsAutosuggestWidget(props) {
@@ -68,14 +189,13 @@ function FriendsAutosuggestWidget(props) {
 		query: {
 			includeSelf: true,
 		},
-		convertInputValue: () => {
-			let value = props.value;
+		convertInputValue: (value) => {
 			if (isEmptyString(value) || !value.match(/MA\.\d+/)) return new Promise(resolve => resolve(value));
 			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName}) => {
 				return fullName || value;
 			});
 		},
-		isValueSuggested: value => {
+		isValueSuggested: (value) => {
 			return !isEmptyString(value) && value.match(/MA\.\d+/);
 		},
 		renderUnsuggested: (input) => {
@@ -120,7 +240,7 @@ export class Autosuggest extends Component {
 	componentWillReceiveProps(props) {
 		const prevValue = this.state.value;
 		this.setState(this.getStateFromProps(props), () => {
-			if (props.value !== prevValue) this.triggerConvert(this.props);
+			if (props.value !== prevValue) this.triggerConvert(props);
 		});
 	}
 
@@ -138,17 +258,16 @@ export class Autosuggest extends Component {
 	}
 
 	triggerConvert = (props) => {
-		let isValueSuggested = this.props.isValueSuggested;
+		let {isValueSuggested, value, convertInputValue: convert} = props;
 
-		if (props.value === undefined || props.value === "") {
+		if (isEmptyString(value)) {
 			this.setState({inputValue: undefined});
 			return;
 		}
 
-		let convert = this.props.convertInputValue;
-		if ((isValueSuggested && isValueSuggested(this.props.value) && convert) || (!isValueSuggested && convert)) {
+		if ((isValueSuggested && isValueSuggested(value) && convert) || (!isValueSuggested && convert)) {
 			this.setState({isLoading: true});
-			convert(this)
+			convert(value)
 				.then(inputValue => {
 					if (!this.mounted) return;
 					this.setState({inputValue: inputValue, isLoading: false});
@@ -178,7 +297,8 @@ export class Autosuggest extends Component {
 		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
-		(() => {
+
+		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
@@ -187,6 +307,7 @@ export class Autosuggest extends Component {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const exactMatch = this.findExactMatch(suggestions);
+						console.log(suggestions, exactMatch);
 						if (!this.state.focused && exactMatch) {
 							this.selectSuggestion({...exactMatch, value});
 						}
@@ -203,7 +324,13 @@ export class Autosuggest extends Component {
 						this.onSuggestionsClearRequested();
 					}
 				});
-		})();
+		};
+
+		const context = new Context(this.props.formContext.contextId);
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+		}
+		this.timeout = context.setTimeout(request, 400);
 	}
 
 	onSuggestionsClearRequested = () => {
@@ -323,6 +450,10 @@ export class Autosuggest extends Component {
 			suggestionHighlighted: "rw-list-option rw-state-focus"
 		};
 
+		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props ?
+			this.props.hightlightFirstSuggestion :
+			!this.props.allowNonsuggestedValue;
+
 		return (
 			<div className="autosuggest-wrapper">
 				<ReactAutosuggest
@@ -336,7 +467,7 @@ export class Autosuggest extends Component {
 					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 					onSuggestionSelected={this.onSuggestionSelected}
 					focusInputOnSuggestionClick={false}
-					highlightFirstSuggestion={this.props.highlightFirstSuggestion}
+					highlightFirstSuggestion={highlightFirstSuggestion}
 					theme={cssClasses}
 				/>
 			</div>
@@ -387,7 +518,7 @@ export class Autosuggest extends Component {
 
 		if (!this.state.focused && !this.state.isLoading) {
 			glyph = (validationState === "success" && renderSuccessGlyph) ?
-				renderSuccessGlyph(this) : getGlyph(validationState);
+				renderSuccessGlyph(value) : getGlyph(validationState);
 		}
 		const input = (
 			<FetcherInput 

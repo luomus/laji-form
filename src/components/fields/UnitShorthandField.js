@@ -188,7 +188,6 @@ class CodeReader extends Component {
 				onChange={onAutosuggestChange}
 				formContext={formContext}
 				allowNonsuggestedValue={false}
-				highlightFirstSuggestion={true}
 			/>
 		);
 
