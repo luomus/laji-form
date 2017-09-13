@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
@@ -32,9 +31,10 @@ export default class ArrayBulkField extends Component {
 	}
 
 	render() {
+		const {TitleField} = this.props.registry.fields;
 		return (
 			<fieldset>
-				<TitleField title={this.props.schema.title || this.props.name}/>
+				<TitleField title={this.props.schema.title || this.props.name} className={getUiOptions(this.props.uiSchema).titleClassName} />
 				{this.renderItems()}
 				<Button onClick={this.onAddClick}>Lisää havaintorivejä</Button><br/>
 			</fieldset>

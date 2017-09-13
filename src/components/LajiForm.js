@@ -10,7 +10,6 @@ import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 
 import ApiClient from "../ApiClient";
@@ -114,7 +113,7 @@ class _SchemaField extends Component {
 	}
 }
 
-const _TitleField = props => isEmptyString(props.title) ? null : <TitleField {...props} />;
+const _TitleField = ({title, className}) => (isEmptyString(title)) ? null : <legend className={className}>{title}</legend>;
 
 const fields = importLocalComponents("fields", [
 	{SchemaField: _SchemaField},

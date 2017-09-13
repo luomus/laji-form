@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Row , Col, Tooltip, OverlayTrigger } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
@@ -31,11 +30,11 @@ export default class ExtraLabelRowField extends Component {
 	}
 
 	render() {
-		const SchemaField = this.props.registry.fields.SchemaField;
-		const options = getUiOptions(this.props.uiSchema);
+		const {SchemaField, TitleField} = this.props.registry.fields;
+		const {labels, titleClassName} = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
-		options.labels.forEach((property, i) => {
+		labels.forEach((property, i) => {
 			cols.push(this.getColContent(property, Object.keys(property)[0], i));
 		});
 
@@ -43,7 +42,7 @@ export default class ExtraLabelRowField extends Component {
 
 		return (
 			<div>
-				{title ? <TitleField title={title} /> : null}
+				{title ? <TitleField title={title} className={titleClassName} /> : null}
 				<Row>{cols}</Row>
 				<SchemaField {...this.props} {...this.state}/>
 			</div>

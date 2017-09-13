@@ -2,6 +2,7 @@ import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { renderGrid } from "./GridLayoutField";
+import { getUiOptions } from "../../utils";
 
 export function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
@@ -13,6 +14,7 @@ export function ObjectFieldTemplate(props) {
 						title={props.title}
 						required={props.required}
 						formContext={props.formContext}
+						className={getUiOptions(props.uiSchema).titleClassName}
 					/>}
 			{props.description &&
 				<DescriptionField

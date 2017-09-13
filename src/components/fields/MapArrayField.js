@@ -291,7 +291,7 @@ export default class MapArrayField extends Component {
 		return (
 			<div ref="affix">
 				<Row>
-					<Col {...mapSizes}>
+					<Col {...mapSizes} className="form-group-padding-bottom">
 						{wrappedMap}
 					</Col>
 					<Col {...schemaSizes} ref="_stretch">

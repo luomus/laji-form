@@ -156,7 +156,7 @@ export default class GridLayoutField extends Component {
 		let fieldTitle = title !== undefined ? title : this.props.name;
 		return (
 			<fieldset>
-				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} /> : null}
+				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} className={getUiOptions(this.props.uiSchema).titleClassName} /> : null}
 				{rows.map((row, i) =>
 					<Row key={i}>
 						{row}

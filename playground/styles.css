@@ -138,6 +138,9 @@ body .laji-form {
 .laji-form .form-group {
 	margin-bottom: 0;
 }
+.laji-form .form-group-padding-bottom {
+	margin-bottom: 6px;
+}
 
 .laji-form button {
 	line-height: 14px;
@@ -151,11 +154,13 @@ body .laji-form {
 	font-size: 15px;
 	margin-bottom: 10px;
 }
+.laji-form legend.lg {
+	font-size: 20px;
+}
 .laji-form label {
 	font-size: 13px;
 	white-space: nowrap;
-	margin-bottom: 0px;
-	margin-top: 4px;
+	margin-bottom: 1px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -786,4 +791,8 @@ body .laji-form {
 		width: calc(100% / 13);
 		float: left;
 	}
+}
+
+.laji-form table {
+	margin-bottom: 3px;
 }

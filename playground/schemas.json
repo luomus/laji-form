@@ -341,7 +341,8 @@
 				"belowUiSchemaRoot": {
 					"ui:field": "SingleItemArrayField",
 					"ui:options": {
-						"titleFormat": "Paikan %{idx} havainnot"
+						"titleFormat": "Paikan %{idx} havainnot",
+						"titleClassName": "lg"
 					}
 				},
 				"inlineUiSchemaRoot": {

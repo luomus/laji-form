@@ -489,7 +489,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div>
-				<TitleField title={that.state.getTitle(activeIdx)} />
+				<TitleField title={that.state.getTitle(activeIdx)} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
 			: null;
@@ -596,7 +596,7 @@ class TableArrayFieldTemplate extends Component {
 			return val;
 		};
 
-		const {itemsClassNames, confirmDelete} = getUiOptions(uiSchema);
+		const {itemsClassNames, confirmDelete, titleClassName} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = idx => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
@@ -613,7 +613,7 @@ class TableArrayFieldTemplate extends Component {
 
 		return (
 			<div>
-				<TitleField title={that.state.getTitle(that.state.activeIdx)}/>
+				<TitleField title={that.state.getTitle(that.state.activeIdx)} className={titleClassName}/>
 				<DescriptionField description={this.props.description}/>
 				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (

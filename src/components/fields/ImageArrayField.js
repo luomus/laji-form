@@ -38,7 +38,7 @@ export default class ImageArrayField extends Component {
 		const {schema, uiSchema, name, formContext} = this.props;
 		const {translations} = formContext;
 
-		const {description} = getUiOptions(uiSchema);
+		const {description, titleClassName} = getUiOptions(uiSchema);
 		const title = (schema.title === undefined) ? name : schema.title;
 		const {TitleField} = this.props.registry.fields;
 
@@ -62,7 +62,7 @@ export default class ImageArrayField extends Component {
 		return (
 			<Row>
 				<Col xs={12}>
-					<TitleField title={title} />
+					<TitleField title={title} className={titleClassName} />
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
