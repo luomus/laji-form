@@ -741,11 +741,11 @@ class SplitArrayFieldTemplate extends Component {
 		}
 
 		for (let i = 0; i < props.formData.length; i++) {
-			const value = parseJSONPointer(props.formData[i], uiOptions.splitRule.fieldPath);
+			const value = parseJSONPointer(props.formData[i], uiOptions.splitRule.fieldPath) + "";
 			let match = -1;
 
 			for (let j = 0; j < uiOptions.splitRule.rules.length; j++) {
-				if (value && value.match(uiOptions.splitRule.rules[j])) {
+				if (value.match(uiOptions.splitRule.rules[j])) {
 					match = j;
 					break;
 				}

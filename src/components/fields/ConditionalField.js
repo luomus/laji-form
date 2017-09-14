@@ -14,11 +14,11 @@ const operationPropType = PropTypes.shape({
 });
 
 const casePropType = PropTypes.shape({
-	rules: PropTypes.oneOf([
+	rules: PropTypes.oneOfType([
 		rulePropType,
 		PropTypes.arrayOf(rulePropType)
 	]),
-	operations: PropTypes.oneOf([
+	operations: PropTypes.oneOfType([
 		operationPropType,
 		PropTypes.arrayOf(operationPropType)
 	])
@@ -52,7 +52,7 @@ export default class ConditionalField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				cases: PropTypes.oneOf([
+				cases: PropTypes.oneOfType([
 					casePropType,
 					PropTypes.arrayOf(casePropType)
 				])

@@ -752,37 +752,37 @@ body .laji-form {
 
 /* Custom bootstrap grid class */
 
-.col-xs-1-13,
-.col-sm-1-13,
-.col-md-1-13,
-.col-lg-1-13 {
+.col-xs-13,
+.col-sm-13,
+.col-md-13,
+.col-lg-13 {
 	position: relative;
 	min-height: 1px;
 	/*padding-right: 10px;
 	padding-left: 10px;*/
 }
 
-.col-xs-1-13 {
+.col-xs-13 {
 	width: calc(100% / 13);
 	float: left;
 }
 
 @media (min-width: 768px) {
-	.col-sm-1-13 {
+	.col-sm-13 {
 		width: calc(100% / 13);
 		float: left;
 	}
 }
 
 @media (min-width: 992px) {
-	.col-md-1-13 {
+	.col-md-13 {
 		width: calc(100% / 13);
 		float: left;
 	}
 }
 
 @media (min-width: 1200px) {
-	.col-lg-1-13 {
+	.col-lg-13 {
 		width: calc(100% / 13);
 		float: left;
 	}
