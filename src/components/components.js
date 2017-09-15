@@ -497,7 +497,7 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 	let overlayRef = undefined;
 	let getOverlayRef = ref => {
 		overlayRef = ref;
-	}
+	};
 
 	const overlay = (
 		<OverlayTrigger ref={getOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={

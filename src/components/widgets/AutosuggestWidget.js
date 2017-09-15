@@ -60,7 +60,7 @@ class TaxonCardOverlay extends Component {
 		let popoverMouseIn = false;
 		const popoverMouseOver = () => {
 			popoverMouseIn = true;
-		}
+		};
 		let popoverTimeout = undefined;
 		const popoverMouseOut = () => {
 			popoverMouseIn = false;
@@ -70,7 +70,7 @@ class TaxonCardOverlay extends Component {
 			popoverTimeout = new Context(formContext.contextId).setTimeout(() => {
 				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
 			}, 200);
-		}
+		};
 
 		const popover = (
 			<Popover id={`${id}-popover`} onMouseOver={popoverMouseOver} onMouseOut={popoverMouseOut}>
@@ -98,7 +98,7 @@ class TaxonCardOverlay extends Component {
 		const overlayMouseOver = () => {
 			overlayMouseIn = true;
 			overlayRef.show();
-		}
+		};
 		let overlayTimeout = undefined;
 		const overlayMouseOut = () => {
 			overlayMouseIn = false;
@@ -307,7 +307,6 @@ export class Autosuggest extends Component {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const exactMatch = this.findExactMatch(suggestions);
-						console.log(suggestions, exactMatch);
 						if (!this.state.focused && exactMatch) {
 							this.selectSuggestion({...exactMatch, value});
 						}
