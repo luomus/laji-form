@@ -513,7 +513,7 @@
 									"autosuggestField": "taxon",
 									"allowNonsuggestedValue": true,
 									"suggestionInputField": "identifications_0_taxon",
-									"suggestionValueField": ["identifications_0_taxonID", "unitFact_autocompleteSelectedTaxonID"],
+									"suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
 									"suggestionReceivers": {
 										"identifications_0_taxon": "value",
 										"unitType": "$taxonGroup",

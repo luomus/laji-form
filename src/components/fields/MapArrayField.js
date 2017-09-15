@@ -15,9 +15,9 @@ import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 
 const popupMappers = {
-	unitTaxon: (schema, formData) => {
+	unitTaxon: (schema, formData, options = {}) => {
 		try {
-			return {[schema.identifications.items.properties.taxon.title]: formData.identifications[0].taxon};
+			return {[schema.identifications.items.properties.taxon.title]: parseJSONPointer(formData, options.valuePath, !!"safe mode")};
 		} catch (e) {
 			return {};
 		}
@@ -714,7 +714,7 @@ export default class MapArrayField extends Component {
 			let fieldSchema = this.props.schema.items.properties[geometryMapperField].items.properties;
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			if (field.mapper) {
-				const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData);
+				const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData, field.options);
 				for (let label in mappedData) {
 					const item = mappedData[label];
 					if (hasData(item)) data[label] = item;
