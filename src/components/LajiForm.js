@@ -19,7 +19,7 @@ import translations from "../translations.js";
 class _SchemaField extends Component {
 	constructor(props) {
 		super(props);
-		this.updateVirtualInstance(props);
+		this.updateVirtualInstance(props, !!"initial");
 	}
 
 	componentDidMount() {
@@ -36,8 +36,9 @@ class _SchemaField extends Component {
 		this.updateVirtualInstance(props);
 	}
 
-	updateVirtualInstance = (props) => {
-		if ([props, this.props].forEach(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) || !deepEquals([this.props, props])) {
+	updateVirtualInstance = (props, initial) => {
+		if ([props, this.props].some(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) &&
+		    (initial || !deepEquals([this.props, props]))) {
 			this.functionOutputProps = this.applyFunction(props);
 		}
 	}
@@ -81,14 +82,19 @@ class _SchemaField extends Component {
 
 	render() {
 		const props = this.functionOutputProps || this.props;
-
 		let {schema, uiSchema, registry} = props;
 
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
 			schema = {...schema, uniqueItems: false};
 		}
 
-		if (uiSchema && uiSchema["ui:field"] && uiSchema.uiSchema && new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && uiSchema["ui:buttons"]) {
+		if (
+			uiSchema &&
+			uiSchema["ui:field"] && 
+			uiSchema.uiSchema &&
+			new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && 
+			uiSchema["ui:buttons"] && uiSchema["ui:buttons"].length
+		) {
 			uiSchema = {
 				...uiSchema,
 				"ui:buttons": undefined,
