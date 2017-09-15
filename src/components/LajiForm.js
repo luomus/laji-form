@@ -124,9 +124,6 @@ const _TitleField = ({title, className}) => (isEmptyString(title)) ? null : <leg
 const fields = importLocalComponents("fields", [
 	{SchemaField: _SchemaField},
 	{TitleField: _TitleField},
-	// Disabled until we have time to make it work properly. StringField wrapper was used to optimization:
-	// it caused the onChange-events to trigger events only on blur, not on every key stroke.
-	// "StringField",
 	"ArrayField",
 	"NestField",
 	"ArrayBulkField",
@@ -164,6 +161,7 @@ const fields = importLocalComponents("fields", [
 ]);
 
 const widgets = importLocalComponents("widgets", [
+	"BaseInput",
 	"CheckboxWidget",
 	"SelectWidget",
 	"TextareaWidget",
