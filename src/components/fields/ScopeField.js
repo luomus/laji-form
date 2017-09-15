@@ -329,7 +329,7 @@ export default class ScopeField extends Component {
 			if (additionalsPersistenceKey) {
 				const formDataItem = props.formData[additionalsPersistenceKey];
 				let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
-				if (items.length === 0) items = ["undefined"];
+				items = ["undefined", ...items];
 				items.forEach(item => {
 					if (this._context && this._context[item]) additionalsToAdd = {...additionalsToAdd, ...this._context[item]};
 				});
@@ -614,7 +614,6 @@ export default class ScopeField extends Component {
 		return isIncluded;
 	}
 
-
 	toggleAdditionalProperty = (fields) => {
 		if (!Array.isArray(fields)) fields = [fields];
 		const additionalFields = fields.reduce((additionalFields, field) => {
@@ -637,7 +636,7 @@ export default class ScopeField extends Component {
 			} else if (additionalsPersistenceId) {
 				this.getContext()[ `scopeField_${additionalsPersistenceId}`] = additionalFields;
 			}
-		} 
+		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
 	}
 
