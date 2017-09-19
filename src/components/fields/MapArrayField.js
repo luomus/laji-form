@@ -187,7 +187,7 @@ export default class MapArrayField extends Component {
 		};
 		if (inlineUiSchemaRoot) {
 			inlineUiSchema = {...inlineUiSchema, ...inlineUiSchemaRoot};
-			inlineUiSchema.items = {...(inlineUiSchemaRoot.items || {}), ...inlineItemsUiSchema};
+			inlineUiSchema.items = {...inlineItemsUiSchema, ...(inlineUiSchemaRoot.items || {})};
 		} else {
 			inlineUiSchema.items = inlineItemsUiSchema;
 		}
