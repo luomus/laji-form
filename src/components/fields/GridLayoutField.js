@@ -138,7 +138,7 @@ export default class GridLayoutField extends Component {
 						uiSchema={this.state.uiSchema[propertyName]}
 						idSchema={toIdSchema(
 							property,
-							this.state.idSchema.$id + "_" + propertyName,
+							this.state.idSchema[propertyName].$id,
 							this.props.registry.definitions
 						)}
 						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
