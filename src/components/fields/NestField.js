@@ -159,8 +159,9 @@ export default class NestField extends Component {
 
 			uiSchema = {
 				...uiSchema, [wrapperFieldName]: {
-					...(nests[wrapperFieldName] ? nests[wrapperFieldName].uiSchemaRoot : {} || {}), 
-					...(uiSchema[wrapperFieldName] || {}), ...nestedProps.uiSchema}
+					...nestedProps.uiSchema,
+					...(nests[wrapperFieldName] ? nests[wrapperFieldName].uiSchemaRoot : {} || {}),
+					...(uiSchema[wrapperFieldName] || {})}
 			};
 			if (nest.rootUiSchema) {
 				uiSchema = {...uiSchema, [wrapperFieldName]: {...(nest.rootUiSchema || {}), ...(uiSchema[wrapperFieldName] || {})}};
