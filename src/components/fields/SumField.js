@@ -17,6 +17,7 @@ export default class CopyValuesArrayField extends Component {
 	onChange(formData) {
 		const summedFields = this.getUiOptions().summedFields;
 		const resultField = this.getUiOptions().resultField;
+		const resultType = this.props.schema.properties[resultField].type;
 
 		let result = 0;
 		let allEmpty = true;
@@ -27,7 +28,12 @@ export default class CopyValuesArrayField extends Component {
 		    }
 		});
 
-		formData[resultField] = allEmpty ? undefined : result;
+		result = allEmpty || isNaN(result) ? undefined : result;
+		if (result !== undefined && resultType !== "number" && resultType !== "integer") {
+			result = result + "";
+		}
+
+		formData[resultField] = result;
 		this.props.onChange(formData);
 	}
 }
