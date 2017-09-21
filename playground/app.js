@@ -9,7 +9,7 @@ import "../src/styles";
 import "./styles.css";
 
 // set to undefined to use the local schemas
-const SCHEMA_ID = "JX.519";
+const SCHEMA_ID = "MHL.3";
 
 const log = (type) => console.info.bind(console, type);
 

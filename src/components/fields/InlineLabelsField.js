@@ -104,7 +104,7 @@ export default class InlineLabelsField extends Component {
 		const fieldTitle = title !== undefined ? title : this.props.name;
 
 		return (
-			<fieldset className={getUiOptions(this.props.uiSchema).classNames}>
+			<fieldset>
                 {!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} /> : null}
                 {(rows).map((row, i) =>
 					<Row key={i}>{row}</Row>

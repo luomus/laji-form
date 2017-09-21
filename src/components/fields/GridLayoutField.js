@@ -150,7 +150,7 @@ export default class GridLayoutField extends Component {
 			);
 		});
 
-		rows.push(lastRow);
+		if (lastRow.length > 0) rows.push(lastRow);
 
 		const {title} = this.props.schema;
 		let fieldTitle = title !== undefined ? title : this.props.name;
