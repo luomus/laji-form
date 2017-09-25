@@ -807,7 +807,8 @@ body .laji-form {
 	padding-right: 0;
 }
 
-.laji-form .laji-form-striped-array-table legend, .laji-form .laji-form-striped-array-table .laji-form-label-row, .laji-form .laji-form-striped-array-table .laji-form-field-template-item {
+.laji-form .laji-form-striped-array-table legend, .laji-form .laji-form-striped-array-table .laji-form-label-row,
+.laji-form .laji-form-striped-array-table .laji-form-field-template-item, .laji-form .laji-form-striped-array-table .btn-toolbar {
 	padding-right: 7px;
 	padding-left: 7px;
 }
