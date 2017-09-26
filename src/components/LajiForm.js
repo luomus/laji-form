@@ -476,7 +476,7 @@ export default class LajiForm extends Component {
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
-		this._contextState = {warnings: []};
+		this._contextState = {warnings: {}};
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -555,7 +555,6 @@ export default class LajiForm extends Component {
 					ErrorList={ErrorListTemplate}
 					formContext={formContext}
 					validate={validate(this.props.validators)}
-					safeRenderCompletion={true}
 				>
 				<div>
 					{this.props.children}
