@@ -1,25 +1,43 @@
 import lajiValidate from "laji-validate";
 
-export default (validators, warnings, context) => (data, errors) => {
+export default (validators) => (data, errors) => {
+
 	if (validators) {
-		let result = lajiValidate(data, validators);
-		let messages = getMessages(result);
-
-		if (messages.length > 0) {
-			context.setShowWarnings(false);
-			return toErrorSchema(messages);
-		}
-	}
-
-	if (warnings && !context.contextState.skipWarnings) {
-		let result = lajiValidate(data, warnings);
-		let messages = getMessages(result);
-		context.setShowWarnings(true);
+		const result = lajiValidate(data, validators);
+		const messages = getMessages(result);
 		return toErrorSchema(messages);
 	}
 
 	return errors;
 };
+
+export function getWarnings(data, validators) {
+	if (validators) {
+		const result = lajiValidate(data, validators);
+		return getWarningIds(result);
+	}
+
+	return {};
+}
+
+function getWarningIds(result) {
+	const warnings = {};
+
+	for (let k in result) {
+		let path = "root";
+		const split = k.split(".");
+		for (let s in split) {
+			const split2 = split[s].split(/[|]/);
+			path += "_" + split2[0];
+			if (split2.length > 1) {
+				path += "_" + split2[1];
+			}
+		}
+		warnings[path] = result[k];
+	}
+
+	return warnings;
+}
 
 function getMessages(result) {
 	const messages = [];

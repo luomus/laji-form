@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
+import { getWarnings } from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
@@ -224,7 +225,6 @@ function FieldTemplate({
 
 	const buttons = (uiSchema["ui:buttons"] && schema.type !== "array") ? uiSchema["ui:buttons"] : undefined;
 	const vertical = uiSchema["ui:buttonsVertical"];
-	const errorClassName = formContext.contextState.showWarnings ? " laji-form-warning-container" : "";
 
 	let containerClassName, schemaClassName, buttonsClassName;
 	if (buttons && buttons.length) {
@@ -232,8 +232,12 @@ function FieldTemplate({
 		schemaClassName = "laji-form-field-template-schema";
 		buttonsClassName = "laji-form-field-template-buttons";
 	}
+
+	const warnings = formContext.contextState.warnings[id];
+	const warningClassName = warnings ? " laji-form-warning-container" : "";
+
 	return (
-		<div className={classNames + errorClassName} id={elemId}>
+		<div className={classNames + warningClassName} id={elemId}>
 			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} /> : null}
 			{_displayLabel && description ? description : null}
 			<div className={containerClassName}>
@@ -256,6 +260,15 @@ function FieldTemplate({
 			<div id={`laji-form-error-container-${id}`}>
 				{errors}
 			</div>
+			{warnings ?
+				<div id={`laji-form-warning-container-${id}`}>
+					<p></p>
+					<ul>
+					{warnings.map((warning, i) => (
+						<li key={i} className="text-warning">{warning}</li>
+					))}
+					</ul>
+				</div> : null}
 		</div>
 	);
 }
@@ -271,7 +284,6 @@ class ErrorListTemplate extends Component {
 		const {contextId, translations} = formContext;
 		const that = new Context(contextId).formInstance;
 		const clickHandler = that.errorClickHandler;
-		const showWarnings = !!formContext.contextState.showWarnings;
 
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;
@@ -305,21 +317,15 @@ class ErrorListTemplate extends Component {
 			if (!this.state.expanded) this.setState({expanded: true});
 		};
 
-		const submitWithWarnings = () => {
-			this.props.formContext.setSkipWarnings(true);
-			that.submit();
-			this.props.formContext.setSkipWarnings(false);
-		};
-
 		return (
 			<Panel collapsible expanded={this.state.expanded} 
 				className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}`}
 				style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}
-				bsStyle={showWarnings ? "warning" : "danger"}
+				bsStyle="danger"
 				header={
 				<div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
 					<div className="panel-title">
-						{showWarnings ? translations.Warnings : translations.Errors}
+						{translations.Errors}
 						<span className="pull-right">
 							<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
 							<GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} />
@@ -329,9 +335,7 @@ class ErrorListTemplate extends Component {
 				}
 				footer={
 					<div>
-					{showWarnings ? <Button onClick={submitWithWarnings}>{translations.SubmitWithWarnings}</Button> :
 						<Button onClick={revalidate}><Glyphicon glyph="refresh" /> {translations.Revalidate}</Button>
-					}
 					</div>
 				}
 			>
@@ -472,7 +476,7 @@ export default class LajiForm extends Component {
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
-		this._contextState = {};
+		this._contextState = {warnings: []};
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -510,9 +514,10 @@ export default class LajiForm extends Component {
 	}
 
 	onChange = ({formData}) => {
+		this._contextState.warnings = getWarnings(formData, this.props.warnings);
 		if (this.props.onChange) this.props.onChange(formData);
 		this._context.formData = formData;
-	}
+	};
 
 	getRef = form => {this.formRef = form;}
 
@@ -533,9 +538,7 @@ export default class LajiForm extends Component {
 			contextId: this._id,
 			getFormRef: () => this.formRef,
 			topOffset: this.props.topOffset,
-			bottomOffset: this.props.bottomOffset,
-			setSkipWarnings: (skip) => this._contextState["skipWarnings"] = skip,
-			setShowWarnings: (show) => this._contextState["showWarnings"] = show
+			bottomOffset: this.props.bottomOffset
 		};
 
 		return (
@@ -551,7 +554,8 @@ export default class LajiForm extends Component {
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
 					formContext={formContext}
-					validate={validate(this.props.validators, this.props.warnings, formContext)}
+					validate={validate(this.props.validators)}
+					safeRenderCompletion={true}
 				>
 				<div>
 					{this.props.children}
@@ -596,13 +600,13 @@ export default class LajiForm extends Component {
 
 	onSubmit = (...props) => {
 		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
-	}
+	};
 
 	submit = (propagate = true) => {
 		this.propagateSubmit = propagate;
 		this.formRef.onSubmit({preventDefault: () => {}});
 		this.propagateSubmit = true;
-	}
+	};
 
 	dismissHelp = (e) => {
 		const node = findDOMNode(this.shortcutHelpRef);
