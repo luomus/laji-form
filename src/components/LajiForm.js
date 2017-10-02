@@ -233,8 +233,8 @@ function FieldTemplate({
 		buttonsClassName = "laji-form-field-template-buttons";
 	}
 
-	const warnings = formContext.contextState.warnings[id];
-	const warningClassName = warnings ? " laji-form-warning-container" : "";
+	const warnings = formContext.getWarnings(children.props.formData, id);
+	const warningClassName = warnings.length > 0 ? " laji-form-warning-container" : "";
 
 	return (
 		<div className={classNames + warningClassName} id={elemId}>
@@ -260,7 +260,7 @@ function FieldTemplate({
 			<div id={`laji-form-error-container-${id}`}>
 				{errors}
 			</div>
-			{warnings ?
+			{warnings.length > 0 ?
 				<div id={`laji-form-warning-container-${id}`}>
 					<p></p>
 					<ul>
@@ -514,7 +514,6 @@ export default class LajiForm extends Component {
 	}
 
 	onChange = ({formData}) => {
-		this._contextState.warnings = getWarnings(formData, this.props.warnings);
 		if (this.props.onChange) this.props.onChange(formData);
 		this._context.formData = formData;
 	};
@@ -538,7 +537,10 @@ export default class LajiForm extends Component {
 			contextId: this._id,
 			getFormRef: () => this.formRef,
 			topOffset: this.props.topOffset,
-			bottomOffset: this.props.bottomOffset
+			bottomOffset: this.props.bottomOffset,
+			getWarnings: (data, id) => {
+				return getWarnings(data, id, this.props.warnings, this.props.schema);
+			}
 		};
 
 		return (

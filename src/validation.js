@@ -11,32 +11,50 @@ export default (validators) => (data, errors) => {
 	return errors;
 };
 
-export function getWarnings(data, validators) {
-	if (validators) {
-		const result = lajiValidate(data, validators);
-		return getWarningIds(result);
-	}
+export function getWarnings(data, id, validators, schema) {
+	if (!id || !validators) return [];
 
-	return {};
-}
+	function getValidator(idArray, i, validators, schema) {
+		if (i >= idArray.length) {
+			let validator = null;
+			for (const prop in validators) {
+				if (!schema[prop]) {
+					if (!validator) validator = {};
+					validator[prop] = validators[prop];
+				}
+			}
+			return validator;
+		}
 
-function getWarningIds(result) {
-	const warnings = {};
-
-	for (let k in result) {
-		let path = "root";
-		const split = k.split(".");
-		for (let s in split) {
-			const split2 = split[s].split(/[|]/);
-			path += "_" + split2[0];
-			if (split2.length > 1) {
-				path += "_" + split2[1];
+		for (const prop in validators) {
+			if (prop.match(/^\d+$/)) {
+				return getValidator(idArray, i + 1, validators.items, schema.items);
+			}
+			if (prop === idArray[i]) {
+				validators = validators[prop];
+				schema = schema[prop];
+				if (validators.properties) {
+					validators = validators.properties;
+					schema = schema.properties;
+				}
+				return getValidator(idArray, i + 1, validators, schema);
 			}
 		}
-		warnings[path] = result[k];
+
+		return null;
 	}
 
-	return warnings;
+	const idParts = id.split("_");
+	const validator = getValidator(idParts, 1, validators, schema.properties);
+	if (validator) {
+		const id = idParts[idParts.length - 1];
+		const result = lajiValidate({[id]: data}, {[id]: validator});
+		if (result) {
+			return result[id];
+		}
+	}
+
+	return [];
 }
 
 function getMessages(result) {
