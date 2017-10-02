@@ -343,5 +343,45 @@
 		fi: "Tallenna varoituksista huolimatta",
 		en: "??",
 		sv: "??"
+	},
+	chooseFromNamedPlace: {
+		fi: "Lisää nimetty paikka",
+		en: "Add a named place",
+		sv: "Lägga en namngiven plats"
+	},
+	chooseNamedPlace: {
+		fi: "Valitse nimetty paikka",
+		en: "Choose a named place",
+		sv: "Välja namngiven plats"
+	},
+	namedPlacesFetchFail: {
+		fi: "Nimettyjen paikkojen hakeminen epäonnistui.",
+		en: "Fetching named places failed",
+		sv: "Hämtning av namngivna platser misslyckades"
+	},
+	list: {
+		fi: "Luettelo",
+		en: "List",
+		sv: "Lista"
+	},
+	name: {
+		fi: "Nimi",
+		en: "Name",
+		sv: "Namn"
+	},
+	notes: {
+		fi: "Lisätiedot",
+		en: "Details",
+		sv: "Anteckningar"
+	},
+	useThisPlace: {
+		fi: "Käytä tätä paikkaa",
+		en: "Use this place",
+		sv: "Använd denna plats"
+	},
+	SelectPlaceFromList: {
+		fi: "Kirjoita valitaksesi paikan listalta",
+		en: "Type in order to select a place from the list",
+		sv: "Skriv in för att välja en plats från listan"
 	}
 };

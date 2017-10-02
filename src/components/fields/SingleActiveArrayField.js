@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, parseJSONPointer,
+import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
+import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton } from "../components";
-import _ArrayFieldTemplate, { getButtons, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -118,6 +118,11 @@ export default class SingleActiveArrayField extends Component {
 
 	componentDidMount() {
 		this.updatePopups(this.props);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+	}
+
+	componentWillUnmount() {
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.id, "activeIdx");
 	}
 
 	componentWillReceiveProps(props) {
@@ -295,9 +300,6 @@ export default class SingleActiveArrayField extends Component {
 	buttonDefinitions = {
 		add: {
 			callback: () => this.onActiveChange(this.props.formData.length),
-			className: (!getUiOptions(this.props.uiSchema).renderer || getUiOptions(this.props.uiSchema).renderer === "accordion") ?
-				"col-xs-12 laji-form-accordion-header" :
-				undefined
 		},
 		copy: {
 			fn: () => (...params) => {
@@ -408,6 +410,25 @@ const ButtonsWrapper = ({props}) => {
 	return <div>{getButtons(buttons, props)}</div>;
 };
 
+const AccordionButtonsWrapper = ({props}) => {
+	const buttons = getUiOptions(props.uiSchema).buttons;
+	if (!buttons) return null;
+
+	const cols = Object.keys(getBootstrapCols()).reduce((cols, colType) => {
+		cols[colType] = (colType === "xs") ? 12 : 12 / buttons.length;
+		return cols;
+	}, {});
+
+	return (
+		<Row className="laji-form-accordion-buttons">
+			{buttons.map(button => getButton(button, props)).map((button, idx) => 
+					<Col {...cols} key={idx}>{button}</Col>
+			)}
+		</Row>
+	);
+
+};
+
 @handlesButtonsAndFocus
 class AccordionArrayFieldTemplate extends Component {
 	render() {
@@ -431,7 +452,7 @@ class AccordionArrayFieldTemplate extends Component {
 							{idx === activeIdx ? item.children : null}
 						</Panel>
 					))}
-					<ButtonsWrapper props={arrayFieldTemplateProps} />
+					<AccordionButtonsWrapper props={arrayFieldTemplateProps} />
 				</Accordion>
 			</div>
 		);

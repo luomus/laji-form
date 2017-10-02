@@ -197,9 +197,12 @@ export default class MapArrayField extends Component {
 		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
 		if (belowUiSchema) belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
 
-		const {addButtonPath, removeAddButtonPath} = getUiOptions(this.props.uiSchema);
-		if (addButtonPath) {
-			const injectTarget = parseJSONPointer(belowUiSchema, `${addButtonPath}/ui:options`, "createParents");
+		const {buttonsPath, addButtonPath, removeAddButtonPath} = getUiOptions(this.props.uiSchema);
+		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
+		let _buttonsPath = buttonsPath || addButtonPath;
+
+		if (_buttonsPath) {
+			const injectTarget = parseJSONPointer(belowUiSchema, `${_buttonsPath}/ui:options`, "createParents");
 			const buttons = uiSchema["ui:options"].buttons || [];
 			const injectButtons = injectTarget.buttons || [];
 			if ((injectButtons).every(button => {return button.key !== "_add";})) {
@@ -214,7 +217,8 @@ export default class MapArrayField extends Component {
 						}, 
 						key: "_add",
 						glyph: "plus"
-					}
+					},
+					...(options.buttons || []).filter(({fn}) => fn !== "add")
 				];
 			}
 		}

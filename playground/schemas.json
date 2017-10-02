@@ -294,86 +294,89 @@
 			}
 		},
 		"gatherings": {
-			"ui:functions": {
-				"ui:field": "ContextInjectionField",
+			"ui:field": "NamedPlaceChooserField",
+			"uiSchema": {
+				"ui:functions": {
+					"ui:field": "ContextInjectionField",
+					"ui:options": {
+						"injections": {
+							"/ui:options/activeIdx": "/activeGatheringIdx"
+						}
+					}
+				},
+				"ui:field": "MapArrayField",
+				"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
+				"ui:settings": [
+					"/mapOptions/tileLayerName",
+					"/mapOptions/overlayNames",
+					"/mapOptions/tileLayerOpacity"
+				],
 				"ui:options": {
-					"injections": {
-						"/ui:options/activeIdx": "/activeGatheringIdx"
-					}
+					"geometryField": "geometry",
+					"geometryMapper": "units",
+					"mapSizes": {
+						"lg": 4,
+						"md": 4,
+						"sm": 6,
+						"xs": 12
+					},
+					"buttons": [
+						{
+							"fn": "add",
+							"label": "Lisää paikka"
+						}
+					],
+					"popupFields": [
+						{
+							"mapper": "taxon"
+						},
+						{
+							"field": "sex"
+						},
+						{
+							"field": "notes"
+						}
+					],
+					"belowFields": [
+						"units"
+					],
+					"belowUiSchemaRoot": {
+						"ui:field": "SingleItemArrayField",
+						"ui:options": {
+							"titleFormat": "Paikan %{idx} havainnot",
+							"titleClassName": "lg"
+						}
+					},
+					"inlineUiSchemaRoot": {
+						"ui:field": "AccordionArrayField",
+						"ui:options": {
+							"headerFormatters": [
+								"units",
+								"locality"
+							],
+							"popupFields": [
+								{
+									"field": "units",
+									"mapper": "units"
+								},
+								{
+									"field": "localityDescription"
+								}
+							],
+							"titleFormat": "%{Title} %{idx}",
+							"confirmDelete": true
+						}
+					},
+					"propsToPassToInlineSchema": [
+						"errorSchema",
+						"formData"
+					],
+					"minHeight": 435,
+					"resizeTimeout": 210,
+					"buttonsPath": "/items/units",
+					"removeAddButtonPath": "/",
+					"addTxt": "Lisää paikka"
 				}
-			},
-			"ui:field": "MapArrayField",
-			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
-			"ui:settings": [
-				"/mapOptions/tileLayerName",
-				"/mapOptions/overlayNames",
-				"/mapOptions/tileLayerOpacity"
-			],
-			"ui:options": {
-				"geometryField": "geometry",
-				"geometryMapper": "units",
-				"mapSizes": {
-					"lg": 4,
-					"md": 4,
-					"sm": 6,
-					"xs": 12
-				},
-				"buttons": [
-					{
-						"fn": "add",
-						"label": "Lisää paikka"
-					}
-				],
-				"popupFields": [
-					{
-						"mapper": "taxon"
-					},
-					{
-						"field": "sex"
-					},
-					{
-						"field": "notes"
-					}
-				],
-				"belowFields": [
-					"units"
-				],
-				"belowUiSchemaRoot": {
-					"ui:field": "SingleItemArrayField",
-					"ui:options": {
-						"titleFormat": "Paikan %{idx} havainnot",
-						"titleClassName": "lg"
-					}
-				},
-				"inlineUiSchemaRoot": {
-					"ui:field": "AccordionArrayField",
-					"ui:options": {
-						"headerFormatters": [
-							"units",
-							"locality"
-						],
-						"popupFields": [
-							{
-								"field": "units",
-								"mapper": "units"
-							},
-							{
-								"field": "localityDescription"
-							}
-						],
-						"titleFormat": "%{Title} %{idx}",
-						"confirmDelete": true
-					}
-				},
-				"propsToPassToInlineSchema": [
-					"errorSchema",
-					"formData"
-				],
-				"minHeight": 435,
-				"resizeTimeout": 210,
-				"addButtonPath": "/items/units",
-				"removeAddButtonPath": "/",
-				"addTxt": "Lisää paikka"
 			},
 			"items": {
 				"ui:field": "NestField",

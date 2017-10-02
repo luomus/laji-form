@@ -5,7 +5,7 @@ import Combobox from "react-widgets/lib/Combobox";
 import Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
 
-import { isEmptyString, getUiOptions } from "../../utils";
+import { isEmptyString, getUiOptions, isNullOrUndefined } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -73,7 +73,7 @@ class SelectWidget extends Component {
 	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => value))
 
 	selectOnChange = (item) => {
-		item.value ? this.props.onChange(item.value) : this.setState({value: item});
+		!isNullOrUndefined(item.value) ? this.props.onChange(item.value) : this.setState({value: item});
 	}
 
 	onClick = () => {
@@ -107,6 +107,7 @@ class SelectWidget extends Component {
 		const commonOptions = {
 			id,
 			value: this.state.value,
+			placeholder: getUiOptions(this.props).placeholder,
 			data: enumOptions,
 			valueField: "value",
 			textField: "label",
