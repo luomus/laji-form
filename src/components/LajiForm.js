@@ -476,7 +476,6 @@ export default class LajiForm extends Component {
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
-		this._contextState = {warnings: {}};
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -530,7 +529,6 @@ export default class LajiForm extends Component {
 
 		const formContext = {
 			translations,
-			contextState: this._contextState,
 			lang: this.props.lang,
 			uiSchemaContext: this.props.uiSchemaContext,
 			settings: this.props.settings,
