@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
 import { toIdSchema, orderProperties } from  "react-jsonschema-form/lib/utils";
 import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString, isMultiSelect, getNestedUiFieldsList, applyFunction } from "../../utils";
-import { Row , Col } from "react-bootstrap";
+import { Row , Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -15,7 +15,8 @@ export default class GridLayoutField extends Component {
 				md: PropTypes.integer,
 				sm: PropTypes.integer,
 				xs: PropTypes.integer,
-				showLabels: PropTypes.boolean
+				showLabels: PropTypes.boolean,
+				rowTitles: PropTypes.arrayOf(PropTypes.string)
 			})
 		}).isRequired
 	}
@@ -57,8 +58,9 @@ export default class GridLayoutField extends Component {
 		const groups = [];
 
 		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
+		const rowTitles = options && options.rowTitles ? options.rowTitles : [];
 
-		return {...fieldProps, groups, showLabels, colsToRows};
+		return {...fieldProps, groups, showLabels, rowTitles, colsToRows};
 	}
 
 	isRequired = (requirements, name) => {
@@ -97,7 +99,7 @@ export default class GridLayoutField extends Component {
 	render() {
 		const SchemaField = this.state.registry.fields.SchemaField;
 		const props = {...this.props, ...this.state};
-		const {colsToRows, showLabels} = this.state;
+		const {colsToRows, showLabels, rowTitles} = this.state;
 
 		const {schema, uiSchema} = this.state;
 
@@ -113,6 +115,8 @@ export default class GridLayoutField extends Component {
 				return lastRow;
 			}
 		}
+
+		this.addRowTitles(rows, rowTitles);
 
 		orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach((propertyName, i) => {
 			const property = this.state.schema.properties[propertyName];
@@ -164,5 +168,20 @@ export default class GridLayoutField extends Component {
 				)}
 			</fieldset>
 		);
+	}
+
+	addRowTitles = (rows, rowTitles) => {
+		for (let i = 0; i < rowTitles.length; i++) {
+			rows[i] = [];
+			const tooltip = <Tooltip id={this.props.idSchema.$id + "_row_" + i + "_tooltip"}>{rowTitles[i]}</Tooltip>;
+			const titleCols = this.getCols({type: "string"}, this.state.uiSchema["rowTitle"], "rowTitle");
+			rows[i].push((<Col {...titleCols} key={"title_" + i}>
+				<div>
+					<OverlayTrigger overlay={tooltip}>
+						<label><strong>{rowTitles[i]}</strong></label>
+					</OverlayTrigger>
+				</div>
+			</Col>));
+		}
 	}
 }

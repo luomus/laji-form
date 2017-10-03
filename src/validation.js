@@ -11,32 +11,56 @@ export default (validators) => (data, errors) => {
 	return errors;
 };
 
-export function getWarnings(data, validators) {
-	if (validators) {
-		const result = lajiValidate(data, validators);
-		return getWarningIds(result);
+export function  getWarningValidatorsById(validators, schema) {
+	if (!validators) return {};
+
+	function addWarningsById(path, validators, schema, validatorsById) {
+		for (const prop in validators) {
+			if (!schema[prop]) {
+				if (!validatorsById[path]) {
+					validatorsById[path] = {};
+				}
+				validatorsById[path][prop] = validators[prop];
+				continue;
+			}
+
+			let newPath = path;
+			if (prop === "items") {
+				newPath = path + "_\d+";
+			} else if (prop !== "properties") {
+				newPath = path + "_" +  prop;
+			}
+
+			addWarningsById(newPath, validators[prop], schema[prop], validatorsById);
+		}
 	}
 
-	return {};
+	const validatorById = {};
+	addWarningsById("root", validators, schema.properties, validatorById);
+	return validatorById;
 }
 
-function getWarningIds(result) {
-	const warnings = {};
+export function getWarnings(data, id, warningValidators) {
+	if (!id) return null;
+	let validator;
 
-	for (let k in result) {
-		let path = "root";
-		const split = k.split(".");
-		for (let s in split) {
-			const split2 = split[s].split(/[|]/);
-			path += "_" + split2[0];
-			if (split2.length > 1) {
-				path += "_" + split2[1];
-			}
+	for (let path in warningValidators) {
+		if (id.match(new RegExp("^" + path + "$"))) {
+			validator = warningValidators[path];
+			break;
 		}
-		warnings[path] = result[k];
 	}
 
-	return warnings;
+	if (!validator) return null;
+
+	const idParts = id.split("_");
+	const property = idParts[idParts.length - 1];
+	const result = lajiValidate({[property]: data}, {[property]: validator});
+	if (result) {
+		return result[property];
+	}
+
+	return null;
 }
 
 function getMessages(result) {

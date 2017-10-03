@@ -635,11 +635,10 @@ body .laji-form {
 .laji-form .laji-form-error-list .panel-heading {
 	background-color: #bd362f;
 }
-.laji-form .laji-form-error-list.panel-warning .panel-heading {
-	background-color: #f0ad4e;
-}
-.laji-form .has-error.laji-form-warning-container .rw-widget {
+.laji-form :not(.has-error).laji-form-warning-container .rw-widget, .laji-form :not(.has-error).laji-form-warning-container input {
 	border-color: #f0ad4e !important;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 }
 .laji-form .laji-form-warning-container .text-danger {
 	color: #f0ad4e;

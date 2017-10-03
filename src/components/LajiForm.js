@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
+import { getWarnings, getWarningValidatorsById } from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
@@ -152,7 +153,6 @@ const fields = importLocalComponents("fields", [
 	"UnitShorthandField",
 	"CombinedStringField",
 	"UiFieldMapperArrayField",
-	"InlineLabelsField",
 	"ExtraLabelRowField",
 	"ConditionalField",
 	"SumField",
@@ -225,7 +225,7 @@ function FieldTemplate({
 
 	const buttons = (uiSchema["ui:buttons"] && schema.type !== "array") ? uiSchema["ui:buttons"] : undefined;
 	const vertical = uiSchema["ui:buttonsVertical"];
-	const errorClassName = formContext.contextState.showWarnings ? " laji-form-warning-container" : "";
+	const errorClassName = formContext.showWarnings ? " laji-form-warning-container" : "";
 
 	let containerClassName, schemaClassName, buttonsClassName;
 	if (buttons && buttons.length) {
@@ -233,6 +233,10 @@ function FieldTemplate({
 		schemaClassName = "laji-form-field-template-schema";
 		buttonsClassName = "laji-form-field-template-buttons";
 	}
+
+	const warnings = formContext.getWarnings(children.props.formData, id);
+	const warningClassName = warnings ? " laji-form-warning-container" : "";
+
 	return (
 		<div className={classNames + errorClassName} id={elemId}>
 			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} /> : null}
@@ -272,7 +276,7 @@ class ErrorListTemplate extends Component {
 		const {contextId, translations} = formContext;
 		const that = new Context(contextId).formInstance;
 		const clickHandler = that.errorClickHandler;
-		const showWarnings = !!formContext.contextState.showWarnings;
+		const showWarnings = !!formContext.showWarnings;
 
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;
@@ -492,7 +496,7 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		this._contextState = {};
+		this.warningValidatorsById = getWarningValidatorsById(props.warnings, props.schema);
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -546,7 +550,6 @@ export default class LajiForm extends Component {
 
 		const formContext = {
 			translations,
-			contextState: this._contextState,
 			lang: this.props.lang,
 			uiSchemaContext: this.props.uiSchemaContext,
 			settings: this.props.settings,
@@ -554,9 +557,14 @@ export default class LajiForm extends Component {
 			getFormRef: () => this.formRef,
 			topOffset: this.props.topOffset,
 			bottomOffset: this.props.bottomOffset,
-			setSkipWarnings: (skip) => this._contextState["skipWarnings"] = skip,
-			setShowWarnings: (show) => this._contextState["showWarnings"] = show,
-			formID: this.props.id
+			setSkipWarnings: (skip) => this.setState({skipWarnings: skip}),
+			setShowWarnings: (show) => this.setState({showWarnings: show}),
+			skipWarnings: this.state.skipWarnings,
+			showWarnings: this.state.showWarnings,
+			formID: this.props.id,
+			getWarnings: (data, id) => {
+				return getWarnings(data, id, this.warningValidatorsById);
+			}
 		};
 
 		return (
