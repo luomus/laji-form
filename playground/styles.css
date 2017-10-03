@@ -640,7 +640,7 @@ body .laji-form {
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 }
-.laji-form .laji-form-warning-container .text-danger {
+.laji-form .laji-form-warning-container .text-warning {
 	color: #f0ad4e;
 }
 .laji-form .laji-form-error-list .panel-title {
@@ -808,7 +808,7 @@ body .laji-form {
 	padding-right: 0;
 }
 
-.laji-form .laji-form-striped-array-table legend, .laji-form .laji-form-striped-array-table .laji-form-label-row, .laji-form .laji-form-striped-array-table .laji-form-field-template-item {
+.laji-form .laji-form-striped-array-table .btn-toolbar, .laji-form .laji-form-striped-array-table legend, .laji-form .laji-form-striped-array-table .laji-form-label-row, .laji-form .laji-form-striped-array-table .laji-form-field-template-item {
 	padding-right: 7px;
 	padding-left: 7px;
 }
