@@ -475,7 +475,7 @@ export default class LajiForm extends Component {
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
-		this.warningValidatorById = getWarningValidatorsById(props.warnings, props.schema);
+		this.warningValidatorsById = getWarningValidatorsById(props.warnings, props.schema);
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -537,7 +537,7 @@ export default class LajiForm extends Component {
 			topOffset: this.props.topOffset,
 			bottomOffset: this.props.bottomOffset,
 			getWarnings: (data, id) => {
-				return getWarnings(data, id, this.warningValidatorById);
+				return getWarnings(data, id, this.warningValidatorsById);
 			}
 		};
 
