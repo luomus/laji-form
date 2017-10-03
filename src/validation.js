@@ -11,50 +11,56 @@ export default (validators) => (data, errors) => {
 	return errors;
 };
 
-export function getWarnings(data, id, validators, schema) {
-	if (!id || !validators) return [];
+export function  getWarningValidatorsById(validators, schema) {
+	if (!validators) return {};
 
-	function getValidator(idArray, i, validators, schema) {
-		if (i >= idArray.length) {
-			let validator = null;
-			for (const prop in validators) {
-				if (!schema[prop]) {
-					if (!validator) validator = {};
-					validator[prop] = validators[prop];
-				}
-			}
-			return validator;
-		}
-
+	function addWarningsById(path, validators, schema, validatorsById) {
 		for (const prop in validators) {
-			if (prop.match(/^\d+$/)) {
-				return getValidator(idArray, i + 1, validators.items, schema.items);
-			}
-			if (prop === idArray[i]) {
-				validators = validators[prop];
-				schema = schema[prop];
-				if (validators.properties) {
-					validators = validators.properties;
-					schema = schema.properties;
+			if (!schema[prop]) {
+				if (!validatorsById[path]) {
+					validatorsById[path] = {};
 				}
-				return getValidator(idArray, i + 1, validators, schema);
+				validatorsById[path][prop] = validators[prop];
+				continue;
 			}
-		}
 
-		return null;
+			let newPath = path;
+			if (prop === "items") {
+				newPath = path + "_\d+";
+			} else if (prop !== "properties") {
+				newPath = path + "_" +  prop;
+			}
+
+			addWarningsById(newPath, validators[prop], schema[prop], validatorsById);
+		}
 	}
+
+	const validatorById = {};
+	addWarningsById("root", validators, schema.properties, validatorById);
+	return validatorById;
+}
+
+export function getWarnings(data, id, warningValidators) {
+	if (!id) return null;
+	let validator;
+
+	for (let path in warningValidators) {
+		if (id.match(new RegExp("^" + path + "$"))) {
+			validator = warningValidators[path];
+			break;
+		}
+	}
+
+	if (!validator) return null;
 
 	const idParts = id.split("_");
-	const validator = getValidator(idParts, 1, validators, schema.properties);
-	if (validator) {
-		const id = idParts[idParts.length - 1];
-		const result = lajiValidate({[id]: data}, {[id]: validator});
-		if (result) {
-			return result[id];
-		}
+	const property = idParts[idParts.length - 1];
+	const result = lajiValidate({[property]: data}, {[property]: validator});
+	if (result) {
+		return result[property];
 	}
 
-	return [];
+	return null;
 }
 
 function getMessages(result) {

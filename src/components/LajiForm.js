@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { getWarnings } from "../validation";
+import { getWarnings, getWarningValidatorsById } from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
@@ -233,7 +233,7 @@ function FieldTemplate({
 	}
 
 	const warnings = formContext.getWarnings(children.props.formData, id);
-	const warningClassName = warnings.length > 0 ? " laji-form-warning-container" : "";
+	const warningClassName = warnings ? " laji-form-warning-container" : "";
 
 	return (
 		<div className={classNames + warningClassName} id={elemId}>
@@ -259,7 +259,7 @@ function FieldTemplate({
 			<div id={`laji-form-error-container-${id}`}>
 				{errors}
 			</div>
-			{warnings.length > 0 ?
+			{warnings ?
 				<div id={`laji-form-warning-container-${id}`}>
 					<p></p>
 					<ul>
@@ -475,6 +475,7 @@ export default class LajiForm extends Component {
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
+		this.warningValidatorById = getWarningValidatorsById(props.warnings, props.schema);
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -536,7 +537,7 @@ export default class LajiForm extends Component {
 			topOffset: this.props.topOffset,
 			bottomOffset: this.props.bottomOffset,
 			getWarnings: (data, id) => {
-				return getWarnings(data, id, this.props.warnings, this.props.schema);
+				return getWarnings(data, id, this.warningValidatorById);
 			}
 		};
 
