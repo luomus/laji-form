@@ -6,6 +6,7 @@ import { getWarnings, getWarningValidatorsById } from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
+import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
@@ -41,7 +42,7 @@ class _SchemaField extends Component {
 		if ([props, this.props].some(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) &&
 		    (initial || !deepEquals([this.props, props]))) {
 			this.functionOutputProps = this.applyFunction(props);
-		}
+			}
 	}
 
 	applyFunction = (props) => {
@@ -64,8 +65,26 @@ class _SchemaField extends Component {
 
 		if (!functions) return props;
 
-		const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, uiFn) => {
+		let nonVirtualFound = false;
+
+		const _functions = ((Array.isArray(functions)) ? functions : [functions]);
+
+		const computedProps = _functions.reduce((_props, uiFn, idx) => {
+			if (nonVirtualFound) {
+				return _props;
+			}
 			_props = {..._props, uiSchema: {...uiFn, uiSchema: _props.uiSchema}};
+
+			if (!new Context("VIRTUAL_SCHEMA_NAMES")[uiFn["ui:field"]]) {
+				nonVirtualFound = true;
+				return {..._props,
+					uiSchema: {
+						..._props.uiSchema,
+						"ui:functions": _functions.slice(idx + 1)
+					}
+				};
+			}
+
 			const {state = {}} = new props.registry.fields[uiFn["ui:field"]](_props);
 			return {
 				..._props, 
@@ -104,6 +123,22 @@ class _SchemaField extends Component {
 					"ui:buttons": uiSchema["ui:buttons"]
 				}
 			};
+		}
+
+		if (
+		uiSchema &&
+		uiSchema["ui:field"] &&
+		uiSchema["ui:field"] !== "ContextInjectionField" &&
+		uiSchema["ui:field"] !== "InjectField" &&
+		uiSchema["ui:options"] &&
+		uiSchema["ui:options"].injections
+		) {
+			const {injections} = uiSchema["ui:options"];
+			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.formContext.uiSchemaContext);
+			uiSchema = {
+				...injectedUiSchema,
+				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+			}
 		}
 
 		// Reset ArrayFieldTemplate

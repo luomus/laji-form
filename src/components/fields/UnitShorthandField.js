@@ -17,7 +17,7 @@ export default class UnitShorthandField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				shorthandField: PropTypes.string,
-				formID: PropTypes.string.isRequired,
+				formID: PropTypes.string,
 				showSchema: PropTypes.bool
 			}).isRequired,
 			uiSchema: PropTypes.object
@@ -85,7 +85,7 @@ export default class UnitShorthandField extends Component {
 				<CodeReader translations={this.props.formContext.translations}
 										onChange={this.onCodeChange} 
 										value={this.props.formData[shorthandFieldName]} 
-										formID={getUiOptions(this.props.uiSchema).formID} 
+										formID={getUiOptions(this.props.uiSchema).formID || formContext.uiSchemaContext.formID} 
 										help={help} 
 										id={shorthandFieldName ? `_laji-form_${id}` : `_laji-form_${id}`}
 										formContext={formContext}

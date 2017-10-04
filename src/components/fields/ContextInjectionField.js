@@ -18,21 +18,24 @@ export default class ContextInjectionField extends Component {
 	getStateFromProps(props) {
 		let {uiSchema} = props;
 		const {injections} = this.getUiOptions();
-
-		let	injected = false;
-		const updateObject = {};
-		for (let injectionPath in injections) {
-			const splitted = injectionPath.substring(1).split("/");
-			const last = splitted.pop();
-			const tail = splitted.reduce((pointer, path) => {
-				pointer[path] = {};
-				return pointer[path];
-			}, updateObject);
-			tail[last] = {$set: parseJSONPointer(props.formContext.uiSchemaContext, injections[injectionPath])};
-			injected = true;
-		}
-		if (injected) uiSchema = update(uiSchema, updateObject);
-
-		return {uiSchema};
+		return {uiSchema: getInjectedUiSchema(uiSchema, injections, props.formContext.uiSchemaContext)};
 	}
+}
+
+export function getInjectedUiSchema(uiSchema, injections, uiSchemaContext) {
+	let	injected = false;
+	const updateObject = {};
+	for (let injectionPath in injections) {
+		const splitted = injectionPath.substring(1).split("/");
+		const last = splitted.pop();
+		const tail = splitted.reduce((pointer, path) => {
+			pointer[path] = {};
+			return pointer[path];
+		}, updateObject);
+		tail[last] = {$set: parseJSONPointer(uiSchemaContext, injections[injectionPath])};
+		injected = true;
+	}
+	if (injected) uiSchema = update(uiSchema, updateObject);
+
+	return uiSchema;
 }
