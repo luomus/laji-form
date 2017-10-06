@@ -118,7 +118,9 @@ export default class SingleActiveArrayField extends Component {
 
 	componentDidMount() {
 		this.updatePopups(this.props);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
+			this.onActiveChange(idx);
+		});
 	}
 
 	componentWillUnmount() {

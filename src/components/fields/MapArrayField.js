@@ -13,6 +13,7 @@ import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
+import { getButtons, getButton } from "../ArrayFieldTemplate";
 
 const popupMappers = {
 	unitTaxon: (schema, formData, options = {}) => {
@@ -73,14 +74,19 @@ export default class MapArrayField extends Component {
 	componentDidMount() {
 		this.setState({mounted: true});
 		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
-		const {onComponentDidMount} = this.getGeometryMapper(this.props);
 		this.map = this.refs.map.refs.map.map;
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
+			this.setState({activeIdx: idx}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
+		});
+
+		const {onComponentDidMount} = this.getGeometryMapper(this.props);
 		if (onComponentDidMount) onComponentDidMount();
 	}
 
 	componentWillUnmount() {
 		this.setState({mounted: false});
 		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
 	}
 
 	componentDidUpdate(...params) {
@@ -233,6 +239,10 @@ export default class MapArrayField extends Component {
 		const inlineSchema = <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_inline`}{...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
 		const belowSchema = belowFields ? <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_below`} {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
+		const buttons =  mapOptions.emptyMode ? 
+			this.props.uiSchema["ui:options"].buttons.map(button => getButton(button, {canAdd: button.key === "addNamedPlace", uiSchema: this.props.uiSchema})).filter(button => button) :
+			undefined;
+
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
 
@@ -300,7 +310,13 @@ export default class MapArrayField extends Component {
 					</Col>
 					<Col {...schemaSizes} ref="_stretch">
 						{mapOptions.emptyMode ?
-							<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{this.props.uiSchema["ui:help"]}</Popover> :
+								<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
+									<div>
+										{this.props.uiSchema["ui:help"]}
+										{buttons ? ` ${this.props.formContext.translations.or}` : null}
+										{buttons}
+									</div>
+								}</Popover> :
 							inlineSchema
 						}
 					</Col>

@@ -831,3 +831,6 @@ body .laji-form {
 	z-index: 1000;
 	padding: 50px;
 }
+.laji-form .popover {
+	z-index: 1040;
+}

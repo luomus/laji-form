@@ -29,8 +29,12 @@ export default class NamedPlaceChooserField extends Component {
 						fn: () => () => {
 							this.setState({show: true});
 						},
+						key: "addNamedPlace",
 						glyph: "map-marker",
-						label: props.formContext.translations.ChooseFromNamedPlace
+						label: props.formContext.translations.ChooseFromNamedPlace,
+						rules: {
+							canAdd: true
+						}
 					}
 				]
 			}

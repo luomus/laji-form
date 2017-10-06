@@ -29,6 +29,8 @@ export function getButton(button, props = {}) {
 				const ruleVal = btn.rules[ruleName];
 				if (ruleName === "minLength") {
 					return (props.formData || []).length >= ruleVal;
+				} else if (ruleName === "canAdd") {
+					return canAdd(props)
 				}
 			});
 		}
