@@ -122,7 +122,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.id, "activeIdx");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
 	}
 
 	componentWillReceiveProps(props) {
