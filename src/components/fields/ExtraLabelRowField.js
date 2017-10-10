@@ -31,19 +31,26 @@ export default class ExtraLabelRowField extends Component {
 
 	render() {
 		const {SchemaField, TitleField} = this.props.registry.fields;
-		const {labels, titleClassName} = getUiOptions(this.props.uiSchema);
+		const options = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
-		labels.forEach((property, i) => {
+		options.labels.forEach((property, i) => {
 			cols.push(this.getColContent(property, Object.keys(property)[0], i));
 		});
 
 		const title = this.props.schema.title !== undefined ? this.props.schema.title : this.props.name;
 
+		let rowClassNames = "";
+		["lg", "md", "sm", "xs"].forEach((col) => {
+			if (options[col] === 0) {
+				rowClassNames += " hidden-" + col;
+			}
+		});
+
 		return (
 			<div>
-				{title ? <TitleField title={title} className={titleClassName} /> : null}
-				<Row className="laji-form-label-row">{cols}</Row>
+				{title ? <TitleField title={title} className={options.titleClassName} /> : null}
+				<Row className={"laji-form-label-row" + rowClassNames}>{cols}</Row>
 				<SchemaField {...this.props} {...this.state}/>
 			</div>
 		);

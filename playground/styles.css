@@ -792,16 +792,44 @@ body .laji-form {
 .laji-form .laji-form-compact-table .row {
 	padding-top: 5px;
 	padding-bottom: 5px;
+	margin-right: -1px;
+	margin-left: -1px;
 }
 
 .laji-form .laji-form-compact-table .row .row {
-	padding: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-bottom: 3px;
 }
 
 .laji-form .laji-form-compact-table [class^="col-"] {
 	padding-right: 1px;
 	padding-left: 1px;
 }
+
+@media (max-width: 910px) {
+	.laji-form .laji-form-compact-table.early-column-break .col-xs-12 {
+		width: 100%;
+	}
+
+	.laji-form .laji-form-compact-table.early-column-break .col-xs-3 {
+		width: 25%;
+	}
+
+	.laji-form .laji-form-compact-table.early-column-break .col-xs-0 {
+		display: none;
+	}
+
+	.laji-form .laji-form-compact-table.early-column-break .laji-form-field-template-item {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	.laji-form .laji-form-compact-table.early-column-break .btn-toolbar {
+		margin-top: 10px;
+	}
+}
+
 
 .laji-form .laji-form-striped-array-table {
 	padding-left: 0;
@@ -811,20 +839,6 @@ body .laji-form {
 .laji-form .laji-form-striped-array-table .btn-toolbar, .laji-form .laji-form-striped-array-table legend, .laji-form .laji-form-striped-array-table .laji-form-label-row, .laji-form .laji-form-striped-array-table .laji-form-field-template-item {
 	padding-right: 7px;
 	padding-left: 7px;
-}
-
-@media (max-width: 910px) {
-	.laji-form .early-column-break .col-xs-12 {
-		width: 100%;
-	}
-
-	.laji-form .early-column-break .col-xs-3 {
-		width: 25%;
-	}
-
-	.laji-form .early-column-break .col-xs-0 {
-		display: none;
-	}
 }
 
 .laji-form .laji-form-striped-array-table .laji-form-field-template-item:nth-child(odd) {
