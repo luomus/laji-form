@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import BaseInput from "react-jsonschema-form/lib/components/widgets/BaseInput";
 import Context from "../../Context";
+import { getUiOptions } from "../../utils";
 
 export default class _BaseInput extends Component {
 	constructor(props) {
@@ -13,7 +14,7 @@ export default class _BaseInput extends Component {
 	}
 
 	getStateFromProps = (props) => {
-		return {value: props.value};
+		return {value: props.value, ...getUiOptions(props).inputOptions};
 	}
 
 	onChange = (value) => {
@@ -43,7 +44,7 @@ export default class _BaseInput extends Component {
 
 	render() {
 		return (
-			<div >
+			<div>
 				<BaseInput {...this.props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />
 			</div>
 		);
