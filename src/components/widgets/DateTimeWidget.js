@@ -17,7 +17,7 @@ export default class DateTimeWidget extends Component {
 		disabled: false,
 		required: false,
 		calendar: true,
-		time: true,
+		time: true
 	}
 
 	constructor(props) {
@@ -122,11 +122,14 @@ export default class DateTimeWidget extends Component {
 			this.timeWritten = false;
 		};
 
+		const options = getUiOptions(this.props);
+		const showTimeList = options.showTimeList !== undefined ? options.showTimeList : true;
+
 		const getRef = (elem) => { this.dateTimePickerRef = elem; };
 		const datePicker = (<DateTimePicker
 			ref={getRef}
 			calendar={this.state.calendar}
-			time={this.state.time}
+			time={this.state.time && showTimeList}
 			format={this.state.inputFormat}
 			timeFormat={this.state.timeFormat}
 			placeholder={this.state.placeholder}
@@ -142,7 +145,7 @@ export default class DateTimeWidget extends Component {
 		  }}
 		/>);
 
-		const {showButtons} = getUiOptions(this.props);
+		const {showButtons} = options;
 
 		return showButtons ? (
 			<div className="date-widget">
