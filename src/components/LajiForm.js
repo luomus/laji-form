@@ -42,7 +42,7 @@ class _SchemaField extends Component {
 		if ([props, this.props].some(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) &&
 		    (initial || !deepEquals([this.props, props]))) {
 			this.functionOutputProps = this.applyFunction(props);
-			}
+		}
 	}
 
 	applyFunction = (props) => {
@@ -137,7 +137,7 @@ class _SchemaField extends Component {
 			uiSchema = {
 				...injectedUiSchema,
 				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
-			}
+			};
 		}
 
 		// Reset ArrayFieldTemplate

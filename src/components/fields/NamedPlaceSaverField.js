@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { getInnerUiSchema } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Panel, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import { GlyphButton, Button, ButtonToolbar } from "../components";
+import { GlyphButton, Button } from "../components";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";

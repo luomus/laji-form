@@ -122,7 +122,7 @@ class NamedPlaceChooser extends Component {
 				map.map.setView(latlng, {animate: false});
 			}
 		} else {
-			const layerGroup = L.featureGroup(layers);
+			const layerGroup = L.featureGroup(layers); //eslint-disable-line no-undef
 			center = layerGroup.getBounds().getCenter();
 			map.map.fitBounds(layerGroup.getBounds(), {animate: false});
 		}

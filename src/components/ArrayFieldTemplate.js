@@ -30,7 +30,7 @@ export function getButton(button, props = {}) {
 				if (ruleName === "minLength") {
 					return (props.formData || []).length >= ruleVal;
 				} else if (ruleName === "canAdd") {
-					return canAdd(props)
+					return canAdd(props);
 				}
 			});
 		}

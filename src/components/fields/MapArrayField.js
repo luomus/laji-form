@@ -13,7 +13,7 @@ import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
-import { getButtons, getButton } from "../ArrayFieldTemplate";
+import { getButton } from "../ArrayFieldTemplate";
 
 const popupMappers = {
 	unitTaxon: (schema, formData, options = {}) => {
