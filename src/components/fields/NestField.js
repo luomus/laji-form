@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { toIdSchema } from  "react-jsonschema-form/lib/utils";
-import { immutableDelete } from  "../../utils";
+import { immutableDelete, getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -129,7 +129,7 @@ export default class NestField extends Component {
 
 		let {schema, uiSchema, idSchema, errorSchema, formData} = props;
 
-		const {nests} = options;
+		const {nests, buttonsNest, buttons} = options;
 
 		const nestedPropsMap = {};
 
@@ -174,6 +174,12 @@ export default class NestField extends Component {
 				if (schema.required) schema.required = schema.required.filter(requiredField => requiredField !== fieldName);
 			});
 		});
+
+		if (buttonsNest && nests[buttonsNest] && buttons) {
+			let nestOptions = getUiOptions(uiSchema[buttonsNest]);
+			let _buttons = nestOptions.buttons || [];
+			uiSchema = {...uiSchema, [buttonsNest]: {...uiSchema[buttonsNest], "ui:options": {...nestOptions, buttons: [..._buttons, ...buttons]}}};
+		}
 
 		return {schema, uiSchema, idSchema, errorSchema, formData};
 	}

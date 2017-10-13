@@ -379,6 +379,9 @@
 				"addTxt": "Lisää paikka"
 			},
 			"items": {
+				"ui:functions": {
+					"ui:field": "NamedPlaceSaverField"
+				},
 				"ui:field": "NestField",
 				"ui:options": {
 					"nests": {
@@ -412,7 +415,8 @@
 								"images",
 								"eventTime",
 								"weather",
-								"notes"
+								"notes",
+								"geometry"
 							],
 							"rootUiSchema": {
 								"ui:field": "ScopeField",
@@ -441,7 +445,7 @@
 					"*",
 					"units"
 				],
-				"wgs84GeometryCollection": {
+				"geometry": {
 					"ui:field": "HiddenField"
 				},
 				"images": {
@@ -1613,7 +1617,8 @@
 	"warnings": {},
 	"uiSchemaContext": {
 		"creator": "MA.308",
-		"formID": "JX.519"
+		"formID": "JX.519",
+		"activeGatheringIdx": 0
 	},
 	"formData": {
 	  "gatheringEvent": {
@@ -1628,7 +1633,8 @@
 	  "secureLevel": "MX.secureLevelNone",
 	  "gatherings": [
 		{
-				"notes": "test",
+			"notes": "test",
+			"namedPlaceID": "MNP.5758",
           "dateBegin": "2018-02-01",
 		  "images": [
 			"MM.89524"
@@ -1696,7 +1702,13 @@
 			  }
 			}
 		  ],
-		  "geometry": "60:25/"
+		  "geometry": {
+				  "type": "Point",
+				  "coordinates": [
+					25,
+					62
+				  ]
+				}
 		},
 		{
 		  "images": [],

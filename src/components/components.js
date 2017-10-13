@@ -7,11 +7,19 @@ import Spinner from "react-spinner";
 
 export class Button extends Component {
 	render() {
+		const {
+			tooltip,
+			tooltipPlacement,
+			tooltipTrigger,
+			...props
+		} = this.props;
 		return (
-			<_Button
-			bsStyle="primary"
-			{...this.props}
-			>{this.props.children}</_Button>
+			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
+				<_Button
+				bsStyle="primary"
+				{...props}
+				>{props.children}</_Button>
+			</TooltipComponent>
 		);
 	}
 }
@@ -130,8 +138,11 @@ export class Alert extends Component {
 export const GlyphButton = (props) => {
 	const {glyph, ...buttonProps} = props;
 	return (
-		<Button {...buttonProps} className={`glyph-button${props.className ? ` ${props.className}` : ""}`}>
+		<Button {...buttonProps} 
+		        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
+			      tooltipPlacement={props.tooltipPlacement || "left"}>
 			<Glyphicon glyph={glyph} />
+			{props.children}
 		</Button>
 	);
 };

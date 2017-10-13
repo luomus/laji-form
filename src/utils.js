@@ -80,7 +80,7 @@ export function getUiOptions(container) {
 
 export function getInnerUiSchema(parentUiSchema) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && parentUiSchema["ui:buttons"]) {
+	if (uiSchema && (new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] || new Context("SCHEMA_FIELD_WRAPPERS")[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [

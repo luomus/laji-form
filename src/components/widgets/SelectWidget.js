@@ -11,6 +11,10 @@ import BaseComponent from "../BaseComponent";
 @BaseComponent
 class SelectWidget extends Component {
 
+	static defaultProps = {
+		selectOnChange: true
+	}
+
 	componentDidMount() {
 		this.getContext().addFocusHandler(this.props.id, this.onFocus);
 	}
@@ -73,7 +77,9 @@ class SelectWidget extends Component {
 	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => value))
 
 	selectOnChange = (item) => {
-		!isNullOrUndefined(item.value) ? this.props.onChange(item.value) : this.setState({value: item});
+		this.setState({value: item}, () => {
+			this.props.selectOnChange && !isNullOrUndefined(item.value) && this.props.onChange(item.value);
+		});
 	}
 
 	onClick = () => {
@@ -84,8 +90,11 @@ class SelectWidget extends Component {
 		findDOMNode(this.comboRef.refs.inner.refs.input).select();
 	})
 
-	onSelect = () => {
+	onSelect = (item) => {
 		this.state.open && this.getContext().setImmediate(() => this.setState({open: false}));
+		if (!this.props.selectOnChange) {
+			this.props.onChange(item.value);
+		}
 	}
 
 	onToggle = () => {

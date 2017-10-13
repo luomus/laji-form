@@ -108,7 +108,7 @@ export default class MapArrayField extends Component {
 
 	render() {
 		const {registry: {fields: {SchemaField}}} = this.props;
-		let {uiSchema, errorSchema} = this.props;
+		let {uiSchema, errorSchema, schema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = []} = options;
 		let { belowUiSchemaRoot = {}, inlineUiSchemaRoot = {} } = options;
@@ -138,9 +138,6 @@ export default class MapArrayField extends Component {
 			sizes[size] = 12 - mapSizes[size] || 12;
 			return sizes;
 		}, {});
-
-		const schemaProps = immutableDelete(this.props.schema.items.properties, geometryField);
-		const schema = {...this.props.schema, items: {...this.props.schema.items, properties: schemaProps}};
 
 		const getChildProps = () => {
 			return {

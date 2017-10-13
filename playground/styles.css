@@ -862,3 +862,6 @@ body .laji-form {
 .laji-form .popover {
 	z-index: 1040;
 }
+.laji-form .place-saver-dialog .alert {
+	margin-top: 5px;
+}

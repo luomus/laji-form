@@ -111,8 +111,7 @@ class _SchemaField extends Component {
 		if (
 			uiSchema &&
 			uiSchema["ui:field"] && 
-			uiSchema.uiSchema &&
-			new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] && 
+			(new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] || new Context("SCHEMA_FIELD_WRAPPERS")[uiSchema["ui:field"]]) && 
 			uiSchema["ui:buttons"] && uiSchema["ui:buttons"].length
 		) {
 			uiSchema = {
@@ -130,7 +129,6 @@ class _SchemaField extends Component {
 		uiSchema["ui:field"] &&
 		uiSchema["ui:field"] !== "ContextInjectionField" &&
 		uiSchema["ui:field"] !== "InjectField" &&
-		uiSchema["ui:field"] !== "DependentInjectValueField" &&
 		uiSchema["ui:options"] &&
 		uiSchema["ui:options"].injections
 		) {
@@ -174,7 +172,6 @@ const fields = importLocalComponents("fields", [
 	"ArrayCombinerField",
 	"DependentBooleanField",
 	"DependentDisableField",
-	"DependentInjectValueField",
 	"MapArrayField",
 	"AutoArrayField",
 	"AutosuggestField",
@@ -194,6 +191,7 @@ const fields = importLocalComponents("fields", [
 	"ConditionalField",
 	"SumField",
 	"NamedPlaceChooserField",
+	"NamedPlaceSaverField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);

@@ -691,3 +691,5 @@ export default class ScopeField extends Component {
 		});
 	}
 }
+
+new Context("SCHEMA_FIELD_WRAPPERS").ScopeField = true;

@@ -349,6 +349,11 @@
 		en: "Fetching named places failed",
 		sv: "Hämtning av namngivna platser misslyckades"
 	},
+	namedPlacesSaveFail: {
+		fi: "Nimetyn paikan tallennus epäonnistui.",
+		en: "Saving named place failed",
+		sv: "Det sparade namnet misslyckades."
+	},
 	list: {
 		fi: "Luettelo",
 		en: "List",
@@ -373,5 +378,45 @@
 		fi: "Kirjoita valitaksesi paikan listalta",
 		en: "Type in order to select a place from the list",
 		sv: "Skriv in för att välja en plats från listan"
+	},
+	warning: {
+		fi: "Varoitus",
+		en: "Warning",
+		sv: "Varning"
+	},
+	usedNamedPlaceName: {
+		fi: "Paikan nimi on jo käytössä. Valitse alta ylikirjoitettava paikka tai paina tallenna uusi.",
+		en: "The place name is used already. Select a place to overwrite below or click save new.",
+		sv: "Platsen heter redan. Välj en plats att skriva över nedan eller klicka på spara ny."
+	},
+	save: {
+		fi: "Tallenna",
+		en: "Save",
+		sv: "Spara"
+	},
+	new: {
+		fi: "Uusi",
+		en: "New",
+		sv: "Ny"
+	},
+	saveOverwrite: {
+		fi: "Tallenna nykyisen päälle",
+		en: "Overwrite existing",
+		sv: "Skriv över befintliga"
+	},
+	SaveNamedPlace: {
+		fi: "Tallenna nimettynä paikkana",
+		en: "Save as a named place",
+		sv: "Spara som en bestämd plats"
+	},
+	ClickPlaceToOverwrite: {
+		fi: "Klikkaa paikkaa ylikirjoittaaksesi se",
+		en: "Click a place in order to overwrite it",
+		sv: "Klicka på en plats för att skriva över den"
+	},
+	NamedPlacesUseFail: {
+		fi: "Paikka ei ole yhteensopiva lomakkeen kanssa.",
+		en: "The place is not compatible with the form",
+		sv: "Platsen är inte kompatibel med formuläret"
 	}
 };
