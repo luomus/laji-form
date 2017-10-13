@@ -410,7 +410,8 @@ export default class LajiForm extends Component {
 	}
 
 	static defaultProps = {
-		lang: "en"
+		lang: "en",
+		autoFocus: true
 	}
 
 	constructor(props) {
@@ -547,7 +548,7 @@ export default class LajiForm extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		focusById(this._id, "root");
+		this.props.autoFocus && focusById(this._id, "root");
 	}
 
 	componentWillUnmount() {

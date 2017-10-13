@@ -242,7 +242,7 @@ class NamedPlaceChooser extends Component {
 			}, []);
 
 			return (
-				<div style={{height: "100%"}}>
+				<div style={{height: "inherit"}}>
 					<SelectWidget 
 						disabled={!this.state.places}
 						options={{enumOptions: enums, placeholder: `${translations.SelectPlaceFromList}...`}} 

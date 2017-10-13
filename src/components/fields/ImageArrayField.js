@@ -143,6 +143,7 @@ export default class ImageArrayField extends Component {
 								formData={state.modalMetadata}
 								onChange={onChange}
 								onSubmit={this.onImageMetadataUpdate}
+								autoFocus={false}
 								lang={lang}>
 								{(metadataSaveSuccess !== undefined) ? (
 										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
