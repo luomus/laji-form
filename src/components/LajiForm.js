@@ -108,6 +108,8 @@ class _SchemaField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
+		console.log(new Context("VIRTUAL_SCHEMA_NAMES"));
+		console.log(new Context("SCHEMA_FIELD_WRAPPERS"));
 		if (
 			uiSchema &&
 			uiSchema["ui:field"] && 
