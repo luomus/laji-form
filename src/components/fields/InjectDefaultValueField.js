@@ -28,6 +28,8 @@ export default class InjectDefaultValueField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "InjectDefaultValueField";}
+
 	onChange(formData) {
 		let {schema} = this.props;
 		const options = this.getUiOptions();

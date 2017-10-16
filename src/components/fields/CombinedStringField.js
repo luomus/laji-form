@@ -59,6 +59,8 @@ export default class CombinedStringField extends Component {
 		}).isRequired
 	};
 
+	static getName() {return  "CombinedStringField";}
+
 	getStateFromProps(props) {
 		const uiOptions = this.getUiOptions();
 		let {schema, idSchema, formData} = props;

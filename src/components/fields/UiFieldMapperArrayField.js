@@ -6,6 +6,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
 export default class UiFieldMapperArrayField extends Component {
+
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -25,6 +26,8 @@ export default class UiFieldMapperArrayField extends Component {
 			uiSchema: PropTypes.object
 		}).isRequired
 	}
+
+	static getName() {return "UiFieldMapperArrayField";}
 
 	constructor(props) {
 		super(props);

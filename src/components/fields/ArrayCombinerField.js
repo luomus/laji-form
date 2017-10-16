@@ -23,6 +23,8 @@ export default class ArrayCombinerField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "ArrayCombinerField";}
+
 	getStateFromProps(props) {
 		const {additionalItemsAmount} = this.getUiOptions();
 

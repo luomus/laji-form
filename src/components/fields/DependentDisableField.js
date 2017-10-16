@@ -27,6 +27,8 @@ export default class DependentDisableField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "DependentDisableField";}
+
 	getStateFromProps(props) {
 		let {uiSchema, formData} = props;
 		let newFormData = formData;

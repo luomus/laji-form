@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
-export default class CopyValuesArrayField extends Component {
+export default class SumField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -13,6 +13,8 @@ export default class CopyValuesArrayField extends Component {
 			uiSchema: PropTypes.object
 		}).isRequired
 	};
+
+	static getName() {return "SumField";}
 
 	onChange(formData) {
 		const summedFields = this.getUiOptions().summedFields;

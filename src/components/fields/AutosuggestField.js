@@ -42,6 +42,8 @@ export default class AutosuggestField extends Component {
 			uiSchema: PropTypes.object
 		}).isRequired
 	}
+
+	static getName() {return  "AutosuggestField";}
 	
 	componentDidMount() {
 		this.mounted = true;

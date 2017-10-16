@@ -60,6 +60,8 @@ export default class ConditionalField extends Component {
 		})
 	}
 
+	static getName() {return  "ConditionalField";}
+
 	checkRule = (props) => ({field, regexp}) => {
 		let value = (props.formData || {})[field];
 		if (value === undefined) value = "";

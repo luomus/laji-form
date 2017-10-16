@@ -15,6 +15,8 @@ export default class ContextInjectionField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return  "ContextInjectionField";}
+
 	getStateFromProps(props) {
 		let {uiSchema} = props;
 		const {injections} = this.getUiOptions();

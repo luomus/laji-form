@@ -21,6 +21,8 @@ export default class FlatField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "FlatField";}
+
 	getStateFromProps(props, origProps) {
 		const state = {
 			schema: props.schema,

@@ -15,6 +15,8 @@ export default class AutoArrayField extends Component {
 		})
 	}
 
+	static getName() {return "AutoArrayField";}
+
 	getStateFromProps(props) {
 		const {formData, schema, uiSchema, registry} = props;
 

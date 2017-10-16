@@ -3,6 +3,9 @@ import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
 export default class SingleItemArrayField extends Component {
+
+	static getName() {return "SingleItemArrayField";}
+
 	getStateFromProps(props) {
 		return {
 			...props,

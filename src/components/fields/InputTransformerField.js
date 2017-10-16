@@ -13,6 +13,8 @@ export default class InputTransformerField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "InputTransformerField";}
+
 	onChange(formData) {
 		const {rules} = this.getUiOptions();
 		for (let field in rules) {

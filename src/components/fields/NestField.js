@@ -124,6 +124,8 @@ export default class NestField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "NestField";}
+
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 

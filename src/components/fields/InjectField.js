@@ -31,6 +31,8 @@ export default class InjectField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return  "InjectField";}
+
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 		const {injections} = options;

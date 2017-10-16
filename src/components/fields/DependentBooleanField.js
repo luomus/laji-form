@@ -23,6 +23,8 @@ export default class DependentBooleanField extends Component {
 		}).isRequired
 	}
 
+	static getName() {return "DependentBooleanField";}
+
 	getStateFromProps(props) {
 		let {uiSchema, formData} = props;
 		const {booleanField, booleanDefiner} = this.getUiOptions();
