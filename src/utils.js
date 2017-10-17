@@ -143,7 +143,7 @@ const SWITCH_CLASS = "bootstrap-switch";
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`; });
+tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`; });
 
 export function getTabbableFields(elem, reverse) {
 	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
@@ -216,9 +216,13 @@ export function focusNextInput(...params) {
 }
 
 export function focusById(contextId, id) {
+	console.log(contextId);
+	console.log(id);
 	const elem = getSchemaElementById(contextId, id);
+	console.log(elem);
 	if (elem) {
 		const tabbableFields = getTabbableFields(elem);
+		console.log(tabbableFields);
 		if (tabbableFields && tabbableFields.length) {
 			tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem);
