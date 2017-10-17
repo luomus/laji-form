@@ -8,7 +8,7 @@ import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, isObject } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -130,7 +130,17 @@ export default class MapArrayField extends Component {
 			}
 		};
 
-		const mapOptions = {...this.getGeometryMapper(this.props).getOptions(options), ...options.mapOptions, ...(this.state.mapOptions || {})};
+		const mapOptions = {
+			...this.getGeometryMapper(this.props).getOptions(options), 
+			...options.mapOptions, 
+			...(this.state.mapOptions || {}),
+			draw: {
+				...this.getGeometryMapper(this.props).getOptions(options).draw,
+				...(typeof options.mapOptions.draw === "object") ? options.mapOptions.draw : {},
+				...(this.state.mapOptions || {}).draw,
+			}
+
+		};
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
