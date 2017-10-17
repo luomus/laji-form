@@ -61,11 +61,11 @@ export default function VirtualSchemaField(ComposedComponent) {
 	if (ComposedComponent.getName) {
 		const name = ComposedComponent.getName();
 		new Context("VIRTUAL_SCHEMA_NAMES")[name] = true;
-		if (ComposedComponent.getName() !== getReactComponentName(ComposedComponent)) {
+		if (process.env.NODE_ENV !== "production" && ComposedComponent.getName() !== getReactComponentName(ComposedComponent)) {
 			console.warn(`${getReactComponentName(ComposedComponent)} getName() doesn't return it's component name! (It returned '${name}')`);
 		}
 	} else {
-		console.warn(`${getReactComponentName(ComposedComponent)} is missing getName() static method!`);
+		console.warn(`${getReactComponentName(ComposedComponent)} is missing static getName() method!`);
 	}
 
 	return VirtualSchemaField;
