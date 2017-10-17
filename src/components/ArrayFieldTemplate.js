@@ -225,8 +225,10 @@ export const arrayKeyFunctions = {
 
 		const currentIdx = getCurrentIdx ? getCurrentIdx() : focusedIdx;
 
-		if (isNullOrUndefined(currentIdx) && getProps().items.length > 0) {
-			focusIdx(reverse ? getProps().items.length - 1 : 0);
+		const arrayLength = getProps().formData ? getProps().formData.length : 0;
+
+		if (isNullOrUndefined(currentIdx) && arrayLength > 0) {
+			focusIdx(reverse ? arrayLength - 1 : 0);
 			return true;
 		} else {
 			let amount = 0;
@@ -234,7 +236,7 @@ export const arrayKeyFunctions = {
 
 			const nextIdx = currentIdx + amount;
 
-			if (amount === 0 || amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < getProps().items.length) {
+			if (amount === 0 || amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < arrayLength) {
 				if (navigateCallforward) {
 					e.persist();
 					navigateCallforward(() => focusIdx(nextIdx), nextIdx);
