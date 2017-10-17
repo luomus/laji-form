@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { getWarnings, getWarningValidatorsById } from "../validation";
+import { getWarnings, getWarningValidatorsById, transformErrors } from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
@@ -270,6 +270,8 @@ function FieldTemplate({
 
 	const warnings = formContext.getWarnings(children.props.formData, id);
 	const warningClassName = warnings ? " laji-form-warning-container" : "";
+
+	label = children.props.required ? label + "*" : label;
 
 	return (
 		<div className={classNames + warningClassName} id={elemId}>
@@ -612,6 +614,7 @@ export default class LajiForm extends Component {
 					ErrorList={ErrorListTemplate}
 					formContext={formContext}
 					validate={validate(this.props.validators)}
+					transformErrors={transformErrors(translations)}
 				>
 				<div>
 					{this.props.children}

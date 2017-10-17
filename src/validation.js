@@ -63,6 +63,17 @@ export function getWarnings(data, id, warningValidators) {
 	return null;
 }
 
+export function transformErrors(translations) {
+	return (errors) => {
+		return errors.map(error => {
+			if (error.name === "type") {
+				error.message = translations.TypeError + translations[error.argument[0]] + ".";
+			}
+			return error;
+		});
+	};
+}
+
 function getMessages(result) {
 	const messages = [];
 	for(let k in result) {

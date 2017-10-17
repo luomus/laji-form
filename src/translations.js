@@ -418,5 +418,15 @@
 		fi: "Paikka ei ole yhteensopiva lomakkeen kanssa.",
 		en: "The place is not compatible with the form",
 		sv: "Platsen är inte kompatibel med formuläret"
+	},
+	TypeError: {
+		fi: "Pitää olla ",
+		en: "Must be of type ",
+		sv: "Måste vara "
+	},
+	integer: {
+		fi: "kokonaisluku",
+		en: "integer",
+		sv: "ett heltal"
 	}
 };
