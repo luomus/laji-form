@@ -216,13 +216,9 @@ export function focusNextInput(...params) {
 }
 
 export function focusById(contextId, id) {
-	console.log(contextId);
-	console.log(id);
 	const elem = getSchemaElementById(contextId, id);
-	console.log(elem);
 	if (elem) {
 		const tabbableFields = getTabbableFields(elem);
-		console.log(tabbableFields);
 		if (tabbableFields && tabbableFields.length) {
 			tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem);
