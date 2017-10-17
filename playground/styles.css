@@ -816,7 +816,7 @@ body .laji-form {
 		width: 25%;
 	}
 
-	.laji-form .laji-form-compact-table.early-column-break .col-xs-0 {
+	.laji-form .laji-form-compact-table.early-column-break .hidden-xs {
 		display: none;
 	}
 
