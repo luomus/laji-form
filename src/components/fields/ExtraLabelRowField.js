@@ -13,7 +13,8 @@ export default class ExtraLabelRowField extends Component {
 				lg: PropTypes.integer,
 				md: PropTypes.integer,
 				sm: PropTypes.integer,
-				xs: PropTypes.integer
+				xs: PropTypes.integer,
+				hiddenXs: PropTypes.boolean
 			})
 		}).isRequired
 	};
@@ -31,7 +32,7 @@ export default class ExtraLabelRowField extends Component {
 
 	render() {
 		const {SchemaField, TitleField} = this.props.registry.fields;
-		const {labels, titleClassName} = getUiOptions(this.props.uiSchema);
+		const {labels, titleClassName, hiddenXs} = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
 		labels.forEach((property, i) => {
@@ -43,7 +44,7 @@ export default class ExtraLabelRowField extends Component {
 		return (
 			<div>
 				{title ? <TitleField title={title} className={titleClassName} /> : null}
-				<Row className="laji-form-label-row">{cols}</Row>
+				<Row className={"laji-form-label-row" + (hiddenXs ? " hidden-xs" : "")}>{cols}</Row>
 				<SchemaField {...this.props} {...this.state}/>
 			</div>
 		);
@@ -92,10 +93,6 @@ export default class ExtraLabelRowField extends Component {
 				cols[col] = optionCol[selector];
 			} else {
 				cols[col] = optionCol;
-			}
-
-			if (cols[col] === 0) {
-				cols[col + "Hidden"] = true;
 			}
 		});
 
