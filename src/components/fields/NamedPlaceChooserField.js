@@ -17,31 +17,9 @@ import SelectWidget from "../widgets/SelectWidget";
  */
 @BaseComponent
 export default class NamedPlaceChooserField extends Component {
-	getStateFromProps(props) {
-		const innerUiSchema = getInnerUiSchema(props.uiSchema);
-		const options = getUiOptions(innerUiSchema);
-		const uiSchema = {
-			...innerUiSchema,
-			"ui:options": {
-				...options,
-				buttons: [
-					...(options.buttons || []),
-					{
-						fn: () => () => {
-							this.setState({show: true});
-						},
-						key: "addNamedPlace",
-						glyph: "map-marker",
-						label: props.formContext.translations.ChooseFromNamedPlace,
-						rules: {
-							canAdd: true
-						}
-					}
-				]
-			}
-		};
-
-		return {uiSchema};
+	constructor(props) {
+		super(props);
+		this.state = {};
 	}
 
 	onPlaceSelected = (place) => {
@@ -57,14 +35,56 @@ export default class NamedPlaceChooserField extends Component {
 		}
 	}
 
+	componentDidMount() {
+		this.mounted = true;
+		new ApiClient().fetch("/named-places", {collectionID: this.props.formContext.uiSchemaContext.formID}).then(response => {
+			if (!this.mounted) return;
+			const state = {places: response.results};
+
+			if (response.results && response.results.length) {
+				const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
+				const options = getUiOptions(innerUiSchema);
+				const uiSchema = {
+					...innerUiSchema,
+					"ui:options": {
+						...options,
+						buttons: [
+							...(options.buttons || []),
+							{
+								fn: () => () => {
+									this.setState({show: true});
+								},
+								key: "addNamedPlace",
+								glyph: "map-marker",
+								label: this.props.formContext.translations.ChooseFromNamedPlace,
+								rules: {
+									canAdd: true
+								}
+							}
+						]
+					}
+				};
+				state.uiSchema = uiSchema;
+			}
+
+			this.setState(state);
+		}).catch(() => {
+			this.setState({failed: true});
+		});
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {translations} = formContext;
-		const {uiSchema, failed} = this.state;
+		const {failed} = this.state;
 		const onHide = () => this.setState({show: false});
 		return (
 			<div>
-				<SchemaField  {...this.props} uiSchema={uiSchema} />
+				<SchemaField  {...this.props} uiSchema={this.state.uiSchema || getInnerUiSchema(this.props.uiSchema)} />
 				{
 					this.state.show ? (
 						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={onHide}>
@@ -73,7 +93,7 @@ export default class NamedPlaceChooserField extends Component {
 							</Modal.Header>
 							<Modal.Body>
 								{failed && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
-								<NamedPlaceChooser formContext={formContext} onSelected={this.onPlaceSelected} />
+								<NamedPlaceChooser places={this.state.places} failed={this.state.failed} formContext={formContext} onSelected={this.onPlaceSelected} />
 							</Modal.Body>
 						</Modal>
 					) : null
@@ -88,21 +108,6 @@ class NamedPlaceChooser extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
-		this.apiClient = new ApiClient();
-	}
-
-	componentWillUnmount() {
-		this.mounted = false;
-	}
-
-	componentDidMount() {
-		this.mounted = true;
-		this.apiClient.fetch("/named-places", {collectionID: this.props.formContext.uiSchemaContext.formID}).then(response => {
-			if (!this.mounted) return;
-			this.setState({places: response.results});
-		}).catch(() => {
-			this.setState({failed: true});
-		});
 	}
 
 	onPlaceSelected = (place) => {
@@ -139,7 +144,7 @@ class NamedPlaceChooser extends Component {
 					map.setData();
 				}
 				this.geometryCollectionData = {
-					geoData: this.state.places[idx].geometry
+					geoData: this.props.places[idx].geometry
 				};
 				map.setData(this.geometryCollectionData);
 				return true;
@@ -192,8 +197,7 @@ class NamedPlaceChooser extends Component {
 	}
 
 	render() {
-		const {places, failed} = this.state;
-		const {translations} = this.props.formContext;
+		const {places, failed, formContext: {translations}} = this.props;
 		
 		const that = this;
 		function getPopupRef(elem) {
@@ -244,7 +248,7 @@ class NamedPlaceChooser extends Component {
 			return (
 				<div style={{height: "inherit"}}>
 					<SelectWidget 
-						disabled={!this.state.places}
+						disabled={!places}
 						options={{enumOptions: enums, placeholder: `${translations.SelectPlaceFromList}...`}} 
 						onChange={this.onSelectChange} 
 						selectOnChange={false}

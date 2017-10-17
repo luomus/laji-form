@@ -310,7 +310,7 @@ export default class MapArrayField extends Component {
 								<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
 									<div>
 										{this.props.uiSchema["ui:help"]}
-										{buttons ? ` ${this.props.formContext.translations.or}` : null}
+										{buttons && buttons.length ? ` ${this.props.formContext.translations.or}` : null}
 										{buttons}
 									</div>
 								}</Popover> :
