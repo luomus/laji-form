@@ -9,7 +9,7 @@ import "../src/styles";
 import "./styles.css";
 
 // set to undefined to use the local schemas
-const SCHEMA_ID = undefined;
+const SCHEMA_ID = "JX.652";
 
 const log = (type) => console.info.bind(console, type);
 
@@ -211,7 +211,11 @@ if (SCHEMA_ID !== undefined) {
 		const propsToPass = {
 			schema, 
 			uiSchema, 
-			uiSchemaContext: {...schemas.uiSchemaContext, ...uiSchemaContext},
+			uiSchemaContext: {
+				...schemas.uiSchemaContext, 
+				formID: SCHEMA_ID === undefined ? schemas.uiSchemaContext.formID : SCHEMA_ID,
+				...uiSchemaContext
+			},
 			settings: {...schemas.settings, ...settings}
 		};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;

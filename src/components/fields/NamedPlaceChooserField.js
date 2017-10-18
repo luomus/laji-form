@@ -20,6 +20,7 @@ export default class NamedPlaceChooserField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		this.apiClient = new ApiClient();
 	}
 
 	onPlaceSelected = (place) => {
@@ -35,9 +36,8 @@ export default class NamedPlaceChooserField extends Component {
 		}
 	}
 
-	componentDidMount() {
-		this.mounted = true;
-		new ApiClient().fetch("/named-places", {collectionID: this.props.formContext.uiSchemaContext.formID}).then(response => {
+	updatePlaces = () => {
+		this.apiClient.fetchCached("/named-places", {collectionID: this.props.formContext.uiSchemaContext.formID}).then(response => {
 			if (!this.mounted) return;
 			const state = {places: response.results};
 
@@ -73,8 +73,15 @@ export default class NamedPlaceChooserField extends Component {
 		});
 	}
 
+	componentDidMount() {
+		this.mounted = true;
+		this.updatePlaces();
+		this.apiClient.onCachePathInvalidation("/named-places", this.updatePlaces);
+	}
+
 	componentWillUnmount() {
 		this.mounted = false;
+		this.apiClient.removeOnCachePathInvalidation("/named-places", this.updatePlaces);
 	}
 
 	render() {

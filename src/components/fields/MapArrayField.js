@@ -215,7 +215,7 @@ export default class MapArrayField extends Component {
 			const injectButtons = injectTarget.buttons || [];
 			if ((injectButtons).every(button => {return button.key !== "_add";})) {
 				injectTarget.buttons = [
-					...injectButtons, 
+					...injectButtons,
 					{
 						...(buttons.find(button => button.fn === "add") || {}),
 						fn: () => () => {

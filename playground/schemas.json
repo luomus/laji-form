@@ -420,8 +420,7 @@
 								"images",
 								"eventTime",
 								"weather",
-								"notes",
-								"geometry"
+								"notes"
 							],
 							"rootUiSchema": {
 								"ui:field": "ScopeField",

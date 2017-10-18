@@ -9,6 +9,7 @@ export default class ApiClient {
 	constructor(apiClient) {
 		if (!singletonInstance) singletonInstance = this;
 		this.apiClient = apiClient;
+		this.on = {};
 		return singletonInstance;
 	}
 
@@ -32,13 +33,38 @@ export default class ApiClient {
 	}
 
 	fetchCached(path, query) {
-		const cacheKey = path + JSON.stringify(query);
-		cache[cacheKey] = cache.hasOwnProperty(cacheKey) ? cache[cacheKey] : this.fetch(path, query);
-		return cache[cacheKey];
+		const cacheQuery = JSON.stringify(query);
+
+		if (!cache[path])  cache[path] = {};
+		cache[path][cacheQuery] = cache[path].hasOwnProperty(cacheQuery) ? cache[path][cacheQuery] : this.fetch(path, query);
+		return cache[path][cacheQuery];
 	}
 
+	invalidateCachePath(path) {
+		delete cache[path];
+		if (this.on[path]) {
+			this.on[path].forEach(callback => callback());
+		}
+	}
+
+	//TODO on invalidation callbacks
+	invalidateCachePathQuery(path, query) {
+		if (cache[path]) delete cache[path][query];
+	}
 
 	flushCache() {
 		cache = {};
+	}
+
+	onCachePathInvalidation(path, callback) {
+		if (!this.on[path]) this.on[path] = [];
+
+		this.on[path].push(callback);
+	}
+
+	onRemoveCachePathInvalidation(path, callback) {
+		if (this.on[path]) {
+			this.on[path] = this.on[path].filter(fn => fn !== callback);
+		}
 	}
 }

@@ -128,6 +128,7 @@ class PlaceSaverDialog extends Component {
 			},
 			body: JSON.stringify(place)
 		}).then(response => {
+			this.apiClient.invalidateCachePath("/named-places");
 			return response.json();
 		}).then(this.props.onSave)
 			.catch(() => {
