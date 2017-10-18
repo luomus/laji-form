@@ -327,6 +327,11 @@
 						"label": "Lisää paikka"
 					}
 				],
+				"mapOptions": {
+					"controlSettings": {
+						"drawClear": true
+					}
+				},
 				"popupFields": [
 					{
 						"mapper": "taxon"
