@@ -355,7 +355,6 @@ export function bsSizeToPixels(bsSize) {
 	}
 }
 
-
 export function applyFunction(props) {
 	let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
 
