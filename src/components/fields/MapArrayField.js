@@ -419,7 +419,7 @@ export default class MapArrayField extends Component {
 				});
 				const item = this.props.formData[this.state.activeIdx];
 				this.props.onChange(update(this.props.formData,
-					{[this.state.activeIdx]: {[geometryField]: item && item.type === "GeometryCollection" ?
+					{[this.state.activeIdx]: {[geometryField]: item[geometryField] && item[geometryField].type === "GeometryCollection" ?
 						{geometries: {$splice: splices}} : {$set: undefined}}}));
 			},
 			onEdited: ({features}) => {
