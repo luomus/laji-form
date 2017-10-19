@@ -207,6 +207,12 @@ body .laji-form {
 	height: 100%;
 	overflow: hidden;
 }
+.laji-form .laji-form-map-container .laji-form-popped {
+	position: absolute;
+	left: 25%;
+	top: 5px;
+	overflow: hidden;
+}
 .laji-form .map-field .field-description {
 	padding-bottom: 15px;
 }

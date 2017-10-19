@@ -983,15 +983,13 @@ export class Map extends Component {
 class MapPanel extends Component {
 	render() {
 		return (
-			<div className="pass-block">
-				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header}>
+				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header} className="laji-form-popped">
 					{this.props.text}
 					{this.props.buttonText ?
 						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 						null
 					}
 				</Panel>
-			</div>
 		);
 	}
 }

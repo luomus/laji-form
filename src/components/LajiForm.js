@@ -243,7 +243,7 @@ function FieldTemplate({
 	formContext
 	}) {
 
-	if (hidden) {
+	if (hidden || uiSchema["ui:field"] === "HiddenField") {
 		return children;
 	}
 	const inlineHelp = uiSchema["ui:inlineHelp"];
