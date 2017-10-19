@@ -125,12 +125,12 @@ class _SchemaField extends Component {
 		}
 
 		if (
-		uiSchema &&
-		uiSchema["ui:field"] &&
-		uiSchema["ui:field"] !== "ContextInjectionField" &&
-		uiSchema["ui:field"] !== "InjectField" &&
-		uiSchema["ui:options"] &&
-		uiSchema["ui:options"].injections
+			uiSchema &&
+			uiSchema["ui:field"] &&
+			uiSchema["ui:field"] !== "ContextInjectionField" &&
+			uiSchema["ui:field"] !== "InjectField" &&
+			uiSchema["ui:options"] &&
+			uiSchema["ui:options"].injections
 		) {
 			const {injections} = uiSchema["ui:options"];
 			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.formContext.uiSchemaContext);
@@ -138,6 +138,10 @@ class _SchemaField extends Component {
 				...injectedUiSchema,
 				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
 			};
+		}
+
+		if (schema.type === "integer" && (!uiSchema || uiSchema && !uiSchema["ui:widget"])) {
+			uiSchema = {...(uiSchema || {}), "ui:widget": "updown"};
 		}
 
 		// Reset ArrayFieldTemplate
@@ -244,7 +248,7 @@ function FieldTemplate({
 	formContext
 	}) {
 
-	if (hidden) {
+	if (hidden || uiSchema["ui:field"] === "HiddenField") {
 		return children;
 	}
 	const inlineHelp = uiSchema["ui:inlineHelp"];
@@ -298,13 +302,13 @@ function FieldTemplate({
 			<div id={`laji-form-error-container-${id}`}>
 				{errors}
 			</div>
-            {warnings ?
+			{warnings ?
 				<div id={`laji-form-warning-container-${id}`}>
 					<p></p>
 					<ul>
-                        {warnings.map((warning, i) => (
+						{warnings.map((warning, i) => (
 							<li key={i} className="text-warning">{warning}</li>
-                        ))}
+						))}
 					</ul>
 				</div> : null}
 		</div>

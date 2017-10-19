@@ -80,6 +80,12 @@ export default class UnitShorthandField extends Component {
 		// TODO use container id if doesn't have shorthandFieldName? Solve global id conflict problem first.
 		const id = shorthandFieldName ? this.props.idSchema[shorthandFieldName].$id : `${this.props.idSchema.$id}_shortHandField`;
 
+		let innerUiSchema = undefined;
+		if (this.state.showSchema) {
+			innerUiSchema = getInnerUiSchema({...uiSchemaWithoutHelp});
+			innerUiSchema  = {...innerUiSchema, "ui:buttons": [...(innerUiSchema["ui:buttons"] || []), toggleButton]};
+		}
+
 		return !this.state.showSchema ? (
 			<div className="laji-form-field-template-item">
 				<CodeReader translations={this.props.formContext.translations}
@@ -93,11 +99,7 @@ export default class UnitShorthandField extends Component {
 				<div className="laji-form-field-template-buttons">{toggleButton}</div>
 			</div>
 		) : (
-			<div>
-				<SchemaField 
-					{...this.props} 
-					uiSchema={getInnerUiSchema({...uiSchemaWithoutHelp, "ui:buttons": [toggleButton]})} />
-			</div>
+			<SchemaField {...this.props} uiSchema={innerUiSchema} />
 		);
 	}
 }

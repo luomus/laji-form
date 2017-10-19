@@ -335,24 +335,24 @@
 		sv: "Uppdatera felen"
 	},
 	chooseFromNamedPlace: {
-		fi: "Lisää nimetty paikka",
-		en: "Add a named place",
-		sv: "Lägga en namngiven plats"
+		fi: "Lisää oma paikka",
+		en: "Add an own place",
+		sv: "Lägg till en egen plats"
 	},
 	chooseNamedPlace: {
-		fi: "Valitse nimetty paikka",
-		en: "Choose a named place",
-		sv: "Välja namngiven plats"
+		fi: "Valitse oma paikka",
+		en: "Choose an own place",
+		sv: "Välja egen plats"
 	},
 	namedPlacesFetchFail: {
-		fi: "Nimettyjen paikkojen hakeminen epäonnistui.",
-		en: "Fetching named places failed",
-		sv: "Hämtning av namngivna platser misslyckades"
+		fi: "Omien paikkojen hakeminen epäonnistui.",
+		en: "Fetching own places failed",
+		sv: "Hämtning av egna platser misslyckades"
 	},
 	namedPlacesSaveFail: {
-		fi: "Nimetyn paikan tallennus epäonnistui.",
-		en: "Saving named place failed",
-		sv: "Det sparade namnet misslyckades."
+		fi: "Oman paikan tallennus epäonnistui.",
+		en: "Failed to save the place",
+		sv: "Misslyckades med att spara platsen"
 	},
 	list: {
 		fi: "Luettelo",
@@ -405,9 +405,9 @@
 		sv: "Skriv över befintliga"
 	},
 	SaveNamedPlace: {
-		fi: "Tallenna nimettynä paikkana",
-		en: "Save as a named place",
-		sv: "Spara som en bestämd plats"
+		fi: "Tallenna omana paikkana",
+		en: "Save as an own place",
+		sv: "Spara som en egen plats"
 	},
 	ClickPlaceToOverwrite: {
 		fi: "Klikkaa paikkaa ylikirjoittaaksesi se",
@@ -428,6 +428,11 @@
 		fi: "kokonaisluku",
 		en: "integer",
 		sv: "ett heltal"
+	},
+	string: {
+		fi: "merkkijono",
+		en: "string",
+		sv: "stringen"
 	},
 	FieldIsRequired: {
 		fi: "Pakollinen kenttä",

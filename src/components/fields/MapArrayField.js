@@ -9,7 +9,7 @@ import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { NORMAL_COLOR } from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, getUpdateObjectFromJSONPath } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -209,15 +209,19 @@ export default class MapArrayField extends Component {
 		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
 		let _buttonsPath = buttonsPath || addButtonPath;
 
-		if (_buttonsPath) {
-			const injectTarget = parseJSONPointer(belowUiSchema, `${_buttonsPath}/ui:options`, "createParents");
-			const buttons = uiSchema["ui:options"].buttons || [];
-			const injectButtons = injectTarget.buttons || [];
-			if ((injectButtons).every(button => {return button.key !== "_add";})) {
-				injectTarget.buttons = [
-					...injectButtons,
+		if (_buttonsPath && options.buttons) {
+			let injectionTarget = false;
+			try {
+				injectionTarget =	parseJSONPointer(belowUiSchema, `${_buttonsPath}/ui:options`);
+			} catch (e) {
+				console.error("Invalid buttonsPath for MapArrayField");
+			}
+
+			if (injectionTarget) {
+				const addButton = options.buttons.find(({fn}) => fn === "add");
+				const buttons = [
 					{
-						...(buttons.find(button => button.fn === "add") || {}),
+						...(addButton || {}),
 						fn: () => () => {
 							const nextActive = this.props.formData.length;
 							this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
@@ -226,8 +230,11 @@ export default class MapArrayField extends Component {
 						key: "_add",
 						glyph: "plus"
 					},
-					...(options.buttons || []).filter(({fn}) => fn !== "add")
-				];
+					...options.buttons.filter(button => button !== addButton),
+				]
+				const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
+				const updateObject = getUpdateObjectFromJSONPath(`${_buttonsPath}/ui:options`, {buttons: updateTail});
+				belowUiSchema = update(belowUiSchema, updateObject);
 			}
 		}
 
@@ -976,15 +983,13 @@ export class Map extends Component {
 class MapPanel extends Component {
 	render() {
 		return (
-			<div className="pass-block">
-				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header}>
+				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header} className="laji-form-popped">
 					{this.props.text}
 					{this.props.buttonText ?
 						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 						null
 					}
 				</Panel>
-			</div>
 		);
 	}
 }

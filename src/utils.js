@@ -47,11 +47,11 @@ export function propertyHasData(field, container) {
 	(!Array.isArray(data) || (data.length > 0 && hasData(data))));
 }
 
-export function getUpdateObjectFromPath(path, injection) {
+export function getUpdateObjectFromJSONPath(path, injection) {
 	let update = {};
 	let updatePointer = update;
 	let lastPathName = "";
-	let splittedPath = path.split(".");
+	let splittedPath = path.split("/").filter(s => !isEmptyString(s));
 	splittedPath.forEach((pathStep, i) => {
 		updatePointer[pathStep] = {};
 		if (i < splittedPath.length - 1) updatePointer = updatePointer[pathStep];
