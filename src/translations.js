@@ -428,5 +428,10 @@
 		fi: "kokonaisluku",
 		en: "integer",
 		sv: "ett heltal"
+	},
+	string: {
+		fi: "merkkijono",
+		en: "string",
+		sv: "stringen"
 	}
 };
