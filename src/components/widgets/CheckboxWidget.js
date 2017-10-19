@@ -13,7 +13,8 @@ export default class CheckboxWidget extends Component {
 			registry,
 			readonly,
 			options,
-			label
+			label,
+			required
 		} = this.props;
 
 		function getNextVal() {
@@ -54,7 +55,7 @@ export default class CheckboxWidget extends Component {
 		);
 
 		return isEmptyString(label) ? checkbox : (
-			<Label {...this.props}>
+			<Label label={required ? label + "*" : label}>
 				{checkbox}
 			</Label>
 		);

@@ -28,7 +28,7 @@ export default class ArrayCombinerField extends Component {
 	getStateFromProps(props) {
 		const {additionalItemsAmount} = this.getUiOptions();
 
-		let itemSchema = {type: "object", properties: {}};
+		let itemSchema = {type: "object", properties: {}, required: props.schema.required};
 		let schema = {type: "array"};
 		if (additionalItemsAmount) schema.additionalItems = itemSchema;
 		if (props.schema.hasOwnProperty("title")) schema.title = props.schema.title;

@@ -428,5 +428,10 @@
 		fi: "kokonaisluku",
 		en: "integer",
 		sv: "ett heltal"
+	},
+	FieldIsRequired: {
+		fi: "Pakollinen kenttä",
+		en: "Required field",
+		sv: "Obligatoriskt fält"
 	}
 };
