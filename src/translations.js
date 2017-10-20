@@ -335,9 +335,9 @@
 		sv: "Uppdatera felen"
 	},
 	chooseFromNamedPlace: {
-		fi: "Lisää oma paikka",
-		en: "Add an own place",
-		sv: "Lägg till en egen plats"
+		fi: "Käytä omaa paikka",
+		en: "Use an own place",
+		sv: "Använd en egen plats"
 	},
 	chooseNamedPlace: {
 		fi: "Valitse oma paikka",

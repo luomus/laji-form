@@ -276,11 +276,9 @@ function FieldTemplate({
 	const warnings = formContext.getWarnings(children.props.formData, id);
 	const warningClassName = warnings ? " laji-form-warning-container" : "";
 
-	label = required && label ? label + "*" : label;
-
 	return (
 		<div className={classNames + warningClassName} id={elemId}>
-			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} /> : null}
+			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} required={children.props.required} /> : null}
 			{_displayLabel && description ? description : null}
 			<div className={containerClassName}>
 				<div className={schemaClassName}>

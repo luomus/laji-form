@@ -12,6 +12,9 @@ import { Map } from "./MapArrayField";
 import { NORMAL_COLOR, ACTIVE_COLOR } from "laji-map/lib/globals";
 import SelectWidget from "../widgets/SelectWidget";
 
+const PLACES_FETCH_FAIL = "PLACES_FETCH_FAIL";
+const PLACE_USE_FAIL = "PLACE_USE_FAIL";
+
 /**
  * Compatible only with gathering field.
  */
@@ -25,19 +28,32 @@ export default class NamedPlaceChooserField extends Component {
 
 	onPlaceSelected = (place) => {
 		try {
+			let gathering = getDefaultFormState(
+				this.props.schema.items,
+				place.prepopulatedDocument.gatherings[0],
+				this.props.registry.definitions
+			);
+			gathering = Object.keys(gathering).reduce((_gathering, key) => {
+				console.log(key);
+				if (this.props.schema.items.properties[key]) {
+					_gathering[key] = gathering[key];
+				}
+				return _gathering;
+			}, {});
+
 			this.props.onChange([
 				...(this.props.formData || []),
-				getDefaultFormState(this.props.schema.items, place.prepopulatedDocument.gatherings[0], this.props.registry.definitions)
+				gathering
 			]);
 			this.setState({show: false});
 			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "activeIdx", this.props.formData.length);
 		} catch(e) {
-			this.setState({failed: true});
+			this.setState({failed: PLACE_USE_FAIL});
 		}
 	}
 
 	updatePlaces = () => {
-		this.apiClient.fetchCached("/named-places", {collectionID: this.props.formContext.uiSchemaContext.formID}).then(response => {
+		this.apiClient.fetchCached("/named-places").then(response => {
 			if (!this.mounted) return;
 			const state = {places: response.results};
 
@@ -69,7 +85,7 @@ export default class NamedPlaceChooserField extends Component {
 
 			this.setState(state);
 		}).catch(() => {
-			this.setState({failed: true});
+			this.setState({failed: PLACES_FETCH_FAIL});
 		});
 	}
 
@@ -100,7 +116,7 @@ export default class NamedPlaceChooserField extends Component {
 							</Modal.Header>
 							<Modal.Body>
 								{failed && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
-								<NamedPlaceChooser places={this.state.places} failed={this.state.failed} formContext={formContext} onSelected={this.onPlaceSelected} />
+								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} />
 							</Modal.Body>
 						</Modal>
 					) : null
