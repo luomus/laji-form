@@ -1625,52 +1625,54 @@
 		"activeGatheringIdx": 0
 	},
 	"formData": {
-	  "gatheringEvent": {
-		"leg": [
-		  "MA.308"
-		],
-		"legPublic": true
-	  },
-	  "gatherings": [
-		{
-		  "images": [],
-		  "units": [
-			{
-			  "recordBasis": "MY.recordBasisHumanObservationPhoto",
-			  "unitType": [],
-			  "taxonConfidence": "MY.taxonConfidenceSure",
-			  "count": "223lkj",
-			  "images": [],
-			  "identifications": [
-				{
-				  "taxon": "sdf",
-				  "identificationBasis": []
-				}
-			  ],
-			  "unitGathering": {
-				"geometry": {},
-				"dateBegin": "2017-02-12"
-			  },
-			  "unitFact": {}
-			}
-		  ],
-		  "geometry": {
-			"type": "GeometryCollection",
-			"geometries": [
-			  {
-				"type": "Point",
-				"coordinates": [
-				  27.49391338721197,
-				  63.51505459680076
-				]
-			  }
-			]
-		  }
-		}
-	  ],
-	  "editors": [],
-	  "secureLevel": "MX.secureLevelNone"
-	},
+  "gatheringEvent": {
+    "leg": [
+      "MA.308"
+    ],
+    "legPublic": true
+  },
+  "gatherings": [
+    {
+      "images": [
+        "MM.89909"
+      ],
+      "units": [
+        {
+          "recordBasis": "MY.recordBasisHumanObservationPhoto",
+          "unitType": [],
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "count": "223lkj",
+          "images": [],
+          "identifications": [
+            {
+              "taxon": "sdf",
+              "identificationBasis": []
+            }
+          ],
+          "unitGathering": {
+            "geometry": {},
+            "dateBegin": "2017-02-12"
+          },
+          "unitFact": {}
+        }
+      ],
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [
+              27.49391338721197,
+              63.51505459680076
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "editors": [],
+  "secureLevel": "MX.secureLevelNone"
+},
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",
 		  "%additionalFields/scopeField_gathering_unit_unitType": {

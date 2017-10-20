@@ -118,19 +118,16 @@ class TableArrayFieldTemplate extends Component {
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 
-		const labels =schemaPropsArray.map(propName => {
-			let label = schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName;
-			if (schema.items.required && schema.items.required.indexOf(propName) !== -1) label += "*";
-
-			return (
-				<Col {...cols} key={propName + "-label"}>
-					<Label
-						label={label}
-						disabled={false}
-						id={idSchema[propName].$id}
-						help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
-			</Col>);
-		});
+		const labels =schemaPropsArray.map(propName => 
+			<Col {...cols} key={propName + "-label"}>
+				<Label
+					label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
+					disabled={false}
+					id={idSchema[propName].$id}
+					required={schema.items.required && propName in schema.items.required}
+					help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
+			</Col>
+		);
 
 		const options = getUiOptions(props.uiSchema);
 		const {confirmDelete, deleteCorner, renderDelete = true, nonRemovables = [], buttons} = options;

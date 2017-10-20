@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
 import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl } from "react-bootstrap";
+import { isEmptyString } from "../utils";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -475,7 +476,7 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id}) {
+export function Label({label, help, children, id, required}) {
 	const showHelp = label && help;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
@@ -487,7 +488,7 @@ export function Label({label, help, children, id}) {
 
 	const labelElem = (
 		<label htmlFor={id}>
-			<strong>{label}{showHelp ? <Help /> : null}</strong>
+			<strong>{label}{showHelp ? <Help /> : null}{required ? "*" :  ""}</strong>
 			{children}
 		</label>
 	);
