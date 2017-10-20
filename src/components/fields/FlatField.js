@@ -43,6 +43,9 @@ export default class FlatField extends Component {
 
 			if (properties) Object.keys(properties).forEach(innerField => {
 				state.schema = update(state.schema, {properties: {$merge: {[getPropName(field, innerField, isArray)]: properties[innerField]}}});
+				if (innerSchema.required && innerSchema.required.indexOf(innerField) !== -1) {
+					state.schema.required = update(state.schema.required || [], {$push: [getPropName(field, innerField, isArray)]});
+				}
 
 				if (props.uiSchema[field] && props.uiSchema[field][innerField]) {
 					state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: props.uiSchema[field][innerField]}});
