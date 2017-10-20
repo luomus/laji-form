@@ -241,6 +241,7 @@ function FieldTemplate({
 	rawHelp,
 	description,
 	hidden,
+	required,
 	displayLabel,
 	schema,
 	uiSchema,
@@ -275,7 +276,7 @@ function FieldTemplate({
 	const warnings = formContext.getWarnings(children.props.formData, id);
 	const warningClassName = warnings ? " laji-form-warning-container" : "";
 
-	label = children.props.required ? label + "*" : label;
+	label = required && label ? label + "*" : label;
 
 	return (
 		<div className={classNames + warningClassName} id={elemId}>

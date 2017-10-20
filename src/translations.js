@@ -433,5 +433,10 @@
 		fi: "merkkijono",
 		en: "string",
 		sv: "stringen"
+	},
+	FieldIsRequired: {
+		fi: "Pakollinen kenttä",
+		en: "Required field",
+		sv: "Obligatoriskt fält"
 	}
 };

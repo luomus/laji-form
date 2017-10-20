@@ -119,10 +119,13 @@ class TableArrayFieldTemplate extends Component {
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 
 		const labels =schemaPropsArray.map(propName => {
+			let label = schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName;
+			if (schema.items.required && schema.items.required.indexOf(propName) !== -1) label += "*";
+
 			return (
 				<Col {...cols} key={propName + "-label"}>
 					<Label
-						label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
+						label={label}
 						disabled={false}
 						id={idSchema[propName].$id}
 						help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />

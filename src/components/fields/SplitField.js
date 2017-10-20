@@ -37,7 +37,7 @@ export default class SplitField extends Component {
 
 	renderSplitField = ({fields, uiSchema, name}) => {
 		const {props} = this;
-		const schema = {type: "object", properties: {}};
+		const schema = {type: "object", properties: {}, required: props.schema.required};
 
 		const schemas = {
 			errorSchema: {},
