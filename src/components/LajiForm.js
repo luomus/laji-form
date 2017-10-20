@@ -618,6 +618,7 @@ export default class LajiForm extends Component {
 					formContext={formContext}
 					validate={validate(this.props.validators)}
 					transformErrors={transformErrors(translations)}
+					noHtml5Validate={true}
 				>
 				<div>
 					{this.props.children}

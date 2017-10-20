@@ -134,6 +134,9 @@ body .laji-form {
 	background-color: #e6e6e6;
 	border-color: #e6e6e6;
 }
+.laji-form ul.rw-list > li.rw-list-option, .rw-selectlist > li.rw-list-option {
+min-height: 20px;
+}
 
 .laji-form .form-group {
 	margin-bottom: 0;

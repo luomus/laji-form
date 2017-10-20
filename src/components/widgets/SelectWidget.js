@@ -25,9 +25,6 @@ class SelectWidget extends Component {
 
 	getStateFromProps(props) {
 		let {options: {enumOptions}} = props;
-		if (enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {
-			enumOptions = enumOptions.slice(1);
-		}
 
 		function sort(enumOptions, order) {
 			if (!Array.isArray(order)) return enumOptions;
@@ -90,6 +87,10 @@ class SelectWidget extends Component {
 		findDOMNode(this.comboRef.refs.inner.refs.input).select();
 	})
 
+	onBlur = () => {
+		this.setState({value: this.state.valsToItems[this.props.value]});
+	}
+
 	onSelect = (item) => {
 		this.state.open && this.getContext().setImmediate(() => this.setState({open: false}));
 		if (!this.props.selectOnChange) {
@@ -145,6 +146,7 @@ class SelectWidget extends Component {
 				onToggle={this.onToggle}
 				onClick={this.onClick}
 				onFocus={this.onFocus}
+				onBlur={this.onBlur}
 				onSelect={this.onSelect}
 				suggest={true}
 			/>
