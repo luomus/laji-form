@@ -11,10 +11,6 @@ import BaseComponent from "../BaseComponent";
 @BaseComponent
 class SelectWidget extends Component {
 
-	static defaultProps = {
-		selectOnChange: true
-	}
-
 	componentDidMount() {
 		this.getContext().addFocusHandler(this.props.id, this.onFocus);
 	}
@@ -88,7 +84,11 @@ class SelectWidget extends Component {
 	})
 
 	onBlur = () => {
-		this.setState({value: this.state.valsToItems[this.props.value]});
+		if (typeof this.state.value !== "object") {
+			this.setState({value: this.state.valsToItems[this.props.value]});
+		} else {
+			this.selectOnChange(this.state.value);
+		}
 	}
 
 	onSelect = (item) => {
@@ -185,5 +185,10 @@ if (process.env.NODE_ENV !== "production") {
 		onChange: PropTypes.func,
 	};
 }
+
+SelectWidget.defaultProps = {
+	selectOnChange: true
+};
+
 
 export default SelectWidget;
