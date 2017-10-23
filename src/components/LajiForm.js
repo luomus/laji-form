@@ -213,7 +213,8 @@ const widgets = importLocalComponents("widgets", [
 	"HiddenWidget",
 	"PlainTextWidget",
 	"ImageSelectWidget",
-	"AnyToBooleanWidget"
+	"AnyToBooleanWidget",
+	"URLWidget"
 ]);
 
 function importLocalComponents(dir, fieldNames) {
