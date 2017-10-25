@@ -61,12 +61,12 @@ const buttonSettings = {
 			let modalMap = undefined;
 			let triggerLayer = undefined;
 
-			const {rootElem, ...mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			const {rootElem, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
 			that.setState({
 				modalMap: {
 					...mapOptions,
 					draw: {
-						...map.draw,
+						...mapOptions.draw,
 						marker: true,
 						polyline: false,
 						rectangle: false,
@@ -88,7 +88,11 @@ const buttonSettings = {
 									map.draw.onChange([event]);
 								}
 							}
-						}
+						},
+					},
+					controlSettings: {
+						...mapOptions.controlSettings,
+						drawClear: false
 					},
 					onComponentDidMount: (map) => {
 						modalMap = map;

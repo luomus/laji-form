@@ -107,6 +107,17 @@ export default class MapArrayField extends Component {
 		return this.geometryMappers[getUiOptions(props.uiSchema).geometryMapper || "default"];
 	}
 
+	getContainer = () => {
+		const belowSchema = !!getUiOptions(this.props.uiSchema).belowFields;
+		return findDOMNode(belowSchema ? this.refs._stretch : this.refs.affix);
+	}
+	onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true})
+	onPopupClose = () => this.setState({popupIdx: undefined})
+	onFocusGrab = () => this.setState({focusGrabbed: true})
+	onFocusRelease = () => this.setState({focusGrabbed: false})
+	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}})
+	getAligmentAnchor = () => this.refs._stretch
+
 	render() {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema, schema} = this.props;
@@ -231,7 +242,7 @@ export default class MapArrayField extends Component {
 						glyph: "plus"
 					},
 					...options.buttons.filter(button => button !== addButton),
-				]
+				];
 				const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
 				const updateObject = getUpdateObjectFromJSONPath(`${_buttonsPath}/ui:options`, {buttons: updateTail});
 				belowUiSchema = update(belowUiSchema, updateObject);
@@ -255,25 +266,15 @@ export default class MapArrayField extends Component {
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
 
-		const getContainer = () => findDOMNode(belowSchema ? this.refs._stretch : this.refs.affix);
-		const onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true});
-		const onPopupClose = () => {this.setState({popupIdx: undefined});};
-		const onFocusGrab = () => {this.setState({focusGrabbed: true});};
-		const onFocusRelease = () => {this.setState({focusGrabbed: false});};
-		const onOptionsChanged = options => {
-			this.setState({mapOptions: {...this.state.mapOptions, ...options}});
-		};
-		const getAligmentAnchor = () => this.refs._stretch;
-
 		const mapPropsToPass = {
 			contextId: this.props.formContext.contextId,
 			lang: this.props.formContext.lang,
-			onPopupClose: onPopupClose,
+			onPopupClose: this.onPopupClose,
 			markerPopupOffset: 45,
 			featurePopupOffset: 5,
 			popupOnHover: true,
-			onFocusGrab: onFocusGrab,
-			onFocusRelease: onFocusRelease,
+			onFocusGrab: this.onFocusGrab,
+			onFocusRelease: this.onFocusRelease,
 			panel: errors ? {
 				header: this.props.formContext.translations.Error,
 				panelTextContent: <div id={`laji-form-error-container-${this.props.idSchema.$id}_${activeIdx}_${geometryField}`}>{errors}</div>,
@@ -281,7 +282,7 @@ export default class MapArrayField extends Component {
 			} : null,
 			draw: false,
 			controlSettings: true,
-			onOptionsChanged: onOptionsChanged,
+			onOptionsChanged: this.onOptionsChanged,
 			...mapOptions
 		};
 		const map = (
@@ -292,10 +293,10 @@ export default class MapArrayField extends Component {
 		);
 
 		const wrapperProps = {
-			getContainer,
+			getContainer: this.getContainer,
 			topOffset: topOffset === undefined ? this.props.formContext.topOffset : topOffset,
 			bottomOffset: bottomOffset === undefined ? this.props.formContext.bottomOffset : bottomOffset,
-			onResize,
+			onResize: this.onResize,
 			mounted: this.state.mounted,
 			className: this.state.focusGrabbed ? "pass-block" : "",
 			minHeight: getUiOptions(this.props.uiSchema).minHeight
@@ -306,7 +307,7 @@ export default class MapArrayField extends Component {
 				{map}
 			</Stretch>
 		) : (
-			<StretchAffix {...wrapperProps} getAligmentAnchor={getAligmentAnchor}>
+			<StretchAffix {...wrapperProps} getAligmentAnchor={this.getAligmentAnchor}>
 				{map}
 			</StretchAffix>
 		);
@@ -341,6 +342,15 @@ export default class MapArrayField extends Component {
 		);
 	}
 
+	getDraftStyle = () => {
+		return {color: "#25B4CA", opacity: 1};
+	}
+	
+	getUnitFeatureStyle = ({featureIdx}) => {
+		const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
+		return {color: color, fillColor: color, weight: 4};
+	}
+
 	//TODO geometrymappers abuse each others criss and cross. All the other mappers should extend default mapper.
 	geometryMappers = {
 		default: {
@@ -360,9 +370,7 @@ export default class MapArrayField extends Component {
 							})
 						}
 					},
-					getDraftStyle: () => {
-						return {color: "#25B4CA", opacity: 1};
-					},
+					getDraftStyle: this.getDraftStyle,
 					onChange: emptyMode ? mapper.onMapChangeCreateGathering : mapper.onChange,
 					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
 				};
@@ -458,15 +466,9 @@ export default class MapArrayField extends Component {
 							})
 						},
 						getPopup: this.getPopup,
-						getFeatureStyle: ({featureIdx}) => {
-							this._context.featureIdxsToItemIdxs[featureIdx];
-							const color = this._context.featureIdxsToItemIdxs[featureIdx] === undefined ? NORMAL_COLOR : "#55AEFA";
-							return {color: color, fillColor: color, weight: 4};
-						}
+						getFeatureStyle: this.getUnitFeatureStyle
 					},
-					getDraftStyle: () => {
-						return {color: "#25B4CA", opacity: 1};
-					},
+					getDraftStyle: this.getDraftStyle,
 					onChange: emptyMode ? mapper.onMapChangeCreateGathering : mapper.onChange,
 					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
 				};
@@ -732,8 +734,8 @@ export default class MapArrayField extends Component {
 
 		if (!geometryMapperField) return false;
 
-		const featureIdxToItemIdxs = this._context.featureIdxsToItemIdxs;
-		const itemIdx = featureIdxToItemIdxs ? featureIdxToItemIdxs[idx] : undefined;
+		const {featureIdxsToItemIdxs} = this._context.featureIdxsToItemIdxs;
+		const itemIdx = featureIdxsToItemIdxs ? featureIdxsToItemIdxs[idx] : undefined;
 		let data = {};
 		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx] ||
 		    !formData[this.state.activeIdx][geometryMapperField] || itemIdx === undefined) return data;
@@ -915,22 +917,6 @@ export class Map extends Component {
 	}
 
 	setOptions = (prevOptions, options) => {
-		function filterFunctions(original) {
-			if (typeof original === "function") return undefined;
-			else if (Array.isArray(original)) return original.map(filterFunctions);
-			else if (typeof original !== "object" || original === null) return original;
-			return Object.keys(original).reduce((filtered, key) => {
-				// We don't check for object type recursively, because we know that only these objects contain functions.
-				if (key === "draw" || key === "data" || key === "lineTransect") {
-					filtered[key] = filterFunctions(original[key]);
-				} else if (typeof original[key] !== "function") {
-					filtered[key] = original[key];
-				}
-
-				return filtered;
-			}, {});
-		}
-
 		const {className, style, onComponentDidMount, hidden, singleton, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
@@ -939,14 +925,12 @@ export class Map extends Component {
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
 			..._prevOptions
-		} = prevOptions; // eslint-disable-line no-unused-vars
+		} = prevOptions;
 	
 
 		if (this.map) Object.keys(_options).forEach(key => {
-			if (!deepEquals(...[_options, _prevOptions].map(__options => filterFunctions(__options)[key]))) {
-				if (_options[key] !== _prevOptions[key]) {
-					this.map.setOption(key, _options[key]);
-				}
+			if (!deepEquals(_options[key], _prevOptions[key])) {
+				this.map.setOption(key, _options[key]);
 			}
 		});
 	}
