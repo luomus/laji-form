@@ -344,7 +344,10 @@ export class Autosuggest extends Component {
 		if (onSuggestionSelected) {
 			onSuggestionSelected(suggestion);
 		}
-		this.setState(state);
+		const callback = onSuggestionSelected ? undefined : () => {
+			this.props.onChange(suggestion[this.props.suggestionReceive || "key"])
+		};
+		this.setState(state, callback);
 	}
 
 	onSuggestionSelected = (e, {suggestion, method}) => {
