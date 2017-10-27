@@ -124,7 +124,7 @@ class TableArrayFieldTemplate extends Component {
 					label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
 					disabled={false}
 					id={idSchema[propName].$id}
-					required={schema.items.required && propName in schema.items.required}
+					required={schema.items.required && schema.items.required.indexOf(propName) > -1}
 					help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
 			</Col>
 		);

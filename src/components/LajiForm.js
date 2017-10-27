@@ -279,7 +279,7 @@ function FieldTemplate({
 
 	return (
 		<div className={classNames + warningClassName} id={elemId}>
-			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} required={children.props.required} /> : null}
+			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} required={required} /> : null}
 			{_displayLabel && description ? description : null}
 			<div className={containerClassName}>
 				<div className={schemaClassName}>
