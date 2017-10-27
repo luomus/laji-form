@@ -62,7 +62,7 @@ export default class ApiClient {
 		this.on[path].push(callback);
 	}
 
-	onRemoveCachePathInvalidation(path, callback) {
+	removeOnCachePathInvalidation(path, callback) {
 		if (this.on[path]) {
 			this.on[path] = this.on[path].filter(fn => fn !== callback);
 		}
