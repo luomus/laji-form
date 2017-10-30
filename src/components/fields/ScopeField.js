@@ -33,23 +33,9 @@ const buttonSettings = {
 
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 
-		function getLayer(map) {
-			const {$id} = that.props.idSchema;
-			const splitted = $id.split("_");
-			const idx = parseInt(splitted[splitted.length - 1]);
-
-			const {featureIdxsToItemIdxs} = new Context(`${that.props.formContext.contextId}_MAP_CONTAINER`);
-			let featureIdx = undefined;
-			for (let i in featureIdxsToItemIdxs) {
-				if (featureIdxsToItemIdxs[i] === idx) {
-					featureIdx = i;
-					break;
-				}
-			}
-			if (featureIdx === undefined) return;
-
-			return map._getDrawLayerById(map.idxsToIds[featureIdx]);
-		}
+		const {$id} = that.props.idSchema;
+		const splitted = $id.split("_");
+		const idx = parseInt(splitted[splitted.length - 1]);
 
 		let active = false;
 		function onClick() {
@@ -62,11 +48,41 @@ const buttonSettings = {
 			let triggerLayer = undefined;
 
 			const {rootElem, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
+			const gatheringData = map.draw;
+			const unitData = map.data && map.data[0] ? 
+				map.data[0] :
+				undefined;
+
+			const data = [
+				{
+					featureCollection: gatheringData.featureCollection,
+					getFeatureStyle: gatheringData.getFeatureStyle
+				},
+			];
+
+			if (unitData) {
+				data.push({
+					featureCollection: {
+						features: unitData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+					},
+					getFeatureStyle: () => {return {color: "#55AEFA"};}
+				});
+			}
+
+			const drawData = that.props.formData[geometryField] && that.props.formData[geometryField].type ? 
+				{ featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: that.props.formData[geometryField]}]} }:
+				undefined;
+
+			if (unitData && drawData) drawData.getFeatureStyle = unitData.getFeatureStyle;
+
 			that.setState({
 				modalMap: {
 					...mapOptions,
+					data,
 					draw: {
 						...mapOptions.draw,
+						featureCollection: undefined,
+						...drawData,
 						marker: true,
 						polyline: false,
 						rectangle: false,
@@ -78,31 +94,35 @@ const buttonSettings = {
 								switch (type) {
 								case "create":
 									that.props.onChange(update(
-											that.props.formData,
-											{$merge: {[geometryField]: event.feature.geometry}}
-										));
+										that.props.formData,
+										{$merge: {[geometryField]: event.feature.geometry}}
+									));
 									close();
 									break;
 								case "delete":
 								case "edit":
-									map.draw.onChange([event]);
+									that.props.onChange(update(
+										that.props.formData,
+										{$merge: {[geometryField]: event.features[0].geometry}}
+									));
 								}
 							}
 						},
 					},
-					controlSettings: {
-						...mapOptions.controlSettings,
+					controls: {
+						...mapOptions.controls,
 						drawClear: false
 					},
 					onComponentDidMount: (map) => {
 						modalMap = map;
 						triggerLayer = modalMap.triggerDrawing("marker");
-						const layer = getLayer(modalMap);
+						const layer = map._getLayerByIdxs(map.drawIdx, 0);
 						if (layer) {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 							modalMap.updateLayerStyle(layer, {opacity: 0.7});
+							map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
 						} else {
-							const {drawLayerGroup} = modalMap;
+							const {draw: {group: drawLayerGroup}} = modalMap;
 							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
 							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 						}
@@ -122,7 +142,7 @@ const buttonSettings = {
 		let layer = undefined;
 		function onMouseEnter() {
 			const {map} = mapContext;
-			layer = getLayer(map);
+			layer = map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
 			if (!layer) return;
 
 			let latlng = undefined;
@@ -130,16 +150,12 @@ const buttonSettings = {
 				if (layer[fn]) latlng = layer[fn]();
 			}
 			map.updateLayerStyle(layer, {color: "#75CEFA"});
-
-			if (!latlng) return;
-			if (!map.map.getBounds().contains(latlng)) {
-				map.map.setView(latlng);
-			}
 		}
 
 		function onMouseLeave() {
-			if (active || !layer) return;
 			const {map} = mapContext;
+			layer = map && map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
+			if (active || !layer) return;
 			map.updateLayerStyle(layer, {color: "#55AEFA"});
 		}
 
@@ -175,12 +191,17 @@ const buttonSettings = {
 				miniMap: {
 					...mapOptions,
 					draw: false,
-					controlSettings: false,
-					zoom: 14,
+					controls: false,
+					controlSettings: undefined,
+					zoom: 8,
 					center: geometry.coordinates.slice(0).reverse(),
 					data: [
 						...(map && map.draw ? [{
-							...map.draw.data,
+							...map.draw,
+							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
+						}] : []),
+						...(map && map.data && map.data[0] ? [{
+							...map.data[0],
 							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
 						}] : []),
 						{

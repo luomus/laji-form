@@ -56,16 +56,20 @@ const headerFormatters = {
 					return {type: "Feature", properties: {}, geometry};
 				});
 
-			map.setData({
+			map.addData({
 				featureCollection: {type: "featureCollection", features: geometries},
 				getFeatureStyle: () => {
 					return {opacity: 0.6, color: "#888888"};
-				}
+				},
+				temp: true
 			});
 		},
 		onMouseLeave: (that) => {
 			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
-			map.setData();
+			const lastData = map.data[map.data.length -1];
+			if (lastData && lastData.temp) {
+				map.removeData(map.data.length - 1);
+			}
 			that.hoveredIdx = undefined;
 		}
 	}
