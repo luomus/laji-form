@@ -140,9 +140,9 @@ class _SchemaField extends Component {
 			};
 		}
 
-		if (schema.type === "integer" && (!uiSchema || uiSchema && !uiSchema["ui:widget"])) {
-			uiSchema = {...(uiSchema || {}), "ui:widget": "updown"};
-		}
+		/*if (schema.type === "integer" && (!uiSchema || uiSchema && !uiSchema["ui:widget"])) {
+			uiSchema = {...(uiSchema || {}), "ui:widget": "NumberInput"};
+		}*/
 
 		// Reset ArrayFieldTemplate
 		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
