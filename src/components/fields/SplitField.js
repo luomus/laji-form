@@ -41,7 +41,7 @@ export default class SplitField extends Component {
 
 		const schemas = {
 			errorSchema: {},
-			idSchema: {},
+			idSchema: {$id: props.idSchema.$id},
 			formData: {}
 		};
 
@@ -53,7 +53,6 @@ export default class SplitField extends Component {
 				const itemSchema = props[schema][field];
 				if (has) schemas[schema][field] = itemSchema;
 			});
-
 		});
 
 		return (
