@@ -8,7 +8,8 @@ export default class SumField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				resultField: PropTypes.string.isRequired,
-				summedFields: PropTypes.arrayOf(PropTypes.string).isRequired
+				summedFields: PropTypes.arrayOf(PropTypes.string).isRequired,
+				summedProperty: PropTypes.string
 			}).isRequired,
 			uiSchema: PropTypes.object
 		}).isRequired
@@ -17,15 +18,18 @@ export default class SumField extends Component {
 	static getName() {return "SumField";}
 
 	onChange(formData) {
-		const summedFields = this.getUiOptions().summedFields;
-		const resultField = this.getUiOptions().resultField;
+		const {summedFields, resultField, summedProperty} = this.getUiOptions();
 		const resultType = this.props.schema.properties[resultField].type;
 
 		let result = 0;
 		let allEmpty = true;
 		summedFields.forEach(field => {
 		    if (formData[field] !== undefined) {
-			    result += Number(formData[field]);
+				if (summedProperty === "arrayLength") {
+					result += formData[field].length;
+				} else {
+					result += Number(formData[field]);
+				}
 			    allEmpty = false;
 		    }
 		});

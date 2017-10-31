@@ -106,7 +106,7 @@ export default class InjectField extends Component {
 					delete item[fieldName];
 					formData = update(formData, {[target]: {[i]: {$set: item}}});
 				}
-			} else if (formData && formData[target] && formData[target][fieldName]) {
+			} else if (formData && formData[target] && formData[target][fieldName] !== undefined) {
 				formData = update(formData, this.getFormDataPath(splits, {$set: formData[target][fieldName]}));
 				delete formData[target][fieldName];
 				formDataChanged = true;
