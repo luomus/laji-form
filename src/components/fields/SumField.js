@@ -17,21 +17,35 @@ export default class SumField extends Component {
 
 	static getName() {return "SumField";}
 
+	getStateFromProps({formData}) {
+		const {resultField} = this.getUiOptions();
+		if (formData[resultField] === undefined) {
+			formData = {...formData, [resultField]: this.getSum(formData)};
+		}
+		return {formData};
+	}
+
 	onChange(formData) {
+		const {resultField} = this.getUiOptions();
+		formData = {...formData, [resultField]: this.getSum(formData)};
+		this.props.onChange(formData);
+	}
+
+	getSum = (formData) => {
 		const {summedFields, resultField, summedProperty} = this.getUiOptions();
 		const resultType = this.props.schema.properties[resultField].type;
 
 		let result = 0;
 		let allEmpty = true;
 		summedFields.forEach(field => {
-		    if (formData[field] !== undefined) {
+			if (formData[field] !== undefined) {
 				if (summedProperty === "arrayLength") {
 					result += formData[field].length;
 				} else {
 					result += Number(formData[field]);
 				}
-			    allEmpty = false;
-		    }
+				allEmpty = false;
+			}
 		});
 
 		result = allEmpty || isNaN(result) ? undefined : result;
@@ -39,7 +53,6 @@ export default class SumField extends Component {
 			result = result + "";
 		}
 
-		formData[resultField] = result;
-		this.props.onChange(formData);
+		return result;
 	}
 }
