@@ -140,22 +140,23 @@ class NamedPlaceChooser extends Component {
 	onSelectChange = (idx) => {
 		const {map} = this.mapElem;
 		const layers = this.idxToLayer[idx];
+		const [layer] = layers;
 		let center = undefined;
-		if (layers.length === 1) {
-			const latlng = layers[0].getLatLng();
+		if (layers.length === 1 && !layer.getBounds) {
+			const latlng = layer.getLatLng ? layer.getLatLng() : layer.getCenter();
 			center = latlng;
-			if (map.data[0].clusterLayer.hasLayer(layers[0])) {
-				map.data[0].clusterLayer.zoomToShowLayer(layers[0]);
+			if (map.data[0].groupContainer.hasLayer(layer) && layer.feature.geometry.type === "Point") {
+				map.data[0].groupContainer.zoomToShowLayer(layer);
 			} else {
 				map.map.setView(latlng, {animate: false});
 			}
+			map.setNormalizedZoom(15, {animate: false});
 		} else {
 			const layerGroup = L.featureGroup(layers); //eslint-disable-line no-undef
 			center = layerGroup.getBounds().getCenter();
 			map.map.fitBounds(layerGroup.getBounds(), {animate: false});
 		}
-		map.setNormalizedZoom(15, {animate: false});
-		new Context(this.props.formContext.contextId).setImmediate(() => layers[0].fire("click", {latlng: center}), 10);
+		new Context(this.props.formContext.contextId).setImmediate(() => layer.fire("click", {latlng: center}), 10);
 	}
 
 	onMapChange = (events) => {
@@ -177,7 +178,8 @@ class NamedPlaceChooser extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		const {map} = this.mapElem;
-		const idxToLayer = map.dataLayerGroups.reduce((idxToLayer, layerGroup) => {
+		this.idxToLayer = map.data.reduce((idxToLayer, item) => {
+			const layerGroup = item.group;
 			layerGroup.eachLayer(layer => {
 				if (!idxToLayer[layer.feature.properties.idx]) {
 					idxToLayer[layer.feature.properties.idx] = [];
@@ -186,7 +188,6 @@ class NamedPlaceChooser extends Component {
 			});
 			return idxToLayer;
 		}, {});
-		this.idxToLayer = idxToLayer;
 
 		if (this.state.popupIdx !== prevState.popupIdx) {
 			const prevLayers = this.idxToLayer[prevState.popupIdx] || [];
@@ -283,7 +284,7 @@ class NamedPlaceChooser extends Component {
 						data={data}
 						markerPopupOffset={45}
 						featurePopupOffset={5}
-						controlSettings={{draw: false, coordinateInput: false}}
+						controls={{draw: false, coordinateInput: false}}
 					/>
 					{(!places) ? <Spinner /> : null}
 					<div style={{display: "none"}}>

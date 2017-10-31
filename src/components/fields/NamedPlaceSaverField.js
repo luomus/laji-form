@@ -85,7 +85,7 @@ class PlaceSaverDialog extends Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetch("/named-places", {collectionID: this.props.formContext.uiSchemaContext.formID}).then(response => {
+		this.apiClient.fetch("/named-places").then(response => {
 			if (!this.mounted) return;
 			this.setState({
 				places: response.results,

@@ -328,13 +328,14 @@
 					}
 				],
 				"mapOptions": {
-					"controlSettings": {
+					"controls": {
 						"drawClear": true
 					}
 				},
 				"popupFields": [
 					{
-						"mapper": "taxon"
+						"mapper": "unitTaxon",
+						"valuePath": "/identifications/0/taxon"
 					},
 					{
 						"field": "sex"
