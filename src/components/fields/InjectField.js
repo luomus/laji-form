@@ -57,11 +57,15 @@ export default class InjectField extends Component {
 			idSchema = update(idSchema, this.getIdSchemaPath(splits, {$set: undefined}));
 			if (formData && formData[target] && Array.isArray(formData[target])) {
 				formData[target].forEach((item, i) => {
-					let updatedItem = update(item, this.getUpdateFormDataPath(formData, fieldName, splits));
+					const data = this.getInnerData(formData, splits);
+					let updatedItem = update(item, {$merge: {[fieldName]: null}});
+					updatedItem = update(updatedItem, {[fieldName]: {$set: data}});
 					formData = update(formData, {[target]: {[i]: {$set: updatedItem}}});
 				});
 			} else if (formData && formData[target]) {
-				formData = update(formData, {[target]: this.getUpdateFormDataPath(formData, fieldName, splits)});
+				const data = this.getInnerData(formData, splits);
+				formData = update(formData, {[target]: {$merge: {[fieldName]: null}}});
+				formData = update(formData, {[target]: {[fieldName]: {$set: data}}});
 			}
 
 			formData = update(formData, this.getFormDataPath(splits, {$set: undefined}));
@@ -87,7 +91,7 @@ export default class InjectField extends Component {
 		const options = this.getUiOptions();
 		const {fields, target} = options.injections;
 		if (!formData || !formData[target]) {
-			formatToOriginal(this.props);
+			formData = this.formatToOriginal(formData, this.props, fields);
 			this.props.onChange(formData);
 			return;
 		}
@@ -113,25 +117,23 @@ export default class InjectField extends Component {
 			}
 		});
 		if (!formDataChanged) {
-			formatToOriginal(this.props);
+			formData = this.formatToOriginal(formData, this.props, fields);
 		}
-
 		this.props.onChange(formData);
-		function formatToOriginal(props) {
-			fields.forEach((fieldPath) => {
-				const splits = fieldPath.split("/");
-				const fieldName = splits[splits.length - 1];
-				formData = update(formData, {$merge: this.getFormDataPath(fieldPath, props.formData[fieldName])});
-			});
-		}
+	}
+
+	formatToOriginal = (formData, props, fields) => {
+		fields.forEach((fieldPath) => {
+			const splits = fieldPath.split("/");
+			const fieldName = splits[splits.length - 1];
+			formData = update(formData, this.getFormDataPath(splits, {$set: props.formData[fieldName]}));
+		});
+		return formData;
 	}
 	getUpdateSchemaPropertiesPath = (schema, $operation) => {
 		if (schema.type === "object") return {properties: $operation};
 		else if (schema.type === "array") return {items: {properties: $operation}};
 		else throw "schema is not object or array";
-	}
-	getUpdateFormDataPath = (formData, fieldName, splits) => {
-		return {$merge: {[fieldName]: this.getInnerData(formData, splits)}};
 	}
 	getSchemaProperties = (schema, splits) => {
 		return splits.reduce((o, s, i)=> {
