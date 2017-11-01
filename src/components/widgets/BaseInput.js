@@ -21,12 +21,14 @@ export default class _BaseInput extends Component {
 		const type = this.props.schema.type;
 		// Accept only integers
 		if (type === "integer") {
-			value = value ? value.replace(/[^0-9]/g, "") : value;
+			value = value ? value.replace(/[^0-9\-]/g, "") : value;
+			value = value ? value.replace(/(.+)-/g, "$1") : value;
 		}
 		// Accept integers or floats
 		if (type === "number") {
-			value = value ? value.replace(/[^0-9.]/g, "") : value;
+			value = value ? value.replace(/[^0-9.\-]/g, "") : value;
 			value = value ? value.replace(/(\..*)\./g, "$1") : value;
+			value = value ? value.replace(/(.+)-/g, "$1") : value;
 		}
 
 		this.setState({value}, () =>  {
