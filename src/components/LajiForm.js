@@ -129,6 +129,7 @@ class _SchemaField extends Component {
 			uiSchema["ui:field"] &&
 			uiSchema["ui:field"] !== "ContextInjectionField" &&
 			uiSchema["ui:field"] !== "InjectField" &&
+			uiSchema["ui:field"] !== "DependentInjectValueField" &&
 			uiSchema["ui:options"] &&
 			uiSchema["ui:options"].injections
 		) {
@@ -176,6 +177,7 @@ const fields = importLocalComponents("fields", [
 	"ArrayCombinerField",
 	"DependentBooleanField",
 	"DependentDisableField",
+	"DependentInjectValueField",
 	"MapArrayField",
 	"AutoArrayField",
 	"AutosuggestField",
