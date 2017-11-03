@@ -119,7 +119,7 @@ const buttonSettings = {
 						const layer = map._getLayerByIdxs(map.drawIdx, 0);
 						if (layer) {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-							modalMap.updateLayerStyle(layer, {opacity: 0.7});
+							modalMap.setLayerStyle(layer, {opacity: 0.7});
 							map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
 						} else {
 							const {draw: {group: drawLayerGroup}} = modalMap;
@@ -144,19 +144,14 @@ const buttonSettings = {
 			const {map} = mapContext;
 			layer = map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
 			if (!layer) return;
-
-			let latlng = undefined;
-			for (let fn of ["getLatLng", "getCenter"]) {
-				if (layer[fn]) latlng = layer[fn]();
-			}
-			map.updateLayerStyle(layer, {color: "#75CEFA"});
+			map.setLayerStyle(layer, {color: "#75CEFA"});
 		}
 
 		function onMouseLeave() {
 			const {map} = mapContext;
 			layer = map && map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
 			if (active || !layer) return;
-			map.updateLayerStyle(layer, {color: "#55AEFA"});
+			map.setLayerStyle(layer, {color: "#55AEFA"});
 		}
 
 		const button = (

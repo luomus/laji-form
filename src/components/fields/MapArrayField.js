@@ -38,8 +38,378 @@ function parseGeometries(geometry) {
 		}, []);
 }
 
-@BaseComponent
+
 export default class MapArrayField extends Component {
+	render() {
+		const {geometryMapper = "default"} = getUiOptions(this.props.uiSchema);
+		switch (geometryMapper) {
+		case "default":
+			return <DefaultMapArrayField {...this.props} />;
+		case "units":
+			return <UnitsMapArrayField {...this.props} />;
+		case "lineTransect":
+			return <LineTransectMapArrayField {...this.props} />;
+		}
+	}
+}
+
+@_MapArrayField
+class DefaultMapArrayField extends Component {
+	getOptions(options) {
+		const {formData} = this.props;
+		const geometries = this.getData();
+
+		const emptyMode = !formData || !formData.length;
+
+		const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
+			featureCollection: {
+				type: "FeatureCollection",
+				features: (geometries || []).map(geometry => {
+					return {type: "Feature", properties: {}, geometry};
+				})
+			},
+			getDraftStyle: this.getDraftStyle,
+			onChange: emptyMode ? this.onMapChangeCreateGathering : this.onChange,
+			...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
+		};
+
+
+		const controls = (emptyMode || this.state.activeIdx !== undefined) ?
+			{drawCopy: true} : {draw: false, coordinateInput: false};
+
+		return {draw, controls, emptyMode};
+	}
+
+	onMapChangeCreateGathering(events) {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		events.forEach(e => {
+			if (e.type === "create") {
+				const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+				formData[geometryField] = {
+					type: "GeometryCollection",
+					geometries: [e.feature.geometry]
+				};
+				this.props.onChange([formData]);
+				this.setState({activeIdx: 0}, () => {
+					const node = getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0`);
+					if (!node) return;
+					const tabbables = getTabbableFields(node);
+					if (tabbables && tabbables.length) tabbables[0].focus();
+				});
+			}
+		});
+	}
+
+	getData() {
+		const {formData} = this.props;
+		const idx = this.state.activeIdx;
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		if (!formData) return;
+
+		const item = formData[idx];
+		this._context.featureIdxsToItemIdxs = {};
+
+		let geometries = [];
+		if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
+			geometries = parseGeometries(item[geometryField]);
+		}
+
+		return geometries;
+	}
+
+	onChange(events) {
+		events.forEach(e => {
+			switch (e.type) {
+			case "create":
+				this.onAdd(e);
+				break;
+			case "delete":
+				this.onRemove(e);
+				break;
+			case "edit":
+				this.onEdited(e);
+				break;
+			}
+		});
+	}
+
+	onAdd({feature: {geometry}}) {
+		const formData = this.props.formData ||
+			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+
+		const itemFormData = formData[this.state.activeIdx];
+		this.props.onChange(update(formData,
+			{[this.state.activeIdx]: {$merge: {[geometryField]: {type: "GeometryCollection", geometries: [
+				...parseGeometries(itemFormData[geometryField]), geometry
+			]}}}}));
+	}
+
+	onRemove({idxs}) {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		let splices = [];
+		idxs.sort().reverse().forEach((idx) => {
+			splices.push([idx, 1]);
+		});
+		const item = this.props.formData[this.state.activeIdx];
+		this.props.onChange(update(this.props.formData,
+			{[this.state.activeIdx]: {[geometryField]: item[geometryField] && item[geometryField].type === "GeometryCollection" ?
+				{geometries: {$splice: splices}} : {$set: undefined}}}));
+	}
+
+	onEdited({features}) {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		this.props.onChange(update(this.props.formData,
+			{[this.state.activeIdx]: {[geometryField]: {
+				geometries: Object.keys(features).reduce((obj, idx) => {
+					obj[idx] = {$set: features[idx].geometry};
+					return obj;
+				}, {})
+			}}}));
+	}
+}
+
+@_MapArrayField
+class UnitsMapArrayField extends Component {
+	field = "units"
+
+	constructor(props) {
+		super(props);
+		this.onMapChangeCreateGathering = DefaultMapArrayField.prototype.onMapChangeCreateGathering.bind(this);
+		this.onChange = DefaultMapArrayField.prototype.onChange.bind(this);
+		this.onAdd = DefaultMapArrayField.prototype.onAdd.bind(this);
+		this.onRemove = DefaultMapArrayField.prototype.onRemove.bind(this);
+		this.onEdited = DefaultMapArrayField.prototype.onEdited.bind(this);
+	}
+
+	getOptions = (options) => {
+		const {formData} = this.props;
+		const {gatherings = [], units = []} = this.getData();
+
+		const emptyMode = !formData || !formData.length;
+
+		const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
+			featureCollection: {
+				type: "FeatureCollection",
+				features: gatherings.map(geometry => {
+					return {type: "Feature", properties: {}, geometry};
+				})
+			},
+			getDraftStyle: this.getDraftStyle,
+			onChange: emptyMode ? this.onMapChangeCreateGathering : this.onChange,
+			...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
+		};
+
+		const data = {
+			featureCollection: {
+				type: "FeatureCollection",
+				features: units.reduce((units, geometry, idx) => {
+					if (geometry) units.push({type: "Feature", properties: {idx}, geometry});
+					return units;
+				}, [])
+			},
+			getPopup: this.getPopup,
+			getFeatureStyle: this.getUnitFeatureStyle,
+			getDraftStyle: this.getDraftStyle,
+			editable: true,
+			onChange: this.onUnitChange,
+		};
+
+		const controls = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
+			{drawCopy: true} : {draw: false, coordinateInput: false};
+
+		return {draw, data, controls, emptyMode};
+	}
+
+	getData = () => {
+		const {formData} = this.props;
+		const idx = this.state.activeIdx;
+		if (!formData) return;
+
+		const item = formData[idx];
+
+		const gatherings = DefaultMapArrayField.prototype.getData.call(this);
+
+		const units = ((item && item.units) ? item.units : []).reduce((units, unit, idx) => {
+			if (unit.unitGathering) {
+				const {unitGathering: {geometry}} = unit;
+				if (geometry && hasData(geometry)) {
+					units[idx] = geometry;
+				}
+				return units;
+			}
+		}, []);
+		return {gatherings, units};
+	}
+
+	onUnitChange = (events) => {
+		events.forEach(e => {
+			switch (e.type) {
+			case "delete":
+				this.onUnitRemove(e);
+				break;
+			case "edit":
+				this.onUnitEdited(e);
+				break;
+			}
+		});
+	}
+
+	onUnitRemove = ({idxs}) => {
+		const {formData} = this.props;
+
+		const unitIdxs = idxs;
+
+		let splices = [];
+		idxs.sort().reverse().forEach((idx) => {
+			splices.push([idx, 1]);
+		});
+
+		let updateObject = {[this.state.activeIdx]: {
+			units: unitIdxs.reduce((obj, idx) => {
+				obj[idx] = {
+					unitGathering: {
+						geometry: {
+							$set: getDefaultFormState(
+								this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
+								undefined,
+								this.props.registry.definitions
+							)
+						}
+					}
+				};
+				return obj;
+			}, {})
+		}};
+
+		this.props.onChange(update(formData, updateObject));
+	}
+
+	onUnitEdited = ({features}) => {
+		const unitEditGeometries = Object.keys(features).reduce((unitEditGeometries, idx) => {
+			unitEditGeometries[features[idx].properties.idx] = features[idx].geometry;
+			return unitEditGeometries;
+		}, {});
+
+		const updateObject = {
+			[this.state.activeIdx]: {
+				units: Object.keys(unitEditGeometries).reduce((o, i) => {
+					o[i] = {unitGathering: {geometry: {$set: unitEditGeometries[i]}}};
+					return o;
+				}, {})
+			}
+		};
+
+		this.props.onChange(update(this.props.formData, updateObject));
+	}
+
+	onComponentDidUpdate = () => {
+		if (this.highlightedElem) {
+			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
+		}
+
+		const {popupIdx} = this.state;
+		if (popupIdx === undefined) return;
+
+		const idx = this._context.featureIdxsToItemIdxs[popupIdx];
+
+		if (idx === undefined) {
+			return;
+		}
+
+		const id = `_laji-form_${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
+		this.highlightedElem = document.querySelector(`#${id} .form-group`);
+
+		if (this.highlightedElem) {
+			this.highlightedElem.className += " map-highlight";
+		}
+	}
+
+	onActiveChange = idx => {
+		if (idx === undefined) return;
+		if (Object.keys(this.map.draw.group._layers).length) this.map.map.fitBounds(this.map.draw.group.getBounds());
+	}
+}
+
+@_MapArrayField
+class LineTransectMapArrayField extends Component {
+	getOptions() {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		const {formData} = this.props;
+		const lineTransect = latLngSegmentsToGeoJSONGeometry(formData.map(item => item.geometry.coordinates));
+		return {
+			lineTransect: {
+				feature: {geometry: lineTransect},
+				activeIdx: this.state.activeIdx,
+				keepActiveTooltipOpen: true,
+				onChange: (events) => {
+					let state = {};
+					let formData = this.props.formData;
+					let formDataChanged = false;
+					events.forEach(e => {
+						switch (e.type) {
+						case "create": {
+							formDataChanged = true;
+							const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+							newItem[geometryField] = e.geometry;
+							formData = update(formData, {
+								$splice: [[e.idx, 0, newItem]]
+							});
+							break;
+						}
+						case "edit": {
+							formDataChanged = true;
+							formData = update(formData, {
+								[e.idx]: {
+									[geometryField]: {$set: e.geometry}
+								}
+							});
+							break;
+						}
+						case "delete": {
+							formDataChanged = true;
+							formData = update(formData, {$splice: [[e.idx, 1]]});
+							break;
+						}
+						case "active": {
+							state.activeIdx = e.idx;
+						}
+						}
+					});
+					const afterState = () => {
+						if (formDataChanged) {
+							this.props.onChange(formData);
+						}
+					};
+					Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
+				}
+			},
+			controls: {
+				lineTransect: true
+			}
+		};
+	}
+
+	onActiveChange(idx) {
+		this.getContext().setImmediate(() =>
+			this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
+		);
+		this.map._openTooltipFor(idx);
+		focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`);
+	}
+	onComponentDidUpdate(prevProps, prevState) {
+		if (prevState.activeIdx !== this.state.activeIdx) {
+			this.onActiveChange(this.state.activeIdx);
+		}
+	}
+	onComponentDidMount() {
+		this.onActiveChange(this.state.activeIdx);
+	}
+}
+
+function _MapArrayField(ComposedComponent) { return (
+@BaseComponent
+class _MapArrayField extends ComposedComponent {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -79,8 +449,7 @@ export default class MapArrayField extends Component {
 			this.setState({activeIdx: idx}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 		});
 
-		const {onComponentDidMount} = this.getGeometryMapper(this.props);
-		if (onComponentDidMount) onComponentDidMount();
+		if (this.onComponentDidMount) this.onComponentDidMount();
 	}
 
 	componentWillUnmount() {
@@ -90,8 +459,7 @@ export default class MapArrayField extends Component {
 	}
 
 	componentDidUpdate(...params) {
-		const mapper = this.getGeometryMapper(this.props);
-		if (mapper.onComponentDidUpdate) mapper.onComponentDidUpdate(...params);
+		if (this.onComponentDidUpdate) this.onComponentDidUpdate(...params);
 		if (this.refs.stretch) {
 			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
 			if (resizeTimeout) {
@@ -100,10 +468,6 @@ export default class MapArrayField extends Component {
 				this.refs.stretch.update();
 			}
 		}
-	}
-
-	getGeometryMapper = (props) => {
-		return this.geometryMappers[getUiOptions(props.uiSchema).geometryMapper || "default"];
 	}
 
 	getContainer = () => {
@@ -129,7 +493,7 @@ export default class MapArrayField extends Component {
 			activeIdx,
 			onActiveChange: (idx, callback) => {
 				this.setState({activeIdx: idx}, () => {
-					this.getGeometryMapper(this.props).onActiveChange(idx);
+					this.onActiveChange(idx);
 					if (callback) callback();
 				});
 			}
@@ -142,7 +506,7 @@ export default class MapArrayField extends Component {
 		};
 
 		let mapOptions = merge.all([
-			(this.getGeometryMapper(this.props).getOptions(options) || {}),
+			(this.getOptions(options) || {}),
 			(options.mapOptions || {}),
 			(this.state.mapOptions || {})
 		]);
@@ -280,6 +644,7 @@ export default class MapArrayField extends Component {
 				bsStyle: "danger"
 			} : null,
 			draw: false,
+			zoomToData: true,
 			onOptionsChanged: this.onOptionsChanged,
 			...mapOptions,
 			controls: {
@@ -348,350 +713,13 @@ export default class MapArrayField extends Component {
 		return {color: "#25B4CA", opacity: 1};
 	}
 	
-	getUnitFeatureStyle = ({featureIdx}) => {
+	getUnitFeatureStyle = () => {
 		const color = "#55AEFA";
 		return {color: color, fillColor: color, weight: 4};
 	}
 
-	geometryMappers = {
-		default: {
-			getOptions: (options) => {
-				const mapper = this.geometryMappers.default;
-				const {formData} = this.props;
-				const geometries = mapper.getData();
-
-				const emptyMode = !formData || !formData.length;
-
-				const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
-					featureCollection: {
-						type: "FeatureCollection",
-						features: (geometries || []).map(geometry => {
-							return {type: "Feature", properties: {}, geometry};
-						})
-					},
-					getDraftStyle: this.getDraftStyle,
-					onChange: emptyMode ? mapper.onMapChangeCreateGathering : mapper.onChange,
-					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
-				};
-
-
-				const controls = (emptyMode || this.state.activeIdx !== undefined) ?
-					{drawCopy: true} : {draw: false, coordinateInput: false};
-
-				return {draw, controls, emptyMode};
-			},
-			onMapChangeCreateGathering: (events) => {
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-				events.forEach(e => {
-					if (e.type === "create") {
-						const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-						formData[geometryField] = {
-							type: "GeometryCollection",
-							geometries: [e.feature.geometry]
-						};
-						this.props.onChange([formData]);
-						this.setState({activeIdx: 0}, () => {
-							const node = getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0`);
-							if (!node) return;
-							const tabbables = getTabbableFields(node);
-							if (tabbables && tabbables.length) tabbables[0].focus();
-						});
-					}
-				});
-			},
-			getData: () => {
-				const {formData} = this.props;
-				const idx = this.state.activeIdx;
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-				if (!formData) return;
-
-				const item = formData[idx];
-				this._context.featureIdxsToItemIdxs = {};
-
-				let geometries = [];
-				if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
-					geometries = parseGeometries(item[geometryField]);
-				}
-
-				return geometries;
-			},
-			onChange: (events) => {
-				const mapper = this.geometryMappers.default;
-
-				events.forEach(e => {
-					switch (e.type) {
-					case "create":
-						mapper.onAdd(e);
-						break;
-					case "delete":
-						mapper.onRemove(e);
-						break;
-					case "edit":
-						mapper.onEdited(e);
-						break;
-					}
-				});
-			},
-			onAdd: ({feature: {geometry}}) => {
-				const formData = this.props.formData ||
-					[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-
-				const itemFormData = formData[this.state.activeIdx];
-				this.props.onChange(update(formData,
-					{[this.state.activeIdx]: {$merge: {[geometryField]: {type: "GeometryCollection", geometries: [
-						...parseGeometries(itemFormData[geometryField]), geometry
-					]}}}}));
-			},
-			onRemove: ({idxs}) => {
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-				let splices = [];
-				idxs.sort().reverse().forEach((idx) => {
-					splices.push([idx, 1]);
-				});
-				const item = this.props.formData[this.state.activeIdx];
-				this.props.onChange(update(this.props.formData,
-					{[this.state.activeIdx]: {[geometryField]: item[geometryField] && item[geometryField].type === "GeometryCollection" ?
-						{geometries: {$splice: splices}} : {$set: undefined}}}));
-			},
-			onEdited: ({features}) => {
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-				this.props.onChange(update(this.props.formData,
-					{[this.state.activeIdx]: {[geometryField]: {
-						geometries: Object.keys(features).reduce((obj, idx) => {
-							obj[idx] = {$set: features[idx].geometry};
-							return obj;
-						}, {})
-					}}}));
-			}
-		},
-		units: {
-			field: "units",
-			getOptions: (options) => {
-				const mapper = this.geometryMappers.units;
-				const {formData} = this.props;
-				const {gatherings = [], units = []} = mapper.getData();
-
-				const emptyMode = !formData || !formData.length;
-
-				const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
-					featureCollection: {
-						type: "FeatureCollection",
-						features: gatherings.map(geometry => {
-							return {type: "Feature", properties: {}, geometry};
-						})
-					},
-					getDraftStyle: this.getDraftStyle,
-					onChange: emptyMode ? this.geometryMappers.default.onMapChangeCreateGathering : this.geometryMappers.default.onChange,
-					...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
-				};
-
-				const data = {
-					featureCollection: {
-						type: "FeatureCollection",
-						features: units.reduce((units, geometry, idx) => {
-							if (geometry) units.push({type: "Feature", properties: {idx}, geometry});
-							return units;
-						}, [])
-					},
-					getPopup: this.getPopup,
-					getFeatureStyle: this.getUnitFeatureStyle,
-					getDraftStyle: this.getDraftStyle,
-					editable: true,
-					onChange: mapper.onUnitChange,
-				};
-
-				const controls = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
-					{drawCopy: true} : {draw: false, coordinateInput: false};
-
-				return {draw, data, controls, emptyMode};
-			},
-			getData: () => {
-				const {formData} = this.props;
-				const idx = this.state.activeIdx;
-				if (!formData) return;
-
-				const item = formData[idx];
-
-				const gatherings = this.geometryMappers.default.getData();
-
-				const units = ((item && item.units) ? item.units : []).reduce((units, unit, idx) => {
-					if (unit.unitGathering) {
-						const {unitGathering: {geometry}} = unit;
-						if (geometry && hasData(geometry)) {
-							units[idx] = geometry;
-						}
-						return units;
-					}
-				}, []);
-				return {gatherings, units};
-			},
-			onUnitChange: (events) => {
-				const mapper = this.geometryMappers.units;
-
-				events.forEach(e => {
-					switch (e.type) {
-					case "delete":
-						mapper.onUnitRemove(e);
-						break;
-					case "edit":
-						mapper.onUnitEdited(e);
-						break;
-					}
-				});
-			},
-			onUnitRemove: ({idxs}) => {
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-				const {formData} = this.props;
-
-				const unitIdxs = idxs;
-
-				let splices = [];
-				idxs.sort().reverse().forEach((idx) => {
-					splices.push([idx, 1]);
-				});
-
-				let updateObject = {[this.state.activeIdx]: {
-					units: unitIdxs.reduce((obj, idx) => {
-						obj[idx] = {
-							unitGathering: {
-								geometry: {
-									$set: getDefaultFormState(
-										this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
-										undefined,
-										this.props.registry.definitions
-									)
-								}
-							}
-						};
-						return obj;
-					}, {})
-				}};
-
-				this.props.onChange(update(formData, updateObject));
-			},
-			onUnitEdited: ({features}) => {
-				const unitEditGeometries = Object.keys(features).reduce((unitEditGeometries, idx) => {
-					unitEditGeometries[features[idx].properties.idx] = features[idx].geometry;
-					return unitEditGeometries;
-				}, {});
-
-				const updateObject = {
-					[this.state.activeIdx]: {
-						units: Object.keys(unitEditGeometries).reduce((o, i) => {
-							o[i] = {unitGathering: {geometry: {$set: unitEditGeometries[i]}}};
-							return o;
-						}, {})
-					}
-				};
-
-				this.props.onChange(update(this.props.formData, updateObject));
-			},
-			onComponentDidUpdate: () => {
-				if (this.highlightedElem) {
-					this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
-				}
-
-				const {popupIdx} = this.state;
-				if (popupIdx === undefined) return;
-
-				const idx = this._context.featureIdxsToItemIdxs[popupIdx];
-
-				if (idx === undefined) {
-					return;
-				}
-
-				const id = `_laji-form_${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
-				this.highlightedElem = document.querySelector(`#${id} .form-group`);
-
-				if (this.highlightedElem) {
-					this.highlightedElem.className += " map-highlight";
-				}
-			},
-			onActiveChange: idx => {
-				if (idx === undefined) return;
-				if (Object.keys(this.map.draw.group._layers).length) this.map.map.fitBounds(this.map.draw.group.getBounds());
-			},
-		},
-		lineTransect: {
-			getOptions: () => {
-				const {geometryField} = getUiOptions(this.props.uiSchema);
-				const {formData} = this.props;
-				const lineTransect = latLngSegmentsToGeoJSONGeometry(formData.map(item => item.geometry.coordinates));
-				return {
-					lineTransect: {
-						feature: {geometry: lineTransect},
-						activeIdx: this.state.activeIdx,
-						keepActiveTooltipOpen: true,
-						onChange: (events) => {
-							let state = {};
-							let formData = this.props.formData;
-							let formDataChanged = false;
-							events.forEach(e => {
-								switch (e.type) {
-								case "create": {
-									formDataChanged = true;
-									const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-									newItem[geometryField] = e.geometry;
-									formData = update(formData, {
-										$splice: [[e.idx, 0, newItem]]
-									});
-									break;
-								}
-								case "edit": {
-									formDataChanged = true;
-									formData = update(formData, {
-										[e.idx]: {
-											[geometryField]: {$set: e.geometry}
-										}
-									});
-									break;
-								}
-								case "delete": {
-									formDataChanged = true;
-									formData = update(formData, {$splice: [[e.idx, 1]]});
-									break;
-								}
-								case "active": {
-									state.activeIdx = e.idx;
-								}
-								}
-							});
-							const afterState = () => {
-								if (formDataChanged) {
-									this.props.onChange(formData);
-								}
-							};
-							Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
-						}
-					},
-					controls: {
-						lineTransect: true
-					}
-				};
-			},
-			onActiveChange: idx => {
-				this.getContext().setImmediate(() =>
-					this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
-				);
-				this.map._openTooltipFor(idx);
-				focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`);
-			},
-			onComponentDidUpdate: (prevProps, prevState) => {
-				if (prevState.activeIdx !== this.state.activeIdx) {
-					this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
-				}
-			},
-			onComponentDidMount: () => {
-				this.geometryMappers.lineTransect.onActiveChange(this.state.activeIdx);
-			}
-		}
-	}
-
-
 	mapKeyFunctions = {
 		splitLineTransectByMeters: () => {
-			if (getUiOptions(this.props.uiSchema).geometryMapper !== "lineTransect") return false;
 			this.map.splitLTByMeters(this.state.activeIdx);
 		}
 	};
@@ -705,7 +733,7 @@ export default class MapArrayField extends Component {
 
 	getFeaturePopupData = (idx) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
-		const geometryMapperField = this.getGeometryMapper(this.props).field;
+		const geometryMapperField = this.field;
 		const {formData} = this.props;
 
 		if (!geometryMapperField) return false;
@@ -713,16 +741,22 @@ export default class MapArrayField extends Component {
 		let data = {};
 		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx] ||
 		    !formData[this.state.activeIdx][geometryMapperField] || idx === undefined) return data;
+
 		popupFields.forEach(field => {
 			const fieldName = field.field;
 			const itemFormData = formData[this.state.activeIdx][geometryMapperField][idx];
 			let fieldSchema = this.props.schema.items.properties[geometryMapperField].items.properties;
 			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
 			if (field.mapper) {
-				const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData, field);
-				for (let label in mappedData) {
-					const item = mappedData[label];
-					if (hasData(item)) data[label] = item;
+				try {
+					const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData, field);
+
+					for (let label in mappedData) {
+						const item = mappedData[label];
+						if (hasData(item)) data[label] = item;
+					}
+				} catch (e) {
+					console.warn(`Warning: Popup mapper ${field.mapper} crashed!`);
 				}
 			} else if (fieldData) {
 				const title = fieldSchema[fieldName].title || fieldName;
@@ -731,6 +765,7 @@ export default class MapArrayField extends Component {
 		});
 		return data;
 	}
+});
 }
 
 class Popup extends Component {
@@ -904,7 +939,6 @@ export class Map extends Component {
 
 		if (this.map) Object.keys(_options).forEach(key => {
 			if (!deepEquals(_options[key], _prevOptions[key])) {
-				console.log("set", key, _options[key]);
 				this.map.setOption(key, _options[key]);
 			}
 		});

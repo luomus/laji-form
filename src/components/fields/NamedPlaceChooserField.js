@@ -34,7 +34,6 @@ export default class NamedPlaceChooserField extends Component {
 				this.props.registry.definitions
 			);
 			gathering = Object.keys(gathering).reduce((_gathering, key) => {
-				console.log(key);
 				if (this.props.schema.items.properties[key]) {
 					_gathering[key] = gathering[key];
 				}
@@ -196,7 +195,7 @@ class NamedPlaceChooser extends Component {
 			[prevLayers, layers].forEach(layers => {
 				layers.forEach(layer => {
 					if (layer) {
-						map.updateLayerStyle(layer, this.getFeatureStyle({feature: layer.feature}));
+						map.setLayerStyle(layer, this.getFeatureStyle({feature: layer.feature}));
 					}
 				});
 			});
