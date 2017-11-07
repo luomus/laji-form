@@ -26,7 +26,7 @@ export function  getWarningValidatorsById(validators, schema) {
 
 			let newPath = path;
 			if (prop === "items") {
-				newPath = path + "_\d+";
+				newPath = path + "_[0-9]+";
 			} else if (prop !== "properties") {
 				newPath = path + "_" +  prop;
 			}
