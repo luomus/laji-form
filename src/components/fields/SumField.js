@@ -19,22 +19,6 @@ export default class SumField extends Component {
 	static getName() {return "SumField";}
 
 	getStateFromProps({formData}) {
-		const sumContext = new Context("SUMFIELD");
-		if (!sumContext["updated"]) {
-			sumContext["updated"] = true;
-
-			const {resultField} = this.getUiOptions();
-			let sum = formData[resultField];
-
-			if (sum === undefined) {
-				sum = this.getSum(formData);
-				formData = {...formData, [resultField]: sum};
-				if (sum !== undefined) {
-					this.props.onChange(formData);
-				}
-			}
-		}
-
 		return {prevResult: this.getSum(formData)};
 	}
 

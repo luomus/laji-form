@@ -42,11 +42,6 @@ export default class TemplateArrayField extends Component {
 		return {formData, itemUiSchema, itemSchema};
 	};
 
-	componentDidMount() {
-		const {formData} = this.getItemProperties(this.props);
-		this.onChange(formData);
-	}
-
 	render() {
 		const {registry: {fields: {ArrayField, TitleField}}} = this.props;
 		const {formData, itemUiSchema, itemSchema} = this.getItemProperties(this.props);
@@ -67,12 +62,12 @@ export default class TemplateArrayField extends Component {
 	}
 
 	onChange(formData) {
-		const requiredFields = this.props.schema.items.required || [];
+		const fields = Object.keys(this.props.schema.items.properties);
 
 		formData = formData.reduce((array, value) => {
 			let hasAllFields = true;
-			for (let i in requiredFields) {
-				if (value[requiredFields[i]] === undefined) hasAllFields = false;
+			for (let f in fields) {
+				if (value[fields[f]] === undefined) hasAllFields = false;
 			}
 			if (hasAllFields) array.push({...value});
 			return array;
