@@ -170,24 +170,28 @@ class TaxonAutosuggestWidget extends Component {
 	render() {
 		const {props} = this;
 
+		const {options: propsOptions, ...propsWithoutOptions} = props;
+
 		const options = {
 			convertInputValue: this.convertInputValue,
 			isValueSuggested: this.isValueSuggested,
 			renderSuggested: this.renderSuggested,
 			renderUnsuggested: this.renderUnsuggested(props),
 			renderSuccessGlyph: this.renderSuccessGlyph,
+			query: {...propsOptions.queryOptions}
 		};
-
-		const {options: propsOptions, ...propsWithoutOptions} = props;
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
 function FriendsAutosuggestWidget(props) {
+	const {options: propsOptions, ...propsWithoutOptions} = props;
+
 	const options = {
 		query: {
 			includeSelf: true,
+			...propsOptions.queryOptions
 		},
 		convertInputValue: (value) => {
 			if (isEmptyString(value) || !value.match(/MA\.\d+/)) return new Promise(resolve => resolve(value));
@@ -210,8 +214,6 @@ function FriendsAutosuggestWidget(props) {
 		                                         glyph="user"
 		                                         className="form-control-feedback"/>,
 	};
-
-	const {options: propsOptions, ...propsWithoutOptions} = props;
 
 	return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
 }
@@ -345,7 +347,7 @@ export class Autosuggest extends Component {
 			onSuggestionSelected(suggestion);
 		}
 		const callback = onSuggestionSelected ? undefined : () => {
-			this.props.onChange(suggestion[this.props.suggestionReceive || "key"])
+			this.props.onChange(suggestion[this.props.suggestionReceive || "key"]);
 		};
 		this.setState(state, callback);
 	}
