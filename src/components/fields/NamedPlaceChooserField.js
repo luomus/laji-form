@@ -39,6 +39,7 @@ export default class NamedPlaceChooserField extends Component {
 				}
 				return _gathering;
 			}, {});
+			gathering.namedPlaceID = place.id;
 
 			this.props.onChange([
 				...(this.props.formData || []),
