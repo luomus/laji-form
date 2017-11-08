@@ -785,16 +785,22 @@ class SplitArrayFieldTemplate extends Component {
 			splitItems[match].push(props.items[i]);
 		}
 
+		let startIdx = 0;
+
 		return (
 			<div>
-				{splitItems.map((items, i) =>
-					<_ArrayFieldTemplate key={i}
+				{splitItems.map((items, i) => {
+					const idx = startIdx;
+					startIdx = startIdx + items.length;
+
+					return (<_ArrayFieldTemplate key={i}
 										 {...this.props}
 										 title={uiOptions.uiOptions[i].title}
 										 items={items}
+										 startIdx={idx}
 										 canAdd={uiOptions.uiOptions[i].addable}
 										 uiSchema={{...this.props.uiSchema, "ui:options": uiOptions.uiOptions[i]}}/>
-				)}
+				)})}
 			</div>
 		);
 	}
