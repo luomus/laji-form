@@ -17,7 +17,8 @@ const buttonDefinitions = {
 	add: {
 		glyph: "plus",
 		fn: (e) => (props) => {
-			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
+			const idx = (props.startIdx || 0) + props.items.length;
+			onAdd(e, props, `${props.idSchema.$id}_${idx}`);
 		}
 	}
 };
