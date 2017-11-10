@@ -5,7 +5,12 @@ export default (validators) => (data, errors) => {
 	if (validators) {
 		const result = lajiValidate(data, validators);
 		const messages = getMessages(result);
-		return toErrorSchema(messages);
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve(toErrorSchema(messages));
+			}, 2000);
+		});
+		//return toErrorSchema(messages);
 	}
 
 	return errors;
