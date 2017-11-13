@@ -1,22 +1,25 @@
 import lajiValidate from "laji-validate";
 
+export function initializeValidation(apiClient) {
+	lajiValidate.extend(lajiValidate.validators.remote, {
+		fetch: apiClient.fetch
+	});
+}
+
 export default (validators) => (data, errors) => {
 
 	if (validators) {
-		const result = lajiValidate(data, validators);
-		const messages = getMessages(result);
-		return new Promise(resolve => {
-			setTimeout(() => {
-				resolve(toErrorSchema(messages));
-			}, 2000);
+		return lajiValidate.async(data, validators).then(() => Promise.resolve([])).catch(result => {
+			const messages = getMessages(result);
+			const errorSchema = toErrorSchema(messages);
+			return Promise.resolve(errorSchema);
 		});
-		//return toErrorSchema(messages);
 	}
 
 	return errors;
 };
 
-export function  getWarningValidatorsById(validators, schema) {
+export function getWarningValidatorsById(validators, schema) {
 	if (!validators) return {};
 
 	function addWarningsById(path, validators, schema, validatorsById) {

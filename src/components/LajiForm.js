@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { getWarnings, getWarningValidatorsById, transformErrors } from "../validation";
+import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
 import { Button, Label, Help, GlyphButton } from "./components";
 import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
@@ -424,6 +424,7 @@ export default class LajiForm extends Component {
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient(props.apiClient);
+		initializeValidation(this.apiClient);
 		this.translations = this.constructTranslations();
 		this._id = getNewId();
 		this._context = new Context(this._id);
