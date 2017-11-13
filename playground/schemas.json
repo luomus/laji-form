@@ -215,9 +215,9 @@
 										"rootUiSchema": {
 											"ui:field": "GridLayoutField",
 											"ui:options": {
-												"lg": 3,
-												"md": 3,
-												"sm": 6,
+												"lg": 6,
+												"md": 6,
+												"sm": 9,
 												"xs": 12
 											}
 										}
@@ -255,6 +255,7 @@
 			},
 			"leg": {
 				"ui:widget": "AutosuggestWidget",
+				"ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
 				"ui:options": {
 					"autosuggestField": "friends",
 					"allowNonsuggestedValue": true,
@@ -295,7 +296,9 @@
 		},
 		"gatherings": {
 			"ui:functions": [
-				{"ui:field": "NamedPlaceChooserField"},
+				{
+					"ui:field": "NamedPlaceChooserField"
+				},
 				{
 					"ui:field": "ContextInjectionField",
 					"ui:options": {
@@ -313,6 +316,13 @@
 				"/mapOptions/tileLayerOpacity"
 			],
 			"ui:options": {
+				"mapOptions": {
+					"controls": {
+						"drawClear": true,
+						"drawDelete": true,
+						"drawReverse": true
+					}
+				},
 				"geometryField": "geometry",
 				"geometryMapper": "units",
 				"mapSizes": {
@@ -327,15 +337,9 @@
 						"label": "Lisää paikka"
 					}
 				],
-				"mapOptions": {
-					"controls": {
-						"drawClear": true
-					}
-				},
 				"popupFields": [
 					{
-						"mapper": "unitTaxon",
-						"valuePath": "/identifications/0/taxon"
+						"mapper": "taxon"
 					},
 					{
 						"field": "sex"
@@ -350,8 +354,7 @@
 				"belowUiSchemaRoot": {
 					"ui:field": "SingleItemArrayField",
 					"ui:options": {
-						"titleFormat": "Paikan %{idx} havainnot",
-						"titleClassName": "lg"
+						"titleFormat": "Paikan %{idx} havainnot"
 					}
 				},
 				"inlineUiSchemaRoot": {
@@ -421,7 +424,9 @@
 								"images",
 								"eventTime",
 								"weather",
-								"notes"
+								"notes",
+								"geometry",
+								"namedPlaceID"
 							],
 							"rootUiSchema": {
 								"ui:field": "ScopeField",
@@ -453,6 +458,9 @@
 				"geometry": {
 					"ui:field": "HiddenField"
 				},
+				"namedPlaceID": {
+					"ui:field": "HiddenField"
+				},
 				"images": {
 					"ui:field": "ImageArrayField",
 					"ui:options": {
@@ -474,8 +482,7 @@
 						"ui:options": {
 							"fields": [
 								"identifications",
-								"unitGathering",
-								"unitFact"
+								"unitGathering"
 							]
 						}
 					},
@@ -518,188 +525,177 @@
 						]
 					},
 					"items": {
-						"ui:functions": [
-							{
-								"ui:field": "AutosuggestField",
-								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionInputField": "identifications_0_taxon",
-									"suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
-									"suggestionReceivers": {
-										"identifications_0_taxon": "value",
-										"unitType": "$taxonGroup",
-										"unitFact_autocompleteSelectedTaxonID": "key"
-									},
-									"inputTransformer": {
-										"regexp": "^(.*)\\?$",
-										"transformations": {
-											"taxonConfidence": "MY.taxonConfidenceUnsure"
-										}
-									}
-								}
-							},
-							{
-								"ui:field": "UnitShorthandField",
-								"ui:options": {
-									"injections": {
-										"/ui:options/formID": "/formID"
-									},
-									"formID": "formID is injected here"
-								}
-							},
-							{
-								"ui:field": "ScopeField",
-								"ui:settings": [
-									"%additionalFields/scopeField_gathering_unit_unitType"
-								],
-								"ui:options": {
-									"additionalsGroupingPath": "/fieldScopes/unitType",
-									"additionalsGroupingOrderer": "unitType",
-									"additionalsGroupsTranslator": "taxonGroups",
-									"additionalsPersistenceKey": "unitType",
-									"additionalsPersistenceId": "gathering_unit_unitType",
-									"includeAdditionalFieldsChooserButton": true,
-									"glyphFields": [
-										{
-											"glyph": "camera",
-											"show": "images",
-											"label": "Lisää valokuva"
-										},
-										{
-											"glyph": "map-marker",
-											"fn": "setLocation",
-											"label": "Valitse sijainti"
-										}
-									],
-									"fields": [
-										"unitFact_autocompleteSelectedTaxonID",
-										"identifications_0_taxon",
-										"count",
-										"notes",
-										"unitType",
-										"taxonConfidence",
-										"recordBasis"
-									],
-									"fieldScopes": {
-										"unitType": {
-											"*": {
-												"title": "Kaikki",
-												"additionalFields": [
-													"identifications_0_det",
-													"identifications_0_detDate",
-													"identifications_0_identificationBasis",
-													"sex",
-													"unitGathering_dateBegin",
-													"unitGathering_dateEnd",
-													"unitGathering_habitatIUCN",
-													"unitGathering_habitatDescription",
-													"preservation",
-													"samplingMethod",
-													"breeding",
-													"maleIndividualCount",
-													"femaleIndividualCount"
-												]
-											},
-											"MVL.1": {
-												"additionalFields": [
-													"atlasCode",
-													"movingStatus",
-													"twitched"
-												]
-											},
-											"MVL.21": {
-												"additionalFields": [
-													"nativeStatus",
-													"plantLifeStage",
-													"plantStatusCode"
-												]
-											},
-											"MVL.232": {
-												"additionalFields": [
-													"lifeStage",
-													"hostID"
-												]
-											},
-											"MVL.233": {
-												"title": "Sienet",
-												"additionalFields": [
-													"unitGathering_substrate",
-													"substrateSpecies",
-													"smell",
-													"smellNotes",
-													"taste",
-													"tasteNotes"
-												]
-											}
-										}
+						"ui:functions": {
+							"ui:field": "AutosuggestField",
+							"ui:options": {
+								"autosuggestField": "taxon",
+								"allowNonsuggestedValue": true,
+								"suggestionInputField": "identifications_0_taxon",
+								"suggestionValueField": "identifications_0_taxonID",
+								"suggestionReceivers": {
+									"identifications_0_taxon": "value",
+									"unitType": "$taxonGroup",
+									"identifications_0_taxonID": "key"
+								},
+								"inputTransformer": {
+									"regexp": "^(.*)\\?$",
+									"transformations": {
+										"taxonConfidence": "MY.taxonConfidenceUnsure"
 									}
 								}
 							}
+						},
+						"ui:field": "ScopeField",
+						"classNames": "well well-sm",
+						"ui:settings": [
+							"%additionalFields/scopeField_gathering_unit_unitType"
 						],
 						"ui:order": [
-						  "identifications",
-						  "count",
-						  "notes",
-						  "unitType",
-						  "taxonConfidence",
-						  "recordBasis",
-						  "*",
-						  "images"
+							"identifications",
+							"count",
+							"notes",
+							"unitType",
+							"taxonConfidence",
+							"recordBasis",
+							"*",
+							"images"
 						],
-						"ui:field": "GridLayoutField",
 						"ui:options": {
-							"lg": {
-								"unitFact_autocompleteSelectedTaxonID": 2,
-								"identifications_0_taxon": 2,
-								"count": 2,
-								"notes": 2,
-								"unitType": 2,
-								"taxonConfidence": 2,
-								"recordBasis": 2,
-								"identifications_0_identificationBasis": 2,
-								"unitGathering_dateBegin": 3,
-								"unitGathering_dateEnd": 3,
-								"*": 1
-							},
-							"md": {
-								"unitFact_autocompleteSelectedTaxonID": 2,
-								"identifications_0_taxon": 2,
-								"count": 2,
-								"notes": 2,
-								"unitType": 2,
-								"taxonConfidence": 2,
-								"recordBasis": 2,
-								"identifications_0_identificationBasis": 2,
-								"unitGathering_dateBegin": 3,
-								"unitGathering_dateEnd": 3,
-								"identifications_0_detDate": 3,
-								"*": 1
-							},
-							"sm": {
-								"identifications_0_identificationBasis": 4,
-								"unitGathering_dateBegin": 3,
-								"unitGathering_dateEnd": 3,
-								"*": 2
-							},
-							"xs": 12,
-							"rows": [
-								[
-									"identifications_0_taxon",
-									"taxonConfidence",
-									"recordBasis",
-									"count",
-									"notes"
-								]
-							]
+							"additionalsGroupingPath": "/fieldScopes/unitType",
+							"additionalsGroupingOrderer": "unitType",
+							"additionalsGroupsTranslator": "taxonGroups",
+							"additionalsPersistenceKey": "unitType",
+							"additionalsPersistenceId": "gathering_unit_unitType",
+							"includeAdditionalFieldsChooserButton": true,
+							"glyphFields": [
+								{
+									"glyph": "camera",
+									"show": "images",
+									"label": "Lisää valokuva"
+								},
+								{
+									"glyph": "map-marker",
+									"fn": "setLocation",
+									"label": "Valitse sijainti"
+								}
+							],
+							"fields": [
+								"identifications_0_taxonID",
+								"identifications_0_taxon",
+								"count",
+								"notes",
+								"unitType",
+								"taxonConfidence",
+								"recordBasis"
+							],
+							"fieldScopes": {
+								"unitType": {
+									"*": {
+										"title": "Kaikki",
+										"additionalFields": [
+											"identifications_0_det",
+											"identifications_0_detDate",
+											"identifications_0_identificationBasis",
+											"sex",
+											"unitGathering_dateBegin",
+											"unitGathering_dateEnd",
+											"unitGathering_habitatIUCN",
+											"unitGathering_habitatDescription",
+											"preservation",
+											"samplingMethod",
+											"breeding"
+										]
+									},
+									"MVL.1": {
+										"additionalFields": [
+											"atlasCode",
+											"movingStatus",
+											"twitched"
+										]
+									},
+									"MVL.21": {
+										"additionalFields": [
+											"nativeStatus",
+											"plantLifeStage",
+											"plantStatusCode"
+										]
+									},
+									"MVL.232": {
+										"additionalFields": [
+											"lifeStage",
+											"hostID"
+										]
+									},
+									"MVL.233": {
+										"title": "Sienet",
+										"additionalFields": [
+											"unitGathering_substrate",
+											"substrateSpecies",
+											"smell",
+											"smellNotes",
+											"taste",
+											"tasteNotes"
+										]
+									}
+								}
+							}
 						},
-						"classNames": "well well-sm",
-						"unitFact": {
-							"autocompleteSelectedTaxonID": {
-								"ui:widget": "HiddenWidget"
+						"uiSchema": {
+							"ui:field": "GridLayoutField",
+							"ui:options": {
+								"lg": {
+									"identifications_0_taxonID": 3,
+									"identifications_0_taxon": 3,
+									"count": 1,
+									"notes": 2,
+									"unitType": 2,
+									"taxonConfidence": 2,
+									"recordBasis": 2,
+									"identifications_0_identificationBasis": 2,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
+									"*": 2
+								},
+								"md": {
+									"identifications_0_taxonID": 3,
+									"identifications_0_taxon": 3,
+									"count": 1,
+									"notes": 3,
+									"unitType": 2,
+									"taxonConfidence": 2,
+									"recordBasis": 2,
+									"identifications_0_identificationBasis": 2,
+									"unitGathering_dateBegin": 3,
+									"unitGathering_dateEnd": 3,
+									"identifications_0_detDate": 3,
+									"*": 2
+								},
+								"sm": {
+									"identifications_0_taxonID": 4,
+									"identifications_0_taxon": 4,
+									"count": 2,
+									"identifications_0_identificationBasis": 6,
+									"unitGathering_dateBegin": 4,
+									"unitGathering_dateEnd": 4,
+									"notes": 5,
+									"*": 4
+								},
+								"xs": 12,
+								"rows": [
+									[
+										"identifications_0_taxon",
+										"taxonConfidence",
+										"recordBasis",
+										"count",
+										"notes"
+									]
+								]
 							}
 						},
 						"identifications": {
+							"taxonID": {
+								"ui:widget": "HiddenWidget"
+							},
 							"detDate": {
 								"ui:widget": "DateWidget"
 							}
@@ -868,7 +864,7 @@
 											"Näyte",
 											"Havaittu",
 											"Valokuvattu",
-											"Käsitelty (otettu kiinni, tutkittu ja vapautettu)"
+											"Käsitelty (otettu kiinni, ei näytettä)"
 										]
 									},
 									"unitType": {
@@ -1286,15 +1282,6 @@
 											"type": "string"
 										}
 									},
-									"unitFact": {
-										"type": "object",
-										"properties": {
-											"autocompleteSelectedTaxonID": {
-												"type": "string",
-												"title": "Taksonin tunniste"
-											}
-										}
-									},
 									"identifications": {
 										"type": "array",
 										"items": {
@@ -1303,6 +1290,10 @@
 												"taxon": {
 													"type": "string",
 													"title": "Nimi"
+												},
+												"taxonID": {
+													"type": "string",
+													"title": "Taksonin tunniste"
 												},
 												"det": {
 													"type": "string",
@@ -1361,7 +1352,7 @@
 											"geometry": {
 												"type": "object",
 												"properties": {},
-												"title": "MZ.geometry"
+												"title": "Geometria"
 											},
 											"dateBegin": {
 												"type": "string",
@@ -1475,14 +1466,6 @@
 											"Kaivuu",
 											"Maaston peseminen"
 										]
-									},
-									"maleIndividualCount": {
-										"type": "integer",
-										"title": "Koiraiden yksilömäärä"
-									},
-									"femaleIndividualCount": {
-										"type": "integer",
-										"title": "Naaraiden yksilömäärä"
 									}
 								},
 								"required": []
@@ -1492,7 +1475,7 @@
 						"geometry": {
 							"type": "object",
 							"properties": {},
-							"title": "MZ.geometry"
+							"title": "Geometria"
 						},
 						"weather": {
 							"type": "string",
@@ -1501,6 +1484,10 @@
 						"notes": {
 							"type": "string",
 							"title": "Lisätiedot"
+						},
+						"namedPlaceID": {
+							"type": "string",
+							"title": "Nimetty paikka"
 						}
 					},
 					"required": []
@@ -1607,9 +1594,13 @@
 					"geometry": {
 						"geometry": {
 							"requireShape": true,
+							"maximumSize": 10,
+							"includeGatheringUnits": true,
 							"message": {
-								"missingGeometries": "Vähintään yksi paikka täytyy ilmoittaa."
-							}
+								"missingGeometries": "Paikalla täytyy olla vähintään yksi kuvio.",
+								"invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria"
+							},
+							"boundingBoxMaxHectares": 1000000
 						}
 					}
 				}
@@ -1684,4 +1675,3 @@
 		  }
 		} 
 }
-

@@ -304,8 +304,7 @@ export class Autosuggest extends Component {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.get = this.apiClient.fetchCached("/autocomplete/" + autosuggestField,
-				{q: value, includePayload: true, ...query})
-				.then(suggestions => {
+				{q: value, includePayload: true, ...query}).then(suggestions => {
 					const state = {isLoading: false};
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						const exactMatch = this.findExactMatch(suggestions);
@@ -316,13 +315,14 @@ export class Autosuggest extends Component {
 						else state.oldSuggestions = suggestions;
 						this.setState(state);
 						this.promiseTimestamp = undefined;
+						this.loading = true;
 					}
-				})
-				.catch(() => {
+				}).catch(() => {
 					if (this.mounted && this.promiseTimestamp === timestamp) {
 						this.setState({isLoading: false});
 						this.promiseTimestamp = undefined;
 						this.onSuggestionsClearRequested();
+						this.loading = true;
 					}
 				});
 		};
@@ -332,6 +332,7 @@ export class Autosuggest extends Component {
 			clearTimeout(this.timeout);
 		}
 		this.timeout = context.setTimeout(request, 400);
+		this.loading = true;
 	}
 
 	onSuggestionsClearRequested = () => {
@@ -400,7 +401,7 @@ export class Autosuggest extends Component {
 			return;
 		}
 
-		const exactMatch = this.findExactMatch(this.state.suggestions);
+		const exactMatch = this.loading ? undefined : this.findExactMatch(this.state.suggestions);
 		this.setState({focused: false}, () => {
 			if (!this.state.inputInProgress) {
 				return;
