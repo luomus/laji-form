@@ -807,6 +807,19 @@ min-height: 20px;
 	margin-bottom: 3px;
 }
 
+.laji-form .well-compact {
+	margin: 0 0 1px 0;
+	padding: 4px 10px;
+}
+
+.laji-form .well-compact .plainText {
+	line-height: 25px;
+}
+
+.laji-form .well-compact-striped .laji-form-field-template-item:nth-child(even) .well-compact {
+	background-color: #e3e3e3;
+}
+
 .laji-form .laji-form-compact-table .row {
 	padding-top: 5px;
 	padding-bottom: 5px;
