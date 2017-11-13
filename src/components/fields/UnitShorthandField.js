@@ -32,15 +32,17 @@ export default class UnitShorthandField extends Component {
 
 	getStateFromProps = (props) => {
 		let {showSchema} = this.state;
+		const shortHandFieldName = getUiOptions(props.uiSchema).shorthandField;
 		const isEmpty = () => {
-			return this.props.schema.properties.shorthandField ? 
-				isEmptyString(props.formData[getUiOptions(props.uiSchema).shorthandField]) :
+			return props.schema.properties[shortHandFieldName] ? 
+				isEmptyString(props.formData[shortHandFieldName]) :
 				deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 		};
 
 		if (!this.state.showSchema && !isEmpty()) {
 			showSchema = true;
 		}
+
 		return {showSchema};
 	}
 
@@ -78,7 +80,9 @@ export default class UnitShorthandField extends Component {
 		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:belowHelp": {$set: undefined}}});
 
 		// TODO use container id if doesn't have shorthandFieldName? Solve global id conflict problem first.
-		const id = shorthandFieldName ? this.props.idSchema[shorthandFieldName].$id : `${this.props.idSchema.$id}_shortHandField`;
+		const id = (shorthandFieldName && this.props.idSchema[shorthandFieldName]) ?
+			this.props.idSchema[shorthandFieldName].$id :
+			`${this.props.idSchema.$id}_shortHandField`;
 
 		let innerUiSchema = undefined;
 		if (this.state.showSchema) {
@@ -89,9 +93,9 @@ export default class UnitShorthandField extends Component {
 		return !this.state.showSchema ? (
 			<div className="laji-form-field-template-item">
 				<CodeReader translations={this.props.formContext.translations}
-										onChange={this.onCodeChange} 
-										value={this.props.formData[shorthandFieldName]} 
-										formID={getUiOptions(this.props.uiSchema).formID || formContext.uiSchemaContext.formID} 
+										onChange={this.onCodeChange}
+										value={this.props.formData[shorthandFieldName]}
+										formID={getUiOptions(this.props.uiSchema).formID || formContext.uiSchemaContext.formID}
 										help={help} 
 										id={shorthandFieldName ? `_laji-form_${id}` : `_laji-form_${id}`}
 										formContext={formContext}
