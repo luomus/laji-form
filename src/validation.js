@@ -72,10 +72,8 @@ export function transformErrors(translations) {
 	return (errors) => {
 		return errors.map(error => {
 			if (error.name === "type") {
-				error.message = translations.TypeError + translations[error.argument[0]] + ".";
+				error.message = translations.TypeError + translations[error.params.type] + ".";
 			} else if (error.name === "required") {
-				error.property = error.property + "." + error.argument;
-				error.schema = error.schema.properties[error.argument];
 				error.message = translations.FieldIsRequired + ".";
 			}
 			return error;

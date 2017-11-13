@@ -145,6 +145,7 @@ export default class InjectField extends Component {
 		}, schema);
 	}
 	getInnerData = (data, splits) => {
+		if (!data) return data;
 		return splits.reduce((o, s, i)=> {
 			if (i === splits.length - 1) {
 				return o[s];
