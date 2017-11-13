@@ -330,8 +330,6 @@ class ErrorListTemplate extends Component {
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;
 			let errors = (__errors || []).map(_error => {
-				console.log(path);
-				console.log(schema);
 				const _schema = parseJSONPointer(schema, path);
 				return {
 					label: _schema.title,
