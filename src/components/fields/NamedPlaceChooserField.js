@@ -254,7 +254,8 @@ class NamedPlaceChooser extends Component {
 					data[pointer] = {
 						geoData: {type: "FeatureCollection", features: geometry.geometries.map(geom => {return {type: "Feature", geometry: geom, properties: {idx: i}};})},
 						getFeatureStyle: this.getFeatureStyle,
-						getPopup
+						getPopup,
+						highlightOnHover: true
 					};
 					pointer++;
 				} else {
@@ -262,7 +263,8 @@ class NamedPlaceChooser extends Component {
 						geoData: {type: "FeatureCollection", features: []},
 						getFeatureStyle: this.getFeatureStyle,
 						getPopup,
-						cluster: true
+						cluster: true,
+						highlightOnHover: true
 					};
 					data[0].geoData.features.push({type: "Feature", geometry, properties: {idx: i}});
 				}
