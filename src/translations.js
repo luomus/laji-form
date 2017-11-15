@@ -329,10 +329,18 @@
 		en: "errors",
 		sv: "fels"
 	},
+	warnings: {
+		fi: "varoitukset",
+		en: "warnings",
+		sv: "varningar"
+	},
 	revalidate: {
 		fi: "Päivitä virheet",
 		en: "Refresh the errors",
 		sv: "Uppdatera felen"
+	},
+	submitWithWarnings: {
+		fi: "Tallenna varoituksista huolimatta"
 	},
 	chooseFromNamedPlace: {
 		fi: "Käytä omaa paikkaa",

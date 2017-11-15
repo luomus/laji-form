@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl } from "react-bootstrap";
-import { isEmptyString } from "../utils";
+import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -498,6 +497,53 @@ export function Label({label, help, children, id, required}) {
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;
+}
+
+export class ErrorPanel extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {expanded: true};
+	}
+
+	expand = () => {
+		if (!this.state.expanded) this.setState({expanded: true});
+	};
+	collapseToggle = () => this.setState({expanded: !this.state.expanded});
+
+	render() {
+		const {errors, title, clickHandler, poppedToggle, showToggle, classNames} = this.props;
+
+		if (errors.length === 0) return null;
+
+		return (
+			<Panel collapsible expanded={this.state.expanded}
+				   className={classNames}
+				   header={
+					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
+						   <div className="panel-title">
+							   {title}
+							   <span className="pull-right">
+								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
+								   {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
+							   </span>
+						   </div>
+					   </div>
+				   }
+			>
+				<ListGroup fill>
+                        {errors.map(({label, error, id}, i) =>  {
+							const _clickHandler = () => clickHandler(id);
+								return (
+									<ListGroupItem key={i} onClick={_clickHandler}>
+                                        {label ? <b>{label}:</b> : null} {error}
+									</ListGroupItem>
+								);
+                        	}
+                        )}
+					</ListGroup>
+			</Panel>
+		);
+	}
 }
 
 function NullTooltip() {

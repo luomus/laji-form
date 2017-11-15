@@ -3,8 +3,8 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
-import { Button, Label, Help, GlyphButton } from "./components";
-import { Panel, Table, ListGroup, ListGroupItem, Glyphicon } from "react-bootstrap";
+import { Button, Label, Help, ErrorPanel } from "./components";
+import { Panel, Table, Glyphicon } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
 import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
@@ -239,7 +239,7 @@ function FieldTemplate({
 	classNames,
 	label,
 	children,
-	errors,
+	rawErrors,
 	rawHelp,
 	description,
 	hidden,
@@ -275,8 +275,17 @@ function FieldTemplate({
 		buttonsClassName = "laji-form-field-template-buttons";
 	}
 
-	const warnings = formContext.getWarnings(children.props.formData, id);
-	const warningClassName = warnings ? " laji-form-warning-container" : "";
+	let warnings = [];
+	const errors = (rawErrors || []).reduce((arr, err) => {
+		if (err.indexOf("[warning]") > -1) {
+			warnings.push(err.substring("[warning]".length));
+		} else {
+			arr.push(err);
+		}
+		return arr;
+	}, []);
+	if (warnings.length === 0) warnings = formContext.getWarnings(children.props.formData, id);
+	const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
 
 	return (
 		<div className={classNames + warningClassName} id={elemId}>
@@ -299,10 +308,16 @@ function FieldTemplate({
 				<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
 				null
 			}
-			<div id={`laji-form-error-container-${id}`}>
-				{errors}
-			</div>
-			{warnings ?
+            {errors.length > 0 ?
+				<div id={`laji-form-error-container-${id}`}>
+					<p></p>
+					<ul>
+                        {errors.map((error, i) => (
+							<li key={i} className="text-danger">{error}</li>
+                        ))}
+					</ul>
+				</div> : null}
+			{warnings.length > 0 ?
 				<div id={`laji-form-warning-container-${id}`}>
 					<p></p>
 					<ul>
@@ -318,7 +333,7 @@ function FieldTemplate({
 class ErrorListTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {expanded: true, popped: true};
+		this.state = {popped: true};
 	}
 
 	render() {
@@ -329,26 +344,36 @@ class ErrorListTemplate extends Component {
 
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;
-			let errors = (__errors || []).map(_error => {
+			let {errors, warnings} = (__errors || []).reduce(({errors, warnings}, _error) => {
 				const _schema = parseJSONPointer(schema, path);
-				return {
-					label: _schema.title,
-					error: _error,
-					id: id
-				};
-			});
+				if (_error.indexOf("[warning]") > -1) {
+					warnings.push({
+						label: _schema.title,
+						error: _error.substring("[warning]".length),
+						id: id
+					});
+				} else {
+					errors.push({
+						label: _schema.title,
+						error: _error,
+						id: id
+					});
+				}
+				return {errors, warnings};
+			}, {errors: [], warnings: []});
 			Object.keys(properties).forEach(prop => {
 				let _path = path;
 				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
 				else _path = `${_path}/properties/${prop}`;
-				errors = [...errors, ...walkErrors(_path, `${id}_${prop}`, errorSchema[prop])];
+				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop]);
+				errors = [...errors, ...childErrors.errors];
+				warnings = [...warnings, ...childErrors.warnings];
 			});
-			return errors;
+			return {errors, warnings};
 		}
 
-		const _errors = walkErrors("", "root", errorSchema);
+		const {errors, warnings} = walkErrors("", "root", errorSchema);
 
-		const collapseToggle = () => this.setState({expanded: !this.state.expanded});
 		const poppedToggle = (e) => {
 			e.stopPropagation();
 			this.setState({popped: !this.state.popped});
@@ -356,43 +381,41 @@ class ErrorListTemplate extends Component {
 		const revalidate = () => {
 			const that = new Context(this.props.formContext.contextId).formInstance;
 			that.submit(!"don`t propagate");
-			if (!this.state.expanded) this.setState({expanded: true});
+			this.refs.errorPanel.expand();
+			this.refs.warningPanel.expand();
+		};
+		const submitWithWarnings = () => {
+			const that = new Context(this.props.formContext.contextId).formInstance;
+			that.submit("propagate", "ignore warnings");
 		};
 
 		return (
-			<Panel collapsible expanded={this.state.expanded}
-				   className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}`}
-				   style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}
-				   bsStyle="danger"
-				   header={
-					   <div className="laji-form-clickable-panel-header" onClick={collapseToggle}>
-						   <div className="panel-title">
-                               {translations.Errors}
-							   <span className="pull-right">
-							<GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
-							<GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} />
-						</span>
-						   </div>
-					   </div>
-                   }
-				   footer={
-					   <div>
-						   <Button onClick={revalidate}><Glyphicon glyph="refresh" /> {translations.Revalidate}</Button>
-					   </div>
-                   }
-			>
-				<ListGroup fill>
-					{_errors.map(({label, error, id}, i) =>  {
-						const _clickHandler = () => clickHandler(id);
-						return (
-							<ListGroupItem key={i} onClick={_clickHandler}>
-								{label ? <b>{label}:</b> : null} {error}
-							</ListGroupItem>
-						);
-					}
-					)}
-				</ListGroup>
-			</Panel>
+			<div className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""} ${errors.length === 0 ? " laji-form-warning-list" : ""}`}
+				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
+				<ErrorPanel classNames="error-panel"
+							ref="errorPanel"
+							errors={errors}
+							title={translations.Errors}
+							clickHandler={clickHandler}
+							showToggle={true}
+							poppedToggle={poppedToggle}/>
+				<ErrorPanel classNames="warning-panel"
+							ref="warningPanel"
+							errors={warnings}
+							title={translations.Warnings}
+							clickHandler={clickHandler}
+							showToggle={errors.length === 0}
+							poppedToggle={poppedToggle}/>
+				<div className="panel-footer">
+					<div>
+                        {errors.length > 0 ?
+							<Button onClick={revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}
+							</Button> :
+							<Button onClick={submitWithWarnings}>{translations.SubmitWithWarnings}</Button>
+                        }
+					</div>
+				</div>
+			</div>
 		);
 	}
 }
@@ -430,6 +453,7 @@ export default class LajiForm extends Component {
 		this._context = new Context(this._id);
 		this._context.formInstance = this;
 		this.propagateSubmit = true;
+		this.validationSettings = {ignoreWarnings: false};
 
 		this.blockingLoaderCounter = 0;
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
@@ -602,7 +626,7 @@ export default class LajiForm extends Component {
 			bottomOffset: this.props.bottomOffset,
 			formID: this.props.id,
 			getWarnings: (data, id) => {
-				return getWarnings(data, id, this.warningValidatorsById);
+				return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
 			}
 		};
 
@@ -619,7 +643,7 @@ export default class LajiForm extends Component {
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
 					formContext={formContext}
-					validate={validate(this.props.validators)}
+					validate={validate(this.props.validators, this.props.warnings, this.validationSettings)}
 					transformErrors={transformErrors(translations)}
 					noHtml5Validate={true}
 				>
@@ -666,13 +690,15 @@ export default class LajiForm extends Component {
 
 	onSubmit = (...props) => {
 		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
-	}
+	};
 
-	submit = (propagate = true) => {
+	submit = (propagate = true, ignoreWarnings = false) => {
 		this.propagateSubmit = propagate;
+		this.validationSettings.ignoreWarnings = ignoreWarnings;
 		this.formRef.onSubmit({preventDefault: () => {}});
 		this.propagateSubmit = true;
-	}
+		this.validationSettings.ignoreWarnings = false;
+	};
 
 	dismissHelp = (e) => {
 		const node = findDOMNode(this.shortcutHelpRef);

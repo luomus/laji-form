@@ -6,13 +6,26 @@ export function initializeValidation(apiClient) {
 	});
 }
 
-export default (validators) => (data, errors) => {
-
-	if (validators) {
-		return lajiValidate.async(data, validators).then(() => Promise.resolve([])).catch(result => {
-			const messages = getMessages(result);
-			const errorSchema = toErrorSchema(messages);
-			return Promise.resolve(errorSchema);
+export default (validators, warnings, settings) => (data, errors) => {
+	if (validators || (warnings && !settings.ignoreWarnings)) {
+		const promises = [];
+		if (validators) {
+			promises.push(lajiValidate.async(data, validators)
+				.then(() => {return {};})
+				.catch(err => err));
+		}
+		if (warnings && !settings.ignoreWarnings) {
+			promises.push(lajiValidate.async(data, warnings)
+				.then(() => {return {};})
+				.catch(res => res));
+		}
+		return Promise.all(promises).then((res) => {
+			const messages = res.reduce((arr, err, i) => {
+				const type = (i === 1) ? "warning": "error";
+				arr = arr.concat(getMessages(err, type));
+				return arr;
+			}, []);
+			return Promise.resolve(toErrorSchema(messages));
 		});
 	}
 
@@ -25,6 +38,7 @@ export function getWarningValidatorsById(validators, schema) {
 	function addWarningsById(path, validators, schema, validatorsById) {
 		for (const prop in validators) {
 			if (!schema[prop]) {
+				if (prop === "remote") continue;
 				if (!validatorsById[path]) {
 					validatorsById[path] = {};
 				}
@@ -48,8 +62,8 @@ export function getWarningValidatorsById(validators, schema) {
 	return validatorById;
 }
 
-export function getWarnings(data, id, warningValidators) {
-	if (!id) return null;
+export function getWarnings(data, id, warningValidators, formData) {
+	if (!id) return [];
 	let validator;
 
 	for (let path in warningValidators) {
@@ -59,16 +73,39 @@ export function getWarnings(data, id, warningValidators) {
 		}
 	}
 
-	if (!validator) return null;
+	if (!validator) return [];
+	const {newFormData, validators} = constructDataForValidation(id, data, formData, validator);
 
-	const idParts = id.split("_");
-	const property = idParts[idParts.length - 1];
-	const result = lajiValidate({[property]: data}, {[property]: validator});
+	const result = lajiValidate(newFormData, validators);
 	if (result) {
-		return result[property];
+		const key = id.replace(/^root_/, "").replace(/_(?=[0-9])/g, "").replace(/[0-9]+/g, "[$&]").replace(/_/g, ".");
+		return result[key];
 	}
+	return [];
+}
 
-	return null;
+function constructDataForValidation(id, data, formData, validator) {
+	formData = JSON.parse(JSON.stringify(formData));
+	const idParts = id.split("_");
+	const validators = {};
+	idParts.reduce(({validators, formData}, id, i) => {
+		if (i === 0) return {validators, formData};
+		if (i >= idParts.length - 1) {
+			validators["properties"] = {[id]: validator};
+			formData[id] = data;
+			return {validators, formData};
+		}
+		if (!formData[id]) {
+			formData[id] = {};
+		}
+		if (!isNaN(id)) {
+			validators["items"] = {};
+			return {validators: validators["items"], formData: formData[id]};
+		}
+		validators["properties"] = {[id]: {}};
+		return {validators: validators["properties"][id], formData: formData[id]};
+	}, {validators, formData});
+	return {newFormData: formData, validators: validators.properties};
 }
 
 export function transformErrors(translations) {
@@ -84,13 +121,14 @@ export function transformErrors(translations) {
 	};
 }
 
-function getMessages(result) {
+function getMessages(result, type) {
 	const messages = [];
 	for(let k in result) {
 		for (let l in result[k]) {
+			const message = (type === "warning") ? "[warning]" + result[k][l] : result[k][l];
 			messages.push({
 				property: "instance." + k,
-				message: result[k][l]
+				message: message
 			});
 		}
 	}
