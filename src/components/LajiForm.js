@@ -690,15 +690,19 @@ export default class LajiForm extends Component {
 
 	onSubmit = (...props) => {
 		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
-	};
+		this.propagateSubmit = true;
+	}
+
+	onError = () => {
+		this.propagateSubmit = true;
+	}
 
 	submit = (propagate = true, ignoreWarnings = false) => {
 		this.propagateSubmit = propagate;
 		this.validationSettings.ignoreWarnings = ignoreWarnings;
 		this.formRef.onSubmit({preventDefault: () => {}});
-		this.propagateSubmit = true;
 		this.validationSettings.ignoreWarnings = false;
-	};
+	}
 
 	dismissHelp = (e) => {
 		const node = findDOMNode(this.shortcutHelpRef);
@@ -737,7 +741,7 @@ export default class LajiForm extends Component {
 		},
 
 		revalidate: () => {
-			this.submit(!"don`t propagate");
+			this.submit(!"don't propagate");
 		}
 	}
 
