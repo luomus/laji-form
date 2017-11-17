@@ -408,9 +408,9 @@
 		sv: "Ny"
 	},
 	saveOverwrite: {
-		fi: "Tallenna nykyisen päälle",
-		en: "Overwrite existing",
-		sv: "Skriv över befintliga"
+		fi: "Tallenna nykyinen uudella nimellä",
+		en: "Overwrite existing with a new name",
+		sv: "Skriv över befintliga med en ny namn"
 	},
 	SaveNamedPlace: {
 		fi: "Tallenna omana paikkana",
