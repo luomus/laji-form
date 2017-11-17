@@ -220,6 +220,8 @@ class UnitsMapArrayField extends Component {
 			onChange: this.onUnitChange,
 		};
 
+		this.unitFeatures = data.featureCollection.features;
+
 		const controls = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
 			{drawCopy: true} : {draw: false, coordinateInput: false};
 
@@ -260,7 +262,8 @@ class UnitsMapArrayField extends Component {
 		});
 	}
 
-	onUnitRemove = ({idxs}) => {
+	onUnitRemove = (e) => {
+		const idxs = e.idxs.map(idx => this.unitFeatures[idx].properties.idx);
 		const {formData} = this.props;
 
 		const unitIdxs = idxs;
