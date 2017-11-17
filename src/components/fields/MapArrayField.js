@@ -55,6 +55,11 @@ export default class MapArrayField extends Component {
 
 @_MapArrayField
 class DefaultMapArrayField extends Component {
+	constructor(props) {
+		super(props);
+		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
+		this.onChange = this.onChange.bind(this);
+	}
 	getOptions(options) {
 		const {formData} = this.props;
 		const geometries = this.getData();
