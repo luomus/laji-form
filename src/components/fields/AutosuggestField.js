@@ -60,16 +60,13 @@ export default class AutosuggestField extends Component {
 			onSuggestionSelected: this.onSuggestionSelected,
 			onConfirmUnsuggested: this.onConfirmUnsuggested,
 			onInputChange: this.onInputChange,
-			isValueSuggested: this.isValueSuggested
+			isValueSuggested: this.isValueSuggested,
+			getSuggestionFromValue: this.getSuggestionFromValue
 		};
-		const {suggestionValueField, suggestionInputField} = options;
-
-		if (suggestionValueField && props.formData && !isEmptyString(props.formData[suggestionValueField])) {
-			options.value = props.formData[suggestionValueField];
-		}
+		const {suggestionInputField} = options;
 
 		if (suggestionInputField && props.formData && !isEmptyString(props.formData[suggestionInputField])) {
-			options.inputValue = props.formData[suggestionInputField];
+			options.value = props.formData[suggestionInputField];
 		}
 
 		const uiSchema = {
@@ -139,5 +136,23 @@ export default class AutosuggestField extends Component {
 			if (!formData || !formData[fieldName]) return false;
 		}
 		return true;
+	}
+
+	getSuggestionFromValue = () => {
+		const {formData} = this.props;
+		const {suggestionValueField, suggestionInputField} = this.getUiOptions();
+
+		const value = suggestionInputField && formData && !isEmptyString(formData[suggestionInputField]) ? 
+			formData[suggestionInputField] : undefined;
+		const key = suggestionValueField && formData && !isEmptyString(formData[suggestionValueField]) ?
+			formData[suggestionValueField] : undefined;
+
+		let suggestion = undefined;
+		if (value !== undefined) {
+			suggestion = {value};
+			if (key !== undefined) suggestion.key = key;
+		}
+
+		return suggestion ? Promise.resolve(suggestion) : Promise.reject();
 	}
 }

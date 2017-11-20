@@ -63,7 +63,10 @@ export default function BaseComponent(ComposedComponent) {
 
 		componentWillReceiveProps(props) {
 			super.componentWillReceiveProps && super.componentWillReceiveProps(props);
-			this.getStateFromProps && this.setState(this.getStateFromProps(props));
+			if (this.getStateFromProps) {
+				const state = this.getStateFromProps(props);
+				if (state) this.setState(state);
+			}
 			this.updateSettingSaver(props);
 		}
 
