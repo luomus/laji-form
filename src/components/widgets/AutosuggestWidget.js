@@ -4,7 +4,7 @@ import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Tooltip, OverlayTrigger, Glyphicon, Popover } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { getUiOptions, isEmptyString, focusNextInput } from "../../utils";
+import { isEmptyString, focusNextInput } from "../../utils";
 import { FetcherInput } from "../components";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
@@ -54,15 +54,11 @@ class TaxonAutosuggestWidget extends Component {
 		);
 	}
 
-	renderSuggested = (input, suggestion) => {
-		const options = getUiOptions(this.props);
-		const value = "value" in options ? options.value : this.props.value;
-		return (
-			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover">
-				{input}
-			</TaxonCardOverlay>
-		);
-	}
+	renderSuggested = (input, suggestion) => (
+		<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover">
+			{input}
+		</TaxonCardOverlay>
+	)
 
 	renderSuccessGlyph = (value) => {
 		return (
@@ -208,8 +204,7 @@ export class Autosuggest extends Component {
 		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
 	}
 
-	onSuggestionsClearRequested = () => {
-	}
+	onSuggestionsClearRequested = () => {}
 
 	selectSuggestion = (suggestion) => {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
@@ -260,13 +255,13 @@ export class Autosuggest extends Component {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, ...query}).then(suggestions => {
-				!this.mounted ?
-					this.afterBlurAndFetch(suggestions)
-					: this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions));
+				this.mounted ?
+					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
+					this.afterBlurAndFetch(suggestions);
 			}).catch(() => {
 				this.setState({isLoading: false}, this.afterBlurAndFetch);
 			});
-		}
+		};
 
 		const context = new Context(this.props.formContext.contextId);
 		if (this.timeout) {
@@ -350,7 +345,7 @@ export class Autosuggest extends Component {
 
 	renderInput = (inputProps) => {
 		let validationState = null;
-		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, isValueSuggested} = this.props;
+		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested} = this.props;
 		const {suggestion} = this.state;
 
 		const isSuggested = !!suggestion;
@@ -392,7 +387,7 @@ export class Autosuggest extends Component {
 				renderSuccessGlyph(value) : getGlyph(validationState);
 		}
 
-		const inputValue = isEmptyString(this.state.value) ? "" : this.state.value
+		const inputValue = isEmptyString(this.state.value) ? "" : this.state.value;
 		const input = (
 			<FetcherInput 
 				{...inputProps} 
@@ -441,6 +436,39 @@ class TaxonCardOverlay extends Component {
 			});
 	}
 
+	popoverMouseOver = () => {
+		this.popoverMouseIn = true;
+	}
+
+	popoverMouseOut = () => {
+		this.popoverMouseIn = false;
+		if (this.popoverTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
+		this.popoverTimeout = new Context(this.props.formContext.contextId).setTimeout(() => {
+			if (!this.popoverMouseIn && !this.overlayMouseIn && this.overlayRef) this.overlayRef.hide();
+		}, 200);
+	}
+
+	getOverlayRef = elem => {
+		this.overlayRef = elem;
+	};
+
+	overlayMouseOver = () => {
+		this.overlayMouseIn = true;
+		this.overlayRef.show();
+	};
+
+	overlayMouseOut = () => {
+		this.overlayMouseIn = false;
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
+		this.overlayTimeout = new Context(this.props.formContext.contextId).setTimeout(() => {
+			if (!this.popoverMouseIn && !this.overlayMouseIn && this.overlayRef) this.overlayRef.hide();
+		}, 200);
+	};
+
 	render() {
 		const {id, formContext, value, children, placement} = this.props;
 		const {urlTxt, urlTxtIsCursive} = this.state;
@@ -451,24 +479,8 @@ class TaxonCardOverlay extends Component {
 			</Tooltip>
 		);
 
-
-		let popoverMouseIn = false;
-		const popoverMouseOver = () => {
-			popoverMouseIn = true;
-		};
-		let popoverTimeout = undefined;
-		const popoverMouseOut = () => {
-			popoverMouseIn = false;
-			if (popoverTimeout) {
-				clearTimeout(overlayTimeout);
-			}
-			popoverTimeout = new Context(formContext.contextId).setTimeout(() => {
-				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
-			}, 200);
-		};
-
 		const popover = (
-			<Popover id={`${id}-popover`} onMouseOver={popoverMouseOver} onMouseOut={popoverMouseOut}>
+			<Popover id={`${id}-popover`} onMouseOver={this.popoverMouseOver} onMouseOut={this.popoverMouseOut}>
 				<span className="text-success">
 					<Glyphicon glyph="tag" /> {formContext.translations.KnownSpeciesName}
 				</span>
@@ -485,32 +497,12 @@ class TaxonCardOverlay extends Component {
 			</Popover>
 		);
 
-		let overlayRef = undefined;
-		const getOverlayRef = elem => {
-			overlayRef = elem;
-		};
-		let overlayMouseIn = undefined;
-		const overlayMouseOver = () => {
-			overlayMouseIn = true;
-			overlayRef.show();
-		};
-		let overlayTimeout = undefined;
-		const overlayMouseOut = () => {
-			overlayMouseIn = false;
-			if (overlayTimeout) {
-				clearTimeout(overlayTimeout);
-			}
-			overlayTimeout = new Context(formContext.contextId).setTimeout(() => {
-				if (!popoverMouseIn && !overlayMouseIn && overlayRef) overlayRef.hide();
-			}, 200);
-		};
-
 		return (
-			<div onMouseOver={overlayMouseOver} onMouseOut={overlayMouseOut}>
+			<div onMouseOver={this.overlayMouseOver} onMouseOut={this.overlayMouseOut}>
 				<OverlayTrigger delay={1}
 				                trigger={[]} 
 				                placement={placement || "top"}
-												ref={getOverlayRef}
+												ref={this.getOverlayRef}
 				                overlay={popover}>
 					{children}
 				</OverlayTrigger>

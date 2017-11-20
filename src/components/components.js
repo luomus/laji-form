@@ -531,16 +531,15 @@ export class ErrorPanel extends Component {
 				   }
 			>
 				<ListGroup fill>
-                        {errors.map(({label, error, id}, i) =>  {
-							const _clickHandler = () => clickHandler(id);
-								return (
-									<ListGroupItem key={i} onClick={_clickHandler}>
-                                        {label ? <b>{label}:</b> : null} {error}
-									</ListGroupItem>
-								);
-                        	}
-                        )}
-					</ListGroup>
+					{errors.map(({label, error, id}, i) =>  {
+						const _clickHandler = () => clickHandler(id);
+						return (
+							<ListGroupItem key={i} onClick={_clickHandler}>
+								{label ? <b>{label}:</b> : null} {error}
+							</ListGroupItem>
+						);
+					})}
+				</ListGroup>
 			</Panel>
 		);
 	}

@@ -148,9 +148,8 @@ export default class AutosuggestField extends Component {
 			formData[suggestionValueField] : undefined;
 
 		let suggestion = undefined;
-		if (value !== undefined) {
-			suggestion = {value};
-			if (key !== undefined) suggestion.key = key;
+		if (value !== undefined && key !== undefined) {
+			suggestion = {value, key};
 		}
 
 		return suggestion ? Promise.resolve(suggestion) : Promise.reject();

@@ -802,7 +802,7 @@ class SplitArrayFieldTemplate extends Component {
 										 startIdx={idx}
 										 canAdd={uiOptions.uiOptions[i].addable}
 										 uiSchema={{...props.uiSchema, "ui:options": uiOptions.uiOptions[i]}}/>
-				)})}
+					);})}
 			</div>
 		);
 	}
