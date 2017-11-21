@@ -58,7 +58,6 @@ export default function BaseComponent(ComposedComponent) {
 			} else {
 				return `${settingsId}#${id}$${uiSchema["ui:field"]}${key}`;
 			}
-
 		}
 
 		componentWillReceiveProps(props) {
@@ -73,12 +72,26 @@ export default function BaseComponent(ComposedComponent) {
 		// JSON Parsing will throw exceptions for paths that aren't initialized. This is intentional -
 		// we don't want to save undefined values for settings that are not set.
 		updateSettingSaver(props) {
+			function parseSettingSaver(target, key) {
+				const splits = key.split("/");
+				const last = splits.pop();
+
+				const lastContainer = parseJSONPointer(target, splits.join("/"));
+
+				if (lastContainer && last in lastContainer) {
+					return lastContainer[last];
+				} else {
+					throw new Error("Setting saver parsing failed");
+				}
+			}
+
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach(key => {
 				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						return parseJSONPointer(this.getContext(), key.replace(/^%[^/]*/, ""));
+						key = key.replace(/^%[^/]*/, "");
+						return parseSettingSaver(this.getContext(), key);
 					} else {
-						return parseJSONPointer(this.state, key);
+						return parseSettingSaver(this.state, key);
 					}
 				});
 			});
