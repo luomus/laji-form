@@ -20,12 +20,20 @@ export default (validators, warnings, settings) => (data, errors) => {
 				.catch(res => res));
 		}
 		return Promise.all(promises).then((res) => {
-			const messages = res.reduce((arr, err, i) => {
-				const type = (i === 1) ? "warning": "error";
-				arr = arr.concat(getMessages(err, type));
-				return arr;
-			}, []);
-			return Promise.resolve(toErrorSchema(messages));
+			if (settings.ignoreWarnings && res.length > 0 && Object.keys(res[0]).length > 0 && warnings) {
+				promises.push(lajiValidate.async(data, warnings)
+                        .then(() => {return {};})
+                        .catch(res => res));
+			}
+
+			return Promise.all(promises).then((res) => {
+				const messages = res.reduce((arr, err, i) => {
+					const type = (i === 1) ? "warning" : "error";
+					arr = arr.concat(getMessages(err, type));
+					return arr;
+				}, []);
+				return Promise.resolve(toErrorSchema(messages));
+			});
 		});
 	}
 
