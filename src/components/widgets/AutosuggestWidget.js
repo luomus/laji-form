@@ -9,7 +9,6 @@ import { FetcherInput } from "../components";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 
-@BaseComponent
 export default class _AutosuggestWidget extends Component {
 	render() {
 		if (this.props.options) {
@@ -136,7 +135,6 @@ class FriendsAutosuggestWidget extends Component {
 	}
 }
 
-@BaseComponent
 export class Autosuggest extends Component {
 	static propTypes = {
 		autosuggestField: PropTypes.string,
@@ -171,6 +169,10 @@ export class Autosuggest extends Component {
 		if (!suggestion || suggestion[suggestionReceive || "key"] !== value) {
 			return {value: props.value};
 		}
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 	}
 
 	componentDidMount() {

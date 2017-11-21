@@ -4,19 +4,28 @@ import { findDOMNode } from "react-dom";
 import Combobox from "react-widgets/lib/Combobox";
 import Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
+import Context from "../../Context";
 
 import { isEmptyString, getUiOptions, isNullOrUndefined } from "../../utils";
-import BaseComponent from "../BaseComponent";
 
-@BaseComponent
 class SelectWidget extends Component {
 
+	constructor(props) {
+		super(props);
+		this.state = this.getStateFromProps(props);
+		this._context = new Context(this.props.formContext.contextId);
+	}
+
 	componentDidMount() {
-		this.getContext().addFocusHandler(this.props.id, this.onFocus);
+		this._context.addFocusHandler(this.props.id, this.onFocus);
 	}
 
 	componentWillUnmount() {
-		this.getContext().removeFocusHandler(this.props.id, this.onFocus);
+		this._context.removeFocusHandler(this.props.id, this.onFocus);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 	}
 
 	getStateFromProps(props) {
@@ -92,7 +101,7 @@ class SelectWidget extends Component {
 	}
 
 	onSelect = (item) => {
-		this.state.open && this.getContext().setImmediate(() => this.setState({open: false}));
+		this.state.open && this._context.setImmediate(() => this.setState({open: false}));
 		if (!this.props.selectOnChange) {
 			this.props.onChange(item.value);
 		}

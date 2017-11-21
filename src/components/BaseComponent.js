@@ -23,7 +23,7 @@ export default function BaseComponent(ComposedComponent) {
 		loadSettings(props, target, rule) {
 			const {uiSchema, formContext} = props;
 
-			if (uiSchema && uiSchema["ui:settings"] && !uiSchema["ui:settings"].used) {
+			if (uiSchema && uiSchema["ui:settings"]) {
 				const settings = formContext.settings || {};
 				uiSchema["ui:settings"].forEach(key => {
 					if (this.getSettingsKey(props, key) in settings) {
