@@ -334,7 +334,14 @@ class ErrorListTemplate extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {popped: true};
+		new Context(this.props.formContext.contextId).errorList = this;
 	}
+
+	expand = () => {
+		if (!this.state.popped) this.setState({popped: true});
+		this.refs.errorPanel.expand();
+		this.refs.warningPanel.expand();
+	};
 
 	render() {
 		const {errorSchema, schema, formContext} = this.props;
@@ -636,6 +643,7 @@ export default class LajiForm extends Component {
 					{...this.props}
 					ref={this.getRef}
 					onChange={this.onChange}
+					onError={this.onError}
 					onSubmit={this.onSubmit}
 					fields={fields}
 					widgets={widgets}
@@ -691,17 +699,19 @@ export default class LajiForm extends Component {
 	onSubmit = (...props) => {
 		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
 		this.propagateSubmit = true;
+		this.validationSettings.ignoreWarnings = false;
 	}
 
 	onError = () => {
+		if (this.propagateSubmit) this._context.errorList.expand();
 		this.propagateSubmit = true;
+		this.validationSettings.ignoreWarnings = false;
 	}
 
 	submit = (propagate = true, ignoreWarnings = false) => {
 		this.propagateSubmit = propagate;
 		this.validationSettings.ignoreWarnings = ignoreWarnings;
 		this.formRef.onSubmit({preventDefault: () => {}});
-		this.validationSettings.ignoreWarnings = false;
 	}
 
 	dismissHelp = (e) => {
