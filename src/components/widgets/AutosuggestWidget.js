@@ -6,7 +6,6 @@ import { Tooltip, OverlayTrigger, Glyphicon, Popover } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput } from "../../utils";
 import { FetcherInput } from "../components";
-import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 
 export default class _AutosuggestWidget extends Component {
