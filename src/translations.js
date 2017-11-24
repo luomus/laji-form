@@ -20,14 +20,14 @@
 		sv: "Igår"
 	},
 	datePlaceholderDay: {
-		fi: "Pp.kk.vvvv",
-		en: "Dd/mm/yyyy",
-		sv: "Åååå-mm-dd"
+		fi: "pp.kk.vvvv",
+		en: "dd/mm/yyyy",
+		sv: "pp.kk.vvvv"
 	},
 	timePlaceholderDay: {
-		fi: "Tt.mm",
-		en: "H:mm AM/PM",
-		sv: "Tt:mm"
+		fi: "tt.mm",
+		en: "h:mm AM/PM",
+		sv: "tt.mm"
 	},
 	yes: {
 		fi: "Kyllä",

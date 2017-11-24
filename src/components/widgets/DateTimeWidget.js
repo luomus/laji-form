@@ -38,7 +38,8 @@ export default class DateTimeWidget extends Component {
 	}
 
 	getStateFromProps(props) {
-		let localeFormats = moment().locale(props.formContext.lang)._locale._longDateFormat;
+		const {lang} = props.formContext;
+		let localeFormats = moment().locale(lang === "sv" ? "fi" : lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
 
 		let dateFormat = "";
@@ -106,7 +107,7 @@ export default class DateTimeWidget extends Component {
 
 	render() {
 		const {value, readonly} = this.props;
-		const {translations} = this.props.formContext;
+		const {translations, lang} = this.props.formContext;
 
 		const onChange = value => {
 			const momentValue = moment(value);
