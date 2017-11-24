@@ -54,7 +54,7 @@ export default class CheckboxWidget extends Component {
 			</div>
 		);
 
-		return isEmptyString(label) ? checkbox : (
+		return isEmptyString(label) || options.label === false ? checkbox : (
 			<Label label={label} required={required}>
 				{checkbox}
 			</Label>

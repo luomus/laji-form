@@ -107,7 +107,7 @@ export default class DateTimeWidget extends Component {
 
 	render() {
 		const {value, readonly} = this.props;
-		const {translations, lang} = this.props.formContext;
+		const {translations} = this.props.formContext;
 
 		const onChange = value => {
 			const momentValue = moment(value);

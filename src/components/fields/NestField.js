@@ -132,6 +132,7 @@ export default class NestField extends Component {
 		let {schema, uiSchema, idSchema, errorSchema, formData} = props;
 
 		const {nests, buttonsNest, buttons} = options;
+		const uiButtons = uiSchema["ui:buttons"];
 
 		const nestedPropsMap = {};
 
@@ -177,10 +178,23 @@ export default class NestField extends Component {
 			});
 		});
 
-		if (buttonsNest && nests[buttonsNest] && buttons) {
-			let nestOptions = getUiOptions(uiSchema[buttonsNest]);
-			let _buttons = nestOptions.buttons || [];
-			uiSchema = {...uiSchema, [buttonsNest]: {...uiSchema[buttonsNest], "ui:options": {...nestOptions, buttons: [..._buttons, ...buttons]}}};
+		if (buttonsNest && nests[buttonsNest]) {
+			if (uiButtons) {
+				uiSchema = {
+					"ui:buttons": undefined,
+					[buttonsNest]: {
+						...(uiSchema[buttonsNest] || []),
+						"ui:buttons": [
+							...uiSchema["ui:buttons"]
+						]
+					}
+				};
+			}
+			if (buttons) {
+				let nestOptions = getUiOptions(uiSchema[buttonsNest]);
+				let _buttons = nestOptions.buttons || [];
+				uiSchema = {...uiSchema, [buttonsNest]: {...uiSchema[buttonsNest], "ui:options": {...nestOptions, buttons: [..._buttons, ...buttons]}}};
+			}
 		}
 
 		return {schema, uiSchema, idSchema, errorSchema, formData};

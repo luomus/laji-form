@@ -16,7 +16,7 @@ const PLACES_FETCH_FAIL = "PLACES_FETCH_FAIL";
 const PLACE_USE_FAIL = "PLACE_USE_FAIL";
 
 /**
- * Compatible only with gathering field.
+ * Compatible only with gatherings array and gathering object.
  */
 @BaseComponent
 export default class NamedPlaceChooserField extends Component {
@@ -25,6 +25,8 @@ export default class NamedPlaceChooserField extends Component {
 		this.state = {};
 		this.apiClient = new ApiClient();
 	}
+
+	isArray = (props) => props.schema.type === "array"
 
 	onPlaceSelected = (place) => {
 		try {
@@ -60,27 +62,51 @@ export default class NamedPlaceChooserField extends Component {
 			if (response.results && response.results.length) {
 				const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
 				const options = getUiOptions(innerUiSchema);
-				const uiSchema = {
-					...innerUiSchema,
-					"ui:options": {
-						...options,
-						buttons: [
-							...(options.buttons || []),
-							{
-								fn: () => () => {
-									this.setState({show: true});
-								},
-								key: "addNamedPlace",
-								glyph: "map-marker",
-								label: this.props.formContext.translations.ChooseFromNamedPlace,
-								rules: {
-									canAdd: true
+				if (this.isArray(this.props)) {
+					const uiSchema = {
+						...innerUiSchema,
+						"ui:options": {
+							...options,
+							buttons: [
+								...(options.buttons || []),
+								{
+									fn: () => () => {
+										this.setState({show: true});
+									},
+									key: "addNamedPlace",
+									glyph: "map-marker",
+									label: this.props.formContext.translations.ChooseFromNamedPlace,
+									rules: {
+										canAdd: true
+									}
 								}
-							}
-						]
-					}
-				};
-				state.uiSchema = uiSchema;
+							]
+						}
+					};
+					state.uiSchema = uiSchema;
+				} else {
+					const uiSchema = {
+						...innerUiSchema,
+						"ui:options": {
+							...options,
+							buttons: [
+								...(options.buttons || []),
+								{
+									fn: () => () => {
+										this.setState({show: true});
+									},
+									key: "addNamedPlace",
+									glyph: "map-marker",
+									label: this.props.formContext.translations.ChooseFromNamedPlace,
+									rules: {
+										canAdd: true
+									}
+								}
+							]
+						}
+					};
+					state.uiSchema = uiSchema;
+				}
 			}
 
 			this.setState(state);

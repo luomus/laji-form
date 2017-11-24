@@ -110,22 +110,6 @@ class _SchemaField extends Component {
 
 		if (
 			uiSchema &&
-			uiSchema["ui:field"] && 
-			(new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] || new Context("SCHEMA_FIELD_WRAPPERS")[uiSchema["ui:field"]]) && 
-			uiSchema["ui:buttons"] && uiSchema["ui:buttons"].length
-		) {
-			uiSchema = {
-				...uiSchema,
-				"ui:buttons": undefined,
-				uiSchema: {
-					...uiSchema.uiSchema,
-					"ui:buttons": uiSchema["ui:buttons"]
-				}
-			};
-		}
-
-		if (
-			uiSchema &&
 			uiSchema["ui:field"] &&
 			uiSchema["ui:field"] !== "ContextInjectionField" &&
 			uiSchema["ui:field"] !== "InjectField" &&
@@ -158,12 +142,13 @@ class _SchemaField extends Component {
 	}
 }
 
-const _TitleField = ({title, className}) => (isEmptyString(title)) ? null : <legend className={className}>{title}</legend>;
+const _TitleField = ({title, className, buttons}) => (isEmptyString(title)) ? null : <legend className={className}>{title} {buttons}</legend>;
 
 const fields = importLocalComponents("fields", [
 	{SchemaField: _SchemaField},
 	{TitleField: _TitleField},
 	"ArrayField",
+	"ObjectField",
 	"NestField",
 	"ArrayBulkField",
 	"ArrayBulkField",
@@ -265,16 +250,6 @@ function FieldTemplate({
 
 	const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
 
-	const buttons = (uiSchema["ui:buttons"] && schema.type !== "array") ? uiSchema["ui:buttons"] : undefined;
-	const vertical = uiSchema["ui:buttonsVertical"];
-
-	let containerClassName, schemaClassName, buttonsClassName;
-	if (buttons && buttons.length) {
-		containerClassName = "laji-form-field-template-item" + (vertical ? " keep-vertical" : "");
-		schemaClassName = "laji-form-field-template-schema";
-		buttonsClassName = "laji-form-field-template-buttons";
-	}
-
 	let warnings = [];
 	const errors = (rawErrors || []).reduce((arr, err) => {
 		if (err.indexOf("[warning]") > -1) {
@@ -291,30 +266,24 @@ function FieldTemplate({
 		<div className={classNames + warningClassName} id={elemId}>
 			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} required={required} /> : null}
 			{_displayLabel && description ? description : null}
-			<div className={containerClassName}>
-				<div className={schemaClassName}>
-					{inlineHelp ? <div className="pull-left">{children}</div> : children}
-					{inlineHelp ? (
-						<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
-						) : null
-					}
-				</div>
-				{buttons ?
-					<div className={buttonsClassName}>{buttons}</div> :
-					null
+			<div>
+				{inlineHelp ? <div className="pull-left">{children}</div> : children}
+				{inlineHelp ? (
+					<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
+					) : null
 				}
 			</div>
 			{belowHelp ? 
 				<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
 				null
 			}
-            {errors.length > 0 ?
+			{errors.length > 0 ?
 				<div id={`laji-form-error-container-${id}`}>
 					<p></p>
 					<ul>
-                        {errors.map((error, i) => (
+						{errors.map((error, i) => (
 							<li key={i} className="text-danger">{error}</li>
-                        ))}
+						))}
 					</ul>
 				</div> : null}
 			{warnings.length > 0 ?
