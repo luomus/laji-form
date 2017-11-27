@@ -2,15 +2,22 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
+const sumPropType = PropTypes.shape({
+	resultField: PropTypes.string.isRequired,
+	summedFields: PropTypes.arrayOf(PropTypes.string).isRequired,
+	summedProperty: PropTypes.string
+});
+
 @VirtualSchemaField
 export default class SumField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
-			"ui:options": PropTypes.shape({
-				resultField: PropTypes.string.isRequired,
-				summedFields: PropTypes.arrayOf(PropTypes.string).isRequired,
-				summedProperty: PropTypes.string
-			}).isRequired,
+			"ui:options": {
+				"sums": PropTypes.oneOfType([
+					sumPropType,
+					PropTypes.arrayOf(sumPropType)
+				]).isRequired
+			},
 			uiSchema: PropTypes.object
 		}).isRequired
 	};
@@ -18,42 +25,54 @@ export default class SumField extends Component {
 	static getName() {return "SumField";}
 
 	getStateFromProps({formData}) {
-		return {prevResult: this.getSum(formData)};
+		return {prevResult: this.getSums(formData)};
 	}
 
 	onChange(formData) {
-		const {resultField} = this.getUiOptions();
-		const sum = this.getSum(formData);
+		let {sums} = this.getUiOptions();
+		sums = Array.isArray(sums) ? sums : [sums];
 
-		if (sum !== this.state.prevResult) {
-			formData = {...formData, [resultField]: sum};
-		}
+		const newSums = this.getSums(formData);
+		sums.forEach(options => {
+			if (newSums[options.resultField] !== this.state.prevResult[options.resultField]) {
+				formData = {...formData, [options.resultField]: newSums[options.resultField]};
+			}
+		});
 
 		this.props.onChange(formData);
 	}
 
-	getSum = (formData) => {
-		const {summedFields, resultField, summedProperty} = this.getUiOptions();
-		const resultType = this.props.schema.properties[resultField].type;
+	getSums = (formData) => {
+		let {sums} = this.getUiOptions();
+		sums = Array.isArray(sums) ? sums : [sums];
 
-		let result = 0;
-		let allEmpty = true;
-		summedFields.forEach(field => {
-			if (formData[field] !== undefined) {
-				if (summedProperty === "arrayLength") {
-					result += formData[field].length;
-				} else {
-					result += Number(formData[field]);
+		const results = {};
+
+		sums.forEach(options => {
+			const {resultField, summedFields, summedProperty} = options;
+			const resultType = this.props.schema.properties[resultField].type;
+
+			let result = 0;
+			let allEmpty = true;
+			summedFields.forEach(field => {
+				if (formData[field] !== undefined) {
+					if (summedProperty === "arrayLength") {
+						result += formData[field].length;
+					} else {
+						result += Number(formData[field]);
+					}
+					allEmpty = false;
 				}
-				allEmpty = false;
+			});
+
+			result = allEmpty || isNaN(result) ? undefined : result;
+			if (result !== undefined && resultType !== "number" && resultType !== "integer") {
+				result = result + "";
 			}
+
+			results[resultField] = result;
 		});
 
-		result = allEmpty || isNaN(result) ? undefined : result;
-		if (result !== undefined && resultType !== "number" && resultType !== "integer") {
-			result = result + "";
-		}
-
-		return result;
+		return results;
 	}
 }
