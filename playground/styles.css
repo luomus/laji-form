@@ -164,7 +164,8 @@ min-height: 20px;
 
 .laji-form legend {
 	font-size: 15px;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 .laji-form legend.lg {
 	font-size: 20px;
@@ -175,7 +176,21 @@ min-height: 20px;
 	margin-bottom: 1px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	margin-top: 5px;
 }
+.laji-form .field-without-label {
+	margin-top: 5px;
+}
+.laji-form .well-sm {
+	padding-top: 4px;
+}
+.laji-form .table-condensed .well-sm {
+	padding-top: 0;
+}
+.laji-form .table-condensed .laji-form-field-template-buttons {
+	margin-top: 5px;
+}
+
 .laji-form .field-description {
 	font-size: 13px;
 }
@@ -370,7 +385,7 @@ min-height: 20px;
 	margin-bottom: 5px;
 }
 .laji-form .laji-form-images {
-	margin-top: 5px;
+	margin-top: 10px;
 }
 .laji-form .laji-form-images > div {
 	margin-right: 7px;
@@ -602,6 +617,9 @@ min-height: 20px;
 }
 .laji-form .panel-body:not(.laji-map-dialog) {
 	padding: 8px;
+}
+.laji-form .panel:not(.laji-form-popped) .panel-body {
+	padding-top: 3px;
 }
 
 .laji-form .has-error .rw-widget {
@@ -839,6 +857,11 @@ min-height: 20px;
 	padding-bottom: 5px;
 	margin-right: -1px;
 	margin-left: -1px;
+}
+
+.laji-form .laji-form-compact-table .laji-form-label-row {
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 .laji-form .laji-form-compact-table .row .row {
