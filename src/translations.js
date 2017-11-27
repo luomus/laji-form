@@ -412,22 +412,22 @@
 		en: "Overwrite existing with a new name",
 		sv: "Skriv över befintliga med en ny namn"
 	},
-	SaveNamedPlace: {
+	saveNamedPlace: {
 		fi: "Tallenna omana paikkana",
 		en: "Save as an own place",
 		sv: "Spara som en egen plats"
 	},
-	ClickPlaceToOverwrite: {
+	clickPlaceToOverwrite: {
 		fi: "Klikkaa paikkaa ylikirjoittaaksesi se",
 		en: "Click a place in order to overwrite it",
 		sv: "Klicka på en plats för att skriva över den"
 	},
-	NamedPlacesUseFail: {
+	namedPlacesUseFail: {
 		fi: "Paikka ei ole yhteensopiva lomakkeen kanssa.",
 		en: "The place is not compatible with the form",
 		sv: "Platsen är inte kompatibel med formuläret"
 	},
-	TypeError: {
+	typeError: {
 		fi: "Pitää olla ",
 		en: "Must be of type ",
 		sv: "Måste vara "
@@ -442,9 +442,14 @@
 		en: "string",
 		sv: "stringen"
 	},
-	FieldIsRequired: {
+	fieldIsRequired: {
 		fi: "Pakollinen kenttä",
 		en: "Required field",
 		sv: "Obligatoriskt fält"
+	},
+	namedPlaces: {
+		fi: "Omat paikat",
+		en: "Own places",
+		sv: "Egna platser"
 	}
 };

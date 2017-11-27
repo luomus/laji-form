@@ -63,6 +63,9 @@ export default class NamedPlaceSaverField extends Component {
 				<SchemaField  {...this.props} uiSchema={uiSchema} />
 				{this.state && this.state.show ? (
 				<Modal dialogClassName="laji-form" show={true} onHide={onHide}>
+					<Modal.Header>
+						<Modal.Title>{formContext.translations.NamedPlaces}</Modal.Title>
+					</Modal.Header>
 					<Modal.Body>
 						<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData} />
 					</Modal.Body>
