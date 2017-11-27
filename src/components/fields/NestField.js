@@ -131,7 +131,8 @@ export default class NestField extends Component {
 
 		let {schema, uiSchema, idSchema, errorSchema, formData} = props;
 
-		const {nests, buttonsNest, buttons} = options;
+		const {nests, buttonsNest} = options;
+		const buttons = getUiOptions(uiSchema).buttons;
 		const uiButtons = uiSchema["ui:buttons"];
 
 		const nestedPropsMap = {};

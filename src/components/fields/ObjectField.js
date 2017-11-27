@@ -3,6 +3,7 @@ import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { Row , Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
+import { getButton } from "../ArrayFieldTemplate";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
@@ -11,7 +12,9 @@ export default (props) => {
 
 function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
+
 	let buttons = getGlyphButtons(props);
+	const topButtons = getButtonsForPosition(props, "top");
 
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
@@ -29,6 +32,7 @@ function ObjectFieldTemplate(props) {
 						className={getUiOptions(props.uiSchema).titleClassName}
 						buttons={buttons}
 					/>}
+				{topButtons}
 				{props.description &&
 					<DescriptionField
 						id={`${props.idSchema.$id}__description`}
@@ -111,6 +115,7 @@ function GridTemplate(props) {
 	let fieldTitle = title !== undefined ? title : props.name;
 
 	let buttons = getGlyphButtons(props);
+	const topButtons = getButtonsForPosition(props, "top");
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
 	buttons = <div className={buttonsClassName}>{buttons}</div>;
@@ -119,6 +124,7 @@ function GridTemplate(props) {
 		<div className={containerClassName}>
 			<fieldset className={schemaClassName}>
 				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} className={getUiOptions(props.uiSchema).titleClassName} buttons={buttons}/> : null}
+				{topButtons}
 				{rows.map((row, i) =>
 					<Row key={i}>
 						{row}
@@ -168,8 +174,24 @@ function getClassNames(props, buttons) {
 
 function getGlyphButtons(props) {
 	const {uiSchema} = props;
-	const buttons = uiSchema["ui:buttons"];
+	let buttons = uiSchema["ui:buttons"] || [];
+	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(buttonDef => !buttonDef.position);
+	if (buttonDescriptions) {
+		buttons = [
+			...buttons,
+			...buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props))
+		];
+	}
+
 	return buttons ?
 		buttons :
+		null;
+}
+
+function getButtonsForPosition(props, position) {
+	const {uiSchema} = props;
+	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position);
+	return (buttonDescriptions && buttonDescriptions.length) ? 
+		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
 		null;
 }
