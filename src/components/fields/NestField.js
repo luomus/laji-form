@@ -204,7 +204,8 @@ export default class NestField extends Component {
 						...uiSchema[buttonsNest],
 						"ui:options": {
 							...nestOptions,
-							buttons: [..._buttons, ...buttons]}
+							buttons: [..._buttons, ...buttons]
+						}
 					}
 				};
 			}

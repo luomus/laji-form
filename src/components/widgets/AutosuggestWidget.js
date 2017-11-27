@@ -61,7 +61,7 @@ class TaxonAutosuggestWidget extends Component {
 	renderSuccessGlyph = (value) => {
 		return (
 			<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
-				<Glyphicon style={{pointerEvents: "auto"}} glyph="tag" className="form-control-feedback"/>
+				<Glyphicon style={{pointerEvents: "none"}} glyph="tag" className="form-control-feedback"/>
 			</a>
 		);
 	}
@@ -111,7 +111,7 @@ class FriendsAutosuggestWidget extends Component {
 		);
 	}
 
-	renderSuccessGlyph =  () => <Glyphicon style={{pointerEvents: "auto"}}
+	renderSuccessGlyph =  () => <Glyphicon style={{pointerEvents: "none"}}
 															           glyph="user"
 															           className="form-control-feedback"/>
 
@@ -373,7 +373,7 @@ export class Autosuggest extends Component {
 
 			return glyph ? (
 				<Glyphicon
-					style={{pointerEvents: "auto"}}
+					style={{pointerEvents: "none"}}
 					glyph={glyph}
 					className="form-control-feedback"
 				/>
