@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { findDOMNode }  from "react-dom";
-import { getInnerUiSchema, isEmptyString } from "../../utils";
+import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Panel, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import { GlyphButton, Button } from "../components";
+import { Button } from "../components";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -19,29 +19,28 @@ export default class NamedPlaceSaverField extends Component {
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const uiSchema = {
 			...innerUiSchema,
-			"ui:buttons": [
-				...(innerUiSchema["ui:buttons"] || []),
-				this.getButton(props)
-			]
+			"ui:options": {
+				...getUiOptions(innerUiSchema),
+				buttons: [
+					...(getUiOptions(innerUiSchema).buttons || []),
+					this.getButton(props)
+				]
+			}
 		};
 
 		return {uiSchema};
 	}
 
 	getButton(props) {
-		const button = (
-			<GlyphButton 
-				bsStyle={props.formData.namedPlaceID ? "success" : "default"} 
-				key="named-place-save-button" 
-				glyph="floppy-disk" 
-				tooltip={props.formContext.translations.SaveNamedPlace}
-				onClick={this.onButtonClick} />
-		);
-
-		return button;
+		return {
+			label: props.formContext.translations.SaveNamedPlace,
+			fn: this.onButtonClick,
+			glyph: "floppy-disk",
+			position: "top"
+		};
 	}
 
-	onButtonClick = () => {
+	onButtonClick = () => () => {
 		this.setState({show: !this.state.show});
 	}
 

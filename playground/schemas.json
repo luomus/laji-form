@@ -297,6 +297,9 @@
 		"gatherings": {
 			"ui:functions": [
 				{
+					"ui:field": "NamedPlaceChooserField"
+				},
+				{
 					"ui:field": "ContextInjectionField",
 					"ui:options": {
 						"injections": {
@@ -386,9 +389,6 @@
 			},
 			"items": {
 				"ui:functions": [
-					{
-						"ui:field": "NamedPlaceChooserField"
-					},
 					{
 						"ui:field": "NamedPlaceSaverField"
 					}
