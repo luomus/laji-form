@@ -285,7 +285,7 @@ export default class ScopeField extends Component {
 		let uiSchema = {
 			...this.state.uiSchema, 
 			"ui:buttons": [
-				...(this.state.uiSchema["ui:buttons"] || []),
+				...(this.props.uiSchema["ui:buttons"] || []),
 				this.renderAdditionalsButton()
 			]
 		};
@@ -593,7 +593,7 @@ export default class ScopeField extends Component {
 		);
 
 		return (
-			<OverlayTrigger key={`${this.props.idSchema.$id}-test`} overlay={tooltip} placement="left" bsRole={bsRole} >
+			<OverlayTrigger key={`${this.props.idSchema.$id}-scope`} overlay={tooltip} placement="left" bsRole={bsRole} >
 				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} />
 			</OverlayTrigger>
 		);

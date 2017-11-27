@@ -16,7 +16,7 @@ const PLACES_FETCH_FAIL = "PLACES_FETCH_FAIL";
 const PLACE_USE_FAIL = "PLACE_USE_FAIL";
 
 /**
- * Compatible only with gathering field.
+ * Compatible only with gatherings array and gathering object.
  */
 @BaseComponent
 export default class NamedPlaceChooserField extends Component {
@@ -26,30 +26,59 @@ export default class NamedPlaceChooserField extends Component {
 		this.apiClient = new ApiClient();
 	}
 
+	isArray = () => this.props.schema.type === "array"
+
 	onPlaceSelected = (place) => {
 		try {
-			let gathering = getDefaultFormState(
-				this.props.schema.items,
-				place.prepopulatedDocument.gatherings[0],
-				this.props.registry.definitions
-			);
-			gathering = Object.keys(gathering).reduce((_gathering, key) => {
-				if (this.props.schema.items.properties[key]) {
-					_gathering[key] = gathering[key];
-				}
-				return _gathering;
-			}, {});
-			gathering.namedPlaceID = place.id;
+			if (this.isArray()) { // gatherings array
+				let gathering = getDefaultFormState(
+					this.props.schema.items,
+					place.prepopulatedDocument.gatherings[0],
+					this.props.registry.definitions
+				);
+				gathering = Object.keys(gathering).reduce((_gathering, key) => {
+					if (this.props.schema.items.properties[key]) {
+						_gathering[key] = gathering[key];
+					}
+					return _gathering;
+				}, {});
+				gathering.namedPlaceID = place.id;
 
-			this.props.onChange([
-				...(this.props.formData || []),
-				gathering
-			]);
-			this.setState({show: false});
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "activeIdx", this.props.formData.length);
+				this.props.onChange([
+					...(this.props.formData || []),
+					gathering
+				]);
+				this.setState({show: false});
+				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "activeIdx", this.props.formData.length);
+			} else { // gathering object
+				let gathering = getDefaultFormState(
+					this.props.schema,
+					place.prepopulatedDocument.gatherings[0],
+					this.props.registry.definitions
+				);
+				const blacklist = ["units", "dateBegin", "dateEnd", "weather", "namedPlaceID"];
+				gathering = Object.keys(gathering).reduce((_gathering, key) => {
+					if (this.props.schema.properties[key] && !blacklist.includes(key)) {
+						_gathering[key] = gathering[key];
+					}
+					return _gathering;
+				}, {});
+				gathering.namedPlaceID = place.id;
+
+				this.props.onChange({...this.props.formData, ...gathering});
+				this.setState({show: false});
+				const splits = this.props.idSchema.$id.split("_");
+				splits.pop();
+				const targetId = splits.join("_");
+				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
+			}
 		} catch(e) {
 			this.setState({failed: PLACE_USE_FAIL});
 		}
+	}
+
+	onButtonClick = () => () => {
+		this.setState({show: true});
 	}
 
 	updatePlaces = () => {
@@ -60,23 +89,24 @@ export default class NamedPlaceChooserField extends Component {
 			if (response.results && response.results.length) {
 				const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
 				const options = getUiOptions(innerUiSchema);
+				const buttonDefinition = {
+					fn: this.onButtonClick,
+					key: "addNamedPlace",
+					glyph: "map-marker",
+					label: this.props.formContext.translations.ChooseFromNamedPlace
+				};
+				if (this.isArray()) { // gatherings array
+					buttonDefinition.rules = {canAdd: true};
+				} else {
+					buttonDefinition.position = "top";
+				}
 				const uiSchema = {
 					...innerUiSchema,
 					"ui:options": {
 						...options,
 						buttons: [
 							...(options.buttons || []),
-							{
-								fn: () => () => {
-									this.setState({show: true});
-								},
-								key: "addNamedPlace",
-								glyph: "map-marker",
-								label: this.props.formContext.translations.ChooseFromNamedPlace,
-								rules: {
-									canAdd: true
-								}
-							}
+							buttonDefinition
 						]
 					}
 				};

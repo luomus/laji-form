@@ -1,187 +1,27 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import TitleField from "react-jsonschema-form/lib/components/fields/TitleField";
-import { toIdSchema, orderProperties } from  "react-jsonschema-form/lib/utils";
-import { isHidden, getUiOptions, getInnerUiSchema, isEmptyString, isMultiSelect, getNestedUiFieldsList, applyFunction } from "../../utils";
-import { Row , Col, OverlayTrigger, Tooltip } from "react-bootstrap";
-import BaseComponent from "../BaseComponent";
+import React from "react";
+import { getUiOptions } from "../../utils";
 
-@BaseComponent
-export default class GridLayoutField extends Component {
-	static propTypes = {
-		uiSchema: PropTypes.shape({
-			"ui:options": PropTypes.shape({
-				lg: PropTypes.integer,
-				md: PropTypes.integer,
-				sm: PropTypes.integer,
-				xs: PropTypes.integer,
-				showLabels: PropTypes.boolean,
-				rowTitles: PropTypes.arrayOf(PropTypes.string)
-			})
-		}).isRequired
-	}
+export default (props) => {
+	let {schema, uiSchema} = props;
+	const {SchemaField} = props.registry.fields;
+	uiSchema = {
+		...uiSchema,
+		"ui:grid": uiSchema["ui:options"]
+	};
+	delete uiSchema["ui:field"];
 
-	static defaultProps = {
-		uiSchema: {
-			"ui:options": {
-				showLabels: true
-			}
-		}
-	}
-
-	getStateFromProps(props) {
-		let fieldProps = {...props};
-		const options = getUiOptions(props.uiSchema);
-		const innerUiSchema = getInnerUiSchema(props.uiSchema);
-
-		fieldProps = {...fieldProps, uiSchema: {...fieldProps.uiSchema, "ui:field": undefined, ...innerUiSchema}};
-
-		fieldProps = applyFunction(fieldProps);
-
-		//// Apply nested uiSchemas prop effects virtually without rendering them.
-		while (true) {
-			const uiField = fieldProps.uiSchema["ui:field"];
-			if (uiField === undefined) break;
-
-			const field = new props.registry.fields[uiField](fieldProps);
-			const innerfieldProps = {...field.props, ...field.state};
-			fieldProps = {...fieldProps, ...innerfieldProps};
-		}
-
-		const colsToRows = {};
-		(options.rows || []).forEach((row, i) => {
-			row.forEach(col => {
-				colsToRows[col] = i;
-			});
+	if (getUiOptions(uiSchema).showLabels === false) {
+		Object.keys(schema.properties).forEach(propertyName => {
+			const propertyUiSchema = (uiSchema[propertyName] || {});
+			uiSchema[propertyName] = {
+				...propertyUiSchema,
+				"ui:options": {
+					...(propertyUiSchema["ui:options"] || {}),
+					label: false
+				}
+			};
 		});
-
-		const groups = [];
-
-		const showLabels = (options && options.hasOwnProperty("showLabels")) ? options.showLabels : true;
-		const rowTitles = options && options.rowTitles ? options.rowTitles : [];
-
-		return {...fieldProps, groups, showLabels, rowTitles, colsToRows};
 	}
 
-	isRequired = (requirements, name) => {
-		return Array.isArray(requirements) &&
-			requirements.indexOf(name) !== -1;
-	}
-
-	getCols = (schema, uiSchema, property) => {
-		const cols = {lg: 12, md: 12, sm: 12, xs: 12};
-
-		if ((schema.type === "array" && !(schema.items && schema.items.enum && isMultiSelect(schema, uiSchema))) ||
-		    (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))) {
-			return cols;
-		}
-
-		const options = getUiOptions(this.props.uiSchema);
-		Object.keys(cols).forEach(col => {
-			const optionCol = options[col];
-			if (typeof optionCol === "object") {
-				let selector = undefined;
-				if (optionCol[property]) selector = property;
-				else if (optionCol["*"]) selector = "*";
-				cols[col] = optionCol[selector];
-			} else {
-				cols[col] = optionCol;
-			}
-		});
-
-		return cols;
-	}
-
-	onChange = (propertyName) => (formData) => {
-		this.props.onChange({...this.state.formData, [propertyName]: formData});
-	}
-
-	render() {
-		const SchemaField = this.state.registry.fields.SchemaField;
-		const props = {...this.props, ...this.state};
-		const {colsToRows, showLabels, rowTitles} = this.state;
-
-		const {schema, uiSchema} = this.state;
-
-		const rows = [];
-		const lastRow = [];
-
-		function getRow(col) {
-			const colRow = colsToRows[col];
-			if (colRow !== undefined) {
-				if (!rows[colRow]) rows[colRow] = [];
-				return rows[colRow];
-			} else {
-				return lastRow;
-			}
-		}
-
-		this.addRowTitles(rows, rowTitles);
-
-		orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach((propertyName, i) => {
-			const property = this.state.schema.properties[propertyName];
-
-			if (!property) return;
-
-			const uiSchemaProperty = uiSchema[propertyName];
-			const cols = this.getCols(property, uiSchemaProperty, propertyName);
-
-			let {title, ...schema} = property;
-			const name = showLabels ? (title !== undefined ? title : propertyName) : undefined;
-
-			if (showLabels) schema = {...schema, title};
-
-			if (!isHidden(this.state.uiSchema, propertyName)) getRow(propertyName).push(
-				<Col key={"div_" + i} {...cols}>
-					<SchemaField
-						{...props}
-						key={i}
-						name={name}
-						required={this.isRequired(this.state.schema.required, propertyName)}
-						schema={schema}
-						uiSchema={this.state.uiSchema[propertyName]}
-						idSchema={toIdSchema(
-							property,
-							this.state.idSchema[propertyName].$id,
-							this.props.registry.definitions
-						)}
-						errorSchema={this.state.errorSchema ? (this.state.errorSchema[propertyName] || {}) : {}}
-						formData={this.state.formData ? this.state.formData[propertyName] : undefined}
-						registry={this.state.registry}
-						onChange={this.onChange(propertyName)}
-					/>
-				</Col>
-			);
-		});
-
-		if (lastRow.length > 0) rows.push(lastRow);
-
-		const {title} = this.props.schema;
-		let fieldTitle = title !== undefined ? title : this.props.name;
-		return (
-			<fieldset>
-				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} className={getUiOptions(this.props.uiSchema).titleClassName} /> : null}
-				{rows.map((row, i) =>
-					<Row key={i}>
-						{row}
-					</Row>
-				)}
-			</fieldset>
-		);
-	}
-
-	addRowTitles = (rows, rowTitles) => {
-		for (let i = 0; i < rowTitles.length; i++) {
-			rows[i] = [];
-			const tooltip = <Tooltip id={this.props.idSchema.$id + "_row_" + i + "_tooltip"}>{rowTitles[i]}</Tooltip>;
-			const titleCols = this.getCols({type: "string"}, this.state.uiSchema["rowTitle"], "rowTitle");
-			rows[i].push((<Col {...titleCols} key={"title_" + i}>
-				<div>
-					<OverlayTrigger overlay={tooltip}>
-						<label><strong>{rowTitles[i]}</strong></label>
-					</OverlayTrigger>
-				</div>
-			</Col>));
-		}
-	}
-}
+	return <SchemaField {...props} schema={schema} uiSchema={uiSchema} />;
+};

@@ -456,6 +456,9 @@ class _MapArrayField extends ComposedComponent {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
 			this.setState({activeIdx: idx}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 		});
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", () => {
+			this._zoomToDataOnNextTick = true;
+		});
 
 		if (this.onComponentDidMount) this.onComponentDidMount();
 	}
@@ -475,6 +478,10 @@ class _MapArrayField extends ComposedComponent {
 			} else {
 				this.refs.stretch.update();
 			}
+		}
+		if (this._zoomToDataOnNextTick) {
+			this._zoomToDataOnNextTick = false;
+			this.map.zoomToData();
 		}
 	}
 

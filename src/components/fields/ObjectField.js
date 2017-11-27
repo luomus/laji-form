@@ -1,43 +1,197 @@
 import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
-import { orderProperties } from "react-jsonschema-form/lib/utils";
-import { renderGrid } from "./GridLayoutField";
-import { getUiOptions } from "../../utils";
+import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
+import { Row , Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
+import { getButton } from "../ArrayFieldTemplate";
 
-export function ObjectFieldTemplate(props) {
+export default (props) => {
+	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
+	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template}} />;
+};
+
+function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
+
+	let buttons = getGlyphButtons(props);
+	const topButtons = getButtonsForPosition(props, "top");
+
+	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
+
+	buttons = <div className={buttonsClassName}>{buttons}</div>;
+
 	return (
-		<fieldset>
-			{props.title &&
+		<div className={containerClassName}>
+			<fieldset className={schemaClassName}>
+				{props.title &&
 					<TitleField
 						id={`${props.idSchema.$id}__title`}
 						title={props.title}
 						required={props.required}
 						formContext={props.formContext}
 						className={getUiOptions(props.uiSchema).titleClassName}
+						buttons={buttons}
 					/>}
-			{props.description &&
-				<DescriptionField
-					id={`${props.idSchema.$id}__description`}
-					description={props.description}
-					formContext={props.formContext}
-				/>}
-			{props.properties}
-		</fieldset>
+				{topButtons}
+				{props.description &&
+					<DescriptionField
+						id={`${props.idSchema.$id}__description`}
+						description={props.description}
+						formContext={props.formContext}
+					/>}
+				{props.properties.map(({content}) => content)}
+			</fieldset>
+			{!props.title && buttons ? buttons : undefined}
+		</div>
 	);
 }
 
 function GridTemplate(props) {
-	const propToSchema = orderProperties(Object.keys(props.schema.properties), props.uiSchema["ui:order"]).reduce((obj, prop, i) => {
-		obj[prop] = props.properties[i];
-		return obj;
-	}, {});
-	return renderGrid(props.schema, props.uiSchema, props.uiSchema["ui:grid"], props.name, (property) => {
-		return propToSchema[property];
+	const {schema, uiSchema, idSchema, properties, TitleField} = props;
+	const gridOptions = props.uiSchema["ui:grid"] || {};
+
+	const rows = [];
+	const lastRow = [];
+
+	const colsToRows = {};
+	(gridOptions.rows || []).forEach((row, i) => {
+		row.forEach(col => {
+			colsToRows[col] = i;
+		});
 	});
+
+	const {rowTitles = []} = gridOptions;
+
+	const addRowTitles = (rows, rowTitles) => {
+		for (let i = 0; i < rowTitles.length; i++) {
+			rows[i] = [];
+			const tooltip = <Tooltip id={idSchema.$id + "_row_" + i + "_tooltip"}>{rowTitles[i]}</Tooltip>;
+			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
+			rows[i].push((<Col {...titleCols} key={"title_" + i}>
+				<div>
+					<OverlayTrigger overlay={tooltip}>
+						<label><strong>{rowTitles[i]}</strong></label>
+					</OverlayTrigger>
+				</div>
+			</Col>));
+		}
+	};
+
+	function getRow(col, colsToRows, rows) {
+		const colRow = colsToRows[col];
+		if (colRow !== undefined) {
+			if (!rows[colRow]) rows[colRow] = [];
+			return rows[colRow];
+		} else {
+			return lastRow;
+		}
+	}
+
+	addRowTitles(rows, rowTitles);
+
+	orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach((propertyName, i) => {
+		const property = schema.properties[propertyName];
+
+		if (!property) return;
+
+		const uiSchemaProperty = uiSchema[propertyName];
+		const cols = getCols(props, property, uiSchemaProperty, propertyName);
+
+		const propertiesByName = properties.reduce((propertiesByName, _prop) => {
+			propertiesByName[_prop.name] = _prop;
+			return propertiesByName;
+		}, {});
+
+		if (!isHidden(uiSchema, propertyName)) getRow(propertyName, colsToRows, rows).push(
+			<Col key={"div_" + i} {...cols}>
+				{propertiesByName[propertyName].content}
+			</Col>
+		);
+	});
+
+	if (lastRow.length > 0) rows.push(lastRow);
+
+	const {title} = schema;
+	let fieldTitle = title !== undefined ? title : props.name;
+
+	let buttons = getGlyphButtons(props);
+	const topButtons = getButtonsForPosition(props, "top");
+	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
+
+	buttons = <div className={buttonsClassName}>{buttons}</div>;
+
+	return (
+		<div className={containerClassName}>
+			<fieldset className={schemaClassName}>
+				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} className={getUiOptions(props.uiSchema).titleClassName} buttons={buttons}/> : null}
+				{topButtons}
+				{rows.map((row, i) =>
+					<Row key={i}>
+						{row}
+					</Row>
+				)}
+			</fieldset>
+			{!props.title && buttons ? buttons : null}
+	</div>
+	);
 }
 
-export default (props) => {
-	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
-	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template}} />;
-};
+function getCols(props, schema, uiSchema, property) {
+	const cols = {lg: 12, md: 12, sm: 12, xs: 12};
+
+	if ((schema.type === "array" && !(schema.items && schema.items.enum && isMultiSelect(schema, uiSchema))) ||
+			(schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))) {
+		return cols;
+	}
+
+	const options = props.uiSchema["ui:grid"];
+	Object.keys(cols).forEach(col => {
+		const optionCol = options[col];
+		if (typeof optionCol === "object") {
+			let selector = undefined;
+			if (optionCol[property]) selector = property;
+			else if (optionCol["*"]) selector = "*";
+			cols[col] = optionCol[selector];
+		} else {
+			cols[col] = optionCol;
+		}
+	});
+
+	return cols;
+}
+
+function getClassNames(props, buttons) {
+	const vertical = props.uiSchema["ui:buttonsVertical"];
+	let containerClassName, schemaClassName, buttonsClassName;
+	if (buttons && buttons.length) {
+		containerClassName = "laji-form-field-template-item" + (vertical ? " keep-vertical" : "");
+		schemaClassName = "laji-form-field-template-schema";
+		buttonsClassName = "laji-form-field-template-buttons";
+		if (props.title) buttonsClassName += " pull-right";
+	}
+	return {containerClassName, schemaClassName, buttonsClassName};
+}
+
+function getGlyphButtons(props) {
+	const {uiSchema} = props;
+	let buttons = uiSchema["ui:buttons"] || [];
+	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(buttonDef => !buttonDef.position);
+	if (buttonDescriptions) {
+		buttons = [
+			...buttons,
+			...buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props))
+		];
+	}
+
+	return buttons ?
+		buttons :
+		null;
+}
+
+function getButtonsForPosition(props, position) {
+	const {uiSchema} = props;
+	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position);
+	return (buttonDescriptions && buttonDescriptions.length) ? 
+		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
+		null;
+}

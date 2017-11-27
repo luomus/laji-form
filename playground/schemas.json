@@ -297,9 +297,6 @@
 		"gatherings": {
 			"ui:functions": [
 				{
-					"ui:field": "NamedPlaceChooserField"
-				},
-				{
 					"ui:field": "ContextInjectionField",
 					"ui:options": {
 						"injections": {
@@ -388,9 +385,14 @@
 				"addTxt": "Lisää paikka"
 			},
 			"items": {
-				"ui:functions": {
-					"ui:field": "NamedPlaceSaverField"
-				},
+				"ui:functions": [
+					{
+						"ui:field": "NamedPlaceChooserField"
+					},
+					{
+						"ui:field": "NamedPlaceSaverField"
+					}
+				],
 				"ui:field": "NestField",
 				"ui:options": {
 					"nests": {
@@ -450,7 +452,8 @@
 								}
 							}
 						}
-					}
+					},
+					"buttonsNest": "placeWrapper"
 				},
 				"ui:order": [
 					"*",
@@ -1351,7 +1354,7 @@
 													}
 												}
 											},
-											"required": []
+											"required": ["taxon"]
 										},
 										"minItems": 1
 									},
@@ -1636,7 +1639,8 @@
     "leg": [
       "MA.308"
     ],
-    "legPublic": true
+    "legPublic": true,
+	"dateBegin": ""
   },
   "gatherings": [
     {
@@ -1652,7 +1656,7 @@
           "images": [],
           "identifications": [
             {
-              "taxon": "sdf",
+              "taxon": "",
               "identificationBasis": []
             }
           ],
