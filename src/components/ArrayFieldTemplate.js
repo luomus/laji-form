@@ -93,6 +93,8 @@ export function getButtons(buttons = [], props = {}) {
 		buttonElems = [...buttonElems, ...props.uiSchema["ui:buttons"]];
 	}
 
+	if (buttonElems.length === 0) return null;
+
 	return (
 		<ButtonToolbar className={getUiOptions(props.uiSchema)["ui:buttonsDesktopLayout"] ? "desktop-layout" : undefined} key="buttons">
 			{buttonElems}

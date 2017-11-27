@@ -799,38 +799,47 @@ min-height: 20px;
 
 /* Custom bootstrap grid class */
 
-.col-xs-13,
-.col-sm-13,
-.col-md-13,
-.col-lg-13 {
+.col-xs-13104,
+.col-sm-13104,
+.col-md-13104,
+.col-lg-13104,
+.col-xs-6104,
+.col-sm-6104,
+.col-md-6104,
+.col-lg-6104 {
 	position: relative;
 	min-height: 1px;
-	/*padding-right: 10px;
-	padding-left: 10px;*/
-}
-
-.col-xs-13 {
-	width: calc(100% / 13);
-	float: left;
 }
 
 @media (min-width: 768px) {
-	.col-sm-13 {
-		width: calc(100% / 13);
+	.col-sm-13104 {
+		width: calc(100% / 104 * 13);
+		float: left;
+	}
+	.col-sm-6104 {
+		width: calc(100% / 104 * 6);
 		float: left;
 	}
 }
 
 @media (min-width: 992px) {
-	.col-md-13 {
-		width: calc(100% / 13);
+	.col-md-13104 {
+		width: calc(100% / 104 * 13);
+		float: left;
+	}
+	.col-md-6104 {
+		width: calc(100% / 104 * 6);
 		float: left;
 	}
 }
 
 @media (min-width: 1200px) {
-	.col-lg-13 {
-		width: calc(100% / 13);
+	.col-lg-13104 {
+		width: calc(100% / 104 * 13);
+		float: left;
+	}
+	.col-lg-6104 {
+		width: calc(100% / 104 * 6);
 		float: left;
 	}
 }
