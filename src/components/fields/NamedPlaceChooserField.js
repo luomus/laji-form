@@ -96,30 +96,21 @@ export default class NamedPlaceChooserField extends Component {
 					label: this.props.formContext.translations.ChooseFromNamedPlace
 				};
 				if (this.isArray()) { // gatherings array
-					const uiSchema = {
-						...innerUiSchema,
-						"ui:options": {
-							...options,
-							buttons: [
-								...(options.buttons || []),
-								{...buttonDefinition, rules: {canAdd: true}}
-							]
-						}
-					};
-					state.uiSchema = uiSchema;
-				} else { // gathering object
-					const uiSchema = {
-						...innerUiSchema,
-						"ui:options": {
-							...options,
-							buttons: [
-								...(options.buttons || []),
-								{...buttonDefinition, position: "top"}
-							]
-						}
-					};
-					state.uiSchema = uiSchema;
+					buttonDefinition.rules = {canAdd: true};
+				} else {
+					buttonDefinition.position = "top";
 				}
+				const uiSchema = {
+					...innerUiSchema,
+					"ui:options": {
+						...options,
+						buttons: [
+							...(options.buttons || []),
+							buttonDefinition
+						]
+					}
+				};
+				state.uiSchema = uiSchema;
 			}
 
 			this.setState(state);

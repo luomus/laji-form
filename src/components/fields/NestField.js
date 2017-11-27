@@ -194,7 +194,19 @@ export default class NestField extends Component {
 			if (buttons) {
 				let nestOptions = getUiOptions(uiSchema[buttonsNest]);
 				let _buttons = nestOptions.buttons || [];
-				uiSchema = {...uiSchema, [buttonsNest]: {...uiSchema[buttonsNest], "ui:options": {...nestOptions, buttons: [..._buttons, ...buttons]}}};
+				uiSchema = {
+					...uiSchema,
+					"ui:options": {
+						...uiSchema["ui:options"],
+						buttons: undefined
+					},
+					[buttonsNest]: {
+						...uiSchema[buttonsNest],
+						"ui:options": {
+							...nestOptions,
+							buttons: [..._buttons, ...buttons]}
+					}
+				};
 			}
 		}
 
