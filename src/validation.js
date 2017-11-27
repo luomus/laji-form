@@ -87,7 +87,7 @@ export function getWarnings(data, id, warningValidators, formData) {
 	const result = lajiValidate(newFormData, validators);
 	if (result) {
 		const key = id.replace(/^root_/, "").replace(/_(?=[0-9])/g, "").replace(/[0-9]+/g, "[$&]").replace(/_/g, ".");
-		return result[key];
+		return result[key] || [];
 	}
 	return [];
 }
