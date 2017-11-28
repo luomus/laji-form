@@ -82,7 +82,7 @@ export default class NamedPlaceChooserField extends Component {
 	}
 
 	updatePlaces = () => {
-		this.apiClient.fetchCached("/named-places").then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false}).then(response => {
 			if (!this.mounted) return;
 			const state = {places: response.results};
 

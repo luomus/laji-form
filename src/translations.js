@@ -393,9 +393,9 @@
 		sv: "Varning"
 	},
 	usedNamedPlaceName: {
-		fi: "Paikan nimi on jo käytössä. Valitse alta ylikirjoitettava paikka tai paina tallenna uusi.",
-		en: "The place name is used already. Select a place to overwrite below or click save new.",
-		sv: "Platsen heter redan. Välj en plats att skriva över nedan eller klicka på spara ny."
+		fi: "Paikan nimi on jo käytössä",
+		en: "The place name is used already",
+		sv: "Platsen heter redan"
 	},
 	save: {
 		fi: "Tallenna",
@@ -407,10 +407,10 @@
 		en: "New",
 		sv: "Ny"
 	},
-	saveOverwrite: {
-		fi: "Tallenna nykyinen uudella nimellä",
-		en: "Overwrite existing with a new name",
-		sv: "Skriv över befintliga med en ny namn"
+	saveCurrentOverwrite: {
+		fi: "Tallenna nykyisen päälle",
+		en: "Overwrite existing",
+		sv: "Skriv över befintliga"
 	},
 	saveNamedPlace: {
 		fi: "Tallenna omana paikkana",
@@ -451,5 +451,15 @@
 		fi: "Omat paikat",
 		en: "Own places",
 		sv: "Egna platser"
-	}
+	},
+	usedNamedPlaceNameMultiple: {
+		fi: "Valitse alta ylikirjoitettava paikka",
+		en: "Select a place to overwrite below",
+		sv: "Välj en plats att skriva över nedan"
+	},
+	saveExistingOverwrite: {
+		fi: "Ylikirjoita paikka",
+		en: "Overwrite place",
+		sv: "Skriv över platsen"
+	},
 };

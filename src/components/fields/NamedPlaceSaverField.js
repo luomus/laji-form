@@ -93,7 +93,7 @@ class PlaceSaverDialog extends Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetch("/named-places").then(response => {
+		this.apiClient.fetch("/named-places", {public: false}).then(response => {
 			if (!this.mounted) return;
 			const state = {
 				places: response.results,
@@ -184,6 +184,10 @@ class PlaceSaverDialog extends Component {
 		});
 	}
 
+	onOverwriteExisting = () => {
+		this.onOverwriteCurrent(this.state.placeNamesToPlaces[this.state.value])();
+	}
+
 	// Hack that fixed autofocus cursor position
 	onFocus = (e) => {
 		var val = e.target.value;
@@ -206,6 +210,10 @@ class PlaceSaverDialog extends Component {
 			return (place.owners || []).includes(this.props.formContext.uiSchemaContext.creator);
 		});
 
+		const getButton = (onClick, text) => {
+			return <Button bsSize="small" onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
+		}
+
 		return this.state.failed ? (
 			<Alert bsStyle="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
 		): (
@@ -216,21 +224,24 @@ class PlaceSaverDialog extends Component {
 						{" "}
 						<FormControl type="text" value={value} onChange={this.onInputChange} autoFocus onFocus={this.onFocus} disabled={loading} ref={this.setInputRef}/>
 						{" "}
-						<Button bsSize="small" onClick={this.onSaveNew} disabled={loading || isEmptyString(value)}>{translations.Save} {translations.new}</Button>
+						{!existingPlaces.length ? 
+								getButton(this.onSaveNew, `${translations.Save} ${translations.new}`) : null}
 						{" "}
-						{!existingPlaces.length && this.props.gathering.namedPlaceID ? 
-								<Button  bsSize="small" onClick={this.onOverwriteCurrent} disabled={loading || isEmptyString(value)}>{translations.SaveOverwrite}</Button> : 
-								null
-						}
+						{this.props.gathering.namedPlaceID ? 
+								getButton(this.onOverwriteCurrent, translations.SaveCurrentOverwrite) : null}
+						{existingPlaces.length === 1 && !this.props.gathering.namedPlaceID ? 
+								getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
 					</FormGroup>
 					{loading ? <div className="pull-right"><Spinner /></div> : null}
 				</Form>
-				{existingPlaces.length ? (
+				{!this.props.gathering.namedPlaceID && existingPlaces.length ?
+					<Alert bsStyle="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple} ${translations.or} ${translations.saveCurrentOverwrite}.` : ""}`}</Alert>
+					: null}
+				{existingPlaces.length > 1 ? (
 					<FormGroup>
-						<Alert bsStyle="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}`}</Alert>
 						<Panel header={translations.ClickPlaceToOverwrite}>
 							<ListGroup fill>
-								{existingPlaces.map(place => 
+								{existingPlaces.map(place =>
 									<ListGroupItem header={place.name} key={place.id} onClick={loading ? undefined : this.onOverwriteSelected(place)} disabled={loading}>
 										{place.notes}
 									</ListGroupItem>
