@@ -175,7 +175,7 @@ class NamedPlaceChooser extends Component {
 		if (layers.length === 1 && !layer.getBounds) {
 			const latlng = layer.getLatLng ? layer.getLatLng() : layer.getCenter();
 			center = latlng;
-			if (map.data[0].groupContainer.hasLayer(layer) && layer.feature.geometry.type === "Point") {
+			if (map.data[0].groupContainer.hasLayer(layer) && map.data[0].groupContainer.zoomToShowLayer && layer.feature.geometry.type === "Point") {
 				map.data[0].groupContainer.zoomToShowLayer(layer);
 			} else {
 				map.map.setView(latlng, {animate: false});

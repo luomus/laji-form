@@ -185,7 +185,7 @@ class PlaceSaverDialog extends Component {
 	}
 
 	onOverwriteExisting = () => {
-		this.onOverwriteCurrent(this.state.placeNamesToPlaces[this.state.value])();
+		this.onOverwriteSelected(this.state.placeNamesToPlaces[this.state.value])();
 	}
 
 	// Hack that fixed autofocus cursor position
