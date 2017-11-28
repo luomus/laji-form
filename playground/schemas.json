@@ -362,7 +362,7 @@
 					"ui:options": {
 						"headerFormatters": [
 							"units",
-							"locality"
+							"namedPlace"
 						],
 						"popupFields": [
 							{

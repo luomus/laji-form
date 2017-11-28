@@ -247,7 +247,8 @@ class NamedPlaceChooser extends Component {
 		}
 
 		const {idx} = feature.properties;
-		return {color: idx === this.state.popupIdx ? ACTIVE_COLOR : getColor(idx)};
+		const color = idx === this.state.popupIdx ? ACTIVE_COLOR : getColor(idx);
+		return {color, fillColor: color};
 	}
 
 	render() {

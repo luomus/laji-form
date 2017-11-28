@@ -10,70 +10,8 @@ import { DeleteButton } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
+import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
-
-const headerFormatters = {
-	units: {
-		render: (that, idx) => {
-			const {props: {formContext: {translations}, formData}} = that;
-			const item = formData[idx];
-			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ?
-				item.units.filter(unit =>
-					unit &&
-					unit.identifications &&
-					unit.identifications[0] &&
-					unit.identifications[0].taxon).length
-				: 0;
-
-			return (
-				<span className="text-muted">
-					{` (${unitsLength} ${translations.unitsPartitive})`}
-				</span>
-			);
-		},
-		onClick: (that, idx) => {
-			if (that.state.activeIdx === idx) {
-				headerFormatters.units.onMouseEnter(that, idx, !!"use the force");
-			} else {
-				headerFormatters.units.onMouseLeave(that);
-			}
-		},
-		onMouseEnter: (that, idx, force) => {
-			const {props: {formData}} = that;
-			const item = formData[idx];
-
-			that.hoveredIdx = idx;
-			if (!force && idx === that.state.activeIdx) return;
-			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
-			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
-
-			const unitGeometries = [...(item && item.units ? item.units : [])]
-				.filter(unit => unit.unitGathering && hasData(unit.unitGathering.geometry))
-				.map(unit => unit.unitGathering.geometry);
-
-			const geometries = [...gatheringGeometries, ...unitGeometries]
-				.map(geometry => {
-					return {type: "Feature", properties: {}, geometry};
-				});
-
-			map.addData({
-				featureCollection: {type: "featureCollection", features: geometries},
-				getFeatureStyle: () => {
-					return {opacity: 0.6, color: "#888888"};
-				},
-				temp: true
-			});
-		},
-		onMouseLeave: (that) => {
-			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
-			const lastData = map.data[map.data.length -1];
-			if (lastData && lastData.temp) {
-				map.removeData(map.data.length - 1);
-			}
-			that.hoveredIdx = undefined;
-		}
-	}
-};
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
@@ -176,19 +114,25 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	render() {
-		const renderer = getUiOptions(this.props.uiSchema).renderer || "accordion";
+		const {renderer = "accordion"} = getUiOptions(this.props.uiSchema);
 		let ArrayFieldTemplate = undefined;
-		if (renderer === "accordion") {
+		switch(renderer) {
+		case "accordion":
 			ArrayFieldTemplate = AccordionArrayFieldTemplate;
-		} else if (renderer === "pager") {
+			break;
+		case "pager":
 			ArrayFieldTemplate = PagerArrayFieldTemplate;
-		} else if (renderer === "uncontrolled") {
+			break;
+		case "uncontrolled":
 			ArrayFieldTemplate = UncontrolledArrayFieldTemplate;
-		} else if (renderer === "table") {
+			break;
+		case "table":
 			ArrayFieldTemplate = TableArrayFieldTemplate;
-		} else if (renderer === "split"){
+			break;
+		case "split":
 			ArrayFieldTemplate = SplitArrayFieldTemplate;
-		} else {
+			break;
+		default:
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
@@ -444,7 +388,11 @@ class AccordionArrayFieldTemplate extends Component {
 		const activeIdx = that.state.activeIdx;
 
 		const onSelect = key => that.onActiveChange(key);
-		const header = idx => renderAccordionHeader(that, idx);
+
+		const getHeader = idx => <AccordionHeader 
+			that={that}
+			idx={idx}
+		/>;
 
 		return (
 			<div className="laji-form-single-active-array">
@@ -453,7 +401,7 @@ class AccordionArrayFieldTemplate extends Component {
 						<Panel key={idx}
 						       className="laji-form-clickable-panel"
 									 eventKey={idx}
-									 header={header(idx)}
+									 header={getHeader(idx)}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
 							{idx === activeIdx ? item.children : null}
 						</Panel>
@@ -680,68 +628,189 @@ class TableArrayFieldTemplate extends Component {
 		);
 	}
 }
+const headerFormatters = {
+	units: {
+		component: (props) => {
+			const {that: {props: {formContext: {translations}, formData}}} = props;
+			const item = formData;
+			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ?
+				item.units.filter(unit =>
+					unit &&
+					unit.identifications &&
+					unit.identifications[0] &&
+					unit.identifications[0].taxon).length
+				: 0;
 
-function renderAccordionHeader(that, idx) {
-	const popupData = that.state.popups[idx];
-
-	// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
-	const options = getUiOptions(that.props.uiSchema);
-	let _headerFormatters = options.headerFormatters || options.headerFormatter || [];
-	if (_headerFormatters && !Array.isArray(_headerFormatters)) _headerFormatters = [_headerFormatters];
-
-	const formatters = _headerFormatters.map(formatter => {
-		if (headerFormatters[formatter]) return headerFormatters[formatter];
-		else return {
-			render: (that, idx) => {
-				return <span className="text-muted">{that.props.formData[idx][formatter]}</span>;
+			return (
+				<span className="text-muted">
+					{` (${unitsLength} ${translations.unitsPartitive})`}
+				</span>
+			);
+		},
+		onClick: (that, idx) => {
+			if (that.state.activeIdx === idx) {
+				headerFormatters.units.onMouseEnter(that, idx, !!"use the force");
+			} else {
+				headerFormatters.units.onMouseLeave(that);
 			}
+		},
+		onMouseEnter: (that, idx, force) => {
+			const {props: {formData}} = that;
+			const item = formData[idx];
+
+			that.hoveredIdx = idx;
+			if (!force && idx === that.state.activeIdx) return;
+			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
+			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
+
+			const unitGeometries = [...(item && item.units ? item.units : [])]
+				.filter(unit => unit.unitGathering && hasData(unit.unitGathering.geometry))
+				.map(unit => unit.unitGathering.geometry);
+
+			const geometries = [...gatheringGeometries, ...unitGeometries]
+				.map(geometry => {
+					return {type: "Feature", properties: {}, geometry};
+				});
+
+			map.addData({
+				featureCollection: {type: "featureCollection", features: geometries},
+				getFeatureStyle: () => {
+					return {opacity: 0.6, color: "#888888"};
+				},
+				temp: true
+			});
+		},
+		onMouseLeave: (that) => {
+			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
+			const lastData = map.data[map.data.length -1];
+			if (lastData && lastData.temp) {
+				map.removeData(map.data.length - 1);
+			}
+			that.hoveredIdx = undefined;
+		}
+	},
+	namedPlace: {
+		component: class NamedPlaceHeader extends Component {
+			constructor(props) {
+				super(props);
+				this.state = {};
+			}
+
+			componentDidMount() {
+				this.mounted = true;
+				this.fetch(this.props);
+			}
+
+			componentWillUnmount() {
+				this.mounted = false;
+			}
+
+			componentWillReceiveProps(props) {
+				this.fetch(props);
+			}
+
+			fetch = (props) => {
+				const {namedPlaceID} = props.that.props.formData[props.idx];
+				if (namedPlaceID) new ApiClient().fetchCached(`/named-places/${namedPlaceID}`).then(response => {
+					if (this.mounted && name !== this.state.name) this.setState({
+						namedPlaceID,
+						name: response.name
+					});
+				});
+			}
+
+			render() {
+				const {name} = this.state;
+				const {locality} = this.props.that.props.formData[this.props.idx];
+				return <span className="text-muted">{!isEmptyString(name) ? name : locality}</span>;
+			}
+		}
+	}
+};
+
+class AccordionHeader extends Component {
+	render() {
+		const {that, idx} = this.props;
+		const {props} = that;
+		const {uiSchema, formContext} = props;
+		const title = that.state.getTitle(idx);
+		const onDelete = that.onDelete(idx);
+		const popupData = that.state.popups[idx];
+
+		// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
+		const options = getUiOptions(uiSchema);
+		let _headerFormatters = options.headerFormatters || options.headerFormatter || [];
+		if (_headerFormatters && !Array.isArray(_headerFormatters)) _headerFormatters = [_headerFormatters];
+
+		if (options.headerFormatter) {
+			console.warn("laji-form warning: 'headerFormatter' is deprecated. Use 'headerFormatters' instead.");
+		}
+
+		const formatters = _headerFormatters.map(formatter => {
+			if (headerFormatters[formatter]) return headerFormatters[formatter];
+			else return {
+				component: (props) => {
+					return <span className="text-muted">{props.formData[formatter]}</span>;
+				}
+			};
+		});
+
+		const headerText = (
+			<span>
+				{title}
+				{formatters.map((formatter, i) => {
+					const {component: Formatter} = formatter;
+					return (
+						<span key={i}> <Formatter that={that} idx={idx} /></span>
+					);
+				})}
+			</span>
+		);
+
+		const onHeaderClick = () => {
+			that.onActiveChange(idx);
+			formatters.forEach(formatter => {formatter.onClick && formatter.onClick(that, idx);});
 		};
-	});
 
-	const headerText = <span>{that.state.getTitle(idx)}{formatters.map((formatter, i) => <span key={i}> {formatter.render(that, idx)}</span>)}</span>;
+		const onMouseEnter = () => {
+			formatters.forEach(formatter => {
+				formatter.onMouseEnter && formatter.onMouseEnter(that, idx);
+			});
+		};
 
-	const onHeaderClick = () => {
-		that.onActiveChange(idx);
-		formatters.forEach(formatter => {formatter.onClick && formatter.onClick(that, idx);});
-	};
+		const onMouseLeave = () => {
+			formatters.forEach(formatter => {
+				formatter.onMouseLeave && formatter.onMouseLeave(that, idx);
+			});
+		};
 
-	const onMouseEnter = () => {
-		formatters.forEach(formatter => {
-			formatter.onMouseEnter && formatter.onMouseEnter(that, idx);
-		});
-	};
-
-	const onMouseLeave = () => {
-		formatters.forEach(formatter => {
-			formatter.onMouseLeave && formatter.onMouseLeave(that, idx);
-		});
-	};
-
-	const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
-
-	const header = (
-		<div className="laji-form-clickable-panel-header laji-form-accordion-header" onClick={onHeaderClick}
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave} >
-			<div className="panel-title">
-				{headerText}
-				<DeleteButton ref={getDeleteButtonRef}
-				              className="pull-right"
-				              confirm={options.confirmDelete}
-				              translations={that.props.formContext.translations}
-				              onClick={that.onDelete(idx)} />
+		const header = (
+			<div className="laji-form-clickable-panel-header laji-form-accordion-header"
+			     onClick={onHeaderClick}
+				   onMouseEnter={onMouseEnter}
+				   onMouseLeave={onMouseLeave} >
+				<div className="panel-title">
+					{headerText}
+					<DeleteButton ref={this.setDeleteButtonRef}
+					              className="pull-right"
+					              confirm={options.confirmDelete}
+					              translations={formContext.translations}
+					              onClick={onDelete} />
+				</div>
 			</div>
-		</div>
-	);
+		);
 
-	return hasData(popupData) ? (
-		<OverlayTrigger placement="left"
-		                overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
-			{header}
-		</OverlayTrigger>
-	) : (
-		header
-	);
+		return hasData(popupData) ? (
+			<OverlayTrigger placement="left"
+											overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>
+				{header}
+			</OverlayTrigger>
+		) : (
+			header
+		);
+	}
+
+	setDeleteButtonRef = elem => {this.props.that.deleteButtonRefs[this.props.idx] = elem;};
 }
 
 class SplitArrayFieldTemplate extends Component {
