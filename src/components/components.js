@@ -487,7 +487,7 @@ export function Label({label, help, children, id, required}) {
 
 	const labelElem = (
 		<label htmlFor={id}>
-			<strong>{label}{showHelp ? <Help /> : null}{required ? "*" :  ""}</strong>
+			<strong>{label}{required ? "*" :  ""}{showHelp ? <Help /> : null}</strong>
 			{children}
 		</label>
 	);
