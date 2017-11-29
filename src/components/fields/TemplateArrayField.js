@@ -48,7 +48,8 @@ export default class TemplateArrayField extends Component {
 
 		return (
 			<div>
-				{this.props.schema.title ? <TitleField title={this.props.schema.title} /> : null}
+				{this.props.schema.title ?
+					<TitleField title={this.props.schema.title} help={this.props.uiSchema["ui:help"]} id={this.props.idSchema.$id}/> :null}
 				<ArrayField
 					{...this.props}
 					schema={{...this.props.schema, items: itemSchema}}

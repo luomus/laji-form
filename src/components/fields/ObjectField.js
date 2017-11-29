@@ -30,6 +30,7 @@ function ObjectFieldTemplate(props) {
 						required={props.required}
 						formContext={props.formContext}
 						className={getUiOptions(props.uiSchema).titleClassName}
+						help={props.uiSchema["ui:help"]}
 						buttons={buttons}
 					/>}
 				{topButtons}
@@ -123,7 +124,12 @@ function GridTemplate(props) {
 	return (
 		<div className={containerClassName}>
 			<fieldset className={schemaClassName}>
-				{!isEmptyString(fieldTitle) ? <TitleField title={fieldTitle} className={getUiOptions(props.uiSchema).titleClassName} buttons={buttons}/> : null}
+				{!isEmptyString(fieldTitle) ?
+					<TitleField title={fieldTitle}
+								className={getUiOptions(props.uiSchema).titleClassName}
+								buttons={buttons}
+								help={uiSchema["ui:help"]}
+								id={idSchema.$id} /> : null}
 				{topButtons}
 				{rows.map((row, i) =>
 					<Row key={i}>

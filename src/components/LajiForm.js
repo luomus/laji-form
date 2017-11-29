@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
 import { Button, Label, Help, ErrorPanel } from "./components";
-import { Panel, Table, Glyphicon } from "react-bootstrap";
+import { Panel, Table, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
 import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
@@ -142,7 +142,26 @@ class _SchemaField extends Component {
 	}
 }
 
-const _TitleField = ({title, className, buttons}) => (isEmptyString(title)) ? null : <legend className={className}>{title} {buttons}</legend>;
+const _TitleField = ({title, className, buttons, help, id}) => {
+	if (isEmptyString(title)) return null;
+
+	if (!help) return <legend className={className}>{title} {buttons}</legend>
+
+	const tooltipElem = <Tooltip id={id + "-tooltip"}>
+							<span>
+								<strong>{title}</strong><br />
+								{help}
+							</span>
+						</Tooltip>;
+
+	return (
+		<legend>
+			<OverlayTrigger placement="right" overlay={tooltipElem}>
+				<span>{title} <Help /> {buttons}</span>
+			</OverlayTrigger>
+		</legend>
+	);
+};
 
 const fields = importLocalComponents("fields", [
 	{SchemaField: _SchemaField},

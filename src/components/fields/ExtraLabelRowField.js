@@ -43,7 +43,7 @@ export default class ExtraLabelRowField extends Component {
 
 		return (
 			<div>
-				{title ? <TitleField title={title} className={titleClassName} /> : null}
+				{title ? <TitleField title={title} className={titleClassName} help={this.props.uiSchema["ui:help"]} id={this.props.idSchema.$id}/> : null}
 				<Row className={"laji-form-label-row" + (hiddenXs ? " hidden-xs" : "")}>{cols}</Row>
 				<SchemaField {...this.props} {...this.state}/>
 			</div>
