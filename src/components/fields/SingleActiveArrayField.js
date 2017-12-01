@@ -631,8 +631,8 @@ class TableArrayFieldTemplate extends Component {
 const headerFormatters = {
 	units: {
 		component: (props) => {
-			const {that: {props: {formContext: {translations}, formData}}} = props;
-			const item = formData;
+			const {that: {props: {formContext: {translations}, formData}}, idx} = props;
+			const item = formData[idx];
 			const unitsLength = (item && item.units && item.units.hasOwnProperty("length")) ?
 				item.units.filter(unit =>
 					unit &&
