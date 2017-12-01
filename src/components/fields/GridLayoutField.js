@@ -10,7 +10,7 @@ export default (props) => {
 	};
 	delete uiSchema["ui:field"];
 
-	if (getUiOptions(uiSchema).showLabels === false) {
+	if (getUiOptions(uiSchema).label === false) {
 		Object.keys(schema.properties).forEach(propertyName => {
 			const propertyUiSchema = (uiSchema[propertyName] || {});
 			uiSchema[propertyName] = {

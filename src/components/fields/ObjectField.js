@@ -157,9 +157,9 @@ function getCols(props, schema, uiSchema, property) {
 			let selector = undefined;
 			if (optionCol[property]) selector = property;
 			else if (optionCol["*"]) selector = "*";
-			cols[col] = optionCol[selector];
+			cols[col] = parseInt(optionCol[selector]);
 		} else {
-			cols[col] = optionCol;
+			cols[col] = parseInt(optionCol);
 		}
 	});
 

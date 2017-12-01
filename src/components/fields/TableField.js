@@ -65,7 +65,7 @@ export default class TableField extends Component {
 
 		const itemsUiSchema = {
 			"ui:field": "GridLayoutField", 
-			"ui:options": {...cols, showLabels: false},
+			"ui:options": {...cols, label: false},
 		};
 
 		let _uiSchema = uiSchema;

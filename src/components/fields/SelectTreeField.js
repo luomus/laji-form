@@ -64,6 +64,9 @@ export default class SelectTreeField extends Component {
 				select.enum.push(key);
 				select.enumNames.push(dictionarifiedEnums[key]);
 			});
+			if (labels && labels[depth]) {
+				select.title = labels[depth];
+			}
 			select.title = (labels && labels[depth]) ? labels[depth] : "";
 
 			properties[depth] = select;
