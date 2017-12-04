@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
-import { Row , Col, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Row , Col} from "react-bootstrap";
+import { Label } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -66,15 +67,9 @@ export default class ExtraLabelRowField extends Component {
 				</Col>
 			);
 		} else {
-			const tooltip = <Tooltip id={this.props.idSchema.$id + "_label_" + i + "_tooltip"}>{value}</Tooltip>;
-
 			return (
 				<Col {...cols} key={i}>
-					<div>
-						<OverlayTrigger overlay={tooltip}>
-							<label><strong>{value}</strong></label>
-						</OverlayTrigger>
-					</div>
+					<Label label={value} id={this.props.idSchema.$id}/>
 				</Col>
 			);
 		}

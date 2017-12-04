@@ -174,9 +174,21 @@ min-height: 20px;
 	font-size: 13px;
 	white-space: nowrap;
 	margin-bottom: 1px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	display: inline-block;
+	max-width: 100%;
 	margin-top: 5px;
+}
+.laji-form label > div {
+	width: 100%;
+}
+.laji-form label > div > strong {
+	display: block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.laji-form label > div > .laji-form-help-glyph {
+	float: right;
 }
 .laji-form .field-without-label {
 	margin-top: 5px;
@@ -223,6 +235,7 @@ min-height: 20px;
 	border-radius:9px;
 	color: white;
 	padding: 1px 5px;
+	font-size: 13px;
 }
 
 .laji-form .laji-form-map-container {

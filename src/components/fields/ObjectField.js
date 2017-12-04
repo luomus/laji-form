@@ -1,7 +1,7 @@
 import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
-import { Row , Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Row , Col } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
 import { getButton } from "../ArrayFieldTemplate";
 import { Label } from "../components";
