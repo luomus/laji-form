@@ -2,6 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import deepmerge from "deepmerge";
+import { parseJSONPointer } from "../../utils";
 
 const rulePropType = PropTypes.shape({
 	field: PropTypes.string.isRequired,
@@ -63,7 +64,7 @@ export default class ConditionalField extends Component {
 	static getName() {return  "ConditionalField";}
 
 	checkRule = (props) => ({field, regexp}) => {
-		let value = (props.formData || {})[field];
+		let value = parseJSONPointer(props.formData || {}, field);
 		if (value === undefined) value = "";
 		return `${value}`.match(new RegExp(regexp));
 	}
