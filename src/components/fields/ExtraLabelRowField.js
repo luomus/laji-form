@@ -36,8 +36,8 @@ export default class ExtraLabelRowField extends Component {
 		const {labels, titleClassName, hiddenXs} = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
-		labels.forEach((property, i) => {
-			cols.push(this.getColContent(property, Object.keys(property)[0], i));
+		labels.forEach((label, i) => {
+			cols.push(this.getColContent(label, i));
 		});
 
 		const title = this.props.schema.title !== undefined ? this.props.schema.title : this.props.name;
@@ -51,28 +51,14 @@ export default class ExtraLabelRowField extends Component {
 		);
 	}
 
-	getColContent = (obj, property, i) => {
-		const cols = this.getCols(property);
-		const value = obj[property];
+	getColContent = (label, i) => {
+		const cols = this.getCols(label.size);
 
-		if (Array.isArray(value)) {
-			const innerCols = [];
-			value.forEach((childProp, j) => {
-				innerCols.push(this.getColContent(childProp, Object.keys(childProp)[0], j));
-			});
-
-			return (
-				<Col {...cols} key={i}>
-					<Row>{innerCols}</Row>
-				</Col>
-			);
-		} else {
-			return (
-				<Col {...cols} key={i}>
-					<Label label={value} id={this.props.idSchema.$id}/>
-				</Col>
-			);
-		}
+		return (
+			<Col {...cols} key={i}>
+				<Label label={label.label} id={this.props.idSchema.$id} help={label.help}/>
+			</Col>
+		);
 	};
 
 	getCols = (property) => {
