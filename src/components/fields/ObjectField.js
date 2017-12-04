@@ -4,6 +4,7 @@ import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils"
 import { Row , Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
 import { getButton } from "../ArrayFieldTemplate";
+import { Label } from "../components";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
@@ -66,15 +67,12 @@ function GridTemplate(props) {
 	const addRowTitles = (rows, rowTitles) => {
 		for (let i = 0; i < rowTitles.length; i++) {
 			rows[i] = [];
-			const tooltip = <Tooltip id={idSchema.$id + "_row_" + i + "_tooltip"}>{rowTitles[i]}</Tooltip>;
 			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
-			rows[i].push((<Col {...titleCols} key={"title_" + i}>
-				<div>
-					<OverlayTrigger overlay={tooltip}>
-						<label><strong>{rowTitles[i]}</strong></label>
-					</OverlayTrigger>
-				</div>
-			</Col>));
+			rows[i].push(<Col {...titleCols} key={"title_" + i}>
+							<Label id={idSchema.$id + "_row_" + i}
+								   label={rowTitles[i].title}
+								   help={rowTitles[i].help}/>
+						</Col>);
 		}
 	};
 
