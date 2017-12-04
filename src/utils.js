@@ -10,17 +10,15 @@ export function isHidden(uiSchema, property) {
 	return !uiSchema || uiSchema["ui:widget"] == "HiddenWidget" || uiSchema["ui:field"] == "HiddenField";
 }
 
-export function isDefaultData(formData, schema, registry) {
-	function propIsDefaultData(field, value) {
-		return value === getDefaultFormState(field, undefined, registry);
+export function isDefaultData(formData, schema, definitions = {}) {
+	switch (schema.type) {
+	case "object":
+		return Object.keys(formData || {}).every(field => isDefaultData(formData[field], schema.properties[field], definitions));
+	case "array":
+		return (formData || []).every(item => isDefaultData(item, schema.items, definitions));
+	default:
+		return formData === getDefaultFormState(schema, formData, definitions);
 	}
-	if (!Array.isArray(formData)) formData = [formData];
-	return formData.some(data => {
-		if (typeof data === "object") {
-			return Object.keys(data).some(_field => propIsDefaultData(schema.properties[_field], data));
-		}
-		else return propIsDefaultData(schema, data);
-	});
 }
 
 export function hasData(formData) {

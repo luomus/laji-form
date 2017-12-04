@@ -403,10 +403,6 @@ export default class ScopeField extends Component {
 				generatedUiSchema = merge(generatedUiSchema, fieldScope.uiSchema);
 			}
 
-			if (generatedUiSchema["ui:order"]) {
-				generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => field === "*" || fieldsToShow[field]);
-			}
-
 			if (fieldScope.fieldScopes) {
 				addFieldScopeFieldsToFieldsToShow(fieldScope);
 			}
@@ -420,15 +416,19 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
-				if (fieldSelectorValues.length > 0 && hasData(fieldSelectorValues[0]) && !isDefaultData(fieldSelectorValues[0], schema.properties[fieldSelector], props.registry.definitions)) {
-					fieldSelectorValues = ["+", ...fieldSelectorValues];
+				if (fieldSelector === "+" && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
+					addFieldSelectorsValues(scopes, fieldSelector, "+");
 				}
-				fieldSelectorValues = ["*", ...fieldSelectorValues];
-				fieldSelectorValues.forEach(fieldSelectorValue => {
-					if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions)) {
-						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
-					}
-				});
+				if (fieldSelector === "*") {
+					addFieldSelectorsValues(scopes, fieldSelector, "*");
+				}
+				if (fieldSelector !== "*" && fieldSelector !== "+") {
+					fieldSelectorValues.forEach(fieldSelectorValue => {
+						if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector].type === "array" ? schema.properties[fieldSelector].items : schema.properties[fieldSelector], props.registry.definitions)) {
+							addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
+						}
+					});
+				}
 			});
 		}
 
@@ -438,6 +438,7 @@ export default class ScopeField extends Component {
 			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
 				fieldsToShow[property] = props.schema.properties[property];
 			});
+
 		}
 
 		if (props.formData) {
@@ -453,6 +454,13 @@ export default class ScopeField extends Component {
 		}
 
 		schema = {...schema, properties: fieldsToShow};
+
+		if (generatedUiSchema["ui:order"]) {
+			generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => schema.properties[field]);
+			if (!generatedUiSchema["ui:order"].includes("*")) {
+				generatedUiSchema["ui:order"] = [...generatedUiSchema["ui:order"], "*"];
+			}
+		}
 
 		return {
 			schema: schema,
