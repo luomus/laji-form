@@ -906,6 +906,10 @@ class MapComponent extends Component {
 let singletonMap = undefined;
 
 export class Map extends Component {
+	static defaultProps = {
+		availableTileLayerNamesBlacklist: ["pohjakartta"]
+	};
+
 	componentDidMount() {
 		let {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
 
