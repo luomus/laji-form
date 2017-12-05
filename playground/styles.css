@@ -179,7 +179,7 @@ min-height: 20px;
 	margin-top: 5px;
 }
 .laji-form label > div {
-	width: 100%;
+	width: auto;
 }
 .laji-form label > div > strong {
 	display: block;
