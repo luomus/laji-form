@@ -178,6 +178,9 @@ min-height: 20px;
 	max-width: 100%;
 	margin-top: 5px;
 }
+.laji-form .leaflet-container label {
+	display: inherit;
+}
 .laji-form label > div {
 	width: 100%;
 }
