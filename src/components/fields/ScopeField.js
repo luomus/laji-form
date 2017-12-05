@@ -416,19 +416,17 @@ export default class ScopeField extends Component {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
-				if (fieldSelector === "+" && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
+				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
 				}
-				if (fieldSelector === "*") {
+				if (scopes[fieldSelector]["*"]) {
 					addFieldSelectorsValues(scopes, fieldSelector, "*");
 				}
-				if (fieldSelector !== "*" && fieldSelector !== "+") {
-					fieldSelectorValues.forEach(fieldSelectorValue => {
-						if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector].type === "array" ? schema.properties[fieldSelector].items : schema.properties[fieldSelector], props.registry.definitions)) {
-							addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
-						}
-					});
-				}
+				fieldSelectorValues.forEach(fieldSelectorValue => {
+					if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector].type === "array" ? schema.properties[fieldSelector].items : schema.properties[fieldSelector], props.registry.definitions)) {
+						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
+					}
+				});
 			});
 		}
 
