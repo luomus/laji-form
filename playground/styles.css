@@ -182,16 +182,17 @@ min-height: 20px;
 	display: inherit;
 }
 .laji-form label > div {
-	width: 100%;
+	display: flex;
 }
 .laji-form label > div > strong {
+	flex: 1;
 	display: block;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 .laji-form label > div > .laji-form-help-glyph {
-	float: right;
+	flex: 0 0 auto;
 }
 .laji-form .field-without-label {
 	margin-top: 5px;
