@@ -42,17 +42,17 @@
 	knownSpeciesName: {
 		fi: "Tunnettu nimi",
 		en: "Known name",
-		sv: "Känd namn"
+		sv: "Känt namn"
 	},
 	unknownSpeciesName: {
 		fi: "Tuntematon nimi",
 		en: "Unknown name",
-		sv: "Okänd namn"
+		sv: "Okänt namn"
 	},
 	unknownName: {
 		fi: "Ei tunnettu nimi",
 		en: "Not known name",
-		sv: "Okänd namn"
+		sv: "Okänt namn"
 	},
 	fix: {
 		fi: "Korjaa",
@@ -72,7 +72,7 @@
 	useUnknownName: {
 		fi: "Käytä tuntematonta nimeä",
 		en: "Use unknown name",
-		sv: "Använd okänd namn"
+		sv: "Använd okänt namn"
 	},
 	search: {
 		fi: "Etsi",
@@ -82,7 +82,7 @@
 	filter: {
 		fi: "Rajaa",
 		en: "Filter",
-		sv: "Avgränsa"
+		sv: "Filtrera"
 	},
 	more: {
 		fi: "Lisää",
@@ -127,7 +127,7 @@
 	dropOrSelectFiles: {
 		fi: "Raahaa tähän kuvat tai klikkaa valitaksesi kuvat koneeltasi",
 		en: "Drag pictures here or click here to select the pictures from you computer",
-		sv: "Dra bilder här eller klick här för att välja bilder från din dator"
+		sv: "Dra bilder här eller klicka här för att välja bilder från din dator"
 	},
 	selectMoreFields: {
 		fi: "Valitse lisää kenttiä",
@@ -187,7 +187,7 @@
 	saveFail: {
 		fi: "Tallennus epäonnistui.",
 		en: "Saving failed.",
-		sv: "Lagring misslyckades."
+		sv: "Sparade framgångsrikt!"
 	},
 	tryAgainLater: {
 		fi: "Yritä myöhemmin uudestaan.",
@@ -207,7 +207,7 @@
 	allowedFileFormats: {
 		fi: "Sallitut kuvaformaatit ovat",
 		en: "Allowed image formats are",
-		sv: "Tillåtna filformat för bilder är"
+		sv: "Tillåtna filformat för bilderna är"
 	},
 	allowedFileSize: {
 		fi: "Kuvan suurin sallittu koko on",
@@ -242,7 +242,7 @@
 	previous: {
 		fi: "Edellinen",
 		en: "Previous",
-		sv: "Tidigare"
+		sv: "Föregående"
 	},
 	invalidUnitCode: {
 		fi: "Virheellinen koodi.",
@@ -257,52 +257,52 @@
 	shortcuts: {
 		fi: "Pikanäppäimet",
 		en: "Shortcuts",
-		sv: "Kortkommandos"
+		sv: "Kortkommandon"
 	},
 	navigate: {
 		fi: "Liiku seuraavaan kenttään",
 		en: "Navigate to the next field",
-		sv: "??"
+		sv: "Navigera till nästa fält"
 	},
 	navigateReverse: {
 		fi: "Liiku edelliseen kenttään",
 		en: "Navigate to the previous field",
-		sv: "??"
+		sv: "Navigera till föregående fält"
 	},
 	navigateArray: {
 		fi: "Liiku seuraavaan toisteiseen kenttään",
 		en: "Navigate to the next array item",
-		sv: "??"
+		sv: "Navigera till nästa upprepande fält"
 	},
 	navigateArrayReverse: {
 		fi: "Liiku edelliseen toisteiseen kenttään",
 		en: "Navigate to the previous array item",
-		sv: "??"
+		sv: "Navigera till föregående upprepande fält"
 	},
 	insert: {
 		fi: "Lisää uusi kenttä",
 		en: "Add a new item to an array",
-		sv: "??"
+		sv: "Lägg till ett nytt fält"
 	},
 	delete: {
 		fi: "Poista toisteinen kenttä",
 		en: "Remove the focused array item",
-		sv: "??"
+		sv: "Radera det upprepande fältet"
 	},
 	insertTarget: {
 		fi: "Lisää uusi",
 		en: "Add a new",
-		sv: "??"
+		sv: "Lägg till ny"
 	},
 	navigateArrayTarget: {
 		fi: "Liiku seuraavaan",
 		en: "Navigate to the next",
-		sv: "??"
+		sv: "Navigera till nästa"
 	},
 	navigateArrayReverseTarget: {
 		fi: "Liiku edelliseen",
 		en: "Navigate to the previous",
-		sv: "??"
+		sv: "Navigera till föregående"
 	},
 	textareaHint: {
 		fi: "Lisää uuden rivin tekstikenttään",
@@ -312,7 +312,7 @@
 	splitLineTransectByMetersTarget: {
 		fi: "Pätkäise linja metriluvulla",
 		en: "Split line transect by meters",
-		sv: "Dela line transekt metrisk talet"
+		sv: "Bryta av linjen gemon meter"
 	},
 	setLocationToUnit: {
 		fi: "Aseta havainnolle uusi sijainti",
@@ -322,12 +322,12 @@
 	below: {
 		fi: "alla",
 		en: "below",
-		sv: "Ange en ny plats för observationen"
+		sv: "under"
 	},
 	errors: {
 		fi: "virheet",
 		en: "errors",
-		sv: "fels"
+		sv: "fel"
 	},
 	warnings: {
 		fi: "varoitukset",
@@ -350,7 +350,7 @@
 	chooseNamedPlace: {
 		fi: "Valitse oma paikka",
 		en: "Choose an own place",
-		sv: "Välja egen plats"
+		sv: "Välj en egen plats"
 	},
 	namedPlacesFetchFail: {
 		fi: "Omien paikkojen hakeminen epäonnistui.",
@@ -375,7 +375,7 @@
 	notes: {
 		fi: "Lisätiedot",
 		en: "Details",
-		sv: "Anteckningar"
+		sv: "Tilläggsuppgifter"
 	},
 	useThisPlace: {
 		fi: "Käytä tätä paikkaa",
