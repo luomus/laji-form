@@ -5,7 +5,7 @@ import { getUiOptions } from "../../utils";
 export default function AnyToBooleanWidget(props) {
 	const {trueValue, falseValue} = getUiOptions(props);
 	const schema = {...props.schema, type: "boolean"};
-	const value = props.value === trueValue;
+	const value = props.value === trueValue ? true : (props.value === falseValue) ? false : undefined;
 
 	const onChange = (value) => {
 		let newValue = undefined;
