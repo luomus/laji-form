@@ -287,6 +287,6 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		idSchema: newIdSchema,
 		errorSchema: newErrorSchema,
 		formData: newFormData,
-		onChange: onChange? newOnChange : undefined
+		onChange: onChange ? newOnChange : undefined
 	};
 }

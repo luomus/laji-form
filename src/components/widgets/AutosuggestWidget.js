@@ -220,6 +220,8 @@ export class Autosuggest extends Component {
 	}
 
 	selectUnsuggested = (value) => {
+		if (isEmptyString(value) && isEmptyString(this.props.value)) return;
+
 		const {onConfirmUnsuggested, onChange} = this.props;
 
 		this.setState({value, suggestion: undefined}, () => {

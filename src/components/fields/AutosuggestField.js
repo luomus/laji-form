@@ -9,6 +9,22 @@ const suggestionParsers = {
 	}
 };
 
+const parseQuery = (query, props) => {
+	return Object.keys(query).reduce((_query, key) => {
+		if (typeof query[key] === "object") {
+			const {parser, field} = query[key];
+			const {formData = {}} = props;
+			if (parser === "arrayJoin") {
+				_query[key] = (formData[field] || []).join(",")
+			}
+		} else {
+			_query[key] = query[key];
+		}
+		return _query;
+	}, {});
+}
+
+
 /**
  * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutosuggestWidget.
  *
@@ -37,13 +53,14 @@ export default class AutosuggestField extends Component {
 				inputTransformer: PropTypes.shape({
 					regexp: PropTypes.string.isRequired,
 					transformations: PropTypes.object.isRequired
-				})
+				}),
+
 			}).isRequired,
 			uiSchema: PropTypes.object
 		}).isRequired
 	}
 
-	static getName() {return  "AutosuggestField";}
+	static getName() {return "AutosuggestField";}
 	
 	componentDidMount() {
 		this.mounted = true;
@@ -67,6 +84,10 @@ export default class AutosuggestField extends Component {
 
 		if (suggestionInputField && props.formData && !isEmptyString(props.formData[suggestionInputField])) {
 			options.value = props.formData[suggestionInputField];
+		}
+
+		if (options.query) {
+			options.query = parseQuery(options.query, props);
 		}
 
 		const uiSchema = {
