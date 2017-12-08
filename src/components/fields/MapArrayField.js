@@ -6,7 +6,7 @@ import deepEquals from "deep-equal";
 import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
 import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
-import { Row, Col, Panel, Popover } from "react-bootstrap";
+import { Row, Col, Panel, Popover, Modal } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, getUpdateObjectFromJSONPath } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
@@ -470,6 +470,7 @@ class _MapArrayField extends ComposedComponent {
 	}
 
 	componentDidUpdate(...params) {
+		const [prevProps, prevState] = params; // eslint-disable-line no-unused-vars
 		if (this.onComponentDidUpdate) this.onComponentDidUpdate(...params);
 		if (this.refs.stretch) {
 			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
@@ -482,6 +483,12 @@ class _MapArrayField extends ComposedComponent {
 		if (this._zoomToDataOnNextTick) {
 			this._zoomToDataOnNextTick = false;
 			this.map.zoomToData();
+		}
+		if (this.state.fullscreen && !prevState.fullscreen) {
+			this._mapContainer = this.map.rootElem;
+			this.map.setRootElem(findDOMNode(this.modalRef));
+		} else if (!this.state.fullscreen && prevState.fullscreen) {
+			this.map.setRootElem(this._mapContainer);
 		}
 	}
 
@@ -665,7 +672,12 @@ class _MapArrayField extends ComposedComponent {
 			controls: {
 				...(mapOptions.controlSettings || {}),
 				...(mapOptions.controls || {})
-			}
+			},
+			customControls: [{
+				iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
+				fn: this.toggleFullscreen,
+				position: "bottomright"
+			}]
 		};
 		const map = (
 			<MapComponent
@@ -720,8 +732,25 @@ class _MapArrayField extends ComposedComponent {
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
+				{
+					this.state.fullscreen ? (
+						<Modal show={true} dialogClassName="laji-form map-dialog" onHide={this.toggleFullscreen}>
+							<Modal.Header closeButton={true} />
+							<Modal.Body ref={this.setModalRef} />
+						</Modal>
+
+					) : null
+				}
 			</div>
 		);
+	}
+
+	setModalRef = (elem) => {
+		this.modalRef = elem;
+	}
+
+	toggleFullscreen = () => {
+		this.setState({fullscreen: !this.state.fullscreen});
 	}
 
 	getDraftStyle = () => {
