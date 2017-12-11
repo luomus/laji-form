@@ -901,25 +901,37 @@ min-height: 20px;
 	padding-left: 1px;
 }
 
+.laji-form-dense-table input {
+	font-weight: bold;
+}
+.laji-form-dense-table input::-webkit-input-placeholder {
+	font-weight: normal;
+}
+.laji-form-dense-table input::-moz-placeholder {
+	font-weight: normal;
+}
+.laji-form-dense-table input:-ms-input-placeholder {
+	font-weight: normal;
+}
 @media (max-width: 910px) {
-	.laji-form .laji-form-compact-table.early-column-break .col-xs-12 {
+	.laji-form .laji-form-dense-table .col-xs-12 {
 		width: 100%;
 	}
 
-	.laji-form .laji-form-compact-table.early-column-break .col-xs-3 {
+	.laji-form .laji-form-dense-table .col-xs-3 {
 		width: 25%;
 	}
 
-	.laji-form .laji-form-compact-table.early-column-break .hidden-xs {
+	.laji-form .laji-form-dense-table .hidden-xs {
 		display: none;
 	}
 
-	.laji-form .laji-form-compact-table.early-column-break .laji-form-field-template-item {
+	.laji-form .laji-form-dense-table .laji-form-field-template-item {
 		padding-top: 5px;
 		padding-bottom: 5px;
 	}
 
-	.laji-form .laji-form-compact-table.early-column-break .btn-toolbar {
+	.laji-form .laji-form-dense-table .btn-toolbar {
 		margin-top: 10px;
 	}
 }
