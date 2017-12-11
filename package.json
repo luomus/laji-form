@@ -27,7 +27,7 @@
     "deepmerge": "^1.1.1",
     "immutability-helper": "^2.1.2",
     "laji-map": "^1.0.297",
-    "laji-validate": "0.0.48",
+    "laji-validate": "0.0.51",
     "moment": "*",
     "prop-types": "^15.5.8",
     "react": "^15.5.0",
