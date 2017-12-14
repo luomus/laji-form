@@ -580,6 +580,7 @@ export default class LajiForm extends Component {
 
 	componentWillUnmount() {
 		this.mounted = false;
+		if (this._context.singletonMap) this._context.singletonMap.destroy();
 	}
 
 	constructTranslations = () => {

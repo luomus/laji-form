@@ -48,7 +48,7 @@ const buttonSettings = {
 			let triggerLayer = undefined;
 
 			const {rootElem, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
-			const gatheringData = map.draw;
+			const gatheringData = map.getDraw();
 			const unitData = map.data && map.data[0] ? 
 				map.data[0] :
 				undefined;
@@ -122,7 +122,7 @@ const buttonSettings = {
 							modalMap.setLayerStyle(layer, {opacity: 0.7});
 							map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
 						} else {
-							const {draw: {group: drawLayerGroup}} = modalMap;
+							const {group: drawLayerGroup} = modalMap.getDraw();
 							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
 							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 						}
@@ -166,7 +166,7 @@ const buttonSettings = {
 		const {translations} = that.props.formContext;
 		const overlay = hasCoordinates ? (
 			<Popover id={`${id}-$tooltip-${glyph}`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true}/>
+				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext}/>
 			</Popover>
 		) : (
 			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
@@ -191,8 +191,8 @@ const buttonSettings = {
 					zoom: 8,
 					center: geometry.coordinates.slice(0).reverse(),
 					data: [
-						...(map && map.draw ? [{
-							...map.draw,
+						...(map && map.getDraw() ? [{
+							...map.getDraw(),
 							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
 						}] : []),
 						...(map && map.data && map.data[0] ? [{
@@ -311,7 +311,7 @@ export default class ScopeField extends Component {
 						<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<Map {...this.state.modalMap} singleton={true} />
+						<Map {...this.state.modalMap} singleton={true} formContext={this.props.formContext}/>
 					</Modal.Body>
 				</Modal>
 			);

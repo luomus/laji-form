@@ -932,8 +932,6 @@ class MapComponent extends Component {
 	}
 }
 
-let singletonMap = undefined;
-
 export class Map extends Component {
 	static defaultProps = {
 		availableTileLayerNamesBlacklist: ["pohjakartta"]
@@ -957,11 +955,10 @@ export class Map extends Component {
 	}
 
 	componentWillUnmount() {
-		this.map.destroy();
+		if (!this.props.singleton) this.map.destroy();
 	}
 
 	componentDidUpdate(prevProps) {
-
 		const {className, style, onComponentDidMount, hidden, singleton, ...options} = this.props; // eslint-disable-line no-unused-vars
 
 		if (this.map && options.lineTransect && "activeIdx" in options.lineTransect) {
@@ -988,7 +985,6 @@ export class Map extends Component {
 			..._prevOptions
 		} = prevOptions;
 	
-
 		if (this.map) Object.keys(_options).forEach(key => {
 			if (!deepEquals(_options[key], _prevOptions[key])) {
 				this.map.setOption(key, _options[key]);
@@ -998,15 +994,16 @@ export class Map extends Component {
 
 	initializeMap = (options) => {
 		if (this.props.singleton) {
-			if (!singletonMap) {
-				singletonMap = new LajiMap({
+			const context = new Context(this.props.formContext.contextId);
+			if (!context.singletonMap) {
+				context.singletonMap = new LajiMap({
 					rootElem: this.refs.map,
 					...options
 				});
-				this.map = singletonMap;
+				this.map = context.singletonMap;
 			} else {
-				this.map = singletonMap;
-				this.setOptions(singletonMap.getOptions(), {...options, rootElem: this.refs.map});
+				this.map = context.singletonMap;
+				this.setOptions(context.singletonMap.getOptions(), {...options, rootElem: this.refs.map});
 			}
 		} else {
 			this.map = new LajiMap({
