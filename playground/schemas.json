@@ -1636,35 +1636,32 @@
 	},
 	"formData": {
   "gatheringEvent": {
-    "leg": [
-      "MA.308"
-    ],
     "legPublic": true,
-	"dateBegin": ""
+    "leg": [
+      "Olli Raitio"
+    ]
   },
+  "editors": [],
+  "secureLevel": "MX.secureLevelNone",
   "gatherings": [
     {
-      "images": [
-        "MM.89909"
-      ],
+      "images": [],
       "units": [
         {
-          "recordBasis": "MY.recordBasisHumanObservationPhoto",
-          "unitType": [],
+          "recordBasis": "MY.recordBasisHumanObservation",
+          "informalTaxonGroups": [],
           "taxonConfidence": "MY.taxonConfidenceSure",
-          "count": "223lkj",
           "images": [],
           "identifications": [
             {
-              "taxon": "",
               "identificationBasis": []
             }
           ],
           "unitGathering": {
-            "geometry": {},
-            "dateBegin": "2017-02-12"
+            "geometry": {}
           },
-          "unitFact": {}
+          "unitFact": {},
+          "checklistID": ""
         }
       ],
       "geometry": {
@@ -1673,16 +1670,16 @@
           {
             "type": "Point",
             "coordinates": [
-              27.49391338721197,
-              63.51505459680076
+              28.460856290734863,
+              63.1040091390111
             ]
           }
         ]
-      }
+      },
+      "habitat": [],
+      "taxonCensus": []
     }
-  ],
-  "editors": [],
-  "secureLevel": "MX.secureLevelNone"
+  ]
 },
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",

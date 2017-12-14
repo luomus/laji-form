@@ -145,7 +145,7 @@ class _SchemaField extends Component {
 const _TitleField = ({title, className, buttons, help, id}) => {
 	if (isEmptyString(title)) return null;
 
-	if (!help) return <legend className={className}>{title} {buttons}</legend>
+	if (!help) return <legend className={className}>{title} {buttons}</legend>;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>
 							<span>

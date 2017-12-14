@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem, InputGroup } from "react-bootstrap";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -566,6 +566,7 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 			{children}
 		</OverlayTrigger>
 	);
+
 	return (trigger === "hover") ? (() => {
 		const onMouseOver = () => overlayRef.show();
 		const onMouseOut = () => overlayRef.hide();
@@ -578,13 +579,20 @@ export function TooltipComponent({tooltip, children, id, placement, trigger}) {
 
 }
 
-export function FetcherInput({loading, validationState, glyph, getRef, ...inputProps}) {
-	const _getRef = r => {if (getRef) getRef(r);};
-	return (
-		<div className={`fetcher-input has-feedback${validationState ? ` has-${validationState}` : ""}`}>
-			<input className="form-control" type="text" {...inputProps} ref={_getRef} />
-			{glyph ?  <FormControl.Feedback>{glyph}</FormControl.Feedback> : null }
-			{loading ? <Spinner /> : null }
-		</div>
-	);
+export class FetcherInput extends Component{
+	setRef = (elem) => {
+		if (this.props.getRef) this.props.getRef(elem);
+	}
+
+	render() {
+		const {loading, validationState, glyph, getRef, extra, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		return (
+			<InputGroup className={`fetcher-input has-feedback${validationState ? ` has-${validationState}` : ""}`}>
+				{extra}
+				<input className="form-control" type="text" {...inputProps} ref={this.setRef} />
+				{glyph ? <FormControl.Feedback>{glyph}</FormControl.Feedback> : null}
+				{loading ? <Spinner /> : null }
+			</InputGroup>
+		);
+	}
 }

@@ -462,4 +462,9 @@
 		en: "Overwrite place",
 		sv: "Skriv över platsen"
 	},
+	pickInformalTaxonGroup: {
+		fi: "Valitse lajiryhmä",
+		en: "Select an informal group",
+		sv: "Välj ornagismgruppen"
+	}
 };

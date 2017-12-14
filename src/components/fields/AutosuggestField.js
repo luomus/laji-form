@@ -2,6 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+import Context from "../../Context";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
@@ -15,14 +16,14 @@ const parseQuery = (query, props) => {
 			const {parser, field} = query[key];
 			const {formData = {}} = props;
 			if (parser === "arrayJoin") {
-				_query[key] = (formData[field] || []).join(",")
+				_query[key] = (formData[field] || []).join(",");
 			}
 		} else {
 			_query[key] = query[key];
 		}
 		return _query;
 	}, {});
-}
+};
 
 
 /**
@@ -54,7 +55,8 @@ export default class AutosuggestField extends Component {
 					regexp: PropTypes.string.isRequired,
 					transformations: PropTypes.object.isRequired
 				}),
-
+				informalTaxonGroups: PropTypes.string,
+				informalTaxonGroupPersistenceKey: PropTypes.string
 			}).isRequired,
 			uiSchema: PropTypes.object
 		}).isRequired
@@ -65,20 +67,28 @@ export default class AutosuggestField extends Component {
 	componentDidMount() {
 		this.mounted = true;
 	}
+
 	componentWillUnmount() {
 		this.mounted = false;
 	}
 
 	getStateFromProps(props) {
-		let {schema} = props;
+		let {schema, formData, formContext} = props;
 		const uiOptions = getUiOptions(props);
+		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = uiOptions;
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
 			onConfirmUnsuggested: this.onConfirmUnsuggested,
 			onInputChange: this.onInputChange,
 			isValueSuggested: this.isValueSuggested,
-			getSuggestionFromValue: this.getSuggestionFromValue
+			getSuggestionFromValue: this.getSuggestionFromValue,
+			onInformalTaxonGroupSelected: informalTaxonGroups ? this.onInformalTaxonGroupSelected : undefined,
+			taxonGroupID: informalTaxonGroups && formData[informalTaxonGroups]
+			? informalTaxonGroupPersistenceKey !== undefined 
+				?  new Context(`${formContext.contextID}_${informalTaxonGroupPersistenceKey}`).value
+					: formData[informalTaxonGroups][0] 
+				: undefined
 		};
 		const {suggestionInputField} = options;
 
@@ -174,5 +184,14 @@ export default class AutosuggestField extends Component {
 		}
 
 		return suggestion ? Promise.resolve(suggestion) : Promise.reject();
+	}
+
+	onInformalTaxonGroupSelected = (informalTaxonID) => {
+		const {formContext} = this.props;
+		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = getUiOptions(this.props.uiSchema);
+		this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
+		if (informalTaxonGroupPersistenceKey !== undefined) {
+			new Context(`${formContext.contextID}_${informalTaxonGroupPersistenceKey}`).value = informalTaxonID;
+		}
 	}
 }

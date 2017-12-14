@@ -335,7 +335,7 @@ class UnitsMapArrayField extends Component {
 
 	onActiveChange = idx => {
 		if (idx === undefined) return;
-		if (Object.keys(this.map.draw.group._layers).length) this.map.map.fitBounds(this.map.draw.group.getBounds());
+		if (Object.keys(this.map.getDraw().group._layers).length) this.map.map.fitBounds(this.map.getDraw().group.getBounds());
 	}
 }
 
@@ -954,6 +954,10 @@ export class Map extends Component {
 			this.mountCalled = true;
 			if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
 		}
+	}
+
+	componentWillUnmount() {
+		this.map.destroy();
 	}
 
 	componentDidUpdate(prevProps) {

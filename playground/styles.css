@@ -315,8 +315,9 @@ min-height: 20px;
 	float: right;
 }
 .laji-form .fetcher-input .react-spinner {
+	z-index: 3;
 	width: 25px;
-	right: -9px;
+	right: -11px;
 	bottom: -20px;
 }
 .laji-form .input-meta .react-spinner {
@@ -970,4 +971,49 @@ min-height: 20px;
 }
 .laji-form .place-saver-dialog .alert {
 	margin-top: 5px;
+}
+
+.laji-form .informal-taxon-group-selector.input-group-addon {
+	padding: 0px 3px;
+	background: #eee;
+	color: #555;
+	cursor: pointer;
+}
+.informal-taxon-group-selector.input-group-addon:focus, .informal-taxon-group-selector.input-group-addon:hover {
+	background-color: white;
+	background: #ddd;
+}
+.laji-form .informal-taxon-group-selector.input-group-addon .close {
+	float: none;
+	font-size: 14px;
+	margin-left: 2px;
+}
+.laji-form .informal-taxon-group-selector.input-group-addon > span {
+	display: flex;
+}
+
+.laji-form .informal-group-image {
+	width: 20px;
+	height: 20px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100% auto;
+}
+
+.laji-form .informal-taxon-groups-list {
+	position: absolute;
+	z-index: 1;
+	margin-left: -4px;
+	margin-top: 7px;
+}
+.laji-form .informal-taxon-groups-list .list-group-item {
+	display: flex;
+	padding: 2px 9px;
+}
+.laji-form .informal-taxon-groups-list .list-group-item .informal-group-image {
+	margin-left: -5px;
+	margin-right: 5px;
+}
+.laji-form .informal-taxon-groups-list .list-group-item.active .informal-group-image {
+	background-color: white;
 }

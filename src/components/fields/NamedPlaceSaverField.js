@@ -212,7 +212,7 @@ class PlaceSaverDialog extends Component {
 
 		const getButton = (onClick, text) => {
 			return <Button bsSize="small" onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
-		}
+		};
 
 		return this.state.failed ? (
 			<Alert bsStyle="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 

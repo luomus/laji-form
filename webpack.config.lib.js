@@ -35,7 +35,11 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("css-loader")
+				loader: ExtractTextPlugin.extract("css-loader"),
+				exclude: [
+					path.join(__dirname, "playground", "styles-dev.css")
+				]
+
 			},
 			{
 				test: /\.less$/,
