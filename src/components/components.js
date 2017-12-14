@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button } from "react-bootstrap";
-import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem, InputGroup } from "react-bootstrap";
+import { Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -587,12 +587,12 @@ export class FetcherInput extends Component{
 	render() {
 		const {loading, validationState, glyph, getRef, extra, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
 		return (
-			<InputGroup className={`fetcher-input has-feedback${validationState ? ` has-${validationState}` : ""}`}>
+			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""}`}>
 				{extra}
 				<input className="form-control" type="text" {...inputProps} ref={this.setRef} />
 				{glyph ? <FormControl.Feedback>{glyph}</FormControl.Feedback> : null}
 				{loading ? <Spinner /> : null }
-			</InputGroup>
+			</div>
 		);
 	}
 }
