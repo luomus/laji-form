@@ -77,7 +77,8 @@ class _SchemaField extends Component {
 
 			if (!new Context("VIRTUAL_SCHEMA_NAMES")[uiFn["ui:field"]]) {
 				nonVirtualFound = true;
-				return {..._props,
+				return {
+					..._props,
 					uiSchema: {
 						..._props.uiSchema,
 						"ui:functions": _functions.slice(idx + 1)
@@ -219,7 +220,8 @@ const widgets = importLocalComponents("widgets", [
 	"PlainTextWidget",
 	"ImageSelectWidget",
 	"AnyToBooleanWidget",
-	"URLWidget"
+	"URLWidget",
+	"InformalTaxonGroupChooserWidget"
 ]);
 
 function importLocalComponents(dir, fieldNames) {

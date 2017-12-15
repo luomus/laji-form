@@ -143,7 +143,7 @@ function GridTemplate(props) {
 function getCols(props, schema, uiSchema, property) {
 	const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 
-	if ((schema.type === "array" && !(schema.items && schema.items.enum && isMultiSelect(schema, uiSchema))) ||
+	if ((schema.type === "array" && !(schema.items && schema.items.enum && isMultiSelect(schema, uiSchema) || uiSchema["ui:field"] === "SingleItemArrayField")) ||
 			(schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))) {
 		return cols;
 	}

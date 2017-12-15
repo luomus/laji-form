@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
-import { DeleteButton } from "../components";
+import { DeleteButton, Label } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
@@ -461,10 +461,12 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
 		const {TitleField} =  arrayTemplateFieldProps;
+		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
+		const title = that.state.getTitle(activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div>
-				<TitleField title={that.state.getTitle(activeIdx)} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName}/>
+				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
 			: null;
@@ -513,6 +515,7 @@ class TableArrayFieldTemplate extends Component {
 		}
 
 		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
+		const Title = getUiOptions(this.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
@@ -586,9 +589,11 @@ class TableArrayFieldTemplate extends Component {
 			);
 		};
 
+		const title = that.state.getTitle(that.state.activeIdx);
+
 		return (
 			<div>
-				<TitleField title={that.state.getTitle(that.state.activeIdx)} className={titleClassName}/>
+				<Title title={title} label={title} className={titleClassName}/>
 				<DescriptionField description={this.props.description}/>
 				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (

@@ -65,6 +65,9 @@ body .laji-form {
 .laji-form .autosuggest-container ul {
 	padding-left: 0px;
 }
+.laji-form .autosuggest-wrapper {
+	position: relative;
+}
 .laji-form .autosuggest-wrapper .rw-popup {
 	left: initial;
 	right: initial;
@@ -991,22 +994,24 @@ min-height: 20px;
 .laji-form .informal-taxon-group-selector.input-group-addon > span {
 	display: flex;
 }
+.laji-form .dropdown.btn-group .informal-group-image {
+	float: left;
+}
 
 .laji-form .informal-group-image {
-	width: 20px;
-	height: 20px;
+	min-width: 20px;
+	min-height: 20px;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% auto;
 }
 
-.laji-form .informal-taxon-groups-list {
-	position: absolute;
+.laji-form .informal-taxon-groups-list.list-group {
 	z-index: 1;
-	margin-left: -4px;
-	margin-top: 7px;
+	margin-left: -1px;
+	margin-top: 2px;
 }
-.laji-form .informal-taxon-groups-list .list-group-item {
+.laji-form .informal-taxon-groups-list .list-group-item, .laji-form .informal-taxon-groups-list li a {
 	display: flex;
 	padding: 2px 9px;
 }
@@ -1014,6 +1019,44 @@ min-height: 20px;
 	margin-left: -5px;
 	margin-right: 5px;
 }
-.laji-form .informal-taxon-groups-list .list-group-item.active .informal-group-image {
+.laji-form .informal-taxon-groups-list .active .informal-group-image {
 	background-color: white;
+}
+.laji-form .informal-taxon-groups-list .dropdown.btn-group button {
+	height: 25px;
+	display: flex;
+}
+.laji-form .informal-taxon-groups-list .dropdown.btn-group button .caret {
+	margin-top: 5px;
+}
+.laji-form.informal-taxon-group-chooser .informal-group-image {
+	width: 50px;
+	height: 50px;
+	margin: 0 auto;
+}
+.laji-form.informal-taxon-group-chooser h4 {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.laji-form.informal-taxon-group-chooser .list-group-item {
+	background: #eee;
+	display: flex;
+}
+.laji-form.informal-taxon-group-chooser .list-group-item h5 {
+	flex-grow: 1;
+}
+
+.laji-form .informal-taxon-groups-list button {
+	width: 100%;
+	height: 25px;
+}
+.laji-form .informal-taxon-groups-list .informal-group-chooser-button-content {
+	display: flex;
+	margin-top: -3px;
+}
+.laji-form .informal-taxon-groups-list .informal-group-chooser-button-content span {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }

@@ -63,6 +63,7 @@ export default class AutosuggestField extends Component {
 	}
 
 	static getName() {return "AutosuggestField";}
+	static displayName = "kek"
 	
 	componentDidMount() {
 		this.mounted = true;

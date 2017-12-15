@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, DeleteButton } from "./components";
+import { Button, DeleteButton, Label } from "./components";
 import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
@@ -170,9 +170,9 @@ export default class ArrayFieldTemplate extends Component {
 
 	render() {
 		const {props} = this;
-		const Title = props.TitleField;
-		const Description = props.DescriptionField;
 		const options = getUiOptions(props.uiSchema);
+		const Title = options.renderTitleAsLabel ? Label :  props.TitleField;
+		const Description = props.DescriptionField;
 		const {confirmDelete, deleteCorner, renderDelete = true, orderable, nonRemovables = [], nonOrderables = [], buttons} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
@@ -195,9 +195,11 @@ export default class ArrayFieldTemplate extends Component {
 			);
 		});
 
+		const title = "ui:title" in props.uiSchema ? props.uiSchema["ui:title"] : props.title;
+
 		return (
 			<div className={props.className}>
-				<Title title={"ui:title" in props.uiSchema ? props.uiSchema["ui:title"] : props.title}/>
+				<Title title={title} label={title} />
 				<Description description={props.description}/>
 				{
 					orderable ? 

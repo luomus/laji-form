@@ -57,6 +57,7 @@ export default class FlatField extends Component {
 				}
 				state.idSchema = update(state.idSchema, {$merge: {[getPropName(field, innerField, isArray)]: {$id: innerId}}});
 			});
+
 			state.schema.properties = immutableDelete(state.schema.properties, field);
 			state.idSchema = immutableDelete(state.idSchema, field);
 

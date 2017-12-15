@@ -432,7 +432,7 @@ export class Autosuggest extends Component {
 			component = (
 				<div>
 					{component}
-					<InformalTaxonGroupList show={this.state.informalTaxonGroupsOpen} onSelected={this.onInformalTaxonGroupSelected} taxonGroupID={taxonGroupID} />
+					<InformalTaxonGroupList show={this.state.informalTaxonGroupsOpen} onSelected={this.onInformalTaxonGroupSelected} taxonGroupID={taxonGroupID} style={{position: "absolute"}} />
 				</div>
 			);
 		}
@@ -620,7 +620,7 @@ class InformalTaxonGroupsAddon extends Component {
 	}
 }
 
-class InformalTaxonGroupList extends Component {
+export class InformalTaxonGroupList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {informalTaxonGroups: {}};
@@ -647,18 +647,19 @@ class InformalTaxonGroupList extends Component {
 	}
 
 	render() {
+		const {GroupComponent = ListGroup, ItemComponent = ListGroupItem, style} = this.props;
 		return this.props.show ? (
-			<ListGroup className="informal-taxon-groups-list">
+			<GroupComponent className="informal-taxon-groups-list" style={style}>
 				{Object.keys(this.state.informalTaxonGroups).map(id => {
 					const itg = this.state.informalTaxonGroups[id];
 					return (
-						<ListGroupItem key={itg.name} onClick={this.onGroupClick(itg)} active={this.props.taxonGroupID === itg.id}>
+						<ItemComponent key={itg.name} onClick={this.onGroupClick(itg)} active={this.props.taxonGroupID === itg.id}>
 							<div className={`informal-group-image ${itg.id}`} />
 							{itg.name}
-						</ListGroupItem>
+						</ItemComponent>
 					);
 				})}
-		</ListGroup>
+		</GroupComponent>
 		) : null;
 	}
 }

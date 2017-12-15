@@ -466,5 +466,15 @@
 		fi: "Valitse lajiryhmä",
 		en: "Select an informal group",
 		sv: "Välj ornagismgruppen"
-	}
+	},
+	select: {
+		fi: "Valitse",
+		en: "Select",
+		sv: "Välj"
+	},
+	showSubgroups: {
+		fi: "Näytä alaryhmät",
+		en: "Show subgroups",
+		sv: "Välj subgrupper"
+	},
 };
