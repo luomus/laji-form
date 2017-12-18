@@ -115,7 +115,7 @@ export class InformalTaxonGroupChooser extends Component {
 		this.mounted = true;
 		getInformalGroups().then(state => {
 			if (!this.mounted) return;
-			this.setState(state);
+			this.setState({...state, root: state.informalTaxonGroups});
 		});
 	}
 
