@@ -17,6 +17,16 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 			if (!this.mounted) return;
 			this.setState(state);
 		});
+		this.componentWillReceiveProps(this.props);
+	}
+
+	componentWillReceiveProps(props) {
+		if (props.value !== this.state.informalTaxonGroup) {
+			if (!props.value) this.setState({name: undefined});
+			getInformalGroups().then(({informalTaxonGroupsById}) => {
+				this.setState({informalTaxonGroup: informalTaxonGroupsById[this.props.value]});
+			});
+		}
 	}
 
 	componentWillUnmount() {
@@ -25,7 +35,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 
 	onSelected = (id) => {
 		this.props.onChange(id);
-		if (this.state.informalTaxonGroupsById && id) this.setState({name: this.state.informalTaxonGroupsById[id].name});
+		if (this.state.informalTaxonGroupsById && id) this.setState({informalTaxonGroup: this.state.informalTaxonGroupsById[id]});
 	}
 
 	show = () => {
@@ -53,12 +63,12 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 			: (
 				<div className="informal-group-chooser-button-content">
 					<div className={`informal-group-image ${imageID}`} />
-					{this.state.name ? <span>{this.state.name}</span> : <Spinner />}
+					{this.state.informalTaxonGroup ? <span>{this.state.informalTaxonGroup.name}</span> : <Spinner />}
 					<div className="close" onClick={this.onClear}>×</div>
 				</div>
 			);
 		return (
-			<TooltipComponent tooltip={this.props.value && this.state.informalTaxonGroupsById && this.state.informalTaxonGroupsById[this.props.value].name}>
+			<TooltipComponent tooltip={this.state.informalTaxonGroup && this.state.informalTaxonGroup.name}>
 				<div className="informal-taxon-groups-list">
 					<Button onClick={this.show}>{title}</Button>
 					{this.state.show && <InformalTaxonGroupChooser onHide={this.hide} onSelected={this.onSelected} translations={this.props.formContext.translations}/>}
