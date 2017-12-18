@@ -826,7 +826,7 @@ class Popup extends Component {
 	}
 }
 
-class MapComponent extends Component {
+export class MapComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {mapOptions: {}};

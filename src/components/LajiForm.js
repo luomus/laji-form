@@ -202,6 +202,7 @@ const fields = importLocalComponents("fields", [
 	"NamedPlaceChooserField",
 	"NamedPlaceSaverField",
 	"TemplateArrayField",
+	"MapField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);

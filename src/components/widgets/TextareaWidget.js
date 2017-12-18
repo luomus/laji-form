@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TextareaWidget from "react-jsonschema-form/lib/components/widgets/TextareaWidget";
-import { Tooltip } from "react-bootstrap";
 import { stringifyKeyCombo } from "../../utils";
+import { TooltipComponent } from "../components";
 import Context from "../../Context";
 
 export default class _TextareaWidget extends Component {
@@ -40,10 +40,9 @@ export default class _TextareaWidget extends Component {
 	render() {
 		const textarea = <TextareaWidget {...this.props} />;
 		return this.state.keyCombo ? (
-			<div onBlur={this.onBlur} onFocus={this.onFocus}>
+			<TooltipComponent tooltip={`${stringifyKeyCombo(this.state.keyCombo)} ${this.props.formContext.translations.textareaHint}`} placement="bottom">
 				{textarea}
-				<Tooltip className={this.state.focused ? "in" : ""} id={`${this.props.id}_hint`} placement="bottom">{`${stringifyKeyCombo(this.state.keyCombo)} ${this.props.formContext.translations.textareaHint}`}</Tooltip>
-			</div>
+			</TooltipComponent>
 		) : textarea;
 	}
 
