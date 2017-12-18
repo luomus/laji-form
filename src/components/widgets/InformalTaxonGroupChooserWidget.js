@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Modal, Button, Row, Col, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb } from "react-bootstrap";
+import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import ApiClient from "../../ApiClient";
 import Spinner from "react-spinner";
@@ -143,40 +143,19 @@ export class InformalTaxonGroupChooser extends Component {
 	}
 
 	render() {
-		let Container, getItem;
 		const getButtonGroup = (id) => (
 			<ButtonGroup>
 				{this.state.informalTaxonGroupsById[id].hasSubGroup && <Button key="subgroups" onClick={this.onSubgroupSelected(id)}>{this.props.translations.ShowSubgroups}</Button>}
 				<Button key="select" onClick={this.onSelected(id)}>{this.props.translations.Select}</Button>
 			</ButtonGroup>
 		);
-		switch(this.state.path.length) {
-		case 1:
-			Container = Row;
-			getItem = id => {
-				const itg = this.state.informalTaxonGroupsById[id];
-				return (
-					<Col key={id} lg={6} md={6} sm={6} xs={12}>
-						<div className="well text-center">
-							<div className={`informal-group-image ${id}`} />
-							<h4>
-								{itg.name}
-							</h4>
-							{getButtonGroup(id)}
-						</div>
-					</Col>
-				);
-			};
-			break;
-		default:
-			Container = ListGroup;
-			getItem = id => (
-				<ListGroupItem key={id}>
-					<h5>{this.state.informalTaxonGroupsById[id].name}</h5>
-					{getButtonGroup(id)}
-				</ListGroupItem>
-			);
-		}
+		const getItem = id => (
+			<ListGroupItem key={id}>
+				{this.state.path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
+				<h5>{this.state.informalTaxonGroupsById[id].name}</h5>
+				{getButtonGroup(id)}
+			</ListGroupItem>
+		);
 
 		return (
 			<Modal show={true} onHide={this.props.onHide} dialogClassName="laji-form informal-taxon-group-chooser">
@@ -189,7 +168,7 @@ export class InformalTaxonGroupChooser extends Component {
 					)}
 				</Breadcrumb>
 				{this.state.informalTaxonGroups 
-					? <Container>{Object.keys(this.state.informalTaxonGroups).map(getItem)}</Container>
+					? <ListGroup>{Object.keys(this.state.informalTaxonGroups).map(getItem)}</ListGroup>
 					: <Spinner />
 				}
 			</Modal.Body>
