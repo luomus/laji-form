@@ -102,6 +102,10 @@ export default function BaseComponent(ComposedComponent) {
 				super.componentDidUpdate(prevProps, prevState);
 			}
 
+			if (this.props.uiSchema && this.props.uiSchema["ui:settings"]) {
+				console.log("did update", this.props.uiSchema);
+			}
+
 			if (this.props.uiSchema && (this.props.uiSchema["ui:settings"] || []).some(key => {
 				if (key.match(/^%/)) key = key.match(/^%([^/]*)/)[1];
 				if (!deepEquals(...[prevState, this.state].map(state => parseJSONPointer(state, key, !!"safely")))) {
