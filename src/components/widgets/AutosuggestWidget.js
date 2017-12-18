@@ -8,6 +8,7 @@ import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, isDescendant } from "../../utils";
 import { FetcherInput, TooltipComponent } from "../components";
 import Context from "../../Context";
+import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
 export default class _AutosuggestWidget extends Component {
 	render() {
@@ -358,6 +359,10 @@ export class Autosuggest extends Component {
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
 	}
 
+	onInformalTaxonGroupHide = () => {
+		this.setState({informalTaxonGroupsOpen: false});
+	}
+
 	renderInput = (inputProps) => {
 		let validationState = null;
 		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, taxonGroupID} = this.props;
@@ -432,7 +437,8 @@ export class Autosuggest extends Component {
 			component = (
 				<div>
 					{component}
-					<InformalTaxonGroupList show={this.state.informalTaxonGroupsOpen} onSelected={this.onInformalTaxonGroupSelected} taxonGroupID={taxonGroupID} style={{position: "absolute"}} />
+
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={this.props.formContext.translations}/>}
 				</div>
 			);
 		}
@@ -551,18 +557,13 @@ class InformalTaxonGroupsAddon extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		new ApiClient().fetchCached("/informal-taxon-groups/roots").then(response => {
-			if (!this.mounted) return;
-			this.setState({informalTaxonGroups: response.results.reduce((groups, group) => {
-				groups[group.id] = group;
-				return groups;
-			}, {})});
+		getInformalGroups().then(({informalTaxonGroups, informalTaxonGroupsById}) => {
+			this.setState({informalTaxonGroups, informalTaxonGroupsById});
 		});
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		if (this.clickListener) new Context(this.props.formContext.contextId).removeEventListener(this.clickListener);
 	}
 
 	onClear = (e) => {
@@ -571,95 +572,28 @@ class InformalTaxonGroupsAddon extends Component {
 	}
 
 	toggle = () => {
-		if (!this.props.open) {
-			this._openRequested = true;
-
-			if (this.clickListener) new Context(this.props.formContext.contextId).removeEventListener(this.clickListener);
-
-			this.clickListener = new Context(this.props.formContext.contextId).addEventListener(document, "click", e => {
-				if (!this.props.open || this._openRequested) {
-					this._openRequested = false;
-					return;
-				}
-				if (!isDescendant(findDOMNode(this.rootRef), e.target)) {
-					this.toggle();
-					return;
-				}
-			});
-		}
 		if (this.props.onOpen) this.props.onOpen(!this.props.open);
-	}
-
-	onBlur = () => {
-		this.blurRequested = true;
-		new Context(this.props.formContext.contextId).setTimeout(() => {
-			if (!this.blurBlocked && this.props.onOpen) this.props.onOpen(false);
-			this.blurRequested = false;
-		}, 100);
 	}
 
 	renderGlyph = () => {
 		const {taxonGroupID} = this.props;
+		let imageID = taxonGroupID;
+		const {informalTaxonGroupsById = {}} = this.state;
+		if (informalTaxonGroupsById[taxonGroupID] && informalTaxonGroupsById[taxonGroupID].parent) {
+			imageID = informalTaxonGroupsById[taxonGroupID].parent.id;
+		}
 		return taxonGroupID ?
-			<span onClick={this.toggle}><div className={`informal-group-image ${taxonGroupID}`} /><button className="close" onClick={this.onClear}>×</button></span> :
-			<Glyphicon glyph={"menu-hamburger"} onClick={this.toggle} />;
-	}
-
-	setRef = (elem) => {
-		this.rootRef = elem;
+			<span><div className={`informal-group-image ${imageID}`}/><button className="close" onClick={this.onClear}>×</button></span> :
+			<Glyphicon glyph={"th"}  />;
 	}
 
 	render() {
 		return (
-			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroups ? this.state.informalTaxonGroups[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="informal-taxon-group-selector" tabIndex={0} ref={this.setRef}>
+			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
+				<InputGroup.Addon className="informal-taxon-group-selector" onClick={this.toggle} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>
 		);
-	}
-}
-
-export class InformalTaxonGroupList extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {informalTaxonGroups: {}};
-	}
-
-	componentDidMount() {
-		this.mounted = true;
-		new ApiClient().fetchCached("/informal-taxon-groups/roots").then(response => {
-			if (!this.mounted) return;
-			this.setState({informalTaxonGroups: response.results.reduce((groups, group) => {
-				groups[group.id] = group;
-				return groups;
-			}, {})});
-		});
-	}
-
-	componentWillUnmount() {
-		this.mounted = false;
-	}
-
-	onGroupClick = (itg) => () => {
-		if (!this.props.onSelected) return;
-		this.props.onSelected(itg.id === this.props.taxonGroupID ? undefined : itg.id);
-	}
-
-	render() {
-		const {GroupComponent = ListGroup, ItemComponent = ListGroupItem, style} = this.props;
-		return this.props.show ? (
-			<GroupComponent className="informal-taxon-groups-list" style={style}>
-				{Object.keys(this.state.informalTaxonGroups).map(id => {
-					const itg = this.state.informalTaxonGroups[id];
-					return (
-						<ItemComponent key={itg.name} onClick={this.onGroupClick(itg)} active={this.props.taxonGroupID === itg.id}>
-							<div className={`informal-group-image ${itg.id}`} />
-							{itg.name}
-						</ItemComponent>
-					);
-				})}
-		</GroupComponent>
-		) : null;
 	}
 }

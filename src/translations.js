@@ -464,7 +464,7 @@
 	},
 	pickInformalTaxonGroup: {
 		fi: "Valitse lajiryhmä",
-		en: "Select an informal group",
+		en: "Select a species group",
 		sv: "Välj ornagismgruppen"
 	},
 	select: {

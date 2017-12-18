@@ -994,8 +994,9 @@ min-height: 20px;
 .laji-form .informal-taxon-group-selector.input-group-addon > span {
 	display: flex;
 }
-.laji-form .dropdown.btn-group .informal-group-image {
-	float: left;
+.laji-form .informal-taxon-group-selector.input-group-addon > .glyphicon {
+	margin-top: -2px;
+	margin-left: 2px;
 }
 
 .laji-form .informal-group-image {
@@ -1053,10 +1054,18 @@ min-height: 20px;
 }
 .laji-form .informal-taxon-groups-list .informal-group-chooser-button-content {
 	display: flex;
-	margin-top: -3px;
+	margin-top: -6px;
+	height: 25px;
 }
 .laji-form .informal-taxon-groups-list .informal-group-chooser-button-content span {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
+	padding-top: 4px;
+	flex-grow: 1;
+	text-align: initial;
+}
+.laji-form .informal-taxon-groups-list .informal-group-chooser-button-content .close {
+	width: auto;
+	margin-top: 1px;
 }

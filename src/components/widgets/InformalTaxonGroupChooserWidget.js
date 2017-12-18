@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { InformalTaxonGroupList } from "./AutosuggestWidget";
-import { DropdownButton, MenuItem, Modal, Panel, Button, Grid, Row, Col, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb } from "react-bootstrap";
+import { Modal, Button, Row, Col, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb } from "react-bootstrap";
+import { TooltipComponent } from "../components";
 import ApiClient from "../../ApiClient";
 import Spinner from "react-spinner";
-
-function _DrowdownButton(id, title) {
-	return (props) => <DropdownButton {...props} title={title} id={id} />;
-}
 
 export default class InformalTaxonGroupChooserWidget extends Component {
 	constructor(props) {
@@ -15,11 +11,21 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 		this.state = {};
 	}
 
+	componentDidMount() {
+		this.mounted = true;
+		getInformalGroups().then(state => {
+			if (!this.mounted) return;
+			this.setState(state);
+		});
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
 	onSelected = (id) => {
 		this.props.onChange(id);
-		new ApiClient().fetchCached(`/informal-taxon-groups/${id}`).then(({name}) => {
-			this.setState({name});
-		})
+		if (this.state.informalTaxonGroupsById && id) this.setState({name: this.state.informalTaxonGroupsById[id].name});
 	}
 
 	show = () => {
@@ -30,32 +36,67 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 		this.setState({show: false});
 	}
 
+	onClear = (e) => {
+		e.stopPropagation();
+		this.onSelected(undefined);
+	}
+
+
 	render () {
+		let imageID = this.props.value;
+		const {informalTaxonGroupsById = {}} = this.state;
+		if (informalTaxonGroupsById[this.props.value] && informalTaxonGroupsById[this.props.value].parent) {
+			imageID = informalTaxonGroupsById[this.props.value].parent.id;
+		}
 		const title = !this.props.value 
-			? this.props.formContext.translations.PickInformalTaxonGroup
+			? <div className="informal-group-chooser-button-content"><span>{this.props.formContext.translations.PickInformalTaxonGroup}</span></div>
 			: (
 				<div className="informal-group-chooser-button-content">
-					<div className={`informal-group-image ${this.props.value}`} />
+					<div className={`informal-group-image ${imageID}`} />
 					{this.state.name ? <span>{this.state.name}</span> : <Spinner />}
+					<div className="close" onClick={this.onClear}>×</div>
 				</div>
 			);
 		return (
-			<div className="informal-taxon-groups-list">
-				<Button onClick={this.show}>{title}</Button>
-				{this.state.show && <InformalTaxonGroupChooser onHide={this.hide} onSelected={this.onSelected} translations={this.props.formContext.translations}/>}
-			</div>
+			<TooltipComponent tooltip={this.props.value && this.state.informalTaxonGroupsById && this.state.informalTaxonGroupsById[this.props.value].name}>
+				<div className="informal-taxon-groups-list">
+					<Button onClick={this.show}>{title}</Button>
+					{this.state.show && <InformalTaxonGroupChooser onHide={this.hide} onSelected={this.onSelected} translations={this.props.formContext.translations}/>}
+				</div>
+			</TooltipComponent>
 		);
 	}
 }
 
-function walk(allGroups, _group) {
+function walk(allGroups, _group, parent) {
 	_group.forEach(group => {
 		allGroups[group.id] = group;
+		if (parent) group.parent = parent;
 		if (group.hasSubGroup) {
-			allGroups = walk(allGroups, group.hasSubGroup);
+			allGroups = walk(allGroups, group.hasSubGroup, parent || group);
 		}
 	});
 	return allGroups;
+}
+
+const mapGroupsById = _groups => _groups.reduce((groups, group) => {
+	groups[group.id] = group;
+	return groups;
+}, {});
+
+let informalTaxonGroups, informalTaxonGroupsById;
+
+export function getInformalGroups() {
+	if (informalTaxonGroups) {
+		return Promise.resolve({informalTaxonGroups, informalTaxonGroupsById});
+	}
+	return new ApiClient().fetchCached("/informal-taxon-groups/tree").then(response => {
+		// Contains the current taxon group.
+		const informalTaxonGroups = mapGroupsById(response.results);
+		// Contains all groups in flat object.
+		const informalTaxonGroupsById = walk({}, response.results);
+		return Promise.resolve({informalTaxonGroups, informalTaxonGroupsById});
+	});
 }
 
 export class InformalTaxonGroupChooser extends Component {
@@ -72,20 +113,11 @@ export class InformalTaxonGroupChooser extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		new ApiClient().fetchCached("/informal-taxon-groups/tree").then(response => {
+		getInformalGroups().then(state => {
 			if (!this.mounted) return;
-			// Contains the current taxon group.
-			const informalTaxonGroups = this.mapGroupsById(response.results);
-			// Contains all groups in flat object.
-			const informalTaxonGroupsById = walk({}, response.results);
-			this.setState({root: informalTaxonGroups, informalTaxonGroups, informalTaxonGroupsById});
+			this.setState(state);
 		});
 	}
-
-	mapGroupsById = _groups => _groups.reduce((groups, group) => {
-		groups[group.id] = group;
-		return groups;
-	}, {})
 
 	componentWillUnmount() {
 		this.mounted = false;
@@ -104,7 +136,7 @@ export class InformalTaxonGroupChooser extends Component {
 			: [...this.state.path, id];
 		this.setState({
 			informalTaxonGroups: id 
-				? this.mapGroupsById(this.state.informalTaxonGroupsById[id].hasSubGroup) 
+				? mapGroupsById(this.state.informalTaxonGroupsById[id].hasSubGroup) 
 				: this.state.root,
 			path
 		});
@@ -124,7 +156,7 @@ export class InformalTaxonGroupChooser extends Component {
 			getItem = id => {
 				const itg = this.state.informalTaxonGroupsById[id];
 				return (
-					<Col key={id} lg={2} md={2} sm={6} xs={12}>
+					<Col key={id} lg={6} md={6} sm={6} xs={12}>
 						<div className="well text-center">
 							<div className={`informal-group-image ${id}`} />
 							<h4>
