@@ -32,7 +32,7 @@ export default class AutoArrayField extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (getUiOptions(this.props.uiSchema).autofocus && this.state.formData.length == prevState.formData.length + 1) {
-			focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${this.state.formData.length - 1}`);
+			focusById(this.props.formContext, `${this.props.idSchema.$id}_${this.state.formData.length - 1}`);
 		}
 	}
 }

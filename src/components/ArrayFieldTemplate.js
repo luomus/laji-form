@@ -220,7 +220,7 @@ export default class ArrayFieldTemplate extends Component {
 export const arrayKeyFunctions = {
 	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx}) {
 		function focusIdx(idx) {
-			focusByIdx ? focusByIdx(idx) : focusById(getProps().formContext.contextId, `${getProps().idSchema.$id}_${idx}`);
+			focusByIdx ? focusByIdx(idx) : focusById(getProps().formContext, `${getProps().idSchema.$id}_${idx}`);
 		}
 
 		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
@@ -275,7 +275,10 @@ export const arrayKeyFunctions = {
 
 export const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton, id, getProps}) {
-		if (!isDescendant(getSchemaElementById(getProps().formContext.contextId, id), e.target)) {
+		const {items, idSchema, formContext} = getProps();
+		const {getFormRef, contextId} = formContext;
+
+		if (!isDescendant(getSchemaElementById(contextId, id), e.target)) {
 			return;
 		}
 
@@ -284,9 +287,7 @@ export const arrayItemKeyFunctions = {
 		const deleteButton = getDeleteButton();
 		if (!deleteButton || !deleteButton.onClick) return;
 
-		const {items, idSchema, formContext: {getFormRef, contextId}} = getProps();
-
-		const activeId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+		const activeId = findNearestParentSchemaElemId(contextId, document.activeElement);
 		const idxsMatch = activeId.match(/_\d+/g);
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
 		const prevElem = getNextInput(getFormRef(), getTabbableFields(getSchemaElementById(contextId, `${idSchema.$id}_${idx}`))[0], !!"reverse");
@@ -295,12 +296,12 @@ export const arrayItemKeyFunctions = {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
 				if (idxToFocus >= 0) {
-					focusById(contextId, `${idSchema.$id}_${idxToFocus}`);
+					focusById(formContext, `${idSchema.$id}_${idxToFocus}`);
 				} else {
 					if (prevElem) prevElem.focus();
 				}
 			} else {
-				focusById(contextId, `${activeId}`);
+				focusById(formContext, `${activeId}`);
 			}
 		});
 		return true;

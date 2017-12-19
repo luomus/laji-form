@@ -25,11 +25,12 @@ class _SchemaField extends Component {
 	}
 
 	componentDidMount() {
-		const contextId = this.props.registry.formContext.contextId;
+		const {formContext} = this.props.registry;
+		const contextId = formContext.contextId;
 		const _context = new Context(contextId);
 		const {idToFocus} = _context;
 		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			focusById(contextId, _context.idToFocus);
+			focusById(formContext, _context.idToFocus);
 			_context.idToFocus = undefined;
 		}
 	}
@@ -521,7 +522,7 @@ export default class LajiForm extends Component {
 
 				if (!elem) return;
 
-				scrollIntoViewIfNeeded(elem);
+				scrollIntoViewIfNeeded(elem, {offsetTop: this.props.topOffset, offsetBottom: this.props.bottomOffset});
 
 				if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
 				this.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
@@ -567,17 +568,35 @@ export default class LajiForm extends Component {
 	componentWillReceiveProps(props) {
 		if (props.hasOwnProperty("lang") && this.props.lang !== props.lang) this.apiClient.flushCache();
 		this.setState(this.getStateFromProps(props));
+
 	}
 
 	getStateFromProps(props) {
 		this._context.staticImgPath = props.staticImgPath;
 		this._context.formData = props.formData;
-		return {translations: this.translations[props.lang]};
+		const translations = this.translations[props.lang];
+		return {
+			translations,
+			formContext: {
+				translations,
+				lang: this.props.lang,
+				uiSchemaContext: this.props.uiSchemaContext,
+				settings: this.props.settings,
+				contextId: this._id,
+				getFormRef: this.getFormRef,
+				topOffset: this.props.topOffset,
+				bottomOffset: this.props.bottomOffset,
+				formID: this.props.id,
+				getWarnings: (data, id) => {
+					return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
+				}
+			}
+		};
 	}
 
 	componentDidMount() {
 		this.mounted = true;
-		this.props.autoFocus && focusById(this._id, "root");
+		this.props.autoFocus && focusById(this.state.formContext, "root");
 	}
 
 	componentWillUnmount() {
@@ -609,24 +628,11 @@ export default class LajiForm extends Component {
 
 	getPanelRef = elem => {this.shortcutHelpRef = elem;}
 
+	getFormRef = () => this.formRef
+
 	render() {
 		const {translations} = this.state;
 		const shortcuts = this.props.uiSchema["ui:shortcuts"];
-
-		const formContext = {
-			translations,
-			lang: this.props.lang,
-			uiSchemaContext: this.props.uiSchemaContext,
-			settings: this.props.settings,
-			contextId: this._id,
-			getFormRef: () => this.formRef,
-			topOffset: this.props.topOffset,
-			bottomOffset: this.props.bottomOffset,
-			formID: this.props.id,
-			getWarnings: (data, id) => {
-				return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
-			}
-		};
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
@@ -641,7 +647,7 @@ export default class LajiForm extends Component {
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
-					formContext={formContext}
+					formContext={this.state.formContext}
 					validate={validate(this.props.validators, this.props.warnings, this.validationSettings)}
 					transformErrors={transformErrors(translations)}
 					noHtml5Validate={true}

@@ -403,7 +403,7 @@ class LineTransectMapArrayField extends Component {
 			this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
 		);
 		this.map._openTooltipFor(idx);
-		focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`);
+		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
 	}
 	onComponentDidUpdate(prevProps, prevState) {
 		if (prevState.activeIdx !== this.state.activeIdx) {
@@ -454,7 +454,7 @@ class _MapArrayField extends ComposedComponent {
 		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		this.map = this.refs.map.refs.map.map;
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
-			this.setState({activeIdx: idx}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
+			this.setState({activeIdx: idx}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 		});
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", () => {
 			this._zoomToDataOnNextTick = true;
@@ -621,7 +621,7 @@ class _MapArrayField extends ComposedComponent {
 						fn: () => () => {
 							const nextActive = this.props.formData.length;
 							this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
-							this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext.contextId ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
+							this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 						}, 
 						key: "_add",
 						glyph: "plus"

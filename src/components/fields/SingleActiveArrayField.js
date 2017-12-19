@@ -231,7 +231,7 @@ export default class SingleActiveArrayField extends Component {
 		const that = this;
 		function _callback() {
 			const id = that.props.idSchema.$id;
-			focusById(that.props.formContext.contextId, `${id}_${idx}`);
+			focusById(that.props.formContext, `${id}_${idx}`);
 			that.getContext()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
@@ -300,7 +300,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
 				getCurrentIdx: () => that.state.activeIdx,
 				focusByIdx: (idx) => idx === that.state.activeIdx ?
-					focusById(this.props.formContext.contextId, `${this.props.idSchema.$id}_${idx}`) :
+					focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`) :
 					this.props.formContext.this.onActiveChange(idx)
 			});
 			this.addChildKeyHandler();
