@@ -14,7 +14,12 @@ export default class MapField extends Component {
 			<div>
 				<TitleField title={this.props.schema.title || this.props.name} />
 				<div style={{height}}>
-					<MapComponent {...options.mapOptions || {}} {...this.state.mapOptions || {}} draw={this.getDrawOptions()} lang={this.props.formContext.lang}  onOptionsChanged={this.onOptionsChanged} />
+					<MapComponent {...options.mapOptions || {}} 
+					              {...this.state.mapOptions || {}} 
+					              draw={this.getDrawOptions()} 
+					              lang={this.props.formContext.lang}  
+					              zoomToData={true}  
+					              onOptionsChanged={this.onOptionsChanged} />
 				</div>
 			</div>
 		);
