@@ -149,6 +149,9 @@ body .laji-form {
 .laji-form ul.rw-list > li.rw-list-option, .rw-selectlist > li.rw-list-option {
 min-height: 20px;
 }
+.laji-form .rw-combobox .rw-list, .laji-form .rw-datetimepicker .rw-list, .laji-form .rw-numberpicker .rw-list, .laji-form .rw-dropdownlist .rw-list, .laji-form .rw-multiselect .rw-list {
+    max-height: 50vh;
+}
 
 .laji-form .form-group {
 	margin-bottom: 0;
