@@ -438,8 +438,7 @@ export default class LajiForm extends Component {
 	}
 
 	static defaultProps = {
-		lang: "en",
-		autoFocus: true
+		lang: "en"
 	}
 
 	constructor(props) {
