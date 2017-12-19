@@ -1100,3 +1100,7 @@ min-height: 20px;
 	width: auto;
 	margin-top: 1px;
 }
+
+.laji-form .tooltip-inner {
+	max-width: 300px;
+}
