@@ -1635,33 +1635,31 @@
 		"activeGatheringIdx": 0
 	},
 	"formData": {
+  "creator": "MA.308",
   "gatheringEvent": {
     "legPublic": true,
     "leg": [
-      "Olli Raitio"
+      "MA.308"
     ]
   },
-  "editors": [],
+  "formID": "MHL.9",
+  "editors": [
+    "MA.308"
+  ],
   "secureLevel": "MX.secureLevelNone",
   "gatherings": [
     {
-      "images": [],
       "units": [
         {
-          "recordBasis": "MY.recordBasisHumanObservation",
-          "informalTaxonGroups": [],
-          "taxonConfidence": "MY.taxonConfidenceSure",
+          "informalTaxonGroups": [
+            ""
+          ],
+          "taxonConfidence": "MY.taxonConfidenceUnsure",
           "images": [],
           "identifications": [
-            {
-              "identificationBasis": []
-            }
+            {}
           ],
-          "unitGathering": {
-            "geometry": {}
-          },
-          "unitFact": {},
-          "checklistID": ""
+          "unitFact": {}
         }
       ],
       "geometry": {
@@ -1670,16 +1668,15 @@
           {
             "type": "Point",
             "coordinates": [
-              28.460856290734863,
-              63.1040091390111
+              25.696057875821836,
+              60.47616225749229
             ]
           }
         ]
-      },
-      "habitat": [],
-      "taxonCensus": []
+      }
     }
-  ]
+  ],
+  "_hasChanges": true
 },
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",

@@ -2,6 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 
 const suggestionParsers = {
@@ -137,7 +138,7 @@ export default class AutosuggestField extends Component {
 		let formData = this.props.formData;
 		const {suggestionReceivers, suggestionInputField} = this.getUiOptions();
 		Object.keys(suggestionReceivers).forEach(fieldName => {
-			formData = {...formData, [fieldName]: undefined};
+			formData = {...formData, [fieldName]: getDefaultFormState(this.props.schema.properties[fieldName], undefined, this.props.registry.definitions)};
 		});
 		formData = {...formData, [suggestionInputField]: value};
 		this.props.onChange(formData);
