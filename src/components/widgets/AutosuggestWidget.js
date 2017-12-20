@@ -3,10 +3,10 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Tooltip, OverlayTrigger, Glyphicon, Popover, InputGroup, ListGroup, ListGroupItem } from "react-bootstrap";
+import { OverlayTrigger, Glyphicon, Popover, InputGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, isDescendant } from "../../utils";
-import { FetcherInput, TooltipComponent } from "../components";
+import { FetcherInput, TooltipComponent, Tooltip } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
