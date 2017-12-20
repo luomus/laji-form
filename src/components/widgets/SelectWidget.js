@@ -76,11 +76,11 @@ class SelectWidget extends Component {
 		};
 	}
 
-	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => value))
+	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => this.getEnum(value)));
 
 	selectOnChange = (item) => {
 		this.setState({value: item}, () => {
-			this.props.selectOnChange && !isNullOrUndefined(item.value) && this.props.onChange(item.value);
+			this.props.selectOnChange && !isNullOrUndefined(item.value) && this.props.onChange(this.getEnum(item.value));
 		});
 	}
 
@@ -103,7 +103,7 @@ class SelectWidget extends Component {
 	onSelect = (item) => {
 		this.state.open && this._context.setImmediate(() => this.setState({open: false}));
 		if (!this.props.selectOnChange) {
-			this.props.onChange(item.value);
+			this.props.onChange(this.getEnum(item.value));
 		}
 	}
 
@@ -112,6 +112,8 @@ class SelectWidget extends Component {
 	};
 
 	getRef = elem => this.comboRef = elem;
+
+	getEnum = val => isEmptyString(val) ? undefined : val;
 
 	render() {
 		const {
