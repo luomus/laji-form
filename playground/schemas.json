@@ -1634,10 +1634,12 @@
 		"formID": "JX.519",
 		"activeGatheringIdx": 0
 	},
-	"formData": {
+	"formData":{
   "creator": "MA.308",
   "gatheringEvent": {
     "legPublic": true,
+    "id": "JX.129012#1",
+    "@type": "MZ.gatheringEvent",
     "leg": [
       "MA.308"
     ]
@@ -1651,15 +1653,26 @@
     {
       "units": [
         {
-          "informalTaxonGroups": [
-            ""
-          ],
           "taxonConfidence": "MY.taxonConfidenceUnsure",
-          "images": [],
-          "identifications": [
-            {}
+          "images": [
+            "MM.91124"
           ],
-          "unitFact": {}
+          "informalTaxonGroups": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "id": "JX.129012#3",
+          "@type": "MY.unit",
+          "identifications": [
+            {
+              "taxon": "varpunen",
+              "id": "JX.129012#4",
+              "@type": "MY.identification"
+            }
+          ],
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.36573"
+          }
         }
       ],
       "geometry": {
@@ -1668,16 +1681,28 @@
           {
             "type": "Point",
             "coordinates": [
-              25.696057875821836,
-              60.47616225749229
+              27.410016277451,
+              63.405036313801
             ]
           }
         ]
-      }
+      },
+      "id": "JX.129012#2",
+      "@type": "MY.gathering",
+      "dateBegin": "2017-12-20"
     }
   ],
+  "publicityRestrictions": "MZ.publicityRestrictionsPrivate",
+  "sourceID": "KE.389",
+  "collectionID": "HR.1747",
+  "editor": "MA.308",
+  "dateEdited": "2017-12-20T11:24:32+02:00",
+  "dateCreated": "2017-12-20T11:24:32+02:00",
+  "id": "JX.129012",
+  "@type": "MY.document",
+  "@context": "http://schema.laji.fi/context/document.jsonld",
   "_hasChanges": true
-},
+} ,
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",
 		  "%additionalFields/scopeField_gathering_unit_unitType": {

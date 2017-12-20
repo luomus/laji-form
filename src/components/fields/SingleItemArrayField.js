@@ -15,10 +15,10 @@ export default class SingleItemArrayField extends Component {
 				...props.uiSchema,
 				"ui:field": "SingleActiveArrayField",
 				"ui:options": {
+					activeIdx: 0,
 					...this.getUiOptions(),
 					renderer: "uncontrolled",
-					addable: false,
-					activeIdx: 0
+					addable: false
 				},
 			}
 		};
