@@ -83,7 +83,22 @@ class DefaultMapArrayField extends Component {
 		const controls = (emptyMode || this.state.activeIdx !== undefined) ?
 			{drawCopy: true} : {draw: false, coordinateInput: false};
 
-		return {draw, controls, emptyMode};
+		const data = geometries && geometries.length || !options.placeholderGeometry
+			? undefined
+			: {
+				geoData: options.placeholderGeometry,
+				getFeatureStyle: this._getPlaceholderStyle
+			};
+
+		return {draw, controls, emptyMode, data};
+	}
+
+	_getPlaceholderStyle = () => {
+		return {
+			color: "#999999",
+			fillOpacity: 0,
+			weight: 8
+		}
 	}
 
 	onMapChangeCreateGathering(events) {
