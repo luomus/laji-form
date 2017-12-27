@@ -190,29 +190,35 @@ export class Affix extends Component {
 		}
 	}
 
-	onScroll = () => {
+	_onScroll = () => {
 		const state = this.getState();
 		if (state && state.affixState !== this.state.affixState) {
 			this.setState(state);
 		}
 	}
 
+	onScroll = () => {
+		requestAnimationFrame(this._onScroll);
+	}
+	
+	_onResize = () => {
+		const positioner = findDOMNode(this.refs.positioner);
+		const width = positioner.getBoundingClientRect().width;
+
+		const state = {width};
+
+		const _state = this.getState();
+		if (_state.affixState !== TOP) state.top = _state.top;
+
+		this.setState(state);
+	}
+
 	onResize = () => {
-		requestAnimationFrame(() => {
-			const positioner = findDOMNode(this.refs.positioner);
-			const width = positioner.getBoundingClientRect().width;
-
-			const state = {width};
-
-			const _state = this.getState();
-			if (_state.affixState !== TOP) state.top = _state.top;
-
-			this.setState(state);
-		});
+		requestAnimationFrame(this._onResize);
 	}
 
 	render() {
-		const {children} = this.props;
+		const {children, style: containerStyle} = this.props;
 		const {top, width, affixState} = this.state;
 		const style = {};
 		style.position = "relative";
@@ -225,7 +231,7 @@ export class Affix extends Component {
 			style.top = top;
 		}
 		return (
-			<div>
+			<div style={containerStyle}>
 				<div ref="positioner" />
 				<div ref="wrapper" style={style} className={this.props.className}>
 					{children}
@@ -259,19 +265,23 @@ export class StretchAffix extends Component {
 		window.removeEventListener("resize", this.onResize);
 	}
 
+	_onScroll = () => {
+		this.update(this.getState());
+	}
+
 	onScroll = () => {
-		requestAnimationFrame(() => {
-			this.update(this.getState());
-		});
+		requestAnimationFrame(this._onScroll);
+	}
+
+	_onResize = () => {
+		const positioner = findDOMNode(this.refs.positioner);
+		const width = positioner.getBoundingClientRect().width;
+
+		this.update({...this.getState(), width});
 	}
 
 	onResize = () => {
-		requestAnimationFrame(() => {
-			const positioner = findDOMNode(this.refs.positioner);
-			const width = positioner.getBoundingClientRect().width;
-
-			this.update({...this.getState(), width});
-		});
+		requestAnimationFrame(this._onResize);
 	}
 
 	update = (state) => {

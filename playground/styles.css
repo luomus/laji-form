@@ -1104,3 +1104,8 @@ min-height: 20px;
 .laji-form-tooltip .tooltip-inner {
 	max-width: 300px;
 }
+
+.laji-form .affixed-labels {
+	background: #eee;
+	border-bottom: 1px solid #dddddd;
+}

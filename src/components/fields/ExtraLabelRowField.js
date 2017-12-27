@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Row , Col} from "react-bootstrap";
-import { Label } from "../components";
+import { Label, Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -31,9 +31,18 @@ export default class ExtraLabelRowField extends Component {
 		return {...propsWithInnerUiSchema};
 	}
 
+	setContainerRef = (elem) => {
+		this.containerElem = elem;
+	}
+
+	getContainerRef = () => {
+		return this.containerElem;
+	}
+
+
 	render() {
 		const {SchemaField, TitleField} = this.props.registry.fields;
-		const {labels, titleClassName, hiddenXs} = getUiOptions(this.props.uiSchema);
+		const {labels, titleClassName, hiddenXs, affixed} = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
 		labels.forEach((label, i) => {
@@ -42,10 +51,23 @@ export default class ExtraLabelRowField extends Component {
 
 		const title = this.props.schema.title !== undefined ? this.props.schema.title : this.props.name;
 
+		let labelRow = <Row className={"laji-form-label-row" + (hiddenXs ? " hidden-xs" : "")  + (affixed ? " affixed-labels" : "")}>{cols}</Row>;
+
+		if (affixed) {
+			labelRow = (
+				<Affix getContainer={this.getContainerRef} 
+				       style={affixed ? {position: "relative", zIndex: 1} : undefined} 
+				       topOffset={this.props.formContext.topOffset}
+				       bottomOffset={this.props.formContext.bottomOffset}>
+					{labelRow}
+				</Affix>
+			);
+		}
+
 		return (
-			<div>
+			<div ref={this.setContainerRef}>
 				{title ? <TitleField title={title} className={titleClassName} help={this.props.uiSchema["ui:help"]} id={this.props.idSchema.$id}/> : null}
-				<Row className={"laji-form-label-row" + (hiddenXs ? " hidden-xs" : "")}>{cols}</Row>
+				{labelRow}
 				<SchemaField {...this.props} {...this.state}/>
 			</div>
 		);
