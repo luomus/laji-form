@@ -203,6 +203,7 @@ const fields = importLocalComponents("fields", [
 	"NamedPlaceSaverField",
 	"TemplateArrayField",
 	"MapField",
+	"GeocoderField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);

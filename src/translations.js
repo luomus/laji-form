@@ -477,4 +477,9 @@
 		en: "Show subgroups",
 		sv: "Välj subgrupper"
 	},
+	geolocate: {
+		fi: "Hae paikkatiedot",
+		en: "Get place data",
+		sv: "få platsdata"
+	},
 };
