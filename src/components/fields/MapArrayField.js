@@ -124,7 +124,6 @@ class DefaultMapArrayField extends Component {
 	}
 
 	onChange(events) {
-		console.log(events);
 		events.forEach(e => {
 			switch (e.type) {
 			case "create":

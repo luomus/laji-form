@@ -93,7 +93,7 @@ class PlaceSaverDialog extends Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetch("/named-places", {public: false}).then(response => {
+		this.apiClient.fetch("/named-places", {includePublic: false}).then(response => {
 			if (!this.mounted) return;
 			const state = {
 				places: response.results,
