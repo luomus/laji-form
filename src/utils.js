@@ -2,7 +2,6 @@ import { findDOMNode } from "react-dom";
 import { isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "./Context";
 import update from "immutability-helper";
-import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
@@ -219,7 +218,7 @@ export function focusById(formContext = {}, id) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
 			tabbableFields[0].focus();
-			scrollIntoViewIfNeeded(elem, {offset: {top: formContext.topOffset, bottom: formContext.bottomOffset}});
+			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
 			return true;
 		}
 	}
@@ -390,4 +389,26 @@ export function applyFunction(props) {
 			uiSchema: props.uiSchema.uiSchema
 		}
 	};
+}
+
+export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
+	var rect = elem.getBoundingClientRect();
+	var html = document.documentElement;
+	const height = elem.scrollHeight;
+	const inView = (
+		rect.top >= topOffset &&
+		rect.bottom <= (window.innerHeight || html.clientHeight) - bottomOffset
+	);
+	const distFromTop = rect.top;
+	const viewportHeight = (window.innerHeight || html.clientHeight);
+	const distFromBottom = viewportHeight - rect.bottom;
+	const pageScrolled = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+	if (!inView) {
+		if (distFromTop < topOffset) {
+			window.scrollTo(0, pageScrolled + rect.top - topOffset);
+		}
+		if (distFromBottom < bottomOffset) {
+			window.scrollTo(0, pageScrolled + rect.top - viewportHeight + height + bottomOffset);
+		}
+	}
 }

@@ -5,10 +5,9 @@ import validate from "../validation";
 import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
 import { Button, Label, Help, ErrorPanel } from "./components";
 import { Panel, Table, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString } from "../utils";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString, scrollIntoViewIfNeeded } from "../utils";
 import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
-import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -518,11 +517,10 @@ export default class LajiForm extends Component {
 				const elem = container || document.querySelector(`#laji-form-error-container-${id}`);
 				const input = document.querySelector(`#${id}`);
 
+				if (elem) scrollIntoViewIfNeeded(elem, this.props.topOffset, this.props.bottomOffset);
 				if (input) input.focus();
 
 				if (!elem) return;
-
-				scrollIntoViewIfNeeded(elem, {offsetTop: this.props.topOffset, offsetBottom: this.props.bottomOffset});
 
 				if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
 				this.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);

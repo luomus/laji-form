@@ -26,7 +26,7 @@
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
     "immutability-helper": "^2.1.2",
-    "laji-map": "^1.0.302",
+    "laji-map": "^1.0.303",
     "laji-validate": "0.0.51",
     "moment": "*",
     "prop-types": "^15.5.8",
@@ -43,8 +43,7 @@
     "react-sortable-hoc": "^0.6.3",
     "react-spinner": "^0.2.7",
     "react-transition-group": "^1.1.1",
-    "react-widgets": "^3.4.8",
-    "scroll-into-view-if-needed": "^1.4.0"
+    "react-widgets": "^3.4.8"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",

@@ -60,6 +60,7 @@ class DefaultMapArrayField extends Component {
 		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
 		this.onChange = this.onChange.bind(this);
 	}
+
 	getOptions(options) {
 		const {formData} = this.props;
 		const geometries = this.getData();
@@ -123,6 +124,7 @@ class DefaultMapArrayField extends Component {
 	}
 
 	onChange(events) {
+		console.log(events);
 		events.forEach(e => {
 			switch (e.type) {
 			case "create":
@@ -133,6 +135,9 @@ class DefaultMapArrayField extends Component {
 				break;
 			case "edit":
 				this.onEdited(e);
+				break;
+			case "insert":
+				this.onInsert(e);
 				break;
 			}
 		});
@@ -172,6 +177,19 @@ class DefaultMapArrayField extends Component {
 				}, {})
 			}}}));
 	}
+
+	onInsert({idx, feature}) {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		this.props.onChange(update(this.props.formData,
+			{[this.state.activeIdx]: {[geometryField]: {
+				geometries: {$splice: [[idx, 0, feature.geometry]]}
+			}}}));
+	}
+
+	onActiveChange(idx) {
+		if (idx === undefined) return;
+		this.map.zoomToData();
+	}
 }
 
 @_MapArrayField
@@ -185,6 +203,8 @@ class UnitsMapArrayField extends Component {
 		this.onAdd = DefaultMapArrayField.prototype.onAdd.bind(this);
 		this.onRemove = DefaultMapArrayField.prototype.onRemove.bind(this);
 		this.onEdited = DefaultMapArrayField.prototype.onEdited.bind(this);
+		this.onInsert = DefaultMapArrayField.prototype.onInsert.bind(this);
+		this.onActiveChange = DefaultMapArrayField.prototype.onActiveChange.bind(this);
 	}
 
 	getOptions = (options) => {
@@ -331,11 +351,6 @@ class UnitsMapArrayField extends Component {
 		if (this.highlightedElem) {
 			this.highlightedElem.className += " map-highlight";
 		}
-	}
-
-	onActiveChange = idx => {
-		if (idx === undefined) return;
-		if (Object.keys(this.map.getDraw().group._layers).length) this.map.map.fitBounds(this.map.getDraw().group.getBounds());
 	}
 }
 
@@ -508,7 +523,7 @@ class _MapArrayField extends ComposedComponent {
 		let {uiSchema, errorSchema, schema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = []} = options;
-		let { belowUiSchemaRoot = {}, inlineUiSchemaRoot = {} } = options;
+		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}} = options;
 		const {activeIdx} = this.state;
 
 		const activeIdxProps = {
@@ -975,21 +990,28 @@ export class Map extends Component {
 	}
 
 	setOptions = (prevOptions, options) => {
-		const {className, style, onComponentDidMount, hidden, singleton, ..._options} = options; // eslint-disable-line no-unused-vars
+		const {className, style, onComponentDidMount, hidden, singleton, emptyMode, draw, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
 			style: prevStyle,  // eslint-disable-line no-unused-vars
 			onComponentDidMount: prevOnComponentDidMount,  // eslint-disable-line no-unused-vars
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
+			emptyMode: prevEmptyMode,  // eslint-disable-line no-unused-vars
+			draw: prevDraw,  // eslint-disable-line no-unused-vars
 			..._prevOptions
 		} = prevOptions;
 	
-		if (this.map) Object.keys(_options).forEach(key => {
-			if (!deepEquals(_options[key], _prevOptions[key])) {
-				this.map.setOption(key, _options[key]);
+		if (this.map) {
+			Object.keys(_options).forEach(key => {
+				if (!deepEquals(_options[key], _prevOptions[key])) {
+					this.map.setOption(key, _options[key]);
+				}
+			});
+			if (!deepEquals(draw, prevDraw)) {
+				this.map.updateDrawData(draw);
 			}
-		});
+		}
 	}
 
 	initializeMap = (options) => {
