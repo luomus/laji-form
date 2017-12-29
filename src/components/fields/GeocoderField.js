@@ -101,7 +101,7 @@ export default class GeocoderField extends Component {
 				new ApiClient().fetchCached("/coordinates/biogeographicalProvince", {latlng: [lat, lng].join(",")}).then(response => {
 					changes.biologicalProvince = undefined;
 					if (response.results && response.results.length) {
-						changes.biologicalProvince = response.results[0].place_id;
+						changes.biologicalProvince = response.results[0].formatted_address;
 					}
 				})
 			]).then(() => {
