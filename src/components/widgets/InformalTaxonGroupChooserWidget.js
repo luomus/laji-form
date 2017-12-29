@@ -153,32 +153,38 @@ export class InformalTaxonGroupChooser extends Component {
 	}
 
 	render() {
+		const {path, informalTaxonGroupsById, informalTaxonGroups} = this.state;
+		const {translations, onHide} = this.props;
+
 		const getButtonGroup = (id) => (
 			<ButtonGroup>
-				{this.state.informalTaxonGroupsById[id].hasSubGroup && <Button key="subgroups" onClick={this.onSubgroupSelected(id)}>{this.props.translations.ShowSubgroups}</Button>}
-				<Button key="select" onClick={this.onSelected(id)}>{this.props.translations.Select}</Button>
+				{informalTaxonGroupsById[id].hasSubGroup && <Button key="subgroups" onClick={this.onSubgroupSelected(id)}>{translations.ShowSubgroups}</Button>}
+				<Button key="select" onClick={this.onSelected(id)}>{translations.Select}</Button>
 			</ButtonGroup>
 		);
 		const getItem = id => (
 			<ListGroupItem key={id}>
-				{this.state.path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
-				<h5>{this.state.informalTaxonGroupsById[id].name}</h5>
+				{path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
+				<h5>{informalTaxonGroupsById[id].name}</h5>
 				{getButtonGroup(id)}
 			</ListGroupItem>
 		);
 
 		return (
-			<Modal show={true} onHide={this.props.onHide} dialogClassName="laji-form informal-taxon-group-chooser">
+			<Modal show={true} onHide={onHide} dialogClassName="laji-form informal-taxon-group-chooser">
+				<Modal.Header closeButton={true}>
+					<Modal.Title>{translations.PickInformalTaxonGroup}</Modal.Title>
+				</Modal.Header>
 			<Modal.Body>
 				<Breadcrumb>
-					{this.state.path.map(id => 
+					{path.map(id => 
 						<Breadcrumb.Item key={id === undefined ? "root" : id} onClick={this.onSubgroupSelected(id)}>
-							{id === undefined ? this.props.translations.All : this.state.informalTaxonGroupsById[id].name}
+							{id === undefined ? translations.All : informalTaxonGroupsById[id].name}
 						</Breadcrumb.Item>
 					)}
 				</Breadcrumb>
-				{this.state.informalTaxonGroups 
-					? <ListGroup>{Object.keys(this.state.informalTaxonGroups).map(getItem)}</ListGroup>
+				{informalTaxonGroups 
+					? <ListGroup>{Object.keys(informalTaxonGroups).map(getItem)}</ListGroup>
 					: <Spinner />
 				}
 			</Modal.Body>
