@@ -1,7 +1,7 @@
 import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
-import { Row , Col } from "react-bootstrap";
+import { Row , Col, ButtonToolbar } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
 import { getButton } from "../ArrayFieldTemplate";
 import { Label } from "../components";
@@ -15,7 +15,11 @@ function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => getButtonsForPosition(props, pos));
+	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
+		<ButtonToolbar key={`buttons-${pos}`}>
+			{getButtonsForPosition(props, pos)}
+		</ButtonToolbar>
+	));
 
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
@@ -115,7 +119,12 @@ function GridTemplate(props) {
 	let fieldTitle = title !== undefined ? title : props.name;
 
 	let buttons = getGlyphButtons(props);
-	const topButtons = getButtonsForPosition(props, "top");
+	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
+		<ButtonToolbar key={`buttons-${pos}`}>
+			{getButtonsForPosition(props, pos)}
+		</ButtonToolbar>
+	));
+
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
 	buttons = <div className={buttonsClassName}>{buttons}</div>;
@@ -135,6 +144,7 @@ function GridTemplate(props) {
 						{row}
 					</Row>
 				)}
+				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : null}
 	</div>
