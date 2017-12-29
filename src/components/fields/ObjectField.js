@@ -15,7 +15,7 @@ function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
 
 	let buttons = getGlyphButtons(props);
-	const topButtons = getButtonsForPosition(props, "top");
+	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => getButtonsForPosition(props, pos));
 
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
@@ -42,6 +42,7 @@ function ObjectFieldTemplate(props) {
 						formContext={props.formContext}
 					/>}
 				{props.properties.map(({content}) => content)}
+				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : undefined}
 		</div>

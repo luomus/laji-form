@@ -1,36 +1,61 @@
-import { Component } from "react";
-import { getUiOptions } from "../../utils";
-import VirtualSchemaField from "../VirtualSchemaField";
+import React, { Component } from "react";
+import { getUiOptions, getInnerUiSchema } from "../../utils";
+import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import ApiClient from "../../ApiClient";
+import { Button } from "../components";
+import Spinner from "react-spinner";
 
 const cache = {};
 
-@VirtualSchemaField
+@BaseComponent
 export default class GeocoderField extends Component {
 	static getName() {return "GeocoderField";}
 
-	getStateFromProps(props) {
+	constructor(props) {
+		super(props);
+		this.state = this.getStateFromProps(props, false);
+	}
+
+	componentDidMount() {
+		this.mounted = true;
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
+	getStateFromProps(props, loading) {
+		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const uiSchema = {
-			...props.uiSchema,
+			...innerUiSchema,
 			"ui:options": {
-				...getUiOptions(props.uiSchema),
+				...getUiOptions(innerUiSchema),
 				buttons: [
-					...(getUiOptions(props.uiSchema).buttons || []),
-					this.getButton(props)
+					...(getUiOptions(innerUiSchema).buttons || []),
+					this.getButton(props, loading)
 				]
 			}
 		};
 
-		return {uiSchema};
+		const state = {uiSchema, loading};
+		return state;
 	}
 
-	getButton(props) {
+	getButton(props, loading) {
 		return {
-			label: props.formContext.translations.Geolocate,
 			fn: this.onButtonClick,
-			glyph: "globe",
-			position: "top"
+			position: "top",
+			key: loading,
+			render: onClick => (
+				<Button key="geolocate" onClick={onClick} disabled={loading}>
+					<strong>
+						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
+						{" "}
+						{props.formContext.translations.Geolocate}
+					</strong>
+				</Button>
+			)
 		};
 	}
 
@@ -58,26 +83,43 @@ export default class GeocoderField extends Component {
 			})
 		}).getBounds().getCenter();
 		const {lat, lng} = center;
+
 		const changes = {};
-		Promise.all([
-			this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`).then(response => {
-				const {country_code, town, state, county} = response.address;
-				changes.country = country_code;
-				changes.municipality = undefined;
-				changes.administrativeProvince = undefined;
-				if (country_code === "fi") {
-					changes.municipality = town;
+		this.setState(this.getStateFromProps(this.props, true), () => {
+			Promise.all([
+				this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`).then(response => {
+					const {country_code, town, state, state_district, county} = response.address;
+					changes.country = country_code;
+					changes.municipality = undefined;
+					changes.administrativeProvince = undefined;
+					if (country_code === "fi") {
+						changes.municipality = town;
+					} else {
+						changes.administrativeProvince = county || state || state_district || town;
+					}
+				}),
+				new ApiClient().fetchCached("/coordinates/biogeographicalProvince", {latlng: [lat, lng].join(",")}).then(response => {
+					if (response.results && response.results.length) {
+						changes.biologicalProvince = response.results[0].place_id;
+					}
+				})
+			]).then(() => {
+				if (this.mounted) {
+					this.setState(this.getStateFromProps(this.props, false), 
+						() => this.props.onChange({...this.props.formData, ...changes})
+					);
 				} else {
-					changes.administrativeProvince = county || town || state;
+					this.props.onChange({...this.props.formData, ...changes});
 				}
-			}),
-			new ApiClient().fetchCached("/coordinates/biogeographicalProvince", {latlng: [lat, lng].join(",")}).then(response => {
-				if (response.results && response.results.length) {
-					changes.biologicalProvince = response.results[0].place_id;
-				}
-			})
-		]).then(() => {
-			this.props.onChange({...this.props.formData, ...changes});
-		})
+			}).catch(() => {
+				if (!this.mounted) return;
+				this.setState(this.getStateFromProps(this.props, false));
+			});
+		});
+	}
+
+	render() {
+		const {SchemaField} = this.props.registry.fields;
+		return <SchemaField {...this.props} uiSchema={this.state.uiSchema} />;
 	}
 }

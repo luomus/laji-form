@@ -54,7 +54,7 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, callback, key, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, callback, key, render, ...options} = button;
 
 	label = label !== undefined ?
 		(glyph ? ` ${label}` : label) :
@@ -74,7 +74,7 @@ export function getButton(button, props = {}) {
 		}
 	};
 
-	return (
+	return render ? render(onClick) : (
 		<Button key={key || fnName} className={className} onClick={onClick} >
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
