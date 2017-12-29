@@ -88,8 +88,8 @@ export default class GeocoderField extends Component {
 		this.setState(this.getStateFromProps(this.props, true), () => {
 			Promise.all([
 				this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${this.props.formContext.lang}`).then(response => {
-					const {country_code, town, state, state_district, county} = response.address;
-					changes.country = country_code;
+					const {country, country_code, town, state, state_district, county} = response.address;
+					changes.country = country;
 					changes.municipality = undefined;
 					changes.administrativeProvince = undefined;
 					if (country_code === "fi") {
