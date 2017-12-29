@@ -519,13 +519,15 @@ class TableArrayFieldTemplate extends Component {
 		const foundProps = {};
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
-				const found = foundProps[prop] || (
-					item.hasOwnProperty(prop) && 
-					!isNullOrUndefined(item[prop]) && 
-					(!Array.isArray(item[prop]) || Array.isArray(item[prop]) && !item[prop].every(isNullOrUndefined)) &&
-					!isHidden(uiSchema.items, prop) &&
-					!isHidden(getNestedTailUiSchema(uiSchema.items), prop)
-				);
+				const found = 
+					foundProps[prop] || 
+					(
+						item.hasOwnProperty(prop) && 
+						!isEmptyString(item[prop]) && 
+						(!Array.isArray(item[prop]) || Array.isArray(item[prop]) && !item[prop].every(isEmptyString)) &&
+						!isHidden(uiSchema.items, prop) &&
+						!isHidden(getNestedTailUiSchema(uiSchema.items), prop)
+					);
 				if (found) foundProps[prop] = true;
 				return found;
 			})) {
