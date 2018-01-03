@@ -4,21 +4,23 @@ import { findDOMNode } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 
-export function Button(props) {
-	const {
-		tooltip,
-		tooltipPlacement,
-		tooltipTrigger,
-		..._props
-	} = props;
-	return (
-		<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
-			<_Button
-			bsStyle="primary"
-			{..._props}
-			>{_props.children}</_Button>
-		</TooltipComponent>
-	);
+export class Button extends Component {
+	render() {
+		const {
+			tooltip,
+			tooltipPlacement,
+			tooltipTrigger,
+			..._props
+		} = this.props;
+		return (
+			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
+				<_Button
+				bsStyle="primary"
+				{..._props}
+				>{_props.children}</_Button>
+			</TooltipComponent>
+		);
+	}
 }
 
 export class DeleteButton extends Component {
