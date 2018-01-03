@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
-import { Button as _Button, Overlay, OverlayTrigger, Popover, Tooltip as _Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button as _Button, Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 
 export function Button(props) {
@@ -19,11 +19,6 @@ export function Button(props) {
 			>{_props.children}</_Button>
 		</TooltipComponent>
 	);
-}
-
-export function Tooltip(props) {
-	const {children, ...restProps} = props;
-	return <div className="laji-form-tooltip"><_Tooltip {...restProps}>{children}</_Tooltip></div>;
 }
 
 export class DeleteButton extends Component {

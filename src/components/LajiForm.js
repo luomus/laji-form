@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
 import { Button, Label, Help, ErrorPanel } from "./components";
-import { Panel, Table, Glyphicon, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Panel, Table, Glyphicon, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString, scrollIntoViewIfNeeded } from "../utils";
 import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
