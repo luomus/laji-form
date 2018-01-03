@@ -306,7 +306,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			});
 		}
 
-		addChildKeyHandler() {
+		addChildKeyHandlers() {
 			const that = this.props.formContext.this;
 			if (this.childKeyHandlerId) new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
 			if (that.state.activeIdx !== undefined) {
