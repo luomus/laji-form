@@ -317,7 +317,7 @@ class NamedPlaceChooser extends Component {
 						data={data}
 						markerPopupOffset={45}
 						featurePopupOffset={5}
-						controls={{draw: false, coordinateInput: false}}
+						controls={{draw: false}}
 						lang={this.props.formContext.lang}
 					/>
 					{(!places) ? <Spinner /> : null}

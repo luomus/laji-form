@@ -257,7 +257,7 @@ class UnitsMapArrayField extends Component {
 		this.unitFeatures = data.featureCollection.features;
 
 		const controls = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
-			{drawCopy: true} : {draw: false, coordinateInput: false};
+			{} : {draw: false};
 
 		return {draw, data, controls, emptyMode};
 	}
@@ -421,6 +421,7 @@ class LineTransectMapArrayField extends Component {
 					Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
 				}
 			},
+			draw: false,
 			controls: {
 				lineTransect: true
 			}
@@ -557,8 +558,8 @@ class _MapArrayField extends ComposedComponent {
 		};
 
 		let mapOptions = merge.all([
-			(this.getOptions(options) || {}),
 			(options.mapOptions || {}),
+			(this.getOptions(options) || {}),
 			(this.state.mapOptions || {})
 		]);
 
@@ -699,7 +700,6 @@ class _MapArrayField extends ComposedComponent {
 			onOptionsChanged: this.onOptionsChanged,
 			...mapOptions,
 			controls: {
-				...(mapOptions.controlSettings || {}),
 				...(mapOptions.controls || {})
 			},
 			customControls: [{

@@ -111,7 +111,10 @@ const buttonSettings = {
 					},
 					controls: {
 						...mapOptions.controls,
-						drawClear: false
+						draw: {
+							...(mapOptions.controls.draw || {}),
+							clear: false
+						}
 					},
 					onComponentDidMount: (map) => {
 						modalMap = map;
@@ -187,7 +190,6 @@ const buttonSettings = {
 					...mapOptions,
 					draw: false,
 					controls: false,
-					controlSettings: undefined,
 					zoom: 8,
 					center: geometry.coordinates.slice(0).reverse(),
 					data: [
