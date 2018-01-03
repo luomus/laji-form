@@ -4,10 +4,12 @@ import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
-import { GlyphButton, FetcherInput } from "../components";
+import Context from "../../Context";
+import { Button, FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import deepEquals from "deep-equal";
+import { getButton } from "../ArrayFieldTemplate";
 
 const LINE_TRANSECT_ID = "MHL.1";
 
@@ -18,7 +20,8 @@ export default class UnitShorthandField extends Component {
 			"ui:options": PropTypes.shape({
 				shorthandField: PropTypes.string,
 				formID: PropTypes.string,
-				showSchema: PropTypes.bool
+				showSchema: PropTypes.bool,
+				persistenceKey: PropTypes.string
 			}).isRequired,
 			uiSchema: PropTypes.object
 		})
@@ -31,6 +34,30 @@ export default class UnitShorthandField extends Component {
 	}
 
 	getStateFromProps = (props) => {
+		const {persistenceKey} = getUiOptions(props.uiSchema);
+		let showSchema = undefined;
+		if (persistenceKey) {
+			const persistingContainer = new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`);
+			if (persistingContainer && "value" in persistingContainer) {
+				showSchema = persistingContainer.value;
+			} else {
+				showSchema = this.shouldShowSchema(props);
+			}
+		} else {
+			showSchema = this.shouldShowSchema(props);
+		}
+
+		return {showSchema};
+	}
+
+	componentWillReceiveProps = () => {
+		if (this.onNextTick) {
+			this.onNextTick();
+			this.onNextTick = undefined;
+		}
+	}
+
+	shouldShowSchema = (props) => {
 		let {showSchema} = this.state;
 		const shortHandFieldName = getUiOptions(props.uiSchema).shorthandField;
 		const isEmpty = () => {
@@ -39,34 +66,37 @@ export default class UnitShorthandField extends Component {
 				deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 		};
 
-		if (!this.state.showSchema && !isEmpty()) {
+		if (this.state.showSchema === undefined && !isEmpty()) {
 			showSchema = true;
 		}
-
-		return {showSchema};
+		return showSchema;
 	}
 
 	getToggleButton = () => {
 		const onClick = () => {
+			const {persistenceKey} = getUiOptions(this.props.uiSchema);
 			this.setState({showSchema: !this.state.showSchema}, () => {
 				focusById(this.props.formContext, this.props.idSchema.$id);
+				new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
 			});
 		};
 
-		return (
-			<GlyphButton
-				key={`${this.props.idSchema.$id}-toggle-code-reader-schema`}
-				bsStyle={this.state.showSchema ? "default" : "primary"}
-				onClick={onClick}
-				glyph="resize-small"
-			/>
-		);
+		return {
+			glyph: "resize-small",
+			fn: onClick,
+			tooltip: this.props.formContext.translations[this.state.showSchema ? "OpenShorthand" :  "CloseShorthand"],
+			tooltipPlacement: "left",
+			bsStyle: this.state.showSchema ? "default" : "primary"
+		};
 	}
 
 	onCodeChange = (formData = {}) => {
 		this.getContext().idToFocus = this.props.idSchema.$id;
 		this.props.onChange(getDefaultFormState(this.props.schema, formData, this.props.registry.definitions));
-		this.setState({showSchema: true});
+		const {autocopy} = getUiOptions(this.props.uiSchema);
+		this.onNextTick = () => {
+			autocopy ? new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy") : this.setState({showSchema: true});
+		};
 	}
 
 	render() {
@@ -87,7 +117,8 @@ export default class UnitShorthandField extends Component {
 		let innerUiSchema = undefined;
 		if (this.state.showSchema) {
 			innerUiSchema = getInnerUiSchema({...uiSchemaWithoutHelp});
-			innerUiSchema  = {...innerUiSchema, "ui:buttons": [...(innerUiSchema["ui:buttons"] || []), toggleButton]};
+			const innerOptions = getUiOptions(innerUiSchema);
+			innerUiSchema  = {...innerUiSchema, "ui:options": {...innerOptions, buttons: [...(innerOptions.buttons || []), toggleButton]}};
 		}
 
 		return !this.state.showSchema ? (
@@ -100,7 +131,7 @@ export default class UnitShorthandField extends Component {
 										id={shorthandFieldName ? `_laji-form_${id}` : `_laji-form_${id}`}
 										formContext={formContext}
 										className="laji-form-field-template-schema" />
-				<div className="laji-form-field-template-buttons">{toggleButton}</div>
+				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
 		) : (
 			<SchemaField {...this.props} uiSchema={innerUiSchema} />
@@ -183,18 +214,20 @@ class CodeReader extends Component {
 					onKeyDown={onKeyDown}
 				/>
 		) : (
-			<Autosuggest
-				autosuggestField="unit"
-				query={{
-					formID,
-					includeNonMatching: true
-				}}
-				onSuggestionSelected={onSuggestionSelected}
-				renderSuggestion={renderSuggestion}
-				onChange={onAutosuggestChange}
-				formContext={formContext}
-				allowNonsuggestedValue={false}
-			/>
+			<div className="unit-shorthand">
+				<Autosuggest
+					autosuggestField="unit"
+					query={{
+						formID,
+						includeNonMatching: true
+					}}
+					onSuggestionSelected={onSuggestionSelected}
+					renderSuggestion={renderSuggestion}
+					onChange={onAutosuggestChange}
+					formContext={formContext}
+					allowNonsuggestedValue={false}
+				/>
+			</div>
 		);
 
 		return (

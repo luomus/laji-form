@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, isNullOrUndefined, parseJSONPointer, getBootstrapCols,
+import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -290,10 +290,11 @@ class Popup extends Component {
 }
 
 function handlesButtonsAndFocus(ComposedComponent) {
-	return class SingleActiveArrayTemplateField extends ComposedComponent {
+	return @handlesArrayKeys
+	class SingleActiveArrayTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
 
-		componentDidMount() {
+		addKeyHandlers() {
 			const that = this.props.formContext.this;
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
@@ -303,13 +304,6 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`) :
 					this.props.formContext.this.onActiveChange(idx)
 			});
-			this.addChildKeyHandler();
-			if (super.componentDidMount) super.componentDidMount();
-		}
-
-		componentDidUpdate() {
-			this.addChildKeyHandler();
-			if (super.componentDidUpdate) super.componentDidUpdate();
 		}
 
 		addChildKeyHandler() {

@@ -54,7 +54,7 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, callback, key, render, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, callback, key, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
 
 	label = label !== undefined ?
 		(glyph ? ` ${label}` : label) :
@@ -75,7 +75,7 @@ export function getButton(button, props = {}) {
 	};
 
 	return render ? render(onClick) : (
-		<Button key={key || fnName} className={className} onClick={onClick} >
+		<Button key={key || fnName} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 		</Button>
@@ -107,14 +107,14 @@ export function handlesArrayKeys(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
-			this.addKeyHandlers();
-			this.addChildKeyHandlers();
+			(super.addKeyHandlers || this.addKeyHandlers).call(this);
+			(super.addChildKeyHandlers ||  this.addChildKeyHandlers).call(this);
+			(super.addCustomEventListeners || this.addCustomEventListeners).call(this);
 			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentDidUpdate() {
-			this.addKeyHandlers();
-			this.addChildKeyHandlers();
+			(this.addChildKeyHandlers || this.addChildKeyHandlers).call(this);
 			if (super.componentDidUpdate) super.componentDidUpdate();
 		}
 
@@ -136,6 +136,18 @@ export function handlesArrayKeys(ComposedComponent) {
 				const id = `${this.props.idSchema.$id}_${i}`;
 				this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
 				context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
+			});
+		}
+
+		addCustomEventListeners() {
+			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "copy", () => {
+				const {buttonDefinitions} = getUiOptions(this.props.uiSchema);
+				if (buttonDefinitions && buttonDefinitions.copy) {
+					buttonDefinitions.copy.fn()(this.props, {type: "blacklist", filter: []});
+					if (buttonDefinitions.copy.callback) {
+						buttonDefinitions.copy.callback();
+					}
+				}
 			});
 		}
 

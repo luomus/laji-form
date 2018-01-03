@@ -1119,6 +1119,10 @@ min-height: 20px;
 }
 
 .laji-form .affixed-labels {
-	background: #eee;
+	background: #f5f5f5;
 	border-bottom: 1px solid #dddddd;
+}
+
+.laji-form .unit-shorthand {
+	margin-top: 5px;
 }

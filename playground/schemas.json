@@ -558,6 +558,18 @@
 					"items": {
 						"ui:functions": [
 							{
+								"ui:field": "UnitShorthandField",
+								"ui:options": {
+									"injections": {
+										"/ui:options/formID": "formID"
+									},
+									"persistenceKey": "unit",
+									"shorthandField": "identifications_0_taxon",
+									"autocopy": true,
+									"showSchema": true
+								}
+							},
+							{
 								"ui:field": "AutosuggestField",
 								"ui:options": {
 									"autosuggestField": "taxon",
@@ -742,8 +754,13 @@
 							]
 						},
 						"identifications": {
-							"detDate": {
-								"ui:widget": "DateWidget"
+							"items": {
+								"taxon": {
+									"ui:belowHelp": "Kirjoita pikakirjoitukseen (määrä) LAJI (koiraiden yksilömäärä) (naaraiden yksilömäärä). Suluilla merkityt eivät ole pakollisia."
+								},
+								"detDate": {
+									"ui:widget": "DateWidget"
+								}
 							}
 						},
 						"informalTaxonGroups": {

@@ -243,7 +243,7 @@ export class Autosuggest extends Component {
 		this.selectSuggestion(suggestion);
 	}
 
-	findExactMatch = (suggestions, value) => {
+	findExactMatch = (suggestions, value = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase()));
 	}

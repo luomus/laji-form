@@ -4,23 +4,21 @@ import { findDOMNode } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger, Popover, Tooltip as _Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 
-export class Button extends Component {
-	render() {
-		const {
-			tooltip,
-			tooltipPlacement,
-			tooltipTrigger,
-			...props
-		} = this.props;
-		return (
-			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
-				<_Button
-				bsStyle="primary"
-				{...props}
-				>{props.children}</_Button>
-			</TooltipComponent>
-		);
-	}
+export function Button(props) {
+	const {
+		tooltip,
+		tooltipPlacement,
+		tooltipTrigger,
+		..._props
+	} = props;
+	return (
+		<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
+			<_Button
+			bsStyle="primary"
+			{..._props}
+			>{_props.children}</_Button>
+		</TooltipComponent>
+	);
 }
 
 export function Tooltip(props) {
@@ -567,30 +565,30 @@ function NullTooltip() {
 }
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
-export function TooltipComponent({tooltip, children, id, placement, trigger}) {
-	let overlayRef = undefined;
-	let getOverlayRef = ref => {
-		overlayRef = ref;
-	};
+export class TooltipComponent extends Component {
+	setOverlayRef = (elem) => {
+		this.overlayElem = elem;
+	}
+	onMouseOver = () => this.overlayElem.show();
+	onMouseOut = () => this.overlayElem.hide();
 
-	const overlay = (
-		<OverlayTrigger ref={getOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
-			(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
-		}>
-			{children}
-		</OverlayTrigger>
-	);
+	render() {
+		const {tooltip, children, id, placement, trigger} = this.props;
 
-	return (trigger === "hover") ? (() => {
-		const onMouseOver = () => overlayRef.show();
-		const onMouseOut = () => overlayRef.hide();
-		return (
-			<div onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+		const overlay = (
+			<OverlayTrigger ref={this.setOverlayElem} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
+				(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
+			}>
+				{children}
+			</OverlayTrigger>
+		);
+
+		return (trigger === "hover") ? (
+			<div onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
 				{overlay}
 			</div>
-		);
-	})() : overlay;
-
+		) : overlay;
+	}
 }
 
 export class FetcherInput extends Component{

@@ -492,4 +492,14 @@
 		en: "Exit fullscreen mode",
 		sv: "Avsluta helskärmsläge"
 	},
+	openShorthand: {
+		fi: "Avaa pikasyöttötila",
+		en: "Open shorthand mode",
+		sv: "Öppet stenografi läge"
+	},
+	closeShorthand: {
+		fi: "Sulje pikasyöttötila",
+		en: "Close shorthand mode",
+		sv: "Nära stenografi läge"
+	},
 };
