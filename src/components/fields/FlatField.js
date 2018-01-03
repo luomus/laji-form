@@ -47,8 +47,12 @@ export default class FlatField extends Component {
 					state.schema.required = update(state.schema.required || [], {$push: [getPropName(field, innerField, isArray)]});
 				}
 
-				if (props.uiSchema[field] && props.uiSchema[field][innerField]) {
-					state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: props.uiSchema[field][innerField]}});
+				if (props.uiSchema[field]) {
+					if (!isArray && props.uiSchema[field][innerField]) {
+						state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: props.uiSchema[field][innerField]}});
+					} else if (isArray && props.uiSchema[field].items && props.uiSchema[field].items[innerField]) {
+						state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: props.uiSchema[field].items[innerField]}});
+					}
 				}
 
 				let innerId = props.idSchema[field][innerField].$id;
@@ -78,8 +82,7 @@ export default class FlatField extends Component {
 
 				if (!innerData && props.schema.properties[field].type === "object") {
 					innerData = getDefaultFormState(props.schema.properties[field], undefined, props.registry);
-				}
-				else if (!innerData && props.schema.properties[field].type === "array") {
+				} else if (!innerData && props.schema.properties[field].type === "array") {
 					innerData = [getDefaultFormState(props.schema.properties[field].items, undefined, props.registry)];
 				}
 
