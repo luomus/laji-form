@@ -573,7 +573,7 @@ export class TooltipComponent extends Component {
 		const {tooltip, children, id, placement, trigger} = this.props;
 
 		const overlay = (
-			<OverlayTrigger ref={this.setOverlayElem} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
+			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
 			}>
 				{children}
