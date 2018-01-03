@@ -705,7 +705,8 @@ class _MapArrayField extends ComposedComponent {
 			customControls: [{
 				iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
 				fn: this.toggleFullscreen,
-				position: "bottomright"
+				position: "bottomright",
+				text: this.props.formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
 			}]
 		};
 		const map = (

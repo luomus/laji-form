@@ -482,4 +482,14 @@
 		en: "Get place data",
 		sv: "få platsdata"
 	},
+	mapFullscreen: {
+		fi: "Avaa kartta kokoruututilassa",
+		en: "Open the map in fullscreen",
+		sv: "Öppna kartan i fullskärm"
+	},
+	mapExitFullscreen: {
+		fi: "Poistu kokoruututilasta",
+		en: "Exit fullscreen mode",
+		sv: "Avsluta helskärmsläge"
+	},
 };
