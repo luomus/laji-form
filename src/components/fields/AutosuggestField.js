@@ -11,13 +11,13 @@ const suggestionParsers = {
 	}
 };
 
-const parseQuery = (query, props) => {
+const parseQuery = (query, props, taxonGroups) => {
 	return Object.keys(query).reduce((_query, key) => {
 		if (typeof query[key] === "object") {
 			const {parser, field} = query[key];
 			const {formData = {}} = props;
 			if (parser === "arrayJoin") {
-				_query[key] = (formData[field] || []).join(",");
+				_query[key] = ((key === "informalTaxonGroup" ? taxonGroups : formData[field]) || []).join(",");
 			}
 		} else {
 			_query[key] = query[key];
@@ -86,11 +86,15 @@ export default class AutosuggestField extends Component {
 			isValueSuggested: this.isValueSuggested,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			onInformalTaxonGroupSelected: informalTaxonGroups ? this.onInformalTaxonGroupSelected : undefined,
-			taxonGroupID: informalTaxonGroups && formData[informalTaxonGroups]
-			? informalTaxonGroupPersistenceKey !== undefined 
-				?  new Context(`${formContext.contextId}_AUTOSUGGEST_FIELD_PERSISTENCE_${informalTaxonGroupPersistenceKey}`).value
-					: formData[informalTaxonGroups][0] 
-				: undefined
+			taxonGroupID: (
+				!informalTaxonGroups 
+				? undefined
+				: informalTaxonGroupPersistenceKey !== undefined 
+					? new Context(`${formContext.contextId}_AUTOSUGGEST_FIELD_PERSISTENCE_${informalTaxonGroupPersistenceKey}`).value
+					: formData[informalTaxonGroups] 
+						? formData[informalTaxonGroups][0] 
+						: undefined
+			)
 		};
 		const {suggestionInputField} = options;
 
@@ -99,7 +103,7 @@ export default class AutosuggestField extends Component {
 		}
 
 		if (options.query) {
-			options.query = parseQuery(options.query, props);
+			options.query = parseQuery(options.query, props, [options.taxonGroupID]);
 		}
 
 		const uiSchema = {
