@@ -73,7 +73,7 @@ export default class UnitShorthandField extends Component {
 	}
 
 	getToggleButton = () => {
-		const onClick = () => {
+		const onClick = () => () => {
 			const {persistenceKey} = getUiOptions(this.props.uiSchema);
 			this.setState({showSchema: !this.state.showSchema}, () => {
 				focusById(this.props.formContext, this.props.idSchema.$id);
