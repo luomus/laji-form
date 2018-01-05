@@ -5,7 +5,7 @@ import validate from "../validation";
 import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
 import { Button, Label, Help, ErrorPanel } from "./components";
 import { Panel, Table, Glyphicon, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString, scrollIntoViewIfNeeded } from "../utils";
+import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString, scrollIntoViewIfNeeded, getUiOptions } from "../utils";
 import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 
@@ -103,14 +103,18 @@ class _SchemaField extends Component {
 
 	render() {
 		const props = this.functionOutputProps || this.props;
-		let {schema, uiSchema, registry} = props;
+		let {schema, uiSchema = {}, registry} = props;
 
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
 			schema = {...schema, uniqueItems: false};
 		}
 
+		const options = getUiOptions(uiSchema);
+		if (typeof options.label === "string")  {
+			schema = {...schema, title: options.label};
+		}
+
 		if (
-			uiSchema &&
 			uiSchema["ui:field"] &&
 			uiSchema["ui:field"] !== "ContextInjectionField" &&
 			uiSchema["ui:field"] !== "InjectField" &&
@@ -124,10 +128,6 @@ class _SchemaField extends Component {
 				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
 			};
 		}
-
-		/*if (schema.type === "integer" && (!uiSchema || uiSchema && !uiSchema["ui:widget"])) {
-			uiSchema = {...(uiSchema || {}), "ui:widget": "NumberInput"};
-		}*/
 
 		// Reset ArrayFieldTemplate
 		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
