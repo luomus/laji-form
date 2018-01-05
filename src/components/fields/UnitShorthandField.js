@@ -92,11 +92,11 @@ export default class UnitShorthandField extends Component {
 
 	onCodeChange = (formData = {}) => {
 		this.getContext().idToFocus = this.props.idSchema.$id;
-		this.props.onChange(getDefaultFormState(this.props.schema, formData, this.props.registry.definitions));
 		const {autocopy} = getUiOptions(this.props.uiSchema);
 		this.onNextTick = () => {
 			autocopy ? new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy") : this.setState({showSchema: true});
 		};
+		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}, this.props.registry.definitions));
 	}
 
 	render() {
