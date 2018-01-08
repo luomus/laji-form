@@ -558,18 +558,6 @@
 					"items": {
 						"ui:functions": [
 							{
-								"ui:field": "UnitShorthandField",
-								"ui:options": {
-									"injections": {
-										"/ui:options/formID": "formID"
-									},
-									"persistenceKey": "unit",
-									"shorthandField": "identifications_0_taxon",
-									"autocopy": true,
-									"showSchema": true
-								}
-							},
-							{
 								"ui:field": "AutosuggestField",
 								"ui:options": {
 									"autosuggestField": "taxon",
@@ -594,6 +582,43 @@
 											"parser": "arrayJoin",
 											"field": "informalTaxonGroups"
 										}
+									},
+									"toggleable": {
+										"autosuggestField": "unit",
+										"query": {
+											"includeNonMatching": true,
+											"matchType": "exact,partial"
+										}
+									},
+									"togglePersistenceKey": "unit",
+									"autocopy": {
+                "type": "whitelist",
+                "filter": [
+                  "recordBasis",
+                  "informalTaxonGroups",
+                  "taxonConfidence",
+                  "lifeStage",
+                  "preservation",
+                  "plantLifeStage",
+                  "breeding",
+                  "atlasCode",
+                  "twitched",
+                  "nativeStatus",
+                  "identifications_0_det",
+                  "identifications_0_detDate",
+                  "identifications_0_identificationBasis",
+                  "samplingMethod",
+                  "unitGathering_habitatIUCN",
+                  "unitGathering_habitatDescription",
+                  "unitGathering_dateBegin",
+                  "unitGathering_dateEnd",
+                  "identifications_0_taxon",
+                  "unitFact_autocompleteSelectedTaxonID",
+                  "informalTaxonGroups",
+                  "count",
+                  "maleIndividualCount",
+                  "femaleIndividualCount"
+                ]
 									}
 								}
 							},

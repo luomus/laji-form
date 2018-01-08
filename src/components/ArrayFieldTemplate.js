@@ -140,10 +140,11 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addCustomEventListeners() {
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "copy", () => {
+			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "copy", (options = {}) => {
+				const {type = "blacklist", filter = []} = options;
 				const {buttonDefinitions} = getUiOptions(this.props.uiSchema);
 				if (buttonDefinitions && buttonDefinitions.copy) {
-					buttonDefinitions.copy.fn()(this.props, {type: "blacklist", filter: []});
+					buttonDefinitions.copy.fn()(this.props, {type, filter});
 					if (buttonDefinitions.copy.callback) {
 						buttonDefinitions.copy.callback();
 					}

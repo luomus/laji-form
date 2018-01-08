@@ -502,4 +502,14 @@
 		en: "Close shorthand mode",
 		sv: "Nära stenografi läge"
 	},
+	startShorthand: {
+		fi: "Aloita pikasyöttö",
+		en: "Start shorthand mode",
+		sv: "Start stenografi läge"
+	},
+	stopShorthand: {
+		fi: "Lopeta pikasyöttö",
+		en: "Stop shorthand mode",
+		sv: "Slut stenografi läge"
+	},
 };

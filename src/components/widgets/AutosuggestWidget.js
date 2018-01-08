@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { findDOMNode } from "react-dom";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { OverlayTrigger, Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput } from "../../utils";
+import { isEmptyString, focusNextInput, focusById } from "../../utils";
 import { FetcherInput, TooltipComponent, } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -15,6 +16,8 @@ export default class _AutosuggestWidget extends Component {
 			switch (this.props.options.autosuggestField) {
 			case "taxon":
 				return <TaxonAutosuggestWidget {...this.props} />;
+			case "unit":
+				return <UnitAutosuggestWidget {...this.props} />;
 			case "friends":
 				return <FriendsAutosuggestWidget {...this.props} />;
 			}
@@ -23,65 +26,85 @@ export default class _AutosuggestWidget extends Component {
 	}
 }
 
-class TaxonAutosuggestWidget extends Component {
-	getSuggestionFromValue = (value) => {
-		const isValueSuggested = this.isValueSuggested;
-		if (isValueSuggested(value)) {
-			return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
-				if (vernacularName !== undefined) {
-					return {value: vernacularName, key: value};
-				}
-				if (scientificName !== undefined) {
-					return {value: scientificName, key: value};
-				}
-			});
-		} else {
-			return Promise.reject();
+function TaxonAutosuggest(ComposedComponent) {
+	return class TaxonAutosuggestWidget extends ComposedComponent {
+		getSuggestionFromValue = (value) => {
+			if (this.isValueSuggested(value)) {
+				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
+					if (vernacularName !== undefined) {
+						return {value: vernacularName, key: value};
+					}
+					if (scientificName !== undefined) {
+						return {value: scientificName, key: value};
+					}
+				});
+			} else {
+				return Promise.reject();
+			}
 		}
-	}
 
-	isValueSuggested = (value) => {
-		return !isEmptyString(value) && !!value.match(/MX\.\d+/);
-	}
-	
-	renderUnsuggested = (props) => (input) => {
-		const tooltip = (
-			<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
+		isValueSuggested = (value) => {
+			return !isEmptyString(value) && !!value.match(/MX\.\d+/);
+		}
+		
+		renderUnsuggested = (props) => (input) => {
+			const tooltip = (
+				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
+			);
+			return (
+				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			);
+		}
+
+		renderSuggested = (input, suggestion) => (
+			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover">
+				{input}
+			</TaxonCardOverlay>
+		)
+
+		renderSuccessGlyph = (value) => {
+			return (
+				<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
+					<Glyphicon style={{pointerEvents: "none"}} glyph="tag" className="form-control-feedback"/>
+				</a>
+			);
+		}
+
+		render() {
+			const {props} = this;
+
+			const {options: propsOptions, ...propsWithoutOptions} = props;
+
+			const options = {
+				getSuggestionFromValue: this.getSuggestionFromValue,
+				isValueSuggested: this.isValueSuggested,
+				renderSuggested: this.renderSuggested,
+				renderUnsuggested: this.renderUnsuggested(props),
+				renderSuccessGlyph: this.renderSuccessGlyph,
+				renderSuggestion: this.renderSuggestion,
+				query: {...propsOptions.queryOptions}
+			};
+
+			return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+		}
+	};
+}
+
+@TaxonAutosuggest
+class TaxonAutosuggestWidget extends Component {}
+
+@TaxonAutosuggest
+class UnitAutosuggestWidget extends Component {
+	renderSuggestion = (suggestion) => {
+		const {count, maleIndividualCount, femaleIndividualCount} = suggestion.payload.interpretedFrom;
+		const [countElem, maleElem, femaleElem] = [count, maleIndividualCount, femaleIndividualCount].map(val => 
+			val && <span className="text-muted">{val}</span>
 		);
-		return (
-			<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
-		);
-	}
-
-	renderSuggested = (input, suggestion) => (
-		<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover">
-			{input}
-		</TaxonCardOverlay>
-	)
-
-	renderSuccessGlyph = (value) => {
-		return (
-			<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
-				<Glyphicon style={{pointerEvents: "none"}} glyph="tag" className="form-control-feedback"/>
-			</a>
-		);
-	}
-
-	render() {
-		const {props} = this;
-
-		const {options: propsOptions, ...propsWithoutOptions} = props;
-
-		const options = {
-			getSuggestionFromValue: this.getSuggestionFromValue,
-			isValueSuggested: this.isValueSuggested,
-			renderSuggested: this.renderSuggested,
-			renderUnsuggested: this.renderUnsuggested(props),
-			renderSuccessGlyph: this.renderSuccessGlyph,
-			query: {...propsOptions.queryOptions}
-		};
-
-		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+		const taxonName = suggestion.payload.unit.identifications[0].taxon;
+		const name = suggestion.payload.isNonMatching
+			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
+			: taxonName;
+		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}</span>;
 	}
 }
 
@@ -362,12 +385,23 @@ export class Autosuggest extends Component {
 		this.setState({informalTaxonGroupsOpen: false});
 	}
 
+	onToggle = () => {
+		if (!this.mounted) return;
+		this.props.onToggle(!this.props.toggled);
+		setImmediate(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
+	}
+
+	setInputRef = (elem) => {
+		this.inputElem = elem;
+	}
+
 	renderInput = (inputProps) => {
 		let validationState = null;
-		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, taxonGroupID} = this.props;
+		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, taxonGroupID, onToggle, isValueSuggested} = this.props;
+		const {translations} = this.props.formContext;
 		const {suggestion} = this.state;
 
-		const isSuggested = !!suggestion;
+		const isSuggested = !!suggestion && isValueSuggested(value);
 
 		if (!isEmptyString(value)) {
 			validationState = isSuggested ? "success" : "warning";
@@ -401,7 +435,7 @@ export class Autosuggest extends Component {
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		let glyph = undefined;
 
-		if (!this.state.focused && !this.state.isLoading) {
+		if (!this.state.focused && !this.state.isLoading && (!onToggle || !this.state.focused)) {
 			glyph = (validationState === "success" && renderSuccessGlyph) ?
 				renderSuccessGlyph(value) : getGlyph(validationState);
 		}
@@ -414,6 +448,15 @@ export class Autosuggest extends Component {
 																	formContext={this.props.formContext} /> 
 			: null;
 
+		const toggler = onToggle && this.state.focused
+			? (
+				<TooltipComponent tooltip={translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]} >
+					<InputGroup.Addon className={`autosuggest-input-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle} tabIndex={0}>
+						<Glyphicon glyph="flash"/>
+				</InputGroup.Addon>
+				</TooltipComponent>
+			) : null;
+
 		const inputValue = isEmptyString(this.state.value) ? "" : this.state.value;
 		const input = (
 			<FetcherInput 
@@ -423,6 +466,9 @@ export class Autosuggest extends Component {
 				loading={this.state.isLoading} 
 				validationState={validationState} 
 				extra={addon}
+				appendExtra={toggler}
+				getRef={this.setInputRef}
+				className={toggler && this.state.focused ? "has-toggler" : undefined}
 			/>
 		);
 
@@ -437,7 +483,7 @@ export class Autosuggest extends Component {
 				<div>
 					{component}
 
-					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={this.props.formContext.translations}/>}
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations}/>}
 				</div>
 			);
 		}
@@ -589,7 +635,7 @@ class InformalTaxonGroupsAddon extends Component {
 	render() {
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="informal-taxon-group-selector" onClick={this.toggle} tabIndex={0}>
+				<InputGroup.Addon className="autosuggest-input-addon" onClick={this.toggle} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>

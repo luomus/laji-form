@@ -1,13 +1,15 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer } from "../../utils";
-import VirtualSchemaField from "../VirtualSchemaField";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema } from "../../utils";
+import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
+import merge from "deepmerge";
+import equals from "deep-equal";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
-		return suggestion.payload.informalTaxonGroups.map(item => item.id);
+		return suggestion.payload ? suggestion.payload.informalTaxonGroups.map(item => item.id) : [];
 	}
 };
 
@@ -26,7 +28,6 @@ const parseQuery = (query, props, taxonGroups) => {
 	}, {});
 };
 
-
 /**
  * Uses AutosuggestWidget to apply autosuggested values to multiple object's fields. Options are passed to AutosuggestWidget.
  *
@@ -43,7 +44,7 @@ const parseQuery = (query, props, taxonGroups) => {
  *  uiSchema: <uiSchema> (uiSchema which is passed to inner SchemaField)
  * }
  */
-@VirtualSchemaField
+@BaseComponent
 export default class AutosuggestField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -64,20 +65,35 @@ export default class AutosuggestField extends Component {
 	}
 
 	static getName() {return "AutosuggestField";}
-	static displayName = "kek"
+
+	constructor(props) {
+		super(props);
+		const {togglePersistenceKey} = getUiOptions(props.uiSchema);
+		let toggled = undefined;
+		if (togglePersistenceKey) {
+			toggled = this.getPersistenceContext(props).value;
+		}
+		this.state = this.getStateFromProps(props, toggled);
+	}
+
+	componentWillReceiveProps = (props) => {
+		this.setState(this.getStateFromProps(props));
+		if (this.onNextTick) {
+			this.onNextTick();
+			this.onNextTick = undefined;
+		}
+	}
+
+	getPersistenceContext = (props) => new Context(`${props.formContext.contextId}_AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`)
 	
-	componentDidMount() {
-		this.mounted = true;
-	}
-
-	componentWillUnmount() {
-		this.mounted = false;
-	}
-
-	getStateFromProps(props) {
-		let {schema, formData, formContext} = props;
-		const uiOptions = getUiOptions(props);
+	getStateFromProps = (props, toggled) => {
+		let {schema, uiSchema, formData, formContext} = props;
+		const uiOptions = getUiOptions(uiSchema);
 		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = uiOptions;
+		toggled = (toggled !== undefined)
+			? toggled
+			: this.state ? this.state.toggled : false;
+
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
@@ -96,6 +112,14 @@ export default class AutosuggestField extends Component {
 						: undefined
 			)
 		};
+
+		if (uiOptions.toggleable) {
+			options.toggled = toggled;
+			options.onToggle = this.onToggleChange;
+
+			options = this.getActiveOptions(options, toggled);
+		}
+
 		const {suggestionInputField} = options;
 
 		if (suggestionInputField && props.formData && !isEmptyString(props.formData[suggestionInputField])) {
@@ -106,41 +130,68 @@ export default class AutosuggestField extends Component {
 			options.query = parseQuery(options.query, props, [options.taxonGroupID]);
 		}
 
-		const uiSchema = {
-			...props.uiSchema,
+		const _uiSchema = {
+			...getInnerUiSchema(uiSchema),
 			[suggestionInputField]: {"ui:widget": "AutosuggestWidget", "ui:options": options}
 		};
 
-		return {schema, uiSchema};
+		return {schema, uiSchema: _uiSchema, toggled};
+	}
+
+	getActiveOptions = (options, toggled) => {
+		toggled = (toggled !== undefined) ? toggled : this.state.toggled;
+		return toggled ? merge(options, options.toggleable) : options;
 	}
 
 	onSuggestionSelected = (suggestion) => {
 		if (suggestion === null) suggestion = undefined;
 
-		let {formData} = this.props;
-		const options = this.getUiOptions();
+		let {formData, uiSchema, formContext} = this.props;
+		const {suggestionReceivers, autosuggestField, suggestionValueField, autocopy} = this.getActiveOptions(getUiOptions(uiSchema));
 
-		for (let fieldName in options.suggestionReceivers) {
-			// undefined suggestion clears value.
-			let fieldVal = undefined;
-			if (typeof suggestion === "object") {
-				const suggestionValPath = options.suggestionReceivers[fieldName];
-				if (suggestionValPath[0] === "$") {
-					fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
-				} else if (suggestionValPath[0] === "/") {
-					fieldVal = parseJSONPointer(suggestion, suggestionValPath);
-				} else {
-					fieldVal = suggestion[suggestionValPath];
+		const handleSuggestionReceivers = (formData, suggestion) => {
+			for (let fieldName in suggestionReceivers) {
+				// undefined suggestion clears value.
+				let fieldVal = undefined;
+				if (typeof suggestion === "object") {
+					const suggestionValPath = suggestionReceivers[fieldName];
+					if (suggestionValPath[0] === "$") {
+						fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
+					} else if (suggestionValPath[0] === "/") {
+						fieldVal = parseJSONPointer(suggestion, suggestionValPath);
+					} else {
+						fieldVal = suggestion[suggestionValPath];
+					}
 				}
+				formData = {...formData, [fieldName]: fieldVal};
 			}
-			formData = {...formData, [fieldName]: fieldVal};
+			return formData;
+		};
+
+		if (autosuggestField === "unit") {
+			let {unit} = suggestion.payload;
+			if (unit.unitType) {
+				unit.informalTaxonGroups = unit.unitType;
+				delete unit.unitType;
+			}
+			unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+				const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
+				return state.formData;
+			}, unit);
+			formData = handleSuggestionReceivers(formData, {});
+			formData = {...formData, [suggestionValueField]: undefined, ...unit};
+			if (autocopy && !equals(this.props.formData, formData)) {
+				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
+			}
+		} else {
+			handleSuggestionReceivers(formData, suggestion);
 		}
 		this.props.onChange(formData);
 	}
 
 	onConfirmUnsuggested = (value) => {
-		let formData = this.props.formData;
-		const {suggestionReceivers, suggestionInputField} = this.getUiOptions();
+		let {formData, uiSchema} = this.props;
+		const {suggestionReceivers, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 		Object.keys(suggestionReceivers).forEach(fieldName => {
 			formData = {...formData, [fieldName]: getDefaultFormState(this.props.schema.properties[fieldName], undefined, this.props.registry.definitions)};
 		});
@@ -149,8 +200,8 @@ export default class AutosuggestField extends Component {
 	}
 
 	onInputChange = (value) => {
-		let {formData} = this.props;
-		const inputTransformer = this.getUiOptions().inputTransformer;
+		let {formData, uiSchema} = this.props;
+		const {inputTransformer} = this.getActiveOptions(getUiOptions(uiSchema));
 		if (inputTransformer) {
 			const regexp = new RegExp(inputTransformer.regexp);
 			if (value.match(regexp)) {
@@ -168,16 +219,16 @@ export default class AutosuggestField extends Component {
 	}
 
 	isValueSuggested = () => {
-		const {formData} = this.props;
-		for (let fieldName in this.getUiOptions().suggestionReceivers) {
+		const {formData, uiSchema} = this.props;
+		for (let fieldName in this.getActiveOptions(getUiOptions(uiSchema)).suggestionReceivers) {
 			if (!formData || !formData[fieldName]) return false;
 		}
 		return true;
 	}
 
 	getSuggestionFromValue = () => {
-		const {formData} = this.props;
-		const {suggestionValueField, suggestionInputField} = this.getUiOptions();
+		const {formData, uiSchema} = this.props;
+		const {suggestionValueField, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 
 		const value = suggestionInputField && formData && !isEmptyString(formData[suggestionInputField]) ? 
 			formData[suggestionInputField] : undefined;
@@ -193,11 +244,24 @@ export default class AutosuggestField extends Component {
 	}
 
 	onInformalTaxonGroupSelected = (informalTaxonID) => {
-		const {formContext} = this.props;
-		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = getUiOptions(this.props.uiSchema);
+		const {formContext, uiSchema} = this.props;
+		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = this.getActiveOptions(getUiOptions(uiSchema));
 		this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		if (informalTaxonGroupPersistenceKey !== undefined) {
 			new Context(`${formContext.contextId}_AUTOSUGGEST_FIELD_PERSISTENCE_${informalTaxonGroupPersistenceKey}`).value = informalTaxonID;
 		}
+	}
+
+	onToggleChange = (value) => {
+		const {togglePersistenceKey} = getUiOptions(this.props.uiSchema);
+		if (togglePersistenceKey) {
+			this.getPersistenceContext(this.props).value = value;
+		}
+		this.setState(this.getStateFromProps(this.props, value));
+	}
+
+	render() {
+		const {SchemaField} = this.props.registry.fields;
+		return <SchemaField {...this.props} uiSchema={this.state.uiSchema} />;
 	}
 }
