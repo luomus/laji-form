@@ -162,10 +162,14 @@ export class InformalTaxonGroupChooser extends Component {
 				<Button key="select" onClick={this.onSelected(id)}>{translations.Select}</Button>
 			</ButtonGroup>
 		);
+		const getLabel = id => {
+			const name = informalTaxonGroupsById[id].name;
+			return path.length <= 1 ? <h5>{name}</h5> : <span>{name}</span>;
+		};
 		const getItem = id => (
-			<ListGroupItem key={id}>
+			<ListGroupItem key={id} className={path.length > 1 ? "not-root" : ""}>
 				{path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
-				<h5>{informalTaxonGroupsById[id].name}</h5>
+				{getLabel(id)}
 				{getButtonGroup(id)}
 			</ListGroupItem>
 		);

@@ -588,7 +588,7 @@ export class TooltipComponent extends Component {
 	}
 }
 
-export class FetcherInput extends Component{
+export class FetcherInput extends Component {
 	setRef = (elem) => {
 		if (this.props.getRef) this.props.getRef(elem);
 	}
