@@ -127,21 +127,19 @@ body .laji-form {
 	padding: 3px 6px !important;
 }
 
-.laji-form .rw-multiselect-tag {
-	background-color: #337ab7;
-    font-weight: bold;
-    height: 19px;
-    margin-top: 2px;
-    margin-left: 1px;
-}
-
 .laji-form .rw-input-reset {
     height: 23px;
 }
 
-.laji-form .rw-multiselect-taglist span, .laji-form .rw-multiselect-taglist .rw-btn {
-    color: white;
+.rw-multiselect-taglist li {
+	height: 20px;
+	font-size: 11px;
+	padding: 2px;
+	color: white;
+	background-color: #286090;
+	font-weight: bold;
 }
+
 .laji-form .rw-list-option.rw-state-focus:not(.rw-state-selected) {
 	background-color: #e6e6e6;
 	border-color: #e6e6e6;

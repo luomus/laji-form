@@ -29,7 +29,11 @@ class SelectWidget extends Component {
 	}
 
 	getStateFromProps(props) {
-		let {options: {enumOptions}} = props;
+		let {options: {enumOptions}, multiple} = props;
+
+		if (multiple && enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {
+			enumOptions = enumOptions.slice(1);
+		}
 
 		function sort(enumOptions, order) {
 			if (!Array.isArray(order)) return enumOptions;
