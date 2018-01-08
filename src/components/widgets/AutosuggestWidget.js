@@ -450,7 +450,7 @@ export class Autosuggest extends Component {
 
 		const toggler = onToggle && this.state.focused
 			? (
-				<TooltipComponent tooltip={translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]} >
+				<TooltipComponent tooltip={`${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`} >
 					<InputGroup.Addon className={`autosuggest-input-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle} tabIndex={0}>
 						<Glyphicon glyph="flash"/>
 				</InputGroup.Addon>
