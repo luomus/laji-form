@@ -53,7 +53,7 @@ export default class SplitField extends Component {
 		);
 	}
 
-	renderSplitField = ({fields, uiSchema, name}) => {
+	renderSplitField = ({fields}) => {
 		return (
 			<SchemaField
 				{...this.props}

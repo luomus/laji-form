@@ -8,17 +8,20 @@ import BaseComponent from "../BaseComponent";
 export default class MapField extends Component {
 	render() {
 		const {TitleField} = this.props.registry.fields;
-		const options = getUiOptions(this.props.uiSchema);
-		const {height = 400} = options;
+		const {uiSchema, formData} = this.props;
+		const options = getUiOptions(uiSchema);
+		const {height = 400, emptyHelp} = options;
+		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
 				<div style={{height}}>
-					<MapComponent {...options.mapOptions || {}} 
-					              {...this.state.mapOptions || {}} 
-					              draw={this.getDrawOptions()} 
-					              lang={this.props.formContext.lang}  
-					              zoomToData={true}  
+					<MapComponent {...options.mapOptions || {}}
+					              {...this.state.mapOptions || {}}
+					              draw={this.getDrawOptions()}
+					              lang={this.props.formContext.lang}
+					              zoomToData={true}
+												panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
 					              onOptionsChanged={this.onOptionsChanged} />
 				</div>
 			</div>
@@ -33,7 +36,7 @@ export default class MapField extends Component {
 			...(mapOptions.draw || {}),
 			geoData: formData && Object.keys(formData).length ? formData : undefined,
 			onChange: this.onChange
-		}
+		};
 	}
 
 	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}})

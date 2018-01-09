@@ -32,6 +32,9 @@ body .laji-form {
 .laji-form.blocking-loader.leaving {
 	visibility: visible;
 }
+.laji-form.blocking-loader.enter-start {
+	opacity: 0.0;
+}
 .laji-form.blocking-loader.entering {
 	opacity: 0.5;
 }
@@ -255,6 +258,7 @@ min-height: 20px;
 .laji-form .laji-form-map-container .laji-form-popped {
 	position: absolute;
 	left: 25%;
+	right: 25%;
 	top: 5px;
 	overflow: hidden;
 }
