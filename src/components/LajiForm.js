@@ -597,11 +597,16 @@ export default class LajiForm extends Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.props.autoFocus && focusById(this.state.formContext, "root");
+
+		this.blockingLoaderRef = document.createElement("div");
+		this.blockingLoaderRef.className = "laji-form blocking-loader enter-start";
+		document.body.appendChild(this.blockingLoaderRef);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
 		if (this._context.singletonMap) this._context.singletonMap.destroy();
+		document.body.removeChild(this.blockingLoaderRef);
 	}
 
 	constructTranslations = () => {
@@ -659,7 +664,6 @@ export default class LajiForm extends Component {
 						null}
 					</div>
 			</Form>
-			<div ref={this.getBlockerRef} className="blocking-loader" />
 			{shortcuts ? 
 					<Panel 
 						ref={this.getPanelRef} 
@@ -816,9 +820,9 @@ export default class LajiForm extends Component {
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		if (this.mounted) {
 			if (this.blockingLoaderCounter === 1) {
-				this.blockingLoaderRef.className = "blocking-loader enter-start";
+				this.blockingLoaderRef.className = "laji-form blocking-loader enter-start";
 				setImmediate(() => {
-					this.blockingLoaderRef.className = "blocking-loader entering";
+					this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 				});
 			}
 		}
@@ -830,12 +834,12 @@ export default class LajiForm extends Component {
 		if (this.blockingLoaderCounter < 0) {
 			console.warn("laji-form: Blocking loader was popped before pushing!");
 		} else if (this.blockingLoaderCounter === 0) {
-			this.blockingLoaderRef.className = "blocking-loader leave-start";
+			this.blockingLoaderRef.className = "laji-form blocking-loader leave-start";
 			this.setImmediate(() => {
-				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "blocking-loader leaving";
+				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader leaving";
 			});
 			this.setTimeout(() => {
-				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "blocking-loader";
+				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader enter-start";
 			}, 200); // should match css transition time.
 		}
 	}

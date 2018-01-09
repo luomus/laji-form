@@ -16,32 +16,33 @@ body .laji-form {
 	border-color: #a94442 !important;
 }
 
-.laji-form .blocking-loader.enter-start,
-.laji-form .blocking-loader.entering,
-.laji-form .blocking-loader.leave-start,
-.laji-form .blocking-loader.leaving {
+.laji-form.blocking-loader.enter-start,
+.laji-form.blocking-loader.entering,
+.laji-form.blocking-loader.leave-start,
+.laji-form.blocking-loader.leaving {
 	width: 100%;
 	height: 100%;
 	background: #000000;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	z-index: 1051;
 }
-.laji-form .blocking-loader.entering,
-.laji-form .blocking-loader.leave-start,
-.laji-form .blocking-loader.leaving {
+.laji-form.blocking-loader.enter-start,
+.laji-form.blocking-loader.entering,
+.laji-form.blocking-loader.leave-start,
+.laji-form.blocking-loader.leaving {
 	transition: opacity 200ms ease-in;
 }
-.laji-form .blocking-loader.enter-start {
+.laji-form.blocking-loader.enter-start {
 	opacity: 0;
 }
-.laji-form .blocking-loader.entering {
+.laji-form.blocking-loader.entering {
 	opacity: 0.5;
 }
-.laji-form .blocking-loader.leave-start {
+.laji-form.blocking-loader.leave-start {
 	opacity: 0.5;
 }
-.laji-form .blocking-loader.leaving {
+.laji-form.blocking-loader.leaving {
 	opacity: 0.0;
 }
 
