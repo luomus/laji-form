@@ -34,7 +34,7 @@ export default class InjectField extends Component {
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 		const {injections} = options;
-		let {schema, idSchema, formData, errorSchema} = props;
+		let {schema, uiSchema, idSchema, formData, errorSchema} = props;
 
 		(Array.isArray(injections) ? injections : [injections]).forEach((injection) => {
 			const {fields, target} = injection;
@@ -54,6 +54,11 @@ export default class InjectField extends Component {
 					schema = update(schema, {properties: {[target]: {required: {$push: [fieldName]}}}});
 					schema = update(schema, this.getSchemaPath(splits, {required: {$splice: [[idx, 1]]}}));
 				}
+
+				let parentUiSchemaProperties = this.getUiSchemaProperties(uiSchema, splits);
+				uiSchema = update(uiSchema, {[target]: this.getUpdateUiSchemaPropertiesPath(
+					uiSchema[target],
+					{$merge: {[fieldName]: parentUiSchemaProperties[fieldName]}})});
 
 				idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema.$id + "_" + fieldPath.replace(/\//g, "_")}}}});
 				idSchema = update(idSchema, this.getIdSchemaPath(splits, {$set: undefined}));
@@ -88,7 +93,7 @@ export default class InjectField extends Component {
 			});
 		});
 
-		return {schema, idSchema, formData, errorSchema};
+		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
 	onChange(formData) {
 		const options = this.getUiOptions();
@@ -151,6 +156,18 @@ export default class InjectField extends Component {
 			if (o.type === "array") return o["items"];
 			return o["properties"][s];
 		}, schema);
+	}
+	getUpdateUiSchemaPropertiesPath = (uiSchema, $operation) => {
+		return uiSchema.items ? {items: $operation} : $operation;
+	}
+	getUiSchemaProperties = (uiSchema, splits) => {
+		return splits.reduce((o, s, i)=> {
+			if (i === splits.length - 1) {
+				return o;
+			}
+			if (o.items) return o["items"];
+			return o[s];
+		}, uiSchema);
 	}
 	getInnerData = (data, splits) => {
 		if (!data) return data;
