@@ -4,6 +4,7 @@ import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
+import { getPropsForFields } from "./NestField";
 
 @BaseComponent
 export default class SplitField extends Component {
@@ -24,45 +25,41 @@ export default class SplitField extends Component {
 	}
 
 	render() {
+		const { TitleField, DescriptionField } = this.props.registry.fields;
+		const {"ui:title": _title} = this.props.uiSchema;
 		return (
-			<Row>
-				{getUiOptions(this.props.uiSchema).splits.map((split, i) =>
-					<Col md={split.md} lg={split.lg} xs={split.xs} sm={split.sm} key={i}>
-						{this.renderSplitField(split)}
-					</Col>
-				)}
-			</Row>
+			<div>
+				<TitleField 
+					id={`${this.props.idSchema.$id}__title`}
+						title={_title !== undefined ? _title : this.props.title}
+						required={this.props.required}
+						formContext={this.props.formContext}
+						className={getUiOptions(this.props.uiSchema).titleClassName}
+						help={this.props.uiSchema["ui:help"]}
+					/>
+				<DescriptionField
+					id={`${this.props.idSchema.$id}__description`}
+					description={this.props.description}
+					formContext={this.props.formContext}
+				/>
+				<Row>
+					{getUiOptions(this.props.uiSchema).splits.map((split, i) =>
+						<Col md={split.md} lg={split.lg} xs={split.xs} sm={split.sm} key={i}>
+							{this.renderSplitField(split)}
+						</Col>
+					)}
+				</Row>
+			</div>
 		);
 	}
 
 	renderSplitField = ({fields, uiSchema, name}) => {
-		const {props} = this;
-		const schema = {type: "object", properties: {}, required: props.schema.required};
-
-		const schemas = {
-			errorSchema: {},
-			idSchema: {$id: props.idSchema.$id},
-			formData: {}
-		};
-
-		fields.forEach(field => {
-			schema.properties[field] = props.schema.properties[field];
-
-			[...Object.keys(schemas), "uiSchema"].forEach(schema => {
-				const has = props[schema].hasOwnProperty(field);
-				const itemSchema = props[schema][field];
-				if (has) schemas[schema][field] = itemSchema;
-			});
-		});
-
 		return (
 			<SchemaField
-				{...props}
-				{...schemas}
-				schema={schema}
-				uiSchema={uiSchema}
-			  name={name}
+				{...this.props}
+				{...getPropsForFields(this.props, fields)}
 			  onChange={this.onChange(fields)}
+				name=""
 			/>
 		);
 	}

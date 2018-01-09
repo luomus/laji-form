@@ -599,7 +599,7 @@ export default class LajiForm extends Component {
 		this.props.autoFocus && focusById(this.state.formContext, "root");
 
 		this.blockingLoaderRef = document.createElement("div");
-		this.blockingLoaderRef.className = "laji-form blocking-loader enter-start";
+		this.blockingLoaderRef.className = "laji-form blocking-loader";
 		document.body.appendChild(this.blockingLoaderRef);
 	}
 
@@ -820,10 +820,7 @@ export default class LajiForm extends Component {
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		if (this.mounted) {
 			if (this.blockingLoaderCounter === 1) {
-				this.blockingLoaderRef.className = "laji-form blocking-loader enter-start";
-				setImmediate(() => {
-					this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-				});
+				this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 			}
 		}
 	}
@@ -839,7 +836,7 @@ export default class LajiForm extends Component {
 				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader leaving";
 			});
 			this.setTimeout(() => {
-				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader enter-start";
+				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader";
 			}, 200); // should match css transition time.
 		}
 	}

@@ -12,7 +12,7 @@ export default class MapField extends Component {
 		const {height = 400} = options;
 		return (
 			<div>
-				<TitleField title={this.props.schema.title || this.props.name} />
+				<TitleField title={this.props.schema.title} />
 				<div style={{height}}>
 					<MapComponent {...options.mapOptions || {}} 
 					              {...this.state.mapOptions || {}} 
