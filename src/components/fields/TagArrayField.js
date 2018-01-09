@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import { isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Label } from "../components";
@@ -42,13 +43,21 @@ export default class TagArrayField extends Component {
 		}
 	}
 
+	setInputRef = (ref) => {
+		this.inputRef = ref;
+	}
+
+	onClick = () => {
+		findDOMNode(this.inputRef).focus();
+	}
+
 	render() {
 		const {formData = []} = this.props;
 		const {value = ""} = this.state;
 		return (
 			<div>
-				<Label label={this.props.schema.title} />
-				<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}`}>
+				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />
+				<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}`} onClick={this.onClick}>
 					<div className="rw-multiselect-wrapper">
 						<ul className="rw-multiselect-taglist">
 							{formData.map((item, idx) => 
@@ -60,8 +69,10 @@ export default class TagArrayField extends Component {
 						</ul>
 						<input type="text" 
 						       className="rw-input"
+									 ref={this.setInputRef}
 							     value={value}
 							     onChange={this.onChange}
+									 id={this.props.idSchema.$id}
 							     onFocus={this.onFocus}
 							     onBlur={this.onBlur}
 							     onKeyDown={this.onKeyDown} />
