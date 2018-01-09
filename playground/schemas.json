@@ -129,7 +129,8 @@
 			"injections": {
 				"fields": [
 					"editors",
-					"secureLevel"
+					"secureLevel",
+					"keywords"
 				],
 				"target": "gatheringEvent"
 			}
@@ -141,7 +142,8 @@
 				"*",
 				"legPublic",
 				"secureLevel",
-				"eventTime"
+				"eventTime",
+				"keywords"
 			],
 			"ui:options": {
 				"nests": {
@@ -288,7 +290,8 @@
 			"legPublic": {
 				"ui:options": {
 					"allowUndefined": false,
-					"invert": true
+					"invert": true,
+					"label": "Havainnoijien nimet salataan"
 				}
 			}
 		},
@@ -316,11 +319,13 @@
 			"ui:options": {
 				"mapOptions": {
 					"controls": {
-						"drawClear": true,
-						"drawDelete": true,
-						"drawReverse": true,
-						"drawUndo": false,
-						"drawRedo": false
+						"draw": {
+							"clear": true,
+							"delete": true,
+							"reverse": true,
+							"undo": false,
+							"redo": false
+						}
 					}
 				},
 				"geometryField": "geometry",
@@ -354,7 +359,8 @@
 				"belowUiSchemaRoot": {
 					"ui:field": "SingleItemArrayField",
 					"ui:options": {
-						"titleFormat": "Paikan %{idx} havainnot"
+						"titleFormat": "Paikan %{idx} havainnot",
+						"titleClassName": "lg"
 					}
 				},
 				"inlineUiSchemaRoot": {
@@ -592,33 +598,33 @@
 									},
 									"togglePersistenceKey": "unit",
 									"autocopy": {
-                "type": "whitelist",
-                "filter": [
-                  "recordBasis",
-                  "informalTaxonGroups",
-                  "taxonConfidence",
-                  "lifeStage",
-                  "preservation",
-                  "plantLifeStage",
-                  "breeding",
-                  "atlasCode",
-                  "twitched",
-                  "nativeStatus",
-                  "identifications_0_det",
-                  "identifications_0_detDate",
-                  "identifications_0_identificationBasis",
-                  "samplingMethod",
-                  "unitGathering_habitatIUCN",
-                  "unitGathering_habitatDescription",
-                  "unitGathering_dateBegin",
-                  "unitGathering_dateEnd",
-                  "identifications_0_taxon",
-                  "unitFact_autocompleteSelectedTaxonID",
-                  "informalTaxonGroups",
-                  "count",
-                  "maleIndividualCount",
-                  "femaleIndividualCount"
-                ]
+										"type": "whitelist",
+										"filter": [
+											"recordBasis",
+											"informalTaxonGroups",
+											"taxonConfidence",
+											"lifeStage",
+											"preservation",
+											"plantLifeStage",
+											"breeding",
+											"atlasCode",
+											"twitched",
+											"nativeStatus",
+											"identifications_0_det",
+											"identifications_0_detDate",
+											"identifications_0_identificationBasis",
+											"samplingMethod",
+											"unitGathering_habitatIUCN",
+											"unitGathering_habitatDescription",
+											"unitGathering_dateBegin",
+											"unitGathering_dateEnd",
+											"identifications_0_taxon",
+											"unitFact_autocompleteSelectedTaxonID",
+											"informalTaxonGroups",
+											"count",
+											"maleIndividualCount",
+											"femaleIndividualCount"
+										]
 									}
 								}
 							},
@@ -846,6 +852,9 @@
 					}
 				}
 			}
+		},
+		"keywords": {
+			"ui:field": "TagArrayField"
 		}
 	},
 	"extra": {
@@ -1140,7 +1149,7 @@
 					},
 					"legPublic": {
 						"type": "boolean",
-						"title": "Havainnoijien nimet salataan",
+						"title": "Näytetäänkö nimet julkisesti?",
 						"default": true
 					},
 					"dateBegin": {
@@ -2219,6 +2228,13 @@
 					},
 					"required": []
 				}
+			},
+			"keywords": {
+				"type": "array",
+				"title": "Avainsanat",
+				"items": {
+					"type": "string"
+				}
 			}
 		},
 		"required": []
@@ -2607,7 +2623,6 @@
 			}
 		}
 	},
-
 	"uiSchemaContext": {
 		"creator": "MA.308",
 		"formID": "JX.519",

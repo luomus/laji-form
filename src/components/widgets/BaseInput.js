@@ -56,10 +56,6 @@ export default class _BaseInput extends Component {
 	}
 
 	render() {
-		return (
-			<div>
-				<BaseInput {...this.props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />
-			</div>
-		);
+		return <BaseInput {...this.props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />;
 	}
 }

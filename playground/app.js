@@ -10,7 +10,7 @@ import "./styles.css";
 import "./styles-dev.css";
 
 // set to undefined to use the local schemas
-const SCHEMA_ID = "JX.652";
+const SCHEMA_ID = undefined;
 
 const log = (type) => console.info.bind(console, type);
 
@@ -190,7 +190,7 @@ const lajiForm = new LajiForm({
 		settings: schemas.settings,
 		formData: schemas.formData,
 	}),
-	formData: {gatheringEvent: {leg: ["MA.308"]}},
+	//formData: {gatheringEvent: {leg: ["MA.308"]}},
 	//formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,

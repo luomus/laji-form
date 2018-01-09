@@ -46,15 +46,6 @@ export default class _TextareaWidget extends Component {
 		) : textarea;
 	}
 
-	onKeyDown = (e) => {
-		if (e.ctrlKey && e.key === "Enter") {
-			const {value} = this.props;
-			this.props.onChange((value !== undefined ? value : "") + "\n");
-			e.stopPropagation();
-			e.preventDefault();
-		}
-	}
-
 	onFocus = () => {
 		this.setState({focused: true});
 	}

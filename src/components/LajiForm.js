@@ -204,6 +204,7 @@ const fields = importLocalComponents("fields", [
 	"TemplateArrayField",
 	"MapField",
 	"GeocoderField",
+	"TagArrayField",
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
