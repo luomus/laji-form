@@ -39,11 +39,12 @@ export default class GeocoderField extends Component {
 				}
 			};
 		} else {
-			state.uiSchema = innerUiSchema
+			state.uiSchema = innerUiSchema;
 		}
 
-		const {country, municipality, biologicalProvince, administrativeProvince} = props.formData;
-		const hasData = [country, municipality, biologicalProvince, administrativeProvince].filter(field => props.schema.properties[field]).some(field => !isEmptyString(field));
+		const fields = ["country", "municipality", "biologicalProvince", "administrativeProvince"].filter(field => props.schema.properties[field]);
+		const hasData = fields.filter(field => props.schema.properties[field]).some(field => !isEmptyString(props.formData[field]));
+		console.log(hasData);
 		const geometry = this.getGeometry(props);
 		if ((!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !equals(this.getGeometry(this.props), geometry))) {
 			button ? this.onButtonClick()(props) : this.update(props);
