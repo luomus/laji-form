@@ -26,8 +26,8 @@ export default class GeocoderField extends Component {
 	getStateFromProps(props, loading) {
 		const state = {loading};
 		const {updateOnlyEmpty = false, button = false} = getUiOptions(props.uiSchema);
+		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		if (button) {
-			const innerUiSchema = getInnerUiSchema(props.uiSchema);
 			state.uiSchema = {
 				...innerUiSchema,
 				"ui:options": {
@@ -38,10 +38,12 @@ export default class GeocoderField extends Component {
 					]
 				}
 			};
+		} else {
+			state.uiSchema = innerUiSchema
 		}
 
 		const {country, municipality, biologicalProvince, administrativeProvince} = props.formData;
-		const hasData = [country, municipality, biologicalProvince, administrativeProvince].some(field => !isEmptyString(field));
+		const hasData = [country, municipality, biologicalProvince, administrativeProvince].filter(field => props.schema.properties[field]).some(field => !isEmptyString(field));
 		const geometry = this.getGeometry(props);
 		if ((!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !equals(this.getGeometry(this.props), geometry))) {
 			button ? this.onButtonClick()(props) : this.update(props);
@@ -110,11 +112,19 @@ export default class GeocoderField extends Component {
 		const fetchForeign = () => {
 			this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${props.formContext.lang}`).then(response => {
 				const {country, town, state, county, city} = response.address;
-				const changes = {
-					country,
-					municipality: town || city || county,
-					administrativeProvince: state
-				};
+				const changes = {};
+				if (props.schema.properties.biologicalProvince) {
+					changes.biologicalProvince = undefined;
+				}
+				if (props.schema.properties.country) {
+					changes.country = country;
+				}
+				if (props.schema.properties.municipality) {
+					changes.municipality = town || city || county;
+				}
+				if (props.schema.properties.administrativeProvince) {
+					changes.administrativeProvince = state;
+				}
 				this.props.onChange({...props.formData, ...changes});
 				mainContext.popBlockingLoader();
 				if (callback) callback();
@@ -148,17 +158,23 @@ export default class GeocoderField extends Component {
 			}).then(response => {
 				return response.json();
 			}).then(response => {
-				const changes = {biologicalProvince: undefined, administrativeProvince: undefined};
+				const changes = {};
+				if (props.schema.properties.biologicalProvince) {
+					changes.biologicalProvince = undefined;
+				}
+				if (props.schema.properties.administrativeProvince) {
+					changes.administrativeProvince = undefined;
+				}
 				if (response.status === "OK") {
 					changes.country = props.formContext.translations.Finland;
 					response.results.forEach(result => {
 						if (!result.types) return;
 						const type = result.types[0];
 						const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
-						if (type === "municipality") {
+						if (type === "municipality" && props.schema.properties.municipality) {
 							changes.municipality = join(changes.municipality, result.formatted_address);
-						} else if (type === "biogeographicalProvince") {
-							changes.biologicalProvince = join(changes.municipality, result.address_components[0].long_name);
+						} else if (type === "biogeographicalProvince"  && props.schema.properties.biologicalProvince) {
+							changes.biologicalProvince = join(changes.biologicalProvince, result.address_components[0].long_name);
 						}
 					});
 					this.props.onChange({...props.formData, ...changes});
