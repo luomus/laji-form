@@ -23,18 +23,9 @@ export default class GeocoderField extends Component {
 		this.mounted = false;
 	}
 
-	componentWillReceiveProps(props) {
-		const {country, municipality, biologicalProvince, administrativeProvince} = props.formData;
-		const {updateOnlyEmpty = false, button = false} = getUiOptions(props.uiSchema);
-		const hasData = [country, municipality, biologicalProvince, administrativeProvince].some(field => !isEmptyString(field));
-		if ((!updateOnlyEmpty || !hasData) && !equals(this.getGeometry(this.props), this.getGeometry(props))) {
-			button ? this.onButtonClick()(props) : this.update(props);
-		}
-	}
-
 	getStateFromProps(props, loading) {
 		const state = {loading};
-		const {button = false} = getUiOptions(props.uiSchema);
+		const {updateOnlyEmpty = false, button = false} = getUiOptions(props.uiSchema);
 		if (button) {
 			const innerUiSchema = getInnerUiSchema(props.uiSchema);
 			state.uiSchema = {
@@ -47,6 +38,13 @@ export default class GeocoderField extends Component {
 					]
 				}
 			};
+		}
+
+		const {country, municipality, biologicalProvince, administrativeProvince} = props.formData;
+		const hasData = [country, municipality, biologicalProvince, administrativeProvince].some(field => !isEmptyString(field));
+		const geometry = this.getGeometry(props);
+		if ((!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !equals(this.getGeometry(this.props), geometry))) {
+			button ? this.onButtonClick()(props) : this.update(props);
 		}
 
 		return state;
@@ -72,11 +70,14 @@ export default class GeocoderField extends Component {
 	}
 
 	onButtonClick = () => (props) => {
-		this.setState(this.getStateFromProps(this.props, true), () => 
+		this.mounted ? this.setState(this.getStateFromProps(this.props, true), () => {
 			this.update(props, () => {
 				this.setState(this.getStateFromProps(this.props, false));
-			})
-		);
+			});
+		}) : 
+		this.update(props, () => {
+			this.setState(this.getStateFromProps(this.props, false));
+		});
 	}
 
 	getGeometry = (props) => {
@@ -104,7 +105,7 @@ export default class GeocoderField extends Component {
 	update = (props, callback) => {
 		const geometry = this.getGeometry(props);
 
-		if (!geometry || !geometry.geometries.length) return;
+		if (!geometry || !geometry.geometries || !geometry.geometries.length) return;
 
 		const center = L.geoJson({ // eslint-disable-line no-undef
 			type: "FeatureCollection",
@@ -154,7 +155,6 @@ export default class GeocoderField extends Component {
 					if (callback) callback();
 				});
 			}
-
 		}).catch(() => {
 			mainContext.popBlockingLoader();
 			if (callback) callback();

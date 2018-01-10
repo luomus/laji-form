@@ -8,10 +8,7 @@ export default class StringToArrayField extends Component {
 	static getName() {return "StringToArrayField";}
 	getStateFromProps(props, propsWithUiOptions) {
 		const {formData = ""} = props;
-		console.log("real", formData);
 		const {delimiter = " "} = this.getUiOptions();
-		console.log("splitted", formData.split(delimiter));
-		console.log(propsWithUiOptions);
 		const innerUiSchema = getUiOptions(propsWithUiOptions.uiSchema).uiSchema || {};
 		return {
 			schema: {
@@ -29,7 +26,6 @@ export default class StringToArrayField extends Component {
 
 	onChange(formData) {
 		const {delimiter = " "} = this.getUiOptions();
-		console.log("ON CHNAGE");
 		this.props.onChange(formData.join(delimiter));
 	}
 }
