@@ -184,7 +184,7 @@ export default class AutosuggestField extends Component {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
-			handleSuggestionReceivers(formData, suggestion);
+			formData = handleSuggestionReceivers(formData, suggestion);
 		}
 		this.props.onChange(formData);
 	}
