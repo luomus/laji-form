@@ -1,5 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
+import update from "immutability-helper";
 import { toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { immutableDelete, getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
@@ -209,6 +210,25 @@ export default class NestField extends Component {
 					}
 				};
 			}
+		}
+
+		const {"ui:order": order} = uiSchema;
+		const dictionarifiedOrder = order.reduce((dict, field, idx) => {
+			dict[field] = idx;
+			return dict;
+		}, {});
+		const splices = [];
+		if (order) {
+			Object.keys(nests).forEach(nestName => {
+				const {fields} = nests[nestName];
+				fields.forEach(field => {
+					const idx = dictionarifiedOrder[field];
+					if (idx !== undefined) {
+						splices.push([idx, 1]);
+					}
+				});
+			});
+			uiSchema = update(uiSchema, {"ui:order": {$splice: splices.sort(([idx], [_idx]) => _idx - idx)}});
 		}
 
 		return {schema, uiSchema, idSchema, errorSchema, formData};
