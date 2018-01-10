@@ -263,12 +263,6 @@
 					"preventTypingPattern": "^MA\\.\\d+$"
 				}
 			},
-			"editors": {
-				"ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
-				"ui:options": {
-					"allowUndefined": false
-				}
-			},
 			"dateBegin": {
 				"ui:widget": "DateTimeWidget",
 				"ui:options": {
@@ -277,15 +271,6 @@
 			},
 			"dateEnd": {
 				"ui:widget": "DateTimeWidget"
-			},
-			"secureLevel": {
-				"ui:widget": "AnyToBooleanWidget",
-				"ui:help": "Valinta mahdollistaa tarkan paikkatiedon karkeistamisen julkisesta Laji.fi-palvelusta. Huomaathan, että tallentamasi tieto on karkeistamisesta huolimatta viranomaisten käytössä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-				"ui:options": {
-					"trueValue": "MX.secureLevelKM10",
-					"falseValue": "MX.secureLevelNone",
-					"allowUndefined": false
-				}
 			},
 			"legPublic": {
 				"ui:options": {
@@ -855,7 +840,22 @@
 		},
 		"keywords": {
 			"ui:field": "TagArrayField"
-		}
+		},
+			"secureLevel": {
+				"ui:widget": "AnyToBooleanWidget",
+				"ui:help": "Valinta mahdollistaa tarkan paikkatiedon karkeistamisen julkisesta Laji.fi-palvelusta. Huomaathan, että tallentamasi tieto on karkeistamisesta huolimatta viranomaisten käytössä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+				"ui:options": {
+					"trueValue": "MX.secureLevelKM10",
+					"falseValue": "MX.secureLevelNone",
+					"allowUndefined": false
+				}
+			},
+			"editors": {
+				"ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+				"ui:options": {
+					"allowUndefined": false
+				}
+			}
 	},
 	"extra": {
 		"habitat": {

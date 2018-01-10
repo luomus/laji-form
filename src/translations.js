@@ -516,5 +516,10 @@
 		fi: "Kirjoitusmuoto: (määrä) LAJI (koiraiden yksilömäärä) (naaraiden yksilömäärä). Suluilla merkityt eivät ole pakollisia.",
 		en: "Format:(count) SPECIES (male individual count) (female individual count). The fields marked with brackets aren't required",
 		sv: "Formatera: (antal) SPECIER (individantal av hane) (individantal av hone). Fälten markerade med parentes är inte nödvändiga."
+	},
+	finland: {
+		fi: "Suomi",
+		en: "Finland",
+		sv: "Finska"
 	}
 };
