@@ -52,7 +52,8 @@ export default class TagArrayField extends Component {
 	}
 
 	render() {
-		const {formData = []} = this.props;
+		let {formData = []} = this.props;
+		formData = formData.filter(s => !isEmptyString(s));
 		const {value = ""} = this.state;
 		return (
 			<div>

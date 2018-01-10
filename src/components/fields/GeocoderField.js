@@ -104,61 +104,73 @@ export default class GeocoderField extends Component {
 
 	update = (props, callback) => {
 		const geometry = this.getGeometry(props);
+		const mainContext = new Context(props.formContext.contextId);
 
 		if (!geometry || !geometry.geometries || !geometry.geometries.length) return;
+		const fetchForeign = () => {
+			this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${props.formContext.lang}`).then(response => {
+				const {country, town, state, county, city} = response.address;
+				const changes = {
+					country,
+					municipality: town || city || county,
+					administrativeProvince: state
+				};
+				this.props.onChange({...props.formData, ...changes});
+				mainContext.popBlockingLoader();
+				if (callback) callback();
+			}).catch(() => {
+				mainContext.popBlockingLoader();
+				if (callback) callback();
+			});
+		};
 
-		const center = L.geoJson({ // eslint-disable-line no-undef
+		const bounds = L.geoJson({ // eslint-disable-line no-undef
 			type: "FeatureCollection",
 			features: geometry.geometries.map(geometry => {
 				return {type: "Feature", properties: {}, geometry};
 			})
-		}).getBounds().getCenter();
+		}).getBounds();
+		const finlandBounds = [[71.348, 33.783], [48.311, 18.316]];
+		const center = bounds.getCenter();
 		const {lat, lng} = center;
 
-		const changes = {};
-		const mainContext = new Context(props.formContext.contextId);
 		mainContext.pushBlockingLoader();
-		new ApiClient().fetchRaw("/coordinates/location", undefined, {
-			method: "POST",
-			headers: {
-				"accept": "application/json",
-				"content-type": "application/json"
-			},
-			body: JSON.stringify(geometry)
-		}).then(response => {
-			return response.json();
-		}).then(response => {
-			changes.biologicalProvince = undefined;
-			if (response.status === "OK") {
-				changes.country = props.formContext.translations.Finland;
-				response.results.forEach(result => {
-					if (!result.types) return;
-					const type = result.types[0];
-					const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
-					if (type === "municipality") {
-						changes.municipality = join(changes.municipality, result.formatted_address);
-					} else if (type === "biogeographicalProvince") {
-						changes.biologicalProvince = join(changes.municipality, result.address_components[0].long_name);
-					}
-				});
-				this.props.onChange({...props.formData, ...changes});
-				mainContext.popBlockingLoader();
-				if (callback) callback();
-			} else {
-				this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${props.formContext.lang}`).then(response => {
-					const {country, town, state, county, city} = response.address;
-					changes.country = country;
-					changes.municipality = town || city || county;
-					changes.administrativeProvince = state;
+
+		!bounds.overlaps(finlandBounds) ? 
+			fetchForeign() :
+			new ApiClient().fetchRaw("/coordinates/location", undefined, {
+				method: "POST",
+				headers: {
+					"accept": "application/json",
+					"content-type": "application/json"
+				},
+				body: JSON.stringify(geometry)
+			}).then(response => {
+				return response.json();
+			}).then(response => {
+				const changes = {biologicalProvince: undefined, administrativeProvince: undefined};
+				if (response.status === "OK") {
+					changes.country = props.formContext.translations.Finland;
+					response.results.forEach(result => {
+						if (!result.types) return;
+						const type = result.types[0];
+						const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
+						if (type === "municipality") {
+							changes.municipality = join(changes.municipality, result.formatted_address);
+						} else if (type === "biogeographicalProvince") {
+							changes.biologicalProvince = join(changes.municipality, result.address_components[0].long_name);
+						}
+					});
 					this.props.onChange({...props.formData, ...changes});
 					mainContext.popBlockingLoader();
 					if (callback) callback();
-				});
-			}
-		}).catch(() => {
-			mainContext.popBlockingLoader();
-			if (callback) callback();
-		});
+				} else {
+					fetchForeign();
+				}
+			}).catch(() => {
+				mainContext.popBlockingLoader();
+				if (callback) callback();
+			});
 	}
 
 	render() {
