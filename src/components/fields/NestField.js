@@ -228,7 +228,7 @@ export default class NestField extends Component {
 					}
 				});
 			});
-			uiSchema = update(uiSchema, {"ui:order": {$splice: splices.sort(([idx], [_idx]) => _idx - idx)}});
+			if (splices.length) uiSchema = update(uiSchema, {"ui:order": {$splice: splices.sort(([idx], [_idx]) => _idx - idx)}});
 		}
 
 		return {schema, uiSchema, idSchema, errorSchema, formData};

@@ -55,7 +55,6 @@ export default function VirtualSchemaField(ComposedComponent) {
 				/>
 			);
 		}
-
 	}
 
 	if (ComposedComponent.getName) {

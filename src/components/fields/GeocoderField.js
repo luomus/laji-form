@@ -6,6 +6,8 @@ import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
+import { Button } from "../components";
+import Spinner from "react-spinner";
 
 const cache = {};
 
@@ -23,20 +25,58 @@ export default class GeocoderField extends Component {
 
 	componentWillReceiveProps(props) {
 		const {country, municipality, biologicalProvince, administrativeProvince} = props.formData;
+		const {updateOnlyEmpty = false, button = false} = getUiOptions(props.uiSchema);
 		const hasData = [country, municipality, biologicalProvince, administrativeProvince].some(field => !isEmptyString(field));
-		if (!hasData && !equals(this.getGeometry(this.props), this.getGeometry(props))) {
-			this.update(props);
+		if ((!updateOnlyEmpty || !hasData) && !equals(this.getGeometry(this.props), this.getGeometry(props))) {
+			button ? this.onButtonClick()(props) : this.update(props);
 		}
 	}
 
-	fetch = (url) => {
-		cache[url] = cache[url] || fetch(url).then(response => {
-			if (response.status >= 400) {
-				throw new Error("Request failed");
-			}
-			return response.json();
-		});
-		return cache[url];
+	getStateFromProps(props, loading) {
+		const state = {loading};
+		const {button = false} = getUiOptions(props.uiSchema);
+		if (button) {
+			const innerUiSchema = getInnerUiSchema(props.uiSchema);
+			state.uiSchema = {
+				...innerUiSchema,
+				"ui:options": {
+					...getUiOptions(innerUiSchema),
+					buttons: [
+						...(getUiOptions(innerUiSchema).buttons || []),
+						this.getButton(props, loading)
+					]
+				}
+			};
+		}
+
+		return state;
+	}
+
+	getButton(props, loading) {
+		// Button is disabled when loading is false 
+		// (it is false only after fetch and no formData updates, otherwise it will be true/undefined.
+		return {
+			fn: this.onButtonClick,
+			position: "top",
+			key: loading,
+			render: onClick => (
+				<Button key="geolocate" onClick={onClick} disabled={loading === false}>
+					<strong>
+						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
+						{" "}
+						{props.formContext.translations.Geolocate}
+					</strong>
+				</Button>
+			)
+		};
+	}
+
+	onButtonClick = () => (props) => {
+		this.setState(this.getStateFromProps(this.props, true), () => 
+			this.update(props, () => {
+				this.setState(this.getStateFromProps(this.props, false));
+			})
+		);
 	}
 
 	getGeometry = (props) => {
@@ -51,7 +91,17 @@ export default class GeocoderField extends Component {
 		return geometry;
 	}
 
-	update = (props) => {
+	fetch = (url) => {
+		cache[url] = cache[url] || fetch(url).then(response => {
+			if (response.status >= 400) {
+				throw new Error("Request failed");
+			}
+			return response.json();
+		});
+		return cache[url];
+	}
+
+	update = (props, callback) => {
 		const geometry = this.getGeometry(props);
 
 		if (!geometry || !geometry.geometries.length) return;
@@ -90,26 +140,29 @@ export default class GeocoderField extends Component {
 						changes.biologicalProvince = join(changes.municipality, result.address_components[0].long_name);
 					}
 				});
-				props.onChange({...props.formData, ...changes});
+				this.props.onChange({...props.formData, ...changes});
 				mainContext.popBlockingLoader();
+				if (callback) callback();
 			} else {
 				this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${props.formContext.lang}`).then(response => {
 					const {country, town, state, county, city} = response.address;
 					changes.country = country;
 					changes.municipality = town || city || county;
 					changes.administrativeProvince = state;
-					props.onChange({...props.formData, ...changes});
+					this.props.onChange({...props.formData, ...changes});
 					mainContext.popBlockingLoader();
+					if (callback) callback();
 				});
 			}
 
 		}).catch(() => {
 			mainContext.popBlockingLoader();
+			if (callback) callback();
 		});
 	}
 
 	render() {
 		const {SchemaField} = this.props.registry.fields;
-		return <SchemaField {...this.props} uiSchema={getInnerUiSchema(this.props.uiSchema)} />;
+		return <SchemaField {...this.props} uiSchema={this.state.uiSchema} />;
 	}
 }
