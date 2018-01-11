@@ -270,6 +270,14 @@ export class Autosuggest extends Component {
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase()));
 	}
 
+	findOnlyOneMatch = (suggestions) => {
+		if (!Array.isArray(suggestions)) suggestions = [suggestions];
+		const filtered = suggestions.filter(suggestion => !suggestion.payload  || !suggestion.payload.isNonMatching)
+		if (filtered.length === 1) {
+			return filtered[0];
+		}
+	}
+
 	onInputChange = (e, {newValue: value}) => {
 		this.setState({value});
 	}
@@ -315,10 +323,14 @@ export class Autosuggest extends Component {
 		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
 		const {value} = this.state;
+		const {selectOnlyOne} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, value);
+		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
 
-		if (exactMatch) {
+		if (onlyOneMatch) {
+			this.selectSuggestion(onlyOneMatch);
+		}	else if (!selectOnlyOne && exactMatch) {
 			this.selectSuggestion({...exactMatch, value});
 		} else {
 			this.selectUnsuggested(value);
