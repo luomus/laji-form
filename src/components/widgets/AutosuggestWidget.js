@@ -629,7 +629,7 @@ class InformalTaxonGroupsAddon extends Component {
 		}
 		return taxonGroupID ?
 			<span><div className={`informal-group-image ${imageID}`}/><button className="close" onClick={this.onClear}>×</button></span> :
-			<Glyphicon glyph={"th"}  />;
+			<Glyphicon glyph="menu-hamburger" />;
 	}
 
 	render() {
