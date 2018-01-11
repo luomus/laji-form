@@ -23,9 +23,18 @@ export default class GeocoderField extends Component {
 		this.mounted = false;
 	}
 
+	getOptions = (props) => {
+		return {
+			updateOnlyEmpty: false,
+			button: false,
+			fields: ["country", "municipality", "biologicalProvince", "administrativeProvince"],
+			...getUiOptions((props || this.props).uiSchema)
+		};
+	}
+
 	getStateFromProps(props, loading) {
 		const state = {loading};
-		const {updateOnlyEmpty = false, button = false} = getUiOptions(props.uiSchema);
+		const {updateOnlyEmpty, button, fields} = this.getOptions(props);
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		if (button) {
 			state.uiSchema = {
@@ -42,9 +51,7 @@ export default class GeocoderField extends Component {
 			state.uiSchema = innerUiSchema;
 		}
 
-		const fields = ["country", "municipality", "biologicalProvince", "administrativeProvince"].filter(field => props.schema.properties[field]);
-		const hasData = fields.filter(field => props.schema.properties[field]).some(field => !isEmptyString(props.formData[field]));
-		console.log(hasData);
+		const hasData = fields.some(field => !isEmptyString(props.formData[field]));
 		const geometry = this.getGeometry(props);
 		if ((!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !equals(this.getGeometry(this.props), geometry))) {
 			button ? this.onButtonClick()(props) : this.update(props);
@@ -108,22 +115,27 @@ export default class GeocoderField extends Component {
 	update = (props, callback) => {
 		const geometry = this.getGeometry(props);
 		const mainContext = new Context(props.formContext.contextId);
+		const {fields} = this.getOptions();
+		const fieldByKeys = fields.reduce((_fields, option) => {
+			_fields[option] = true;
+			return _fields;
+		}, {});
 
 		if (!geometry || !geometry.geometries || !geometry.geometries.length) return;
 		const fetchForeign = () => {
 			this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${props.formContext.lang}`).then(response => {
 				const {country, town, state, county, city} = response.address;
 				const changes = {};
-				if (props.schema.properties.biologicalProvince) {
+				if (fieldByKeys.biologicalProvince) {
 					changes.biologicalProvince = undefined;
 				}
-				if (props.schema.properties.country) {
+				if (fieldByKeys.country) {
 					changes.country = country;
 				}
-				if (props.schema.properties.municipality) {
+				if (fieldByKeys.municipality) {
 					changes.municipality = town || city || county;
 				}
-				if (props.schema.properties.administrativeProvince) {
+				if (fieldByKeys.administrativeProvince) {
 					changes.administrativeProvince = state;
 				}
 				this.props.onChange({...props.formData, ...changes});
@@ -160,10 +172,10 @@ export default class GeocoderField extends Component {
 				return response.json();
 			}).then(response => {
 				const changes = {};
-				if (props.schema.properties.biologicalProvince) {
+				if (fieldByKeys.biologicalProvince) {
 					changes.biologicalProvince = undefined;
 				}
-				if (props.schema.properties.administrativeProvince) {
+				if (fieldByKeys.administrativeProvince) {
 					changes.administrativeProvince = undefined;
 				}
 				if (response.status === "OK") {
@@ -172,9 +184,9 @@ export default class GeocoderField extends Component {
 						if (!result.types) return;
 						const type = result.types[0];
 						const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
-						if (type === "municipality" && props.schema.properties.municipality) {
+						if (type === "municipality" && fieldByKeys.municipality) {
 							changes.municipality = join(changes.municipality, result.formatted_address);
-						} else if (type === "biogeographicalProvince"  && props.schema.properties.biologicalProvince) {
+						} else if (type === "biogeographicalProvince"  && fieldByKeys.biologicalProvince) {
 							changes.biologicalProvince = join(changes.biologicalProvince, result.address_components[0].long_name);
 						}
 					});
