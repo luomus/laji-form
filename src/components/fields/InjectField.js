@@ -165,8 +165,8 @@ export default class InjectField extends Component {
 			if (i === splits.length - 1) {
 				return o;
 			}
-			if (o.items) return o["items"];
-			return o[s];
+			if (o && o.items) return o["items"][s];
+			return o ? o[s] : {};
 		}, uiSchema);
 	}
 	getInnerData = (data, splits) => {

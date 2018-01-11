@@ -122,30 +122,6 @@ export default class GeocoderField extends Component {
 		}, {});
 
 		if (!geometry || !geometry.geometries || !geometry.geometries.length) return;
-		const fetchForeign = () => {
-			this.fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&email=helpdesk@laji.fi&accept-language=${props.formContext.lang}`).then(response => {
-				const {country, town, state, county, city} = response.address;
-				const changes = {};
-				if (fieldByKeys.biologicalProvince) {
-					changes.biologicalProvince = undefined;
-				}
-				if (fieldByKeys.country) {
-					changes.country = country;
-				}
-				if (fieldByKeys.municipality) {
-					changes.municipality = town || city || county;
-				}
-				if (fieldByKeys.administrativeProvince) {
-					changes.administrativeProvince = state;
-				}
-				this.props.onChange({...props.formData, ...changes});
-				mainContext.popBlockingLoader();
-				if (callback) callback();
-			}).catch(() => {
-				mainContext.popBlockingLoader();
-				if (callback) callback();
-			});
-		};
 
 		const bounds = L.geoJson({ // eslint-disable-line no-undef
 			type: "FeatureCollection",
@@ -156,6 +132,79 @@ export default class GeocoderField extends Component {
 		const finlandBounds = [[71.348, 33.783], [48.311, 18.316]];
 		const center = bounds.getCenter();
 		const {lat, lng} = center;
+
+		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
+
+		const handleResponse = (country, ...fields) => (response) => {
+			fields = fields.reduce((_fields, field) => {
+				_fields[field] = true;
+				return _fields;
+			}, {});
+
+			const changes = {};
+			if (fieldByKeys.biologicalProvince) {
+				changes.biologicalProvince = undefined;
+			}
+			if (fieldByKeys.administrativeProvince) {
+				changes.administrativeProvince = undefined;
+			}
+
+			const parsers = {
+				country: {
+					type: ["country"],
+					responseField: "long_name"
+				},
+				administrativeProvince: {
+					type: ["administrative_area_level_1"],
+					responseField: "short_name"
+				},
+				municipality: {
+					type: ["municipality", "administrative_area_level_2"],
+					responseField: "short_name"
+				},
+				biologicalProvince: {
+					type: ["biogeographicalProvince"],
+					responseField: "long_name"
+				}
+			};
+
+			// Store found values so they are used only once.
+			const found = {};
+
+			if (response.status === "OK") {
+				response.results.forEach(result => {
+					result.address_components.forEach(addressComponent => {
+						if (!addressComponent.types) return;
+						outer: for (const type of addressComponent.types) {
+							for (const field in parsers) {
+								const parser = parsers[field];
+								if (parser.type.includes(type)) {
+									const responseValue = addressComponent[parser.responseField];
+									if (!found[field]) found[field] = {};
+									if (!found[field][responseValue]) changes[field] = join(changes[field], responseValue);
+									found[field][responseValue] = true;
+									break outer;
+								}
+							}
+						}
+					});
+				});
+				if (country) changes.country = country;
+				this.props.onChange({...props.formData, ...changes});
+				mainContext.popBlockingLoader();
+				if (callback) callback();
+			} else if (country) {
+				fetchForeign();
+			}
+		};
+
+		const fetchForeign = () => {
+			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${props.formContext.googleApiKey}&language=en&filter=country|administrative_area_level_1|administrative_area_level_2`)
+			    .then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
+				mainContext.popBlockingLoader();
+				if (callback) callback();
+			});
+		};
 
 		mainContext.pushBlockingLoader();
 
@@ -170,33 +219,7 @@ export default class GeocoderField extends Component {
 				body: JSON.stringify(geometry)
 			}).then(response => {
 				return response.json();
-			}).then(response => {
-				const changes = {};
-				if (fieldByKeys.biologicalProvince) {
-					changes.biologicalProvince = undefined;
-				}
-				if (fieldByKeys.administrativeProvince) {
-					changes.administrativeProvince = undefined;
-				}
-				if (response.status === "OK") {
-					changes.country = props.formContext.translations.Finland;
-					response.results.forEach(result => {
-						if (!result.types) return;
-						const type = result.types[0];
-						const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
-						if (type === "municipality" && fieldByKeys.municipality) {
-							changes.municipality = join(changes.municipality, result.formatted_address);
-						} else if (type === "biogeographicalProvince"  && fieldByKeys.biologicalProvince) {
-							changes.biologicalProvince = join(changes.biologicalProvince, result.address_components[0].long_name);
-						}
-					});
-					this.props.onChange({...props.formData, ...changes});
-					mainContext.popBlockingLoader();
-					if (callback) callback();
-				} else {
-					fetchForeign();
-				}
-			}).catch(() => {
+			}).then(handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince")).catch(() => {
 				mainContext.popBlockingLoader();
 				if (callback) callback();
 			});

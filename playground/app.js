@@ -199,7 +199,8 @@ const lajiForm = new LajiForm({
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
 	renderSubmit: true,
-	onSettingsChange: console.info
+	onSettingsChange: console.info,
+	googleApiKey: properties.googleApiKey
 });
 
 if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;

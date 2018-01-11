@@ -590,7 +590,8 @@ export default class LajiForm extends Component {
 				formID: this.props.id,
 				getWarnings: (data, id) => {
 					return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
-				}
+				},
+				googleApiKey: props.googleApiKey
 			}
 		};
 	}
