@@ -2666,25 +2666,6 @@
               "id": "JX.129012#4",
               "@type": "MY.identification"
             }
-          ]
-        },
-        {
-          "taxonConfidence": "MY.taxonConfidenceUnsure",
-          "images": [
-            "MM.91124"
-          ],
-          "informalTaxonGroups": [
-            "MVL.145",
-            "MVL.1"
-          ],
-          "id": "JX.129012#3",
-          "@type": "MY.unit",
-          "identifications": [
-            {
-              "taxon": "varpunen",
-              "id": "JX.129012#4",
-              "@type": "MY.identification"
-            }
           ],
           "unitFact": {
             "autocompleteSelectedTaxonID": "MX.36573"

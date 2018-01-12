@@ -738,7 +738,7 @@ const headerFormatters = {
 
 const tableFormatters = {
 	unknownTaxon: (item, col, formatted, options) => {
-		return (item[options.idField]) ? formatted : <span>{formatted} <Glyphicon bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
+		return (isEmptyString(item[col]) || item[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
 	}
 };
 
