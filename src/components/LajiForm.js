@@ -836,10 +836,10 @@ export default class LajiForm extends Component {
 			this.blockingLoaderRef.className = "laji-form blocking-loader leave-start";
 			this.setImmediate(() => {
 				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader leaving";
+				this.setTimeout(() => {
+					if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader";
+				}, 200); // should match css transition time.
 			});
-			this.setTimeout(() => {
-				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader";
-			}, 200); // should match css transition time.
 		}
 	}
 
