@@ -89,7 +89,7 @@ export default class AutosuggestField extends Component {
 	getStateFromProps = (props, toggled) => {
 		let {schema, uiSchema, formData, formContext} = props;
 		const uiOptions = getUiOptions(uiSchema);
-		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = uiOptions;
+		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey} = uiOptions;
 		toggled = (toggled !== undefined)
 			? toggled
 			: this.state ? this.state.toggled : false;
