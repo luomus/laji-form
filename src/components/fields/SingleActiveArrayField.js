@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
+import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col, Glyphicon } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
 import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
@@ -509,7 +509,8 @@ class TableArrayFieldTemplate extends Component {
 		}
 
 		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
-		const Title = getUiOptions(this.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
+		const {renderTitleAsLabel, formatters} = getUiOptions(this.props.uiSchema);
+		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
@@ -556,18 +557,24 @@ class TableArrayFieldTemplate extends Component {
 				formatter = formatterComponent.prototype.__proto__.formatValue;
 			}
 
+			let formatted = val;
 			if (formatter) {
-				return formatter(val, getUiOptions(_uiSchema), that.props);
+				formatted = formatter(val, getUiOptions(_uiSchema), that.props);
 			} else if (isEmptyString(val)) {
-				return "";
+				formatted = "";
 			} else if (isMultiSelect(_schema)) {
-				return val.map(_val => _schema.items.enumNames[_schema.items.enum.indexOf(_val)]).join(", ");
+				formatted = val.map(_val => _schema.items.enumNames[_schema.items.enum.indexOf(_val)]).join(", ");
 			} else if (isSelect(_schema)) {
-				return isEmptyString(val) ? val : _schema.enumNames[_schema.enum.indexOf(val)];
+				formatted = isEmptyString(val) ? val : _schema.enumNames[_schema.enum.indexOf(val)];
 			} else if (_schema.type === "boolean") {
-				return this.props.formContext.translations[val ? "yes" : "no"];
+				formatted = this.props.formContext.translations[val ? "yes" : "no"];
 			}
-			return val;
+
+			if (formatters[col]) {
+				formatted = tableFormatters[formatters[col].formatter](item, col, formatted, formatters[col]);
+			}
+
+			return formatted;
 		};
 
 		const {itemsClassNames, confirmDelete, titleClassName} = getUiOptions(uiSchema);
@@ -726,6 +733,12 @@ const headerFormatters = {
 				return <span className="text-muted">{!isEmptyString(name) ? name : locality}</span>;
 			}
 		}
+	}
+};
+
+const tableFormatters = {
+	unknownTaxon: (item, col, formatted, options) => {
+		return (item[options.idField]) ? formatted : <span>{formatted} <Glyphicon bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
 	}
 };
 
