@@ -291,7 +291,7 @@ export class Autosuggest extends Component {
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, ...query}).then(suggestions => {
+			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", ...query}).then(suggestions => {
 				this.mounted ?
 					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
 					this.afterBlurAndFetch(suggestions);
