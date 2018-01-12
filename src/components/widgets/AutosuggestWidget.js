@@ -289,6 +289,14 @@ export class Autosuggest extends Component {
 			return filtered[0];
 		}
 	}
+	
+	findNonMatching = (suggestions) => {
+		if (!Array.isArray(suggestions)) suggestions = [suggestions];
+		const filtered = suggestions.filter(suggestion => suggestion.payload  && suggestion.payload.isNonMatching);
+		if (filtered.length === 1) {
+			return filtered[0];
+		}
+	}
 
 	onInputChange = (e, {newValue: value}) => {
 		this.setState({value});
@@ -335,15 +343,18 @@ export class Autosuggest extends Component {
 		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
 		const {value} = this.state;
-		const {selectOnlyOne} = this.props;
+		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, value);
 		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
+		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
 
 		if (onlyOneMatch) {
 			this.selectSuggestion(onlyOneMatch);
 		}	else if (exactMatch) {
 			this.selectSuggestion({...exactMatch, value});
+		}	else if (nonMatching) {
+			this.selectSuggestion(nonMatching);
 		} else {
 			this.selectUnsuggested(value);
 		}
