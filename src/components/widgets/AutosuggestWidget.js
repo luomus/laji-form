@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { findDOMNode } from "react-dom";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { OverlayTrigger, Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput, focusById } from "../../utils";
+import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo } from "../../utils";
 import { FetcherInput, TooltipComponent, } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -203,10 +202,22 @@ export class Autosuggest extends Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.triggerConvert();
+		new Context(this.props.formContext.contextId).addKeyHandler(this.props.id, this.keyFunctions);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
+		new Context(this.props.formContext.contextId).removeKeyHandler(this.props.id, this.keyFunctions);
+	}
+
+	keyFunctions = {
+		autosuggestToggle: () => {
+			if (this.props.onToggle) {
+				this.onToggle();
+				return true;
+			}
+			return false;
+		}
 	}
 
 	triggerConvert = () => {
@@ -221,6 +232,7 @@ export class Autosuggest extends Component {
 			this.setState({isLoading: false});
 		});
 	}
+
 	getSuggestionValue = (suggestion) => {
 		return suggestion.value;
 	}
@@ -272,7 +284,7 @@ export class Autosuggest extends Component {
 
 	findOnlyOneMatch = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		const filtered = suggestions.filter(suggestion => !suggestion.payload  || !suggestion.payload.isNonMatching)
+		const filtered = suggestions.filter(suggestion => !suggestion.payload  || !suggestion.payload.isNonMatching);
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
@@ -460,9 +472,23 @@ export class Autosuggest extends Component {
 																	formContext={this.props.formContext} /> 
 			: null;
 
+
+		const getTogglerTooltip = () => {
+			let tooltip = `${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`;
+
+			const {shortcuts} = new Context(this.props.formContext.contextId);
+			Object.keys(shortcuts).some(keyCombo => {
+				if (shortcuts[keyCombo].fn == "autosuggestToggle") {
+					tooltip = `[${stringifyKeyCombo(keyCombo)}]: ${tooltip}`;
+					return true;
+				}
+			});
+			return tooltip;
+		};
+
 		const toggler = onToggle && this.state.focused
 			? (
-				<TooltipComponent tooltip={`${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`} >
+				<TooltipComponent tooltip={getTogglerTooltip()} >
 					<InputGroup.Addon className={`autosuggest-input-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle} tabIndex={0}>
 						<Glyphicon glyph="flash"/>
 				</InputGroup.Addon>

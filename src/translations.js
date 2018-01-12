@@ -521,5 +521,5 @@
 		fi: "Suomi",
 		en: "Finland",
 		sv: "Finska"
-	}
+	},
 };
