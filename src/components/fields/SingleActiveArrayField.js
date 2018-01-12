@@ -570,7 +570,7 @@ class TableArrayFieldTemplate extends Component {
 				formatted = this.props.formContext.translations[val ? "yes" : "no"];
 			}
 
-			if (formatters[col]) {
+			if (formatters && formatters[col]) {
 				formatted = tableFormatters[formatters[col].formatter](item, col, formatted, formatters[col]);
 			}
 
