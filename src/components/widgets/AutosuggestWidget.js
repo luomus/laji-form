@@ -330,7 +330,7 @@ export class Autosuggest extends Component {
 
 		if (onlyOneMatch) {
 			this.selectSuggestion(onlyOneMatch);
-		}	else if (!selectOnlyOne && exactMatch) {
+		}	else if (exactMatch) {
 			this.selectSuggestion({...exactMatch, value});
 		} else {
 			this.selectUnsuggested(value);
