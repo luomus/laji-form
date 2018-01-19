@@ -385,7 +385,7 @@ class LineTransectMapArrayField extends Component {
 					let formDataChanged = false;
 					events.forEach(e => {
 						switch (e.type) {
-						case "create": {
+						case "insert": {
 							formDataChanged = true;
 							const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
 							newItem[geometryField] = e.geometry;
