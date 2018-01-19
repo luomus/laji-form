@@ -373,7 +373,8 @@ class LineTransectMapArrayField extends Component {
 	getOptions() {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
-		const lineTransect = latLngSegmentsToGeoJSONGeometry(formData.map(item => item.geometry.coordinates));
+		console.log(formData);
+		const lineTransect = {type: "MultiLineString", coordinates: formData.map(item => item.geometry.coordinates)};
 		return {
 			lineTransect: {
 				feature: {geometry: lineTransect},
@@ -430,7 +431,7 @@ class LineTransectMapArrayField extends Component {
 
 	onActiveChange(idx) {
 		this.getContext().setImmediate(() =>
-			this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
+			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
 		);
 		this.map._openTooltipFor(idx);
 		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
