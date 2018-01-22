@@ -156,11 +156,11 @@ export default class GeocoderField extends Component {
 				},
 				administrativeProvince: {
 					type: ["administrative_area_level_1"],
-					responseField: "short_name"
+					responseField: "long_name"
 				},
 				municipality: {
-					type: ["municipality", "administrative_area_level_2"],
-					responseField: "short_name"
+					type: ["municipality", "administrative_area_level_3", "administrative_area_level_2"],
+					responseField: "long_name"
 				},
 				biologicalProvince: {
 					type: ["biogeographicalProvince"],
@@ -168,25 +168,28 @@ export default class GeocoderField extends Component {
 				}
 			};
 
-			// Store found values so they are used only once.
-			const found = {};
 
 			if (response.status === "OK") {
-				response.results.forEach(result => {
-					result.address_components.forEach(addressComponent => {
-						if (!addressComponent.types) return;
-						outer: for (const type of addressComponent.types) {
-							for (const field in parsers) {
-								const parser = parsers[field];
-								if (parser.type.includes(type)) {
-									const responseValue = addressComponent[parser.responseField];
-									if (!found[field]) found[field] = {};
-									if (!found[field][responseValue]) changes[field] = join(changes[field], responseValue);
-									found[field][responseValue] = true;
-									break outer;
-								}
+				const found = {};
+				Object.keys(parsers).forEach(field => {
+					const parser = parsers[field];
+					parser.type.some((type, typeIdx) => {
+						response.results.forEach(result => result.address_components.forEach(addressComponent => {
+							if (addressComponent.types.includes(type)) {
+								if (!found[field]) found[field] = {};
+								if (!found[field][typeIdx]) found[field][typeIdx] = {};
+								const responseField = addressComponent[parser.responseField] ? parser.responseField : "short_name";
+								found[field][typeIdx][addressComponent[responseField]] = true;
 							}
-						}
+						}));
+						return found[field] && found[field][typeIdx];
+					});
+				});
+				Object.keys(found).forEach(field => {
+					const keys = Object.keys(found[field]);
+					const responseForField = found[field][keys[0]];
+					Object.keys(responseForField).forEach(value => {
+						changes[field] = join(changes[field], value);
 					});
 				});
 				if (country) changes.country = country;
@@ -199,7 +202,7 @@ export default class GeocoderField extends Component {
 		};
 
 		const fetchForeign = () => {
-			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${props.formContext.googleApiKey}&language=en&filter=country|administrative_area_level_1|administrative_area_level_2`)
+			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${props.formContext.googleApiKey}&language=en&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`)
 			    .then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
 				mainContext.popBlockingLoader();
 				if (callback) callback();
