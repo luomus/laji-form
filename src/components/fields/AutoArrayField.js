@@ -26,7 +26,14 @@ export default class AutoArrayField extends Component {
 		if (formData && (formData.length === 0 || !deepEquals(formData[formData.length - 1], emptyItem))) {
 			state.formData = [...formData, emptyItem];
 		}
-		state.uiSchema = {...uiSchema, "ui:options": {...(uiSchema["ui:options"] || {}), nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]}};
+		state.uiSchema = {
+			...uiSchema, 
+			"ui:options": {
+				canAdd: false,
+				...(uiSchema["ui:options"] || {}), 
+				nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]
+			}
+		};
 		return state;
 	}
 
