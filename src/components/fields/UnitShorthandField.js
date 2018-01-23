@@ -5,7 +5,7 @@ import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, u
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import { Button, FetcherInput } from "../components";
+import { FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import deepEquals from "deep-equal";
@@ -59,12 +59,7 @@ export default class UnitShorthandField extends Component {
 
 	shouldShowSchema = (props) => {
 		let {showSchema} = this.state;
-		const shortHandFieldName = getUiOptions(props.uiSchema).shorthandField;
-		const isEmpty = () => {
-			return props.schema.properties[shortHandFieldName] ? 
-				isEmptyString(props.formData[shortHandFieldName]) :
-				deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
-		};
+		const isEmpty = () => deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 
 		if (this.state.showSchema === undefined && !isEmpty()) {
 			showSchema = true;
