@@ -373,7 +373,6 @@ class LineTransectMapArrayField extends Component {
 	getOptions() {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
-		console.log(formData);
 		const lineTransect = {type: "MultiLineString", coordinates: formData.map(item => item.geometry.coordinates)};
 		return {
 			lineTransect: {

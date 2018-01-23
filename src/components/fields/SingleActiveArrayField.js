@@ -12,6 +12,7 @@ import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
+import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 
 const popupMappers = {
 	units: (schema, units, fieldName) => {
@@ -383,10 +384,20 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const onSelect = key => that.onActiveChange(key);
 
-		const getHeader = idx => <AccordionHeader 
-			that={that}
-			idx={idx}
-		/>;
+
+		const getHeader = idx => (
+			<AccordionHeader 
+				that={that}
+				idx={idx}
+				wrapperClassName="panel-title"
+				className="laji-form-clickable-panel-header laji-form-accordion-header">
+				<DeleteButton ref={this.setDeleteButtonRef(idx)}
+											className="pull-right"
+											confirm={getUiOptions(arrayFieldTemplateProps.uiSchema).confirmDelete}
+											translations={this.props.formContext.translations}
+											onClick={that.onDelete(idx)} />
+			</AccordionHeader>
+		);
 
 		return (
 			<div className="laji-form-single-active-array">
@@ -405,6 +416,8 @@ class AccordionArrayFieldTemplate extends Component {
 			</div>
 		);
 	}
+
+	setDeleteButtonRef = idx => elem => {this.props.formContext.this.deleteButtonRefs[idx] = elem;};
 }
 
 @handlesButtonsAndFocus
@@ -415,9 +428,11 @@ class PagerArrayFieldTemplate extends Component {
 		const {translations} = that.props.formContext;
 		const {buttons} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
-
-		const navigatePrev = () => that.onActiveChange(activeIdx - 1);
-		const navigateNext = () => that.onActiveChange(activeIdx + 1);
+		const getHeader = idx => <AccordionHeader 
+			that={that}
+			idx={idx}
+			className="panel-title"
+		/>;
 
 		return (
 			<div className="laji-form-single-active-array">
@@ -427,13 +442,13 @@ class PagerArrayFieldTemplate extends Component {
 							<Pager.Item previous 
 							            href="#"
 							            disabled={activeIdx <= 0 || activeIdx === undefined}
-							            onClick={navigatePrev}>
+							            onClick={this.navigatePrev}>
 								&larr; {translations.Previous}</Pager.Item>
-							{activeIdx !== undefined ? <div className="panel-title">{that.state.getTitle(activeIdx)}</div> : null}
+							{activeIdx !== undefined ? getHeader(activeIdx) : null}
 							<Pager.Item next 
 							            href="#"
 							            disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
-							            onClick={navigateNext}>
+							            onClick={this.navigateNext}>
 								{translations.Next}  &rarr;</Pager.Item>
 						</Pager>
 					</div>
@@ -446,6 +461,10 @@ class PagerArrayFieldTemplate extends Component {
 			</div>
 		);
 	}
+
+	navigatePrev = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx - 1);
+	navigateNext = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx + 1);
+
 }
 
 @handlesButtonsAndFocus
@@ -733,6 +752,13 @@ const headerFormatters = {
 				return <span className="text-muted">{!isEmptyString(name) ? name : locality}</span>;
 			}
 		}
+	},
+	lineTransect: {
+		component: (props) => {
+			const lineTransectFeature = {type:"Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: props.that.props.formData.map(item => item.geometry.coordinates)}};
+			const [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
+			return props.idx !== undefined ? <span className="text-muted">{`(${start}-${end}m)`}</span> : null;
+		}
 	}
 };
 
@@ -799,17 +825,13 @@ class AccordionHeader extends Component {
 		};
 
 		const header = (
-			<div className="laji-form-clickable-panel-header laji-form-accordion-header"
+			<div className={this.props.className}
 			     onClick={onHeaderClick}
 				   onMouseEnter={onMouseEnter}
 				   onMouseLeave={onMouseLeave} >
-				<div className="panel-title">
+				<div className={this.props.wrapperClassName}>
 					{headerText}
-					<DeleteButton ref={this.setDeleteButtonRef}
-					              className="pull-right"
-					              confirm={options.confirmDelete}
-					              translations={formContext.translations}
-					              onClick={onDelete} />
+					{this.props.children}
 				</div>
 			</div>
 		);
@@ -823,8 +845,6 @@ class AccordionHeader extends Component {
 			header
 		);
 	}
-
-	setDeleteButtonRef = elem => {this.props.that.deleteButtonRefs[this.props.idx] = elem;};
 }
 
 class SplitArrayFieldTemplate extends Component {
