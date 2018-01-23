@@ -378,7 +378,6 @@ class LineTransectMapArrayField extends Component {
 			lineTransect: {
 				feature: {geometry: lineTransect},
 				activeIdx: this.state.activeIdx,
-				keepActiveTooltipOpen: true,
 				onChange: (events) => {
 					let state = {};
 					let formData = this.props.formData;
@@ -430,18 +429,20 @@ class LineTransectMapArrayField extends Component {
 
 	onActiveChange(idx) {
 		this.getContext().setImmediate(() =>
-			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
+			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13}) // eslint-disable-line no-undef
 		);
-		this.map._openTooltipFor(idx);
 		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
 	}
+	
 	onComponentDidUpdate(prevProps, prevState) {
 		if (prevState.activeIdx !== this.state.activeIdx) {
 			this.onActiveChange(this.state.activeIdx);
 		}
 	}
+
 	onComponentDidMount() {
 		this.onActiveChange(this.state.activeIdx);
+		this.map._closeTooltipFor(this.state.activeIdx)._openTooltipFor(this.state.activeIdx);
 	}
 }
 
