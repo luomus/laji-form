@@ -1144,3 +1144,13 @@ min-height: 20px;
 .laji-form .fetcher-input.has-toggler .react-spinner {
 	margin-right: 25px;
 }
+
+.laji-form .laji-text-select {
+	padding: 5px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.laji-form .laji-text-select .checkbox {
+	margin: 0;
+}

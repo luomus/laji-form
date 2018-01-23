@@ -222,6 +222,7 @@ const widgets = importLocalComponents("widgets", [
 	"AutosuggestWidget",
 	"HiddenWidget",
 	"PlainTextWidget",
+	"TextSelectWidget",
 	"ImageSelectWidget",
 	"AnyToBooleanWidget",
 	"URLWidget",
