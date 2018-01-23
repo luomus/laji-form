@@ -53,7 +53,8 @@ export default class GeocoderField extends Component {
 
 		const hasData = fields.some(field => !isEmptyString(props.formData[field]));
 		const geometry = this.getGeometry(props);
-		if ((!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !equals(this.getGeometry(this.props), geometry))) {
+		const geometriesEqual = equals(this.getGeometry(this.props), geometry);
+		if ((geometry && geometry.geometries && geometry.geometries.length === 0 && !geometriesEqual) || (!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !geometriesEqual)) {
 			button ? this.onButtonClick()(props) : this.update(props);
 		}
 
@@ -63,12 +64,14 @@ export default class GeocoderField extends Component {
 	getButton(props, loading) {
 		// Button is disabled when loading is false 
 		// (it is false only after fetch and no formData updates, otherwise it will be true/undefined.
+		
+		const geometry = this.getGeometry(props);
 		return {
 			fn: this.onButtonClick,
 			position: "top",
 			key: loading,
 			render: onClick => (
-				<Button key="geolocate" onClick={onClick} disabled={loading === false}>
+				<Button key="geolocate" onClick={onClick} disabled={loading === false  || geometry.geometries.length === 0}>
 					<strong>
 						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
 						{" "}
@@ -121,7 +124,17 @@ export default class GeocoderField extends Component {
 			return _fields;
 		}, {});
 
-		if (!geometry || !geometry.geometries || !geometry.geometries.length) return;
+		if (!geometry || !geometry.geometries || !geometry.geometries.length) {
+			let {formData} = props;
+			fields.forEach(field => {
+				formData = {
+					...formData,
+					[field]: undefined
+				};
+			});
+			this.props.onChange(formData);
+			return;
+		}
 
 		const bounds = L.geoJson({ // eslint-disable-line no-undef
 			type: "FeatureCollection",
