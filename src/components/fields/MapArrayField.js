@@ -442,7 +442,6 @@ class LineTransectMapArrayField extends Component {
 
 	onComponentDidMount() {
 		this.onActiveChange(this.state.activeIdx);
-		this.map._closeTooltipFor(this.state.activeIdx)._openTooltipFor(this.state.activeIdx);
 	}
 }
 
