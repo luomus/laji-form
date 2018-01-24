@@ -92,7 +92,9 @@ export default class AutosuggestField extends Component {
 		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey} = uiOptions;
 		toggled = (toggled !== undefined)
 			? toggled
-			: this.state ? this.state.toggled : false;
+			: this.state
+				? this.state.toggled
+				: false;
 
 		let options = {
 			...uiOptions,
@@ -110,7 +112,10 @@ export default class AutosuggestField extends Component {
 					: formData[informalTaxonGroups] 
 						? formData[informalTaxonGroups][0] 
 						: undefined
-			)
+			),
+			placeholder: toggled 
+				? formContext.translations.UnitAutosuggestFieldTogglePlaceholder 
+				: uiOptions["ui:placeholder"]
 		};
 
 		if (uiOptions.toggleable) {

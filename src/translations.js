@@ -514,7 +514,7 @@
 	},
 	shorthandHelp: {
 		fi: "Kirjoitusmuoto: (määrä) LAJI (koiraiden yksilömäärä) (naaraiden yksilömäärä). Suluilla merkityt eivät ole pakollisia.",
-		en: "Format:(count) SPECIES (male individual count) (female individual count). The fields marked with brackets aren't required",
+		en: "Format: (count) SPECIES (male individual count) (female individual count). The fields marked with brackets aren't required",
 		sv: "Formatera: (antal) SPECIER (individantal av hane) (individantal av hone). Fälten markerade med parentes är inte nödvändiga."
 	},
 	finland: {
@@ -522,4 +522,9 @@
 		en: "Finland",
 		sv: "Finska"
 	},
+	unitAutosuggestFieldTogglePlaceholder: {
+		fi: "(määrä) LAJI (koir. yksilöm.) (naar. yksilöm.)",
+		en: "(count) SPECIES (male count) (female count)",
+		sv: "(antal) SPECIER (ind. av hane) (ind. av hone)"
+	}
 };
