@@ -1,0 +1,117 @@
+import React, { Component } from "react";
+import { getUiOptions } from "../../utils";
+import update from "immutability-helper";
+import { Checkbox } from "react-bootstrap";
+import BaseInput from "./BaseInput";
+
+class TextSelectWidget extends Component {
+	constructor(props) {
+		super();
+
+		this.state = this.getInitialState(props);
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getInitialState(props) {
+		let {enums = [], delimiter = ", ", freeTextField} = getUiOptions(props);
+		const {value} = props;
+
+		const selectedCheckboxes = new Set();
+
+		const values = !value ? [] : value.split(delimiter);
+
+		const otherValues = [];
+		values.map(val => {
+			if (enums.indexOf(val) !== -1) {
+				selectedCheckboxes.add(val);
+			} else {
+				otherValues.push(val);
+			}
+		});
+		if (otherValues.length > 0) {
+			selectedCheckboxes.add(freeTextField);
+		}
+
+		return {selectedCheckboxes, enums, otherValue: otherValues.join(delimiter), freeTextField};
+	}
+
+	getStateFromProps(props) {
+		let {enums = [], delimiter = ", "} = getUiOptions(props);
+		const {value} = props;
+		const values = !value ? [] : value.split(delimiter);
+
+		const otherValues = [];
+
+		values.map(val => {
+			if (enums.indexOf(val) === -1) {
+				otherValues.push(val);
+			}
+		});
+		return {otherValue: otherValues.join(delimiter)};
+	}
+
+	render() {
+		let {enums, otherValue, freeTextField, selectedCheckboxes} = this.state;
+
+		if (freeTextField) {
+			enums = update(enums, {$push: [freeTextField]});
+		}
+
+		return (
+            <div className="laji-text-select">
+                {enums.map((label, i) => {
+	                const changeFunction = () => {
+		                this.onCheckBoxChange(label);
+	                };
+	                return (
+                        <Checkbox key={i}
+                                  title={label}
+                                  checked={selectedCheckboxes.has(label)}
+                                  onClick={changeFunction}>{label}</Checkbox>
+	                );
+				})}
+                {freeTextField ?
+                        <BaseInput {...this.props}
+                                   id={this.props.id + "_input"}
+                                   value={otherValue}
+                                   onChange={this.onInputChange}
+                                   disabled={!selectedCheckboxes.has(freeTextField)} />
+                : null}
+            </div>
+		);
+	}
+
+	onCheckBoxChange = (label) => {
+	    const selectedCheckboxes = this.state.selectedCheckboxes;
+
+		if (selectedCheckboxes.has(label)) {
+			selectedCheckboxes.delete(label);
+		} else {
+			selectedCheckboxes.add(label);
+		}
+
+		this.setState({selectedCheckboxes: selectedCheckboxes});
+
+		this.onChange(this.state.otherValue);
+	};
+
+	onInputChange = (value) => {
+		this.onChange(value);
+	};
+
+	onChange = (textValue) => {
+		let newValue = [...this.state.selectedCheckboxes];
+		if (this.state.selectedCheckboxes.has(this.state.freeTextField)) {
+		    if (textValue && textValue.length > 0) {
+			newValue = update(newValue, {$push: [textValue]});
+		    }
+		    newValue.splice(newValue.indexOf(this.state.freeTextField), 1);
+		}
+		this.props.onChange(newValue.join(", "));
+	};
+}
+
+export default TextSelectWidget;
