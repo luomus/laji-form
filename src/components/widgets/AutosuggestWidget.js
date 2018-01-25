@@ -51,7 +51,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
 			);
 			return (
-				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+				<OverlayTrigger overlay={tooltip} placement="top">{input}</OverlayTrigger>
 			);
 		}
 
@@ -130,7 +130,7 @@ class FriendsAutosuggestWidget extends Component {
 			<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
 		);
 		return (
-			<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			<OverlayTrigger overlay={tooltip} placement="top">{input}</OverlayTrigger>
 		);
 	}
 
