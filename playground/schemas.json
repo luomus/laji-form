@@ -632,14 +632,20 @@
 							{
 								"ui:field": "InputTransformerField",
 								"ui:options": {
-									"rules": {
-										"images": {
-											"length": 1,
-											"transformations": {
-												"recordBasis": "MY.recordBasisHumanObservationPhoto"
+									"rules": [{
+										"transformations": {
+											"recordBasis": "MY.recordBasisHumanObservationPhoto"
+										},
+										"conditions": {
+											"images": {
+												"length": 1
+											},
+											"recordBasis": {
+												"regexp": "MY.recordBasisPreservedSpecimen",
+												"reverse": true
 											}
 										}
-									}
+									}]
 								}
 							}
 						],

@@ -17,19 +17,37 @@ export default class InputTransformerField extends Component {
 
 	onChange(formData) {
 		const {rules} = this.getUiOptions();
-		let passes = true;
-		for (let field in rules) {
-			const rule = rules[field];
-			const {regexp, length, transformations} = rule;
-			if (formData && formData[field] && formData[field] !== this.props.formData[field]) {
+		rules.forEach(({conditions, transformations}) => {
+			let passes = true;
+
+			// If transforming field is updated, do nothing
+			// (If a transforming field is also a condition field, the field would take the conditional value always when updated).
+			if (Object.keys(transformations).some(field => 
+				formData && formData[field] && formData[field] !== this.props.formData[field]
+			)) {
+				return;
+			}
+
+			// If condition fields didn't change, do nothing.
+			if (Object.keys(conditions).every(field => 
+				formData && formData[field] && formData[field] === this.props.formData[field]
+			)) {
+				return;
+			}
+
+			for (let field in conditions) {
+				const condition = conditions[field];
+				const {regexp, length, reverse} = condition;
 				if (passes && regexp !== undefined) {
-					const regexp = new RegExp(rule.regexp.replace("%default", this.props.schema.properties[field].default));
-					passes = `${formData[field]}`.match(regexp);
+					const regexp = new RegExp(condition.regexp.replace("%default", this.props.schema.properties[field].default));
+					const result = `${formData[field]}`.match(regexp);
+					passes = reverse ? !result : result;
 				}
 				if (passes && length !== undefined) {
-					passes = formData[field].length >= length;
+					const result = formData[field].length >= length;
+					passes = reverse ? !result : result;
 				}
-
+				if (!passes) break;
 			}
 			if (passes) {
 				let formDataChange = {};
@@ -38,7 +56,7 @@ export default class InputTransformerField extends Component {
 				}
 				formData = {...formData, ...formDataChange};
 			}
-		}
+		});
 		this.props.onChange(formData);
 	}
 }
