@@ -223,8 +223,8 @@ const buttonSettings = {
  * uiSchema = {"ui:options": {
  * additionalsGroupingPath: path to the field scope that defines groups
  * additionalsGroupsTranslator: one of scopeFieldsSettings translator
- * additionalsPersistenceId: instances with same persistence id use the same additional fields
- * additionalsPersistenceKey: form data property value for more fine grained persistence behaviour
+ * additionalsPersistenceKey: instances with same persistence id use the same additional fields
+ * additionalsPersistenceField: form data property value for more fine grained persistence behaviour
  *  uiSchema: <uiSchema> (ui schema for inner schema)
  *  fields: [<string>] (fields that are always shown)
  *  fieldScopes: {
@@ -255,8 +255,8 @@ export default class ScopeField extends Component {
 				includeAdditionalFieldsChooserButton: PropTypes.boolean,
 				additionalsGroupingPath: PropTypes.string,
 				additionalsGroupsTranslator: PropTypes.oneOf(Object.keys(scopeFieldSettings)),
-				additionalsPersistenceId: PropTypes.string,
 				additionalsPersistenceKey: PropTypes.string,
+				additionalsPersistenceField: PropTypes.string,
 				fieldScopes: PropTypes.object,
 				fields: PropTypes.arrayOf(PropTypes.string),
 				definitions: PropTypes.object,
@@ -338,18 +338,18 @@ export default class ScopeField extends Component {
 			includeAdditionalFieldsChooserButton
 		};
 
-		const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(props.uiSchema);
-		let additionalFields = additionalsPersistenceKey ? {} : (this.state ? this.state.additionalFields : {});
+		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(props.uiSchema);
+		let additionalFields = additionalsPersistenceField ? {} : (this.state ? this.state.additionalFields : {});
 
-		if (additionalsPersistenceId) {
+		if (additionalsPersistenceKey) {
 			const mainContext = this.getContext();
-			this._context = mainContext[ `scopeField_${additionalsPersistenceId}`];
+			this._context = mainContext[ `scopeField_${additionalsPersistenceKey}`];
 		}
 
 		if (this._context) {
 			let additionalsToAdd = {};
-			if (additionalsPersistenceKey) {
-				const formDataItem = props.formData[additionalsPersistenceKey];
+			if (additionalsPersistenceField) {
+				const formDataItem = props.formData[additionalsPersistenceField];
 				let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
 				items = ["undefined", ...items];
 				items.forEach(item => {
@@ -649,20 +649,20 @@ export default class ScopeField extends Component {
 		}, this.state.additionalFields);
 
 		if (this.context) {
-			const {additionalsPersistenceKey, additionalsPersistenceId} = getUiOptions(this.props.uiSchema);
-			const additionalsPersistenceVal = this.props.formData[additionalsPersistenceKey];
+			const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(this.props.uiSchema);
+			const additionalsPersistenceVal = this.props.formData[additionalsPersistenceField];
 			let contextEntry = this._context || {};
-			if (additionalsPersistenceKey) {
-				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceKey].type === "array") ?
+			if (additionalsPersistenceField) {
+				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceField].type === "array") ?
 						additionalsPersistenceVal :
 						[additionalsPersistenceVal]);
 				if (additionalsKeys.length === 0) additionalsKeys = ["undefined"];
 				additionalsKeys.forEach(persistenceKey => {
 					contextEntry[persistenceKey] = additionalFields;
 				});
-				this.getContext()[ `scopeField_${additionalsPersistenceId}`] = contextEntry;
-			} else if (additionalsPersistenceId) {
-				this.getContext()[ `scopeField_${additionalsPersistenceId}`] = additionalFields;
+				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = contextEntry;
+			} else if (additionalsPersistenceKey) {
+				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
 			}
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});

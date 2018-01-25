@@ -17,7 +17,6 @@ export default function BaseComponent(ComposedComponent) {
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadContextSettings(props, this.getContext());
 			if (!this.state && this.getStateFromProps) this.state = this.getStateFromProps(props);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.state = this.loadStateSettings(props, this.state);
-			this.updateSettingSaver(props);
 		}
 
 		loadSettings(props, target, rule) {
@@ -110,6 +109,11 @@ export default function BaseComponent(ComposedComponent) {
 			})) {
 				this.getContext().onSettingsChange();
 			}
+		}
+
+		componentDidMount() {
+			this.updateSettingSaver(this.props);
+			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentWillUnmount() {

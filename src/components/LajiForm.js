@@ -496,7 +496,9 @@ export default class LajiForm extends Component {
 		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
 
 		this.settingSavers = {};
-		this._context.addSettingSaver = (key, fn) => this.settingSavers[key] = fn;
+		this._context.addSettingSaver = (key, fn) => {
+			this.settingSavers[key] = fn;
+		}
 		this._context.removeSettingSaver = (key) => {
 			delete this.settingSavers[key];
 		};
@@ -850,7 +852,7 @@ export default class LajiForm extends Component {
 				settings[key] = this.settingSavers[key]();
 			} catch (e) {
 				// Swallow failing settings parsing.
-			}
+			} 
 			return settings;
 		}, {});
 	}

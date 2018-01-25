@@ -649,8 +649,8 @@
 							"additionalsGroupingPath": "/fieldScopes/informalTaxonGroups",
 							"additionalsGroupingOrderer": "informalTaxonGroups",
 							"additionalsGroupsTranslator": "taxonGroups",
-							"additionalsPersistenceKey": "informalTaxonGroups",
-							"additionalsPersistenceId": "gathering_unit_informalTaxonGroups",
+							"additionalsPersistenceField": "informalTaxonGroups",
+							"additionalsPersistenceKey": "gathering_unit_informalTaxonGroups",
 							"includeAdditionalFieldsChooserButton": true,
 							"glyphFields": [
 								{
