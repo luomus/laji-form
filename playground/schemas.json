@@ -656,7 +656,8 @@
 								{
 									"glyph": "camera",
 									"show": "images",
-									"label": "Lisää valokuva"
+									"label": "Lisää valokuva",
+									"open": true
 								},
 								{
 									"glyph": "map-marker",

@@ -338,7 +338,7 @@ export default class ScopeField extends Component {
 			includeAdditionalFieldsChooserButton
 		};
 
-		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(props.uiSchema);
+		const {additionalsPersistenceField, additionalsPersistenceKey, glyphFields = []} = getUiOptions(props.uiSchema);
 		let additionalFields = additionalsPersistenceField ? {} : (this.state ? this.state.additionalFields : {});
 
 		if (additionalsPersistenceKey) {
@@ -361,6 +361,12 @@ export default class ScopeField extends Component {
 			additionalFields = {...additionalFields, ...additionalsToAdd};
 		}
 		state.additionalFields = additionalFields;
+
+		glyphFields.forEach(({show, open}) => {
+			if (show && open) {
+				additionalFields[show] = true;
+			}
+		});
 
 		state = {...state, ...this.getSchemasAndAdditionals(props, state)};
 
