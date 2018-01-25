@@ -628,6 +628,19 @@
 										"hostID": "key"
 									}
 								}
+							},
+							{
+								"ui:field": "InputTransformerField",
+								"ui:options": {
+									"rules": {
+										"images": {
+											"length": 1,
+											"transformations": {
+												"recordBasis": "MY.recordBasisHumanObservationPhoto"
+											}
+										}
+									}
+								}
 							}
 						],
 						"ui:field": "ScopeField",

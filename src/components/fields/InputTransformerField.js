@@ -17,13 +17,24 @@ export default class InputTransformerField extends Component {
 
 	onChange(formData) {
 		const {rules} = this.getUiOptions();
+		let passes = true;
 		for (let field in rules) {
 			const rule = rules[field];
-			const regexp = new RegExp(rule.regexp.replace("%default", this.props.schema.properties[field].default));
-			if (formData && formData[field] && formData[field] !== this.props.formData[field] && `${formData[field]}`.match(regexp))  {
+			const {regexp, length, transformations} = rule;
+			if (formData && formData[field] && formData[field] !== this.props.formData[field]) {
+				if (passes && regexp !== undefined) {
+					const regexp = new RegExp(rule.regexp.replace("%default", this.props.schema.properties[field].default));
+					passes = `${formData[field]}`.match(regexp);
+				}
+				if (passes && length !== undefined) {
+					passes = formData[field].length >= length;
+				}
+
+			}
+			if (passes) {
 				let formDataChange = {};
-				if (rule.transformations) for (let transformField in rule.transformations) {
-					formDataChange[transformField] = rule.transformations[transformField];
+				if (transformations) for (let transformField in transformations) {
+					formDataChange[transformField] = transformations[transformField];
 				}
 				formData = {...formData, ...formDataChange};
 			}
