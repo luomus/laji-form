@@ -115,9 +115,15 @@ class SelectWidget extends Component {
 		this.setState({open: false});
 	};
 
-	getRef = elem => this.comboRef = elem;
+	setRef = elem => this.comboRef = elem;
 
 	getEnum = val => isEmptyString(val) ? undefined : val;
+
+	onMultiSelectKeyDown = e => {
+		if (e.key === "Enter" && !isEmptyString(this.comboRef.refs.inner.props.searchTerm)) {
+			e.stopPropagation();
+		}
+	}
 
 	render() {
 		const {
@@ -151,12 +157,14 @@ class SelectWidget extends Component {
 			<Multiselect 
 				{...commonOptions}
 				onChange={this.multiSelectOnChange}
+				onKeyDown={this.onMultiSelectKeyDown}
+				ref={this.setRef}
 			/>
 		) : (
 			<Combobox
 				{...commonOptions}
 				onChange={this.selectOnChange}
-				ref={this.getRef}
+				ref={this.setRef}
 				open={this.state.open}
 				onToggle={this.onToggle}
 				onClick={this.onClick}
