@@ -66,16 +66,6 @@ export default class AutosuggestField extends Component {
 
 	static getName() {return "AutosuggestField";}
 
-	constructor(props) {
-		super(props);
-		const {togglePersistenceKey} = getUiOptions(props.uiSchema);
-		let toggled = undefined;
-		if (togglePersistenceKey) {
-			toggled = this.getPersistenceContext(props).value;
-		}
-		this.state = this.getStateFromProps(props, toggled);
-	}
-
 	componentWillReceiveProps = (props) => {
 		this.setState(this.getStateFromProps(props));
 		if (this.onNextTick) {
@@ -84,15 +74,25 @@ export default class AutosuggestField extends Component {
 		}
 	}
 
-	getPersistenceContext = (props) => new Context(`${props.formContext.contextId}_AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`)
+	getPersistenceContextKey = (props) => `AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`
 	
 	getStateFromProps = (props, toggled) => {
 		let {schema, uiSchema, formData, formContext} = props;
 		const uiOptions = getUiOptions(uiSchema);
-		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey} = uiOptions;
+		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey, togglePersistenceKey} = uiOptions;
+
+		if (togglePersistenceKey) {
+			toggled = new Context(this.props.formContext.contextId)[this.getPersistenceContextKey(props)];
+			console.log(toggled, new Context(this.props.formContext.contextId), new Context(this.props.formContext.contextId)[this.getPersistenceContextKey(props)]);
+		}
+
 		toggled = (toggled !== undefined)
 			? toggled
-			: this.state ? this.state.toggled : false;
+			: this.state
+				?  this.state.toggled
+					: togglePersistenceKey
+						? new Context(this.props.formContext.contextId)[this.getPersistenceContextKey(props)]
+						: false;
 
 		let options = {
 			...uiOptions,
@@ -139,7 +139,7 @@ export default class AutosuggestField extends Component {
 	}
 
 	getActiveOptions = (options, toggled) => {
-		toggled = (toggled !== undefined) ? toggled : this.state.toggled;
+		toggled = (toggled !== undefined) ? toggled : (this.state || {}).toggled;
 		return toggled ? merge(options, options.toggleable) : options;
 	}
 
@@ -255,7 +255,7 @@ export default class AutosuggestField extends Component {
 	onToggleChange = (value) => {
 		const {togglePersistenceKey} = getUiOptions(this.props.uiSchema);
 		if (togglePersistenceKey) {
-			this.getPersistenceContext(this.props).value = value;
+			new Context(this.props.formContext.contextId)[this.getPersistenceContextKey(this.props)] = value;
 		}
 		this.setState(this.getStateFromProps(this.props, value));
 	}

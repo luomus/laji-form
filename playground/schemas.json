@@ -618,16 +618,68 @@
 							},
 							{
 								"ui:field": "AutosuggestField",
+								"ui:settings": [
+									"%/AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_unit"
+								],
 								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionInputField": "hostInformalNameString",
-									"suggestionValueField": "hostID",
-									"suggestionReceivers": {
-										"hostInformalNameString": "value",
-										"hostID": "key"
-									}
-								}
+												  "autosuggestField": "taxon",
+												  "allowNonsuggestedValue": true,
+												  "suggestionInputField": "identifications_0_taxon",
+												  "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
+												  "suggestionReceivers": {
+													"identifications_0_taxon": "value",
+													"informalTaxonGroups": "$taxonGroup",
+													"unitFact_autocompleteSelectedTaxonID": "key"
+												  },
+												  "inputTransformer": {
+													"regexp": "^(.*)\\?$",
+													"transformations": {
+													  "taxonConfidence": "MY.taxonConfidenceUnsure"
+													}
+												  },
+												  "informalTaxonGroups": "informalTaxonGroups",
+												  "informalTaxonGroupPersistenceKey": "units_informalTaxonGroup",
+												  "query": {
+													"informalTaxonGroup": {
+													  "parser": "arrayJoin",
+													  "field": "informalTaxonGroups"
+													}
+												  },
+												  "toggleable": {
+													"autosuggestField": "unit",
+													"query": {
+													  "includeNonMatching": true,
+													  "matchType": "exact,partial"
+													},
+													"selectOnlyOne": true,
+													"nonMatchingBeforeUnsuggested": true
+												  },
+												  "togglePersistenceKey": "unit",
+												  "autocopy": {
+													"type": "whitelist",
+													"filter": [
+													  "recordBasis",
+													  "informalTaxonGroups",
+													  "taxonConfidence",
+													  "lifeStage",
+													  "preservation",
+													  "plantLifeStage",
+													  "breeding",
+													  "atlasCode",
+													  "twitched",
+													  "nativeStatus",
+													  "identifications_0_det",
+													  "identifications_0_detDate",
+													  "identifications_0_identificationBasis",
+													  "samplingMethod",
+													  "unitGathering_habitatIUCN",
+													  "unitGathering_habitatDescription",
+													  "unitGathering_dateBegin",
+													  "unitGathering_dateEnd"
+													]
+												  }
+												}
+				
 							},
 							{
 								"ui:field": "InputTransformerField",
@@ -2727,6 +2779,7 @@
 			  "unitGathering_dateBegin": true,
 			  "unitGathering_dateEnd": false
 			}
-		  }
+		  },
+		  "%/AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_unit": true
 		} 
 }
