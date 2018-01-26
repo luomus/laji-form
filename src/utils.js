@@ -402,7 +402,7 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	const distFromTop = rect.top;
 	const viewportHeight = (window.innerHeight || html.clientHeight);
 	const distFromBottom = viewportHeight - rect.bottom;
-	const pageScrolled = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+	const pageScrolled = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 	if (!inView) {
 		if (distFromTop < topOffset) {
 			window.scrollTo(0, pageScrolled + rect.top - topOffset);

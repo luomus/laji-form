@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -61,7 +60,7 @@ export default class MapField extends Component {
 				formData = {
 					type: "GeometryCollection",
 					geometries: []
-				}
+				};
 			}
 		});
 		this.props.onChange(formData);
