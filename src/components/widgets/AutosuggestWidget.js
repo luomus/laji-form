@@ -279,7 +279,7 @@ export class Autosuggest extends Component {
 
 	findExactMatch = (suggestions, value = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase()));
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (suggestion.payload && !suggestion.payload.isNonMatching)));
 	}
 
 	findOnlyOneMatch = (suggestions) => {
@@ -343,20 +343,23 @@ export class Autosuggest extends Component {
 		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
 		const {value} = this.state;
-		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested} = this.props;
+		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, value);
 		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
 		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
+		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
 		if (onlyOneMatch) {
 			this.selectSuggestion(onlyOneMatch);
 		}	else if (exactMatch) {
 			this.selectSuggestion({...exactMatch, value});
-		}	else if (nonMatching) {
+		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
 			this.selectSuggestion(nonMatching);
 		} else {
-			this.selectUnsuggested(value);
+			if (!valueDidntChangeAndHasInformalTaxonGroup) {
+				this.selectUnsuggested(value);
+			}
 		}
 	}
 

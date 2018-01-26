@@ -619,7 +619,8 @@
 							{
 								"ui:field": "AutosuggestField",
 								"ui:settings": [
-									"%/AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_unit"
+									"%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit",
+									"%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup"
 								],
 								"ui:options": {
 												  "autosuggestField": "taxon",
@@ -2780,6 +2781,8 @@
 			  "unitGathering_dateEnd": false
 			}
 		  },
-		  "%/AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_unit": true
+		  "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": true,
+
+		  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup" : "MVL.37"
 		} 
 }

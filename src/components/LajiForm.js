@@ -572,7 +572,6 @@ export default class LajiForm extends Component {
 	componentWillReceiveProps(props) {
 		if (props.hasOwnProperty("lang") && this.props.lang !== props.lang) this.apiClient.flushCache();
 		this.setState(this.getStateFromProps(props));
-
 	}
 
 	getStateFromProps(props) {
@@ -583,14 +582,16 @@ export default class LajiForm extends Component {
 			translations,
 			formContext: {
 				translations,
-				lang: this.props.lang,
-				uiSchemaContext: this.props.uiSchemaContext,
-				settings: this.props.settings,
+				lang: props.lang,
+				uiSchemaContext: props.uiSchemaContext,
+				settings: this.state && this.state.formContext
+					? this.state.formContext.settings
+					: props.settings,
 				contextId: this._id,
 				getFormRef: this.getFormRef,
-				topOffset: this.props.topOffset,
-				bottomOffset: this.props.bottomOffset,
-				formID: this.props.id,
+				topOffset: props.topOffset,
+				bottomOffset: props.bottomOffset,
+				formID: props.id,
 				getWarnings: (data, id) => {
 					return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
 				},
@@ -858,7 +859,9 @@ export default class LajiForm extends Component {
 	}
 	
 	onSettingsChange = () => {
-		if (this.props.onSettingsChange) this.props.onSettingsChange(this.getSettings());
+		const settings = this.getSettings();
+		this.setState({formContext: {...this.state.formContext, settings}});
+		if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
 	}
 
 	addEventListener = (target, name, fn ) => {
