@@ -15,6 +15,16 @@ const cache = {};
 export default class GeocoderField extends Component {
 	static getName() {return "GeocoderField";}
 
+	constructor(props) {
+		super(props);
+		this.state = this.getStateFromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		const geometryUpdated = equals(this.getGeometry(props), this.getGeometry(this.props)) ? false : undefined;
+		this.setState(this.getStateFromProps(props, geometryUpdated));
+	}
+
 	componentDidMount() {
 		this.mounted = true;
 	}
