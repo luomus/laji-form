@@ -186,7 +186,6 @@ const fields = importLocalComponents("fields", [
 	"AutosuggestField",
 	"HiddenField",
 	"InitiallyHiddenField",
-	"InputTransformerField",
 	"ContextInjectionField",
 	"ImageArrayField",
 	"SplitField",
@@ -197,7 +196,6 @@ const fields = importLocalComponents("fields", [
 	"CombinedValueDisplayField",
 	"UiFieldMapperArrayField",
 	"ExtraLabelRowField",
-	"ConditionalField",
 	"SumField",
 	"NamedPlaceChooserField",
 	"NamedPlaceSaverField",
@@ -206,6 +204,8 @@ const fields = importLocalComponents("fields", [
 	"GeocoderField",
 	"TagArrayField",
 	"StringToArrayField",
+	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
+	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
@@ -236,6 +236,7 @@ function importLocalComponents(dir, fieldNames) {
 		} else {
 			const fieldName = Object.keys(field)[0];
 			if (typeof field[fieldName] === "string") {
+				console.warn(`Laji-form warning: ui:field ${fieldName} is an alias for ${field[fieldName]}. The aliases are for keeping forms backward compatible - please update the ui:field for this field.`);
 				fields[fieldName] = require(`./${dir}/${field[fieldName]}`).default;
 			} else {
 				fields[fieldName] = field[fieldName];
