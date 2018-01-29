@@ -279,7 +279,7 @@ export class Autosuggest extends Component {
 
 	findExactMatch = (suggestions, value = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (suggestion.payload && !suggestion.payload.isNonMatching)));
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
 	}
 
 	findOnlyOneMatch = (suggestions) => {
