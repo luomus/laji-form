@@ -50,7 +50,8 @@ export default class UnitShorthandField extends Component {
 		return {showSchema};
 	}
 
-	componentWillReceiveProps = () => {
+	componentWillReceiveProps = (props) => {
+		this.setState(this.getStateFromProps(props));
 		if (this.onNextTick) {
 			this.onNextTick();
 			this.onNextTick = undefined;

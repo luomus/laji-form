@@ -15,6 +15,16 @@ const cache = {};
 export default class GeocoderField extends Component {
 	static getName() {return "GeocoderField";}
 
+	constructor(props) {
+		super(props);
+		this.state = this.getStateFromProps(props);
+	}
+
+	componentWillReceiveProps(props) {
+		const geometryUpdated = equals(this.getGeometry(props), this.getGeometry(this.props)) ? false : undefined;
+		this.setState(this.getStateFromProps(props, geometryUpdated));
+	}
+
 	componentDidMount() {
 		this.mounted = true;
 	}
@@ -71,7 +81,7 @@ export default class GeocoderField extends Component {
 			position: "top",
 			key: loading,
 			render: onClick => (
-				<Button key="geolocate" onClick={onClick} disabled={loading === false  || geometry.geometries.length === 0}>
+				<Button key="geolocate" onClick={onClick} disabled={loading === false  || !geometry || !geometry.geometries || geometry.geometries.length === 0}>
 					<strong>
 						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
 						{" "}

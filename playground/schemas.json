@@ -618,15 +618,87 @@
 							},
 							{
 								"ui:field": "AutosuggestField",
+								"ui:settings": [
+									"%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit",
+									"%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup"
+								],
 								"ui:options": {
-									"autosuggestField": "taxon",
-									"allowNonsuggestedValue": true,
-									"suggestionInputField": "hostInformalNameString",
-									"suggestionValueField": "hostID",
-									"suggestionReceivers": {
-										"hostInformalNameString": "value",
-										"hostID": "key"
-									}
+												  "autosuggestField": "taxon",
+												  "allowNonsuggestedValue": true,
+												  "suggestionInputField": "identifications_0_taxon",
+												  "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
+												  "suggestionReceivers": {
+													"identifications_0_taxon": "value",
+													"informalTaxonGroups": "$taxonGroup",
+													"unitFact_autocompleteSelectedTaxonID": "key"
+												  },
+												  "inputTransformer": {
+													"regexp": "^(.*)\\?$",
+													"transformations": {
+													  "taxonConfidence": "MY.taxonConfidenceUnsure"
+													}
+												  },
+												  "informalTaxonGroups": "informalTaxonGroups",
+												  "informalTaxonGroupPersistenceKey": "units_informalTaxonGroup",
+												  "query": {
+													"informalTaxonGroup": {
+													  "parser": "arrayJoin",
+													  "field": "informalTaxonGroups"
+													}
+												  },
+												  "toggleable": {
+													"autosuggestField": "unit",
+													"query": {
+													  "includeNonMatching": true,
+													  "matchType": "exact,partial"
+													},
+													"selectOnlyOne": true,
+													"nonMatchingBeforeUnsuggested": true
+												  },
+												  "togglePersistenceKey": "unit",
+												  "autocopy": {
+													"type": "whitelist",
+													"filter": [
+													  "recordBasis",
+													  "informalTaxonGroups",
+													  "taxonConfidence",
+													  "lifeStage",
+													  "preservation",
+													  "plantLifeStage",
+													  "breeding",
+													  "atlasCode",
+													  "twitched",
+													  "nativeStatus",
+													  "identifications_0_det",
+													  "identifications_0_detDate",
+													  "identifications_0_identificationBasis",
+													  "samplingMethod",
+													  "unitGathering_habitatIUCN",
+													  "unitGathering_habitatDescription",
+													  "unitGathering_dateBegin",
+													  "unitGathering_dateEnd"
+													]
+												  }
+												}
+				
+							},
+							{
+								"ui:field": "InputTransformerField",
+								"ui:options": {
+									"rules": [{
+										"transformations": {
+											"recordBasis": "MY.recordBasisHumanObservationPhoto"
+										},
+										"conditions": {
+											"images": {
+												"length": 1
+											},
+											"recordBasis": {
+												"regexp": "MY.recordBasisPreservedSpecimen",
+												"reverse": true
+											}
+										}
+									}]
 								}
 							}
 						],
@@ -649,14 +721,15 @@
 							"additionalsGroupingPath": "/fieldScopes/informalTaxonGroups",
 							"additionalsGroupingOrderer": "informalTaxonGroups",
 							"additionalsGroupsTranslator": "taxonGroups",
-							"additionalsPersistenceKey": "informalTaxonGroups",
-							"additionalsPersistenceId": "gathering_unit_informalTaxonGroups",
+							"additionalsPersistenceField": "informalTaxonGroups",
+							"additionalsPersistenceKey": "gathering_unit_informalTaxonGroups",
 							"includeAdditionalFieldsChooserButton": true,
 							"glyphFields": [
 								{
 									"glyph": "camera",
 									"show": "images",
-									"label": "Lisää valokuva"
+									"label": "Lisää valokuva",
+									"open": true
 								},
 								{
 									"glyph": "map-marker",
@@ -2261,6 +2334,10 @@
 					},
 					"presence": {
 						"message": "Päivämäärä on pakollinen"
+					},
+					"compareDate": {
+						"hasTimeIfOtherHas": "dateEnd",
+						"message": "Aikavälin alulla %{value} pitää olla aika jos lopulla on"
 					}
 				},
 				"dateEnd": {
@@ -2707,6 +2784,9 @@
 			  "unitGathering_dateBegin": true,
 			  "unitGathering_dateEnd": false
 			}
-		  }
+		  },
+		  "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": true,
+
+		  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup" : "MVL.37"
 		} 
 }

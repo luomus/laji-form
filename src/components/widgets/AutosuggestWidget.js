@@ -51,7 +51,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
 			);
 			return (
-				<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+				<OverlayTrigger overlay={tooltip} placement="top">{input}</OverlayTrigger>
 			);
 		}
 
@@ -130,7 +130,7 @@ class FriendsAutosuggestWidget extends Component {
 			<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
 		);
 		return (
-			<OverlayTrigger overlay={tooltip}>{input}</OverlayTrigger>
+			<OverlayTrigger overlay={tooltip} placement="top">{input}</OverlayTrigger>
 		);
 	}
 
@@ -182,26 +182,30 @@ export class Autosuggest extends Component {
 			unsuggested: false,
 			focused: false,
 			value: props.value,
-			suggestion: isSuggested ? {} : undefined
+			suggestion: isSuggested ? {} : undefined,
 		};
+		this.state = {...this.state, ...this.getStateFromProps(props)};
 		this.apiClient = new ApiClient();
 	}
 
 	getStateFromProps(props) {
-		const {value, suggestionReceive} = props;
+		const {value, suggestionReceive = "key"} = props;
 		const {suggestion} = this.state;
-		if (!suggestion || suggestion[suggestionReceive || "key"] !== value) {
+		if (suggestion && suggestion[suggestionReceive] !== value && this.mounted) {
+			this.triggerConvert(props);
+		} else if (!suggestion) {
 			return {value: props.value};
 		}
 	}
 
 	componentWillReceiveProps(props) {
-		this.setState(this.getStateFromProps(props));
+		const state = this.getStateFromProps(props);
+		state && this.setState(state);
 	}
 
 	componentDidMount() {
 		this.mounted = true;
-		this.triggerConvert();
+		this.triggerConvert(this.props);
 		new Context(this.props.formContext.contextId).addKeyHandler(this.props.id, this.keyFunctions);
 	}
 
@@ -220,8 +224,8 @@ export class Autosuggest extends Component {
 		}
 	}
 
-	triggerConvert = () => {
-		const {value, getSuggestionFromValue} = this.props;
+	triggerConvert = (props) => {
+		const {value, getSuggestionFromValue} = props;
 		if (isEmptyString(value) || !getSuggestionFromValue) return;
 
 		this.setState({isLoading: true});
@@ -279,7 +283,7 @@ export class Autosuggest extends Component {
 
 	findExactMatch = (suggestions, value = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase()));
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
 	}
 
 	findOnlyOneMatch = (suggestions) => {
@@ -343,20 +347,23 @@ export class Autosuggest extends Component {
 		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
 		const {value} = this.state;
-		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested} = this.props;
+		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, value);
 		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
 		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
+		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
 		if (onlyOneMatch) {
 			this.selectSuggestion(onlyOneMatch);
 		}	else if (exactMatch) {
 			this.selectSuggestion({...exactMatch, value});
-		}	else if (nonMatching) {
+		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
 			this.selectSuggestion(nonMatching);
 		} else {
-			this.selectUnsuggested(value);
+			if (!valueDidntChangeAndHasInformalTaxonGroup) {
+				this.selectUnsuggested(value);
+			}
 		}
 	}
 

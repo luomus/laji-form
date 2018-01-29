@@ -66,16 +66,6 @@ export default class AutosuggestField extends Component {
 
 	static getName() {return "AutosuggestField";}
 
-	constructor(props) {
-		super(props);
-		const {togglePersistenceKey} = getUiOptions(props.uiSchema);
-		let toggled = undefined;
-		if (togglePersistenceKey) {
-			toggled = this.getPersistenceContext(props).value;
-		}
-		this.state = this.getStateFromProps(props, toggled);
-	}
-
 	componentWillReceiveProps = (props) => {
 		this.setState(this.getStateFromProps(props));
 		if (this.onNextTick) {
@@ -84,18 +74,36 @@ export default class AutosuggestField extends Component {
 		}
 	}
 
-	getPersistenceContext = (props) => new Context(`${props.formContext.contextId}_AUTOSUGGESTFIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`)
+	getTogglePersistenceContextKey = (props) => `AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_${props.uiSchema["ui:options"].togglePersistenceKey}`
+	getInformalTaxonGroupsPersistenceContextKey = (props) => `AUTOSUGGEST_FIELD_PERSISTENCE_${props.uiSchema["ui:options"].informalTaxonGroupPersistenceKey}`
 	
 	getStateFromProps = (props, toggled) => {
-		let {schema, uiSchema, formData, formContext} = props;
+		let {schema, uiSchema, formData} = props;
+		const context = new Context(this.props.formContext.contextId);
 		const uiOptions = getUiOptions(uiSchema);
-		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey} = uiOptions;
+		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey, togglePersistenceKey} = uiOptions;
+
+		if (togglePersistenceKey) {
+			toggled = context[this.getTogglePersistenceContextKey(props)];
+		}
+
 		toggled = (toggled !== undefined)
 			? toggled
 			: this.state
-				? this.state.toggled
-				: false;
+				?  this.state.toggled
+					: togglePersistenceKey
+						? context[this.getTogglePersistenceContextKey(props)]
+						: false;
 
+		const taxonGroupID = (
+			!informalTaxonGroups 
+			? undefined
+			: informalTaxonGroupPersistenceKey !== undefined 
+				? context[this.getInformalTaxonGroupsPersistenceContextKey(props)]
+				: formData[informalTaxonGroups] 
+					? formData[informalTaxonGroups][0] 
+					: undefined
+		);
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
@@ -104,17 +112,10 @@ export default class AutosuggestField extends Component {
 			isValueSuggested: this.isValueSuggested,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			onInformalTaxonGroupSelected: informalTaxonGroups ? this.onInformalTaxonGroupSelected : undefined,
-			taxonGroupID: (
-				!informalTaxonGroups 
-				? undefined
-				: informalTaxonGroupPersistenceKey !== undefined 
-					? new Context(`${formContext.contextId}_AUTOSUGGEST_FIELD_PERSISTENCE_${informalTaxonGroupPersistenceKey}`).value
-					: formData[informalTaxonGroups] 
-						? formData[informalTaxonGroups][0] 
-						: undefined
-			),
+			informalTaxonGroupsValue: props.formData[informalTaxonGroups],
+			taxonGroupID,
 			placeholder: toggled 
-				? formContext.translations.UnitAutosuggestFieldTogglePlaceholder 
+				? this.props.formContext.translations.UnitAutosuggestFieldTogglePlaceholder 
 				: uiOptions["ui:placeholder"]
 		};
 
@@ -140,11 +141,11 @@ export default class AutosuggestField extends Component {
 			[suggestionInputField]: {"ui:widget": "AutosuggestWidget", "ui:options": options}
 		};
 
-		return {schema, uiSchema: _uiSchema, toggled};
+		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
 	}
 
 	getActiveOptions = (options, toggled) => {
-		toggled = (toggled !== undefined) ? toggled : this.state.toggled;
+		toggled = (toggled !== undefined) ? toggled : (this.state || {}).toggled;
 		return toggled ? merge(options, options.toggleable) : options;
 	}
 
@@ -249,18 +250,18 @@ export default class AutosuggestField extends Component {
 	}
 
 	onInformalTaxonGroupSelected = (informalTaxonID) => {
-		const {formContext, uiSchema} = this.props;
+		const {uiSchema} = this.props;
 		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = this.getActiveOptions(getUiOptions(uiSchema));
 		this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		if (informalTaxonGroupPersistenceKey !== undefined) {
-			new Context(`${formContext.contextId}_AUTOSUGGEST_FIELD_PERSISTENCE_${informalTaxonGroupPersistenceKey}`).value = informalTaxonID;
+			new Context(this.props.formContext.contextId)[this.getInformalTaxonGroupsPersistenceContextKey(this.props)] = informalTaxonID;
 		}
 	}
 
 	onToggleChange = (value) => {
 		const {togglePersistenceKey} = getUiOptions(this.props.uiSchema);
 		if (togglePersistenceKey) {
-			this.getPersistenceContext(this.props).value = value;
+			new Context(this.props.formContext.contextId)[this.getTogglePersistenceContextKey(this.props)] = value;
 		}
 		this.setState(this.getStateFromProps(this.props, value));
 	}

@@ -61,26 +61,26 @@ class TextSelectWidget extends Component {
 		}
 
 		return (
-            <div className="laji-text-select">
-                {enums.map((label, i) => {
-	                const changeFunction = () => {
-		                this.onCheckBoxChange(label);
-	                };
-	                return (
-                        <Checkbox key={i}
-                                  title={label}
-                                  checked={selectedCheckboxes.has(label)}
-                                  onClick={changeFunction}>{label}</Checkbox>
-	                );
+			<div className="laji-text-select">
+				{enums.map((label, i) => {
+					const changeFunction = () => {
+						this.onCheckBoxChange(label);
+					};
+					return (
+						<Checkbox key={i}
+						          title={label}
+						          checked={selectedCheckboxes.has(label)}
+						          onClick={changeFunction}>{label}</Checkbox>
+					);
 				})}
-                {freeTextField ?
-                        <BaseInput {...this.props}
-                                   id={this.props.id + "_input"}
-                                   value={otherValue}
-                                   onChange={this.onInputChange}
-                                   disabled={!selectedCheckboxes.has(freeTextField)} />
-                : null}
-            </div>
+				{freeTextField ?
+					<BaseInput {...this.props}
+						id={this.props.id + "_input"}
+						value={otherValue}
+						onChange={this.onInputChange}
+						disabled={!selectedCheckboxes.has(freeTextField)} />
+				: null}
+			</div>
 		);
 	}
 
