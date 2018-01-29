@@ -88,8 +88,7 @@ export default function BaseComponent(ComposedComponent) {
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach(key => {
 				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						key = key.replace(/^%[^/]*/, "");
-						return parseSettingSaver(this.getContext(), key);
+						return parseSettingSaver(this.getContext(), key.replace(/^%[^/]*/, ""));
 					} else {
 						return parseSettingSaver(this.state, key);
 					}

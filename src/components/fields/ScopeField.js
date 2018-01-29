@@ -363,7 +363,7 @@ export default class ScopeField extends Component {
 		state.additionalFields = additionalFields;
 
 		glyphFields.forEach(({show, open}) => {
-			if (show && open) {
+			if (!(show in state.additionalFields) && show && open) {
 				additionalFields[show] = true;
 			}
 		});
