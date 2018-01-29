@@ -2334,6 +2334,10 @@
 					},
 					"presence": {
 						"message": "Päivämäärä on pakollinen"
+					},
+					"compareDate": {
+						"hasTimeIfOtherHas": "dateEnd",
+						"message": "Aikavälin alulla %{value} pitää olla aika jos lopulla on"
 					}
 				},
 				"dateEnd": {
