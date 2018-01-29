@@ -273,7 +273,8 @@ export class Autosuggest extends Component {
 		});
 	}
 
-	onSuggestionSelected = (e, {suggestion, method}) => {
+	onSuggestionSelected = (e, data) => {
+		const {suggestion, method} = data;
 		e.preventDefault();
 		if (method === "click") {
 			if ("id" in this.props) focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
@@ -344,27 +345,30 @@ export class Autosuggest extends Component {
 	}
 
 	afterBlurAndFetch = (suggestions) => {
-		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
+		// Wait for click triggering before executing.
+		setTimeout(() => {
+			if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
-		const {value} = this.state;
-		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue} = this.props;
+			const {value} = this.state;
+			const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue} = this.props;
 
-		const exactMatch = this.findExactMatch(suggestions, value);
-		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
-		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
-		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
+			const exactMatch = this.findExactMatch(suggestions, value);
+			const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
+			const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
+			const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
-		if (onlyOneMatch) {
-			this.selectSuggestion(onlyOneMatch);
-		}	else if (exactMatch) {
-			this.selectSuggestion({...exactMatch, value});
-		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
-			this.selectSuggestion(nonMatching);
-		} else {
-			if (!valueDidntChangeAndHasInformalTaxonGroup) {
-				this.selectUnsuggested(value);
+			if (onlyOneMatch) {
+				this.selectSuggestion(onlyOneMatch);
+			}	else if (exactMatch) {
+				this.selectSuggestion({...exactMatch, value});
+			}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
+				this.selectSuggestion(nonMatching);
+			} else {
+				if (!valueDidntChangeAndHasInformalTaxonGroup) {
+					this.selectUnsuggested(value);
+				}
 			}
-		}
+		}, 100);
 	}
 
 	render() {

@@ -296,11 +296,6 @@
 			],
 			"ui:field": "MapArrayField",
 			"ui:help": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
-			"ui:settings": [
-				"/mapOptions/tileLayerName",
-				"/mapOptions/overlayNames",
-				"/mapOptions/tileLayerOpacity"
-			],
 			"ui:options": {
 				"mapOptions": {
 					"controls": {
@@ -437,9 +432,6 @@
 							],
 							"rootUiSchema": {
 								"ui:field": "ScopeField",
-								"ui:settings": [
-									"%additionalFields/scopeField_gatherings"
-								],
 								"ui:options": {
 									"includeAdditionalFieldsChooserButton": true,
 									"additionalsPersistenceId": "gatherings",
@@ -2787,6 +2779,6 @@
 		  },
 		  "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": true,
 
-		  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup" : "MVL.37"
+		  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup" : "MVL.1"
 		} 
 }
