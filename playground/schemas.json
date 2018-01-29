@@ -683,7 +683,7 @@
 				
 							},
 							{
-								"ui:field": "InputTransformerField",
+								"ui:field": "ConditionalOnChangeField",
 								"ui:options": {
 									"rules": [{
 										"transformations": {
