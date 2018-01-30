@@ -71,6 +71,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
 		this.updatePopups(props);
 	}
 

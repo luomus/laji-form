@@ -49,7 +49,7 @@ const casePropType = PropTypes.shape({
  * }
  */
 @VirtualSchemaField
-export default class ConditionalField extends Component {
+export default class ConditionalUiSchemaField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -61,7 +61,7 @@ export default class ConditionalField extends Component {
 		})
 	}
 
-	static getName() {return  "ConditionalField";}
+	static getName() {return  "ConditionalUiSchemaField";}
 
 	checkRule = (props) => ({field, regexp}) => {
 		let value = parseJSONPointer(props.formData || {}, field);

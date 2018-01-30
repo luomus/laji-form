@@ -98,7 +98,7 @@ class DefaultMapArrayField extends Component {
 			color: "#999999",
 			fillOpacity: 0,
 			weight: 8
-		}
+		};
 	}
 
 	onMapChangeCreateGathering(events) {

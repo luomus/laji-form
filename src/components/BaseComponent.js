@@ -17,7 +17,6 @@ export default function BaseComponent(ComposedComponent) {
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadContextSettings(props, this.getContext());
 			if (!this.state && this.getStateFromProps) this.state = this.getStateFromProps(props);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.state = this.loadStateSettings(props, this.state);
-			this.updateSettingSaver(props);
 		}
 
 		loadSettings(props, target, rule) {
@@ -61,8 +60,9 @@ export default function BaseComponent(ComposedComponent) {
 		}
 
 		componentWillReceiveProps(props) {
-			super.componentWillReceiveProps && super.componentWillReceiveProps(props);
-			if (this.getStateFromProps) {
+			if (super.componentWillReceiveProps) {
+				super.componentWillReceiveProps(props);
+			} else if (this.getStateFromProps) {
 				const state = this.getStateFromProps(props);
 				if (state) this.setState(state);
 			}
@@ -88,8 +88,7 @@ export default function BaseComponent(ComposedComponent) {
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach(key => {
 				this.getContext().addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						key = key.replace(/^%[^/]*/, "");
-						return parseSettingSaver(this.getContext(), key);
+						return parseSettingSaver(this.getContext(), key.replace(/^%[^/]*/, ""));
 					} else {
 						return parseSettingSaver(this.state, key);
 					}
@@ -110,6 +109,11 @@ export default function BaseComponent(ComposedComponent) {
 			})) {
 				this.getContext().onSettingsChange();
 			}
+		}
+
+		componentDidMount() {
+			this.updateSettingSaver(this.props);
+			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentWillUnmount() {

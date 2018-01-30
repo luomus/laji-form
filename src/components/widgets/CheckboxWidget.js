@@ -41,7 +41,7 @@ export default class CheckboxWidget extends Component {
 		const hasLabel = !isEmptyString(label)  && options.label !== false;
 
 		const checkbox = (
-			<div onClick={onClick} onKeyDown={onKeyDown} className={`checkbox-container ${hasLabel ? "" : "field-without-label"}`}>
+			<div onClick={onClick} onKeyDown={onKeyDown} className="checkbox-container">
 				<Switch
 					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
 					defaultValue={allowUndefined ? null : false}
