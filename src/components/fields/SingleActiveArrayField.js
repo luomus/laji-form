@@ -758,7 +758,7 @@ const headerFormatters = {
 		component: (props) => {
 			const lineTransectFeature = {type:"Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: props.that.props.formData.map(item => item.geometry.coordinates)}};
 			const [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
-			return props.idx !== undefined ? <span className="text-muted">{`(${start}-${end}m)`}</span> : null;
+			return props.idx !== undefined ? <span className="text-muted">{`${start}-${end}m`}</span> : null;
 		}
 	}
 };
@@ -773,9 +773,8 @@ class AccordionHeader extends Component {
 	render() {
 		const {that, idx} = this.props;
 		const {props} = that;
-		const {uiSchema, formContext} = props;
+		const {uiSchema} = props;
 		const title = that.state.getTitle(idx);
-		const onDelete = that.onDelete(idx);
 		const popupData = that.state.popups[idx];
 
 		// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
