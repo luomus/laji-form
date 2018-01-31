@@ -136,9 +136,17 @@ export default class AutosuggestField extends Component {
 			options.query = parseQuery(options.query, props, [options.taxonGroupID]);
 		}
 
+		const innerUiSchema = getInnerUiSchema(uiSchema);
 		const _uiSchema = {
-			...getInnerUiSchema(uiSchema),
-			[suggestionInputField]: {"ui:widget": "AutosuggestWidget", "ui:options": options}
+			...innerUiSchema,
+			[suggestionInputField]: {
+				"ui:widget": "AutosuggestWidget",
+				...(innerUiSchema[suggestionInputField] || {}),
+				"ui:options": {
+					...getUiOptions(innerUiSchema[suggestionInputField]),
+					...options
+				},
+			}
 		};
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
