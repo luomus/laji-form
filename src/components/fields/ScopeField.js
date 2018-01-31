@@ -338,8 +338,11 @@ export default class ScopeField extends Component {
 			includeAdditionalFieldsChooserButton
 		};
 
-		const {additionalsPersistenceField, additionalsPersistenceKey, glyphFields = []} = getUiOptions(props.uiSchema);
-		let additionalFields = additionalsPersistenceField ? {} : (this.state ? this.state.additionalFields : {});
+		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(props.uiSchema);
+
+		let additionalFields = additionalsPersistenceField
+			?  {}
+			: (this.state ? this.state.additionalFields : {});
 
 		if (additionalsPersistenceKey) {
 			const mainContext = this.getContext();
@@ -362,12 +365,6 @@ export default class ScopeField extends Component {
 		}
 		state.additionalFields = additionalFields;
 
-		glyphFields.forEach(({show, open}) => {
-			if (!(show in state.additionalFields) && show && open) {
-				additionalFields[show] = true;
-			}
-		});
-
 		state = {...state, ...this.getSchemasAndAdditionals(props, state)};
 
 		return state;
@@ -377,16 +374,22 @@ export default class ScopeField extends Component {
 		let {schema, uiSchema, formData} = props;
 		let additionalFields = (state && state.additionalFields) ? Object.assign({}, state.additionalFields) : {};
 
-		let options = getUiOptions(uiSchema);
+		const options = getUiOptions(uiSchema);
+		let {fields = [], definitions, glyphFields = []} = options;
 		let generatedUiSchema = getInnerUiSchema(uiSchema);
 
 		let fieldsToShow = {};
 
-		if (options.fields) options.fields.forEach(field => {
+		fields.forEach(field => {
 			fieldsToShow[field] = schema.properties[field];
 		});
-
-		const definitions = options.definitions;
+		
+		glyphFields.reduce((additionalFields, {show, open}) => {
+			if (!(show in additionalFields) && show && open) {
+				additionalFields[show] = open;
+			}
+			return additionalFields;
+		}, additionalFields);
 
 		function addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue) {
 			let fieldScope = scopes[fieldSelector][fieldSelectorValue];

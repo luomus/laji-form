@@ -8,6 +8,7 @@ import { Panel, Table, Glyphicon, OverlayTrigger, Tooltip } from "react-bootstra
 import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString, scrollIntoViewIfNeeded, getUiOptions } from "../utils";
 import { getInjectedUiSchema } from "./fields/ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
+import equals from "deep-equal";
 
 import Form from "react-jsonschema-form";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -862,8 +863,10 @@ export default class LajiForm extends Component {
 	
 	onSettingsChange = () => {
 		const settings = this.getSettings();
-		this.setState({formContext: {...this.state.formContext, settings}});
-		if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
+		if (!equals(this.state.formContext.settings, settings)) {
+			this.setState({formContext: {...this.state.formContext, settings}});
+			if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
+		}
 	}
 
 	addEventListener = (target, name, fn ) => {
