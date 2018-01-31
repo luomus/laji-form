@@ -29,20 +29,25 @@ export default class NamedPlaceChooserField extends Component {
 	isArray = () => this.props.schema.type === "array"
 
 	onPlaceSelected = (place) => {
+		const getGathering = (schema) => {
+			let gathering = getDefaultFormState(
+				schema,
+				place.prepopulatedDocument.gatherings[0],
+				this.props.registry.definitions
+			);
+			gathering = Object.keys(gathering).reduce((_gathering, key) => {
+				const property = this.props.schema.items.properties[key];
+				if (property && !property.excludeFromCopy) {
+					_gathering[key] = gathering[key];
+				}
+				return _gathering;
+			}, {});
+			gathering.namedPlaceID = place.id;
+			return gathering;
+		}
 		try {
 			if (this.isArray()) { // gatherings array
-				let gathering = getDefaultFormState(
-					this.props.schema.items,
-					place.prepopulatedDocument.gatherings[0],
-					this.props.registry.definitions
-				);
-				gathering = Object.keys(gathering).reduce((_gathering, key) => {
-					if (this.props.schema.items.properties[key]) {
-						_gathering[key] = gathering[key];
-					}
-					return _gathering;
-				}, {});
-				gathering.namedPlaceID = place.id;
+				const gathering = getGathering(this.props.schema.items)
 
 				this.props.onChange([
 					...(this.props.formData || []),
@@ -51,18 +56,7 @@ export default class NamedPlaceChooserField extends Component {
 				this.setState({show: false});
 				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "activeIdx", this.props.formData.length);
 			} else { // gathering object
-				let gathering = getDefaultFormState(
-					this.props.schema,
-					place.prepopulatedDocument.gatherings[0],
-					this.props.registry.definitions
-				);
-				const blacklist = ["units", "dateBegin", "dateEnd", "weather", "namedPlaceID"];
-				gathering = Object.keys(gathering).reduce((_gathering, key) => {
-					if (this.props.schema.properties[key] && !blacklist.includes(key)) {
-						_gathering[key] = gathering[key];
-					}
-					return _gathering;
-				}, {});
+				let gathering = getGathering(this.props.schema);
 				gathering.namedPlaceID = place.id;
 
 				this.props.onChange({...this.props.formData, ...gathering});
