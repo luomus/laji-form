@@ -124,7 +124,7 @@ export default class UnitShorthandField extends Component {
 										value={this.props.formData[shorthandFieldName]}
 										formID={getUiOptions(this.props.uiSchema).formID || formContext.uiSchemaContext.formID}
 										help={help} 
-										id={shorthandFieldName ? `_laji-form_${id}` : `_laji-form_${id}`}
+										id={id}
 										formContext={formContext}
 										className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
