@@ -120,7 +120,7 @@ class SelectWidget extends Component {
 	getEnum = val => isEmptyString(val) ? undefined : val;
 
 	onMultiSelectKeyDown = e => {
-		if (e.key === "Enter" && !isEmptyString(this.comboRef.refs.inner.props.searchTerm)) {
+		if (e.key === "Enter" && this.comboRef.refs.inner.props.open) {
 			e.stopPropagation();
 		}
 	}
