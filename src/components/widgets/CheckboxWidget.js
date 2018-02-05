@@ -37,7 +37,7 @@ export default class CheckboxWidget extends Component {
 			onChange(getNextVal());
 		}
 
-		const {allowUndefined, invert} = {allowUndefined: true, invert: false, ...(options || {})};
+		const {allowUndefined, invert, help} = {allowUndefined: true, invert: false, ...(options || {})};
 		const hasLabel = !isEmptyString(label)  && options.label !== false;
 
 		const checkbox = (
@@ -56,7 +56,7 @@ export default class CheckboxWidget extends Component {
 		);
 
 		return !hasLabel ? checkbox : (
-			<Label label={label} required={required}>
+			<Label label={label} required={required} help={help}>
 				{checkbox}
 			</Label>
 		);
