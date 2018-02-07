@@ -3,171 +3,23 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
-import { Button, Label, Help, ErrorPanel } from "./components";
-import { Panel, Table, Glyphicon, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { isMultiSelect, focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, parseJSONPointer, getSchemaElementById, isEmptyString, scrollIntoViewIfNeeded, getUiOptions } from "../utils";
-import { getInjectedUiSchema } from "./fields/ContextInjectionField";
-import { deepEquals } from  "react-jsonschema-form/lib/utils";
+import { Button } from "./components";
+import { Panel, Table } from "react-bootstrap";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded } from "../utils";
 import equals from "deep-equal";
 
 import Form from "react-jsonschema-form";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
+import FieldTemplate from "./FieldTemplate";
+import ErrorListTemplate from "./ErrorListTemplate";
 
 import ApiClient from "../ApiClient";
 import Context from "../Context";
 import translations from "../translations.js";
 
-class _SchemaField extends Component {
-	constructor(props) {
-		super(props);
-		this.updateVirtualInstance(props, !!"initial");
-	}
-
-	componentDidMount() {
-		const {formContext} = this.props.registry;
-		const contextId = formContext.contextId;
-		const _context = new Context(contextId);
-		const {idToFocus} = _context;
-		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			focusById(formContext, _context.idToFocus);
-			_context.idToFocus = undefined;
-		}
-	}
-
-	componentWillReceiveProps(props) {
-		this.updateVirtualInstance(props);
-	}
-
-	updateVirtualInstance = (props, initial) => {
-		if ([props, this.props].some(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) &&
-		    (initial || !deepEquals([this.props, props]))) {
-			this.functionOutputProps = this.applyFunction(props);
-		}
-	}
-
-	applyFunction = (props) => {
-		let {"ui:functions": functions, "ui:childFunctions": childFunctions, ..._uiSchema} = (props.uiSchema || {});
-
-		const objectOrArrayAsArray = item => (
-			item ? 
-				(Array.isArray(item) ?
-					item : 
-					[item]) :
-				[]
-		);
-
-		if (childFunctions) {
-			functions = [
-				{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: objectOrArrayAsArray(childFunctions)}},
-				...objectOrArrayAsArray(functions)
-			];
-		}
-
-		if (!functions) return props;
-
-		let nonVirtualFound = false;
-
-		const _functions = ((Array.isArray(functions)) ? functions : [functions]);
-
-		const computedProps = _functions.reduce((_props, uiFn, idx) => {
-			if (nonVirtualFound) {
-				return _props;
-			}
-			_props = {..._props, uiSchema: {...uiFn, uiSchema: _props.uiSchema}};
-
-			if (!new Context("VIRTUAL_SCHEMA_NAMES")[uiFn["ui:field"]]) {
-				nonVirtualFound = true;
-				return {
-					..._props,
-					uiSchema: {
-						..._props.uiSchema,
-						"ui:functions": _functions.slice(idx + 1)
-					}
-				};
-			}
-
-			const {state = {}} = new props.registry.fields[uiFn["ui:field"]](_props);
-			return {
-				..._props, 
-				...state, 
-				registry: {
-					..._props.registry, 
-					...state.registry,
-					formContext: state.formContext || props.registry.formContext
-				}
-			};
-		}, {...props, uiSchema: _uiSchema, formContext: props.registry.formContext});
-
-		return computedProps;
-	}
-
-	render() {
-		const props = this.functionOutputProps || this.props;
-		let {schema, uiSchema = {}, registry} = props;
-
-		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
-			schema = {...schema, uniqueItems: false};
-		}
-
-		const options = getUiOptions(uiSchema);
-		if (typeof options.label === "string")  {
-			schema = {...schema, title: options.label};
-		}
-
-		if (
-			uiSchema["ui:field"] &&
-			uiSchema["ui:field"] !== "ContextInjectionField" &&
-			uiSchema["ui:field"] !== "InjectField" &&
-			uiSchema["ui:options"] &&
-			uiSchema["ui:options"].injections
-		) {
-			const {injections} = uiSchema["ui:options"];
-			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.formContext.uiSchemaContext);
-			uiSchema = {
-				...injectedUiSchema,
-				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
-			};
-		}
-
-		// Reset ArrayFieldTemplate
-		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
-			registry = {...registry, ArrayFieldTemplate};
-		}
-
-		return <SchemaField
-			{...props}
-			registry={registry}
-			schema={schema}
-			uiSchema={uiSchema}
-		/>;
-	}
-}
-
-const _TitleField = ({title, className, buttons, help, id}) => {
-	if (isEmptyString(title)) return null;
-
-	if (!help) return <legend className={className}>{title} {buttons}</legend>;
-
-	const tooltipElem = <Tooltip id={id + "-tooltip"}>
-							<span>
-								<strong>{title}</strong><br />
-								{help}
-							</span>
-						</Tooltip>;
-
-	return (
-		<legend>
-			<OverlayTrigger placement="right" overlay={tooltipElem}>
-				<span>{title} <Help /> {buttons}</span>
-			</OverlayTrigger>
-		</legend>
-	);
-};
-
 const fields = importLocalComponents("fields", [
-	{SchemaField: _SchemaField},
-	{TitleField: _TitleField},
+	"SchemaField",
+	"TitleField",
 	"ArrayField",
 	"ObjectField",
 	"NestField",
@@ -248,184 +100,6 @@ function importLocalComponents(dir, fieldNames) {
 	}, {});
 }
 
-function FieldTemplate({
-	id,
-	classNames,
-	label,
-	children,
-	rawErrors,
-	rawHelp,
-	description,
-	hidden,
-	required,
-	displayLabel,
-	schema,
-	uiSchema,
-	formContext
-	}) {
-
-	if (hidden || uiSchema["ui:field"] === "HiddenField") {
-		return children;
-	}
-	const inlineHelp = uiSchema["ui:inlineHelp"];
-	const belowHelp = uiSchema["ui:belowHelp"];
-	const ids = new Context(`${formContext.contextId}_IDS`);
-	const htmlId = `_laji-form_${formContext.contextId}_${id}`;
-	let elemId = undefined;
-	if (!ids[htmlId]  || ids[htmlId] === this) {
-		ids[htmlId] = this;
-		elemId = htmlId;
-	}
-
-	const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
-
-	let warnings = [];
-	const errors = (rawErrors || []).reduce((arr, err) => {
-		if (err.indexOf("[warning]") > -1) {
-			warnings.push(err.substring("[warning]".length));
-		} else {
-			arr.push(err);
-		}
-		return arr;
-	}, []);
-	if (warnings.length === 0) warnings = formContext.getWarnings(children.props.formData, id);
-	const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
-
-	return (
-		<div className={classNames + warningClassName} id={elemId}>
-			{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} required={required} /> : null}
-			{_displayLabel && description ? description : null}
-			<div>
-				{inlineHelp ? <div className="pull-left">{children}</div> : children}
-				{inlineHelp ? (
-					<div className="pull-left"><Help help={inlineHelp} id={`${elemId}-inline-help`} /></div>
-					) : null
-				}
-			</div>
-			{belowHelp ? 
-				<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
-				null
-			}
-			{errors.length > 0 ?
-				<div id={`laji-form-error-container-${id}`}>
-					<p></p>
-					<ul>
-						{errors.map((error, i) => (
-							<li key={i} className="text-danger">{error}</li>
-						))}
-					</ul>
-				</div> : null}
-			{warnings.length > 0 ?
-				<div id={`laji-form-warning-container-${id}`}>
-					<p></p>
-					<ul>
-						{warnings.map((warning, i) => (
-							<li key={i} className="text-warning">{warning}</li>
-						))}
-					</ul>
-				</div> : null}
-		</div>
-	);
-}
-
-class ErrorListTemplate extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {popped: true};
-		new Context(this.props.formContext.contextId).errorList = this;
-	}
-
-	expand = () => {
-		if (!this.state.popped) this.setState({popped: true});
-		this.refs.errorPanel.expand();
-		this.refs.warningPanel.expand();
-	};
-
-	render() {
-		const {errorSchema, schema, formContext} = this.props;
-		const {contextId, translations} = formContext;
-		const that = new Context(contextId).formInstance;
-		const clickHandler = that.errorClickHandler;
-
-		function walkErrors(path, id, errorSchema) {
-			const {__errors, ...properties} = errorSchema;
-			let {errors, warnings} = (__errors || []).reduce(({errors, warnings}, _error) => {
-				const _schema = parseJSONPointer(schema, path);
-				if (_error.indexOf("[warning]") > -1) {
-					warnings.push({
-						label: _schema.title,
-						error: _error.substring("[warning]".length),
-						id: id
-					});
-				} else {
-					errors.push({
-						label: _schema.title,
-						error: _error,
-						id: id
-					});
-				}
-				return {errors, warnings};
-			}, {errors: [], warnings: []});
-			Object.keys(properties).forEach(prop => {
-				let _path = path;
-				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
-				else _path = `${_path}/properties/${prop}`;
-				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop]);
-				errors = [...errors, ...childErrors.errors];
-				warnings = [...warnings, ...childErrors.warnings];
-			});
-			return {errors, warnings};
-		}
-
-		const {errors, warnings} = walkErrors("", "root", errorSchema);
-
-		const poppedToggle = (e) => {
-			e.stopPropagation();
-			this.setState({popped: !this.state.popped});
-		};
-		const revalidate = () => {
-			const that = new Context(this.props.formContext.contextId).formInstance;
-			that.submit(!"don`t propagate");
-			this.refs.errorPanel.expand();
-			this.refs.warningPanel.expand();
-		};
-		const submitWithWarnings = () => {
-			const that = new Context(this.props.formContext.contextId).formInstance;
-			that.submit("propagate", "ignore warnings");
-		};
-
-		return (
-			<div className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""} ${errors.length === 0 ? " laji-form-warning-list" : ""}`}
-				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
-				<ErrorPanel classNames="error-panel"
-							ref="errorPanel"
-							errors={errors}
-							title={translations.Errors}
-							clickHandler={clickHandler}
-							showToggle={true}
-							poppedToggle={poppedToggle}/>
-				<ErrorPanel classNames="warning-panel"
-							ref="warningPanel"
-							errors={warnings}
-							title={translations.Warnings}
-							clickHandler={clickHandler}
-							showToggle={errors.length === 0}
-							poppedToggle={poppedToggle}/>
-				<div className="panel-footer">
-					<div>
-                        {errors.length > 0 ?
-							<Button onClick={revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}
-							</Button> :
-							<Button onClick={submitWithWarnings}>{translations.SubmitWithWarnings}</Button>
-                        }
-					</div>
-				</div>
-			</div>
-		);
-	}
-}
-
-
 // Each form should have a unique id to keep Context private.
 let id = 0;
 function getNewId() {
@@ -433,7 +107,6 @@ function getNewId() {
 	id++;
 	return _id;
 }
-
 
 export default class LajiForm extends Component {
 	static propTypes = {
