@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Context from "../../Context";
-import { focusById, isMultiSelect, getUiOptions, getInjectedUiSchema } from "../../utils";
+import { focusById, isMultiSelect, getUiOptions } from "../../utils";
+import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
