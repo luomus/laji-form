@@ -124,7 +124,7 @@ export default class UnitShorthandField extends Component {
 										value={this.props.formData[shorthandFieldName]}
 										formID={getUiOptions(this.props.uiSchema).formID || formContext.uiSchemaContext.formID}
 										help={help} 
-										id={shorthandFieldName ? `_laji-form_${id}` : `_laji-form_${id}`}
+										id={id}
 										formContext={formContext}
 										className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
@@ -159,7 +159,39 @@ class CodeReader extends Component {
 	componentWillUnmount() {
 		this.mounted = false;
 	}
-	
+
+	onKeyDown = (e) => {
+		if (e.key === "Enter") {
+			this.getCode();
+		}
+	}
+
+	onFetcherInputChange = ({target: {value}}) => {
+		if (this.mounted) this.setState({value});
+	}
+
+	onAutosuggestChange = (formData) => {
+		this.props.onChange(formData);
+	}
+
+	onSuggestionSelected = ({payload: {unit}}) => {
+		const {formContext} = this.props;
+		if (formContext.formDataTransformers) {
+			unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+				const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
+				return state.formData;
+			}, unit);
+		}
+		this.props.onChange(unit);
+	}
+
+	renderSuggestion(suggestion) {
+		const {translations} = this.props;
+		return suggestion.payload.isNonMatching
+		? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
+		: suggestion.value;
+	}
+
 	render() {
 		const {translations} = this.props;
 
@@ -167,48 +199,18 @@ class CodeReader extends Component {
 		if (this.state.failed === true) validationState = "warning";
 		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
 
-		const onFetcherInputChange = ({target: {value}}) => {
-			if (this.mounted) this.setState({value});
-		};
-
-		const onAutosuggestChange = (formData) => {
-			this.props.onChange(formData);
-		};
-
-		const onKeyDown = e => {
-			if (e.key === "Enter") {
-				this.getCode();
-			}
-		};
-
 		const {formID, formContext} = this.props;
 
-		const onSuggestionSelected = ({payload: {unit}}) => {
-			if (formContext.formDataTransformers) {
-				unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
-					const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
-					return state.formData;
-				}, unit);
-			}
-			this.props.onChange(unit);
-		};
-
-		const renderSuggestion = (suggestion) => {
-			return suggestion.payload.isNonMatching ? 
-				<span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span> : 
-				suggestion.value;
-		};
-
 		const inputElem = (formID === LINE_TRANSECT_ID) ? (
-				<FetcherInput
-					id={this.props.id}
-					loading={this.state.loading}
-					value={this.state.value}
-					validationState={validationState}
-					onChange={onFetcherInputChange}
-					onBlur={this.getCode}
-					onKeyDown={onKeyDown}
-				/>
+			<FetcherInput
+				id={this.props.id}
+				loading={this.state.loading}
+				value={this.state.value}
+				validationState={validationState}
+				onChange={this.onFetcherInputChange}
+				onBlur={this.getCode}
+				onKeyDown={this.onKeyDown}
+			/>
 		) : (
 			<div className="unit-shorthand">
 				<Autosuggest
@@ -217,9 +219,9 @@ class CodeReader extends Component {
 						formID,
 						includeNonMatching: true
 					}}
-					onSuggestionSelected={onSuggestionSelected}
-					renderSuggestion={renderSuggestion}
-					onChange={onAutosuggestChange}
+					onSuggestionSelected={this.onSuggestionSelected}
+					renderSuggestion={this.renderSuggestion}
+					onChange={this.onAutosuggestChange}
 					formContext={formContext}
 					allowNonsuggestedValue={false}
 				/>

@@ -350,7 +350,7 @@ export class Autosuggest extends Component {
 			if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
 			const {value} = this.state;
-			const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue} = this.props;
+			const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
 			const exactMatch = this.findExactMatch(suggestions, value);
 			const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
@@ -363,10 +363,8 @@ export class Autosuggest extends Component {
 				this.selectSuggestion({...exactMatch, value});
 			}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
 				this.selectSuggestion(nonMatching);
-			} else {
-				if (!valueDidntChangeAndHasInformalTaxonGroup) {
-					this.selectUnsuggested(value);
-				}
+			} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
+				this.selectUnsuggested(value);
 			}
 		}, 100);
 	}

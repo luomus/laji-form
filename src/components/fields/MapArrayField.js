@@ -371,55 +371,15 @@ class UnitsMapArrayField extends Component {
 @_MapArrayField
 class LineTransectMapArrayField extends Component {
 	getOptions() {
-		const {geometryField} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
-		const lineTransect = latLngSegmentsToGeoJSONGeometry(formData.map(item => item.geometry.coordinates));
+		const lineTransect = {type: "MultiLineString", coordinates: formData.map(item => item.geometry.coordinates)};
 		return {
 			lineTransect: {
 				feature: {geometry: lineTransect},
 				activeIdx: this.state.activeIdx,
-				keepActiveTooltipOpen: true,
-				onChange: (events) => {
-					let state = {};
-					let formData = this.props.formData;
-					let formDataChanged = false;
-					events.forEach(e => {
-						switch (e.type) {
-						case "insert": {
-							formDataChanged = true;
-							const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-							newItem[geometryField] = e.geometry;
-							formData = update(formData, {
-								$splice: [[e.idx, 0, newItem]]
-							});
-							break;
-						}
-						case "edit": {
-							formDataChanged = true;
-							formData = update(formData, {
-								[e.idx]: {
-									[geometryField]: {$set: e.geometry}
-								}
-							});
-							break;
-						}
-						case "delete": {
-							formDataChanged = true;
-							formData = update(formData, {$splice: [[e.idx, 1]]});
-							break;
-						}
-						case "active": {
-							state.activeIdx = e.idx;
-						}
-						}
-					});
-					const afterState = () => {
-						if (formDataChanged) {
-							this.props.onChange(formData);
-						}
-					};
-					Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
-				}
+				onChange: this.onChange,
+				getFeatureStyle: this.getFeatureStyle,
+				getTooltip: this.getTooltip
 			},
 			draw: false,
 			controls: {
@@ -428,18 +388,84 @@ class LineTransectMapArrayField extends Component {
 		};
 	}
 
+	onChange = (events) => {
+		const {geometryField} = getUiOptions(this.props.uiSchema);
+		let state = {};
+		let {formData} = this.props;
+		let formDataChanged = false;
+		events.forEach(e => {
+			switch (e.type) {
+			case "insert": {
+				formDataChanged = true;
+				const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+				newItem[geometryField] = e.geometry;
+				formData = update(formData, {
+					$splice: [[e.idx, 0, newItem]]
+				});
+				break;
+			}
+			case "edit": {
+				formDataChanged = true;
+				formData = update(formData, {
+					[e.idx]: {
+						[geometryField]: {$set: e.geometry}
+					}
+				});
+				break;
+			}
+			case "delete": {
+				formDataChanged = true;
+				formData = update(formData, {$splice: [[e.idx, 1]]});
+				break;
+			}
+			case "active": {
+				state.activeIdx = e.idx;
+			}
+			}
+		});
+		const afterState = () => {
+			if (formDataChanged) {
+				this.props.onChange(formData);
+			}
+		};
+		Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
+	}
+
+	getFeatureStyle = ({lineIdx, style}) => {
+		if (this.props.errorSchema[lineIdx]) {
+			return {...style, fillColor: "#ff0000"};
+		}
+		const {gatheringFact = {}} = this.props.formData[lineIdx];
+		const {lineTransectSegmentCounted} = gatheringFact;
+		if (!lineTransectSegmentCounted) {
+			return { ...style, fillColor: "#444444"};
+		}
+	}
+
+	getTooltip = (lineIdx, content) => {
+		const {translations} = this.props.formContext;
+		if (this.props.errorSchema[lineIdx]) {
+			content = `${content}<br/><span class=\"text-danger\">${translations.LineTransectSegmentHasErrors}!</span>`;
+		}
+		const {gatheringFact = {}} = this.props.formData[lineIdx];
+		const {lineTransectSegmentCounted} = gatheringFact;
+		if (!lineTransectSegmentCounted) content = `${content}<br/>${translations.LineTransectSegmentNotCounted}`;
+		return content;
+	}
+
 	onActiveChange(idx) {
 		this.getContext().setImmediate(() =>
-			this.map.map.fitBounds(this.map._allCorridors[idx].getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13})
+			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13}) // eslint-disable-line no-undef
 		);
-		this.map._openTooltipFor(idx);
 		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
 	}
+	
 	onComponentDidUpdate(prevProps, prevState) {
 		if (prevState.activeIdx !== this.state.activeIdx) {
 			this.onActiveChange(this.state.activeIdx);
 		}
 	}
+
 	onComponentDidMount() {
 		this.onActiveChange(this.state.activeIdx);
 	}

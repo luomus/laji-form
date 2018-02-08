@@ -526,5 +526,15 @@
 		fi: "(määrä) LAJI (koir. yksilöm.) (naar. yksilöm.)",
 		en: "(count) SPECIES (male count) (female count)",
 		sv: "(antal) SPECIER (ind. av hane) (ind. av hone)"
-	}
+	},
+	lineTransectSegmentHasErrors: {
+		fi: "Pätkällä on virheitä",
+		en: "Segment has errors",
+		sv: "Segmentet har fel"
+	},
+	lineTransectSegmentNotCounted: {
+		fi: "Pätkää ei lasketa",
+		en: "Segment isn't counted",
+		sv: "Segmentet räknas inte"
+	},
 };

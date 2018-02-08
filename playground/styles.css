@@ -648,6 +648,9 @@ min-height: 20px;
 	overflow: hidden;
 	width: 0px; /** Ellipsis overflowing doesn't work without fixed width **/
 }
+.laji-form .laji-form-accordion-header .pager .panel-title > *:first-child {
+	width: auto;
+}
 
 .laji-form .map-highlight, .laji-form.reorder-active {
 	border-color: #66afe9;
@@ -1152,4 +1155,8 @@ min-height: 20px;
 
 .laji-form .laji-text-select .checkbox {
 	margin: 0;
+}
+
+.laji-form .laji-map .leaflet-draw-tooltip .text-danger {
+	color: #ffbbbb;
 }
