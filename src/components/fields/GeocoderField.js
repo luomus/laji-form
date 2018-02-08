@@ -81,7 +81,7 @@ export default class GeocoderField extends Component {
 			position: "top",
 			key: loading,
 			render: onClick => (
-				<Button key="geolocate" onClick={onClick} disabled={loading === false  || !geometry || !geometry.geometries || geometry.geometries.length === 0}>
+				<Button key="geolocate" onClick={onClick} disabled={!this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)}>
 					<strong>
 						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
 						{" "}
@@ -95,11 +95,11 @@ export default class GeocoderField extends Component {
 	onButtonClick = () => (props) => {
 		this.mounted ? this.setState(this.getStateFromProps(this.props, true), () => {
 			this.update(props, () => {
-				this.setState(this.getStateFromProps(this.props, false));
+				this.setState({...this.getStateFromProps(this.props, false), timeout: false});
 			});
 		}) : 
 		this.update(props, () => {
-			this.setState(this.getStateFromProps(this.props, false));
+			this.setState({...this.getStateFromProps(this.props, false), timeout: false});
 		});
 	}
 
@@ -158,6 +158,15 @@ export default class GeocoderField extends Component {
 
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
+		const afterFetch = (callback) => {
+			console.log(this.fetching);
+			if (this.fetching) {
+				mainContext.popBlockingLoader();
+				if (callback) callback();
+			}
+			this.fetching = false;
+		}
+
 		const handleResponse = (country, ...fields) => (response) => {
 			fields = fields.reduce((_fields, field) => {
 				_fields[field] = true;
@@ -191,7 +200,6 @@ export default class GeocoderField extends Component {
 				}
 			};
 
-
 			if (response.status === "OK") {
 				const found = {};
 				Object.keys(parsers).forEach(field => {
@@ -216,23 +224,38 @@ export default class GeocoderField extends Component {
 					});
 				});
 				if (country) changes.country = country;
-				this.props.onChange({...props.formData, ...changes});
-				mainContext.popBlockingLoader();
-				if (callback) callback();
+				afterFetch(() => {
+					this.props.onChange({...props.formData, ...changes})
+					if (callback) callback();
+				});
 			} else if (country) {
 				fetchForeign();
 			}
 		};
 
 		const fetchForeign = () => {
-			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${props.formContext.googleApiKey}&language=en&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`)
-			    .then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
-				mainContext.popBlockingLoader();
-				if (callback) callback();
+			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
+				?latlng=${lat},${lng}\
+				&key=${props.formContext.googleApiKey}\
+				&language=en\
+				&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
+			).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
+				afterFetch(callback);
 			});
 		};
 
 		mainContext.pushBlockingLoader();
+
+		this.fetching = true;
+
+		this.getContext().setTimeout(() => {
+			if (this.fetching) {
+				afterFetch();
+				this.setState({timeout: true}, () => {
+					this.setState(this.getStateFromProps(this.props, false));
+				});
+			}
+		}, 5 * 1000);
 
 		!bounds.overlaps(finlandBounds) ? 
 			fetchForeign() :
@@ -246,8 +269,7 @@ export default class GeocoderField extends Component {
 			}).then(response => {
 				return response.json();
 			}).then(handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince")).catch(() => {
-				mainContext.popBlockingLoader();
-				if (callback) callback();
+				afterFetch(callback);
 			});
 	}
 
