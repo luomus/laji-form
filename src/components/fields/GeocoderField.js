@@ -107,7 +107,7 @@ export default class GeocoderField extends Component {
 		const {uiSchema, formData} = props;
 		const {geometryField = "geometry"} = getUiOptions(uiSchema);
 		let geometry = formData[geometryField];
-		if (geometry.type !== "GeometryCollection") {
+		if ("type" in geometry && geometry.type !== "GeometryCollection") {
 			geometry = {type:  "GeometryCollection", geometries: [geometry]};
 		}
 		if (formData.units) formData.units.forEach(({unitGathering}) => {
@@ -162,7 +162,6 @@ export default class GeocoderField extends Component {
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
 		const afterFetch = (callback) => {
-			console.log(this.fetching);
 			if (this.fetching) {
 				mainContext.popBlockingLoader();
 				if (callback) callback();
