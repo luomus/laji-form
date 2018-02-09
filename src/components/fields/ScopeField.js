@@ -15,7 +15,7 @@ const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (props, taxonGroup) => {
 			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
-				return response.name.content;
+				return response.name;
 			}).catch(() => {
 				return "";
 			});
