@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Context from "../../Context";
 import { focusById, isMultiSelect, getUiOptions } from "../../utils";
+import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
@@ -10,6 +11,7 @@ export default class _SchemaField extends Component {
 	constructor(props) {
 		super(props);
 		this.updateVirtualInstance(props, !!"initial");
+		this.state = {showAnnotations: false};
 	}
 
 	componentDidMount() {
@@ -115,6 +117,17 @@ export default class _SchemaField extends Component {
 			uiSchema = {
 				...injectedUiSchema,
 				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+			};
+		}
+
+		if (uiSchema["ui:annotations"]) {
+			uiSchema = {
+				...uiSchema,
+				"ui:functions": [
+					...(uiSchema["ui:functions"] || []),
+					{"ui:field": "AnnotationField", "ui:options": (isObject(uiSchema["ui:annotations"]) ? uiSchema["ui:annotations"] : {})}
+				],
+				"ui:annotations": undefined
 			};
 		}
 

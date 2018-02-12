@@ -139,11 +139,9 @@ export default class ImageArrayField extends Component {
 							<LajiForm
 								{...metadataForm}
 								uiSchema={{...metadataForm.uiSchema, "ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})}}}
-								contextId={this.props.idSchema.$id}
 								formData={state.modalMetadata}
 								onChange={onChange}
 								onSubmit={this.onImageMetadataUpdate}
-								autoFocus={false}
 								lang={lang}>
 								{(metadataSaveSuccess !== undefined) ? (
 										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>

@@ -6,7 +6,7 @@ import Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 
-import { isEmptyString, getUiOptions, isNullOrUndefined } from "../../utils";
+import { isEmptyString, getUiOptions, isNullOrUndefined, filter } from "../../utils";
 
 class SelectWidget extends Component {
 
@@ -48,15 +48,10 @@ class SelectWidget extends Component {
 			});
 		}
 
-		const {filter, filterType = "blacklist", labels, order} = getUiOptions(props);
+		const {filter: _filter, filterType, labels, order} = getUiOptions(props);
 
-		if (filter) {
-			const filterEnumsDictionary = {};
-			filter.forEach(_enum => { filterEnumsDictionary[_enum] = true; });
-
-			const filterFn = ({value}) => filterEnumsDictionary[value];
-
-			enumOptions = enumOptions.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
+		if (_filter) {
+			enumOptions = filter(enumOptions, _filter, filterType, item => item.value);
 		}
 
 		if (labels) {

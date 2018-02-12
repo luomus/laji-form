@@ -124,6 +124,31 @@
 			"gatheringEvent",
 			"gatherings"
 		],
+		"ui:annotations": {
+			"container": "modal",
+			"add": {
+				"adminOnly": true,
+				"type": "MAN.typeOpinion",
+				"filter": {
+					"filterType": "blacklist",
+					"filter": ["opinion"]
+				},
+				"uiSchema": {
+					"annotationClass": {
+						"ui:widget": "AnyToBooleanWidget",
+						"ui:options": {
+							"trueValue": "MAN.annotationClassReliable",
+							"falseValue": "MAN.annotationClassUnreliable",
+							"allowUndefined": false
+						}
+					}
+				},
+				"formData": {
+					"annotationClass": "MAN.annotationClassReliable"
+				}
+				
+			}
+		},
 		"ui:field": "InjectField",
 		"ui:options": {
 			"injections": {
@@ -502,6 +527,9 @@
 					},
 					"ui:field": "SingleActiveArrayField",
 					"ui:title": "",
+					"ui:settings": [
+						"/activeIdx"
+					],
 					"ui:options": {
 						"renderer": "table",
 						"normalRenderingTreshold": "sm",
@@ -699,6 +727,31 @@
 						"ui:settings": [
 							"%additionalFields/scopeField_gathering_unit_informalTaxonGroups"
 						],
+						"ui:annotations": {
+							"container": "modal",
+							"adminOnly": true,
+							"add": {
+								"type": "MAN.typeOpinion",
+								"filter": {
+									"filterType": "blacklist",
+									"filter": ["opinion"]
+								},
+								"uiSchema": {
+									"annotationClass": {
+										"ui:widget": "AnyToBooleanWidget",
+										"ui:options": {
+											"trueValue": "MAN.annotationClassReliable",
+											"falseValue": "MAN.annotationClassUnreliable",
+											"allowUndefined": false
+										}
+									}
+								},
+								"formData": {
+									"annotationClass": "MAN.annotationClassReliable"
+								}
+								
+							}
+						},
 						"ui:order": [
 							"identifications",
 							"count",
@@ -2693,82 +2746,163 @@
 					"MY.habitatEnumValue55"
 				]
 			}
-		}
-	},
-	"uiSchemaContext": {
+		},
 		"creator": "MA.308",
 		"formID": "JX.519",
-		"activeGatheringIdx": 0
+		"activeGatheringIdx": 0,
+		"isAdmin": true,
+		"annotations": {
+			"JX.129099#5": [
+			  {
+				"deleted": false,
+				"notes": "Käki. Ihan varmasti.",
+				"created": "2018-02-08T13:36:03+00:00",
+				"createdTimestamp": 1518096963,
+				"opinion": "käki",
+				"annotationClass": "MAN.annotationClassReliable",
+				"annotationByPerson": "MA.308",
+				"id": "http://tun.fi/MAN.416",
+				"type": "http://tun.fi/MAN.typeOpinion"
+			  },
+			  {
+				"deleted": false,
+				"notes": "No eikä ole!",
+				"created": "2018-02-08T13:36:49+00:00",
+				"createdTimestamp": 1518097009,
+				"annotationClass": "MAN.annotationClassUnreliable",
+				"annotationByPerson": "MA.308",
+				"id": "http://tun.fi/MAN.417",
+				"type": "http://tun.fi/MAN.typeOpinion"
+			  }
+			]
+		}
 	},
 	"formData":{
-  "creator": "MA.308",
-  "gatheringEvent": {
-    "legPublic": true,
-    "id": "JX.129012#1",
-    "@type": "MZ.gatheringEvent",
-    "leg": [
-      "MA.308"
-    ]
-  },
-  "formID": "MHL.9",
-  "editors": [
-    "MA.308"
-  ],
-  "secureLevel": "MX.secureLevelNone",
-  "gatherings": [
-    {
-      "units": [
-        {
-          "taxonConfidence": "MY.taxonConfidenceUnsure",
-          "images": [
-            "MM.91124"
-          ],
-          "informalTaxonGroups": [
-            "MVL.145",
-            "MVL.1"
-          ],
-          "id": "JX.129012#3",
-          "@type": "MY.unit",
-          "identifications": [
-            {
-              "taxon": "varpunen",
-              "id": "JX.129012#4",
-              "@type": "MY.identification"
-            }
-          ],
-          "unitFact": {
-            "autocompleteSelectedTaxonID": "MX.36573"
-          }
-        }
-      ],
-      "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              27.410016277451,
-              63.405036313801
-            ]
-          }
-        ]
-      },
-      "id": "JX.129012#2",
-      "@type": "MY.gathering",
-      "dateBegin": "2017-12-20"
-    }
-  ],
-  "publicityRestrictions": "MZ.publicityRestrictionsPrivate",
-  "sourceID": "KE.389",
-  "collectionID": "HR.1747",
-  "editor": "MA.308",
-  "dateEdited": "2017-12-20T11:24:32+02:00",
-  "dateCreated": "2017-12-20T11:24:32+02:00",
-  "id": "JX.129012",
-  "@type": "MY.document",
-  "@context": "http://schema.laji.fi/context/document.jsonld",
-  "_hasChanges": true
-} ,
+	  "id": "JX.129099",
+	  "formID": "JX.519",
+	  "editors": [
+		"MA.97",
+		"MA.314",
+		"MA.308"
+	  ],
+	  "gatheringEvent": {
+		"legPublic": true,
+		"id": "JX.129099#1",
+		"@type": "MZ.gatheringEvent",
+		"leg": [
+		  "MA.97",
+		  "MA.314",
+		  "MA.308"
+		],
+		"dateBegin": "2018-01-25"
+	  },
+	  "gatherings": [
+		{
+		  "units": [
+			{
+			  "recordBasis": "MY.recordBasisHumanObservation",
+			  "count": "3",
+			  "identifications": [
+				{
+				  "taxon": "Kettu",
+				  "identificationBasis": [
+					"MY.identificationBasisSeen"
+				  ],
+				  "id": "JX.129099#4",
+				  "@type": "MY.identification"
+				}
+			  ],
+			  "maleIndividualCount": 1,
+			  "femaleIndividualCount": 2,
+			  "id": "JX.129099#3",
+			  "@type": "MY.unit",
+			  "informalTaxonGroups": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "unitGathering": {
+				"id": "JX.129099#7",
+				"@type": "MZ.unitGathering"
+			  }
+			},
+			{
+			  "recordBasis": "MY.recordBasisHumanObservationPhoto",
+			  "count": "2",
+			  "sex": "MY.sexM",
+			  "identifications": [
+				{
+				  "taxon": "Käki",
+				  "identificationBasis": [
+					"MY.identificationBasisHeard"
+				  ],
+				  "id": "JX.129099#6",
+				  "@type": "MY.identification"
+				}
+			  ],
+			  "id": "JX.129099#5",
+			  "@type": "MY.unit",
+			  "informalTaxonGroups": [],
+			  "taxonConfidence": "MY.taxonConfidenceSure",
+			  "images": [],
+			  "unitGathering": {
+				"id": "JX.129099#8",
+				"@type": "MZ.unitGathering"
+			  }
+			}
+		  ],
+		  "geometry": {
+			"type": "Polygon",
+			"coordinates": [
+			  [
+				[
+				  24.832164854609,
+				  60.213812181191
+				],
+				[
+				  25.012430260804,
+				  60.216636768062
+				],
+				[
+				  25.00698199915,
+				  60.306335538727
+				],
+				[
+				  24.826223442878,
+				  60.303500722369
+				],
+				[
+				  24.832164854609,
+				  60.213812181191
+				]
+			  ]
+			],
+			"coordinateVerbatim": "668:338"
+		  },
+		  "habitat": [
+			"MY.habitatEnumValue1"
+		  ],
+		  "country": "Suomi",
+		  "municipality": "Espoo",
+		  "id": "JX.129099#2",
+		  "@type": "MY.gathering",
+		  "images": [],
+		  "taxonCensus": []
+		}
+	  ],
+	  "keywords": [
+		"2018",
+		"testi"
+	  ],
+	  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+	  "sourceID": "KE.389",
+	  "collectionID": "HR.1747",
+	  "creator": "MA.97",
+	  "editor": "MA.97",
+	  "dateEdited": "2018-01-26T13:39:43+02:00",
+	  "dateCreated": "2018-01-26T07:07:02+02:00",
+	  "@type": "MY.document",
+	  "@context": "http://schema.laji.fi/context/document.jsonld",
+	  "secureLevel": "MX.secureLevelNone"
+	},
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",
 		  "%additionalFields/scopeField_gathering_unit_unitType": {
@@ -2777,8 +2911,9 @@
 			  "unitGathering_dateEnd": false
 			}
 		  },
-		  "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": true,
+		  "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": false,
 
-		  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup" : "MVL.1"
+		  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup" : "MVL.1",
+		  "#root_gatherings_0_units$SingleActiveArrayField/activeIdx": 1
 		} 
 }

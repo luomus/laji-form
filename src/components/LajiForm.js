@@ -59,6 +59,7 @@ const fields = importLocalComponents("fields", [
 	"StringToArrayField",
 	"ConditionalOnChangeField",
 	"ConditionalUiSchemaField",
+	"AnnotationField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -118,7 +119,8 @@ export default class LajiForm extends Component {
 	}
 
 	static defaultProps = {
-		lang: "en"
+		lang: "en",
+		uiSchema: {}
 	}
 
 	constructor(props) {
@@ -342,7 +344,7 @@ export default class LajiForm extends Component {
 				>
 				<div>
 					{this.props.children}
-					{(!this.props.hasOwnProperty("renderSubmit") || this.props.renderSubmit) ?
+					{(!this.props.children && this.props.renderSubmit !== false) ?
 						(<Button id="submit" type="submit">{translations.Submit}</Button>) :
 						null}
 					</div>

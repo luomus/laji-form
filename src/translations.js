@@ -537,4 +537,9 @@
 		en: "Segment isn't counted",
 		sv: "Segmentet räknas inte"
 	},
+	comments: {
+		fi: "Kommentit",
+		en: "Comments",
+		sv: "Kommenter"
+	},
 };

@@ -1160,3 +1160,10 @@ min-height: 20px;
 .laji-form .laji-map .leaflet-draw-tooltip .text-danger {
 	color: #ffbbbb;
 }
+
+.laji-form .annotation-list {
+	background-color: #f9f9f9;
+}
+.laji-form .annotation-list-odd {
+	background-color: #f4f4f4;
+}

@@ -212,7 +212,7 @@ export default class NestField extends Component {
 			}
 		}
 
-		const {"ui:order": order} = uiSchema;
+		const {"ui:order": order = []} = uiSchema;
 		const dictionarifiedOrder = order.reduce((dict, field, idx) => {
 			dict[field] = idx;
 			return dict;
