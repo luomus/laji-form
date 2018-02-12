@@ -435,7 +435,7 @@ class LineTransectMapArrayField extends Component {
 		if (this.props.errorSchema[lineIdx]) {
 			return {...style, fillColor: "#ff0000"};
 		}
-		const {gatheringFact = {}} = this.props.formData[lineIdx];
+		const {gatheringFact = {}} = this.props.formData[lineIdx] || {};
 		const {lineTransectSegmentCounted} = gatheringFact;
 		if (!lineTransectSegmentCounted) {
 			return { ...style, fillColor: "#444444"};
@@ -459,7 +459,7 @@ class LineTransectMapArrayField extends Component {
 		);
 		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
 	}
-	
+
 	onComponentDidUpdate(prevProps, prevState) {
 		if (prevState.activeIdx !== this.state.activeIdx) {
 			this.onActiveChange(this.state.activeIdx);
