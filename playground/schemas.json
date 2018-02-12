@@ -137,6 +137,7 @@
 					"annotationClass": {
 						"ui:widget": "AnyToBooleanWidget",
 						"ui:options": {
+							"label": "Arvioni laskennan luotettavuudesta",
 							"trueValue": "MAN.annotationClassReliable",
 							"falseValue": "MAN.annotationClassUnreliable",
 							"allowUndefined": false

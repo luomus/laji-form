@@ -279,11 +279,6 @@ export default class ScopeField extends Component {
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
 		const {translations} = this.props.formContext;
-
-		const onHide = () => {
-			this.setState({modalMap: undefined});
-		};
-
 		let uiSchema = {
 			...this.state.uiSchema, 
 			"ui:buttons": [
@@ -308,12 +303,12 @@ export default class ScopeField extends Component {
 
 		if (this.state.modalMap) {
 			addButton(
-				<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={onHide} keyboard={false}>
+				<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={this.onHide} keyboard={false} onKeyDown={this.onModalMapKeyDown}>
 					<Modal.Header closeButton={true}>
 						<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<Map {...this.state.modalMap} singleton={true} formContext={this.props.formContext}/>
+						<Map {...this.state.modalMap} singleton={true} formContext={this.props.formContext} ref={this.setMapRef}/>
 					</Modal.Body>
 				</Modal>
 			);
@@ -322,6 +317,19 @@ export default class ScopeField extends Component {
 		return <SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />;
 	}
 
+	onHide = () => {
+		this.setState({modalMap: undefined});
+	};
+
+	onModalMapKeyDown = (e) => {
+		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e)) {
+			this.onHide();
+		}
+	}
+
+	setMapRef = (elem) => {
+		this.modalMapRef = elem;
+	}
 	componentDidUpdate(nextProps) {
 		if (!this.state.additionalsGroupsTranslations || nextProps.formContext.lang !== this.props.formContext.lang ||
 			getUiOptions(nextProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
