@@ -423,3 +423,19 @@ export function filter (properties, filter, filterType = "blacklist", getValue) 
 	return properties.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
 }
 
+export function injectButtons(uiSchema, buttons, buttonsPath) {
+	let injectionTarget = false;
+	try {
+		injectionTarget =	parseJSONPointer(uiSchema, `${buttonsPath}/ui:options`);
+	} catch (e) {
+		console.error("Invalid buttonsPath for MapArrayField");
+	}
+
+	if (injectionTarget) {
+		const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
+		const updateObject = getUpdateObjectFromJSONPath(`${buttonsPath}/ui:options`, {buttons: updateTail});
+		uiSchema = update(uiSchema, updateObject);
+	}
+	return uiSchema;
+}
+

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getUiOptions, getInnerUiSchema, filter } from "../../utils";
+import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../utils";
 import { Panel, ListGroup, ListGroupItem, Modal, Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
@@ -18,10 +18,12 @@ export default class AnnotationField extends Component {
 	}
 
 	getButton = () => {
+		const annotations = this.getAnnotations();
 		return {
 			glyph: "comment",
 			text:"kekeke",
-			fn: this.onClick
+			fn: this.onClick,
+			bsStyle: annotations && annotations.length ? "primary": "default"
 		};
 	}
 
@@ -40,20 +42,15 @@ export default class AnnotationField extends Component {
 	}
 
 	render() {
-		const {adminOnly, container, add, uiSchema: annotationUiSchema} = getUiOptions(this.props.uiSchema);
+		const {adminOnly, container, add, uiSchema: annotationUiSchema, buttonsPath = "/"} = getUiOptions(this.props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
+		const buttons = [
+			...(getUiOptions(innerUiSchema).buttons || []),
+			this.getButton()
+		];
 		let uiSchema = adminOnly && (!this.props.formContext.uiSchemaContext.isAdmin)
 			? innerUiSchema
-			: {
-				...innerUiSchema,
-				"ui:options": {
-					...getUiOptions(innerUiSchema),
-					buttons: [
-						...(getUiOptions(innerUiSchema).buttons || []),
-						this.getButton()
-					]
-				}
-			};
+			: injectButtons(innerUiSchema, buttons, buttonsPath);
 
 		let Container = undefined;
 
@@ -61,7 +58,7 @@ export default class AnnotationField extends Component {
 		case "modal":
 			Container = ({children}) => {
 				return (
-					<Modal show={true} dialogClassName="laji-form" onHide={this.onHide} keyboard={false}>
+					<Modal show={true} dialogClassName="laji-form" onHide={this.onHide}>
 						<Modal.Header closeButton={true} />
 						<Modal.Body>
 							{children}

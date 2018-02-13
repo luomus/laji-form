@@ -8,7 +8,7 @@ import LajiMap from "laji-map/lib/map";
 import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { Row, Col, Panel, Popover, Modal } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, getUpdateObjectFromJSONPath } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, getUpdateObjectFromJSONPath, injectButtons } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -662,32 +662,21 @@ class _MapArrayField extends ComposedComponent {
 		let _buttonsPath = buttonsPath || addButtonPath;
 
 		if (_buttonsPath && options.buttons) {
-			let injectionTarget = false;
-			try {
-				injectionTarget =	parseJSONPointer(belowUiSchema, `${_buttonsPath}/ui:options`);
-			} catch (e) {
-				console.error("Invalid buttonsPath for MapArrayField");
-			}
-
-			if (injectionTarget) {
-				const addButton = options.buttons.find(({fn}) => fn === "add");
-				const buttons = [
-					{
-						...(addButton || {}),
-						fn: () => () => {
-							const nextActive = this.props.formData.length;
-							this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
-							this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
-						}, 
-						key: "_add",
-						glyph: "plus"
+			const addButton = options.buttons.find(({fn}) => fn === "add");
+			const buttons = [
+				{
+					...(addButton || {}),
+					fn: () => () => {
+						const nextActive = this.props.formData.length;
+						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
+						this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 					},
-					...options.buttons.filter(button => button !== addButton),
-				];
-				const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
-				const updateObject = getUpdateObjectFromJSONPath(`${_buttonsPath}/ui:options`, {buttons: updateTail});
-				belowUiSchema = update(belowUiSchema, updateObject);
-			}
+					key: "_add",
+					glyph: "plus"
+				},
+				...options.buttons.filter(button => button !== addButton),
+			];
+			belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
 		}
 
 		if (removeAddButtonPath && this.state.activeIdx !== undefined) {

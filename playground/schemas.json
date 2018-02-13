@@ -148,7 +148,8 @@
 					"annotationClass": "MAN.annotationClassReliable"
 				}
 				
-			}
+			},
+			"buttonsPath": "/gatheringEvent"
 		},
 		"ui:field": "InjectField",
 		"ui:options": {
