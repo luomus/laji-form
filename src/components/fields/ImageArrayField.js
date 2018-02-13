@@ -85,7 +85,7 @@ export default class ImageArrayField extends Component {
 	}
 
 	renderImgs = () => {
-		return this.props.formData.map((item, i) => (
+		return (this.props.formData || []).map((item, i) => (
 			<div key={i} className="img-container">
 				<a onClick={this.onImgClick(i)}><Thumbnail id={item} /></a>
 				<DeleteButton corner={true} translations={this.props.formContext.translations} onClick={this.onImgRmClick(i)}>✖</DeleteButton>

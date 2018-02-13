@@ -39,6 +39,8 @@ export default class NamedPlaceChooserField extends Component {
 				const property = this.props.schema.items.properties[key];
 				if (property && !property.excludeFromCopy) {
 					_gathering[key] = gathering[key];
+				} else {
+					_gathering[key] = getDefaultFormState(schema.properties[key], undefined, this.props.registry.definitions);
 				}
 				return _gathering;
 			}, {});
