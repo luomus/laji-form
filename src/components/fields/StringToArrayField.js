@@ -25,6 +25,6 @@ export default class StringToArrayField extends Component {
 
 	onChange(formData) {
 		const {delimiter = " "} = this.getUiOptions();
-		this.props.onChange(formData.join(delimiter));
+		this.props.onChange(formData.filter(v => v).join(delimiter));
 	}
 }
