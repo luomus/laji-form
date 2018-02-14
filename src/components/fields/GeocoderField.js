@@ -218,12 +218,16 @@ export default class GeocoderField extends Component {
 						return found[field] && found[field][typeIdx];
 					});
 				});
-				Object.keys(found).forEach(field => {
-					const keys = Object.keys(found[field]);
-					const responseForField = found[field][keys[0]];
-					Object.keys(responseForField).forEach(value => {
-						changes[field] = join(changes[field], value);
-					});
+				Object.keys(parsers).forEach(field => {
+					if (found[field]) {
+						const keys = Object.keys(found[field]);
+						const responseForField = found[field][keys[0]];
+						Object.keys(responseForField).forEach(value => {
+							changes[field] = join(changes[field], value);
+						});
+					} else {
+						changes[field] = "";
+					}
 				});
 				if (country) changes.country = country;
 				afterFetch(() => {
