@@ -439,3 +439,9 @@ export function injectButtons(uiSchema, buttons, buttonsPath) {
 	return uiSchema;
 }
 
+export function dictionarify(array) {
+	return array.reduce((o, k) => {
+		o[k] = true;
+		return o;
+	}, {});
+}

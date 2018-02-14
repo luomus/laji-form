@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
-import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, dictionarify } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Modal, Alert } from "react-bootstrap";
 import { Button } from "../components";
@@ -35,9 +35,10 @@ export default class NamedPlaceChooserField extends Component {
 				place.prepopulatedDocument.gatherings[0],
 				this.props.registry.definitions
 			);
+			const whitelistDict = dictionarify(["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription"]);
 			gathering = Object.keys(gathering).reduce((_gathering, key) => {
 				const property = this.props.schema.items.properties[key];
-				if (property && !property.excludeFromCopy) {
+				if (property && whitelistDict[key]) {
 					_gathering[key] = gathering[key];
 				} else {
 					_gathering[key] = getDefaultFormState(schema.properties[key], undefined, this.props.registry.definitions);
