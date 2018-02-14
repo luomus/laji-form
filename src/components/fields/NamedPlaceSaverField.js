@@ -129,7 +129,6 @@ class PlaceSaverDialog extends Component {
 	}
 
 	getGathering = () => {
-		//const {units, dateBegin, dateEnd, weather, namedPlaceID, ...gathering} = this.props.gathering; //eslint-disable-line no-unused-vars
 		return ["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription"].reduce((gathering, key) => {
 			gathering[key] = this.props.gathering[key];
 			return gathering;

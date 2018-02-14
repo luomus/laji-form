@@ -30,21 +30,14 @@ export default class NamedPlaceChooserField extends Component {
 
 	onPlaceSelected = (place) => {
 		const getGathering = (schema) => {
-			let gathering = getDefaultFormState(
-				schema,
-				place.prepopulatedDocument.gatherings[0],
-				this.props.registry.definitions
-			);
-			const whitelistDict = dictionarify(["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription"]);
-			gathering = Object.keys(gathering).reduce((_gathering, key) => {
-				const property = this.props.schema.items.properties[key];
-				if (property && whitelistDict[key]) {
-					_gathering[key] = gathering[key];
-				} else {
-					_gathering[key] = getDefaultFormState(schema.properties[key], undefined, this.props.registry.definitions);
+			const whitelist = ["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription"];
+			let gathering = getDefaultFormState(schema, undefined, this.props.registry.definitions);
+			const placeGathering = place.prepopulatedDocument.gatherings[0];
+			whitelist.forEach(prop => {
+				if (prop in placeGathering) {
+					gathering[prop] = placeGathering[prop];
 				}
-				return _gathering;
-			}, {});
+			});
 			gathering.namedPlaceID = place.id;
 			return gathering;
 		}

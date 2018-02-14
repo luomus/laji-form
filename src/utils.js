@@ -419,7 +419,7 @@ export function filter (properties, filter, filterType = "blacklist", getValue) 
 	const filterFn = (item) => {
 		const value = getValue ? getValue(item) : item;
 		return filterDictionary[value];
-	}
+	};
 	return properties.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
 }
 
