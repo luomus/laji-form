@@ -167,7 +167,7 @@ export default class GeocoderField extends Component {
 				if (callback) callback();
 			}
 			this.fetching = false;
-		}
+		};
 
 		const handleResponse = (country, ...fields) => (response) => {
 			fields = fields.reduce((_fields, field) => {
@@ -231,7 +231,7 @@ export default class GeocoderField extends Component {
 				});
 				if (country) changes.country = country;
 				afterFetch(() => {
-					this.props.onChange({...props.formData, ...changes})
+					this.props.onChange({...props.formData, ...changes});
 					if (callback) callback();
 				});
 			} else if (country) {

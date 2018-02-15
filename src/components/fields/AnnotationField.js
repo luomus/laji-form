@@ -48,7 +48,7 @@ export default class AnnotationField extends Component {
 			...(getUiOptions(innerUiSchema).buttons || []),
 			this.getButton()
 		];
-		let uiSchema = adminOnly && (!this.props.formContext.uiSchemaContext.isAdmin)
+		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin || !this.props.formData.id
 			? innerUiSchema
 			: injectButtons(innerUiSchema, buttons, buttonsPath);
 
@@ -75,7 +75,7 @@ export default class AnnotationField extends Component {
 		return (
 			<div>
 				<SchemaField {...this.props} uiSchema={uiSchema} />
-				{(container !== "modal" || this.state.show) && 
+				{(this.props.formData.id && (container !== "modal" || this.state.show)) && 
 					<Container>
 						<AnnotationBox
 							id={this.props.formData.id}
