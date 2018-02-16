@@ -1131,6 +1131,16 @@ min-height: 20px;
 	margin-left: 6px;
 }
 
+.informal-taxon-group-chooser .panel .informal-group-image {
+    height: 50px;
+    width: 50px;
+    margin: 0 auto;
+}
+.informal-taxon-group-chooser .panel-heading {
+	height: 52px;
+	text-align: center;
+}
+
 .tooltip-inner {
 	max-width: 300px;
 }

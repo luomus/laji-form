@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb } from "react-bootstrap";
+import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Panel, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import ApiClient from "../../ApiClient";
 import Spinner from "react-spinner";
+import BaseComponent from "../BaseComponent";
+import { getUiOptions } from "../../utils";
 
+@BaseComponent
 export default class InformalTaxonGroupChooserWidget extends Component {
 	constructor(props) {
 		super(props);
@@ -33,8 +36,15 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 		this.mounted = false;
 	}
 
+	getDefaultOptions = (props) => {
+		const {button = true, rootOnly = false, grid = {lg: 1, md: 2, sm: 3, xs: 12} } = getUiOptions(props.uiSchema);
+		return {button, rootOnly, grid};
+	}
+
 	onSelected = (id) => {
 		this.props.onChange(id);
+		const {button} = this.getDefaultOptions(this.props);
+		if (button) this.hide();
 		if (this.state.informalTaxonGroupsById && id) this.setState({informalTaxonGroup: this.state.informalTaxonGroupsById[id]});
 	}
 
@@ -54,27 +64,43 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 
 	render () {
 		let imageID = this.props.value;
+		const {button, rootOnly, grid} = this.getDefaultOptions(this.props);
 		const {informalTaxonGroupsById = {}} = this.state;
 		if (informalTaxonGroupsById[this.props.value] && informalTaxonGroupsById[this.props.value].parent) {
 			imageID = informalTaxonGroupsById[this.props.value].parent.id;
 		}
-		const title = !this.props.value 
-			? <div className="informal-group-chooser-button-content"><span>{this.props.formContext.translations.PickInformalTaxonGroup}</span></div>
-			: (
-				<div className="informal-group-chooser-button-content">
-					<div className={`informal-group-image ${imageID}`} />
-					{this.state.informalTaxonGroup ? <span>{this.state.informalTaxonGroup.name}</span> : <Spinner />}
-					<div className="close" onClick={this.onClear}>×</div>
-				</div>
+		const InformalTaxonGroupChooserComponent = <InformalTaxonGroupChooser activeId={this.props.value} onSelected={this.onSelected} translations={this.props.formContext.translations} rootOnly={rootOnly} grid={grid}/>;
+
+		if (button) {
+			const title = !this.props.value 
+				? <div className="informal-group-chooser-button-content"><span>{this.props.formContext.translations.PickInformalTaxonGroup}</span></div>
+				: (
+					<div className="informal-group-chooser-button-content">
+						<div className={`informal-group-image ${imageID}`} />
+						{this.state.informalTaxonGroup ? <span>{this.state.informalTaxonGroup.name}</span> : <Spinner />}
+						<div className="close" onClick={this.onClear}>×</div>
+					</div>
+				);
+			return (
+				<TooltipComponent tooltip={this.state.informalTaxonGroup && this.state.informalTaxonGroup.name}>
+					<div className="informal-taxon-groups-list">
+						<Button onClick={this.show}>{title}</Button>
+						{this.state.show && (
+							<Modal show={true} onHide={this.hide} dialogClassName="laji-form informal-taxon-group-chooser">
+								<Modal.Header closeButton={true}>
+									<Modal.Title>{this.props.formContext.translations.PickInformalTaxonGroup}</Modal.Title>
+								</Modal.Header>
+							<Modal.Body>
+								{InformalTaxonGroupChooserComponent}
+							</Modal.Body>
+						</Modal>
+				)}
+					</div>
+				</TooltipComponent>
 			);
-		return (
-			<TooltipComponent tooltip={this.state.informalTaxonGroup && this.state.informalTaxonGroup.name}>
-				<div className="informal-taxon-groups-list">
-					<Button onClick={this.show}>{title}</Button>
-					{this.state.show && <InformalTaxonGroupChooser onHide={this.hide} onSelected={this.onSelected} translations={this.props.formContext.translations}/>}
-				</div>
-			</TooltipComponent>
-		);
+		} else {
+			return InformalTaxonGroupChooserComponent;
+		}
 	}
 }
 
@@ -112,7 +138,6 @@ export function getInformalGroups() {
 export class InformalTaxonGroupChooser extends Component {
 	static propTypes = {
 		onSelected: PropTypes.func.isRequired,
-		onHide: PropTypes.func.isRequired,
 		translations: PropTypes.object.isRequired
 	}
 
@@ -135,7 +160,6 @@ export class InformalTaxonGroupChooser extends Component {
 
 	onSelected = (id) => () => {
 		this.props.onSelected(id);
-		this.props.onHide();
 	}
 
 	onSubgroupSelected = (id) => () => {
@@ -154,7 +178,7 @@ export class InformalTaxonGroupChooser extends Component {
 
 	render() {
 		const {path, informalTaxonGroupsById, informalTaxonGroups} = this.state;
-		const {translations, onHide} = this.props;
+		const {translations, rootOnly, grid, activeId} = this.props;
 
 		const getButtonGroup = (id) => (
 			<ButtonGroup>
@@ -166,33 +190,37 @@ export class InformalTaxonGroupChooser extends Component {
 			const name = informalTaxonGroupsById[id].name;
 			return path.length <= 1 ? <h5>{name}</h5> : <span>{name}</span>;
 		};
-		const getItem = id => (
+		const Container = ({children}) => rootOnly ? <Row>{children}</Row> : <ListGroup>{children}</ListGroup>;
+		const getItem = id => !rootOnly ? (
 			<ListGroupItem key={id} className={path.length > 1 ? "not-root" : ""}>
 				{path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
 				{getLabel(id)}
 				{getButtonGroup(id)}
 			</ListGroupItem>
+		) : (
+			<Col key={id} {...grid}>
+				<Panel header={getLabel(id)} onClick={this.onSelected(id)} bsStyle={id === activeId ? "primary" : undefined}>
+					<div className={`informal-group-image ${id}`} />
+				</Panel>
+			</Col>
 		);
 
 		return (
-			<Modal show={true} onHide={onHide} dialogClassName="laji-form informal-taxon-group-chooser">
-				<Modal.Header closeButton={true}>
-					<Modal.Title>{translations.PickInformalTaxonGroup}</Modal.Title>
-				</Modal.Header>
-			<Modal.Body>
-				<Breadcrumb>
+			<div className="informal-taxon-group-chooser">
+				{!rootOnly && (
+					<Breadcrumb>
 					{path.map(id => 
 						<Breadcrumb.Item key={id === undefined ? "root" : id} onClick={this.onSubgroupSelected(id)}>
 							{id === undefined ? translations.All : informalTaxonGroupsById[id].name}
 						</Breadcrumb.Item>
 					)}
 				</Breadcrumb>
+				)}
 				{informalTaxonGroups 
-					? <ListGroup>{Object.keys(informalTaxonGroups).map(getItem)}</ListGroup>
+					? <Container>{Object.keys(informalTaxonGroups).map(getItem)}</Container>
 					: <Spinner />
 				}
-			</Modal.Body>
-			</Modal>
+			</div>
 		);
 	}
 }
