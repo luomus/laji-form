@@ -1,5 +1,7 @@
+import React from "react";
 import { findDOMNode } from "react-dom";
-import { isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
 import update from "immutability-helper";
 
@@ -444,4 +446,50 @@ export function dictionarify(array) {
 		o[k] = true;
 		return o;
 	}, {});
+}
+
+
+const tableFormatters = {
+	unknownTaxon: (item, formatted, options) => {
+		return (isEmptyString(item) || item[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
+	}
+};
+export function formatValue(props, col, _formatter) {
+	let {formData, uiSchema, schema, registry} = props;
+
+	schema = schema.properties[col];
+	
+	const val = formData[col];
+	const _uiSchema = uiSchema[col] || getNestedTailUiSchema(uiSchema[col] || {});
+
+	let formatterComponent = undefined;
+	if (_uiSchema["ui:widget"]) formatterComponent = registry.widgets[_uiSchema["ui:widget"]];
+	else if (schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
+	else if (_uiSchema["ui:field"]) formatterComponent = registry.fields[_uiSchema["ui:field"]];
+
+	let formatter = undefined;
+	if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
+		formatter = formatterComponent.prototype.formatValue;
+	} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
+		formatter = formatterComponent.prototype.__proto__.formatValue;
+	}
+
+	let formatted = val;
+	if (formatter) {
+		formatted = formatter(val, getUiOptions(_uiSchema), props);
+	} else if (isEmptyString(val)) {
+		formatted = "";
+	} else if (isMultiSelect(schema)) {
+		formatted = val.map(_val => schema.items.enumNames[schema.items.enum.indexOf(_val)]).join(", ");
+	} else if (isSelect(schema)) {
+		formatted = isEmptyString(val) ? val : schema.enumNames[schema.enum.indexOf(val)];
+	} else if (schema.type === "boolean") {
+		formatted = props.formContext.translations[val ? "yes" : "no"];
+	}
+
+	if (_formatter) {
+		formatted = tableFormatters[_formatter.formatter](formData, formatted, _formatter);
+	}
+
+	return formatted;
 }

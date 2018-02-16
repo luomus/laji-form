@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col, Glyphicon } from "react-bootstrap";
+import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter } from "../../utils";
-import { isSelect, isMultiSelect, orderProperties } from "react-jsonschema-form/lib/utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
+import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
@@ -560,43 +560,6 @@ class TableArrayFieldTemplate extends Component {
 
 		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
 
-		const formatValue = (item, col) => {
-			const val = item[col];
-			const _schema = schema.items.properties[col];
-			const _uiSchema = uiSchema.items[col] || getNestedTailUiSchema(uiSchema.items)[col] || {};
-
-			let formatterComponent = undefined;
-			if (_uiSchema["ui:widget"]) formatterComponent = registry.widgets[_uiSchema["ui:widget"]];
-			else if (_schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
-			else if (_uiSchema["ui:field"]) formatterComponent = registry.fields[_uiSchema["ui:field"]];
-
-			let formatter = undefined;
-			if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
-				formatter = formatterComponent.prototype.formatValue;
-			} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
-				formatter = formatterComponent.prototype.__proto__.formatValue;
-			}
-
-			let formatted = val;
-			if (formatter) {
-				formatted = formatter(val, getUiOptions(_uiSchema), that.props);
-			} else if (isEmptyString(val)) {
-				formatted = "";
-			} else if (isMultiSelect(_schema)) {
-				formatted = val.map(_val => _schema.items.enumNames[_schema.items.enum.indexOf(_val)]).join(", ");
-			} else if (isSelect(_schema)) {
-				formatted = isEmptyString(val) ? val : _schema.enumNames[_schema.enum.indexOf(val)];
-			} else if (_schema.type === "boolean") {
-				formatted = this.props.formContext.translations[val ? "yes" : "no"];
-			}
-
-			if (formatters && formatters[col]) {
-				formatted = tableFormatters[formatters[col].formatter](item, col, formatted, formatters[col]);
-			}
-
-			return formatted;
-		};
-
 		const {itemsClassNames, confirmDelete, titleClassName} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = idx => {
@@ -638,7 +601,7 @@ class TableArrayFieldTemplate extends Component {
 							return [
 								<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0}>
 									{[
-										...cols.map(col => <td key={col}>{formatValue(formData[idx], col)}</td>),
+										...cols.map(col => <td key={col}>{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}</td>),
 										getDeleteButtonFor(idx)
 									]}
 								</tr>,
@@ -760,12 +723,6 @@ const headerFormatters = {
 			const [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
 			return props.idx !== undefined ? <span className="text-muted">{`${start}-${end}m`}</span> : null;
 		}
-	}
-};
-
-const tableFormatters = {
-	unknownTaxon: (item, col, formatted, options) => {
-		return (isEmptyString(item[col]) || item[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
 	}
 };
 

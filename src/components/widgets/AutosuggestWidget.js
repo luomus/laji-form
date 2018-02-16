@@ -23,11 +23,56 @@ export default class _AutosuggestWidget extends Component {
 		}
 		return <Autosuggest {...this.props} />;
 	}
+
+	formatValue(value, options) {
+		if (options) {
+			let component = undefined;
+			switch (options.autosuggestField) {
+			case "taxon":
+				component = TaxonAutosuggestWidget;
+				break;
+			case "unit":
+				component = UnitAutosuggestWidget;
+				break;
+			case "friends":
+				component = FriendsAutosuggestWidget;
+			}
+			const getSuggestionFromValue = component.prototype.getSuggestionFromValue;
+			if (getSuggestionFromValue) {
+				return <SimpleValueRenderer getSuggestionFromValue={getSuggestionFromValue} value={value}/>
+			}
+		}
+	}
+}
+
+class SimpleValueRenderer extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {value: this.props.value};
+	}
+	componentDidMount() {
+		if (this.props.getSuggestionFromValue) {
+			this.isValueSuggested = FriendsAutosuggestWidget.prototype.isValueSuggested.bind(this);
+			this.props.getSuggestionFromValue.call(this, this.props.value).then(({value}) => {
+				this.setState({value});
+			});
+		}
+	}
+	render() {
+		return <span>{this.state.value}</span>
+	}
+
 }
 
 function TaxonAutosuggest(ComposedComponent) {
 	return class TaxonAutosuggestWidget extends ComposedComponent {
-		getSuggestionFromValue = (value) => {
+		constructor(props) {
+			super(props);
+			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
+			this.isValueSuggested = this.isValueSuggested.bind(this);
+		}
+
+		getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
 				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
 					if (vernacularName !== undefined) {
@@ -108,8 +153,13 @@ class UnitAutosuggestWidget extends Component {
 }
 
 class FriendsAutosuggestWidget extends Component {
-	
-	getSuggestionFromValue = (value) => {
+	constructor(props) {
+		super(props);
+		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
+		this.isValueSuggested = this.isValueSuggested.bind(this);
+	}
+
+	getSuggestionFromValue(value) {
 		if (this.isValueSuggested(value)) {
 			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName}) => {
 				if (fullName) {
@@ -121,7 +171,7 @@ class FriendsAutosuggestWidget extends Component {
 		}
 	}
 
-	isValueSuggested = (value) => {
+	isValueSuggested(value) {
 		return !isEmptyString(value) && value.match(/MA\.\d+/);
 	}
 
