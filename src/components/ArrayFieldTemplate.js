@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, DeleteButton, Label } from "./components";
+import { Button, DeleteButton, Label, TooltipComponent } from "./components";
 import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
@@ -183,10 +183,19 @@ export default class ArrayFieldTemplate extends Component {
 
 	render() {
 		const {props} = this;
-		const options = getUiOptions(props.uiSchema);
-		const Title = options.renderTitleAsLabel ? Label :  props.TitleField;
+		const {
+			confirmDelete,
+			renderTitleAsLabel,
+			deleteCorner,
+			renderDelete = true,
+			orderable,
+			nonRemovables = [],
+			nonOrderables = [],
+			buttons,
+			"ui:deleteHelp": deleteHelp
+		} = getUiOptions(props.uiSchema);
+		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
-		const {confirmDelete, deleteCorner, renderDelete = true, orderable, nonRemovables = [], nonOrderables = [], buttons} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
@@ -198,6 +207,7 @@ export default class ArrayFieldTemplate extends Component {
 				              className="laji-form-field-template-buttons"
 				              confirm={confirmDelete}
 				              corner={deleteCorner}
+				              tooltip={deleteHelp}
 				              translations={props.formContext.translations}/>
 			);
 			return (

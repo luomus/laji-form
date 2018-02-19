@@ -77,12 +77,12 @@ export class DeleteButton extends Component {
 	render() {
 		const {props, state} = this;
 		const {show} = state;
-		const {translations, corner} = props;
+		const {translations, corner, tooltip} = props;
 		let buttonClassName = "glyph-button";
 		buttonClassName += corner ? " delete-corner" : "";
 		const getOverlayTarget = () => findDOMNode(this.refs.del);
 		const onClick = e => this.onClick(e);
-		return (
+		const button = (
 			<div className={props.className} style={this.props.style}>
 				<Button bsStyle="danger"
 								className={buttonClassName}
@@ -108,6 +108,7 @@ export class DeleteButton extends Component {
 				}
 			</div>
 		);
+		return tooltip ? <TooltipComponent tooltip={tooltip}>{button}</TooltipComponent> : button;
 	}
 }
 

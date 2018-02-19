@@ -563,7 +563,7 @@ class _MapArrayField extends ComposedComponent {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema, schema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = []} = options;
+		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp} = options;
 		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}} = options;
 		const {activeIdx} = this.state;
 
@@ -761,7 +761,7 @@ class _MapArrayField extends ComposedComponent {
 						{mapOptions.emptyMode ?
 								<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
 									<div>
-										{this.props.uiSchema["ui:help"]}
+										{emptyHelp}
 										{buttons && buttons.length ? ` ${this.props.formContext.translations.or}` : null}
 										{buttons}
 									</div>

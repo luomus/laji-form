@@ -130,7 +130,7 @@ class TableArrayFieldTemplate extends Component {
 		);
 
 		const options = getUiOptions(props.uiSchema);
-		const {confirmDelete, deleteCorner, renderDelete = true, nonRemovables = [], buttons} = options;
+		const {confirmDelete, deleteCorner, renderDelete = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
@@ -141,11 +141,12 @@ class TableArrayFieldTemplate extends Component {
 				{props.items.map((item, i) => {
 					const deleteButton = (
 						<DeleteButton ref={getRefFor(i)}
-													onClick={item.onDropIndexClick(item.index)}
-													className="laji-form-field-template-buttons"
-													confirm={confirmDelete}
-													corner={deleteCorner}
-													translations={props.formContext.translations}/>
+						              onClick={item.onDropIndexClick(item.index)}
+						              className="laji-form-field-template-buttons"
+						              confirm={confirmDelete}
+						              corner={deleteCorner}
+						              tooltip={deleteHelp}
+						              translations={props.formContext.translations}/>
 					);
 					return (
 						<Row key={item.index} >
