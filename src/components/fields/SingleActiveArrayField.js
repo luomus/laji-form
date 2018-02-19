@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
-import { DeleteButton, Label } from "../components";
+import { DeleteButton, Label, Help, TooltipComponent } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
@@ -775,6 +775,8 @@ class AccordionHeader extends Component {
 		const {that, idx} = this.props;
 		const title = that.state.getTitle(idx);
 		const popupData = that.state.popups[idx];
+		const {uiSchema} = that.props;
+		const hasHelp = uiSchema && uiSchema["ui:help"];
 
 		const headerText = (
 			<span>
@@ -785,8 +787,11 @@ class AccordionHeader extends Component {
 						<span key={i}> <Formatter that={that} idx={idx} /></span>
 					);
 				})}
+				{hasHelp ? <Help/> : null}
 			</span>
 		);
+
+		const headerTextComponent = hasHelp ? <TooltipComponent tooltip={uiSchema["ui:help"]}>{headerText}</TooltipComponent> : headerText;
 
 		const header = (
 			<div className={this.props.className}
@@ -794,7 +799,7 @@ class AccordionHeader extends Component {
 				   onMouseEnter={this.onMouseEnter}
 				   onMouseLeave={this.onMouseLeave} >
 				<div className={this.props.wrapperClassName}>
-					{headerText}
+					{headerTextComponent}
 					{this.props.children}
 				</div>
 			</div>
