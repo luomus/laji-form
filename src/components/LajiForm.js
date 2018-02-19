@@ -244,6 +244,29 @@ export default class LajiForm extends Component {
 		};
 
 		this.warningValidatorsById = getWarningValidatorsById(props.warnings, props.schema);
+
+		this.ids = {};
+
+		// First call returns id, next call (and only the very next) reserves the id until it is released.
+		this.reserveId = (id, sendId) => {
+			if (this.ids[id]) {
+				this.ids[id].push(sendId);
+			} else {
+				this.ids[id] = [sendId]; // Just mark that the id is now used. It isn't reserved yet.
+				return id;
+			}
+		}
+
+		this.releaseId = (id, sendId) => {
+			if (this.ids[id]) {
+				const idx = this.ids[id].indexOf(sendId);
+				this.ids[id] = this.ids[id].splice(idx, 1);
+				if (this.ids[id].length > 0) {
+					this.ids[id][0](id);
+				}
+			}
+		}
+
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -273,7 +296,9 @@ export default class LajiForm extends Component {
 				getWarnings: (data, id) => {
 					return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
 				},
-				googleApiKey: props.googleApiKey
+				googleApiKey: props.googleApiKey,
+				reserveId: this.reserveId,
+				releaseId: this.releaseId,
 			}
 		};
 	}

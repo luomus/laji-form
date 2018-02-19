@@ -619,8 +619,8 @@ class _MapArrayField extends ComposedComponent {
 				idSchema: this.props.idSchema,
 				formData: update((this.props.formData || []), {$merge: {[this.state.activeIdx]: props.formData}}),
 				errorSchema: props.errorSchema && Object.keys(props.errorSchema).length ? 
-					update((this.props.errorSchema || []), {$merge: {[this.state.activeIdx]: props.errorSchema}}) : 
-					this.props.errorSchema,
+					{[this.state.activeIdx]: props.errorSchema} : 
+					{},
 				onChange: formData => {
 					this.props.onChange(formData.map((item, idx) => {
 						return {
