@@ -212,7 +212,7 @@ export default class ArrayFieldTemplate extends Component {
 
 		return (
 			<div className={props.className}>
-				<Title title={title} label={title} />
+				<Title title={title} label={title} help={props.uiSchema["ui:help"]} />
 				<Description description={props.description}/>
 				{
 					orderable ? 
