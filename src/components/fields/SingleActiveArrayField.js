@@ -433,6 +433,7 @@ class PagerArrayFieldTemplate extends Component {
 			that={that}
 			idx={idx}
 			className="panel-title"
+			canHaveUndefinedIdx={false}
 		/>;
 
 		return (
@@ -555,7 +556,7 @@ class TableArrayFieldTemplate extends Component {
 		if (order) cols = orderProperties(cols, order.filter(field => field === "*" || foundProps[field]));
 
 		const that = this.props.formContext.this;
-		const {registry, errorSchema} = that.props;
+		const {errorSchema} = that.props;
 		const activeIdx = that.state.activeIdx;
 
 		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
@@ -727,12 +728,30 @@ const headerFormatters = {
 };
 
 class AccordionHeader extends Component {
-	render() {
-		const {that, idx} = this.props;
-		const {props} = that;
-		const {uiSchema} = props;
-		const title = that.state.getTitle(idx);
-		const popupData = that.state.popups[idx];
+	onHeaderClick = () => {
+		const {that, idx, canHaveUndefinedIdx = true} = this.props;
+		const formatters = this.getFormatters();
+		if (!canHaveUndefinedIdx) {
+			return;
+		}
+		that.onActiveChange(idx);
+		formatters.forEach(formatter => {formatter.onClick && formatter.onClick(that, idx);});
+	}
+
+	onMouseEnter = () => {
+		this.getFormatters().forEach(formatter => {
+			formatter.onMouseEnter && formatter.onMouseEnter(this.props.that, this.props.idx);
+		});
+	};
+
+	onMouseLeave = () => {
+		this.getFormatters().forEach(formatter => {
+			formatter.onMouseLeave && formatter.onMouseLeave(this.props.that, this.props.idx);
+		});
+	};
+
+	getFormatters = () => {
+		const {uiSchema} = this.props.that.props;
 
 		// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
 		const options = getUiOptions(uiSchema);
@@ -742,8 +761,7 @@ class AccordionHeader extends Component {
 		if (options.headerFormatter) {
 			console.warn("laji-form warning: 'headerFormatter' is deprecated. Use 'headerFormatters' instead.");
 		}
-
-		const formatters = _headerFormatters.map(formatter => {
+		return _headerFormatters.map(formatter => {
 			if (headerFormatters[formatter]) return headerFormatters[formatter];
 			else return {
 				component: (props) => {
@@ -751,11 +769,17 @@ class AccordionHeader extends Component {
 				}
 			};
 		});
+	}
+
+	render() {
+		const {that, idx} = this.props;
+		const title = that.state.getTitle(idx);
+		const popupData = that.state.popups[idx];
 
 		const headerText = (
 			<span>
 				{title}
-				{formatters.map((formatter, i) => {
+				{this.getFormatters().map((formatter, i) => {
 					const {component: Formatter} = formatter;
 					return (
 						<span key={i}> <Formatter that={that} idx={idx} /></span>
@@ -764,28 +788,11 @@ class AccordionHeader extends Component {
 			</span>
 		);
 
-		const onHeaderClick = () => {
-			that.onActiveChange(idx);
-			formatters.forEach(formatter => {formatter.onClick && formatter.onClick(that, idx);});
-		};
-
-		const onMouseEnter = () => {
-			formatters.forEach(formatter => {
-				formatter.onMouseEnter && formatter.onMouseEnter(that, idx);
-			});
-		};
-
-		const onMouseLeave = () => {
-			formatters.forEach(formatter => {
-				formatter.onMouseLeave && formatter.onMouseLeave(that, idx);
-			});
-		};
-
 		const header = (
 			<div className={this.props.className}
-			     onClick={onHeaderClick}
-				   onMouseEnter={onMouseEnter}
-				   onMouseLeave={onMouseLeave} >
+			     onClick={this.onHeaderClick}
+				   onMouseEnter={this.onMouseEnter}
+				   onMouseLeave={this.onMouseLeave} >
 				<div className={this.props.wrapperClassName}>
 					{headerText}
 					{this.props.children}
