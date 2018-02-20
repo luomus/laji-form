@@ -542,4 +542,9 @@
 		en: "Comments",
 		sv: "Kommenter"
 	},
+	showAnnotations: {
+		fi: "Näytä annotaatiot",
+		en: "Show annotations",
+		sv: "Välj annotationer"
+	}
 };

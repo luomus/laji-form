@@ -105,7 +105,6 @@ export default class UnitShorthandField extends Component {
 		let help = tailUiSchema && tailUiSchema[shorthandFieldName] && tailUiSchema[shorthandFieldName]["ui:belowHelp"];
 		const uiSchemaWithoutHelp = isEmptyString(help) ? uiSchema : updateTailUiSchema(uiSchema, {[shorthandFieldName]: {"ui:belowHelp": {$set: undefined}}});
 
-		// TODO use container id if doesn't have shorthandFieldName? Solve global id conflict problem first.
 		const id = (shorthandFieldName && this.props.idSchema[shorthandFieldName]) ?
 			this.props.idSchema[shorthandFieldName].$id :
 			`${this.props.idSchema.$id}_shortHandField`;
@@ -114,7 +113,7 @@ export default class UnitShorthandField extends Component {
 		if (this.state.showSchema) {
 			innerUiSchema = getInnerUiSchema({...uiSchemaWithoutHelp});
 			const innerOptions = getUiOptions(innerUiSchema);
-			innerUiSchema  = {...innerUiSchema, "ui:options": {...innerOptions, buttons: [...(innerOptions.buttons || []), toggleButton]}};
+			innerUiSchema = {...innerUiSchema, "ui:options": {...innerOptions, buttons: [...(innerOptions.buttons || []), toggleButton]}};
 		}
 
 		return !this.state.showSchema ? (

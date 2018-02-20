@@ -21,7 +21,8 @@ export default class AnnotationField extends Component {
 		const annotations = this.getAnnotations();
 		return {
 			glyph: "comment",
-			text:"kekeke",
+			tooltip: this.props.formContext.translations.ShowAnnotations,
+			tooltipPlacement: "left",
 			fn: this.onClick,
 			bsStyle: annotations && annotations.length ? "primary": "default"
 		};
@@ -44,13 +45,9 @@ export default class AnnotationField extends Component {
 	render() {
 		const {adminOnly, container, add, uiSchema: annotationUiSchema, buttonsPath = "/"} = getUiOptions(this.props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
-		const buttons = [
-			...(getUiOptions(innerUiSchema).buttons || []),
-			this.getButton()
-		];
 		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin || !this.props.formData.id
 			? innerUiSchema
-			: injectButtons(innerUiSchema, buttons, buttonsPath);
+			: injectButtons(innerUiSchema, [this.getButton()], buttonsPath);
 
 		let Container = undefined;
 
@@ -65,7 +62,7 @@ export default class AnnotationField extends Component {
 						</Modal.Body>
 					</Modal>
 				);
-			}
+			};
 			break;
 		default:
 			Container = ({children}) => <div>{children}</div>;
@@ -129,7 +126,7 @@ class AnnotationBox extends Component {
 			const annotations = [...this.state.annotations, annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
-		}).catch(e => {
+		}).catch(() => {
 			this.setState({fail: true});
 		});
 	}

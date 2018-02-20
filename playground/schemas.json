@@ -2754,157 +2754,3713 @@
 		"activeGatheringIdx": 0,
 		"isAdmin": true,
 		"annotations": {
-			"JX.129099#5": [
-			  {
-				"deleted": false,
-				"notes": "Käki. Ihan varmasti.",
-				"created": "2018-02-08T13:36:03+00:00",
-				"createdTimestamp": 1518096963,
-				"opinion": "käki",
-				"annotationClass": "MAN.annotationClassReliable",
-				"annotationByPerson": "MA.308",
-				"id": "http://tun.fi/MAN.416",
-				"type": "http://tun.fi/MAN.typeOpinion"
-			  },
-			  {
-				"deleted": false,
-				"notes": "No eikä ole!",
-				"created": "2018-02-08T13:36:49+00:00",
-				"createdTimestamp": 1518097009,
-				"annotationClass": "MAN.annotationClassUnreliable",
-				"annotationByPerson": "MA.308",
-				"id": "http://tun.fi/MAN.417",
-				"type": "http://tun.fi/MAN.typeOpinion"
-			  }
-			]
-		}
+  "JX.129510#3": [
+    {
+      "id": "MAN.491",
+      "annotationClass": "MAN.annotationClassReliable",
+      "notes": "Hienosti tunnistettu satakieli",
+      "targetID": "JX.129510#3",
+      "rootID": "JX.129510",
+      "type": "MAN.typeAdmin",
+      "annotationByPerson": "MA.308",
+      "created": "2018-02-20T13:40:15+02:00",
+      "@type": "MAN.annotation",
+      "@context": "http://schema.laji.fi/context/annotation.jsonld"
+    }
+  ],
+  "JX.129510": [
+    {
+      "id": "MAN.490",
+      "annotationClass": "MAN.annotationClassUnreliable",
+      "notes": "kelvottomasti laskettu. Ei yhtäkään biotooppimerkintää.",
+      "targetID": "JX.129510",
+      "rootID": "JX.129510",
+      "type": "MAN.typeAdmin",
+      "annotationByPerson": "MA.308",
+      "created": "2018-02-20T13:39:37+02:00",
+      "@type": "MAN.annotation",
+      "@context": "http://schema.laji.fi/context/annotation.jsonld"
+    },
+    {
+      "id": "MAN.489",
+      "annotationClass": "MAN.annotationClassUnreliable",
+      "notes": "kelvottomasti laskettu. Ei yhtäkään biotooppimerkintää.",
+      "targetID": "JX.129510",
+      "rootID": "JX.129510",
+      "type": "MAN.typeAdmin",
+      "annotationByPerson": "MA.308",
+      "created": "2018-02-20T13:39:26+02:00",
+      "@type": "MAN.annotation",
+      "@context": "http://schema.laji.fi/context/annotation.jsonld"
+    }
+  ]
+}
 	},
 	"formData":{
-	  "id": "JX.129099",
-	  "formID": "JX.519",
-	  "editors": [
-		"MA.97",
-		"MA.314",
-		"MA.308"
-	  ],
-	  "gatheringEvent": {
-		"legPublic": true,
-		"id": "JX.129099#1",
-		"@type": "MZ.gatheringEvent",
-		"leg": [
-		  "MA.97",
-		  "MA.314",
-		  "MA.308"
-		],
-		"dateBegin": "2018-01-25"
-	  },
-	  "gatherings": [
-		{
-		  "units": [
-			{
-			  "recordBasis": "MY.recordBasisHumanObservation",
-			  "count": "3",
-			  "identifications": [
-				{
-				  "taxon": "Kettu",
-				  "identificationBasis": [
-					"MY.identificationBasisSeen"
-				  ],
-				  "id": "JX.129099#4",
-				  "@type": "MY.identification"
-				}
-			  ],
-			  "maleIndividualCount": 1,
-			  "femaleIndividualCount": 2,
-			  "id": "JX.129099#3",
-			  "@type": "MY.unit",
-			  "informalTaxonGroups": [],
-			  "taxonConfidence": "MY.taxonConfidenceSure",
-			  "images": [],
-			  "unitGathering": {
-				"id": "JX.129099#7",
-				"@type": "MZ.unitGathering"
-			  }
-			},
-			{
-			  "recordBasis": "MY.recordBasisHumanObservationPhoto",
-			  "count": "2",
-			  "sex": "MY.sexM",
-			  "identifications": [
-				{
-				  "taxon": "Käki",
-				  "identificationBasis": [
-					"MY.identificationBasisHeard"
-				  ],
-				  "id": "JX.129099#6",
-				  "@type": "MY.identification"
-				}
-			  ],
-			  "id": "JX.129099#5",
-			  "@type": "MY.unit",
-			  "informalTaxonGroups": [],
-			  "taxonConfidence": "MY.taxonConfidenceSure",
-			  "images": [],
-			  "unitGathering": {
-				"id": "JX.129099#8",
-				"@type": "MZ.unitGathering"
-			  }
-			}
-		  ],
-		  "geometry": {
-			"type": "Polygon",
-			"coordinates": [
-			  [
-				[
-				  24.832164854609,
-				  60.213812181191
-				],
-				[
-				  25.012430260804,
-				  60.216636768062
-				],
-				[
-				  25.00698199915,
-				  60.306335538727
-				],
-				[
-				  24.826223442878,
-				  60.303500722369
-				],
-				[
-				  24.832164854609,
-				  60.213812181191
-				]
-			  ]
-			],
-			"coordinateVerbatim": "668:338"
-		  },
-		  "habitat": [
-			"MY.habitatEnumValue1"
-		  ],
-		  "country": "Suomi",
-		  "municipality": "Espoo",
-		  "id": "JX.129099#2",
-		  "@type": "MY.gathering",
-		  "images": [],
-		  "taxonCensus": []
-		}
-	  ],
-	  "keywords": [
-		"2018",
-		"testi"
-	  ],
-	  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
-	  "sourceID": "KE.389",
-	  "collectionID": "HR.1747",
-	  "creator": "MA.97",
-	  "editor": "MA.97",
-	  "dateEdited": "2018-01-26T13:39:43+02:00",
-	  "dateCreated": "2018-01-26T07:07:02+02:00",
-	  "@type": "MY.document",
-	  "@context": "http://schema.laji.fi/context/document.jsonld",
-	  "secureLevel": "MX.secureLevelNone"
-	},
+  "creator": "MA.308",
+  "gatheringEvent": {
+    "startDistanceFromNECorner": "0",
+    "namedPlaceNotes": "P-paikka:\nLinjan laskenta vaatii saareen menemisen jo edellisenä iltana, ensin yhteysaluksella Kustavista Norrbyhyn, sieltä lossilla Keistiöön. Autolla pääsee perille saakka.\nrakennusten kierto:\nei\nteiden kunto:\nok\nmuuta:\nhelppokulkuinen linja",
+    "legPublic": true,
+    "routeDirectionAdhered": true,
+    "id": "JX.129510#1",
+    "@type": "MZ.gatheringEvent",
+    "leg": [
+      "MA.308"
+    ],
+    "dateBegin": "2017-05-25",
+    "timeStart": "05:00",
+    "timeEnd": "07:00"
+  },
+  "formID": "MHL.1",
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.340696,
+            60.376122
+          ],
+          [
+            21.34042,
+            60.375516
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "individualCount": 1,
+          "shortHandText": "llx",
+          "lineTransectObsType": "MY.lineTransectObsTypeSong",
+          "lineTransectRouteFieldType": "MY.lineTransectRouteFieldTypeOuter",
+          "pairCount": 1,
+          "unitType": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "lineTransectPairCountChanged": false,
+          "id": "JX.129510#3",
+          "@type": "MY.unit",
+          "identifications": [
+            {
+              "taxon": "Luscinia luscinia",
+              "taxonID": "MX.32819"
+            }
+          ],
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.32819"
+          }
+        },
+        {
+          "informalTaxonGroups": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "individualCount": 1,
+          "shortHandText": "llx",
+          "lineTransectObsType": "MY.lineTransectObsTypeSong",
+          "lineTransectRouteFieldType": "MY.lineTransectRouteFieldTypeOuter",
+          "pairCount": 1,
+          "unitType": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "lineTransectPairCountChanged": false,
+          "identifications": [
+            {
+              "taxon": "Luscinia luscinia",
+              "taxonID": "MX.32819",
+              "id": "JX.129510#6",
+              "@type": "MY.identification"
+            }
+          ],
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.32819"
+          },
+          "id": "JX.129510#5",
+          "@type": "MY.unit"
+        },
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#8",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#7",
+          "@type": "MY.unit",
+          "unitFact": {}
+        },
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {}
+          ],
+          "unitFact": {},
+          "pairCount": 1
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#2",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.34042,
+            60.375516
+          ],
+          [
+            21.340908,
+            60.374798
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#11",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#10",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#9",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.340908,
+            60.374798
+          ],
+          [
+            21.34151,
+            60.373951
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#14",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#13",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#12",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.34151,
+            60.373951
+          ],
+          [
+            21.341445,
+            60.373489
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#17",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#16",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#15",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.341445,
+            60.373489
+          ],
+          [
+            21.342041,
+            60.372885
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#20",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#19",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#18",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.342041,
+            60.372885
+          ],
+          [
+            21.342837,
+            60.372072
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#23",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#22",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#21",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.342837,
+            60.372072
+          ],
+          [
+            21.342956,
+            60.371699
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#26",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#25",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#24",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.342956,
+            60.371699
+          ],
+          [
+            21.342659,
+            60.371111
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#29",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#28",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#27",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.342659,
+            60.371111
+          ],
+          [
+            21.342247,
+            60.370238
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#32",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#31",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#30",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.342247,
+            60.370238
+          ],
+          [
+            21.341722,
+            60.36991
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#35",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#34",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#33",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.341722,
+            60.36991
+          ],
+          [
+            21.340915,
+            60.369848
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#38",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#37",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#36",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.340915,
+            60.369848
+          ],
+          [
+            21.340255,
+            60.369775
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#41",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#40",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#39",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.340255,
+            60.369775
+          ],
+          [
+            21.339366,
+            60.370187
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#44",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#43",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#42",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.339366,
+            60.370187
+          ],
+          [
+            21.339099,
+            60.370257
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#47",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#46",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#45",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.339099,
+            60.370257
+          ],
+          [
+            21.337498,
+            60.370683
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#50",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#49",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#48",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.337498,
+            60.370683
+          ],
+          [
+            21.336675,
+            60.370189
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#53",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#52",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#51",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.336675,
+            60.370189
+          ],
+          [
+            21.335595,
+            60.370548
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#56",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#55",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#54",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.335595,
+            60.370548
+          ],
+          [
+            21.33532,
+            60.370455
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#59",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#58",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#57",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.33532,
+            60.370455
+          ],
+          [
+            21.333827,
+            60.369951
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#62",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#61",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#60",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.333827,
+            60.369951
+          ],
+          [
+            21.332586,
+            60.370186
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#65",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#64",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#63",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.332586,
+            60.370186
+          ],
+          [
+            21.331339,
+            60.370771
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#68",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#67",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#66",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.331339,
+            60.370771
+          ],
+          [
+            21.331236,
+            60.370839
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#71",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#70",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#69",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.331236,
+            60.370839
+          ],
+          [
+            21.330129,
+            60.371557
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#74",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#73",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#72",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.330129,
+            60.371557
+          ],
+          [
+            21.328838,
+            60.371772
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#77",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#76",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#75",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.328838,
+            60.371772
+          ],
+          [
+            21.327115,
+            60.372058
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#80",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#79",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#78",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.327115,
+            60.372058
+          ],
+          [
+            21.325391,
+            60.372353
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#83",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#82",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#81",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.325391,
+            60.372353
+          ],
+          [
+            21.323687,
+            60.372641
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#86",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#85",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#84",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.323687,
+            60.372641
+          ],
+          [
+            21.321965,
+            60.372927
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#89",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#88",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#87",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.321965,
+            60.372927
+          ],
+          [
+            21.32026,
+            60.373214
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#92",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#91",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#90",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.32026,
+            60.373214
+          ],
+          [
+            21.318538,
+            60.3735
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#95",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#94",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#93",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.318538,
+            60.3735
+          ],
+          [
+            21.316815,
+            60.373787
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#98",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#97",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#96",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.316815,
+            60.373787
+          ],
+          [
+            21.315111,
+            60.374074
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#101",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#100",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#99",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.315111,
+            60.374074
+          ],
+          [
+            21.313388,
+            60.37436
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#104",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#103",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#102",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.313388,
+            60.37436
+          ],
+          [
+            21.311666,
+            60.374646
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#107",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#106",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#105",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.311666,
+            60.374646
+          ],
+          [
+            21.309961,
+            60.374933
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#110",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#109",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#108",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.309961,
+            60.374933
+          ],
+          [
+            21.308239,
+            60.375219
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#113",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#112",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#111",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.308239,
+            60.375219
+          ],
+          [
+            21.306534,
+            60.375506
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#116",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#115",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#114",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.306534,
+            60.375506
+          ],
+          [
+            21.304811,
+            60.375792
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#119",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#118",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#117",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.304811,
+            60.375792
+          ],
+          [
+            21.303089,
+            60.376078
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#122",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#121",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#120",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.303089,
+            60.376078
+          ],
+          [
+            21.301382,
+            60.376374
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#125",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#124",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#123",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.301382,
+            60.376374
+          ],
+          [
+            21.29966,
+            60.37666
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#128",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#127",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#126",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.29966,
+            60.37666
+          ],
+          [
+            21.299689,
+            60.377013
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#131",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#130",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#129",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.299689,
+            60.377013
+          ],
+          [
+            21.300019,
+            60.377099
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#134",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#133",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#132",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.300019,
+            60.377099
+          ],
+          [
+            21.301639,
+            60.377502
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#137",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#136",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#135",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.301639,
+            60.377502
+          ],
+          [
+            21.302131,
+            60.377604
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#140",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#139",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#138",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.302131,
+            60.377604
+          ],
+          [
+            21.3038,
+            60.377936
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#143",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#142",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#141",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.3038,
+            60.377936
+          ],
+          [
+            21.305488,
+            60.378261
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#146",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#145",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#144",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.305488,
+            60.378261
+          ],
+          [
+            21.305657,
+            60.378439
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#149",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#148",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#147",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.305657,
+            60.378439
+          ],
+          [
+            21.306781,
+            60.378559
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#152",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#151",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#150",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.306781,
+            60.378559
+          ],
+          [
+            21.307252,
+            60.378886
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#155",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#154",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#153",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.307252,
+            60.378886
+          ],
+          [
+            21.307635,
+            60.378875
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#158",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#157",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#156",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.307635,
+            60.378875
+          ],
+          [
+            21.308031,
+            60.378586
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#161",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#160",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#159",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.308031,
+            60.378586
+          ],
+          [
+            21.309071,
+            60.378154
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#164",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#163",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#162",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.309071,
+            60.378154
+          ],
+          [
+            21.309449,
+            60.377864
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#167",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#166",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#165",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.309449,
+            60.377864
+          ],
+          [
+            21.309822,
+            60.377187
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#170",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#169",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#168",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.309822,
+            60.377187
+          ],
+          [
+            21.310404,
+            60.37677
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#173",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#172",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#171",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.310404,
+            60.37677
+          ],
+          [
+            21.311632,
+            60.376193
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#176",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#175",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#174",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.311632,
+            60.376193
+          ],
+          [
+            21.311862,
+            60.375915
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#179",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#178",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#177",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.311862,
+            60.375915
+          ],
+          [
+            21.312843,
+            60.375921
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#182",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#181",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#180",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.312843,
+            60.375921
+          ],
+          [
+            21.313967,
+            60.376248
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#185",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#184",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#183",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.313967,
+            60.376248
+          ],
+          [
+            21.315304,
+            60.376611
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#188",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#187",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#186",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.315304,
+            60.376611
+          ],
+          [
+            21.316474,
+            60.376572
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#191",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#190",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#189",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.316474,
+            60.376572
+          ],
+          [
+            21.317166,
+            60.376673
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#194",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#193",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#192",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.317166,
+            60.376673
+          ],
+          [
+            21.318118,
+            60.377047
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#197",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#196",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#195",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.318118,
+            60.377047
+          ],
+          [
+            21.318809,
+            60.37705
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#200",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#199",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#198",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.318809,
+            60.37705
+          ],
+          [
+            21.319627,
+            60.377256
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#203",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#202",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#201",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.319627,
+            60.377256
+          ],
+          [
+            21.319847,
+            60.377247
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#206",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#205",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#204",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.319847,
+            60.377247
+          ],
+          [
+            21.321655,
+            60.377198
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#209",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#208",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#207",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.321655,
+            60.377198
+          ],
+          [
+            21.323173,
+            60.377047
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#212",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#211",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#210",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.323173,
+            60.377047
+          ],
+          [
+            21.324586,
+            60.376658
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#215",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#214",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#213",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.324586,
+            60.376658
+          ],
+          [
+            21.325374,
+            60.37652
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#218",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#217",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#216",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.325374,
+            60.37652
+          ],
+          [
+            21.326432,
+            60.376809
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#221",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#220",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#219",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.326432,
+            60.376809
+          ],
+          [
+            21.327473,
+            60.376574
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#224",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#223",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#222",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.327473,
+            60.376574
+          ],
+          [
+            21.329138,
+            60.376204
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#227",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#226",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#225",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.329138,
+            60.376204
+          ],
+          [
+            21.329953,
+            60.376221
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#230",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#229",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#228",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.329953,
+            60.376221
+          ],
+          [
+            21.330745,
+            60.376057
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#233",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#232",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#231",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.330745,
+            60.376057
+          ],
+          [
+            21.331551,
+            60.375812
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#236",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#235",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#234",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.331551,
+            60.375812
+          ],
+          [
+            21.332285,
+            60.375772
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#239",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#238",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#237",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.332285,
+            60.375772
+          ],
+          [
+            21.333853,
+            60.375641
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#242",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#241",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#240",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.333853,
+            60.375641
+          ],
+          [
+            21.335131,
+            60.375506
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#245",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#244",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#243",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.335131,
+            60.375506
+          ],
+          [
+            21.335655,
+            60.375528
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#248",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#247",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#246",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.335655,
+            60.375528
+          ],
+          [
+            21.336827,
+            60.375894
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#251",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#250",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#249",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.336827,
+            60.375894
+          ],
+          [
+            21.337434,
+            60.376063
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#254",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#253",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#252",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.337434,
+            60.376063
+          ],
+          [
+            21.338301,
+            60.376307
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#257",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#256",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#255",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.338301,
+            60.376307
+          ],
+          [
+            21.338626,
+            60.37642
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#260",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#259",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#258",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.338626,
+            60.37642
+          ],
+          [
+            21.339978,
+            60.376073
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#263",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#262",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#261",
+      "@type": "MY.gathering"
+    },
+    {
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.339978,
+            60.376073
+          ],
+          [
+            21.340696,
+            60.376122
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129510#266",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129510#265",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129510#264",
+      "@type": "MY.gathering"
+    }
+  ],
+  "namedPlaceID": "MNP.5179",
+  "editors": [
+    "MA.308"
+  ],
+  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+  "sourceID": "KE.389",
+  "collectionID": "HR.61",
+  "editor": "MA.308",
+  "dateEdited": "2018-02-20T13:37:23+02:00",
+  "dateCreated": "2018-02-20T13:37:23+02:00",
+  "id": "JX.129510",
+  "@type": "MY.document",
+  "@context": "http://schema.laji.fi/context/document.jsonld",
+  "_hasChanges": true
+},
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",
 		  "%additionalFields/scopeField_gathering_unit_unitType": {

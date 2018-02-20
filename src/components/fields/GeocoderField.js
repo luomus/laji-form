@@ -74,7 +74,7 @@ export default class GeocoderField extends Component {
 	getButton(props, loading) {
 		// Button is disabled when loading is false 
 		// (it is false only after fetch and no formData updates, otherwise it will be true/undefined.
-		
+
 		const geometry = this.getGeometry(props);
 		return {
 			fn: this.onButtonClick,
