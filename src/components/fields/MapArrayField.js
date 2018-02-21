@@ -671,8 +671,9 @@ class _MapArrayField extends ComposedComponent {
 						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
 						this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 					},
-					key: "_add",
-					glyph: "plus"
+					key: "add",
+					glyph: "plus",
+					id: this.props.idSchema.$id
 				},
 				...options.buttons.filter(button => button !== addButton),
 			];
@@ -681,7 +682,7 @@ class _MapArrayField extends ComposedComponent {
 
 		if (removeAddButtonPath && this.state.activeIdx !== undefined) {
 			const target = parseJSONPointer(inlineUiSchema, `${removeAddButtonPath}/ui:options`, "createParents");
-			target.renderAdd = false;
+			target.canAdd = false;
 		} else {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
@@ -689,9 +690,14 @@ class _MapArrayField extends ComposedComponent {
 		const inlineSchema = <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_inline`}{...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
 		const belowSchema = belowFields ? <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_below`} {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
-		const buttons =  mapOptions.emptyMode ? 
-			this.props.uiSchema["ui:options"].buttons.map(button => getButton(button, {canAdd: button.key === "addNamedPlace", uiSchema: this.props.uiSchema})).filter(button => button) :
-			undefined;
+		const buttons =  mapOptions.emptyMode
+			? this.props.uiSchema["ui:options"].buttons.map(button => getButton(button, {
+				canAdd: button.key === "addNamedPlace",
+				uiSchema: this.props.uiSchema,
+				idSchema: this.props.idSchema,
+				formData: this.props.formData
+			})).filter(button => button)
+			: undefined;
 
 		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
 			errorSchema[activeIdx][geometryField].__errors : null;
@@ -724,6 +730,7 @@ class _MapArrayField extends ComposedComponent {
 				text: this.props.formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
 			}]
 		};
+
 		const map = (
 			<MapComponent
 				ref="map"

@@ -55,8 +55,6 @@ export default class SingleActiveArrayField extends Component {
 			activeIdx: (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx,
 			...this.getStateFromProps(props), popups: {}
 		};
-		const id = `${this.props.idSchema.$id}`;
-		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
 	componentDidMount() {
@@ -88,6 +86,9 @@ export default class SingleActiveArrayField extends Component {
 		const state = {};
 		const options = getUiOptions(props.uiSchema);
 		if (options.hasOwnProperty("activeIdx")) state.activeIdx = options.activeIdx;
+		else if (props.formData.length === 1 && this.props.formData.length === 0) {
+			state.activeIdx = 0;
+		}
 
 		const {titleFormat} = options;
 
@@ -234,7 +235,6 @@ export default class SingleActiveArrayField extends Component {
 		function _callback() {
 			const id = that.props.idSchema.$id;
 			focusById(that.props.formContext, `${id}_${idx}`);
-			that.getContext()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
 
@@ -475,13 +475,15 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
-		const {TitleField} =  arrayTemplateFieldProps;
+		const {TitleField, DescriptionField} =  arrayTemplateFieldProps;
 		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
+		const {titleFormatters} = getUiOptions(that.props.uiSchema);
 		const title = that.state.getTitle(activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div>
-				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName}/>
+				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} />
+				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
 			: null;
@@ -561,7 +563,7 @@ class TableArrayFieldTemplate extends Component {
 
 		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
 
-		const {itemsClassNames, confirmDelete, titleClassName} = getUiOptions(uiSchema);
+		const {itemsClassNames, confirmDelete, titleClassName, titleFormatters} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = idx => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
@@ -580,8 +582,8 @@ class TableArrayFieldTemplate extends Component {
 
 		return (
 			<div>
-				<Title title={title} label={title} className={titleClassName}/>
-				<DescriptionField description={this.props.description}/>
+				<Title title={title} label={title} className={titleClassName} titleFormatters={titleFormatters} formData={formData} />
+				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
 				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 					{items.length !== 1 || that.state.activeIdx !== 0 ? (
 						<thead>

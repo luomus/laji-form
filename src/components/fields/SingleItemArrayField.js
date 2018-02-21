@@ -10,7 +10,7 @@ export default class SingleItemArrayField extends Component {
 	getStateFromProps(props) {
 		return {
 			...props,
-			formData: props.formData.length ? props.formData : [getDefaultFormState(props.schema.items, undefined, props.registry.definitions)],
+			formData: props.formData && props.formData.length ? props.formData : [getDefaultFormState(props.schema.items, undefined, props.registry.definitions)],
 			uiSchema: {
 				...props.uiSchema,
 				"ui:field": "SingleActiveArrayField",

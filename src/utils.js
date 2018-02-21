@@ -16,7 +16,7 @@ export function isDefaultData(formData, schema, definitions = {}) {
 	case "object":
 		return Object.keys(formData || {}).every(field => isDefaultData(formData[field], schema.properties[field], definitions));
 	case "array":
-		return (formData || []).every(item => isDefaultData(item, schema.items, definitions));
+		return (Array.isArray(formData) || formData === undefined) && (formData || []).every(item => isDefaultData(item, schema.items, definitions));
 	default:
 		return formData === getDefaultFormState(schema, undefined, definitions);
 	}

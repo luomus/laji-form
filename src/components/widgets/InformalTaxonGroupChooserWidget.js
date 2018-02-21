@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Panel, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import ApiClient from "../../ApiClient";
+import Context from "../../Context";
 import Spinner from "react-spinner";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions } from "../../utils";
@@ -37,7 +38,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 	}
 
 	getDefaultOptions = (props) => {
-		const {button = true, rootOnly = false, grid = {lg: 1, md: 2, sm: 3, xs: 12} } = getUiOptions(props.uiSchema);
+		const {button = true, rootOnly = false, grid = {lg: 1, md: 2, sm: 3, xs: 12} } = getUiOptions(props);
 		return {button, rootOnly, grid};
 	}
 
@@ -60,7 +61,6 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 		e.stopPropagation();
 		this.onSelected(undefined);
 	}
-
 
 	render () {
 		let imageID = this.props.value;
@@ -131,6 +131,7 @@ export function getInformalGroups() {
 		const informalTaxonGroups = mapGroupsById(response.results);
 		// Contains all groups in flat object.
 		const informalTaxonGroupsById = walk({}, response.results);
+		new Context().informalTaxonGroupsById = informalTaxonGroupsById;
 		return Promise.resolve({informalTaxonGroups, informalTaxonGroupsById});
 	});
 }

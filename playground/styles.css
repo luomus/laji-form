@@ -1140,6 +1140,11 @@ min-height: 20px;
 	height: 52px;
 	text-align: center;
 }
+.laji-form legend .informal-group-image {
+	width: 20px;
+	height: 20px;
+	float: left;
+}
 
 .tooltip-inner {
 	max-width: 300px;

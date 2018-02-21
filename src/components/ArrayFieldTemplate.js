@@ -31,15 +31,15 @@ export function getButton(button, props = {}) {
 				if (ruleName === "minLength") {
 					return (props.formData || []).length >= ruleVal;
 				} else if (ruleName === "canAdd") {
-					return canAdd(props);
+					return (button.id && button.id !== props.idSchema.$id) || canAdd(props);
 				}
 			});
 		}
 
 		const fnName = button.fn;
-		const _buttonDefinitions = props.uiSchema && getUiOptions(props.uiSchema).buttonDefinitions ? 
-			merge(buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions) :
-			buttonDefinitions;
+		const _buttonDefinitions = props.uiSchema && getUiOptions(props.uiSchema).buttonDefinitions
+			? merge(buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions)
+			: buttonDefinitions;
 		const definition = _buttonDefinitions[fnName];
 		const _button = {...(definition || {}), ...button};
 
@@ -47,18 +47,18 @@ export function getButton(button, props = {}) {
 
 		if (!_button.fnName) _button.fnName = fnName;
 		if (definition) _button.fn = _buttonDefinitions[fnName].fn;
-		if (!(fnName === "add" && (!canAdd(props) || getUiOptions(props.uiSchema).renderAdd === false))) return _button;
+		if (fnName !== "add" || ((button.id && button.id !== props.idSchema.$id) || canAdd(props))) return _button;
 	}
 
 	button = handleButton(button);
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, callback, key, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, callback, key, id, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
 
-	label = label !== undefined ?
-		(glyph ? ` ${label}` : label) :
-		"";
+	label = label !== undefined
+		?  (glyph ? ` ${label}` : label)
+		: "";
 
 	const onClick = e => {
 		let _fn = () => fn(e)(props, options);
@@ -75,7 +75,7 @@ export function getButton(button, props = {}) {
 	};
 
 	return render ? render(onClick) : (
-		<Button key={key || fnName} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
+		<Button key={`${id}_${key || fnName}`} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 		</Button>
@@ -85,7 +85,7 @@ export function getButton(button, props = {}) {
 export function getButtons(buttons = [], props = {}) {
 	const addBtnAdded = buttons.some(button => button.fn === "add");
 
-	if (!addBtnAdded && (!props || canAdd(props))) buttons = [{fn: "add"}, ...buttons];
+	if (!addBtnAdded && (!props || canAdd(props))) buttons = [{fn: "add", id: props.idSchema.$id}, ...buttons];
 
 	let buttonElems = buttons.map(button => getButton(button, props));
 
@@ -192,7 +192,8 @@ export default class ArrayFieldTemplate extends Component {
 			nonRemovables = [],
 			nonOrderables = [],
 			buttons,
-			"ui:deleteHelp": deleteHelp
+			"ui:deleteHelp": deleteHelp,
+			titleFormatters
 		} = getUiOptions(props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
@@ -222,7 +223,7 @@ export default class ArrayFieldTemplate extends Component {
 
 		return (
 			<div className={props.className}>
-				<Title title={title} label={title} help={props.uiSchema["ui:help"]} />
+				<Title title={title} label={title} help={props.uiSchema["ui:help"]} formatters={titleFormatters} />
 				<Description description={props.description}/>
 				{
 					orderable ? 

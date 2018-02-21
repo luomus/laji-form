@@ -87,7 +87,8 @@ export default class NamedPlaceChooserField extends Component {
 					fn: this.onButtonClick,
 					key: "addNamedPlace",
 					glyph: "map-marker",
-					label: this.props.formContext.translations.ChooseFromNamedPlace
+					label: this.props.formContext.translations.ChooseFromNamedPlace,
+					id: this.props.idSchema.$id
 				};
 				if (this.isGatheringsArray()) {
 					buttonDefinition.rules = {canAdd: true};
