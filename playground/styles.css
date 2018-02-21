@@ -1146,6 +1146,14 @@ min-height: 20px;
 	float: left;
 }
 
+.laji-form .informal-taxon-group-chooser .panel {
+	transition: border .2s ease-in-out;
+	cursor: pointer;
+}
+.laji-form .informal-taxon-group-chooser .panel:hover {
+	border-color: #337ab7;
+}
+
 .tooltip-inner {
 	max-width: 300px;
 }

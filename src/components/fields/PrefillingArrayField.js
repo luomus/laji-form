@@ -1,8 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import deepEquals from "deep-equal";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { getUiOptions, focusById, immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
