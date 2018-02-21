@@ -26,7 +26,7 @@ export default class NamedPlaceChooserField extends Component {
 		this.apiClient = new ApiClient();
 	}
 
-	isArray = () => this.props.schema.type === "array"
+	isGatheringsArray = () => this.props.schema.type === "array"
 
 	onPlaceSelected = (place) => {
 		const getGathering = (schema) => {
@@ -42,7 +42,7 @@ export default class NamedPlaceChooserField extends Component {
 			return gathering;
 		}
 		try {
-			if (this.isArray()) { // gatherings array
+			if (this.isGatheringsArray()) {
 				const gathering = getGathering(this.props.schema.items)
 
 				this.props.onChange([
@@ -74,7 +74,11 @@ export default class NamedPlaceChooserField extends Component {
 	updatePlaces = () => {
 		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
 			if (!this.mounted) return;
-			const state = {places: response.results};
+			const state = {places: response.results.sort((a, b) => {
+				if (a.name < b.name) return -1;
+				if (a.name > b.name) return 1;
+				return 0;
+			})};
 
 			if (response.results && response.results.length) {
 				const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
@@ -85,7 +89,7 @@ export default class NamedPlaceChooserField extends Component {
 					glyph: "map-marker",
 					label: this.props.formContext.translations.ChooseFromNamedPlace
 				};
-				if (this.isArray()) { // gatherings array
+				if (this.isGatheringsArray()) {
 					buttonDefinition.rules = {canAdd: true};
 				} else {
 					buttonDefinition.position = "top";
