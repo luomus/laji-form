@@ -240,9 +240,9 @@ min-height: 20px;
 
 .laji-form .laji-form-help-glyph {
 	margin-left: 5px;
-	border-radius:9px;
+	border-radius: 9px;
 	color: white;
-	padding: 1px 5px;
+	padding: 0px 6px;
 	font-size: 13px;
 }
 
