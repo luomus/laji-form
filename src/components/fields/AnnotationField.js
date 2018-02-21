@@ -94,7 +94,7 @@ new Context("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
 class AnnotationBox extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {annotations: props.annotations};
+		this.state = {annotations: props.annotations || []};
 	}
 
 	componentDidMount() {
@@ -126,7 +126,7 @@ class AnnotationBox extends Component {
 			const annotations = [...this.state.annotations, annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
-		}).catch(() => {
+		}).catch((e) => {
 			this.setState({fail: true});
 		});
 	}
