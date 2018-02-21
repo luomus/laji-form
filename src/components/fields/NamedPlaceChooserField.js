@@ -72,7 +72,7 @@ export default class NamedPlaceChooserField extends Component {
 	}
 
 	updatePlaces = () => {
-		this.apiClient.fetchCached("/named-places", {includePublic: false}).then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
 			if (!this.mounted) return;
 			const state = {places: response.results};
 
@@ -223,7 +223,8 @@ class NamedPlaceChooser extends Component {
 		}
 	}
 
-	getFeatureStyle = ({feature}) => {
+	getFeatureStyle = (data) => {
+		const {feature = {}} = data || {};
 		function getColor(idx) {
 			const r = NORMAL_COLOR.substring(1,3);
 			const g = NORMAL_COLOR.substring(3,5);
@@ -236,7 +237,7 @@ class NamedPlaceChooser extends Component {
 			}, "#");
 		}
 
-		const {idx} = feature.properties;
+		const {idx} = feature.properties || {};
 		const color = idx === this.state.popupIdx ? ACTIVE_COLOR : getColor(idx);
 		return {color, fillColor: color};
 	}
