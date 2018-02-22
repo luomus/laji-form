@@ -250,7 +250,7 @@ export default class LajiForm extends Component {
 
 		// First call returns id, next call (and only the very next) reserves the id until it is released.
 		this.reserveId = (id, sendId) => {
-			if (this.ids[id]) {
+			if (this.ids[id] && this.ids[id].length) {
 				this.ids[id].push(sendId);
 			} else {
 				this.ids[id] = [sendId]; // Just mark that the id is now used. It isn't reserved yet.
@@ -261,7 +261,7 @@ export default class LajiForm extends Component {
 		this.releaseId = (id, sendId) => {
 			if (this.ids[id]) {
 				const idx = this.ids[id].indexOf(sendId);
-				this.ids[id] = this.ids[id].splice(idx, 1);
+				this.ids[id].splice(idx, 1);
 				if (this.ids[id].length > 0) {
 					this.ids[id][0](id);
 				}
