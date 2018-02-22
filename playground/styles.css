@@ -254,6 +254,7 @@ min-height: 20px;
 .laji-form .laji-form-map {
 	height: 100%;
 	overflow: hidden;
+	position: relative;
 }
 .laji-form .laji-form-map-container .laji-form-popped {
 	position: absolute;

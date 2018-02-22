@@ -315,6 +315,7 @@ class NamedPlaceChooser extends Component {
 						featurePopupOffset={5}
 						controls={{draw: false}}
 						lang={this.props.formContext.lang}
+						bodyAsDialogRoot={false}
 					/>
 					{(!places) ? <Spinner /> : null}
 					<div style={{display: "none"}}>
