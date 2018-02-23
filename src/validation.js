@@ -6,29 +6,34 @@ export function initializeValidation(apiClient) {
 	});
 }
 
-export default (validators, warnings, settings) => (data, errors) => {
-	if (validators || (warnings && !settings.ignoreWarnings)) {
+export default ({errors: error, warnings: warning, liveErrors: liveError}, settings) => (data, errors) => {
+	if (error || (warning && !settings.ignoreWarnings)) {
 		const promises = [];
-		if (validators) {
-			promises.push(lajiValidate.async(data, validators)
-				.then(() => {return {};})
-				.catch(err => err));
+
+		const getPromiseForValidator = (type, validator) => {
+			return lajiValidate.async(data, validator)
+				.then(() => {})
+				.catch(res => res)
+				.then(err => {return {type, err};});
+		};
+
+		const _validators = {error, liveError};
+		if (!settings.ignoreWarnings) {
+			_validators.warning = warning;
 		}
-		if (warnings && !settings.ignoreWarnings) {
-			promises.push(lajiValidate.async(data, warnings)
-				.then(() => {return {};})
-				.catch(res => res));
-		}
+
+		Object.keys(_validators).forEach(type => {
+			const validator = _validators[type];
+			promises.push(getPromiseForValidator(type, validator));
+		});
+
 		return Promise.all(promises).then((res) => {
-			if (settings.ignoreWarnings && res.length > 0 && Object.keys(res[0]).length > 0 && warnings) {
-				promises.push(lajiValidate.async(data, warnings)
-                        .then(() => {return {};})
-                        .catch(res => res));
+			if (settings.ignoreWarnings && res.length > 0 && Object.keys(res[0]).length > 0 && warning) {
+				promises.push(getPromiseForValidator("warning", warning));
 			}
 
 			return Promise.all(promises).then((res) => {
-				const messages = res.reduce((arr, err, i) => {
-					const type = (i === 1) ? "warning" : "error";
+				const messages = res.reduce((arr, {type, err}) => {
 					arr = arr.concat(getMessages(err, type));
 					return arr;
 				}, []);
@@ -133,7 +138,7 @@ function getMessages(result, type) {
 	const messages = [];
 	for(let k in result) {
 		for (let l in result[k]) {
-			const message = (type === "warning") ? "[warning]" + result[k][l] : result[k][l];
+			const message = (type !== "validators") ? `[${type}]` + result[k][l] : result[k][l];
 			messages.push({
 				property: "instance." + k,
 				message: message

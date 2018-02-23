@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, ErrorPanel } from "./components";
 import { Glyphicon } from "react-bootstrap";
-import { parseJSONPointer } from "../utils";
+import { parseJSONPointer, formatErrorMessage } from "../utils";
 import Context from "../Context";
 
 export default class ErrorListTemplate extends Component {
@@ -30,13 +30,13 @@ export default class ErrorListTemplate extends Component {
 				if (_error.indexOf("[warning]") > -1) {
 					warnings.push({
 						label: _schema.title,
-						error: _error.substring("[warning]".length),
+						error: formatErrorMessage(_error),
 						id: id
 					});
 				} else {
 					errors.push({
 						label: _schema.title,
-						error: _error,
+						error: formatErrorMessage(_error),
 						id: id
 					});
 				}

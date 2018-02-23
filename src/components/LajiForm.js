@@ -116,7 +116,8 @@ export default class LajiForm extends Component {
 		uiSchemaContext: PropTypes.object,
 		settings: PropTypes.object,
 		validators: PropTypes.object,
-		warnings: PropTypes.object
+		warnings: PropTypes.object,
+		liveErrors: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -245,6 +246,7 @@ export default class LajiForm extends Component {
 		};
 
 		this.warningValidatorsById = getWarningValidatorsById(props.warnings, props.schema);
+		this.liveErrorsById = getWarningValidatorsById(props.liveErrors, props.schema);
 
 		this.ids = {};
 
@@ -297,9 +299,21 @@ export default class LajiForm extends Component {
 				getWarnings: (data, id) => {
 					return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
 				},
+				getLiveErrors: (data, id) => {
+					return getWarnings(data, id, this.liveErrorsById, this._context.formData);
+				},
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
+				invalidData: () => {
+					return this._context.errorList;
+				},
+				revalidate: () => {
+					if (this.props.validators || this.props.warnings || this.props.liveErrors) {
+						this.submit(!"don't propagate");
+						return true;
+					}
+				}
 			}
 		};
 	}
@@ -364,7 +378,7 @@ export default class LajiForm extends Component {
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
 					formContext={this.state.formContext}
-					validate={validate(this.props.validators, this.props.warnings, this.validationSettings)}
+					validate={validate({errors: this.props.validators, warnings: this.props.warnings, liveErrors: this.props.liveErrors}, this.validationSettings)}
 					transformErrors={transformErrors(translations)}
 					noHtml5Validate={true}
 				>

@@ -493,3 +493,5 @@ export function formatValue(props, col, _formatter) {
 
 	return formatted;
 }
+
+export const formatErrorMessage = msg => msg.replace(/^\[.*\]/, "");

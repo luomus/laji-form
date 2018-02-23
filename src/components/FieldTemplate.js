@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Context from "../Context";
 import { Label, Help } from "./components";
-import { isMultiSelect, focusById, getUiOptions } from "../utils";
+import { isMultiSelect, focusById, getUiOptions, formatErrorMessage } from "../utils";
 
 export default class FieldTemplate extends Component {
 
@@ -69,16 +69,46 @@ export default class FieldTemplate extends Component {
 		const _displayLabel = (schema.items && schema.items.enum && !isMultiSelect(schema, uiSchema)) ? false : displayLabel;
 
 		let warnings = [];
+		let liveErrors = [];
 		const errors = (rawErrors || []).reduce((arr, err) => {
 			if (err.indexOf("[warning]") > -1) {
-				warnings.push(err.substring("[warning]".length));
+				warnings.push(formatErrorMessage(err));
+			} else if (err.indexOf("[liveError]") > -1) {
+				liveErrors.push(formatErrorMessage(err));
 			} else {
-				arr.push(err);
+				arr.push(formatErrorMessage(err));
 			}
 			return arr;
 		}, []);
-		if (warnings.length === 0 && this.state.id) warnings = formContext.getWarnings(children.props.formData, id);
+		let shouldRevalidate = false;
+		if (warnings.length === 0 && this.state.id) {
+			const newWarnings = formContext.getWarnings(children.props.formData, id);
+			if (newWarnings && this.props.formContext.invalidData()) {
+				shouldRevalidate = true;
+			} else {
+				warnings = newWarnings;
+			}
+		}
 		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
+
+		if (liveErrors.length === 0 && this.state.id) {
+			const newLiveErrors = formContext.getLiveErrors(children.props.formData, id);
+			if (newLiveErrors.length > 0) {
+				if (this.props.formContext.invalidData()) {
+					shouldRevalidate = false;
+				} else {
+					liveErrors = newLiveErrors;
+				}
+			}
+		}
+
+		liveErrors.forEach(error => {
+			errors.push(error);
+		});
+
+		if (shouldRevalidate) {
+			this.props.formContext.revalidate();
+		}
 
 		return (
 			<div className={classNames + warningClassName} id={htmlId}>
