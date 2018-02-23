@@ -55,6 +55,8 @@ export default class SingleActiveArrayField extends Component {
 			activeIdx: (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx,
 			...this.getStateFromProps(props), popups: {}
 		};
+		const id = `${this.props.idSchema.$id}`;
+		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
 	componentDidMount() {
@@ -235,6 +237,7 @@ export default class SingleActiveArrayField extends Component {
 		function _callback() {
 			const id = that.props.idSchema.$id;
 			focusById(that.props.formContext, `${id}_${idx}`);
+			that.getContext()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
 

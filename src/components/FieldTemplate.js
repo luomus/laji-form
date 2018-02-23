@@ -1,12 +1,16 @@
 import React, {Component} from "react";
 import Context from "../Context";
 import { Label, Help } from "./components";
-import { isMultiSelect } from "../utils";
+import { isMultiSelect, focusById, getUiOptions } from "../utils";
 
 export default class FieldTemplate extends Component {
 
 	constructor(props) {
 		super(props);
+		if (getUiOptions(props.uiSchema).reserveId === false) {
+			this.state = {};
+			return;
+		}
 		const id = this.props.formContext.reserveId(this.props.id, this.receiveId);
 		if (id) {
 			this.state = {id};
@@ -15,11 +19,26 @@ export default class FieldTemplate extends Component {
 		}
 	}
 
+	componentDidMount() {
+		const {formContext} = this.props;
+		const contextId = formContext.contextId;
+		const _context = new Context(contextId);
+		const {idToFocus} = _context;
+		if (idToFocus !== undefined && this.props.id === idToFocus) {
+			focusById(formContext, _context.idToFocus);
+			_context.idToFocus = undefined;
+		}
+	}
+
+
 	receiveId = (id) => {
 		this.setState({id});
 	}
 
 	componentWillUnmount() {
+		if (getUiOptions(this.props.uiSchema).reserveId === false) {
+			return;
+		}
 		this.props.formContext.releaseId(this.props.id);
 	}
 

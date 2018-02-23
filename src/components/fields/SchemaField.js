@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Context from "../../Context";
-import { focusById, isMultiSelect, getUiOptions } from "../../utils";
+import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
@@ -12,17 +12,6 @@ export default class _SchemaField extends Component {
 		super(props);
 		this.updateVirtualInstance(props, !!"initial");
 		this.state = {showAnnotations: false};
-	}
-
-	componentDidMount() {
-		const {formContext} = this.props.registry;
-		const contextId = formContext.contextId;
-		const _context = new Context(contextId);
-		const {idToFocus} = _context;
-		if (idToFocus !== undefined && this.props.idSchema.$id === idToFocus) {
-			focusById(formContext, _context.idToFocus);
-			_context.idToFocus = undefined;
-		}
 	}
 
 	componentWillReceiveProps(props) {

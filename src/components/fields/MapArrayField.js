@@ -652,10 +652,18 @@ class _MapArrayField extends ComposedComponent {
 			inlineUiSchema.items = inlineItemsUiSchema;
 		}
 
-		let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot} : undefined;
+		let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot} : {};
 
 		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
-		if (belowUiSchema) belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
+		belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
+
+		if (!belowUiSchema.items) {
+			belowUiSchema.items = {}
+		}
+		if (!belowUiSchema.items["ui:options"]) {
+			belowUiSchema.items["ui:options"] = {}
+		}
+		belowUiSchema.items["ui:options"].reserveId = false;
 
 		const {buttonsPath, addButtonPath, removeAddButtonPath} = getUiOptions(this.props.uiSchema);
 		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
