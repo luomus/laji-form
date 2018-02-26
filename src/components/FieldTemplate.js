@@ -95,23 +95,19 @@ export default class FieldTemplate extends Component {
 					null
 				}
 				{errors.length > 0 ?
-					<div id={`laji-form-error-container-${id}`}>
-						<p></p>
-						<ul>
+						<ul id={`laji-form-error-container-${id}`} className="laji-form-error-container">
 							{errors.map((error, i) => (
-								<li key={i} className="text-danger">{error}</li>
+								<li key={i}>{error}</li>
 							))}
 						</ul>
-					</div> : null}
+					 : null}
 				{warnings.length > 0 ?
-					<div id={`laji-form-warning-container-${id}`}>
-						<p></p>
-						<ul>
-							{warnings.map((warning, i) => (
-								<li key={i} className="text-warning">{warning}</li>
-							))}
-						</ul>
-					</div> : null}
+					<ul  id={`laji-form-warning-container-${id}`} className="laji-form-warning-container">
+						{warnings.map((warning, i) => (
+							<li key={i}>{warning}</li>
+						))}
+					</ul>
+					: null}
 			</div>
 		);
 	}

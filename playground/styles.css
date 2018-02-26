@@ -733,8 +733,21 @@ min-height: 20px;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 }
-.laji-form .text-warning {
-	color: #f0ad4e;
+.laji-form .laji-form-warning-container, .laji-form .laji-form-error-container {
+	padding: 0px;
+}
+.laji-form ul.laji-form-warning-container li, .laji-form ul.laji-form-error-container li {
+    color: white;
+    border-radius: 4px;
+    list-style: none;
+    margin: 1px;
+    padding: 2px 5px;
+}
+.laji-form ul.laji-form-warning-container li {
+    background: #f0ad4e;
+}
+.laji-form ul.laji-form-error-container li {
+	background-color: #bd362f;
 }
 .laji-form .laji-form-error-list .panel-title {
 	color: white;
