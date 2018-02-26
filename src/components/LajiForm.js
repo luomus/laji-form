@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
-import { getWarnings, getWarningValidatorsById, transformErrors, initializeValidation } from "../validation";
+import { transformErrors, initializeValidation } from "../validation";
 import { Button } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded } from "../utils";
@@ -245,9 +245,6 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		this.warningValidatorsById = getWarningValidatorsById(props.warnings, props.schema);
-		this.liveErrorsById = getWarningValidatorsById(props.liveErrors, props.schema);
-
 		this.ids = {};
 
 		// First call returns id, next call (and only the very next) reserves the id until it is released.
@@ -296,12 +293,6 @@ export default class LajiForm extends Component {
 				topOffset: props.topOffset,
 				bottomOffset: props.bottomOffset,
 				formID: props.id,
-				getWarnings: (data, id) => {
-					return getWarnings(data, id, this.warningValidatorsById, this._context.formData);
-				},
-				getLiveErrors: (data, id) => {
-					return getWarnings(data, id, this.liveErrorsById, this._context.formData);
-				},
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
@@ -378,14 +369,15 @@ export default class LajiForm extends Component {
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
 					formContext={this.state.formContext}
-					validate={validate({errors: this.props.validators, warnings: this.props.warnings, liveErrors: this.props.liveErrors}, this.validationSettings)}
+					validate={this.validate}
 					transformErrors={transformErrors(translations)}
 					noHtml5Validate={true}
+					liveValidate={true}
 				>
 				<div>
 					{this.props.children}
 					{(!this.props.children && this.props.renderSubmit !== false) ?
-						(<Button id="submit" type="submit">{translations.Submit}</Button>) :
+						(<Button id="submit" type="submit" onClick={this._onDefaultSubmit}>{translations.Submit}</Button>) :
 						null}
 					</div>
 			</Form>
@@ -422,6 +414,15 @@ export default class LajiForm extends Component {
 		);
 	}
 
+	validate = (...params) => {
+		const validations = {warnings: this.props.warnings, liveErrors: this.props.liveErrors};
+		if (this._validateAll || this.formRef && this.formRef.state && this.formRef.state.errors.length && !this.formRef.state.errors.every(({stack}) => stack.includes("[warning]") || stack.includes("[liveError]"))) {
+			validations.errors = this.props.validators;
+			validations.warnings = this.props.warnings;
+		}
+		return validate(validations, this.validationSettings)(...params);
+	}
+
 	onSubmit = (...props) => {
 		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
 		this.propagateSubmit = true;
@@ -434,10 +435,17 @@ export default class LajiForm extends Component {
 		this.validationSettings.ignoreWarnings = false;
 	}
 
+	_onDefaultSubmit = (e) => {
+		e.preventDefault();
+		this.submit();
+	}
+
 	submit = (propagate = true, ignoreWarnings = false) => {
+		this._validateAll = true;
 		this.propagateSubmit = propagate;
 		this.validationSettings.ignoreWarnings = ignoreWarnings;
 		this.formRef.onSubmit({preventDefault: () => {}});
+		this._validateAll = false;
 	}
 
 	dismissHelp = (e) => {
