@@ -5,7 +5,7 @@ import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import { Button } from "../components";
+import { Button, DeleteButton } from "../components";
 import Spinner from "react-spinner";
 import { isObject } from "laji-map/lib/utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
@@ -239,8 +239,21 @@ class AnnotationBox extends Component {
 		};
 	}
 
+	onDelete = (id) => () => {
+		new ApiClient().fetchRaw(`/annotations/${id}`, undefined, {
+			method: "DELETE"
+		}).then(() => {
+			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
+			const annotations = this.state.annotations.filter(({id: _id}) => _id !== id);
+			annotationContext[this.props.id] = annotations;
+			this.setState({deleteFail: false, annotations});
+		}).catch(() => {
+			this.setState({deleteFail: true});
+		});
+	}
+
 	render() {
-		const {formContext: {translations, lang}} = this.props;
+		const {formContext: {translations, lang, uiSchemaContext: {creator}}} = this.props;
 		const {metadataForm = {}, annotations = []} = this.state;
 		const _uiSchema = this.getUiSchema();
 
@@ -250,18 +263,25 @@ class AnnotationBox extends Component {
 				<ListGroup fill={true}>
 					{this.state.metadataForm ? annotations.slice(0).reverse().map((annotation, idx) => 
 						<ListGroupItem key={idx} className={`annotation-list${idx % 2 === 0 ? "" : "-odd"}`}>
-							<LajiForm 
-								{...metadataForm}
-								uiSchema={_uiSchema}
-								lang={lang}
-								formData={annotation} 
-								renderSubmit={false}
-							/>
+							<div>
+								<LajiForm
+									{...metadataForm}
+									uiSchema={_uiSchema}
+									lang={lang}
+									formData={annotation}
+									renderSubmit={false}
+								/>
+								{annotation.annotationByPerson === creator ? <DeleteButton onClick={this.onDelete(annotation.id)} translations={translations} corner={true}/> : null}
+							</div>
 						</ListGroupItem>
 					) : <Spinner />}
 				</ListGroup>
+				{this.state.deleteFail &&
+					<Alert bsStyle={"danger"}>
+						{translations["DeleteFail"]}
+					</Alert>
+				}
 			</Panel>
 		);
 	}
 }
-

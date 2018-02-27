@@ -546,5 +546,10 @@
 		fi: "Näytä annotaatiot",
 		en: "Show annotations",
 		sv: "Välj annotationer"
-	}
+	},
+	deleteFail: {
+		fi: "Poisto epäonnistui.",
+		en: "Delete failed.",
+		sv: "Radera framgångsrikt!"
+	},
 };
