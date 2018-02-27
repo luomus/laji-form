@@ -5,10 +5,9 @@ import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
-import { latLngSegmentsToGeoJSONGeometry } from "laji-map/lib/utils";
 import { Row, Col, Panel, Popover, Modal } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, getUpdateObjectFromJSONPath, injectButtons } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, injectButtons } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -662,10 +661,10 @@ class _MapArrayField extends ComposedComponent {
 		belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
 
 		if (!belowUiSchema.items) {
-			belowUiSchema.items = {}
+			belowUiSchema.items = {};
 		}
 		if (!belowUiSchema.items["ui:options"]) {
-			belowUiSchema.items["ui:options"] = {}
+			belowUiSchema.items["ui:options"] = {};
 		}
 		belowUiSchema.items["ui:options"].reserveId = false;
 

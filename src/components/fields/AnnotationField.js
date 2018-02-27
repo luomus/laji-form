@@ -43,7 +43,7 @@ export default class AnnotationField extends Component {
 	}
 
 	render() {
-		const {adminOnly, container, add, uiSchema: annotationUiSchema, buttonsPath = "/"} = getUiOptions(this.props.uiSchema);
+		const {adminOnly, container, add, filter, uiSchema: annotationUiSchema, buttonsPath = "/"} = getUiOptions(this.props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
 		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin || !this.props.formData.id
 			? innerUiSchema
@@ -81,6 +81,7 @@ export default class AnnotationField extends Component {
 							formContext={this.props.formContext} 
 							add={add}
 							uiSchema={annotationUiSchema}
+							filter={filter}
 						/>
 					</Container>
 				}
@@ -102,7 +103,16 @@ class AnnotationBox extends Component {
 		new ApiClient().fetchCached("/forms/MHL.15", {lang: this.props.lang, format: "schema"})
 			.then(metadataForm => {
 				if (this.mounted) {
-					this.setState({metadataForm});
+					const {filter: _filter} = this.props;
+					let propArray = Object.keys(metadataForm.schema.properties);
+					if (_filter) propArray = filter(propArray, _filter.filter, _filter.filterType);
+
+					const schemaProperties = propArray.reduce((properties, prop) => {
+						properties[prop] = metadataForm.schema.properties[prop];
+						return properties;
+					}, {});
+					const schema = {...metadataForm.schema, properties: schemaProperties};
+					this.setState({metadataForm: {...metadataForm, schema}});
 				}
 			});
 	}
@@ -126,7 +136,7 @@ class AnnotationBox extends Component {
 			const annotations = [...this.state.annotations, annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
-		}).catch((e) => {
+		}).catch(() => {
 			this.setState({fail: true});
 		});
 	}
@@ -167,26 +177,26 @@ class AnnotationBox extends Component {
 		let submitOnChange = undefined;
 		let addFormData = undefined;
 		if (add && metadataForm && metadataForm.schema) {
-			const addOptions =  this.getAddOptions();
+			const {adminOnly, filter: _filter, uiSchema: _addUiSchema, _submitOnChange, formData} =  this.getAddOptions();
 
-			if (addOptions.adminOnly && !formContext.uiSchemaContext.isAdmin) {
+			if (adminOnly && !formContext.uiSchemaContext.isAdmin) {
 				return null;
 			}
 
 			let propArray = Object.keys(metadataForm.schema.properties);
 			propArray = filter(propArray, ["created", "annotationByPerson"], "blacklist");
-			if (addOptions.filter) propArray = filter(propArray, addOptions.filter.filter, addOptions.filter.filterType);
+			if (_filter) propArray = filter(propArray, _filter.filter, _filter.filterType);
 
 			const addSchemaProperties = propArray.reduce((properties, prop) => {
 				properties[prop] = metadataForm.schema.properties[prop];
 				return properties;
 			}, {});
 			addSchema = {...metadataForm.schema, properties: addSchemaProperties};
-			addUiSchema = addOptions.uiSchema || {..._uiSchema, "ui:readonly": false};
-			submitOnChange = addOptions.submitOnChange;
+			addUiSchema = _addUiSchema || {..._uiSchema, "ui:readonly": false};
+			submitOnChange = _submitOnChange;
 			addFormData = this.state.addFormData || (
-				addOptions.formData
-				? getDefaultFormState(addSchema, addOptions.formData)
+				formData
+				? getDefaultFormState(addSchema, formData)
 				: undefined
 			);
 		}
