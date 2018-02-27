@@ -464,6 +464,10 @@ class LineTransectMapArrayField extends Component {
 		if (prevState.activeIdx !== this.state.activeIdx) {
 			this.onActiveChange(this.state.activeIdx);
 		}
+
+		for (let lineIdx = 0; lineIdx < this.props.formData.length; lineIdx++) {
+			this.map._updateLTStyleForLineIdx(lineIdx);
+		}
 	}
 
 	onComponentDidMount() {
