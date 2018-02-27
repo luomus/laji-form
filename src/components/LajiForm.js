@@ -415,9 +415,13 @@ export default class LajiForm extends Component {
 	}
 
 	validate = (...params) => {
-		const validations = {warnings: this.props.warnings, liveErrors: this.props.liveErrors};
+		const validations = {liveErrors: this.props.liveErrors};
 		if (this._validateAll || this.formRef && this.formRef.state && this.formRef.state.errors.length && !this.formRef.state.errors.every(({stack}) => stack.includes("[warning]") || stack.includes("[liveError]"))) {
 			validations.errors = this.props.validators;
+			if (!this.validationSettings.ignoreWarnings) {
+				validations.warnings = this.props.warnings;
+			}
+		} else if (!this.validationSettings.ignoreWarnings) {
 			validations.warnings = this.props.warnings;
 		}
 		return validate(validations, this.validationSettings)(...params);
