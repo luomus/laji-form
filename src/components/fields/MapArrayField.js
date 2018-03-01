@@ -430,9 +430,11 @@ class LineTransectMapArrayField extends Component {
 		Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
 	}
 
-	getFeatureStyle = ({lineIdx, style}) => {
+	getFeatureStyle = ({lineIdx, style, type}) => {
 		if (this.props.errorSchema[lineIdx]) {
-			return {...style, fillColor: "#ff0000"};
+			return (type === L.CircleMarker) // eslint-disable-line no-undef
+				? style
+				: {...style, fillColor: "#f33"};
 		}
 		const {gatheringFact = {}} = this.props.formData[lineIdx] || {};
 		const {lineTransectSegmentCounted} = gatheringFact;
