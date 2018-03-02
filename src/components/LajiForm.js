@@ -7,6 +7,7 @@ import { Button } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded } from "../utils";
 import equals from "deep-equal";
+import { toErrorList } from "react-jsonschema-form/lib/validate";
 
 import Form from "react-jsonschema-form";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
@@ -255,7 +256,7 @@ export default class LajiForm extends Component {
 				this.ids[id] = [sendId]; // Just mark that the id is now used. It isn't reserved yet.
 				return id;
 			}
-		}
+		};
 
 		this.releaseId = (id, sendId) => {
 			if (this.ids[id]) {
@@ -265,7 +266,7 @@ export default class LajiForm extends Component {
 					this.ids[id][0](id);
 				}
 			}
-		}
+		};
 
 		this.state = this.getStateFromProps(props);
 	}
@@ -295,16 +296,7 @@ export default class LajiForm extends Component {
 				formID: props.id,
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
-				releaseId: this.releaseId,
-				invalidData: () => {
-					return this._context.errorList;
-				},
-				revalidate: () => {
-					if (this.props.validators || this.props.warnings || this.props.liveErrors) {
-						this.submit(!"don't propagate");
-						return true;
-					}
-				}
+				releaseId: this.releaseId
 			}
 		};
 	}
@@ -370,7 +362,7 @@ export default class LajiForm extends Component {
 					ErrorList={ErrorListTemplate}
 					formContext={this.state.formContext}
 					validate={this.validate}
-					transformErrors={transformErrors(translations)}
+					transformErrors={this.transformErrors}
 					noHtml5Validate={true}
 					liveValidate={true}
 				>
@@ -414,9 +406,11 @@ export default class LajiForm extends Component {
 		);
 	}
 
+	transformErrors = (...params) => transformErrors(this.state.translations, !this.validateAll)(...params);
+
 	validate = (...params) => {
 		const validations = {liveErrors: this.props.liveErrors};
-		if (this._validateAll || this.formRef && this.formRef.state && this.formRef.state.errors.length && !this.formRef.state.errors.every(({stack}) => stack.includes("[warning]") || stack.includes("[liveError]"))) {
+		if (this.validateAll) {
 			validations.errors = this.props.validators;
 			if (!this.validationSettings.ignoreWarnings) {
 				validations.warnings = this.props.warnings;
@@ -424,7 +418,18 @@ export default class LajiForm extends Component {
 		} else if (!this.validationSettings.ignoreWarnings) {
 			validations.warnings = this.props.warnings;
 		}
-		return validate(validations, this.validationSettings)(...params);
+		return new Promise(resolve => {
+			validate(validations, this.validationSettings)(...params).then(_validations => {
+				const errors = toErrorList(_validations);
+				// Rerun validations with warnings if errors surfaced.
+				if (this.validationSettings.ignoreWarnings && errors.length) {
+					validations.warnings = this.props.warnings;
+					validate(validations, {...this.validationSettings, ignoreWarnings: false})(...params).then(resolve);
+				} else {
+					resolve(_validations);
+				}
+			});
+		});
 	}
 
 	onSubmit = (...props) => {
@@ -445,11 +450,10 @@ export default class LajiForm extends Component {
 	}
 
 	submit = (propagate = true, ignoreWarnings = false) => {
-		this._validateAll = true;
+		this.validateAll = true;
 		this.propagateSubmit = propagate;
 		this.validationSettings.ignoreWarnings = ignoreWarnings;
 		this.formRef.onSubmit({preventDefault: () => {}});
-		this._validateAll = false;
 	}
 
 	dismissHelp = (e) => {

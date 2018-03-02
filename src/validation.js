@@ -45,9 +45,9 @@ export default ({errors: error, warnings: warning, liveErrors: liveError}, setti
 	return errors;
 };
 
-export function transformErrors(translations) {
+export function transformErrors(translations, skip) {
 	return (errors) => {
-		return errors.map(error => {
+		return skip ? [] : errors.map(error => {
 			if (error.name === "type") {
 				error.message = translations.TypeError + translations[error.params.type] + ".";
 			} else if (error.name === "required") {
