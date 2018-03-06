@@ -153,7 +153,7 @@ export default class SingleActiveArrayField extends Component {
 			classNames: undefined,
 			"ui:options": {
 				...this.props.uiSchema["ui:options"],
-				renderDelete: false,
+				removable: false,
 				buttons,
 				buttonDefinitions: this.props.uiSchema["ui:options"].buttonDefinitions ? 
 					merge(this.buttonDefinitions, getUiOptions(this.props.uiSchema).buttonDefinitions) :
@@ -179,7 +179,8 @@ export default class SingleActiveArrayField extends Component {
 				formContext={formContext}
 				registry={{
 					...this.props.registry,
-					ArrayFieldTemplate
+					ArrayFieldTemplate,
+					formContext
 				}}
 				uiSchema={uiSchema}
 			/>
@@ -469,7 +470,6 @@ class PagerArrayFieldTemplate extends Component {
 
 	navigatePrev = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx - 1);
 	navigateNext = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx + 1);
-
 }
 
 @handlesButtonsAndFocus

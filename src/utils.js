@@ -4,6 +4,9 @@ import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "
 import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
 import update from "immutability-helper";
+import { isObject as  _isObject } from "laji-map/lib/utils";
+
+export const isObject = _isObject;
 
 export function isHidden(uiSchema, property) {
 	if (!uiSchema) return false;
@@ -495,3 +498,24 @@ export function formatValue(props, col, _formatter) {
 }
 
 export const formatErrorMessage = msg => msg.replace(/^\[.*\]/, "");
+
+export function checkRules(rules, props, cache) {
+	const passes = (Array.isArray(rules) ? rules : [rules]).every(({field, regexp, valueIn}, idx) => {
+		let value = parseJSONPointer(props.formData || {}, field);
+		if (value === undefined) value = "";
+		if (regexp) {
+			return `${value}`.match(new RegExp(regexp));
+		} else if (valueIn) {
+			if (cache) {
+				if (!cache[idx]) {
+					cache[idx] = dictionarify(valueIn)
+				}
+				return cache[idx][value];
+			} else {
+				return dictionarify(valueIn)[value];
+			}
+		}
+	});
+
+	return cache ? {passes, cache} : passes;
+}

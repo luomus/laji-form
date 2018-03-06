@@ -2,14 +2,15 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import deepmerge from "deepmerge";
-import { parseJSONPointer } from "../../utils";
+import { checkRules } from "../../utils";
 
-const rulePropType = PropTypes.shape({
+export const rulePropType = PropTypes.shape({
 	field: PropTypes.string.isRequired,
-	regexp: PropTypes.string.isRequired,
+	regexp: PropTypes.string,
+	valueIn: PropTypes.arrayOf(PropTypes.string),
 });
 
-const operationPropType = PropTypes.shape({
+export const operationPropType = PropTypes.shape({
 	type: PropTypes.oneOf(["merge", "wrap"]),
 	uiSchema: PropTypes.object.isRequired,
 });
@@ -32,7 +33,8 @@ const casePropType = PropTypes.shape({
  *		rules: [
  *			{
  *				regexp: The regexp that the field must match.
- *				field: The field that has to match the regexp
+ *				valueIn: An array that the field must be in.
+ *				field: The field that the rule is being checked on (can be a JSON pointer or a field name)
  *			}
  *		],
  *		operations: [ // All the operations are performed if all rules pass.
@@ -42,7 +44,9 @@ const casePropType = PropTypes.shape({
  *				                                   "replace" (default) replaces nested uiSchema with conditional uiSchema.
  *				uiSchema: conditional uiSchema to use.
  *			}
- *		]
+ *		],
+ *		cache: <boolean> true by default. If you know the cases will cache, set this to false.
+ *		       There will be a performance penalty on valueIn rule, as they are not indexed without caching.
  *	]
  * }
  * uiSchema: nested uiSchema
@@ -56,46 +60,60 @@ export default class ConditionalUiSchemaField extends Component {
 				cases: PropTypes.oneOfType([
 					casePropType,
 					PropTypes.arrayOf(casePropType)
-				])
+				]),
+				cache: PropTypes.boolean
 			})
 		})
 	}
 
 	static getName() {return  "ConditionalUiSchemaField";}
 
-	checkRule = (props) => ({field, regexp}) => {
-		let value = parseJSONPointer(props.formData || {}, field);
-		if (value === undefined) value = "";
-		return `${value}`.match(new RegExp(regexp));
-	}
+	cache = {};
 
 	getStateFromProps(props) {
-		const {cases = []} = this.getUiOptions();
+		const {cases = [], cache = true} = this.getUiOptions();
 
 		const {uiSchema} = props;
 
 		let computedUiSchema = uiSchema;
-		(Array.isArray(cases) ? cases : [cases]).some(({rules = [], operations = []}) => {
-			const passes = (Array.isArray(rules) ? rules : [rules]).every(this.checkRule(props));
+		(Array.isArray(cases) ? cases : [cases]).some(({rules = [], operations = []}, idx) => {
+
+			let passes;
+			if (cache) {
+				if (!this.cache[idx]) {
+					this.cache[idx] = {};
+				}
+				const check = checkRules(rules, props, this.cache[idx]);
+				const {cache}  = check;
+				passes = check.passes;
+				this.cache = cache;
+			} else {
+				passes = checkRules(rules, props);
+			}
+
 			if (passes)  {
-				computedUiSchema = (Array.isArray(operations) ? operations : [operations]).reduce((_uiSchema, op) => {
-					switch (op.type) {
-					case "merge":
-						computedUiSchema = deepmerge(uiSchema,  op.uiSchema, {arrayMerge: (a1, a2) => a2});
-						break;
-					case "wrap":
-						computedUiSchema = {...op.uiSchema, uiSchema: computedUiSchema};
-						break;
-					case "replace":
-					default:
-						computedUiSchema = op.uiSchema;
-					}
-					return computedUiSchema;
-				}, computedUiSchema);
+				computedUiSchema = computeUiSchema(computedUiSchema, operations);
 			}
 			return passes;
 		});
 
 		return {uiSchema: computedUiSchema};
 	}
+}
+
+export const computeUiSchema = (uiSchema, operations) => {
+	return (Array.isArray(operations) ? operations : [operations]).reduce((_uiSchema, op) => {
+		switch (op.type) {
+		case "merge":
+			uiSchema = deepmerge(uiSchema,  op.uiSchema, {arrayMerge: (a1, a2) => a2});
+			break;
+		case "wrap":
+			uiSchema = {...op.uiSchema, uiSchema};
+			break;
+		case "replace":
+		default:
+			uiSchema = op.uiSchema;
+		}
+		return uiSchema;
+	}, uiSchema);
 }

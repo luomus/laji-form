@@ -88,6 +88,12 @@ export default class TableField extends Component {
 
 		}
 
+		const _formContext = {
+			...formContext,
+			cols,
+			wrapperCols,
+			schemaPropsArray
+		};
 		return (
 			<ArrayField
 				{...this.props}
@@ -98,14 +104,10 @@ export default class TableField extends Component {
 				uiSchema={_uiSchema}
 				registry={{
 					...this.props.registry,
-					ArrayFieldTemplate: TableArrayFieldTemplate
+					ArrayFieldTemplate: TableArrayFieldTemplate,
+					formContext: _formContext
 				}}
-				formContext={{
-					...formContext,
-					cols,
-					wrapperCols,
-					schemaPropsArray
-				}}
+				formContext={_formContext}
 			/>
 		);
 	}
@@ -130,7 +132,7 @@ class TableArrayFieldTemplate extends Component {
 		);
 
 		const options = getUiOptions(props.uiSchema);
-		const {confirmDelete, deleteCorner, renderDelete = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
+		const {confirmDelete, deleteCorner, removable = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
@@ -153,7 +155,7 @@ class TableArrayFieldTemplate extends Component {
 							<Col {...wrapperCols}>
 								<div className="laji-form-field-template-item keep-vertical">
 									<div className="laji-form-field-template-schema">{item.children}</div>
-									{item.hasRemove && !nonRemovables.includes(item.index) && renderDelete && deleteButton}
+									{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 								</div>
 							</Col>
 						</Row>

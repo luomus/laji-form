@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { immutableDelete } from  "../../utils";
+import { immutableDelete, parseJSONPointer } from  "../../utils";
 import { toIdSchema } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -54,9 +54,11 @@ export default class CombinedValueDisplayField extends Component {
 
 			let value = undefined;
 
+			const firstValue = firstField[0] === "/" ? parseJSONPointer(formData, firstField, !!"safely") : formData[firstField];
+			const secondValue = secondField[0] === "/" ? parseJSONPointer(formData, secondField, !!"safely") : formData[secondField];
 			if (combineType === "timeDifference") {
-				if (formData[firstField] && formData[secondField]) {
-					const difference = this.toMinutes(formData[secondField]) - this.toMinutes(formData[firstField]);
+				if (firstValue && secondValue) {
+					const difference = this.toMinutes(secondValue) - this.toMinutes(formData[firstField]);
 					if (difference >= 0) {
 						const hours = Math.floor(difference / 60);
 						const minutes = difference % 60;
@@ -66,8 +68,8 @@ export default class CombinedValueDisplayField extends Component {
 			} else {
 				const delimiter = options.delimiter || "";
 				value = [];
-				if (formData[firstField]) value.push(formData[firstField]);
-				if (formData[secondField]) value.push(formData[secondField]);
+				if (firstValue) value.push(firstValue);
+				if (secondValue) value.push(secondValue);
 				value = value.join(delimiter);
 			}
 

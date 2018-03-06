@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, DeleteButton, Label, TooltipComponent } from "./components";
+import { Button, DeleteButton, Label } from "./components";
 import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
@@ -17,7 +17,7 @@ const buttonDefinitions = {
 	add: {
 		glyph: "plus",
 		fn: (e) => (props) => {
-			const idx = (props.startIdx || 0) + props.items.length;
+			const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + props.items.length;
 			onAdd(e, props, `${props.idSchema.$id}_${idx}`);
 		}
 	}
@@ -187,7 +187,7 @@ export default class ArrayFieldTemplate extends Component {
 			confirmDelete,
 			renderTitleAsLabel,
 			deleteCorner,
-			renderDelete = true,
+			removable = true,
 			orderable,
 			nonRemovables = [],
 			nonOrderables = [],
@@ -214,7 +214,7 @@ export default class ArrayFieldTemplate extends Component {
 			return (
 				<div key={item.index} className="laji-form-field-template-item keep-vertical">
 					<div className="laji-form-field-template-schema">{item.children}</div>
-					{item.hasRemove && !nonRemovables.includes(item.index) && renderDelete && deleteButton}
+					{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 				</div>
 			);
 		});
@@ -224,7 +224,7 @@ export default class ArrayFieldTemplate extends Component {
 		return (
 			<div className={props.className}>
 				<Title title={title} label={title} help={props.uiSchema["ui:help"]} formatters={titleFormatters} />
-				<Description description={props.description}/>
+				{props.description && <Description description={props.description}/>}
 				{
 					orderable ? 
 						<SortableList helperClass="laji-form reorder-active" 
