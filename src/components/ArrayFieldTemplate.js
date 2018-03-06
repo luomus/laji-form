@@ -47,7 +47,7 @@ export function getButton(button, props = {}) {
 
 		if (!_button.fnName) _button.fnName = fnName;
 		if (definition) _button.fn = _buttonDefinitions[fnName].fn;
-		if (fnName !== "add" || ((button.id && button.id !== props.idSchema.$id) || getUiOptions(props.uiSchema).renderAdd !== false || canAdd(props))) return _button;
+		if (fnName !== "add" || ((button.id && button.id !== props.idSchema.$id) || canAdd(props))) return _button;
 	}
 
 	button = handleButton(button);
