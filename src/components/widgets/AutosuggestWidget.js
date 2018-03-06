@@ -39,7 +39,7 @@ export default class _AutosuggestWidget extends Component {
 			}
 			const getSuggestionFromValue = component.prototype.getSuggestionFromValue;
 			if (getSuggestionFromValue) {
-				return <SimpleValueRenderer getSuggestionFromValue={getSuggestionFromValue} value={value}/>
+				return <SimpleValueRenderer getSuggestionFromValue={getSuggestionFromValue} value={value}/>;
 			}
 		}
 	}
@@ -59,7 +59,7 @@ class SimpleValueRenderer extends Component {
 		}
 	}
 	render() {
-		return <span>{this.state.value}</span>
+		return <span>{this.state.value}</span>;
 	}
 
 }
@@ -590,8 +590,7 @@ export class Autosuggest extends Component {
 			component = (
 				<div>
 					{component}
-
-					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations}/>}
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations} />}
 				</div>
 			);
 		}
