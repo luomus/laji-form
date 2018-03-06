@@ -6,7 +6,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, focusById } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -637,7 +637,7 @@ export default class ScopeField extends Component {
 					const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
 					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
-					const onButtonClick = () => this.toggleAdditionalProperty(property);
+					const onButtonClick = () => this.toggleAdditionalProperty(property, !!"scroll");
 					return (
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
@@ -659,7 +659,7 @@ export default class ScopeField extends Component {
 		return isIncluded;
 	}
 
-	toggleAdditionalProperty = (fields) => {
+	toggleAdditionalProperty = (fields, scrollToView) => {
 		if (!Array.isArray(fields)) fields = [fields];
 		const additionalFields = fields.reduce((additionalFields, field) => {
 			return {...additionalFields, [field]: !this.propertyIsIncluded(field)};
@@ -682,7 +682,9 @@ export default class ScopeField extends Component {
 				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
 			}
 		}
-		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
+		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, scrollToView ? () => {
+			focusById(this.props.formContext, this.props.idSchema.$id);
+		} : undefined);
 	}
 
 
