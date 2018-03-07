@@ -245,7 +245,7 @@ export default class LajiForm extends Component {
 					return;
 				}
 			}
-			callback && callback()
+			callback && callback();
 		};
 
 		this.ids = {};

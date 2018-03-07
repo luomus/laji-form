@@ -767,6 +767,10 @@ min-height: 20px;
 .laji-form .laji-form-error-list .pull-right > * {
 	margin-left: 5px;
 }
+.laji-form .laji-form-error-list .panel-footer {
+	position: sticky;
+	bottom: 0px;
+}
 
 .laji-form .shortcut-help {
 	bottom: 5px;
