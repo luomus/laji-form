@@ -40,27 +40,42 @@ export default class NamedPlaceChooserField extends Component {
 			});
 			gathering.namedPlaceID = place.id;
 			return gathering;
-		}
-		try {
-			if (this.isGatheringsArray()) {
-				const gathering = getGathering(this.props.schema.items)
+		};
 
-				this.props.onChange([
+		try {
+			let targetId, gathering, newFormData, zoomToData;
+			if (this.isGatheringsArray()) {
+				gathering = getGathering(this.props.schema.items);
+
+				newFormData = [
 					...(this.props.formData || []),
 					gathering
-				]);
+				];
 				this.setState({show: false});
-				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "activeIdx", this.props.formData.length);
+				targetId = this.props.idSchema.$id;
+				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "activeIdx", this.props.formData.length);
 			} else { // gathering object
-				let gathering = getGathering(this.props.schema);
+				gathering = getGathering(this.props.schema);
 				gathering.namedPlaceID = place.id;
 
-				this.props.onChange({...this.props.formData, ...gathering});
+				newFormData = {...this.props.formData, ...gathering};
 				this.setState({show: false});
 				const splits = this.props.idSchema.$id.split("_");
 				splits.pop();
-				const targetId = splits.join("_");
-				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
+				targetId = splits.join("_");
+				zoomToData = true;
+			}
+			const {country} = gathering || {};
+			// Sending the event triggers a state change, which may result in a race condition where the onChange event is lost.
+			// That's why we use a callback here.
+			if (!["Suomi", "Finland", "", undefined].includes(country)) {
+				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "tileLayerName", "openStreetMap", () => {
+					this.props.onChange(newFormData);
+					if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
+				});
+			} else {
+				this.props.onChange(newFormData);
+				if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
 			}
 		} catch(e) {
 			this.setState({failed: PLACE_USE_FAIL});

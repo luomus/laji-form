@@ -710,6 +710,7 @@ class InformalTaxonGroupsAddon extends Component {
 	componentDidMount() {
 		this.mounted = true;
 		getInformalGroups().then(({informalTaxonGroups, informalTaxonGroupsById}) => {
+			if (!this.mounted) return;
 			this.setState({informalTaxonGroups, informalTaxonGroupsById});
 		});
 	}

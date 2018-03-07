@@ -60,6 +60,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
 		this.updatePopups(this.props);
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
 			this.onActiveChange(idx);
@@ -67,6 +68,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentWillUnmount() {
+		this.mounted = false;
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
 	}
 
@@ -79,7 +81,7 @@ export default class SingleActiveArrayField extends Component {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		if (popupFields) props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, props, item).then(popupData => {
-				this.setState({popups: {...this.state.popups, [idx]: popupData}});
+				if (this.mounted) this.setState({popups: {...this.state.popups, [idx]: popupData}});
 			});
 		});
 	}

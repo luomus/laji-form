@@ -515,10 +515,17 @@ class _MapArrayField extends ComposedComponent {
 		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		this.map = this.refs.map.refs.map.map;
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
-			this.setState({activeIdx: idx}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
+			this.setState({activeIdx: idx}, () => {
+				focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`);
+				this.onActiveChange(idx);
+			});
 		});
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", () => {
 			this._zoomToDataOnNextTick = true;
+		});
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayerName", (tileLayerName, callback) => {
+			this._tileLayerNameOnNextTick = tileLayerName;
+			this._tileLayerNameOnNextTickCallback = callback;
 		});
 
 		if (this.onComponentDidMount) this.onComponentDidMount();
@@ -528,6 +535,8 @@ class _MapArrayField extends ComposedComponent {
 		this.setState({mounted: false});
 		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayerName");
 	}
 
 	componentDidUpdate(...params) {
@@ -545,6 +554,11 @@ class _MapArrayField extends ComposedComponent {
 			this._zoomToDataOnNextTick = false;
 			this.map.zoomToData();
 		}
+		if (this._tileLayerNameOnNextTick) {
+			const tileLayerName = this._tileLayerNameOnNextTick;
+			this.tileLayerNameOnNextTick = false;
+			this.map.setTileLayerByName(tileLayerName);
+		}
 		if (this.state.fullscreen && !prevState.fullscreen) {
 			this._mapContainer = this.map.rootElem;
 			this.map.setRootElem(findDOMNode(this.modalRef));
@@ -561,7 +575,12 @@ class _MapArrayField extends ComposedComponent {
 	onPopupClose = () => this.setState({popupIdx: undefined})
 	onFocusGrab = () => this.setState({focusGrabbed: true})
 	onFocusRelease = () => this.setState({focusGrabbed: false})
-	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}})
+	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}}, () => {
+		if (this._tileLayerNameOnNextTickCallback) {
+			this._tileLayerNameOnNextTickCallback();
+			this._tileLayerNameOnNextTickCallback = undefined;
+		}
+	})
 	getAligmentAnchor = () => this.refs._stretch
 
 	render() {

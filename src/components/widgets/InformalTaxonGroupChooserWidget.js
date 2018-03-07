@@ -28,6 +28,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 		if (props.value !== this.state.informalTaxonGroup) {
 			if (!props.value) this.setState({name: undefined});
 			getInformalGroups().then(({informalTaxonGroupsById}) => {
+				if (!this.mounted) return;
 				this.setState({informalTaxonGroup: informalTaxonGroupsById[this.props.value]});
 			});
 		}
