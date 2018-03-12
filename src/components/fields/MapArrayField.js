@@ -556,7 +556,8 @@ class _MapArrayField extends ComposedComponent {
 		}
 		if (this._tileLayerNameOnNextTick) {
 			const tileLayerName = this._tileLayerNameOnNextTick;
-			this.tileLayerNameOnNextTick = false;
+			this._tileLayerNameOnNextTick = false;
+			console.log("set tilelayer");
 			this.map.setTileLayerByName(tileLayerName);
 		}
 		if (this.state.fullscreen && !prevState.fullscreen) {
