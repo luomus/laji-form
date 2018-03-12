@@ -689,11 +689,11 @@ class _MapArrayField extends ComposedComponent {
 		}
 		belowUiSchema.items["ui:options"].reserveId = false;
 
-		const {buttonsPath, addButtonPath, removeAddButtonPath} = getUiOptions(this.props.uiSchema);
+		const {buttonsPath, addButtonPath} = getUiOptions(this.props.uiSchema);
 		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
 		let _buttonsPath = buttonsPath || addButtonPath;
 
-		if (_buttonsPath && options.buttons) {
+		if (this.state.activeIdx !== undefined && _buttonsPath && options.buttons) {
 			const addButton = options.buttons.find(({fn}) => fn === "add");
 			const buttons = [
 				{
@@ -710,9 +710,7 @@ class _MapArrayField extends ComposedComponent {
 				...options.buttons.filter(button => button !== addButton),
 			];
 			belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
-		}
-
-		if (!removeAddButtonPath && this.state.activeIdx) {
+		} else if (this.state.activeIdx === undefined) {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 
