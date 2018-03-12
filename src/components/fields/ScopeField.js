@@ -113,7 +113,8 @@ const buttonSettings = {
 						...mapOptions.controls,
 						draw: {
 							...(mapOptions.controls.draw || {}),
-							clear: false
+							clear: false,
+							delete: false
 						}
 					},
 					onComponentDidMount: (map) => {
