@@ -712,10 +712,7 @@ class _MapArrayField extends ComposedComponent {
 			belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
 		}
 
-		if (removeAddButtonPath && this.state.activeIdx !== undefined) {
-			const target = parseJSONPointer(inlineUiSchema, `${removeAddButtonPath}/ui:options`, "createParents");
-			target.canAdd = false;
-		} else {
+		if (!removeAddButtonPath && this.state.activeIdx) {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 

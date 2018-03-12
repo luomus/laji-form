@@ -114,7 +114,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		componentDidUpdate() {
-			(this.addChildKeyHandlers || this.addChildKeyHandlers).call(this);
+			(super.addChildKeyHandlers || this.addChildKeyHandlers).call(this);
 			if (super.componentDidUpdate) super.componentDidUpdate();
 		}
 
@@ -135,7 +135,9 @@ export function handlesArrayKeys(ComposedComponent) {
 			this.props.items.forEach((item, i) => {
 				const id = `${this.props.idSchema.$id}_${i}`;
 				this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
-				context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => this.deleteButtonRefs[i]});
+				context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
+					return this.deleteButtonRefs[i];
+				}});
 			});
 		}
 
@@ -314,15 +316,16 @@ export const arrayItemKeyFunctions = {
 		const activeId = findNearestParentSchemaElemId(contextId, document.activeElement);
 		const idxsMatch = activeId.match(/_\d+/g);
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
-		const prevElem = getNextInput(getFormRef(), getTabbableFields(getSchemaElementById(contextId, `${idSchema.$id}_${idx}`))[0], !!"reverse");
+		const elem = getSchemaElementById(contextId, `${idSchema.$id}_${idx}`);
+		const prevElem = elem ? getNextInput(getFormRef(), getTabbableFields(elem)[0], !!"reverse") : null;
 		
-		getDeleteButton().onClick(e, (deleted) => {
+		deleteButton.onClick(e, (deleted) => {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
 				if (idxToFocus >= 0) {
 					focusById(formContext, `${idSchema.$id}_${idxToFocus}`);
-				} else {
-					if (prevElem) prevElem.focus();
+				} else if (prevElem) {
+					prevElem.focus();
 				}
 			} else {
 				focusById(formContext, `${activeId}`);

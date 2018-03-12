@@ -155,7 +155,6 @@ export default class SingleActiveArrayField extends Component {
 			classNames: undefined,
 			"ui:options": {
 				...this.props.uiSchema["ui:options"],
-				removable: false,
 				buttons,
 				buttonDefinitions: this.props.uiSchema["ui:options"].buttonDefinitions ? 
 					merge(this.buttonDefinitions, getUiOptions(this.props.uiSchema).buttonDefinitions) :
@@ -320,7 +319,9 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			if (that.state.activeIdx !== undefined) {
 				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
 				this.childKeyHandlerId = id;
-				new Context(this.props.formContext.contextId).addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => that.deleteButtonRefs[that.state.activeIdx]});
+				new Context(this.props.formContext.contextId).addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
+					return that.deleteButtonRefs[that.state.activeIdx]
+				}});
 			}
 
 			this.removeFocusHandlers();
