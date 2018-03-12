@@ -4,13 +4,19 @@ import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, getKeyHandlerTargetId } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props, idToFocus) {
 	if (!canAdd(props)) return;
-	props.onAddClick(e);
+	let {idToFocusAfterAdd} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
+	if (idToFocusAfterAdd) {
+		idToFocusAfterAdd = getKeyHandlerTargetId(new Context(props.formContext.contextId), idToFocusAfterAdd);
+		const elem = document.getElementById(idToFocusAfterAdd);
+		if (elem) new Context(props.formContext.contextId).elemToFocus = elem;
+	}
+	props.onAddClick(e);
 }
 
 const buttonDefinitions = {
@@ -54,7 +60,8 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, callback, key, id, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, callback, key, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
+	const id = button.id || (props.idSchema || {}).$id;
 
 	label = label !== undefined
 		?  (glyph ? ` ${label}` : label)
@@ -74,8 +81,9 @@ export function getButton(button, props = {}) {
 		}
 	};
 
+	const buttonId = `${id}_${key || fnName}`;
 	return render ? render(onClick) : (
-		<Button key={`${id}_${key || fnName}`} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
+		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 		</Button>
