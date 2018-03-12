@@ -15,7 +15,7 @@ import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 
 const popupMappers = {
-	units: (schema, units, fieldName) => {
+	units: (schema, units, options) => {
 		const identifications = units.map(item =>
 			(item && item.identifications && item.identifications[0]) ?
 				item.identifications[0] :
@@ -24,12 +24,10 @@ const popupMappers = {
 
 		return Promise.all(
 			identifications.map(identification =>
-					new Promise(resolve => resolve(identification.taxon))
+					Promise.resolve(identification.taxon)
 			)
 		).then(result => {
-			return new Promise(resolve => {
-				resolve({[(schema.units ? schema.units.title : undefined) || fieldName]: result});
-			});
+			return Promise.resolve({[(schema.units ? schema.units.title : undefined) || options.label || options.field]: result});
 		});
 	}
 };
@@ -211,7 +209,7 @@ export default class SingleActiveArrayField extends Component {
 			let fieldSchema = props.schema.items.properties;
 
 			if (field.mapper && fieldData) {
-				return popupMappers[field.mapper](fieldSchema, fieldData, fieldName);
+				return popupMappers[field.mapper](fieldSchema, fieldData, field);
 			} else if (fieldData) {
 				return new Promise(resolve => resolve({[fieldSchema  && fieldSchema[fieldName] ? fieldSchema[fieldName].title : fieldName]: fieldData}));
 			}
@@ -320,7 +318,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
 				this.childKeyHandlerId = id;
 				new Context(this.props.formContext.contextId).addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
-					return that.deleteButtonRefs[that.state.activeIdx]
+					return that.deleteButtonRefs[that.state.activeIdx];
 				}});
 			}
 
