@@ -251,6 +251,10 @@ class UnitsMapArrayField extends Component {
 			getDraftStyle: this.getDraftStyle,
 			editable: true,
 			onChange: this.onUnitChange,
+			on: {
+				mouseover: this.onMouseOver,
+				mouseout: this.onMouseOut
+			}
 		};
 
 		this.unitFeatures = data.featureCollection.features;
@@ -259,6 +263,27 @@ class UnitsMapArrayField extends Component {
 			{} : {draw: false};
 
 		return {draw, data, controls, emptyMode};
+	}
+
+	onMouseOver = (e, {feature}) => {
+		const {idx} = feature.properties || {};
+
+		if (idx === undefined) {
+			return;
+		}
+
+		const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
+		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+
+		if (this.highlightedElem) {
+			this.highlightedElem.className += " map-highlight";
+		}
+	}
+
+	onMouseOut = () => {
+		if (this.highlightedElem) {
+			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
+		}
 	}
 
 	getData = () => {
@@ -342,28 +367,6 @@ class UnitsMapArrayField extends Component {
 		};
 
 		this.props.onChange(update(this.props.formData, updateObject));
-	}
-
-	onComponentDidUpdate = () => {
-		if (this.highlightedElem) {
-			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
-		}
-
-		const {popupIdx} = this.state;
-		if (popupIdx === undefined) return;
-
-		const idx = this._context.featureIdxsToItemIdxs[popupIdx];
-
-		if (idx === undefined) {
-			return;
-		}
-
-		const id = `_laji-form_${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
-		this.highlightedElem = document.querySelector(`#${id} .form-group`);
-
-		if (this.highlightedElem) {
-			this.highlightedElem.className += " map-highlight";
-		}
 	}
 }
 

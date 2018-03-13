@@ -536,7 +536,7 @@ class TableArrayFieldTemplate extends Component {
 		}
 
 		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
-		const {renderTitleAsLabel, formatters} = getUiOptions(this.props.uiSchema);
+		const {renderTitleAsLabel, formatters = {}} = getUiOptions(this.props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
@@ -606,7 +606,7 @@ class TableArrayFieldTemplate extends Component {
 								undefined;
 							if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 							return [
-								<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0}>
+								<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0} id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}>
 									{[
 										...cols.map(col => <td key={col}>{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}</td>),
 										getDeleteButtonFor(idx)
