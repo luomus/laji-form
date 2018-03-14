@@ -6,8 +6,8 @@ export function initializeValidation(apiClient) {
 	});
 }
 
-export default ({errors: error, warnings: warning, liveErrors: liveError}, settings) => (data, errors) => {
-	if (error || (warning && !settings.ignoreWarnings)) {
+export default ({errors: error, liveErrors: liveError, warnings: warning, liveWarnings: liveWarning}, settings) => (data, errors) => {
+	if (error || (liveWarning && !settings.ignoreWarnings)) {
 		const promises = [];
 
 		const getPromiseForValidator = (type, validator) => {
@@ -20,6 +20,7 @@ export default ({errors: error, warnings: warning, liveErrors: liveError}, setti
 		const _validators = {error, liveError};
 		if (!settings.ignoreWarnings) {
 			_validators.warning = warning;
+			_validators.liveWarning = liveWarning;
 		}
 
 		Object.keys(_validators).forEach(type => {
@@ -28,8 +29,9 @@ export default ({errors: error, warnings: warning, liveErrors: liveError}, setti
 		});
 
 		return Promise.all(promises).then((res) => {
-			if (settings.ignoreWarnings && res.length > 0 && Object.keys(res[0]).length > 0 && warning) {
-				promises.push(getPromiseForValidator("warning", warning));
+			if (settings.ignoreWarnings && res.length > 0 && Object.keys(res[0]).length > 0) {
+				liveWarning && promises.push(getPromiseForValidator("liveWarning", liveWarning));
+				warning && promises.push(getPromiseForValidator("warning", warning));
 			}
 
 			return Promise.all(promises).then((res) => {

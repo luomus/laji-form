@@ -8,7 +8,7 @@ import "./styles.css";
 import "./styles-dev.css";
 
 // set to undefined to use the local schemas
-const SCHEMA_ID = "JX.519";
+const SCHEMA_ID = "MHL.1";
 
 const log = (type) => console.info.bind(console, type);
 
@@ -206,7 +206,7 @@ const lajiForm = new LajiForm({
 		formData: schemas.formData,
 	}),
 	formData: {gatheringEvent: {leg: ["MA.308"]}},
-	//formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
+	formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
 	apiClient,
 	lang,
@@ -224,7 +224,7 @@ if (SCHEMA_ID !== undefined) {
 	apiClient.fetch(`/forms/${SCHEMA_ID}`, {lang, format: "schema"}).then(response => {
 		return response.json();
 	}).then(props => {
-		const {schema, uiSchema, validators, warnings, liveErrors, uiSchemaContext, settings, prepopulatedDocument} = props;
+		const {schema, uiSchema, validators, warnings, uiSchemaContext, settings, prepopulatedDocument} = props;
 		const propsToPass = {
 			schema, 
 			uiSchema, 
@@ -237,7 +237,6 @@ if (SCHEMA_ID !== undefined) {
 		};
 		if (!Array.isArray(validators)) propsToPass.validators = validators;
 		if (!Array.isArray(warnings)) propsToPass.warnings = warnings;
-		if (!Array.isArray(liveErrors)) propsToPass.liveErrors = liveErrors;
 		if (prepopulatedDocument) propsToPass.formData = prepopulatedDocument;
 		lajiForm.setState(propsToPass);
 	});

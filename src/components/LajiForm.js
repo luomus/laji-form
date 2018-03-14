@@ -120,7 +120,6 @@ export default class LajiForm extends Component {
 		settings: PropTypes.object,
 		validators: PropTypes.object,
 		warnings: PropTypes.object,
-		liveErrors: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -412,26 +411,29 @@ export default class LajiForm extends Component {
 	transformErrors = (...params) => transformErrors(this.state.translations, !this.validateAll)(...params);
 
 	validate = (...params) => {
-		const validations = {liveErrors: this.props.liveErrors};
+		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
+		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
+		const validations = {liveErrors: liveErrorValidators};
 		if (this.validateAll) {
-			validations.errors = this.props.validators;
+			validations.errors = errorValidators;
 			if (!this.validationSettings.ignoreWarnings) {
-				validations.warnings = this.props.warnings;
+				validations.warnings = warningValidators;
+				validations.liveWarnings = liveWarningValidators;
 			}
 		} else if (!this.validationSettings.ignoreWarnings) {
-			validations.warnings = this.props.warnings;
+			validations.liveWarnings = liveWarningValidators;
 		}
 		return new Promise(resolve => {
 			validate(validations, this.validationSettings)(...params).then(_validations => {
 				const errors = toErrorList(_validations);
 				if (this.validateAll) {
-					this._cachedErrors = walkTree(_validations);
+					this._cachedErrors = cacheValidations(_validations);
 				} else if (this._cachedErrors) {
 					_validations = merge(_validations, this._cachedErrors);
 				}
 				// Rerun validations with warnings if errors surfaced.
 				if (this.validationSettings.ignoreWarnings && errors.length) {
-					validations.warnings = this.props.warnings;
+					validations.liveWarnings = liveWarningValidators;
 					validate(validations, {...this.validationSettings, ignoreWarnings: false})(...params).then(__validations => {
 						if (!this.validateAll) {
 							_validations = resolve(merge(__validations, this._cachedErrors));
@@ -447,15 +449,31 @@ export default class LajiForm extends Component {
 			});
 		});
 
-		function walkTree(validations, cached = {}) {
+		function cacheValidations(validations, cached = {}) {
 			Object.keys(validations).forEach(key => {
 				if (isObject(validations[key])) {
-					cached[key] = walkTree(validations[key]);
-				} else if (validations[key].some(err => err.includes("[error]"))) {
-					cached[key] = validations[key].filter(err => err.includes("[error]"));
+					cached[key] = cacheValidations(validations[key]);
+				} else if (validations[key].some(err => err.includes("[error]") || err.includes("[warning]"))) {
+					cached[key] = validations[key].filter(err => err.includes("[error]") || err.includes("[warning]"));
 				}
 			});
 			return cached;
+		}
+
+		function splitLive(validators, schema, live = {}, rest = {}) {
+			Object.keys(validators).forEach(key => {
+				if (schema[key]) {
+					live[key] = {};
+					rest[key] = {};
+					splitLive(validators[key], schema[key], live[key], rest[key]);
+					if (Object.keys(live[key]).length === 0) delete live[key];
+					if (Object.keys(rest[key]).length === 0) delete rest[key];
+				} else {
+					const container = validators[key].options && validators[key].options._live ? live : rest;
+					container[key] = validators[key];
+				}
+			});
+			return {live, rest};
 		}
 	}
 
