@@ -626,7 +626,7 @@ export default class ScopeField extends Component {
 	}
 
 	renderGlyphFields = () => {
-		const {glyphFields, idToScroll} = getUiOptions(this.props.uiSchema);
+		const {glyphFields} = getUiOptions(this.props.uiSchema);
 		const {idSchema} = this.props;
 
 		return glyphFields ?
@@ -638,7 +638,7 @@ export default class ScopeField extends Component {
 					const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
 					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
-					const onButtonClick = () => this.toggleAdditionalProperty(property, idToScroll || true);
+					const onButtonClick = () => this.toggleAdditionalProperty(property);
 					return (
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
@@ -660,14 +660,14 @@ export default class ScopeField extends Component {
 		return isIncluded;
 	}
 
-	toggleAdditionalProperty = (fields, scrollToView) => {
+	toggleAdditionalProperty = (fields) => {
+		const {additionalsPersistenceField, additionalsPersistenceKey, idToScroll} = getUiOptions(this.props.uiSchema);
 		if (!Array.isArray(fields)) fields = [fields];
 		const additionalFields = fields.reduce((additionalFields, field) => {
 			return {...additionalFields, [field]: !this.propertyIsIncluded(field)};
 		}, this.state.additionalFields);
 
 		if (this.context) {
-			const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(this.props.uiSchema);
 			const additionalsPersistenceVal = this.props.formData[additionalsPersistenceField];
 			let contextEntry = this._context || {};
 			if (additionalsPersistenceField) {
@@ -683,16 +683,14 @@ export default class ScopeField extends Component {
 				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
 			}
 		}
-		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, scrollToView ? () => {
-			if (typeof scrollToView === "string") {
-
-				scrollToView = getKeyHandlerTargetId(new Context(this.props.formContext.contextId), scrollToView);
-				const elem = document.getElementById(scrollToView);
+		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, () => {
+			if (idToScroll) {
+				const elem = document.getElementById(getKeyHandlerTargetId(new Context(this.props.formContext.contextId), idToScroll));
 				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
 			} else {
 				focusById(this.props.formContext, this.props.idSchema.$id);
 			}
-		} : undefined);
+		});
 	}
 
 
