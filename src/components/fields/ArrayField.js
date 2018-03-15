@@ -5,6 +5,7 @@ import update from "immutability-helper";
 import merge from "deepmerge";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
+import { beforeAdd } from "../ArrayFieldTemplate";
 
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 	const nestedFilters = filter;
@@ -79,9 +80,12 @@ export default class _ArrayField extends Component {
 		copy: {
 			glyph: "duplicate",
 			fn: () => (...params) => {
+				beforeAdd(this.props, `${this.props.idSchema.$id}_${this.props.formData.length}`);
 				this.props.onChange([
 					...this.props.formData,
-					copyItemFunction(this, this.props.formData[this.props.formData.length  - 1])(...params)
+					() => {
+						copyItemFunction(this, this.props.formData[this.props.formData.length  - 1])(...params);
+					}
 				]);
 			},
 			rules: {

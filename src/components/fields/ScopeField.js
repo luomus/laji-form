@@ -6,7 +6,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, focusById } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, focusById, getKeyHandlerTargetId, scrollIntoViewIfNeeded } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -626,7 +626,7 @@ export default class ScopeField extends Component {
 	}
 
 	renderGlyphFields = () => {
-		const {glyphFields} = getUiOptions(this.props.uiSchema);
+		const {glyphFields, idToScroll} = getUiOptions(this.props.uiSchema);
 		const {idSchema} = this.props;
 
 		return glyphFields ?
@@ -638,7 +638,7 @@ export default class ScopeField extends Component {
 					const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
 					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
-					const onButtonClick = () => this.toggleAdditionalProperty(property, !!"scroll");
+					const onButtonClick = () => this.toggleAdditionalProperty(property, idToScroll || true);
 					return (
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
@@ -684,7 +684,14 @@ export default class ScopeField extends Component {
 			}
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, scrollToView ? () => {
-			focusById(this.props.formContext, this.props.idSchema.$id);
+			if (typeof scrollToView === "string") {
+
+				scrollToView = getKeyHandlerTargetId(new Context(this.props.formContext.contextId), scrollToView);
+				const elem = document.getElementById(scrollToView);
+				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
+			} else {
+				focusById(this.props.formContext, this.props.idSchema.$id);
+			}
 		} : undefined);
 	}
 

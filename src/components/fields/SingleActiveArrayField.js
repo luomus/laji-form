@@ -7,7 +7,7 @@ import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPoint
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -261,6 +261,7 @@ export default class SingleActiveArrayField extends Component {
 				const idx = this.state.activeIdx !== undefined ?
 					this.state.activeIdx :
 					this.props.formData.length - 1;
+				beforeAdd(this.props, `${this.props.idSchema.$id}_${this.state.activeIdx + 1}`);
 				this.props.onChange([
 					...this.props.formData.slice(0, idx + 1),
 					copyItemFunction(this, this.props.formData[idx])(...params),

@@ -9,6 +9,11 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props, idToFocus) {
 	if (!canAdd(props)) return;
+	beforeAdd(props, idToFocus);
+	props.onAddClick(e);
+}
+
+export function beforeAdd(props, idToFocus) {
 	let {idToFocusAfterAdd} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 	if (idToFocusAfterAdd) {
@@ -16,7 +21,6 @@ function onAdd(e, props, idToFocus) {
 		const elem = document.getElementById(idToFocusAfterAdd);
 		if (elem) new Context(props.formContext.contextId).elemToFocus = elem;
 	}
-	props.onAddClick(e);
 }
 
 const buttonDefinitions = {
