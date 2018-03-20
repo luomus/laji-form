@@ -10,12 +10,8 @@ export default class ApiClient {
 		this.userToken = userToken;
 	}
 
-	setLang (lang) {
-		this.lang = lang;
-	}
-
 	getBaseQuery() {
-		return {access_token: this.accessToken, personToken: this.userToken, lang: this.lang};
+		return {access_token: this.accessToken, personToken: this.userToken};
 	}
 
 	fetch(path, query, options) {

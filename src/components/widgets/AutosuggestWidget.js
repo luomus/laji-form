@@ -492,7 +492,7 @@ export class Autosuggest extends Component {
 	renderInput = (inputProps) => {
 		let validationState = null;
 		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, isValueSuggested} = this.props;
-		const {translations} = this.props.formContext;
+		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
 		const isSuggested = !!suggestion && isValueSuggested(value);
@@ -590,7 +590,7 @@ export class Autosuggest extends Component {
 			component = (
 				<div>
 					{component}
-					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations} />}
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations} lang={lang} />}
 				</div>
 			);
 		}

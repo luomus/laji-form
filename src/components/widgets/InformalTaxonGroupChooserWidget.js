@@ -70,7 +70,18 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 		if (informalTaxonGroupsById[this.props.value] && informalTaxonGroupsById[this.props.value].parent) {
 			imageID = informalTaxonGroupsById[this.props.value].parent.id;
 		}
-		const InformalTaxonGroupChooserComponent = <InformalTaxonGroupChooser modal={button} onHide={this.hide} activeId={this.props.value} onSelected={this.onSelected} translations={this.props.formContext.translations} rootOnly={rootOnly} grid={grid}/>;
+		const InformalTaxonGroupChooserComponent = (
+			<InformalTaxonGroupChooser
+				modal={button}
+				onHide={this.hide}
+				activeId={this.props.value}
+				onSelected={this.onSelected}
+				translations={this.props.formContext.translations}
+				lang={this.props.formContext.lang}
+				rootOnly={rootOnly}
+				grid={grid}
+			/>
+		);
 
 		if (button) {
 			const title = !this.props.value 
@@ -146,6 +157,16 @@ export class InformalTaxonGroupChooser extends Component {
 			this.setState({...state, root: state.informalTaxonGroups});
 		});
 	}
+
+	componentWillReceiveProps(props) {
+		if (this.props.lang !== props.lang) {
+		getInformalGroups().then(state => {
+			if (!this.mounted) return;
+			this.setState({...state, root: state.informalTaxonGroups});
+		});
+		}
+	}
+
 
 	componentWillUnmount() {
 		this.mounted = false;

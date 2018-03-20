@@ -1,15 +1,20 @@
 let singletonInstance = null;
 let cache = {};
 
+let lang = "en";
+
 /**
  * ApiClient "interface". Wraps the given apiClient as a singleton object.
  * Implementing class must implement fetch().
  */
 export default class ApiClient {
-	constructor(apiClient) {
+	constructor(apiClient, _lang) {
 		if (!singletonInstance) singletonInstance = this;
 		this.apiClient = apiClient;
 		this.on = {};
+		if (_lang) {
+			lang = _lang;
+		}
 		return singletonInstance;
 	}
 
@@ -20,7 +25,7 @@ export default class ApiClient {
 	 * @returns a Promise.
 	 */
 	fetchRaw(path, query, options) {
-		return this.apiClient.fetch(path, query, options);
+		return this.apiClient.fetch(path, {lang, ...(query || {})}, options);
 	}
 
 	fetch(path, query, options) {
@@ -67,4 +72,10 @@ export default class ApiClient {
 			this.on[path] = this.on[path].filter(fn => fn !== callback);
 		}
 	}
+
+	setLang (_lang) {
+		lang = _lang;
+		this.flushCache();
+	}
+
 }

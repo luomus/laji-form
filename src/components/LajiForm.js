@@ -129,7 +129,7 @@ export default class LajiForm extends Component {
 
 	constructor(props) {
 		super(props);
-		this.apiClient = new ApiClient(props.apiClient);
+		this.apiClient = new ApiClient(props.apiClient, props.lang);
 		initializeValidation(this.apiClient);
 		this.translations = this.constructTranslations();
 		this._id = getNewId();
@@ -274,7 +274,9 @@ export default class LajiForm extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (props.hasOwnProperty("lang") && this.props.lang !== props.lang) this.apiClient.flushCache();
+		if (props.hasOwnProperty("lang") && this.props.lang !== props.lang) {
+			this.apiClient.setLang(props.lang);
+		}
 		this.setState(this.getStateFromProps(props));
 	}
 
