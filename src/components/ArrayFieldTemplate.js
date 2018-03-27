@@ -291,7 +291,7 @@ export const arrayKeyFunctions = {
 		}
 		return false;
 	},
-	insert: function (e, {getProps, insertCallforward}) {
+	insert: function(e, {getProps, insertCallforward}) {
 		const props = getProps();
 		function afterInsert() {
 			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);

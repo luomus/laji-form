@@ -71,6 +71,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentWillReceiveProps(props) {
+		this.prevActiveIdx = this.state.activeIdx;
 		this.setState(this.getStateFromProps(props));
 		this.updatePopups(props);
 	}
@@ -119,7 +120,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	render() {
-		const {renderer = "accordion"} = getUiOptions(this.props.uiSchema);
+		const {renderer = "accordion", tableActiveItemClassNames} = getUiOptions(this.props.uiSchema);
 		let ArrayFieldTemplate = undefined;
 		switch(renderer) {
 		case "accordion":
@@ -141,7 +142,7 @@ export default class SingleActiveArrayField extends Component {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
-		const formContext = {...this.props.formContext, this: this};
+		const formContext = {...this.props.formContext, this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
@@ -160,15 +161,13 @@ export default class SingleActiveArrayField extends Component {
 			}
 		};
 
-		if (renderer === "table" && uiSchema.items.classNames  && !this.state.normalRenderingTreshold) {
-			const {classNames: itemsClassNames, ...uiSchemaItems} = uiSchema.items;
+		if (renderer === "table" && tableActiveItemClassNames && !this.state.normalRendering) {
 			uiSchema = {
 				...uiSchema,
-				"ui:options": {
-					...(uiSchema["ui:options"] || {}),
-					itemsClassNames
-				},
-				items: uiSchemaItems
+				items: {
+					...uiSchema.items,
+					classNames: tableActiveItemClassNames
+				}
 			};
 		}
 
@@ -186,16 +185,8 @@ export default class SingleActiveArrayField extends Component {
 		);
 	}
 
-	updateDimensions = () => {
-		const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
-		if (!normalRenderingTreshold) return;
-		let treshold = bsSizeToPixels(normalRenderingTreshold);
-
-		if (window.innerWidth <= treshold && !this.state.normalRenderingTreshold) {
-			this.setState({normalRenderingTreshold: true});
-		} else if (window.innerWidth > treshold && this.state.normalRenderingTreshold) {
-			this.setState({normalRenderingTreshold: false});
-		}
+	updateDimensions = (normalRendering, callback) => {
+		this.setState({normalRendering}, () => callback && callback(normalRendering));
 	}
 
 	getPopupDataPromise = (idx, props, itemFormData) => {
@@ -254,7 +245,7 @@ export default class SingleActiveArrayField extends Component {
 
 	buttonDefinitions = {
 		add: {
-			callback: () => this.onActiveChange(this.props.formData.length),
+			callback: () => this.onActiveChange(this.props.formData.length)
 		},
 		copy: {
 			fn: () => (...params) => {
@@ -283,7 +274,7 @@ export default class SingleActiveArrayField extends Component {
 
 class Popup extends Component {
 	render() {
-		const { data } = this.props;
+		const {data} = this.props;
 		return (data && Object.keys(data).length) ? (
 			<ul className="map-data-tooltip">
 				{data ? Object.keys(data).map(fieldName => {
@@ -390,7 +381,6 @@ class AccordionArrayFieldTemplate extends Component {
 		const activeIdx = that.state.activeIdx;
 
 		const onSelect = key => that.onActiveChange(key);
-
 
 		const getHeader = idx => (
 			<AccordionHeader 
@@ -501,17 +491,40 @@ class TableArrayFieldTemplate extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		this.itemElems = [];
 	}
 
 	componentDidMount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
 		window.addEventListener("resize", this.updateDimensions);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", () => {
+			this.updateDimensions();
+		});
 		this.updateDimensions();
 	}
 
 	componentWillUnmount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
 		window.removeEventListener("resize", this.updateDimensions);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize");
+	}
+
+	componentDidUpdate = (prevProps, prevState) => {
+		const that = this.props.formContext.this;
+		let updated = false;
+		if (this.props.items.length !== prevProps.items.length || this.state.activeIdx !== prevState.activeIdx) {
+			if (!this.state.normalRendering && this.props.items.length === 1 && this.state.activeIdx === 0) {
+				this.updateDimensions();
+				updated = true;
+			} else if (this.state.normalRendering && this.props.items.length > 1 || this.state.activeIdx !== 0) {
+				this.updateDimensions();
+				updated = true;
+			}
+		}
+
+		if (!updated && (this.state.activeIdx !== that.state.activeIdx || prevProps.items.length !== this.props.items.length)) {
+			this.updateLayout(this.props.formContext.this.state.activeIdx);
+		}
 	}
 
 	updateDimensions = () => {
@@ -521,18 +534,49 @@ class TableArrayFieldTemplate extends Component {
 			if (!normalRenderingTreshold) return;
 			let treshold = bsSizeToPixels(normalRenderingTreshold);
 
-			if (window.innerWidth <= treshold  && !this.state.normalRenderingTreshold) {
-				this.setState({normalRenderingTreshold: true});
-				that.updateDimensions();
-			} else if (window.innerWidth > treshold && this.state.normalRenderingTreshold) {
-				this.setState({normalRenderingTreshold: false});
-				that.updateDimensions();
+			const onlyOneActive = that.props.formData.length === 1 && that.state.activeIdx === 0;
+
+			let normalRendering = undefined;
+			if (!this.state.normalRendering && (onlyOneActive || window.innerWidth <= treshold)) {
+				normalRendering = true;
+			} else if (this.state.normalRendering && (!onlyOneActive && window.innerWidth > treshold)) {
+				normalRendering = false;
+			}
+
+			if (normalRendering !== undefined) {
+				that.updateDimensions(normalRendering, () => 
+					this.setState({normalRendering}, this.updateLayout)
+				);
+			}	else if (!this.state.normalRendering) {
+				this.updateLayout();
 			}
 		});
 	}
 
+	setActiveRef = (elem) => {
+		this.activeElem = elem;
+	}
+
+	updateLayout = (idx = null) => {
+		const that = this.props.formContext.this;
+		const {activeIdx} = that.state;
+		const rowElem = this.itemElems[activeIdx];
+		if (!rowElem || !this.activeElem) return;
+		const state = {
+			activeStyle: activeIdx !== undefined ? {
+				position: "absolute",
+				top: rowElem.offsetTop
+			} : {},
+			activeTrStyle: activeIdx !== undefined ? {
+				height: this.activeElem.offsetHeight
+			} : {}
+		};
+		if (idx !== null) state.activeIdx = idx;
+		this.setState(state);
+	}
+
 	render() {
-		if (this.state.normalRenderingTreshold) {
+		if (this.state.normalRendering) {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
@@ -566,67 +610,69 @@ class TableArrayFieldTemplate extends Component {
 		const {errorSchema} = that.props;
 		const activeIdx = that.state.activeIdx;
 
-		const changeActive = idx => () => idx !== that.state.activeIdx && that.onActiveChange(idx);
+		const changeActive = idx => () => {
+			idx !== that.state.activeIdx && that.onActiveChange(idx, this.updateLayout);
+		};
 
-		const {itemsClassNames, confirmDelete, titleClassName, titleFormatters} = getUiOptions(uiSchema);
+		const {confirmDelete, titleClassName, titleFormatters} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = idx => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
-			return (
-				<td key="delete" className="single-active-array-table-delete">
-					{this.props.items[idx].hasRemove && <DeleteButton ref={getDeleteButtonRef}
-					              confirm={confirmDelete}
-					              translations={this.props.formContext.translations}
-					              onClick={that.onDelete(idx)} />
-					}
-				</td>
-			);
+			return <DeleteButton ref={getDeleteButtonRef}
+			                     key={idx}
+			                     confirm={confirmDelete}
+			                     translations={this.props.formContext.translations}
+			                     onClick={that.onDelete(idx)} />;
+		};
+
+		const setItemRef = idx => elem => {
+			this.itemElems[idx] = elem;
 		};
 
 		const title = that.state.getTitle(that.state.activeIdx);
 
 		return (
-			<div>
+			<div style={{position: "relative"}} className="single-active-array-table-container">
 				<Title title={title} label={title} className={titleClassName} titleFormatters={titleFormatters} formData={formData} />
 				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
-				<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
-					{items.length !== 1 || that.state.activeIdx !== 0 ? (
-						<thead>
-								<tr className="darker">
-									{[
-										...cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>),
-										<th key="_delete" className="single-active-array-table-delete" />
-									]}
-								</tr>
-						</thead>
-					) : null}
-					<tbody>
-						{items.map((item, idx) => {
-							let className = (idx === activeIdx) ?
-								"single-active-array-table-hidden" : // We hide the active row from table, but render it to keep table layout steady.
-								undefined;
-							if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
-							return [
-								<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0} id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}>
-									{[
-										...cols.map(col => <td key={col}>{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}</td>),
-										getDeleteButtonFor(idx)
-									]}
-								</tr>,
-								(idx === activeIdx) ? <tr key="active" onClick={changeActive(idx)}>
-									<td className={itemsClassNames} colSpan={cols.length}>{item.children}</td>
-									{getDeleteButtonFor(idx)}
-								</tr> : null
-							];
-						})
-						}
-					</tbody>
-				</Table>
+				<div className="laji-form-field-template-item">
+					<div className="table-responsive laji-form-field-template-schema">
+						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
+							{items.length !== 1 || that.state.activeIdx !== 0 ? (
+								<thead>
+										<tr className="darker">
+											{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+										</tr>
+								</thead>
+							) : null}
+							<tbody>
+								{items.map((item, idx) => {
+									let className = "";
+									if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
+									return [
+										<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0} id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined} ref={setItemRef(idx)} style={idx === activeIdx ? this.state.activeTrStyle : undefined}>
+											{[...cols.map(col => <td key={col}>{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}</td>), idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx)}</td>]}
+										</tr>
+									];
+								})}
+							</tbody>
+						</Table>
+					</div>
+					<div className="laji-form-field-template-buttons">
+					</div>
+				</div>
+				{activeIdx !== undefined && items[activeIdx] ? (
+					<div key={activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
+						<div className="laji-form-field-template-schema">{items[activeIdx].children}</div>
+						<div className="laji-form-field-template-buttons">{getDeleteButtonFor(activeIdx)}</div>
+					</div>
+				): null}
 				<ButtonsWrapper props={this.props} />
 			</div>
 		);
 	}
 }
+
 const headerFormatters = {
 	units: {
 		component: (props) => {

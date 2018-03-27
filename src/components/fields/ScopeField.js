@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
+import equals from "deep-equal";
 import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, Tooltip, Collapse, Popover } from "react-bootstrap";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
@@ -331,10 +332,15 @@ export default class ScopeField extends Component {
 	setMapRef = (elem) => {
 		this.modalMapRef = elem;
 	}
-	componentDidUpdate(nextProps) {
-		if (!this.state.additionalsGroupsTranslations || nextProps.formContext.lang !== this.props.formContext.lang ||
-			getUiOptions(nextProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
-			this.translateAdditionalsGroups(nextProps);
+
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.state.additionalsGroupsTranslations || prevProps.formContext.lang !== this.props.formContext.lang ||
+			getUiOptions(prevProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
+			this.translateAdditionalsGroups(this.props);
+		}
+		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
+			console.log("resize");
+			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}
 

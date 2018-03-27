@@ -25,7 +25,7 @@ export default class FieldTemplate extends Component {
 		const _context = new Context(contextId);
 		const {idToFocus, elemToFocus} = _context;
 		if (idToFocus !== undefined && this.props.id === idToFocus) {
-			if (!elemToFocus) focusById(formContext, _context.idToFocus);
+			focusById(formContext, _context.idToFocus);
 			_context.idToFocus = undefined;
 			_context.elemToFocus = undefined;
 			if (elemToFocus) {
