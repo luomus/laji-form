@@ -458,10 +458,18 @@ class LineTransectMapArrayField extends Component {
 	}
 
 	onActiveChange(idx) {
-		this.getContext().setImmediate(() =>
-			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: this.map._getDefaultCRSLayers().includes(this.map.tileLayer) ? 16 : 13}) // eslint-disable-line no-undef
-		);
+		this.focusOnMap(idx);
 		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
+	}
+
+	focusOnMap = (idx) => {
+		this.getContext().setImmediate(() =>{
+			const isDefaultCRS = this.map._getDefaultCRSLayers().includes(this.map.tileLayer);
+			const maxZoom = isDefaultCRS ? 16 : 13;
+			const minZoom = 13;
+			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {minZoom, maxZoom}); // eslint-disable-line no-undef
+			if (this.map.getNormalizedZoom() < minZoom) this.map.setNormalizedZoom(minZoom);
+		});
 	}
 
 	onComponentDidUpdate(prevProps, prevState) {
@@ -475,7 +483,7 @@ class LineTransectMapArrayField extends Component {
 	}
 
 	onComponentDidMount() {
-		this.onActiveChange(this.state.activeIdx);
+		this.focusOnMap(this.state.activeIdx);
 	}
 }
 
