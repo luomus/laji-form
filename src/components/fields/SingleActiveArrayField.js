@@ -252,7 +252,7 @@ export default class SingleActiveArrayField extends Component {
 				const idx = this.state.activeIdx !== undefined ?
 					this.state.activeIdx :
 					this.props.formData.length - 1;
-				beforeAdd(this.props, `${this.props.idSchema.$id}_${this.state.activeIdx + 1}`);
+				beforeAdd(this.props);
 				this.props.onChange([
 					...this.props.formData.slice(0, idx + 1),
 					copyItemFunction(this, this.props.formData[idx])(...params),
@@ -297,9 +297,11 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
 				getCurrentIdx: () => that.state.activeIdx,
-				focusByIdx: (idx) => idx === that.state.activeIdx ?
+				focusByIdx: (idx) => {
+					idx === that.state.activeIdx ?
 					focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`) :
-					this.props.formContext.this.onActiveChange(idx)
+					this.props.formContext.this.onActiveChange(idx);
+				}
 			});
 		}
 
@@ -534,12 +536,10 @@ class TableArrayFieldTemplate extends Component {
 			if (!normalRenderingTreshold) return;
 			let treshold = bsSizeToPixels(normalRenderingTreshold);
 
-			const onlyOneActive = that.props.formData.length === 1 && that.state.activeIdx === 0;
-
 			let normalRendering = undefined;
-			if (!this.state.normalRendering && (onlyOneActive || window.innerWidth <= treshold)) {
+			if (!this.state.normalRendering && window.innerWidth <= treshold) {
 				normalRendering = true;
-			} else if (this.state.normalRendering && (!onlyOneActive && window.innerWidth > treshold)) {
+			} else if (this.state.normalRendering && window.innerWidth > treshold) {
 				normalRendering = false;
 			}
 

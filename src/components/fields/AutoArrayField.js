@@ -2,8 +2,9 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import deepEquals from "deep-equal";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { getUiOptions, focusById } from "../../utils";
+import { getSchemaElementById, getKeyHandlerTargetId } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+import Context from "../../Context";
 
 @VirtualSchemaField
 export default class AutoArrayField extends Component {
@@ -18,7 +19,7 @@ export default class AutoArrayField extends Component {
 	static getName() {return "AutoArrayField";}
 
 	getStateFromProps(props) {
-		const {formData, schema, uiSchema, registry} = props;
+		const {formData, schema, uiSchema, registry, formContext} = props;
 
 		const state = {formData};
 
@@ -34,12 +35,27 @@ export default class AutoArrayField extends Component {
 				nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]
 			}
 		};
+
+		if (this.state && state.formData.length > this.state.formData.length) {
+			const {contextId} = formContext;
+			const context = new Context(contextId);
+			context.idToFocus = `${this.props.idSchema.$id}_${state.formData.length - 1}`;
+
+			let {idToFocusAfterAdd} = this.getUiOptions();
+			if (idToFocusAfterAdd) {
+				idToFocusAfterAdd = getKeyHandlerTargetId(idToFocusAfterAdd, formContext, this.state.formData);
+			}
+			context.elemToFocus = getSchemaElementById(contextId, `${this.props.idSchema.$id}_${state.formData.length - 2}`);
+		}
+
 		return state;
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		if (getUiOptions(this.props.uiSchema).autofocus && this.state.formData.length == prevState.formData.length + 1) {
-			focusById(this.props.formContext, `${this.props.idSchema.$id}_${this.state.formData.length - 1}`);
+	onChange(formData) {
+		const emptyItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+		if (formData && formData.length !== 0 && deepEquals(formData[formData.length - 1], emptyItem)) {
+			formData = formData.slice(0, formData.length - 1);
 		}
+		this.props.onChange(formData);
 	}
 }

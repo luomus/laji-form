@@ -53,9 +53,9 @@ class SimpleValueRenderer extends Component {
 	componentDidMount() {
 		if (this.props.getSuggestionFromValue) {
 			this.isValueSuggested = FriendsAutosuggestWidget.prototype.isValueSuggested.bind(this);
-			this.props.getSuggestionFromValue.call(this, this.props.value).then(({value}) => {
-				this.setState({value});
-			});
+			this.props.getSuggestionFromValue.call(this, this.props.value).then((suggestion) => {
+				this.setState({value: suggestion.value});
+			}).catch(() => {});
 		}
 	}
 	render() {

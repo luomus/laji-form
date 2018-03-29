@@ -177,7 +177,7 @@ export function findNearestParentSchemaElem(elem) {
 
 export function findNearestParentSchemaElemId(contextId, elem) {
 	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
-	return nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "");
+	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
 }
 
 export function findNearestParentTabbableElem(elem) {
@@ -219,7 +219,7 @@ export function focusNextInput(...params) {
 
 export function focusById(formContext = {}, id) {
 	const elem = getSchemaElementById(formContext.contextId, id);
-	if (elem) {
+	if (elem && document.body.contains(elem)) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
 			tabbableFields[0].focus();
@@ -277,10 +277,11 @@ export function isDescendant(parent, child) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(context, target = "") {
+export function getKeyHandlerTargetId(target = "", context, formData) { // eslint-disable-line no-unused-vars
 	while (target.match(/%\{(.*)\}/)) {
-		const key = /%\{(.*)\}/.exec(target)[1];
-		target = target.replace(`%{${key}}`, context[key]);
+		const path = /%\{(.*)\}/.exec(target)[1];
+		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");
+		target = target.replace(`%{${path}}`, eval(path));
 	}
 	return target;
 }
@@ -305,7 +306,7 @@ export function handleKeysWith(context, id, keyFunctions = {}, e, additionalPara
 	}
 
 	const highPriorityHandled = context.keyHandlers.some(keyHandler => {
-		let target = getKeyHandlerTargetId(context, keyHandler.target);
+		let target = getKeyHandlerTargetId(keyHandler.target, context);
 		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
 			if (!handleKey(keyHandler)) {
 				e.preventDefault();
@@ -408,13 +409,23 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	const viewportHeight = (window.innerHeight || html.clientHeight);
 	const distFromBottom = viewportHeight - rect.bottom;
 	const pageScrolled = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-	if (!inView) {
-		if (distFromTop < topOffset) {
-			window.scrollTo(0, pageScrolled + rect.top - topOffset);
-		}
-		if (distFromBottom < bottomOffset) {
-			window.scrollTo(0, pageScrolled + rect.top - viewportHeight + height + bottomOffset);
-		}
+
+	if (inView) return;
+
+	let amount = undefined;
+
+	if (distFromTop < topOffset) {
+		amount = rect.top - topOffset;
+	}
+	if (distFromBottom < bottomOffset) {
+		amount = rect.top - viewportHeight + height + bottomOffset;
+	}
+
+	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
+	if (distFromTop - pageScrolled - amount < 0) {
+		window.scrollTo(0, pageScrolled + distFromTop);
+	} else {
+		window.scrollTo(0, pageScrolled + amount);
 	}
 }
 

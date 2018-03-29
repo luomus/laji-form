@@ -714,7 +714,7 @@ class _MapArrayField extends ComposedComponent {
 						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
 						this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
 					},
-					key: "add",
+					fnName: "add",
 					glyph: "plus",
 					id: this.props.idSchema.$id
 				},

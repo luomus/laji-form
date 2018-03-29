@@ -7,17 +7,19 @@ import Context from "../Context";
 import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, getKeyHandlerTargetId } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
-function onAdd(e, props, idToFocus) {
+function onAdd(e, props) {
 	if (!canAdd(props)) return;
-	beforeAdd(props, idToFocus);
 	props.onAddClick(e);
 }
 
-export function beforeAdd(props, idToFocus) {
+export function beforeAdd(props) {
+	if (!canAdd(props)) return;
+	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
+	const idToFocus =  `${props.idSchema.$id}_${idx}`;
 	let {idToFocusAfterAdd} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 	if (idToFocusAfterAdd) {
-		idToFocusAfterAdd = getKeyHandlerTargetId(new Context(props.formContext.contextId), idToFocusAfterAdd);
+		idToFocusAfterAdd = getKeyHandlerTargetId(idToFocusAfterAdd, new Context(props.formContext.contextId));
 		const elem = document.getElementById(idToFocusAfterAdd);
 		if (elem) new Context(props.formContext.contextId).elemToFocus = elem;
 	}
@@ -27,9 +29,9 @@ const buttonDefinitions = {
 	add: {
 		glyph: "plus",
 		fn: (e) => (props) => {
-			const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + props.items.length;
-			onAdd(e, props, `${props.idSchema.$id}_${idx}`);
-		}
+			onAdd(e, props);
+		},
+		beforeFn: beforeAdd
 	}
 };
 
@@ -46,7 +48,7 @@ export function getButton(button, props = {}) {
 			});
 		}
 
-		const fnName = button.fn;
+		const fnName = button.fnName || button.fn;
 		const _buttonDefinitions = props.uiSchema && getUiOptions(props.uiSchema).buttonDefinitions
 			? merge(buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions)
 			: buttonDefinitions;
@@ -56,7 +58,7 @@ export function getButton(button, props = {}) {
 		if (!rulesSatisfied(_button)) return;
 
 		if (!_button.fnName) _button.fnName = fnName;
-		if (definition) _button.fn = _buttonDefinitions[fnName].fn;
+		if (definition && typeof _button.fn !== "function") _button.fn = _buttonDefinitions[fnName].fn;
 		if (fnName !== "add" || ((button.id && button.id !== props.idSchema.$id) || canAdd(props))) return _button;
 	}
 
@@ -64,7 +66,7 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, callback, key, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
 	const id = button.id || (props.idSchema || {}).$id;
 
 	label = label !== undefined
@@ -72,10 +74,12 @@ export function getButton(button, props = {}) {
 		: "";
 
 	const onClick = e => {
-		let _fn = () => fn(e)(props, options);
-		const __fn = !callback ? _fn : () => {
+		const onClickProps = button.getProps ? button.getProps() : props;
+		let _fn = () => fn(e)(onClickProps, options);
+		const __fn = () => {
+			beforeFn && beforeFn(onClickProps, options);
 			_fn();
-			callback();
+			callback && callback();
 		};
 		if (callforward) {
 			e.persist();
@@ -85,7 +89,7 @@ export function getButton(button, props = {}) {
 		}
 	};
 
-	const buttonId = `${id}_${key || fnName}`;
+	const buttonId = `${id}_${fnName}`;
 	return render ? render(onClick) : (
 		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
@@ -291,19 +295,22 @@ export const arrayKeyFunctions = {
 		}
 		return false;
 	},
-	insert: function(e, {getProps, insertCallforward}) {
+	insert: function(e, _props) {
+		const {getProps, insertCallforward} = _props;
 		const props = getProps();
 		function afterInsert() {
-			onAdd(e, props, `${props.idSchema.$id}_${props.items.length}`);
+			onAdd(e, props);
 		}
 
 		if (canAdd(props)) {
 			if (insertCallforward) {
 				e.persist();
+				beforeAdd(props);
 				insertCallforward(() => {
 					afterInsert();
 				});
 			} else {
+				beforeAdd(props);
 				afterInsert();
 			}
 			return true;

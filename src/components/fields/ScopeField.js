@@ -339,7 +339,6 @@ export default class ScopeField extends Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
-			console.log("resize");
 			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}
@@ -691,7 +690,7 @@ export default class ScopeField extends Component {
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, () => {
 			if (idToScroll) {
-				const elem = document.getElementById(getKeyHandlerTargetId(new Context(this.props.formContext.contextId), idToScroll));
+				const elem = document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)));
 				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
 			} else {
 				focusById(this.props.formContext, this.props.idSchema.$id);

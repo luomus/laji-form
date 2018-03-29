@@ -163,7 +163,6 @@ export default class LajiForm extends Component {
 					);
 				}
 			}
-
 		};
 
 		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
@@ -592,7 +591,7 @@ export default class LajiForm extends Component {
 
 		const targets = this._context.keyHandlerTargets.filter(({handler}) => {
 			return handler.conditions.every(condition => condition(e));
-		}).map(({id}) => getKeyHandlerTargetId(this._context, id));
+		}).map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
