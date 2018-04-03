@@ -819,9 +819,6 @@ min-height: 20px;
 .laji-form .single-active-array-table {
 	border-right: none;
 }
-.laji-form th.single-active-array-table-delete {
-	border-right: none;
-}
 .laji-form .single-active-array-table-delete {
 	width: 1px;
 	padding: 0px;
