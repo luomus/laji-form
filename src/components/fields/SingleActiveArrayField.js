@@ -565,7 +565,8 @@ class TableArrayFieldTemplate extends Component {
 		const state = {
 			activeStyle: activeIdx !== undefined ? {
 				position: "absolute",
-				top: rowElem.offsetTop
+				top: rowElem.offsetTop,
+				width: "100%"
 			} : {},
 			activeTrStyle: activeIdx !== undefined ? {
 				height: this.activeElem.offsetHeight
@@ -642,6 +643,7 @@ class TableArrayFieldTemplate extends Component {
 								<thead>
 										<tr className="darker">
 											{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+											<th key="_delete" className="single-active-array-table-delete" />
 										</tr>
 								</thead>
 							) : null}
@@ -658,8 +660,7 @@ class TableArrayFieldTemplate extends Component {
 							</tbody>
 						</Table>
 					</div>
-					<div className="laji-form-field-template-buttons">
-					</div>
+					<div className="laji-form-field-template-buttons" />
 				</div>
 				{activeIdx !== undefined && items[activeIdx] ? (
 					<div key={activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
