@@ -491,7 +491,7 @@ export function Label({label, help, children, id, required}) {
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
 		<span>
 			<strong>{label}</strong><br />
-			{help}
+			<span dangerouslySetInnerHTML={{__html: help}} />
 		</span>
 	): label}</Tooltip>;
 
