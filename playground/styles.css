@@ -816,6 +816,9 @@ min-height: 20px;
 .laji-form .single-active-array-table-container .laji-form-field-template-buttons {
 	width: 26px;
 }
+.laji-form .single-active-array-table-container .table-responsive.laji-form-field-template-schema {
+	width: 1px; /** firefox 52 table-responsive fails without fixed width (possibly related to display: flex also?) **/
+}
 .laji-form .single-active-array-table {
 	border-right: none;
 }
