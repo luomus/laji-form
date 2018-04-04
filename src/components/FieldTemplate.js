@@ -86,7 +86,7 @@ export default class FieldTemplate extends Component {
 
 		return (
 			<div className={classNames + warningClassName} id={htmlId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} id={id} required={required} /> : null}
+				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} id={id} required={required} _context={new Context(formContext.contextId)} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}

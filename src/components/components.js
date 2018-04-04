@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
-import { Button as _Button, Overlay, OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -485,7 +485,7 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id, required}) {
+export function Label({label, help, children, id, required, _context, helpHoverable}) {
 	const showHelp = label && help;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
@@ -506,7 +506,7 @@ export function Label({label, help, children, id, required}) {
 	);
 
 	return (label || help) ? (
-		<OverlayTrigger placement="right" overlay={tooltipElem}>
+		<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;
@@ -574,11 +574,11 @@ export class TooltipComponent extends Component {
 		const {tooltip, children, id, placement, trigger} = this.props;
 
 		const overlay = (
-			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
+			<_OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
 			}>
 				{children}
-			</OverlayTrigger>
+			</_OverlayTrigger>
 		);
 
 		return (trigger === "hover") ? (
@@ -603,6 +603,73 @@ export class FetcherInput extends Component {
 				{glyph ? <FormControl.Feedback>{glyph}</FormControl.Feedback> : null}
 				{loading ? <Spinner /> : null }
 				{appendExtra}
+			</div>
+		);
+	}
+}
+
+// Bootstrap OverlayTrigger that is hoverable if hoverable === true
+export class OverlayTrigger extends Component {
+	
+	setOverlayTriggerRef = elem => {
+		this.overlayTriggerRef = elem;
+	};
+
+	overlayTriggerMouseOver = () => {
+		this.overlayTriggerMouseIn = true;
+		this.overlayTriggerRef.show();
+	};
+
+	overlayTriggerMouseOut = () => {
+		this.overlayTriggerMouseIn = false;
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
+		this.overlayTimeout = this.props._context.setTimeout(() => {
+			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
+		}, 200);
+	};
+
+	overlayMouseOver = () => {
+		this.overlayMouseIn = true;
+	}
+
+	overlayMouseOut = () => {
+		this.overlayMouseIn = false;
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
+		this.overlayTimeout = this.props._context.setTimeout(() => {
+			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
+		}, 200);
+	}
+
+	render() {
+		const {
+			children,
+			overlay,
+			_context, //eslint-disable-line no-unused-vars
+			...props
+		} = this.props;
+
+		if (!this.props.hoverable) return (
+			<_OverlayTrigger {...props} overlay={overlay}>
+				{children}
+			</_OverlayTrigger>
+		);
+
+		const _overlay = React.cloneElement(overlay, {onMouseOver: this.overlayMouseOver, onMouseOut: this.overlayMouseOut});
+
+		return (
+			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>
+				<_OverlayTrigger {...props}
+				                delay={1}
+				                trigger={[]} 
+				                placement={this.props.placement || "top"}
+												ref={this.setOverlayTriggerRef}
+				                overlay={_overlay}>
+					{children}
+				</_OverlayTrigger>
 			</div>
 		);
 	}

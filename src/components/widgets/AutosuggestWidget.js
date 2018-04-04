@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { OverlayTrigger, Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
+import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo } from "../../utils";
-import { FetcherInput, TooltipComponent, } from "../components";
+import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
@@ -626,38 +626,6 @@ class TaxonCardOverlay extends Component {
 			});
 	}
 
-	popoverMouseOver = () => {
-		this.popoverMouseIn = true;
-	}
-
-	popoverMouseOut = () => {
-		this.popoverMouseIn = false;
-		if (this.popoverTimeout) {
-			clearTimeout(this.overlayTimeout);
-		}
-		this.popoverTimeout = new Context(this.props.formContext.contextId).setTimeout(() => {
-			if (!this.popoverMouseIn && !this.overlayMouseIn && this.overlayRef) this.overlayRef.hide();
-		}, 200);
-	}
-
-	getOverlayRef = elem => {
-		this.overlayRef = elem;
-	};
-
-	overlayMouseOver = () => {
-		this.overlayMouseIn = true;
-		this.overlayRef.show();
-	};
-
-	overlayMouseOut = () => {
-		this.overlayMouseIn = false;
-		if (this.overlayTimeout) {
-			clearTimeout(this.overlayTimeout);
-		}
-		this.overlayTimeout = new Context(this.props.formContext.contextId).setTimeout(() => {
-			if (!this.popoverMouseIn && !this.overlayMouseIn && this.overlayRef) this.overlayRef.hide();
-		}, 200);
-	};
 
 	render() {
 		const {id, formContext, value, children, placement} = this.props;
@@ -670,7 +638,7 @@ class TaxonCardOverlay extends Component {
 		);
 
 		const popover = (
-			<Popover id={`${id}-popover`} onMouseOver={this.popoverMouseOver} onMouseOut={this.popoverMouseOut}>
+			<Popover id={`${id}-popover`}>
 				<span className="text-success">
 					<Glyphicon glyph="tag" /> {formContext.translations.KnownSpeciesName}
 				</span>
@@ -688,15 +656,12 @@ class TaxonCardOverlay extends Component {
 		);
 
 		return (
-			<div onMouseOver={this.overlayMouseOver} onMouseOut={this.overlayMouseOut}>
-				<OverlayTrigger delay={1}
-				                trigger={[]} 
-				                placement={placement || "top"}
-												ref={this.getOverlayRef}
-				                overlay={popover}>
-					{children}
-				</OverlayTrigger>
-			</div>
+			<OverlayTrigger hoverable={true}
+			                placement={placement}
+			                _context={new Context(this.props.formContext.contextId)}
+											overlay={popover}>
+				{children}
+			</OverlayTrigger>
 		);
 	}
 }
