@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Context from "../Context";
 import { Label, Help } from "./components";
-import { isMultiSelect, focusById, getUiOptions, formatErrorMessage, scrollIntoViewIfNeeded } from "../utils";
+import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
 
 export default class FieldTemplate extends Component {
 
@@ -23,14 +23,11 @@ export default class FieldTemplate extends Component {
 		const {formContext} = this.props;
 		const contextId = formContext.contextId;
 		const _context = new Context(contextId);
-		const {idToFocus, elemToFocus} = _context;
+		const {idToFocus, idToScroll} = _context;
 		if (idToFocus !== undefined && this.props.id === idToFocus) {
-			console.log(idToFocus, this.props.id, elemToFocus);
-			if (!focusById(formContext, _context.idToFocus)) return;
-			_context.idToFocus = undefined;
-			_context.elemToFocus = undefined;
-			if (elemToFocus) {
-				scrollIntoViewIfNeeded(elemToFocus, formContext.topOffset, formContext.bottomOffset);
+			if (focusAndScroll(formContext, idToFocus, idToScroll)) {
+				_context.idToFocus = undefined;
+				_context.idToScroll = undefined;
 			}
 		}
 	}

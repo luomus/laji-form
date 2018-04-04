@@ -4,7 +4,7 @@ import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, getKeyHandlerTargetId } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props) {
@@ -16,13 +16,9 @@ export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
 	const idToFocus =  `${props.idSchema.$id}_${idx}`;
-	let {idToFocusAfterAdd} = getUiOptions(props.uiSchema || {});
+	let {idToScrollAfterAdd} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
-	if (idToFocusAfterAdd) {
-		idToFocusAfterAdd = getKeyHandlerTargetId(idToFocusAfterAdd, new Context(props.formContext.contextId));
-		const elem = document.getElementById(idToFocusAfterAdd);
-		if (elem) new Context(props.formContext.contextId).elemToFocus = elem;
-	}
+	new Context(props.formContext.contextId).idToScrollAfterAdd = idToScrollAfterAdd;
 }
 
 const buttonDefinitions = {

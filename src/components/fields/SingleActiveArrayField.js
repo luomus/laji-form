@@ -233,7 +233,8 @@ export default class SingleActiveArrayField extends Component {
 		}
 
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
-		onActiveChange ? onActiveChange(idx, _callback) : this.setState({activeIdx: idx}, _callback);
+		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, _callback);
+		//onActiveChange ? onActiveChange(idx, _callback) : this.setState({activeIdx: idx}, _callback);
 	}
 
 	onDelete = (idx) => () => {
@@ -437,7 +438,7 @@ class PagerArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array">
 				<Panel className="laji-form-clickable-panel" header={
-					<div className="laji-form-clickable-panel-header laji-form-accordion-header">
+					<div className="laji-form-clickable-panel-header laji-form-accordion-header" id={`${this.props.idSchema.$id}__header`}>
 						<Pager>
 							<Pager.Item previous 
 							            href="#"

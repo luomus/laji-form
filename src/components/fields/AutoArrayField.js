@@ -41,11 +41,11 @@ export default class AutoArrayField extends Component {
 			const context = new Context(contextId);
 			context.idToFocus = `${this.props.idSchema.$id}_${state.formData.length - 1}`;
 
-			let {idToFocusAfterAdd} = this.getUiOptions();
-			if (idToFocusAfterAdd) {
-				idToFocusAfterAdd = getKeyHandlerTargetId(idToFocusAfterAdd, formContext, this.state.formData);
+			let {idToScrollAfterAdd} = this.getUiOptions();
+			if (idToScrollAfterAdd) {
+				idToScrollAfterAdd = getKeyHandlerTargetId(idToScrollAfterAdd, formContext, this.state.formData);
 			}
-			context.elemToFocus = getSchemaElementById(contextId, `${this.props.idSchema.$id}_${state.formData.length - 2}`);
+			context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${state.formData.length - 2}`;
 		}
 
 		return state;

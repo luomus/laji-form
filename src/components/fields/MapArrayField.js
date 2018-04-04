@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
 import { Row, Col, Panel, Popover, Modal } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, injectButtons } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -110,12 +110,14 @@ class DefaultMapArrayField extends Component {
 					geometries: [e.feature.geometry]
 				};
 				this.props.onChange([formData]);
-				this.setState({activeIdx: 0}, () => {
-					const node = getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0`);
-					if (!node) return;
-					const tabbables = getTabbableFields(node);
-					if (tabbables && tabbables.length) tabbables[0].focus();
-				});
+				//this.onActiveChange(0);
+				this.setState({activeIdx: 0});
+				//this.setState({activeIdx: 0}, () => {
+				//	const node = getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0`);
+				//	if (!node) return;
+				//	const tabbables = getTabbableFields(node);
+				//	if (tabbables && tabbables.length) tabbables[0].focus();
+				//});
 			}
 		});
 	}
@@ -199,7 +201,7 @@ class DefaultMapArrayField extends Component {
 			}}}));
 	}
 
-	onActiveChange(idx) {
+	afterActiveChange(idx) {
 		if (idx === undefined) return;
 		this.map.zoomToData();
 	}
@@ -217,7 +219,7 @@ class UnitsMapArrayField extends Component {
 		this.onRemove = DefaultMapArrayField.prototype.onRemove.bind(this);
 		this.onEdited = DefaultMapArrayField.prototype.onEdited.bind(this);
 		this.onInsert = DefaultMapArrayField.prototype.onInsert.bind(this);
-		this.onActiveChange = DefaultMapArrayField.prototype.onActiveChange.bind(this);
+		this.afterActiveChange = DefaultMapArrayField.prototype.afterActiveChange.bind(this);
 	}
 
 	getOptions = (options) => {
@@ -429,6 +431,9 @@ class LineTransectMapArrayField extends Component {
 			if (formDataChanged) {
 				this.props.onChange(formData);
 			}
+			if ("activeIdx" in state) {
+				this.afterActiveChange(state.activeIdx);
+			}
 		};
 		Object.keys(state).length ?	this.setState(state, afterState()) : afterState();
 	}
@@ -457,9 +462,8 @@ class LineTransectMapArrayField extends Component {
 		return content;
 	}
 
-	onActiveChange(idx) {
+	afterActiveChange(idx) {
 		this.focusOnMap(idx);
-		focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
 	}
 
 	focusOnMap = (idx) => {
@@ -472,18 +476,10 @@ class LineTransectMapArrayField extends Component {
 		});
 	}
 
-	onComponentDidUpdate(prevProps, prevState) {
-		if (prevState.activeIdx !== this.state.activeIdx) {
-			this.onActiveChange(this.state.activeIdx);
-		}
-
+	componentDidUpdate(prevProps) {
 		for (let lineIdx = 0; lineIdx < this.props.formData.length; lineIdx++) {
 			this.map._updateLTStyleForLineIdx(lineIdx);
 		}
-	}
-
-	onComponentDidMount() {
-		this.focusOnMap(this.state.activeIdx);
 	}
 }
 
@@ -522,14 +518,12 @@ class _MapArrayField extends ComposedComponent {
 	}
 
 	componentDidMount() {
+		if (super.componentDidMount) super.componentDidMount();
 		this.setState({mounted: true});
 		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		this.map = this.refs.map.refs.map.map;
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
-			this.setState({activeIdx: idx}, () => {
-				focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`);
-				this.onActiveChange(idx);
-			});
+			this.setState({activeIdx: idx});
 		});
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", () => {
 			this._zoomToDataOnNextTick = true;
@@ -539,7 +533,19 @@ class _MapArrayField extends ComposedComponent {
 			this._tileLayerNameOnNextTickCallback = callback;
 		});
 
-		if (this.onComponentDidMount) this.onComponentDidMount();
+		if (this.state.activeIdx !== undefined) {
+			this.afterActiveChange(this.state.activeIdx, !!"initial call");
+		}
+	}
+
+	afterActiveChange(idx, initial) {
+		super.afterActiveChange(idx);
+		const {idToScrollAfterActiveChange} = getUiOptions(this.props.uiSchema);
+		!initial && focusAndScroll(this.props.formContext, `${this.props.idSchema.$id}_${idx}`, idToScrollAfterActiveChange);
+		if (this.activeIdxCallback) {
+			this.activeIdxCallback();
+		}
+		this.activeIdxCallback = undefined;
 	}
 
 	componentWillUnmount() {
@@ -551,8 +557,14 @@ class _MapArrayField extends ComposedComponent {
 	}
 
 	componentDidUpdate(...params) {
+		if (super.componentDidUpdate) super.componentDidUpdate(...params);
+
 		const [prevProps, prevState] = params; // eslint-disable-line no-unused-vars
-		if (this.onComponentDidUpdate) this.onComponentDidUpdate(...params);
+
+		if (prevState.activeIdx !== this.state.activeIdx) {
+			this.afterActiveChange(this.state.activeIdx);
+		}
+
 		if (this.refs.stretch) {
 			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
 			if (resizeTimeout) {
@@ -605,10 +617,8 @@ class _MapArrayField extends ComposedComponent {
 		const activeIdxProps = {
 			activeIdx,
 			onActiveChange: (idx, callback) => {
-				this.setState({activeIdx: idx}, () => {
-					this.onActiveChange(idx);
-					if (callback) callback();
-				});
+				this.activeIdxCallback = callback;
+				this.setState({activeIdx: idx});
 			}
 		};
 		uiSchema = {
@@ -712,7 +722,7 @@ class _MapArrayField extends ComposedComponent {
 					fn: () => () => {
 						const nextActive = this.props.formData.length;
 						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
-						this.setState({activeIdx: nextActive}, () => focusById(this.props.formContext ,`${this.props.idSchema.$id}_${this.state.activeIdx}`));
+						this.setState({activeIdx: nextActive});
 					},
 					fnName: "add",
 					glyph: "plus",
@@ -1065,11 +1075,11 @@ export class Map extends Component {
 	}
 
 	setOptions = (prevOptions, options) => {
-		const {className, style, onComponentDidMount, hidden, singleton, emptyMode, draw, ..._options} = options; // eslint-disable-line no-unused-vars
+		const {className, style, hidden, singleton, emptyMode, draw, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
 			style: prevStyle,  // eslint-disable-line no-unused-vars
-			onComponentDidMount: prevOnComponentDidMount,  // eslint-disable-line no-unused-vars
+			onComponentDidMount: prevOnComponentDidMount, // eslint-disable-line no-unused-vars
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
 			emptyMode: prevEmptyMode,  // eslint-disable-line no-unused-vars

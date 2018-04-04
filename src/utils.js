@@ -398,6 +398,8 @@ export function applyFunction(props) {
 }
 
 export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
+	if (!elem) return;
+
 	var rect = elem.getBoundingClientRect();
 	var html = document.documentElement;
 	const height = elem.scrollHeight;
@@ -519,7 +521,7 @@ export function checkRules(rules, props, cache) {
 		} else if (valueIn) {
 			if (cache) {
 				if (!cache[idx]) {
-					cache[idx] = dictionarify(valueIn)
+					cache[idx] = dictionarify(valueIn);
 				}
 				return cache[idx][value];
 			} else {
@@ -529,4 +531,14 @@ export function checkRules(rules, props, cache) {
 	});
 
 	return cache ? {passes, cache} : passes;
+}
+
+export function focusAndScroll(formContext, idToFocus, idToScroll) {
+	const _context = new Context(formContext.contextId);
+	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context))) return false;
+	idToScroll = getKeyHandlerTargetId(idToScroll, _context);
+	if (idToScroll) {
+		const elemToScroll = document.getElementById(idToScroll);
+		scrollIntoViewIfNeeded(elemToScroll, formContext.topOffset, formContext.bottomOffset);
+	}
 }
