@@ -185,7 +185,7 @@ export default class SingleActiveArrayField extends Component {
 		);
 	}
 
-	updateDimensions = (normalRendering, callback) => {
+	updateRenderingMode = (normalRendering, callback) => {
 		this.setState({normalRendering}, () => callback && callback(normalRendering));
 	}
 
@@ -500,16 +500,16 @@ class TableArrayFieldTemplate extends Component {
 
 	componentDidMount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
-		window.addEventListener("resize", this.updateDimensions);
+		window.addEventListener("resize", this.updateRenderingMode);
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", () => {
-			this.updateDimensions();
+			this.updateRenderingMode();
 		});
-		this.updateDimensions();
+		this.updateRenderingMode();
 	}
 
 	componentWillUnmount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
-		window.removeEventListener("resize", this.updateDimensions);
+		window.removeEventListener("resize", this.updateRenderingMode);
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize");
 	}
 
@@ -518,20 +518,33 @@ class TableArrayFieldTemplate extends Component {
 		let updated = false;
 		if (this.props.items.length !== prevProps.items.length || this.state.activeIdx !== prevState.activeIdx) {
 			if (!this.state.normalRendering && this.props.items.length === 1 && this.state.activeIdx === 0) {
-				this.updateDimensions();
+				this.updateRenderingMode();
 				updated = true;
 			} else if (this.state.normalRendering && this.props.items.length > 1 || this.state.activeIdx !== 0) {
-				this.updateDimensions();
+				this.updateRenderingMode();
 				updated = true;
 			}
 		}
 
-		if (!updated && (this.state.activeIdx !== that.state.activeIdx || prevProps.items.length !== this.props.items.length)) {
-			this.updateLayout(this.props.formContext.this.state.activeIdx);
+		if (!updated) {
+			const activeChanged = this.state.activeIdx !== that.state.activeIdx;
+			const itemsLengthChanged = prevProps.items.length !== this.props.items.length;
+
+			let tHeadHeight, tHeadHeightChanged;
+			if (this.tHeadRef) {
+				tHeadHeight = this.tHeadRef.scrollHeight;
+				tHeadHeightChanged = this.prevTHeadHeight && tHeadHeight !== this.prevTHeadHeight;
+			}
+
+			 if (activeChanged || itemsLengthChanged || tHeadHeightChanged) {
+				this.updateLayout(this.props.formContext.this.state.activeIdx);
+			}
+			if( tHeadHeight) this.prevTHeadHeight = tHeadHeight;
 		}
 	}
 
-	updateDimensions = () => {
+	// Sets state.normalRendering on if screen is too small for table layout.
+	updateRenderingMode = () => {
 		requestAnimationFrame(() => {
 			const that = this.props.formContext.this;
 			const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
@@ -546,7 +559,7 @@ class TableArrayFieldTemplate extends Component {
 			}
 
 			if (normalRendering !== undefined) {
-				that.updateDimensions(normalRendering, () => 
+				that.updateRenderingMode(normalRendering, () => 
 					this.setState({normalRendering}, this.updateLayout)
 				);
 			}	else if (!this.state.normalRendering) {
@@ -559,23 +572,29 @@ class TableArrayFieldTemplate extends Component {
 		this.activeElem = elem;
 	}
 
+	setTHeadRef = (elem) => {
+		this.tHeadRef = elem;
+	}
+
 	updateLayout = (idx = null) => {
-		const that = this.props.formContext.this;
-		const {activeIdx} = that.state;
-		const rowElem = this.itemElems[activeIdx];
-		if (!rowElem || !this.activeElem) return;
-		const state = {
-			activeStyle: activeIdx !== undefined ? {
-				position: "absolute",
-				top: rowElem.offsetTop,
-				width: "100%"
-			} : {},
-			activeTrStyle: activeIdx !== undefined ? {
-				height: this.activeElem.offsetHeight
-			} : {}
-		};
-		if (idx !== null) state.activeIdx = idx;
-		this.setState(state);
+		requestAnimationFrame(() => {
+			const that = this.props.formContext.this;
+			const {activeIdx} = that.state;
+			const rowElem = this.itemElems[activeIdx];
+			if (!rowElem || !this.activeElem) return;
+			const state = {
+				activeStyle: activeIdx !== undefined ? {
+					position: "absolute",
+					top: rowElem.offsetTop,
+					width: "100%"
+				} : {},
+				activeTrStyle: activeIdx !== undefined ? {
+					height: this.activeElem.offsetHeight
+				} : {}
+			};
+			if (idx !== null) state.activeIdx = idx;
+			this.setState(state);
+		});
 	}
 
 	render() {
@@ -642,7 +661,7 @@ class TableArrayFieldTemplate extends Component {
 					<div className="table-responsive laji-form-field-template-schema">
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
 							{items.length !== 1 || that.state.activeIdx !== 0 ? (
-								<thead>
+								<thead ref={this.setTHeadRef}>
 										<tr className="darker">
 											{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
 											<th key="_delete" className="single-active-array-table-delete" />
