@@ -86,7 +86,8 @@ const widgets = importLocalComponents("widgets", [
 	"ImageSelectWidget",
 	"AnyToBooleanWidget",
 	"URLWidget",
-	"InformalTaxonGroupChooserWidget"
+	"InformalTaxonGroupChooserWidget",
+	"UpperCaseWidget"
 ]);
 
 function importLocalComponents(dir, fieldNames) {

@@ -18,6 +18,8 @@ export default class _BaseInput extends Component {
 	}
 
 	onChange = (value) => {
+		if (this.props.formatValue) value = this.props.formatValue(value);
+
 		const type = this.props.schema.type;
 		// Accept only integers
 		if (type === "integer") {
@@ -56,6 +58,10 @@ export default class _BaseInput extends Component {
 	}
 
 	render() {
-		return <BaseInput {...this.props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />;
+		const {
+			formatValue, // eslint-disable-line no-unused-vars
+			...props
+		} = this.props;
+		return <BaseInput {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />;
 	}
 }
