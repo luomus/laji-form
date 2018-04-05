@@ -232,9 +232,10 @@ export default class SingleActiveArrayField extends Component {
 			callback && callback();
 		}
 
+		new Context(this.props.formContext.contextId).idToFocus = `${this.props.idSchema.$id}_${idx}`;
+		new Context(this.props.formContext.contextId).idToScroll = `${this.props.idSchema.$id}_${idx}__header`;
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, _callback);
-		//onActiveChange ? onActiveChange(idx, _callback) : this.setState({activeIdx: idx}, _callback);
 	}
 
 	onDelete = (idx) => () => {
@@ -301,7 +302,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				focusByIdx: (idx) => {
 					idx === that.state.activeIdx ?
 					focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`) :
-					this.props.formContext.this.onActiveChange(idx);
+					that.onActiveChange(idx);
 				}
 			});
 		}
@@ -438,7 +439,7 @@ class PagerArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array">
 				<Panel className="laji-form-clickable-panel" header={
-					<div className="laji-form-clickable-panel-header laji-form-accordion-header" id={`${this.props.idSchema.$id}__header`}>
+					<div className="laji-form-clickable-panel-header laji-form-accordion-header">
 						<Pager>
 							<Pager.Item previous 
 							            href="#"
@@ -850,6 +851,7 @@ class AccordionHeader extends Component {
 
 		const header = (
 			<div className={this.props.className}
+			     id={`${that.props.idSchema.$id}_${idx}__header`}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}
 				   onMouseLeave={this.onMouseLeave} >

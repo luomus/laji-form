@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
 import { Row, Col, Panel, Popover, Modal } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getTabbableFields, getSchemaElementById, getBootstrapCols, focusById, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -110,14 +110,7 @@ class DefaultMapArrayField extends Component {
 					geometries: [e.feature.geometry]
 				};
 				this.props.onChange([formData]);
-				//this.onActiveChange(0);
 				this.setState({activeIdx: 0});
-				//this.setState({activeIdx: 0}, () => {
-				//	const node = getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0`);
-				//	if (!node) return;
-				//	const tabbables = getTabbableFields(node);
-				//	if (tabbables && tabbables.length) tabbables[0].focus();
-				//});
 			}
 		});
 	}
@@ -476,7 +469,7 @@ class LineTransectMapArrayField extends Component {
 		});
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate() {
 		for (let lineIdx = 0; lineIdx < this.props.formData.length; lineIdx++) {
 			this.map._updateLTStyleForLineIdx(lineIdx);
 		}
@@ -540,8 +533,7 @@ class _MapArrayField extends ComposedComponent {
 
 	afterActiveChange(idx, initial) {
 		super.afterActiveChange(idx);
-		const {idToScrollAfterActiveChange} = getUiOptions(this.props.uiSchema);
-		!initial && focusAndScroll(this.props.formContext, `${this.props.idSchema.$id}_${idx}`, idToScrollAfterActiveChange);
+		!initial && focusAndScroll(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
 		if (this.activeIdxCallback) {
 			this.activeIdxCallback();
 		}
