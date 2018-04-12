@@ -241,7 +241,7 @@ export class Autosuggest extends Component {
 	getStateFromProps(props) {
 		const {value, suggestionReceive = "key"} = props;
 		const {suggestion} = this.state;
-		if (suggestion && suggestion[suggestionReceive] !== value && this.mounted) {
+		if (this.state.value !== value || (suggestion && suggestion[suggestionReceive] !== value && this.mounted)) {
 			this.triggerConvert(props);
 		} else if (!suggestion) {
 			return {value: props.value};
@@ -276,7 +276,12 @@ export class Autosuggest extends Component {
 
 	triggerConvert = (props) => {
 		const {value, getSuggestionFromValue} = props;
-		if (isEmptyString(value) || !getSuggestionFromValue) return;
+		if (isEmptyString(value) || !getSuggestionFromValue)  {
+			if (this.state.suggestion && Object.keys(this.state.suggestion).length > 0) {
+				this.setState({suggestion: undefined, value});
+			}
+			return;
+		}
 
 		this.setState({isLoading: true});
 		getSuggestionFromValue(value).then(suggestion => {
