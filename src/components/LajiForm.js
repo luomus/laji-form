@@ -134,6 +134,7 @@ export default class LajiForm extends Component {
 		initializeValidation(this.apiClient);
 		this.translations = this.constructTranslations();
 		this._id = getNewId();
+
 		this._context = new Context(this._id);
 		this._context.formInstance = this;
 		this.propagateSubmit = true;

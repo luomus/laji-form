@@ -43,7 +43,7 @@ export default class AnnotationField extends Component {
 	}
 
 	render() {
-		const {adminOnly, container, add, filter, uiSchema: annotationUiSchema, buttonsPath = "/"} = getUiOptions(this.props.uiSchema);
+		const {adminOnly, container, add, filter, uiSchema: annotationUiSchema, buttonsPath = "/", formId} = getUiOptions(this.props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
 		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin || !this.props.formData.id
 			? innerUiSchema
@@ -82,6 +82,7 @@ export default class AnnotationField extends Component {
 							add={add}
 							uiSchema={annotationUiSchema}
 							filter={filter}
+							formId={formId}
 						/>
 					</Container>
 				}
@@ -98,22 +99,25 @@ class AnnotationBox extends Component {
 		this.state = {annotations: props.annotations || []};
 	}
 
+	static defaultProps = {
+		formId: "MHL.15"
+	}
+
 	componentDidMount() {
 		this.mounted = true;
-		new ApiClient().fetchCached("/forms/MHL.15", {lang: this.props.lang, format: "schema"})
+		new ApiClient().fetchCached(`/forms/${this.props.formId}`, {lang: this.props.lang, format: "schema"})
 			.then(metadataForm => {
-				if (this.mounted) {
-					const {filter: _filter} = this.props;
-					let propArray = Object.keys(metadataForm.schema.properties);
-					if (_filter) propArray = filter(propArray, _filter.filter, _filter.filterType);
+				if (!this.mounted) return;
+				const {filter: _filter} = this.props;
+				let propArray = Object.keys(metadataForm.schema.properties);
+				if (_filter) propArray = filter(propArray, _filter.filter, _filter.filterType);
 
-					const schemaProperties = propArray.reduce((properties, prop) => {
-						properties[prop] = metadataForm.schema.properties[prop];
-						return properties;
-					}, {});
-					const schema = {...metadataForm.schema, properties: schemaProperties};
-					this.setState({metadataForm: {...metadataForm, schema}});
-				}
+				const schemaProperties = propArray.reduce((properties, prop) => {
+					properties[prop] = metadataForm.schema.properties[prop];
+					return properties;
+				}, {});
+				const schema = {...metadataForm.schema, properties: schemaProperties};
+				this.setState({metadataForm: {...metadataForm, schema}});
 			});
 	}
 
