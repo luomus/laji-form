@@ -3,6 +3,14 @@ import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils"
 import BaseComponent from "./BaseComponent";
 import Context from "../Context";
 
+export function getPropsWithInnerUiSchema(props) {
+	return {
+		...props,
+		uiSchema: getInnerUiSchema(props.uiSchema),
+		options: getUiOptions(props.uiSchema)
+	};
+}
+
 /**
  * Virtual SchemaFields are components which are just state transforming machines.
  */
@@ -17,12 +25,7 @@ export default function VirtualSchemaField(ComposedComponent) {
 		}
 
 		getStateFromProps(props) {
-			const propsWithInnerUiSchema = {
-				...props,
-				uiSchema: getInnerUiSchema(props.uiSchema),
-				options: getUiOptions(props.uiSchema)
-			};
-
+			const propsWithInnerUiSchema = getPropsWithInnerUiSchema(props);
 			return {
 				...propsWithInnerUiSchema,
 				...super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema,

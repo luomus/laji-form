@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from  "../../utils";
-import VirtualSchemaField from "../VirtualSchemaField";
+import VirtualSchemaField, { getPropsWithInnerUiSchema } from "../VirtualSchemaField";
 
 @VirtualSchemaField
 export default class UiFieldMapperArrayField extends Component {
@@ -38,6 +38,7 @@ export default class UiFieldMapperArrayField extends Component {
 
 	componentWillReceiveProps(props) {
 		this.updateChildProps(props);
+		this.setState(this.getStateFromProps(props));
 	}
 
 	updateChildProps = (props) => {
