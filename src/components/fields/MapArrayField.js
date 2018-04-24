@@ -461,11 +461,8 @@ class LineTransectMapArrayField extends Component {
 
 	focusOnMap = (idx) => {
 		this.getContext().setImmediate(() =>{
-			const isDefaultCRS = this.map._getDefaultCRSLayers().includes(this.map.tileLayer);
-			const maxZoom = isDefaultCRS ? 16 : 13;
-			const minZoom = 13;
-			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {minZoom, maxZoom}); // eslint-disable-line no-undef
-			if (this.map.getNormalizedZoom() < minZoom) this.map.setNormalizedZoom(minZoom);
+			console.log("fitboutnds");
+			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {minZoom: 30}); // eslint-disable-line no-undef
 		});
 	}
 
@@ -597,6 +594,19 @@ class _MapArrayField extends ComposedComponent {
 		}
 	})
 	getAligmentAnchor = () => this.refs._stretch
+	onEnterViewPort = () => {
+		this.afterActiveChange(this.state.activeIdx, !!"initial call");
+	}
+
+	getMapOptions = () => {
+		const options = getUiOptions(this.props.uiSchema);
+		return merge.all([
+			(options.mapOptions || {}),
+			(this.getOptions(options) || {}),
+			(this.state.mapOptions || {})
+		]);
+	}
+	
 
 	render() {
 		const {registry: {fields: {SchemaField}}} = this.props;
@@ -620,11 +630,7 @@ class _MapArrayField extends ComposedComponent {
 			}
 		};
 
-		let mapOptions = merge.all([
-			(options.mapOptions || {}),
-			(this.getOptions(options) || {}),
-			(this.state.mapOptions || {})
-		]);
+		let mapOptions = this.getMapOptions();
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
@@ -793,7 +799,7 @@ class _MapArrayField extends ComposedComponent {
 				{map}
 			</Stretch>
 		) : (
-			<StretchAffix {...wrapperProps} getAligmentAnchor={this.getAligmentAnchor}>
+			<StretchAffix {...wrapperProps} getAligmentAnchor={this.getAligmentAnchor} enterViewPortTreshold={200} onEnterViewPort={this.onEnterViewPort}>
 				{map}
 			</StretchAffix>
 		);

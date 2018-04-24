@@ -246,7 +246,10 @@ export class StretchAffix extends Component {
 
 	componentWillReceiveProps(props) {
 		if (props.mounted && !this.initialized) {
-			this.update(this.getState());
+			const state = this.getState();
+			this.update(state);
+			this.cameToViewFirstTime = state.affixHeight > this.props.enterViewPortTreshold || 0;
+			console.log("init", this.cameToViewFirstTime);
 			this.initialized = true;
 		}
 	}
@@ -262,7 +265,14 @@ export class StretchAffix extends Component {
 	}
 
 	_onScroll = () => {
-		this.update(this.getState());
+		let callback = undefined;
+		const state = this.getState();
+		console.log(this.cameToViewFirstTime, state.affixHeight);
+		if (!this.cameToViewFirstTime && state.affixHeight > this.props.enterViewPortTreshold || 0) {
+			this.cameToViewFirstTime = true;
+			if (this.props.onEnterViewPort) callback = () => this.props.onEnterViewPort();
+		}
+		this.update(state, callback);
 	}
 
 	onScroll = () => {
@@ -273,16 +283,24 @@ export class StretchAffix extends Component {
 		const positioner = findDOMNode(this.refs.positioner);
 		const width = positioner.getBoundingClientRect().width;
 
-		this.update({...this.getState(), width});
+		let callback = undefined;
+		const state = this.getState();
+		console.log(this.cameToViewFirstTime, state.affixHeight);
+		if (!this.cameToViewFirstTime && state.affixHeight > this.props.enterViewPortTreshold || 0) {
+			this.cameToViewFirstTime = true;
+			if (this.props.onEnterViewPort) callback = () => this.props.onEnterViewPort();
+		}
+		this.update({...state, width}, callback);
 	}
 
 	onResize = () => {
 		requestAnimationFrame(this._onResize);
 	}
 
-	update = (state) => {
+	update = (state, callback) => {
 		const afterStateChange = () => {
 			if (this.props.onResize) this.props.onResize();
+			callback && callback();
 		};
 		state ? this.setState(state, () => {
 			afterStateChange();
