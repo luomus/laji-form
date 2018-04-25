@@ -35,11 +35,10 @@ export default class FlatField extends Component {
 		const {fields} = this.getUiOptions();
 
 		fields.forEach(field => {
-			const innerSchema = props.schema.properties[field];
+			let innerSchema = props.schema.properties[field];
 			const isArray = innerSchema.type === "array";
-			const propertiesName = isArray ? "items" : "properties";
-			let properties = innerSchema[propertiesName];
-			if (properties.properties) properties = properties.properties;
+			if (isArray) innerSchema = innerSchema.items;
+			let {properties} = innerSchema;
 
 			if (properties) Object.keys(properties).forEach(innerField => {
 				state.schema = update(state.schema, {properties: {$merge: {[getPropName(field, innerField, isArray)]: properties[innerField]}}});

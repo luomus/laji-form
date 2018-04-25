@@ -249,7 +249,6 @@ export class StretchAffix extends Component {
 			const state = this.getState();
 			this.update(state);
 			this.cameToViewFirstTime = state.affixHeight > this.props.enterViewPortTreshold || 0;
-			console.log("init", this.cameToViewFirstTime);
 			this.initialized = true;
 		}
 	}
@@ -267,7 +266,6 @@ export class StretchAffix extends Component {
 	_onScroll = () => {
 		let callback = undefined;
 		const state = this.getState();
-		console.log(this.cameToViewFirstTime, state.affixHeight);
 		if (!this.cameToViewFirstTime && state.affixHeight > this.props.enterViewPortTreshold || 0) {
 			this.cameToViewFirstTime = true;
 			if (this.props.onEnterViewPort) callback = () => this.props.onEnterViewPort();
@@ -285,7 +283,6 @@ export class StretchAffix extends Component {
 
 		let callback = undefined;
 		const state = this.getState();
-		console.log(this.cameToViewFirstTime, state.affixHeight);
 		if (!this.cameToViewFirstTime && state.affixHeight > this.props.enterViewPortTreshold || 0) {
 			this.cameToViewFirstTime = true;
 			if (this.props.onEnterViewPort) callback = () => this.props.onEnterViewPort();

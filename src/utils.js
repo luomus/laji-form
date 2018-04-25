@@ -88,15 +88,16 @@ export function getInnerUiSchema(parentUiSchema) {
 			"ui:buttons": [
 				...(uiSchema["ui:buttons"] || []),
 				...parentUiSchema["ui:buttons"]
-			],
+			]
 		};
 	}
 	return {
 		...restOfUiSchema,
 		"ui:field": undefined,
 		"ui:settings": undefined,
+		"ui:options": uiSchema ? undefined : restOfUiSchema["ui:options"],
 		"ui:buttons": uiSchema ? undefined : parentUiSchema["ui:buttons"],
-		...uiSchema
+		...(uiSchema || {})
 	};
 }
 

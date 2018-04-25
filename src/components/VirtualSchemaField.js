@@ -6,8 +6,7 @@ import Context from "../Context";
 export function getPropsWithInnerUiSchema(props) {
 	return {
 		...props,
-		uiSchema: getInnerUiSchema(props.uiSchema),
-		options: getUiOptions(props.uiSchema)
+		uiSchema: getInnerUiSchema(props.uiSchema)
 	};
 }
 

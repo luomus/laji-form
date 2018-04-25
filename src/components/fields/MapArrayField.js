@@ -117,15 +117,15 @@ class DefaultMapArrayField extends Component {
 
 	getData() {
 		const {formData} = this.props;
-		const idx = this.state.activeIdx;
+		const {activeIdx} = this.state;
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		if (!formData) return;
 
-		const item = formData[idx];
+		const item = formData[activeIdx];
 		this._context.featureIdxsToItemIdxs = {};
 
 		let geometries = [];
-		if (idx !== undefined && item && item[geometryField] && item[geometryField].type) {
+		if (activeIdx !== undefined && item && item[geometryField] && item[geometryField].type) {
 			geometries = parseGeometries(item[geometryField]);
 		}
 
@@ -461,7 +461,6 @@ class LineTransectMapArrayField extends Component {
 
 	focusOnMap = (idx) => {
 		this.getContext().setImmediate(() =>{
-			console.log("fitboutnds");
 			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {minZoom: 30}); // eslint-disable-line no-undef
 		});
 	}
@@ -535,6 +534,7 @@ class _MapArrayField extends ComposedComponent {
 			this.activeIdxCallback();
 		}
 		this.activeIdxCallback = undefined;
+		this.onLocateOrAddNew();
 	}
 
 	componentWillUnmount() {
@@ -600,13 +600,19 @@ class _MapArrayField extends ComposedComponent {
 
 	getMapOptions = () => {
 		const options = getUiOptions(this.props.uiSchema);
-		return merge.all([
+		let _options = merge.all([
 			(options.mapOptions || {}),
 			(this.getOptions(options) || {}),
 			(this.state.mapOptions || {})
 		]);
+		if (options.createOnLocate && !_options.locate) {
+			_options = {
+				..._options,
+				locate: [this.onLocate, this.onLocateFail]
+			};
+		}
+		return _options;
 	}
-	
 
 	render() {
 		const {registry: {fields: {SchemaField}}} = this.props;
@@ -623,12 +629,16 @@ class _MapArrayField extends ComposedComponent {
 				this.setState({activeIdx: idx});
 			}
 		};
-		uiSchema = {
-			...getInnerUiSchema(uiSchema),
-			"ui:options": {
-				...getUiOptions(getInnerUiSchema(uiSchema)),
-			}
-		};
+		uiSchema = getInnerUiSchema(uiSchema);
+		if (getUiOptions(this.props.uiSchema).buttons) {
+			uiSchema = {
+				...uiSchema,
+				"ui:options": {
+					...uiSchema["ui:options"],
+					buttons: [...uiSchema["ui:options"], ...getUiOptions(this.props.uiSchema).buttons]
+				}
+			};
+		}
 
 		let mapOptions = this.getMapOptions();
 
@@ -812,13 +822,15 @@ class _MapArrayField extends ComposedComponent {
 					</Col>
 					<Col {...schemaSizes} ref="_stretch">
 						{mapOptions.emptyMode ?
+							(!emptyHelp && (!buttons || !buttons.length) ? null :
 								<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
 									<div>
 										{emptyHelp}
 										{buttons && buttons.length ? ` ${this.props.formContext.translations.or}` : null}
 										{buttons}
 									</div>
-								}</Popover> :
+								}</Popover>
+							) :
 							inlineSchema
 						}
 					</Col>
@@ -906,6 +918,40 @@ class _MapArrayField extends ComposedComponent {
 			}
 		});
 		return data;
+	}
+
+	onLocate = (latlng, radius) => {
+		this.location = latlng ? {latlng, radius} : undefined;
+		this.onLocateOrAddNew();
+	}
+
+	onLocateOrAddNew = () => {
+		if (!this.location) return;
+
+		const {latlng, radius} = this.location;
+		const {createOnLocate, geometryField} = getUiOptions(this.props.uiSchema);
+		if (!createOnLocate) return;
+
+		const {formData} = this.props;
+		if (this.props.formData.length === 0 
+			|| (
+				!formData[this.state.activeIdx][geometryField] ||
+				!formData[this.state.activeIdx][geometryField] ||
+				!Object.keys(formData[this.state.activeIdx][geometryField]).length
+			)) {
+			let geometry = undefined;
+			if (createOnLocate === "marker") {
+				geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
+			}
+			if (createOnLocate === "circle") {
+				geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat], radius};
+			}
+			this.map.addFeatureToDraw({
+				type: "Feature",
+				properties: {},
+				geometry
+			});
+		}
 	}
 });
 }

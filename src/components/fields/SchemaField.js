@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Context from "../../Context";
-import { isMultiSelect, getUiOptions } from "../../utils";
+import { isMultiSelect, getUiOptions, getInnerUiSchema } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
@@ -53,8 +53,28 @@ export default class _SchemaField extends Component {
 			if (nonVirtualFound) {
 				return _props;
 			}
-			_props = {..._props, uiSchema: {...uiFn, uiSchema: _props.uiSchema}};
 
+			const buttons =  !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema).buttons : undefined;
+			const uiButtons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema)["ui:buttons"] : undefined;
+			_props = {
+				..._props, 
+				uiSchema: (_props.uiSchema["ui:field"])
+					? {...uiFn, uiSchema: _props.uiSchema}
+					: {..._props.uiSchema, ...uiFn}
+			};
+			if (buttons || uiButtons) {
+				_props = {
+					..._props, 
+					uiSchema: {
+						..._props.uiSchema,
+						"ui:options": {
+							..._props.uiSchema["ui:options"],
+							buttons: [...(_props.uiSchema.buttons || []), ...(buttons || [])],
+							"ui:buttons": [...(_props.uiSchema["ui:buttons"] || []), ...(uiButtons || [])]
+						}
+					}
+				};
+			}
 			if (!new Context("VIRTUAL_SCHEMA_NAMES")[uiFn["ui:field"]]) {
 				nonVirtualFound = true;
 				return {
