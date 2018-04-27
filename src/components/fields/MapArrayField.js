@@ -601,6 +601,7 @@ class _MapArrayField extends ComposedComponent {
 	getMapOptions = () => {
 		const options = getUiOptions(this.props.uiSchema);
 		let _options = merge.all([
+			{clickBeforeZoomAndPan: true},
 			(options.mapOptions || {}),
 			(this.getOptions(options) || {}),
 			(this.state.mapOptions || {})
