@@ -573,9 +573,11 @@ class _MapArrayField extends ComposedComponent {
 		}
 		if (this.state.fullscreen && !prevState.fullscreen) {
 			this._mapContainer = this.map.rootElem;
-			this.map.setRootElem(findDOMNode(this.modalRef));
+			this.map.setRootElem(findDOMNode(this.fullscreenRef));
+			this.map.setOption("clickBeforeZoomAndPan", false);
 		} else if (!this.state.fullscreen && prevState.fullscreen) {
 			this.map.setRootElem(this._mapContainer);
+			this.map.setOption("clickBeforeZoomAndPan", true);
 		}
 	}
 
@@ -845,19 +847,15 @@ class _MapArrayField extends ComposedComponent {
 				</Row>
 				{
 					this.state.fullscreen ? (
-						<Modal show={true} dialogClassName="laji-form map-dialog" onHide={this.toggleFullscreen}>
-							<Modal.Header closeButton={true} />
-							<Modal.Body ref={this.setModalRef} />
-						</Modal>
-
+						<div className="map-fullscreen" ref={this.setFullscreenRef} />
 					) : null
 				}
 			</div>
 		);
 	}
 
-	setModalRef = (elem) => {
-		this.modalRef = elem;
+	setFullscreenRef = (elem) => {
+		this.fullscreenRef = elem;
 	}
 
 	toggleFullscreen = () => {

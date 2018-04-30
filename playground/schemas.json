@@ -2796,42 +2796,1069 @@
   ]
 }
 	},
-	"formData":{
+	"formData": {
+  "creator": "MA.308",
   "gatheringEvent": {
+    "startDistanceFromNECorner": "3000",
+    "namedPlaceNotes": "muuta:\nreitin kulkua muutetaan NW-kulmassa",
+    "legPublic": true,
+    "id": "JX.129764#1",
+    "@type": "MZ.gatheringEvent",
+    "gpsUsed": false,
     "leg": [
       "MA.308"
     ],
-    "legPublic": true
+    "dateBegin": "2017-05-25",
+    "timeStart": "05:00",
+    "timeEnd": "07:00"
   },
-  "editors": [],
-  "secureLevel": "MX.secureLevelNone",
+  "formID": "MHL.1",
   "gatherings": [
     {
-      "locality": "jjjjjj",
-      "images": [],
-      "units": [
-      ],
+      "habitatClassification": "S3K10",
       "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              27.134461,
-              63.258517
-            ]
-          }
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.467571394866,
+            60.728156808647
+          ],
+          [
+            24.467500733218,
+            60.729053758626
+          ]
         ]
       },
-      "habitat": [],
-      "country": "Suomi",
-      "administrativeProvince": "",
-      "municipality": "Kuopio",
-      "biologicalProvince": "Pohjois-Savo",
-      "taxonCensus": []
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [
+        {
+          "informalTaxonGroups": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "individualCount": 1,
+          "shortHandText": "llx",
+          "pairCount": 1,
+          "unitType": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "identifications": [
+            {
+              "taxon": "Luscinia luscinia",
+              "taxonID": "MX.32819",
+              "id": "JX.129764#4",
+              "@type": "MY.identification"
+            }
+          ],
+          "unitFact": {
+            "lineTransectObsType": "MY.lineTransectObsTypeSong",
+            "lineTransectRouteFieldType": "MY.lineTransectRouteFieldTypeOuter",
+            "autocompleteSelectedTaxonID": "MX.32819"
+          },
+          "id": "JX.129764#3",
+          "@type": "MY.unit"
+        },
+        {
+          "informalTaxonGroups": [],
+          "identifications": [
+            {
+              "id": "JX.129764#6",
+              "@type": "MY.identification"
+            }
+          ],
+          "pairCount": 1,
+          "id": "JX.129764#5",
+          "@type": "MY.unit",
+          "unitFact": {}
+        }
+      ],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#2",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K5",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.467500733218,
+            60.729053758626
+          ],
+          [
+            24.467465400684,
+            60.729502233551
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#7",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K10",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.467465400684,
+            60.729502233551
+          ],
+          [
+            24.46743006701,
+            60.729950708435
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#8",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "K3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.46743006701,
+            60.729950708435
+          ],
+          [
+            24.46738059795,
+            60.7305785732
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#9",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "HhA3",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.46738059795,
+            60.7305785732
+          ],
+          [
+            24.467288720909,
+            60.731744607543
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#10",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.467288720909,
+            60.731744607543
+          ],
+          [
+            24.467218041016,
+            60.732641556843
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#11",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "K3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.467218041016,
+            60.732641556843
+          ],
+          [
+            24.46714735656,
+            60.733538505973
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#12",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.46714735656,
+            60.733538505973
+          ],
+          [
+            24.46704132132,
+            60.734883929349
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#13",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "HhA5",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.46704132132,
+            60.734883929349
+          ],
+          [
+            24.466935275812,
+            60.736229352344
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#14",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "PlK2",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.466935275812,
+            60.736229352344
+          ],
+          [
+            24.466864573101,
+            60.737126300794
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#15",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K10",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.466864573101,
+            60.737126300794
+          ],
+          [
+            24.466758510476,
+            60.738471723152
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#16",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.466758510476,
+            60.738471723152
+          ],
+          [
+            24.466687796353,
+            60.739368671178
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#17",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.466687796353,
+            60.739368671178
+          ],
+          [
+            24.466581716608,
+            60.740714092898
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#18",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "VhA4",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.466581716608,
+            60.740714092898
+          ],
+          [
+            24.466510991069,
+            60.7416110405
+          ],
+          [
+            24.466475626588,
+            60.742059514237
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#19",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.466475626588,
+            60.742059514237
+          ],
+          [
+            24.466474919287,
+            60.742068483711
+          ],
+          [
+            24.468842687166,
+            60.742526416836
+          ],
+          [
+            24.468618364271,
+            60.743510293071
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#20",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.468618364271,
+            60.743510293071
+          ],
+          [
+            24.468424367044,
+            60.744342033468
+          ],
+          [
+            24.468494128995,
+            60.744388264817
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#21",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S4K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.468494128995,
+            60.744388264817
+          ],
+          [
+            24.468873229706,
+            60.744700838273
+          ],
+          [
+            24.46892184206,
+            60.744782601428
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#22",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "M3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.46892184206,
+            60.744782601428
+          ],
+          [
+            24.469231845813,
+            60.745273525878
+          ],
+          [
+            24.469091512005,
+            60.745657138544
+          ],
+          [
+            24.469287336457,
+            60.746199804343
+          ],
+          [
+            24.469983689186,
+            60.746212945754
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#23",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "L3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.469983689186,
+            60.746212945754
+          ],
+          [
+            24.471816199517,
+            60.74624751115
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#24",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "K3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.471816199517,
+            60.74624751115
+          ],
+          [
+            24.472732456392,
+            60.746264784467
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#25",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.472732456392,
+            60.746264784467
+          ],
+          [
+            24.474564973559,
+            60.746299312338
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#26",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "K3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.474564973559,
+            60.746299312338
+          ],
+          [
+            24.478230021552,
+            60.746368293026
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#27",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.478230021552,
+            60.746368293026
+          ],
+          [
+            24.47844992501,
+            60.746372428685
+          ],
+          [
+            24.480978819484,
+            60.746419962871
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#28",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "HhA3",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.480978819484,
+            60.746419962871
+          ],
+          [
+            24.482811357117,
+            60.746454378161
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#29",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "M3K20",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.482811357117,
+            60.746454378161
+          ],
+          [
+            24.484295715928,
+            60.746482236207
+          ],
+          [
+            24.484344184333,
+            60.74586333436
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#30",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "K3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.484344184333,
+            60.74586333436
+          ],
+          [
+            24.484556424027,
+            60.743621623253
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#31",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "S3K15",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.484556424027,
+            60.743621623253
+          ],
+          [
+            24.484720178926,
+            60.741998813419
+          ],
+          [
+            24.484768630277,
+            60.741379910953
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#32",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "VsA4",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.484768630277,
+            60.741379910953
+          ],
+          [
+            24.485126187832,
+            60.737515042178
+          ],
+          [
+            24.485192942474,
+            60.736896482775
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#33",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "VsA5",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.485192942474,
+            60.736896482775
+          ],
+          [
+            24.48555038593,
+            60.733031609921
+          ],
+          [
+            24.485822770514,
+            60.730018504395
+          ],
+          [
+            24.484089386919,
+            60.72849483614
+          ],
+          [
+            24.479712773951,
+            60.728403628437
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#34",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "PsK3",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.479712773951,
+            60.728403628437
+          ],
+          [
+            24.478797020959,
+            60.728386405754
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#35",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "HhA4",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.478797020959,
+            60.728386405754
+          ],
+          [
+            24.475134724839,
+            60.728308482969
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#36",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "PlK2",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.475134724839,
+            60.728308482969
+          ],
+          [
+            24.474933260389,
+            60.728304687642
+          ],
+          [
+            24.473303231863,
+            60.728273968867
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#37",
+      "@type": "MY.gathering"
+    },
+    {
+      "habitatClassification": "HaA3",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            24.473303231863,
+            60.728273968867
+          ],
+          [
+            24.467571394866,
+            60.728156808647
+          ]
+        ]
+      },
+      "taxonCensus": [
+        {
+          "censusTaxonID": "MX.37580",
+          "taxonCensusType": "MY.taxonCensusTypeCounted"
+        }
+      ],
+      "units": [],
+      "gatheringFact": {
+        "lineTransectSegmentCounted": true
+      },
+      "id": "JX.129764#38",
+      "@type": "MY.gathering"
     }
   ],
-  "keywords": []
+  "namedPlaceID": "MNP.27113",
+  "editors": [
+    "MA.308"
+  ],
+  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+  "sourceID": "KE.389",
+  "collectionID": "HR.61",
+  "editor": "MA.308",
+  "dateEdited": "2018-03-28T13:47:07+03:00",
+  "dateCreated": "2018-03-28T13:47:07+03:00",
+  "id": "JX.129764",
+  "@type": "MY.document",
+  "@context": "http://schema.laji.fi/context/document.jsonld",
+  "_hasChanges": true
 },
 	"settings": {
 		  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "maastokartta",
