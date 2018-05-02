@@ -78,9 +78,15 @@ export default class SingleActiveArrayField extends Component {
 
 	updatePopups = (props) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
+		let {popups} = this.state;
+		let count = 0;
 		if (popupFields) props.formData.forEach((item, idx) => {
 			this.getPopupDataPromise(idx, props, item).then(popupData => {
-				if (this.mounted) this.setState({popups: {...this.state.popups, [idx]: popupData}});
+				count++;
+				popups  = {...popups, [idx]: popupData};
+				if (this.mounted && count === props.formData.length) this.setState({popups});
+			}).catch(() => {
+				count++;
 			});
 		});
 	}
@@ -192,7 +198,7 @@ export default class SingleActiveArrayField extends Component {
 	getPopupDataPromise = (idx, props, itemFormData) => {
 		const {popupFields} = getUiOptions(props.uiSchema);
 
-		if (!this.props.formData) return new Promise(resolve => resolve({}));
+		if (!this.props.formData) return Promise.resolve({});
 
 		return Promise.all(popupFields.map(field => {
 			const fieldName = field.field;
@@ -211,7 +217,7 @@ export default class SingleActiveArrayField extends Component {
 				});
 				return popup;
 			}, {});
-			return new Promise(resolve => resolve(popupData));
+			return Promise.resolve(popupData);
 		});
 	}
 
