@@ -5,7 +5,7 @@ import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
-import { Row, Col, Panel, Popover, Modal } from "react-bootstrap";
+import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
@@ -725,9 +725,9 @@ class _MapArrayField extends ComposedComponent {
 		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
 		let _buttonsPath = buttonsPath || addButtonPath;
 
-		if (this.state.activeIdx !== undefined && _buttonsPath && options.buttons) {
-			const addButton = options.buttons.find(({fn}) => fn === "add");
-			const buttons = [
+		const appendAddButton = (buttons) => {
+			const addButton = buttons.find(({fn}) => fn === "add");
+			return [
 				{
 					...(addButton || {}),
 					fn: () => () => {
@@ -739,19 +739,30 @@ class _MapArrayField extends ComposedComponent {
 					glyph: "plus",
 					id: this.props.idSchema.$id
 				},
-				...options.buttons.filter(button => button !== addButton),
+				...buttons.filter(button => button !== addButton),
 			];
-			belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
-		} else if (this.state.activeIdx === undefined) {
+		};
+
+		let buttons = undefined;
+		let renderButtonsBelow = false;
+		if (this.state.activeIdx !== undefined && options.buttons) {
+			if (_buttonsPath) {
+				buttons = appendAddButton(options.buttons);
+				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
+			} else if (options.renderButtonsBelow) {
+				buttons = appendAddButton(options.buttons);
+				renderButtonsBelow = true;
+			}
+		} else if (this.state.activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 
 		const inlineSchema = <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_inline`}{...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
 		const belowSchema = belowFields ? <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_below`} {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
-		const buttons =  mapOptions.emptyMode
-			? this.props.uiSchema["ui:options"].buttons.map(button => getButton(button, {
-				canAdd: button.key === "addNamedPlace",
+		buttons =  !_buttonsPath && buttons || mapOptions.emptyMode
+			? buttons.map(button => getButton(button, {
+				canAdd: mapOptions.emptyMode ? button.fnName === "addNamedPlace" : true,
 				uiSchema: this.props.uiSchema,
 				idSchema: this.props.idSchema,
 				formData: this.props.formData
@@ -816,6 +827,7 @@ class _MapArrayField extends ComposedComponent {
 				{map}
 			</StretchAffix>
 		);
+		const {TitleField} = this.props.registry.fields;
 
 		return (
 			<div ref="affix">
@@ -845,6 +857,12 @@ class _MapArrayField extends ComposedComponent {
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
+				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
+				<Row>
+					<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
+					<ButtonToolbar>{buttons}</ButtonToolbar>
+				</Row>
+				) : null}
 				{
 					this.state.fullscreen ? (
 						<div className="map-fullscreen" ref={this.setFullscreenRef} />

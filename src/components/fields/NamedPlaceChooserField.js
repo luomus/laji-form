@@ -100,7 +100,7 @@ export default class NamedPlaceChooserField extends Component {
 				const options = getUiOptions(innerUiSchema);
 				const buttonDefinition = {
 					fn: this.onButtonClick,
-					key: "addNamedPlace",
+					fnName: "addNamedPlace",
 					glyph: "map-marker",
 					label: this.props.formContext.translations.ChooseFromNamedPlace,
 					id: this.props.idSchema.$id
