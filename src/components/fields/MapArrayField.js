@@ -760,7 +760,7 @@ class _MapArrayField extends ComposedComponent {
 		const inlineSchema = <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_inline`}{...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
 		const belowSchema = belowFields ? <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_below`} {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
-		buttons =  !_buttonsPath && buttons || mapOptions.emptyMode
+		buttons =  buttons && (!_buttonsPath || mapOptions.emptyMode)
 			? buttons.map(button => getButton(button, {
 				canAdd: mapOptions.emptyMode ? button.fnName === "addNamedPlace" : true,
 				uiSchema: this.props.uiSchema,

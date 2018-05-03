@@ -85,7 +85,7 @@ export default class InjectField extends Component {
 						if (!errorSchema[target][i]) errorSchema = update(errorSchema, {[target]: {$merge: {[i]: {}}}});
 						errorSchema = update(errorSchema, {[target]: {[i]: {$merge: {[fieldName]: errors}}}});
 					}
-					delete errorSchema[fieldName];
+					errorSchema = immutableDelete(errorSchema, fieldName);
 				} else if (errors && schema.properties[target].type === "object") {
 					if (!errorSchema[target]) errorSchema = update(errorSchema, {$merge: {[target]: {}}});
 					errorSchema = update(errorSchema, {[target]: {$merge: {[fieldName]: errors}}});
@@ -107,18 +107,18 @@ export default class InjectField extends Component {
 			}
 
 			let formDataChanged = false;
-			fields.forEach( fieldPath => {
+			fields.forEach(fieldPath => {
 				const splits = fieldPath.split("/");
 				const fieldName = splits[splits.length - 1];
 
 				if (formData && formData[target] && Array.isArray(formData[target])) {
 					for (const i in formData[target]) {
 						let item = formData[target][i];
-						if (item[fieldName] !== this.props.formData[fieldName]) {
+						if (item[fieldName] !== formData[fieldName]) {
 							formData = update(formData, this.getFormDataPath(splits, {$set: item[fieldName]}));
 							formDataChanged = true;
 						}
-						delete item[fieldName];
+						item = immutableDelete(item, fieldName);
 						formData = update(formData, {[target]: {[i]: {$set: item}}});
 					}
 				} else if (formData && formData[target] && formData[target][fieldName] !== undefined) {
