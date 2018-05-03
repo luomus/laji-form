@@ -223,9 +223,16 @@ export class Autosuggest extends Component {
 		allowNonsuggestedValue: true,
 	}
 
+	isValueSuggested = (value, props) => {
+		if (!props) props = this.props;
+		const {isValueSuggested, suggestionReceive, onSuggestionSelected} = props;
+		if (!onSuggestionSelected && suggestionReceive !== "key") return undefined;
+		return isValueSuggested ? isValueSuggested(props.value) : undefined;
+	}
+
 	constructor(props) {
 		super(props);
-		const isSuggested = props.isValueSuggested && props.isValueSuggested(props.value);
+		const isSuggested = this.isValueSuggested(props.value, props);
 		this.state = {
 			isLoading: false,
 			suggestions: [],
@@ -496,13 +503,14 @@ export class Autosuggest extends Component {
 
 	renderInput = (inputProps) => {
 		let validationState = null;
-		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, isValueSuggested} = this.props;
+		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle} = this.props;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
-		const isSuggested = !!suggestion && isValueSuggested(value);
+		let isSuggested = this.isValueSuggested(value);
+		if (isSuggested) isSuggested = isSuggested && !!suggestion;
 
-		if (!isEmptyString(value)) {
+		if (!isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";
 		}
 
@@ -588,7 +596,7 @@ export class Autosuggest extends Component {
 		let component = input;
 		if (value && isSuggested && renderSuggested) {
 			component = renderSuggested(input, suggestion);
-		} else if (value && !isSuggested && renderUnsuggested) {
+		} else if (value && isSuggested === false && renderUnsuggested) {
 			component = renderUnsuggested(input);
 		}
 		if (informalTaxonGroups) {
