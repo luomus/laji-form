@@ -18,7 +18,7 @@ export function beforeAdd(props) {
 	const idToFocus =  `${props.idSchema.$id}_${idx}`;
 	let {idToScrollAfterAdd} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
-	new Context(props.formContext.contextId).idToScrollAfterAdd = idToScrollAfterAdd;
+	new Context(props.formContext.contextId).idToScroll = idToScrollAfterAdd;
 }
 
 const buttonDefinitions = {

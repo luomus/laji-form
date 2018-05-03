@@ -432,7 +432,7 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 
 	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
 	if (distFromTop - pageScrolled - amount < 0) {
-		window.scrollTo(0, pageScrolled + distFromTop);
+		window.scrollTo(0, pageScrolled + distFromTop - topOffset);
 	} else {
 		window.scrollTo(0, pageScrolled + amount);
 	}

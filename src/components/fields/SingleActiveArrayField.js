@@ -238,9 +238,9 @@ export default class SingleActiveArrayField extends Component {
 			callback && callback();
 		}
 
+		const {onActiveChange, idToScrollAfterAdd} = getUiOptions(this.props.uiSchema);
 		new Context(this.props.formContext.contextId).idToFocus = `${this.props.idSchema.$id}_${idx}`;
-		new Context(this.props.formContext.contextId).idToScroll = `${this.props.idSchema.$id}_${idx}__header`;
-		const {onActiveChange} = getUiOptions(this.props.uiSchema);
+		if (!idToScrollAfterAdd) new Context(this.props.formContext.contextId).idToScroll = `${this.props.idSchema.$id}_${idx}__header`;
 		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, _callback);
 	}
 

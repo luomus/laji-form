@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Context from "../../Context";
-import { isMultiSelect, getUiOptions, getInnerUiSchema } from "../../utils";
+import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
