@@ -25,6 +25,9 @@ export function isDefaultData(formData, schema, definitions = {}) {
 	}
 }
 
+/**
+ * If you use this with schema data, note that this function doesn't check default data.
+ */
 export function hasData(formData) {
 	function hasValue(value)  {
 		return value !== undefined && value !== null && value !== "";
@@ -41,6 +44,9 @@ export function hasData(formData) {
 	}
 }
 
+/**
+ * If you use this with schema data, note that this function doesn't check default data.
+ */
 export function propertyHasData(field, container) {
 	if (!container) return false;
 	const data = container[field];
