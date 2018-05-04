@@ -749,8 +749,10 @@ class _MapArrayField extends ComposedComponent {
 			if (_buttonsPath) {
 				buttons = appendAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
+				inlineUiSchema["ui:options"].renderAdd = false;
 			} else if (options.renderButtonsBelow) {
 				buttons = appendAddButton(options.buttons);
+				inlineUiSchema["ui:options"].renderAdd = false;
 				renderButtonsBelow = true;
 			}
 		} else if (this.state.activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
@@ -858,7 +860,7 @@ class _MapArrayField extends ComposedComponent {
 					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
 				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
-				<Row>
+				<Row className="map-array-field-below-buttons">
 					<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
 					<ButtonToolbar>{buttons}</ButtonToolbar>
 				</Row>
