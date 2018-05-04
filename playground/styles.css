@@ -1232,3 +1232,7 @@ min-height: 20px;
 .laji-form .no-transition .collapsing {
 	transition: none !important;
 }
+
+.laji-form .map-array-field-below-buttons {
+	margin-top: 20px;
+}

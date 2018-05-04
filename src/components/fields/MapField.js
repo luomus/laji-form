@@ -28,6 +28,7 @@ export default class MapField extends Component {
 		const {height = 400, emptyHelp} = options;
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		const mapOptions = {
+			clickBeforeZoomAndPan: true,
 			...(options.mapOptions || {}),
 			...(this.state.mapOptions || {})
 		};
