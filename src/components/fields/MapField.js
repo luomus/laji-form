@@ -5,22 +5,58 @@ import BaseComponent from "../BaseComponent";
 
 @BaseComponent
 export default class MapField extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
+	componentDidMount() {
+		const {uiSchema, formData} = this.props;
+		const {mapOptions} = getUiOptions(uiSchema);
+		if (mapOptions.singleton) {
+			const map = this.getContext().singletonMap;
+			if (map && map.getOptions().locate && map.userLocation) {
+				this.onLocate(map.userLocation.latlng);
+			}
+		}
+	}
+
 	render() {
 		const {TitleField} = this.props.registry.fields;
 		const {uiSchema, formData} = this.props;
 		const options = getUiOptions(uiSchema);
 		const {height = 400, emptyHelp} = options;
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
+		const mapOptions = {
+			...(options.mapOptions || {}),
+			...(this.state.mapOptions || {})
+		};
+
+		const isSingleton = mapOptions.singleton;
+		let singletonHasLocate = false;
+		let singletonRendered = false;
+		if (isSingleton) {
+			const map = this.getContext().singletonMap;
+			if (map) {
+				singletonRendered = true;
+				singletonHasLocate = map.getOptions().locate;
+			}
+		}
+
+		if ((options.mapOptions || {}).createOnLocate && !this.state.mapOptions && (!singletonRendered ||  singletonHasLocate)) {
+			mapOptions.locate = [this.onLocate];
+		}
+
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
 				<div style={{height}}>
-					<MapComponent {...options.mapOptions || {}}
-					              {...this.state.mapOptions || {}}
+					<MapComponent {...mapOptions}
 					              draw={this.getDrawOptions()}
 					              lang={this.props.formContext.lang}
 					              zoomToData={true}
 												panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
+					              formContext={this.props.formContext}
 					              onOptionsChanged={this.onOptionsChanged} />
 				</div>
 			</div>
@@ -38,7 +74,9 @@ export default class MapField extends Component {
 		};
 	}
 
-	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}})
+	onOptionsChanged = (options) => {
+		this.setState({mapOptions: {...this.state.mapOptions, ...options}})
+	}
 
 	onChange = (events) => {
 		let formData;
@@ -65,4 +103,15 @@ export default class MapField extends Component {
 		});
 		this.props.onChange(formData);
 	}
+
+	onLocate = (latlng) => {
+		if (!latlng) return;
+		const {formData} = this.props;
+		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
+		if (!isEmpty) {
+			return;
+		}
+		this.props.onChange({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [latlng.lng, latlng.lat]}]});
+	}
 }
+

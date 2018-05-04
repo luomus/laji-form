@@ -7,7 +7,7 @@ import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPoint
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButtonElems, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -360,11 +360,11 @@ function handlesButtonsAndFocus(ComposedComponent) {
 // Swallow unknown prop warnings.
 const ButtonsWrapper = ({props}) => {
 	const buttons = getUiOptions(props.uiSchema).buttons;
-	return <div>{getButtons(buttons, props)}</div>;
+	return <div>{getButtonElems(buttons, props)}</div>;
 };
 
 const AccordionButtonsWrapper = ({props}) => {
-	const buttons = getUiOptions(props.uiSchema).buttons;
+	const buttons = getButtons(getUiOptions(props.uiSchema).buttons, props);
 	if (!buttons) return null;
 
 	const cols = Object.keys(getBootstrapCols()).reduce((cols, colType) => {
@@ -407,7 +407,7 @@ class AccordionArrayFieldTemplate extends Component {
 		);
 
 		return (
-			<div className="laji-form-single-active-array">
+			<div className="laji-form-single-active-array no-transition">
 				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
@@ -464,7 +464,7 @@ class PagerArrayFieldTemplate extends Component {
 					<div key={activeIdx}>
 						{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
 					</div>
-					{getButtons(buttons, arrayTemplateFieldProps)}
+					{getButtonElems(buttons, arrayTemplateFieldProps)}
 				</Panel>
 			</div>
 		);
@@ -846,7 +846,7 @@ class AccordionHeader extends Component {
 			if (headerFormatters[formatter]) return headerFormatters[formatter];
 			else return {
 				component: (props) => {
-					return <span className="text-muted">{props.formData[formatter]}</span>;
+					return <span className="text-muted">{formatter[0] === "/" ? parseJSONPointer(props.that.props.formData, formatter, !!"safe") : props.that.props.formData[formatter]}</span>;
 				}
 			};
 		});

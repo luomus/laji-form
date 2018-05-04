@@ -1228,3 +1228,7 @@ min-height: 20px;
 	height: 100%;
 	z-index: 9999;
 }
+
+.laji-form .no-transition .collapsing {
+	transition: none !important;
+}

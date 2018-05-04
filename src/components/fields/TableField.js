@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { DeleteButton, Label } from "../components";
-import { getButtons, handlesArrayKeys } from "../ArrayFieldTemplate";
+import { getButtonElems, handlesArrayKeys } from "../ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
 
 const specialRules = {
@@ -162,7 +162,7 @@ class TableArrayFieldTemplate extends Component {
 					);
 				}
 				)}
-				{getButtons(buttons, props)}
+				{getButtonElems(buttons, props)}
 			</div>
 		);
 	}

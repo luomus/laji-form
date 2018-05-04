@@ -98,7 +98,11 @@ export function getButtons(buttons = [], props = {}) {
 	const addBtnAdded = buttons.some(button => button.fn === "add");
 
 	if (!addBtnAdded && (!props || canAdd(props))) buttons = [{fn: "add", id: props.idSchema.$id}, ...buttons];
+	return buttons;
+}
 
+export function getButtonElems(buttons = [], props = {}) {
+	buttons = getButtons(buttons, props);
 	let buttonElems = buttons.map(button => getButton(button, props));
 
 	if (props.uiSchema["ui:buttons"]) {
@@ -249,7 +253,7 @@ export default class ArrayFieldTemplate extends Component {
 						              nonOrderables={nonOrderables} /> :
 						items
 				}
-				{getButtons(buttons, props)}
+				{getButtonElems(buttons, props)}
 			</div>
 		);
 	}

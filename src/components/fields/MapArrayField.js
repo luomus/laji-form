@@ -611,7 +611,7 @@ class _MapArrayField extends ComposedComponent {
 		if (options.createOnLocate && !_options.locate) {
 			_options = {
 				..._options,
-				locate: [this.onLocate, this.onLocateFail]
+				locate: [this.onLocate]
 			};
 		}
 		return _options;
@@ -1014,6 +1014,9 @@ export class MapComponent extends Component {
 			},
 			tileLayerOpacityChangeEnd: ({tileLayerOpacity}) => {
 				this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
+			},
+			locateToggle: ({locate}) => {
+				this.setState({mapOptions: {...this.state.mapOptions, locate}});
 			}
 		});
 	}
@@ -1022,8 +1025,8 @@ export class MapComponent extends Component {
 		if (this._callback) this._callback();
 		this._callback = undefined;
 
-		if  (this.props.onOptionsChanged && ["tileLayerName", "tileLayerOpacity", "overlayNames"].some(name => 
-			!deepEquals(...[this.state, prevState].map(state => state.mapOptions[name]))
+		if  (this.props.onOptionsChanged && ["tileLayerName", "tileLayerOpacity", "overlayNames", "locate"].some(name => 
+			!deepEquals(...[this.state, prevState].map(state => state.mapOptions[name])) 
 		)) {
 			this.props.onOptionsChanged(this.state.mapOptions);
 		}
@@ -1110,8 +1113,17 @@ export class Map extends Component {
 
 		if (!this.props.hidden) {
 			this.initializeMap(options);
-			this.mountCalled = true;
 			if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
+			if (this.map) {
+				setImmediate(() => {
+					this.map.map.invalidateSize();
+					if (this.props.singleton) {
+						if (options.zoomToData) {
+							this.map.zoomToData();
+						}
+					}
+				});
+			}
 		}
 	}
 
