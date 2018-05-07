@@ -234,7 +234,7 @@ export default class SingleActiveArrayField extends Component {
 		function _callback() {
 			const id = that.props.idSchema.$id;
 			const {focusOnActiveChange = true} = getUiOptions(that.props.uiSchema);
-			focusOnActiveChange && focusById(that.props.formContext, `${id}_${idx}`);
+			focusById(that.props.formContext, `${id}_${idx}`, focusOnActiveChange);
 			that.getContext()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
@@ -847,7 +847,7 @@ class AccordionHeader extends Component {
 		return _headerFormatters.map(formatter => {
 			if (headerFormatters[formatter]) return headerFormatters[formatter];
 			else return {
-				component: (props) => {
+				component: () => {
 					return <span className="text-muted">{formatter[0] === "/" ? parseJSONPointer(formData, formatter, !!"safe") : formData[formatter]}</span>;
 				}
 			};
@@ -879,6 +879,7 @@ class AccordionHeader extends Component {
 		const header = (
 			<div className={this.props.className}
 			     id={`${that.props.idSchema.$id}_${idx}__header`}
+			     tabIndex={0}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}
 				   onMouseLeave={this.onMouseLeave} >

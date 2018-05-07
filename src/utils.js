@@ -224,12 +224,12 @@ export function focusNextInput(...params) {
 	if (field) field.focus();
 }
 
-export function focusById(formContext = {}, id) {
+export function focusById(formContext = {}, id, focus = true) {
 	const elem = getSchemaElementById(formContext.contextId, id);
 	if (elem && document.body.contains(elem)) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
-			tabbableFields[0].focus();
+			focus && tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
 			return true;
 		}
