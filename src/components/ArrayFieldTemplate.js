@@ -118,6 +118,14 @@ export function getButtonElems(buttons = [], props = {}) {
 	);
 }
 
+export function getButtonsForPosition(props, position) {
+	const {uiSchema} = props;
+	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position || (!button.position && position === "bottom"));
+	return (buttonDescriptions && buttonDescriptions.length) ? 
+		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
+		null;
+}
+
 export function handlesArrayKeys(ComposedComponent) {
 	return class ArrayFieldTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
@@ -209,13 +217,15 @@ export default class ArrayFieldTemplate extends Component {
 			orderable,
 			nonRemovables = [],
 			nonOrderables = [],
-			buttons,
 			"ui:deleteHelp": deleteHelp,
 			titleFormatters
 		} = getUiOptions(props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
+
+		const topButtons = getButtonsForPosition(props, "top");
+		const bottomButtons = getButtonsForPosition(props, "bottom");
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
@@ -242,6 +252,7 @@ export default class ArrayFieldTemplate extends Component {
 		return (
 			<div className={props.className}>
 				<Title title={title} label={title} help={props.uiSchema["ui:help"]} formatters={titleFormatters} />
+				{getButtonElems(topButtons, props)}
 				{props.description && <Description description={props.description}/>}
 				{
 					orderable ? 
@@ -253,7 +264,7 @@ export default class ArrayFieldTemplate extends Component {
 						              nonOrderables={nonOrderables} /> :
 						items
 				}
-				{getButtonElems(buttons, props)}
+				{getButtonElems(bottomButtons, props)}
 			</div>
 		);
 	}

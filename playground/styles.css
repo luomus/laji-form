@@ -796,6 +796,9 @@ min-height: 20px;
 .laji-form-single-active-array .panel-group .btn-toolbar {
 	margin-top: 5px;
 }
+.laji-form-accordion-buttons.row:first-child {
+	margin-bottom: 5px;
+}
 .laji-form .btn-toolbar {
 	margin-right: 5px;
 }

@@ -7,7 +7,7 @@ import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPoint
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButtonElems, getButton, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButtonElems, getButton, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -364,8 +364,8 @@ const ButtonsWrapper = ({props}) => {
 	return <div>{getButtonElems(buttons, props)}</div>;
 };
 
-const AccordionButtonsWrapper = ({props}) => {
-	const buttons = getButtons(getUiOptions(props.uiSchema).buttons, props);
+const AccordionButtonsWrapper = ({props, position}) => {
+	const buttons = getButtonsForPosition(props, position);
 	if (!buttons) return null;
 
 	const cols = Object.keys(getBootstrapCols()).reduce((cols, colType) => {
@@ -375,7 +375,7 @@ const AccordionButtonsWrapper = ({props}) => {
 
 	return (
 		<Row className="laji-form-accordion-buttons">
-			{buttons.map(button => getButton(button, props)).map((button, idx) => 
+			{buttons.map((button, idx) => 
 					<Col {...cols} key={idx}>{button}</Col>
 			)}
 		</Row>
@@ -409,6 +409,7 @@ class AccordionArrayFieldTemplate extends Component {
 
 		return (
 			<div className="laji-form-single-active-array no-transition">
+				<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="top" />
 				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
@@ -419,7 +420,7 @@ class AccordionArrayFieldTemplate extends Component {
 							{idx === activeIdx ? item.children : null}
 						</Panel>
 					))}
-					<AccordionButtonsWrapper props={arrayFieldTemplateProps} />
+					<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="bottom"/>
 				</Accordion>
 			</div>
 		);

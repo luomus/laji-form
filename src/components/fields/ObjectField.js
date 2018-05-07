@@ -3,7 +3,7 @@ import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
-import { getButton } from "../ArrayFieldTemplate";
+import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
 import { Label } from "../components";
 
 export default (props) => {
@@ -207,13 +207,5 @@ function getGlyphButtons(props) {
 
 	return buttons ?
 		buttons :
-		null;
-}
-
-function getButtonsForPosition(props, position) {
-	const {uiSchema} = props;
-	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position);
-	return (buttonDescriptions && buttonDescriptions.length) ? 
-		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
 		null;
 }
