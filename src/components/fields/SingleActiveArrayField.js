@@ -233,7 +233,8 @@ export default class SingleActiveArrayField extends Component {
 		const that = this;
 		function _callback() {
 			const id = that.props.idSchema.$id;
-			focusById(that.props.formContext, `${id}_${idx}`);
+			const {focusOnActiveChange = true} = getUiOptions(that.props.uiSchema);
+			focusOnActiveChange && focusById(that.props.formContext, `${id}_${idx}`);
 			that.getContext()[`${id}.activeIdx`] = idx;
 			callback && callback();
 		}
