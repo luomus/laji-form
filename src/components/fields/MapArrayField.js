@@ -767,7 +767,8 @@ class _MapArrayField extends ComposedComponent {
 				canAdd: mapOptions.emptyMode ? button.fnName === "addNamedPlace" : true,
 				uiSchema: this.props.uiSchema,
 				idSchema: this.props.idSchema,
-				formData: this.props.formData
+				formData: this.props.formData,
+				formContext: this.props.formContext
 			})).filter(button => button)
 			: undefined;
 
