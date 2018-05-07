@@ -252,7 +252,7 @@ export default class ArrayFieldTemplate extends Component {
 		return (
 			<div className={props.className}>
 				<Title title={title} label={title} help={props.uiSchema["ui:help"]} formatters={titleFormatters} />
-				{getButtonElems(topButtons, props)}
+				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
 					orderable ? 
@@ -264,7 +264,7 @@ export default class ArrayFieldTemplate extends Component {
 						              nonOrderables={nonOrderables} /> :
 						items
 				}
-				{getButtonElems(bottomButtons, props)}
+				{bottomButtons}
 			</div>
 		);
 	}

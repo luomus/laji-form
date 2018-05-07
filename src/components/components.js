@@ -166,24 +166,24 @@ export class Affix extends Component {
 
 	getState = () => {
 		const container = this.props.getContainer();
-		if (container) {
-			const offset = (this.props.topOffset || 0);
+		if (!container) return;
 
-			const containerTop = container.getBoundingClientRect().top;
-			const containerHeight = container.offsetHeight;
-			const containerVisibleHeight = containerHeight + containerTop;
-			const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
-			const scrolled = containerTop < offset;
+		const offset = (this.props.topOffset || 0);
 
-			let affixState = TOP;
-			if (scrolled && containerVisibleHeight < wrapperHeight + offset) affixState = BOTTOM;
-			else if (scrolled) affixState = AFFIXED;
+		const containerTop = container.getBoundingClientRect().top;
+		const containerHeight = container.offsetHeight;
+		const containerVisibleHeight = containerHeight + containerTop;
+		const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
+		const scrolled = containerTop < offset;
 
-			const wrapperNode = findDOMNode(this.refs.wrapper);
-			const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
-			const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : offset;
-			return {affixState, width, top};
-		}
+		let affixState = TOP;
+		if (scrolled && containerVisibleHeight < wrapperHeight + offset) affixState = BOTTOM;
+		else if (scrolled) affixState = AFFIXED;
+
+		const wrapperNode = findDOMNode(this.refs.wrapper);
+		const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
+		const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : offset;
+		return {affixState, width, top};
 	}
 
 	_onScroll = () => {

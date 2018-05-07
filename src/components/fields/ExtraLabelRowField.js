@@ -39,7 +39,6 @@ export default class ExtraLabelRowField extends Component {
 		return this.containerElem;
 	}
 
-
 	render() {
 		const {SchemaField, TitleField} = this.props.registry.fields;
 		const {labels, titleClassName, hiddenXs, affixed} = getUiOptions(this.props.uiSchema);
