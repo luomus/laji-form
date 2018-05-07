@@ -833,6 +833,7 @@ class AccordionHeader extends Component {
 
 	getFormatters = () => {
 		const {uiSchema} = this.props.that.props;
+		const formData = this.props.that.props.formData[this.props.idx];
 
 		// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
 		const options = getUiOptions(uiSchema);
@@ -846,7 +847,7 @@ class AccordionHeader extends Component {
 			if (headerFormatters[formatter]) return headerFormatters[formatter];
 			else return {
 				component: (props) => {
-					return <span className="text-muted">{formatter[0] === "/" ? parseJSONPointer(props.that.props.formData, formatter, !!"safe") : props.that.props.formData[formatter]}</span>;
+					return <span className="text-muted">{formatter[0] === "/" ? parseJSONPointer(formData, formatter, !!"safe") : formData[formatter]}</span>;
 				}
 			};
 		});
