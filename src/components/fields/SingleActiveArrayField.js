@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
-import { DeleteButton, Label, Help, TooltipComponent } from "../components";
+import { DeleteButton, Label, Help, TooltipComponent, Button } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButton, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
@@ -393,6 +393,9 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const onSelect = key => that.onActiveChange(key);
 
+		const {confirmDelete, closeButton} = getUiOptions(arrayFieldTemplateProps.uiSchema);
+		const {translations} = this.props.formContext;
+
 		const getHeader = idx => (
 			<AccordionHeader 
 				that={that}
@@ -401,8 +404,8 @@ class AccordionArrayFieldTemplate extends Component {
 				className="laji-form-clickable-panel-header laji-form-accordion-header">
 				<DeleteButton ref={this.setDeleteButtonRef(idx)}
 											className="pull-right"
-											confirm={getUiOptions(arrayFieldTemplateProps.uiSchema).confirmDelete}
-											translations={this.props.formContext.translations}
+											confirm={confirmDelete}
+											translations={translations}
 											onClick={that.onDelete(idx)} />
 			</AccordionHeader>
 		);
@@ -418,6 +421,7 @@ class AccordionArrayFieldTemplate extends Component {
 									 header={getHeader(idx)}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
 							{idx === activeIdx ? item.children : null}
+							{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
 						</Panel>
 					))}
 					<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="bottom"/>
