@@ -59,6 +59,7 @@ export default class UnitShorthandField extends Component {
 	}
 
 	shouldShowSchema = (props) => {
+		//return !deepEquals(props.formData, this.props.formData);
 		let {showSchema} = this.state;
 		const isEmpty = () => deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 
@@ -87,10 +88,16 @@ export default class UnitShorthandField extends Component {
 	}
 
 	onCodeChange = (formData = {}) => {
-		this.getContext().idToFocus = this.props.idSchema.$id;
-		const {autocopy} = getUiOptions(this.props.uiSchema);
+		const {autocopy, autofocus} = getUiOptions(this.props.uiSchema);
+		if   (!autofocus) this.getContext().idToFocus = this.props.idSchema.$id;
 		this.onNextTick = () => {
-			autocopy ? new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy") : this.setState({showSchema: true});
+			if (autocopy) {
+				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy");
+			} else if (autofocus) {
+				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "focus", "last");
+			} else {
+				this.setState({showSchema: true});
+			}
 		};
 		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}, this.props.registry.definitions));
 	}

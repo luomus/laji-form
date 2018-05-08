@@ -78,9 +78,7 @@ class SelectWidget extends Component {
 	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => this.getEnum(value)));
 
 	selectOnChange = (item) => {
-		this.setState({value: item}, () => {
-			this.props.selectOnChange && !isNullOrUndefined(item.value) && this.props.onChange(this.getEnum(item.value));
-		});
+		this.setState({value: item});
 	}
 
 	onClick = () => {
@@ -95,15 +93,13 @@ class SelectWidget extends Component {
 		if (typeof this.state.value !== "object") {
 			this.setState({value: this.state.valsToItems[this.props.value]});
 		} else {
-			this.selectOnChange(this.state.value);
+			this.props.onChange(this.getEnum(this.state.value.value));
 		}
 	}
 
 	onSelect = (item) => {
 		this.state.open && this._context.setImmediate(() => this.setState({open: false}));
-		if (!this.props.selectOnChange) {
-			this.props.onChange(this.getEnum(item.value));
-		}
+		this.props.onChange(this.getEnum(item.value));
 	}
 
 	onToggle = () => {

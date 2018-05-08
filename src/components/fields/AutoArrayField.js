@@ -2,9 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import deepEquals from "deep-equal";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { getSchemaElementById, getKeyHandlerTargetId } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
-import Context from "../../Context";
 
 @VirtualSchemaField
 export default class AutoArrayField extends Component {
@@ -19,7 +17,7 @@ export default class AutoArrayField extends Component {
 	static getName() {return "AutoArrayField";}
 
 	getStateFromProps(props) {
-		const {formData, schema, uiSchema, registry, formContext} = props;
+		const {formData, schema, uiSchema, registry} = props;
 
 		const state = {formData};
 
@@ -35,18 +33,6 @@ export default class AutoArrayField extends Component {
 				nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]
 			}
 		};
-
-		if (this.state && state.formData.length > this.state.formData.length) {
-			const {contextId} = formContext;
-			const context = new Context(contextId);
-			context.idToFocus = `${this.props.idSchema.$id}_${state.formData.length - 1}`;
-
-			let {idToScrollAfterAdd} = this.getUiOptions();
-			if (idToScrollAfterAdd) {
-				idToScrollAfterAdd = getKeyHandlerTargetId(idToScrollAfterAdd, formContext, this.state.formData);
-			}
-			context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${state.formData.length - 2}`;
-		}
 
 		return state;
 	}
