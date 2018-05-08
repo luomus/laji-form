@@ -118,9 +118,9 @@ export function getButtonElems(buttons = [], props = {}) {
 	);
 }
 
-export function getButtonsForPosition(props, position) {
+export function getButtonsForPosition(props, position, defaultPosition = "bottom") {
 	const {uiSchema} = props;
-	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position || (!button.position && position === "bottom"));
+	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position || (!button.position && position ===defaultPosition));
 	return (buttonDescriptions && buttonDescriptions.length) ? 
 		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
 		null;
