@@ -461,7 +461,7 @@ class LineTransectMapArrayField extends Component {
 
 	focusOnMap = (idx) => {
 		this.getContext().setImmediate(() =>{
-			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {minZoom: 30}); // eslint-disable-line no-undef
+			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: 13}); // eslint-disable-line no-undef
 		});
 	}
 
