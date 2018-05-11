@@ -1,6 +1,7 @@
 import { Component } from "react";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getUiOptions } from "../../utils";
 
 @VirtualSchemaField
 export default class SingleItemArrayField extends Component {
@@ -16,7 +17,7 @@ export default class SingleItemArrayField extends Component {
 				"ui:field": "SingleActiveArrayField",
 				"ui:options": {
 					activeIdx: 0,
-					...this.getUiOptions(),
+					...getUiOptions(props.uiSchema),
 					renderer: "uncontrolled",
 					addable: false
 				},

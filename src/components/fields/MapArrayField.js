@@ -658,11 +658,11 @@ class _MapArrayField extends ComposedComponent {
 				uiSchema: uiSchema.items,
 				idSchema: toIdSchema(
 					schema.items,
-					`${this.props.idSchema.$id}_${this.state.activeIdx}`,
+					`${this.props.idSchema.$id}_${activeIdx}`,
 					this.props.registry.definitions
 				),
-				formData: (this.props.formData || [])[this.state.activeIdx],
-				errorSchema: this.props.errorSchema[this.state.activeIdx] || {},
+				formData: (this.props.formData || [])[activeIdx],
+				errorSchema: this.props.errorSchema[activeIdx] || {},
 				registry: this.props.registry,
 				formContext: this.props.formContext
 			};
@@ -673,9 +673,9 @@ class _MapArrayField extends ComposedComponent {
 				schema: {...schema, items: props.schema},
 				uiSchema: {...uiSchema, items: props.uiSchema},
 				idSchema: this.props.idSchema,
-				formData: update((this.props.formData || []), {$merge: {[this.state.activeIdx]: props.formData}}),
+				formData: update((this.props.formData || []), {$merge: {[activeIdx]: props.formData}}),
 				errorSchema: props.errorSchema && Object.keys(props.errorSchema).length ? 
-					{[this.state.activeIdx]: props.errorSchema} : 
+					{[activeIdx]: props.errorSchema} : 
 					{},
 				onChange: formData => {
 					this.props.onChange(formData.map((item, idx) => {
@@ -684,7 +684,9 @@ class _MapArrayField extends ComposedComponent {
 							...item
 						};
 					}));
-				}
+				},
+				registry: this.props.registry,
+				formContext: this.props.formContext
 			};
 		};
 
@@ -745,7 +747,7 @@ class _MapArrayField extends ComposedComponent {
 
 		let buttons = undefined;
 		let renderButtonsBelow = false;
-		if (this.state.activeIdx !== undefined && options.buttons) {
+		if (activeIdx !== undefined && options.buttons) {
 			if (_buttonsPath) {
 				buttons = appendAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
@@ -755,12 +757,12 @@ class _MapArrayField extends ComposedComponent {
 				inlineUiSchema["ui:options"].renderAdd = false;
 				renderButtonsBelow = true;
 			}
-		} else if (this.state.activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
+		} else if (activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 
-		const inlineSchema = <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_inline`}{...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
-		const belowSchema = belowFields ? <SchemaField key={`${this.props.idSchema.$id}_${activeIdx}_below`} {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+		const inlineSchema = <SchemaField {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
+		const belowSchema = belowFields ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
 		buttons =  buttons && (!_buttonsPath || mapOptions.emptyMode)
 			? buttons.map(button => getButton(button, {

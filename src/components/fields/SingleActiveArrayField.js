@@ -4,10 +4,10 @@ import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButtonElems, getButton, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -74,6 +74,12 @@ export default class SingleActiveArrayField extends Component {
 		this.prevActiveIdx = this.state.activeIdx;
 		this.setState(this.getStateFromProps(props));
 		this.updatePopups(props);
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (this.state.activeIdx !== prevState.activeIdx) {
+			focusAndScroll(this.props.formContext, `${this.props.idSchema.$id}_${this.state.activeIdx}`,  `${this.props.idSchema.$id}_${this.state.activeIdx}__header`);
+		}
 	}
 
 	updatePopups = (props) => {
@@ -239,9 +245,7 @@ export default class SingleActiveArrayField extends Component {
 			callback && callback();
 		}
 
-		const {onActiveChange, idToScrollAfterAdd} = getUiOptions(this.props.uiSchema);
-		new Context(this.props.formContext.contextId).idToFocus = `${this.props.idSchema.$id}_${idx}`;
-		if (!idToScrollAfterAdd) new Context(this.props.formContext.contextId).idToScroll = `${this.props.idSchema.$id}_${idx}__header`;
+		const {onActiveChange} = getUiOptions(this.props.uiSchema);
 		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, _callback);
 	}
 
