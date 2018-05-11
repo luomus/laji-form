@@ -552,4 +552,14 @@
 		en: "Delete failed.",
 		sv: "Radera framgångsrikt!"
 	},
+	showLineTransectControls: {
+		fi: "Näytä lisää työkaluja",
+		en: "Show more tools",
+		sv: "Näytä lisää työkaluja"
+	},
+	hideLineTransectControls: {
+		fi: "Piilota työkalut",
+		en: "Hide tools",
+		sv: "Piilota työkalut"
+	}
 };

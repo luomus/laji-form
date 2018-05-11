@@ -367,6 +367,10 @@ class UnitsMapArrayField extends Component {
 
 @_MapArrayField
 class LineTransectMapArrayField extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {showLTTools: false};
+	}
 	getOptions() {
 		const {formData} = this.props;
 		const lineTransect = {type: "MultiLineString", coordinates: formData.map(item => item.geometry.coordinates)};
@@ -380,8 +384,25 @@ class LineTransectMapArrayField extends Component {
 			},
 			draw: false,
 			controls: {
-				lineTransect: true
-			}
+				lineTransect: {
+					split: true,
+					splitByMeters: this.state.showLTTools,
+					createPoint: this.state.showLTTools,
+					shiftPoint: this.state.showLTTools,
+					deletePoints: this.state.showLTTools,
+					undo: this.state.showLTTools,
+					redo: this.state.showLTTools
+				}
+			},
+			customControls: [{
+				iconCls: `glyphicon glyphicon-${this.state.showLTTools ?  "menu-up" : "option-vertical"}`,
+				fn: () => {
+					this.setState({showLTTools: !this.state.showLTTools});
+				},
+				text: this.props.formContext.translations[this.state.showLTTools ? "HideLineTransectControls" : "ShowLineTransectControls"],
+				group: "lineTransect"
+			}]
+			
 		};
 	}
 
@@ -503,7 +524,7 @@ class _MapArrayField extends ComposedComponent {
 		const initialState = {activeIdx: 0};
 		const options = getUiOptions(props.uiSchema);
 		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
-		this.state = initialState;
+		this.state = {...initialState, ...(this.state || {})};
 	}
 
 	componentDidMount() {
@@ -798,12 +819,15 @@ class _MapArrayField extends ComposedComponent {
 			controls: {
 				...(mapOptions.controls || {})
 			},
-			customControls: [{
-				iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
-				fn: this.toggleFullscreen,
-				position: "bottomright",
-				text: this.props.formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
-			}]
+			customControls: [
+				...(mapOptions.customControls || []),
+				{
+					iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
+					fn: this.toggleFullscreen,
+					position: "bottomright",
+					text: this.props.formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
+				}
+			]
 		};
 
 		const map = (
