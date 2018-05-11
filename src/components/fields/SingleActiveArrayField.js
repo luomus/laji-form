@@ -365,7 +365,7 @@ const ButtonsWrapper = ({props}) => {
 };
 
 const AccordionButtonsWrapper = ({props, position}) => {
-	const buttons = getButtonsForPosition(props, position);
+	const buttons = getButtonsForPosition(props, getButtons(getUiOptions(props.uiSchema).buttons, props), position);
 	if (!buttons) return null;
 
 	const cols = Object.keys(getBootstrapCols()).reduce((cols, colType) => {

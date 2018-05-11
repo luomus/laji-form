@@ -118,9 +118,8 @@ export function getButtonElems(buttons = [], props = {}) {
 	);
 }
 
-export function getButtonsForPosition(props, position, defaultPosition = "bottom") {
-	const {uiSchema} = props;
-	const buttonDescriptions = (getUiOptions(uiSchema).buttons || []).filter(button => button.position === position || (!button.position && position ===defaultPosition));
+export function getButtonsForPosition(props, buttonDescriptions = [], position, defaultPosition = "bottom") {
+	buttonDescriptions = buttonDescriptions.filter(button => button.position === position || (!button.position && position === defaultPosition));
 	return (buttonDescriptions && buttonDescriptions.length) ? 
 		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
 		null;
@@ -228,14 +227,17 @@ export default class ArrayFieldTemplate extends Component {
 			nonRemovables = [],
 			nonOrderables = [],
 			"ui:deleteHelp": deleteHelp,
-			titleFormatters
+			titleFormatters,
+			buttons = []
 		} = getUiOptions(props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
-		const topButtons = getButtonsForPosition(props, "top");
-		const bottomButtons = getButtonsForPosition(props, "bottom");
+		const _buttons = getButtons(buttons, props);
+
+		const topButtons = getButtonsForPosition(props, _buttons, "top");
+		const bottomButtons = getButtonsForPosition(props, _buttons, "bottom");
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
