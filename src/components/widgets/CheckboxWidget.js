@@ -63,11 +63,11 @@ export default class CheckboxWidget extends Component {
 	}
 
 	formatValue(value, options, props) {
-		return value === undefined  ?
-			"" :
-			value === true ?
-				props.formContext.translations.Yes :
-				props.formContext.translations.No;
+		return value === undefined
+			? ""
+			: value === true
+				? props.formContext.translations.Yes
+				: props.formContext.translations.No;
 	}
 }
 
