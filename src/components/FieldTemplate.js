@@ -61,7 +61,7 @@ export default class FieldTemplate extends Component {
 		formContext
 		} = this.props;
 
-		if (hidden || uiSchema["ui:field"] === "HiddenField") {
+		if (hidden || uiSchema["ui:field"] === "HiddenField" || uiSchema["ui:widget"] === "HiddenWidget") {
 			return children;
 		}
 		const inlineHelp = uiSchema["ui:inlineHelp"];
