@@ -791,8 +791,8 @@ class _MapArrayField extends ComposedComponent {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 
-		const inlineSchema = <SchemaField {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
-		const belowSchema = belowFields ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+		const inlineSchema = <SchemaField  key={`${this.props.idSchema.$id}_${activeIdx}_inline`} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
+		const belowSchema = belowFields ? <SchemaField  key={`${this.props.idSchema.$id}_${activeIdx}_below`} {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
 		buttons =  buttons && (!_buttonsPath || mapOptions.emptyMode)
 			? buttons.map(button => getButton(button, {
