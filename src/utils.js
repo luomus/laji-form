@@ -542,6 +542,7 @@ export function checkRules(rules, props, cache) {
 
 export function focusAndScroll(formContext, idToFocus, idToScroll) {
 	const _context = new Context(formContext.contextId);
+	if (idToFocus === undefined && idToScroll === undefined) return;
 	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context))) return false;
 	idToScroll = getKeyHandlerTargetId(idToScroll, _context);
 	if (idToScroll) {

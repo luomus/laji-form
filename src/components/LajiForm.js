@@ -223,6 +223,10 @@ export default class LajiForm extends Component {
 			this.focusHandlers[id].push(fn);
 		};
 		this._context.removeFocusHandler = (id, fn) => {
+			if (!this.focusHandlers[id]) {
+				console.warn(`laji-form warning: removing focus handler that isn't registered for id ${id}.`);
+				return;
+			}
 			this.focusHandlers[id] = this.focusHandlers[id].filter(_fn => fn !== _fn);
 		};
 
@@ -596,6 +600,7 @@ export default class LajiForm extends Component {
 			return handler.conditions.every(condition => condition(e));
 		}).map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
+		console.log(order);
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
 

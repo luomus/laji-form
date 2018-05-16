@@ -77,8 +77,12 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (this.state.activeIdx !== prevState.activeIdx) {
-			focusAndScroll(this.props.formContext, `${this.props.idSchema.$id}_${this.state.activeIdx}`,  `${this.props.idSchema.$id}_${this.state.activeIdx}__header`);
+		const options = getUiOptions(this.props);
+		const prevOptions = getUiOptions(prevProps);
+		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
+		if ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx)) {
+			const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`));
 		}
 	}
 
@@ -228,7 +232,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 
 	onActiveChange = (idx, callback) => {
-		if (idx !== undefined)  {
+		if (idx !== undefined) {
 			idx = parseInt(idx);
 		}
 
@@ -236,17 +240,8 @@ export default class SingleActiveArrayField extends Component {
 			idx = undefined;
 		}
 
-		const that = this;
-		function _callback() {
-			const id = that.props.idSchema.$id;
-			const {focusOnActiveChange = true} = getUiOptions(that.props.uiSchema);
-			focusById(that.props.formContext, `${id}_${idx}`, focusOnActiveChange);
-			that.getContext()[`${id}.activeIdx`] = idx;
-			callback && callback();
-		}
-
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
-		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, _callback);
+		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, callback);
 	}
 
 	onDelete = (idx) => () => {
@@ -310,11 +305,12 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
 				getCurrentIdx: () => that.state.activeIdx,
-				focusByIdx: (idx) => {
+				focusByIdx: (idx, callback) => {
 					idx === that.state.activeIdx ?
-					focusById(this.props.formContext, `${this.props.idSchema.$id}_${idx}`) :
-					that.onActiveChange(idx);
-				}
+					callback() :
+					that.onActiveChange(idx, callback);
+				},
+				getIdToScrollAfterNavigate: () => `${this.props.idSchema.$id}_${that.state.activeIdx}__header`
 			});
 		}
 

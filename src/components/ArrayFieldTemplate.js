@@ -4,7 +4,7 @@ import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, getKeyHandlerTargetId } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props) {
@@ -167,7 +167,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		addCustomEventListeners() {
 			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "focus", target => {
 				if (target === "last") {
-					const context=  new Context(this.props.formContext.contextId);
+					const context = new Context(this.props.formContext.contextId);
 					context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
 					context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
 				} else {
@@ -283,9 +283,23 @@ export default class ArrayFieldTemplate extends Component {
 }
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx}) {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
 		function focusIdx(idx) {
-			focusByIdx ? focusByIdx(idx) : focusById(getProps().formContext, `${getProps().idSchema.$id}_${idx}`);
+			function callback() {
+				const options = getUiOptions(getProps().uiSchema);
+				const idToFocusAfterNavigate = options.idToFocusAfterNavigate ||  `${getProps().idSchema.$id}_${idx}`;
+				const idToScrollAfterNavigate = options.idToScrollAfterNavigate
+					? options.idToScrollAfterNavigate
+					: getIdToScrollAfterNavigate
+						? getIdToScrollAfterNavigate()
+						: undefined;
+				focusAndScroll(getProps().formContext, idToFocusAfterNavigate, idToScrollAfterNavigate);
+			}
+			if (focusByIdx) {
+				focusByIdx(idx, callback);
+			} else {
+				callback();
+			}
 		}
 
 		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);

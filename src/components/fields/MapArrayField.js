@@ -550,11 +550,6 @@ class _MapArrayField extends ComposedComponent {
 
 	afterActiveChange(idx, initial) {
 		super.afterActiveChange(idx);
-		!initial && focusAndScroll(this.props.formContext, `${this.props.idSchema.$id}_${idx}`);
-		if (this.activeIdxCallback) {
-			this.activeIdxCallback();
-		}
-		this.activeIdxCallback = undefined;
 		this.onLocateOrAddNew();
 	}
 
@@ -572,6 +567,11 @@ class _MapArrayField extends ComposedComponent {
 		const [prevProps, prevState] = params; // eslint-disable-line no-unused-vars
 
 		if (prevState.activeIdx !== this.state.activeIdx) {
+			if (!this.nestedHandledActiveChange && this.state.activeIdx !== undefined) {
+				const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
+				focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
+			}
+			this.nestedHandledActiveChange = false;
 			this.afterActiveChange(this.state.activeIdx);
 		}
 
@@ -638,20 +638,33 @@ class _MapArrayField extends ComposedComponent {
 		return _options;
 	}
 
+	onActiveChange = (idx, callback) => {
+		this.nestedHandledActiveChange = true;
+		this.setState({activeIdx: idx}, () => {
+			if (!callback) return;
+			callback();
+		});
+	}
+	
+	customAdd = () => () => {
+		const nextActive = this.props.formData.length;
+		this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
+		this.setState({activeIdx: nextActive});
+	}
+
 	render() {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema, schema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp} = options;
-		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}} = options;
+		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
 		const {activeIdx} = this.state;
 
 		const activeIdxProps = {
 			activeIdx,
-			onActiveChange: (idx, callback) => {
-				this.activeIdxCallback = callback;
-				this.setState({activeIdx: idx});
-			}
+			onActiveChange: this.onActiveChange,
+			idToFocusAfterNavigate,
+			idToScrollAfterNavigate
 		};
 		uiSchema = getInnerUiSchema(uiSchema);
 		if (getUiOptions(this.props.uiSchema).buttons) {
@@ -753,11 +766,7 @@ class _MapArrayField extends ComposedComponent {
 			return [
 				{
 					...(addButton || {}),
-					fn: () => () => {
-						const nextActive = this.props.formData.length;
-						this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
-						this.setState({activeIdx: nextActive});
-					},
+					fn: this.customAdd,
 					fnName: "add",
 					glyph: "plus",
 					id: this.props.idSchema.$id
