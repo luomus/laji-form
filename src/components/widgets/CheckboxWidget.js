@@ -1,47 +1,97 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Label } from "../components";
-import { isNullOrUndefined, isEmptyString } from "../../utils";
+import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
 import Switch from "react-bootstrap-switch";
 
 export default class CheckboxWidget extends Component {
+
+	getNextVal = () => {
+		const {value} = this.props;
+		const {allowUndefined = true} = getUiOptions(this.props);
+		let nextVal = true;
+		if (value === true) nextVal = false;
+		else if (allowUndefined && value === false) nextVal = undefined;
+		return nextVal;
+	}
+
+	onKeyDown = (e) => {
+		const {
+			disabled,
+			onChange,
+			readonly
+		} = this.props;
+
+		if (!disabled  && !readonly && e.key === " " && ["shift", "alt", "ctrl"].every(special => !e[`${special}Key`])) {
+			e.preventDefault();
+			onChange(this.getNextVal());
+		}
+	}
+
+	onClick = (e) => {
+		const {
+			disabled,
+			onChange,
+			readonly
+		} = this.props;
+
+		e.preventDefault();
+		if (disabled || readonly) return;
+		onChange(this.getNextVal());
+	}
+
+	onSelectChange = (value) => {
+		const _value = value === "true"
+			? true
+			: value === "false"
+				? false
+				: undefined;
+		this.props.onChange(_value);
+	}
+
 	render() {
 		const {
 			value,
 			disabled,
-			onChange,
 			registry,
 			readonly,
-			options,
 			label,
 			required
 		} = this.props;
 
-		function getNextVal() {
-			let nextVal = true;
-			if (value === true) nextVal = false;
-			else if (allowUndefined && value === false) nextVal = undefined;
-			return nextVal;
-		}
+		const options = getUiOptions(this.props);
+		const {allowUndefined = true, invert = false, help, label: uiOptionsLabel} = options;
+		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
 
-		function onKeyDown(e) {
-			if (!disabled  && !readonly && e.key === " " && ["shift", "alt", "ctrl"].every(special => !e[`${special}Key`])) {
-				e.preventDefault();
-				onChange(getNextVal());
-			}
-		}
+		if (allowUndefined || value === undefined) {
+			const schema = {
+				...this.props.schema,
+				type: "string",
+				enum: [
+					"undefined",
+					"true",
+					"false"
+				],
+				enumNames: [
+					" ",
+					registry.formContext.translations.Yes,
+					registry.formContext.translations.No,
+				]
+			};
 
-		function onClick(e) {
-			e.preventDefault();
-			if (disabled || readonly) return;
-			onChange(getNextVal());
+			const uiSchema = {"ui:options": options};
+			const {SchemaField} = registry.fields;
+			return <SchemaField
+				{...this.props}
+				schema={schema}
+				uiSchema={uiSchema}
+				onChange={this.onSelectChange}
+				idSchema={{$id: this.props.id}}
+			/>;
 		}
-
-		const {allowUndefined, invert, help} = {allowUndefined: true, invert: false, ...(options || {})};
-		const hasLabel = !isEmptyString(label)  && options.label !== false;
 
 		const checkbox = (
-			<div onClick={onClick} onKeyDown={onKeyDown} className="checkbox-container">
+			<div onClick={this.onClick} onKeyDown={this.onKeyDown} className="checkbox-container">
 				<Switch
 					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
 					defaultValue={allowUndefined ? null : false}

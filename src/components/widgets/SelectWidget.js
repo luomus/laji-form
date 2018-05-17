@@ -98,7 +98,7 @@ class SelectWidget extends Component {
 	}
 
 	onSelect = (item) => {
-		this.state.open && this._context.setImmediate(() => this.setState({open: false}));
+		this.state.open && this._context.setImmediate(() => this.setState({open: false, value: item.value}));
 		this.props.onChange(this.getEnum(item.value));
 	}
 
