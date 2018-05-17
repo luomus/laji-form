@@ -540,10 +540,10 @@ export function checkRules(rules, props, cache) {
 	return cache ? {passes, cache} : passes;
 }
 
-export function focusAndScroll(formContext, idToFocus, idToScroll) {
+export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true) {
 	const _context = new Context(formContext.contextId);
 	if (idToFocus === undefined && idToScroll === undefined) return;
-	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context))) return false;
+	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	idToScroll = getKeyHandlerTargetId(idToScroll, _context);
 	if (idToScroll) {
 		const elemToScroll = document.getElementById(idToScroll);

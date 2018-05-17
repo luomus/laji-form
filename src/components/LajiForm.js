@@ -600,7 +600,6 @@ export default class LajiForm extends Component {
 			return handler.conditions.every(condition => condition(e));
 		}).map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
-		console.log(order);
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
 

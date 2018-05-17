@@ -287,13 +287,14 @@ export const arrayKeyFunctions = {
 		function focusIdx(idx) {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);
+				const {focusOnActiveChange = true} = options;
 				const idToFocusAfterNavigate = options.idToFocusAfterNavigate ||  `${getProps().idSchema.$id}_${idx}`;
 				const idToScrollAfterNavigate = options.idToScrollAfterNavigate
 					? options.idToScrollAfterNavigate
 					: getIdToScrollAfterNavigate
 						? getIdToScrollAfterNavigate()
 						: undefined;
-				focusAndScroll(getProps().formContext, idToFocusAfterNavigate, idToScrollAfterNavigate);
+				focusAndScroll(getProps().formContext, idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnActiveChange);
 			}
 			if (focusByIdx) {
 				focusByIdx(idx, callback);

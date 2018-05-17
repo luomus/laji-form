@@ -81,8 +81,8 @@ export default class SingleActiveArrayField extends Component {
 		const prevOptions = getUiOptions(prevProps);
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
 		if ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx)) {
-			const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`));
+			const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnActiveChange = true} = getUiOptions(this.props.uiSchema);
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`, focusOnActiveChange));
 		}
 	}
 
