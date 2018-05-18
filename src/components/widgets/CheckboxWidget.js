@@ -41,7 +41,8 @@ export default class CheckboxWidget extends Component {
 	}
 
 	onSelectChange = (value) => {
-		const _value = value === "true"
+		const _value =
+			value === "true"
 			? true
 			: value === "false"
 				? false
@@ -79,12 +80,20 @@ export default class CheckboxWidget extends Component {
 				]
 			};
 
+			const formData =
+				value === true
+				? "true"
+				: value === false
+					? "false"
+					: undefined
+
 			const uiSchema = {"ui:options": options};
 			const {SchemaField} = registry.fields;
 			return <SchemaField
 				{...this.props}
 				schema={schema}
 				uiSchema={uiSchema}
+				formData={formData}
 				onChange={this.onSelectChange}
 				idSchema={{$id: this.props.id}}
 			/>;

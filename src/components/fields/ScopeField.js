@@ -7,7 +7,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, focusById, getKeyHandlerTargetId, scrollIntoViewIfNeeded } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, focusById, getKeyHandlerTargetId, scrollIntoViewIfNeeded, getSchemaElementById } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -694,12 +694,10 @@ export default class ScopeField extends Component {
 			}
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, () => {
-			if (idToScroll) {
-				const elem = document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)));
-				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
-			} else {
-				focusById(this.props.formContext, this.props.idSchema.$id);
-			}
+			const elem = idToScroll
+				? document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)))
+				: getSchemaElementById(this.props.formContext.contextId, this.props.idSchema.$id);
+			scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
 		});
 	}
 
