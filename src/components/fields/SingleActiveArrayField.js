@@ -513,8 +513,8 @@ class TableArrayFieldTemplate extends Component {
 	componentDidMount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
 		window.addEventListener("resize", this.updateRenderingMode);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", () => {
-			this.updateRenderingMode();
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", (data, callback) => {
+			this.updateRenderingMode(callback);
 		});
 		this.updateRenderingMode();
 	}
@@ -556,7 +556,7 @@ class TableArrayFieldTemplate extends Component {
 	}
 
 	// Sets state.normalRendering on if screen is too small for table layout.
-	updateRenderingMode = () => {
+	updateRenderingMode = (callback) => {
 		requestAnimationFrame(() => {
 			const that = this.props.formContext.this;
 			const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
@@ -572,10 +572,10 @@ class TableArrayFieldTemplate extends Component {
 
 			if (normalRendering !== undefined) {
 				that.updateRenderingMode(normalRendering, () => 
-					this.setState({normalRendering}, this.updateLayout)
+					this.setState({normalRendering}, () => this.updateLayout(null, callback))
 				);
 			}	else if (!this.state.normalRendering) {
-				this.updateLayout();
+				this.updateLayout(null, callback);
 			}
 		});
 	}
@@ -588,7 +588,7 @@ class TableArrayFieldTemplate extends Component {
 		this.tHeadRef = elem;
 	}
 
-	updateLayout = (idx = null) => {
+	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
 			const that = this.props.formContext.this;
 			const {activeIdx} = that.state;
@@ -605,7 +605,7 @@ class TableArrayFieldTemplate extends Component {
 				} : {}
 			};
 			if (idx !== null) state.activeIdx = idx;
-			this.setState(state);
+			this.setState(state, callback);
 		});
 	}
 

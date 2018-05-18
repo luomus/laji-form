@@ -7,7 +7,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, focusById, getKeyHandlerTargetId, scrollIntoViewIfNeeded, getSchemaElementById } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getKeyHandlerTargetId, scrollIntoViewIfNeeded, getSchemaElementById } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -339,7 +339,14 @@ export default class ScopeField extends Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+			const {idToScroll} = getUiOptions(this.props.uiSchema);
+			const elem = idToScroll
+				? document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)))
+				: getSchemaElementById(this.props.formContext.contextId, this.props.idSchema.$id);
+
+			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize", undefined, () => {
+				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset)
+			});
 		}
 	}
 
@@ -671,7 +678,7 @@ export default class ScopeField extends Component {
 	}
 
 	toggleAdditionalProperty = (fields) => {
-		const {additionalsPersistenceField, additionalsPersistenceKey, idToScroll} = getUiOptions(this.props.uiSchema);
+		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(this.props.uiSchema);
 		if (!Array.isArray(fields)) fields = [fields];
 		const additionalFields = fields.reduce((additionalFields, field) => {
 			return {...additionalFields, [field]: !this.propertyIsIncluded(field)};
@@ -693,12 +700,7 @@ export default class ScopeField extends Component {
 				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
 			}
 		}
-		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})}, () => {
-			const elem = idToScroll
-				? document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)))
-				: getSchemaElementById(this.props.formContext.contextId, this.props.idSchema.$id);
-			scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
-		});
+		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
 	}
 
 
