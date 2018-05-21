@@ -177,13 +177,14 @@ class DefaultMapArrayField extends Component {
 
 	onEdited({features}) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
+		const geometry = this.props.formData[this.state.activeIdx][geometryField];
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {[geometryField]: {
+			{[this.state.activeIdx]: {[geometryField]: geometry.type === "GeometryCollection" ? {
 				geometries: Object.keys(features).reduce((obj, idx) => {
 					obj[idx] = {$set: features[idx].geometry};
 					return obj;
 				}, {})
-			}}}));
+			} : {$set: features[0].geometry}}}));
 	}
 
 	onInsert({idx, feature}) {
