@@ -512,7 +512,8 @@ class TableArrayFieldTemplate extends Component {
 
 	componentDidMount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
-		window.addEventListener("resize", this.updateRenderingMode);
+		this._updateRenderingMode = () => this.updateRenderingMode();
+		window.addEventListener("resize", this._updateRenderingMode);
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", (data, callback) => {
 			this.updateRenderingMode(callback);
 		});
@@ -521,7 +522,7 @@ class TableArrayFieldTemplate extends Component {
 
 	componentWillUnmount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
-		window.removeEventListener("resize", this.updateRenderingMode);
+		window.removeEventListener("resize", this._updateRenderingMode);
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize");
 	}
 
