@@ -11,7 +11,7 @@ import { Autosuggest } from "../widgets/AutosuggestWidget";
 import deepEquals from "deep-equal";
 import { getButton } from "../ArrayFieldTemplate";
 
-const LINE_TRANSECT_ID = "MHL.1";
+const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
 
 @BaseComponent
 export default class UnitShorthandField extends Component {
@@ -207,7 +207,7 @@ class CodeReader extends Component {
 
 		const {formID, formContext} = this.props;
 
-		const inputElem = (formID === LINE_TRANSECT_ID) ? (
+		const inputElem = LINE_TRANSECT_IDS.includes(formID) ? (
 			<FetcherInput
 				id={this.props.id}
 				loading={this.state.loading}
