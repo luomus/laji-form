@@ -808,9 +808,12 @@ const headerFormatters = {
 	},
 	lineTransect: {
 		component: (props) => {
-			const lineTransectFeature = {type:"Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: props.that.props.formData.map(item => item.geometry.coordinates)}};
-			const [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
-			return props.idx !== undefined ? <span className="text-muted">{`${start}-${end}m`}</span> : null;
+			let start, end;
+			const lineTransectFeature = Object.keys(props.that.props.formData[0].geometry).length 
+				? {type:"Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: props.that.props.formData.map(item => item.geometry.coordinates)}}
+				: undefined;
+			if (lineTransectFeature) [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
+			return props.idx !== undefined && end ? <span className="text-muted">{`${start}-${end}m`}</span> : null;
 		}
 	}
 };

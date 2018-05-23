@@ -92,14 +92,6 @@ class DefaultMapArrayField extends Component {
 		return {draw, controls, emptyMode, data};
 	}
 
-	_getPlaceholderStyle = () => {
-		return {
-			color: "#999999",
-			fillOpacity: 0,
-			weight: 8
-		};
-	}
-
 	onMapChangeCreateGathering(events) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		events.forEach(e => {
@@ -372,18 +364,33 @@ class LineTransectMapArrayField extends Component {
 		super(props);
 		this.state = {showLTTools: false};
 	}
+	
 	getOptions() {
 		const {formData} = this.props;
-		const lineTransect = {type: "MultiLineString", coordinates: formData.map(item => item.geometry.coordinates)};
+		const {geometryField, placeholderGeometry} = getUiOptions(this.props.uiSchema);
+		const lineTransect = this.hasLineTransectFeature(this.props)
+			? {type: "MultiLineString", coordinates: formData.map(item => item[geometryField].coordinates)}
+			: undefined;
 		return {
-			lineTransect: {
+			lineTransect: lineTransect ? {
 				feature: {geometry: lineTransect},
 				activeIdx: this.state.activeIdx,
 				onChange: this.onChange,
 				getFeatureStyle: this.getFeatureStyle,
 				getTooltip: this.getTooltip
+			} : undefined,
+			draw: lineTransect ? false : {
+				line: true,
+				marker: false,
+				circle: false,
+				rectangle: false,
+				polygon: false,
+				onChange: this.onLineCreate
 			},
-			draw: false,
+			data: lineTransect || !placeholderGeometry ? false : {
+				geoData: placeholderGeometry,
+				getFeatureStyle: this._getPlaceholderStyle
+			},
 			controls: {
 				lineTransect: {
 					split: true,
@@ -393,6 +400,10 @@ class LineTransectMapArrayField extends Component {
 					deletePoints: this.state.showLTTools,
 					undo: this.state.showLTTools,
 					redo: this.state.showLTTools
+				},
+				draw: {
+					undo: false,
+					redo: false
 				}
 			},
 			customControls: [{
@@ -405,6 +416,12 @@ class LineTransectMapArrayField extends Component {
 			}]
 			
 		};
+	}
+
+	onLineCreate = ([event]) => {
+		this.props.onChange(update(this.props.formData, {0: {geometry: {$set: 
+			event.feature.geometry
+		}}}));
 	}
 
 	onChange = (events) => {
@@ -481,13 +498,23 @@ class LineTransectMapArrayField extends Component {
 		this.focusOnMap(idx);
 	}
 
+	hasLineTransectFeature(props) {
+		const {geometryField} = getUiOptions(props.uiSchema);
+		return Object.keys(props.formData[0][geometryField]).length;
+	}
+
 	focusOnMap = (idx) => {
+		if (!this.hasLineTransectFeature(this.props)) {
+			setImmediate(() => this.map.zoomToData({paddingInMeters: 200}));
+			return;
+		}
 		this.getContext().setImmediate(() =>{
 			this.map.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: 13}); // eslint-disable-line no-undef
 		});
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		if (!this.hasLineTransectFeature(prevProps) || !this.hasLineTransectFeature(this.props)) return;
 		for (let lineIdx = 0; lineIdx < this.props.formData.length; lineIdx++) {
 			this.map._updateLTStyleForLineIdx(lineIdx);
 		}
@@ -601,6 +628,15 @@ class _MapArrayField extends ComposedComponent {
 			this.map.setRootElem(this._mapContainer);
 			this.map.setOption("clickBeforeZoomAndPan", true);
 		}
+	}
+
+
+	_getPlaceholderStyle() {
+		return {
+			color: "#999999",
+			fillOpacity: 0,
+			weight: 8
+		};
 	}
 
 	getContainer = () => {
@@ -1173,10 +1209,10 @@ export class Map extends Component {
 	componentDidUpdate(prevProps) {
 		const {className, style, onComponentDidMount, hidden, singleton, ...options} = this.props; // eslint-disable-line no-unused-vars
 
-		if (this.map && options.lineTransect && "activeIdx" in options.lineTransect) {
+		if (this.map && prevProps.lineTransect && options.lineTransect && "activeIdx" in options.lineTransect) {
 			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
 		}
-		delete options.lineTransect;
+		if (prevProps.lineTransect) delete options.lineTransect;
 
 		this.setOptions(prevProps, options);
 
