@@ -54,6 +54,21 @@ export default class _SchemaField extends Component {
 				return _props;
 			}
 
+			if (
+				uiFn["ui:field"] &&
+				uiFn["ui:field"] !== "ContextInjectionField" &&
+				uiFn["ui:field"] !== "InjectField" &&
+				uiFn["ui:options"] &&
+				uiFn["ui:options"].injections
+			) {
+				const {injections} = uiFn["ui:options"];
+				const injectedUiSchema = getInjectedUiSchema(uiFn, injections, props.registry.formContext.uiSchemaContext);
+				uiFn = {
+					...injectedUiSchema,
+					"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+				};
+			}
+
 			const buttons =  !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema).buttons : undefined;
 			const uiButtons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema)["ui:buttons"] : undefined;
 			_props = {
