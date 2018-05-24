@@ -136,9 +136,9 @@ export function handlesArrayKeys(ComposedComponent) {
 			if (super.componentDidMount) super.componentDidMount();
 		}
 
-		componentDidUpdate() {
+		componentDidUpdate(prevProps, prevState) {
 			(super.addChildKeyHandlers || this.addChildKeyHandlers).call(this);
-			if (super.componentDidUpdate) super.componentDidUpdate();
+			if (super.componentDidUpdate) super.componentDidUpdate(prevProps, prevState);
 		}
 
 		addKeyHandlers() {
@@ -287,14 +287,14 @@ export const arrayKeyFunctions = {
 		function focusIdx(idx) {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);
-				const {focusOnActiveChange = true} = options;
+				const {focusOnNavigate = true} = options;
 				const idToFocusAfterNavigate = options.idToFocusAfterNavigate ||  `${getProps().idSchema.$id}_${idx}`;
 				const idToScrollAfterNavigate = options.idToScrollAfterNavigate
 					? options.idToScrollAfterNavigate
 					: getIdToScrollAfterNavigate
 						? getIdToScrollAfterNavigate()
 						: undefined;
-				focusAndScroll(getProps().formContext, idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnActiveChange);
+				focusAndScroll(getProps().formContext, idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
 			}
 			if (focusByIdx) {
 				focusByIdx(idx, callback);

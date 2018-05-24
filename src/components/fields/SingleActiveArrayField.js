@@ -81,8 +81,8 @@ export default class SingleActiveArrayField extends Component {
 		const prevOptions = getUiOptions(prevProps);
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
 		if ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx)) {
-			const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnActiveChange = true} = getUiOptions(this.props.uiSchema);
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`, focusOnActiveChange));
+			const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true} = getUiOptions(this.props.uiSchema);
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`, focusOnNavigate));
 		}
 	}
 
@@ -492,7 +492,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const title = that.state.getTitle(activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
-			<div>
+			<div key={activeIdx}>
 				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} />
 				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
@@ -526,7 +526,7 @@ class TableArrayFieldTemplate extends Component {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize");
 	}
 
-	componentDidUpdate = (prevProps, prevState) => {
+	componentDidUpdate(prevProps, prevState) {
 		const that = this.props.formContext.this;
 		let updated = false;
 		if (this.props.items.length !== prevProps.items.length || this.state.activeIdx !== prevState.activeIdx) {
