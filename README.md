@@ -8,9 +8,9 @@ LajiForm is a dynamic form built on React. It can be used as a standalone librar
 npm install laji-form --save
 ```
 
-# Usage #
+# Usage as a library #
 
-LajiForm passes all its properties to react-jsonschema-form.
+LajiForm passes all its properties to react-jsonschema-form. Read the documentation for react-jsonschema-form.
 
 ## Usage as a standalone library ##
 
@@ -66,7 +66,9 @@ Styles can be found at  ```dist/styles.css```.
 
 # Development #
 
-You need to configure your personal apitest.laji.fi access token. Get the key to you email:
+Run `npm install` to install the dependencies and `npm start` to start the app.
+
+Before running, you'll need to configure your personal apitest.laji.fi access token. Get the key to you email:
 
 ```
 curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{\
@@ -80,6 +82,10 @@ Copy settings template file:
 cp properties.json.example properties.json
 ```
 
-Then put the API access token you got in your email to ```properties.json```. Put also your user access token there.
+Then put the API access token you got in your email to ```properties.json```. Put also your user access token & user ID there. Google API key is needed only for using the reverse geo location for foreign locations.
 
 Try to keep the code style consistent - ```npm run lint``` should pass without errors.
+
+## Developing different forms ##
+
+You can view remote forms by changing the `SCHEMA_ID` variable in `src/app`. Set it to `undefined` to use the form data from `playground/schemas.json`.
