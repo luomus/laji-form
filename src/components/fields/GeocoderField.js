@@ -8,6 +8,7 @@ import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { Button } from "../components";
 import Spinner from "react-spinner";
+import { FINLAND_BOUNDS } from "laji-map/lib/globals";
 
 const cache = {};
 
@@ -155,7 +156,6 @@ export default class GeocoderField extends Component {
 				return {type: "Feature", properties: {}, geometry};
 			})
 		}).getBounds();
-		const finlandBounds = [[71.348, 33.783], [48.311, 18.316]];
 		const center = bounds.getCenter();
 		const {lat, lng} = center;
 
@@ -263,7 +263,7 @@ export default class GeocoderField extends Component {
 			}
 		}, 5 * 1000);
 
-		!bounds.overlaps(finlandBounds) ? 
+		!bounds.overlaps(FINLAND_BOUNDS) ? 
 			fetchForeign() :
 			new ApiClient().fetchRaw("/coordinates/location", undefined, {
 				method: "POST",
