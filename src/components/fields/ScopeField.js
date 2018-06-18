@@ -491,7 +491,7 @@ export default class ScopeField extends Component {
 		schema = {...schema, properties: fieldsToShow};
 
 		if (generatedUiSchema["ui:order"]) {
-			generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => schema.properties[field]);
+			generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => schema.properties[field] || field === "*");
 			if (!generatedUiSchema["ui:order"].includes("*")) {
 				generatedUiSchema["ui:order"] = [...generatedUiSchema["ui:order"], "*"];
 			}
