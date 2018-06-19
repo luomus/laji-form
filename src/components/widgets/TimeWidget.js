@@ -4,7 +4,7 @@ import DateTimeWidget from "./DateTimeWidget";
 import { isEmptyString } from "../../utils";
 
 const onChange = onChange => value => {
-	onChange(isEmptyString(value)  ? null : (moment(value).format("HH:mm")));
+	onChange(isEmptyString(value) ? '' : (moment(value).format("HH:mm")));
 };
 
 export default (props) => (
