@@ -438,7 +438,7 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	}
 }
 
-export function filter (properties, filter, filterType = "blacklist", getValue) {
+export function filter(properties, filter, filterType = "blacklist", getValue) {
 	const filterDictionary = {};
 	filter.forEach(_enum => { filterDictionary[_enum] = true; });
 	const filterFn = (item) => {

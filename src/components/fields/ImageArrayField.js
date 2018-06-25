@@ -292,13 +292,12 @@ export default class ImageArrayField extends Component {
 
 	getDefaultMetadataPromise = () => {
 		const {capturerVerbatimPath} = getUiOptions(this.props.uiSchema);
-		let defaultMetadata = this._context.defaultMetadata || {};
+		let defaultMetadata = this._context.defaultMetadata
+			? {...this._context.defaultMetadata}
+			: {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
+		delete defaultMetadata.caption;
 
 		const MACode = parseJSONPointer(this.mainContext.formData, capturerVerbatimPath);
-
-		if (!this._context.defaultMetadata) {
-			defaultMetadata = {...defaultMetadata, intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
-		}
 
 		return MACode !== undefined ?
 			this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName}) => {
@@ -310,11 +309,10 @@ export default class ImageArrayField extends Component {
 				this._context.defaultMetadata = defaultMetadata;
 				return defaultMetadata;
 			}).catch(() => {
-				return (
-					new Promise(resolve => {
-						this._context.defaultMetadata = defaultMetadata;
-						resolve(defaultMetadata);
-					}));
+				return new Promise(resolve => {
+					this._context.defaultMetadata = defaultMetadata;
+					resolve(defaultMetadata);
+				});
 			}) :
 			new Promise(resolve => {
 				this._context.defaultMetadata = defaultMetadata;
