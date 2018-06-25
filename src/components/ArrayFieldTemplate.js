@@ -165,9 +165,9 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addCustomEventListeners() {
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "focus", target => {
+			const context = new Context(this.props.formContext.contextId);
+			context.addCustomEventListener(this.props.idSchema.$id, "focus", target => {
 				if (target === "last") {
-					const context = new Context(this.props.formContext.contextId);
 					context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
 					context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
 				} else {
@@ -190,6 +190,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		componentWillUnmount() {
 			const context = new Context(this.props.formContext.contextId);
 
+			context.removeCustomEventListener(this.props.idSchema.$id, "focus");
 			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			if (this.childKeyHandlers) {
 				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
