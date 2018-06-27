@@ -539,9 +539,8 @@ export default class ScopeField extends Component {
 		};
 
 		return (
-			<div>
-				<Dropdown key="socop"
-				          id={this.props.idSchema.$id + "-scope-field-dropdown"}
+			<div key="scope-additionals-dropdown">
+				<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
 				          bsStyle="primary"
 				          pullRight
 				          open={this.state.additionalsOpen}

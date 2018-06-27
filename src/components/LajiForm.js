@@ -384,32 +384,32 @@ export default class LajiForm extends Component {
 					</div>
 			</Form>
 			{shortcuts ? 
-					<Panel 
-						ref={this.getPanelRef} 
-						className="shortcut-help laji-form-popped z-depth-3 hidden" 
-						style={{bottom: (this.props.bottomOffset || 0) + 5}}
-						bsStyle="info" 
-						header={
-							<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-						}
-					>
-					<Table fill>
-						<tbody className="well">{
-							Object.keys(shortcuts).map((keyCombo, idx) => {
-								const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
-								if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn)) return;
-								let translation = "";
-								if (translation) translation = label;
-								else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];
-								if  (targetLabel) translation = `${translation} ${targetLabel}`;
-								return (
-									<tr key={idx}>
-										<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
-									</tr>
-								);
-							})
-						}</tbody>
-					</Table>
+				<Panel 
+					ref={this.getPanelRef} 
+					className="shortcut-help laji-form-popped z-depth-3 hidden" 
+					style={{bottom: (this.props.bottomOffset || 0) + 5}}
+					bsStyle="info" 
+				>
+					<Panel.Heading>
+						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
+					</Panel.Heading>
+						<Table>
+							<tbody className="well">{
+								Object.keys(shortcuts).map((keyCombo, idx) => {
+									const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
+									if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn)) return;
+									let translation = "";
+									if (translation) translation = label;
+									else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];
+									if  (targetLabel) translation = `${translation} ${targetLabel}`;
+									return (
+										<tr key={idx}>
+											<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
+										</tr>
+									);
+								})
+							}</tbody>
+						</Table>
 				</Panel> 
 			: null}
 		</div>

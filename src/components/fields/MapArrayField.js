@@ -1237,13 +1237,23 @@ export class Map extends Component {
 	
 		if (this.map) {
 			Object.keys(_options).forEach(key => {
-				if (!deepEquals(_options[key], _prevOptions[key])) {
-					this.map.setOption(key, _options[key]);
+				switch(key) {
+				case "draw": // More optimal way of updating draw data than setting the draw option
+					if (!deepEquals(draw, prevDraw)) {
+						this.map.updateDrawData(draw);
+					}
+					break;
+				case "rootElem": // deeqEquals on DOM node causes maximum call stack size exceeding.
+					if (_options[key] !== _prevOptions[key]) {
+						this.map.setOption(key, _options[key]);
+					}
+					break;
+				default:
+					if (!deepEquals(_options[key], _prevOptions[key])) {
+						this.map.setOption(key, _options[key]);
+					}
 				}
 			});
-			if (!deepEquals(draw, prevDraw)) {
-				this.map.updateDrawData(draw);
-			}
 		}
 	}
 
@@ -1280,12 +1290,19 @@ export class Map extends Component {
 class MapPanel extends Component {
 	render() {
 		return (
-				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header} className="laji-form-popped">
-					{this.props.text}
-					{this.props.buttonText ?
-						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
-						null
-					}
+				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped">
+					{this.props.header ? (
+						<Panel.Heading>
+							{this.props.header}
+						</Panel.Heading>
+					) : null}
+					<Panel.Body>
+						{this.props.text}
+						{this.props.buttonText ?
+							<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+							null
+						}
+					</Panel.Body>
 				</Panel>
 		);
 	}

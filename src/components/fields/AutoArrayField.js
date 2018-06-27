@@ -6,7 +6,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
 export default class AutoArrayField extends Component {
-	static PropTypes = {
+	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				autofocus: PropTypes.boolean

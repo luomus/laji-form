@@ -544,9 +544,9 @@ export class ErrorPanel extends Component {
 		if (errors.length === 0) return null;
 
 		return (
-			<Panel collapsible expanded={this.state.expanded}
-				   className={classNames}
-				   header={
+			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle}
+				   className={classNames}>
+				<Panel.Heading>
 					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 						   <div className="panel-title">
 							   {title}
@@ -556,18 +556,19 @@ export class ErrorPanel extends Component {
 							   </span>
 						   </div>
 					   </div>
-				   }
-			>
-				<ListGroup fill>
-					{errors.map(({label, error, id}, i) =>  {
-						const _clickHandler = () => clickHandler(id);
-						return (
-							<ListGroupItem key={i} onClick={_clickHandler}>
-								{label ? <b>{label}:</b> : null} {error}
-							</ListGroupItem>
-						);
-					})}
-				</ListGroup>
+				</Panel.Heading>
+				<Panel.Collapse>
+					<ListGroup>
+						{errors.map(({label, error, id}, i) =>  {
+							const _clickHandler = () => clickHandler(id);
+							return (
+								<ListGroupItem key={i} onClick={_clickHandler}>
+									{label ? <b>{label}:</b> : null} {error}
+								</ListGroupItem>
+							);
+						})}
+					</ListGroup>
+				</Panel.Collapse>
 			</Panel>
 		);
 	}

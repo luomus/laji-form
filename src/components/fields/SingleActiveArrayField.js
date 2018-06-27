@@ -413,15 +413,19 @@ class AccordionArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array no-transition">
 				<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="top" />
-				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
+				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id$}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
 						       className="laji-form-clickable-panel"
 									 eventKey={idx}
-									 header={getHeader(idx)}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-							{idx === activeIdx ? item.children : null}
-							{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+							<Panel.Heading>{getHeader(idx)}</Panel.Heading>
+							{idx === activeIdx ? (
+								<Panel.Body>
+									{item.children}
+									{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+								</Panel.Body>
+							) : null}
 						</Panel>
 					))}
 					<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="bottom"/>
@@ -450,27 +454,30 @@ class PagerArrayFieldTemplate extends Component {
 
 		return (
 			<div className="laji-form-single-active-array">
-				<Panel className="laji-form-clickable-panel" header={
-					<div className="laji-form-clickable-panel-header laji-form-accordion-header">
-						<Pager>
-							<Pager.Item previous 
-							            href="#"
-							            disabled={activeIdx <= 0 || activeIdx === undefined}
-							            onClick={this.navigatePrev}>
-								&larr; {translations.Previous}</Pager.Item>
-							{activeIdx !== undefined ? getHeader(activeIdx) : null}
-							<Pager.Item next 
-							            href="#"
-							            disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
-							            onClick={this.navigateNext}>
-								{translations.Next}  &rarr;</Pager.Item>
-						</Pager>
-					</div>
-				}>
-					<div key={activeIdx}>
-						{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
-					</div>
-					{getButtonElems(buttons, arrayTemplateFieldProps)}
+				<Panel className="laji-form-clickable-panel">
+					<Panel.Heading>
+						<div className="laji-form-clickable-panel-header laji-form-accordion-header">
+							<Pager>
+								<Pager.Item previous 
+														href="#"
+														disabled={activeIdx <= 0 || activeIdx === undefined}
+														onClick={this.navigatePrev}>
+									&larr; {translations.Previous}</Pager.Item>
+								{activeIdx !== undefined ? getHeader(activeIdx) : null}
+								<Pager.Item next 
+														href="#"
+														disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
+														onClick={this.navigateNext}>
+									{translations.Next}  &rarr;</Pager.Item>
+							</Pager>
+						</div>
+					</Panel.Heading>
+					<Panel.Body>
+						<div key={activeIdx}>
+							{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+						</div>
+						{getButtonElems(buttons, arrayTemplateFieldProps)}
+					</Panel.Body>
 				</Panel>
 			</div>
 		);
