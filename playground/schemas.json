@@ -2852,5 +2852,9 @@
       "eventTime": {}
     }
   ]
+}, 
+"settings": {
+  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "openStreetMap",
+  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup": "MVL.41"
 }
 }

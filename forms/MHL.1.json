@@ -1,0 +1,1324 @@
+{
+    "attributes": {
+        "id": "MHL.1"
+    },
+    "category": "MHL.categoryBirdMonitoringSchemes",
+    "collectionID": "HR.61",
+    "description": "T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Muiden linjojen kuin vakiolinjojen tulokset ilmoitetaan toistaiseksi tuttuun tapaan Excel-lomakkeella. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a><ol><li>Ilmoita lomakkeella laskennan ja reitin perustiedot sek\u00e4 havaitut linnut biotoopeittain. Saat lis\u00e4ohjeita ?-kuvakkeista kenttien vieress\u00e4.</li><li>Lomakkeella voit siirty\u00e4 kent\u00e4st\u00e4 toiseen joko hiiren avulla tai pikan\u00e4pp\u00e4imill\u00e4 (tab = seuraavaan kentt\u00e4\u00e4n, Alt + nuoli yl\u00f6s = edelliselle havaintoriville, Alt + nuoli alas = seuraavalle havaintoriville).</li><li>Kirjaa havaitut linnut biotoopeittain. Voit valita biotooppip\u00e4tk\u00e4t joko kartalta klikkaamalla tai liikkua biotooppip\u00e4tk\u00e4st\u00e4 toiseen nuolin\u00e4pp\u00e4imill\u00e4 havaintojensy\u00f6t\u00f6n yl\u00e4puolella. Kirjaa muuttuneet biotoopit \u201dp\u00e4\u00e4saran biotooppi\u201d -kentt\u00e4\u00e4n.</li><li>Tee mahdolliset muutokset biotooppip\u00e4tkien pituuteen tai reitin kulkuun kartan ty\u00f6kaluja k\u00e4ytt\u00e4en. Voit muokata linjan pistett\u00e4 ensin tuplaklikkaamalla ja sitten raahaamalla. Pisteen voi poistaa klikkaamalla sit\u00e4 hiiren oikealla n\u00e4pp\u00e4imell\u00e4. Jos teit virheen kartan muokkauksessa, k\u00e4yt\u00e4 \u201dKumoa\u201d-ty\u00f6kalua kartan oikeasta reunasta. Seuraa kartalla kursorin viereen tulevia ohjetekstej\u00e4 ja katso perusteellisempaa ohjetta Linjalaskentojen etusivun k\u00e4ytt\u00f6ohjeesta.</li><li>Havaintoja voit sy\u00f6tt\u00e4\u00e4 joko ns. pikasy\u00f6tt\u00f6tilassa tai erillisten kenttien avulla. Pikasy\u00f6tt\u00f6tilaan ja siit\u00e4 pois siirryt\u00e4\u00e4n havaintojensy\u00f6t\u00f6n oikean reunan nuolikuvakkeesta. K\u00e4yt\u00f6ss\u00e4 ovat 3+3 lyhenteet, tieteelliset ja suomenkieliset nimet sek\u00e4 pikasy\u00f6tt\u00f6tilassa lis\u00e4ksi yleisimpien lajien 2-kirjaimiset lyhenteet (linkki 2-kirjaimisiin lyhenteisiin: <a target=\"_blank\" rel=\"noreferrer noopener\" href=\"https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet\">https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet</a>). Voit k\u00e4ytt\u00e4\u00e4 pieni\u00e4 tai isoja kirjaimia ja k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. Katso ohjetta \u201dHavainnot\u201d-kent\u00e4n alla.</li><li>Kun olet sy\u00f6tt\u00e4nyt havainnot, ja haluat tallentaa ja l\u00e4hett\u00e4\u00e4 tiedot eteenp\u00e4in Linnustonseurannalle, paina: \u201dTallenna julkisena\u201d.</li><li>Tallennuksen j\u00e4lkeen tulee n\u00e4kyviin lista mahdollisista virheist\u00e4 ja varoituksista. Korjaa virheet ja tallenna uudelleen.</li><li>Tallennuksen j\u00e4lkeen n\u00e4et koosteen tallentamastasi havaintoer\u00e4st\u00e4, esimerkiksi havaituista lajeista ja parim\u00e4\u00e4rist\u00e4, p\u00e4\u00e4sarkaprosentista, kokonaislajim\u00e4\u00e4r\u00e4st\u00e4, etenemisnopeudesta jne.</li><li>P\u00e4\u00e4set tarvittaessa muokkaamaan tallennettua havaintoer\u00e4\u00e4 \u201dOmat havaintoer\u00e4ni\u201d \u2013kohdasta. Kunkin havaintoer\u00e4n vasemmassa laidassa on valittavana \u201dN\u00e4yt\u00e4 havaintoer\u00e4\u201d ja \u201dSiirry muokkaussivulle\u201d -kuvakkeet.</li></ol>",
+    "excludeFromCopy": [
+        "units"
+    ],
+    "features": [
+        "MHL.featureNamedPlace",
+        "MHL.featureAddingNamedPlacesNotAllowed",
+        "MHL.featureRestrictAccess",
+        "MHL.featureAdminister",
+        "MHL.featureAddingNamedPlacesNotAllowed",
+        "MHL.featureEditingNamedPlacesNotAllowed",
+        "MHL.featureCopyLatestDocumentToNamedPlace",
+        "MHL.featureReserve"
+    ],
+    "id": "MHL.1",
+    "language": "fi",
+    "logo": "https://cdn.laji.fi/images/logos/linjalaskentalomake.PNG",
+    "name": "Linjalaskenta",
+    "namedPlaceOptions": {
+        "description": "<p>T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. T\u00e4\u00e4ll\u00e4 voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\" rel=\"noopener noreferref\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisi\u00e4 reittien tietoja ja varaustilannetta.</li><li>Tehd\u00e4 varauksen tulevalle kaudelle ja vapauttaa tekem\u00e4si varauksen.<br>(Huom! kev\u00e4\u00e4ll\u00e4 2018 on k\u00e4yt\u00f6ss\u00e4 vanha varaussivu: <a href=\"http://koivu.luomus.fi/seurannat/linjalaskenta/vakiolinjat.php\" target=\"_blank\" rel=\"noopener noreferref\">http://koivu.luomus.fi/seurannat/linjalaskenta/vakiolinjat.php</a> )</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen valitse oikeasta reunasta \u201dKatso ja tulosta kartta ja maastolomake\u201d.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirty\u00e4 ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen klikkaa \u201dilmoita uusi laskenta t\u00e4lle reitille\u201d.</ol><p>Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ota yhteytt\u00e4 <a target=\"_blank\" href=\"mailto:linnustonseuranta@luomus.fi\">linnustonseuranta@luomus.fi</a></p>",
+        "formNavLabel": "Reitit ja ilmoittaminen",
+        "listLabel": "Linjaluettelo",
+        "printLabel": "Katso ja tulosta kartta ja maastolomake",
+        "reservationUntil": "${year}-12-31",
+        "showLegendList": true,
+        "startWithMap": true,
+        "useLabel": "Ilmoita uusi laskenta t\u00e4lle reitille"
+    },
+    "options": {
+        "messages": {
+            "success": "Linjalaskennan havaintosi on nyt tallennettu. Kiitos osallistumisestasi! Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ole yhteydess\u00e4 linnustonseuranta@luomus.fi"
+        },
+        "namedPlaceList": [
+            "$.alternativeIDs[0]",
+            "$.name",
+            "$._status",
+            "$.prepopulatedDocument.gatheringEvent.dateBegin"
+        ],
+        "season": {
+            "end": "${year}-07-12",
+            "start": "${year}-05-01"
+        }
+    },
+    "printType": "MHL.printTypeLineTransect",
+    "schema": {
+        "properties": {
+            "editors": {
+                "items": {
+                    "type": "string"
+                },
+                "title": "Muokkausoikeus",
+                "type": "array"
+            },
+            "gatheringEvent": {
+                "properties": {
+                    "breaksDuringCensusInMinutes": {
+                        "title": "Pidettyjen taukojen m\u00e4\u00e4r\u00e4 minuutteina",
+                        "type": "integer"
+                    },
+                    "censusHinderedByEnviromentalFactors": {
+                        "default": false,
+                        "title": "S\u00e4\u00e4olot (tms) haittasivat",
+                        "type": "boolean"
+                    },
+                    "censusPrematurelyAborted": {
+                        "default": false,
+                        "title": "J\u00e4ik\u00f6 laskenta kesken?",
+                        "type": "boolean"
+                    },
+                    "dateBegin": {
+                        "title": "Laskentap\u00e4iv\u00e4",
+                        "type": "string"
+                    },
+                    "gpsUsed": {
+                        "default": false,
+                        "title": "GPS k\u00e4yt\u00f6ss\u00e4",
+                        "type": "boolean"
+                    },
+                    "leg": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Laskijat",
+                        "type": "array"
+                    },
+                    "legPublic": {
+                        "default": true,
+                        "title": "Laskijan nimi n\u00e4kyy tuloksissa julkisena",
+                        "type": "boolean"
+                    },
+                    "namedPlaceNotes": {
+                        "title": "Reitin kuvaus (reitin yleinen kuvaus, esim. helppo-/vaikeakulkuisuus, vinkit tuleville laskijoille)",
+                        "type": "string"
+                    },
+                    "notes": {
+                        "title": "Lis\u00e4tiedot laskennasta (esimerkiksi muutokset reittiin, huomiot s\u00e4\u00e4tilasta jne.)",
+                        "type": "string"
+                    },
+                    "taxonCensus": {
+                        "default": [
+                            {
+                                "censusTaxonID": "MX.37580",
+                                "taxonCensusType": "MY.taxonCensusTypeCounted"
+                            }
+                        ],
+                        "items": {
+                            "properties": {
+                                "censusTaxonID": {
+                                    "title": "Laskettu taksoni",
+                                    "type": "string"
+                                },
+                                "taxonCensusType": {
+                                    "default": "",
+                                    "enum": [
+                                        "MY.taxonCensusTypeCounted"
+                                    ],
+                                    "enumNames": [
+                                        "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista"
+                                    ],
+                                    "title": "Laskennan kattavuus",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "censusTaxonID",
+                                "taxonCensusType"
+                            ],
+                            "type": "object"
+                        },
+                        "title": "Kaikki havaitut nis\u00e4kk\u00e4\u00e4t kirjattu",
+                        "type": "array"
+                    },
+                    "timeEnd": {
+                        "title": "Laskennan lopetusaika",
+                        "type": "string"
+                    },
+                    "timeStart": {
+                        "title": "Laskennan aloitusaika",
+                        "type": "string"
+                    }
+                },
+                "required": [],
+                "title": "",
+                "type": "object"
+            },
+            "gatherings": {
+                "items": {
+                    "properties": {
+                        "gatheringFact": {
+                            "properties": {
+                                "lineTransectSegmentCounted": {
+                                    "default": true,
+                                    "title": "Biotooppi laskettu",
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [],
+                            "title": "",
+                            "type": "object"
+                        },
+                        "geometry": {
+                            "properties": {},
+                            "title": "Koordinaatit",
+                            "type": "object"
+                        },
+                        "habitatClassification": {
+                            "title": "P\u00e4\u00e4saran biotooppi",
+                            "type": "string"
+                        },
+                        "timeStart": {
+                            "title": "Kellonaika",
+                            "type": "string"
+                        },
+                        "units": {
+                            "excludeFromCopy": true,
+                            "items": {
+                                "properties": {
+                                    "broodSize": {
+                                        "title": "Pesyekoko",
+                                        "type": "integer"
+                                    },
+                                    "identifications": {
+                                        "items": {
+                                            "properties": {
+                                                "taxon": {
+                                                    "title": "Laji",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [],
+                                            "type": "object"
+                                        },
+                                        "minItems": 1,
+                                        "type": "array"
+                                    },
+                                    "individualCount": {
+                                        "title": "Yksil\u00f6m\u00e4\u00e4r\u00e4",
+                                        "type": "integer"
+                                    },
+                                    "informalTaxonGroups": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Muotoryhm\u00e4t",
+                                        "type": "array"
+                                    },
+                                    "likelyMigrant": {
+                                        "title": "Todenn\u00e4k\u00f6inen l\u00e4pimuuttaja (ei pesi)",
+                                        "type": "boolean"
+                                    },
+                                    "notes": {
+                                        "title": "Lis\u00e4tiedot",
+                                        "type": "string"
+                                    },
+                                    "pairCount": {
+                                        "default": 1,
+                                        "title": "Parim\u00e4\u00e4r\u00e4",
+                                        "type": "integer"
+                                    },
+                                    "shortHandText": {
+                                        "title": "Pikasy\u00f6tt\u00f6",
+                                        "type": "string"
+                                    },
+                                    "unitFact": {
+                                        "properties": {
+                                            "autocompleteSelectedTaxonID": {
+                                                "title": "Taxon ID selected from autocomplete",
+                                                "type": "string"
+                                            },
+                                            "lineTransectObsType": {
+                                                "enum": [
+                                                    "",
+                                                    "MY.lineTransectObsTypeSong",
+                                                    "MY.lineTransectObsTypeOtherSound",
+                                                    "MY.lineTransectObsTypeSeen",
+                                                    "MY.lineTransectObsTypeSeenMale",
+                                                    "MY.lineTransectObsTypeSeenFemale",
+                                                    "MY.lineTransectObsTypeFlyingOverhead",
+                                                    "MY.lineTransectObsTypeFlock",
+                                                    "MY.lineTransectObsTypeFlockFlyingOverhead",
+                                                    "MY.lineTransectObsTypeSeenPair",
+                                                    "MY.lineTransectObsTypeSeenBrood",
+                                                    "MY.lineTransectObsTypeSeenNest",
+                                                    "MY.lineTransectObsTypeUnknown"
+                                                ],
+                                                "enumNames": [
+                                                    "",
+                                                    "Laulava",
+                                                    "Muuten \u00e4\u00e4ntelev\u00e4",
+                                                    "N\u00e4k\u00f6havainto",
+                                                    "Koiras",
+                                                    "Naaras",
+                                                    "Ylilent\u00e4v\u00e4",
+                                                    "Parvi",
+                                                    "Lentoparvi",
+                                                    "Pari",
+                                                    "Poikue",
+                                                    "Pes\u00e4",
+                                                    "Tuntematon"
+                                                ],
+                                                "title": "Havainnon laatu",
+                                                "type": "string"
+                                            },
+                                            "lineTransectRouteFieldType": {
+                                                "enum": [
+                                                    "",
+                                                    "MY.lineTransectRouteFieldTypeInner",
+                                                    "MY.lineTransectRouteFieldTypeOuter"
+                                                ],
+                                                "enumNames": [
+                                                    "",
+                                                    "P - P\u00e4\u00e4sarka",
+                                                    "A - Apusarka"
+                                                ],
+                                                "title": "Sarka",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [],
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [],
+                                "type": "object"
+                            },
+                            "title": "Havainnot",
+                            "type": "array"
+                        }
+                    },
+                    "required": [],
+                    "type": "object"
+                },
+                "title": "",
+                "type": "array"
+            }
+        },
+        "required": [],
+        "type": "object"
+    },
+    "title": "Vakiolinjalaskentalomake",
+    "uiSchema": {
+        "editors": {
+            "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
+            "ui:options": {
+                "allowUndefined": false
+            }
+        },
+        "gatheringEvent": {
+            "breaksDuringCensusInMinutes": {
+                "ui:help": "Jos pidit taukoja, esim. isommat kierrot tms. arvioi pituus karkeasti"
+            },
+            "censusHinderedByEnviromentalFactors": {
+                "ui:help": "Valitse <i>Kyll\u00e4</i> jos arvioit ett\u00e4 s\u00e4\u00e4 haittasi lintujen aktiivisuutta tai niiden havaitsemista",
+                "ui:options": {
+                    "allowUndefined": false
+                }
+            },
+            "censusPrematurelyAborted": {
+                "ui:help": "Valitse <i>Kyll\u00e4</i> jos linjan laskenta j\u00e4i kesken. Merkitse t\u00e4ll\u00f6in laskematta j\u00e4\u00e4neet biotooppip\u00e4tkiin <i>Biotooppi laskettu</i> -kentt\u00e4\u00e4n <i>Ei</i>",
+                "ui:options": {
+                    "allowUndefined": false
+                }
+            },
+            "classNames": "well well-sm",
+            "dateBegin": {
+                "ui:options": {
+                    "showButtons": true
+                },
+                "ui:widget": "DateWidget"
+            },
+            "gpsUsed": {
+                "ui:options": {
+                    "allowUndefined": false
+                }
+            },
+            "leg": {
+                "ui:help": "Laskijan nimi, muodossa: etunimi sukunimi",
+                "ui:options": {
+                    "allowNonsuggestedValue": true,
+                    "autosuggestField": "friends",
+                    "preventTypingPattern": "^MA\\.\\d+$",
+                    "suggestionReceive": "key"
+                },
+                "ui:widget": "AutosuggestWidget"
+            },
+            "legPublic": {
+                "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4.",
+                "ui:options": {
+                    "allowUndefined": false
+                }
+            },
+            "namedPlaceNotes": {
+                "ui:help": "Kirjaa t\u00e4h\u00e4n pysyvi\u00e4 reittiin liittyvi\u00e4 seikkoja",
+                "ui:options": {
+                    "rows": 3
+                },
+                "ui:widget": "textarea"
+            },
+            "notes": {
+                "ui:help": "Ilmoitettavaa laskentakertaa koskevat huomiot. Pysyv\u00e4t muutokset ja vinkit kirjoitetaan kentt\u00e4\u00e4n: \u201dReitin kuvaus\u201d.",
+                "ui:options": {
+                    "rows": 2
+                },
+                "ui:widget": "textarea"
+            },
+            "taxonCensus": {
+                "ui:field": "AnyToBooleanField",
+                "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n nis\u00e4k\u00e4st\u00e4",
+                "ui:options": {
+                    "allowUndefined": false,
+                    "falseValue": [
+                        {
+                            "censusTaxonID": "MX.37580",
+                            "taxonCensusType": "MY.taxonCensusTypeCounted"
+                        }
+                    ],
+                    "trueValue": [
+                        {
+                            "censusTaxonID": "MX.37580",
+                            "taxonCensusType": "MY.taxonCensusTypeCounted"
+                        },
+                        {
+                            "censusTaxonID": "MX.37612",
+                            "taxonCensusType": "MY.taxonCensusTypeCounted"
+                        }
+                    ]
+                }
+            },
+            "timeEnd": {
+                "ui:options": {
+                    "showTimeList": false
+                },
+                "ui:widget": "TimeWidget"
+            },
+            "timeStart": {
+                "ui:options": {
+                    "showTimeList": false
+                },
+                "ui:widget": "TimeWidget"
+            },
+            "ui:field": "NestField",
+            "ui:options": {
+                "nests": {
+                    "eventTime": {
+                        "fields": [
+                            "dateBegin",
+                            "timeStart",
+                            "timeEnd"
+                        ],
+                        "rootUiSchema": {
+                            "ui:grid": {
+                                "lg": {
+                                    "dateBegin": 3,
+                                    "timeEnd": 2,
+                                    "timeStart": 2
+                                },
+                                "md": {
+                                    "dateBegin": 4,
+                                    "timeEnd": 2,
+                                    "timeStart": 2
+                                },
+                                "rows": [
+                                    [
+                                        "dateBegin",
+                                        "timeStart",
+                                        "timeEnd"
+                                    ]
+                                ],
+                                "sm": {
+                                    "dateBegin": 5,
+                                    "timeEnd": 3,
+                                    "timeStart": 3
+                                },
+                                "xs": 12
+                            }
+                        },
+                        "title": ""
+                    },
+                    "legEditor": {
+                        "fields": [
+                            "leg",
+                            "editors"
+                        ],
+                        "rootUiSchema": {
+                            "ui:field": "NestField",
+                            "ui:options": {
+                                "nests": {
+                                    "_legEditor": {
+                                        "fields": [
+                                            "leg",
+                                            "editors"
+                                        ],
+                                        "rootUiSchema": {
+                                            "items": {
+                                                "ui:field": "DependentDisableField",
+                                                "ui:functions": {
+                                                    "ui:field": "ContextInjectionField",
+                                                    "ui:options": {
+                                                        "injections": {
+                                                            "/ui:options/rules/0/regexp": "/creator"
+                                                        }
+                                                    }
+                                                },
+                                                "ui:options": {
+                                                    "rules": [
+                                                        {
+                                                            "disableDefiner": "leg",
+                                                            "disableField": "editors",
+                                                            "disabledValueToDisplay": true,
+                                                            "inlineHelp": "Sinulla t\u00e4ytyy olla muokkausoikeus.",
+                                                            "regexp": "creator is injected here"
+                                                        },
+                                                        {
+                                                            "disableDefiner": "leg",
+                                                            "disableField": "editors",
+                                                            "regexp": "^((?!(MA\\.\\d)).)*$"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "ui:field": "TableField",
+                                            "ui:functions": [
+                                                {
+                                                    "ui:field": "DependentBooleanField",
+                                                    "ui:options": {
+                                                        "booleanDefiner": "leg",
+                                                        "booleanField": "editors"
+                                                    }
+                                                },
+                                                {
+                                                    "ui:field": "ArrayCombinerField"
+                                                }
+                                            ],
+                                            "ui:options": {
+                                                "specialRules": "legEditors",
+                                                "ui:buttonsDesktopLayout": true,
+                                                "ui:deleteHelp": "Poista laskijan nimi"
+                                            }
+                                        },
+                                        "title": ""
+                                    },
+                                    "legEditorSizeFixer": {
+                                        "fields": [
+                                            "_legEditor"
+                                        ],
+                                        "rootUiSchema": {
+                                            "ui:grid": {
+                                                "lg": 6,
+                                                "md": 6,
+                                                "sm": 9,
+                                                "xs": 12
+                                            }
+                                        },
+                                        "title": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ui:order": [
+                "*",
+                "legPublic",
+                "eventTime",
+                "censusPrematurelyAborted",
+                "censusHinderedByEnviromentalFactors",
+                "gpsUsed",
+                "breaksDuringCensusInMinutes",
+                "taxonCensus",
+                "namedPlaceNotes",
+                "notes"
+            ]
+        },
+        "gatherings": {
+            "items": {
+                "gatheringFact": {
+                    "lineTransectSegmentCounted": {
+                        "ui:help": "Jos jouduit j\u00e4tt\u00e4m\u00e4\u00e4n laskennan syyst\u00e4 tai toisesta v\u00e4liin kyseisell\u00e4 biotooppip\u00e4tk\u00e4ll\u00e4, valitse <i>Ei</i>",
+                        "ui:options": {
+                            "allowUndefined": false
+                        }
+                    }
+                },
+                "geometry": {
+                    "ui:field": "HiddenField"
+                },
+                "habitatClassification": {
+                    "ui:help": "<u>Biotoopin koodi</u> on kolmiosainen. Alun <b>ISO</b> kirjain kertoo biotoopin ja seuraava numero tai <b>ISO</b> kirjain tarkentaa sit\u00e4. Niiden per\u00e4\u00e4n merkit\u00e4\u00e4n mets\u00e4isill\u00e4 biotoopeilla puuston keskikorkeus ja aukeilla biotoopeilla aukean kokoluokka. <a href=\"https://www.luomus.fi/sites/default/files/files/linjalomake-e.pdf\" target=\"_blank\" rel=\"noreferrer\">Tarkemmat ohjeet</a>",
+                    "ui:helpHoverable": true,
+                    "ui:widget": "UpperCaseWidget"
+                },
+                "timeStart": {
+                    "ui:help": "Biotooppip\u00e4tk\u00e4n aika, raportoidaan 500 m v\u00e4lein",
+                    "ui:options": {
+                        "showTimeList": false
+                    },
+                    "ui:widget": "TimeWidget"
+                },
+                "ui:field": "NestField",
+                "ui:options": {
+                    "nests": {
+                        "placeWrapper": {
+                            "fields": [
+                                "gatheringFact",
+                                "habitatClassification",
+                                "timeStart",
+                                "geometry"
+                            ],
+                            "rootUiSchema": {
+                                "ui:grid": {
+                                    "lg": {
+                                        "*": 2,
+                                        "habitatClassification": 4
+                                    },
+                                    "md": {
+                                        "*": 2,
+                                        "habitatClassification": 4
+                                    },
+                                    "rows": [
+                                        [
+                                            "habitatClassification",
+                                            "timeStart",
+                                            "gatheringFact"
+                                        ]
+                                    ],
+                                    "sm": {
+                                        "gatheringFact": 3,
+                                        "habitatClassification": 6,
+                                        "timeStart": 3
+                                    },
+                                    "xs": 12
+                                },
+                                "ui:order": [
+                                    "*",
+                                    "gatheringFact"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "ui:order": [
+                    "*",
+                    "units"
+                ],
+                "units": {
+                    "items": {
+                        "broodSize": {
+                            "ui:help": "Laskettu munien tai poikasten m\u00e4\u00e4r\u00e4."
+                        },
+                        "identifications": {
+                            "items": {
+                                "detDate": {
+                                    "ui:widget": "DateWidget"
+                                }
+                            }
+                        },
+                        "individualCount": {
+                            "ui:help": "Jos ei merkit\u00e4, oletetaan yksil\u00f6m\u00e4\u00e4r\u00e4ksi 1."
+                        },
+                        "informalTaxonGroups": {
+                            "ui:field": "HiddenField"
+                        },
+                        "pairCount": {
+                            "ui:help": "Havainnosta tulkittu parim\u00e4\u00e4r\u00e4"
+                        },
+                        "shortHandText": {
+                            "ui:belowHelp": "<div> <strong>Kirjoita pikakirjoitukseen LAJI (a) (Lukum\u00e4\u00e4r\u00e4) Koodi (A/P)</strong> <p> <table class=\"table table-condensed\"> <thead> <tr> <th>Koodi</th><th>Havainnon laatu</th><th>Ilmoitettava lukum\u00e4\u00e4r\u00e4</th> </tr> </thead> <tbody> <tr> <td>x</td><td>Laulava</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>v</td><td>Muuten \u00e4\u00e4ntelev\u00e4</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>o</td><td>N\u00e4k\u00f6havainto</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>k</td><td>Koiras</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>n</td><td>Naaras</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>y</td><td>Ylilent\u00e4v\u00e4</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>a luku o</td><Td>Parvi</Td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>a luku y</td><td>Lentoparvi</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>pari</td><td>Pari</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>poikue</td><td>Poikue</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>pes\u00e4</td><td>Pes\u00e4</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> </tbody> </table> </p> <p> <table class=\"table table-condensed\"> <tbody> <tr> <th>LAJI</th><td>Lajin kaksi- tai kuusikirjaiminen koodi. Pakollinen.</td> </tr> <tr> <th>a</th><td>Jos kyseess\u00e4 on parvihavainto, lukum\u00e4\u00e4r\u00e4n eteen kirjoitetaan a. Muuten a j\u00e4tet\u00e4\u00e4n kirjoittamatta. </td></tr> <tr> <th>Lukum\u00e4\u00e4r\u00e4</th><td>Yksil\u00f6m\u00e4\u00e4r\u00e4 tai koodeille \"pari\", \"poikue\", \"pes\u00e4\" parim\u00e4\u00e4r\u00e4. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, lukum\u00e4\u00e4r\u00e4ksi tulee 1. </td></tr> <tr> <th>Koodi</th><td>Luettelo koodeista on yll\u00e4. Pakollinen. </td></tr> <tr> <th>A/P</th><td>A = Apusarka, P = P\u00e4\u00e4sarka. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, saraksi tulee A. </td></tr> </tbody> </table> </p> <p> Voit k\u00e4ytt\u00e4\u00e4 suuria tai pieni\u00e4 kirjaimia. Voit k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. </p> <p> Esimerkkej\u00e4: <i>TTX, RRvp, pt2xp, ec2y, CSa6y, CORNIX O P, cornixop, TM2pariP, PD3k</i> </p> </div>",
+                            "ui:help": "Sy\u00f6t\u00e4 havainto pikasy\u00f6tt\u00f6koodein, oikealla puolella olevat sarakkeet t\u00e4yttyv\u00e4t automaattisesti",
+                            "ui:readonly": true
+                        },
+                        "ui:annotations": {
+                            "add": {
+                                "formData": {
+                                    "annotationClass": "MAN.annotationClassReliable"
+                                },
+                                "type": "MAN.typeOpinion",
+                                "uiSchema": {
+                                    "annotationClass": {
+                                        "ui:title": "Havainnon luotettavuus"
+                                    }
+                                }
+                            },
+                            "adminOnly": true,
+                            "container": "modal",
+                            "filter": {
+                                "filter": [
+                                    "opinion"
+                                ],
+                                "filterType": "blacklist"
+                            }
+                        },
+                        "ui:field": "ScopeField",
+                        "ui:functions": [
+                            {
+                                "ui:field": "ContextInjectionField",
+                                "ui:options": {
+                                    "injections": {
+                                        "/ui:options/formID": "/formID"
+                                    }
+                                }
+                            },
+                            {
+                                "classNames": "well well-sm darker slim",
+                                "ui:field": "UnitShorthandField",
+                                "ui:options": {
+                                    "autofocus": true,
+                                    "injectButtons": true,
+                                    "shorthandField": "shortHandText"
+                                }
+                            },
+                            {
+                                "ui:field": "FlatField",
+                                "ui:options": {
+                                    "fields": [
+                                        "identifications",
+                                        "unitFact"
+                                    ]
+                                }
+                            },
+                            {
+                                "ui:field": "AutosuggestField",
+                                "ui:options": {
+                                    "allowNonsuggestedValue": true,
+                                    "autosuggestField": "taxon",
+                                    "inputTransformer": {
+                                        "regexp": "^(.*)\\?$",
+                                        "transformations": {
+                                            "taxonConfidence": "MY.taxonConfidenceUnsure"
+                                        }
+                                    },
+                                    "query": {
+                                        "informalTaxonGroup": "MVL.1,MVL.2",
+                                        "onlyFinnish": true
+                                    },
+                                    "suggestionInputField": "identifications_0_taxon",
+                                    "suggestionReceivers": {
+                                        "identifications_0_taxon": "/payload/scientificName",
+                                        "informalTaxonGroups": "$taxonGroup",
+                                        "unitFact_autocompleteSelectedTaxonID": "key"
+                                    },
+                                    "suggestionValueField": "unitFact_autocompleteSelectedTaxonID"
+                                }
+                            }
+                        ],
+                        "ui:grid": {
+                            "lg": {
+                                "broodSize": 1,
+                                "identifications_0_taxon": 2,
+                                "individualCount": 1,
+                                "likelyMigrant": 2,
+                                "notes": 2,
+                                "pairCount": 1,
+                                "shortHandText": 1,
+                                "unitFact_lineTransectObsType": 2,
+                                "unitFact_lineTransectRouteFieldType": 2
+                            },
+                            "md": {
+                                "broodSize": 1,
+                                "identifications_0_taxon": 2,
+                                "individualCount": 1,
+                                "likelyMigrant": 2,
+                                "notes": 2,
+                                "pairCount": 1,
+                                "shortHandText": 1,
+                                "unitFact_lineTransectObsType": 2,
+                                "unitFact_lineTransectRouteFieldType": 2
+                            },
+                            "sm": {
+                                "broodSize": 2,
+                                "identifications_0_taxon": 4,
+                                "individualCount": 3,
+                                "likelyMigrant": 4,
+                                "notes": 4,
+                                "pairCount": 3,
+                                "shortHandText": 4,
+                                "unitFact_lineTransectObsType": 4,
+                                "unitFact_lineTransectRouteFieldType": 4
+                            },
+                            "xs": 12
+                        },
+                        "ui:options": {
+                            "fieldScopes": {
+                                "informalTaxonGroups": {
+                                    "*": {
+                                        "additionalFields": [
+                                            "notes"
+                                        ]
+                                    }
+                                },
+                                "unitFact_lineTransectObsType": {
+                                    "MY.lineTransectObsTypeFlock": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeFlockFlyingOverhead": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeFlyingOverhead": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeOtherSound": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSeen": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSeenBrood": {
+                                        "fields": [
+                                            "broodSize",
+                                            "pairCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSeenFemale": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSeenMale": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSeenNest": {
+                                        "fields": [
+                                            "individualCount",
+                                            "broodSize",
+                                            "pairCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSeenPair": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    },
+                                    "MY.lineTransectObsTypeSong": {
+                                        "fields": [
+                                            "individualCount"
+                                        ]
+                                    }
+                                }
+                            },
+                            "fields": [
+                                "unitFact_autocompleteSelectedTaxonID",
+                                "shortHandText",
+                                "unitGathering_taxonID",
+                                "identifications_0_taxon",
+                                "unitFact_lineTransectObsType",
+                                "unitFact_lineTransectRouteFieldType",
+                                "pairCount"
+                            ],
+                            "includeAdditionalFieldsChooserButton": true
+                        },
+                        "ui:order": [
+                            "shortHandText",
+                            "identifications_0_taxon",
+                            "unitFact_lineTransectObsType",
+                            "unitFact_lineTransectRouteFieldType",
+                            "individualCount",
+                            "pairCount",
+                            "broodSize",
+                            "notes",
+                            "*"
+                        ],
+                        "unitFact": {
+                            "autocompleteSelectedTaxonID": {
+                                "ui:widget": "HiddenWidget"
+                            },
+                            "lineTransectRouteFieldType": {
+                                "ui:help": "A = apusarka, P = p\u00e4\u00e4sarka. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, havainto tulkitaan apusaralle."
+                            }
+                        },
+                        "unitGathering": {
+                            "geometry": {
+                                "ui:field": "HiddenField"
+                            }
+                        }
+                    },
+                    "ui:field": "AutoArrayField",
+                    "ui:help": "Sy\u00f6t\u00e4 havainto pikasy\u00f6tt\u00f6koodein ja paina Enter, jolloin havainto puretaan automaattisesti erillisiin kenttiin",
+                    "ui:options": {
+                        "canAdd": false,
+                        "confirmDelete": true,
+                        "deleteCorner": true,
+                        "orderable": true
+                    }
+                }
+            },
+            "ui:field": "SingleActiveArrayField",
+            "ui:functions": {
+                "ui:field": "MapArrayField",
+                "ui:options": {
+                    "geometryField": "geometry",
+                    "geometryMapper": "lineTransect",
+                    "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
+                    "idToScrollAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}__header",
+                    "mapOptions": {
+                        "controls": {
+                            "location": false
+                        },
+                        "tileLayerName": "maastokartta",
+                        "tileLayerOpacity": 0.5
+                    },
+                    "mapSizes": {
+                        "lg": 4,
+                        "md": 4,
+                        "sm": 6,
+                        "xs": 6
+                    }
+                },
+                "ui:settings": [
+                    "/mapOptions/tileLayerName",
+                    "/mapOptions/overlayNames",
+                    "/mapOptions/tileLayerOpacity"
+                ]
+            },
+            "ui:help": "Valitse seuraava/edellinen biotooppip\u00e4tk\u00e4 joko sivulla olevista nuolista tai kartasta klikkaamalla",
+            "ui:options": {
+                "canAdd": false,
+                "headerFormatters": [
+                    "lineTransect"
+                ],
+                "renderer": "pager"
+            },
+            "ui:title": "Biotooppip\u00e4tk\u00e4"
+        },
+        "ui:annotations": {
+            "add": {
+                "filter": {
+                    "filter": [
+                        "opinion"
+                    ],
+                    "filterType": "blacklist"
+                },
+                "formData": {
+                    "annotationClass": "MAN.annotationClassReliable"
+                },
+                "type": "MAN.typeOpinion",
+                "uiSchema": {
+                    "annotationClass": {
+                        "ui:options": {
+                            "allowUndefined": false,
+                            "falseValue": "MAN.annotationClassUnreliable",
+                            "label": "Arvioni laskennan luotettavuudesta",
+                            "trueValue": "MAN.annotationClassReliable"
+                        },
+                        "ui:widget": "AnyToBooleanWidget"
+                    }
+                }
+            },
+            "adminOnly": true,
+            "buttonsPath": "/gatheringEvent",
+            "container": "modal",
+            "formId": "MHL.21"
+        },
+        "ui:field": "InjectField",
+        "ui:options": {
+            "injections": {
+                "fields": [
+                    "editors"
+                ],
+                "target": "gatheringEvent"
+            }
+        },
+        "ui:order": [
+            "gatheringEvent",
+            "gatherings"
+        ],
+        "ui:shortcuts": {
+            "Enter": {
+                "fn": "navigate"
+            },
+            "alt": {
+                "delay": 1,
+                "fn": "help"
+            },
+            "alt+ ": {
+                "fn": "navigate"
+            },
+            "alt+ArrowDown": {
+                "fn": "navigateArray",
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havaintoon"
+            },
+            "alt+ArrowLeft": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+ArrowRight": {
+                "fn": "navigateArray",
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+ArrowUp": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havaintoon"
+            },
+            "alt+Delete": {
+                "fn": "delete"
+            },
+            "alt+Insert": {
+                "fn": "insert"
+            },
+            "alt+PageDown": {
+                "fn": "navigateArray",
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+PageUp": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+d": {
+                "fn": "delete"
+            },
+            "alt+h": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+i": {
+                "fn": "insert"
+            },
+            "alt+j": {
+                "fn": "navigateArray",
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havaintoon"
+            },
+            "alt+k": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havaintoon"
+            },
+            "alt+l": {
+                "fn": "navigateArray",
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+m": {
+                "fn": "splitLineTransectByMeters",
+                "target": "root_gatherings"
+            },
+            "alt+n": {
+                "fn": "navigateArray"
+            },
+            "alt+p": {
+                "fn": "navigateArray",
+                "reverse": true
+            },
+            "alt+shift+ ": {
+                "fn": "navigate",
+                "reverse": true
+            },
+            "alt+u": {
+                "fn": "insert",
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havainto"
+            },
+            "ctrl+Enter": {
+                "fn": "textareaRowInsert"
+            },
+            "shift+Enter": {
+                "fn": "navigate",
+                "reverse": true
+            }
+        }
+    },
+    "validators": {
+        "gatheringEvent": {
+            "presence": {
+                "allowEmpty": false
+            },
+            "properties": {
+                "dateBegin": {
+                    "date": {
+                        "earliest": "1915-05-01",
+                        "latest": "now",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian vanha",
+                        "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa"
+                    },
+                    "monthDay": {
+                        "earliestDay": 1,
+                        "earliestMonth": 5,
+                        "latestDay": 31,
+                        "latestMonth": 7,
+                        "message": {
+                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on ennen laskenta-aikaa %{value}",
+                            "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on laskenta-ajan j\u00e4lkeen %{value}"
+                        }
+                    },
+                    "presence": {
+                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 pit\u00e4\u00e4 ilmoittaa"
+                    }
+                },
+                "leg": {
+                    "presence": {
+                        "allowEmpty": false,
+                        "message": "V\u00e4hint\u00e4\u00e4n yksi havainnoija t\u00e4ytyy ilmoittaa."
+                    }
+                },
+                "timeEnd": {
+                    "compareNumerically": {
+                        "greaterThan": "timeStart",
+                        "message": "Loppuajan tulee olla alkuaikaa my\u00f6hemmin"
+                    },
+                    "presence": {
+                        "message": "Lopetusaika pit\u00e4\u00e4 ilmoittaa"
+                    }
+                },
+                "timeStart": {
+                    "presence": {
+                        "message": "Aloitusaika pit\u00e4\u00e4 ilmoittaa"
+                    }
+                }
+            },
+            "timeArray": {
+                "fieldContainer": "#/gatherings",
+                "lowerRange": "/timeStart",
+                "message": {
+                    "range": "Biotooppien kellonaikojen t\u00e4ytyy olla ilmoitetulta aikav\u00e4lilt\u00e4 %{lowerRange}-%{upperRange}"
+                },
+                "upperRange": "/timeEnd"
+            }
+        },
+        "gatherings": {
+            "items": {
+                "properties": {
+                    "geometry": {
+                        "geometry": {
+                            "message": {
+                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
+                            },
+                            "requireShape": true
+                        }
+                    },
+                    "units": {
+                        "items": {
+                            "properties": {
+                                "individualCount": {
+                                    "compareNumerically": {
+                                        "greaterThan": 1,
+                                        "message": "Yksil\u00f6m\u00e4\u00e4r\u00e4n tulee olla suurempi kuin 1 kun parvi on n\u00e4hty.",
+                                        "onlyWhenAttrIn": {
+                                            "/unitFact/lineTransectObsType": [
+                                                "MY.lineTransectObsTypeFlock",
+                                                "MY.lineTransectObsTypeFlockFlyingOverhead"
+                                            ]
+                                        },
+                                        "options": {
+                                            "_live": true
+                                        }
+                                    },
+                                    "numericality": {
+                                        "greaterThanOrEqualTo": 1,
+                                        "message": "Yksil\u00f6m\u00e4\u00e4r\u00e4n tulee olla suurempi kuin 0",
+                                        "onlyInteger": true,
+                                        "options": {
+                                            "_live": true
+                                        }
+                                    }
+                                },
+                                "pairCount": {
+                                    "compareNumerically": {
+                                        "lessThanOrEqualTo": "individualCount",
+                                        "message": "Parim\u00e4\u00e4r\u00e4 ei saa olla suurempi kuin yksil\u00f6m\u00e4\u00e4r\u00e4."
+                                    },
+                                    "numericality": {
+                                        "greaterThanOrEqualTo": 1,
+                                        "message": "Parim\u00e4\u00e4r\u00e4n tulee olla suurempi kuin 0",
+                                        "onlyInteger": true,
+                                        "options": {
+                                            "_live": true
+                                        }
+                                    }
+                                },
+                                "unitFact": {
+                                    "properties": {
+                                        "lineTransectObsType": {
+                                            "presence": {
+                                                "message": "Havainnon laatu t\u00e4ytyy ilmoittaa",
+                                                "options": {
+                                                    "_live": true
+                                                }
+                                            }
+                                        },
+                                        "lineTransectRouteFieldType": {
+                                            "crossCheck": {
+                                                "check": "lineTransectObsType",
+                                                "message": "P\u00e4\u00e4saralle ei saa ilmoittaa laaduksi \"Ylilent\u00e4v\u00e4\"",
+                                                "onlyWhenCheckIn": [
+                                                    "MY.lineTransectObsTypeFlyingOverhead"
+                                                ],
+                                                "options": {
+                                                    "_live": true
+                                                },
+                                                "valueMustBeIn": [
+                                                    "MY.lineTransectRouteFieldTypeOuter"
+                                                ]
+                                            },
+                                            "presence": {
+                                                "message": "Sarka t\u00e4ytyy ilmoittaa",
+                                                "options": {
+                                                    "_live": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "presence": {
+                "allowEmpty": false,
+                "message": "V\u00e4hint\u00e4\u00e4n yksi paikka t\u00e4ytyy ilmoittaa."
+            }
+        }
+    },
+    "viewerType": "MHL.viewerTypeLineTransect",
+    "warnings": {
+        "gatheringEvent": {
+            "properties": {
+                "dateBegin": {
+                    "date": {
+                        "earliest": "lastYear",
+                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on yli vuoden vanha, oletko varma",
+                        "options": {
+                            "_live": true
+                        }
+                    },
+                    "monthDayRange": {
+                        "message": {
+                            "notInAnyRange": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei ole laskenta-ajan sis\u00e4ll\u00e4 (%{value})"
+                        },
+                        "options": {
+                            "_live": true
+                        },
+                        "ranges": [
+                            {
+                                "earliestDay": 25,
+                                "earliestMonth": 5,
+                                "latestDay": 12,
+                                "latestMonth": 7
+                            }
+                        ]
+                    }
+                },
+                "timeEnd": {
+                    "time": {
+                        "earliestHour": 1,
+                        "latestHour": 10,
+                        "latestMinute": 0,
+                        "message": {
+                            "tooLate": "Aloitusaika on hyvin my\u00f6h\u00e4inen, tarkistathan ett\u00e4 on oikein"
+                        },
+                        "options": {
+                            "_live": true
+                        }
+                    }
+                },
+                "timeStart": {
+                    "time": {
+                        "earliestHour": 2,
+                        "earliestMinute": 20,
+                        "latestHour": 5,
+                        "latestMinute": 0,
+                        "message": {
+                            "tooEarly": "Aloitusaika on hyvin varhainen, tarkistathan ett\u00e4 on oikein",
+                            "tooLate": "Aloitusaika on hyvin my\u00f6h\u00e4inen, tarkistathan ett\u00e4 on oikein"
+                        },
+                        "options": {
+                            "_live": true
+                        }
+                    }
+                }
+            }
+        },
+        "gatherings": {
+            "items": {
+                "properties": {
+                    "habitatClassification": {
+                        "presence": {
+                            "message": "P\u00e4\u00e4saran biotooppi puuttuu"
+                        },
+                        "transectBiotope": {
+                            "message": {
+                                "invalidA": "A pit\u00e4isi olla v\u00e4lill\u00e4 1-6. Nyt se oli '%{value}'.",
+                                "invalidBiotope": "Biotoopin t\u00e4ytyy olla joko K,M,S,L,J,P,H,R,N,V,A,T tai X, mutta se oli '%{value}'",
+                                "invalidFocus": "Toisen kirjaimen t\u00e4ytyy olla yksi arvojoukosta %{key}, mutta se oli %{value}",
+                                "invalidK": "K pit\u00e4isi olla v\u00e4lill\u00e4 1-35. Nyt se oli '%{value}'.",
+                                "invalidSize": "V\u00e4\u00e4r\u00e4 kokoluokka annettiin. Kokoluokan pit\u00e4isi olla %{key}, mutta se oli %{value}",
+                                "invalidX": "V\u00e4\u00e4r\u00e4 MUU. Pit\u00e4isi olla vain tarkentava kirjain tai X, eik\u00e4 mit\u00e4\u00e4n muuta.",
+                                "notString": "%{key} ei ole tyypilt\u00e4\u00e4n teksti\u00e4",
+                                "tooLong": "Biotoopin koodi sis\u00e4lt\u00e4\u00e4 ylim\u00e4\u00e4r\u00e4isi\u00e4 arvoja. K\u00e4yt\u00e4 lis\u00e4tiedot kentt\u00e4\u00e4 mieluummin.",
+                                "tooShort": "Biotoopin koodi on liian lyhyt!"
+                            },
+                            "options": {
+                                "_live": true
+                            }
+                        }
+                    },
+                    "units": {
+                        "items": {
+                            "properties": {
+                                "individualCount": {
+                                    "numericality": {
+                                        "lessThanOrEqualTo": 50,
+                                        "message": "Yksil\u00f6m\u00e4\u00e4r\u00e4 on ep\u00e4tavallisen suuri. Oletko varma?",
+                                        "onlyInteger": true,
+                                        "options": {
+                                            "_live": true
+                                        }
+                                    }
+                                },
+                                "pairCount": {
+                                    "numericality": {
+                                        "lessThanOrEqualTo": 30,
+                                        "message": "Parim\u00e4\u00e4r\u00e4 on ep\u00e4tavallisen suuri. Oletko varma?",
+                                        "onlyInteger": true,
+                                        "options": {
+                                            "_live": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "timeArray": {
+                "count": 10,
+                "message": {
+                    "count": "V\u00e4hint\u00e4\u00e4n %{count} kellonaikaa t\u00e4ytyy ilmoittaa",
+                    "order": "Biotooppien kellonaikojenaikojen t\u00e4ytyy olla nousevassa j\u00e4rjestyksess\u00e4"
+                },
+                "order": true
+            }
+        }
+    }
+}
