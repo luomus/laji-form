@@ -53,7 +53,7 @@ export class DeleteButton extends Component {
 		e.preventDefault();
 		e.stopPropagation();
 		this.setState({show: true}, () => {
-			findDOMNode(this.refs["confirm-yes"]).focus();
+			this._focusConfirm = true;
 		});
 	}
 
@@ -71,6 +71,13 @@ export class DeleteButton extends Component {
 	componentWillUnmount = () => {
 		if (this.callback && !this.callbackCalled) {
 			this.callback(this.deleted);
+		}
+	}
+
+	setConfirmAutofocus = (elem) => {
+		if (this._focusConfirm) {
+			findDOMNode(elem).focus();
+			this._focusConfirm = undefined;
 		}
 	}
 
@@ -95,7 +102,7 @@ export class DeleteButton extends Component {
 						<Popover id="popover-trigger-click">
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref="confirm-yes">
+								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus}>
 									{translations.Remove}
 								</Button>
 								<Button bsStyle="default" onClick={this.onHideConfirm}>
