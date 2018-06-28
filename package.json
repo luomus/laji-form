@@ -11,7 +11,8 @@
     "build": "npm run build:lib && npm run build:dist",
     "publish-to-npm": "npm version patch && git push && npm run build && npm publish",
     "push-to-git": "npm run lint && git push",
-    "lint": "eslint -c .eslintrc.prod.json src playground"
+    "lint": "eslint -c .eslintrc.prod.json src playground",
+    "test": "HOST=0.0.0.0 PORT=8083 protractor protractor.conf.js"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -62,6 +63,8 @@
     "css-loader": "^0.25.0",
     "es6-promise": "^4.0.5",
     "eslint": "^3.19.0",
+    "eslint-plugin-jasmine": "^2.10.1",
+    "eslint-plugin-protractor": "^1.40.0",
     "eslint-plugin-react": "^6.10.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",

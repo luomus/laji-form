@@ -101,6 +101,11 @@ export default class TableField extends Component {
 					...schema,
 					items: itemsSchema
 				}}
+				idSchema={{
+					$id: "c",
+					editors: {$id: "a"},
+					leg: {$id: "b"},
+				}}
 				uiSchema={_uiSchema}
 				registry={{
 					...this.props.registry,
