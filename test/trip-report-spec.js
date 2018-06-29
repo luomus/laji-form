@@ -1,6 +1,6 @@
 const {HOST, PORT} = process.env;
 
-const getLocatorForContextId = contextId => path =>  `#_laji-form_${contextId}_root_${path.replace(".", "_")}`;
+const getLocatorForContextId = contextId => path =>  `#_laji-form_${contextId}_root_${path.replace(/\./g, "_")}`;
 const navigateToForm = formID => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true`);
 
 const lajiFormLocator = getLocatorForContextId(0);
@@ -14,7 +14,7 @@ describe("Trip report (JX.519)", () => {
 
 		const $gatheringEvent = lajiFormLocate("gatheringEvent");
 
-		it("has gatheringEvent", () => {
+		it("is displayed", () => {
 			expect($gatheringEvent.isPresent()).toBe(true);
 		});
 
@@ -46,32 +46,211 @@ describe("Trip report (JX.519)", () => {
 		});
 	});
 
-	it("has gatherings", () => {
-		expect(lajiFormLocate("gatherings").isDisplayed()).toBe(true);
+	describe("gatherings", () => {
+		it("is displayed", () => {
+			expect(lajiFormLocate("gatherings").isDisplayed()).toBe(true);
+		});
+
+		it("is empty", () => {
+			expect(lajiFormLocate("gatherings.0").isPresent()).toBe(false);
+		});
+
+		const $map = $(".laji-map");
+
+		it("map is present", () => {
+			expect($map.isDisplayed()).toBe(true);
+		});
+
+		it("creating pointer on map creates gathering", () => {
+			const $markerButton = $(".leaflet-draw-draw-marker");
+
+			expect($markerButton.isDisplayed()).toBe(true);
+
+			$markerButton.click();
+
+			browser.actions()
+				.mouseMove($map, {x: 100, y: 100})
+				.click()
+				.perform();
+
+			expect(lajiFormLocate("gatherings.0").isDisplayed()).toBe(true);
+		});
+
+		const $blockingLoader = $(".laji-form.blocking-loader");
+
+		function waitUntilBlockingLoaderHides() {
+			return browser.wait(protractor.ExpectedConditions.invisibilityOf($blockingLoader), 20000, "Geocoding timeout");
+		}
+
+		it("geocoding starts and finished after adding gathering", async done => {
+			expect($blockingLoader.isDisplayed()).toBe(true);
+
+			await waitUntilBlockingLoaderHides();
+
+			expect($blockingLoader.isDisplayed()).toBe(false);
+			done();
+		});
+
+		it("contains country", () => {
+			expect(lajiFormLocate("gatherings.0.country").isDisplayed()).toBe(true);
+		});
+
+		it("contains biologicalProvince", () => {
+			expect(lajiFormLocate("gatherings.0.administrativeProvince").isDisplayed()).toBe(true);
+		});
+
+		it("contains municipality", () => {
+			expect(lajiFormLocate("gatherings.0.municipality").isDisplayed()).toBe(true);
+		});
+
+		it("contains locality", () => {
+			expect(lajiFormLocate("gatherings.0.locality").isDisplayed()).toBe(true);
+		});
+
+		it("contains localityDescription", () => {
+			expect(lajiFormLocate("gatherings.0.localityDescription").isDisplayed()).toBe(true);
+		});
+
+		it("contains images", () => {
+			expect(lajiFormLocate("gatherings.0.images").isDisplayed()).toBe(true);
+		});
+
+		it("contains weather", () => {
+			expect(lajiFormLocate("gatherings.0.weather").isDisplayed()).toBe(true);
+		});
+
+		it("contains notes", () => {
+			expect(lajiFormLocate("gatherings.0.notes").isDisplayed()).toBe(true);
+		});
+
+		const $additionalsButton = $("#root_gatherings_0-additionals");
+
+		it("has additional fields button", () => {
+			expect($additionalsButton.isDisplayed()).toBe(true);
+		});
+
+		it("can add additional fields", () => {
+			$additionalsButton.click();
+			const $$additionalListItems = $$(".dropdown.open li a");
+			$$additionalListItems.first().click();
+
+			expect(lajiFormLocate("gatherings.0.biologicalProvince").isDisplayed()).toBe(true);
+
+			$additionalsButton.click();
+
+			expect($$additionalListItems.isPresent()).toBe(false);
+		});
+
+		it("add button works", async () => {
+			$("#root_gatherings-add").click();
+
+			expect(lajiFormLocate("gatherings.1").isDisplayed()).toBe(true);
+
+			await waitUntilBlockingLoaderHides();
+		});
+
+		it("map is empty for new gathering", () => {
+			expect($map.element(by.css(".vector-marker")).isPresent()).toBe(false);
+		});
+
+		it("items can be deleted", () => {
+			$("#root_gatherings_1-delete").click();
+			$("#root_gatherings_1-delete-confirm-yes").click();
+
+			expect(lajiFormLocate("gatherings.1").isPresent()).toBe(false);
+		});
+
+		it("first gathering can be activated", () => {
+			$("#root_gatherings_0-header").click();
+
+			expect(lajiFormLocate("gatherings.0").isDisplayed()).toBe(true); // Test that the first field is visible.
+		});
 	});
 
-	it("gatherings is empty", () => {
-		expect(lajiFormLocate("gatherings.0").isPresent()).toBe(false);
+	describe("units", () => {
+		it("is displayed", () => {
+			expect(lajiFormLocate("gatherings.0.units").isDisplayed()).toBe(true);
+		});
+
+		it("has one by default", () => {
+			expect(lajiFormLocate("gatherings.0.units.0").isDisplayed()).toBe(true);
+		});
+
+		it("can be added", () => {
+			$("#root_gatherings_0_units-add").click();
+
+			expect(lajiFormLocate("gatherings.0.units.1").isDisplayed()).toBe(true);
+		});
+
+		it("first is shown as table row after activating second", () => {
+			expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
+		});
+
+		it("activating works for both", () => {
+			lajiFormLocate("gatherings.0.units.0").click();
+
+			expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("div");
+			expect(lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("tr");
+
+			lajiFormLocate("gatherings.0.units.1").click();
+
+			expect(lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("div");
+			expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
+		});
+
+		it("can be deleted", () => {
+			$("#root_gatherings_0_units_1-delete").click();
+			$("#root_gatherings_0_units_1-delete-confirm-yes").click();
+
+			expect(lajiFormLocate("gatherings.0.units.1").isPresent()).toBe(false);
+		});
+
+		it("first is active after deleting second", () => {
+			expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("div");
+		});
+
+		it("contains identifications.0.taxon", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.taxon").isDisplayed()).toBe(true);
+		});
+
+		it("contains count", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.count").isDisplayed()).toBe(true);
+		});
+
+		it("contains notes", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.notes").isDisplayed()).toBe(true);
+		});
+
+		it("contains taxonConfidence", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.taxonConfidence").isDisplayed()).toBe(true);
+		});
+
+		it("contains recordBasis", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.recordBasis").isDisplayed()).toBe(true);
+		});
+
+		it("contains images", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.images").isDisplayed()).toBe(true);
+		});
+
+		const $additionalsButton = $("#root_gatherings_0_units_0-additionals");
+
+		it("has additional fields button", () => {
+			expect($additionalsButton.isDisplayed()).toBe(true);
+		});
+
+		it("can add additional fields", () => {
+			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isPresent()).toBe(false);
+
+			$additionalsButton.click();
+
+			const $additionalItem = $$(".scope-field-modal-item").first().all(by.css(".list-group-item")).get(1);
+			$additionalItem.click();
+
+			$(".scope-field-modal .close").click();
+
+			expect($additionalItem.isPresent()).toBe(false);
+			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isDisplayed()).toBe(true);
+		});
 	});
-
-	const $map = $(".laji-map");
-
-	it("map is present", () => {
-		expect($map.isPresent()).toBe(true);
-	});
-
-	it("creating pointer on map creates gathering", () => {
-		const $markerButton = $(".leaflet-draw-draw-marker");
-		expect($markerButton.isPresent()).toBe(true);
-
-		$markerButton.click();
-
-		browser.actions()
-			.mouseMove($map, {x: 100, y: 100})
-			.click()
-			.perform();
-
-		expect(lajiFormLocate("gatherings.0").isPresent()).toBe(true);
-	});
-
 });

@@ -91,7 +91,8 @@ export class DeleteButton extends Component {
 		const onClick = e => this.onClick(e);
 		const button = (
 			<div className={props.className} style={this.props.style}>
-				<Button bsStyle="danger"
+				<Button id={`${props.id}-delete`}
+				        bsStyle="danger"
 								className={buttonClassName}
 								ref="del"
 								onKeyDown={this.onButtonKeyDown}
@@ -99,13 +100,13 @@ export class DeleteButton extends Component {
 				{show ?
 					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
 									 target={getOverlayTarget}>
-						<Popover id="popover-trigger-click">
+						<Popover id={`${this.props.id}-delete-confirm`}>
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus}>
+								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>
 									{translations.Remove}
 								</Button>
-								<Button bsStyle="default" onClick={this.onHideConfirm}>
+								<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
 									{translations.Cancel}
 								</Button>
 							</ButtonGroup>

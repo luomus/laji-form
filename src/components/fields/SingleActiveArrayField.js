@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
+import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button } from "../components";
@@ -402,7 +402,8 @@ class AccordionArrayFieldTemplate extends Component {
 				idx={idx}
 				wrapperClassName="panel-title"
 				className="laji-form-clickable-panel-header laji-form-accordion-header">
-				<DeleteButton ref={this.setDeleteButtonRef(idx)}
+				<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
+				              ref={this.setDeleteButtonRef(idx)}
 											className="pull-right"
 											confirm={confirmDelete}
 											translations={translations}
@@ -413,7 +414,7 @@ class AccordionArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array no-transition">
 				<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="top" />
-				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id$}-accordion`}>
+				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
 						       className="laji-form-clickable-panel"
@@ -660,7 +661,8 @@ class TableArrayFieldTemplate extends Component {
 
 		const getDeleteButtonFor = idx => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
-			return <DeleteButton ref={getDeleteButtonRef}
+			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
+			                     ref={getDeleteButtonRef}
 			                     key={idx}
 			                     confirm={confirmDelete}
 			                     translations={this.props.formContext.translations}
@@ -894,7 +896,7 @@ class AccordionHeader extends Component {
 
 		const header = (
 			<div className={this.props.className}
-			     id={`${that.props.idSchema.$id}_${idx}__header`}
+			     id={`${that.props.idSchema.$id}_${idx}-header`}
 			     tabIndex={0}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}

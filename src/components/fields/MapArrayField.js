@@ -1223,7 +1223,7 @@ export class Map extends Component {
 	}
 
 	setOptions = (prevOptions, options) => {
-		const {className, style, hidden, singleton, emptyMode, draw, ..._options} = options; // eslint-disable-line no-unused-vars
+		const {className, style, hidden, singleton, emptyMode, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
 			style: prevStyle,  // eslint-disable-line no-unused-vars
@@ -1231,7 +1231,6 @@ export class Map extends Component {
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
 			emptyMode: prevEmptyMode,  // eslint-disable-line no-unused-vars
-			draw: prevDraw,  // eslint-disable-line no-unused-vars
 			..._prevOptions
 		} = prevOptions;
 	
@@ -1239,8 +1238,8 @@ export class Map extends Component {
 			Object.keys(_options).forEach(key => {
 				switch(key) {
 				case "draw": // More optimal way of updating draw data than setting the draw option
-					if (!deepEquals(draw, prevDraw)) {
-						this.map.updateDrawData(draw);
+					if (!deepEquals(_options.draw, _prevOptions.draw)) {
+						this.map.updateDrawData(_options.draw);
 					}
 					break;
 				case "rootElem": // deeqEquals on DOM node causes maximum call stack size exceeding.

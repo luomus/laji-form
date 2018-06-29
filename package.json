@@ -12,7 +12,8 @@
     "publish-to-npm": "npm version patch && git push && npm run build && npm publish",
     "push-to-git": "npm run lint && git push",
     "lint": "eslint -c .eslintrc.prod.json src playground",
-    "test": "HOST=0.0.0.0 PORT=8083 protractor protractor.conf.js"
+    "test": "HOST=0.0.0.0 PORT=8083 protractor protractor.conf.js",
+    "test:headless": "HOST=0.0.0.0 PORT=8083 protractor --capabilities.chromeOptions.args=\"headless\" protractor.conf.js"
   },
   "keywords": [
     "react-jsonschema-form",

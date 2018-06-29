@@ -49,6 +49,8 @@
         ],
         "react/no-find-dom-node": "off",
         "react/jsx-no-bind": 2,
+        "jasmine/no-spec-dupes": [1, "branch"],
+        "protractor/no-describe-selectors": "off",
         "no-console": "off"
     },
     "plugins": [

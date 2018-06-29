@@ -85,7 +85,7 @@ export function getButton(button, props = {}) {
 		}
 	};
 
-	const buttonId = `${id}_${fnName}`;
+	const buttonId = `${id}-${fnName}`;
 	return render ? render(onClick) : (
 		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
@@ -244,7 +244,8 @@ export default class ArrayFieldTemplate extends Component {
 
 		const items = props.items.map((item, i) => {
 			const deleteButton = (
-				<DeleteButton ref={getRefFor(i)}
+				<DeleteButton id={`${props.idSchema.$id}_${i}`}
+				              ref={getRefFor(i)}
 				              onClick={item.onDropIndexClick(item.index)}
 				              className="laji-form-field-template-buttons"
 				              confirm={confirmDelete}

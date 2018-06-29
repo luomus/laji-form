@@ -5,7 +5,7 @@ let lang = "en";
 
 /**
  * ApiClient "interface". Wraps the given apiClient as a singleton object.
- * Implementing class must implement fetch().
+ * Given apiClient must implement fetch().
  */
 export default class ApiClient {
 	constructor(apiClient, _lang) {
@@ -77,5 +77,4 @@ export default class ApiClient {
 		lang = _lang;
 		this.flushCache();
 	}
-
 }
