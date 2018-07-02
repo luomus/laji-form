@@ -242,12 +242,18 @@ describe("Trip report (JX.519)", () => {
 		it("can add additional fields", () => {
 			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isPresent()).toBe(false);
 
+			expect($additionalsButton.isDisplayed()).toBe(true);
+
 			$additionalsButton.click();
 
+			const $modal = $(".scope-field-modal");
 			const $additionalItem = $$(".scope-field-modal-item").first().all(by.css(".list-group-item")).get(1);
-			$additionalItem.click();
 
-			$(".scope-field-modal .close").click();
+			expect($modal.isDisplayed()).toBe(true);
+			expect($additionalItem.isDisplayed()).toBe(true);
+
+			$additionalItem.click();
+			$modal.element(by.css(".close")).click();
 
 			expect($additionalItem.isPresent()).toBe(false);
 			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isDisplayed()).toBe(true);
