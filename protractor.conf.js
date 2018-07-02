@@ -8,6 +8,8 @@ exports.config = {
 		}
 	},
 	onPrepare: function() {
-		    browser.ignoreSynchronization = true;
+		browser.ignoreSynchronization = true;
+		require("babel-register");
+		require("babel-polyfill");
 	}
 };

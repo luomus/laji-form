@@ -13,7 +13,8 @@
     "push-to-git": "npm run lint && git push",
     "lint": "eslint -c .eslintrc.prod.json src playground",
     "test": "HOST=0.0.0.0 PORT=8083 protractor protractor.conf.js",
-    "test:headless": "HOST=0.0.0.0 PORT=8083 protractor --capabilities.chromeOptions.args=\"headless\" protractor.conf.js"
+    "test:headless": "HOST=0.0.0.0 PORT=8083 protractor --capabilities.chromeOptions.args=\"headless\" protractor.conf.js",
+    "test:debug": "HOST=0.0.0.0 PORT=8083 node --inspect-brk node_modules/protractor/bin/protractor protractor.conf.js"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -60,6 +61,7 @@
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
+    "babel-register": "^6.26.0",
     "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.25.0",
     "es6-promise": "^4.0.5",
@@ -73,6 +75,7 @@
     "json-loader": "^0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
+    "protractor": "^5.3.2",
     "querystring": "^0.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",

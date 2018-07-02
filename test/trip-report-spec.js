@@ -1,10 +1,4 @@
-const {HOST, PORT} = process.env;
-
-const getLocatorForContextId = contextId => path =>  `#_laji-form_${contextId}_root_${path.replace(/\./g, "_")}`;
-const navigateToForm = formID => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true`);
-
-const lajiFormLocator = getLocatorForContextId(0);
-const lajiFormLocate = str => $(lajiFormLocator(str));
+import { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides } from "./test-utils.js";
 
 describe("Trip report (JX.519)", () => {
 
@@ -78,14 +72,10 @@ describe("Trip report (JX.519)", () => {
 
 		const $blockingLoader = $(".laji-form.blocking-loader");
 
-		function waitUntilBlockingLoaderHides() {
-			return browser.wait(protractor.ExpectedConditions.invisibilityOf($blockingLoader), 20000, "Geocoding timeout");
-		}
-
 		it("geocoding starts and finished after adding gathering", async done => {
 			expect($blockingLoader.isDisplayed()).toBe(true);
 
-			await waitUntilBlockingLoaderHides();
+			await waitUntilBlockingLoaderHides(2000);
 
 			expect($blockingLoader.isDisplayed()).toBe(false);
 			done();
@@ -239,14 +229,17 @@ describe("Trip report (JX.519)", () => {
 			expect($additionalsButton.isDisplayed()).toBe(true);
 		});
 
-		it("can add additional fields", () => {
+		it("can add additional fields", async done => {
+			const $modal = $(".scope-field-modal");
+
 			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isPresent()).toBe(false);
 
 			expect($additionalsButton.isDisplayed()).toBe(true);
 
 			$additionalsButton.click();
 
-			const $modal = $(".scope-field-modal");
+			await browser.wait(protractor.ExpectedConditions.visibilityOf($modal), 5000, "Code reading timeout");
+
 			const $additionalItem = $$(".scope-field-modal-item").first().all(by.css(".list-group-item")).get(1);
 
 			expect($modal.isDisplayed()).toBe(true);
@@ -257,6 +250,7 @@ describe("Trip report (JX.519)", () => {
 
 			expect($additionalItem.isPresent()).toBe(false);
 			expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isDisplayed()).toBe(true);
+			done();
 		});
 	});
 });

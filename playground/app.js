@@ -49,9 +49,7 @@ if (query.id !== undefined && query.local !== "true") {
 		return response.json();
 	});
 } else {
-	promise = new Promise(resolve => {
-		resolve(forms[query.id]);
-	});
+	promise = Promise.resolve(query.id ? forms[query.id] : schemas);
 }
 
 promise.then(data => {
@@ -69,7 +67,7 @@ promise.then(data => {
 				}
 			})(),
 		uiSchemaContext: {
-			...data.uiSchemaContext,
+			...(data.uiSchemaContext || {}),
 			creator: properties.userId
 		},
 		onSubmit,
