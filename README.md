@@ -68,7 +68,7 @@ Styles can be found at  ```dist/styles.css```.
 
 Run `npm install` to install the dependencies and `npm start` to start the app.
 
-Before running, you'll need to configure your personal apitest.laji.fi access token. Get the key to you email:
+Before running, you'll need to configure your personal apitest.laji.fi access token. Get the key to your email:
 
 ```
 curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{\
@@ -88,4 +88,23 @@ Try to keep the code style consistent - ```npm run lint``` should pass without e
 
 ## Developing different forms ##
 
-You can view remote forms by changing the `SCHEMA_ID` variable in `src/app`. Set it to `undefined` to use the form data from `playground/schemas.json`.
+Start the server and navigate to http://localhost:8083?id={form_id}
+
+If you want to use local schemas that the tests use, use uri param `local=true`.
+
+## Tests ##
+
+Install protractor with: 
+
+```
+npm i -g protractor
+webdriver-manager update
+```
+
+The playground server and the Selenium server must be running before running the tests. Start the Selenium server with:
+
+```
+webdriver-manager start
+```
+
+Then run the tests with `npm run test:headless`. You can see the tests running in a browser with `npm test`.

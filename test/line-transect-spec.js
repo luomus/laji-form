@@ -8,7 +8,6 @@ describe("Line transect (MHL.1)", () => {
 	const $unit = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon");
 
 	it("shorthand unit is shown", () => {
-		debug;
 		expect($shorthand.isDisplayed()).toBe(true);
 	});
 	

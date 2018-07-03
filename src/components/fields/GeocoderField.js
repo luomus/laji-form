@@ -240,14 +240,15 @@ export default class GeocoderField extends Component {
 		};
 
 		const fetchForeign = () => {
+			if (!props.formContext.googleApiKey) throw new Error("Google api key not provided");
 			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
-				?latlng=${lat},${lng}\
-				&key=${props.formContext.googleApiKey}\
-				&language=en\
-				&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
-			).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
-				afterFetch(callback);
-			});
+					?latlng=${lat},${lng}\
+					&key=${props.formContext.googleApiKey}\
+					&language=en\
+					&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
+				).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
+					afterFetch(callback);
+				});
 		};
 
 		mainContext.pushBlockingLoader();

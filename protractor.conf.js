@@ -5,10 +5,13 @@ exports.config = {
 		browserName: "chrome",
 		chromeOptions: {
 			args: ["--disable-gpu", "--window-size=800x600"]
-		}
+		},
+		shardTestFiles: true,
+		maxInstances: 4
+
 	},
 	onPrepare: function() {
-		browser.ignoreSynchronization = true;
+		browser.waitForAngularEnabled(false);
 		require("babel-register");
 		require("babel-polyfill");
 	}

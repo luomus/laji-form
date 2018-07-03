@@ -1,5 +1,7 @@
 import { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides } from "./test-utils.js";
 
+import { googleApiKey } from "../properties.json"
+
 describe("Trip report (JX.519)", () => {
 
 	navigateToForm("JX.519");
@@ -72,25 +74,33 @@ describe("Trip report (JX.519)", () => {
 
 		const $blockingLoader = $(".laji-form.blocking-loader");
 
-		it("geocoding starts and finished after adding gathering", async done => {
-			expect($blockingLoader.isDisplayed()).toBe(true);
+		describe("geocoding", () => {
 
-			await waitUntilBlockingLoaderHides(2000);
+			if (!googleApiKey) {
+				pending("Google API key missing");
+			}
 
-			expect($blockingLoader.isDisplayed()).toBe(false);
-			done();
-		});
+			it("geocoding starts and finished after adding gathering", async done => {
+				expect($blockingLoader.isDisplayed()).toBe(true);
 
-		it("contains country", () => {
-			expect(lajiFormLocate("gatherings.0.country").isDisplayed()).toBe(true);
-		});
+				await waitUntilBlockingLoaderHides(6000);
 
-		it("contains biologicalProvince", () => {
-			expect(lajiFormLocate("gatherings.0.administrativeProvince").isDisplayed()).toBe(true);
-		});
+				expect($blockingLoader.isDisplayed()).toBe(false);
+				done();
+			});
 
-		it("contains municipality", () => {
-			expect(lajiFormLocate("gatherings.0.municipality").isDisplayed()).toBe(true);
+			it("contains country", () => {
+				expect(lajiFormLocate("gatherings.0.country").isDisplayed()).toBe(true);
+			});
+
+			it("contains biologicalProvince", () => {
+				expect(lajiFormLocate("gatherings.0.administrativeProvince").isDisplayed()).toBe(true);
+			});
+
+			it("contains municipality", () => {
+				expect(lajiFormLocate("gatherings.0.municipality").isDisplayed()).toBe(true);
+			});
+
 		});
 
 		it("contains locality", () => {
@@ -122,9 +132,9 @@ describe("Trip report (JX.519)", () => {
 		it("can add additional fields", () => {
 			$additionalsButton.click();
 			const $$additionalListItems = $$(".dropdown.open li a");
-			$$additionalListItems.first().click();
+			$$additionalListItems.last().click();
 
-			expect(lajiFormLocate("gatherings.0.biologicalProvince").isDisplayed()).toBe(true);
+			expect(lajiFormLocate("gatherings.0.taxonCensus").isDisplayed()).toBe(true);
 
 			$additionalsButton.click();
 
