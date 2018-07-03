@@ -401,7 +401,7 @@ class AccordionArrayFieldTemplate extends Component {
 				that={that}
 				idx={idx}
 				wrapperClassName="panel-title"
-				className="laji-form-clickable-panel-header laji-form-accordion-header">
+				className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
 				<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
 				              ref={this.setDeleteButtonRef(idx)}
 											className="pull-right"
@@ -417,7 +417,7 @@ class AccordionArrayFieldTemplate extends Component {
 				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
-						       className="laji-form-clickable-panel"
+						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
 							<Panel.Heading>{getHeader(idx)}</Panel.Heading>
@@ -455,9 +455,9 @@ class PagerArrayFieldTemplate extends Component {
 
 		return (
 			<div className="laji-form-single-active-array">
-				<Panel className="laji-form-clickable-panel">
+				<Panel className="laji-form-panel">
 					<Panel.Heading>
-						<div className="laji-form-clickable-panel-header laji-form-accordion-header">
+						<div className="laji-form-panel-header laji-form-accordion-header">
 							<Pager>
 								<Pager.Item previous 
 														href="#"
