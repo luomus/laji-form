@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "0.0.464",
+  "version": "0.0.467",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/app.js",
   "scripts": {
@@ -29,8 +29,8 @@
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
     "immutability-helper": "^2.1.2",
-    "laji-map": "^1.0.376",
-    "laji-validate": "0.0.65",
+    "laji-map": "^1.0.381",
+    "laji-validate": "0.0.66",
     "moment": "*",
     "prop-types": "^15.5.8",
     "react-addons-css-transition-group": "*",

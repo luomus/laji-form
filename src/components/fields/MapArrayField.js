@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -454,6 +454,29 @@ class LineTransectMapArrayField extends Component {
 				formData = update(formData, {$splice: [[e.idx, 1]]});
 				break;
 			}
+			case "merge": {
+				formDataChanged = true;
+				const [first, second] = e.idxs;
+				formData = update(formData, {[first]: {units: {$set: [
+					...formData[first].units,
+					...formData[second].units
+				]}}});
+				formData = update(formData, {$splice: [[second, 1]]});
+				break;
+			}
+			case "move": {
+				formDataChanged = true;
+				const {idx, target} = e;
+
+				let splices = [
+						[idx, 1],
+						[target, 0, formData[idx]],
+				];
+				 // Splices must be executed in reverse order to keep idxs correct.
+				if (target > idx) splices = splices.reverse();
+				formData = update(formData, {$splice: splices});
+				break;
+			}
 			case "active": {
 				state.activeIdx = e.idx;
 			}
@@ -514,6 +537,7 @@ class LineTransectMapArrayField extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
+		return;
 		if (!this.hasLineTransectFeature(prevProps) || !this.hasLineTransectFeature(this.props)) return;
 		for (let lineIdx = 0; lineIdx < this.props.formData.length; lineIdx++) {
 			this.map._updateLTStyleForLineIdx(lineIdx);
@@ -841,8 +865,9 @@ class _MapArrayField extends ComposedComponent {
 			})).filter(button => button)
 			: undefined;
 
-		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
-			errorSchema[activeIdx][geometryField].__errors : null;
+		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField])
+			? errorSchema[activeIdx][geometryField].__errors.map(formatErrorMessage)
+			: null;
 
 		const mapPropsToPass = {
 			contextId: this.props.formContext.contextId,
