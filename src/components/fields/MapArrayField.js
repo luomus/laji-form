@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import LajiMap from "laji-map/lib/map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -865,8 +865,9 @@ class _MapArrayField extends ComposedComponent {
 			})).filter(button => button)
 			: undefined;
 
-		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField]) ?
-			errorSchema[activeIdx][geometryField].__errors : null;
+		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField])
+			? errorSchema[activeIdx][geometryField].__errors.map(formatErrorMessage)
+			: null;
 
 		const mapPropsToPass = {
 			contextId: this.props.formContext.contextId,
