@@ -63,7 +63,15 @@ promise.then(data => {
 				case "MHL.1":
 					return {...ownerFilledFormData, gatherings: lineTransectFormData.gatherings};
 				default:
-					return ownerFilledFormData;
+						return data.prepopulatedDocument
+							? {
+								...data.prepopulatedDocument,
+								gatheringEvent: {
+									...(data.prepopulatedDocument.gatheringEvent || {}),
+									...ownerFilledFormData.gatheringEvent
+								}
+							}
+							: ownerFilledFormData;
 				}
 			})(),
 		uiSchemaContext: {
