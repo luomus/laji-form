@@ -159,7 +159,7 @@ const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
 export class Affix extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {affixState: false};
+		this.state = this.getState(props);
 	}
 
 	componentDidMount() {
@@ -172,33 +172,45 @@ export class Affix extends Component {
 		window.removeEventListener("resize", this.onResize);
 	}
 
-	getState = () => {
-		const container = this.props.getContainer();
+	getState = (props) => {
+		const container = props.getContainer();
 		if (!container) return;
 
-		const offset = (this.props.topOffset || 0);
+		const {topOffset = 0} = props;
 
 		const containerTop = container.getBoundingClientRect().top;
 		const containerHeight = container.offsetHeight;
 		const containerVisibleHeight = containerHeight + containerTop;
 		const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
-		const scrolled = containerTop < offset;
+		const wrapperScrollHeight = findDOMNode(this.refs.wrapper).scrollHeight;
+		const scrolled = containerTop < topOffset;
 
 		let affixState = TOP;
-		if (scrolled && containerVisibleHeight < wrapperHeight + offset) affixState = BOTTOM;
+		if (scrolled && containerVisibleHeight < wrapperScrollHeight + topOffset) affixState = BOTTOM;
 		else if (scrolled) affixState = AFFIXED;
 
 		const wrapperNode = findDOMNode(this.refs.wrapper);
 		const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
-		const top = affixState === BOTTOM ? (containerHeight - wrapperHeight) : offset;
-		return {affixState, width, top};
+		const top = topOffset;
+
+		const affixHeight = affixState === BOTTOM
+			? Math.max(containerVisibleHeight - topOffset, 0)
+			: undefined;
+
+		const fixerHeight = affixState === AFFIXED
+			? Math.max(
+					Math.min(
+						wrapperHeight + Math.min(containerTop, 0),
+						wrapperHeight
+					),
+					0
+				)
+			: 0;
+		return {affixState, width, top, affixHeight, fixerHeight};
 	}
 
 	_onScroll = () => {
-		const state = this.getState();
-		if (state && state.affixState !== this.state.affixState) {
-			this.setState(state);
-		}
+		this.setState(this.getState(this.props));
 	}
 
 	onScroll = () => {
@@ -211,7 +223,7 @@ export class Affix extends Component {
 
 		const state = {width};
 
-		const _state = this.getState();
+		const _state = this.getState(this.props);
 		if (_state.affixState !== TOP) state.top = _state.top;
 
 		this.setState(state);
@@ -223,16 +235,19 @@ export class Affix extends Component {
 
 	render() {
 		const {children, style: containerStyle} = this.props;
-		const {top, width, affixState} = this.state;
+		const {top, width, affixState, affixHeight, fixerHeight} = this.state || {};
 		const style = {};
+		const fixerStyle = {position: "relative", zIndex: -1, height: fixerHeight};
 		style.position = "relative";
-		if (affixState === AFFIXED) {
+		if (affixState === BOTTOM || affixState === AFFIXED) {
 			style.position = "fixed";
 			style.width = width;
 			style.top = top;
-		}
-		else if (affixState === BOTTOM) {
-			style.top = top;
+			style.zIndex = 10000;
+			style.height = affixHeight;
+			if (affixState === BOTTOM) {
+				style.overflow = "hidden";
+			}
 		}
 		return (
 			<div style={containerStyle}>
@@ -240,6 +255,7 @@ export class Affix extends Component {
 				<div ref="wrapper" style={style} className={this.props.className}>
 					{children}
 				</div>
+				<div style={fixerStyle} />
 			</div>
 		);
 	}
@@ -346,21 +362,21 @@ export class StretchAffix extends Component {
 			if (horizontallyAligned) {
 				top = topOffset;
 
-				affixHeight = affixState !== BOTTOM ?
-					viewportHeight
+				affixHeight = affixState !== BOTTOM
+					? viewportHeight
 						- containerTop
 						- Math.max(top - containerTop, 0)
-						- bottomOffset :
-					Math.max(
+						- bottomOffset
+					: Math.max(
 						containerVisibleHeight
 							- Math.max(bottomOffset - containerBottom, 0)
 							- topOffset,
 						0
 					);
 
-				fixerHeight = affixState !== TOP ?
-					"100vh" :
-				Math.max(viewportHeight - affixHeight, 0);
+				fixerHeight = affixState !== TOP
+					? "100vh"
+					: Math.max(viewportHeight - affixHeight, 0);
 			} else {
 				affixHeight = this.props.minHeight;
 				fixerHeight = 0;
@@ -382,10 +398,6 @@ export class StretchAffix extends Component {
 		case TOP:
 			break;
 		case AFFIXED:
-			if (horizontallyAligned) style.position = "fixed";
-			style.width = width;
-			style.top = top;
-			break;
 		case BOTTOM:
 			if (horizontallyAligned) style.position = "fixed";
 			style.width = width;

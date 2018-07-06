@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
-import { DeleteButton, Label, Help, TooltipComponent, Button } from "../components";
+import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
@@ -403,7 +403,7 @@ class AccordionArrayFieldTemplate extends Component {
 				wrapperClassName="panel-title"
 				className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
 				<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
-				              ref={this.setDeleteButtonRef(idx)}
+											ref={this.setDeleteButtonRef(idx)}
 											className="pull-right"
 											confirm={confirmDelete}
 											translations={translations}
@@ -420,7 +420,9 @@ class AccordionArrayFieldTemplate extends Component {
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-							<Panel.Heading>{getHeader(idx)}</Panel.Heading>
+							<Panel.Heading>
+								{getHeader(idx)}
+							</Panel.Heading>
 							{idx === activeIdx ? (
 								<Panel.Body>
 									{item.children}
@@ -440,38 +442,59 @@ class AccordionArrayFieldTemplate extends Component {
 
 @handlesButtonsAndFocus
 class PagerArrayFieldTemplate extends Component {
+
+	setContainerRef = (elem) => {
+		this.containerRef = elem;
+	}
+
+	getContainerRef = () => this.containerRef
+
 	render() {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
-		const {buttons} = getUiOptions(arrayTemplateFieldProps.uiSchema);
+		const {buttons, affixed} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
-		const getHeader = idx => <AccordionHeader 
-			that={that}
-			idx={idx}
-			className="panel-title"
-			canHaveUndefinedIdx={false}
-		/>;
+		let header = (
+			<div className="laji-form-panel-header laji-form-accordion-header">
+				<Pager>
+					<Pager.Item previous 
+											href="#"
+											disabled={activeIdx <= 0 || activeIdx === undefined}
+											onClick={this.navigatePrev}>
+						&larr; {translations.Previous}</Pager.Item>
+					{activeIdx !== undefined
+							? (
+								<AccordionHeader 
+									that={that}
+									idx={activeIdx}
+									className="panel-title"
+									canHaveUndefinedIdx={false}
+								/> 
+							)
+							: null}
+					<Pager.Item next 
+											href="#"
+											disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
+											onClick={this.navigateNext}>
+						{translations.Next}  &rarr;</Pager.Item>
+				</Pager>
+			</div>
+		);
+
+		if (affixed) {
+			header = (
+				<Affix getContainer={this.getContainerRef} topOffset={this.props.formContext.topOffset}>
+					{header}
+				</Affix>
+			);
+		}
 
 		return (
-			<div className="laji-form-single-active-array">
+			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
 				<Panel className="laji-form-panel">
 					<Panel.Heading>
-						<div className="laji-form-panel-header laji-form-accordion-header">
-							<Pager>
-								<Pager.Item previous 
-														href="#"
-														disabled={activeIdx <= 0 || activeIdx === undefined}
-														onClick={this.navigatePrev}>
-									&larr; {translations.Previous}</Pager.Item>
-								{activeIdx !== undefined ? getHeader(activeIdx) : null}
-								<Pager.Item next 
-														href="#"
-														disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
-														onClick={this.navigateNext}>
-									{translations.Next}  &rarr;</Pager.Item>
-							</Pager>
-						</div>
+							{header}
 					</Panel.Heading>
 					<Panel.Body>
 						<div key={activeIdx}>
