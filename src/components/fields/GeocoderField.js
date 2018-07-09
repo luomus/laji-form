@@ -240,7 +240,8 @@ export default class GeocoderField extends Component {
 		};
 
 		const fetchForeign = () => {
-			if (!props.formContext.googleApiKey) throw new Error("Google api key not provided");
+			if (!props.formContext.googleApiKey) return afterFetch(callback);
+
 			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
 					?latlng=${lat},${lng}\
 					&key=${props.formContext.googleApiKey}\
