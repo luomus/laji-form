@@ -19,6 +19,7 @@ export default class GeocoderField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
+		this.componentDidUpdate();
 	}
 
 	componentWillReceiveProps(props) {
@@ -43,9 +44,19 @@ export default class GeocoderField extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		const {updateOnlyEmpty, button, fields} = this.getOptions(this.props);
+		const hasData = fields.some(field => !isEmptyString(this.props.formData[field]));
+		const geometry = this.getGeometry(this.props);
+		const geometriesEqual = prevProps && equals(this.getGeometry(prevProps), geometry);
+		if ((geometry && geometry.geometries && geometry.geometries.length === 0 && !geometriesEqual) || (!updateOnlyEmpty || !hasData) && ((this.state.loading === undefined && !this.state && geometry) || !geometriesEqual)) {
+			button ? this.onButtonClick()(this.props) : this.update(this.props);
+		}
+	}
+
 	getStateFromProps(props, loading) {
 		const state = {loading};
-		const {updateOnlyEmpty, button, fields} = this.getOptions(props);
+		const {button} = this.getOptions(props);
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		if (button) {
 			state.uiSchema = {
@@ -60,13 +71,6 @@ export default class GeocoderField extends Component {
 			};
 		} else {
 			state.uiSchema = innerUiSchema;
-		}
-
-		const hasData = fields.some(field => !isEmptyString(props.formData[field]));
-		const geometry = this.getGeometry(props);
-		const geometriesEqual = equals(this.getGeometry(this.props), geometry);
-		if ((geometry && geometry.geometries && geometry.geometries.length === 0 && !geometriesEqual) || (!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !geometriesEqual)) {
-			button ? this.onButtonClick()(props) : this.update(props);
 		}
 
 		return state;
