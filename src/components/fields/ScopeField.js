@@ -382,11 +382,11 @@ export default class ScopeField extends Component {
 			} else {
 				if (this._context) additionalsToAdd = this._context;
 			}
-			Object.keys(additionalsToAdd).forEach(field => {
-				if (propertyHasData(field, props.formData) && !isDefaultData(props.formData[field], props.schema.properties[field], props.registry.definitions)) {
-					delete additionalsToAdd[field];
-				}
-			});
+			//Object.keys(additionalsToAdd).forEach(field => {
+			//	if (propertyHasData(field, props.formData) && !isDefaultData(props.formData[field], props.schema.properties[field], props.registry.definitions)) {
+			//		delete additionalsToAdd[field];
+			//	}
+			//});
 			additionalFields = {...additionalFields, ...additionalsToAdd};
 		}
 		state.additionalFields = additionalFields;
