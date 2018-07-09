@@ -296,9 +296,13 @@ export default class LajiForm extends Component {
 				translations,
 				lang: props.lang,
 				uiSchemaContext: props.uiSchemaContext,
-				settings: this.state && this.state.formContext
-					? this.state.formContext.settings
-					: props.settings,
+				settings: JSON.parse(JSON.stringify(
+					(
+					this.state && this.state.formContext
+						? this.state.formContext.settings
+						: props.settings
+					) || {}
+				)),
 				contextId: this._id,
 				getFormRef: this.getFormRef,
 				topOffset: props.topOffset,
@@ -650,7 +654,7 @@ export default class LajiForm extends Component {
 	onSettingsChange = () => {
 		const settings = this.getSettings();
 		if (!equals(this.state.formContext.settings, settings)) {
-			this.setState({formContext: {...this.state.formContext, settings}});
+			this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
 			if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
 		}
 	}
