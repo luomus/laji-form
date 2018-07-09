@@ -32,7 +32,6 @@ export default class FieldTemplate extends Component {
 		}
 	}
 
-
 	receiveId = (id) => {
 		this.setState({id});
 	}
@@ -41,7 +40,7 @@ export default class FieldTemplate extends Component {
 		if (getUiOptions(this.props.uiSchema).reserveId === false) {
 			return;
 		}
-		this.props.formContext.releaseId(this.props.id);
+		this.props.formContext.releaseId(this.props.id, this.receiveId);
 	}
 
 	render() {
