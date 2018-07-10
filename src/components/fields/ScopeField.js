@@ -12,6 +12,7 @@ import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -102,6 +103,11 @@ const buttonSettings = {
 									close();
 									break;
 								case "delete":
+									that.props.onChange(update(
+										that.props.formData,
+										{$merge: {[geometryField]: getDefaultFormState(that.props.schema.properties[geometryField], undefined, that.props.registry.definitions)}}
+									))
+									break;
 								case "edit":
 									that.props.onChange(update(
 										that.props.formData,
