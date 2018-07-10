@@ -11,6 +11,7 @@ import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
+import { computeUiSchema } from "./ConditionalUiSchemaField";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -227,24 +228,26 @@ const buttonSettings = {
  * additionalsGroupsTranslator: one of scopeFieldsSettings translator
  * additionalsPersistenceKey: instances with same persistence id use the same additional fields
  * additionalsPersistenceField: form data property value for more fine grained persistence behaviour
- *  uiSchema: <uiSchema> (ui schema for inner schema)
- *  fields: [<string>] (fields that are always shown)
- *  fieldScopes: {
- *   fieldName: {
- *     fieldValue: {
- *       fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
- *       additionalFields: [<string>] (if grouping is enabled, additional fields are shown only if selected from the list)
- *       refs: [<string>] (root definitions that are merged recursively to this fieldScope)
- *       uiSchema: <uiSchema> (merged recursively to inner uiSchema)
- *       fieldScopes: {fieldName: <fieldScope>, fieldName2 ...}
- *     },
- *     fieldValue2, ...
- *   }
- *  },
- *  definitions: {
- *    defName: <fieldScope>,
- *    defname2: ...
- *  },
+ * uiSchema: <uiSchema> (ui schema for inner schema)
+ * fields: [<string>] (fields that are always shown)
+ * fieldScopes: {
+ *  fieldName: {
+ *    fieldValue: {
+ *      fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
+ *      additionalFields: [<string>] (if grouping is enabled, additional fields are shown only if selected from the list)
+ *      excludeFields: [<string>] (exclude fields from showing)
+ *      refs: [<string>] (root definitions that are merged recursively to this fieldScope)
+ *      uiSchema: <uiSchema> (merged recursively to inner uiSchema)
+ *      uiSchemaMergeType: See documentation for ConditionalUiSchemaField
+ *      fieldScopes: {fieldName: <fieldScope>, fieldName2 ...}
+ *    },
+ *    fieldValue2, ...
+ *  }
+ * },
+ * definitions: {
+ *   defName: <fieldScope>,
+ *   defname2: ...
+ * }
  * }
  *
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
@@ -345,7 +348,7 @@ export default class ScopeField extends Component {
 				: getSchemaElementById(this.props.formContext.contextId, this.props.idSchema.$id);
 
 			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize", undefined, () => {
-				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset)
+				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
 			});
 		}
 	}
@@ -424,6 +427,12 @@ export default class ScopeField extends Component {
 				});
 			}
 
+			if (fieldScope.excludeFields) {
+				fieldScope.excludeFields.forEach(fieldName => {
+					delete fieldsToShow[fieldName];
+				});
+			}
+
 			if (fieldScope.fields) fieldScope.fields.forEach((fieldName) => {
 				fieldsToShow[fieldName] = schema.properties[fieldName];
 				if (additionalFields[fieldName]) {
@@ -432,7 +441,8 @@ export default class ScopeField extends Component {
 			});
 
 			if (fieldScope.uiSchema) {
-				generatedUiSchema = merge(generatedUiSchema, fieldScope.uiSchema);
+				const {uiSchemaMergeType = "merge"} = fieldScope;
+				generatedUiSchema = computeUiSchema(generatedUiSchema, {type: uiSchemaMergeType, uiSchema: fieldScope.uiSchema});
 			}
 
 			if (fieldScope.fieldScopes) {

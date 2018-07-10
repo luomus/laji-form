@@ -201,10 +201,13 @@ const lineTransectGeometries = lineTransect.geometry.coordinates.map(coordinates
 
 const lajiForm = new LajiForm({
 	...(SCHEMA_ID === undefined ? schemas : {
-		uiSchemaContext: schemas.uiSchemaContext,
 		settings: schemas.settings,
 		formData: schemas.formData,
 	}),
+	uiSchemaContext: {
+		...schemas.uiSchemaContext,
+		creator: properties.userId
+	},
 	//formData: {gatheringEvent: {leg: ["MA.308"]}},
 	//formData: {gatheringEvent: {leg: ["MA.308"]}, gatherings: lineTransectGeometries},
 	onSubmit,
