@@ -112,8 +112,10 @@ export default class GeocoderField extends Component {
 		const {uiSchema, formData} = props;
 		const {geometryField = "geometry"} = getUiOptions(uiSchema);
 		let geometry = formData[geometryField];
-		if ("type" in geometry && geometry.type !== "GeometryCollection") {
-			geometry = {type:  "GeometryCollection", geometries: [geometry]};
+		if (!geometry.type) {
+			geometry = {type: "GeometryCollection", geometries: []};
+		} else if ("type" in geometry && geometry.type !== "GeometryCollection") {
+			geometry = {type: "GeometryCollection", geometries: [geometry]};
 		}
 		if (formData.units) formData.units.forEach(({unitGathering}) => {
 			if (unitGathering && unitGathering.geometry  && unitGathering.geometry.coordinates) {

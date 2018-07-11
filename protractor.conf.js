@@ -14,5 +14,10 @@ exports.config = {
 		browser.waitForAngularEnabled(false);
 		require("babel-register");
 		require("babel-polyfill");
+	},
+	afterEach: function() {
+		browser.manage().logs().get("browser").then((browserLog) => {
+			expect(browserLog.length).toEqual(0);
+		});
 	}
 };

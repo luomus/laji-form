@@ -698,6 +698,13 @@ class TableArrayFieldTemplate extends Component {
 
 		const title = that.state.getTitle(that.state.activeIdx);
 
+		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx)
+			: undefined;
+		const onMouseLeave = (idx) => that.props.idSchema.$id.match(/units$/)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx)
+			: undefined;
+
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
 				<Title title={title} label={title} className={titleClassName} titleFormatters={titleFormatters} formData={formData} />
@@ -718,8 +725,24 @@ class TableArrayFieldTemplate extends Component {
 									let className = "";
 									if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
-										<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0} id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined} ref={setItemRef(idx)} style={idx === activeIdx ? this.state.activeTrStyle : undefined}>
-											{[...cols.map(col => <td key={col}>{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}</td>), idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx)}</td>]}
+										<tr key={idx} 
+										    onClick={changeActive(idx)}
+										    className={className}
+										    tabIndex={0}
+										    id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}
+										    ref={setItemRef(idx)}
+										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}
+												onMouseEnter={onMouseEnter(idx)}
+										    onMouseLeave={onMouseLeave(idx)}
+										>
+											{[
+												...cols.map(col => (
+													<td key={col}>
+														{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}
+													</td>
+												)),
+												idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx)}</td>
+											]}
 										</tr>
 									];
 								})}

@@ -44,6 +44,8 @@ describe("Trip report (JX.519)", () => {
 		});
 	});
 
+	const $gatheringAdd = $("#root_gatherings-add");
+
 	describe("gatherings", () => {
 		it("is displayed", () => {
 			expect(lajiFormLocate("gatherings").isDisplayed()).toBe(true);
@@ -142,7 +144,7 @@ describe("Trip report (JX.519)", () => {
 		});
 
 		it("add button works", async () => {
-			$("#root_gatherings-add").click();
+			$gatheringAdd.click();
 
 			expect(lajiFormLocate("gatherings.1").isDisplayed()).toBe(true);
 
@@ -260,8 +262,8 @@ describe("Trip report (JX.519)", () => {
 			done();
 		});
 
-		const $getLocationButtonFor = idx => $(`#root_gatherings_0_units_${idx}-location`);
-		const $locationButton = $getLocationButtonFor(0);
+		const $getLocationButtonFor = (gatheringIdx, unitIdx) => $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-location`);
+		const $locationButton = $getLocationButtonFor(0, 0);
 		const $locationModal = $(".map-dialog");
 		const $locationModalMap = $locationModal.$(".laji-map");
 
@@ -269,8 +271,8 @@ describe("Trip report (JX.519)", () => {
 			expect($locationButton.isDisplayed()).toBe(true);
 		});
 
-		const clickLocationButtonAndAddLocation = async (idx) => {
-			$getLocationButtonFor(idx).click();
+		async function clickLocationButtonAndAddLocation(gatheringIdx, unitIdx) {
+			$getLocationButtonFor(gatheringIdx, unitIdx).click();
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($locationModal), 5000, "Map modal waiting timeout");
 
@@ -281,11 +283,10 @@ describe("Trip report (JX.519)", () => {
 				.mouseMove($locationModalMap, {x: 100, y: 100})
 				.click()
 				.perform();
-
 		}
 
 		it("can add location", async done => {
-			await clickLocationButtonAndAddLocation(0);
+			await clickLocationButtonAndAddLocation(0, 0);
 
 			expect($gatheringsMap.$$(".vector-marker.leaflet-interactive").count()).toBe(2);
 			done();
@@ -314,20 +315,39 @@ describe("Trip report (JX.519)", () => {
 				.mouseMove($locationButton)
 				.perform();
 
-			browser.sleep(1000);
-
 			const unitFillAfterLocationHover = await $$gatheringPaths.last().getAttribute("style");
 
 			expect(unitFill).not.toBe(unitFillAfterLocationHover);
 			done();
 		});
 
+		it("hovering unit table row changes gathering map unit color", async done => {
+			$unitAdd.click();
+
+			const unitFill = await $$gatheringPaths.last().getAttribute("style");
+
+			browser.actions()
+				.mouseMove(lajiFormLocate("gatherings.0.units.0"))
+				.perform();
+
+			const unitFillAfterLocationHover = await $$gatheringPaths.last().getAttribute("style");
+
+			expect(unitFill).not.toBe(unitFillAfterLocationHover);
+
+			$("#root_gatherings_0_units_1-delete").click();
+			$("#root_gatherings_0_units_1-delete-confirm-yes").click();
+
+			done();
+		});
+
+		const $locationPeeker = $("#root_gatherings_0_units_0-location-peeker");
+
 		it("hovering location button displays location peeking map", () => {
 			browser.actions()
 				.mouseMove($locationButton)
 				.perform();
 
-			expect($("#root_gatherings_0_units_0-location-peeker").isDisplayed()).toBe(true);
+			expect($locationPeeker.isDisplayed()).toBe(true);
 		});
 
 		it("location peeker shows data", async done => {
@@ -335,12 +355,15 @@ describe("Trip report (JX.519)", () => {
 				.mouseMove($locationButton)
 				.perform();
 
-			const firstFill = await $$gatheringPaths.first().getAttribute("fill");
-			const secondFill = await $$gatheringPaths.last().getAttribute("fill");
+			await browser.wait(protractor.ExpectedConditions.visibilityOf($locationPeeker.$(".leaflet-container")), 5000, "Map peeker waiting timeout");
 
 			const $$peekerPaths = $$("#root_gatherings_0_units_0-location-peeker .vector-marker path");
 
 			expect($$peekerPaths.count()).not.toBe(0);
+
+			const firstFill = await $$peekerPaths.first().getAttribute("fill");
+			const secondFill = await $$peekerPaths.last().getAttribute("fill");
+
 			expect(firstFill).not.toBe(secondFill);
 
 			done();
@@ -348,19 +371,32 @@ describe("Trip report (JX.519)", () => {
 
 		it("location peeker doesn't highlight wrong unit on gatherings map after copying a unit when there is a unit with a location below", async done => {
 			$unitAdd.click();
-			await clickLocationButtonAndAddLocation(1);
+			await clickLocationButtonAndAddLocation(0, 1);
 			lajiFormLocate("gatherings.0.units.0").click();
 			$("#root_gatherings_0_units-copy").click();
 
 			const unitFill = await $$gatheringPaths.last().getAttribute("style");
 
 			browser.actions()
-				.mouseMove($getLocationButtonFor(1))
+				.mouseMove($getLocationButtonFor(0, 1))
 				.perform();
 
 			const unitFillAfterLocationHover = await $$gatheringPaths.last().getAttribute("style");
 
 			expect(unitFill).toBe(unitFillAfterLocationHover);
+
+			done();
+		});
+
+		it("can have location even if gathering doesn't have", async done => {
+			$gatheringAdd.click();
+			await clickLocationButtonAndAddLocation(1, 0);
+			await waitUntilBlockingLoaderHides(6000);
+
+			expect($$gatheringPaths.count()).toBe(1);
+
+			$("#root_gatherings_1-delete").click();
+			$("#root_gatherings_1-delete-confirm-yes").click();
 
 			done();
 		});
