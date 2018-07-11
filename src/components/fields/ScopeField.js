@@ -138,30 +138,18 @@ const buttonSettings = {
 				}
 			});
 
-
 			function close() {
 				if (triggerLayer) triggerLayer.disable();
 				that.setState({modalMap: undefined});
 			}
 		}
 
-		let layer = undefined;
-		function onMouseEnter() {
-			const {map} = mapContext;
-			layer = map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
-			if (!layer) return;
-			map.setLayerStyle(layer, {color: "#75CEFA"});
-		}
-
-		function onMouseLeave() {
-			const {map} = mapContext;
-			layer = map && map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
-			if (active || !layer) return;
-			map.setLayerStyle(layer, {color: "#55AEFA"});
-		}
+		const onMouseEnter = () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
+		const onMouseLeave = () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
 
 		const button = (
 			<GlyphButton
+				id={`${that.props.idSchema.$id}-location`}
 				bsStyle={hasCoordinates ? "primary" : "default"}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
@@ -171,11 +159,11 @@ const buttonSettings = {
 
 		const {translations} = that.props.formContext;
 		const overlay = hasCoordinates ? (
-			<Popover id={`${id}-$tooltip-${glyph}`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
+			<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
 				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
 			</Popover>
 		) : (
-			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
+			<Tooltip id={`${id}-location-peeker`}>{label}</Tooltip>
 		);
 
 		const onEntered = () => {

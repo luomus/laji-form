@@ -208,6 +208,38 @@ class UnitsMapArrayField extends Component {
 		this.afterActiveChange = DefaultMapArrayField.prototype.afterActiveChange.bind(this);
 	}
 
+	componentDidMount() {
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlightUnit", this.startHighlightUnit);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlightUnit", this.endHighlightUnit);
+	}
+
+	componentWillUnmount() {
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlightUnit");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlightUnit");
+	}
+
+	startHighlightUnit = (idx) => {
+		const layers = this.map.data[0].group._layers;
+		for (let id of Object.keys(this.map.data[0].group._layers)) {
+			const layer = layers[id];
+			if (layer.feature.properties.idx === idx) {
+				this.map.setLayerStyle(layer, {color: "#75CEFA"});
+				break;
+			}
+		}
+	};
+
+	endHighlightUnit = (idx) => {
+		const layers = this.map.data[0].group._layers;
+		for (let id of Object.keys(this.map.data[0].group._layers)) {
+			const layer = layers[id];
+			if (layer.feature.properties.idx === idx) {
+				this.map.setLayerStyle(layer, {color: this.getUnitFeatureStyle().color});
+				break;
+			}
+		}
+	};
+
 	getOptions = (options) => {
 		const {formData} = this.props;
 		const {gatherings = [], units = []} = this.getData();
