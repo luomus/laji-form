@@ -461,6 +461,11 @@ class LineTransectMapArrayField extends Component {
 					...formData[first].units,
 					...formData[second].units
 				]}}});
+				formData = update(formData, {
+					[first]: {
+						[geometryField]: {$set: e.geometry}
+					}
+				});
 				formData = update(formData, {$splice: [[second, 1]]});
 				break;
 			}
@@ -537,7 +542,6 @@ class LineTransectMapArrayField extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		return;
 		if (!this.hasLineTransectFeature(prevProps) || !this.hasLineTransectFeature(this.props)) return;
 		for (let lineIdx = 0; lineIdx < this.props.formData.length; lineIdx++) {
 			this.map._updateLTStyleForLineIdx(lineIdx);
