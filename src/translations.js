@@ -528,14 +528,14 @@
 		sv: "(antal) SPECIER (ind. av hane) (ind. av hone)"
 	},
 	lineTransectSegmentHasErrors: {
-		fi: "Pätkällä on virheitä",
-		en: "Segment has errors",
-		sv: "Segmentet har fel"
+		fi: "Biotoopilla on virheitä",
+		en: "Biotope has errors",
+		sv: "Biotopen har fel"
 	},
 	lineTransectSegmentNotCounted: {
-		fi: "Pätkää ei lasketa",
-		en: "Segment isn't counted",
-		sv: "Segmentet räknas inte"
+		fi: "Biotooppia ei lasketa",
+		en: "Biotope isn't counted",
+		sv: "Biotopen räknas inte"
 	},
 	comments: {
 		fi: "Kommentit",
