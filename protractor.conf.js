@@ -10,6 +10,7 @@ exports.config = {
 		maxInstances: 4
 
 	},
+	SELENIUM_PROMISE_MANAGER: false,
 	onPrepare: function() {
 		browser.waitForAngularEnabled(false);
 		require("babel-register");

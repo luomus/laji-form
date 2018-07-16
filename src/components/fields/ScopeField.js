@@ -26,25 +26,55 @@ const scopeFieldSettings = {
 };
 
 const buttonSettings = {
-	setLocation: (that, {glyph, label}) => {
-		const id = that.props.idSchema.$id;
+	setLocation: class LocationButton extends Component {
+		getIdx = () => {
+			const {that} = this.props;
+			const {$id} = that.props.idSchema;
+			const splitted = $id.split("_");
+			return parseInt(splitted[splitted.length - 1]);
+		}
 
-		const {geometryField = "unitGathering_geometry"} = getUiOptions(that.uiSchema);
+		onMouseEnter = () => {
+			const {that} = this.props;
+			const idx = this.getIdx();
+			this._hovered = true;
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
+		}
 
-		const hasCoordinates = hasData(that.props.formData[geometryField]);
+		onMouseLeave = () => {
+			const {that} = this.props;
+			const idx = this.getIdx();
+			this._hovered = false;
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
+		}
 
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		componentWillUnmount() {
+			this._hovered && this.onMouseLeave();
+		}
 
-		const {$id} = that.props.idSchema;
-		const splitted = $id.split("_");
-		const idx = parseInt(splitted[splitted.length - 1]);
+		getGeometryField = () => {
+			const {that} = this.props;
+			const {geometryField = "unitGathering_geometry"} = getUiOptions(that.uiSchema);
+			return geometryField;
+		}
 
-		let active = false;
-		function onClick() {
-			active = true;
-			const {translations} = that.props.formContext;
+		hasCoordinates = () => {
+			const {that} = this.props;
+			const geometryField = this.getGeometryField();
+			return hasData(that.props.formData[geometryField]);
+		}
+
+		onClick = () => {
+			const {that} = this.props;
+			const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 			const {map} = mapContext;
 			if (!map) return;
+
+			const {translations} = that.props.formContext;
+			const geometryField = this.getGeometryField();
+			const hasCoordinates = this.hasCoordinates();
+
+			const idx = this.getIdx();
 
 			let modalMap = undefined;
 			let triggerLayer = undefined;
@@ -144,29 +174,11 @@ const buttonSettings = {
 			}
 		}
 
-		const onMouseEnter = () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
-		const onMouseLeave = () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
+		onEntered = () => {
+			const {that} = this.props;
+			const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+			if (!mapContext) return;
 
-		const button = (
-			<GlyphButton
-				id={`${that.props.idSchema.$id}-location`}
-				bsStyle={hasCoordinates ? "primary" : "default"}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				glyph={glyph}
-				onClick={onClick} />
-		);
-
-		const {translations} = that.props.formContext;
-		const overlay = hasCoordinates ? (
-			<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
-			</Popover>
-		) : (
-			<Tooltip id={`${id}-location-peeker`}>{label}</Tooltip>
-		);
-
-		const onEntered = () => {
 			const {map} = mapContext;
 			let mapOptions = {};
 			if (map) {
@@ -174,6 +186,7 @@ const buttonSettings = {
 				mapOptions = _mapOptions;
 			}
 
+			const geometryField = this.getGeometryField();
 			const geometry = that.props.formData[geometryField];
 
 			that.setState({
@@ -201,11 +214,41 @@ const buttonSettings = {
 			});
 		};
 
-		return (
-			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={hasCoordinates ? onEntered : undefined}>
-				{button}
-			</OverlayTrigger>
-		);
+
+		render ()  {
+			const {that, settings: {glyph, label}} = this.props;
+			const id = that.props.idSchema.$id;
+
+			const hasCoordinates = this.hasCoordinates();
+
+			const button = (
+				<GlyphButton
+					id={`${that.props.idSchema.$id}-location`}
+					bsStyle={hasCoordinates ? "primary" : "default"}
+					onMouseEnter={this.onMouseEnter}
+					onMouseLeave={this.onMouseLeave}
+					glyph={glyph}
+					onClick={this.onClick} />
+			);
+
+			const {translations} = that.props.formContext;
+			const overlay = hasCoordinates ? (
+				<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
+					<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
+				</Popover>
+			) : (
+				<Tooltip id={`${id}-location-peeker`}>{label}</Tooltip>
+			);
+
+			return (
+				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 
+				                overlay={overlay}
+				                placement="left"
+				                onEntered={hasCoordinates ? this.onEntered : undefined}>
+					{button}
+				</OverlayTrigger>
+			);
+		}
 	}
 };
 
@@ -658,7 +701,8 @@ export default class ScopeField extends Component {
 						</OverlayTrigger>
 					);
 				} else if (settings.fn) {
-					return buttonSettings[settings.fn](this, settings);
+					const Component = buttonSettings[settings.fn];
+					return <Component key={settings.fn} that={this} settings={settings} />;
 				}
 			}) : null;
 	}
