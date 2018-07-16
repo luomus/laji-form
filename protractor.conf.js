@@ -1,3 +1,5 @@
+//let SpecReporter = require("jasmine-spec-reporter').SpecReporter;
+
 exports.config = {
 	seleniumAddress: 'http://localhost:4444/wd/hub',
 	specs: ["test/*-spec.js"],
@@ -15,6 +17,13 @@ exports.config = {
 		browser.waitForAngularEnabled(false);
 		require("babel-register");
 		require("babel-polyfill");
+
+		var env = jasmine.getEnv();
+		env.clearReporters();
+		var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+		env.addReporter(new SpecReporter({
+			displayStacktrace: true
+		}));
 	},
 	afterEach: function() {
 		browser.manage().logs().get("browser").then((browserLog) => {
