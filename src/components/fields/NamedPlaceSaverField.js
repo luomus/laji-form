@@ -129,7 +129,7 @@ class PlaceSaverDialog extends Component {
 	}
 
 	getGathering = () => {
-		return ["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription"].reduce((gathering, key) => {
+		return ["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription", "coordinateRadius"].reduce((gathering, key) => {
 			gathering[key] = this.props.gathering[key];
 			return gathering;
 		}, {});
