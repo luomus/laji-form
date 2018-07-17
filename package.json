@@ -29,7 +29,7 @@
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
     "immutability-helper": "^2.1.2",
-    "laji-map": "^1.0.382",
+    "laji-map": "^1.0.383",
     "laji-validate": "0.0.66",
     "moment": "*",
     "prop-types": "^15.5.8",
