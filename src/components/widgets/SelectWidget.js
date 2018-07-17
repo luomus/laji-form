@@ -162,7 +162,6 @@ class SelectWidget extends Component {
 				onFocus={this.onFocus}
 				onBlur={this.onBlur}
 				onSelect={this.onSelect}
-				suggest={true}
 			/>
 		);
 
