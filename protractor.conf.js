@@ -1,7 +1,5 @@
-//let SpecReporter = require("jasmine-spec-reporter').SpecReporter;
-
 exports.config = {
-	seleniumAddress: 'http://localhost:4444/wd/hub',
+	seleniumAddress: "http://localhost:4444/wd/hub",
 	specs: ["test/*-spec.js"],
 	capabilities: {
 		browserName: "chrome",
@@ -20,7 +18,7 @@ exports.config = {
 
 		var env = jasmine.getEnv();
 		env.clearReporters();
-		var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+		var SpecReporter = require("jasmine-spec-reporter").SpecReporter;
 		env.addReporter(new SpecReporter({
 			displayStacktrace: true
 		}));
