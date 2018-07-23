@@ -184,6 +184,10 @@ class FriendsAutosuggestWidget extends Component {
 		);
 	}
 
+	findExactMatch = (suggestions, value) => {
+		return suggestions.find(suggestion => (suggestion && suggestion.payload.name.toLowerCase() === value.toLowerCase()));
+	}
+
 	renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}}
 															           glyph="user"
 															           className="form-control-feedback"/>
@@ -201,6 +205,7 @@ class FriendsAutosuggestWidget extends Component {
 			isValueSuggested: this.isValueSuggested,
 			renderUnsuggested: this.renderUnsuggested,
 			renderSuccessGlyph: this.renderSuccessGlyph,
+			findExactMatch: this.findExactMatch,
 		};
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
@@ -346,7 +351,10 @@ export class Autosuggest extends Component {
 
 	findExactMatch = (suggestions, value = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
+		const {findExactMatch} = this.props;
+		return findExactMatch
+			? findExactMatch(suggestions, value)
+			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
 	}
 
 	findOnlyOneMatch = (suggestions) => {
