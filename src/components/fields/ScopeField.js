@@ -152,7 +152,7 @@ const buttonSettings = {
 					onComponentDidMount: (map) => {
 						modalMap = map;
 						triggerLayer = modalMap.triggerDrawing("marker");
-						const layer = map._getLayerByIdxs(map.drawIdx, 0);
+						const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
 						if (layer) {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 							modalMap.setLayerStyle(layer, {opacity: 0.7});
