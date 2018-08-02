@@ -371,6 +371,26 @@ describe("Trip report (JX.519)", () => {
 
 			await $("#root_gatherings_1-delete").click();
 			await $("#root_gatherings_1-delete-confirm-yes").click();
+			await $("#root_gatherings_0-header").click();
+		});
+
+		const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon")
+		const $poweruserButton = $taxon.$(".power-user-addon");
+
+		it("shows power user for taxon field", async () => {
+			await $taxon.$("input").click();
+
+			await expect($poweruserButton.isDisplayed()).toBe(true);
+		});
+
+		it("clicking power user button toggles power user mode on", async () => {
+			await $poweruserButton.click();
+
+			await expect($poweruserButton.getAttribute("class")).toContain("active");
+
+			await $poweruserButton.click();
+
+			await expect($poweruserButton.getAttribute("class")).not.toContain("active");
 		});
 	});
 });
