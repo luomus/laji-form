@@ -4,7 +4,7 @@ import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
-import LajiMap from "laji-map/lib/map";
+import LajiMap from "laji-map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
