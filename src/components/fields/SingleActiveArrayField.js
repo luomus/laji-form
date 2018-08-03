@@ -82,7 +82,7 @@ export default class SingleActiveArrayField extends Component {
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
 		if ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx)) {
 			const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true} = getUiOptions(this.props.uiSchema);
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`, focusOnNavigate));
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}-header`, focusOnNavigate));
 		}
 	}
 
@@ -310,7 +310,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					callback() :
 					that.onActiveChange(idx, callback);
 				},
-				getIdToScrollAfterNavigate: () => `${this.props.idSchema.$id}_${that.state.activeIdx}__header`
+				getIdToScrollAfterNavigate: () => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
 			});
 		}
 
