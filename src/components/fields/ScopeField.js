@@ -373,14 +373,7 @@ export default class ScopeField extends Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
-			const {idToScroll} = getUiOptions(this.props.uiSchema);
-			const elem = idToScroll
-				? document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)))
-				: getSchemaElementById(this.props.formContext.contextId, this.props.idSchema.$id);
-
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize", undefined, () => {
-				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
-			});
+			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}
 
