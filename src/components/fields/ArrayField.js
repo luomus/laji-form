@@ -80,7 +80,7 @@ export default class _ArrayField extends Component {
 		copy: {
 			glyph: "duplicate",
 			fn: () => (...params) => {
-				beforeAdd(this.props, `${this.props.idSchema.$id}_${this.props.formData.length}`);
+				beforeAdd(this.props);
 				this.props.onChange([
 					...this.props.formData,
 					() => {

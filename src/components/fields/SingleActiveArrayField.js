@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, getWindowScrolled } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
@@ -622,6 +622,9 @@ class TableArrayFieldTemplate extends Component {
 
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
+			const context = new Context(this.props.formContext.contextId);
+			const {lastIdToFocus, lastIdToScroll, windowScrolled} = context;
+			const idToScrollBack = context.windowScrolled === getWindowScrolled() ? context.windowScrolled : undefined;
 			const that = this.props.formContext.this;
 			const {activeIdx} = that.state;
 			const rowElem = this.itemElems[activeIdx];
@@ -637,7 +640,13 @@ class TableArrayFieldTemplate extends Component {
 				} : {}
 			};
 			if (idx !== null) state.activeIdx = idx;
-			this.setState(state, callback);
+			const _callback = () => {
+				if (idToScrollBack !== undefined) {
+					focusAndScroll(this.props.formContext, lastIdToFocus, lastIdToScroll);
+				}
+				if (callback) callback();
+			};
+			this.setState(state, _callback);
 		});
 	}
 

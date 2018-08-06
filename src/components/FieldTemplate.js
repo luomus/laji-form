@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Context from "../Context";
 import { Label, Help } from "./components";
-import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
+import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll, getWindowScrolled } from "../utils";
 
 export default class FieldTemplate extends Component {
 

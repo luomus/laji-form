@@ -2073,7 +2073,7 @@
                                     "label": "Valitse sijainti"
                                 }
                             ],
-                            "idToScroll": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_add",
+                            "idToScroll": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
                             "includeAdditionalFieldsChooserButton": true
                         },
                         "ui:order": [
@@ -2181,7 +2181,7 @@
                                 "idField": "unitFact_autocompleteSelectedTaxonID"
                             }
                         },
-                        "idToScrollAfterAdd": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_add",
+                        "idToScrollAfterAdd": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
                         "normalRenderingTreshold": "sm",
                         "renderer": "table",
                         "tableActiveItemClassNames": "panel panel-body gray"

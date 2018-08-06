@@ -347,7 +347,7 @@ export function stringifyKeyCombo(keyCombo = "") {
 }
 
 export function canAdd(props) {
-	return props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
+	return (!("canAdd" in props) || props.canAdd) && getUiOptions(props.uiSchema).canAdd !== false;
 }
 
 export function bsSizeToPixels(bsSize) {
@@ -404,6 +404,10 @@ export function applyFunction(props) {
 	};
 }
 
+export function getWindowScrolled() {
+	return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+}
+
 export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	if (!elem) return;
 
@@ -417,7 +421,7 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	const distFromTop = rect.top;
 	const viewportHeight = (window.innerHeight || html.clientHeight);
 	const distFromBottom = viewportHeight - rect.bottom;
-	const pageScrolled = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+	const pageScrolled = getWindowScrolled();
 
 	if (inView) return;
 
@@ -434,7 +438,7 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	if (distFromTop - pageScrolled - amount < 0) {
 		window.scrollTo(0, pageScrolled + distFromTop - topOffset);
 	} else {
-		window.scrollTo(0, pageScrolled + amount);
+		window.scrollTo(0, elem, pageScrolled + amount);
 	}
 }
 
@@ -544,9 +548,12 @@ export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true)
 	const _context = new Context(formContext.contextId);
 	if (idToFocus === undefined && idToScroll === undefined) return;
 	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
-	idToScroll = getKeyHandlerTargetId(idToScroll, _context);
 	if (idToScroll) {
-		const elemToScroll = document.getElementById(idToScroll);
+		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
 		scrollIntoViewIfNeeded(elemToScroll, formContext.topOffset, formContext.bottomOffset);
 	}
+	_context.lastIdToFocus = idToFocus; // Mark for components that manipulate height/scroll positions
+	_context.lastIdToScroll = idToScroll;
+	_context.windowScrolled = getWindowScrolled();
+	return true;
 }
