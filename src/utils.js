@@ -231,6 +231,9 @@ export function focusById(formContext = {}, id, focus = true) {
 		if (tabbableFields && tabbableFields.length) {
 			focus && tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
+			const _context = new Context(formContext.contextId);
+			_context.lastIdToScroll = id; // Mark for components that manipulate height/scroll positions
+			_context.windowScrolled = getWindowScrolled();
 			return true;
 		}
 	}
@@ -537,12 +540,11 @@ export function checkRules(rules, props, cache) {
 export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true) {
 	const _context = new Context(formContext.contextId);
 	if (idToFocus === undefined && idToScroll === undefined) return;
-	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
+	if (idToFocus && !focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	if (idToScroll) {
 		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
 		scrollIntoViewIfNeeded(elemToScroll, formContext.topOffset, formContext.bottomOffset);
 	}
-	_context.lastIdToFocus = idToFocus; // Mark for components that manipulate height/scroll positions
 	_context.lastIdToScroll = idToScroll;
 	_context.windowScrolled = getWindowScrolled();
 	return true;

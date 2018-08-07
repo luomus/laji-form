@@ -80,9 +80,15 @@ export default class SingleActiveArrayField extends Component {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
-		if ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx)) {
-			const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true} = getUiOptions(this.props.uiSchema);
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}-header`, focusOnNavigate));
+		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion"} = getUiOptions(this.props.uiSchema);
+		if (renderer === "uncontrolled") return;
+		if (prevProps.formData.length === this.props.formData.length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
+			const idToScroll = idToScrollAfterNavigate
+				? idToScrollAfterNavigate
+				: renderer === "accordion" || renderer === "pager" 
+					?  `${this.props.idSchema.$id}_${this.state.activeIdx}-header`
+					:  `${this.props.idSchema.$id}-add`;
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScroll, focusOnNavigate));
 		}
 	}
 
@@ -141,9 +147,9 @@ export default class SingleActiveArrayField extends Component {
 			this.scrollHeightFixed = elem.scrollHeight;
 			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
 				const context = new Context(this.props.formContext.contextId);
-				const {lastIdToFocus, lastIdToScroll, windowScrolled} = context;
+				const {lastIdToScroll, windowScrolled} = context;
 				if (windowScrolled === getWindowScrolled()) {
-					focusAndScroll(this.state.formContext, lastIdToFocus, lastIdToScroll);
+					focusAndScroll(this.state.formContext, undefined, lastIdToScroll);
 				}
 			});
 		} else {
@@ -317,6 +323,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		addKeyHandlers() {
+			const {renderer = "accordion"} = getUiOptions(this.props.uiSchema);
 			const that = this.props.formContext.this;
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
@@ -327,7 +334,9 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					callback() :
 					that.onActiveChange(idx, callback);
 				},
-				getIdToScrollAfterNavigate: () => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
+				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager" ?
+					() => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
+					: undefined
 			});
 		}
 
@@ -651,7 +660,7 @@ class TableArrayFieldTemplate extends Component {
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
 			const context = new Context(this.props.formContext.contextId);
-			const {lastIdToFocus, lastIdToScroll, windowScrolled} = context;
+			const {lastIdToScroll, windowScrolled} = context;
 			const scrollBack = windowScrolled === getWindowScrolled();
 			const that = this.props.formContext.this;
 			const {activeIdx} = that.state;
@@ -670,7 +679,7 @@ class TableArrayFieldTemplate extends Component {
 			if (idx !== null) state.activeIdx = idx;
 			const _callback = () => {
 				if (scrollBack) {
-					focusAndScroll(this.props.formContext, lastIdToFocus, lastIdToScroll);
+					focusAndScroll(this.props.formContext, undefined, lastIdToScroll);
 				}
 				if (callback) callback();
 			};

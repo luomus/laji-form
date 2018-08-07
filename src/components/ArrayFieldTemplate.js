@@ -16,7 +16,7 @@ export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
 	const idToFocus =  `${props.idSchema.$id}_${idx}`;
-	let {idToScrollAfterAdd} = getUiOptions(props.uiSchema || {});
+	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 	new Context(props.formContext.contextId).idToScroll = idToScrollAfterAdd;
 }
