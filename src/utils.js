@@ -410,7 +410,6 @@ export function getWindowScrolled() {
 
 export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	if (!elem) return;
-
 	var rect = elem.getBoundingClientRect();
 	var html = document.documentElement;
 	const height = elem.scrollHeight;
@@ -418,27 +417,18 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 		rect.top >= topOffset &&
 		rect.bottom <= (window.innerHeight || html.clientHeight) - bottomOffset
 	);
-	const distFromTop = rect.top;
+	const elemTopDistFromViewportTop = rect.top;
 	const viewportHeight = (window.innerHeight || html.clientHeight);
-	const distFromBottom = viewportHeight - rect.bottom;
+	const elemBottomDistFromViewportBottom = -(elemTopDistFromViewportTop + height - viewportHeight);
 	const pageScrolled = getWindowScrolled();
 
 	if (inView) return;
 
-	let amount = undefined;
-
-	if (distFromTop < topOffset) {
-		amount = rect.top - topOffset;
-	}
-	if (distFromBottom < bottomOffset) {
-		amount = rect.top - viewportHeight + height + bottomOffset;
-	}
-
 	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
-	if (distFromTop - pageScrolled - amount < 0) {
-		window.scrollTo(0, pageScrolled + distFromTop - topOffset);
+	if (elemTopDistFromViewportTop <= topOffset) {
+		window.scrollTo(0, pageScrolled + elemTopDistFromViewportTop - topOffset);
 	} else {
-		window.scrollTo(0, elem, pageScrolled + amount);
+		window.scrollTo(0, pageScrolled - elemBottomDistFromViewportBottom + bottomOffset);
 	}
 }
 
