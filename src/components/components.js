@@ -174,6 +174,15 @@ export class Affix extends Component {
 		window.removeEventListener("resize", this.onResize);
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.props.onAffixChange || !prevState || !this.state) return;
+		if (prevState.affixState !== AFFIXED && this.state.affixState === AFFIXED) {
+			this.props.onAffixChange(true);
+		} else if (prevState.affixState === AFFIXED && this.state.affixState !== AFFIXED) {
+			this.props.onAffixChange(false);
+		}
+	}
+
 	getState = (props) => {
 		const container = props.getContainer();
 		if (!container) return;

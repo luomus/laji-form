@@ -109,30 +109,47 @@ export default class SingleActiveArrayField extends Component {
 			state.activeIdx = 0;
 		}
 
+		return state;
+	}
+
+	getTitle = (idx) => {
+		const options = getUiOptions(this.props.uiSchema);
 		const {titleFormat} = options;
 
-		const title = "ui:title" in props.uiSchema ? props.uiSchema["ui:title" ] : props.schema.title;
-		state.getTitle = (idx) => {
-			if (!titleFormat) return title;
+		const title = "ui:title" in this.props.uiSchema ? this.props.uiSchema["ui:title" ] : this.props.schema.title;
+		if (!titleFormat) return title;
 
-			const formatters = {
-				idx: idx + 1,
-				title: props.schema.title
-			};
-				
-			return Object.keys(formatters).reduce((_title, key) => {
-				[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
-					while (_title.includes(replacePattern)) {
-						const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
-							decapitalizeFirstLetter : capitalizeFirstLetter;
-						_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
-					}
-				});
-				return _title;
-			}, titleFormat);
+		const formatters = {
+			idx: idx + 1,
+			title: this.props.schema.title
 		};
 
-		return state;
+		return Object.keys(formatters).reduce((_title, key) => {
+			[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
+				while (_title.includes(replacePattern)) {
+					const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
+						decapitalizeFirstLetter : capitalizeFirstLetter;
+					_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
+				}
+			});
+			return _title;
+		}, titleFormat);
+	}
+
+	onHeaderAffixChange = (elem, value) => {
+		if (value) {
+			this.scrollHeightFixed = elem.scrollHeight;
+			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
+				const context = new Context(this.props.formContext.contextId);
+				const {lastIdToFocus, lastIdToScroll, windowScrolled} = context;
+				if (windowScrolled === getWindowScrolled()) {
+					focusAndScroll(this.state.formContext, lastIdToFocus, lastIdToScroll);
+				}
+			});
+		} else {
+			this.scrollHeightFixed = 0;
+			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset}});
+		}
 	}
 
 	render() {
@@ -158,7 +175,7 @@ export default class SingleActiveArrayField extends Component {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
-		const formContext = {...this.props.formContext, this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
+		const formContext = {...(this.state.formContext || this.props.formContext), this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
@@ -449,6 +466,10 @@ class PagerArrayFieldTemplate extends Component {
 
 	getContainerRef = () => this.containerRef
 
+	setHeaderRef = (elem) => {
+		this.headerRef = elem;
+	}
+
 	render() {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
@@ -456,7 +477,7 @@ class PagerArrayFieldTemplate extends Component {
 		const {buttons, affixed} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
 		let header = (
-			<div className="laji-form-panel-header laji-form-accordion-header">
+			<div className="laji-form-panel-header laji-form-accordion-header" ref={this.setHeaderRef}>
 				<Pager>
 					<Pager.Item previous 
 											href="#"
@@ -483,8 +504,9 @@ class PagerArrayFieldTemplate extends Component {
 		);
 
 		if (affixed) {
+			const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
 			header = (
-				<Affix getContainer={this.getContainerRef} topOffset={this.props.formContext.topOffset}>
+				<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 					{header}
 				</Affix>
 			);
@@ -507,6 +529,12 @@ class PagerArrayFieldTemplate extends Component {
 		);
 	}
 
+	onHeaderAffixChange = (value) => {
+		const elem = this.headerRef;
+		const that = this.props.formContext.this;
+		that.onHeaderAffixChange(elem, value);
+	}
+
 	navigatePrev = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx - 1);
 	navigateNext = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx + 1);
 }
@@ -520,7 +548,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const {TitleField, DescriptionField} =  arrayTemplateFieldProps;
 		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
 		const {titleFormatters} = getUiOptions(that.props.uiSchema);
-		const title = that.state.getTitle(activeIdx);
+		const title = that.getTitle(activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={activeIdx}>
@@ -624,7 +652,7 @@ class TableArrayFieldTemplate extends Component {
 		requestAnimationFrame(() => {
 			const context = new Context(this.props.formContext.contextId);
 			const {lastIdToFocus, lastIdToScroll, windowScrolled} = context;
-			const idToScrollBack = context.windowScrolled === getWindowScrolled() ? context.windowScrolled : undefined;
+			const scrollBack = windowScrolled === getWindowScrolled();
 			const that = this.props.formContext.this;
 			const {activeIdx} = that.state;
 			const rowElem = this.itemElems[activeIdx];
@@ -641,7 +669,7 @@ class TableArrayFieldTemplate extends Component {
 			};
 			if (idx !== null) state.activeIdx = idx;
 			const _callback = () => {
-				if (idToScrollBack !== undefined) {
+				if (scrollBack) {
 					focusAndScroll(this.props.formContext, lastIdToFocus, lastIdToScroll);
 				}
 				if (callback) callback();
@@ -705,7 +733,7 @@ class TableArrayFieldTemplate extends Component {
 			this.itemElems[idx] = elem;
 		};
 
-		const title = that.state.getTitle(that.state.activeIdx);
+		const title = that.getTitle(that.state.activeIdx);
 
 		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
 			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx)
@@ -929,7 +957,7 @@ class AccordionHeader extends Component {
 
 	render() {
 		const {that, idx} = this.props;
-		const title = that.state.getTitle(idx);
+		const title = that.getTitle(idx);
 		const popupData = that.state.popups[idx];
 		const {uiSchema} = that.props;
 		const hasHelp = uiSchema && uiSchema["ui:help"];
