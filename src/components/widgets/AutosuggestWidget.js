@@ -238,11 +238,11 @@ export class Autosuggest extends Component {
 	constructor(props) {
 		super(props);
 		const isSuggested = this.isValueSuggested(props.value, props);
-		this.focused = false;
 		this.state = {
 			isLoading: false,
 			suggestions: [],
 			unsuggested: false,
+			focused: false,
 			value: props.value,
 			suggestion: isSuggested ? {} : undefined,
 		};
@@ -274,13 +274,6 @@ export class Autosuggest extends Component {
 	componentWillUnmount() {
 		this.mounted = false;
 		new Context(this.props.formContext.contextId).removeKeyHandler(this.props.id, this.keyFunctions);
-	}
-
-	componentDidUpdate() {
-		if (this.onNextTick) {
-			this.onNextTick();
-			this.onNextTick = undefined;
-		}
 	}
 
 	keyFunctions = {
@@ -414,20 +407,17 @@ export class Autosuggest extends Component {
 	}
 
 	onFocus = () => {
-		this.focused = true;
-		//this.setState({focused: true});
+		this.setState({focused: true});
 	}
 
 	onBlur = () => {
-		if (!this.mounted) return;
-		this.onNextTick = () => this.afterBlurAndFetch(this.state.suggestions);
-		this.focused = false;
+		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
 	}
 
 	afterBlurAndFetch = (suggestions) => {
 		// Wait for click triggering before executing.
 		setTimeout(() => {
-			if (this.mounted && (this.focused || this.state.isLoading)) return;
+			if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
 			const {value} = this.state;
 			const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
@@ -501,8 +491,7 @@ export class Autosuggest extends Component {
 	}
 
 	onInformalTaxonGroupSelected = (id) => {
-		this.focused = false;
-		this.setState({informalTaxonGroupsOpen: false});
+		this.setState({informalTaxonGroupsOpen: false, focused: false});
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
 	}
 
@@ -561,7 +550,7 @@ export class Autosuggest extends Component {
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		let glyph = undefined;
 
-		if (!this.focused && !this.state.isLoading && (!onToggle || !this.focused)) {
+		if (!this.state.focused && !this.state.isLoading && (!onToggle || !this.state.focused)) {
 			glyph = (validationState === "success" && renderSuccessGlyph) ?
 				renderSuccessGlyph(value) : getGlyph(validationState);
 		}
@@ -588,10 +577,10 @@ export class Autosuggest extends Component {
 			return tooltip;
 		};
 
-		const toggler = onToggle && this.focused
+		const toggler = onToggle && this.state.focused
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} >
-					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
+					<InputGroup.Addon className={`autosuggest-input-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
 						<Glyphicon glyph="flash"/>
 				</InputGroup.Addon>
 				</TooltipComponent>
@@ -608,7 +597,7 @@ export class Autosuggest extends Component {
 				extra={addon}
 				appendExtra={toggler}
 				getRef={this.setInputRef}
-				className={toggler && this.focused ? "has-toggler" : undefined}
+				className={toggler && this.state.focused ? "has-toggler" : undefined}
 			/>
 		);
 
@@ -740,7 +729,7 @@ class InformalTaxonGroupsAddon extends Component {
 	render() {
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-addon" onClick={this.toggle} tabIndex={0}>
+				<InputGroup.Addon className="autosuggest-input-addon" onClick={this.toggle} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>

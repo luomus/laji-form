@@ -1,4 +1,4 @@
-import { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides } from "./test-utils.js";
+import { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } from "./test-utils.js";
 
 import { googleApiKey } from "../properties.json"
 
@@ -62,17 +62,7 @@ describe("Trip report (JX.519)", () => {
 		});
 
 		it("creating pointer on map creates gathering", async () => {
-			const $markerButton = $(".leaflet-draw-draw-marker");
-
-			await expect($markerButton.isDisplayed()).toBe(true);
-
-			await $markerButton.click();
-
-			await browser.actions()
-				.mouseMove($gatheringsMap, {x: 100, y: 100}).perform();
-
-			await browser.actions()
-				.click().perform();
+			await putForeignMarkerToMap();
 
 			await expect(lajiFormLocate("gatherings.0").isDisplayed()).toBe(true);
 		});
@@ -172,11 +162,6 @@ describe("Trip report (JX.519)", () => {
 	});
 
 	describe("units", () => {
-
-		async function removeUnit(gatheringIdx, unitIdx) {
-			await $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete`).click();
-			return $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
-		}
 
 		const $unitAdd = $("#root_gatherings_0_units-add");
 		it("is displayed", async () => {
@@ -396,126 +381,6 @@ describe("Trip report (JX.519)", () => {
 			await $poweruserButton.click();
 
 			await expect($poweruserButton.getAttribute("class")).not.toContain("active");
-		});
-
-		describe("autosuggest", async () => {
-			const $okSign = $taxon.$(".glyphicon-tag");
-			const $warningSign = $taxon.$(".glyphicon-warning-sign");
-			const $taxonSuggestionList = $taxon.$(".rw-list");
-			const $$taxonSuggestions = $taxon.$$(".rw-list-option");
-
-			it("clicking any match selects it", async () => {
-				await $taxonInput.sendKeys("kett");
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-				await $$taxonSuggestions.first().click();
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing exact match and pressing enter after waiting for suggestion list selects exact match", async () => {
-				await $taxonInput.sendKeys("kettu");
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-				await $taxonInput.sendKeys(protractor.Key.ENTER);
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
-				await $taxonInput.sendKeys("kettu");
-				await $taxonInput.sendKeys(protractor.Key.ENTER);
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing exact match and pressing tab after waiting for suggestion list selects exact match", async () => {
-				await $taxonInput.sendKeys("kettu");
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-				await $taxonInput.sendKeys(protractor.Key.TAB);
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing exact match and pressing tab without waiting for suggestion list selects exact match", async () => {
-				await $taxonInput.sendKeys("kettu");
-				await $taxonInput.sendKeys(protractor.Key.TAB);
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing non exact match and blurring after waiting for suggestion list shows warning sign", async () => {
-				await $taxonInput.sendKeys("kett");
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-				await $taxonInput.sendKeys(protractor.Key.TAB);
-
-				await expect($warningSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kett");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing non exact match and blurring without waiting for suggestion list shows warning sign", async () => {
-				await $taxonInput.sendKeys("kett");
-				await $taxonInput.sendKeys(protractor.Key.TAB);
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($warningSign), 5000, "taxon warning glyph didn't show up");
-
-				await expect($warningSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kett");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing exact match and blurring after waiting for suggestion list selects exact match", async () => {
-				await $taxonInput.sendKeys("kettu");
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-				await $taxonInput.sendKeys(protractor.Key.TAB);
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("typing exact match and blurring before waiting for suggestion list selects exact match", async () => {
-				await $taxonInput.sendKeys("kettu");
-				await $taxonInput.sendKeys(protractor.Key.TAB);
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
-			it("clicking any match after waiting for suggestion list works with power user mode", async () => {
-				await $taxonInput.click();
-				await $poweruserButton.click();
-
-				await $taxonInput.sendKeys("kettu");
-				await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-				await $$taxonSuggestions.last().click();
-
-				await expect($okSign.isDisplayed()).toBe(true);
-				await expect($taxonInput.getAttribute("value")).not.toBe("kettu");
-
-				await removeUnit(0, 0);
-			});
-
 		});
 	});
 });
