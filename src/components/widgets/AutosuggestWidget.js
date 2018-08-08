@@ -356,8 +356,9 @@ export class Autosuggest extends Component {
 		e.preventDefault();
 		if (method === "click") {
 			if ("id" in this.props) focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
+		} else {
+			this.selectSuggestion(suggestion);
 		}
-		this.selectSuggestion(suggestion);
 	}
 
 	findExactMatch = (suggestions, value = "") => {
@@ -427,30 +428,27 @@ export class Autosuggest extends Component {
 	}
 
 	afterBlurAndFetch = (suggestions) => {
-		// Wait for click triggering before executing.
-		setTimeout(() => {
-			if (this.mounted && (this.state.focused || this.state.isLoading)) return;
+		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
-			const {value} = this.state;
-			const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
+		const {value} = this.state;
+		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
-			const exactMatch = this.findExactMatch(suggestions, value);
-			const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
-			const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
-			const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
+		const exactMatch = this.findExactMatch(suggestions, value);
+		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
+		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
+		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
-			if (this.highlightedSuggestionOnBlur) {
-				this.selectSuggestion(this.highlightedSuggestionOnBlur);
-			} else if (onlyOneMatch) {
-				this.selectSuggestion(onlyOneMatch);
-			}	else if (exactMatch) {
-				this.selectSuggestion({...exactMatch, value});
-			}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
-				this.selectSuggestion(nonMatching);
-			} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
-				this.selectUnsuggested(value);
-			}
-		}, 100);
+		if (this.highlightedSuggestionOnBlur) {
+			this.selectSuggestion(this.highlightedSuggestionOnBlur);
+		} else if (onlyOneMatch) {
+			this.selectSuggestion(onlyOneMatch);
+		}	else if (exactMatch) {
+			this.selectSuggestion({...exactMatch, value});
+		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
+			this.selectSuggestion(nonMatching);
+		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
+			this.selectUnsuggested(value);
+		}
 	}
 
 	render() {
