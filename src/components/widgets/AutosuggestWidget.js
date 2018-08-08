@@ -580,7 +580,7 @@ export class Autosuggest extends Component {
 		const toggler = onToggle && this.state.focused
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} >
-					<InputGroup.Addon className={`autosuggest-input-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
+					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
 						<Glyphicon glyph="flash"/>
 				</InputGroup.Addon>
 				</TooltipComponent>
