@@ -274,6 +274,9 @@ export class Autosuggest extends Component {
 	componentWillUnmount() {
 		this.mounted = false;
 		new Context(this.props.formContext.contextId).removeKeyHandler(this.props.id, this.keyFunctions);
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+		}
 	}
 
 	componentDidUpdate() {
@@ -388,8 +391,6 @@ export class Autosuggest extends Component {
 		if (!value || value.length < 2) return;
 		const {autosuggestField, query = {}} = this.props;
 
-		this.setState({isLoading: true});
-
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
@@ -406,11 +407,14 @@ export class Autosuggest extends Component {
 		if (this.timeout) {
 			clearTimeout(this.timeout);
 		}
-		if (debounce) {
-			this.timeout = context.setTimeout(request, 400);
-		} else {
-			request();
-		}
+		
+		this.setState({isLoading: true}, () => {
+			if (debounce) {
+				this.timeout = context.setTimeout(request, 400);
+			} else {
+				request();
+			}
+		});
 	}
 
 	onFocus = () => {
@@ -420,7 +424,11 @@ export class Autosuggest extends Component {
 
 	onBlur = () => {
 		if (!this.mounted) return;
-		this.onNextTick = () => this.afterBlurAndFetch(this.state.suggestions);
+		if (this.state.isLoading) {
+			this.onNextTick = () => this.afterBlurAndFetch(this.state.suggestions);
+		} else {
+			this.afterBlurAndFetch(this.state.suggestions);
+		}
 		this.focused = false;
 	}
 
