@@ -807,26 +807,6 @@
                                         "type": "string"
                                     },
                                     "birdBehavior": {
-                                        "enum": [
-                                            "",
-                                            "MY.birdBehaviorP",
-                                            "MY.birdBehaviorM",
-                                            "MY.birdBehaviorKiert",
-                                            "MY.birdBehaviorA",
-                                            "MY.birdBehaviorAn",
-                                            "MY.birdBehavioran",
-                                            "MY.birdBehaviora"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "P (paikallinen)",
-                                            "M (muuttava)",
-                                            "kiert (kiertelev\u00e4)",
-                                            "\u00c4 (laulava)",
-                                            "\u00c4n (n\u00e4hty laulava lintu)",
-                                            "\u00e4n (n\u00e4hty \u00e4\u00e4ntelev\u00e4 lintu)",
-                                            "\u00e4 (\u00e4\u00e4ntelev\u00e4)"
-                                        ],
                                         "title": "Linnun tila",
                                         "type": "string"
                                     },
@@ -1987,6 +1967,13 @@
                             },
                             "ui:widget": "AutosuggestWidget"
                         },
+						"birdBehavior": {
+							"ui:widget": "AutosuggestWidget",
+							"ui:options": {
+                                "autosuggestField": "taxon",
+								"autosuggestField": "MY.birdBehaviorEnum"
+							}
+						},
                         "ui:annotations": {
                             "add": {
                                 "filter": {

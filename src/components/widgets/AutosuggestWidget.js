@@ -19,6 +19,8 @@ export default class _AutosuggestWidget extends Component {
 				return <UnitAutosuggestWidget {...this.props} />;
 			case "friends":
 				return <FriendsAutosuggestWidget {...this.props} />;
+			default: 
+				return <RangeAutosuggestWidget {...this.props} />;
 			}
 		}
 		return <Autosuggest {...this.props} />;
@@ -36,6 +38,9 @@ export default class _AutosuggestWidget extends Component {
 				break;
 			case "friends":
 				component = FriendsAutosuggestWidget;
+				break;
+			default:
+				component = RangeAutosuggestWidget;
 			}
 			const getSuggestionFromValue = component.prototype.getSuggestionFromValue;
 			if (getSuggestionFromValue) {
@@ -193,8 +198,7 @@ class FriendsAutosuggestWidget extends Component {
 															           className="form-control-feedback"/>
 
 	render() {
-		const {props} = this;
-		const {options: propsOptions, ...propsWithoutOptions} = props;
+		const {options: propsOptions, ...propsWithoutOptions} = this.props;
 
 		const options = {
 			query: {
@@ -209,6 +213,13 @@ class FriendsAutosuggestWidget extends Component {
 		};
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+	}
+}
+
+class RangeAutosuggestWidget extends Component {
+	render() {
+		const {options: propsOptions, ...propsWithoutOptions} = this.props;
+		return <Autosuggest highlightFirstSuggestion={true} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
@@ -410,7 +421,8 @@ export class Autosuggest extends Component {
 		this.setState({focused: true});
 	}
 
-	onBlur = () => {
+	onBlur = (e, {highlightedSuggestion}) => {
+		this.highlightedSuggestionOnBlur = highlightedSuggestion;
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
 	}
 
@@ -427,7 +439,9 @@ export class Autosuggest extends Component {
 			const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
 			const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
-			if (onlyOneMatch) {
+			if (this.highlightedSuggestionOnBlur) {
+				this.selectSuggestion(this.highlightedSuggestionOnBlur);
+			} else if (onlyOneMatch) {
 				this.selectSuggestion(onlyOneMatch);
 			}	else if (exactMatch) {
 				this.selectSuggestion({...exactMatch, value});
@@ -464,9 +478,9 @@ export class Autosuggest extends Component {
 			suggestionHighlighted: "rw-list-option rw-state-focus"
 		};
 
-		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props ?
-			this.props.hightlightFirstSuggestion :
-			!this.props.allowNonsuggestedValue;
+		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props
+			? this.props.highlightFirstSuggestion
+			: !this.props.allowNonsuggestedValue;
 
 		return (
 			<div className="autosuggest-wrapper">
