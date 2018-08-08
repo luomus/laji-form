@@ -450,6 +450,8 @@ export class Autosuggest extends Component {
 			disabled: props.disabled,
 			placeholder: props.placeholder,
 			onChange: this.onInputChange,
+			onBlur: this.onBlur,
+			onFocus: this.onFocus,
 		};
 
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
@@ -467,7 +469,7 @@ export class Autosuggest extends Component {
 			!this.props.allowNonsuggestedValue;
 
 		return (
-			<div className="autosuggest-wrapper" onFocus={this.onFocus} onBlur={this.onBlur}>
+			<div className="autosuggest-wrapper">
 				<ReactAutosuggest
 					id={`${this.props.id}-autosuggest`}
 					inputProps={inputProps}

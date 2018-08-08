@@ -549,3 +549,12 @@ export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true)
 	_context.windowScrolled = getWindowScrolled();
 	return true;
 }
+
+export function shouldSyncScroll(formContext) {
+	return new Context(formContext.contextId).windowScrolled === getWindowScrolled();
+}
+export function syncScroll(formContext, force = false) {
+	if (force || shouldSyncScroll(formContext)) {
+		focusAndScroll(formContext, undefined, new Context(formContext.contextId).lastIdToScroll);
+	}
+}

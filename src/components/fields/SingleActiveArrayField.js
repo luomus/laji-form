@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, getWindowScrolled } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, getWindowScrolled, syncScroll, shouldSyncScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
@@ -146,11 +146,7 @@ export default class SingleActiveArrayField extends Component {
 		if (value) {
 			this.scrollHeightFixed = elem.scrollHeight;
 			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
-				const context = new Context(this.props.formContext.contextId);
-				const {lastIdToScroll, windowScrolled} = context;
-				if (windowScrolled === getWindowScrolled()) {
-					focusAndScroll(this.state.formContext, undefined, lastIdToScroll);
-				}
+				syncScroll(this.props.formContext);
 			});
 		} else {
 			this.scrollHeightFixed = 0;
@@ -659,9 +655,7 @@ class TableArrayFieldTemplate extends Component {
 
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
-			const context = new Context(this.props.formContext.contextId);
-			const {lastIdToScroll, windowScrolled} = context;
-			const scrollBack = windowScrolled === getWindowScrolled();
+			const scrollBack = shouldSyncScroll(this.props.formContext);
 			const that = this.props.formContext.this;
 			const {activeIdx} = that.state;
 			const rowElem = this.itemElems[activeIdx];
@@ -679,7 +673,7 @@ class TableArrayFieldTemplate extends Component {
 			if (idx !== null) state.activeIdx = idx;
 			const _callback = () => {
 				if (scrollBack) {
-					focusAndScroll(this.props.formContext, undefined, lastIdToScroll);
+					syncScroll(this.props.formContext, !!"force");
 				}
 				if (callback) callback();
 			};

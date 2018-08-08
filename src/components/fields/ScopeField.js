@@ -7,7 +7,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getWindowScrolled, focusAndScroll } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getWindowScrolled, focusAndScroll, syncScroll } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -374,12 +374,7 @@ export default class ScopeField extends Component {
 		}
 		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
 			const context = new Context(this.props.formContext.contextId);
-			const {lastIdToScroll, windowScrolled} = context;
-
-			if (windowScrolled === getWindowScrolled()) {
-				focusAndScroll(this.props.formContext, undefined, lastIdToScroll);
-			}
-			
+			syncScroll(this.props.formContext);
 			context.sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}
