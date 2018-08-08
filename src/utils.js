@@ -468,7 +468,6 @@ export function dictionarify(array) {
 	}, {});
 }
 
-
 const tableFormatters = {
 	unknownTaxon: (item, formatted, options) => {
 		return (isEmptyString(item) || item[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
