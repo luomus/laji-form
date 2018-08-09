@@ -2466,14 +2466,6 @@
             "ui:functions": [
                 {
                     "ui:field": "NamedPlaceChooserField"
-                },
-                {
-                    "ui:field": "ContextInjectionField",
-                    "ui:options": {
-                        "injections": {
-                            "/ui:options/activeIdx": "/activeGatheringIdx"
-                        }
-                    }
                 }
             ],
             "ui:options": {
