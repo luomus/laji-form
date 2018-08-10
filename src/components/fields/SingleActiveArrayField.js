@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, getInitialActiveIdx } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
@@ -45,9 +45,12 @@ export default class SingleActiveArrayField extends Component {
 
 	constructor(props) {
 		super(props);
+		const {formData, uiSchema, schema} = props;
 		this.deleteButtonRefs = {};
+		const options = getUiOptions(uiSchema);
+		const formDataLength = (formData || []).length;
 		this.state = {
-			activeIdx: getInitialActiveIdx(props),
+			activeIdx: (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx,
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;

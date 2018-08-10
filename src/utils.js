@@ -557,9 +557,3 @@ export function syncScroll(formContext, force = false) {
 		focusAndScroll(formContext, undefined, new Context(formContext.contextId).lastIdToScroll);
 	}
 }
-export function getInitialActiveIdx(props) {
-	const {formData, uiSchema, schema} = props;
-	const formDataLength = (formData || []).length;
-	const options = getUiOptions(uiSchema);
-	return (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx
-}

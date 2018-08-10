@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import LajiMap from "laji-map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getInitialActiveIdx } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -114,6 +114,7 @@ class DefaultMapArrayField extends Component {
 		if (!formData) return;
 
 		const item = formData[activeIdx];
+		this._context.featureIdxsToItemIdxs = {};
 
 		let geometries = [];
 		if (activeIdx !== undefined && item && item[geometryField] && item[geometryField].type) {
@@ -579,12 +580,35 @@ class LineTransectMapArrayField extends Component {
 function _MapArrayField(ComposedComponent) { return (
 @BaseComponent
 class _MapArrayField extends ComposedComponent {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				geometryField: PropTypes.string.isRequired,
+				// allows custom algorithm for getting geometry data
+				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect"]),
+				topOffset: PropTypes.integer,
+				bottomOffset: PropTypes.integer,
+				popupFields: PropTypes.arrayOf(PropTypes.object),
+				mapSizes: PropTypes.shape({
+					lg: PropTypes.integer,
+					md: PropTypes.integer,
+					sm: PropTypes.integer,
+					xs: PropTypes.integer
+				})
+			}).isRequired
+		})
+	}
+
 	constructor(props) {
 		super(props);
-		this.state = {
-			activeIdx: getInitialActiveIdx(props),
-			...(this.state || {})
-		};
+		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
+		this._context.featureIdxsToItemIdxs = {};
+		this._context.setState = (state, callback) => this.setState(state, callback);
+
+		const initialState = {activeIdx: 0};
+		const options = getUiOptions(props.uiSchema);
+		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
+		this.state = {...initialState, ...(this.state || {})};
 	}
 
 	componentDidMount() {
@@ -604,11 +628,11 @@ class _MapArrayField extends ComposedComponent {
 		});
 
 		if (this.state.activeIdx !== undefined) {
-			this.afterActiveChange(this.state.activeIdx);
+			this.afterActiveChange(this.state.activeIdx, !!"initial call");
 		}
 	}
 
-	afterActiveChange(idx) {
+	afterActiveChange(idx, initial) {
 		super.afterActiveChange(idx);
 		this.onLocateOrAddNew();
 	}
@@ -687,7 +711,7 @@ class _MapArrayField extends ComposedComponent {
 	})
 	getAligmentAnchor = () => this.refs._stretch
 	onEnterViewPort = () => {
-		this.afterActiveChange(this.state.activeIdx);
+		this.afterActiveChange(this.state.activeIdx, !!"initial call");
 	}
 
 	getMapOptions = () => {
