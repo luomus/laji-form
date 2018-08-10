@@ -325,10 +325,6 @@ export class Autosuggest extends Component {
 		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
 	}
 
-	shouldRenderSuggestions = () => {
-		return this.state.focused;
-	}
-
 	onSuggestionsClearRequested = () => {}
 
 	selectSuggestion = (suggestion) => {
@@ -359,7 +355,12 @@ export class Autosuggest extends Component {
 		const {suggestion, method} = data;
 		e.preventDefault();
 		if (method === "click") {
-			if ("id" in this.props) focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
+			if ("id" in this.props) {
+				// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
+				if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
+					this.selectSuggestion(suggestion);
+				}
+			}
 		} else {
 			this.selectSuggestion(suggestion);
 		}
@@ -433,6 +434,18 @@ export class Autosuggest extends Component {
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
 	}
 
+	// This is used, because the default behavior doesn't render the suggestions when focusing
+	// a suggestion component that wants to render the suggestion when the input is empty.
+	renderSuggestionsContainer = ({containerProps, children}) => {
+		if (!this.state.focused) return null;
+
+		return (
+			<div {...containerProps}>
+				{children}
+			</div>
+		);
+	}
+
 	afterBlurAndFetch = (suggestions) => {
 		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
@@ -455,6 +468,10 @@ export class Autosuggest extends Component {
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(value);
 		}
+	}
+
+	setRef = (ref) => {
+		this.reactAutosuggestRef = ref;
 	}
 
 	render() {
@@ -490,18 +507,20 @@ export class Autosuggest extends Component {
 		return (
 			<div className="autosuggest-wrapper">
 				<ReactAutosuggest
+					ref={this.setRef}
 					id={`${this.props.id}-autosuggest`}
 					inputProps={inputProps}
 					renderInputComponent={this.renderInput}
 					suggestions={suggestions}
 					getSuggestionValue={this.getSuggestionValue}
 					renderSuggestion={this.renderSuggestion}
+					renderSuggestionsContainer={this.renderSuggestionsContainer}
 					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
 					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 					onSuggestionSelected={this.onSuggestionSelected}
 					focusInputOnSuggestionClick={false}
 					highlightFirstSuggestion={highlightFirstSuggestion}
-					shouldRenderSuggestions={this.shouldRenderSuggestions}
+					alwaysRenderSuggestions={true}
 					theme={cssClasses}
 				/>
 			</div>

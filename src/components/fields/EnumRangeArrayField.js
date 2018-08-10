@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
@@ -12,19 +13,19 @@ export default class EnumRangeArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {focused: false, value: ""};
+		this.state = {value: ""};
 	}
 
-	onRemove = (idx) => () => {
-		const formData = [...this.props.formData];
-		formData.splice(idx, 1);
-		this.props.onChange(formData);
+	setRef = (elem) => {
+		this.autosuggestRef = elem;
 	}
+
 	render() {
 		const {range} = getUiOptions(this.props.uiSchema);
 		const autosuggestOptions = {
 			autosuggestField: range,
 			onSuggestionSelected: this.onSuggestionSelected,
+			id: this.props.idSchema.$id,
 			minFetchLength: 0,
 			inputProps: {
 				value: this.state.value,
@@ -33,19 +34,40 @@ export default class EnumRangeArrayField extends Component {
 				onChange: this.onInputChange,
 				tags: this.props.formData,
 				id: this.props.idSchema.$id
-			}
+			},
 		};
 
 		return (
 			<React.Fragment>
 				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />
-				<Autosuggest {...this.props} {...autosuggestOptions} />
+				<Autosuggest {...this.props} {...autosuggestOptions} ref={this.setRef} />
 			</React.Fragment>
 		);
 	}
 
-	onInputChange = (e, {newValue: value}) => {
-		this.setState({value});
+	onInputChange = (e, autosuggestEvent) => {
+		const {newValue: value} = autosuggestEvent;
+		if (autosuggestEvent.method !== "click") {
+			this.setState({value});
+		} else {
+			const tagComponent = this.autosuggestRef.inputElem;
+			const tagComponentElem = findDOMNode(tagComponent);
+			const input = tagComponentElem.querySelector("input");
+			if (input) {
+				// Fix bug in ReactAutosuggest, where onFocus prop isn't called on focus.
+				this.autosuggestRef.reactAutosuggestRef.justSelectedSuggestion = false;
+				input.focus();
+			}
+		}
+	}
+
+	onSuggestionSelected = (suggestion) => {
+		this.onChange([...this.props.formData, suggestion.value]);
+	}
+
+	onChange = (formData) => {
+		this.props.onChange(formData);
+		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
 	}
 }
 
@@ -60,8 +82,7 @@ class EnumRangeInputInjection extends Component {
 
 	onChange = (tags) => {
 		this.props.that.setState({value: ""}, () => {
-			new Context(this.props.that.props.formContext.contextId).sendCustomEvent(this.props.id, "resize");
-			this.props.that.props.onChange(tags);
+			this.props.that.onChange(tags);
 		});
 	}
 }

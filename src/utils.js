@@ -221,7 +221,11 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 
 export function focusNextInput(...params) {
 	const field = getNextInput(...params);
-	if (field) field.focus();
+	if (field) {
+		field.focus();
+		return true;
+	}
+	return false;
 }
 
 export function focusById(formContext = {}, id, focus = true) {
