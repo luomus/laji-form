@@ -254,7 +254,7 @@ export class Autosuggest extends Component {
 			suggestions: [],
 			unsuggested: false,
 			focused: false,
-			value: props.value,
+			value: props.value !== undefined ? props.value : "",
 			suggestion: isSuggested ? {} : undefined,
 		};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
@@ -325,6 +325,10 @@ export class Autosuggest extends Component {
 		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
 	}
 
+	shouldRenderSuggestions = () => {
+		return this.state.focused;
+	}
+
 	onSuggestionsClearRequested = () => {}
 
 	selectSuggestion = (suggestion) => {
@@ -390,7 +394,7 @@ export class Autosuggest extends Component {
 	}
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
-		if (!value || value.length < 2) return;
+		if (value === undefined || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) return;
 		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
@@ -419,7 +423,9 @@ export class Autosuggest extends Component {
 	}
 
 	onFocus = () => {
-		this.setState({focused: true});
+		this.setState({focused: true}, () => {
+			this.onSuggestionsFetchRequested({value: this.state.value});
+		});
 	}
 
 	onBlur = (e, {highlightedSuggestion}) => {
@@ -464,6 +470,7 @@ export class Autosuggest extends Component {
 			onChange: this.onInputChange,
 			onBlur: this.onBlur,
 			onFocus: this.onFocus,
+			...(this.props.inputProps || {})
 		};
 
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
@@ -494,6 +501,7 @@ export class Autosuggest extends Component {
 					onSuggestionSelected={this.onSuggestionSelected}
 					focusInputOnSuggestionClick={false}
 					highlightFirstSuggestion={highlightFirstSuggestion}
+					shouldRenderSuggestions={this.shouldRenderSuggestions}
 					theme={cssClasses}
 				/>
 			</div>
@@ -524,8 +532,8 @@ export class Autosuggest extends Component {
 	}
 
 	renderInput = (inputProps) => {
-		let validationState = null;
 		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle} = this.props;
+		let validationState = null;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
@@ -577,7 +585,6 @@ export class Autosuggest extends Component {
 																	formContext={this.props.formContext} /> 
 			: null;
 
-
 		const getTogglerTooltip = () => {
 			let tooltip = `${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`;
 
@@ -603,7 +610,6 @@ export class Autosuggest extends Component {
 		const inputValue = isEmptyString(this.state.value) ? "" : this.state.value;
 		const input = (
 			<FetcherInput 
-				{...inputProps} 
 				value={inputValue}
 				glyph={glyph} 
 				loading={this.state.isLoading} 
@@ -612,6 +618,7 @@ export class Autosuggest extends Component {
 				appendExtra={toggler}
 				getRef={this.setInputRef}
 				className={toggler && this.state.focused ? "has-toggler" : undefined}
+				{...inputProps} 
 			/>
 		);
 

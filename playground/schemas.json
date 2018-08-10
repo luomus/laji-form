@@ -981,6 +981,9 @@
 						},
 						"hostID": {
 							"ui:widget": "HiddenWidget"
+						},
+						"birdBehavior": {
+							"ui:field": "EnumRangeArrayField"
 						}
 					}
 				}
@@ -2854,7 +2857,11 @@
   ]
 }, 
 "settings": {
-  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "openStreetMap",
-  "%taxonGroupID/AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup": "MVL.41"
+  "%additionalFields/scopeField_gathering_unit_informalTaxonGroups": {
+    "undefined": {
+      "images": true,
+      "birdBehavior": true
+    }
+  }
 }
 }

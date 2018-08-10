@@ -642,16 +642,23 @@ export class FetcherInput extends Component {
 	}
 
 	render() {
-		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 		return (
 			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""} ${className}`} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
 				{extra}
-				<input className="form-control" type="text" {...inputProps} ref={this.setRef} />
+				<Input {...inputProps} ref={this.setRef} />
 				{glyph ? <FormControl.Feedback>{glyph}</FormControl.Feedback> : null}
 				{loading ? <Spinner /> : null }
 				{appendExtra}
 			</div>
 		);
+	}
+}
+
+class FetcherInputDefaultInput extends Component {
+	render() {
+		return <input className="form-control" type="text" {...this.props} ref={this.ref} />;
 	}
 }
 

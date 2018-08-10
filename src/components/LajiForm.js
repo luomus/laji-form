@@ -65,6 +65,7 @@ const fields = importLocalComponents("fields", [
 	"PrefillingArrayField",
 	"ConditionalAdditionalItemsArrayField",
 	"AnyToBooleanField",
+	"EnumRangeArrayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
