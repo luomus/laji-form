@@ -655,7 +655,10 @@ export default class LajiForm extends Component {
 	onSettingsChange = () => {
 		const settings = this.getSettings();
 		if (!equals(this.state.formContext.settings, settings)) {
-			this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
+			// setImmediate because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
+			setImmediate(() => {
+				this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
+			});
 			if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
 		}
 	}

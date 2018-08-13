@@ -383,4 +383,22 @@ describe("Trip report (JX.519)", () => {
 			await expect($poweruserButton.getAttribute("class")).not.toContain("active");
 		});
 	});
+
+	const $informalTaxonGroupButton = $(".informal-taxon-group-chooser");
+	it("choosing informal taxon group changes fields", async () => {
+		await $informalTaxonGroupButton.click();
+
+		browser.sleep(1000);
+
+		const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
+		const fieldCount = await getFieldCount();
+
+		const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last();
+
+		await $birdButton.click();
+
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.0.twitched")), 4000, "Bird field didn't appear");
+
+		await expect(fieldCount).not.toBe(await getFieldCount());
+	});
 });

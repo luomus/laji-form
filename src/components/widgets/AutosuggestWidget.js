@@ -776,7 +776,7 @@ class InformalTaxonGroupsAddon extends Component {
 	render() {
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon" onClick={this.toggle} tabIndex={0}>
+				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>
