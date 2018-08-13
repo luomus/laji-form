@@ -161,7 +161,7 @@ export default class AutosuggestField extends Component {
 		if (suggestion === null) suggestion = undefined;
 
 		let {formData, uiSchema, formContext} = this.props;
-		const {suggestionReceivers, autosuggestField, suggestionValueField, autocopy} = this.getActiveOptions(getUiOptions(uiSchema));
+		const {suggestionReceivers, autosuggestField, suggestionValueField, autocopy, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 
 		const handleSuggestionReceivers = (formData, suggestion) => {
 			for (let fieldName in suggestionReceivers) {
@@ -188,13 +188,13 @@ export default class AutosuggestField extends Component {
 				unit.informalTaxonGroups = unit.unitType;
 				delete unit.unitType;
 			}
-			unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+			unit = (formContext.formDataTransformers || []).reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
 				const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
 				return state.formData;
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...formData, [suggestionValueField]: undefined, ...unit};
-			if (autocopy && !equals(this.props.formData, formData)) {
+			if (isEmptyString(this.props.formData[suggestionInputField]) && autocopy && !equals(this.props.formData, formData)) {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
