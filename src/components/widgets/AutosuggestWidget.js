@@ -325,7 +325,9 @@ export class Autosuggest extends Component {
 		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
 	}
 
-	onSuggestionsClearRequested = () => {}
+	onSuggestionsClearRequested = () => {
+		this.clearRequested = true;
+	}
 
 	selectSuggestion = (suggestion) => {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
@@ -334,8 +336,10 @@ export class Autosuggest extends Component {
 				onSuggestionSelected(suggestion) :
 				onChange(suggestion[suggestionReceive || "key"]);
 		};
+		const state = {suggestion, value: this.getSuggestionValue(suggestion)};
+		if (this.clearRequested) state.suggestions = [];
 		this.mounted ? 
-			this.setState({suggestion, value: this.getSuggestionValue(suggestion)}, afterStateChange) :
+			this.setState(state, afterStateChange) :
 			afterStateChange();
 	}
 
@@ -344,7 +348,9 @@ export class Autosuggest extends Component {
 
 		const {onConfirmUnsuggested, onChange} = this.props;
 
-		this.setState({value, suggestion: undefined}, () => {
+		const state = {value, suggestion: undefined};
+		if (this.clearRequested) state.suggestions = [];
+		this.setState(state, () => {
 			onConfirmUnsuggested ?
 				onConfirmUnsuggested(value) :
 				onChange(value);
@@ -352,17 +358,16 @@ export class Autosuggest extends Component {
 	}
 
 	onSuggestionSelected = (e, data) => {
+		// Input onBlur/onFocus isn't called without this hack.
+		this.reactAutosuggestRef.justSelectedSuggestion = false;
+
 		const {suggestion, method} = data;
 		e.preventDefault();
-		if (method === "click") {
-			if ("id" in this.props) {
-				// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
-				if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
-					this.selectSuggestion(suggestion);
-				}
+		if ("id" in this.props) {
+			// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
+			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
+				this.selectSuggestion(suggestion);
 			}
-		} else {
-			this.selectSuggestion(suggestion);
 		}
 	}
 
@@ -395,7 +400,11 @@ export class Autosuggest extends Component {
 	}
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
-		if (value === undefined || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) return;
+		if (value === undefined || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
+			this.setState({suggestions: []});
+			return;
+		}	
+
 		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
@@ -424,9 +433,7 @@ export class Autosuggest extends Component {
 	}
 
 	onFocus = () => {
-		this.setState({focused: true}, () => {
-			this.onSuggestionsFetchRequested({value: this.state.value});
-		});
+		this.setState({focused: true}, () => this.onSuggestionsFetchRequested({value: this.state.value}));
 	}
 
 	onBlur = (e, {highlightedSuggestion}) => {
@@ -607,7 +614,7 @@ export class Autosuggest extends Component {
 		const getTogglerTooltip = () => {
 			let tooltip = `${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`;
 
-			const {shortcuts} = new Context(this.props.formContext.contextId);
+			const {shortcuts = []} = new Context(this.props.formContext.contextId);
 			Object.keys(shortcuts).some(keyCombo => {
 				if (shortcuts[keyCombo].fn == "autosuggestToggle") {
 					tooltip = `[${stringifyKeyCombo(keyCombo)}]: ${tooltip}`;

@@ -54,8 +54,6 @@ export default class EnumRangeArrayField extends Component {
 			const tagComponentElem = findDOMNode(tagComponent);
 			const input = tagComponentElem.querySelector("input");
 			if (input) {
-				// Fix bug in ReactAutosuggest, where onFocus prop isn't called on focus.
-				this.autosuggestRef.reactAutosuggestRef.justSelectedSuggestion = false;
 				input.focus();
 			}
 		}
