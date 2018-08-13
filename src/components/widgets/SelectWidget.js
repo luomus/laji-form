@@ -82,7 +82,10 @@ class SelectWidget extends Component {
 		};
 	}
 
-	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => this.getEnum(value)));
+	multiSelectOnChange = (values) => {
+		this.props.onChange(values.map(({value}) => this.getEnum(value)));
+		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.id, "resize");
+	}
 
 	selectOnChange = (item) => {
 		this.setState({value: item});
