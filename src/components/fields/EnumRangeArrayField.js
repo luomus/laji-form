@@ -28,6 +28,7 @@ export default class EnumRangeArrayField extends Component {
 			onConfirmUnsuggested: this.onConfirmUnsuggested,
 			id: this.props.idSchema.$id,
 			value: this.state.value,
+			controlledValue: true,
 			minFetchLength: 0,
 			inputProps: {
 				value: this.state.value,
