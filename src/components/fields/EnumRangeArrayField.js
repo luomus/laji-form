@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, focusNextInput } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
 import { Label } from "../components";
@@ -25,7 +25,9 @@ export default class EnumRangeArrayField extends Component {
 		const autosuggestOptions = {
 			autosuggestField: range,
 			onSuggestionSelected: this.onSuggestionSelected,
+			onConfirmUnsuggested: this.onConfirmUnsuggested,
 			id: this.props.idSchema.$id,
+			value: this.state.value,
 			minFetchLength: 0,
 			inputProps: {
 				value: this.state.value,
@@ -47,40 +49,56 @@ export default class EnumRangeArrayField extends Component {
 
 	onInputChange = (e, autosuggestEvent) => {
 		const {newValue: value} = autosuggestEvent;
+
 		if (autosuggestEvent.method !== "click") {
 			this.setState({value});
 		} else {
-			const tagComponent = this.autosuggestRef.inputElem;
-			const tagComponentElem = findDOMNode(tagComponent);
-			const input = tagComponentElem.querySelector("input");
-			if (input) {
-				input.focus();
+			this.setState({value: ""});
+			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.idSchema.$id))) {
+				const tagComponent = this.autosuggestRef.inputElem;
+				const tagComponentElem = findDOMNode(tagComponent);
+				const input = tagComponentElem.querySelector("input");
+				if (input) {
+					input.focus();
+				}
 			}
 		}
 	}
 
 	onSuggestionSelected = (suggestion) => {
-		this.onChange([...this.props.formData, suggestion.value]);
+		this.setState({value: ""}, () => {
+			this.onChange([...this.props.formData, suggestion.value], "suggestion selected");
+		});
 	}
 
-	onChange = (formData) => {
-		this.props.onChange(formData);
-		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+	onConfirmUnsuggested = (value) => {
+		this.setState({value: ""}, () => {
+			this.onChange([...this.props.formData, value], "unsuggested selected");
+		});
+	}
+
+	onChange = (formData, reason) => {
+		if (reason !== "remove" && reason !== "suggestion selected" && reason !== "unsuggested selected") {
+			this.setState({value: ""});
+			return;
+		}
+		this.setState({value: ""}, () => {
+			this.props.onChange(formData);
+			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+		});
 	}
 }
 
 class EnumRangeInputInjection extends Component {
 	render() {
-		return <TagInputComponent {...this.props} onChange={this.onChange} onInputChange={this.onInputChange} />;
+		return <TagInputComponent {...this.props} onChange={this.onChange} onInputChange={this.onInputChange}/>;
 	}
 
 	onInputChange = e => {
 		this.props.onChange(e, {newValue: e.target.value});
 	}
 
-	onChange = (tags) => {
-		this.props.that.setState({value: ""}, () => {
-			this.props.that.onChange(tags);
-		});
+	onChange = (tags, reason) => {
+		this.props.that.onChange(tags, reason);
 	}
 }

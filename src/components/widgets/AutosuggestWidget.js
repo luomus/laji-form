@@ -265,7 +265,14 @@ export class Autosuggest extends Component {
 		const {value, suggestionReceive = "key"} = props;
 		const {suggestion} = this.state;
 		if (this.state.value !== value || (suggestion && suggestion[suggestionReceive] !== value && this.mounted)) {
-			this.triggerConvert(props);
+			if (this.mounted && this.state.value !== value) {
+				this.setState({value}, () => {
+					this.triggerConvert(props)
+					this.onSuggestionsFetchRequested({value}, !"dont debounce");
+				});
+			} else {
+				this.triggerConvert(props);
+			}
 		} else if (!suggestion) {
 			return {value: props.value};
 		}
@@ -395,11 +402,18 @@ export class Autosuggest extends Component {
 		}
 	}
 
-	onInputChange = (e, {newValue: value}) => {
-		this.setState({value});
+	onInputChange = (e, autosuggestEvent) => {
+		const {newValue: value} = autosuggestEvent;
+		this.setState({value}, () => {
+			if (this.props.inputProps && this.props.inputProps.onChange) {
+				e.persist();
+				this.props.inputProps.onChange(e, autosuggestEvent);
+			}
+		});
 	}
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
+		if (value === undefined) value = "";
 		if (value === undefined || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
 			this.setState({suggestions: []});
 			return;
@@ -417,6 +431,7 @@ export class Autosuggest extends Component {
 					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
 					this.afterBlurAndFetch(suggestions);
 			}).catch(() => {
+				this._valueForBlurAndFetch = this.state.value;
 				this.setState({isLoading: false}, this.afterBlurAndFetch);
 			});
 		};
@@ -432,14 +447,34 @@ export class Autosuggest extends Component {
 		}
 	}
 
-	onFocus = () => {
+	onFocus = (e) => {
 		this.setState({focused: true}, () => this.onSuggestionsFetchRequested({value: this.state.value}));
+		if ( this.props.inputProps && this.props.inputProps.onFocus) {
+			e.persist();
+			this.props.inputProps.onFocus(e);
+		}
 	}
 
 	onBlur = (e, {highlightedSuggestion}) => {
 		this.highlightedSuggestionOnBlur = highlightedSuggestion;
+		this._valueForBlurAndFetch = this.state.value;
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
+		if ( this.props.inputProps && this.props.inputProps.onBlur) {
+			e.persist();
+			this.props.inputProps.onBlur(e);
+		}
 	}
+
+	onKeyDown = (e) => {
+		if (e.key === "Enter" && this.props.allowNonsuggestedValue && !this.state.loading && !isEmptyString(this.state.value)) {
+			this.selectUnsuggested(this.state.value);
+		}
+		if ( this.props.inputProps && this.props.inputProps.onKeyDown) {
+			e.persist();
+			this.props.inputProps.onKeyDown(e);
+		}
+	}
+
 
 	// This is used, because the default behavior doesn't render the suggestions when focusing
 	// a suggestion component that wants to render the suggestion when the input is empty.
@@ -453,8 +488,8 @@ export class Autosuggest extends Component {
 		);
 	}
 
-	afterBlurAndFetch = (suggestions) => {
-		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
+	afterBlurAndFetch = (suggestions, callback) => {
+		if (this.mounted && (this.state.focused || this.state.isLoading) || this.state.value !== this._valueForBlurAndFetch) return;
 
 		const {value} = this.state;
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
@@ -475,6 +510,8 @@ export class Autosuggest extends Component {
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(value);
 		}
+
+		callback && callback();
 	}
 
 	setRef = (ref) => {
@@ -484,6 +521,7 @@ export class Autosuggest extends Component {
 	render() {
 		const {props} = this;
 		let {suggestions, value} = this.state;
+		if (value === undefined) value = "";
 
 		const inputProps = {
 			id: this.props.id,
@@ -491,10 +529,11 @@ export class Autosuggest extends Component {
 			readOnly: props.readonly,
 			disabled: props.disabled,
 			placeholder: props.placeholder,
+			...(this.props.inputProps || {}),
 			onChange: this.onInputChange,
 			onBlur: this.onBlur,
 			onFocus: this.onFocus,
-			...(this.props.inputProps || {})
+			onKeyDown: this.onKeyDown
 		};
 
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";

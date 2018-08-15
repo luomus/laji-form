@@ -2860,7 +2860,8 @@
   "%additionalFields/scopeField_gathering_unit_informalTaxonGroups": {
     "undefined": {
       "images": true,
-      "birdBehavior": true
+      "birdBehavior": true,
+      "distance": true
     }
   }
 }

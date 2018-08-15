@@ -34,7 +34,7 @@ export class TagInputComponent extends Component {
 		const {value} = this.state;
 		const {tags = []} = this.props;
 		if (e.key === "Enter" && !isEmptyString(value)) {
-			this.props.onChange([...tags, value]);
+			this.props.onChange([...tags, value], "enter");
 			e.stopPropagation();
 			e.preventDefault();
 		} else if (e.key === "Backspace" && isEmptyString(value) && tags.length) {
@@ -49,7 +49,7 @@ export class TagInputComponent extends Component {
 	onRemove = (idx) => () => {
 		const tags = [...(this.props.tags || [])];
 		tags.splice(idx, 1);
-		this.props.onChange(tags);
+		this.props.onChange(tags, "remove");
 	}
 
 	onFocus = () => {
@@ -62,7 +62,7 @@ export class TagInputComponent extends Component {
 		this.setState({focused: false});
 		if (this.props.onBlur) this.props.onBlur();
 		if (!isEmptyString(this.state.value)) {
-			this.props.onChange([...(this.props.tags || []), this.state.value]);
+			this.props.onChange([...(this.props.tags || []), this.state.value], "blur");
 		}
 	}
 
