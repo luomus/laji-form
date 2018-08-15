@@ -268,7 +268,6 @@ export class Autosuggest extends Component {
 			if (this.mounted && this.state.value !== value) {
 				this.setState({value}, () => {
 					this.triggerConvert(props)
-					this.onSuggestionsFetchRequested({value}, !"dont debounce");
 				});
 			} else {
 				this.triggerConvert(props);
@@ -489,9 +488,10 @@ export class Autosuggest extends Component {
 	}
 
 	afterBlurAndFetch = (suggestions, callback) => {
-		if (this.mounted && (this.state.focused || this.state.isLoading) || this.state.value !== this._valueForBlurAndFetch) return;
+		const {value = ""} = this.state;
+		if (this._valueForBlurAndFetch === undefined) this._valueForBlurAndFetch = "";
+		if (this.mounted && (this.state.focused || this.state.isLoading)) return;
 
-		const {value} = this.state;
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, value);
