@@ -382,8 +382,6 @@ export default class ScopeField extends Component {
 	getAdditionalPersistenceValue = (props) => {
 		const {additionalsPersistenceField, additionalPersistenceContextKey} = getUiOptions(props.uiSchema);
 		let formDataItem = props.formData[additionalsPersistenceField];
-		console.log("formDatItem", formDataItem);
-		console.log(new Context(this.props.formContext.contextId)[additionalPersistenceContextKey]);
 		if (additionalPersistenceContextKey && (formDataItem === undefined || Array.isArray(formDataItem) && formDataItem.length === 0)) {
 			formDataItem = new Context(this.props.formContext.contextId)[additionalPersistenceContextKey];
 		}
@@ -481,8 +479,6 @@ export default class ScopeField extends Component {
 				});
 			}
 
-			console.log(fieldSelector, fieldScope);
-			console.log(_fields);
 			_fields.forEach((fieldName) => {
 				fieldsToShow[fieldName] = schema.properties[fieldName];
 				if (additionalFields[fieldName]) {
@@ -508,7 +504,6 @@ export default class ScopeField extends Component {
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = that.getAdditionalPersistenceValue(props);
-				console.log("!!!!!!!", fieldSelectorValues);
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
 				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
