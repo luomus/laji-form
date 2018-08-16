@@ -9,7 +9,7 @@ const chrome = {
 	...common,
 	browserName: "chrome",
 	chromeOptions: {
-		args: ["--headless", "--disable-gpu", `window-size=${width}x${height}`]
+		args: ["--headless", "--disable-gpu", `window-size=${width}x${height}`, "--no-sandbox", "--disable-dev-shm-usage"]
 	},
 };
 
