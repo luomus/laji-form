@@ -95,15 +95,14 @@ export default class AutosuggestField extends Component {
 						? context[this.getTogglePersistenceContextKey(props)]
 						: false;
 
-		const taxonGroupID = (
-			!informalTaxonGroups 
+		const taxonGroupID = !informalTaxonGroups 
 			? undefined
 			: informalTaxonGroupPersistenceKey !== undefined 
 				? context[this.getInformalTaxonGroupsPersistenceContextKey(props)]
 				: formData[informalTaxonGroups] 
 					? formData[informalTaxonGroups][0] 
-					: undefined
-		);
+					: undefined;
+
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
@@ -260,9 +259,11 @@ export default class AutosuggestField extends Component {
 	onInformalTaxonGroupSelected = (informalTaxonID) => {
 		const {uiSchema} = this.props;
 		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = this.getActiveOptions(getUiOptions(uiSchema));
-		this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		if (informalTaxonGroupPersistenceKey !== undefined) {
 			new Context(this.props.formContext.contextId)[this.getInformalTaxonGroupsPersistenceContextKey(this.props)] = informalTaxonID;
+			this.setState(this.getStateFromProps(this.props));
+		} else {
+			this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		}
 	}
 

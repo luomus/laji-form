@@ -7,7 +7,7 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getWindowScrolled, focusAndScroll, syncScroll } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getWindowScrolled, focusAndScroll, syncScroll, isObject, dictionarify } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -379,6 +379,20 @@ export default class ScopeField extends Component {
 		}
 	}
 
+	getAdditionalPersistenceValue = (props) => {
+		const {additionalsPersistenceField, additionalPersistenceContextKey} = getUiOptions(props.uiSchema);
+		let formDataItem = props.formData[additionalsPersistenceField];
+		console.log("formDatItem", formDataItem);
+		console.log(new Context(this.props.formContext.contextId)[additionalPersistenceContextKey]);
+		if (additionalPersistenceContextKey && (formDataItem === undefined || Array.isArray(formDataItem) && formDataItem.length === 0)) {
+			formDataItem = new Context(this.props.formContext.contextId)[additionalPersistenceContextKey];
+		}
+		let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
+		items = ["undefined", ...items];
+		return items;
+	}
+
+
 	getStateFromProps(props) {
 		const options = getUiOptions(props.uiSchema);
 
@@ -402,10 +416,8 @@ export default class ScopeField extends Component {
 		if (this._context) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceField) {
-				const formDataItem = props.formData[additionalsPersistenceField];
-				let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
-				items = ["undefined", ...items];
-				items.forEach(item => {
+				const additionalPersistenceValue = this.getAdditionalPersistenceValue(props);
+				additionalPersistenceValue.forEach(item => {
 					if (this._context && this._context[item]) additionalsToAdd = {...additionalsToAdd, ...this._context[item]};
 				});
 			} else {
@@ -422,7 +434,7 @@ export default class ScopeField extends Component {
 
 	getSchemasAndAdditionals = (props, state) => {
 		let {schema, uiSchema, formData} = props;
-		let additionalFields = (state && state.additionalFields) ? Object.assign({}, state.additionalFields) : {};
+		let additionalFields = (state && state.additionalFields) ? {...state.additionalFields} : {};
 
 		const options = getUiOptions(uiSchema);
 		let {fields = [], definitions, glyphFields = []} = options;
@@ -453,13 +465,25 @@ export default class ScopeField extends Component {
 				});
 			}
 
-			if (fieldScope.excludeFields) {
-				fieldScope.excludeFields.forEach(fieldName => {
-					delete fieldsToShow[fieldName];
+			const {excludeFields = [], fields: _fields = [], additionalFields: _additionalFields} = fieldScope;
+
+			excludeFields.forEach(fieldName => {
+				delete fieldsToShow[fieldName];
+			});
+
+			if (isObject(_additionalFields)) {
+				const mergedAdditionalFields = {..._additionalFields, ...state.additionalFields};
+				Object.keys(mergedAdditionalFields).forEach(fieldName => {
+					const show = mergedAdditionalFields[fieldName];
+					if (show) {
+						fieldsToShow[fieldName] = schema.properties[fieldName];
+					}
 				});
 			}
 
-			if (fieldScope.fields) fieldScope.fields.forEach((fieldName) => {
+			console.log(fieldSelector, fieldScope);
+			console.log(_fields);
+			_fields.forEach((fieldName) => {
 				fieldsToShow[fieldName] = schema.properties[fieldName];
 				if (additionalFields[fieldName]) {
 					delete additionalFields[fieldName];
@@ -476,13 +500,15 @@ export default class ScopeField extends Component {
 			}
 		}
 		
+		const that = this;
 		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
 
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
-				let fieldSelectorValues = formData[fieldSelector];
+				let fieldSelectorValues = that.getAdditionalPersistenceValue(props);
+				console.log("!!!!!!!", fieldSelectorValues);
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
 				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
@@ -502,7 +528,9 @@ export default class ScopeField extends Component {
 
 		if (additionalFields) {
 			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
-				fieldsToShow[property] = props.schema.properties[property];
+				if (additionalFields[property]) {
+					fieldsToShow[property] = props.schema.properties[property];
+				}
 			});
 
 		}
@@ -554,7 +582,9 @@ export default class ScopeField extends Component {
 		const glyphButtons = this.renderGlyphFields();
 
 		return [
-			additionalsGroupingPath ? this.renderFieldsModal(additionalProperties) : this.renderFieldsDropdown(additionalProperties),
+			additionalsGroupingPath
+				? this.renderFieldsModal(additionalProperties)
+				: this.renderFieldsDropdown(additionalProperties),
 			...(glyphButtons ? glyphButtons : [])
 		];
 	}
@@ -609,13 +639,18 @@ export default class ScopeField extends Component {
 		groupNames.forEach(groupName => {
 			let group = groups[groupName] || {};
 			let groupFields = {};
-			const {fields, additionalFields} = group;
-			const combinedFields = [];
-			[fields, additionalFields].forEach(_fields => {
-				if (_fields) combinedFields.push(..._fields);
-			});
+			const {fields = [], additionalFields = []} = group;
+			const additionalFieldsDict = isObject(additionalFields) ? additionalFields : dictionarify(additionalFields);
+			let combinedFields = [
+				...fields,
+				...Object.keys(additionalFieldsDict)
+			];
 			combinedFields.forEach(field => {
-				if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
+				if (additionalProperties[field]) {
+					groupFields[field] = additionalProperties[field];
+				} else if (additionalFieldsDict[field]) {
+					groupFields[field] = this.props.schema.properties[field];
+				}
 			});
 			let groupsList = this.additionalPropertiesToList(groupFields, ListGroupItem);
 			if (groupsList.length) {
@@ -704,8 +739,8 @@ export default class ScopeField extends Component {
 
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
-		const isIncluded = !!(additionalFields[property] === true || this.state.schema.properties[property]);
-		return isIncluded;
+		const isIncluded = additionalFields[property] === true || this.state.schema.properties[property];
+		return !!isIncluded;
 	}
 
 	toggleAdditionalProperty = (fields) => {
