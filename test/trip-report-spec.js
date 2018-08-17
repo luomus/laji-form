@@ -158,6 +158,8 @@ describe("Trip report (JX.519)", () => {
 			await $("#root_gatherings_0-header").click();
 
 			await expect(lajiFormLocate("gatherings.0").isDisplayed()).toBe(true); // Test that the first field is visible.
+
+			await waitUntilBlockingLoaderHides(6000);
 		});
 	});
 
