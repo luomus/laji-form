@@ -379,14 +379,14 @@ export default class ScopeField extends Component {
 		}
 	}
 
-	getAdditionalPersistenceValue = (props) => {
+	getAdditionalPersistenceValue = (props, includeUndefined = true) => {
 		const {additionalsPersistenceField, additionalPersistenceContextKey} = getUiOptions(props.uiSchema);
 		let formDataItem = props.formData[additionalsPersistenceField];
 		if (additionalPersistenceContextKey && (formDataItem === undefined || Array.isArray(formDataItem) && formDataItem.length === 0)) {
 			formDataItem = new Context(this.props.formContext.contextId)[additionalPersistenceContextKey];
 		}
 		let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
-		items = ["undefined", ...items];
+		if (includeUndefined) items = ["undefined", ...items];
 		return items;
 	}
 
@@ -746,7 +746,7 @@ export default class ScopeField extends Component {
 		}, this.state.additionalFields);
 
 		if (this.context) {
-			const additionalsPersistenceVal = this.props.formData[additionalsPersistenceField];
+			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
 			let contextEntry = this._context || {};
 			if (additionalsPersistenceField) {
 				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceField].type === "array") ?
