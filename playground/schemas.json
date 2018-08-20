@@ -2837,10 +2837,14 @@
       "units": [
         {
           "taxonConfidence": "MY.taxonConfidenceSure",
-          "recordBasis": "MY.recordBasisHumanObservation",
+          "recordBasis": "MY.recordBasisHumanObservationPhoto",
           "checklistID": "",
           "informalTaxonGroups": [],
-          "images": [],
+          "images": [
+            "MM.93028"
+          ],
+          "preservation": [],
+          "birdBehavior": [],
           "identifications": [
             {
               "identificationBasis": []

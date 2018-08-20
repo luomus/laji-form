@@ -181,11 +181,14 @@ export default class LajiForm extends Component {
 		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
 
 		this.settingSavers = {};
-		this._context.addSettingSaver = (key, fn) => {
-			this.settingSavers[key] = fn;
+		this.globalSettingSavers = {};
+		this._context.addSettingSaver = (key, fn, global = false) => {
+			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+			settingSavers[key] = fn;
 		};
-		this._context.removeSettingSaver = (key) => {
-			delete this.settingSavers[key];
+		this._context.removeSettingSaver = (key, global = false) => {
+			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+			delete settingSavers[key];
 		};
 		this._context.onSettingsChange = this.onSettingsChange;
 
@@ -311,7 +314,8 @@ export default class LajiForm extends Component {
 				formID: props.id,
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
-				releaseId: this.releaseId
+				releaseId: this.releaseId,
+				notifier: props.notifier || this.getDefaultNotifier()
 			}
 		};
 	}
@@ -343,6 +347,13 @@ export default class LajiForm extends Component {
 			}
 		}
 		return dictionaries;
+	}
+
+	getDefaultNotifier = () => {
+		if (this.defaultNotifier) return this.defaultNotifier;
+		this.defaultNotifier = ["success", "info", "warning", "error"].reduce((notifier, method) => {
+			return notifier[method] = msg => console.warn(`Notification component not specified for LajiForm! Got '${method}'notification: '${msg}'`);
+		}, {});
 	}
 
 	onChange = ({formData}) => {
@@ -385,7 +396,7 @@ export default class LajiForm extends Component {
 				<div>
 					{this.props.children}
 					{(!this.props.children && this.props.renderSubmit !== false) ?
-						(<Button id="submit" type="submit" onClick={this._onDefaultSubmit}>{translations.Submit}</Button>) :
+						(<Button id="submit" type="submit" onClick={this._onDefaultSubmit}>{this.props.submitText || translations.Submit}</Button>) :
 						null}
 					</div>
 			</Form>
@@ -641,10 +652,11 @@ export default class LajiForm extends Component {
 		}
 	}
 
-	getSettings = () => {
-		return Object.keys(this.settingSavers).reduce((settings, key) => {
+	getSettings = (global = false) => {
+		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+		return Object.keys(settingSavers).reduce((settings, key) => {
 			try {
-				settings[key] = this.settingSavers[key]();
+				settings[key] = settingSavers[key]();
 			} catch (e) {
 				// Swallow failing settings parsing.
 			} 
@@ -652,14 +664,14 @@ export default class LajiForm extends Component {
 		}, {});
 	}
 	
-	onSettingsChange = () => {
-		const settings = this.getSettings();
+	onSettingsChange = (global = false) => {
+		const settings = this.getSettings(global);
 		if (!equals(this.state.formContext.settings, settings)) {
 			// setImmediate because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
 			setImmediate(() => {
 				this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
 			});
-			if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
+			if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
 		}
 	}
 

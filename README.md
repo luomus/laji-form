@@ -60,6 +60,19 @@ Pass the implementation to LajiForm like so:
 <LajiForm apiClient={new ApiClientImplementation()} ... />
 ```
 
+## Notifications ##
+
+LajiForm expects a notification implementation as a paratemer `notifier`. The `notifier` object must implement the interface below:
+
+```
+{
+	success: message => (),
+	warning: message => (),
+	info: message => (),
+	error: message => (),
+}
+```
+
 ## Styles ##
 
 Styles can be found at  ```dist/styles.css```.

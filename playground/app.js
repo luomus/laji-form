@@ -2,6 +2,7 @@ import LajiForm from "../src/app";
 import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
+import _notus from "notus";
 
 import tripReport from "../forms/JX.519.json";
 import fungiAtlas from "../forms/JX.652.json";
@@ -11,6 +12,10 @@ import lineTransectFormData from "../forms/MHL.1.formData.json";
 import "../src/styles";
 import "./styles.css";
 import "./styles-dev.css";
+
+import "notus/src/notus.css";
+
+const notus = _notus();
 
 const forms = {
 	"JX.519": tripReport,
@@ -52,6 +57,11 @@ if (query.id !== undefined && query.local !== "true") {
 	promise = Promise.resolve(query.id ? forms[query.id] : schemas);
 }
 
+const notifier = [["warning", "waring"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
+	notifier[method] = message => notus.send({message, alertType: notusType, title: ""});
+	return notifier;
+}, {});
+
 promise.then(data => {
 	const lajiForm = new LajiForm({
 		...data,
@@ -63,15 +73,15 @@ promise.then(data => {
 				case "MHL.1":
 					return {...ownerFilledFormData, gatherings: lineTransectFormData.gatherings};
 				default:
-						return data.prepopulatedDocument
-							? {
-								...data.prepopulatedDocument,
-								gatheringEvent: {
-									...(data.prepopulatedDocument.gatheringEvent || {}),
-									...ownerFilledFormData.gatheringEvent
-								}
+					return data.prepopulatedDocument
+						? {
+							...data.prepopulatedDocument,
+							gatheringEvent: {
+								...(data.prepopulatedDocument.gatheringEvent || {}),
+								...ownerFilledFormData.gatheringEvent
 							}
-							: ownerFilledFormData;
+						}
+						: ownerFilledFormData;
 				}
 			})(),
 		uiSchemaContext: {
@@ -86,7 +96,8 @@ promise.then(data => {
 		staticImgPath: "/build",
 		renderSubmit: true,
 		onSettingsChange: console.info,
-		googleApiKey: properties.googleApiKey
+		googleApiKey: properties.googleApiKey,
+		notifier
 	});
 	if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 });
