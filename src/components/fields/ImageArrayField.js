@@ -376,7 +376,7 @@ export default class ImageArrayField extends Component {
 	}
 
 	formatValue(value) {
-		return <Thumbnail id={value} />;
+		return value.length ? <Thumbnail id={value} /> : null;
 	}
 }
 
