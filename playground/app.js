@@ -86,7 +86,8 @@ promise.then(data => {
 			})(),
 		uiSchemaContext: {
 			...(data.uiSchemaContext || {}),
-			creator: properties.userId
+			creator: properties.userId,
+			isAdmin: query.admin
 		},
 		onSubmit,
 		apiClient,
