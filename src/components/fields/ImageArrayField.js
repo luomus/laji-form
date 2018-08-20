@@ -7,9 +7,10 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } fro
 import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, parseJSONPointer } from "../../utils";
+import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
+import equals from "deep-equal";
 
 const MAX_IMAGE_SIZE = 20000000;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif", "application/pdf"];
@@ -35,6 +36,13 @@ export default class ImageArrayField extends Component {
 		this.mainContext.addSettingSaver("defaultImageMetadata", () => {
 			return this._context.defaultMetadata;
 		}, !!"global");
+	}
+
+	onSettingsChange = (defaultMetadata) => {
+		if (!equals(this._context.defaultMetadata, defaultMetadata)) {
+			this._context.defaultMetadata = defaultMetadata;
+			this.mainContext.onSettingsChange(!!"global");
+		}
 	}
 
 	componentWillUnmount() {
@@ -315,8 +323,11 @@ export default class ImageArrayField extends Component {
 		}).then(() => {
 			this.mainContext.popBlockingLoader();
 			this.setState({modalOpen: false}, () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess));
-			this._context.defaultMetadata = formData;
-			this.mainContext.onSettingsChange(!!"global");
+			this.onSettingsChange({
+				intellectualRights: formData.intellectualRights,
+				capturerVerbatim: formData.capturerVerbatim,
+				intellectualOwner: formData.intellectualOwner
+			});
 		}).catch(() => {
 			this.mainContext.popBlockingLoader();
 			this.setState({metadataSaveSuccess: false});
@@ -324,33 +335,26 @@ export default class ImageArrayField extends Component {
 	}
 
 	getDefaultMetadataPromise = () => {
-		let defaultMetadata = this._context.defaultMetadata
-			? {...this._context.defaultMetadata}
-			: {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
-		delete defaultMetadata.caption;
-
+		let defaultMetadata = this._context.defaultMetadata || {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
 		const MACode = this.props.formContext.uiSchemaContext.creator;
 
-		return MACode !== undefined ?
+		return !defaultMetadata.capturerVerbatim && MACode !== undefined ?
 			this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName}) => {
 				const name = fullName || MACode;
 				defaultMetadata = {
 					...defaultMetadata,
 					capturerVerbatim: Array.isArray(name) ? name : [name]
 				};
-				this._context.defaultMetadata = defaultMetadata;
-				this.mainContext.onSettingsChange(!!"global");
+				this.onSettingsChange(defaultMetadata);
 				return defaultMetadata;
 			}).catch(() => {
 				return new Promise(resolve => {
-					this._context.defaultMetadata = defaultMetadata;
-					this.mainContext.onSettingsChange(!!"global");
+					this.onSettingsChange(defaultMetadata);
 					resolve(defaultMetadata);
 				});
 			}) :
 			new Promise(resolve => {
-				this._context.defaultMetadata = defaultMetadata;
-				this.mainContext.onSettingsChange(!!"global");
+				this.onSettingsChange(defaultMetadata);
 				resolve(defaultMetadata);
 			});
 	}
