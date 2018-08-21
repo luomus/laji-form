@@ -615,17 +615,15 @@ export default class ScopeField extends Component {
 		let list = [];
 
 		const options = getUiOptions(this.props.uiSchema);
-		const {additionalsGroupingPath, additionalsGroupingOrderer} = options;
+		const {additionalsGroupingPath} = options;
 
 		let groupTranslations = this.state.additionalsGroupsTranslations || {};
 
-		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : undefined;
+		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : {};
 
+		const additionalsPersistenceValue = this.getAdditionalPersistenceValue(this.props);
 		let groupNames = Object.keys(groups);
-		if (additionalsGroupingOrderer && this.props.formData) {
-			const orderer = this.props.formData[additionalsGroupingOrderer];
-			if (orderer) groupNames = groupNames.sort((a, b) => orderer.indexOf(b) - orderer.indexOf(a));
-		}
+		if (additionalsPersistenceValue) groupNames = groupNames.sort((a, b) => additionalsPersistenceValue.indexOf(b) - additionalsPersistenceValue.indexOf(a));
 
 		groupNames.forEach(groupName => {
 			let group = groups[groupName] || {};
