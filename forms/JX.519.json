@@ -2174,17 +2174,28 @@
                                         "title": "Kaikki"
                                     },
                                     "MVL.1": {
-                                        "additionalFields": {
-                                            "atlasCode": true,
-                                            "birdAge": true,
-                                            "birdBehavior": true,
-                                            "birdPlumage": true,
-                                            "breeding": true,
-                                            "distance": true,
-                                            "movingDirection": true,
-                                            "sex": true,
-                                            "twitched": true
-                                        },
+                                        "defaultFields": [
+                                            "atlasCode",
+                                            "birdAge",
+                                            "birdBehavior",
+                                            "birdPlumage",
+                                            "breeding",
+                                            "distance",
+                                            "movingDirection",
+                                            "sex",
+                                            "twitched"
+                                        ],
+                                        "additionalFields": [
+                                            "atlasCode",
+                                            "birdAge",
+                                            "birdBehavior",
+                                            "birdPlumage",
+                                            "breeding",
+                                            "distance",
+                                            "movingDirection",
+                                            "sex",
+                                            "twitched"
+                                        ],
                                         "excludeFields": [
                                             "taxonConfidence",
                                             "recordBasis"
@@ -2212,12 +2223,18 @@
                                         }
                                     },
                                     "MVL.187": {
-                                        "fields": {
-                                            "batBehavior": true,
-                                            "identifications_0_identificationBasis": true,
-                                            "lifeStage": true,
-                                            "sex": true
-                                        },
+                                        "defaultFields": [
+                                            "batBehavior",
+                                            "identifications_0_identificationBasis",
+                                            "lifeStage",
+                                            "sex"
+                                        ],
+                                        "additionalFields": [
+                                            "batBehavior",
+                                            "identifications_0_identificationBasis",
+                                            "lifeStage",
+                                            "sex"
+                                        ],
                                         "uiSchema": {
                                             "lifeStage": {
                                                 "ui:options": {
@@ -2246,26 +2263,41 @@
                                         }
                                     },
                                     "MVL.21": {
+                                        "defaultFields": [
+                                            "plantLifeStage",
+                                            "plantStatusCode"
+                                        ],
                                         "additionalFields": [
                                             "plantLifeStage",
                                             "plantStatusCode"
                                         ]
                                     },
                                     "MVL.232": {
-                                        "additionalFields": {
-                                            "femaleIndividualCount": true,
-                                            "hostInformalNameString": true,
-                                            "identifications_0_det": true,
-                                            "identifications_0_detDate": true,
-                                            "identifications_0_identificationBasis": true,
-                                            "lifeStage": true,
-                                            "maleIndividualCount": true,
-                                            "preservation": true,
-                                            "samplingMethod": true,
-                                            "sex": true,
-                                            "unitGathering_habitatDescription": true,
-                                            "unitGathering_habitatIUCN": true
-                                        },
+										"defaultFields": [
+                                            "identifications_0_det",
+                                            "identifications_0_detDate",
+                                            "identifications_0_identificationBasis",
+                                            "femaleIndividualCount",
+                                            "hostInformalNameString",
+                                            "lifeStage",
+                                            "maleIndividualCount",
+                                            "preservation",
+                                            "samplingMethod",
+                                            "sex",
+                                            "unitGathering_habitatDescription",
+                                            "unitGathering_habitatIUCN"
+										],
+                                        "additionalFields": [
+                                            "femaleIndividualCount",
+                                            "hostInformalNameString",
+                                            "lifeStage",
+                                            "maleIndividualCount",
+                                            "preservation",
+                                            "samplingMethod",
+                                            "sex",
+                                            "unitGathering_habitatDescription",
+                                            "unitGathering_habitatIUCN"
+                                        ],
                                         "excludeFields": [
                                             "taxonConfidence",
                                             "recordBasis"

@@ -267,6 +267,7 @@ const buttonSettings = {
  *      fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
  *      additionalFields: [<string>] (if grouping is enabled, additional fields are shown only if selected from the list)
  *      excludeFields: [<string>] (exclude fields from showing)
+ *      excludeFields: [<string>] (fields that are shown by default)
  *      refs: [<string>] (root definitions that are merged recursively to this fieldScope)
  *      uiSchema: <uiSchema> (merged recursively to inner uiSchema)
  *      uiSchemaMergeType: See documentation for ConditionalUiSchemaField
@@ -433,6 +434,7 @@ export default class ScopeField extends Component {
 	getSchemasAndAdditionals = (props, state) => {
 		let {schema, uiSchema, formData} = props;
 		let additionalFields = (state && state.additionalFields) ? {...state.additionalFields} : {};
+		let defaultFields = (state && state.defaultFields) ? {...state.defaultFields} : {};
 
 		const options = getUiOptions(uiSchema);
 		let {fields = [], definitions, glyphFields = []} = options;
@@ -463,21 +465,15 @@ export default class ScopeField extends Component {
 				});
 			}
 
-			const {excludeFields = [], fields: _fields = [], additionalFields: _additionalFields} = fieldScope;
+			const {excludeFields = [], fields: _fields = [], defaultFields: _defaultFields = []} = fieldScope;
 
 			excludeFields.forEach(fieldName => {
 				delete fieldsToShow[fieldName];
 			});
 
-			if (isObject(_additionalFields)) {
-				const mergedAdditionalFields = {..._additionalFields, ...state.additionalFields};
-				Object.keys(mergedAdditionalFields).forEach(fieldName => {
-					const show = mergedAdditionalFields[fieldName];
-					if (show) {
-						fieldsToShow[fieldName] = schema.properties[fieldName];
-					}
-				});
-			}
+			_defaultFields.forEach(fieldName => {
+				if (additionalFields[fieldName] !== false) fieldsToShow[fieldName] = schema.properties[fieldName];
+			});
 
 			_fields.forEach((fieldName) => {
 				fieldsToShow[fieldName] = schema.properties[fieldName];
@@ -527,7 +523,6 @@ export default class ScopeField extends Component {
 					fieldsToShow[property] = props.schema.properties[property];
 				}
 			});
-
 		}
 
 		if (props.formData) {
@@ -554,7 +549,8 @@ export default class ScopeField extends Component {
 		return {
 			schema: schema,
 			uiSchema: generatedUiSchema,
-			additionalFields
+			additionalFields,
+			defaultFields
 		};
 	}
 
@@ -635,11 +631,8 @@ export default class ScopeField extends Component {
 			let group = groups[groupName] || {};
 			let groupFields = {};
 			const {fields = [], additionalFields = []} = group;
-			const additionalFieldsDict = isObject(additionalFields) ? additionalFields : dictionarify(additionalFields);
-			let combinedFields = [
-				...fields,
-				...Object.keys(additionalFieldsDict)
-			];
+			const additionalFieldsDict = dictionarify(additionalFields);
+			let combinedFields = Object.keys({...dictionarify(fields), ...additionalFieldsDict});
 			combinedFields.forEach(field => {
 				if (additionalProperties[field]) {
 					groupFields[field] = additionalProperties[field];
