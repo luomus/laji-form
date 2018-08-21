@@ -365,42 +365,21 @@ describe("Trip report (JX.519)", () => {
 			await $("#root_gatherings_0-header").click();
 		});
 
-		const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon")
-		const $poweruserButton = $taxon.$(".power-user-addon");
-		const $taxonInput = $taxon.$("input");
+		const $informalTaxonGroupButton = $(".informal-taxon-group-chooser");
+		it("choosing informal taxon group changes fields", async () => {
+			await $informalTaxonGroupButton.click();
 
-		it("shows power user for taxon field", async () => {
-			await $taxonInput.click();
+			const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
+			const fieldCount = await getFieldCount();
 
-			await expect($poweruserButton.isDisplayed()).toBe(true);
+			const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last();
+
+			await expect($birdButton.isDisplayed()).toBe(true);
+
+			await $birdButton.click();
+			await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.0.twitched")), 4000, "Bird field didn't appear");
+
+			await expect(fieldCount).not.toBe(await getFieldCount());
 		});
-
-		it("clicking power user button toggles power user mode on", async () => {
-			await $poweruserButton.click();
-
-			await expect($poweruserButton.getAttribute("class")).toContain("active");
-
-			await $poweruserButton.click();
-
-			await expect($poweruserButton.getAttribute("class")).not.toContain("active");
-		});
-	});
-
-	const $informalTaxonGroupButton = $(".informal-taxon-group-chooser");
-	it("choosing informal taxon group changes fields", async () => {
-		await $informalTaxonGroupButton.click();
-
-		browser.sleep(1000);
-
-		const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
-		const fieldCount = await getFieldCount();
-
-		const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last();
-
-		await $birdButton.click();
-
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.0.twitched")), 4000, "Bird field didn't appear");
-
-		await expect(fieldCount).not.toBe(await getFieldCount());
 	});
 });

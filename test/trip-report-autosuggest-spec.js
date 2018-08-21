@@ -119,6 +119,23 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await removeUnit(0, 0);
 	});
 
+	it("shows power user for taxon field", async () => {
+		await $taxonInput.click();
+
+		await expect($poweruserButton.isDisplayed()).toBe(true);
+	});
+
+	it("clicking power user button toggles power user mode on/off", async () => {
+		await $poweruserButton.click();
+
+		await expect($poweruserButton.getAttribute("class")).toContain("active");
+
+		await $poweruserButton.click();
+
+		await expect($poweruserButton.getAttribute("class")).not.toContain("active");
+	});
+
+
 	it("clicking any match after waiting for suggestion list works with power user mode", async () => {
 		await $taxonInput.click();
 		await $poweruserButton.click();
@@ -131,15 +148,28 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
 
 		const enteredUnitTaxon = await lajiFormLocate("gatherings.0.units.0").$$("td").first().getText();
-		//await expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("div");
-		//await expect(lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("tr");
-		//await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
 
-		//await expect($okSign.isDisplayed()).toBe(true);
 		await expect(enteredUnitTaxon).not.toBe("kettu");
 
 		await removeUnit(0, 0);
 		await removeUnit(0, 0);
+	});
+
+
+	it("entering exact match when power user mode is on adds new unit automatically", async () => {
+		await $taxonInput.sendKeys("susi");
+		await $taxonInput.sendKeys(protractor.Key.ENTER);
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "New unit didn't show up");
+
+		await expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
+		await expect(lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("div");
+
+		await removeUnit(0, 1);
+
+		await $taxonInput.click();
+		await $poweruserButton.click();
+
+		await expect($poweruserButton.getAttribute("class")).not.toContain("active");
 	});
 
 });

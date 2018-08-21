@@ -465,7 +465,7 @@ export class Autosuggest extends Component {
 	}
 
 	onKeyDown = (e) => {
-		if (e.key === "Enter" && this.props.allowNonsuggestedValue && !this.state.loading && !isEmptyString(this.state.value)) {
+		if (this.props.controlledValue && e.key === "Enter" && this.props.allowNonsuggestedValue && !this.state.loading && !isEmptyString(this.state.value)) {
 			this.selectUnsuggested(this.state.value);
 		}
 		if ( this.props.inputProps && this.props.inputProps.onKeyDown) {

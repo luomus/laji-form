@@ -24,7 +24,7 @@ export async function putForeignMarkerToMap() {
 	await browser.actions()
 		.mouseMove($gatheringsMap, {x: 100, y: 100}).perform();
 
-	return await browser.actions()
+	return browser.actions()
 		.click().perform();
 }
 
