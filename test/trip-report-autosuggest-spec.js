@@ -12,7 +12,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	const $poweruserButton = $taxon.$(".power-user-addon");
 	const $taxonInput = $taxon.$("input");
 
-	const $okSign = $taxon.$(".glyphicon-tag");
+	const $okSign = $taxon.$(".glyphicon-ok");
 	const $warningSign = $taxon.$(".glyphicon-warning-sign");
 	const $taxonSuggestionList = $taxon.$(".rw-list");
 	const $$taxonSuggestions = $taxon.$$(".rw-list-option");

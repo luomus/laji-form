@@ -159,14 +159,13 @@ export class InformalTaxonGroupChooser extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (this.props.lang !== props.lang) {
+		if (this.props.lang === props.lang) return;
+
 		getInformalGroups().then(state => {
 			if (!this.mounted) return;
 			this.setState({...state, root: state.informalTaxonGroups});
 		});
-		}
 	}
-
 
 	componentWillUnmount() {
 		this.mounted = false;

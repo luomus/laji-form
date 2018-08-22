@@ -561,5 +561,15 @@
 		fi: "Piilota työkalut",
 		en: "Hide tools",
 		sv: "Piilota työkalut"
+	},
+	taxonomicRank: {
+		fi: "Taksonominen taso",
+		en: "Taxonomic rank",
+		sv: "Taxonomisk nivå"
+	},
+	taxonGroups: {
+		fi: "Lajiryhmät",
+		en: "Species groups",
+		sv: "Organismgrupper"
 	}
 };

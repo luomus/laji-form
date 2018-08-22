@@ -1092,12 +1092,20 @@ min-height: 20px;
 	margin-left: 2px;
 }
 
-.laji-form .informal-group-image {
+.laji-form .informal-group-image, .laji-form.informal-group-image  {
 	min-width: 20px;
 	min-height: 20px;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% auto;
+}
+
+.laji-form.taxon-popover.informal-group-image {
+	background-size: auto 65px;
+	background-position: top left;
+}
+.laji-form.taxon-popover.informal-group-image > div {
+	margin-left: 65px;
 }
 
 .laji-form .informal-taxon-groups-list.list-group {

@@ -4,7 +4,7 @@ import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo } from "../../utils";
+import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -111,13 +111,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			</TaxonCardOverlay>
 		)
 
-		renderSuccessGlyph = (value) => {
-			return (
-				<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
-					<Glyphicon style={{pointerEvents: "none"}} glyph="tag" className="form-control-feedback"/>
-				</a>
-			);
-		}
+		renderSuccessGlyph = (value) => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		render() {
 			const {props} = this;
@@ -725,18 +719,52 @@ class TaxonCardOverlay extends Component {
 	}
 
 	fetch(value) {
-		let urlTxt = "", urlTxtIsCursive = false;
-		isEmptyString(value) ? 
-			this.setState({urlTxt, urlTxtIsCursive}) :
-			new ApiClient().fetchCached(`/taxa/${value}`).then(response => {
-				this.mounted && this.setState({urlTxt: response.scientificName, value, urlTxtIsCursive: response.cursiveName});
-			});
-	}
+		if ( isEmptyString(value)) { 
+			this.setState({scientificName: "", cursiveName: false})
+		} else {
+			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups}) => {
+				if (!this.mounted) return;
+				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName}});
 
+				getInformalGroups().then(({informalTaxonGroupsById}) => {
+					if (!this.mounted) return;
+					this.setState({informalTaxonGroupsById});
+				});
+			});
+			new ApiClient().fetchCached(`/taxa/${value}/parents`).then(parents => {
+				const state = {};
+				for (let parent of parents) {
+					const {vernacularName, scientificName, cursiveName} = parent;
+					if (parent.taxonRank === "MX.order") {
+						state.order = {vernacularName, scientificName, cursiveName};
+					} else if (parent.taxonRank === "MX.family") {
+						state.family = {vernacularName, scientificName, cursiveName};
+					}
+					if (state.order && state.family) {
+						this.setState(state);
+						break;
+					}
+				}
+				this.setState({...state, higherThanOrder: !state.order && !state.family})
+			});
+			new ApiClient().fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
+				this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
+			});
+		}
+	}
 
 	render() {
 		const {id, formContext, value, children, placement} = this.props;
-		const {urlTxt, urlTxtIsCursive} = this.state;
+		const {
+			taxon = {},
+			taxonRanks,
+			taxonRank,
+			order,
+			family,
+			higherThanOrder,
+			informalTaxonGroupsById = {},
+			informalTaxonGroups = []
+		} = this.state;
 
 		const tooltipElem = (
 			<Tooltip id={`${id}-popover-tooltip`}>
@@ -744,21 +772,47 @@ class TaxonCardOverlay extends Component {
 			</Tooltip>
 		);
 
+		let imageID = informalTaxonGroups[0];
+		if (informalTaxonGroupsById[imageID] && informalTaxonGroupsById[imageID].parent) {
+			imageID = informalTaxonGroupsById[imageID].parent.id;
+		}
+
+		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
+
+		const TaxonName = ({scientificName, vernacularName = "", cursiveName}) => {
+			const _scientificName = vernacularName && scientificName
+				?  `(${scientificName})`
+				: (scientificName || "");
+			return (
+				<React.Fragment>
+					{`${vernacularName}${vernacularName ? " " : ""}`}
+					{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+				</React.Fragment>
+			);
+		}
+
 		const popover = (
 			<Popover id={`${id}-popover`}>
-				<span className="text-success">
-					<Glyphicon glyph="tag" /> {formContext.translations.KnownSpeciesName}
-				</span>
-				{this.state.urlTxt ?
+				<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
 					<div>
 						<OverlayTrigger overlay={tooltipElem}>
 							<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-								<Glyphicon glyph="modal-window"/> {urlTxtIsCursive ? <i>{urlTxt}</i> : urlTxt}
+								{taxon.vernacularName && <React.Fragment><TaxonName {...taxon} /><br /></React.Fragment>}
 							</a>
 						</OverlayTrigger>
-					</div> :
-					<Spinner />
-				}
+						<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
+						{!higherThanOrder && (
+							<React.Fragment>
+								<strong>{formContext.translations.taxonGroups}:</strong>
+								<ul>
+									{order && <li><TaxonName {...order} /></li>}
+										{family && <li><TaxonName {...family} /></li>}
+								</ul>
+							</React.Fragment>
+						)}
+					</div>
+					{loading && <Spinner />}
+				</div>
 			</Popover>
 		);
 
@@ -781,9 +835,9 @@ class InformalTaxonGroupsAddon extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		getInformalGroups().then(({informalTaxonGroups, informalTaxonGroupsById}) => {
+		getInformalGroups().then(({informalTaxonGroupsById}) => {
 			if (!this.mounted) return;
-			this.setState({informalTaxonGroups, informalTaxonGroupsById});
+			this.setState({informalTaxonGroupsById});
 		});
 	}
 
