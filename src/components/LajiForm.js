@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
-import { Button } from "./components";
+import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject } from "../utils";
 import equals from "deep-equal";
@@ -169,7 +169,8 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
+		const shortcuts = props.uiSchema["ui:shortcuts"];
+		this.keyHandlers = this.getKeyHandlers(shortcuts);
 		this._context.keyHandlers = this.keyHandlers;
 		this._context.addKeyHandler("root", this.keyFunctions);
 		this._context.keyHandlerTargets = Object.keys(this.keyHandlers).reduce((targets, keyCombo) => {
@@ -177,6 +178,14 @@ export default class LajiForm extends Component {
 			if ("target" in handler) targets.push({id: handler.target, handler});
 			return targets;
 		}, []);
+
+		Object.keys(shortcuts).some(keyCombo => {
+			if (shortcuts[keyCombo].fn == "help") {
+				this.keyCombo = keyCombo;
+				this.keyComboDelay = shortcuts[keyCombo].fn;
+				return true;
+			}
+		});
 
 		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
 
@@ -375,6 +384,11 @@ export default class LajiForm extends Component {
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
+				{shortcuts && (
+					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
+						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
+					</TooltipComponent>
+				)}
 				<Form
 					{...this.props}
 					ref={this.getRef}
@@ -526,6 +540,25 @@ export default class LajiForm extends Component {
 		this.formRef.onSubmit({preventDefault: () => {}});
 	}
 
+	getShorcutButtonTooltip = () => {
+		const {translations} = this.state.formContext;
+		if (this.keyCombo && this.keyComboDelay) {
+			return `${translations.ShortcutHelpPrefix} ${stringifyKeyCombo(this.keyCombo)}${translations.shortcutHelpSuffix}`;
+		}
+	}
+
+	toggleHelp = (e) => {
+		this.helpVisible ? this.dismissHelp(e) : this.showHelp(e);
+	}
+
+	showHelp = () => {
+		const node = findDOMNode(this.shortcutHelpRef);
+		if (!this.helpVisible) {
+			if (node) node.className = node.className.replace(" hidden", "");
+			this.helpVisible = true;
+		}
+	}
+
 	dismissHelp = (e) => {
 		const node = findDOMNode(this.shortcutHelpRef);
 		e.preventDefault();
@@ -549,13 +582,8 @@ export default class LajiForm extends Component {
 
 			this.helpStarted = true;
 
-			const node = findDOMNode(this.shortcutHelpRef);
-			
 			this.helpTimeout = setTimeout(() => {
-				if (!this.helpVisible) {
-					if (node) node.className = node.className.replace(" hidden", "");
-					this.helpVisible = true;
-				}
+				this.showHelp();
 			}, delay * 1000);
 			this.addEventListener(document, "keyup", this.dismissHelp);
 			this.addEventListener(window, "blur", this.dismissHelp);

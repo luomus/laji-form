@@ -571,5 +571,15 @@
 		fi: "Lajiryhmät",
 		en: "Species groups",
 		sv: "Organismgrupper"
+	},
+	shortcutHelpPrefix: {
+		fi: "Painamalla ",
+		en: "View the shortcuts by holding ",
+		sv: "Visa genvägarna genom att hålla"
+	},
+	shortcutHelpSuffix: {
+		fi: "-näppäimen pohjaan saat näkyville pikanäppäintoiminnot",
+		en: "-key down",
+		sv: "-nyckel nere"
 	}
 };

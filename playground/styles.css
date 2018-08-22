@@ -1284,3 +1284,9 @@ min-height: 20px;
 	background-color: #f1f1f1;
 	color: #b7b7b7;
 }
+
+.laji-form > button {
+	margin-top: 5px;
+	margin-bottom: 5px;
+
+}
