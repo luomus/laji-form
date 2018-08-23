@@ -732,7 +732,7 @@ class TaxonCardOverlay extends Component {
 				});
 			});
 			new ApiClient().fetchCached(`/taxa/${value}/parents`).then(parents => {
-				const state = {};
+				const state = {order: undefined, family: undefined};
 				for (let parent of parents) {
 					const {vernacularName, scientificName, cursiveName} = parent;
 					if (parent.taxonRank === "MX.order") {
@@ -801,7 +801,7 @@ class TaxonCardOverlay extends Component {
 							</a>
 						</OverlayTrigger>
 						<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
-						{!higherThanOrder && (
+						{!higherThanOrder ? (
 							<React.Fragment>
 								<strong>{formContext.translations.taxonGroups}:</strong>
 								<ul>
@@ -809,7 +809,7 @@ class TaxonCardOverlay extends Component {
 										{family && <li><TaxonName {...family} /></li>}
 								</ul>
 							</React.Fragment>
-						)}
+						) : <React.Fragment><br /><br /></React.Fragment>}
 					</div>
 					{loading && <Spinner />}
 				</div>
