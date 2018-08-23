@@ -340,7 +340,9 @@
 		sv: "Uppdatera felen"
 	},
 	submitWithWarnings: {
-		fi: "Tallenna varoituksista huolimatta"
+		fi: "Tallenna varoituksista huolimatta",
+		en: "Acknowledge warnings and save",
+		sv: "bekräfta varningar och spara"
 	},
 	chooseFromNamedPlace: {
 		fi: "Käytä omaa paikkaa",
