@@ -343,7 +343,8 @@ export default class ImageArrayField extends Component {
 				const name = fullName || MACode;
 				defaultMetadata = {
 					...defaultMetadata,
-					capturerVerbatim: Array.isArray(name) ? name : [name]
+					capturerVerbatim: Array.isArray(name) ? name : [name],
+					intellectualOwner: name
 				};
 				this.onSettingsChange(defaultMetadata);
 				return defaultMetadata;
