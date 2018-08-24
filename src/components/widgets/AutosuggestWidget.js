@@ -4,7 +4,7 @@ import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify } from "../../utils";
+import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -442,30 +442,23 @@ export class Autosuggest extends Component {
 
 	onFocus = (e) => {
 		this.setState({focused: true}, () => this.onSuggestionsFetchRequested({value: this.state.value}));
-		if ( this.props.inputProps && this.props.inputProps.onFocus) {
-			e.persist();
-			this.props.inputProps.onFocus(e);
-		}
+
+		triggerParentComponent("onFocus", e, this.props.inputProps);
 	}
 
 	onBlur = (e, {highlightedSuggestion}) => {
 		this.highlightedSuggestionOnBlur = highlightedSuggestion;
 		this._valueForBlurAndFetch = this.state.value;
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
-		if ( this.props.inputProps && this.props.inputProps.onBlur) {
-			e.persist();
-			this.props.inputProps.onBlur(e);
-		}
+		triggerParentComponent("onBlur", e, this.props.inputProps);
 	}
 
 	onKeyDown = (e) => {
 		if (this.props.controlledValue && e.key === "Enter" && this.props.allowNonsuggestedValue && !this.state.loading && !isEmptyString(this.state.value)) {
 			this.selectUnsuggested(this.state.value);
 		}
-		if ( this.props.inputProps && this.props.inputProps.onKeyDown) {
-			e.persist();
-			this.props.inputProps.onKeyDown(e);
-		}
+
+		triggerParentComponent("onKeyDown", e, this.props.inputProps);
 	}
 
 

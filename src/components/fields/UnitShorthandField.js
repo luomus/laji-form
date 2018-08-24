@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
@@ -62,7 +62,6 @@ export default class UnitShorthandField extends Component {
 	}
 
 	shouldShowSchema = (props) => {
-		//return !deepEquals(props.formData, this.props.formData);
 		let {showSchema} = this.state;
 		const isEmpty = () => deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 
@@ -185,12 +184,7 @@ class CodeReader extends Component {
 
 	onSuggestionSelected = ({payload: {unit}}) => {
 		const {formContext} = this.props;
-		if (formContext.formDataTransformers) {
-			unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
-				const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
-				return state.formData;
-			}, unit);
-		}
+		unit = bringRemoteFormData(unit, formContext);
 		this.props.onChange(unit);
 	}
 

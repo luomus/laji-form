@@ -86,7 +86,7 @@ export function getButton(button, props = {}) {
 	};
 
 	const buttonId = `${id}-${fnName}`;
-	return render ? render(onClick) : (
+	return render ? render(onClick, button) : (
 		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>

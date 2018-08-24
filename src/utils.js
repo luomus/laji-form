@@ -556,8 +556,27 @@ export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true)
 export function shouldSyncScroll(formContext) {
 	return new Context(formContext.contextId).windowScrolled === getWindowScrolled();
 }
+
 export function syncScroll(formContext, force = false) {
 	if (force || shouldSyncScroll(formContext)) {
 		focusAndScroll(formContext, undefined, new Context(formContext.contextId).lastIdToScroll);
+	}
+}
+
+export function bringRemoteFormData(formData, formContext) {
+	if (formContext.formDataTransformers) {
+		return formContext.formDataTransformers.reduce((formData, {"ui:field": uiField, props: fieldProps}) => {
+			const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData});
+			return state.formData;
+		}, formData);
+	} else {
+		return formData;
+	}
+}
+
+export function triggerParentComponent(eventName, e, props) {
+	if (props && props[eventName]) {
+		e.persist();
+		props[eventName](e);
 	}
 }

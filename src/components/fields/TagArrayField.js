@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
-import { isEmptyString } from "../../utils";
+import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Label } from "../components";
 
@@ -33,17 +33,15 @@ export class TagInputComponent extends Component {
 	onKeyDown = (e) => {
 		const {value} = this.state;
 		const {tags = []} = this.props;
-		if (e.key === "Enter" && !isEmptyString(value)) {
+		const {separatorKeys = ["Enter"]} = getUiOptions(this.props.uiSchema);
+		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
 			this.props.onChange([...tags, value], "enter");
 			e.stopPropagation();
 			e.preventDefault();
 		} else if (e.key === "Backspace" && isEmptyString(value) && tags.length) {
 			this.onRemove(tags.length - 1)();
 		}
-		if (this.props.onKeyDown) {
-			e.persist();
-			this.props.onKeyDown(e);
-		}
+		triggerParentComponent("onKeyDown", e, this.props);
 	}
 
 	onRemove = (idx) => () => {
@@ -52,18 +50,19 @@ export class TagInputComponent extends Component {
 		this.props.onChange(tags, "remove");
 	}
 
-	onFocus = () => {
+	onFocus = (e) => {
 		this.setState({focused: true}, () => {
-			if (this.props.onFocus) this.props.onFocus();
+			triggerParentComponent("onFocus", e, this.props);
 		});
 	}
 
-	onBlur = () => {
+	onBlur = (e) => {
 		this.setState({focused: false});
-		if (this.props.onBlur) this.props.onBlur();
+		triggerParentComponent("onBlur", e, this.props);
 		if (!isEmptyString(this.state.value)) {
 			this.props.onChange([...(this.props.tags || []), this.state.value], "blur");
 		}
+
 	}
 
 	setInputRef = (ref) => {
@@ -95,6 +94,7 @@ export class TagInputComponent extends Component {
 			value: value,
 			onChange: this.onChange,
 			id: this.props.id,
+			...this.props.inputProps,
 			onFocus: this.onFocus,
 			onBlur: this.onBlur,
 			onKeyDown: this.onKeyDown

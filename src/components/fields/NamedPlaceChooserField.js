@@ -146,7 +146,7 @@ export default class NamedPlaceChooserField extends Component {
 		const {failed} = this.state;
 		const onHide = () => this.setState({show: false});
 		return (
-			<div>
+			<React.Fragment>
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema || getInnerUiSchema(this.props.uiSchema)} />
 				{
 					this.state.show ? (
@@ -161,7 +161,7 @@ export default class NamedPlaceChooserField extends Component {
 						</Modal>
 					) : null
 				}
-			</div>
+			</React.Fragment>
 		);
 
 	}
@@ -366,7 +366,7 @@ class Popup extends Component {
 		}
 
 		return place ? (
-			<div>
+			<React.Fragment>
 				<table className="named-place-popup">
 					<tbody>
 					{
@@ -386,7 +386,7 @@ class Popup extends Component {
 				</tbody>
 				</table>
 				<Button ref={getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
-		</div>
+		</React.Fragment>
 		) : <Spinner />;
 	}
 }
