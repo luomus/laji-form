@@ -40,7 +40,7 @@ const log = (type) => console.info.bind(console, type);
 let lang = "fi";
 
 const apiClient = new ApiClientImplementation(
-	"http://localhost:3003/v0",
+	"https://apitest.laji.fi/v0",
 	properties.accessToken,
 	properties.userToken,
 	lang
