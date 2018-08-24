@@ -570,9 +570,9 @@
 		sv: "Taxonomisk nivå"
 	},
 	taxonGroups: {
-		fi: "Lajiryhmät",
-		en: "Species groups",
-		sv: "Organismgrupper"
+		fi: "Taksonomiset ryhmät",
+		en: "Taxonomic groups",
+		sv: "Taxonomisk grupper"
 	},
 	shortcutHelpPrefix: {
 		fi: "Painamalla ",
