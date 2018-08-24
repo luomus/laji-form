@@ -40,7 +40,7 @@ const log = (type) => console.info.bind(console, type);
 let lang = "fi";
 
 const apiClient = new ApiClientImplementation(
-	"https://apitest.laji.fi/v0",
+	"http://localhost:3003/v0",
 	properties.accessToken,
 	properties.userToken,
 	lang
@@ -57,7 +57,7 @@ if (query.id !== undefined && query.local !== "true") {
 	promise = Promise.resolve(query.id ? forms[query.id] : schemas);
 }
 
-const notifier = [["warning", "waring"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
+const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
 	notifier[method] = message => notus.send({message, alertType: notusType, title: ""});
 	return notifier;
 }, {});
