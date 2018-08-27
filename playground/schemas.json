@@ -981,6 +981,9 @@
 						},
 						"hostID": {
 							"ui:widget": "HiddenWidget"
+						},
+						"birdBehavior": {
+							"ui:field": "EnumRangeArrayField"
 						}
 					}
 				}
@@ -2834,23 +2837,42 @@
       "units": [
         {
           "taxonConfidence": "MY.taxonConfidenceSure",
-          "recordBasis": "MY.recordBasisHumanObservation",
+          "recordBasis": "MY.recordBasisHumanObservationPhoto",
           "checklistID": "",
-          "informalTaxonGroups": [],
-          "images": [],
+          "informalTaxonGroups": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "images": [
+            "MM.93028"
+          ],
+          "preservation": [],
+          "birdBehavior": [],
           "identifications": [
             {
-              "identificationBasis": []
+              "identificationBasis": [],
+              "taxon": "varpunen"
             }
           ],
           "unitGathering": {
             "geometry": {}
           },
-          "unitFact": {}
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.36573"
+          }
         }
       ],
       "eventTime": {}
     }
   ]
+}, 
+"settings": {
+  "%additionalFields/scopeField_gathering_unit_informalTaxonGroups": {
+    "undefined": {
+      "images": true,
+      "birdBehavior": true,
+      "distance": true
+    }
+  }
 }
 }

@@ -4,7 +4,7 @@ import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
-import LajiMap from "laji-map/lib/map";
+import LajiMap from "laji-map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import { Button, StretchAffix, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
@@ -207,6 +207,38 @@ class UnitsMapArrayField extends Component {
 		this.onInsert = DefaultMapArrayField.prototype.onInsert.bind(this);
 		this.afterActiveChange = DefaultMapArrayField.prototype.afterActiveChange.bind(this);
 	}
+
+	componentDidMount() {
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlightUnit", this.startHighlightUnit);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlightUnit", this.endHighlightUnit);
+	}
+
+	componentWillUnmount() {
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlightUnit");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlightUnit");
+	}
+
+	startHighlightUnit = (idx) => {
+		const layers = this.map.data[0].group._layers;
+		for (let id of Object.keys(this.map.data[0].group._layers)) {
+			const layer = layers[id];
+			if (layer.feature.properties.idx === idx) {
+				this.map.setLayerStyle(layer, {color: "#75CEFA"});
+				break;
+			}
+		}
+	};
+
+	endHighlightUnit = (idx) => {
+		const layers = this.map.data[0].group._layers;
+		for (let id of Object.keys(this.map.data[0].group._layers)) {
+			const layer = layers[id];
+			if (layer.feature.properties.idx === idx) {
+				this.map.setLayerStyle(layer, {color: this.getUnitFeatureStyle().color});
+				break;
+			}
+		}
+	};
 
 	getOptions = (options) => {
 		const {formData} = this.props;
@@ -1252,7 +1284,7 @@ export class Map extends Component {
 	}
 
 	setOptions = (prevOptions, options) => {
-		const {className, style, hidden, singleton, emptyMode, draw, ..._options} = options; // eslint-disable-line no-unused-vars
+		const {className, style, hidden, singleton, emptyMode, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
 			style: prevStyle,  // eslint-disable-line no-unused-vars
@@ -1260,19 +1292,28 @@ export class Map extends Component {
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
 			emptyMode: prevEmptyMode,  // eslint-disable-line no-unused-vars
-			draw: prevDraw,  // eslint-disable-line no-unused-vars
 			..._prevOptions
 		} = prevOptions;
 	
 		if (this.map) {
 			Object.keys(_options).forEach(key => {
-				if (!deepEquals(_options[key], _prevOptions[key])) {
-					this.map.setOption(key, _options[key]);
+				switch(key) {
+				case "draw": // More optimal way of updating draw data than setting the draw option
+					if (!deepEquals(_options.draw, _prevOptions.draw)) {
+						this.map.updateDrawData(_options.draw);
+					}
+					break;
+				case "rootElem": // deeqEquals on DOM node causes maximum call stack size exceeding.
+					if (_options[key] !== _prevOptions[key]) {
+						this.map.setOption(key, _options[key]);
+					}
+					break;
+				default:
+					if (!deepEquals(_options[key], _prevOptions[key])) {
+						this.map.setOption(key, _options[key]);
+					}
 				}
 			});
-			if (!deepEquals(draw, prevDraw)) {
-				this.map.updateDrawData(draw);
-			}
 		}
 	}
 
@@ -1309,12 +1350,19 @@ export class Map extends Component {
 class MapPanel extends Component {
 	render() {
 		return (
-				<Panel bsStyle={this.props.bsStyle || undefined} header={this.props.header} className="laji-form-popped">
-					{this.props.text}
-					{this.props.buttonText ?
-						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
-						null
-					}
+				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped">
+					{this.props.header ? (
+						<Panel.Heading>
+							{this.props.header}
+						</Panel.Heading>
+					) : null}
+					<Panel.Body>
+						{this.props.text}
+						{this.props.buttonText ?
+							<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+							null
+						}
+					</Panel.Body>
 				</Panel>
 		);
 	}

@@ -53,7 +53,7 @@ export class DeleteButton extends Component {
 		e.preventDefault();
 		e.stopPropagation();
 		this.setState({show: true}, () => {
-			findDOMNode(this.refs["confirm-yes"]).focus();
+			this._focusConfirm = true;
 		});
 	}
 
@@ -74,6 +74,15 @@ export class DeleteButton extends Component {
 		}
 	}
 
+	setConfirmAutofocus = (elem) => {
+		if (this._focusConfirm) {
+			setImmediate(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
+				findDOMNode(elem).focus();
+				this._focusConfirm = undefined;
+			});
+		}
+	}
+
 	render() {
 		const {props, state} = this;
 		const {show} = state;
@@ -84,7 +93,8 @@ export class DeleteButton extends Component {
 		const onClick = e => this.onClick(e);
 		const button = (
 			<div className={props.className} style={this.props.style}>
-				<Button bsStyle="danger"
+				<Button id={`${props.id}-delete`}
+				        bsStyle="danger"
 								className={buttonClassName}
 								ref="del"
 								onKeyDown={this.onButtonKeyDown}
@@ -92,13 +102,13 @@ export class DeleteButton extends Component {
 				{show ?
 					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
 									 target={getOverlayTarget}>
-						<Popover id="popover-trigger-click">
+						<Popover id={`${this.props.id}-delete-confirm`}>
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref="confirm-yes">
+								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>
 									{translations.Remove}
 								</Button>
-								<Button bsStyle="default" onClick={this.onHideConfirm}>
+								<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
 									{translations.Cancel}
 								</Button>
 							</ButtonGroup>
@@ -162,6 +172,15 @@ export class Affix extends Component {
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.onScroll);
 		window.removeEventListener("resize", this.onResize);
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.props.onAffixChange || !prevState || !this.state) return;
+		if (prevState.affixState !== AFFIXED && this.state.affixState === AFFIXED) {
+			this.props.onAffixChange(true);
+		} else if (prevState.affixState === AFFIXED && this.state.affixState !== AFFIXED) {
+			this.props.onAffixChange(false);
+		}
 	}
 
 	getState = (props) => {
@@ -556,9 +575,9 @@ export class ErrorPanel extends Component {
 		if (errors.length === 0) return null;
 
 		return (
-			<Panel collapsible expanded={this.state.expanded}
-				   className={classNames}
-				   header={
+			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle}
+				   className={classNames}>
+				<Panel.Heading>
 					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 						   <div className="panel-title">
 							   {title}
@@ -568,18 +587,19 @@ export class ErrorPanel extends Component {
 							   </span>
 						   </div>
 					   </div>
-				   }
-			>
-				<ListGroup fill>
-					{errors.map(({label, error, id}, i) =>  {
-						const _clickHandler = () => clickHandler(id);
-						return (
-							<ListGroupItem key={i} onClick={_clickHandler}>
-								{label ? <b>{label}:</b> : null} {error}
-							</ListGroupItem>
-						);
-					})}
-				</ListGroup>
+				</Panel.Heading>
+				<Panel.Collapse>
+					<ListGroup>
+						{errors.map(({label, error, id}, i) =>  {
+							const _clickHandler = () => clickHandler(id);
+							return (
+								<ListGroupItem key={i} onClick={_clickHandler}>
+									{label ? <b>{label}:</b> : null} {error}
+								</ListGroupItem>
+							);
+						})}
+					</ListGroup>
+				</Panel.Collapse>
 			</Panel>
 		);
 	}
@@ -622,16 +642,23 @@ export class FetcherInput extends Component {
 	}
 
 	render() {
-		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 		return (
 			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""} ${className}`} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
 				{extra}
-				<input className="form-control" type="text" {...inputProps} ref={this.setRef} />
+				<Input {...inputProps} ref={this.setRef} />
 				{glyph ? <FormControl.Feedback>{glyph}</FormControl.Feedback> : null}
 				{loading ? <Spinner /> : null }
 				{appendExtra}
 			</div>
 		);
+	}
+}
+
+class FetcherInputDefaultInput extends Component {
+	render() {
+		return <input className="form-control" type="text" {...this.props} ref={this.ref} />;
 	}
 }
 

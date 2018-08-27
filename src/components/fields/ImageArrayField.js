@@ -3,12 +3,14 @@ import update from "immutability-helper";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
-import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert } from "react-bootstrap";
+import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, parseJSONPointer } from "../../utils";
+import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
+import Spinner from "react-spinner";
+import equals from "deep-equal";
 
 const MAX_IMAGE_SIZE = 20000000;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif", "application/pdf"];
@@ -25,13 +27,27 @@ export default class ImageArrayField extends Component {
 		this.state = {};
 	}
 
-
 	componentDidMount() {
 		this.mounted = true;
+		const settings = this.props.formContext.settings || {};
+		if (settings && settings.defaultImageMetadata) {
+			this._context.defaultMetadata = settings.defaultImageMetadata;
+		}
+		this.mainContext.addSettingSaver("defaultImageMetadata", () => {
+			return this._context.defaultMetadata;
+		}, !!"global");
+	}
+
+	onSettingsChange = (defaultMetadata) => {
+		if (!equals(this._context.defaultMetadata, defaultMetadata)) {
+			this._context.defaultMetadata = defaultMetadata;
+			this.mainContext.onSettingsChange(!!"global");
+		}
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
+		this.mainContext.removeSettingSaver("defaultMetadata", !!"global");
 	}
 
 	render() {
@@ -66,6 +82,7 @@ export default class ImageArrayField extends Component {
 					{description !== undefined ? <DescriptionField description={description} /> : null}
 					<div className="laji-form-images">
 						{this.renderImgs()}
+						{this.renderLoadingImgs()}
 						<OverlayTrigger overlay={tooltip}>
 							<DropZone className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
 							          accept="image/*, application/pdf"
@@ -87,20 +104,28 @@ export default class ImageArrayField extends Component {
 	renderImgs = () => {
 		return (this.props.formData || []).map((item, i) => (
 			<div key={i} className="img-container">
-				<a onClick={this.onImgClick(i)}><Thumbnail id={item} /></a>
+				<a onClick={this.openModalFor(i)}><Thumbnail id={item} /></a>
 				<DeleteButton corner={true} translations={this.props.formContext.translations} onClick={this.onImgRmClick(i)}>✖</DeleteButton>
 			</div>
 		));
 	}
 
-	onImgClick = (i) => () => {
+	renderLoadingImgs = () => {
+		return Array(this.state.loading || 0).fill(undefined).map((item, i) => (
+			<div key={i} className="img-container laji-form-drop-zone">
+				<Spinner />
+			</div>
+		));
+	}
+
+	openModalFor = (i) => () => {
 		const item = this.props.formData[i];
-		const state = {modalOpen: true};
+		this.setState({modalOpen: i});
+		this.fetching = item;
 		this.apiClient.fetch(`/images/${item}`).then(response => {
+			if (response.id !== this.fetching) return;
 			this._context.metadatas[item] = response;
-			state.modalImgSrc = response.originalURL;
-			state.modalMetadata = this._context.metadatas[item];
-			this.setState(state);
+			this.setState({modalIdx: i, modalImgSrc: response.originalURL, modalMetadata: this._context.metadatas[item]});
 		});
 	}
 
@@ -109,12 +134,12 @@ export default class ImageArrayField extends Component {
 	}
 
 	renderModal = () => {
-		const {state} = this;
+		const {modalOpen, modalIdx, modalMetadata, metadataSaveSuccess, modalImgSrc} = this.state;
 		const {lang, translations} = this.props.registry.formContext;
 
 		const metadataForm = this.state.metadataForm || {};
 
-		if (this.state.modalOpen && !state.metadataForm) {
+		if (typeof modalOpen === "number" && !this.state.metadataForm) {
 			this.apiClient.fetchCached("/forms/JX.111712", {lang, format: "schema"})
 				.then(metadataForm => {
 					if (this.mounted) {
@@ -123,25 +148,33 @@ export default class ImageArrayField extends Component {
 				});
 		}
 
-		const {metadataSaveSuccess} = this.state;
-		
 		const onHide = () => this.setState({modalOpen: false, metadataSaveSuccess: undefined});
 		const onChange = formData => this.setState({modalMetadata: formData});
 
-		return state.modalOpen ?
+		const {Previous, Next} = this.props.formContext.translations;
+
+		return typeof modalOpen === "number" ?
 			<Modal dialogClassName="laji-form image-modal" show={true}
 			       onHide={onHide}>
-				<Modal.Header closeButton={true} />
+				<Modal.Header closeButton={true}>
+					<br />
+					<Pager>
+						<Pager.Item previous onClick={this.openModalFor(modalOpen - 1)} disabled={modalOpen <= 0}>&larr; {Previous}</Pager.Item>
+						<Pager.Item next onClick={this.openModalFor(modalOpen + 1)} disabled={modalOpen >= this.props.formData.length - 1}>{Next} &rarr;</Pager.Item>
+					</Pager>
+				</Modal.Header>
 				<Modal.Body>
 					<div className="laji-form image-modal-content">
-						<img src={state.modalImgSrc} />
-						{state.modalMetadata && metadataForm.schema ?
+					{modalIdx === modalOpen && modalMetadata && metadataForm.schema
+						? <React.Fragment>
+							<img src={modalImgSrc} />
 							<LajiForm
 								{...metadataForm}
 								uiSchema={{...metadataForm.uiSchema, "ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})}}}
-								formData={state.modalMetadata}
+								formData={modalMetadata}
 								onChange={onChange}
 								onSubmit={this.onImageMetadataUpdate}
+								submitText={translations.Save}
 								lang={lang}>
 								{(metadataSaveSuccess !== undefined) ? (
 										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
@@ -150,7 +183,8 @@ export default class ImageArrayField extends Component {
 									) : null
 								}
 							</LajiForm>
-						: null}
+						</React.Fragment>
+					: <Spinner />}
 					</div>
 				</Modal.Body>
 			</Modal> : null;
@@ -169,6 +203,7 @@ export default class ImageArrayField extends Component {
 		let formData = this.props.formData || [];
 
 		this.mainContext.pushBlockingLoader();
+		this.setState({loading: files.length});
 
 		const fail = (translationKey, additionalInfo="") => {
 			this.mainContext.popBlockingLoader();
@@ -183,7 +218,7 @@ export default class ImageArrayField extends Component {
 			let noValidData = true;
 
 			const formDataBody = files.reduce((body, file) => {
-				if (ALLOWED_FILE_TYPES.indexOf(file.type) === -1) {
+				if (!ALLOWED_FILE_TYPES.includes(file.type)) {
 					invalidFile = true;
 				} else if (file.size > MAX_IMAGE_SIZE) {
 					fileTooLarge = true;
@@ -237,11 +272,16 @@ export default class ImageArrayField extends Component {
 			if (!response) return;
 			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
 			onChange([...formData, ...ids]);
+
+			this.setState({loading: 0});
 			this.mainContext.popBlockingLoader();
 			if (files.length !== ids.length) {
 				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer});
+			} else {
+				this.openModalFor(this.props.formData.length - files.length)();
 			}
 		}).catch(() => {
+			this.setState({loading: 0});
 			this.mainContext.popBlockingLoader();
 			this.setState({alert: true, alertMsg: `${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations.TryAgainLater}`});
 		});
@@ -282,8 +322,12 @@ export default class ImageArrayField extends Component {
 			body: JSON.stringify(formData)
 		}).then(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({metadataSaveSuccess: true});
-			this._context.defaultMetadata = formData;
+			this.setState({modalOpen: false}, () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess));
+			this.onSettingsChange({
+				intellectualRights: formData.intellectualRights,
+				capturerVerbatim: formData.capturerVerbatim,
+				intellectualOwner: formData.intellectualOwner
+			});
 		}).catch(() => {
 			this.mainContext.popBlockingLoader();
 			this.setState({metadataSaveSuccess: false});
@@ -291,31 +335,27 @@ export default class ImageArrayField extends Component {
 	}
 
 	getDefaultMetadataPromise = () => {
-		const {capturerVerbatimPath} = getUiOptions(this.props.uiSchema);
-		let defaultMetadata = this._context.defaultMetadata
-			? {...this._context.defaultMetadata}
-			: {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
-		delete defaultMetadata.caption;
+		let defaultMetadata = this._context.defaultMetadata || {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
+		const MACode = this.props.formContext.uiSchemaContext.creator;
 
-		const MACode = parseJSONPointer(this.mainContext.formData, capturerVerbatimPath);
-
-		return MACode !== undefined ?
+		return !defaultMetadata.capturerVerbatim && MACode !== undefined ?
 			this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName}) => {
 				const name = fullName || MACode;
 				defaultMetadata = {
 					...defaultMetadata,
-					capturerVerbatim: Array.isArray(name) ? name : [name]
+					capturerVerbatim: Array.isArray(name) ? name : [name],
+					intellectualOwner: name
 				};
-				this._context.defaultMetadata = defaultMetadata;
+				this.onSettingsChange(defaultMetadata);
 				return defaultMetadata;
 			}).catch(() => {
 				return new Promise(resolve => {
-					this._context.defaultMetadata = defaultMetadata;
+					this.onSettingsChange(defaultMetadata);
 					resolve(defaultMetadata);
 				});
 			}) :
 			new Promise(resolve => {
-				this._context.defaultMetadata = defaultMetadata;
+				this.onSettingsChange(defaultMetadata);
 				resolve(defaultMetadata);
 			});
 	}
@@ -341,7 +381,7 @@ export default class ImageArrayField extends Component {
 	}
 
 	formatValue(value) {
-		return <Thumbnail id={value} />;
+		return value.length ? <Thumbnail id={value} /> : null;
 	}
 }
 
@@ -372,6 +412,6 @@ class Thumbnail extends PureComponent {
 	}
 
 	render() {
-		return <img src={this.state.url} />;
+		return this.state.url ? <img src={this.state.url} /> : <div className="image-loading"><Spinner /></div>;
 	}
 }

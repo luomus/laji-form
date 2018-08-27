@@ -264,7 +264,7 @@ class AnnotationBox extends Component {
 		return (
 			<Panel header={<strong>{translations.Comments}</strong>}>
 				{this.renderAdd()}
-				<ListGroup fill={true}>
+				<ListGroup>
 					{this.state.metadataForm ? annotations.slice(0).reverse().map((annotation, idx) => 
 						<ListGroupItem key={idx} className={`annotation-list${idx % 2 === 0 ? "" : "-odd"}`}>
 							<div>

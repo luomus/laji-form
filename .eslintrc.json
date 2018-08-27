@@ -3,9 +3,15 @@
     "env": {
         "es6": true,
         "browser": true,
-        "node": true
+        "node": true,
+		"jasmine": true
     },
-    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:protractor/recommended",
+		"plugin:jasmine/recommended"
+	],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -43,9 +49,16 @@
         ],
         "react/no-find-dom-node": "off",
         "react/jsx-no-bind": 2,
+        "jasmine/no-spec-dupes": [1, "branch"],
+        "protractor/no-describe-selectors": "off",
         "no-console": "off"
     },
     "plugins": [
-        "react"
-    ]
+        "react",
+		"protractor",
+		"jasmine"
+    ],
+	"globals": {
+		"L": true
+	}
 }

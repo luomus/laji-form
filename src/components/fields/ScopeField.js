@@ -7,12 +7,11 @@ import { ListGroup, ListGroupItem, Modal, Dropdown, MenuItem, OverlayTrigger, To
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getKeyHandlerTargetId, scrollIntoViewIfNeeded, getSchemaElementById } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, getWindowScrolled, focusAndScroll, syncScroll, isObject, dictionarify } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -27,25 +26,55 @@ const scopeFieldSettings = {
 };
 
 const buttonSettings = {
-	setLocation: (that, {glyph, label}) => {
-		const id = that.props.idSchema.$id;
+	setLocation: class LocationButton extends Component {
+		getIdx = () => {
+			const {that} = this.props;
+			const {$id} = that.props.idSchema;
+			const splitted = $id.split("_");
+			return parseInt(splitted[splitted.length - 1]);
+		}
 
-		const {geometryField = "unitGathering_geometry"} = getUiOptions(that.uiSchema);
+		onMouseEnter = () => {
+			const {that} = this.props;
+			const idx = this.getIdx();
+			this._hovered = true;
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
+		}
 
-		const hasCoordinates = hasData(that.props.formData[geometryField]);
+		onMouseLeave = () => {
+			const {that} = this.props;
+			const idx = this.getIdx();
+			this._hovered = false;
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
+		}
 
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		componentWillUnmount() {
+			this._hovered && this.onMouseLeave();
+		}
 
-		const {$id} = that.props.idSchema;
-		const splitted = $id.split("_");
-		const idx = parseInt(splitted[splitted.length - 1]);
+		getGeometryField = () => {
+			const {that} = this.props;
+			const {geometryField = "unitGathering_geometry"} = getUiOptions(that.uiSchema);
+			return geometryField;
+		}
 
-		let active = false;
-		function onClick() {
-			active = true;
-			const {translations} = that.props.formContext;
+		hasCoordinates = () => {
+			const {that} = this.props;
+			const geometryField = this.getGeometryField();
+			return hasData(that.props.formData[geometryField]);
+		}
+
+		onClick = () => {
+			const {that} = this.props;
+			const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 			const {map} = mapContext;
 			if (!map) return;
+
+			const {translations} = that.props.formContext;
+			const geometryField = this.getGeometryField();
+			const hasCoordinates = this.hasCoordinates();
+
+			const idx = this.getIdx();
 
 			let modalMap = undefined;
 			let triggerLayer = undefined;
@@ -128,7 +157,7 @@ const buttonSettings = {
 					onComponentDidMount: (map) => {
 						modalMap = map;
 						triggerLayer = modalMap.triggerDrawing("marker");
-						const layer = map._getLayerByIdxs(map.drawIdx, 0);
+						const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
 						if (layer) {
 							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 							modalMap.setLayerStyle(layer, {opacity: 0.7});
@@ -144,47 +173,17 @@ const buttonSettings = {
 				}
 			});
 
-
 			function close() {
 				if (triggerLayer) triggerLayer.disable();
 				that.setState({modalMap: undefined});
 			}
 		}
 
-		let layer = undefined;
-		function onMouseEnter() {
-			const {map} = mapContext;
-			layer = map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
-			if (!layer) return;
-			map.setLayerStyle(layer, {color: "#75CEFA"});
-		}
+		onEntered = () => {
+			const {that} = this.props;
+			const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+			if (!mapContext) return;
 
-		function onMouseLeave() {
-			const {map} = mapContext;
-			layer = map && map.data && map.data[0] ? map._getLayerByIdxs(0, idx) : undefined;
-			if (active || !layer) return;
-			map.setLayerStyle(layer, {color: "#55AEFA"});
-		}
-
-		const button = (
-			<GlyphButton
-				bsStyle={hasCoordinates ? "primary" : "default"}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				glyph={glyph}
-				onClick={onClick} />
-		);
-
-		const {translations} = that.props.formContext;
-		const overlay = hasCoordinates ? (
-			<Popover id={`${id}-$tooltip-${glyph}`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-				<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
-			</Popover>
-		) : (
-			<Tooltip id={`${id}-$tooltip-${glyph}`}>{label}</Tooltip>
-		);
-
-		const onEntered = () => {
 			const {map} = mapContext;
 			let mapOptions = {};
 			if (map) {
@@ -192,6 +191,7 @@ const buttonSettings = {
 				mapOptions = _mapOptions;
 			}
 
+			const geometryField = this.getGeometryField();
 			const geometry = that.props.formData[geometryField];
 
 			that.setState({
@@ -219,11 +219,41 @@ const buttonSettings = {
 			});
 		};
 
-		return (
-			<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} overlay={overlay} placement="left" onEntered={hasCoordinates ? onEntered : undefined}>
-				{button}
-			</OverlayTrigger>
-		);
+
+		render ()  {
+			const {that, settings: {glyph, label}} = this.props;
+			const id = that.props.idSchema.$id;
+
+			const hasCoordinates = this.hasCoordinates();
+
+			const button = (
+				<GlyphButton
+					id={`${that.props.idSchema.$id}-location`}
+					bsStyle={hasCoordinates ? "primary" : "default"}
+					onMouseEnter={this.onMouseEnter}
+					onMouseLeave={this.onMouseLeave}
+					glyph={glyph}
+					onClick={this.onClick} />
+			);
+
+			const {translations} = that.props.formContext;
+			const overlay = hasCoordinates ? (
+				<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
+					<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
+				</Popover>
+			) : (
+				<Tooltip id={`${id}-location-peeker`}>{label}</Tooltip>
+			);
+
+			return (
+				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 
+				                overlay={overlay}
+				                placement="left"
+				                onEntered={hasCoordinates ? this.onEntered : undefined}>
+					{button}
+				</OverlayTrigger>
+			);
+		}
 	}
 };
 
@@ -242,6 +272,7 @@ const buttonSettings = {
  *      fields: [<string>] (fields that are shown if fieldName[fieldValue} == true)
  *      additionalFields: [<string>] (if grouping is enabled, additional fields are shown only if selected from the list)
  *      excludeFields: [<string>] (exclude fields from showing)
+ *      excludeFields: [<string>] (fields that are shown by default)
  *      refs: [<string>] (root definitions that are merged recursively to this fieldScope)
  *      uiSchema: <uiSchema> (merged recursively to inner uiSchema)
  *      uiSchemaMergeType: See documentation for ConditionalUiSchemaField
@@ -348,16 +379,23 @@ export default class ScopeField extends Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
-			const {idToScroll} = getUiOptions(this.props.uiSchema);
-			const elem = idToScroll
-				? document.getElementById(getKeyHandlerTargetId(idToScroll, new Context(this.props.formContext.contextId)))
-				: getSchemaElementById(this.props.formContext.contextId, this.props.idSchema.$id);
-
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize", undefined, () => {
-				scrollIntoViewIfNeeded(elem, this.props.formContext.topOffset, this.props.formContext.bottomOffset);
-			});
+			const context = new Context(this.props.formContext.contextId);
+			syncScroll(this.props.formContext);
+			context.sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}
+
+	getAdditionalPersistenceValue = (props, includeUndefined = true) => {
+		const {additionalsPersistenceField, additionalPersistenceContextKey} = getUiOptions(props.uiSchema);
+		let formDataItem = props.formData[additionalsPersistenceField];
+		if (additionalPersistenceContextKey && (formDataItem === undefined || Array.isArray(formDataItem) && formDataItem.length === 0)) {
+			formDataItem = new Context(this.props.formContext.contextId)[additionalPersistenceContextKey];
+		}
+		let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
+		if (includeUndefined) items = ["undefined", ...items];
+		return items;
+	}
+
 
 	getStateFromProps(props) {
 		const options = getUiOptions(props.uiSchema);
@@ -382,10 +420,8 @@ export default class ScopeField extends Component {
 		if (this._context) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceField) {
-				const formDataItem = props.formData[additionalsPersistenceField];
-				let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
-				items = ["undefined", ...items];
-				items.forEach(item => {
+				const additionalPersistenceValue = this.getAdditionalPersistenceValue(props);
+				additionalPersistenceValue.forEach(item => {
 					if (this._context && this._context[item]) additionalsToAdd = {...additionalsToAdd, ...this._context[item]};
 				});
 			} else {
@@ -402,7 +438,8 @@ export default class ScopeField extends Component {
 
 	getSchemasAndAdditionals = (props, state) => {
 		let {schema, uiSchema, formData} = props;
-		let additionalFields = (state && state.additionalFields) ? Object.assign({}, state.additionalFields) : {};
+		let additionalFields = (state && state.additionalFields) ? {...state.additionalFields} : {};
+		let defaultFields = (state && state.defaultFields) ? {...state.defaultFields} : {};
 
 		const options = getUiOptions(uiSchema);
 		let {fields = [], definitions, glyphFields = []} = options;
@@ -433,13 +470,17 @@ export default class ScopeField extends Component {
 				});
 			}
 
-			if (fieldScope.excludeFields) {
-				fieldScope.excludeFields.forEach(fieldName => {
-					delete fieldsToShow[fieldName];
-				});
-			}
+			const {excludeFields = [], fields: _fields = [], defaultFields: _defaultFields = []} = fieldScope;
 
-			if (fieldScope.fields) fieldScope.fields.forEach((fieldName) => {
+			excludeFields.forEach(fieldName => {
+				delete fieldsToShow[fieldName];
+			});
+
+			_defaultFields.forEach(fieldName => {
+				if (additionalFields[fieldName] !== false) fieldsToShow[fieldName] = schema.properties[fieldName];
+			});
+
+			_fields.forEach((fieldName) => {
 				fieldsToShow[fieldName] = schema.properties[fieldName];
 				if (additionalFields[fieldName]) {
 					delete additionalFields[fieldName];
@@ -456,13 +497,14 @@ export default class ScopeField extends Component {
 			}
 		}
 		
+		const that = this;
 		function addFieldScopeFieldsToFieldsToShow(fieldScope) {
 			if (!fieldScope) return;
 			let scopes = fieldScope.fieldScopes;
 
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
-				let fieldSelectorValues = formData[fieldSelector];
+				let fieldSelectorValues = that.getAdditionalPersistenceValue(props);
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
 				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
@@ -482,9 +524,10 @@ export default class ScopeField extends Component {
 
 		if (additionalFields) {
 			Object.keys(additionalFields).filter(field => additionalFields[field]).forEach((property) => {
-				fieldsToShow[property] = props.schema.properties[property];
+				if (additionalFields[property]) {
+					fieldsToShow[property] = props.schema.properties[property];
+				}
 			});
-
 		}
 
 		if (props.formData) {
@@ -511,7 +554,8 @@ export default class ScopeField extends Component {
 		return {
 			schema: schema,
 			uiSchema: generatedUiSchema,
-			additionalFields
+			additionalFields,
+			defaultFields
 		};
 	}
 
@@ -534,7 +578,9 @@ export default class ScopeField extends Component {
 		const glyphButtons = this.renderGlyphFields();
 
 		return [
-			additionalsGroupingPath ? this.renderFieldsModal(additionalProperties) : this.renderFieldsDropdown(additionalProperties),
+			additionalsGroupingPath
+				? this.renderFieldsModal(additionalProperties)
+				: this.renderFieldsDropdown(additionalProperties),
 			...(glyphButtons ? glyphButtons : [])
 		];
 	}
@@ -550,9 +596,8 @@ export default class ScopeField extends Component {
 		};
 
 		return (
-			<div>
-				<Dropdown key="socop"
-				          id={this.props.idSchema.$id + "-scope-field-dropdown"}
+			<div key="scope-additionals-dropdown">
+				<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
 				          bsStyle="primary"
 				          pullRight
 				          open={this.state.additionalsOpen}
@@ -575,28 +620,28 @@ export default class ScopeField extends Component {
 		let list = [];
 
 		const options = getUiOptions(this.props.uiSchema);
-		const {additionalsGroupingPath, additionalsGroupingOrderer} = options;
+		const {additionalsGroupingPath} = options;
 
 		let groupTranslations = this.state.additionalsGroupsTranslations || {};
 
-		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : undefined;
+		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : {};
 
+		const additionalsPersistenceValue = this.getAdditionalPersistenceValue(this.props);
 		let groupNames = Object.keys(groups);
-		if (additionalsGroupingOrderer && this.props.formData) {
-			const orderer = this.props.formData[additionalsGroupingOrderer];
-			if (orderer) groupNames = groupNames.sort((a, b) => orderer.indexOf(b) - orderer.indexOf(a));
-		}
+		if (additionalsPersistenceValue) groupNames = groupNames.sort((a, b) => additionalsPersistenceValue.indexOf(b) - additionalsPersistenceValue.indexOf(a));
 
 		groupNames.forEach(groupName => {
 			let group = groups[groupName] || {};
 			let groupFields = {};
-			const {fields, additionalFields} = group;
-			const combinedFields = [];
-			[fields, additionalFields].forEach(_fields => {
-				if (_fields) combinedFields.push(..._fields);
-			});
+			const {fields = [], additionalFields = []} = group;
+			const additionalFieldsDict = dictionarify(additionalFields);
+			let combinedFields = Object.keys({...dictionarify(fields), ...additionalFieldsDict});
 			combinedFields.forEach(field => {
-				if (additionalProperties[field]) groupFields[field] = additionalProperties[field];
+				if (additionalProperties[field]) {
+					groupFields[field] = additionalProperties[field];
+				} else if (additionalFieldsDict[field]) {
+					groupFields[field] = this.props.schema.properties[field];
+				}
 			});
 			let groupsList = this.additionalPropertiesToList(groupFields, ListGroupItem);
 			if (groupsList.length) {
@@ -648,7 +693,7 @@ export default class ScopeField extends Component {
 
 		return (
 			<OverlayTrigger key={`${this.props.idSchema.$id}-scope`} overlay={tooltip} placement="left" bsRole={bsRole} >
-				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} />
+				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} id={`${this.props.idSchema.$id}-additionals`}/>
 			</OverlayTrigger>
 		);
 	}
@@ -677,15 +722,16 @@ export default class ScopeField extends Component {
 						</OverlayTrigger>
 					);
 				} else if (settings.fn) {
-					return buttonSettings[settings.fn](this, settings);
+					const Component = buttonSettings[settings.fn];
+					return <Component key={settings.fn} that={this} settings={settings} />;
 				}
 			}) : null;
 	}
 
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
-		const isIncluded = !!(additionalFields[property] === true || this.state.schema.properties[property]);
-		return isIncluded;
+		const isIncluded = additionalFields[property] === true || this.state.schema.properties[property];
+		return !!isIncluded;
 	}
 
 	toggleAdditionalProperty = (fields) => {
@@ -696,7 +742,7 @@ export default class ScopeField extends Component {
 		}, this.state.additionalFields);
 
 		if (this.context) {
-			const additionalsPersistenceVal = this.props.formData[additionalsPersistenceField];
+			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
 			let contextEntry = this._context || {};
 			if (additionalsPersistenceField) {
 				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceField].type === "array") ?

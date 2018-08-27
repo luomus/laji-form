@@ -322,9 +322,10 @@ min-height: 20px;
 }
 .laji-form .fetcher-input .react-spinner {
 	z-index: 3;
-	width: 25px;
-	right: -11px;
-	bottom: -20px;
+	width: 21px;
+	height: 21px;
+	right: -9px;
+	bottom: -8px;
 }
 .laji-form .input-meta .react-spinner {
 	width: 20px;
@@ -344,6 +345,15 @@ min-height: 20px;
 }
 .laji-form button .react-spinner .react-spinner_bar {
 	background-color: white !important;
+}
+.laji-form.image-modal-content > .react-spinner {
+	left: 50%;
+	top: 50%;
+	height: 100px;
+	width: 100px;
+}
+.laji-form.image-modal .image-modal-content {
+	min-height: 700px;
 }
 
 .laji-form .scope-field-modal-item .react-spinner {
@@ -431,12 +441,12 @@ min-height: 20px;
 	float: left;
 	cursor: pointer;
 }
-.laji-form .laji-form-images img {
+.laji-form .laji-form-images img, .laji-form .image-loading {
 	width: inherit;
 	height: inherit;
 }
 
-.laji-form .laji-form-drop-zone {
+.laji-form .laji-form-drop-zone, .laji-form .image-loading {
 	border: 2px dashed #cacaca;
 }
 .laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
@@ -479,6 +489,10 @@ min-height: 20px;
 
 .laji-form .img-container {
 	position: relative;
+}
+.laji-form .img-container .react-spinner {
+	top: 50%;
+	left: 50%;
 }
 .laji-form .delete-corner {
 	border-radius: 7px !important;
@@ -850,8 +864,19 @@ min-height: 20px;
 	padding: 0px !important;
 	border: 0px !important;
 }
-.laji-form .single-active-array-table td > img {
+.laji-form .single-active-array-table td > img, .laji-form .single-active-array-table td > .image-loading {
 	height: 15px;
+	width: 15px;
+}
+.laji-form .single-active-array-table .image-loading {
+	border: none;
+}
+.laji-form .single-active-array-table .react-spinner {
+    height: 18px;
+    width: 18px;
+    top: 50%;
+    left: 50%;
+    position: relative;
 }
 
 .laji-form .highlight-error-fire {
@@ -1068,12 +1093,20 @@ min-height: 20px;
 	margin-left: 2px;
 }
 
-.laji-form .informal-group-image {
+.laji-form .informal-group-image, .laji-form.informal-group-image  {
 	min-width: 20px;
 	min-height: 20px;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% auto;
+}
+
+.laji-form.taxon-popover.informal-group-image {
+	background-size: auto 65px;
+	background-position: top left;
+}
+.laji-form.taxon-popover.informal-group-image > div {
+	margin-left: 65px;
 }
 
 .laji-form .informal-taxon-groups-list.list-group {
@@ -1251,4 +1284,10 @@ min-height: 20px;
 .laji-form .pager .disabled a {
 	background-color: #f1f1f1;
 	color: #b7b7b7;
+}
+
+.laji-form > button {
+	margin-top: 5px;
+	margin-bottom: 5px;
+
 }

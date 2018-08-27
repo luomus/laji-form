@@ -16,7 +16,7 @@ export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
 	const idToFocus =  `${props.idSchema.$id}_${idx}`;
-	let {idToScrollAfterAdd} = getUiOptions(props.uiSchema || {});
+	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`} = getUiOptions(props.uiSchema || {});
 	new Context(props.formContext.contextId).idToFocus = idToFocus;
 	new Context(props.formContext.contextId).idToScroll = idToScrollAfterAdd;
 }
@@ -85,8 +85,8 @@ export function getButton(button, props = {}) {
 		}
 	};
 
-	const buttonId = `${id}_${fnName}`;
-	return render ? render(onClick) : (
+	const buttonId = `${id}-${fnName}`;
+	return render ? render(onClick, button) : (
 		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
@@ -244,7 +244,8 @@ export default class ArrayFieldTemplate extends Component {
 
 		const items = props.items.map((item, i) => {
 			const deleteButton = (
-				<DeleteButton ref={getRefFor(i)}
+				<DeleteButton id={`${props.idSchema.$id}_${i}`}
+				              ref={getRefFor(i)}
 				              onClick={item.onDropIndexClick(item.index)}
 				              className="laji-form-field-template-buttons"
 				              confirm={confirmDelete}

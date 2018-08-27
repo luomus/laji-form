@@ -95,15 +95,14 @@ export default class AutosuggestField extends Component {
 						? context[this.getTogglePersistenceContextKey(props)]
 						: false;
 
-		const taxonGroupID = (
-			!informalTaxonGroups 
+		const taxonGroupID = !informalTaxonGroups 
 			? undefined
 			: informalTaxonGroupPersistenceKey !== undefined 
 				? context[this.getInformalTaxonGroupsPersistenceContextKey(props)]
 				: formData[informalTaxonGroups] 
 					? formData[informalTaxonGroups][0] 
-					: undefined
-		);
+					: undefined;
+
 		let options = {
 			...uiOptions,
 			onSuggestionSelected: this.onSuggestionSelected,
@@ -161,7 +160,7 @@ export default class AutosuggestField extends Component {
 		if (suggestion === null) suggestion = undefined;
 
 		let {formData, uiSchema, formContext} = this.props;
-		const {suggestionReceivers, autosuggestField, suggestionValueField, autocopy} = this.getActiveOptions(getUiOptions(uiSchema));
+		const {suggestionReceivers, autosuggestField, suggestionValueField, autocopy, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 
 		const handleSuggestionReceivers = (formData, suggestion) => {
 			for (let fieldName in suggestionReceivers) {
@@ -188,13 +187,13 @@ export default class AutosuggestField extends Component {
 				unit.informalTaxonGroups = unit.unitType;
 				delete unit.unitType;
 			}
-			unit = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+			unit = (formContext.formDataTransformers || []).reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
 				const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
 				return state.formData;
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...formData, [suggestionValueField]: undefined, ...unit};
-			if (autocopy && !equals(this.props.formData, formData)) {
+			if (isEmptyString(this.props.formData[suggestionInputField]) && autocopy && !equals(this.props.formData, formData)) {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
@@ -260,9 +259,11 @@ export default class AutosuggestField extends Component {
 	onInformalTaxonGroupSelected = (informalTaxonID) => {
 		const {uiSchema} = this.props;
 		const {informalTaxonGroups, informalTaxonGroupPersistenceKey} = this.getActiveOptions(getUiOptions(uiSchema));
-		this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		if (informalTaxonGroupPersistenceKey !== undefined) {
 			new Context(this.props.formContext.contextId)[this.getInformalTaxonGroupsPersistenceContextKey(this.props)] = informalTaxonID;
+			this.setState(this.getStateFromProps(this.props));
+		} else {
+			this.props.onChange({...this.props.formData, [informalTaxonGroups]: [informalTaxonID]});
 		}
 	}
 

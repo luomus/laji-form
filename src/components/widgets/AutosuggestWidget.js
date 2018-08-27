@@ -4,7 +4,7 @@ import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo } from "../../utils";
+import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -19,6 +19,8 @@ export default class _AutosuggestWidget extends Component {
 				return <UnitAutosuggestWidget {...this.props} />;
 			case "friends":
 				return <FriendsAutosuggestWidget {...this.props} />;
+			default: 
+				return <RangeAutosuggestWidget {...this.props} />;
 			}
 		}
 		return <Autosuggest {...this.props} />;
@@ -36,6 +38,9 @@ export default class _AutosuggestWidget extends Component {
 				break;
 			case "friends":
 				component = FriendsAutosuggestWidget;
+				break;
+			default:
+				component = RangeAutosuggestWidget;
 			}
 			const getSuggestionFromValue = component.prototype.getSuggestionFromValue;
 			if (getSuggestionFromValue) {
@@ -106,13 +111,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			</TaxonCardOverlay>
 		)
 
-		renderSuccessGlyph = (value) => {
-			return (
-				<a href={"http://tun.fi/" + value} target="_blank" rel="noopener noreferrer">
-					<Glyphicon style={{pointerEvents: "none"}} glyph="tag" className="form-control-feedback"/>
-				</a>
-			);
-		}
+		renderSuccessGlyph = (value) => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		render() {
 			const {props} = this;
@@ -193,8 +192,7 @@ class FriendsAutosuggestWidget extends Component {
 															           className="form-control-feedback"/>
 
 	render() {
-		const {props} = this;
-		const {options: propsOptions, ...propsWithoutOptions} = props;
+		const {options: propsOptions, ...propsWithoutOptions} = this.props;
 
 		const options = {
 			query: {
@@ -209,6 +207,13 @@ class FriendsAutosuggestWidget extends Component {
 		};
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+	}
+}
+
+class RangeAutosuggestWidget extends Component {
+	render() {
+		const {options: propsOptions, ...propsWithoutOptions} = this.props;
+		return <Autosuggest highlightFirstSuggestion={true} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
@@ -243,7 +248,8 @@ export class Autosuggest extends Component {
 			isLoading: false,
 			suggestions: [],
 			unsuggested: false,
-			value: props.value,
+			focused: false,
+			value: props.value !== undefined ? props.value : "",
 			suggestion: isSuggested ? {} : undefined,
 		};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
@@ -254,7 +260,13 @@ export class Autosuggest extends Component {
 		const {value, suggestionReceive = "key"} = props;
 		const {suggestion} = this.state;
 		if (this.state.value !== value || (suggestion && suggestion[suggestionReceive] !== value && this.mounted)) {
-			this.triggerConvert(props);
+			if (this.mounted && this.state.value !== value) {
+				this.setState({value}, () => {
+					this.triggerConvert(props)
+				});
+			} else {
+				this.triggerConvert(props);
+			}
 		} else if (!suggestion) {
 			return {value: props.value};
 		}
@@ -321,7 +333,9 @@ export class Autosuggest extends Component {
 		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
 	}
 
-	onSuggestionsClearRequested = () => {}
+	onSuggestionsClearRequested = () => {
+		this.clearRequested = true;
+	}
 
 	selectSuggestion = (suggestion) => {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
@@ -330,8 +344,10 @@ export class Autosuggest extends Component {
 				onSuggestionSelected(suggestion) :
 				onChange(suggestion[suggestionReceive || "key"]);
 		};
+		const state = {suggestion, value: this.getSuggestionValue(suggestion)};
+		if (this.clearRequested) state.suggestions = [];
 		this.mounted ? 
-			this.setState({suggestion, value: this.getSuggestionValue(suggestion)}, afterStateChange) :
+			this.setState(state, afterStateChange) :
 			afterStateChange();
 	}
 
@@ -340,7 +356,9 @@ export class Autosuggest extends Component {
 
 		const {onConfirmUnsuggested, onChange} = this.props;
 
-		this.setState({value, suggestion: undefined}, () => {
+		const state = {value, suggestion: undefined};
+		if (this.clearRequested) state.suggestions = [];
+		this.setState(state, () => {
 			onConfirmUnsuggested ?
 				onConfirmUnsuggested(value) :
 				onChange(value);
@@ -348,12 +366,17 @@ export class Autosuggest extends Component {
 	}
 
 	onSuggestionSelected = (e, data) => {
+		// Input onBlur/onFocus isn't called without this hack.
+		this.reactAutosuggestRef.justSelectedSuggestion = false;
+
 		const {suggestion, method} = data;
 		e.preventDefault();
-		if (method === "click") {
-			if ("id" in this.props) focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id));
+		if ("id" in this.props) {
+			// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
+			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
+				this.selectSuggestion(suggestion);
+			}
 		}
-		this.selectSuggestion(suggestion);
 	}
 
 	findExactMatch = (suggestions, value = "") => {
@@ -380,12 +403,23 @@ export class Autosuggest extends Component {
 		}
 	}
 
-	onInputChange = (e, {newValue: value}) => {
-		this.setState({value});
+	onInputChange = (e, autosuggestEvent) => {
+		const {newValue: value} = autosuggestEvent;
+		this.setState({value}, () => {
+			if (this.props.inputProps && this.props.inputProps.onChange) {
+				e.persist();
+				this.props.inputProps.onChange(e, autosuggestEvent);
+			}
+		});
 	}
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
-		if (!value || value.length < 2) return;
+		if (value === undefined) value = "";
+		if (value === undefined || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
+			this.setState({suggestions: []});
+			return;
+		}	
+
 		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
@@ -398,6 +432,7 @@ export class Autosuggest extends Component {
 					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
 					this.afterBlurAndFetch(suggestions);
 			}).catch(() => {
+				this._valueForBlurAndFetch = this.state.value;
 				this.setState({isLoading: false}, this.afterBlurAndFetch);
 			});
 		};
@@ -413,45 +448,75 @@ export class Autosuggest extends Component {
 		}
 	}
 
-	onFocus = () => {
-		this.focused = true;
-		//this.setState({focused: true});
+	onFocus = (e) => {
+		this.setState({focused: true}, () => this.onSuggestionsFetchRequested({value: this.state.value}));
+
+		triggerParentComponent("onFocus", e, this.props.inputProps);
 	}
 
-	onBlur = () => {
-		if (!this.mounted) return;
-		this.onNextTick = () => this.afterBlurAndFetch(this.state.suggestions);
-		this.focused = false;
+	onBlur = (e, {highlightedSuggestion}) => {
+		this.highlightedSuggestionOnBlur = highlightedSuggestion;
+		this._valueForBlurAndFetch = this.state.value;
+		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
+		triggerParentComponent("onBlur", e, this.props.inputProps);
 	}
 
-	afterBlurAndFetch = (suggestions) => {
-		// Wait for click triggering before executing.
-		setTimeout(() => {
-			if (this.mounted && (this.focused || this.state.isLoading)) return;
+	onKeyDown = (e) => {
+		if (this.props.controlledValue && e.key === "Enter" && this.props.allowNonsuggestedValue && !this.state.loading && !isEmptyString(this.state.value)) {
+			this.selectUnsuggested(this.state.value);
+		}
 
-			const {value} = this.state;
-			const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
+		triggerParentComponent("onKeyDown", e, this.props.inputProps);
+	}
 
-			const exactMatch = this.findExactMatch(suggestions, value);
-			const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
-			const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
-			const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
-			if (onlyOneMatch) {
-				this.selectSuggestion(onlyOneMatch);
-			}	else if (exactMatch) {
-				this.selectSuggestion({...exactMatch, value});
-			}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
-				this.selectSuggestion(nonMatching);
-			} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
-				this.selectUnsuggested(value);
-			}
-		}, 100);
+	// This is used, because the default behavior doesn't render the suggestions when focusing
+	// a suggestion component that wants to render the suggestion when the input is empty.
+	renderSuggestionsContainer = ({containerProps, children}) => {
+		if (!this.state.focused) return null;
+
+		return (
+			<div {...containerProps}>
+				{children}
+			</div>
+		);
+	}
+
+	afterBlurAndFetch = (suggestions, callback) => {
+		const {value = ""} = this.state;
+		if (this._valueForBlurAndFetch === undefined) this._valueForBlurAndFetch = "";
+		if (this.mounted && (this.state.focused || this.state.isLoading) || (this.props.controlledValue && this._valueForBlurAndFetch !== value)) return;
+
+		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
+
+		const exactMatch = this.findExactMatch(suggestions, value);
+		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
+		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
+		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
+
+		if (this.highlightedSuggestionOnBlur) {
+			this.selectSuggestion(this.highlightedSuggestionOnBlur);
+		} else if (onlyOneMatch) {
+			this.selectSuggestion(onlyOneMatch);
+		}	else if (exactMatch) {
+			this.selectSuggestion({...exactMatch, value});
+		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
+			this.selectSuggestion(nonMatching);
+		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
+			this.selectUnsuggested(value);
+		}
+
+		callback && callback();
+	}
+
+	setRef = (ref) => {
+		this.reactAutosuggestRef = ref;
 	}
 
 	render() {
 		const {props} = this;
 		let {suggestions, value} = this.state;
+		if (value === undefined) value = "";
 
 		const inputProps = {
 			id: this.props.id,
@@ -459,7 +524,11 @@ export class Autosuggest extends Component {
 			readOnly: props.readonly,
 			disabled: props.disabled,
 			placeholder: props.placeholder,
+			...(this.props.inputProps || {}),
 			onChange: this.onInputChange,
+			onBlur: this.onBlur,
+			onFocus: this.onFocus,
+			onKeyDown: this.onKeyDown
 		};
 
 		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
@@ -472,24 +541,27 @@ export class Autosuggest extends Component {
 			suggestionHighlighted: "rw-list-option rw-state-focus"
 		};
 
-		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props ?
-			this.props.hightlightFirstSuggestion :
-			!this.props.allowNonsuggestedValue;
+		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props
+			? this.props.highlightFirstSuggestion
+			: !this.props.allowNonsuggestedValue;
 
 		return (
-			<div className="autosuggest-wrapper" onFocus={this.onFocus} onBlur={this.onBlur}>
+			<div className="autosuggest-wrapper">
 				<ReactAutosuggest
+					ref={this.setRef}
 					id={`${this.props.id}-autosuggest`}
 					inputProps={inputProps}
 					renderInputComponent={this.renderInput}
 					suggestions={suggestions}
 					getSuggestionValue={this.getSuggestionValue}
 					renderSuggestion={this.renderSuggestion}
+					renderSuggestionsContainer={this.renderSuggestionsContainer}
 					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
 					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 					onSuggestionSelected={this.onSuggestionSelected}
 					focusInputOnSuggestionClick={false}
 					highlightFirstSuggestion={highlightFirstSuggestion}
+					alwaysRenderSuggestions={true}
 					theme={cssClasses}
 				/>
 			</div>
@@ -521,8 +593,8 @@ export class Autosuggest extends Component {
 	}
 
 	renderInput = (inputProps) => {
-		let validationState = null;
 		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle} = this.props;
+		let validationState = null;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
@@ -574,11 +646,10 @@ export class Autosuggest extends Component {
 																	formContext={this.props.formContext} /> 
 			: null;
 
-
 		const getTogglerTooltip = () => {
 			let tooltip = `${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`;
 
-			const {shortcuts} = new Context(this.props.formContext.contextId);
+			const {shortcuts = []} = new Context(this.props.formContext.contextId);
 			Object.keys(shortcuts).some(keyCombo => {
 				if (shortcuts[keyCombo].fn == "autosuggestToggle") {
 					tooltip = `[${stringifyKeyCombo(keyCombo)}]: ${tooltip}`;
@@ -600,7 +671,6 @@ export class Autosuggest extends Component {
 		const inputValue = isEmptyString(this.state.value) ? "" : this.state.value;
 		const input = (
 			<FetcherInput 
-				{...inputProps} 
 				value={inputValue}
 				glyph={glyph} 
 				loading={this.state.isLoading} 
@@ -608,7 +678,8 @@ export class Autosuggest extends Component {
 				extra={addon}
 				appendExtra={toggler}
 				getRef={this.setInputRef}
-				className={toggler && this.focused ? "has-toggler" : undefined}
+				className={toggler && this.state.focused ? "has-toggler" : undefined}
+				{...inputProps} 
 			/>
 		);
 
@@ -650,18 +721,52 @@ class TaxonCardOverlay extends Component {
 	}
 
 	fetch(value) {
-		let urlTxt = "", urlTxtIsCursive = false;
-		isEmptyString(value) ? 
-			this.setState({urlTxt, urlTxtIsCursive}) :
-			new ApiClient().fetchCached(`/taxa/${value}`).then(response => {
-				this.mounted && this.setState({urlTxt: response.scientificName, value, urlTxtIsCursive: response.cursiveName});
-			});
-	}
+		if ( isEmptyString(value)) { 
+			this.setState({scientificName: "", cursiveName: false})
+		} else {
+			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups}) => {
+				if (!this.mounted) return;
+				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName}});
 
+				getInformalGroups().then(({informalTaxonGroupsById}) => {
+					if (!this.mounted) return;
+					this.setState({informalTaxonGroupsById});
+				});
+			});
+			new ApiClient().fetchCached(`/taxa/${value}/parents`).then(parents => {
+				const state = {order: undefined, family: undefined};
+				for (let parent of parents) {
+					const {vernacularName, scientificName, cursiveName} = parent;
+					if (parent.taxonRank === "MX.order") {
+						state.order = {vernacularName, scientificName, cursiveName};
+					} else if (parent.taxonRank === "MX.family") {
+						state.family = {vernacularName, scientificName, cursiveName};
+					}
+					if (state.order && state.family) {
+						this.setState(state);
+						break;
+					}
+				}
+				this.setState({...state, higherThanOrder: !state.order && !state.family})
+			});
+			new ApiClient().fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
+				this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
+			});
+		}
+	}
 
 	render() {
 		const {id, formContext, value, children, placement} = this.props;
-		const {urlTxt, urlTxtIsCursive} = this.state;
+		const {
+			taxon = {},
+			taxonRanks,
+			taxonRank,
+			order,
+			family,
+			higherThanOrder,
+			informalTaxonGroupsById = {},
+			informalTaxonGroups = []
+		} = this.state;
 
 		const tooltipElem = (
 			<Tooltip id={`${id}-popover-tooltip`}>
@@ -669,21 +774,47 @@ class TaxonCardOverlay extends Component {
 			</Tooltip>
 		);
 
+		let imageID = informalTaxonGroups[0];
+		if (informalTaxonGroupsById[imageID] && informalTaxonGroupsById[imageID].parent) {
+			imageID = informalTaxonGroupsById[imageID].parent.id;
+		}
+
+		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
+
+		const TaxonName = ({scientificName, vernacularName = "", cursiveName}) => {
+			const _scientificName = vernacularName && scientificName
+				?  `(${scientificName})`
+				: (scientificName || "");
+			return (
+				<React.Fragment>
+					{`${vernacularName}${vernacularName ? " " : ""}`}
+					{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+				</React.Fragment>
+			);
+		}
+
 		const popover = (
 			<Popover id={`${id}-popover`}>
-				<span className="text-success">
-					<Glyphicon glyph="tag" /> {formContext.translations.KnownSpeciesName}
-				</span>
-				{this.state.urlTxt ?
+				<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
 					<div>
 						<OverlayTrigger overlay={tooltipElem}>
 							<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-								<Glyphicon glyph="modal-window"/> {urlTxtIsCursive ? <i>{urlTxt}</i> : urlTxt}
+								{taxon.vernacularName && <React.Fragment><TaxonName {...taxon} /><br /></React.Fragment>}
 							</a>
 						</OverlayTrigger>
-					</div> :
-					<Spinner />
-				}
+						<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
+						{!higherThanOrder ? (
+							<React.Fragment>
+								<strong>{formContext.translations.taxonGroups}:</strong>
+								<ul>
+									{order && <li><TaxonName {...order} /></li>}
+										{family && <li><TaxonName {...family} /></li>}
+								</ul>
+							</React.Fragment>
+						) : <React.Fragment><br /><br /></React.Fragment>}
+					</div>
+					{loading && <Spinner />}
+				</div>
 			</Popover>
 		);
 
@@ -706,9 +837,9 @@ class InformalTaxonGroupsAddon extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		getInformalGroups().then(({informalTaxonGroups, informalTaxonGroupsById}) => {
+		getInformalGroups().then(({informalTaxonGroupsById}) => {
 			if (!this.mounted) return;
-			this.setState({informalTaxonGroups, informalTaxonGroupsById});
+			this.setState({informalTaxonGroupsById});
 		});
 	}
 
@@ -740,7 +871,7 @@ class InformalTaxonGroupsAddon extends Component {
 	render() {
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-addon" onClick={this.toggle} tabIndex={0}>
+				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>

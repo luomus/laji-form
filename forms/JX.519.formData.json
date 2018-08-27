@@ -1,0 +1,65 @@
+{
+  "gatheringEvent": {
+    "legPublic": true,
+    "leg": [
+      "MA.308"
+    ]
+  },
+  "editors": [
+    "MA.308"
+  ],
+  "secureLevel": "MX.secureLevelNone",
+  "keywords": [],
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [
+              24.110223,
+              49.458848
+            ]
+          }
+        ]
+      },
+      "country": "Ukraine",
+      "administrativeProvince": "Lviv Oblast",
+      "biologicalProvince": "",
+      "municipality": "Mykolaivs'kyi district",
+      "images": [],
+      "habitat": [],
+      "taxonCensus": [],
+      "units": [
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisHumanObservationPhoto",
+          "checklistID": "",
+          "informalTaxonGroups": [
+            "MVL.145",
+            "MVL.1"
+          ],
+          "images": [
+            "MM.93028"
+          ],
+          "preservation": [],
+          "birdBehavior": [],
+          "identifications": [
+            {
+              "identificationBasis": [],
+              "taxon": "varpunen"
+            }
+          ],
+          "unitGathering": {
+            "geometry": {}
+          },
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.36573"
+          }
+        }
+      ],
+      "eventTime": {}
+    }
+  ]
+}

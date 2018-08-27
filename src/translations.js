@@ -340,7 +340,9 @@
 		sv: "Uppdatera felen"
 	},
 	submitWithWarnings: {
-		fi: "Tallenna varoituksista huolimatta"
+		fi: "Tallenna varoituksista huolimatta",
+		en: "Acknowledge warnings and save",
+		sv: "bekräfta varningar och spara"
 	},
 	chooseFromNamedPlace: {
 		fi: "Käytä omaa paikkaa",
@@ -561,5 +563,50 @@
 		fi: "Piilota työkalut",
 		en: "Hide tools",
 		sv: "Piilota työkalut"
-	}
+	},
+	taxonomicRank: {
+		fi: "Taksonominen taso",
+		en: "Taxonomic rank",
+		sv: "Taxonomisk nivå"
+	},
+	taxonGroups: {
+		fi: "Taksonomiset ryhmät",
+		en: "Taxonomic groups",
+		sv: "Taxonomisk grupper"
+	},
+	shortcutHelpPrefix: {
+		fi: "Painamalla ",
+		en: "View the shortcuts by holding ",
+		sv: "Visa genvägarna genom att hålla"
+	},
+	shortcutHelpSuffix: {
+		fi: "-näppäimen pohjaan saat näkyville pikanäppäintoiminnot",
+		en: "-key down",
+		sv: "-nyckel nere"
+	},
+	addUnitList: {
+		fi: "Lisää lajilistalta",
+		en: "Add from species lsit",
+		sv: "Lägg till från artlistan"
+	},
+	unitListShorthandHelp: {
+		fi: "Erottele lajinimet pilkulla",
+		en: "Separate the species names with comma",
+		sv: "Separera artens namn med komma"
+	},
+	unitListShorthandSuccess: {
+		fi: "Lajien tuonti onnistui",
+		en: "Species retrieval was succesful",
+		sv: "Arthämtning var framgångsrik"
+	},
+	unitListShorthandWarning: {
+		fi: "Osaa lajinimistä ei tunnistettu. Tunnistamattomien lukumäärä:",
+		en: "All the species weren't recognized. Count of unknown species:",
+		sv: "Alla arter erkändes inte. Räkning av okända arter:"
+	},
+	unitListShorthandError: {
+		fi: "Lajien tuonti epäonnistui",
+		en: "Species retrieval failed",
+		sv: "Arthämtning misslyckades"
+	},
 };

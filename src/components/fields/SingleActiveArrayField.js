@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
-import { getUiOptions, hasData, focusById, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll } from "../../utils";
+import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
@@ -80,9 +80,15 @@ export default class SingleActiveArrayField extends Component {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
-		if ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx)) {
-			const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true} = getUiOptions(this.props.uiSchema);
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}__header`, focusOnNavigate));
+		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion"} = getUiOptions(this.props.uiSchema);
+		if (renderer === "uncontrolled") return;
+		if (prevProps.formData.length === this.props.formData.length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
+			const idToScroll = idToScrollAfterNavigate
+				? idToScrollAfterNavigate
+				: renderer === "accordion" || renderer === "pager" 
+					?  `${this.props.idSchema.$id}_${this.state.activeIdx}-header`
+					:  `${this.props.idSchema.$id}-add`;
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScroll, focusOnNavigate));
 		}
 	}
 
@@ -109,30 +115,43 @@ export default class SingleActiveArrayField extends Component {
 			state.activeIdx = 0;
 		}
 
+		return state;
+	}
+
+	getTitle = (idx) => {
+		const options = getUiOptions(this.props.uiSchema);
 		const {titleFormat} = options;
 
-		const title = "ui:title" in props.uiSchema ? props.uiSchema["ui:title" ] : props.schema.title;
-		state.getTitle = (idx) => {
-			if (!titleFormat) return title;
+		const title = "ui:title" in this.props.uiSchema ? this.props.uiSchema["ui:title" ] : this.props.schema.title;
+		if (!titleFormat) return title;
 
-			const formatters = {
-				idx: idx + 1,
-				title: props.schema.title
-			};
-				
-			return Object.keys(formatters).reduce((_title, key) => {
-				[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
-					while (_title.includes(replacePattern)) {
-						const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
-							decapitalizeFirstLetter : capitalizeFirstLetter;
-						_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
-					}
-				});
-				return _title;
-			}, titleFormat);
+		const formatters = {
+			idx: idx + 1,
+			title: this.props.schema.title
 		};
 
-		return state;
+		return Object.keys(formatters).reduce((_title, key) => {
+			[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
+				while (_title.includes(replacePattern)) {
+					const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
+						decapitalizeFirstLetter : capitalizeFirstLetter;
+					_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
+				}
+			});
+			return _title;
+		}, titleFormat);
+	}
+
+	onHeaderAffixChange = (elem, value) => {
+		if (value) {
+			this.scrollHeightFixed = elem.scrollHeight;
+			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
+				syncScroll(this.props.formContext);
+			});
+		} else {
+			this.scrollHeightFixed = 0;
+			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset}});
+		}
 	}
 
 	render() {
@@ -158,7 +177,7 @@ export default class SingleActiveArrayField extends Component {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
-		const formContext = {...this.props.formContext, this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
+		const formContext = {...(this.state.formContext || this.props.formContext), this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
@@ -300,6 +319,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		addKeyHandlers() {
+			const {renderer = "accordion"} = getUiOptions(this.props.uiSchema);
 			const that = this.props.formContext.this;
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
@@ -310,7 +330,9 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					callback() :
 					that.onActiveChange(idx, callback);
 				},
-				getIdToScrollAfterNavigate: () => `${this.props.idSchema.$id}_${that.state.activeIdx}__header`
+				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager" ?
+					() => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
+					: undefined
 			});
 		}
 
@@ -402,7 +424,8 @@ class AccordionArrayFieldTemplate extends Component {
 				idx={idx}
 				wrapperClassName="panel-title"
 				className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
-				<DeleteButton ref={this.setDeleteButtonRef(idx)}
+				<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
+											ref={this.setDeleteButtonRef(idx)}
 											className="pull-right"
 											confirm={confirmDelete}
 											translations={translations}
@@ -413,15 +436,21 @@ class AccordionArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array no-transition">
 				<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="top" />
-				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx}>
+				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
-									 header={getHeader(idx)}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-							{idx === activeIdx ? item.children : null}
-							{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+							<Panel.Heading>
+								{getHeader(idx)}
+							</Panel.Heading>
+							{idx === activeIdx ? (
+								<Panel.Body>
+									{item.children}
+									{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+								</Panel.Body>
+							) : null}
 						</Panel>
 					))}
 					<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="bottom"/>
@@ -442,6 +471,10 @@ class PagerArrayFieldTemplate extends Component {
 
 	getContainerRef = () => this.containerRef
 
+	setHeaderRef = (elem) => {
+		this.headerRef = elem;
+	}
+
 	render() {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
@@ -449,7 +482,7 @@ class PagerArrayFieldTemplate extends Component {
 		const {buttons, affixed} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
 		let header = (
-			<div className="laji-form-panel-header laji-form-accordion-header">
+			<div className="laji-form-panel-header laji-form-accordion-header" ref={this.setHeaderRef}>
 				<Pager>
 					<Pager.Item previous 
 											href="#"
@@ -476,8 +509,9 @@ class PagerArrayFieldTemplate extends Component {
 		);
 
 		if (affixed) {
+			const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
 			header = (
-				<Affix getContainer={this.getContainerRef} topOffset={this.props.formContext.topOffset}>
+				<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 					{header}
 				</Affix>
 			);
@@ -485,14 +519,25 @@ class PagerArrayFieldTemplate extends Component {
 
 		return (
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
-				<Panel className="laji-form-panel" header={header}>
-					<div key={activeIdx}>
-						{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
-					</div>
-					{getButtonElems(buttons, arrayTemplateFieldProps)}
+				<Panel className="laji-form-panel">
+					<Panel.Heading>
+							{header}
+					</Panel.Heading>
+					<Panel.Body>
+						<div key={activeIdx}>
+							{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+						</div>
+						{getButtonElems(buttons, arrayTemplateFieldProps)}
+					</Panel.Body>
 				</Panel>
 			</div>
 		);
+	}
+
+	onHeaderAffixChange = (value) => {
+		const elem = this.headerRef;
+		const that = this.props.formContext.this;
+		that.onHeaderAffixChange(elem, value);
 	}
 
 	navigatePrev = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx - 1);
@@ -508,7 +553,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const {TitleField, DescriptionField} =  arrayTemplateFieldProps;
 		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
 		const {titleFormatters} = getUiOptions(that.props.uiSchema);
-		const title = that.state.getTitle(activeIdx);
+		const title = that.getTitle(activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={activeIdx}>
@@ -542,7 +587,7 @@ class TableArrayFieldTemplate extends Component {
 	componentWillUnmount() {
 		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
 		window.removeEventListener("resize", this._updateRenderingMode);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize");
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -610,6 +655,7 @@ class TableArrayFieldTemplate extends Component {
 
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
+			const scrollBack = shouldSyncScroll(this.props.formContext);
 			const that = this.props.formContext.this;
 			const {activeIdx} = that.state;
 			const rowElem = this.itemElems[activeIdx];
@@ -625,7 +671,13 @@ class TableArrayFieldTemplate extends Component {
 				} : {}
 			};
 			if (idx !== null) state.activeIdx = idx;
-			this.setState(state, callback);
+			const _callback = () => {
+				if (scrollBack) {
+					syncScroll(this.props.formContext, !!"force");
+				}
+				if (callback) callback();
+			};
+			this.setState(state, _callback);
 		});
 	}
 
@@ -672,7 +724,8 @@ class TableArrayFieldTemplate extends Component {
 
 		const getDeleteButtonFor = idx => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
-			return <DeleteButton ref={getDeleteButtonRef}
+			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
+			                     ref={getDeleteButtonRef}
 			                     key={idx}
 			                     confirm={confirmDelete}
 			                     translations={this.props.formContext.translations}
@@ -683,7 +736,14 @@ class TableArrayFieldTemplate extends Component {
 			this.itemElems[idx] = elem;
 		};
 
-		const title = that.state.getTitle(that.state.activeIdx);
+		const title = that.getTitle(that.state.activeIdx);
+
+		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx)
+			: undefined;
+		const onMouseLeave = (idx) => that.props.idSchema.$id.match(/units$/)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx)
+			: undefined;
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
@@ -705,8 +765,24 @@ class TableArrayFieldTemplate extends Component {
 									let className = "";
 									if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
-										<tr key={idx} onClick={changeActive(idx)} className={className} tabIndex={0} id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined} ref={setItemRef(idx)} style={idx === activeIdx ? this.state.activeTrStyle : undefined}>
-											{[...cols.map(col => <td key={col}>{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}</td>), idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx)}</td>]}
+										<tr key={idx} 
+										    onClick={changeActive(idx)}
+										    className={className}
+										    tabIndex={0}
+										    id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}
+										    ref={setItemRef(idx)}
+										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}
+												onMouseEnter={onMouseEnter(idx)}
+										    onMouseLeave={onMouseLeave(idx)}
+										>
+											{[
+												...cols.map(col => (
+													<td key={col}>
+														{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}
+													</td>
+												)),
+												idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx)}</td>
+											]}
 										</tr>
 									];
 								})}
@@ -884,7 +960,7 @@ class AccordionHeader extends Component {
 
 	render() {
 		const {that, idx} = this.props;
-		const title = that.state.getTitle(idx);
+		const title = that.getTitle(idx);
 		const popupData = that.state.popups[idx];
 		const {uiSchema} = that.props;
 		const hasHelp = uiSchema && uiSchema["ui:help"];
@@ -906,7 +982,7 @@ class AccordionHeader extends Component {
 
 		const header = (
 			<div className={this.props.className}
-			     id={`${that.props.idSchema.$id}_${idx}__header`}
+			     id={`${that.props.idSchema.$id}_${idx}-header`}
 			     tabIndex={0}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}

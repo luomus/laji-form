@@ -19,6 +19,7 @@ export default class GeocoderField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
+		this.componentDidUpdate();
 	}
 
 	componentWillReceiveProps(props) {
@@ -43,9 +44,19 @@ export default class GeocoderField extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		const {updateOnlyEmpty, button, fields} = this.getOptions(this.props);
+		const hasData = fields.some(field => !isEmptyString(this.props.formData[field]));
+		const geometry = this.getGeometry(this.props);
+		const geometriesEqual = prevProps && equals(this.getGeometry(prevProps), geometry);
+		if ((geometry && geometry.geometries && geometry.geometries.length === 0 && !geometriesEqual) || (!updateOnlyEmpty || !hasData) && ((this.state.loading === undefined && !this.state && geometry) || !geometriesEqual)) {
+			button ? this.onButtonClick()(this.props) : this.update(this.props);
+		}
+	}
+
 	getStateFromProps(props, loading) {
 		const state = {loading};
-		const {updateOnlyEmpty, button, fields} = this.getOptions(props);
+		const {button} = this.getOptions(props);
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		if (button) {
 			state.uiSchema = {
@@ -60,13 +71,6 @@ export default class GeocoderField extends Component {
 			};
 		} else {
 			state.uiSchema = innerUiSchema;
-		}
-
-		const hasData = fields.some(field => !isEmptyString(props.formData[field]));
-		const geometry = this.getGeometry(props);
-		const geometriesEqual = equals(this.getGeometry(this.props), geometry);
-		if ((geometry && geometry.geometries && geometry.geometries.length === 0 && !geometriesEqual) || (!updateOnlyEmpty || !hasData) && ((loading === undefined && !this.state && geometry) || !geometriesEqual)) {
-			button ? this.onButtonClick()(props) : this.update(props);
 		}
 
 		return state;
@@ -108,8 +112,10 @@ export default class GeocoderField extends Component {
 		const {uiSchema, formData} = props;
 		const {geometryField = "geometry"} = getUiOptions(uiSchema);
 		let geometry = formData[geometryField];
-		if ("type" in geometry && geometry.type !== "GeometryCollection") {
-			geometry = {type:  "GeometryCollection", geometries: [geometry]};
+		if (!geometry.type) {
+			geometry = {type: "GeometryCollection", geometries: []};
+		} else if ("type" in geometry && geometry.type !== "GeometryCollection") {
+			geometry = {type: "GeometryCollection", geometries: [geometry]};
 		}
 		if (formData.units) formData.units.forEach(({unitGathering}) => {
 			if (unitGathering && unitGathering.geometry  && unitGathering.geometry.coordinates) {
@@ -240,14 +246,16 @@ export default class GeocoderField extends Component {
 		};
 
 		const fetchForeign = () => {
+			if (!props.formContext.googleApiKey) return afterFetch(callback);
+
 			this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
-				?latlng=${lat},${lng}\
-				&key=${props.formContext.googleApiKey}\
-				&language=en\
-				&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
-			).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
-				afterFetch(callback);
-			});
+					?latlng=${lat},${lng}\
+					&key=${props.formContext.googleApiKey}\
+					&language=en\
+					&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
+				).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
+					afterFetch(callback);
+				});
 		};
 
 		mainContext.pushBlockingLoader();

@@ -221,7 +221,11 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 
 export function focusNextInput(...params) {
 	const field = getNextInput(...params);
-	if (field) field.focus();
+	if (field) {
+		field.focus();
+		return true;
+	}
+	return false;
 }
 
 export function focusById(formContext = {}, id, focus = true) {
@@ -231,6 +235,9 @@ export function focusById(formContext = {}, id, focus = true) {
 		if (tabbableFields && tabbableFields.length) {
 			focus && tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
+			const _context = new Context(formContext.contextId);
+			_context.lastIdToScroll = id; // Mark for components that manipulate height/scroll positions
+			_context.windowScrolled = getWindowScrolled();
 			return true;
 		}
 	}
@@ -347,7 +354,7 @@ export function stringifyKeyCombo(keyCombo = "") {
 }
 
 export function canAdd(props) {
-	return props.canAdd && getUiOptions(props.uiSchema).canAdd !== false;
+	return (!("canAdd" in props) || props.canAdd) && getUiOptions(props.uiSchema).canAdd !== false;
 }
 
 export function bsSizeToPixels(bsSize) {
@@ -404,9 +411,12 @@ export function applyFunction(props) {
 	};
 }
 
+export function getWindowScrolled() {
+	return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+}
+
 export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	if (!elem) return;
-
 	var rect = elem.getBoundingClientRect();
 	var html = document.documentElement;
 	const height = elem.scrollHeight;
@@ -414,27 +424,18 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 		rect.top >= topOffset &&
 		rect.bottom <= (window.innerHeight || html.clientHeight) - bottomOffset
 	);
-	const distFromTop = rect.top;
+	const elemTopDistFromViewportTop = rect.top;
 	const viewportHeight = (window.innerHeight || html.clientHeight);
-	const distFromBottom = viewportHeight - rect.bottom;
-	const pageScrolled = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+	const elemBottomDistFromViewportBottom = -(elemTopDistFromViewportTop + height - viewportHeight);
+	const pageScrolled = getWindowScrolled();
 
 	if (inView) return;
 
-	let amount = undefined;
-
-	if (distFromTop < topOffset) {
-		amount = rect.top - topOffset;
-	}
-	if (distFromBottom < bottomOffset) {
-		amount = rect.top - viewportHeight + height + bottomOffset;
-	}
-
 	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
-	if (distFromTop - pageScrolled - amount < 0) {
-		window.scrollTo(0, pageScrolled + distFromTop - topOffset);
+	if (elemTopDistFromViewportTop <= topOffset) {
+		window.scrollTo(0, pageScrolled + elemTopDistFromViewportTop - topOffset);
 	} else {
-		window.scrollTo(0, pageScrolled + amount);
+		window.scrollTo(0, pageScrolled - elemBottomDistFromViewportBottom + bottomOffset);
 	}
 }
 
@@ -464,13 +465,12 @@ export function injectButtons(uiSchema, buttons, buttonsPath) {
 	return uiSchema;
 }
 
-export function dictionarify(array) {
+export function dictionarify(array, getKey, getValue) {
 	return array.reduce((o, k) => {
-		o[k] = true;
+		o[getKey ? getKey(k) : k] = getValue ? getValue(k) : true;
 		return o;
 	}, {});
 }
-
 
 const tableFormatters = {
 	unknownTaxon: (item, formatted, options) => {
@@ -543,10 +543,40 @@ export function checkRules(rules, props, cache) {
 export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true) {
 	const _context = new Context(formContext.contextId);
 	if (idToFocus === undefined && idToScroll === undefined) return;
-	if (!focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
-	idToScroll = getKeyHandlerTargetId(idToScroll, _context);
+	if (idToFocus && !focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	if (idToScroll) {
-		const elemToScroll = document.getElementById(idToScroll);
+		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
 		scrollIntoViewIfNeeded(elemToScroll, formContext.topOffset, formContext.bottomOffset);
+	}
+	_context.lastIdToScroll = idToScroll;
+	_context.windowScrolled = getWindowScrolled();
+	return true;
+}
+
+export function shouldSyncScroll(formContext) {
+	return new Context(formContext.contextId).windowScrolled === getWindowScrolled();
+}
+
+export function syncScroll(formContext, force = false) {
+	if (force || shouldSyncScroll(formContext)) {
+		focusAndScroll(formContext, undefined, new Context(formContext.contextId).lastIdToScroll);
+	}
+}
+
+export function bringRemoteFormData(formData, formContext) {
+	if (formContext.formDataTransformers) {
+		return formContext.formDataTransformers.reduce((formData, {"ui:field": uiField, props: fieldProps}) => {
+			const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData});
+			return state.formData;
+		}, formData);
+	} else {
+		return formData;
+	}
+}
+
+export function triggerParentComponent(eventName, e, props) {
+	if (props && props[eventName]) {
+		e.persist();
+		props[eventName](e);
 	}
 }

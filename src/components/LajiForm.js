@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
-import { Button } from "./components";
+import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject } from "../utils";
 import equals from "deep-equal";
@@ -65,6 +65,8 @@ const fields = importLocalComponents("fields", [
 	"PrefillingArrayField",
 	"ConditionalAdditionalItemsArrayField",
 	"AnyToBooleanField",
+	"EnumRangeArrayField",
+	"UnitListShorthandArrayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -168,7 +170,8 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		this.keyHandlers = this.getKeyHandlers(this.props.uiSchema["ui:shortcuts"]);
+		const shortcuts = props.uiSchema["ui:shortcuts"] || {};
+		this.keyHandlers = this.getKeyHandlers(shortcuts);
 		this._context.keyHandlers = this.keyHandlers;
 		this._context.addKeyHandler("root", this.keyFunctions);
 		this._context.keyHandlerTargets = Object.keys(this.keyHandlers).reduce((targets, keyCombo) => {
@@ -177,14 +180,25 @@ export default class LajiForm extends Component {
 			return targets;
 		}, []);
 
+		Object.keys(shortcuts).some(keyCombo => {
+			if (shortcuts[keyCombo].fn == "help") {
+				this.keyCombo = keyCombo;
+				this.keyComboDelay = shortcuts[keyCombo].fn;
+				return true;
+			}
+		});
+
 		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
 
 		this.settingSavers = {};
-		this._context.addSettingSaver = (key, fn) => {
-			this.settingSavers[key] = fn;
+		this.globalSettingSavers = {};
+		this._context.addSettingSaver = (key, fn, global = false) => {
+			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+			settingSavers[key] = fn;
 		};
-		this._context.removeSettingSaver = (key) => {
-			delete this.settingSavers[key];
+		this._context.removeSettingSaver = (key, global = false) => {
+			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+			delete settingSavers[key];
 		};
 		this._context.onSettingsChange = this.onSettingsChange;
 
@@ -305,12 +319,13 @@ export default class LajiForm extends Component {
 				)),
 				contextId: this._id,
 				getFormRef: this.getFormRef,
-				topOffset: props.topOffset,
-				bottomOffset: props.bottomOffset,
+				topOffset: props.topOffset || 0,
+				bottomOffset: props.bottomOffset || 0,
 				formID: props.id,
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
-				releaseId: this.releaseId
+				releaseId: this.releaseId,
+				notifier: props.notifier || this.getDefaultNotifier()
 			}
 		};
 	}
@@ -344,6 +359,13 @@ export default class LajiForm extends Component {
 		return dictionaries;
 	}
 
+	getDefaultNotifier = () => {
+		if (this.defaultNotifier) return this.defaultNotifier;
+		this.defaultNotifier = ["success", "info", "warning", "error"].reduce((notifier, method) => {
+			return notifier[method] = msg => console.warn(`Notification component not specified for LajiForm! Got '${method}'notification: '${msg}'`);
+		}, {});
+	}
+
 	onChange = ({formData}) => {
 		if (this.props.onChange) this.props.onChange(formData);
 		this._context.formData = formData;
@@ -363,6 +385,11 @@ export default class LajiForm extends Component {
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
+				{shortcuts && (
+					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
+						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
+					</TooltipComponent>
+				)}
 				<Form
 					{...this.props}
 					ref={this.getRef}
@@ -384,37 +411,37 @@ export default class LajiForm extends Component {
 				<div>
 					{this.props.children}
 					{(!this.props.children && this.props.renderSubmit !== false) ?
-						(<Button id="submit" type="submit" onClick={this._onDefaultSubmit}>{translations.Submit}</Button>) :
+						(<Button id="submit" type="submit" onClick={this._onDefaultSubmit}>{this.props.submitText || translations.Submit}</Button>) :
 						null}
 					</div>
 			</Form>
 			{shortcuts ? 
-					<Panel 
-						ref={this.getPanelRef} 
-						className="shortcut-help laji-form-popped z-depth-3 hidden" 
-						style={{bottom: (this.props.bottomOffset || 0) + 5}}
-						bsStyle="info" 
-						header={
-							<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-						}
-					>
-					<Table fill>
-						<tbody className="well">{
-							Object.keys(shortcuts).map((keyCombo, idx) => {
-								const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
-								if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn)) return;
-								let translation = "";
-								if (translation) translation = label;
-								else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];
-								if  (targetLabel) translation = `${translation} ${targetLabel}`;
-								return (
-									<tr key={idx}>
-										<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
-									</tr>
-								);
-							})
-						}</tbody>
-					</Table>
+				<Panel 
+					ref={this.getPanelRef} 
+					className="shortcut-help laji-form-popped z-depth-3 hidden" 
+					style={{bottom: (this.props.bottomOffset || 0) + 5}}
+					bsStyle="info" 
+				>
+					<Panel.Heading>
+						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
+					</Panel.Heading>
+						<Table>
+							<tbody className="well">{
+								Object.keys(shortcuts).map((keyCombo, idx) => {
+									const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
+									if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn)) return;
+									let translation = "";
+									if (translation) translation = label;
+									else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];
+									if  (targetLabel) translation = `${translation} ${targetLabel}`;
+									return (
+										<tr key={idx}>
+											<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
+										</tr>
+									);
+								})
+							}</tbody>
+						</Table>
 				</Panel> 
 			: null}
 		</div>
@@ -514,6 +541,25 @@ export default class LajiForm extends Component {
 		this.formRef.onSubmit({preventDefault: () => {}});
 	}
 
+	getShorcutButtonTooltip = () => {
+		const {translations} = this.state.formContext;
+		if (this.keyCombo && this.keyComboDelay) {
+			return `${translations.ShortcutHelpPrefix} ${stringifyKeyCombo(this.keyCombo)}${translations.shortcutHelpSuffix}`;
+		}
+	}
+
+	toggleHelp = (e) => {
+		this.helpVisible ? this.dismissHelp(e) : this.showHelp(e);
+	}
+
+	showHelp = () => {
+		const node = findDOMNode(this.shortcutHelpRef);
+		if (!this.helpVisible) {
+			if (node) node.className = node.className.replace(" hidden", "");
+			this.helpVisible = true;
+		}
+	}
+
 	dismissHelp = (e) => {
 		const node = findDOMNode(this.shortcutHelpRef);
 		e.preventDefault();
@@ -537,13 +583,8 @@ export default class LajiForm extends Component {
 
 			this.helpStarted = true;
 
-			const node = findDOMNode(this.shortcutHelpRef);
-			
 			this.helpTimeout = setTimeout(() => {
-				if (!this.helpVisible) {
-					if (node) node.className = node.className.replace(" hidden", "");
-					this.helpVisible = true;
-				}
+				this.showHelp();
 			}, delay * 1000);
 			this.addEventListener(document, "keyup", this.dismissHelp);
 			this.addEventListener(window, "blur", this.dismissHelp);
@@ -640,10 +681,11 @@ export default class LajiForm extends Component {
 		}
 	}
 
-	getSettings = () => {
-		return Object.keys(this.settingSavers).reduce((settings, key) => {
+	getSettings = (global = false) => {
+		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
+		return Object.keys(settingSavers).reduce((settings, key) => {
 			try {
-				settings[key] = this.settingSavers[key]();
+				settings[key] = settingSavers[key]();
 			} catch (e) {
 				// Swallow failing settings parsing.
 			} 
@@ -651,11 +693,14 @@ export default class LajiForm extends Component {
 		}, {});
 	}
 	
-	onSettingsChange = () => {
-		const settings = this.getSettings();
+	onSettingsChange = (global = false) => {
+		const settings = this.getSettings(global);
 		if (!equals(this.state.formContext.settings, settings)) {
-			this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
-			if (this.props.onSettingsChange) this.props.onSettingsChange(settings);
+			// setImmediate because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
+			setImmediate(() => {
+				this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
+			});
+			if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
 		}
 	}
 

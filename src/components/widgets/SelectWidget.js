@@ -29,7 +29,7 @@ class SelectWidget extends Component {
 	}
 
 	getStateFromProps(props) {
-		let {options: {enumOptions}, multiple} = props;
+		let {options: {enumOptions}, multiple, value} = props;
 
 		if (multiple && enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {
 			enumOptions = enumOptions.slice(1);
@@ -60,6 +60,13 @@ class SelectWidget extends Component {
 			});
 		}
 
+		if (enumOptions.every(({value: _value}) => value !== _value)) {
+			const _enum = this.props.options.enumOptions.find(({value: _value}) => value === _value);
+			if (_enum) {
+				enumOptions.push(_enum);
+			}
+		}
+
 		if (order) enumOptions = sort(enumOptions, order);
 
 
@@ -71,11 +78,14 @@ class SelectWidget extends Component {
 		return {
 			valsToItems,
 			enumOptions,
-			value: props.value
+			value
 		};
 	}
 
-	multiSelectOnChange = (values) => this.props.onChange(values.map(({value}) => this.getEnum(value)));
+	multiSelectOnChange = (values) => {
+		this.props.onChange(values.map(({value}) => this.getEnum(value)));
+		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.id, "resize");
+	}
 
 	selectOnChange = (item) => {
 		this.setState({value: item});

@@ -60,15 +60,28 @@ Pass the implementation to LajiForm like so:
 <LajiForm apiClient={new ApiClientImplementation()} ... />
 ```
 
+## Notifications ##
+
+LajiForm expects a notification implementation as a paratemer `notifier`. The `notifier` object must implement the interface below:
+
+```
+{
+	success: message => (),
+	warning: message => (),
+	info: message => (),
+	error: message => (),
+}
+```
+
 ## Styles ##
 
 Styles can be found at  ```dist/styles.css```.
 
 # Development #
 
-Run `npm install` to install the dependencies and `npm start` to start the app.
+Run `yarn install` to install the dependencies and `yarn start` to start the app.
 
-Before running, you'll need to configure your personal apitest.laji.fi access token. Get the key to you email:
+Before running, you'll need to configure your personal apitest.laji.fi access token. Get the key to your email:
 
 ```
 curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{\
@@ -88,4 +101,45 @@ Try to keep the code style consistent - ```npm run lint``` should pass without e
 
 ## Developing different forms ##
 
-You can view remote forms by changing the `SCHEMA_ID` variable in `src/app`. Set it to `undefined` to use the form data from `playground/schemas.json`.
+Start the server and navigate to the local playground http://localhost:8083?id={form_id}
+
+### Playground query parameters ###
+
+Option        | Default | Description
+--------------|---------|-----------------------------------------------------------------------------------------------
+id            | -       | Form id to use. If empty, `playground/schemas.json` will be used for form schemas.
+local         | `false` | Use local schemas under `forms/` instead of fetching from apitest.laji.fi.
+localFormData | `false` | Use local formData under `forms/${id}.formData.json` instead of form's `prepopulatedDocument`.
+settings      | `true`  | Use local settings defined in `playground/schemas`.
+
+### Examples ###
+
+http://localhost:8083?id=JX.519 Trip report form with empty `formData`.
+
+http://localhost:8083?id=MHL.1&localFormData=true Line transect form with local `formData`.
+
+## Tests ##
+
+Install protractor with: 
+
+```
+npm i -g protractor
+webdriver-manager update
+```
+
+The playground server and the Selenium server must be running before running the tests. Start the Selenium server with:
+
+```
+webdriver-manager start
+```
+
+Then run the tests with `yarn run test`.
+
+### Test parameters ###
+
+Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome yarn test`
+
+Option         | Default | Description
+---------------|---------|-----------------------------------------------------------------------------------------------
+TEST_BROWSER   | -       | `chrome` or `firefox`. Tests are run for both by default.
+NO_HEADLESS    | `false` | Run the tests in a visible browser window if `true`.

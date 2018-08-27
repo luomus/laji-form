@@ -56,7 +56,7 @@ export default class UiFieldMapperArrayField extends Component {
 		return {
 			...props,
 			schema: props.schema.items,
-			uiSchema: props.uiSchema.uiSchema.items,
+			uiSchema: (props.uiSchema.uiSchema || props.uiSchema).items,
 			idSchema: props.idSchema,
 			formData: (props.formData || [])[idx],
 			errorSchema: (props.errorSchema || {})[idx] || {},

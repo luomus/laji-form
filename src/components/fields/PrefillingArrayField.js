@@ -5,7 +5,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
 export default class PrefillingArrayField extends Component {
-	static PropTypes = {
+	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				field: PropTypes.string,
