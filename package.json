@@ -28,7 +28,7 @@
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
     "immutability-helper": "^2.1.2",
-    "laji-map": "^1.0.401",
+    "laji-map": "^1.0.402",
     "laji-validate": "0.0.69",
     "moment": "*",
     "prop-types": "^15.5.8",
@@ -89,5 +89,8 @@
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2",
     "webpack-node-externals": "^1.5.4"
+  },
+  "resolutions": {
+    "laji-map": "^1.0.402"
   }
 }
