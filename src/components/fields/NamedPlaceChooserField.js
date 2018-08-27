@@ -357,16 +357,17 @@ class Popup extends Component {
 		});
 	}
 
+	getButtonRef = (elem) => {
+		this.buttonElem = elem;
+		console.log(this.buttonElem);
+		console.log(findDOMNode(this.buttonElem));
+	}
+
 	render() {
 		const {place, translations} = this.props;
 
-		const that = this;
-		function getButtonRef(elem) {
-			that.buttonElem = elem;
-		}
-
 		return place ? (
-			<React.Fragment>
+			<div>
 				<table className="named-place-popup">
 					<tbody>
 					{
@@ -385,8 +386,8 @@ class Popup extends Component {
 					}
 				</tbody>
 				</table>
-				<Button ref={getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
-		</React.Fragment>
+				<Button ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
+		</div>
 		) : <Spinner />;
 	}
 }
