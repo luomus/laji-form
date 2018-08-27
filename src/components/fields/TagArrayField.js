@@ -77,8 +77,16 @@ export class TagInputComponent extends Component {
 		const {onInputChange} = this.props;
 		onInputChange && e.persist();
 		const {target: {value}} = e;
+
+		const {separatorKeys = []} = getUiOptions(this.props.uiSchema);
+		const splitted = separatorKeys.reduce((splitted, separator) => {
+			return splitted.reduce((splitted, i) => i.split(separator), splitted);
+		}, [value]);
 		this.setState({value}, () => {
 			onInputChange && this.props.onInputChange(e);
+			if (splitted.length > 1) {
+				this.props.onChange([...(this.props.tags || []), ...splitted]);
+			}
 		});
 	}
 
