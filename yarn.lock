@@ -2959,9 +2959,9 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-laji-map@1.0.404, laji-map@^1.0.395, laji-map@^1.0.404:
-  version "1.0.404"
-  resolved "https://registry.yarnpkg.com/laji-map/-/laji-map-1.0.404.tgz#dcec8338385a846cf9f4ff1355c21b0e6bc50f0d"
+laji-map@1.0.405, laji-map@^1.0.395, laji-map@^1.0.405:
+  version "1.0.405"
+  resolved "https://registry.yarnpkg.com/laji-map/-/laji-map-1.0.405.tgz#1117a78d4c9d8a1d04d88d78a2bb6057e9265e85"
   dependencies:
     Leaflet.vector-markers "git+https://git@github.com/olzraiti/Leaflet.vector-markers.git#17601bee91f2dae098a0a76e96714d59ec958fe6"
     leaflet "1.3.4"
