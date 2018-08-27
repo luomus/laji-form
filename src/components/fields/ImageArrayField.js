@@ -175,7 +175,8 @@ export default class ImageArrayField extends Component {
 								onChange={onChange}
 								onSubmit={this.onImageMetadataUpdate}
 								submitText={translations.Save}
-								lang={lang}>
+								lang={lang}
+								showShortcutButton={false}>
 								{(metadataSaveSuccess !== undefined) ? (
 										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
 											{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
@@ -190,10 +191,13 @@ export default class ImageArrayField extends Component {
 			</Modal> : null;
 	}
 
+	onAlertOk = () => {
+		this.setState({alert: false, alertMsg: undefined});
+	}
+
 	renderAlert = () => {
-		const onOk = () => this.setState({alert: false, alertMsg: undefined});
 		return this.state.alert ? (
-      <PopupAlert onOk={onOk}>
+      <PopupAlert onOk={this.onAlertOk}>
 				{` ${this.state.alertMsg}`}
       </PopupAlert>) : null;
 	}

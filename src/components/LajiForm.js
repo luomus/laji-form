@@ -385,7 +385,7 @@ export default class LajiForm extends Component {
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
-				{shortcuts && (
+				{this.props.showShortcutButton && shortcuts && (
 					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
 						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 					</TooltipComponent>
