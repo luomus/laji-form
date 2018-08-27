@@ -311,6 +311,7 @@ export class Autosuggest extends Component {
 			if (!this.mounted) return;
 			this.setState({suggestion, value: this.getSuggestionValue(suggestion), isLoading: false}, () => this.onSuggestionsFetchRequested(this.state, !"no debounce"));
 		}).catch(() => {
+			if (!this.mounted) return;
 			this.setState({isLoading: false});
 		});
 	}
@@ -425,7 +426,9 @@ export class Autosuggest extends Component {
 					this.afterBlurAndFetch(suggestions);
 			}).catch(() => {
 				this._valueForBlurAndFetch = this.state.value;
-				this.setState({isLoading: false}, this.afterBlurAndFetch);
+				this.mounted
+					? this.setState({isLoading: false}, this.afterBlurAndFetch)
+					: this.afterBlurAndFetch();
 			});
 		};
 
@@ -725,6 +728,7 @@ class TaxonCardOverlay extends Component {
 				});
 			});
 			new ApiClient().fetchCached(`/taxa/${value}/parents`).then(parents => {
+				if (!this.mounted) return;
 				const state = {order: undefined, family: undefined};
 				for (let parent of parents) {
 					const {vernacularName, scientificName, cursiveName} = parent;
@@ -741,6 +745,7 @@ class TaxonCardOverlay extends Component {
 				this.setState({...state, higherThanOrder: !state.order && !state.family})
 			});
 			new ApiClient().fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
+				if (!this.mounted) return;
 				this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
 			});
 		}
