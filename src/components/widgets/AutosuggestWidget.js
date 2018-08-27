@@ -243,7 +243,6 @@ export class Autosuggest extends Component {
 	constructor(props) {
 		super(props);
 		const isSuggested = this.isValueSuggested(props.value, props);
-		this.focused = false;
 		this.state = {
 			isLoading: false,
 			suggestions: [],
@@ -286,13 +285,6 @@ export class Autosuggest extends Component {
 	componentWillUnmount() {
 		this.mounted = false;
 		new Context(this.props.formContext.contextId).removeKeyHandler(this.props.id, this.keyFunctions);
-	}
-
-	componentDidUpdate() {
-		if (this.onNextTick) {
-			this.onNextTick();
-			this.onNextTick = undefined;
-		}
 	}
 
 	keyFunctions = {
@@ -573,8 +565,7 @@ export class Autosuggest extends Component {
 	}
 
 	onInformalTaxonGroupSelected = (id) => {
-		this.focused = false;
-		this.setState({informalTaxonGroupsOpen: false});
+		this.setState({informalTaxonGroupsOpen: false, focused: false});
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
 	}
 
@@ -633,7 +624,7 @@ export class Autosuggest extends Component {
 		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		let glyph = undefined;
 
-		if (!this.focused && !this.state.isLoading && (!onToggle || !this.focused)) {
+		if (!this.state.focused && !this.state.isLoading && (!onToggle || !this.state.focused)) {
 			glyph = (validationState === "success" && renderSuccessGlyph) ?
 				renderSuccessGlyph(value) : getGlyph(validationState);
 		}
@@ -659,7 +650,7 @@ export class Autosuggest extends Component {
 			return tooltip;
 		};
 
-		const toggler = onToggle && this.focused
+		const toggler = onToggle && this.state.focused
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} >
 					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
@@ -878,3 +869,4 @@ class InformalTaxonGroupsAddon extends Component {
 		);
 	}
 }
+
