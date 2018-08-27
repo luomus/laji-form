@@ -4,10 +4,6 @@ import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
 import _notus from "notus";
 
-import tripReport from "../forms/JX.519.json";
-import fungiAtlas from "../forms/JX.652.json";
-import lineTransect from "../forms/MHL.1.json";
-import lineTransectFormData from "../forms/MHL.1.formData.json";
 
 import "../src/styles";
 import "./styles.css";
@@ -16,12 +12,6 @@ import "./styles-dev.css";
 import "notus/src/notus.css";
 
 const notus = _notus();
-
-const forms = {
-	"JX.519": tripReport,
-	"JX.652": fungiAtlas,
-	"MHL.1": lineTransect
-};
 
 function getJsonFromUrl() {
 	  var query = location.search.substr(1);
@@ -54,7 +44,7 @@ if (query.id !== undefined && query.local !== "true") {
 		return response.json();
 	});
 } else {
-	promise = Promise.resolve(query.id ? forms[query.id] : schemas);
+	promise = Promise.resolve(query.id ? require(`../forms/${query.id}.json`) : schemas);
 }
 
 const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
@@ -67,23 +57,16 @@ promise.then(data => {
 		...data,
 		settings: query.settings === "false" ? undefined : schemas.settings,
 		formData: query.localFormData
-			? schemas.formData
-			: (() => {
-				switch (query.id) {
-				case "MHL.1":
-					return {...ownerFilledFormData, gatherings: lineTransectFormData.gatherings};
-				default:
-					return data.prepopulatedDocument
-						? {
-							...data.prepopulatedDocument,
-							gatheringEvent: {
-								...(data.prepopulatedDocument.gatheringEvent || {}),
-								...ownerFilledFormData.gatheringEvent
-							}
-						}
-						: ownerFilledFormData;
+		? require(`../forms/${query.id}.formData.json`)
+			: data.prepopulatedDocument
+				? {
+					...data.prepopulatedDocument,
+					gatheringEvent: {
+						...(data.prepopulatedDocument.gatheringEvent || {}),
+						...ownerFilledFormData.gatheringEvent
+					}
 				}
-			})(),
+				: ownerFilledFormData,
 		uiSchemaContext: {
 			...(data.uiSchemaContext || {}),
 			creator: properties.userId,

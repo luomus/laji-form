@@ -1,7 +1,7 @@
 const {HOST, PORT} = process.env;
 export const getLocatorForContextId = contextId => path =>  `#_laji-form_${contextId}_root_${path.replace(/\./g, "_")}`;
 
-export const navigateToForm = async formID => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false`);
+export const navigateToForm = async (formID, params = "") => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false${params}`);
 export const lajiFormLocator = getLocatorForContextId(0);
 export const lajiFormLocate = str => $(lajiFormLocator(str));
 

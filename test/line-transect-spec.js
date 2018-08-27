@@ -3,7 +3,7 @@ import { navigateToForm, lajiFormLocate } from "./test-utils.js";
 describe("Line transect (MHL.1)", () => {
 
 	it("navigate to form", async () => {
-		await navigateToForm("MHL.1");
+		await navigateToForm("MHL.1", "&localFormData=true");
 	});
 
 	const $shorthand = $("#root_gatherings_0_units_0_shortHandText");

@@ -170,7 +170,7 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		const shortcuts = props.uiSchema["ui:shortcuts"];
+		const shortcuts = props.uiSchema["ui:shortcuts"] || {};
 		this.keyHandlers = this.getKeyHandlers(shortcuts);
 		this._context.keyHandlers = this.keyHandlers;
 		this._context.addKeyHandler("root", this.keyFunctions);
