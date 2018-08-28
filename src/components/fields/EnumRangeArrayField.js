@@ -68,13 +68,13 @@ export default class EnumRangeArrayField extends Component {
 
 	onSuggestionSelected = (suggestion) => {
 		this.setState({value: ""}, () => {
-			this.onChange([...this.props.formData, suggestion.value], "suggestion selected");
+			this.onChange([...(this.props.formData || []), suggestion.value], "suggestion selected");
 		});
 	}
 
 	onConfirmUnsuggested = (value) => {
 		this.setState({value: ""}, () => {
-			this.onChange([...this.props.formData, value], "unsuggested selected");
+			this.onChange([...(this.props.formData || []), value], "unsuggested selected");
 		});
 	}
 
