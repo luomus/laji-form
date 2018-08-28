@@ -315,9 +315,9 @@
 		sv: "Bryta av linjen gemon meter"
 	},
 	setLocationToUnit: {
-		fi: "Aseta havainnolle uusi sijainti",
-		en: "Set a new location for the observation",
-		sv: "Ange en ny plats för observationen"
+		fi: (taxon) => `Aseta havainnolle ${taxon ? `'${taxon}' ` : "" }uusi sijainti`,
+		en: (taxon) => `Set a new location for the ${taxon ? `${taxon} ` : "" }`,
+		sv: (taxon) => `Ange en ny plats för observationen ${taxon ? `'${taxon}' ` : "" }`
 	},
 	below: {
 		fi: "alla",

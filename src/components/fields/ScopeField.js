@@ -318,7 +318,7 @@ export default class ScopeField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
-		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
+		const {additionalsGroupingPath, taxonField} = getUiOptions(this.props.uiSchema);
 
 		const {translations} = this.props.formContext;
 		let uiSchema = {
@@ -347,7 +347,7 @@ export default class ScopeField extends Component {
 			addButton(
 				<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={this.onHide} keyboard={false} onKeyDown={this.onModalMapKeyDown}>
 					<Modal.Header closeButton={true}>
-						<Modal.Title>{translations.SetLocationToUnit}</Modal.Title>
+						<Modal.Title>{translations.SetLocationToUnit(this.props.formData[taxonField])}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<Map {...this.state.modalMap} singleton={true} formContext={this.props.formContext} ref={this.setMapRef} bodyAsDialogRoot={false} />
