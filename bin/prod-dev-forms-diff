@@ -1,8 +1,8 @@
 #!/bin/bash
 form=$1
-[[ -z $id ]] && echo "No form id given" && exit
-printf 'form.laji.fi user: '
+[[ -z $form ]] && echo "No form id given" && exit
+echo -n 'form.laji.fi user: '
 read user
-printf 'form.laji.fi pass: '
-read pass
+echo -n 'form.laji.fi pass: '
+read -s pass
 diff <(curl -s --user $user:$pass https://form.laji.fi/lajiform/"$form" | python -m json.tool) <(curl -s http://formtest.laji.fi/lajiform/"$form" | python -m json.tool)
