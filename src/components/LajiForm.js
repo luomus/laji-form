@@ -352,8 +352,13 @@ export default class LajiForm extends Component {
 			for (let lang in translations[word]) {
 				const translation = translations[word][lang];
 				if (!dictionaries.hasOwnProperty(lang)) dictionaries[lang] = {};
-				dictionaries[lang][word] = decapitalizeFirstLetter(translation);
-				dictionaries[lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
+				if (typeof translation === "string") {
+					dictionaries[lang][word] = decapitalizeFirstLetter(translation);
+					dictionaries[lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
+				} else { // is a function
+					dictionaries[lang][word] = (s) => decapitalizeFirstLetter(translation(s));
+					dictionaries[lang][capitalizeFirstLetter(word)] = (s) => capitalizeFirstLetter(translation(s));
+				}
 			}
 		}
 		return dictionaries;
@@ -385,7 +390,7 @@ export default class LajiForm extends Component {
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
-				{this.props.showShortcutButton && shortcuts && (
+				{this.props.showShortcutButton !== false && shortcuts && (
 					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
 						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 					</TooltipComponent>
@@ -544,7 +549,7 @@ export default class LajiForm extends Component {
 	getShorcutButtonTooltip = () => {
 		const {translations} = this.state.formContext;
 		if (this.keyCombo && this.keyComboDelay) {
-			return `${translations.ShortcutHelpPrefix} ${stringifyKeyCombo(this.keyCombo)}${translations.shortcutHelpSuffix}`;
+			return translations.ShortcutHelp(stringifyKeyCombo(this.keyCombo));
 		}
 	}
 

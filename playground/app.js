@@ -4,7 +4,6 @@ import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
 import _notus from "notus";
 
-
 import "../src/styles";
 import "./styles.css";
 import "./styles-dev.css";

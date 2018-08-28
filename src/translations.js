@@ -574,15 +574,10 @@
 		en: "Taxonomic groups",
 		sv: "Taxonomisk grupper"
 	},
-	shortcutHelpPrefix: {
-		fi: "Painamalla ",
-		en: "View the shortcuts by holding ",
-		sv: "Visa genvägarna genom att hålla"
-	},
-	shortcutHelpSuffix: {
-		fi: "-näppäimen pohjaan saat näkyville pikanäppäintoiminnot",
-		en: "-key down",
-		sv: "-nyckel nere"
+	shortcutHelp: {
+		fi: (key) => `Painamalla ${key}-näppäimen pohjaan saat näkyville pikanäppäintoiminnot`,
+		en: (key) => `View the shortcuts by holding ${key}-key down`,
+		sv: (key) =>  `Visa genvägarna genom att hålla ${key}-nyckel nere`
 	},
 	addUnitList: {
 		fi: "Lisää lajilistalta",
