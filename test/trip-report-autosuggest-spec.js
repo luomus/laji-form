@@ -150,13 +150,17 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		const enteredUnitTaxon = await lajiFormLocate("gatherings.0.units.0").$$("td").first().getText();
 
 		await expect(enteredUnitTaxon).not.toBe("kettu");
-
+	
 		await removeUnit(0, 0);
 		await removeUnit(0, 0);
+		await $taxonInput.click();
+		await $poweruserButton.click();
 	});
 
 
 	it("entering exact match when power user mode is on adds new unit automatically", async () => {
+		await $taxonInput.click();
+		await $poweruserButton.click();
 		await $taxonInput.sendKeys("susi");
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "New unit didn't show up");
