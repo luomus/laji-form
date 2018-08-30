@@ -359,8 +359,6 @@ class Popup extends Component {
 
 	getButtonRef = (elem) => {
 		this.buttonElem = elem;
-		console.log(this.buttonElem);
-		console.log(findDOMNode(this.buttonElem));
 	}
 
 	render() {
