@@ -382,7 +382,7 @@ export class Autosuggest extends Component {
 
 	findOnlyOneMatch = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		const filtered = suggestions.filter(suggestion => !suggestion.payload  || !suggestion.payload.isNonMatching);
+		const filtered = suggestions.filter(suggestion => !suggestion || !suggestion.payload || !suggestion.payload.isNonMatching);
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
@@ -390,7 +390,7 @@ export class Autosuggest extends Component {
 	
 	findNonMatching = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
-		const filtered = suggestions.filter(suggestion => suggestion.payload  && suggestion.payload.isNonMatching);
+		const filtered = suggestions.filter(suggestion => suggestion && suggestion.payload  && suggestion.payload.isNonMatching);
 		if (filtered.length === 1) {
 			return filtered[0];
 		}
@@ -424,8 +424,7 @@ export class Autosuggest extends Component {
 				this.mounted ?
 					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
 					this.afterBlurAndFetch(suggestions);
-			}).catch(() => {
-				this._valueForBlurAndFetch = this.state.value;
+			}).catch((e) => {
 				this.mounted
 					? this.setState({isLoading: false}, this.afterBlurAndFetch)
 					: this.afterBlurAndFetch();
