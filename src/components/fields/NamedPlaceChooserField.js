@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
-import { getUiOptions, getInnerUiSchema, isEmptyString, dictionarify } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Modal, Alert } from "react-bootstrap";
 import { Button } from "../components";
@@ -22,8 +22,30 @@ const PLACE_USE_FAIL = "PLACE_USE_FAIL";
 export default class NamedPlaceChooserField extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
 		this.apiClient = new ApiClient();
+	}
+
+	getStateFromProps(props) {
+		return {uiSchema: this.getUiSchema(props)};
+	}
+
+	getUiSchema = (props) => {
+		if (this.buttonDefinition) {
+			const innerUiSchema = getInnerUiSchema(props.uiSchema);
+			const options = getUiOptions(innerUiSchema);
+			return {
+				...innerUiSchema,
+				"ui:options": {
+					...options,
+					buttons: [
+						...(options.buttons || []),
+						this.buttonDefinition
+					]
+				}
+			};
+		} else {
+			return getInnerUiSchema(props.uiSchema);
+		}
 	}
 
 	isGatheringsArray = () => this.props.schema.type === "array"
@@ -87,6 +109,7 @@ export default class NamedPlaceChooserField extends Component {
 	}
 
 	updatePlaces = () => {
+		this.buttonDefinition = undefined;
 		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
 			if (!this.mounted) return;
 			const state = {places: response.results.sort((a, b) => {
@@ -96,9 +119,7 @@ export default class NamedPlaceChooserField extends Component {
 			})};
 
 			if (response.results && response.results.length) {
-				const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
-				const options = getUiOptions(innerUiSchema);
-				const buttonDefinition = {
+				this.buttonDefinition = {
 					fn: this.onButtonClick,
 					fnName: "addNamedPlace",
 					glyph: "map-marker",
@@ -106,20 +127,11 @@ export default class NamedPlaceChooserField extends Component {
 					id: this.props.idSchema.$id
 				};
 				if (this.isGatheringsArray()) {
-					buttonDefinition.rules = {canAdd: true};
+					this.buttonDefinition.rules = {canAdd: true};
 				} else {
-					buttonDefinition.position = "top";
+					this.buttonDefinition.position = "top";
 				}
-				const uiSchema = {
-					...innerUiSchema,
-					"ui:options": {
-						...options,
-						buttons: [
-							...(options.buttons || []),
-							buttonDefinition
-						]
-					}
-				};
+				const uiSchema = this.getUiSchema(this.props);
 				state.uiSchema = uiSchema;
 			}
 
@@ -147,7 +159,7 @@ export default class NamedPlaceChooserField extends Component {
 		const onHide = () => this.setState({show: false});
 		return (
 			<React.Fragment>
-				<SchemaField  {...this.props} uiSchema={this.state.uiSchema || getInnerUiSchema(this.props.uiSchema)} />
+				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />
 				{
 					this.state.show ? (
 						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={onHide}>
