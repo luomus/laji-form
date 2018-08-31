@@ -99,12 +99,12 @@ export default class GeocoderField extends Component {
 
 	onButtonClick = () => (props) => {
 		this.mounted ? this.setState(this.getStateFromProps(this.props, true), () => {
-			this.update(props, () => {
-				this.setState({...this.getStateFromProps(this.props, false), timeout: false});
+			this.update(props, (failed = false) => {
+				this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
 			});
 		}) : 
-		this.update(props, () => {
-			this.setState({...this.getStateFromProps(this.props, false), timeout: false});
+		this.update(props, (failed = false) => {
+			this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
 		});
 	}
 
@@ -167,10 +167,10 @@ export default class GeocoderField extends Component {
 
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
-		const afterFetch = (callback) => {
+		const afterFetch = (callback, timeout = false) => {
 			if (this.fetching) {
 				mainContext.popBlockingLoader();
-				if (callback) callback();
+				if (callback) callback(timeout);
 			}
 			this.fetching = false;
 		};
@@ -254,7 +254,7 @@ export default class GeocoderField extends Component {
 					&language=en\
 					&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
 				).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch(() => {
-					afterFetch(callback);
+					afterFetch(callback, !!"failed");
 				});
 		};
 
