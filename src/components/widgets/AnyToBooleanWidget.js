@@ -1,6 +1,6 @@
 import React from "react";
 import CheckboxWidget from "./CheckboxWidget";
-import { getUiOptions, parseJSONPointer } from "../../utils";
+import { getUiOptions } from "../../utils";
 import equals from "deep-equal";
 
 export const anyToBoolean = (widget) => (props) => {

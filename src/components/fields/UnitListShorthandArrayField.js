@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData } from "../../utils";
@@ -21,7 +20,7 @@ export default class NamedPlaceChooserField extends Component {
 			glyph: "align-justify",
 			label: this.props.formContext.translations.AddUnitList,
 			id: this.props.idSchema.$id
-		}
+		};
 
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
 		const options = getUiOptions(innerUiSchema);

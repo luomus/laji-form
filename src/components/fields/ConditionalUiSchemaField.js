@@ -116,4 +116,4 @@ export const computeUiSchema = (uiSchema, operations) => {
 		}
 		return uiSchema;
 	}, uiSchema);
-}
+};

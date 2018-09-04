@@ -85,7 +85,7 @@ export default class CheckboxWidget extends Component {
 				? "true"
 				: value === false
 					? "false"
-					: undefined
+					: undefined;
 
 			const uiSchema = {"ui:options": options};
 			const {SchemaField} = registry.fields;

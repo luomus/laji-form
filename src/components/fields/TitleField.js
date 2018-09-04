@@ -42,7 +42,7 @@ const _titleFormatters = {
 	informalTaxonGroup: ({formData, value, renderer}) => {
 		const informalTaxonGroup = parseJSONPointer(formData, value, !!"safely");
 		const {informalTaxonGroupsById = {}} = new Context();
-		const name = informalTaxonGroupsById[informalTaxonGroup] ? informalTaxonGroupsById[informalTaxonGroup].name : ""
+		const name = informalTaxonGroupsById[informalTaxonGroup] ? informalTaxonGroupsById[informalTaxonGroup].name : "";
 		return informalTaxonGroup ? <span key={renderer}><div className={`informal-group-image ${informalTaxonGroup}`} /> {name}</span> : undefined;
 	}
 };

@@ -111,7 +111,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			</TaxonCardOverlay>
 		)
 
-		renderSuccessGlyph = (value) => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
+		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		render() {
 			const {props} = this;
@@ -261,7 +261,7 @@ export class Autosuggest extends Component {
 		if (this.state.value !== value || (suggestion && suggestion[suggestionReceive] !== value && this.mounted)) {
 			if (this.mounted && this.state.value !== value) {
 				this.setState({value}, () => {
-					this.triggerConvert(props)
+					this.triggerConvert(props);
 				});
 			} else {
 				this.triggerConvert(props);
@@ -362,7 +362,7 @@ export class Autosuggest extends Component {
 		// Input onBlur/onFocus isn't called without this hack.
 		this.reactAutosuggestRef.justSelectedSuggestion = false;
 
-		const {suggestion, method} = data;
+		const {suggestion} = data;
 		e.preventDefault();
 		if ("id" in this.props) {
 			// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
@@ -424,7 +424,7 @@ export class Autosuggest extends Component {
 				this.mounted ?
 					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
 					this.afterBlurAndFetch(suggestions);
-			}).catch((e) => {
+			}).catch(() => {
 				this.mounted
 					? this.setState({isLoading: false}, this.afterBlurAndFetch)
 					: this.afterBlurAndFetch();
@@ -715,7 +715,7 @@ class TaxonCardOverlay extends Component {
 
 	fetch(value) {
 		if ( isEmptyString(value)) { 
-			this.setState({scientificName: "", cursiveName: false})
+			this.setState({scientificName: "", cursiveName: false});
 		} else {
 			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups}) => {
 				if (!this.mounted) return;
@@ -741,7 +741,7 @@ class TaxonCardOverlay extends Component {
 						break;
 					}
 				}
-				this.setState({...state, higherThanOrder: !state.order && !state.family})
+				this.setState({...state, higherThanOrder: !state.order && !state.family});
 			});
 			new ApiClient().fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
 				if (!this.mounted) return;
@@ -786,7 +786,7 @@ class TaxonCardOverlay extends Component {
 					{cursiveName ? <i>{_scientificName}</i> : _scientificName}
 				</React.Fragment>
 			);
-		}
+		};
 
 		const popover = (
 			<Popover id={`${id}-popover`}>

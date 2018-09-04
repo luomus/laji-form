@@ -636,7 +636,7 @@ class _MapArrayField extends ComposedComponent {
 		}
 	}
 
-	afterActiveChange(idx, initial) {
+	afterActiveChange(idx) {
 		super.afterActiveChange(idx);
 		this.onLocateOrAddNew();
 	}

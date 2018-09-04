@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import { deepEquals } from  "react-jsonschema-form/lib/utils";
 import { getUiOptions } from  "../../utils";
-import VirtualSchemaField, { getPropsWithInnerUiSchema } from "../VirtualSchemaField";
+import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
 export default class UiFieldMapperArrayField extends Component {

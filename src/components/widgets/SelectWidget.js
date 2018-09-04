@@ -6,7 +6,7 @@ import Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 
-import { isEmptyString, getUiOptions, isNullOrUndefined, filter } from "../../utils";
+import { isEmptyString, getUiOptions, filter } from "../../utils";
 
 class SelectWidget extends Component {
 

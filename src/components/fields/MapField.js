@@ -11,7 +11,7 @@ export default class MapField extends Component {
 	}
 
 	componentDidMount() {
-		const {uiSchema, formData} = this.props;
+		const {uiSchema} = this.props;
 		const {mapOptions} = getUiOptions(uiSchema);
 		if (mapOptions.singleton) {
 			const map = this.getContext().singletonMap;
@@ -76,7 +76,7 @@ export default class MapField extends Component {
 	}
 
 	onOptionsChanged = (options) => {
-		this.setState({mapOptions: {...this.state.mapOptions, ...options}})
+		this.setState({mapOptions: {...this.state.mapOptions, ...options}});
 	}
 
 	onChange = (events) => {
