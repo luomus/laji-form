@@ -907,6 +907,7 @@ class _MapArrayField extends ComposedComponent {
 
 		const mapPropsToPass = {
 			contextId: this.props.formContext.contextId,
+			googleApiKey: this.props.formContext.googleApiKey,
 			lang: this.props.formContext.lang,
 			onPopupClose: this.onPopupClose,
 			markerPopupOffset: 45,
@@ -1284,7 +1285,7 @@ export class Map extends Component {
 	}
 
 	setOptions = (prevOptions, options) => {
-		const {className, style, hidden, singleton, emptyMode, ..._options} = options; // eslint-disable-line no-unused-vars
+		const {className, style, hidden, singleton, emptyMode, contextId, ..._options} = options; // eslint-disable-line no-unused-vars
 		const {
 			className: prevClassName, // eslint-disable-line no-unused-vars
 			style: prevStyle,  // eslint-disable-line no-unused-vars
@@ -1292,6 +1293,7 @@ export class Map extends Component {
 			hidden: prevHidden,  // eslint-disable-line no-unused-vars
 			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
 			emptyMode: prevEmptyMode,  // eslint-disable-line no-unused-vars
+			contextId: prevContextId,  // eslint-disable-line no-unused-vars
 			..._prevOptions
 		} = prevOptions;
 	
@@ -1319,10 +1321,11 @@ export class Map extends Component {
 
 	initializeMap = (options) => {
 		if (this.props.singleton) {
-			const context = new Context(this.props.formContext.contextId);
+			const context = new Context(this.props.contextId);
 			if (!context.singletonMap) {
 				context.singletonMap = new LajiMap({
 					rootElem: this.refs.map,
+					googleApiKey: this.props.formContext.googleApiKey,
 					...options
 				});
 				this.map = context.singletonMap;
