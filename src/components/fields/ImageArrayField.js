@@ -50,6 +50,14 @@ export default class ImageArrayField extends Component {
 		this.mainContext.removeSettingSaver("defaultMetadata", !!"global");
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		const getCount = (_props, _state) => ((_props.formData || []).length + (_state.loading || 0));
+
+		if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
+			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+		}
+	}
+
 	render() {
 		const {schema, uiSchema, idSchema, name, formContext} = this.props;
 		const {translations} = formContext;
