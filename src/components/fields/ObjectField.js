@@ -107,7 +107,7 @@ function GridTemplate(props) {
 		}, {});
 
 		if (!isHidden(uiSchema, propertyName)) getRow(propertyName, colsToRows, rows).push(
-			<Col key={"div_" + i} {...cols}>
+			<Col key={propertyName} {...cols}>
 				{propertiesByName[propertyName].content}
 			</Col>
 		);
