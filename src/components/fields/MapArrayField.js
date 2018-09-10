@@ -6,6 +6,8 @@ import deepEquals from "deep-equal";
 import merge from "deepmerge";
 import LajiMap from "laji-map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
+import PanelHeading from "react-bootstrap/lib/PanelHeading";
+import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, StretchAffix, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
@@ -1355,17 +1357,17 @@ class MapPanel extends Component {
 		return (
 				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped">
 					{this.props.header ? (
-						<Panel.Heading>
+						<PanelHeading>
 							{this.props.header}
-						</Panel.Heading>
+						</PanelHeading>
 					) : null}
-					<Panel.Body>
+					<PanelBody>
 						{this.props.text}
 						{this.props.buttonText ?
 							<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 							null
 						}
-					</Panel.Body>
+					</PanelBody>
 				</Panel>
 		);
 	}

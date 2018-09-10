@@ -93,7 +93,7 @@ function GridTemplate(props) {
 
 	addRowTitles(rows, rowTitles);
 
-	orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach((propertyName, i) => {
+	orderProperties(Object.keys(schema.properties), uiSchema["ui:order"]).forEach(propertyName => {
 		const property = schema.properties[propertyName];
 
 		if (!property) return;

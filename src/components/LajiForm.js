@@ -5,6 +5,7 @@ import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
+import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
@@ -427,9 +428,9 @@ export default class LajiForm extends Component {
 					style={{bottom: (this.props.bottomOffset || 0) + 5}}
 					bsStyle="info" 
 				>
-					<Panel.Heading>
+					<PanelHeading>
 						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-					</Panel.Heading>
+					</PanelHeading>
 						<Table>
 							<tbody className="well">{
 								Object.keys(shortcuts).map((keyCombo, idx) => {

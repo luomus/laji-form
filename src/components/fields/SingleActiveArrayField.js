@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
+import PanelHeading from "react-bootstrap/lib/PanelHeading";
+import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
@@ -442,14 +444,14 @@ class AccordionArrayFieldTemplate extends Component {
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-							<Panel.Heading>
+							<PanelHeading>
 								{getHeader(idx)}
-							</Panel.Heading>
+							</PanelHeading>
 							{idx === activeIdx ? (
-								<Panel.Body>
+								<PanelBody>
 									{item.children}
 									{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
-								</Panel.Body>
+								</PanelBody>
 							) : null}
 						</Panel>
 					))}
@@ -520,15 +522,15 @@ class PagerArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
 				<Panel className="laji-form-panel">
-					<Panel.Heading>
+					<PanelHeading>
 							{header}
-					</Panel.Heading>
-					<Panel.Body>
+					</PanelHeading>
+					<PanelBody>
 						<div key={activeIdx}>
 							{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
 						</div>
 						{getButtonElems(buttons, arrayTemplateFieldProps)}
-					</Panel.Body>
+					</PanelBody>
 				</Panel>
 			</div>
 		);

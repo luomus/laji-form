@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
+import PanelHeading from "react-bootstrap/lib/PanelHeading";
+import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -577,7 +579,7 @@ export class ErrorPanel extends Component {
 		return (
 			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle}
 				   className={classNames}>
-				<Panel.Heading>
+				<PanelHeading>
 					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 						   <div className="panel-title">
 							   {title}
@@ -587,8 +589,8 @@ export class ErrorPanel extends Component {
 							   </span>
 						   </div>
 					   </div>
-				</Panel.Heading>
-				<Panel.Collapse>
+				</PanelHeading>
+				<PanelCollapse>
 					<ListGroup>
 						{errors.map(({label, error, id}, i) =>  {
 							const _clickHandler = () => clickHandler(id);
@@ -599,7 +601,7 @@ export class ErrorPanel extends Component {
 							);
 						})}
 					</ListGroup>
-				</Panel.Collapse>
+				</PanelCollapse>
 			</Panel>
 		);
 	}
