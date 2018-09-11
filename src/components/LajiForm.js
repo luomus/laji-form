@@ -454,7 +454,15 @@ export default class LajiForm extends Component {
 		);
 	}
 
-	transformErrors = (...params) => transformErrors(this.state.translations, !this.validateAll)(...params);
+	transformErrors = (...params) => {
+		const errors =  transformErrors(this.state.translations, !this.validateAll)(...params);
+		if (this.validateAll) {
+			this._cachedNativeErrors = errors;
+		} else if (this._cachedNativeErrors) {
+			return this._cachedNativeErrors;
+		}
+		return errors;
+	}
 
 	validate = (...params) => {
 		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
