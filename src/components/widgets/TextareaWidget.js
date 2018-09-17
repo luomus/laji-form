@@ -11,7 +11,7 @@ export default class _TextareaWidget extends Component {
 
 		this._context = new Context(props.formContext.contextId);
 		const {shortcuts} = this._context;
-		Object.keys(shortcuts).some(keyCombo => {
+		Object.keys(shortcuts || {}).some(keyCombo => {
 			if (shortcuts[keyCombo].fn == "textareaRowInsert") {
 				// Direct mutation should be ok in constructor.
 				this.state.keyCombo = keyCombo; // eslint-disable-line react/no-direct-mutation-state
