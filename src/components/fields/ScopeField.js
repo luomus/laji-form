@@ -505,7 +505,10 @@ export default class ScopeField extends Component {
 
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
 				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
-				let fieldSelectorValues = that.getAdditionalPersistenceValue(props);
+				let fieldSelectorValues = formData[fieldSelector];
+				if (!fieldSelectorValues || Array.isArray(fieldSelectorValues) && !fieldSelectorValues.length) {
+					fieldSelectorValues = that.getAdditionalPersistenceValue(props);
+				}
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
 				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
@@ -531,7 +534,7 @@ export default class ScopeField extends Component {
 			});
 		}
 
-		if (props.formData) {
+		if (formData) {
 			Object.keys(formData).forEach((property) => {
 				if (!propertyHasData(property, formData) ||
 				    (formData.hasOwnProperty(property) &&
