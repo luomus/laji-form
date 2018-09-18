@@ -715,7 +715,7 @@ class _MapArrayField extends ComposedComponent {
 			this._tileLayerNameOnNextTickCallback = undefined;
 		}
 	})
-	getAligmentAnchor = () => this.refs._stretch
+	getAlignmentAnchor = () => this.refs._stretch
 	onEnterViewPort = () => {
 		this.afterActiveChange(this.state.activeIdx, !!"initial call");
 	}
@@ -962,7 +962,7 @@ class _MapArrayField extends ComposedComponent {
 				{map}
 			</Stretch>
 		) : (
-			<StretchAffix {...wrapperProps} getAligmentAnchor={this.getAligmentAnchor} enterViewPortTreshold={200} onEnterViewPort={this.onEnterViewPort}>
+			<StretchAffix {...wrapperProps} getAlignmentAnchor={this.getAlignmentAnchor} enterViewPortTreshold={200} onEnterViewPort={this.onEnterViewPort}>
 				{map}
 			</StretchAffix>
 		);

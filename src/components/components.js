@@ -342,17 +342,18 @@ export class StretchAffix extends Component {
 	}
 
 	getState = () => {
+		const {topOffset = 0, bottomOffset = 0, useAlignmentHeight = true} = this.props;
+
 		const container = this.props.getContainer();
 		let horizontallyAligned = true;
-		const aligmentAnchor = this.props.getAligmentAnchor ? this.props.getAligmentAnchor() : undefined;
+		const alignmentAnchor = this.props.getAlignmentAnchor ? this.props.getAlignmentAnchor() : undefined;
+		const alignmentAnchorElem = alignmentAnchor ? findDOMNode(alignmentAnchor) : undefined;
 		if (container) {
-			if (aligmentAnchor &&
-					container.getBoundingClientRect().top !== findDOMNode(aligmentAnchor).getBoundingClientRect().top) {
+			if (alignmentAnchor &&
+					container.getBoundingClientRect().top !== alignmentAnchorElem.getBoundingClientRect().top) {
 				horizontallyAligned = false;
 			}
 
-			const topOffset = this.props.topOffset || 0;
-			const bottomOffset = this.props.bottomOffset || 0;
 
 			const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -362,6 +363,12 @@ export class StretchAffix extends Component {
 			const containerHeight = container.offsetHeight;
 			const containerVisibleHeight = containerHeight - Math.abs(containerTop);
 			const scrolled = containerTop < topOffset;
+			const alignmentAnchorVisibleHeight = alignmentAnchorElem
+				? alignmentAnchorElem.offsetHeight + alignmentAnchorElem.getBoundingClientRect().top
+				: undefined;
+			const alignmentAnchorScrolledBottom = alignmentAnchorElem
+				? Math.min(viewportHeight - alignmentAnchorElem.getBoundingClientRect().bottom, 0)
+				: undefined;
 
 			let affixState = TOP;
 			if (scrolled && containerVisibleHeight < (viewportHeight - bottomOffset)) affixState = BOTTOM;
@@ -376,14 +383,20 @@ export class StretchAffix extends Component {
 				top = topOffset;
 
 				affixHeight = affixState !== BOTTOM
-					? viewportHeight
+					? (!useAlignmentHeight
+						? viewportHeight
+						: alignmentAnchorVisibleHeight + alignmentAnchorScrolledBottom)
 						- containerTop
 						- Math.max(top - containerTop, 0)
 						- bottomOffset
 					: Math.max(
-						containerVisibleHeight
-							- Math.max(bottomOffset - containerBottom, 0)
-							- topOffset,
+						(!useAlignmentHeight
+							? (containerVisibleHeight
+								- Math.max(bottomOffset - containerBottom, 0))
+							: alignmentAnchorVisibleHeight
+						)
+						- topOffset
+						,
 						0
 					);
 
