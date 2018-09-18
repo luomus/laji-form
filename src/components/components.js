@@ -413,7 +413,7 @@ export class StretchAffix extends Component {
 	}
 
 	render() {
-		const {children} = this.props;
+		const {children, useAlignmentHeight = true} = this.props;
 		const {top, width, affixState, affixHeight, fixerHeight, horizontallyAligned} = this.state;
 
 		const style = {position: "relative"};
@@ -437,7 +437,7 @@ export class StretchAffix extends Component {
 				<div ref="wrapper" style={style} className={this.props.className}>
 					{children}
 				</div>
-				<div style={fixerStyle} />
+				<div style={useAlignmentHeight ? undefined : fixerStyle} />
 			</div>
 		);
 	}
