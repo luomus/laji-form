@@ -755,7 +755,7 @@ class _MapArrayField extends ComposedComponent {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema, schema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp} = options;
+		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp, useSchemaHeight} = options;
 		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
 		const {activeIdx} = this.state;
 
@@ -962,7 +962,7 @@ class _MapArrayField extends ComposedComponent {
 				{map}
 			</Stretch>
 		) : (
-			<StretchAffix {...wrapperProps} getAlignmentAnchor={this.getAlignmentAnchor} enterViewPortTreshold={200} onEnterViewPort={this.onEnterViewPort}>
+			<StretchAffix {...wrapperProps} getAlignmentAnchor={this.getAlignmentAnchor} enterViewPortTreshold={200} onEnterViewPort={this.onEnterViewPort} useAlignmentHeight={useSchemaHeight}>
 				{map}
 			</StretchAffix>
 		);
