@@ -8,7 +8,7 @@ import LajiMap from "laji-map";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
-import { Button, StretchAffix, Stretch } from "../components";
+import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -961,21 +961,17 @@ class _MapArrayField extends ComposedComponent {
 			minHeight: getUiOptions(this.props.uiSchema).minHeight
 		};
 
-		const wrappedMap = belowSchema ? (
+		const wrappedMap = (
 			<Stretch {...wrapperProps}  ref="stretch">
 				{map}
 			</Stretch>
-		) : (
-			<StretchAffix {...wrapperProps} getAlignmentAnchor={this.getAlignmentAnchor} enterViewPortTreshold={200} onEnterViewPort={this.onEnterViewPort} useAlignmentHeight={useSchemaHeight}>
-				{map}
-			</StretchAffix>
 		);
 		const {TitleField} = this.props.registry.fields;
 
 		return (
 			<div ref="affix">
 				<Row>
-					<Col {...mapSizes} className="form-group-padding-bottom">
+					<Col {...mapSizes}>
 						{wrappedMap}
 					</Col>
 					<Col {...schemaSizes} ref="_stretch">
