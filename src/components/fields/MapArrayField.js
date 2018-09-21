@@ -706,8 +706,7 @@ class _MapArrayField extends ComposedComponent {
 	}
 
 	getContainer = () => {
-		const belowSchema = !!getUiOptions(this.props.uiSchema).belowFields;
-		return findDOMNode(belowSchema ? this.refs._stretch : this.refs.affix);
+		return findDOMNode(this.refs._stretch);
 	}
 	onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true})
 	onPopupClose = () => this.setState({popupIdx: undefined})
@@ -969,7 +968,7 @@ class _MapArrayField extends ComposedComponent {
 		const {TitleField} = this.props.registry.fields;
 
 		return (
-			<div ref="affix">
+			<div>
 				<Row>
 					<Col {...mapSizes}>
 						{wrappedMap}
