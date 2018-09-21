@@ -1,10 +1,25 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
 export default class MapField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				mapOptions: PropTypes.object,
+				height: PropTypes.number,
+				emptyHelp: PropTypes.string
+			}).isRequired
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {};

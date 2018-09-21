@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
@@ -11,6 +12,17 @@ const DATE_TIME_SEPARATOR = ", ";
 
 @BaseComponent
 export default class DateTimeWidget extends Component {
+	static propTypes = {
+		options: PropTypes.shape({
+			showButtons: PropTypes.bool,
+			showTimeList: PropTypes.bool,
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}),
+		value: PropTypes.string
+	}
+
 	static defaultProps = {
 		type: "text",
 		readonly: false,

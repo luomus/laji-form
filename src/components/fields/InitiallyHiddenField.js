@@ -12,7 +12,11 @@ export default class InitiallyHiddenField extends Component {
 			"ui:options": PropTypes.shape({
 				uiSchema: PropTypes.object
 			})
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object", "array"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
 	}
 
 	constructor(props) {

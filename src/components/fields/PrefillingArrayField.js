@@ -11,7 +11,11 @@ export default class PrefillingArrayField extends Component {
 				field: PropTypes.string,
 				uiSchema: PropTypes.object
 			})
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	static getName() {return "PrefillingArrayField";}

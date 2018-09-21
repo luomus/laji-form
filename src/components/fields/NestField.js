@@ -122,7 +122,11 @@ export default class NestField extends Component {
 				}
 			}),
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
 	}
 
 	static getName() {return "NestField";}

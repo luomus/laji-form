@@ -24,7 +24,11 @@ export default class UiFieldMapperArrayField extends Component {
 				])
 			}),
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	static getName() {return "UiFieldMapperArrayField";}

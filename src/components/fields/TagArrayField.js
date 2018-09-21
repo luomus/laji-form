@@ -1,11 +1,24 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
+import PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Label } from "../components";
 
 @BaseComponent
 export default class TagArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:option": PropTypes.shape({
+				separatorKeys: PropTypes.arrayOf(PropTypes.string)
+			})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
+	}
+
 	render() {
 		return (
 			<React.Fragment>

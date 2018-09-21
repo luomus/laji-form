@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode }  from "react-dom";
+import PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Panel, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
@@ -15,6 +16,13 @@ const SAVE = "SAVE", FETCH = "FETCH";
  */
 @BaseComponent
 export default class NamedPlaceSaverField extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
+	}
+
 	getStateFromProps(props) {
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const uiSchema = {

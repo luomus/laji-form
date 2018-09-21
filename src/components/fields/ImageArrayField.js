@@ -1,4 +1,5 @@
 import React, { Component, PureComponent } from "react";
+import PropTypes from "prop-types";
 import update from "immutability-helper";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
@@ -17,6 +18,20 @@ const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff"
 
 @BaseComponent
 export default class ImageArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				titleClassName: PropTypes.string
+			})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"]),
+			items: PropTypes.shape({
+				type: PropTypes.oneOf(["string"]).isRequired
+			}).isRequired
+		}).isRequired,
+		formData: PropTypes.array.isRequired
+	}
 
 	constructor(props) {
 		super(props);

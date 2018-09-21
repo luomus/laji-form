@@ -192,7 +192,9 @@ SelectWidget.defaultProps = {
 
 if (process.env.NODE_ENV !== "production") {
 	SelectWidget.propTypes = {
-		schema: PropTypes.object.isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}),
 		id: PropTypes.string.isRequired,
 		options: PropTypes.shape({
 			enumOptions: PropTypes.array,
@@ -201,7 +203,7 @@ if (process.env.NODE_ENV !== "production") {
 			filterType: PropTypes.string,
 			labels: PropTypes.object,
 		}).isRequired,
-		value: PropTypes.any,
+		value: PropTypes.string,
 		required: PropTypes.bool,
 		multiple: PropTypes.bool,
 		autofocus: PropTypes.bool,

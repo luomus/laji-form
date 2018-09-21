@@ -11,7 +11,11 @@ export default class AutoArrayField extends Component {
 			"ui:options": PropTypes.shape({
 				autofocus: PropTypes.boolean
 			})
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	static getName() {return "AutoArrayField";}

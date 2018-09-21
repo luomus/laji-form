@@ -24,7 +24,11 @@ export default class UnitShorthandField extends Component {
 				persistenceKey: PropTypes.string
 			}).isRequired,
 			uiSchema: PropTypes.object
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
 	}
 
 	constructor(props) {

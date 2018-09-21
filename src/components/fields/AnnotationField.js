@@ -12,6 +12,25 @@ import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
 export default class AnnotationField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				adminOnly: PropTypes.bool,
+				container: PropTypes.oneOf(["modal"]),
+				add: PropTypes.object,
+				filter: PropTypes.object,
+				uiSchema: PropTypes.object,
+				buttonsPath: PropTypes.string,
+				formId: PropTypes.string
+			}),
+			uiSchema: PropTypes.object
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {show: false};

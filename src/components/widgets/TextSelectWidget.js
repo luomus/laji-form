@@ -1,10 +1,18 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import update from "immutability-helper";
 import { Checkbox } from "react-bootstrap";
 import BaseInput from "./BaseInput";
 
 class TextSelectWidget extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.string
+		}).isRequired,
+		value: PropTypes.string
+	}
+
 	constructor(props) {
 		super();
 

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import update from "immutability-helper";
 import equals from "deep-equal";
 import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
@@ -14,6 +15,23 @@ const cache = {};
 
 @BaseComponent
 export default class GeocoderField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				updateOnlyEmpty: PropTypes.bool,
+				button: PropTypes.bool,
+				fields: PropTypes.arrayOf(PropTypes.oneOf((["country", "municipality",
+					"biologicalProvince", "administrativeProvince"]))),
+				geometryField: PropTypes.string
+			}),
+			uiSchema: PropTypes.object
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
+	}
+
 	static getName() {return "GeocoderField";}
 
 	constructor(props) {

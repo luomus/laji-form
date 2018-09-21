@@ -42,7 +42,11 @@ export default class SingleActiveArrayField extends Component {
 				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled", "table", "split"]),
 				activeIdx: PropTypes.integer
 			})
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	constructor(props) {

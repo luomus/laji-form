@@ -22,9 +22,19 @@ const specialRules = {
 	}
 };
 
+const specialRulesPropTypes = PropTypes.oneOf(["legEditors"]);
+
 @BaseComponent
 export default class TableField extends Component {
 	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				specialRules: PropTypes.oneOfType([
+					specialRulesPropTypes,
+					PropTypes.arrayOf(specialRulesPropTypes)
+				])		
+			})
+		}),
 		schema: PropTypes.shape({
 			items: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 		}).isRequired
@@ -49,7 +59,7 @@ export default class TableField extends Component {
 
 		const schemaLength = schemaPropsArray.length;
 		const defaultCol = parseInt(12 / schemaLength);
-		const defaultWrapperCol= parseInt(12 / (1 + (Object.keys(schemaProps).length  - schemaLength)));
+		const defaultWrapperCol = parseInt(12 / (1 + (Object.keys(schemaProps).length  - schemaLength)));
 
 		const cols = {xs: undefined, sm: undefined, md: undefined, lg: undefined};
 		const wrapperCols = Object.assign({}, cols);

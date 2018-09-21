@@ -21,7 +21,11 @@ export default class SplitField extends Component {
 					xs: PropTypes.integer
 				})).isRequired
 			}).isRequired
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
 	}
 
 	render() {

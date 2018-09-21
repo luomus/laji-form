@@ -5,6 +5,16 @@ import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
 import Switch from "react-bootstrap-switch";
 
 export default class CheckboxWidget extends Component {
+	static propTypes = {
+		options: PropTypes.shape({
+			allowUndefined: PropTypes.bool,
+			invert:  PropTypes.bool
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["boolean"])
+		}),
+		value: PropTypes.bool
+	}
 
 	getNextVal = () => {
 		const {value} = this.props;
@@ -128,17 +138,4 @@ export default class CheckboxWidget extends Component {
 				? props.formContext.translations.Yes
 				: props.formContext.translations.No;
 	}
-}
-
-if (process.env.NODE_ENV !== "production") {
-	CheckboxWidget.propTypes = {
-		schema: PropTypes.object.isRequired,
-		id: PropTypes.string.isRequired,
-		onChange: PropTypes.func,
-		value: PropTypes.bool,
-		required: PropTypes.bool,
-		options: PropTypes.shape({
-			allowUndefined: PropTypes.boolean
-		})
-	};
 }

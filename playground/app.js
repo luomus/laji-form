@@ -56,7 +56,7 @@ promise.then(data => {
 		...data,
 		settings: query.settings === "false" ? undefined : schemas.settings,
 		formData: query.localFormData
-		? require(`../forms/${query.id}.formData.json`)
+		? require(`../forms/${query.localFormData === "true" ? query.id : query.localFormData}.formData.json`)
 			: data.prepopulatedDocument
 				? {
 					...data.prepopulatedDocument,

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData } from "../../utils";
@@ -13,6 +14,13 @@ import { TagInputComponent } from "./TagArrayField";
  */
 @BaseComponent
 export default class NamedPlaceChooserField extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
+	}
+
 	getStateFromProps() {
 		const buttonDefinition = {
 			fn: this.onButtonClick,

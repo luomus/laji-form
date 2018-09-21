@@ -1,9 +1,17 @@
 import { Component } from "react";
+import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { getUiOptions } from "../../utils";
 
 @VirtualSchemaField
 export default class StringToArrayField extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
+	}
+
 	static getName() {return "StringToArrayField";}
 	getStateFromProps(props, propsWithUiOptions) {
 		const {formData = ""} = props;

@@ -11,7 +11,11 @@ export default class ArrayBulkField extends Component {
 			"ui:options": PropTypes.shape({
 				rowAddAmount: PropTypes.number
 			})
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	constructor(props) {

@@ -10,6 +10,13 @@ import { getUiOptions } from "../../utils";
 
 @BaseComponent
 export default class InformalTaxonGroupChooserWidget extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}),
+		value: PropTypes.string
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {};

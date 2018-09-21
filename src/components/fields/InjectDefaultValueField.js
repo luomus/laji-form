@@ -25,7 +25,11 @@ export default class InjectDefaultValueField extends Component {
 				target: PropTypes.string.isRequired,
 				source: PropTypes.string.isRequired
 			}).isRequired
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object", "array"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
 	}
 
 	static getName() {return "InjectDefaultValueField";}

@@ -602,7 +602,11 @@ class _MapArrayField extends ComposedComponent {
 					xs: PropTypes.integer
 				})
 			}).isRequired
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	constructor(props) {

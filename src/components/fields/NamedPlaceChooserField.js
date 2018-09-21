@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
+import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Modal, Alert } from "react-bootstrap";
@@ -20,6 +21,13 @@ const PLACE_USE_FAIL = "PLACE_USE_FAIL";
  */
 @BaseComponent
 export default class NamedPlaceChooserField extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object", "array"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
+	}
+
 	constructor(props) {
 		super(props);
 		this.apiClient = new ApiClient();

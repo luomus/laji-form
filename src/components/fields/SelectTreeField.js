@@ -19,7 +19,11 @@ export default class SelectTreeField extends Component {
 				labels: PropTypes.arrayOf(PropTypes.string),
 				uiSchema: PropTypes.object
 			}).isRequired
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
 	}
 
 	getStateFromProps(props) {

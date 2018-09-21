@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions, focusNextInput } from "../../utils";
@@ -9,6 +10,18 @@ import Context from "../../Context";
 
 @BaseComponent
 export default class EnumRangeArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				range: PropTypes.string
+			})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
+	}
+
 	static getName() {return "EnumRangeArrayField";}
 
 	constructor(props) {

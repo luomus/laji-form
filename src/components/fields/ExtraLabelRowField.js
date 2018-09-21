@@ -17,7 +17,11 @@ export default class ExtraLabelRowField extends Component {
 				xs: PropTypes.integer,
 				hiddenXs: PropTypes.boolean
 			})
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object", "array"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
 	};
 
 	getStateFromProps(props) {

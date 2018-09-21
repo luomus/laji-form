@@ -12,7 +12,11 @@ export default class TemplateArrayField extends Component {
 				useDefaultAsTemplate: PropTypes.boolean,
 				allowUndefined: PropTypes.boolean
 			})
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	};
 
 	getItemProperties = (props) => {

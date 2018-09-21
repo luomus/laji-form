@@ -28,7 +28,11 @@ export default class ConditionalAdditionalItemsArrayField extends Component {
 				]),
 				cache: PropTypes.boolean
 			})
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array.isRequired
 	}
 
 	static getName() {return  "ConditionalAdditionalItemsArrayField";}

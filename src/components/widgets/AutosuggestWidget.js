@@ -10,6 +10,13 @@ import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
 export default class _AutosuggestWidget extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.string
+		}).isRequired,
+		value: PropTypes.string
+	}
+
 	render() {
 		if (this.props.options) {
 			switch (this.props.options.autosuggestField) {

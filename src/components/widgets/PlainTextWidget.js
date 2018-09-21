@@ -25,6 +25,9 @@ if (process.env.NODE_ENV !== "production") {
 	PlainTextWidget.propTypes = {
 		id: PropTypes.string.isRequired,
 		value: PropTypes.string,
+		schema: PropTypes.shape({
+			type: PropTypes.string
+		})
 	};
 }
 

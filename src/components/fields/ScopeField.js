@@ -306,7 +306,11 @@ export default class ScopeField extends Component {
 				definitions: PropTypes.object,
 				uiSchema: PropTypes.object
 			}).isRequired
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
 	}
 
 	componentDidMount() {

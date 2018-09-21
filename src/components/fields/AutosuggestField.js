@@ -61,7 +61,11 @@ export default class AutosuggestField extends Component {
 				informalTaxonGroupPersistenceKey: PropTypes.string
 			}).isRequired,
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object"])
+		}).isRequired,
+		formData: PropTypes.object.isRequired
 	}
 
 	static getName() {return "AutosuggestField";}
