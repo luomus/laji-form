@@ -559,7 +559,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={activeIdx}>
-				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} />
+				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} help={arrayTemplateFieldProps.uiSchema["ui:help"]}/>
 				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
