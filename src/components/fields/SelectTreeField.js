@@ -21,9 +21,9 @@ export default class SelectTreeField extends Component {
 			}).isRequired
 		}).isRequired,
 		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["object"])
+			type: PropTypes.oneOf(["string"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		value: PropTypes.string
 	}
 
 	getStateFromProps(props) {
