@@ -5,6 +5,7 @@ import merge from "deepmerge";
 import equals from "deep-equal";
 import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, Popover } from "react-bootstrap";
 import Dropdown from "react-bootstrap/lib/Dropdown";
+import DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
@@ -614,9 +615,9 @@ export default class ScopeField extends Component {
 				          onToggle={onToggle}>
 					{this.renderFieldsButton("toggle")}
 					<Collapse in={this.state.additionalsOpen} bsRole="menu">
-						<Dropdown.Menu>
+						<DropdownMenu>
 							{this.additionalPropertiesToList(additionalProperties, MenuItem)}
-						</Dropdown.Menu>
+						</DropdownMenu>
 					</Collapse>
 				</Dropdown>
 			</div>
