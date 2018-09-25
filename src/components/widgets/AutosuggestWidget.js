@@ -443,7 +443,7 @@ export class Autosuggest extends Component {
 			clearTimeout(this.timeout);
 		}
 		if (debounce) {
-			this.timeout = context.setTimeout(request, 400);
+			this.timeout = context.setTimeout(request, 100);
 		} else {
 			request();
 		}
