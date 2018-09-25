@@ -241,10 +241,10 @@ export default class NestField extends Component {
 	onChange(formData) {
 		const {nests} = this.getUiOptions();
 
-		Object.keys(nests).forEach(nestName => {
+		Object.keys(nests).reverse().forEach(nestName => {
 			if (formData[nestName]) {
 				Object.keys(formData[nestName]).forEach(prop => {
-					formData = {...formData, [prop]: formData[nestName][prop]};
+					if (formData[nestName].hasOwnProperty(prop)) formData = {...formData, [prop]: formData[nestName][prop]};
 				});
 				formData = immutableDelete(formData, nestName);
 			}
@@ -271,7 +271,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		 [errorSchema, newErrorSchema],
 		 [formData, newFormData]
 		].forEach(([originalPropContainer, newPropContainer]) => {
-			if (originalPropContainer && (originalPropContainer.hasOwnProperty(fieldName))) newPropContainer[fieldName] = originalPropContainer[fieldName];
+			if (originalPropContainer && originalPropContainer.hasOwnProperty(fieldName)) newPropContainer[fieldName] = originalPropContainer[fieldName];
 		});
 		fieldsDictionarified[fieldName] = true;
 	});
