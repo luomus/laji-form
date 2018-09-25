@@ -254,7 +254,7 @@ export default class ArrayFieldTemplate extends Component {
 				              translations={props.formContext.translations}/>
 			);
 			return (
-				<div key={item.index} className="laji-form-field-template-item keep-vertical">
+				<div key={item.index} className="laji-form-field-template-item keep-vertical field-array-row">
 					<div className="laji-form-field-template-schema">{item.children}</div>
 					{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 				</div>
