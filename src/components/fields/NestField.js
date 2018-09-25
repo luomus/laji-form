@@ -241,26 +241,14 @@ export default class NestField extends Component {
 	onChange(formData) {
 		const {nests} = this.getUiOptions();
 
-		let dictionarifiedNests = {};
-		Object.keys(nests).forEach((newFieldName) => {
-			dictionarifiedNests[newFieldName] = true;
+		Object.keys(nests).forEach(nestName => {
+			if (formData[nestName]) {
+				Object.keys(formData[nestName]).forEach(prop => {
+					formData = {...formData, [prop]: formData[nestName][prop]};
+				});
+				formData = immutableDelete(formData, nestName);
+			}
 		});
-
-		let nestedPropsFound = false;
-		do {
-			nestedPropsFound = false;
-			Object.keys(formData).forEach((prop) => {
-				if (dictionarifiedNests[prop]) {
-					Object.keys(formData[prop] || {}).forEach((nestedProp) => {
-						if (formData && formData[prop] && formData[prop].hasOwnProperty(nestedProp)) {
-							formData = {...formData, [nestedProp]: formData[prop][nestedProp]};
-						}
-					});
-					formData = immutableDelete(formData, prop);
-					nestedPropsFound = true;
-				}
-			});
-		} while (nestedPropsFound);
 
 		this.props.onChange(formData);
 	}
@@ -283,7 +271,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		 [errorSchema, newErrorSchema],
 		 [formData, newFormData]
 		].forEach(([originalPropContainer, newPropContainer]) => {
-			if (originalPropContainer && (originalPropContainer[fieldName] || originalPropContainer[fieldName] === 0)) newPropContainer[fieldName] = originalPropContainer[fieldName];
+			if (originalPropContainer && (originalPropContainer.hasOwnProperty(fieldName))) newPropContainer[fieldName] = originalPropContainer[fieldName];
 		});
 		fieldsDictionarified[fieldName] = true;
 	});
