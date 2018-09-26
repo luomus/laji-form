@@ -10,6 +10,7 @@ export default class ContextInjectionField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				injections: PropTypes.object.isRequired,
+				target: PropTypes.oneOf(["uiSchema", "schema"]),
 			}).isRequired,
 			uiSchema: PropTypes.object
 		}).isRequired
@@ -19,8 +20,9 @@ export default class ContextInjectionField extends Component {
 
 	getStateFromProps(props) {
 		let {uiSchema} = props;
-		const {injections} = this.getUiOptions();
-		return {uiSchema: getInjectedUiSchema(uiSchema, injections, props.formContext.uiSchemaContext)};
+		const {injections, target = "uiSchema"} = this.getUiOptions();
+		const container = props[target];
+		return {[target]: getInjectedUiSchema(container, injections, props.formContext.uiSchemaContext)};
 	}
 }
 
@@ -31,7 +33,7 @@ export function getInjectedUiSchema(uiSchema, injections, uiSchemaContext) {
 		const splitted = injectionPath.substring(1).split("/");
 		const last = splitted.pop();
 		const tail = splitted.reduce((pointer, path) => {
-			pointer[path] = {};
+			if (!pointer[path]) pointer[path] = {};
 			return pointer[path];
 		}, updateObject);
 		tail[last] = {$set: parseJSONPointer(uiSchemaContext, injections[injectionPath])};
