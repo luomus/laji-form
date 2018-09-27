@@ -69,7 +69,8 @@ promise.then(data => {
 		uiSchemaContext: {
 			...(data.uiSchemaContext || {}),
 			creator: properties.userId,
-			isAdmin: query.admin
+			isAdmin: query.admin,
+			municipalityEnum:  require("./municipalityEnum.json")
 		},
 		onSubmit,
 		apiClient,
