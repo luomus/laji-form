@@ -695,6 +695,16 @@ class _MapArrayField extends ComposedComponent {
 			this.map.setRootElem(this._mapContainer);
 			this.map.setOption("clickBeforeZoomAndPan", true);
 		}
+
+		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
+		const geometries = this.getData();
+		let area = this.props.formData[this.state.activeIdx][this.props.uiSchema["ui:options"].areaField];
+		area instanceof Array? area = area[0]: null;
+		if(geometries.length === 0 && area && area.length > 0) {
+			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+				this.map.geocode(result.name, undefined, 8);
+			});
+		}
 	}
 
 
@@ -781,16 +791,6 @@ class _MapArrayField extends ComposedComponent {
 		}
 
 		let mapOptions = this.getMapOptions();
-
-		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
-		const geometries = this.getData();
-		let area = this.props.formData[this.state.activeIdx][options.areaField];
-		typeof area === Array? area = area[0]: null;
-		if(geometries.length === 0 && area && area.length > 0) {
-			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
-				this.map.geocode(result.name, undefined, 8);
-			});
-		}
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
