@@ -15,6 +15,7 @@ import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import { getButton } from "../ArrayFieldTemplate";
+import ApiClient from "../../ApiClient";
 
 const popupMappers = {
 	unitTaxon: (schema, formData, options = {}) => {
@@ -65,7 +66,7 @@ class DefaultMapArrayField extends Component {
 	getOptions(options) {
 		const {formData} = this.props;
 		const geometries = this.getData();
-
+		
 		const emptyMode = !formData || !formData.length;
 
 		const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {
@@ -780,6 +781,16 @@ class _MapArrayField extends ComposedComponent {
 		}
 
 		let mapOptions = this.getMapOptions();
+
+		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
+		const geometries = this.getData();
+		let area = this.props.formData[this.state.activeIdx][options.areaField];
+		typeof area === Array? area = area[0]: null;
+		if(geometries.length === 0 && area && area.length > 0) {
+			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+				this.map.geocode(result.name, undefined, 8);
+			});
+		}
 
 		const mapSizes = options.mapSizes || getBootstrapCols(6);
 
