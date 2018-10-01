@@ -249,6 +249,9 @@ export default class GeocoderField extends Component {
 					});
 				});
 				Object.keys(parsers).forEach(field => {
+					if (!fieldByKeys[field]) {
+						return;
+					}
 					if (found[field]) {
 						const keys = Object.keys(found[field]);
 						const responseForField = found[field][keys[0]];
