@@ -285,7 +285,7 @@ export default class GeocoderField extends Component {
 						changes[field] = "";
 					}
 				});
-				if (country) changes.country = country;
+				if (country && fieldByKeys.country) changes.country = country;
 				afterFetch(() => {
 					this.props.onChange({...props.formData, ...changes});
 					if (callback) callback();
