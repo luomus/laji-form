@@ -22,7 +22,13 @@ export default class GeocoderField extends Component {
 				button: PropTypes.bool,
 				fields: PropTypes.arrayOf(PropTypes.oneOf((["country", "municipality",
 					"biologicalProvince", "administrativeProvince"]))),
-				geometryField: PropTypes.string
+				geometryField: PropTypes.string,
+				"fieldOptions": PropTypes.arrayOf(
+					PropTypes.shape({
+						field: PropTypes.string,
+						enum: PropTypes.string
+					})
+				)
 			}),
 			uiSchema: PropTypes.object
 		}).isRequired,
@@ -247,7 +253,30 @@ export default class GeocoderField extends Component {
 						const keys = Object.keys(found[field]);
 						const responseForField = found[field][keys[0]];
 						Object.keys(responseForField).forEach(value => {
-							changes[field] = join(changes[field], value);
+							// if target field is array
+							if(this.props.schema.properties[field] && this.props.schema.properties[field].type === "array") {
+								const temp = Array.from(this.props.formData[field]);
+
+								// find correct enum from fieldOptions
+								const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
+								const enumField = fieldOptions[fieldOptions.findIndex((element)=>{
+									return element.field === field;
+								})].enum;
+
+								// find enum value from key (eg. municipalityName --> municipalityId)
+								const mEnum = this.props.formContext.uiSchemaContext[enumField];
+								const enumValue = mEnum.enum[
+									mEnum.enumNames.indexOf(value)
+								];
+
+								// push enum value to changes (ignore duplicates)
+								if (!temp.includes(enumValue)) {
+									temp.push(enumValue);
+									changes[field] = temp;
+								}
+							} else {
+								changes[field] = join(changes[field], value);
+							}
 						});
 					} else {
 						changes[field] = "";
