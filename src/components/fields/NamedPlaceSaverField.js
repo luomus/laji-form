@@ -146,8 +146,7 @@ class PlaceSaverDialog extends Component {
 	onSave(place) {
 		place = {
 			...place,
-			geometry: place.prepopulatedDocument.gatherings[0].geometry,
-			collectionID: this.props.formContext.uiSchemaContext.formID
+			geometry: place.prepopulatedDocument.gatherings[0].geometry
 		};
 
 		this.apiClient.fetchRaw(`/named-places${place.id ? `/${place.id}` : ""}`, undefined, {
