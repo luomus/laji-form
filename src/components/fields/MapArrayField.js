@@ -697,9 +697,16 @@ class _MapArrayField extends ComposedComponent {
 		}
 
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
+		const item = (this.props.formData || [])[this.state.activeIdx];
+		const {areaField} = getUiOptions(this.props.uiSchema);
+		if (!item || !areaField) {
+			return;
+		}
+		let area = item[areaField];
+		if (area instanceof Array) {
+			area = area[0];
+		}
 		const geometries = this.getData();
-		let area = this.props.formData[this.state.activeIdx][this.props.uiSchema["ui:options"].areaField];
-		area instanceof Array? area = area[0]: null;
 		if(geometries.length === 0 && area && area.length > 0) {
 			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
@@ -769,7 +776,7 @@ class _MapArrayField extends ComposedComponent {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema, schema} = this.props;
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp, useSchemaHeight} = options;
+		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp} = options;
 		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
 		const {activeIdx} = this.state;
 
