@@ -73,7 +73,18 @@ export default class GeocoderField extends Component {
 		const hasData = fields.some(field => !isEmptyString(this.props.formData[field]));
 		const geometry = this.getGeometry(this.props);
 		const geometriesEqual = prevProps && equals(this.getGeometry(prevProps), geometry);
-		if ((geometry && geometry.geometries && geometry.geometries.length === 0 && !geometriesEqual) || (!updateOnlyEmpty || !hasData) && ((this.state.loading === undefined && !this.state && geometry) || !geometriesEqual)) {
+		const geometryEmpty = geometry && geometry.geometries && geometry.geometries.length === 0;
+		if (updateOnlyEmpty && !geometryEmpty && hasData) {
+			return;
+		}
+		if (!prevProps && hasData) {
+			return;
+		}
+		if (
+			(geometryEmpty && prevProps && !geometriesEqual) // was emptied
+			||
+			(((this.state.loading === undefined && !this.state && geometry) || !geometriesEqual))
+		) {
 			button ? this.onButtonClick()(this.props) : this.update(this.props);
 		}
 	}
