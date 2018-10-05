@@ -201,21 +201,9 @@ class NamedPlaceChooser extends Component {
 		const {map} = this.mapElem;
 		const layers = this.idxToLayer[idx];
 		const [layer] = layers;
-		let center = undefined;
-		if (layers.length === 1 && !layer.getBounds) {
-			const latlng = layer.getLatLng ? layer.getLatLng() : layer.getCenter();
-			center = latlng;
-			if (map.data[0].groupContainer.hasLayer(layer) && map.data[0].groupContainer.zoomToShowLayer && layer.feature.geometry.type === "Point") {
-				map.data[0].groupContainer.zoomToShowLayer(layer);
-			} else {
-				map.map.setView(latlng, 15, {animate: false});
-			}
-			map.setNormalizedZoom(15, {animate: false});
-		} else {
-			const layerGroup = L.featureGroup(layers); //eslint-disable-line no-undef
-			center = layerGroup.getBounds().getCenter();
-			map.map.fitBounds(layerGroup.getBounds(), {animate: false});
-		}
+		const bounds = map.getBoundsForLayers(layers);
+		const center = bounds.getCenter();
+		map.fitBounds(bounds, {animate: false});
 		new Context(this.props.formContext.contextId).setImmediate(() => layer.fire("click", {latlng: center}), 10);
 	}
 
