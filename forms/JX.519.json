@@ -806,13 +806,6 @@
                                         "title": "Linnun ik\u00e4",
                                         "type": "string"
                                     },
-                                    "birdBehavior": {
-                                        "items": {
-                                            "type": "string"
-                                        },
-                                        "title": "Linnun tila",
-                                        "type": "array"
-                                    },
                                     "birdPlumage": {
                                         "enum": [
                                             "",
@@ -1065,6 +1058,13 @@
                                         ],
                                         "title": "Suunta",
                                         "type": "string"
+                                    },
+                                    "movingStatus": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Linnun tila",
+                                        "type": "array"
                                     },
                                     "nativeStatus": {
                                         "enum": [
@@ -1537,7 +1537,8 @@
                             },
                             "minItems": 1,
                             "title": "Havainnot",
-                            "type": "array"
+                            "type": "array",
+                            "uniqueItems": false
                         },
                         "weather": {
                             "excludeFromCopy": true,
@@ -1919,12 +1920,6 @@
                 ],
                 "units": {
                     "items": {
-                        "birdBehavior": {
-                            "ui:field": "EnumRangeArrayField",
-                            "ui:options": {
-                                "range": "MY.birdBehaviorEnum"
-                            }
-                        },
                         "classNames": "well well-sm",
                         "hostID": {
                             "ui:widget": "HiddenWidget"
@@ -1944,6 +1939,12 @@
                         },
                         "informalTaxonGroups": {
                             "ui:field": "HiddenField"
+                        },
+                        "movingStatus": {
+                            "ui:field": "EnumRangeArrayField",
+                            "ui:options": {
+                                "range": "MY.birdBehaviorEnum"
+                            }
                         },
                         "recordBasis": {
                             "ui:options": {
@@ -2002,7 +2003,6 @@
                             "adminOnly": true,
                             "container": "modal"
                         },
-                        "ui:field": "ScopeField",
                         "ui:functions": [
                             {
                                 "ui:field": "AutosuggestField",
@@ -2103,6 +2103,230 @@
                                         }
                                     ]
                                 }
+                            },
+                            {
+                                "ui:field": "ScopeField",
+                                "ui:options": {
+                                    "additionalPersistenceContextKey": "AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup",
+                                    "additionalsGroupingOrderer": "informalTaxonGroups",
+                                    "additionalsGroupingPath": "/fieldScopes/informalTaxonGroups",
+                                    "additionalsGroupsTranslator": "taxonGroups",
+                                    "additionalsPersistenceField": "informalTaxonGroups",
+                                    "additionalsPersistenceKey": "gathering_unit_informalTaxonGroups",
+                                    "fieldScopes": {
+                                        "informalTaxonGroups": {
+                                            "*": {
+                                                "additionalFields": [
+                                                    "identifications_0_det",
+                                                    "identifications_0_detDate",
+                                                    "identifications_0_identificationBasis",
+                                                    "sex",
+                                                    "unitGathering_dateBegin",
+                                                    "unitGathering_dateEnd",
+                                                    "unitGathering_habitatIUCN",
+                                                    "unitGathering_habitatDescription",
+                                                    "preservation",
+                                                    "samplingMethod",
+                                                    "samplingMethodNotes",
+                                                    "breeding",
+                                                    "maleIndividualCount",
+                                                    "femaleIndividualCount",
+                                                    "nativeStatus",
+                                                    "checklistID",
+                                                    "taxonConfidence",
+                                                    "recordBasis"
+                                                ],
+                                                "title": "Kaikki"
+                                            },
+                                            "MVL.1": {
+                                                "additionalFields": [
+                                                    "birdPlumage",
+                                                    "birdAge",
+                                                    "movingStatus",
+                                                    "movingDirection",
+                                                    "atlasCode",
+                                                    "twitched",
+                                                    "distance"
+                                                ],
+                                                "defaultFields": [
+                                                    "sex",
+                                                    "birdPlumage",
+                                                    "birdAge",
+                                                    "movingStatus",
+                                                    "movingDirection",
+                                                    "breeding",
+                                                    "atlasCode",
+                                                    "twitched",
+                                                    "distance"
+                                                ],
+                                                "excludeFields": [
+                                                    "taxonConfidence",
+                                                    "recordBasis"
+                                                ],
+                                                "uiSchema": {
+                                                    "ui:grid": {
+                                                        "rows": null
+                                                    },
+                                                    "ui:order": [
+                                                        "identifications_0_taxon",
+                                                        "count",
+                                                        "sex",
+                                                        "birdPlumage",
+                                                        "birdAge",
+                                                        "movingStatus",
+                                                        "movingDirection",
+                                                        "breeding",
+                                                        "atlasCode",
+                                                        "twitched",
+                                                        "distance",
+                                                        "notes",
+                                                        "*",
+                                                        "images"
+                                                    ]
+                                                }
+                                            },
+                                            "MVL.187": {
+                                                "additionalFields": [
+                                                    "batBehavior"
+                                                ],
+                                                "defaultFields": [
+                                                    "sex",
+                                                    "identifications_0_identificationBasis",
+                                                    "lifeStage",
+                                                    "batBehavior"
+                                                ],
+                                                "uiSchema": {
+                                                    "lifeStage": {
+                                                        "ui:options": {
+                                                            "filter": [
+                                                                "MY.lifeStageJuvenile",
+                                                                "MY.lifeStageSubimago",
+                                                                "MY.lifeStageAdult"
+                                                            ],
+                                                            "filterType": "whitelist"
+                                                        }
+                                                    },
+                                                    "ui:order": [
+                                                        "identifications_0_taxon",
+                                                        "count",
+                                                        "sex",
+                                                        "lifeStage",
+                                                        "batBehavior",
+                                                        "taxonConfidence",
+                                                        "recordBasis",
+                                                        "identifications_0_identificationBasis",
+                                                        "notes",
+                                                        "*",
+                                                        "images"
+                                                    ]
+                                                }
+                                            },
+                                            "MVL.21": {
+                                                "additionalFields": [
+                                                    "plantLifeStage",
+                                                    "plantStatusCode"
+                                                ],
+                                                "defaultFields": [
+                                                    "plantLifeStage",
+                                                    "plantStatusCode",
+                                                    "nativeStatus"
+                                                ]
+                                            },
+                                            "MVL.232": {
+                                                "additionalFields": [
+                                                    "lifeStage",
+                                                    "hostInformalNameString"
+                                                ],
+                                                "defaultFields": [
+                                                    "unitGathering_habitatIUCN",
+                                                    "unitGathering_habitatDescription",
+                                                    "identifications_0_det",
+                                                    "identifications_0_identificationBasis",
+                                                    "identifications_0_detDate",
+                                                    "lifeStage",
+                                                    "hostInformalNameString",
+                                                    "sex",
+                                                    "maleIndividualCount",
+                                                    "femaleIndividualCount",
+                                                    "preservation",
+                                                    "samplingMethod"
+                                                ],
+                                                "excludeFields": [
+                                                    "taxonConfidence",
+                                                    "recordBasis"
+                                                ],
+                                                "uiSchema": {
+                                                    "hostInformalNameString": {
+                                                        "ui:title": "Is\u00e4nt\u00e4laji tai ravintokasvi"
+                                                    },
+                                                    "lifeStage": {
+                                                        "ui:title": "Kehitysaste"
+                                                    },
+                                                    "ui:grid": {
+                                                        "rows": null
+                                                    },
+                                                    "ui:order": [
+                                                        "identifications_0_taxon",
+                                                        "count",
+                                                        "maleIndividualCount",
+                                                        "femaleIndividualCount",
+                                                        "sex",
+                                                        "lifeStage",
+                                                        "samplingMethod",
+                                                        "preservation",
+                                                        "unitGathering_habitatIUCN",
+                                                        "unitGathering_habitatDescription",
+                                                        "identifications_0_det",
+                                                        "identifications_0_detDate",
+                                                        "identifications_0_identificationBasis",
+                                                        "notes",
+                                                        "hostInformalNameString",
+                                                        "*",
+                                                        "images"
+                                                    ]
+                                                }
+                                            },
+                                            "MVL.233": {
+                                                "additionalFields": [
+                                                    "unitGathering_substrate",
+                                                    "substrateSpecies",
+                                                    "smell",
+                                                    "smellNotes",
+                                                    "taste",
+                                                    "tasteNotes"
+                                                ],
+                                                "title": "Sienet"
+                                            }
+                                        }
+                                    },
+                                    "fields": [
+                                        "unitFact_autocompleteSelectedTaxonID",
+                                        "identifications_0_taxon",
+                                        "count",
+                                        "notes",
+                                        "informalTaxonGroups",
+                                        "taxonConfidence",
+                                        "recordBasis"
+                                    ],
+                                    "glyphFields": [
+                                        {
+                                            "glyph": "camera",
+                                            "label": "Lis\u00e4\u00e4 valokuva",
+                                            "open": true,
+                                            "show": "images"
+                                        }
+                                    ],
+                                    "idToScroll": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
+                                    "includeAdditionalFieldsChooserButton": true,
+                                    "taxonField": "identifications_0_taxon"
+                                }
+                            },
+                            {
+                                "ui:field": "LocationChooserField",
+                                "ui:options": {
+                                    "geometryField": "unitGathering_geometry",
+                                    "taxonField": "identifications_0_taxon"
+                                }
                             }
                         ],
                         "ui:grid": {
@@ -2148,221 +2372,6 @@
                                 "unitGathering_dateEnd": 4
                             },
                             "xs": 12
-                        },
-                        "ui:options": {
-                            "additionalPersistenceContextKey": "AUTOSUGGEST_FIELD_PERSISTENCE_units_informalTaxonGroup",
-                            "additionalsGroupingOrderer": "informalTaxonGroups",
-                            "additionalsGroupingPath": "/fieldScopes/informalTaxonGroups",
-                            "additionalsGroupsTranslator": "taxonGroups",
-                            "additionalsPersistenceField": "informalTaxonGroups",
-                            "additionalsPersistenceKey": "gathering_unit_informalTaxonGroups",
-                            "fieldScopes": {
-                                "informalTaxonGroups": {
-                                    "*": {
-                                        "additionalFields": [
-                                            "identifications_0_det",
-                                            "identifications_0_detDate",
-                                            "identifications_0_identificationBasis",
-                                            "sex",
-                                            "unitGathering_dateBegin",
-                                            "unitGathering_dateEnd",
-                                            "unitGathering_habitatIUCN",
-                                            "unitGathering_habitatDescription",
-                                            "preservation",
-                                            "samplingMethod",
-                                            "samplingMethodNotes",
-                                            "breeding",
-                                            "maleIndividualCount",
-                                            "femaleIndividualCount",
-                                            "nativeStatus",
-                                            "checklistID"
-                                        ],
-                                        "title": "Kaikki"
-                                    },
-                                    "MVL.1": {
-                                        "additionalFields": [
-                                            "birdPlumage",
-                                            "birdAge",
-                                            "birdBehavior",
-                                            "movingDirection",
-                                            "atlasCode",
-                                            "twitched",
-                                            "distance"
-                                        ],
-                                        "defaultFields": [
-                                            "sex",
-                                            "birdPlumage",
-                                            "birdAge",
-                                            "birdBehavior",
-                                            "movingDirection",
-                                            "breeding",
-                                            "atlasCode",
-                                            "twitched",
-                                            "distance"
-                                        ],
-                                        "excludeFields": [
-                                            "taxonConfidence",
-                                            "recordBasis"
-                                        ],
-                                        "uiSchema": {
-                                            "ui:grid": {
-                                                "rows": null
-                                            },
-                                            "ui:order": [
-                                                "identifications_0_taxon",
-                                                "count",
-                                                "sex",
-                                                "birdPlumage",
-                                                "birdAge",
-                                                "birdBehavior",
-                                                "movingDirection",
-                                                "breeding",
-                                                "atlasCode",
-                                                "twitched",
-                                                "distance",
-                                                "notes",
-                                                "*",
-                                                "images"
-                                            ]
-                                        }
-                                    },
-                                    "MVL.187": {
-                                        "additionalFields": [
-                                            "batBehavior"
-                                        ],
-                                        "defaultFields": [
-                                            "sex",
-                                            "identifications_0_identificationBasis",
-                                            "lifeStage",
-                                            "batBehavior"
-                                        ],
-                                        "uiSchema": {
-                                            "lifeStage": {
-                                                "ui:options": {
-                                                    "filter": [
-                                                        "MY.lifeStageJuvenile",
-                                                        "MY.lifeStageSubimago",
-                                                        "MY.lifeStageAdult"
-                                                    ],
-                                                    "filterType": "whitelist"
-                                                }
-                                            },
-                                            "ui:order": [
-                                                "identifications_0_taxon",
-                                                "count",
-                                                "sex",
-                                                "lifeStage",
-                                                "batBehavior",
-                                                "taxonConfidence",
-                                                "recordBasis",
-                                                "identifications_0_identificationBasis",
-                                                "notes",
-                                                "*",
-                                                "images"
-                                            ]
-                                        }
-                                    },
-                                    "MVL.21": {
-                                        "additionalFields": [
-                                            "plantLifeStage",
-                                            "plantStatusCode"
-                                        ],
-                                        "defaultFields": [
-                                            "plantLifeStage",
-                                            "plantStatusCode"
-                                        ]
-                                    },
-                                    "MVL.232": {
-                                        "additionalFields": [
-                                            "lifeStage",
-                                            "hostInformalNameString"
-                                        ],
-                                        "defaultFields": [
-                                            "unitGathering_habitatIUCN",
-                                            "unitGathering_habitatDescription",
-                                            "identifications_0_det",
-                                            "identifications_0_identificationBasis",
-                                            "identifications_0_detDate",
-                                            "lifeStage",
-                                            "hostInformalNameString",
-                                            "sex",
-                                            "maleIndividualCount",
-                                            "femaleIndividualCount",
-                                            "preservation",
-                                            "samplingMethod"
-                                        ],
-                                        "excludeFields": [
-                                            "taxonConfidence",
-                                            "recordBasis"
-                                        ],
-                                        "uiSchema": {
-                                            "hostInformalNameString": {
-                                                "ui:title": "Is\u00e4nt\u00e4laji tai ravintokasvi"
-                                            },
-                                            "lifeStage": {
-                                                "ui:title": "Kehitysaste"
-                                            },
-                                            "ui:grid": {
-                                                "rows": null
-                                            },
-                                            "ui:order": [
-                                                "identifications_0_taxon",
-                                                "count",
-                                                "maleIndividualCount",
-                                                "femaleIndividualCount",
-                                                "sex",
-                                                "lifeStage",
-                                                "samplingMethod",
-                                                "preservation",
-                                                "unitGathering_habitatIUCN",
-                                                "unitGathering_habitatDescription",
-                                                "identifications_0_det",
-                                                "identifications_0_detDate",
-                                                "identifications_0_identificationBasis",
-                                                "notes",
-                                                "hostInformalNameString",
-                                                "*",
-                                                "images"
-                                            ]
-                                        }
-                                    },
-                                    "MVL.233": {
-                                        "additionalFields": [
-                                            "unitGathering_substrate",
-                                            "substrateSpecies",
-                                            "smell",
-                                            "smellNotes",
-                                            "taste",
-                                            "tasteNotes"
-                                        ],
-                                        "title": "Sienet"
-                                    }
-                                }
-                            },
-                            "fields": [
-                                "unitFact_autocompleteSelectedTaxonID",
-                                "identifications_0_taxon",
-                                "count",
-                                "notes",
-                                "informalTaxonGroups",
-                                "taxonConfidence",
-                                "recordBasis"
-                            ],
-                            "glyphFields": [
-                                {
-                                    "glyph": "camera",
-                                    "label": "Lis\u00e4\u00e4 valokuva",
-                                    "open": true,
-                                    "show": "images"
-                                },
-                                {
-                                    "fn": "setLocation",
-                                    "glyph": "map-marker",
-                                    "label": "Valitse sijainti"
-                                }
-                            ],
-                            "idToScroll": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
-                            "includeAdditionalFieldsChooserButton": true
                         },
                         "ui:order": [
                             "identifications",
@@ -2430,6 +2439,11 @@
                         }
                     },
                     "ui:field": "SingleActiveArrayField",
+                    "ui:functions": [
+                        {
+                            "ui:field": "UnitListShorthandArrayField"
+                        }
+                    ],
                     "ui:options": {
                         "buttons": [
                             {
@@ -2989,7 +3003,8 @@
                     },
                     "datetime": {
                         "latest": "now",
-                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                        "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
+                        "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
                     },
                     "presence": {
                         "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on pakollinen"
@@ -3002,7 +3017,8 @@
                     },
                     "datetime": {
                         "latest": "now",
-                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                        "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
+                        "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
                     }
                 },
                 "leg": {
@@ -3022,7 +3038,8 @@
                         },
                         "datetime": {
                             "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                            "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
+                            "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
                         }
                     },
                     "dateEnd": {
@@ -3032,7 +3049,8 @@
                         },
                         "datetime": {
                             "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                            "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
+                            "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
                         }
                     },
                     "geometry": {
@@ -3058,7 +3076,7 @@
                             "properties": {
                                 "identifications": {
                                     "presence": {
-                                        "message": "@taxonValidation"
+                                        "message": "Lajinimi t\u00e4ytyy ilmoittaa."
                                     }
                                 },
                                 "unitGathering": {
@@ -3070,7 +3088,8 @@
                                             },
                                             "datetime": {
                                                 "latest": "now",
-                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                                                "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
+                                                "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
                                             }
                                         },
                                         "dateEnd": {
@@ -3080,7 +3099,8 @@
                                             },
                                             "datetime": {
                                                 "latest": "now",
-                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                                                "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
+                                                "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
                                             }
                                         }
                                     }
