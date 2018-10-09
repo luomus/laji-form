@@ -19,7 +19,6 @@ export default class ContextInjectionField extends Component {
 	static getName() {return  "ContextInjectionField";}
 
 	getStateFromProps(props) {
-		let {uiSchema} = props;
 		const {injections, target = "uiSchema"} = this.getUiOptions();
 		const container = props[target];
 		return {[target]: getInjectedUiSchema(container, injections, props.formContext.uiSchemaContext)};

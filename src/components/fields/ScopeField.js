@@ -1,19 +1,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import update from "immutability-helper";
 import merge from "deepmerge";
 import equals from "deep-equal";
-import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, Popover } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, } from "react-bootstrap";
 import Dropdown from "react-bootstrap/lib/Dropdown";
 import DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, updateTailUiSchema, getNestedTailUiSchema, isObject } from "../../utils";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
-import { Map } from "./MapArrayField";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
 
 const scopeFieldSettings = {
@@ -93,9 +90,8 @@ export default class ScopeField extends Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 
-		const {additionalsGroupingPath, taxonField} = getUiOptions(this.props.uiSchema);
+		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
-		const {translations} = this.props.formContext;
 		let uiSchema = {
 			...this.state.uiSchema, 
 			"ui:buttons": [

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, Popover } from "react-bootstrap";
+import { Modal, OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
 import update from "immutability-helper";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { GlyphButton } from "../components";
 import Context from "../../Context";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify } from "../../utils";
+import { hasData, getUiOptions, getInnerUiSchema } from "../../utils";
 import { Map } from "./MapArrayField";
 
 @BaseComponent
