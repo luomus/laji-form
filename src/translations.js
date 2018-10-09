@@ -604,4 +604,9 @@
 		en: "Species retrieval failed",
 		sv: "Arthämtning misslyckades"
 	},
+	chooseLocation: {
+		fi: "Valitse sijainti",
+		en: "Set location",
+		sv: "Ange platsen"
+	},
 };

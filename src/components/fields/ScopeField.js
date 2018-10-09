@@ -9,7 +9,7 @@ import DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import Spinner from "react-spinner";
 import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, updateTailUiSchema, getNestedTailUiSchema, isObject } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -25,238 +25,6 @@ const scopeFieldSettings = {
 				return "";
 			});
 		},
-	}
-};
-
-const buttonSettings = {
-	setLocation: class LocationButton extends Component {
-		getIdx = () => {
-			const {that} = this.props;
-			const {$id} = that.props.idSchema;
-			const splitted = $id.split("_");
-			return parseInt(splitted[splitted.length - 1]);
-		}
-
-		onMouseEnter = () => {
-			const {that} = this.props;
-			const idx = this.getIdx();
-			this._hovered = true;
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
-		}
-
-		onMouseLeave = () => {
-			const {that} = this.props;
-			const idx = this.getIdx();
-			this._hovered = false;
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
-		}
-
-		componentWillUnmount() {
-			this._hovered && this.onMouseLeave();
-		}
-
-		getGeometryField = () => {
-			const {that} = this.props;
-			const {geometryField = "unitGathering_geometry"} = getUiOptions(that.uiSchema);
-			return geometryField;
-		}
-
-		hasCoordinates = () => {
-			const {that} = this.props;
-			const geometryField = this.getGeometryField();
-			return hasData(that.props.formData[geometryField]);
-		}
-
-		onClick = () => {
-			const {that} = this.props;
-			const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
-			const {map} = mapContext;
-			if (!map) return;
-
-			const {translations} = that.props.formContext;
-			const geometryField = this.getGeometryField();
-			const hasCoordinates = this.hasCoordinates();
-
-			const idx = this.getIdx();
-
-			let modalMap = undefined;
-			let triggerLayer = undefined;
-
-			const {rootElem, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
-			const gatheringData = map.getDraw();
-			const unitData = map.data && map.data[0] ? 
-				map.data[0] :
-				undefined;
-
-			const data = [
-				{
-					featureCollection: gatheringData.featureCollection,
-					getFeatureStyle: gatheringData.getFeatureStyle
-				},
-			];
-
-			if (unitData) {
-				data.push({
-					featureCollection: {
-						features: unitData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
-					},
-					getFeatureStyle: () => {return {color: "#55AEFA"};}
-				});
-			}
-
-			const drawData = that.props.formData[geometryField] && that.props.formData[geometryField].type ? 
-				{ featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: that.props.formData[geometryField]}]} }:
-				undefined;
-
-			if (unitData && drawData) drawData.getFeatureStyle = unitData.getFeatureStyle;
-
-			that.setState({
-				modalMap: {
-					...mapOptions,
-					data,
-					draw: {
-						...mapOptions.draw,
-						featureCollection: undefined,
-						...drawData,
-						marker: true,
-						polyline: false,
-						rectangle: false,
-						polygon: false,
-						circle: false,
-						onChange: events => {
-							for (let event of events) {
-								const {type} = event;
-								switch (type) {
-								case "create":
-									that.props.onChange(update(
-										that.props.formData,
-										{$merge: {[geometryField]: event.feature.geometry}}
-									));
-									close();
-									break;
-								case "delete":
-									that.props.onChange(update(
-										that.props.formData,
-										{$merge: {[geometryField]: getDefaultFormState(that.props.schema.properties[geometryField], undefined, that.props.registry.definitions)}}
-									));
-									break;
-								case "edit":
-									that.props.onChange(update(
-										that.props.formData,
-										{$merge: {[geometryField]: event.features[0].geometry}}
-									));
-								}
-							}
-						},
-					},
-					controls: {
-						...mapOptions.controls,
-						draw: {
-							...(mapOptions.controls.draw || {}),
-							clear: false,
-							delete: false
-						}
-					},
-					onComponentDidMount: (map) => {
-						modalMap = map;
-						triggerLayer = modalMap.triggerDrawing("marker");
-						const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
-						if (layer) {
-							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-							modalMap.setLayerStyle(layer, {opacity: 0.7});
-							map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
-						} else {
-							const {group: drawLayerGroup} = modalMap.getDraw();
-							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
-							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
-						}
-					},
-					center: hasCoordinates ? that.props.formData[geometryField].coordinates.slice(0).reverse() : mapOptions.center,
-					zoom: hasCoordinates ? 14 : mapOptions.zoom
-				}
-			});
-
-			function close() {
-				if (triggerLayer) triggerLayer.disable();
-				that.setState({modalMap: undefined});
-			}
-		}
-
-		onEntered = () => {
-			const {that} = this.props;
-			const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
-			if (!mapContext) return;
-
-			const {map} = mapContext;
-			let mapOptions = {};
-			if (map) {
-				const {rootElem, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
-				mapOptions = _mapOptions;
-			}
-
-			const geometryField = this.getGeometryField();
-			const geometry = that.props.formData[geometryField];
-
-			that.setState({
-				miniMap: {
-					...mapOptions,
-					draw: false,
-					controls: false,
-					zoom: 8,
-					center: geometry.coordinates.slice(0).reverse(),
-					data: [
-						...(map && map.getDraw() ? [{
-							...map.getDraw(),
-							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
-						}] : []),
-						...(map && map.data && map.data[0] ? [{
-							...map.data[0],
-							getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
-						}] : []),
-						{
-							geoData: geometry,
-							getFeatureStyle: () => {return {color: "#75CEFA"};}
-						}
-					]
-				}
-			});
-		};
-
-
-		render ()  {
-			const {that, settings: {glyph, label}} = this.props;
-			const id = that.props.idSchema.$id;
-
-			const hasCoordinates = this.hasCoordinates();
-
-			const button = (
-				<GlyphButton
-					id={`${that.props.idSchema.$id}-location`}
-					bsStyle={hasCoordinates ? "primary" : "default"}
-					onMouseEnter={this.onMouseEnter}
-					onMouseLeave={this.onMouseLeave}
-					glyph={glyph}
-					onClick={this.onClick} />
-			);
-
-			const {translations} = that.props.formContext;
-			const overlay = hasCoordinates ? (
-				<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-					<Map {...that.state.miniMap} hidden={!that.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
-				</Popover>
-			) : (
-				<Tooltip id={`${id}-location-peeker`}>{label}</Tooltip>
-			);
-
-			return (
-				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 
-				                overlay={overlay}
-				                placement="left"
-				                onEntered={hasCoordinates ? this.onEntered : undefined}>
-					{button}
-				</OverlayTrigger>
-			);
-		}
 	}
 };
 
@@ -350,34 +118,7 @@ export default class ScopeField extends Component {
 			addButton(this.modal);
 		}
 
-		if (this.state.modalMap) {
-			addButton(
-				<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={this.onHide} keyboard={false} onKeyDown={this.onModalMapKeyDown}>
-					<Modal.Header closeButton={true}>
-						<Modal.Title>{translations.SetLocationToUnit(this.props.formData[taxonField])}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<Map {...this.state.modalMap} singleton={true} formContext={this.props.formContext} ref={this.setMapRef} bodyAsDialogRoot={false} />
-					</Modal.Body>
-				</Modal>
-			);
-		}
-
 		return <SchemaField {...this.props} {...this.state} uiSchema={uiSchema} />;
-	}
-
-	onHide = () => {
-		this.setState({modalMap: undefined});
-	};
-
-	onModalMapKeyDown = (e) => {
-		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e)) {
-			this.onHide();
-		}
-	}
-
-	setMapRef = (elem) => {
-		this.modalMapRef = elem;
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -449,7 +190,7 @@ export default class ScopeField extends Component {
 		let defaultFields = (state && state.defaultFields) ? {...state.defaultFields} : {};
 
 		const options = getUiOptions(uiSchema);
-		let {fields = [], definitions, glyphFields = []} = options;
+		let {fields = [], definitions, glyphFields = [], geometryField = "unitGathering_geometry", taxonField} = options;
 		let generatedUiSchema = getInnerUiSchema(uiSchema);
 
 		let fieldsToShow = {};
@@ -458,7 +199,12 @@ export default class ScopeField extends Component {
 			fieldsToShow[field] = schema.properties[field];
 		});
 		
-		glyphFields.reduce((additionalFields, {show, open}) => {
+		let hasSetLocation = false;
+
+		glyphFields.reduce((additionalFields, {show, open, fn}) => {
+			if (fn === "setLocation") {
+				hasSetLocation = true;
+			}
 			if (!(show in additionalFields) && show && open) {
 				additionalFields[show] = open;
 			}
@@ -559,6 +305,26 @@ export default class ScopeField extends Component {
 			if (!generatedUiSchema["ui:order"].includes("*")) {
 				generatedUiSchema["ui:order"] = [...generatedUiSchema["ui:order"], "*"];
 			}
+		}
+
+		if (hasSetLocation) {
+			console.warn("ScopeField's glyphField fn 'setLocation' is deprecated and will be removed in the future. The functionality is separated to a new component function 'LocationChooserField', use it instead.");
+			const locationFn = {
+				"ui:field": "LocationChooserField",
+				"ui:options": {
+					geometryField,
+					taxonField
+				}
+			};
+			const uiFunctions = generatedUiSchema["ui:functions"]
+				? isObject(generatedUiSchema["ui:functions"])
+					? [generatedUiSchema["ui:functions"], locationFn]
+					: [...generatedUiSchema["ui:functions"], locationFn]
+				: [locationFn];
+			generatedUiSchema = {
+				...generatedUiSchema,
+				"ui:functions": uiFunctions
+			};
 		}
 
 		return {
@@ -713,10 +479,10 @@ export default class ScopeField extends Component {
 		const {idSchema} = this.props;
 
 		return glyphFields ?
-			glyphFields.map(settings => {
-				const {glyph, label} = settings;
-				if (settings.show) {
-					const property = settings.show;
+			glyphFields.filter(settings => !settings.fn || settings.fn !== "setLocation").map(settings => {
+				const {glyph, label, show} = settings;
+				if (show) {
+					const property = show;
 					const isIncluded = this.propertyIsIncluded(property);
 					const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
 
@@ -731,9 +497,6 @@ export default class ScopeField extends Component {
 							/>
 						</OverlayTrigger>
 					);
-				} else if (settings.fn) {
-					const Component = buttonSettings[settings.fn];
-					return <Component key={settings.fn} that={this} settings={settings} />;
 				}
 			}) : null;
 	}
