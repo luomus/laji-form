@@ -14,7 +14,7 @@ import { TagInputComponent } from "./TagArrayField";
  * Compatible only with unit array.
  */
 @BaseComponent
-export default class NamedPlaceChooserField extends Component {
+export default class UnitListShorthandArrayField extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
@@ -22,7 +22,7 @@ export default class NamedPlaceChooserField extends Component {
 		formData: PropTypes.array.isRequired
 	}
 
-	getStateFromProps() {
+	getStateFromProps(props) {
 		const buttonDefinition = {
 			fn: this.onButtonClick,
 			fnName: "addUnitList",
@@ -31,7 +31,7 @@ export default class NamedPlaceChooserField extends Component {
 			id: this.props.idSchema.$id
 		};
 
-		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
+		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const options = getUiOptions(innerUiSchema);
 		const uiSchema = {
 			...innerUiSchema,
