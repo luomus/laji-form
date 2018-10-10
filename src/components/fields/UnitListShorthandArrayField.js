@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
 import { Button } from "../components";
 import { Modal } from "react-bootstrap";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { TagInputComponent } from "./TagArrayField";
+
 
 /**
  * Compatible only with unit array.
@@ -71,7 +72,12 @@ export default class NamedPlaceChooserField extends Component {
 				unit = bringRemoteFormData(unit, this.props.formContext);
 				return unit;
 			});
-			this.props.onChange([...this.props.formData, ...units]);
+			const formData = this.props.formData;
+			const last = formData[formData.length - 1];
+			if (isDefaultData(last, this.props.schema.items, this.props.registry.definitions)) {
+				formData.pop();
+			}
+			this.props.onChange([...formData, ...units]);
 
 			nonMatchingCount
 				? notifier.warning(`${translations.UnitListShorthandWarning} ${nonMatchingCount}`)
