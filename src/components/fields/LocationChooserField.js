@@ -137,24 +137,21 @@ class LocationButton extends Component {
 
 		if (unitData && drawData) drawData.getFeatureStyle = unitData.getFeatureStyle;
 
-		const mapDrawOptions = that.props.uiSchema["ui:options"].mapDrawOptions;
+		const _mapOptions = that.props.uiSchema["ui:options"].mapOptions;
 		let marker = true;
-		let polyline = false;
-		let rectangle = false;
-		let polygon = false;
-		let circle = false;
+		let polyline, rectangle, polygon, circle = false;
 
-		if (mapDrawOptions) {
-			marker = mapDrawOptions.hasOwnProperty('marker') ? mapDrawOptions.marker : true;
-			polyline = mapDrawOptions.hasOwnProperty('polyline') ? mapDrawOptions.polyline : false;
-			rectangle = mapDrawOptions.hasOwnProperty('rectangle') ? mapDrawOptions.rectangle : false;
-			polygon = mapDrawOptions.hasOwnProperty('polygon') ? mapDrawOptions.polygon : false;
-			circle = mapDrawOptions.hasOwnProperty('circle') ? mapDrawOptions.circle : false;
+		if (_mapOptions) {
+			marker = _mapOptions.hasOwnProperty("marker") ? _mapOptions.marker : true;
+			polyline = _mapOptions.hasOwnProperty("polyline") ? _mapOptions.polyline : false;
+			rectangle = _mapOptions.hasOwnProperty("rectangle") ? _mapOptions.rectangle : false;
+			polygon = _mapOptions.hasOwnProperty("polygon") ? _mapOptions.polygon : false;
+			circle = _mapOptions.hasOwnProperty("circle") ? _mapOptions.circle : false;
 		}
 
 		let preselectMarker = true;
 
-		if (that.props.uiSchema["ui:options"].hasOwnProperty('preselectMarker')) {
+		if (that.props.uiSchema["ui:options"].hasOwnProperty("preselectMarker")) {
 			preselectMarker = that.props.uiSchema["ui:options"].preselectMarker;
 		}
 
@@ -166,11 +163,11 @@ class LocationButton extends Component {
 					...mapOptions.draw,
 					featureCollection: undefined,
 					...drawData,
-					marker: marker,
-					polyline: polyline,
-					rectangle: rectangle,
-					polygon: polygon,
-					circle: circle,
+					marker,
+					polyline,
+					rectangle,
+					polygon,
+					circle,
 					onChange: events => {
 						for (let event of events) {
 							const {type} = event;
@@ -207,18 +204,19 @@ class LocationButton extends Component {
 				},
 				onComponentDidMount: (map) => {
 					modalMap = map;
-					if (preselectMarker) {
-						triggerLayer = modalMap.triggerDrawing("marker");
-						const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
-						if (layer) {
-							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-							modalMap.setLayerStyle(layer, {opacity: 0.7});
-							map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
-						} else {
-							const {group: drawLayerGroup} = modalMap.getDraw();
-							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
-							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
-						}
+					if (!preselectMarker) {
+						return;
+					}
+					triggerLayer = modalMap.triggerDrawing("marker");
+					const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
+					if (layer) {
+						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
+						modalMap.setLayerStyle(layer, {opacity: 0.7});
+						map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
+					} else {
+						const {group: drawLayerGroup} = modalMap.getDraw();
+						const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
+						if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 					}
 				},
 				center: hasCoordinates ? that.props.formData[geometryField].coordinates.slice(0).reverse() : mapOptions.center,
