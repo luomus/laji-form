@@ -26,7 +26,7 @@ const query = getJsonFromUrl();
 
 const log = (type) => console.info.bind(console, type);
 
-let lang = "fi";
+let lang = query.lang || "fi";
 
 const apiClient = new ApiClientImplementation(
 	"https://apitest.laji.fi/v0",
