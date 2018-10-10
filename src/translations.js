@@ -581,7 +581,7 @@
 	},
 	addUnitList: {
 		fi: "Lisää lajilistalta",
-		en: "Add from species lsit",
+		en: "Add from species list",
 		sv: "Lägg till från artlistan"
 	},
 	unitListShorthandHelp: {
