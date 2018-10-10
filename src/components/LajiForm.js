@@ -533,12 +533,14 @@ export default class LajiForm extends Component {
 	}
 
 	onSubmit = (...props) => {
+		this.popBlockingLoader();
 		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
 		this.propagateSubmit = true;
 		this.validationSettings.ignoreWarnings = false;
 	}
 
 	onError = () => {
+		this.popBlockingLoader();
 		if (this.propagateSubmit) this._context.errorList.expand();
 		this.propagateSubmit = true;
 		this.validationSettings.ignoreWarnings = false;
@@ -550,6 +552,7 @@ export default class LajiForm extends Component {
 	}
 
 	submit = (propagate = true, ignoreWarnings = false) => {
+		this.pushBlockingLoader();
 		this.validateAll = true;
 		this.propagateSubmit = propagate;
 		this.validationSettings.ignoreWarnings = ignoreWarnings;
