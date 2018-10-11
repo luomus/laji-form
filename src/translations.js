@@ -609,4 +609,9 @@
 		en: "Set location",
 		sv: "Ange platsen"
 	},
+	tooManyShapes: {
+		fi: "Liian monta kuviota. Maksimi: ",
+		en: "Too many shapes. Maximum: ",
+		sv: "???"
+	}
 };
