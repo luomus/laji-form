@@ -111,6 +111,7 @@ id            | -       | Form id to use. If empty, `playground/schemas.json` wi
 local         | `false` | Use local schemas under `forms/` instead of fetching from apitest.laji.fi.
 localFormData | `false` | Use local formData under `forms/${id}.formData.json` instead of form's `prepopulatedDocument`.
 settings      | `true`  | Use local settings defined in `playground/schemas`.
+lang          | `fi`    | Language of the form. Doesn't affect local forms.
 
 ### Examples ###
 

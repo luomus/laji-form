@@ -2,18 +2,19 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
 import { Button } from "../components";
 import { Modal } from "react-bootstrap";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { TagInputComponent } from "./TagArrayField";
 
+
 /**
  * Compatible only with unit array.
  */
 @BaseComponent
-export default class NamedPlaceChooserField extends Component {
+export default class UnitListShorthandArrayField extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
@@ -21,7 +22,7 @@ export default class NamedPlaceChooserField extends Component {
 		formData: PropTypes.array.isRequired
 	}
 
-	getStateFromProps() {
+	getStateFromProps(props) {
 		const buttonDefinition = {
 			fn: this.onButtonClick,
 			fnName: "addUnitList",
@@ -30,7 +31,7 @@ export default class NamedPlaceChooserField extends Component {
 			id: this.props.idSchema.$id
 		};
 
-		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
+		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const options = getUiOptions(innerUiSchema);
 		const uiSchema = {
 			...innerUiSchema,
@@ -71,7 +72,12 @@ export default class NamedPlaceChooserField extends Component {
 				unit = bringRemoteFormData(unit, this.props.formContext);
 				return unit;
 			});
-			this.props.onChange([...this.props.formData, ...units]);
+			const formData = this.props.formData;
+			const last = formData[formData.length - 1];
+			if (isDefaultData(last, this.props.schema.items, this.props.registry.definitions)) {
+				formData.pop();
+			}
+			this.props.onChange([...formData, ...units]);
 
 			nonMatchingCount
 				? notifier.warning(`${translations.UnitListShorthandWarning} ${nonMatchingCount}`)
