@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { Modal, OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
 import update from "immutability-helper";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { Alert } from "react-bootstrap";
 import { GlyphButton } from "../components";
 import Context from "../../Context";
 import { hasData, getUiOptions, getInnerUiSchema } from "../../utils";
@@ -137,25 +137,29 @@ class LocationButton extends Component {
 
 		if (unitData && drawData) drawData.getFeatureStyle = unitData.getFeatureStyle;
 
-		const mapDrawOptions = that.props.uiSchema["ui:options"].mapDrawOptions;
-		let marker = true;
-		let polyline = false;
-		let rectangle = false;
-		let polygon = false;
-		let circle = false;
+		const uiOptions = that.props.uiSchema["ui:options"];
 
-		if (mapDrawOptions) {
-			marker = mapDrawOptions.hasOwnProperty('marker') ? mapDrawOptions.marker : true;
-			polyline = mapDrawOptions.hasOwnProperty('polyline') ? mapDrawOptions.polyline : false;
-			rectangle = mapDrawOptions.hasOwnProperty('rectangle') ? mapDrawOptions.rectangle : false;
-			polygon = mapDrawOptions.hasOwnProperty('polygon') ? mapDrawOptions.polygon : false;
-			circle = mapDrawOptions.hasOwnProperty('circle') ? mapDrawOptions.circle : false;
+		const _mapOptions = uiOptions.mapOptions;
+		let marker = true;
+		let polyline, rectangle, polygon, circle = false;
+
+		if (_mapOptions) {
+			marker = _mapOptions.hasOwnProperty("marker") ? _mapOptions.marker : true;
+			polyline = _mapOptions.hasOwnProperty("polyline") ? _mapOptions.polyline : false;
+			rectangle = _mapOptions.hasOwnProperty("rectangle") ? _mapOptions.rectangle : false;
+			polygon = _mapOptions.hasOwnProperty("polygon") ? _mapOptions.polygon : false;
+			circle = _mapOptions.hasOwnProperty("circle") ? _mapOptions.circle : false;
 		}
 
 		let preselectMarker = true;
 
-		if (that.props.uiSchema["ui:options"].hasOwnProperty('preselectMarker')) {
+		if (uiOptions.hasOwnProperty("preselectMarker")) {
 			preselectMarker = that.props.uiSchema["ui:options"].preselectMarker;
+		}
+
+		let maxShapes = 1;
+		if (uiOptions.maxShapes) {
+			maxShapes = uiOptions.maxShapes;
 		}
 
 		this.setState({
@@ -166,33 +170,54 @@ class LocationButton extends Component {
 					...mapOptions.draw,
 					featureCollection: undefined,
 					...drawData,
-					marker: marker,
-					polyline: polyline,
-					rectangle: rectangle,
-					polygon: polygon,
-					circle: circle,
+					marker,
+					polyline,
+					rectangle,
+					polygon,
+					circle,
 					onChange: events => {
 						for (let event of events) {
 							const {type} = event;
+							const geometryRef = that.props.formData[geometryField];
+
 							switch (type) {
 							case "create":
-								that.props.onChange(update(
-									that.props.formData,
-									{$merge: {[geometryField]: event.feature.geometry}}
-								));
-								close();
+								if(geometryRef.type && maxShapes > 1) {
+									if (geometryRef.geometries.length >= maxShapes) {
+										this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
+										return;
+									}
+									that.props.onChange(update(
+										that.props.formData,
+										{[geometryField]: {geometries: {$push: [{...event.feature.geometry}]}}}
+									));	
+								} else {
+									that.props.onChange(update(
+										that.props.formData,
+										{$merge: {[geometryField]: {type: "GeometryCollection", geometries: [{...event.feature.geometry}]}}}
+									));
+								}
+								if (maxShapes === 1) close();
 								break;
 							case "delete":
 								that.props.onChange(update(
 									that.props.formData,
-									{$merge: {[geometryField]: getDefaultFormState(that.props.schema.properties[geometryField], undefined, that.props.registry.definitions)}}
+									{[geometryField]: {geometries: {$splice: [[event.idxs[0], 1]]}}}	
 								));
 								break;
 							case "edit":
-								that.props.onChange(update(
-									that.props.formData,
-									{$merge: {[geometryField]: event.features[0].geometry}}
-								));
+								var index = Object.keys(event.features)[0];
+								if (index < maxShapes) {
+									that.props.onChange(update(
+										that.props.formData,
+										{[geometryField]: {geometries: {$splice: [[index, 1, event.features[index].geometry]]}}}
+									));
+								}
+							}
+							if ((geometryRef.geometries
+								&& geometryRef.geometries.length <= maxShapes
+								&& type !== "edit")) {
+								this.setState({shapeAlert: undefined});
 							}
 						}
 					},
@@ -207,21 +232,22 @@ class LocationButton extends Component {
 				},
 				onComponentDidMount: (map) => {
 					modalMap = map;
-					if (preselectMarker) {
-						triggerLayer = modalMap.triggerDrawing("marker");
-						const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
-						if (layer) {
-							layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-							modalMap.setLayerStyle(layer, {opacity: 0.7});
-							map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
-						} else {
-							const {group: drawLayerGroup} = modalMap.getDraw();
-							const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
-							if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
-						}
+					if (!preselectMarker) {
+						return;
+					}
+					triggerLayer = modalMap.triggerDrawing("marker");
+					const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
+					if (layer) {
+						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
+						modalMap.setLayerStyle(layer, {opacity: 0.7});
+						map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
+					} else {
+						const {group: drawLayerGroup} = modalMap.getDraw();
+						const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
+						if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 					}
 				},
-				center: hasCoordinates ? that.props.formData[geometryField].coordinates.slice(0).reverse() : mapOptions.center,
+				center: hasCoordinates ? that.props.formData[geometryField].geometries[0].coordinates.slice(0).reverse() : mapOptions.center,
 				zoom: hasCoordinates ? 14 : mapOptions.zoom
 			}
 		});
@@ -254,7 +280,7 @@ class LocationButton extends Component {
 				draw: false,
 				controls: false,
 				zoom: 8,
-				center: geometry.coordinates.slice(0).reverse(),
+				center: geometry.geometries[0].coordinates.slice(0).reverse(),
 				data: [
 					...(map && map.getDraw() ? [{
 						...map.getDraw(),
@@ -289,6 +315,7 @@ class LocationButton extends Component {
 
 	render ()  {
 		const {that, glyph = "map-marker", label} = this.props;
+		const {shapeAlert} = this.state;
 		const id = that.props.idSchema.$id;
 
 		const hasCoordinates = this.hasCoordinates();
@@ -327,6 +354,7 @@ class LocationButton extends Component {
 								<Modal.Title>{translations.SetLocationToUnit(that.props.formData[taxonField])}</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
+								{shapeAlert && <Alert bsStyle="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}
 								<Map {...this.state.modalMap} singleton={true} formContext={that.props.formContext} ref={this.setMapRef} bodyAsDialogRoot={false} />
 							</Modal.Body>
 						</Modal>
