@@ -1,1 +1,2176 @@
-{"id":"JX.134338","creator":"MA.279","gatheringEvent":{"legPublic":true,"id":"JX.134338#164","@type":"MZ.gatheringEvent","leg":["MA.279"],"dateBegin":"2018-09-11","timeStart":"12:01","timeEnd":"12:02"},"formID":"MHL.3","gatherings":[{"geometry":{"type":"GeometryCollection","geometries":[{"type":"LineString","coordinates":[[19.591541,60.180732],[19.590649,60.180709],[19.589509,60.180972],[19.588994,60.181359],[19.588246,60.181638],[19.588112,60.181715],[19.587348,60.181773],[19.588863,60.181946],[19.589295,60.18229],[19.589052,60.182432],[19.588201,60.182684],[19.587798,60.182902],[19.5899,60.183487],[19.590595,60.183808],[19.59032,60.184093],[19.590511,60.184553],[19.590257,60.184955],[19.589842,60.185448],[19.589058,60.185963],[19.588632,60.186115],[19.58756,60.185986],[19.587228,60.186388],[19.586974,60.186803],[19.586083,60.186755],[19.585092,60.186613],[19.584357,60.186605],[19.583273,60.186764],[19.582287,60.187106],[19.581885,60.187285],[19.581213,60.187644],[19.580541,60.188003],[19.579902,60.188206],[19.579517,60.188607],[19.57965,60.189184],[19.579789,60.189604]]},{"type":"LineString","coordinates":[[19.564862,60.213296],[19.565012,60.212277],[19.566051,60.210144],[19.567786,60.20773],[19.569515,60.205421],[19.571039,60.203005],[19.572462,60.198077],[19.573423,60.194086],[19.573524,60.192989],[19.574202,60.191872],[19.575396,60.190995],[19.576629,60.190407],[19.580083,60.189502],[19.583109,60.18875],[19.584997,60.188822],[19.585942,60.188832],[19.587473,60.18864],[19.588908,60.188236],[19.589554,60.187877],[19.590113,60.187098],[19.590735,60.186059],[19.590257,60.184955],[19.590755,60.184359],[19.591413,60.183712],[19.593179,60.182946],[19.594736,60.182152],[19.598691,60.18052],[19.599695,60.180374],[19.599345,60.179952],[19.598934,60.179738],[19.599501,60.179979],[19.599695,60.180374],[19.598691,60.18052],[19.594736,60.182152],[19.594123,60.181753],[19.591885,60.181285],[19.591541,60.180732],[19.591935,60.180108],[19.5925,60.179173],[19.591597,60.178196],[19.592912,60.176902],[19.593484,60.175809],[19.592726,60.175121],[19.592649,60.174467],[19.592215,60.173573],[19.591378,60.172282],[19.590014,60.171039],[19.589674,60.170381],[19.590177,60.16968],[19.590469,60.168977],[19.589927,60.168161],[19.590008,60.167482],[19.590108,60.166384],[19.590621,60.165448],[19.590407,60.164321],[19.591124,60.163492],[19.591891,60.162741],[19.593124,60.162127],[19.593333,60.160926],[19.593158,60.160113],[19.593895,60.15884],[19.593626,60.157764],[19.594336,60.157118],[19.595247,60.156657],[19.596244,60.156667],[19.59698,60.156623],[19.597776,60.156422],[19.598529,60.155986],[19.598553,60.15541],[19.599415,60.154896],[19.600327,60.154409],[19.602063,60.154323],[19.60318,60.153942],[19.603676,60.153398],[19.604334,60.152725],[19.604115,60.151703],[19.603314,60.150805],[19.603232,60.151484],[19.603442,60.152716],[19.602881,60.153573],[19.602345,60.153855],[19.600916,60.154154],[19.599953,60.154588],[19.599415,60.154896],[19.594501,60.154478],[19.594151,60.154056],[19.593826,60.153085],[19.592924,60.152081],[19.592283,60.151133],[19.592778,60.150589],[19.591358,60.149449],[19.589328,60.149088],[19.588407,60.148529],[19.585684,60.148421],[19.584407,60.147623],[19.583067,60.147059],[19.580786,60.146433],[19.579179,60.145998],[19.577651,60.144935],[19.57663,60.144296],[19.576021,60.143819],[19.575127,60.143888],[19.574683,60.144432],[19.574299,60.14482],[19.574229,60.145238],[19.573588,60.145493],[19.572755,60.145353],[19.571679,60.144766],[19.571003,60.144628],[19.57073,60.144887],[19.570286,60.145431],[19.56897,60.145548],[19.568149,60.14635],[19.567672,60.146449],[19.567319,60.146131],[19.566862,60.145786],[19.566419,60.146305],[19.565257,60.147704],[19.562797,60.148776],[19.561104,60.149098],[19.561079,60.149673],[19.560839,60.150377],[19.559398,60.150936],[19.556822,60.151039],[19.553849,60.150667],[19.552943,60.149794],[19.551654,60.149283],[19.550051,60.148742],[19.549184,60.148183],[19.549258,60.14889],[19.548631,60.148831],[19.547675,60.147905],[19.547207,60.146618],[19.546504,60.147108],[19.545453,60.147148],[19.545005,60.147797],[19.545113,60.148897],[19.544732,60.149207],[19.543634,60.149142],[19.543139,60.148457],[19.542674,60.148295],[19.541951,60.149228],[19.542137,60.14978],[19.541219,60.150371],[19.540222,60.15036],[19.539887,60.150827],[19.538807,60.151521],[19.537936,60.152218],[19.537049,60.153307],[19.535759,60.155176],[19.535705,60.156378],[19.534731,60.158224],[19.534056,60.159237],[19.533529,60.16046],[19.533448,60.16229],[19.533612,60.164489],[19.53269,60.165159],[19.530116,60.165209],[19.528658,60.164957],[19.528175,60.165187],[19.52778,60.165811],[19.527173,60.166458],[19.526324,60.166684],[19.526356,60.167129],[19.526273,60.167808],[19.525454,60.168531],[19.525386,60.16887],[19.526098,60.169375],[19.525821,60.169712],[19.523879,60.169691],[19.523102,60.169473],[19.522505,60.168734],[19.521768,60.168778],[19.521594,60.169142],[19.521207,60.169582],[19.520406,60.169887],[19.519856,60.170456],[19.518695,60.170574],[19.51713,60.171524],[19.519715,60.17124],[19.521206,60.170785],[19.522748,60.170332],[19.52426,60.170558],[19.523807,60.171311],[19.524262,60.171683],[19.524717,60.17208],[19.523789,60.17288],[19.524983,60.173182],[19.52361,60.173349],[19.522591,60.173835],[19.520807,60.173815],[19.522696,60.173836],[19.52361,60.173349],[19.524983,60.173182],[19.526202,60.172907],[19.528353,60.17178],[19.532527,60.17235],[19.528295,60.171885],[19.528532,60.171285]]}]},"units":[{"unitType":[],"individualCount":10,"identifications":[{"taxonID":"MX.25860","taxonVerbatim":"Silkkiuikku","id":"JX.134338#83","@type":"MY.identification"}],"unitFact":{"individualCountBiotopeC":2,"individualCountBiotopeD":2,"individualCountBiotopeE":2,"individualCountBiotopeG":2,"individualCountBiotopeH":2},"id":"JX.134338#2","@type":"MY.unit"},{"identifications":[{"taxonID":"MX.26277","taxonVerbatim":"Kyhmyjoutsen","id":"JX.134338#84","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#3","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26280","taxonVerbatim":"Laulujoutsen","id":"JX.134338#85","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#4","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26373","taxonVerbatim":"Sinisorsa","id":"JX.134338#86","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#5","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26415","taxonVerbatim":"Tukkasotka","id":"JX.134338#87","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#6","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26427","taxonVerbatim":"Alli","id":"JX.134338#88","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#7","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26435","taxonVerbatim":"Telkkä","id":"JX.134338#89","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#8","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26440","taxonVerbatim":"Tukkakoskelo","id":"JX.134338#90","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#9","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26442","taxonVerbatim":"Isokoskelo","id":"JX.134338#91","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#10","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26530","taxonVerbatim":"Merikotka","id":"JX.134338#92","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#11","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26647","taxonVerbatim":"Kanahaukka","id":"JX.134338#93","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#12","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26639","taxonVerbatim":"Varpushaukka","id":"JX.134338#94","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#13","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26931","taxonVerbatim":"Pyy","id":"JX.134338#95","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#14","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26921","taxonVerbatim":"Riekko","id":"JX.134338#96","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#15","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26926","taxonVerbatim":"Teeri","id":"JX.134338#97","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#16","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.26928","taxonVerbatim":"Metso","id":"JX.134338#98","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#17","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27048","taxonVerbatim":"Peltopyy","id":"JX.134338#99","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#18","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27152","taxonVerbatim":"Fasaani","id":"JX.134338#100","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#19","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27381","taxonVerbatim":"Nokikana","id":"JX.134338#101","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#20","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27774","taxonVerbatim":"Naurulokki","id":"JX.134338#102","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#21","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27748","taxonVerbatim":"Kalalokki","id":"JX.134338#103","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#22","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27750","taxonVerbatim":"Harmaalokki","id":"JX.134338#104","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#23","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27759","taxonVerbatim":"Merilokki","id":"JX.134338#105","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#24","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.200535","taxonVerbatim":"Kesykyyhky","id":"JX.134338#106","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#25","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.27960","taxonVerbatim":"Turkinkyyhky","id":"JX.134338#107","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#26","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.29008","taxonVerbatim":"Hiiripöllö","id":"JX.134338#108","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#27","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.29011","taxonVerbatim":"Varpuspöllö","id":"JX.134338#109","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#28","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.30530","taxonVerbatim":"Harmaapäätikka","id":"JX.134338#110","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#29","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.30504","taxonVerbatim":"Palokärki","id":"JX.134338#111","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#30","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.30443","taxonVerbatim":"Käpytikka","id":"JX.134338#112","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#31","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.30428","taxonVerbatim":"Pikkutikka","id":"JX.134338#113","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#32","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.30453","taxonVerbatim":"Pohjantikka","id":"JX.134338#114","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#33","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.32065","taxonVerbatim":"Kiuru","id":"JX.134338#115","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#34","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.32608","taxonVerbatim":"Tilhi","id":"JX.134338#116","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#35","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.32625","taxonVerbatim":"Koskikara","id":"JX.134338#117","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#36","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.32801","taxonVerbatim":"Punarinta","id":"JX.134338#118","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#37","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.33106","taxonVerbatim":"Mustarastas","id":"JX.134338#119","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#38","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.33117","taxonVerbatim":"Räkättirastas","id":"JX.134338#120","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#39","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.33118","taxonVerbatim":"Punakylkirastas","id":"JX.134338#121","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#40","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.33954","taxonVerbatim":"Hippiäinen","id":"JX.134338#122","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#41","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34505","taxonVerbatim":"Pyrstötiainen","id":"JX.134338#123","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#42","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34535","taxonVerbatim":"Hömötiainen","id":"JX.134338#124","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#43","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34542","taxonVerbatim":"Lapintiainen","id":"JX.134338#125","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#44","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34553","taxonVerbatim":"Töyhtötiainen","id":"JX.134338#126","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#45","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34549","taxonVerbatim":"Kuusitiainen","id":"JX.134338#127","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#46","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34574","taxonVerbatim":"Sinitiainen","id":"JX.134338#128","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#47","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34567","taxonVerbatim":"Talitiainen","id":"JX.134338#129","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#48","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34586","taxonVerbatim":"Pähkinänakkeli","id":"JX.134338#130","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#49","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.34616","taxonVerbatim":"Puukiipijä","id":"JX.134338#131","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#50","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.32570","taxonVerbatim":"Isolepinkäinen","id":"JX.134338#132","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#51","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37090","taxonVerbatim":"Närhi","id":"JX.134338#133","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#52","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37095","taxonVerbatim":"Kuukkeli","id":"JX.134338#134","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#53","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37122","taxonVerbatim":"Harakka","id":"JX.134338#135","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#54","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37135","taxonVerbatim":"Pähkinähakki","id":"JX.134338#136","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#55","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37142","taxonVerbatim":"Naakka","id":"JX.134338#137","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#56","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37156","taxonVerbatim":"Mustavaris","id":"JX.134338#138","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#57","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.73566","taxonVerbatim":"Varis","id":"JX.134338#139","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#58","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.37178","taxonVerbatim":"Korppi","id":"JX.134338#140","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#59","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36817","taxonVerbatim":"Kottarainen","id":"JX.134338#141","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#60","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36573","taxonVerbatim":"Varpunen","id":"JX.134338#142","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#61","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36589","taxonVerbatim":"Pikkuvarpunen","id":"JX.134338#143","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#62","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36237","taxonVerbatim":"Peippo","id":"JX.134338#144","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#63","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36239","taxonVerbatim":"Järripeippo","id":"JX.134338#145","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#64","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36283","taxonVerbatim":"Viherpeippo","id":"JX.134338#146","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#65","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36306","taxonVerbatim":"Tikli","id":"JX.134338#147","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#66","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36287","taxonVerbatim":"Vihervarpunen","id":"JX.134338#148","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#67","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36310","taxonVerbatim":"Hemppo","id":"JX.134338#149","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#68","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36308","taxonVerbatim":"Urpiainen","id":"JX.134338#150","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#69","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.73545","taxonVerbatim":"Tundraurpiainen","id":"JX.134338#151","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#70","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36358","taxonVerbatim":"Pikkukäpylintu","id":"JX.134338#152","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#71","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36356","taxonVerbatim":"Isokäpylintu","id":"JX.134338#153","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#72","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36355","taxonVerbatim":"Käpylintulaji","id":"JX.134338#154","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#73","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36351","taxonVerbatim":"Taviokuurna","id":"JX.134338#155","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#74","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.36366","taxonVerbatim":"Punatulkku","id":"JX.134338#156","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#75","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.35189","taxonVerbatim":"Pulmunen","id":"JX.134338#157","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#76","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.35146","taxonVerbatim":"Keltasirkku","id":"JX.134338#158","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#77","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.35182","taxonVerbatim":"Pajusirkku","id":"JX.134338#159","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#78","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.50106","taxonVerbatim":"Metsäjänis","id":"JX.134338#160","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#79","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.50386","taxonVerbatim":"Rusakko","id":"JX.134338#161","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#80","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.48089","taxonVerbatim":"Orava","id":"JX.134338#162","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#81","@type":"MY.unit","unitFact":{}},{"identifications":[{"taxonID":"MX.47507","taxonVerbatim":"Metsäkauris","id":"JX.134338#163","@type":"MY.identification"}],"unitType":[],"id":"JX.134338#82","@type":"MY.unit","unitFact":{}},{"unitType":[],"identifications":[{"taxonVerbatim":"yksi vielä"}],"unitFact":{}}],"notes":"Hyvin meni","images":[],"taxonCensus":[{"censusTaxonID":"MX.37580","taxonCensusType":"MY.taxonCensusTypeCounted"}],"id":"JX.134338#1","@type":"MY.gathering","gatheringFact":{"routeLength":17000,"routeLengthBiotopeC":1500,"routeLengthBiotopeD":500,"routeLengthBiotopeE":13700,"routeLengthBiotopeG":300,"routeLengthBiotopeH":1000,"abundanceBOMGAR":"WBC.speciesAbundanceEnum1","abundancePINENU":"WBC.speciesAbundanceEnum1","abundanceTURPIL":"WBC.speciesAbundanceEnum1","cloudAndRain":"WBC.cloudAndRainEnum1","descriptionBiotopeF":"vesistöt","iceCover":"WBC.iceCoverEnum1","observerCount":1,"pineConesAtCensus":"WBC.berriesAndConesEnum3","ACAFLAonBirch":1,"CARSPIonAlder":2,"LOXIAonSpruce":3,"snowAndIceOnTrees":"WBC.snowAndIceOnTreesEnum2","snowCover":"WBC.snowCoverEnum0","sorbusBerriesAtCensus":"WBC.berriesAndConesEnum2","sorbusBerriesEarlyFall":"WBC.berriesAndConesEnum2","spruceConesAtCensus":"WBC.berriesAndConesEnum2","typeOfSnowCover":"WBC.typeOfSnowCoverEnum1","visibility":"WBC.visibilityEnum1","waterbodies":"WBC.waterbodiesEnum1","wayOfTravel":"WBC.wayOfTravelEnum0","wind":"WBC.windEnum1"}}],"namedPlaceID":"MNP.22139","editors":["MA.279"],"publicityRestrictions":"MZ.publicityRestrictionsPrivate","sourceID":"KE.389","collectionID":"HR.39","editor":"MA.279","dateEdited":"2018-09-11T12:26:39+03:00","dateCreated":"2018-09-11T11:53:30+03:00","@type":"MY.document","@context":"http://schema.laji.fi/context/document.jsonld","_hasChanges":true}
+{
+    "@context": "http://schema.laji.fi/context/document.jsonld",
+    "@type": "MY.document",
+    "_hasChanges": true,
+    "collectionID": "HR.39",
+    "creator": "MA.279",
+    "dateCreated": "2018-09-11T11:53:30+03:00",
+    "dateEdited": "2018-09-11T12:26:39+03:00",
+    "editor": "MA.279",
+    "editors": [
+        "MA.279"
+    ],
+	"id": "kek",
+    "formID": "MHL.3",
+    "gatheringEvent": {
+        "@type": "MZ.gatheringEvent",
+        "dateBegin": "2018-09-11",
+        "id": "JX.134338#164",
+        "leg": [
+            "MA.279"
+        ],
+        "legPublic": true,
+        "timeEnd": "12:02",
+        "timeStart": "12:01"
+    },
+    "gatherings": [
+        {
+            "@type": "MY.gathering",
+            "gatheringFact": {
+                "ACAFLAonBirch": 1,
+                "CARSPIonAlder": 2,
+                "LOXIAonSpruce": 3,
+                "abundanceBOMGAR": "WBC.speciesAbundanceEnum1",
+                "abundancePINENU": "WBC.speciesAbundanceEnum1",
+                "abundanceTURPIL": "WBC.speciesAbundanceEnum1",
+                "cloudAndRain": "WBC.cloudAndRainEnum1",
+                "descriptionBiotopeF": "vesist\u00f6t",
+                "iceCover": "WBC.iceCoverEnum1",
+                "observerCount": 1,
+                "pineConesAtCensus": "WBC.berriesAndConesEnum3",
+                "routeLength": 17000,
+                "routeLengthBiotopeC": 1500,
+                "routeLengthBiotopeD": 500,
+                "routeLengthBiotopeE": 13700,
+                "routeLengthBiotopeG": 300,
+                "routeLengthBiotopeH": 1000,
+                "snowAndIceOnTrees": "WBC.snowAndIceOnTreesEnum2",
+                "snowCover": "WBC.snowCoverEnum0",
+                "sorbusBerriesAtCensus": "WBC.berriesAndConesEnum2",
+                "sorbusBerriesEarlyFall": "WBC.berriesAndConesEnum2",
+                "spruceConesAtCensus": "WBC.berriesAndConesEnum2",
+                "typeOfSnowCover": "WBC.typeOfSnowCoverEnum1",
+                "visibility": "WBC.visibilityEnum1",
+                "waterbodies": "WBC.waterbodiesEnum1",
+                "wayOfTravel": "WBC.wayOfTravelEnum0",
+                "wind": "WBC.windEnum1"
+            },
+            "geometry": {
+                "geometries": [
+                    {
+                        "coordinates": [
+                            [
+                                19.591541,
+                                60.180732
+                            ],
+                            [
+                                19.590649,
+                                60.180709
+                            ],
+                            [
+                                19.589509,
+                                60.180972
+                            ],
+                            [
+                                19.588994,
+                                60.181359
+                            ],
+                            [
+                                19.588246,
+                                60.181638
+                            ],
+                            [
+                                19.588112,
+                                60.181715
+                            ],
+                            [
+                                19.587348,
+                                60.181773
+                            ],
+                            [
+                                19.588863,
+                                60.181946
+                            ],
+                            [
+                                19.589295,
+                                60.18229
+                            ],
+                            [
+                                19.589052,
+                                60.182432
+                            ],
+                            [
+                                19.588201,
+                                60.182684
+                            ],
+                            [
+                                19.587798,
+                                60.182902
+                            ],
+                            [
+                                19.5899,
+                                60.183487
+                            ],
+                            [
+                                19.590595,
+                                60.183808
+                            ],
+                            [
+                                19.59032,
+                                60.184093
+                            ],
+                            [
+                                19.590511,
+                                60.184553
+                            ],
+                            [
+                                19.590257,
+                                60.184955
+                            ],
+                            [
+                                19.589842,
+                                60.185448
+                            ],
+                            [
+                                19.589058,
+                                60.185963
+                            ],
+                            [
+                                19.588632,
+                                60.186115
+                            ],
+                            [
+                                19.58756,
+                                60.185986
+                            ],
+                            [
+                                19.587228,
+                                60.186388
+                            ],
+                            [
+                                19.586974,
+                                60.186803
+                            ],
+                            [
+                                19.586083,
+                                60.186755
+                            ],
+                            [
+                                19.585092,
+                                60.186613
+                            ],
+                            [
+                                19.584357,
+                                60.186605
+                            ],
+                            [
+                                19.583273,
+                                60.186764
+                            ],
+                            [
+                                19.582287,
+                                60.187106
+                            ],
+                            [
+                                19.581885,
+                                60.187285
+                            ],
+                            [
+                                19.581213,
+                                60.187644
+                            ],
+                            [
+                                19.580541,
+                                60.188003
+                            ],
+                            [
+                                19.579902,
+                                60.188206
+                            ],
+                            [
+                                19.579517,
+                                60.188607
+                            ],
+                            [
+                                19.57965,
+                                60.189184
+                            ],
+                            [
+                                19.579789,
+                                60.189604
+                            ]
+                        ],
+                        "type": "LineString"
+                    },
+                    {
+                        "coordinates": [
+                            [
+                                19.564862,
+                                60.213296
+                            ],
+                            [
+                                19.565012,
+                                60.212277
+                            ],
+                            [
+                                19.566051,
+                                60.210144
+                            ],
+                            [
+                                19.567786,
+                                60.20773
+                            ],
+                            [
+                                19.569515,
+                                60.205421
+                            ],
+                            [
+                                19.571039,
+                                60.203005
+                            ],
+                            [
+                                19.572462,
+                                60.198077
+                            ],
+                            [
+                                19.573423,
+                                60.194086
+                            ],
+                            [
+                                19.573524,
+                                60.192989
+                            ],
+                            [
+                                19.574202,
+                                60.191872
+                            ],
+                            [
+                                19.575396,
+                                60.190995
+                            ],
+                            [
+                                19.576629,
+                                60.190407
+                            ],
+                            [
+                                19.580083,
+                                60.189502
+                            ],
+                            [
+                                19.583109,
+                                60.18875
+                            ],
+                            [
+                                19.584997,
+                                60.188822
+                            ],
+                            [
+                                19.585942,
+                                60.188832
+                            ],
+                            [
+                                19.587473,
+                                60.18864
+                            ],
+                            [
+                                19.588908,
+                                60.188236
+                            ],
+                            [
+                                19.589554,
+                                60.187877
+                            ],
+                            [
+                                19.590113,
+                                60.187098
+                            ],
+                            [
+                                19.590735,
+                                60.186059
+                            ],
+                            [
+                                19.590257,
+                                60.184955
+                            ],
+                            [
+                                19.590755,
+                                60.184359
+                            ],
+                            [
+                                19.591413,
+                                60.183712
+                            ],
+                            [
+                                19.593179,
+                                60.182946
+                            ],
+                            [
+                                19.594736,
+                                60.182152
+                            ],
+                            [
+                                19.598691,
+                                60.18052
+                            ],
+                            [
+                                19.599695,
+                                60.180374
+                            ],
+                            [
+                                19.599345,
+                                60.179952
+                            ],
+                            [
+                                19.598934,
+                                60.179738
+                            ],
+                            [
+                                19.599501,
+                                60.179979
+                            ],
+                            [
+                                19.599695,
+                                60.180374
+                            ],
+                            [
+                                19.598691,
+                                60.18052
+                            ],
+                            [
+                                19.594736,
+                                60.182152
+                            ],
+                            [
+                                19.594123,
+                                60.181753
+                            ],
+                            [
+                                19.591885,
+                                60.181285
+                            ],
+                            [
+                                19.591541,
+                                60.180732
+                            ],
+                            [
+                                19.591935,
+                                60.180108
+                            ],
+                            [
+                                19.5925,
+                                60.179173
+                            ],
+                            [
+                                19.591597,
+                                60.178196
+                            ],
+                            [
+                                19.592912,
+                                60.176902
+                            ],
+                            [
+                                19.593484,
+                                60.175809
+                            ],
+                            [
+                                19.592726,
+                                60.175121
+                            ],
+                            [
+                                19.592649,
+                                60.174467
+                            ],
+                            [
+                                19.592215,
+                                60.173573
+                            ],
+                            [
+                                19.591378,
+                                60.172282
+                            ],
+                            [
+                                19.590014,
+                                60.171039
+                            ],
+                            [
+                                19.589674,
+                                60.170381
+                            ],
+                            [
+                                19.590177,
+                                60.16968
+                            ],
+                            [
+                                19.590469,
+                                60.168977
+                            ],
+                            [
+                                19.589927,
+                                60.168161
+                            ],
+                            [
+                                19.590008,
+                                60.167482
+                            ],
+                            [
+                                19.590108,
+                                60.166384
+                            ],
+                            [
+                                19.590621,
+                                60.165448
+                            ],
+                            [
+                                19.590407,
+                                60.164321
+                            ],
+                            [
+                                19.591124,
+                                60.163492
+                            ],
+                            [
+                                19.591891,
+                                60.162741
+                            ],
+                            [
+                                19.593124,
+                                60.162127
+                            ],
+                            [
+                                19.593333,
+                                60.160926
+                            ],
+                            [
+                                19.593158,
+                                60.160113
+                            ],
+                            [
+                                19.593895,
+                                60.15884
+                            ],
+                            [
+                                19.593626,
+                                60.157764
+                            ],
+                            [
+                                19.594336,
+                                60.157118
+                            ],
+                            [
+                                19.595247,
+                                60.156657
+                            ],
+                            [
+                                19.596244,
+                                60.156667
+                            ],
+                            [
+                                19.59698,
+                                60.156623
+                            ],
+                            [
+                                19.597776,
+                                60.156422
+                            ],
+                            [
+                                19.598529,
+                                60.155986
+                            ],
+                            [
+                                19.598553,
+                                60.15541
+                            ],
+                            [
+                                19.599415,
+                                60.154896
+                            ],
+                            [
+                                19.600327,
+                                60.154409
+                            ],
+                            [
+                                19.602063,
+                                60.154323
+                            ],
+                            [
+                                19.60318,
+                                60.153942
+                            ],
+                            [
+                                19.603676,
+                                60.153398
+                            ],
+                            [
+                                19.604334,
+                                60.152725
+                            ],
+                            [
+                                19.604115,
+                                60.151703
+                            ],
+                            [
+                                19.603314,
+                                60.150805
+                            ],
+                            [
+                                19.603232,
+                                60.151484
+                            ],
+                            [
+                                19.603442,
+                                60.152716
+                            ],
+                            [
+                                19.602881,
+                                60.153573
+                            ],
+                            [
+                                19.602345,
+                                60.153855
+                            ],
+                            [
+                                19.600916,
+                                60.154154
+                            ],
+                            [
+                                19.599953,
+                                60.154588
+                            ],
+                            [
+                                19.599415,
+                                60.154896
+                            ],
+                            [
+                                19.594501,
+                                60.154478
+                            ],
+                            [
+                                19.594151,
+                                60.154056
+                            ],
+                            [
+                                19.593826,
+                                60.153085
+                            ],
+                            [
+                                19.592924,
+                                60.152081
+                            ],
+                            [
+                                19.592283,
+                                60.151133
+                            ],
+                            [
+                                19.592778,
+                                60.150589
+                            ],
+                            [
+                                19.591358,
+                                60.149449
+                            ],
+                            [
+                                19.589328,
+                                60.149088
+                            ],
+                            [
+                                19.588407,
+                                60.148529
+                            ],
+                            [
+                                19.585684,
+                                60.148421
+                            ],
+                            [
+                                19.584407,
+                                60.147623
+                            ],
+                            [
+                                19.583067,
+                                60.147059
+                            ],
+                            [
+                                19.580786,
+                                60.146433
+                            ],
+                            [
+                                19.579179,
+                                60.145998
+                            ],
+                            [
+                                19.577651,
+                                60.144935
+                            ],
+                            [
+                                19.57663,
+                                60.144296
+                            ],
+                            [
+                                19.576021,
+                                60.143819
+                            ],
+                            [
+                                19.575127,
+                                60.143888
+                            ],
+                            [
+                                19.574683,
+                                60.144432
+                            ],
+                            [
+                                19.574299,
+                                60.14482
+                            ],
+                            [
+                                19.574229,
+                                60.145238
+                            ],
+                            [
+                                19.573588,
+                                60.145493
+                            ],
+                            [
+                                19.572755,
+                                60.145353
+                            ],
+                            [
+                                19.571679,
+                                60.144766
+                            ],
+                            [
+                                19.571003,
+                                60.144628
+                            ],
+                            [
+                                19.57073,
+                                60.144887
+                            ],
+                            [
+                                19.570286,
+                                60.145431
+                            ],
+                            [
+                                19.56897,
+                                60.145548
+                            ],
+                            [
+                                19.568149,
+                                60.14635
+                            ],
+                            [
+                                19.567672,
+                                60.146449
+                            ],
+                            [
+                                19.567319,
+                                60.146131
+                            ],
+                            [
+                                19.566862,
+                                60.145786
+                            ],
+                            [
+                                19.566419,
+                                60.146305
+                            ],
+                            [
+                                19.565257,
+                                60.147704
+                            ],
+                            [
+                                19.562797,
+                                60.148776
+                            ],
+                            [
+                                19.561104,
+                                60.149098
+                            ],
+                            [
+                                19.561079,
+                                60.149673
+                            ],
+                            [
+                                19.560839,
+                                60.150377
+                            ],
+                            [
+                                19.559398,
+                                60.150936
+                            ],
+                            [
+                                19.556822,
+                                60.151039
+                            ],
+                            [
+                                19.553849,
+                                60.150667
+                            ],
+                            [
+                                19.552943,
+                                60.149794
+                            ],
+                            [
+                                19.551654,
+                                60.149283
+                            ],
+                            [
+                                19.550051,
+                                60.148742
+                            ],
+                            [
+                                19.549184,
+                                60.148183
+                            ],
+                            [
+                                19.549258,
+                                60.14889
+                            ],
+                            [
+                                19.548631,
+                                60.148831
+                            ],
+                            [
+                                19.547675,
+                                60.147905
+                            ],
+                            [
+                                19.547207,
+                                60.146618
+                            ],
+                            [
+                                19.546504,
+                                60.147108
+                            ],
+                            [
+                                19.545453,
+                                60.147148
+                            ],
+                            [
+                                19.545005,
+                                60.147797
+                            ],
+                            [
+                                19.545113,
+                                60.148897
+                            ],
+                            [
+                                19.544732,
+                                60.149207
+                            ],
+                            [
+                                19.543634,
+                                60.149142
+                            ],
+                            [
+                                19.543139,
+                                60.148457
+                            ],
+                            [
+                                19.542674,
+                                60.148295
+                            ],
+                            [
+                                19.541951,
+                                60.149228
+                            ],
+                            [
+                                19.542137,
+                                60.14978
+                            ],
+                            [
+                                19.541219,
+                                60.150371
+                            ],
+                            [
+                                19.540222,
+                                60.15036
+                            ],
+                            [
+                                19.539887,
+                                60.150827
+                            ],
+                            [
+                                19.538807,
+                                60.151521
+                            ],
+                            [
+                                19.537936,
+                                60.152218
+                            ],
+                            [
+                                19.537049,
+                                60.153307
+                            ],
+                            [
+                                19.535759,
+                                60.155176
+                            ],
+                            [
+                                19.535705,
+                                60.156378
+                            ],
+                            [
+                                19.534731,
+                                60.158224
+                            ],
+                            [
+                                19.534056,
+                                60.159237
+                            ],
+                            [
+                                19.533529,
+                                60.16046
+                            ],
+                            [
+                                19.533448,
+                                60.16229
+                            ],
+                            [
+                                19.533612,
+                                60.164489
+                            ],
+                            [
+                                19.53269,
+                                60.165159
+                            ],
+                            [
+                                19.530116,
+                                60.165209
+                            ],
+                            [
+                                19.528658,
+                                60.164957
+                            ],
+                            [
+                                19.528175,
+                                60.165187
+                            ],
+                            [
+                                19.52778,
+                                60.165811
+                            ],
+                            [
+                                19.527173,
+                                60.166458
+                            ],
+                            [
+                                19.526324,
+                                60.166684
+                            ],
+                            [
+                                19.526356,
+                                60.167129
+                            ],
+                            [
+                                19.526273,
+                                60.167808
+                            ],
+                            [
+                                19.525454,
+                                60.168531
+                            ],
+                            [
+                                19.525386,
+                                60.16887
+                            ],
+                            [
+                                19.526098,
+                                60.169375
+                            ],
+                            [
+                                19.525821,
+                                60.169712
+                            ],
+                            [
+                                19.523879,
+                                60.169691
+                            ],
+                            [
+                                19.523102,
+                                60.169473
+                            ],
+                            [
+                                19.522505,
+                                60.168734
+                            ],
+                            [
+                                19.521768,
+                                60.168778
+                            ],
+                            [
+                                19.521594,
+                                60.169142
+                            ],
+                            [
+                                19.521207,
+                                60.169582
+                            ],
+                            [
+                                19.520406,
+                                60.169887
+                            ],
+                            [
+                                19.519856,
+                                60.170456
+                            ],
+                            [
+                                19.518695,
+                                60.170574
+                            ],
+                            [
+                                19.51713,
+                                60.171524
+                            ],
+                            [
+                                19.519715,
+                                60.17124
+                            ],
+                            [
+                                19.521206,
+                                60.170785
+                            ],
+                            [
+                                19.522748,
+                                60.170332
+                            ],
+                            [
+                                19.52426,
+                                60.170558
+                            ],
+                            [
+                                19.523807,
+                                60.171311
+                            ],
+                            [
+                                19.524262,
+                                60.171683
+                            ],
+                            [
+                                19.524717,
+                                60.17208
+                            ],
+                            [
+                                19.523789,
+                                60.17288
+                            ],
+                            [
+                                19.524983,
+                                60.173182
+                            ],
+                            [
+                                19.52361,
+                                60.173349
+                            ],
+                            [
+                                19.522591,
+                                60.173835
+                            ],
+                            [
+                                19.520807,
+                                60.173815
+                            ],
+                            [
+                                19.522696,
+                                60.173836
+                            ],
+                            [
+                                19.52361,
+                                60.173349
+                            ],
+                            [
+                                19.524983,
+                                60.173182
+                            ],
+                            [
+                                19.526202,
+                                60.172907
+                            ],
+                            [
+                                19.528353,
+                                60.17178
+                            ],
+                            [
+                                19.532527,
+                                60.17235
+                            ],
+                            [
+                                19.528295,
+                                60.171885
+                            ],
+                            [
+                                19.528532,
+                                60.171285
+                            ]
+                        ],
+                        "type": "LineString"
+                    }
+                ],
+                "type": "GeometryCollection"
+            },
+            "id": "JX.134338#1",
+            "images": [],
+            "notes": "Hyvin meni",
+            "taxonCensus": [
+                {
+                    "censusTaxonID": "MX.37580",
+                    "taxonCensusType": "MY.taxonCensusTypeCounted"
+                }
+            ],
+            "units": [
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#2",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#83",
+                            "taxonID": "MX.25860",
+                            "taxonVerbatim": "Silkkiuikku"
+                        }
+                    ],
+                    "individualCount": 10,
+                    "unitFact": {
+                        "individualCountBiotopeC": 2,
+                        "individualCountBiotopeD": 2,
+                        "individualCountBiotopeE": 2,
+                        "individualCountBiotopeG": 2,
+                        "individualCountBiotopeH": 2
+                    },
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#3",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#84",
+                            "taxonID": "MX.26277",
+                            "taxonVerbatim": "Kyhmyjoutsen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#4",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#85",
+                            "taxonID": "MX.26280",
+                            "taxonVerbatim": "Laulujoutsen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#5",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#86",
+                            "taxonID": "MX.26373",
+                            "taxonVerbatim": "Sinisorsa"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#6",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#87",
+                            "taxonID": "MX.26415",
+                            "taxonVerbatim": "Tukkasotka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#7",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#88",
+                            "taxonID": "MX.26427",
+                            "taxonVerbatim": "Alli"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#8",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#89",
+                            "taxonID": "MX.26435",
+                            "taxonVerbatim": "Telkk\u00e4"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#9",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#90",
+                            "taxonID": "MX.26440",
+                            "taxonVerbatim": "Tukkakoskelo"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#10",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#91",
+                            "taxonID": "MX.26442",
+                            "taxonVerbatim": "Isokoskelo"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#11",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#92",
+                            "taxonID": "MX.26530",
+                            "taxonVerbatim": "Merikotka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#12",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#93",
+                            "taxonID": "MX.26647",
+                            "taxonVerbatim": "Kanahaukka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#13",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#94",
+                            "taxonID": "MX.26639",
+                            "taxonVerbatim": "Varpushaukka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#14",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#95",
+                            "taxonID": "MX.26931",
+                            "taxonVerbatim": "Pyy"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#15",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#96",
+                            "taxonID": "MX.26921",
+                            "taxonVerbatim": "Riekko"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#16",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#97",
+                            "taxonID": "MX.26926",
+                            "taxonVerbatim": "Teeri"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#17",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#98",
+                            "taxonID": "MX.26928",
+                            "taxonVerbatim": "Metso"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#18",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#99",
+                            "taxonID": "MX.27048",
+                            "taxonVerbatim": "Peltopyy"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#19",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#100",
+                            "taxonID": "MX.27152",
+                            "taxonVerbatim": "Fasaani"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#20",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#101",
+                            "taxonID": "MX.27381",
+                            "taxonVerbatim": "Nokikana"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#21",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#102",
+                            "taxonID": "MX.27774",
+                            "taxonVerbatim": "Naurulokki"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#22",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#103",
+                            "taxonID": "MX.27748",
+                            "taxonVerbatim": "Kalalokki"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#23",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#104",
+                            "taxonID": "MX.27750",
+                            "taxonVerbatim": "Harmaalokki"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#24",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#105",
+                            "taxonID": "MX.27759",
+                            "taxonVerbatim": "Merilokki"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#25",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#106",
+                            "taxonID": "MX.200535",
+                            "taxonVerbatim": "Kesykyyhky"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#26",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#107",
+                            "taxonID": "MX.27960",
+                            "taxonVerbatim": "Turkinkyyhky"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#27",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#108",
+                            "taxonID": "MX.29008",
+                            "taxonVerbatim": "Hiirip\u00f6ll\u00f6"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#28",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#109",
+                            "taxonID": "MX.29011",
+                            "taxonVerbatim": "Varpusp\u00f6ll\u00f6"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#29",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#110",
+                            "taxonID": "MX.30530",
+                            "taxonVerbatim": "Harmaap\u00e4\u00e4tikka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#30",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#111",
+                            "taxonID": "MX.30504",
+                            "taxonVerbatim": "Palok\u00e4rki"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#31",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#112",
+                            "taxonID": "MX.30443",
+                            "taxonVerbatim": "K\u00e4pytikka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#32",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#113",
+                            "taxonID": "MX.30428",
+                            "taxonVerbatim": "Pikkutikka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#33",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#114",
+                            "taxonID": "MX.30453",
+                            "taxonVerbatim": "Pohjantikka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#34",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#115",
+                            "taxonID": "MX.32065",
+                            "taxonVerbatim": "Kiuru"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#35",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#116",
+                            "taxonID": "MX.32608",
+                            "taxonVerbatim": "Tilhi"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#36",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#117",
+                            "taxonID": "MX.32625",
+                            "taxonVerbatim": "Koskikara"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#37",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#118",
+                            "taxonID": "MX.32801",
+                            "taxonVerbatim": "Punarinta"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#38",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#119",
+                            "taxonID": "MX.33106",
+                            "taxonVerbatim": "Mustarastas"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#39",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#120",
+                            "taxonID": "MX.33117",
+                            "taxonVerbatim": "R\u00e4k\u00e4ttirastas"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#40",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#121",
+                            "taxonID": "MX.33118",
+                            "taxonVerbatim": "Punakylkirastas"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#41",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#122",
+                            "taxonID": "MX.33954",
+                            "taxonVerbatim": "Hippi\u00e4inen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#42",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#123",
+                            "taxonID": "MX.34505",
+                            "taxonVerbatim": "Pyrst\u00f6tiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#43",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#124",
+                            "taxonID": "MX.34535",
+                            "taxonVerbatim": "H\u00f6m\u00f6tiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#44",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#125",
+                            "taxonID": "MX.34542",
+                            "taxonVerbatim": "Lapintiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#45",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#126",
+                            "taxonID": "MX.34553",
+                            "taxonVerbatim": "T\u00f6yht\u00f6tiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#46",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#127",
+                            "taxonID": "MX.34549",
+                            "taxonVerbatim": "Kuusitiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#47",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#128",
+                            "taxonID": "MX.34574",
+                            "taxonVerbatim": "Sinitiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#48",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#129",
+                            "taxonID": "MX.34567",
+                            "taxonVerbatim": "Talitiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#49",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#130",
+                            "taxonID": "MX.34586",
+                            "taxonVerbatim": "P\u00e4hkin\u00e4nakkeli"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#50",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#131",
+                            "taxonID": "MX.34616",
+                            "taxonVerbatim": "Puukiipij\u00e4"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#51",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#132",
+                            "taxonID": "MX.32570",
+                            "taxonVerbatim": "Isolepink\u00e4inen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#52",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#133",
+                            "taxonID": "MX.37090",
+                            "taxonVerbatim": "N\u00e4rhi"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#53",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#134",
+                            "taxonID": "MX.37095",
+                            "taxonVerbatim": "Kuukkeli"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#54",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#135",
+                            "taxonID": "MX.37122",
+                            "taxonVerbatim": "Harakka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#55",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#136",
+                            "taxonID": "MX.37135",
+                            "taxonVerbatim": "P\u00e4hkin\u00e4hakki"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#56",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#137",
+                            "taxonID": "MX.37142",
+                            "taxonVerbatim": "Naakka"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#57",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#138",
+                            "taxonID": "MX.37156",
+                            "taxonVerbatim": "Mustavaris"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#58",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#139",
+                            "taxonID": "MX.73566",
+                            "taxonVerbatim": "Varis"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#59",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#140",
+                            "taxonID": "MX.37178",
+                            "taxonVerbatim": "Korppi"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#60",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#141",
+                            "taxonID": "MX.36817",
+                            "taxonVerbatim": "Kottarainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#61",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#142",
+                            "taxonID": "MX.36573",
+                            "taxonVerbatim": "Varpunen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#62",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#143",
+                            "taxonID": "MX.36589",
+                            "taxonVerbatim": "Pikkuvarpunen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#63",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#144",
+                            "taxonID": "MX.36237",
+                            "taxonVerbatim": "Peippo"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#64",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#145",
+                            "taxonID": "MX.36239",
+                            "taxonVerbatim": "J\u00e4rripeippo"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#65",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#146",
+                            "taxonID": "MX.36283",
+                            "taxonVerbatim": "Viherpeippo"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#66",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#147",
+                            "taxonID": "MX.36306",
+                            "taxonVerbatim": "Tikli"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#67",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#148",
+                            "taxonID": "MX.36287",
+                            "taxonVerbatim": "Vihervarpunen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#68",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#149",
+                            "taxonID": "MX.36310",
+                            "taxonVerbatim": "Hemppo"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#69",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#150",
+                            "taxonID": "MX.36308",
+                            "taxonVerbatim": "Urpiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#70",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#151",
+                            "taxonID": "MX.73545",
+                            "taxonVerbatim": "Tundraurpiainen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#71",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#152",
+                            "taxonID": "MX.36358",
+                            "taxonVerbatim": "Pikkuk\u00e4pylintu"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#72",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#153",
+                            "taxonID": "MX.36356",
+                            "taxonVerbatim": "Isok\u00e4pylintu"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#73",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#154",
+                            "taxonID": "MX.36355",
+                            "taxonVerbatim": "K\u00e4pylintulaji"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#74",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#155",
+                            "taxonID": "MX.36351",
+                            "taxonVerbatim": "Taviokuurna"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#75",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#156",
+                            "taxonID": "MX.36366",
+                            "taxonVerbatim": "Punatulkku"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#76",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#157",
+                            "taxonID": "MX.35189",
+                            "taxonVerbatim": "Pulmunen"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#77",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#158",
+                            "taxonID": "MX.35146",
+                            "taxonVerbatim": "Keltasirkku"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#78",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#159",
+                            "taxonID": "MX.35182",
+                            "taxonVerbatim": "Pajusirkku"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#79",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#160",
+                            "taxonID": "MX.50106",
+                            "taxonVerbatim": "Mets\u00e4j\u00e4nis"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#80",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#161",
+                            "taxonID": "MX.50386",
+                            "taxonVerbatim": "Rusakko"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#81",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#162",
+                            "taxonID": "MX.48089",
+                            "taxonVerbatim": "Orava"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "@type": "MY.unit",
+                    "id": "JX.134338#82",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.134338#163",
+                            "taxonID": "MX.47507",
+                            "taxonVerbatim": "Mets\u00e4kauris"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                },
+                {
+                    "identifications": [
+                        {
+                            "taxonVerbatim": "yksi viel\u00e4"
+                        }
+                    ],
+                    "unitFact": {},
+                    "unitType": []
+                }
+            ]
+        }
+    ],
+    "id": "JX.134338",
+    "namedPlaceID": "MNP.22139",
+    "publicityRestrictions": "MZ.publicityRestrictionsPrivate",
+    "sourceID": "KE.389"
+}
