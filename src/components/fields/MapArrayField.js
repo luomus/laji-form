@@ -1270,21 +1270,22 @@ export class Map extends Component {
 		if (!this.props.hidden) {
 			this.initializeMap(options);
 			if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
-			if (this.map) {
-				setImmediate(() => {
-					this.map.map.invalidateSize();
-					if (this.props.singleton) {
-						if (options.zoomToData) {
-							this.map.zoomToData();
-						}
-					}
-				});
+			if (!this.map) {
+				return;
 			}
+			setImmediate(() => {
+				this.map.map.invalidateSize();
+				if (this.props.singleton) {
+					if (options.zoomToData) {
+						this.map.zoomToData();
+					}
+				}
+			});
 		}
 	}
 
 	componentWillUnmount() {
-		if (!this.props.singleton) this.map.destroy();
+		if (!this.props.singleton) this.map && this.map.destroy();
 	}
 
 	componentDidUpdate(prevProps) {
