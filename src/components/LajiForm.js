@@ -303,7 +303,7 @@ export default class LajiForm extends Component {
 	}
 
 	getStateFromProps(props) {
-		this._context.staticImgPath = props.staticImgPath;
+		new Context().staticImgPath = props.staticImgPath;
 		this._context.formData = props.formData;
 		const translations = this.translations[props.lang];
 		return {

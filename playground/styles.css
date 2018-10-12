@@ -81,6 +81,10 @@ body .laji-form {
 .laji-form .fetcher-input .list-group {
 	margin-bottom: 0px;
 }
+.laji-form .autosuggest-wrapper .rw-list-option img {
+	border: 1px solid;
+	float: right;
+}
 
 .laji-form .map-array-directionless-enter {
 	opacity: 0.01;

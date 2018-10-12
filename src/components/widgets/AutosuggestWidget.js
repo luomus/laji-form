@@ -9,6 +9,12 @@ import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
+function renderFlag(suggestion) {
+	return (suggestion && suggestion.payload || {}).finnish
+		? <img src={`${new Context().staticImgPath}/finnish-flag.png`} />
+		: null;
+}
+
 export default class _AutosuggestWidget extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
@@ -82,6 +88,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			super(props);
 			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 			this.isValueSuggested = this.isValueSuggested.bind(this);
+			if (super.renderSuggestion) this.renderSuggestion = super.renderSuggestion.bind(this);
 		}
 
 		getSuggestionFromValue(value) {
@@ -120,6 +127,10 @@ function TaxonAutosuggest(ComposedComponent) {
 
 		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
+		renderSuggestion(suggestion) {
+			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
+		}
+
 		render() {
 			const {props} = this;
 
@@ -145,7 +156,11 @@ class TaxonAutosuggestWidget extends Component {}
 
 @TaxonAutosuggest
 class UnitAutosuggestWidget extends Component {
-	renderSuggestion = (suggestion) => {
+	constructor(props) {
+		super(props);
+		this.renderSuggestion = this.renderSuggestion.bind(this);
+	}
+	renderSuggestion(suggestion) {
 		const {count, maleIndividualCount, femaleIndividualCount} = suggestion.payload.interpretedFrom;
 		const [countElem, maleElem, femaleElem] = [count, maleIndividualCount, femaleIndividualCount].map(val => 
 			val && <span className="text-muted">{val}</span>
@@ -154,7 +169,7 @@ class UnitAutosuggestWidget extends Component {
 		const name = suggestion.payload.isNonMatching
 			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
 			: taxonName;
-		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}</span>;
+		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag({payload: {finnish: true}})}</span>;
 	}
 }
 
@@ -477,7 +492,9 @@ export class Autosuggest extends Component {
 	// This is used, because the default behavior doesn't render the suggestions when focusing
 	// a suggestion component that wants to render the suggestion when the input is empty.
 	renderSuggestionsContainer = ({containerProps, children}) => {
-		if (!this.state.focused) return null;
+		if (!this.state.focused) {
+			return null;
+		}
 
 		return (
 			<div {...containerProps}>
