@@ -19,14 +19,20 @@ export default class _SchemaField extends Component {
 	}
 
 	updateVirtualInstance = (props, initial) => {
-		if ([props, this.props].some(_props => _props.uiSchema && (_props.uiSchema["ui:functions"] || _props.uiSchema["ui:childFunctions"])) &&
+		const virtualizedProps = ["ui:functions", "ui:childFunctions", "ui:annotations"];
+		if ([props, this.props].some(_props => _props.uiSchema && virtualizedProps.some(prop => _props.uiSchema[prop])) &&
 		    (initial || !deepEquals([this.props, props]))) {
 			this.functionOutputProps = this.applyFunction(props);
 		}
 	}
 
 	applyFunction = (props) => {
-		let {"ui:functions": functions, "ui:childFunctions": childFunctions, ..._uiSchema} = (props.uiSchema || {});
+		let {
+			"ui:functions": functions,
+			"ui:childFunctions": childFunctions,
+			"ui:annotations": annotations,
+			..._uiSchema
+		} = (props.uiSchema || {});
 
 		const objectOrArrayAsArray = item => (
 			item ? 
@@ -41,6 +47,13 @@ export default class _SchemaField extends Component {
 				{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: objectOrArrayAsArray(childFunctions)}},
 				...objectOrArrayAsArray(functions)
 			];
+		}
+
+		if (annotations) {
+			functions = [
+				{"ui:field": "AnnotationField", "ui:options": (isObject(annotations) ? annotations : {})},
+				...objectOrArrayAsArray(functions)
+			]
 		}
 
 		if (!functions) return props;
@@ -141,17 +154,6 @@ export default class _SchemaField extends Component {
 			uiSchema = {
 				...injectedUiSchema,
 				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
-			};
-		}
-
-		if (uiSchema["ui:annotations"]) {
-			uiSchema = {
-				...uiSchema,
-				"ui:functions": [
-					...(uiSchema["ui:functions"] || []),
-					{"ui:field": "AnnotationField", "ui:options": (isObject(uiSchema["ui:annotations"]) ? uiSchema["ui:annotations"] : {})}
-				],
-				"ui:annotations": undefined
 			};
 		}
 

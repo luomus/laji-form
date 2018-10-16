@@ -2,7 +2,7 @@ import lajiValidate from "laji-validate";
 
 export function initializeValidation(apiClient) {
 	lajiValidate.extend(lajiValidate.validators.remote, {
-		fetch: (...params) => apiClient.fetch(...params)
+		fetch: (...params) => apiClient.fetchRaw(...params)
 	});
 }
 

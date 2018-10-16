@@ -454,14 +454,27 @@ export function injectButtons(uiSchema, buttons, buttonsPath) {
 	try {
 		injectionTarget =	parseJSONPointer(uiSchema, `${buttonsPath}/ui:options`);
 	} catch (e) {
-		console.error("Invalid buttonsPath for MapArrayField");
+		console.error("Invalid buttonsPath for injectButtons()");
 	}
 
-	if (injectionTarget) {
-		const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
-		const updateObject = getUpdateObjectFromJSONPath(`${buttonsPath}/ui:options`, {buttons: updateTail});
-		uiSchema = update(uiSchema, updateObject);
+	if (!injectionTarget) {
+		const splitPath = `${buttonsPath}/ui:options`.split("/").filter(s => !isEmptyString(s));
+		let _s = "";
+		splitPath.reduce((o, s) => {
+			_s += `/${s}`;
+			if (!o[s]) {
+				uiSchema = update(uiSchema, getUpdateObjectFromJSONPath(_s, {$set: {}}));
+			}
+			return o[s];
+		}, uiSchema);
+
+		injectionTarget =	parseJSONPointer(uiSchema, `${buttonsPath}/ui:options`);
 	}
+
+	const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
+	const updateObject = getUpdateObjectFromJSONPath(`${buttonsPath}/ui:options`, {buttons: updateTail});
+	uiSchema = update(uiSchema, updateObject);
+
 	return uiSchema;
 }
 
