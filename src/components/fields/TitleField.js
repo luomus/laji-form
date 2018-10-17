@@ -4,7 +4,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { isEmptyString, parseJSONPointer } from "../../utils";
 import Context from "../../Context";
 
-export default ({title, className, buttons, help, id, formData, titleFormatters = []}) => {
+const TitleField = ({title, className, buttons, help, id, formData, titleFormatters = []}) => {
 	const renderedFormatters = titleFormatters.map((titleFormatter) => {
 		const {renderer} = titleFormatter;
 		return _titleFormatters[renderer]({...titleFormatter, formData});
@@ -37,6 +37,8 @@ export default ({title, className, buttons, help, id, formData, titleFormatters 
 		</Legend>
 	);
 };
+
+export default TitleField;
 
 const _titleFormatters = {
 	informalTaxonGroup: ({formData, value, renderer}) => {

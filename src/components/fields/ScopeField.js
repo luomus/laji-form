@@ -96,7 +96,7 @@ export default class ScopeField extends Component {
 			...this.state.uiSchema, 
 			"ui:buttons": [
 				...(this.props.uiSchema["ui:buttons"] || []),
-				this.renderAdditionalsButton()
+				...this.renderAdditionalsButton()
 			]
 		};
 
@@ -104,7 +104,7 @@ export default class ScopeField extends Component {
 			uiSchema = {
 				...uiSchema,
 				"ui:buttons": [
-					uiSchema["ui:buttons"],
+					...uiSchema["ui:buttons"],
 					button
 				]
 			};

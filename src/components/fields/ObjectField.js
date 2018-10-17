@@ -205,7 +205,9 @@ function getGlyphButtons(props) {
 		];
 	}
 
-	return buttons ?
-		buttons :
-		null;
+	return buttons
+		? props.title
+			? buttons.reverse()
+			: buttons
+		: null;
 }
