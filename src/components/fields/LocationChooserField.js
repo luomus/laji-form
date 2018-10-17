@@ -8,6 +8,7 @@ import { GlyphButton } from "../components";
 import Context from "../../Context";
 import { hasData, getUiOptions, getInnerUiSchema } from "../../utils";
 import { Map } from "./MapArrayField";
+import { combineColors } from "laji-map/lib/utils";
 
 @BaseComponent
 export default class LocationChooserField extends Component {
@@ -94,6 +95,10 @@ class LocationButton extends Component {
 		new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
 	}
 
+	getUnitFeatureStyle = () => ({color: "#55AEFA"})
+
+	getDrawFeatureStyle = () => ({color: combineColors("#55AEFA", "#00ff00", 70)})
+
 	onClick = () => {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
@@ -127,7 +132,7 @@ class LocationButton extends Component {
 				featureCollection: {
 					features: unitData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
 				},
-				getFeatureStyle: () => {return {color: "#55AEFA"};}
+				getFeatureStyle: this.getUnitFeatureStyle
 			});
 		}
 
@@ -170,6 +175,7 @@ class LocationButton extends Component {
 					...mapOptions.draw,
 					featureCollection: undefined,
 					...drawData,
+					getFeatureStyle: this.getDrawFeatureStyle,
 					marker,
 					polyline,
 					rectangle,
