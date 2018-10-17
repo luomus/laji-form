@@ -279,6 +279,7 @@ class LocationButton extends Component {
 				...mapOptions,
 				draw: false,
 				controls: false,
+				customControls: undefined,
 				zoom: 8,
 				center: geometry.geometries[0].coordinates.slice(0).reverse(),
 				data: [
