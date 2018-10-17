@@ -457,13 +457,15 @@ export function injectButtons(uiSchema, buttons, buttonsPath) {
 		console.error("Invalid buttonsPath for injectButtons()");
 	}
 
+	// If path for buttons doesn't exist, we create it (immutably).
 	if (!injectionTarget) {
 		const splitPath = `${buttonsPath}/ui:options`.split("/").filter(s => !isEmptyString(s));
-		let _s = "";
+		let _splitPath = "";
 		splitPath.reduce((o, s) => {
-			_s += `/${s}`;
+			_splitPath += `/${s}`;
+			console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
 			if (!o[s]) {
-				uiSchema = update(uiSchema, getUpdateObjectFromJSONPath(_s, {$set: {}}));
+				uiSchema = update(uiSchema, getUpdateObjectFromJSONPath(_splitPath, {$set: {}}));
 			}
 			return o[s];
 		}, uiSchema);
