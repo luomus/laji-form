@@ -958,7 +958,8 @@ class _MapArrayField extends ComposedComponent {
 					position: "bottomright",
 					text: this.props.formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
 				}
-			]
+			],
+			bodyAsDialogRoot: !this.state.fullscreen
 		};
 
 		const map = (
