@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { findDOMNode } from "react-dom";
+import { findDOMNode, createPortal } from "react-dom";
 import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
@@ -687,14 +687,6 @@ class _MapArrayField extends ComposedComponent {
 			this._tileLayerNameOnNextTick = false;
 			this.map.setTileLayerByName(tileLayerName);
 		}
-		if (this.state.fullscreen && !prevState.fullscreen) {
-			this._mapContainer = this.map.rootElem;
-			this.map.setRootElem(findDOMNode(this.fullscreenRef));
-			this.map.setOption("clickBeforeZoomAndPan", false);
-		} else if (!this.state.fullscreen && prevState.fullscreen) {
-			this.map.setRootElem(this._mapContainer);
-			this.map.setOption("clickBeforeZoomAndPan", true);
-		}
 
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
 		const item = (this.props.formData || [])[this.state.activeIdx];
@@ -929,9 +921,7 @@ class _MapArrayField extends ComposedComponent {
 			: null;
 
 		const mapPropsToPass = {
-			contextId: this.props.formContext.contextId,
-			googleApiKey: this.props.formContext.googleApiKey,
-			lang: this.props.formContext.lang,
+			formContext: this.props.formContext,
 			onPopupClose: this.onPopupClose,
 			markerPopupOffset: 45,
 			featurePopupOffset: 5,
@@ -946,20 +936,8 @@ class _MapArrayField extends ComposedComponent {
 			draw: false,
 			zoomToData: true,
 			onOptionsChanged: this.onOptionsChanged,
-			...mapOptions,
-			controls: {
-				...(mapOptions.controls || {})
-			},
-			customControls: [
-				...(mapOptions.customControls || []),
-				{
-					iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
-					fn: this.toggleFullscreen,
-					position: "bottomright",
-					text: this.props.formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
-				}
-			],
-			bodyAsDialogRoot: !this.state.fullscreen
+			fullscreenable: true,
+			...mapOptions
 		};
 
 		const map = (
@@ -987,7 +965,7 @@ class _MapArrayField extends ComposedComponent {
 		const {TitleField} = this.props.registry.fields;
 
 		return (
-			<div>
+			<React.Fragment>
 				<Row>
 					<Col {...mapSizes}>
 						{wrappedMap}
@@ -1014,27 +992,14 @@ class _MapArrayField extends ComposedComponent {
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
-				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
+				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length && (
 				<Row className="map-array-field-below-buttons">
 					<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
 					<ButtonToolbar>{buttons}</ButtonToolbar>
 				</Row>
-				) : null}
-				{
-					this.state.fullscreen ? (
-						<div className="map-fullscreen" ref={this.setFullscreenRef} />
-					) : null
-				}
-			</div>
+				)}
+			</React.Fragment>
 		);
-	}
-
-	setFullscreenRef = (elem) => {
-		this.fullscreenRef = elem;
-	}
-
-	toggleFullscreen = () => {
-		this.setState({fullscreen: !this.state.fullscreen});
 	}
 
 	getDraftStyle = () => {
@@ -1148,8 +1113,8 @@ export class MapComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {mapOptions: {}};
-		this.mainContext = new Context(props.contextId);
-		this._context = new Context(`${props.contextId}_MAP`);
+		this.mainContext = new Context(props.formContext.contextId);
+		this._context = new Context(`${props.formContext.contextId}_MAP`);
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
 		this._context.showPanel = this.showPanel;
@@ -1223,7 +1188,7 @@ export class MapComponent extends Component {
 	}
 
 	render() {
-		const {panel, contextId, ...mapOptions} = this.props; // eslint-disable-line
+		const {panel, onFocusGrab, onFocusRelease, onOptionsChanged, ...mapOptions} = this.props; // eslint-disable-line
 
 		const controlledPanel = panel ?
 			<MapPanel bsStyle={panel.bsStyle || undefined}
@@ -1258,8 +1223,13 @@ export class Map extends Component {
 		availableTileLayerNamesBlacklist: ["pohjakartta"]
 	};
 
+	constructor(props) {
+		super(props);
+		this.state = {fullscreen: false};
+	}
+
 	componentDidMount() {
-		let {className, style, onComponentDidMount, ...options} = this.props; // eslint-disable-line no-unused-vars
+		let options = {...this.props};
 
 		// Backward compability for bad settings.
 		["tileLayerName", "overlayNames", "tileLayerOpacity"].forEach(prop => {
@@ -1289,87 +1259,140 @@ export class Map extends Component {
 		if (!this.props.singleton) this.map && this.map.destroy();
 	}
 
-	componentDidUpdate(prevProps) {
-		const {className, style, onComponentDidMount, hidden, singleton, ...options} = this.props; // eslint-disable-line no-unused-vars
+	componentDidUpdate(prevProps, prevState) {
+		const {hidden, onComponentDidMount} = this.props;
+		const {...props} = this.props;
 
-		if (this.map && prevProps.lineTransect && options.lineTransect && "activeIdx" in options.lineTransect) {
-			this.map.setLTActiveIdx(options.lineTransect.activeIdx);
+		if (this.map && prevProps.lineTransect && props.lineTransect && "activeIdx" in props.lineTransect) {
+			this.map.setLTActiveIdx(props.lineTransect.activeIdx);
 		}
-		if (prevProps.lineTransect) delete options.lineTransect;
+		if (prevProps.lineTransect) delete props.lineTransect;
 
-		this.setOptions(prevProps, options);
+		this.setMapOptions(prevProps, this.props);
 
 		if (!hidden && !this.map) {
-			this.initializeMap(options);
+			this.initializeMap(props);
 			if (onComponentDidMount) onComponentDidMount(this.map);
 		}
-	}
 
-	setOptions = (prevOptions, options) => {
-		const {className, style, hidden, singleton, emptyMode, contextId, ..._options} = options; // eslint-disable-line no-unused-vars
-		const {
-			className: prevClassName, // eslint-disable-line no-unused-vars
-			style: prevStyle,  // eslint-disable-line no-unused-vars
-			onComponentDidMount: prevOnComponentDidMount, // eslint-disable-line no-unused-vars
-			hidden: prevHidden,  // eslint-disable-line no-unused-vars
-			singleton: prevSingleton,  // eslint-disable-line no-unused-vars
-			emptyMode: prevEmptyMode,  // eslint-disable-line no-unused-vars
-			contextId: prevContextId,  // eslint-disable-line no-unused-vars
-			..._prevOptions
-		} = prevOptions;
-	
-		if (this.map) {
-			Object.keys(_options).forEach(key => {
-				switch(key) {
-				case "draw": // More optimal way of updating draw data than setting the draw option
-					if (!deepEquals(_options.draw, _prevOptions.draw)) {
-						this.map.updateDrawData(_options.draw);
-					}
-					break;
-				case "rootElem": // deeqEquals on DOM node causes maximum call stack size exceeding.
-					if (_options[key] !== _prevOptions[key]) {
-						this.map.setOption(key, _options[key]);
-					}
-					break;
-				default:
-					if (!deepEquals(_options[key], _prevOptions[key])) {
-						this.map.setOption(key, _options[key]);
-					}
-				}
-			});
+		if (this.state.fullscreen && !prevState.fullscreen) {
+			this._mapContainer = this.map.rootElem;
+			this.map.setRootElem(findDOMNode(this.fullscreenRef));
+			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", false);
+		} else if (!this.state.fullscreen && prevState.fullscreen) {
+			this.map.setRootElem(this._mapContainer);
+			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", true);
 		}
 	}
 
-	initializeMap = (options) => {
-		if (this.props.singleton) {
-			const context = new Context(this.props.contextId);
+	toggleFullscreen = () => {
+		this.setState({fullscreen: !this.state.fullscreen});
+	}
+
+	getMapOptions = (props) => {
+		const {
+			className, // eslint-disable-line no-unused-vars
+			style, // eslint-disable-line no-unused-vars
+			hidden, // eslint-disable-line no-unused-vars
+			singleton, // eslint-disable-line no-unused-vars
+			emptyMode, // eslint-disable-line no-unused-vars
+			onComponentDidMount, // eslint-disable-line no-unused-vars
+			fullscreenable, // eslint-disable-line no-unused-vars
+			formContext,  // eslint-disable-line no-unused-vars
+			...mapOptions
+		} = props;
+		return mapOptions;
+	}
+
+	getEnhancedMapOptions = (props) => {
+		const mapOptions = this.getMapOptions(props);
+		const {fullscreenable, formContext = {}} = props;
+
+		if (fullscreenable) {
+			mapOptions.customControls = [
+				...(mapOptions.customControls || []),
+				{
+					iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
+					fn: this.toggleFullscreen,
+					position: "bottomright",
+					text: formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
+				}
+			];
+			mapOptions.bodyAsDialogRoot = mapOptions.bodyAsDialogRoot !== undefined
+				? mapOptions.bodyAsDialogRoot
+				: !this.state.fullscreen;
+		}
+		mapOptions.lang = mapOptions.lang || formContext.lang;
+		mapOptions.googleApiKey = formContext.googleApiKey;
+		mapOptions.rootElem = this.refs.map;
+		return mapOptions;
+	}
+
+	setMapOptions = (prevOptions, options) => {
+		if (!this.map) {
+			return;
+		}
+
+		const mapOptions = this.getMapOptions(options);
+		const prevMapOptions = this.getMapOptions(prevOptions);
+		Object.keys(mapOptions).forEach(key => {
+			switch(key) {
+			case "draw": // More optimal way of updating draw data than setting the draw option
+				if (!deepEquals(mapOptions.draw, prevMapOptions.draw)) {
+					this.map.updateDrawData(mapOptions.draw);
+				}
+				break;
+			case "rootElem": // deeqEquals on DOM node causes maximum call stack size exceeding.
+				if (mapOptions[key] !== prevMapOptions[key]) {
+					this.map.setOption(key, mapOptions[key]);
+				}
+				break;
+			default:
+				if (!deepEquals(mapOptions[key], prevMapOptions[key])) {
+					this.map.setOption(key, mapOptions[key]);
+				}
+			}
+		});
+	}
+
+	initializeMap = (props) => {
+		const mapOptions = this.getEnhancedMapOptions(props);
+		if (props.singleton) {
+			const context = new Context(props.formContext.contextId);
 			if (!context.singletonMap) {
-				context.singletonMap = new LajiMap({
-					rootElem: this.refs.map,
-					googleApiKey: this.props.formContext.googleApiKey,
-					...options
-				});
+				context.singletonMap = new LajiMap(mapOptions);
 				this.map = context.singletonMap;
 			} else {
 				this.map = context.singletonMap;
-				this.setOptions(context.singletonMap.getOptions(), {...options, rootElem: this.refs.map});
+				this.setMapOptions(context.singletonMap.getOptions(), mapOptions);
 			}
 		} else {
-			this.map = new LajiMap({
-				rootElem: this.refs.map,
-				...options
-			});
+			this.map = new LajiMap(mapOptions);
 		}
+	}
+
+	setFullscreenRef = (elem) => {
+		this.fullscreenRef = elem;
 	}
 
 	render() {
 		return (
-			<div key="map"
-				 className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
-				 style={this.props.style} ref="map" />
+			<React.Fragment>
+				<div key="map"
+					className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
+					style={this.props.style} ref="map" />
+				<FullscreenPortal ref={this.setFullscreenRef} on={this.state.fullscreen} />
+		 </React.Fragment>
 		);
 	}
 }
+
+const FullscreenPortal = React.forwardRef((props, ref) => {
+	return props.on && createPortal(
+		<div className="laji-form map-fullscreen" ref={ref} />,
+		document.body
+	);
+});
 
 class MapPanel extends Component {
 	render() {

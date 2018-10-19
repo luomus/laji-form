@@ -1271,7 +1271,7 @@ min-height: 20px;
 .laji-form .annotation-list-odd {
 	background-color: #f4f4f4;
 }
-.laji-form .map-fullscreen {
+.laji-form.map-fullscreen {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -1296,5 +1296,4 @@ min-height: 20px;
 .laji-form > button {
 	margin-top: 5px;
 	margin-bottom: 5px;
-
 }

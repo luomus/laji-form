@@ -85,14 +85,18 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const idx = this.getIdx();
 		this._hovered = true;
-		new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
+		if (typeof idx === "number" && !isNaN(idx)) {
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
+		}
 	}
 
 	onMouseLeave = () => {
 		const {that} = this.props;
 		const idx = this.getIdx();
 		this._hovered = false;
-		new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
+		if (typeof idx === "number" && !isNaN(idx)) {
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
+		}
 	}
 
 	getUnitFeatureStyle = () => ({color: "#55AEFA"})
@@ -114,7 +118,7 @@ class LocationButton extends Component {
 		let modalMap = undefined;
 		let triggerLayer = undefined;
 
-		const {rootElem, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
+		const {rootElem, customControls, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
 		const gatheringData = map.getDraw();
 		const unitData = map.data && map.data[0] ? 
 			map.data[0] :
@@ -144,17 +148,13 @@ class LocationButton extends Component {
 
 		const uiOptions = that.props.uiSchema["ui:options"];
 
-		const _mapOptions = uiOptions.mapOptions;
-		let marker = true;
-		let polyline, rectangle, polygon, circle = false;
+		const _mapOptions = uiOptions.mapOptions || {};
 
-		if (_mapOptions) {
-			marker = _mapOptions.hasOwnProperty("marker") ? _mapOptions.marker : true;
-			polyline = _mapOptions.hasOwnProperty("polyline") ? _mapOptions.polyline : false;
-			rectangle = _mapOptions.hasOwnProperty("rectangle") ? _mapOptions.rectangle : false;
-			polygon = _mapOptions.hasOwnProperty("polygon") ? _mapOptions.polygon : false;
-			circle = _mapOptions.hasOwnProperty("circle") ? _mapOptions.circle : false;
-		}
+		const marker = _mapOptions.hasOwnProperty("marker") ? _mapOptions.marker : true;
+		const polyline = _mapOptions.hasOwnProperty("polyline") ? _mapOptions.polyline : false;
+		const rectangle = _mapOptions.hasOwnProperty("rectangle") ? _mapOptions.rectangle : false;
+		const polygon = _mapOptions.hasOwnProperty("polygon") ? _mapOptions.polygon : false;
+		const circle = _mapOptions.hasOwnProperty("circle") ? _mapOptions.circle : false;
 
 		let preselectMarker = true;
 
@@ -236,6 +236,7 @@ class LocationButton extends Component {
 						delete: false
 					}
 				},
+				fullscreenable: true,
 				onComponentDidMount: (map) => {
 					modalMap = map;
 					if (!preselectMarker) {
