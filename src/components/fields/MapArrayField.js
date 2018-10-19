@@ -5,6 +5,7 @@ import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
 import LajiMap from "laji-map";
+import { combineColors } from "laji-map/lib/utils";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
@@ -222,25 +223,13 @@ class UnitsMapArrayField extends Component {
 	}
 
 	startHighlightUnit = (idx) => {
-		const layers = this.map.data[0].group._layers;
-		for (let id of Object.keys(this.map.data[0].group._layers)) {
-			const layer = layers[id];
-			if (layer.feature.properties.idx === idx) {
-				this.map.setLayerStyle(layer, {color: "#75CEFA"});
-				break;
-			}
-		}
+		const layer = this.map.getLayerByIdxTuple([0, idx]);
+		layer && this.map.setLayerStyle(layer, {color: combineColors(this.getUnitFeatureStyle().color, "#ffffff", 30)});
 	};
 
 	endHighlightUnit = (idx) => {
-		const layers = this.map.data[0].group._layers;
-		for (let id of Object.keys(this.map.data[0].group._layers)) {
-			const layer = layers[id];
-			if (layer.feature.properties.idx === idx) {
-				this.map.setLayerStyle(layer, {color: this.getUnitFeatureStyle().color});
-				break;
-			}
-		}
+		const layer = this.map.getLayerByIdxTuple([0, idx]);
+		layer && this.map.setLayerStyle(layer, {color: this.getUnitFeatureStyle().color});
 	};
 
 	getOptions = (options) => {
