@@ -96,7 +96,7 @@ export default class ScopeField extends Component {
 			...this.state.uiSchema, 
 			"ui:buttons": [
 				...(this.props.uiSchema["ui:buttons"] || []),
-				...this.renderAdditionalsButton()
+				...this.renderAdditionalsButtons()
 			]
 		};
 
@@ -335,8 +335,8 @@ export default class ScopeField extends Component {
 		this.setState({additionalsOpen: !this.state.additionalsOpen});
 	}
 
-	renderAdditionalsButton = () => {
-		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData || {}).length === 0) return null;
+	renderAdditionalsButtons = () => {
+		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData || {}).length === 0) return [];
 
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
