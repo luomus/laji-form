@@ -163,7 +163,7 @@ export default class SingleActiveArrayField extends Component {
 	render() {
 		const {renderer = "accordion", tableActiveItemClassNames} = getUiOptions(this.props.uiSchema);
 		let ArrayFieldTemplate = undefined;
-		switch(renderer) {
+		switch (renderer) {
 		case "accordion":
 			ArrayFieldTemplate = AccordionArrayFieldTemplate;
 			break;
@@ -622,7 +622,7 @@ class TableArrayFieldTemplate extends Component {
 			 if (activeChanged || itemsLengthChanged || tHeadHeightChanged) {
 				this.updateLayout(this.props.formContext.this.state.activeIdx);
 			}
-			if( tHeadHeight) this.prevTHeadHeight = tHeadHeight;
+			if (tHeadHeight) this.prevTHeadHeight = tHeadHeight;
 		}
 	}
 

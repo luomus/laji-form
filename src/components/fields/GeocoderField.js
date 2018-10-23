@@ -267,23 +267,23 @@ export default class GeocoderField extends Component {
 						const keys = Object.keys(found[field]);
 						const responseForField = found[field][keys[0]];
 						Object.keys(responseForField).forEach(value => {
-							// if target field is array
-							if(this.props.schema.properties[field] && this.props.schema.properties[field].type === "array") {
+							// If target field is array
+							if (this.props.schema.properties[field] && this.props.schema.properties[field].type === "array") {
 								const temp = Array.from(this.props.formData[field]);
 
-								// find correct enum from fieldOptions
+								// Find correct enum from fieldOptions
 								const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
 								const enumField = fieldOptions[fieldOptions.findIndex((element)=>{
 									return element.field === field;
 								})].enum;
 
-								// find enum value from key (eg. municipalityName --> municipalityId)
+								// Find enum value from key (eg. municipalityName --> municipalityId)
 								const mEnum = this.props.formContext.uiSchemaContext[enumField];
 								const enumValue = mEnum.enum[
 									mEnum.enumNames.indexOf(value)
 								];
 
-								// push enum value to changes (ignore duplicates)
+								// Push enum value to changes (ignore duplicates)
 								if (!temp.includes(enumValue)) {
 									temp.push(enumValue);
 									changes[field] = temp;

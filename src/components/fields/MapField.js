@@ -97,7 +97,7 @@ export default class MapField extends Component {
 	onChange = (events) => {
 		let formData;
 		events.forEach(e => {
-			switch(e.type) {
+			switch (e.type) {
 			case "create":
 				formData = {
 					type: "GeometryCollection",

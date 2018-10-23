@@ -688,7 +688,7 @@ class _MapArrayField extends ComposedComponent {
 			area = area[0];
 		}
 		const geometries = this.getData();
-		if(geometries.length === 0 && area && area.length > 0) {
+		if (geometries.length === 0 && area && area.length > 0) {
 			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
 			});
@@ -1325,7 +1325,7 @@ export class Map extends Component {
 		const mapOptions = this.getMapOptions(options);
 		const prevMapOptions = this.getMapOptions(prevOptions);
 		Object.keys(mapOptions).forEach(key => {
-			switch(key) {
+			switch (key) {
 			case "draw": // More optimal way of updating draw data than setting the draw option
 				if (!deepEquals(mapOptions.draw, prevMapOptions.draw)) {
 					this.map.updateDrawData(mapOptions.draw);

@@ -53,7 +53,7 @@ export default class _SchemaField extends Component {
 			functions = [
 				{"ui:field": "AnnotationField", "ui:options": (isObject(annotations) ? annotations : {})},
 				...objectOrArrayAsArray(functions)
-			]
+			];
 		}
 
 		if (!functions) return props;

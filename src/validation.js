@@ -62,7 +62,7 @@ export function transformErrors(translations, skip) {
 
 function getMessages(result, type) {
 	const messages = [];
-	for(let k in result) {
+	for (let k in result) {
 		for (let l in result[k]) {
 			const message = (type !== "validators") ? `[${type}]` + result[k][l] : result[k][l];
 			messages.push({

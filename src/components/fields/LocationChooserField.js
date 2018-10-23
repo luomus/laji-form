@@ -188,7 +188,7 @@ class LocationButton extends Component {
 
 							switch (type) {
 							case "create":
-								if(geometryRef.type && maxShapes > 1) {
+								if (geometryRef.type && maxShapes > 1) {
 									if (geometryRef.geometries.length >= maxShapes) {
 										this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
 										return;

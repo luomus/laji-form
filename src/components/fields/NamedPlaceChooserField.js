@@ -107,7 +107,7 @@ export default class NamedPlaceChooserField extends Component {
 				this.props.onChange(newFormData);
 				if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
 			}
-		} catch(e) {
+		} catch (e) {
 			this.setState({failed: PLACE_USE_FAIL});
 		}
 	}
