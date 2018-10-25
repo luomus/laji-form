@@ -2982,9 +2982,9 @@ laji-map@1.0.444, laji-map@^1.0.395, laji-map@^1.0.444:
     "@types/leaflet.markercluster" "*"
     "@types/node" "*"
 
-laji-validate@0.0.72:
-  version "0.0.72"
-  resolved "https://registry.yarnpkg.com/laji-validate/-/laji-validate-0.0.72.tgz#cfb8684e58272b9b92ab56248f60c77756761a4d"
+laji-validate@0.0.73:
+  version "0.0.73"
+  resolved "https://registry.yarnpkg.com/laji-validate/-/laji-validate-0.0.73.tgz#e6387d9c0d4dd9eb4b32f2461ebfb6667dbb4644"
   dependencies:
     "@mapbox/geojson-area" "^0.2.2"
     geojson-bounds "^1.0.1"
