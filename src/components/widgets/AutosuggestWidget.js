@@ -144,11 +144,21 @@ function TaxonAutosuggest(ComposedComponent) {
 				renderSuggested: this.renderSuggested,
 				renderUnsuggested: this.renderUnsuggested(props),
 				renderSuccessGlyph: this.renderSuccessGlyph,
-				renderSuggestion: this.renderSuggestion,
-				query: {...propsOptions.queryOptions}
+				renderSuggestion: this.renderSuggestion
 			};
+			const _options = {
+				...options,
+				...propsWithoutOptions,
+				...(propsOptions || {}),
+				query: {
+					observationMode: true,
+					...(options.query || {}),
+					...(propsWithoutOptions.query || {}),
+					...(propsOptions.query || {}),
+				}
+			}
 
-			return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+			return <Autosuggest {..._options}/>;
 		}
 	};
 }
