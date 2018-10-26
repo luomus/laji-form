@@ -32,6 +32,7 @@ export default class _AutosuggestWidget extends Component {
 			case "unit":
 				return <UnitAutosuggestWidget {...this.props} />;
 			case "friends":
+			case "person":
 				return <FriendsAutosuggestWidget {...this.props} />;
 			default: 
 				return <RangeAutosuggestWidget {...this.props} />;
@@ -51,6 +52,7 @@ export default class _AutosuggestWidget extends Component {
 				component = UnitAutosuggestWidget;
 				break;
 			case "friends":
+			case "person":
 				component = FriendsAutosuggestWidget;
 				break;
 			default:
