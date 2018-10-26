@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import update from "immutability-helper";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
@@ -92,13 +91,11 @@ function TaxonAutosuggest(ComposedComponent) {
 			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 			this.isValueSuggested = this.isValueSuggested.bind(this);
 			if (super.renderSuggestion) this.renderSuggestion = super.renderSuggestion.bind(this);
-			if (super.mapSuggestions) this.mapSuggestions = super.mapSuggestions.bind(this);
 		}
 
 		getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
-				return new ApiClient().fetchCached(`/taxa/${value}`).then((suggestion) => {
-					const {vernacularName, scientificName} = suggestion;
+				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
 					if (vernacularName !== undefined) {
 						return {value: vernacularName, key: value};
 					}
@@ -136,10 +133,6 @@ function TaxonAutosuggest(ComposedComponent) {
 			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
 		}
 
-		mapSuggestions(suggestions) {
-			return suggestions.map(s => s.payload.taxonRankId === "MX.genus" ? {...s, value: `${s.value} sp.`} : s);
-		}
-
 		render() {
 			const {props} = this;
 
@@ -152,9 +145,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				renderUnsuggested: this.renderUnsuggested(props),
 				renderSuccessGlyph: this.renderSuccessGlyph,
 				renderSuggestion: this.renderSuggestion,
-				query: {...propsOptions.queryOptions},
-				mapSuggestions: this.mapSuggestions,
-				getSuggestionValue: this.getSuggestionValue
+				query: {...propsOptions.queryOptions}
 			};
 
 			return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
@@ -170,29 +161,17 @@ class UnitAutosuggestWidget extends Component {
 	constructor(props) {
 		super(props);
 		this.renderSuggestion = this.renderSuggestion.bind(this);
-		this.mapSuggestions = this.mapSuggestions.bind(this);
 	}
-
 	renderSuggestion(suggestion) {
 		const {count, maleIndividualCount, femaleIndividualCount} = suggestion.payload.interpretedFrom;
 		const [countElem, maleElem, femaleElem] = [count, maleIndividualCount, femaleIndividualCount].map(val => 
 			val && <span className="text-muted">{val}</span>
 		);
-		const taxonName = this.getSuggestionValue(suggestion);
+		const taxonName = suggestion.payload.unit.identifications[0].taxon;
 		const name = suggestion.payload.isNonMatching
 			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
 			: taxonName;
-		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag(suggestion)}</span>;
-	}
-
-	mapSuggestions(suggestions) {
-		return suggestions.map(s => s.payload.taxonRankId === "MX.genus"
-			? update(s, {payload: {unit: {identifications: {0: {taxon: {$set: `${s.payload.unit.identifications[0].taxon} sp.`}}}}}})
-				: s);
-	}
-
-	getSuggestionValue(suggestion) {
-		return suggestion.payload.unit.identifications[0].taxon;
+		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag({payload: {finnish: true}})}</span>;
 	}
 }
 
@@ -362,8 +341,7 @@ export class Autosuggest extends Component {
 	}
 
 	getSuggestionValue = (suggestion) => {
-		const {getSuggestionValue} = this.props;
-		return getSuggestionValue ? getSuggestionValue(suggestion) : suggestion.value;
+		return suggestion.value;
 	}
 
 	renderSuggestion = (suggestion) => {
@@ -459,7 +437,7 @@ export class Autosuggest extends Component {
 			return;
 		}	
 
-		const {autosuggestField, query = {}, mapSuggestions} = this.props;
+		const {autosuggestField, query = {}} = this.props;
 
 		this.setState({isLoading: true});
 
@@ -470,7 +448,6 @@ export class Autosuggest extends Component {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}
-				suggestions = mapSuggestions ? mapSuggestions(suggestions) : suggestions;
 				this.mounted ?
 					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
 					this.afterBlurAndFetch(suggestions);
