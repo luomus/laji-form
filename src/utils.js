@@ -534,20 +534,25 @@ export function formatValue(props, col, _formatter) {
 
 export const formatErrorMessage = msg => msg.replace(/^\[.*\]/, "");
 
-export function checkRules(rules, props, cache) {
-	const passes = (Array.isArray(rules) ? rules : [rules]).every(({field, regexp, valueIn}, idx) => {
-		let value = parseJSONPointer(props.formData || {}, field);
-		if (value === undefined) value = "";
-		if (regexp) {
-			return `${value}`.match(new RegExp(regexp));
-		} else if (valueIn) {
-			if (cache) {
-				if (!cache[idx]) {
-					cache[idx] = dictionarify(valueIn);
+export function checkRules(rules, props, cache, prop = "formData") {
+	const passes = (Array.isArray(rules) ? rules : [rules]).every((rule, idx) => {
+		if (rule === "isAdmin") {
+			return props.formContext.uiSchemaContext.isAdmin;
+		} else {
+			const {field, regexp, valueIn} = rule;
+			let value = parseJSONPointer(props[prop] || {}, field);
+			if (value === undefined) value = "";
+			if (regexp) {
+				return `${value}`.match(new RegExp(regexp));
+			} else if (valueIn) {
+				if (cache) {
+					if (!cache[idx]) {
+						cache[idx] = dictionarify(valueIn);
+					}
+					return cache[idx][value];
+				} else {
+					return dictionarify(valueIn)[value];
 				}
-				return cache[idx][value];
-			} else {
-				return dictionarify(valueIn)[value];
 			}
 		}
 	});

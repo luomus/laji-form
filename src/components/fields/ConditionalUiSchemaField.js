@@ -4,11 +4,15 @@ import VirtualSchemaField from "../VirtualSchemaField";
 import deepmerge from "deepmerge";
 import { checkRules } from "../../utils";
 
-export const rulePropType = PropTypes.shape({
-	field: PropTypes.string.isRequired,
-	regexp: PropTypes.string,
-	valueIn: PropTypes.arrayOf(PropTypes.string),
-});
+export const rulePropType = PropTypes.oneOfType([
+	PropTypes.shape({
+		container: PropTypes.string,
+		field: PropTypes.string.isRequired,
+		regexp: PropTypes.string,
+		valueIn: PropTypes.arrayOf(PropTypes.string),
+	}),
+	PropTypes.oneOf(["isAdmin"])
+]);
 
 export const operationPropType = PropTypes.shape({
 	type: PropTypes.oneOf(["merge", "wrap"]),
@@ -109,7 +113,7 @@ export const computeUiSchema = (uiSchema, operations) => {
 	return (Array.isArray(operations) ? operations : [operations]).reduce((_uiSchema, op) => {
 		switch (op.type) {
 		case "merge":
-			uiSchema = deepmerge(uiSchema,  op.uiSchema, {arrayMerge: (a1, a2) => a2});
+			uiSchema = deepmerge(uiSchema, op.uiSchema, {arrayMerge: (a1, a2) => a2});
 			break;
 		case "wrap":
 			uiSchema = {...op.uiSchema, uiSchema};
