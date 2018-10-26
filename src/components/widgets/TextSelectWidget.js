@@ -14,7 +14,7 @@ class TextSelectWidget extends Component {
 	}
 
 	constructor(props) {
-		super();
+		super(props);
 
 		this.state = this.getInitialState(props);
 	}
@@ -71,18 +71,16 @@ class TextSelectWidget extends Component {
 		return (
 			<div className="laji-text-select">
 				{enums.map((label, i) => {
-					const changeFunction = () => {
-						this.onCheckBoxChange(label);
-					};
 					return (
 						<Checkbox key={i}
-						          title={label}
-						          checked={selectedCheckboxes.has(label)}
-						          onClick={changeFunction}>{label}</Checkbox>
+											title={label}
+											checked={selectedCheckboxes.has(label)}
+											onChange={this.onCheckBoxChange(label)}>{label}</Checkbox>
 					);
 				})}
 				{freeTextField ?
-					<BaseInput {...this.props}
+					<BaseInput
+						{...this.props}
 						id={this.props.id + "_input"}
 						value={otherValue}
 						onChange={this.onInputChange}
@@ -92,8 +90,8 @@ class TextSelectWidget extends Component {
 		);
 	}
 
-	onCheckBoxChange = (label) => {
-	    const selectedCheckboxes = this.state.selectedCheckboxes;
+	onCheckBoxChange = (label) => () => {
+		const selectedCheckboxes = this.state.selectedCheckboxes;
 
 		if (selectedCheckboxes.has(label)) {
 			selectedCheckboxes.delete(label);
@@ -113,10 +111,10 @@ class TextSelectWidget extends Component {
 	onChange = (textValue) => {
 		let newValue = [...this.state.selectedCheckboxes];
 		if (this.state.selectedCheckboxes.has(this.state.freeTextField)) {
-		    if (textValue && textValue.length > 0) {
-			newValue = update(newValue, {$push: [textValue]});
-		    }
-		    newValue.splice(newValue.indexOf(this.state.freeTextField), 1);
+			if (textValue && textValue.length > 0) {
+				newValue = update(newValue, {$push: [textValue]});
+			}
+			newValue.splice(newValue.indexOf(this.state.freeTextField), 1);
 		}
 		this.props.onChange(newValue.join(", "));
 	};

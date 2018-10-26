@@ -156,7 +156,7 @@ function TaxonAutosuggest(ComposedComponent) {
 					...(propsWithoutOptions.query || {}),
 					...(propsOptions.query || {}),
 				}
-			}
+			};
 
 			return <Autosuggest {..._options}/>;
 		}
