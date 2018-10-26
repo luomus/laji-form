@@ -86,7 +86,7 @@ export default class _SchemaField extends Component {
 			const uiButtons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema)["ui:buttons"] : undefined;
 			_props = {
 				..._props, 
-				uiSchema: (_props.uiSchema["ui:field"])
+				uiSchema: (_props.uiSchema["ui:field"] || _props.uiSchema["ui:widget"])
 					? {...uiFn, uiSchema: _props.uiSchema}
 					: {..._props.uiSchema, ...uiFn}
 			};
