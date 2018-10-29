@@ -463,6 +463,7 @@ export function injectButtons(uiSchema, buttons, buttonsPath) {
 		let _splitPath = "";
 		splitPath.reduce((o, split) => {
 			_splitPath += `/${split}`;
+			console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
 			if (!o[split]) {
 				uiSchema = update(uiSchema, getUpdateObjectFromJSONPath(_splitPath, {$set: {}}));
 			}
