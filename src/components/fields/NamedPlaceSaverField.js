@@ -149,6 +149,7 @@ class PlaceSaverDialog extends Component {
 			geometry: place.prepopulatedDocument.gatherings[0].geometry
 		};
 
+		new Context(this.props.formContext.contextId).pushBlockingLoader();
 		this.apiClient.fetchRaw(`/named-places${place.id ? `/${place.id}` : ""}`, undefined, {
 			method: place.id ? "PUT" : "POST",
 			headers: {
@@ -157,10 +158,12 @@ class PlaceSaverDialog extends Component {
 			},
 			body: JSON.stringify(place)
 		}).then(response => {
+			new Context(this.props.formContext.contextId).popBlockingLoader();
 			this.apiClient.invalidateCachePath("/named-places");
 			return response.json();
 		}).then(this.props.onSave)
 			.catch(() => {
+				new Context(this.props.formContext.contextId).popBlockingLoader();
 				this.setState({failed: SAVE});
 			});
 	}
