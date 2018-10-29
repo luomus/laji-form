@@ -148,8 +148,13 @@ class TableArrayFieldTemplate extends Component {
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
 		return (
-			<div>
-				<Row>{labels}</Row>
+			<div className="table-field ">
+				<Row>
+					<div className="laji-form-field-template-item">
+						<div className="laji-form-field-template-schema">{labels}</div>
+						<div className="laji-form-field-template-buttons" />
+					</div>
+				</Row>
 				{props.items.map((item, i) => {
 					const deleteButton = (
 						<DeleteButton ref={getRefFor(i)}

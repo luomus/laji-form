@@ -845,7 +845,7 @@ min-height: 20px;
 	padding-bottom: 0 !important;
 	vertical-align: top !important;
 }
-.laji-form .single-active-array-table-container .laji-form-field-template-buttons {
+.laji-form .single-active-array-table-container .laji-form-field-template-buttons, .laji-form .table-field .laji-form-field-template-buttons {
 	width: 26px;
 }
 .laji-form .single-active-array-table-container .table-responsive.laji-form-field-template-schema {
