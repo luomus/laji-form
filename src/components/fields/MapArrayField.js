@@ -739,7 +739,7 @@ class _MapArrayField extends ComposedComponent {
 		return _options;
 	}
 
-	onActiveChange = (idx, callback) => {
+	onActiveChange = (idx, prop, callback) => {
 		this.nestedHandledActiveChange = true;
 		this.setState({activeIdx: idx}, () => {
 			if (!callback) return;

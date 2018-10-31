@@ -256,7 +256,7 @@ export default class SingleActiveArrayField extends Component {
 		});
 	}
 
-	onActiveChange = (idx, callback) => {
+	onActiveChange = (idx, prop, callback) => {
 		if (idx !== undefined) {
 			idx = parseInt(idx);
 		}
@@ -266,7 +266,7 @@ export default class SingleActiveArrayField extends Component {
 		}
 
 		const {onActiveChange} = getUiOptions(this.props.uiSchema);
-		onActiveChange ? onActiveChange(idx, callback) : this.setState({activeIdx: idx}, callback);
+		onActiveChange ? onActiveChange(idx, prop, callback) : this.setState({activeIdx: idx}, callback);
 	}
 
 	onDelete = (idx) => () => {
@@ -329,12 +329,12 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			const that = this.props.formContext.this;
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
-				insertCallforward: callback => that.onActiveChange(that.props.formData.length, callback),
+				insertCallforward: callback => that.onActiveChange(that.props.formData.length, undefined, callback),
 				getCurrentIdx: () => that.state.activeIdx,
-				focusByIdx: (idx, callback) => {
+				focusByIdx: (idx, prop, callback) => {
 					idx === that.state.activeIdx ?
 					callback() :
-					that.onActiveChange(idx, callback);
+					that.onActiveChange(idx, prop, callback);
 				},
 				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager" ?
 					() => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
@@ -358,7 +358,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			for (let i = 0; i < this.props.items.length; i++) {
 				this.focusHandlers.push(() => {
 					if (that.state.activeIdx !== i) return new Promise(resolve => {
-						that.onActiveChange(i, () => resolve());
+						that.onActiveChange(i, undefined, () => resolve());
 					});
 				});
 				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
@@ -723,7 +723,7 @@ class TableArrayFieldTemplate extends Component {
 		const activeIdx = that.state.activeIdx;
 
 		const changeActive = idx => () => {
-			idx !== that.state.activeIdx && that.onActiveChange(idx, this.updateLayout);
+			idx !== that.state.activeIdx && that.onActiveChange(idx, undefined, this.updateLayout);
 		};
 
 		const {confirmDelete, titleClassName, titleFormatters} = getUiOptions(uiSchema);

@@ -286,20 +286,24 @@ export default class ArrayFieldTemplate extends Component {
 
 export const arrayKeyFunctions = {
 	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
-		function focusIdx(idx) {
+		function focusIdx(idx, prop) {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);
-				const {focusOnNavigate = true} = options;
-				const idToFocusAfterNavigate = options.idToFocusAfterNavigate ||  `${getProps().idSchema.$id}_${idx}`;
+				const {focusOnNavigate = true, idToFocusAfterNavigate, keepPropFocusOnNavigate = false} = options;
+				const idByIdx =  `${getProps().idSchema.$id}_${idx}`
+				const _idToFocusAfterNavigate = idToFocusAfterNavigate ||
+					prop && keepPropFocusOnNavigate
+					? `${idByIdx}_${prop}`
+					: idByIdx;
 				const idToScrollAfterNavigate = options.idToScrollAfterNavigate
 					? options.idToScrollAfterNavigate
 					: getIdToScrollAfterNavigate
 						? getIdToScrollAfterNavigate()
 						: undefined;
-				focusAndScroll(getProps().formContext, idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
+				focusAndScroll(getProps().formContext, _idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
 			}
 			if (focusByIdx) {
-				focusByIdx(idx, callback);
+				focusByIdx(idx, prop, callback);
 			} else {
 				callback();
 			}
@@ -309,13 +313,15 @@ export const arrayKeyFunctions = {
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
 		const focusedIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
+		const lastId = nearestSchemaElemId.substring(`${getProps().idSchema.$id}_${focusedIdx}`.length + 1, nearestSchemaElemId.length);
+		const focusedProp = isNaN(lastId) ? lastId : undefined;
 
 		const currentIdx = getCurrentIdx ? getCurrentIdx() : focusedIdx;
 
 		const arrayLength = getProps().formData ? getProps().formData.length : 0;
 
 		if (isNullOrUndefined(currentIdx) && arrayLength > 0) {
-			focusIdx(reverse ? arrayLength - 1 : 0);
+			focusIdx(reverse ? arrayLength - 1 : 0, focusedProp);
 			return true;
 		} else {
 			let amount = 0;
@@ -326,9 +332,9 @@ export const arrayKeyFunctions = {
 			if (amount === 0 || amount < 0 && nextIdx >= 0 || amount > 0 && nextIdx < arrayLength) {
 				if (navigateCallforward) {
 					e.persist();
-					navigateCallforward(() => focusIdx(nextIdx), nextIdx);
+					navigateCallforward(() => focusIdx(nextIdx, focusedProp), nextIdx);
 				} else {
-					focusIdx(nextIdx);
+					focusIdx(nextIdx, focusedProp);
 				}
 				return true;
 			}

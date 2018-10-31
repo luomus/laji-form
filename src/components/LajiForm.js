@@ -676,10 +676,8 @@ export default class LajiForm extends Component {
 	pushBlockingLoader = () => {
 		this.blockingLoaderCounter++;
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
-		if (this.mounted) {
-			if (this.blockingLoaderCounter === 1) {
-				this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-			}
+		if (this.mounted && this.blockingLoaderCounter === 1) {
+			this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 		}
 	}
 
