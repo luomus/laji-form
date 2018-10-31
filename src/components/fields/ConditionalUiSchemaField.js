@@ -11,7 +11,7 @@ export const rulePropType = PropTypes.oneOfType([
 		regexp: PropTypes.string,
 		valueIn: PropTypes.arrayOf(PropTypes.string),
 	}),
-	PropTypes.oneOf(["isAdmin"])
+	PropTypes.oneOf(["isAdmin", "isEdit"])
 ]);
 
 export const operationPropType = PropTypes.shape({
