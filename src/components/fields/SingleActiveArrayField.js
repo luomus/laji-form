@@ -92,8 +92,8 @@ export default class SingleActiveArrayField extends Component {
 			const idToScroll = idToScrollAfterNavigate
 				? idToScrollAfterNavigate
 				: renderer === "accordion" || renderer === "pager" 
-					?  `${this.props.idSchema.$id}_${this.state.activeIdx}-header`
-					:  `${this.props.idSchema.$id}-add`;
+					? `${this.props.idSchema.$id}_${this.state.activeIdx}-header`
+					: `${this.props.idSchema.$id}-add`;
 			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScroll, focusOnNavigate));
 		}
 	}
@@ -331,13 +331,11 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange(that.props.formData.length, undefined, callback),
 				getCurrentIdx: () => that.state.activeIdx,
-				focusByIdx: (idx, prop, callback) => {
-					idx === that.state.activeIdx ?
-					callback() :
-					that.onActiveChange(idx, prop, callback);
-				},
-				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager" ?
-					() => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
+				focusByIdx: (idx, prop, callback) => idx === that.state.activeIdx
+					? callback()
+					: that.onActiveChange(idx, prop, callback),
+				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager"
+					? () => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
 					: undefined
 			});
 		}

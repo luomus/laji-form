@@ -415,7 +415,7 @@ export function getWindowScrolled() {
 	return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 }
 
-export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
+export function getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	if (!elem) return;
 	var rect = elem.getBoundingClientRect();
 	var html = document.documentElement;
@@ -429,14 +429,18 @@ export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
 	const elemBottomDistFromViewportBottom = -(elemTopDistFromViewportTop + height - viewportHeight);
 	const pageScrolled = getWindowScrolled();
 
-	if (inView) return;
+	if (inView) return pageScrolled;
 
 	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
 	if (elemTopDistFromViewportTop <= topOffset) {
-		window.scrollTo(0, pageScrolled + elemTopDistFromViewportTop - topOffset);
+		return pageScrolled + elemTopDistFromViewportTop - topOffset;
 	} else {
-		window.scrollTo(0, pageScrolled - elemBottomDistFromViewportBottom + bottomOffset);
+		return pageScrolled - elemBottomDistFromViewportBottom + bottomOffset;
 	}
+}
+
+export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
+	window.scrollTo(0, getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset, bottomOffset));
 }
 
 export function filter(properties, filter, filterType = "blacklist", getValue) {
@@ -561,16 +565,36 @@ export function checkRules(rules, props, cache, prop = "formData") {
 }
 
 export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true) {
-	const _context = new Context(formContext.contextId);
+	const {contextId, topOffset, bottomOffset} = formContext;
+	const _context = new Context(contextId);
 	if (idToFocus === undefined && idToScroll === undefined) return;
 	if (idToFocus && !focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	if (idToScroll) {
 		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
-		scrollIntoViewIfNeeded(elemToScroll, formContext.topOffset, formContext.bottomOffset);
+		const elemToFocus = getSchemaElementById(contextId, getKeyHandlerTargetId(idToFocus, _context));
+		if (!elemToScroll || !elemToFocus) {
+			return end();
+		}
+		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
+		const scrollAmount = wouldScrollTo - getWindowScrolled();
+		const {top, bottom} = elemToFocus.getBoundingClientRect();
+		const viewTopDistanceFromTop = top - scrollAmount;
+		const viewBottomDistanceFromBottom = (window.innerHeight || document.documentElement.clientHeight) - bottom + scrollAmount;
+
+		// Don't scroll if scrolling would hide focused elem.
+		if (viewTopDistanceFromTop < topOffset || viewBottomDistanceFromBottom < bottomOffset) {
+			return end();
+		} else {
+			scrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
+		}
 	}
-	_context.lastIdToScroll = idToScroll;
-	_context.windowScrolled = getWindowScrolled();
-	return true;
+	return end();
+
+	function end() {
+		_context.lastIdToScroll = idToScroll;
+		_context.windowScrolled = getWindowScrolled();
+		return true;
+	}
 }
 
 export function shouldSyncScroll(formContext) {
