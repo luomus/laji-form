@@ -70,6 +70,7 @@ promise.then(data => {
 			...(data.uiSchemaContext || {}),
 			creator: properties.userId,
 			isAdmin: query.admin,
+			isEdit: query.edit,
 			municipalityEnum:  require("./municipalityEnum.json")
 		},
 		onSubmit,

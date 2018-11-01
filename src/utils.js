@@ -542,6 +542,8 @@ export function checkRules(rules, props, cache, prop = "formData") {
 	const passes = (Array.isArray(rules) ? rules : [rules]).every((rule, idx) => {
 		if (rule === "isAdmin") {
 			return props.formContext.uiSchemaContext.isAdmin;
+		} else if (rule === "isEdit") {
+			return props.formContext.uiSchemaContext.isEdit;
 		} else {
 			const {field, regexp, valueIn} = rule;
 			let value = parseJSONPointer(props[prop] || {}, field);
