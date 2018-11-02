@@ -689,9 +689,20 @@ export default class LajiForm extends Component {
 		} else if (this.blockingLoaderCounter === 0) {
 			this.blockingLoaderRef.className = "laji-form blocking-loader leave-start";
 			this.setImmediate(() => {
+				if (this.blockingLoaderCounter > 0) {
+					this.blockingLoaderRef.className = "laji-form blocking-loader entering";
+					return;
+				}
 				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader leaving";
 				this.setTimeout(() => {
-					if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader";
+					if (!this.blockingLoaderRef) {
+						return;
+					}
+					if (this.blockingLoaderCounter > 0) {
+						this.blockingLoaderRef.className = "laji-form blocking-loader entering";
+					} else {
+						this.blockingLoaderRef.className = "laji-form blocking-loader";
+					}
 				}, 200); // should match css transition time.
 			});
 		}
