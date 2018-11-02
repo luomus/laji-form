@@ -10,7 +10,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -62,6 +62,7 @@ class DefaultMapArrayField extends Component {
 		super(props);
 		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
 		this.onChange = this.onChange.bind(this);
+		this.getGeometry = this.getGeometry.bind(this);
 	}
 
 	getOptions(options) {
@@ -82,9 +83,9 @@ class DefaultMapArrayField extends Component {
 			...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
 		};
 
-
-		const controls = (emptyMode || this.state.activeIdx !== undefined) ?
-			{drawCopy: true} : {draw: false, coordinateInput: false};
+		const controls = (emptyMode || this.state.activeIdx !== undefined)
+			? {drawCopy: true}
+			: {draw: false, coordinateInput: false};
 
 		const data = geometries && geometries.length || !options.placeholderGeometry
 			? undefined
@@ -99,33 +100,56 @@ class DefaultMapArrayField extends Component {
 	onMapChangeCreateGathering(events) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		events.forEach(e => {
-			if (e.type === "create") {
-				const formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-				formData[geometryField] = {
-					type: "GeometryCollection",
-					geometries: [e.feature.geometry]
-				};
-				this.props.onChange([formData]);
-				this.setState({activeIdx: 0});
+			if (e.type !== "create") {
+				return;
 			}
+
+			let splittedPath = geometryField.split("/").filter(s => !isEmptyString(s));
+
+			let _cumulatedPointer = "";
+			let _schema = this.props.schema.items;
+			const formData = splittedPath.reduce((formData, split, i) => {
+				_cumulatedPointer += `/${split}`;
+				_schema = _schema.properties
+					? _schema.properties[split]
+					: _schema.items;
+				return update(formData, getUpdateObjectFromJSONPath(_cumulatedPointer,
+					{$set: i === splittedPath.length - 1
+						? {
+							type: "GeometryCollection",
+							geometries: [e.feature.geometry]
+						}
+						: getDefaultFormState(_schema, undefined, this.props.registry.definitions)
+					}
+				));
+			}, getDefaultFormState(_schema, undefined, this.props.registry.definitions));
+
+			this.props.onChange([formData]);
+			this.setState({activeIdx: 0});
 		});
 	}
 
-	getData() {
-		const {formData} = this.props;
+	getGeometry() {
+		const {formData, uiSchema} = this.props;
+		const {geometryField} = getUiOptions(uiSchema);
 		const {activeIdx} = this.state;
-		const {geometryField} = getUiOptions(this.props.uiSchema);
-		if (!formData) return;
-
-		const item = formData[activeIdx];
-		this._context.featureIdxsToItemIdxs = {};
-
-		let geometries = [];
-		if (activeIdx !== undefined && item && item[geometryField] && item[geometryField].type) {
-			geometries = parseGeometries(item[geometryField]);
+		if (!formData) {
+			return;
 		}
+		const item = formData[activeIdx];
+		if (activeIdx === undefined || !item) {
+			return;
+		}
+		const geometryItem = parseJSONPointer(formData[activeIdx], geometryField);
+		return geometryItem;
+	}
 
-		return geometries;
+	getData() {
+		const geometryItem = this.getGeometry();
+		if (geometryItem && geometryItem.type) {
+			return parseGeometries(geometryItem);
+		}
+		return [];
 	}
 
 	onChange(events) {
@@ -151,12 +175,10 @@ class DefaultMapArrayField extends Component {
 		const formData = this.props.formData ||
 			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
 		const {geometryField} = getUiOptions(this.props.uiSchema);
-
-		const itemFormData = formData[this.state.activeIdx];
 		this.props.onChange(update(formData,
-			{[this.state.activeIdx]: {$merge: {[geometryField]: {type: "GeometryCollection", geometries: [
-				...parseGeometries(itemFormData[geometryField]), geometry
-			]}}}}));
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, {$set: {type: "GeometryCollection", geometries: [
+				...parseGeometries(this.getGeometry()), geometry
+			]}})}));
 	}
 
 	onRemove({idxs}) {
@@ -165,30 +187,32 @@ class DefaultMapArrayField extends Component {
 		idxs.sort().reverse().forEach((idx) => {
 			splices.push([idx, 1]);
 		});
-		const item = this.props.formData[this.state.activeIdx];
+		const geometry = this.getGeometry();
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {[geometryField]: item[geometryField] && item[geometryField].type === "GeometryCollection" ?
-				{geometries: {$splice: splices}} : {$set: undefined}}}));
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, geometry && geometry.type === "GeometryCollection" ?
+				{geometries: {$splice: splices}} : {$set: undefined}
+			)}));
 	}
 
 	onEdited({features}) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
-		const geometry = this.props.formData[this.state.activeIdx][geometryField];
+		const geometry = this.getGeometry();
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {[geometryField]: geometry.type === "GeometryCollection" ? {
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, geometry.type === "GeometryCollection" ? {
 				geometries: Object.keys(features).reduce((obj, idx) => {
 					obj[idx] = {$set: features[idx].geometry};
 					return obj;
 				}, {})
-			} : {$set: features[0].geometry}}}));
+			} : {$set: features[0].geometry}
+			)}));
 	}
 
 	onInsert({idx, feature}) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		this.props.onChange(update(this.props.formData,
-			{[this.state.activeIdx]: {[geometryField]: {
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, {
 				geometries: {$splice: [[idx, 0, feature.geometry]]}
-			}}}));
+			})}));
 	}
 
 	afterActiveChange(idx) {
@@ -210,6 +234,7 @@ class UnitsMapArrayField extends Component {
 		this.onEdited = DefaultMapArrayField.prototype.onEdited.bind(this);
 		this.onInsert = DefaultMapArrayField.prototype.onInsert.bind(this);
 		this.afterActiveChange = DefaultMapArrayField.prototype.afterActiveChange.bind(this);
+		this.getGeometry = DefaultMapArrayField.prototype.getGeometry.bind(this);
 	}
 
 	componentDidMount() {
@@ -895,7 +920,7 @@ class _MapArrayField extends ComposedComponent {
 		const inlineSchema = <SchemaField {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
 		const belowSchema = belowFields ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
-		buttons =  buttons && (!_buttonsPath || mapOptions.emptyMode)
+		buttons = buttons && (!_buttonsPath || mapOptions.emptyMode)
 			? buttons.map(button => getButton(button, {
 				canAdd: mapOptions.emptyMode ? button.fnName === "addNamedPlace" : true,
 				uiSchema: this.props.uiSchema,
@@ -905,10 +930,12 @@ class _MapArrayField extends ComposedComponent {
 			})).filter(button => button)
 			: undefined;
 
-		const errors = (errorSchema && errorSchema[activeIdx] && errorSchema[activeIdx][geometryField])
-			? errorSchema[activeIdx][geometryField].__errors.map(formatErrorMessage)
+		const _errors = errorSchema && errorSchema[activeIdx] && parseJSONPointer(errorSchema[activeIdx], geometryField);
+		const errors = _errors
+			? _errors.__errors.map(formatErrorMessage)
 			: null;
 
+		const errorId = geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
 		const mapPropsToPass = {
 			formContext: this.props.formContext,
 			onPopupClose: this.onPopupClose,
@@ -919,7 +946,7 @@ class _MapArrayField extends ComposedComponent {
 			onFocusRelease: this.onFocusRelease,
 			panel: errors ? {
 				header: this.props.formContext.translations.Error,
-				panelTextContent: <div id={`laji-form-error-container-${this.props.idSchema.$id}_${activeIdx}_${geometryField}`}>{errors}</div>,
+				panelTextContent: <div id={`laji-form-error-container-${this.props.idSchema.$id}_${activeIdx}${errorId}`}>{errors}</div>,
 				bsStyle: "danger"
 			} : null,
 			draw: false,
@@ -1057,16 +1084,11 @@ class _MapArrayField extends ComposedComponent {
 		if (!this.location) return;
 
 		const {latlng, radius} = this.location;
-		const {createOnLocate, geometryField} = getUiOptions(this.props.uiSchema);
+		const {createOnLocate} = getUiOptions(this.props.uiSchema);
 		if (!createOnLocate) return;
 
-		const {formData} = this.props;
-		if (this.props.formData.length === 0 
-			|| (
-				!formData[this.state.activeIdx][geometryField] ||
-				!formData[this.state.activeIdx][geometryField] ||
-				!Object.keys(formData[this.state.activeIdx][geometryField]).length
-			)) {
+		const geometry = this.getGeometry();
+		if (this.props.formData.length === 0 || (!geometry || !Object.keys(geometry).length)) {
 			let geometry = undefined;
 			if (createOnLocate === "marker") {
 				geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
