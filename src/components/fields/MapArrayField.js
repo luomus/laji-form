@@ -88,13 +88,19 @@ class DefaultMapArrayField extends Component {
 			: {draw: false, coordinateInput: false};
 
 		const data = geometries && geometries.length || !options.placeholderGeometry
-			? undefined
+			? []
 			: {
 				geoData: options.placeholderGeometry,
 				getFeatureStyle: this._getPlaceholderStyle
 			};
 
-		return {draw, controls, emptyMode, data};
+		const extraData = options.data ? options.data.map(({geometryField}) => {
+			return {
+				geoData: this.getGeometry(geometryField)
+			}
+		}): [];
+
+		return {draw, controls, emptyMode, data: [...data, ...extraData]};
 	}
 
 	onMapChangeCreateGathering(events) {
@@ -129,7 +135,7 @@ class DefaultMapArrayField extends Component {
 		});
 	}
 
-	getGeometry() {
+	getGeometry(_geometryField) {
 		const {formData, uiSchema} = this.props;
 		const {geometryField} = getUiOptions(uiSchema);
 		const {activeIdx} = this.state;
@@ -140,7 +146,7 @@ class DefaultMapArrayField extends Component {
 		if (activeIdx === undefined || !item) {
 			return;
 		}
-		const geometryItem = parseJSONPointer(formData[activeIdx], geometryField);
+		const geometryItem = parseJSONPointer(formData[activeIdx], _geometryField || geometryField);
 		return geometryItem;
 	}
 
@@ -605,7 +611,7 @@ class _MapArrayField extends ComposedComponent {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				geometryField: PropTypes.string.isRequired,
-				// allows custom algorithm for getting geometry data
+				// Strategy for getting geometry data.
 				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect"]),
 				topOffset: PropTypes.integer,
 				bottomOffset: PropTypes.integer,
@@ -616,7 +622,10 @@ class _MapArrayField extends ComposedComponent {
 					sm: PropTypes.integer,
 					xs: PropTypes.integer
 				})
-			}).isRequired
+			}).isRequired,
+			data: PropTypes.arrayOf(PropTypes.shape({
+				geometryField: PropTypes.string.isRequired
+			}))
 		}),
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
