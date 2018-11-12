@@ -140,32 +140,25 @@ class LocationButton extends Component {
 			});
 		}
 
-		const drawData = that.props.formData[geometryField] && that.props.formData[geometryField].type ? 
-			{ featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: that.props.formData[geometryField]}]} }:
-			undefined;
+		const drawData = that.props.formData[geometryField] && that.props.formData[geometryField].type
+			? { featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: that.props.formData[geometryField]}]} }
+			: undefined;
 
 		if (unitData && drawData) drawData.getFeatureStyle = unitData.getFeatureStyle;
 
-		const uiOptions = that.props.uiSchema["ui:options"];
+		const uiOptions = getUiOptions(that.props.uiSchema);
 
-		const _mapOptions = uiOptions.mapOptions || {};
-
-		const marker = _mapOptions.hasOwnProperty("marker") ? _mapOptions.marker : true;
-		const polyline = _mapOptions.hasOwnProperty("polyline") ? _mapOptions.polyline : false;
-		const rectangle = _mapOptions.hasOwnProperty("rectangle") ? _mapOptions.rectangle : false;
-		const polygon = _mapOptions.hasOwnProperty("polygon") ? _mapOptions.polygon : false;
-		const circle = _mapOptions.hasOwnProperty("circle") ? _mapOptions.circle : false;
-
-		let preselectMarker = true;
-
-		if (uiOptions.hasOwnProperty("preselectMarker")) {
-			preselectMarker = that.props.uiSchema["ui:options"].preselectMarker;
-		}
-
-		let maxShapes = 1;
-		if (uiOptions.maxShapes) {
-			maxShapes = uiOptions.maxShapes;
-		}
+		const {
+			preselectMarker = true,
+			maxShapes = 1,
+			mapOptions: {
+				marker = true,
+				polyline = false,
+				rectangle = false,
+				polygon = false,
+				circle = false
+			} = {}
+		} = uiOptions;
 
 		this.setState({
 			modalMap: {
@@ -237,6 +230,7 @@ class LocationButton extends Component {
 					}
 				},
 				fullscreenable: true,
+				zoomToData: true,
 				onComponentDidMount: (map) => {
 					modalMap = map;
 					if (!preselectMarker) {
@@ -244,18 +238,13 @@ class LocationButton extends Component {
 					}
 					triggerLayer = modalMap.triggerDrawing("marker");
 					const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
+					map.zoomToData();
 					if (layer) {
 						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
 						modalMap.setLayerStyle(layer, {opacity: 0.7});
 						map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
-					} else {
-						const {group: drawLayerGroup} = modalMap.getDraw();
-						const bounds = drawLayerGroup ? drawLayerGroup.getBounds() : undefined;
-						if (bounds && bounds._southWest && bounds._northEast) modalMap.map.fitBounds(bounds);
 					}
-				},
-				center: hasCoordinates ? that.props.formData[geometryField].geometries[0].coordinates.slice(0).reverse() : mapOptions.center,
-				zoom: hasCoordinates ? 14 : mapOptions.zoom
+				}
 			}
 		});
 
@@ -265,6 +254,9 @@ class LocationButton extends Component {
 			_that.onHide();
 		}
 	}
+
+	getGrey = () => ({opacity: 0.6, color: "#888888"})
+	getFeatureStyle = () => ({color: "#75CEFA"})
 
 	onEntered = () => {
 		const {that} = this.props;
@@ -281,29 +273,38 @@ class LocationButton extends Component {
 		const geometryField = this.getGeometryField();
 		const geometry = that.props.formData[geometryField];
 
+		const data = [
+			...(map && map.getDraw() ? [{
+				...map.getDraw(),
+				getFeatureStyle: this.getGrey
+			}] : []),
+			...(map && map.data && map.data[0] ? [{
+				...map.data[0],
+				getFeatureStyle: this.getGrey
+			}] : []),
+			{
+				geoData: geometry,
+				getFeatureStyle: this.getFeatureStyle
+			}
+		]
+
+		const zoomToData = {dataIdxs: [data.length - 1]};
 		this.setState({
 			miniMap: {
 				...mapOptions,
 				draw: false,
 				controls: false,
 				customControls: undefined,
-				zoom: 8,
-				center: geometry.geometries[0].coordinates.slice(0).reverse(),
-				data: [
-					...(map && map.getDraw() ? [{
-						...map.getDraw(),
-						getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
-					}] : []),
-					...(map && map.data && map.data[0] ? [{
-						...map.data[0],
-						getFeatureStyle: () => {return {opacity: 0.6, color: "#888888"};}
-					}] : []),
-					{
-						geoData: geometry,
-						getFeatureStyle: () => {return {color: "#75CEFA"};}
-					}
-				]
+				zoomToData,
+				data
 			}
+		}, () => {
+			setImmediate(() => {
+				const {map} = this.miniMapRef;
+				if (map) {
+					map.zoomToData(zoomToData);
+				}
+			});
 		});
 	};
 
@@ -319,6 +320,10 @@ class LocationButton extends Component {
 
 	setMapRef = (elem) => {
 		this.modalMapRef = elem;
+	}
+
+	setMiniMapRef = (elem) => {
+		this.miniMapRef = elem;
 	}
 
 	render ()  {
@@ -341,7 +346,7 @@ class LocationButton extends Component {
 		const {translations} = that.props.formContext;
 		const overlay = hasCoordinates ? (
 			<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-				<Map {...this.state.miniMap} hidden={!this.state.miniMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false}/>
+				<Map {...this.state.miniMap} hidden={!this.state.miniMap || this.state.modalMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false} ref={this.setMiniMapRef}/>
 			</Popover>
 		) : (
 			<Tooltip id={`${id}-location-peeker`}>{label || that.props.formContext.translations.ChooseLocation}</Tooltip>

@@ -94,11 +94,11 @@ class DefaultMapArrayField extends Component {
 				getFeatureStyle: this._getPlaceholderStyle
 			};
 
-		const extraData = options.data ? options.data.map(({geometryField}) => {
-			return {
+		const extraData = (options.data || []).map(({geometryField}) => (
+			{
 				geoData: this.getGeometry(geometryField)
-			}
-		}): [];
+			})
+		);
 
 		return {draw, controls, emptyMode, data: [...data, ...extraData]};
 	}
@@ -253,15 +253,9 @@ class UnitsMapArrayField extends Component {
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlightUnit");
 	}
 
-	startHighlightUnit = (idx) => {
-		const layer = this.map.getLayerByIdxTuple([0, idx]);
-		layer && this.map.setLayerStyle(layer, {color: combineColors(this.getUnitFeatureStyle().color, "#ffffff", 30)});
-	};
-
-	endHighlightUnit = (idx) => {
-		const layer = this.map.getLayerByIdxTuple([0, idx]);
-		layer && this.map.setLayerStyle(layer, {color: this.getUnitFeatureStyle().color});
-	};
+	isGeometryCollection = (idx) => {
+		return this.props.formData[this.state.activeIdx].units[idx].unitGathering.geometry.type === "GeometryCollection";
+	}
 
 	getOptions = (options) => {
 		const {formData} = this.props;
@@ -281,26 +275,82 @@ class UnitsMapArrayField extends Component {
 			...(options.draw && options.draw.constructor === Object && options.draw !== null ? options.draw : {})
 		};
 
-		const data = {
-			featureCollection: {
-				type: "FeatureCollection",
-				features: units.reduce((units, geometry, idx) => {
-					if (geometry) units.push({type: "Feature", properties: {idx}, geometry});
-					return units;
-				}, [])
-			},
-			getPopup: this.getPopup,
-			getFeatureStyle: this.getUnitFeatureStyle,
-			getDraftStyle: this.getDraftStyle,
-			editable: true,
-			onChange: this.onUnitChange,
-			on: {
-				mouseover: this.onMouseOver,
-				mouseout: this.onMouseOut
-			}
+		// Separate non geometry collections and geometry collections with single geometry to
+		// unitGeometries, and put the rest to unitGeometryCollections. This is for optimization.
+		let unitGeometryCollections = {}, unitGeometries = {};
+		units.forEach((geometry, idx) => {
+			const target = (geometry.type !== "GeometryCollection" || geometry.geometries.length === 1)
+				? unitGeometries
+				: unitGeometryCollections;
+			target[idx] = geometry.type === "GeometryCollection" && geometry.geometries.length === 1
+				? geometry.geometries[0]
+				: geometry;
+		});
+
+		this.unitIdxToGeometryIdx = {};
+		this.geometryIdxUnitIdx = {};
+		this.unitIdxToGeometryCollectionIdx = {};
+		this.geometryCollectionIdxUnitIdx = {};
+		const reducer = ([uToG, gToU], idx, _idx) => {
+			uToG[idx] = _idx;
+			gToU[_idx] = idx;
+			return [uToG, gToU];
+		};
+		Object.keys(unitGeometries).reduce(reducer, [this.unitIdxToGeometryIdx, this.geometryIdxUnitIdx]);
+		Object.keys(unitGeometryCollections).reduce(reducer, [this.unitIdxToGeometryCollectionIdx, this.geometryCollectionIdxUnitIdx]);
+
+		if (!this.unitChangeHandlers) {
+			this.unitChangeHandlers = {onChange: {}, mouseOver: {}, mouseOut: {}};
+		}
+
+		const getCommonOptions = unitIdx => {
+			// Store so change detection doesn't think it's a new function.
+			const unitChangeHandler = this.unitChangeHandlers.onChange[unitIdx] || this.onUnitChange(unitIdx ? +unitIdx : undefined);
+			this.unitChangeHandlers.onChange[unitIdx] = unitChangeHandler;
+			const mouseOver = this.unitChangeHandlers.mouseOver[unitIdx] || this.onMouseOver(unitIdx ? +unitIdx : undefined);
+			this.unitChangeHandlers.mouseOver[unitIdx] = mouseOver;
+			const mouseOut = this.unitChangeHandlers.mouseOut[unitIdx] || this.onMouseOut(unitIdx ? +unitIdx : undefined);
+			this.unitChangeHandlers.mouseOut[unitIdx] = mouseOut;
+			return {
+				getPopup: this.getPopup,
+				getFeatureStyle: this.getUnitFeatureStyle,
+				getDraftStyle: this.getDraftStyle,
+				editable: true,
+				onChange: unitChangeHandler,
+				on: {
+					mouseover: mouseOver,
+					mouseout: mouseOut
+				}
+			};
 		};
 
-		this.unitFeatures = data.featureCollection.features;
+		const data = [
+			{
+				featureCollection: {
+					type: "FeatureCollection",
+					features: Object.keys(unitGeometries).reduce((units, idx) => {
+						const geometry = unitGeometries[idx];
+						if (geometry) units.push({type: "Feature", properties: {idx}, geometry});
+						return units;
+					}, [])
+			  },
+			  ...getCommonOptions()
+			},
+			...Object.keys(unitGeometryCollections).map(idx => {
+				const geometryCollection = unitGeometryCollections[idx];
+				return {
+					featureCollection: {
+						type: "FeatureCollection",
+						features: geometryCollection.geometries.map(geometry => ({
+							type: "Feature", properties: {}, geometry
+						}))
+					},
+					...getCommonOptions(this.geometryCollectionIdxUnitIdx[idx])
+				};
+			})
+		];
+
+		this.unitFeatures = data[0].featureCollection.features;
 
 		const controls = (emptyMode || !isNullOrUndefined(this.state.activeIdx)) ?
 			{} : {draw: false};
@@ -308,12 +358,42 @@ class UnitsMapArrayField extends Component {
 		return {draw, data, controls, emptyMode};
 	}
 
-	onMouseOver = (e, {feature}) => {
-		const {idx} = feature.properties || {};
+	startHighlightUnit = (idx) => {
+		const color = combineColors(this.getUnitFeatureStyle().color, "#ffffff", 30);
+		if (idx in this.unitIdxToGeometryCollectionIdx) {
+			const _idx = this.unitIdxToGeometryCollectionIdx[idx];
+			this.map.data[_idx + 1].group.getLayers().forEach(layer => {
+				this.map.setLayerStyle(layer, {color});
+			});
+		} else {
+			const _idx = this.unitIdxToGeometryIdx[idx];
+			const layer = this.map.getLayerByIdxTuple([0, _idx]);
+			layer && this.map.setLayerStyle(layer, {color});
+		}
+	};
+
+	endHighlightUnit = (idx) => {
+		const color = this.getUnitFeatureStyle().color;
+		if (idx in this.unitIdxToGeometryCollectionIdx) {
+			const _idx = this.unitIdxToGeometryCollectionIdx[idx];
+			this.map.data[_idx + 1].group.getLayers().forEach(layer => {
+				this.map.setLayerStyle(layer, {color});
+			});
+		} else {
+			const _idx = this.unitIdxToGeometryIdx[idx];
+			const layer = this.map.getLayerByIdxTuple([0, _idx]);
+			layer && this.map.setLayerStyle(layer, {color});
+		}
+	};
+
+	onMouseOver = (unitIdx) => (e, {feature}) => {
+		const idx = unitIdx !== undefined ? unitIdx : feature.properties.idx;
 
 		if (idx === undefined) {
 			return;
 		}
+
+		this.startHighlightUnit(idx);
 
 		const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
 		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
@@ -323,7 +403,14 @@ class UnitsMapArrayField extends Component {
 		}
 	}
 
-	onMouseOut = () => {
+	onMouseOut = (unitIdx) => (e, {feature}) => {
+		const idx = unitIdx !== undefined ? unitIdx : feature.properties.idx;
+
+		if (idx === undefined) {
+			return;
+		}
+
+		this.endHighlightUnit(unitIdx);
 		if (this.highlightedElem) {
 			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
 		}
@@ -350,66 +437,100 @@ class UnitsMapArrayField extends Component {
 		return {gatherings, units};
 	}
 
-	onUnitChange = (events) => {
+	onUnitChange = (unitIdx) => (events) => {
 		events.forEach(e => {
 			switch (e.type) {
 			case "delete":
-				this.onUnitRemove(e);
+				this.onUnitRemove(e, unitIdx);
 				break;
 			case "edit":
-				this.onUnitEdited(e);
+				this.onUnitEdited(e, unitIdx);
 				break;
 			}
 		});
 	}
 
-	onUnitRemove = (e) => {
-		const idxs = e.idxs.map(idx => this.unitFeatures[idx].properties.idx);
-		const {formData} = this.props;
+	onUnitRemove = (e, unitIdx) => {
+		if (unitIdx === undefined) { // Isn't a geometry collection (unitIdx stored in feature properties)
+			const idxs = e.idxs.map(idx => this.unitFeatures[idx].properties.idx);
+			const {formData} = this.props;
 
-		const unitIdxs = idxs;
+			const unitIdxs = idxs;
 
-		let splices = [];
-		idxs.sort().reverse().forEach((idx) => {
-			splices.push([idx, 1]);
-		});
+			let updateObject = {[this.state.activeIdx]: {
+				units: unitIdxs.reduce((obj, idx) => {
+					obj[idx] = {
+						unitGathering: {
+							geometry: {
+								$set: getDefaultFormState(
+									this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
+									undefined,
+									this.props.registry.definitions
+								)
+							}
+						}
+					};
+					return obj;
+				}, {})
+			}};
 
-		let updateObject = {[this.state.activeIdx]: {
-			units: unitIdxs.reduce((obj, idx) => {
-				obj[idx] = {
-					unitGathering: {
-						geometry: {
-							$set: getDefaultFormState(
-								this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
-								undefined,
-								this.props.registry.definitions
-							)
+			this.props.onChange(update(formData, updateObject));
+		} else { // Is a geometry collection.
+			const {idxs} = e;
+			this.props.onChange(update(this.props.formData, {
+				[this.state.activeIdx]: {
+					units: {
+						[unitIdx]: {
+							unitGathering: {
+								geometry: {
+									geometries: {
+										$splice: idxs.sort().reverse().map(idx => [idx, 1])
+									}
+								}
+							}
 						}
 					}
-				};
-				return obj;
-			}, {})
-		}};
-
-		this.props.onChange(update(formData, updateObject));
+				}
+			}));
+		}
 	}
 
-	onUnitEdited = ({features}) => {
-		const unitEditGeometries = Object.keys(features).reduce((unitEditGeometries, idx) => {
-			unitEditGeometries[features[idx].properties.idx] = features[idx].geometry;
-			return unitEditGeometries;
-		}, {});
+	onUnitEdited = ({features}, unitIdx) => {
+		if (unitIdx === undefined) { // Isn't a geometry collection (unitIdx stored in feature properties)
+			const unitEditGeometries = Object.keys(features).reduce((unitEditGeometries, idx) => {
+				unitEditGeometries[features[idx].properties.idx] = features[idx].geometry;
+				return unitEditGeometries;
+			}, {});
 
-		const updateObject = {
-			[this.state.activeIdx]: {
-				units: Object.keys(unitEditGeometries).reduce((o, i) => {
-					o[i] = {unitGathering: {geometry: {$set: unitEditGeometries[i]}}};
-					return o;
-				}, {})
-			}
-		};
+			const updateObject = {
+				[this.state.activeIdx]: {
+					units: Object.keys(unitEditGeometries).reduce((o, i) => {
+						o[i] = {unitGathering: {geometry: {$set: unitEditGeometries[i]}}};
+						return o;
+					}, {})
+				}
+			};
+			console.log(this.props.formData, updateObject);
+			this.props.onChange(update(this.props.formData, updateObject));
+		} else { // Is a geometry collection.
+			this.props.onChange(update(this.props.formData, {
+				[this.state.activeIdx]: {
+					units: {
+						[unitIdx]: {
+							unitGathering: {
+								geometry: {$set: Object.keys(features).reduce((geometryCollection, idx) => {
+									const feature = features[idx];
+									geometryCollection.geometries[idx] = feature.geometry
+									return geometryCollection;
+								}, this.props.formData[this.state.activeIdx].units[unitIdx].unitGathering.geometry)
+								}
+							}
+						}
+					}
+				}
+			}));
+		}
 
-		this.props.onChange(update(this.props.formData, updateObject));
 	}
 }
 
@@ -1258,21 +1379,23 @@ export class Map extends Component {
 			}
 		});
 
-		if (!this.props.hidden) {
-			this.initializeMap(options);
-			if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
-			if (!this.map) {
-				return;
-			}
-			setImmediate(() => {
-				this.map.map.invalidateSize();
-				if (this.props.singleton) {
-					if (options.zoomToData) {
-						this.map.zoomToData();
-					}
-				}
-			});
+		if (this.props.hidden) {
+			return;
 		}
+
+		this.initializeMap(options);
+		if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
+		if (!this.map) {
+			return;
+		}
+		setImmediate(() => {
+			this.map.map.invalidateSize();
+			if (this.props.singleton) {
+				if (options.zoomToData) {
+					this.map.zoomToData();
+				}
+			}
+		});
 	}
 
 	componentWillUnmount() {
@@ -1369,6 +1492,7 @@ export class Map extends Component {
 				break;
 			default:
 				if (!deepEquals(mapOptions[key], prevMapOptions[key])) {
+					console.log("set Option", key, mapOptions[key], prevMapOptions[key]);
 					this.map.setOption(key, mapOptions[key]);
 				}
 			}
