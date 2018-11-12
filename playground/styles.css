@@ -1115,6 +1115,9 @@ min-height: 20px;
 .laji-form.taxon-popover.informal-group-image > div {
 	margin-left: 65px;
 }
+.laji-form.taxon-popover img {
+	border: 1px solid;
+}
 
 .laji-form .informal-taxon-groups-list.list-group {
 	z-index: 1;

@@ -181,7 +181,7 @@ class UnitAutosuggestWidget extends Component {
 		const name = suggestion.payload.isNonMatching
 			? <span className="text-muted">{taxonName} <i>({this.props.formContext.translations.unknownSpeciesName})</i></span>
 			: taxonName;
-		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag({payload: {finnish: true}})}</span>;
+		return <span>{countElem}{countElem && " "}{name}{maleElem && " "}{maleElem}{femaleElem && " "}{femaleElem}{renderFlag(suggestion)}</span>;
 	}
 }
 
@@ -756,9 +756,9 @@ class TaxonCardOverlay extends Component {
 		if ( isEmptyString(value)) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
-			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups}) => {
+			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
 				if (!this.mounted) return;
-				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName}});
+				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
 
 				getInformalGroups().then(({informalTaxonGroupsById}) => {
 					if (!this.mounted) return;
@@ -815,7 +815,7 @@ class TaxonCardOverlay extends Component {
 
 		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
 
-		const TaxonName = ({scientificName, vernacularName = "", cursiveName}) => {
+		const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) => {
 			const _scientificName = vernacularName && scientificName
 				?  `(${scientificName})`
 				: (scientificName || "");
@@ -823,6 +823,7 @@ class TaxonCardOverlay extends Component {
 				<React.Fragment>
 					{`${vernacularName}${vernacularName ? " " : ""}`}
 					{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+					{renderFlag({payload: {finnish}})}
 				</React.Fragment>
 			);
 		};
@@ -842,7 +843,7 @@ class TaxonCardOverlay extends Component {
 								<strong>{formContext.translations.taxonGroups}:</strong>
 								<ul>
 									{order && <li><TaxonName {...order} /></li>}
-										{family && <li><TaxonName {...family} /></li>}
+									{family && <li><TaxonName {...family} /></li>}
 								</ul>
 							</React.Fragment>
 						) : <React.Fragment><br /><br /></React.Fragment>}
