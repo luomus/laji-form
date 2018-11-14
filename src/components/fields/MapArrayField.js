@@ -329,6 +329,7 @@ class UnitsMapArrayField extends Component {
 				featureCollection: {
 					type: "FeatureCollection",
 					features: Object.keys(unitGeometries).reduce((units, idx) => {
+						idx = +idx;
 						const geometry = unitGeometries[idx];
 						if (geometry) units.push({type: "Feature", properties: {idx}, geometry});
 						return units;
@@ -337,12 +338,13 @@ class UnitsMapArrayField extends Component {
 			  ...getCommonOptions()
 			},
 			...Object.keys(unitGeometryCollections).map(idx => {
+				idx = +idx;
 				const geometryCollection = unitGeometryCollections[idx];
 				return {
 					featureCollection: {
 						type: "FeatureCollection",
 						features: geometryCollection.geometries.map(geometry => ({
-							type: "Feature", properties: {}, geometry
+							type: "Feature", properties: {idx}, geometry
 						}))
 					},
 					...getCommonOptions(this.geometryCollectionIdxUnitIdx[idx])
@@ -510,7 +512,6 @@ class UnitsMapArrayField extends Component {
 					}, {})
 				}
 			};
-			console.log(this.props.formData, updateObject);
 			this.props.onChange(update(this.props.formData, updateObject));
 		} else { // Is a geometry collection.
 			this.props.onChange(update(this.props.formData, {
@@ -1390,16 +1391,14 @@ export class Map extends Component {
 		}
 		setImmediate(() => {
 			this.map.map.invalidateSize();
-			if (this.props.singleton) {
-				if (options.zoomToData) {
-					this.map.zoomToData();
-				}
-			}
+			this.mounted && this.props.singleton && this.props.zoomToData && this.map.zoomToData(this.props.zoomToData);
 		});
+		this.mounted = true;
 	}
 
 	componentWillUnmount() {
-		if (!this.props.singleton) this.map && this.map.destroy();
+		!this.props.singleton && this.map && this.map.destroy();
+		this.mounted = false;
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -1492,7 +1491,6 @@ export class Map extends Component {
 				break;
 			default:
 				if (!deepEquals(mapOptions[key], prevMapOptions[key])) {
-					console.log("set Option", key, mapOptions[key], prevMapOptions[key]);
 					this.map.setOption(key, mapOptions[key]);
 				}
 			}

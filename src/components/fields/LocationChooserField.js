@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { Modal, OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
+import { Modal, Tooltip, Popover } from "react-bootstrap";
 import update from "immutability-helper";
 import { Alert } from "react-bootstrap";
-import { GlyphButton } from "../components";
+import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { hasData, getUiOptions, getInnerUiSchema } from "../../utils";
 import { Map } from "./MapArrayField";
 import { combineColors } from "laji-map/lib/utils";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
 export default class LocationChooserField extends Component {
@@ -99,9 +100,9 @@ class LocationButton extends Component {
 		}
 	}
 
-	getUnitFeatureStyle = () => ({color: "#55AEFA"})
+	getDrawFeatureStyle = () => ({color: "#55AEFA"})
 
-	getDrawFeatureStyle = () => ({color: combineColors("#55AEFA", "#00ff00", 70)})
+	getDataFeatureStyle = () => ({color: "#aaaaaa", opacity: 0.7})
 
 	onClick = () => {
 		const {that} = this.props;
@@ -109,48 +110,45 @@ class LocationButton extends Component {
 		const {map} = mapContext;
 		if (!map) return;
 
-		const {translations} = that.props.formContext;
 		const geometryField = this.getGeometryField();
-		const hasCoordinates = this.hasCoordinates();
 
 		const idx = this.getIdx();
 
-		let modalMap = undefined;
-		let triggerLayer = undefined;
+		this.triggerLayer = undefined;
 
 		const {rootElem, customControls, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
 		const gatheringData = map.getDraw();
-		const unitData = map.data && map.data[0] ? 
-			map.data[0] :
-			undefined;
+
+		const [unitGeometriesData, ...unitGeometryCollectionsData] = map.data || [];
 
 		const data = [
 			{
 				featureCollection: gatheringData.featureCollection,
-				getFeatureStyle: gatheringData.getFeatureStyle
+				getFeatureStyle: this.getDataFeatureStyle
 			},
-		];
-
-		if (unitData) {
-			data.push({
+			{
 				featureCollection: {
-					features: unitData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+					type: "FeatureCollection",
+					features: unitGeometriesData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
 				},
-				getFeatureStyle: this.getUnitFeatureStyle
-			});
-		}
+				getFeatureStyle: this.getDataFeatureStyle
+			},
+			...unitGeometryCollectionsData.map(data => ({
+				featureCollection: {
+					type: "FeatureCollection",
+					features: data.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+				},
+				getFeatureStyle: this.getDataFeatureStyle
+			}))
+		];
 
 		const drawData = that.props.formData[geometryField] && that.props.formData[geometryField].type
 			? { featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: that.props.formData[geometryField]}]} }
 			: undefined;
 
-		if (unitData && drawData) drawData.getFeatureStyle = unitData.getFeatureStyle;
-
-		const uiOptions = getUiOptions(that.props.uiSchema);
+		if (unitGeometriesData && drawData) drawData.getFeatureStyle = unitGeometriesData.getFeatureStyle;
 
 		const {
-			preselectMarker = true,
-			maxShapes = 1,
 			mapOptions: {
 				marker = true,
 				polyline = false,
@@ -158,15 +156,13 @@ class LocationButton extends Component {
 				polygon = false,
 				circle = false
 			} = {}
-		} = uiOptions;
+		} = getUiOptions(that.props.uiSchema);
 
 		this.setState({
 			modalMap: {
 				...mapOptions,
 				data,
 				draw: {
-					...mapOptions.draw,
-					featureCollection: undefined,
 					...drawData,
 					getFeatureStyle: this.getDrawFeatureStyle,
 					marker,
@@ -174,52 +170,7 @@ class LocationButton extends Component {
 					rectangle,
 					polygon,
 					circle,
-					onChange: events => {
-						for (let event of events) {
-							const {type} = event;
-							const geometryRef = that.props.formData[geometryField];
-
-							switch (type) {
-							case "create":
-								if (geometryRef.type && maxShapes > 1) {
-									if (geometryRef.geometries.length >= maxShapes) {
-										this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
-										return;
-									}
-									that.props.onChange(update(
-										that.props.formData,
-										{[geometryField]: {geometries: {$push: [{...event.feature.geometry}]}}}
-									));	
-								} else {
-									that.props.onChange(update(
-										that.props.formData,
-										{$merge: {[geometryField]: {type: "GeometryCollection", geometries: [{...event.feature.geometry}]}}}
-									));
-								}
-								if (maxShapes === 1) close();
-								break;
-							case "delete":
-								that.props.onChange(update(
-									that.props.formData,
-									{[geometryField]: {geometries: {$splice: [[event.idxs[0], 1]]}}}	
-								));
-								break;
-							case "edit":
-								var index = Object.keys(event.features)[0];
-								if (index < maxShapes) {
-									that.props.onChange(update(
-										that.props.formData,
-										{[geometryField]: {geometries: {$splice: [[index, 1, event.features[index].geometry]]}}}
-									));
-								}
-							}
-							if ((geometryRef.geometries
-								&& geometryRef.geometries.length <= maxShapes
-								&& type !== "edit")) {
-								this.setState({shapeAlert: undefined});
-							}
-						}
-					},
+					onChange: this.onChange
 				},
 				controls: {
 					...mapOptions.controls,
@@ -230,33 +181,110 @@ class LocationButton extends Component {
 					}
 				},
 				fullscreenable: true,
-				zoomToData: true,
-				onComponentDidMount: (map) => {
-					modalMap = map;
-					if (!preselectMarker) {
-						return;
-					}
-					triggerLayer = modalMap.triggerDrawing("marker");
-					const layer = map._getLayerByIdxTuple([map.drawIdx, 0]);
-					map.zoomToData();
-					if (layer) {
-						layer.bindTooltip(translations.CurrentLocation, {permanent: true}).openTooltip();
-						modalMap.setLayerStyle(layer, {opacity: 0.7});
-						map.map.setView(layer.getLatLng(), map.map.zoom, {animate: false});
-					}
-				}
+				zoomToData: {draw: true},
+				onComponentDidMount: this.onMapMounted
 			}
 		});
-
-		const _that = this;
-		function close() {
-			if (triggerLayer) triggerLayer.disable();
-			_that.onHide();
-		}
 	}
 
 	getGrey = () => ({opacity: 0.6, color: "#888888"})
 	getFeatureStyle = () => ({color: "#75CEFA"})
+
+	onChange = (events) => {
+		const {that} = this.props;
+
+		const {maxShapes = 1} = getUiOptions(that.props.uiSchema);
+
+		const _that = this;
+		function close() {
+			_that.triggerLayer && _that.triggerLayer.disable();
+			_that.onHide();
+		}
+
+		const geometryField = this.getGeometryField();
+		for (let event of events) {
+			const {type} = event;
+			const geometryRef = that.props.formData[geometryField];
+
+			switch (type) {
+			case "create": {
+				if (geometryRef.type && maxShapes > 1) {
+					if (geometryRef.geometries && geometryRef.geometries.length >= maxShapes) {
+						this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
+						return;
+					}
+					const geometries = geometryRef && geometryRef.geometries
+						? geometryRef.geometries
+						: geometryRef && geometryRef.type
+						? [geometryRef]
+						: [];
+					that.props.onChange(update(
+						that.props.formData,
+						{[geometryField]: {$set: [...geometries, event.feature.geometry]}}
+					));	
+				} else {
+					that.props.onChange(update(
+						that.props.formData,
+						{[geometryField]: {$set: event.feature.geometry}}
+					));
+				}
+				// TODO LajiMap doesn't send a sequence of events containing multiple events if 
+				// it sends a create event, but this isn't necessarily true in the future and
+				// closing here wouldn't be right.
+				if (maxShapes === 1) close();
+				break;
+			}
+			case "delete": {
+				if (!geometryRef || !geometryRef.type) {
+					break;
+				}
+				const updateObject = geometryRef.type === "GeometryCollection" && geometryRef.geometries
+					? {geometries: {$splice: [[event.idxs[0], 1]]}}
+					: {$set: getDefaultFormState(that.props.schema.properties[geometryField], undefined, that.props.registry.definitions)};
+				that.props.onChange(update(
+					that.props.formData,
+					{[geometryField]: updateObject}
+				));
+				break;
+			}
+			case "edit": {
+				if (!geometryRef || !geometryRef.type) {
+					break;
+				}
+				if (geometryRef.type === "GeometryCollection" && geometryRef.geometries) {
+					const splices = Object.keys(event.features).reduce((splices, idx) => {
+						idx = +idx;
+						const geometry = event.features[idx].geometry;
+						splices.push([idx, 1, geometry]);
+						return splices;
+					}, []);
+					that.props.onChange(update(
+						that.props.formData,
+						{[geometryField]: {geometries: {$splice: splices}}}
+					));
+				} else if (geometryRef.type) {
+					that.props.onChange(update(
+						that.props.formData,
+						{[geometryField]: {$set: event.features[0].geometry}}
+					));
+				}
+			}
+			}
+			if ((geometryRef.geometries
+				&& geometryRef.geometries.length <= maxShapes
+				&& type !== "edit")) {
+				this.setState({shapeAlert: undefined});
+			}
+		}
+	}
+
+	onMapMounted = (map) => {
+		const {that} = this.props;
+		const {preselectMarker = true} = getUiOptions(that.props.uiSchema);
+		if (preselectMarker) {
+			this.triggerLayer = map.triggerDrawing("marker");
+		}
+	}
 
 	onEntered = () => {
 		const {that} = this.props;
@@ -286,7 +314,7 @@ class LocationButton extends Component {
 				geoData: geometry,
 				getFeatureStyle: this.getFeatureStyle
 			}
-		]
+		];
 
 		const zoomToData = {dataIdxs: [data.length - 1]};
 		this.setState({
@@ -296,15 +324,9 @@ class LocationButton extends Component {
 				controls: false,
 				customControls: undefined,
 				zoomToData,
-				data
+				data,
+				clickBeforeZoomAndPan: false
 			}
-		}, () => {
-			setImmediate(() => {
-				const {map} = this.miniMapRef;
-				if (map) {
-					map.zoomToData(zoomToData);
-				}
-			});
 		});
 	};
 
@@ -358,6 +380,8 @@ class LocationButton extends Component {
 				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 
 					overlay={overlay}
 					placement="left"
+					hoverable={true}
+					_context={new Context(that.props.formContext.contextId)}
 					onEntered={hasCoordinates ? this.onEntered : undefined}>
 					{button}
 				</OverlayTrigger>
