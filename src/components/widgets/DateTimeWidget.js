@@ -117,9 +117,28 @@ export default class DateTimeWidget extends Component {
 		if (p !== false) this.toggle = p; //"time" or "calendar"
 	}
 
+	setRef = (elem) => {
+		this.dateTimePickerRef = elem;
+	};
+
+	onTextWidgetFocus = () => {
+		this.setState({textInputFocused: true}, this.focus);
+	}
+
+	onBlur = () => {
+		this.setState({textInputFocused: false});
+	}
+
 	render() {
 		const {value, readonly} = this.props;
 		const {translations} = this.props.formContext;
+		const momentValue = moment(value);
+
+		if (!this.state.textInputFocused && !momentValue.isValid()) {
+			const {TextWidget} = this.props.registry.widgets;
+			return <TextWidget {...this.props} onFocus={this.onTextWidgetFocus} />;
+		}
+
 
 		const onChange = value => {
 			const momentValue = moment(value);
@@ -138,9 +157,8 @@ export default class DateTimeWidget extends Component {
 		const options = getUiOptions(this.props);
 		const showTimeList = options.showTimeList !== undefined ? options.showTimeList : true;
 
-		const getRef = (elem) => { this.dateTimePickerRef = elem; };
 		const datePicker = (<DateTimePicker
-			ref={getRef}
+			ref={this.setRef}
 			calendar={this.state.calendar}
 			time={this.state.time && showTimeList}
 			format={this.state.inputFormat}
@@ -148,7 +166,7 @@ export default class DateTimeWidget extends Component {
 			placeholder={this.state.placeholder}
 			onToggle={this.onToggle}
 			onChange={onChange}
-			value={value ? moment(value).toDate() : null}
+			value={value && momentValue.isValid() ? momentValue.toDate() : null}
 			parse={this.parse}
 			readOnly={readonly}
 			culture={this.props.formContext.lang}
@@ -156,6 +174,7 @@ export default class DateTimeWidget extends Component {
 		    calendarButton: translations.ChooseDate,
 		    timeButton: translations.ChooseTime
 		  }}
+			onBlur={this.onBlur} 
 		/>);
 
 		const {showButtons} = options;

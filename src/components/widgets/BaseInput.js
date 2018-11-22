@@ -45,16 +45,18 @@ export default class _BaseInput extends Component {
 		});
 	}
 
-	onFocus = () => {
+	onFocus = (e) => {
 		this.focused = true;
+		this.props.onFocus && this.props.onFocus(e);
 	}
 
-	onBlur = () => {
+	onBlur = (e) => {
 		this.focused = false;
 		if (this.state.value !== this.props.value) {
 			this.props.onChange(this.state.value);
 		}
 		if (this.timeout) clearTimeout(this.timeout);
+		this.props.onBlur && this.props.onBlur(e);
 	}
 
 	render() {
