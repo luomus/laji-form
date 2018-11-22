@@ -258,7 +258,7 @@ export default class ImageArrayField extends Component {
 
 			if (noValidData && invalidFile) {
 				fail("AllowedFileFormats", this.getAllowedImageFormatsAsString() + ".");
-			} else if (noValidData && fileTooLarge){
+			} else if (noValidData && fileTooLarge) {
 				fail("AllowedFileSize", this.getMaxFileSizeAsString() + ".");
 			} else {
 				return this.apiClient.fetchRaw("/images", undefined, {

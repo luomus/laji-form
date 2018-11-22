@@ -119,7 +119,7 @@ class LocationButton extends Component {
 		const {rootElem, customControls, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
 		const gatheringData = map.getDraw();
 
-		const [unitGeometriesData, ...unitGeometryCollectionsData] = map.data || [];
+		const [unitGeometriesData, ...unitGeometryCollectionsData] = map.data.filter(i => i) || [];
 
 		const data = [
 			{
@@ -181,7 +181,7 @@ class LocationButton extends Component {
 					}
 				},
 				fullscreenable: true,
-				zoomToData: {draw: true},
+				zoomToData: drawData ? {draw: true} : true,
 				onComponentDidMount: this.onMapMounted
 			}
 		});
