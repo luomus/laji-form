@@ -521,7 +521,7 @@ class UnitsMapArrayField extends Component {
 							unitGathering: {
 								geometry: {$set: Object.keys(features).reduce((geometryCollection, idx) => {
 									const feature = features[idx];
-									geometryCollection.geometries[idx] = feature.geometry
+									geometryCollection.geometries[idx] = feature.geometry;
 									return geometryCollection;
 								}, this.props.formData[this.state.activeIdx].units[unitIdx].unitGathering.geometry)
 								}

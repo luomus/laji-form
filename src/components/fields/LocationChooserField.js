@@ -8,7 +8,6 @@ import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { hasData, getUiOptions, getInnerUiSchema } from "../../utils";
 import { Map } from "./MapArrayField";
-import { combineColors } from "laji-map/lib/utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent

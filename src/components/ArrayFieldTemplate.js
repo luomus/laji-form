@@ -290,7 +290,7 @@ export const arrayKeyFunctions = {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);
 				const {focusOnNavigate = true, idToFocusAfterNavigate, keepPropFocusOnNavigate = false} = options;
-				const idByIdx =  `${getProps().idSchema.$id}_${idx}`
+				const idByIdx =  `${getProps().idSchema.$id}_${idx}`;
 				const _idToFocusAfterNavigate = idToFocusAfterNavigate ||
 					prop && keepPropFocusOnNavigate
 					? `${idByIdx}_${prop}`
