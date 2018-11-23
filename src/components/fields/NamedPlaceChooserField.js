@@ -95,18 +95,8 @@ export default class NamedPlaceChooserField extends Component {
 				targetId = splits.join("_");
 				zoomToData = true;
 			}
-			const {country} = gathering || {};
-			// Sending the event triggers a state change, which may result in a race condition where the onChange event is lost.
-			// That's why we use a callback here.
-			if (!["Suomi", "Finland", "", undefined].includes(country)) {
-				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "tileLayerName", "openStreetMap", () => {
-					this.props.onChange(newFormData);
-					if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
-				});
-			} else {
-				this.props.onChange(newFormData);
-				if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
-			}
+			this.props.onChange(newFormData);
+			if (zoomToData) new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "zoomToData", undefined);
 		} catch (e) {
 			this.setState({failed: PLACE_USE_FAIL});
 		}
