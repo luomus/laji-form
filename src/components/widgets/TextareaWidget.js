@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import TextareaWidget from "react-jsonschema-form/lib/components/widgets/TextareaWidget";
 import { stringifyKeyCombo } from "../../utils";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 
-export default class _TextareaWidget extends Component {
+export default class TextareaWidget extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = this.getStateFromProps(props);
 
 		this._context = new Context(props.formContext.contextId);
 		const {shortcuts} = this._context;
@@ -18,6 +17,14 @@ export default class _TextareaWidget extends Component {
 				return true;
 			}
 		});
+	}
+
+	componentWillReceiveProps(props) {
+		this.setState(this.getStateFromProps(props));
+	}
+
+	getStateFromProps = (props) => {
+		return {value: props.value};
 	}
 
 	keyFunctions = {
@@ -38,8 +45,54 @@ export default class _TextareaWidget extends Component {
 		this._context.removeKeyHandler(this.props.id, this.keyFunctions);
 	}
 
+	onFocus = (e) => {
+		this.focused = true;
+		this.props.onFocus && this.props.onFocus(e);
+	}
+
+	onBlur = (e) => {
+		this.focused = false;
+		if (this.state.value !== this.props.value) {
+			this.props.onChange(this.state.value);
+		}
+		if (this.timeout) clearTimeout(this.timeout);
+		this.props.onBlur && this.props.onBlur(e);
+	}
+
+	onChange = ({target: {value}}) => {
+		this.setState({value}, () => {
+			if (!this.focused) {
+				this.props.onChange(value);
+			} else {
+				if (this.timeout) clearTimeout(this.timeout);
+				this.timeout = new Context(this.props.formContext.contextId).setTimeout(() => {
+					this.props.onChange(value === "" ? this.props.options.emptyValue : value);
+				}, 1000);
+			}
+		});
+	}
+
 	render() {
-		const textarea = <TextareaWidget {...this.props} />;
+		const {
+			id, options, placeholder, required, disabled, readonly, autofocus
+		}  = this.props;
+		const {value} = this.state;
+
+		const textarea = <textarea
+			id={id}
+			className="form-control"
+			value={typeof value === "undefined" ? "" : value}
+			placeholder={placeholder}
+			required={required}
+			disabled={disabled}
+			readOnly={readonly}
+			autoFocus={autofocus}
+			rows={options.rows}
+			onFocus={this.onFocus}
+			onBlur={this.onBlur}
+			onChange={this.onChange}
+		/>;
+
 		return this.state.keyCombo ? (
 			<TooltipComponent tooltip={`${stringifyKeyCombo(this.state.keyCombo)} ${this.props.formContext.translations.textareaHint}`} placement="bottom">
 				{textarea}
@@ -47,12 +100,4 @@ export default class _TextareaWidget extends Component {
 		) : textarea;
 	}
 
-	onFocus = () => {
-		this.setState({focused: true});
-	}
-
-	onBlur = () => {
-		this.setState({focused: false});
-	}
 }
-
