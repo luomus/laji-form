@@ -761,7 +761,7 @@ class _MapArrayField extends ComposedComponent {
 		this._context.featureIdxsToItemIdxs = {};
 		this._context.setState = (state, callback) => this.setState(state, callback);
 
-		const initialState = {activeIdx: 0};
+		const initialState = {activeIdx: (this.props.formData || []).length === 1 ? 0 : undefined};
 		const options = getUiOptions(props.uiSchema);
 		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
 		this.state = {...initialState, ...(this.state || {})};
@@ -1034,7 +1034,7 @@ class _MapArrayField extends ComposedComponent {
 
 		let buttons = undefined;
 		let renderButtonsBelow = false;
-		if (activeIdx !== undefined && options.buttons) {
+		if (options.buttons) {
 			if (_buttonsPath) {
 				buttons = appendAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
