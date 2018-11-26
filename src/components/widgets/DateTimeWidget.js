@@ -1,11 +1,12 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { ButtonGroup, Button } from "react-bootstrap";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, isDescendant } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 const DATE_TIME_SEPARATOR = ", ";
@@ -120,13 +121,16 @@ export default class DateTimeWidget extends Component {
 	setRef = (elem) => {
 		this.dateTimePickerRef = elem;
 	};
+	setContainerRef = (elem) => {
+		this.containerRef = elem;
+	}
 
 	onTextWidgetFocus = () => {
 		this.setState({textInputFocused: true}, this.focus);
 	}
 
 	onBlur = () => {
-		this.setState({textInputFocused: false});
+		!isDescendant(findDOMNode(this.containerRef), document.activeElement) && this.setState({textInputFocused: false});
 	}
 
 	render() {
@@ -180,7 +184,7 @@ export default class DateTimeWidget extends Component {
 		const {showButtons} = options;
 
 		return showButtons ? (
-			<div className="date-widget">
+			<div className="date-widget" ref={this.setContainerRef}>
 				<div className="date-picker">
 					{datePicker}
 				</div>
