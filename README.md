@@ -112,6 +112,7 @@ local         | `false` | Use local schemas under `forms/` instead of fetching f
 localFormData | `false` | Use local formData under `forms/${id}.formData.json` instead of form's `prepopulatedDocument`.
 settings      | `true`  | Use local settings defined in `playground/schemas`.
 lang          | `fi`    | Language of the form. Doesn't affect local forms.
+readonly      | `false` | Sets the form readonly.
 
 ### Examples ###
 

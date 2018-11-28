@@ -54,9 +54,13 @@ const notifier = [["warning", "warning"], ["success", "success"], ["info", undef
 promise.then(data => {
 	const lajiForm = new LajiForm({
 		...data,
+		uiSchema: {
+			...data.uiSchema,
+			"ui:disabled": query.readonly
+		},
 		settings: query.settings === "false" ? undefined : schemas.settings,
 		formData: query.localFormData
-		? require(`../forms/${query.localFormData === "true" ? query.id : query.localFormData}.formData.json`)
+			? require(`../forms/${query.localFormData === "true" ? query.id : query.localFormData}.formData.json`)
 			: data.prepopulatedDocument
 				? {
 					...data.prepopulatedDocument,
