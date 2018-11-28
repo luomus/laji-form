@@ -283,7 +283,9 @@ export class Stretch extends Component {
 
 	componentWillReceiveProps(props) {
 		if (props.mounted && !this.initialized) {
-			this.update(this.getState());
+			const state = this.getState();
+			this.update(state);
+			this.cameToViewFirstTime = state.height > this.props.enterViewPortTreshold || 0;
 			this.initialized = true;
 		}
 	}
@@ -297,14 +299,24 @@ export class Stretch extends Component {
 		window.removeEventListener("scroll", this.onScroll);
 	}
 
-	onScroll = () => {
-		requestAnimationFrame(this.update);
+	_onScroll = () => {
+		let callback = undefined;
+		const state = this.getState();
+		if (!this.cameToViewFirstTime && state.height > this.props.enterViewPortTreshold || 0) {
+			this.cameToViewFirstTime = true;
+			if (this.props.onEnterViewPort) callback = () => this.props.onEnterViewPort();
+		}
+		this.update(state, callback);
 	}
 
-	update = () => {
-		const state = this.getState();
+	onScroll = () => {
+		requestAnimationFrame(this._onScroll);
+	}
+
+	update = (state, callback) => {
 		const afterStateChange = () => {
 			if (this.props.onResize) this.props.onResize();
+			callback && callback();
 		};
 		state ? this.setState(state, () => {
 			afterStateChange();

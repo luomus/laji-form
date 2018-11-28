@@ -1124,7 +1124,9 @@ class _MapArrayField extends ComposedComponent {
 			onResize: this.onResize,
 			mounted: this.state.mounted,
 			className: this.state.focusGrabbed ? "pass-block" : "",
-			minHeight: getUiOptions(this.props.uiSchema).minHeight
+			minHeight: getUiOptions(this.props.uiSchema).minHeight,
+			onEnterViewPort: this.onEnterViewPort,
+			enterViewPortTreshold: 200
 		};
 
 		const wrappedMap = (
