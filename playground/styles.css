@@ -3,11 +3,11 @@ body .laji-form {
 	position: relative;
 }
 
-.laji-form .form-control:focus:not([readonly]), .laji-form .rw-state-focus:not(.rw-btn):not(.rw-list-option), .laji-form .bootstrap-switch-focused {
+.laji-form .form-control:focus:not([readonly]), .laji-form .rw-state-focus:not(.rw-btn):not(.rw-list-option), .laji-form .bootstrap-switch-focused:not(.bootstrap-switch-disabled) {
 	-webkit-box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
 	box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
 }
-.laji-form .form-control[readonly] {
+.laji-form .form-control[readonly], .laji-form .bootstrap-switch-disabled {
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
@@ -734,6 +734,9 @@ min-height: 20px;
 .laji-form .bootstrap-switch .bootstrap-switch-handle-on {
     border-top-left-radius: 1px;
     border-bottom-left-radius: 1px;
+}
+.laji-form .bootstrap-switch-disabled {
+	border-color: #ccc;
 }
 .laji-form .laji-form-popped {
 	position: fixed;
