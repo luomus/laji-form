@@ -4,8 +4,8 @@ body .laji-form {
 }
 
 .laji-form .form-control:focus:not([readonly]), .laji-form .rw-state-focus:not(.rw-btn):not(.rw-list-option), .laji-form .bootstrap-switch-focused {
-	-webkit-box-shadow: 0 0 1pt 3.5pt rgb(94, 158, 214);
-	box-shadow: 0 0 1pt 3.5pt rgb(94, 158, 214);
+	-webkit-box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
+	box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
 }
 .laji-form .form-control[readonly] {
 	-webkit-box-shadow: none;
