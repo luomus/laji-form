@@ -74,7 +74,7 @@ export default class ImageArrayField extends Component {
 	}
 
 	render() {
-		const {schema, uiSchema, idSchema, name, formContext} = this.props;
+		const {schema, uiSchema, idSchema, name, formContext, readonly, disabled} = this.props;
 		const {translations} = formContext;
 
 		const {description, titleClassName} = getUiOptions(uiSchema);
@@ -98,6 +98,8 @@ export default class ImageArrayField extends Component {
 		};
 		const onGlyphClick = e => e.preventDefault();
 
+		const {dragging} = this.state;
+
 		return (
 			<Row>
 				<Col xs={12}>
@@ -107,12 +109,13 @@ export default class ImageArrayField extends Component {
 						{this.renderImgs()}
 						{this.renderLoadingImgs()}
 						<OverlayTrigger overlay={tooltip}>
-							<DropZone className={"laji-form-drop-zone" + (this.state.dragging ? " dragging" : "")}
+							<DropZone className={`laji-form-drop-zone${dragging ? " dragging" : ""}${readonly || disabled ? " disabled" : ""}`}
 							          accept="image/*, application/pdf"
 							          onDragEnter={onDragEnter}
 							          onDragLeave={onDragLeave}
-							          onDrop={onDrop
-												}>
+												onDrop={onDrop}
+												disabled={readonly || disabled}
+											>
 								<a href="#" onClick={onGlyphClick}><Glyphicon glyph="camera" /></a>
 							</DropZone>
 						</OverlayTrigger>
@@ -125,10 +128,15 @@ export default class ImageArrayField extends Component {
 	}
 
 	renderImgs = () => {
+		const {disabled, readonly} = this.props;
 		return (this.props.formData || []).map((item, i) => (
 			<div key={i} className="img-container">
 				<a onClick={this.openModalFor(i)}><Thumbnail id={item} /></a>
-				<DeleteButton corner={true} translations={this.props.formContext.translations} onClick={this.onImgRmClick(i)}>✖</DeleteButton>
+				<DeleteButton corner={true}
+					translations={this.props.formContext.translations}
+					onClick={this.onImgRmClick(i)}
+					disabled={disabled || readonly}
+				>✖</DeleteButton>
 			</div>
 		));
 	}
@@ -176,6 +184,15 @@ export default class ImageArrayField extends Component {
 
 		const {Previous, Next} = this.props.formContext.translations;
 
+		const isOpen = modalIdx === modalOpen && modalMetadata && metadataForm.schema;
+
+		const uiSchema = isOpen ? {
+			...metadataForm.uiSchema,
+			"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})},
+			"ui:disabled": this.props.disabled,
+			"ui:readonly": this.props.readonly,
+		} : undefined;
+
 		return typeof modalOpen === "number" ?
 			<Modal dialogClassName="laji-form image-modal" show={true}
 			       onHide={onHide}>
@@ -188,12 +205,12 @@ export default class ImageArrayField extends Component {
 				</Modal.Header>
 				<Modal.Body>
 					<div className="laji-form image-modal-content">
-					{modalIdx === modalOpen && modalMetadata && metadataForm.schema
+					{isOpen
 						? <React.Fragment>
 							<img src={modalImgSrc} />
 							<LajiForm
 								{...metadataForm}
-								uiSchema={{...metadataForm.uiSchema, "ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})}}}
+								uiSchema={uiSchema}
 								formData={modalMetadata}
 								onChange={onChange}
 								onSubmit={this.onImageMetadataUpdate}

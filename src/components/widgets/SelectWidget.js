@@ -92,7 +92,7 @@ class SelectWidget extends Component {
 	}
 
 	onClick = () => {
-		this.setState({open: true});
+		!this.props.disabled && !this.props.readonly && this.setState({open: true});
 	}
 
 	onFocus = () => this.setState({open: true}, () => {
@@ -143,8 +143,7 @@ class SelectWidget extends Component {
 			data: enumOptions,
 			valueField: "value",
 			textField: "label",
-			disabled,
-			readOnly: readonly,
+			disabled: disabled || readonly,
 			filter: "contains",
 			messages: {
 				open: formContext.translations.Open,
@@ -152,7 +151,6 @@ class SelectWidget extends Component {
 				emptyFilter: formContext.translations.NoResults
 			}
 		};
-
 
 		const selectComponent = multiple ? (
 			<Multiselect 

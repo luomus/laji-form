@@ -80,13 +80,15 @@ export default class MapField extends Component {
 	}
 
 	getDrawOptions = () => {
-		const options = getUiOptions(this.props.uiSchema);
+		const {uiSchema, disabled, readonly} = this.props;
+		const options = getUiOptions(uiSchema);
 		const {mapOptions = {}} = options;
 		const {formData} = this.props;
 		return {
 			...(mapOptions.draw || {}),
 			geoData: formData && Object.keys(formData).length ? formData : undefined,
-			onChange: this.onChange
+			onChange: this.onChange,
+			editable: !disabled && !readonly
 		};
 	}
 

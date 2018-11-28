@@ -33,9 +33,9 @@ const buttonDefinitions = {
 
 export function getButton(button, props = {}) {
 	function handleButton(button) {
-		function rulesSatisfied(btn) {
-			return Object.keys(btn.rules || {}).every(ruleName => {
-				const ruleVal = btn.rules[ruleName];
+		function rulesSatisfied(rules = {}) {
+			return Object.keys(rules || {}).every(ruleName => {
+				const ruleVal = rules[ruleName];
 				if (ruleName === "minLength") {
 					return (props.formData || []).length >= ruleVal;
 				} else if (ruleName === "canAdd") {
@@ -51,7 +51,7 @@ export function getButton(button, props = {}) {
 		const definition = _buttonDefinitions[fnName];
 		const _button = {...(definition || {}), ...button};
 
-		if (!rulesSatisfied(_button)) return;
+		if (!rulesSatisfied(_button.rules)) return;
 
 		if (!_button.fnName) _button.fnName = fnName;
 		if (definition && typeof _button.fn !== "function") _button.fn = _buttonDefinitions[fnName].fn;
@@ -62,7 +62,7 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, changesFormData, ...options} = button;
 	const id = button.id || (props.idSchema || {}).$id;
 
 	label = label !== undefined
@@ -87,7 +87,7 @@ export function getButton(button, props = {}) {
 
 	const buttonId = `${id}-${fnName}`;
 	return render ? render(onClick, button) : (
-		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement}>
+		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement} disabled={(fnName ===  "add" || changesFormData) && (props.disabled || props.readonly)}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 		</Button>
@@ -231,6 +231,7 @@ export default class ArrayFieldTemplate extends Component {
 			titleFormatters,
 			buttons = []
 		} = getUiOptions(props.uiSchema);
+		const {readonly, disabled} = this.props;
 		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
@@ -245,6 +246,7 @@ export default class ArrayFieldTemplate extends Component {
 		const items = props.items.map((item, i) => {
 			const deleteButton = (
 				<DeleteButton id={`${props.idSchema.$id}_${i}`}
+										  disabled={disabled || readonly}
 				              ref={getRefFor(i)}
 				              onClick={item.onDropIndexClick(item.index)}
 				              className="laji-form-field-template-buttons"
@@ -348,7 +350,7 @@ export const arrayKeyFunctions = {
 			onAdd(e, props);
 		}
 
-		if (canAdd(props)) {
+		if (!props.disabled && !props.readonly &&  canAdd(props)) {
 			if (insertCallforward) {
 				e.persist();
 				beforeAdd(props);
@@ -366,10 +368,10 @@ export const arrayKeyFunctions = {
 
 export const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton, id, getProps}) {
-		const {items, idSchema, formContext} = getProps();
+		const {items, idSchema, formContext, readonly, disabled} = getProps();
 		const {getFormRef, contextId} = formContext;
 
-		if (!isDescendant(getSchemaElementById(contextId, id), e.target)) {
+		if (readonly || disabled || !isDescendant(getSchemaElementById(contextId, id), e.target)) {
 			return;
 		}
 

@@ -127,7 +127,7 @@ export default class TableField extends Component {
 class TableArrayFieldTemplate extends Component {
 	render() {
 		const {props} = this;
-		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema} = props;
+		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 
 		const labels =schemaPropsArray.map(propName => 
@@ -158,6 +158,7 @@ class TableArrayFieldTemplate extends Component {
 				{props.items.map((item, i) => {
 					const deleteButton = (
 						<DeleteButton ref={getRefFor(i)}
+						              disabled={readonly || disabled}
 						              onClick={item.onDropIndexClick(item.index)}
 						              className="laji-form-field-template-buttons"
 						              confirm={confirmDelete}

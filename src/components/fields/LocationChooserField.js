@@ -105,6 +105,7 @@ class LocationButton extends Component {
 
 	onClick = () => {
 		const {that} = this.props;
+		const {formData,disabled, readonly} = that.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		if (!map) return;
@@ -120,7 +121,7 @@ class LocationButton extends Component {
 
 		const [unitGeometriesData, ...unitGeometryCollectionsData] = map.data.filter(i => i) || [];
 
-		const data = [
+		let data = [
 			{
 				featureCollection: gatheringData.featureCollection,
 				getFeatureStyle: this.getDataFeatureStyle
@@ -141,8 +142,12 @@ class LocationButton extends Component {
 			}))
 		];
 
-		const drawData = that.props.formData[geometryField] && that.props.formData[geometryField].type
-			? { featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: that.props.formData[geometryField]}]} }
+		if (disabled || readonly) {
+			data = data.map(d => ({...d, editable: false}));
+		}
+
+		const drawData = formData[geometryField] && formData[geometryField].type
+			? { featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]} }
 			: undefined;
 
 		if (unitGeometriesData && drawData) drawData.getFeatureStyle = unitGeometriesData.getFeatureStyle;
@@ -169,7 +174,8 @@ class LocationButton extends Component {
 					rectangle,
 					polygon,
 					circle,
-					onChange: this.onChange
+					onChange: this.onChange,
+					editable: !readonly && !disabled
 				},
 				controls: {
 					...mapOptions.controls,
@@ -279,8 +285,9 @@ class LocationButton extends Component {
 
 	onMapMounted = (map) => {
 		const {that} = this.props;
+		const {disabled, readonly} = that.props; 
 		const {preselectMarker = true} = getUiOptions(that.props.uiSchema);
-		if (preselectMarker) {
+		if (!disabled && !readonly && preselectMarker) {
 			this.triggerLayer = map.triggerDrawing("marker");
 		}
 	}

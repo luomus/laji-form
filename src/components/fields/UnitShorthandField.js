@@ -109,7 +109,7 @@ export default class UnitShorthandField extends Component {
 	}
 
 	render() {
-		const {uiSchema, formContext} = this.props;
+		const {uiSchema, formContext, disabled, readonly} = this.props;
 		const {SchemaField} = this.props.registry.fields;
 		const shorthandFieldName = getUiOptions(this.props.uiSchema).shorthandField;
 		const toggleButton = this.getToggleButton();
@@ -138,6 +138,8 @@ export default class UnitShorthandField extends Component {
 										help={help} 
 										id={id}
 										formContext={formContext}
+										disabled={disabled}
+										readonly={readonly}
 										className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
@@ -200,7 +202,7 @@ class CodeReader extends Component {
 	}
 
 	render() {
-		const {translations} = this.props;
+		const {translations, readonly, disabled} = this.props;
 
 		let validationState = "default";
 		if (this.state.failed === true) validationState = "warning";
@@ -217,6 +219,8 @@ class CodeReader extends Component {
 				onChange={this.onFetcherInputChange}
 				onBlur={this.getCode}
 				onKeyDown={this.onKeyDown}
+				readonly={readonly}
+				disabled={disabled}
 			/>
 		) : (
 			<div className="unit-shorthand">

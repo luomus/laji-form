@@ -90,7 +90,8 @@ export default class _ArrayField extends Component {
 			},
 			rules: {
 				minLength:  1
-			}
+			},
+			changesFormData: true
 		}
 	}
 }

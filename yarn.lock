@@ -273,7 +273,7 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-attr-accept@^1.0.3:
+attr-accept@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-1.1.3.tgz#48230c79f93790ef2775fcec4f0db0f5db41ca52"
   dependencies:
@@ -3094,9 +3094,9 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-laji-map@1.0.451, laji-map@^1.0.395, laji-map@^1.0.451:
-  version "1.0.451"
-  resolved "https://registry.yarnpkg.com/laji-map/-/laji-map-1.0.451.tgz#c045cb175b84ba280765fb5cc4065888bd5eb27b"
+laji-map@1.0.454, laji-map@^1.0.395, laji-map@^1.0.454:
+  version "1.0.454"
+  resolved "https://registry.yarnpkg.com/laji-map/-/laji-map-1.0.454.tgz#7b54c60effa6b2674d106558e17d92179ed71d6a"
   dependencies:
     Leaflet.vector-markers "git+https://git@github.com/olzraiti/Leaflet.vector-markers.git#17601bee91f2dae098a0a76e96714d59ec958fe6"
     leaflet "1.3.4"
@@ -4337,11 +4337,11 @@ react-dom@^16.4.1:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react-dropzone@^3.12.3:
-  version "3.13.4"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.13.4.tgz#84da26815c40339691c49b4544c2ef7a16912ccc"
+react-dropzone@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-4.3.0.tgz#facdd7db16509772633c9f5200621ac01aa6706f"
   dependencies:
-    attr-accept "^1.0.3"
+    attr-accept "^1.1.3"
     prop-types "^15.5.7"
 
 react-inlinesvg@^0.6.0:
@@ -4355,9 +4355,9 @@ react-is@^16.3.2, react-is@^16.4.2:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.2.tgz#84891b56c2b6d9efdee577cc83501dfc5ecead88"
 
-"react-jsonschema-form@git+https://git@github.com/olzraiti/react-jsonschema-form.git#453552e958aa42bea1daaac8ba14e177c7825494":
+"react-jsonschema-form@git+https://git@github.com/olzraiti/react-jsonschema-form.git#d7e3482f2ad275a674ecb000793c579b12570235":
   version "1.0.0"
-  resolved "git+https://git@github.com/olzraiti/react-jsonschema-form.git#453552e958aa42bea1daaac8ba14e177c7825494"
+  resolved "git+https://git@github.com/olzraiti/react-jsonschema-form.git#d7e3482f2ad275a674ecb000793c579b12570235"
   dependencies:
     ajv "^5.2.3"
     lodash.topath "^4.5.2"

@@ -25,9 +25,15 @@ export default function VirtualSchemaField(ComposedComponent) {
 
 		getStateFromProps(props) {
 			const propsWithInnerUiSchema = getPropsWithInnerUiSchema(props);
+			const state = super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema;
+			["readonly", "disabled"].forEach(prop => {
+				if (props[prop]) {
+					state.uiSchema = {...(state.uiSchema || propsWithInnerUiSchema.uiSchema), [`ui:${prop}`]: true};
+				}
+			});
 			return {
 				...propsWithInnerUiSchema,
-				...super.getStateFromProps ? super.getStateFromProps(propsWithInnerUiSchema, props) : propsWithInnerUiSchema,
+				...state,
 				onChange: this.onChange
 			};
 		}

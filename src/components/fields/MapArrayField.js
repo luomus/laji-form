@@ -10,7 +10,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -543,7 +543,7 @@ class LineTransectMapArrayField extends Component {
 	}
 	
 	getOptions() {
-		const {formData} = this.props;
+		const {formData, disabled, readonly} = this.props;
 		const {geometryField, placeholderGeometry} = getUiOptions(this.props.uiSchema);
 		const lineTransect = this.hasLineTransectFeature(this.props)
 			? {type: "MultiLineString", coordinates: formData.map(item => item[geometryField].coordinates)}
@@ -554,7 +554,8 @@ class LineTransectMapArrayField extends Component {
 				activeIdx: this.state.activeIdx,
 				onChange: this.onChange,
 				getFeatureStyle: this.getFeatureStyle,
-				getTooltip: this.getTooltip
+				getTooltip: this.getTooltip,
+				editable: !disabled && !readonly
 			} : undefined,
 			draw: lineTransect ? false : {
 				line: true,
@@ -763,7 +764,7 @@ class _MapArrayField extends ComposedComponent {
 
 		const initialState = {activeIdx: (this.props.formData || []).length === 1 ? 0 : undefined};
 		const options = getUiOptions(props.uiSchema);
-		if ("activeIdx" in options) initialState.activeIdx = options.activeIdx;
+		if ((this.props.formData || []).length && "activeIdx" in options) initialState.activeIdx = options.activeIdx;
 		this.state = {...initialState, ...(this.state || {})};
 	}
 
@@ -886,10 +887,30 @@ class _MapArrayField extends ComposedComponent {
 			(this.getOptions(options) || {}),
 			(this.state.mapOptions || {})
 		]);
+		const changes = {};
 		if (options.createOnLocate && !_options.locate) {
+			changes.locate = [this.onLocate];
+		}
+		const {readonly, disabled} = this.props;
+		if (readonly || disabled) {
+			if (isObject(_options.draw)) {
+				changes.draw = {
+					..._options.draw,
+					editable: false
+				};
+			}
+			if (_options.data) {
+				if (_options.data instanceof Array) {
+					changes.data = _options.data.map(d => ({...d, editable: false}));
+				} else if (isObject(_options.data)) {
+					changes.data = {..._options.data, editable: false};
+				}
+			}
+		}
+		if (Object.keys(changes).length) {
 			_options = {
 				..._options,
-				locate: [this.onLocate]
+				...changes
 			};
 		}
 		return _options;
@@ -1048,8 +1069,8 @@ class _MapArrayField extends ComposedComponent {
 			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
 		}
 
-		const inlineSchema = <SchemaField {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
-		const belowSchema = belowFields ? <SchemaField {...defaultProps} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
+		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;
+		const belowSchema = belowFields ? <SchemaField {...this.props} {...belowSchemaProps} uiSchema={belowUiSchema} /> : null;
 
 		buttons = buttons && (!_buttonsPath || mapOptions.emptyMode)
 			? buttons.map(button => getButton(button, {
@@ -1057,7 +1078,9 @@ class _MapArrayField extends ComposedComponent {
 				uiSchema: this.props.uiSchema,
 				idSchema: this.props.idSchema,
 				formData: this.props.formData,
-				formContext: this.props.formContext
+				formContext: this.props.formContext,
+				disabled: this.props.disabled,
+				readonly: this.props.readonly,
 			})).filter(button => button)
 			: undefined;
 
@@ -1139,12 +1162,12 @@ class _MapArrayField extends ComposedComponent {
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
-				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length && (
+				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
 				<Row className="map-array-field-below-buttons">
 					<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
 					<ButtonToolbar>{buttons}</ButtonToolbar>
 				</Row>
-				)}
+				): null}
 			</React.Fragment>
 		);
 	}

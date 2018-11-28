@@ -3,13 +3,17 @@ body .laji-form {
 	position: relative;
 }
 
-.laji-form:focus, .laji-form *:focus {
-	outline: none;
+.laji-form .form-control:focus:not([readonly]), .laji-form .rw-state-focus:not(.rw-btn):not(.rw-list-option), .laji-form .bootstrap-switch-focused {
+	-webkit-box-shadow: 0 0 1pt 3.5pt rgb(94, 158, 214);
+	box-shadow: 0 0 1pt 3.5pt rgb(94, 158, 214);
+}
+.laji-form .form-control[readonly] {
+	-webkit-box-shadow: none;
+	box-shadow: none;
 }
 
-.laji-form .form-control:focus, .laji-form *:not(.rw-btn):not(.rw-list-option).rw-state-focus, .laji-form .bootstrap-switch-focused {
-	-webkit-box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
-	box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
+.laji-form:focus, .laji-form *:focus {
+	outline: none;
 }
 
 .laji-form .has-error .form-control {
@@ -456,7 +460,7 @@ min-height: 20px;
 .laji-form .laji-form-drop-zone, .laji-form .image-loading {
 	border: 2px dashed #cacaca;
 }
-.laji-form  .laji-form-drop-zone:hover, .laji-form .laji-form-drop-zone.dragging  {
+.laji-form  .laji-form-drop-zone:hover:not(.disabled), .laji-form .laji-form-drop-zone.dragging:not(.disabled)  {
 	background-color: #d8fbc6;
 	border-color: #a7d490;
 }
@@ -464,9 +468,13 @@ min-height: 20px;
 	text-decoration: none;
 	color: #337ab7;
 }
-.laji-form .laji-form-drop-zone:hover span, .laji-form .laji-form-drop-zone.dragging span {
+.laji-form .laji-form-drop-zone:hover:not(.disabled) span, .laji-form .laji-form-drop-zone.dragging:not(.disabled) span {
 	color: #a7d490;
 }
+.laji-form  .laji-form-drop-zone.disabled, .laji-form  .laji-form-drop-zone.disabled .glyphicon {
+	cursor: not-allowed;
+}
+
 .laji-form .laji-form-images a {
 	text-align: center;
 	vertical-align: middle;

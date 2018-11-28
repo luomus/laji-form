@@ -134,7 +134,7 @@ export default class DateTimeWidget extends Component {
 	}
 
 	render() {
-		const {value, readonly} = this.props;
+		const {value, readonly, disabled} = this.props;
 		const {translations} = this.props.formContext;
 		const momentValue = moment(value);
 
@@ -142,7 +142,6 @@ export default class DateTimeWidget extends Component {
 			const {TextWidget} = this.props.registry.widgets;
 			return <TextWidget {...this.props} onFocus={this.onTextWidgetFocus} />;
 		}
-
 
 		const onChange = value => {
 			const momentValue = moment(value);
@@ -172,7 +171,7 @@ export default class DateTimeWidget extends Component {
 			onChange={onChange}
 			value={value && momentValue.isValid() ? momentValue.toDate() : null}
 			parse={this.parse}
-			readOnly={readonly}
+			disabled={readonly || disabled}
 			culture={this.props.formContext.lang}
 		  messages={{
 		    calendarButton: translations.ChooseDate,
@@ -189,8 +188,8 @@ export default class DateTimeWidget extends Component {
 					{datePicker}
 				</div>
 				<ButtonGroup>
-					<Button onClick={this.setToday}>{translations.Today}</Button>
-					<Button onClick={this.setYesterday}>{translations.Yesterday}</Button>
+					<Button onClick={this.setToday} disabled={readonly || disabled}>{translations.Today}</Button>
+					<Button onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
 				</ButtonGroup>
 			</div>
 		) : datePicker;

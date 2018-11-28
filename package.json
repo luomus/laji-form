@@ -28,7 +28,7 @@
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
     "immutability-helper": "^2.1.2",
-    "laji-map": "^1.0.451",
+    "laji-map": "^1.0.454",
     "laji-validate": "0.0.73",
     "moment": "*",
     "prop-types": "^15.5.8",
@@ -39,9 +39,9 @@
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-switch": "^15.0.4",
     "react-dom": "^16.4.1",
-    "react-dropzone": "^3.12.3",
+    "react-dropzone": "^4.3.0",
     "react-inlinesvg": "^0.6.0",
-    "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#453552e958aa42bea1daaac8ba14e177c7825494",
+    "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#d7e3482f2ad275a674ecb000793c579b12570235",
     "react-sortable-hoc": "^0.6.3",
     "react-spinner": "^0.2.7",
     "react-transition-group": "^1.1.1",
@@ -91,6 +91,6 @@
     "webpack-node-externals": "^1.5.4"
   },
   "resolutions": {
-    "laji-map": "1.0.451"
+    "laji-map": "1.0.454"
   }
 }

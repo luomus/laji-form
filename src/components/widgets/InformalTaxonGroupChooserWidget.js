@@ -72,6 +72,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 
 	render () {
 		let imageID = this.props.value;
+		const {disabled, readonly} = this.props;
 		const {button, rootOnly, grid} = this.getDefaultOptions(this.props);
 		const {informalTaxonGroupsById = {}} = this.state;
 		if (informalTaxonGroupsById[this.props.value] && informalTaxonGroupsById[this.props.value].parent) {
@@ -103,7 +104,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 			return (
 				<TooltipComponent tooltip={this.state.informalTaxonGroup && this.state.informalTaxonGroup.name}>
 					<div className="informal-taxon-groups-list">
-						<Button onClick={this.show}>{title}</Button>
+						<Button onClick={this.show} disabled={disabled || readonly}>{title}</Button>
 						{this.state.show && InformalTaxonGroupChooserComponent}
 					</div>
 				</TooltipComponent>

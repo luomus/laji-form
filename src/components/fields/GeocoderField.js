@@ -121,7 +121,7 @@ export default class GeocoderField extends Component {
 			position: "top",
 			key: loading,
 			render: onClick => (
-				<Button key="geolocate" onClick={onClick} disabled={!this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)}>
+				<Button key="geolocate" onClick={onClick} disabled={props.disabled || props.readonly || !this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)}>
 					<strong>
 						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
 						{" "}

@@ -104,7 +104,7 @@ export class TagInputComponent extends Component {
 	}
 
 	render() {
-		let {tags = [], InputComponent} = this.props;
+		let {tags = [], InputComponent, readonly, disabled} = this.props;
 		tags = tags.filter(s => !isEmptyString(s));
 		const {value = ""} = this.state;
 
@@ -122,7 +122,8 @@ export class TagInputComponent extends Component {
 		};
 
 		return (
-			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}`} onClick={this.onClick}>
+			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
+				onClick={this.onClick}>
 				<div className="rw-multiselect-wrapper">
 					<ul className="rw-multiselect-taglist">
 						{tags.map((item, idx) => 
@@ -132,7 +133,7 @@ export class TagInputComponent extends Component {
 							</li>
 						)}
 					</ul>
-					{InputComponent ? <InputComponent {...inputProps} /> : <input {...inputProps} />}
+					{InputComponent ? <InputComponent {...inputProps} /> : <input {...inputProps} disabled={disabled || readonly} />}
 				</div>
 			</div>
 		);

@@ -88,7 +88,7 @@ export class DeleteButton extends Component {
 	render() {
 		const {props, state} = this;
 		const {show} = state;
-		const {translations, corner, tooltip} = props;
+		const {translations, corner, tooltip, disabled, readonly} = props;
 		let buttonClassName = "glyph-button";
 		buttonClassName += corner ? " delete-corner" : "";
 		const getOverlayTarget = () => findDOMNode(this.refs.del);
@@ -96,6 +96,7 @@ export class DeleteButton extends Component {
 		const button = (
 			<div className={props.className} style={this.props.style}>
 				<Button id={`${props.id}-delete`}
+				        disabled={disabled || readonly}
 				        bsStyle="danger"
 								className={buttonClassName}
 								ref="del"
@@ -504,7 +505,8 @@ export class FetcherInput extends Component {
 
 class FetcherInputDefaultInput extends Component {
 	render() {
-		return <input className="form-control" type="text" {...this.props} ref={this.ref} />;
+		const {readonly, ...inputProps} = this.props;
+		return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={this.ref} />;
 	}
 }
 

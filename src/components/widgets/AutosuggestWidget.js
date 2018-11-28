@@ -554,7 +554,7 @@ export class Autosuggest extends Component {
 		const inputProps = {
 			id: this.props.id,
 			value,
-			readOnly: props.readonly,
+			readonly: props.readonly,
 			disabled: props.disabled,
 			placeholder: props.placeholder,
 			...(this.props.inputProps || {}),

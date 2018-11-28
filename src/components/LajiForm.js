@@ -388,7 +388,11 @@ export default class LajiForm extends Component {
 
 	render() {
 		const {translations} = this.state;
-		const shortcuts = this.props.uiSchema["ui:shortcuts"];
+		const {
+			"ui:shortcuts": shortcuts,
+			"ui:readonly": readonly,
+			"ui:disabled": disabled
+		} = this.props.uiSchema;
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
@@ -418,7 +422,9 @@ export default class LajiForm extends Component {
 				<div>
 					{this.props.children}
 					{(!this.props.children && this.props.renderSubmit !== false) ?
-						(<Button id="submit" type="submit" onClick={this._onDefaultSubmit}>{this.props.submitText || translations.Submit}</Button>) :
+							(<Button id="submit" type="submit" onClick={this._onDefaultSubmit} disabled={readonly || disabled}>
+								{this.props.submitText || translations.Submit}
+							</Button>) :
 						null}
 					</div>
 			</Form>

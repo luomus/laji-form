@@ -421,6 +421,7 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const {confirmDelete, closeButton} = getUiOptions(arrayFieldTemplateProps.uiSchema);
 		const {translations} = this.props.formContext;
+		const {disabled, readonly} = arrayFieldTemplateProps;
 
 		const getHeader = idx => (
 			<AccordionHeader 
@@ -429,6 +430,7 @@ class AccordionArrayFieldTemplate extends Component {
 				wrapperClassName="panel-title"
 				className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
 				<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
+											disabled={disabled || readonly}
 											ref={this.setDeleteButtonRef(idx)}
 											className="pull-right"
 											confirm={confirmDelete}
@@ -690,7 +692,7 @@ class TableArrayFieldTemplate extends Component {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
-		const {schema, uiSchema, formData, items, TitleField, DescriptionField} = this.props;
+		const {schema, uiSchema, formData, items, TitleField, DescriptionField, disabled, readonly} = this.props;
 		const {renderTitleAsLabel, formatters = {}} = getUiOptions(this.props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
@@ -729,6 +731,7 @@ class TableArrayFieldTemplate extends Component {
 		const getDeleteButtonFor = idx => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
 			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
+										       disabled={disabled || readonly}
 			                     ref={getDeleteButtonRef}
 			                     key={idx}
 			                     confirm={confirmDelete}

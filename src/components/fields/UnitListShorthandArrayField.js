@@ -28,7 +28,8 @@ export default class UnitListShorthandArrayField extends Component {
 			fnName: "addUnitList",
 			glyph: "align-justify",
 			label: this.props.formContext.translations.AddUnitList,
-			id: this.props.idSchema.$id
+			id: this.props.idSchema.$id,
+			changesFormData: true
 		};
 
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
