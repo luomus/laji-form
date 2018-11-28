@@ -558,6 +558,10 @@ export default class LajiForm extends Component {
 	}
 
 	submit = (propagate = true, ignoreWarnings = false) => {
+		const {uiSchema} = this.props;
+		if (uiSchema["ui:disabled"] || uiSchema["ui:readonly"]) {
+			return;
+		}
 		this.pushBlockingLoader();
 		this.validateAll = true;
 		this.propagateSubmit = propagate;

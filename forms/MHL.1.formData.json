@@ -1,5 +1,6 @@
 {
   "gatheringEvent": {
+	"dateBegin": "1992-01-01",
     "legPublic": true,
     "gpsUsed": false,
     "censusPrematurelyAborted": false,

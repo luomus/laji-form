@@ -18,7 +18,8 @@ export default class ErrorListTemplate extends Component {
 	};
 
 	render() {
-		const {errorSchema, schema, formContext} = this.props;
+		const {errorSchema, schema, formContext, uiSchema} = this.props;
+		const {"ui:disabled": disabled, "ui:readonly": readonly} = uiSchema;
 		const {contextId, translations} = formContext;
 		const that = new Context(contextId).formInstance;
 		const clickHandler = that.errorClickHandler;
@@ -93,7 +94,7 @@ export default class ErrorListTemplate extends Component {
 							<Button onClick={revalidate}><Glyphicon glyph="refresh"/>
 							 {translations.Revalidate}
 							</Button> :
-							<Button onClick={submitWithWarnings}>{translations.SubmitWithWarnings}</Button>
+							<Button onClick={submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
 						}
 					</div>
 				</div>
