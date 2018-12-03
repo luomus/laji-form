@@ -187,18 +187,18 @@ export default class SingleActiveArrayField extends Component {
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
-		let buttons = this.props.uiSchema["ui:options"] ? (this.props.uiSchema["ui:options"].buttons || []) : [];
+		const {buttons = [], buttonDefinitions} = getUiOptions(this.props.uiSchema);
 
 		let uiSchema = {
 			...this.props.uiSchema,
 			"ui:field": undefined,
 			classNames: undefined,
 			"ui:options": {
-				...this.props.uiSchema["ui:options"],
+				...getUiOptions(this.props.uiSchema),
 				buttons,
-				buttonDefinitions: this.props.uiSchema["ui:options"].buttonDefinitions ? 
-					merge(this.buttonDefinitions, getUiOptions(this.props.uiSchema).buttonDefinitions) :
-					this.buttonDefinitions
+				buttonDefinitions: buttonDefinitions
+					? merge(this.buttonDefinitions, buttonDefinitions)
+					: this.buttonDefinitions
 			}
 		};
 
@@ -557,7 +557,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
 		const {TitleField, DescriptionField} =  arrayTemplateFieldProps;
-		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label :  TitleField;
+		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label : TitleField;
 		const {titleFormatters} = getUiOptions(that.props.uiSchema);
 		const title = that.getTitle(activeIdx);
 

@@ -27,7 +27,7 @@ export default class MapField extends Component {
 
 	componentDidMount() {
 		const {uiSchema} = this.props;
-		const {mapOptions} = getUiOptions(uiSchema);
+		const {mapOptions = {}} = getUiOptions(uiSchema);
 		if (mapOptions.singleton) {
 			const map = this.getContext().singletonMap;
 			if (map && map.getOptions().locate && map.userLocation) {
