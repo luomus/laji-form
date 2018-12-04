@@ -453,6 +453,40 @@ export function filter(properties, filter, filterType = "blacklist", getValue) {
 	return properties.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
 }
 
+export function updateSafelyWithJSONPath(obj, value, path) {
+	let injectionTarget = false;
+	try {
+		injectionTarget = parseJSONPointer(obj, path);
+	} catch (e) {
+		injectionTarget = makePath(injectionTarget);
+	}
+
+	// If path for injection doesn't exist, we create it immutably.
+	if (!injectionTarget) {
+		injectionTarget = makePath(injectionTarget);
+	}
+
+	const updateObject = getUpdateObjectFromJSONPath(path, {$set: value});
+	return update(obj, updateObject);
+
+
+	function makePath(injectionTarget) {
+		const splitPath = path.split("/").filter(s => !isEmptyString(s));
+		let _splitPath = "";
+		splitPath.reduce((o, split) => {
+			_splitPath += `/${split}`;
+			console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
+			if (!o[split]) {
+				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: {}}));
+			}
+			return o[split];
+		}, obj);
+
+		injectionTarget = parseJSONPointer(obj, path);
+	}
+}
+
+
 export function injectButtons(uiSchema, buttons, buttonsPath) {
 	let injectionTarget = false;
 	try {

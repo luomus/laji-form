@@ -1,10 +1,4 @@
 {
-  "creator":"MA.279",
-  "gatheringEvent": {
-    "leg": ["MA.279"]
-  },
   "formID": "JX.123608",
-  "namedPlace": [{
-    "collectionID":"HR.61"
-  }]
+  "collectionID":"HR.61"
 }

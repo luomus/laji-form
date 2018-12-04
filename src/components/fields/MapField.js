@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
+import ApiClient from "../../ApiClient";
 
 @BaseComponent
 export default class MapField extends Component {
@@ -34,21 +35,46 @@ export default class MapField extends Component {
 				this.onLocate(map.userLocation.latlng);
 			}
 		}
+		this.geocode();
+	}
+
+	componentDidUpdate() {
+		this.geocode();
+	}
+
+	geocode = () => {
+		let {area} = getUiOptions(this.props.uiSchema);
+		if (area instanceof Array) {
+			area = area[0];
+		}
+		const {geoData} = this.getDrawOptions();
+		const isEmpty = !geoData
+			|| (isObject(geoData) && Object.keys(geoData).length === 0)
+			|| (geoData.type === "GeometryCollection" && geoData.geometries.length === 0)
+			|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
+		if (isEmpty && area && area.length > 0) {
+			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+				this.map.geocode(result.name, undefined, 8);
+			});
+		}
+	}
+
+	setMapRef = (mapComponent) => {
+		this.map = mapComponent.refs.map.map;
 	}
 
 	render() {
 		const {TitleField} = this.props.registry.fields;
 		const {uiSchema, formData} = this.props;
-		const options = getUiOptions(uiSchema);
-		const {height = 400, emptyHelp} = options;
+		const {height = 400, emptyHelp, mapOptions = {}} = getUiOptions(uiSchema);
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
-		const mapOptions = {
+		const _mapOptions = {
 			clickBeforeZoomAndPan: true,
-			...(options.mapOptions || {}),
+			...mapOptions,
 			...(this.state.mapOptions || {})
 		};
 
-		const isSingleton = mapOptions.singleton;
+		const isSingleton = _mapOptions.singleton;
 		let singletonHasLocate = false;
 		let singletonRendered = false;
 		if (isSingleton) {
@@ -59,7 +85,7 @@ export default class MapField extends Component {
 			}
 		}
 
-		if ((options.mapOptions || {}).createOnLocate && !this.state.mapOptions && (!singletonRendered ||  singletonHasLocate)) {
+		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered ||  singletonHasLocate)) {
 			mapOptions.locate = [this.onLocate];
 		}
 
@@ -67,7 +93,8 @@ export default class MapField extends Component {
 			<div>
 				<TitleField title={this.props.schema.title} />
 				<div style={{height}}>
-					<MapComponent {...mapOptions}
+					<MapComponent {..._mapOptions}
+												ref={this.setMapRef}
 					              draw={this.getDrawOptions()}
 					              lang={this.props.formContext.lang}
 					              zoomToData={true}

@@ -32,7 +32,7 @@ const casePropType = PropTypes.shape({
 
 /**
  * Transforms uiSchema according to conditional cases. 
- * uischema = {"ui:options": {
+ * uiSchema = {"ui:options": {
  *	cases: [
  *		rules: [
  *			{
