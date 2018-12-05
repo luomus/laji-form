@@ -469,7 +469,6 @@ export function updateSafelyWithJSONPath(obj, value, path) {
 	const updateObject = getUpdateObjectFromJSONPath(path, {$set: value});
 	return update(obj, updateObject);
 
-
 	function makePath(injectionTarget) {
 		const splitPath = path.split("/").filter(s => !isEmptyString(s));
 		let _splitPath = "";
@@ -479,43 +478,18 @@ export function updateSafelyWithJSONPath(obj, value, path) {
 			if (!o[split]) {
 				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: {}}));
 			}
-			return o[split];
+			const next = o[split] || {};
+			injectionTarget = next;
+			return next;
 		}, obj);
 
-		injectionTarget = parseJSONPointer(obj, path);
+		return injectionTarget;
 	}
 }
 
-
 export function injectButtons(uiSchema, buttons, buttonsPath) {
-	let injectionTarget = false;
-	try {
-		injectionTarget =	parseJSONPointer(uiSchema, `${buttonsPath}/ui:options`);
-	} catch (e) {
-		console.error("Invalid buttonsPath for injectButtons()");
-	}
-
-	// If path for buttons doesn't exist, we create it (immutably).
-	if (!injectionTarget) {
-		const splitPath = `${buttonsPath}/ui:options`.split("/").filter(s => !isEmptyString(s));
-		let _splitPath = "";
-		splitPath.reduce((o, split) => {
-			_splitPath += `/${split}`;
-			console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
-			if (!o[split]) {
-				uiSchema = update(uiSchema, getUpdateObjectFromJSONPath(_splitPath, {$set: {}}));
-			}
-			return o[split];
-		}, uiSchema);
-
-		injectionTarget =	parseJSONPointer(uiSchema, `${buttonsPath}/ui:options`);
-	}
-
-	const updateTail = {[injectionTarget.buttons ? "$push" : "$set"]: buttons};
-	const updateObject = getUpdateObjectFromJSONPath(`${buttonsPath}/ui:options`, {buttons: updateTail});
-	uiSchema = update(uiSchema, updateObject);
-
-	return uiSchema;
+	const existingButtons = parseJSONPointer(uiSchema,  `${buttonsPath}/ui:options/buttons`);
+	return updateSafelyWithJSONPath(uiSchema, existingButtons ? [...existingButtons, ...buttons] : buttons, `${buttonsPath}/ui:options/buttons`);
 }
 
 export function dictionarify(array, getKey, getValue) {
