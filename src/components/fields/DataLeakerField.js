@@ -8,7 +8,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  *
  * uiSchema = {"ui:options": {
  *	props: [
- *		string | {
+ *		{
  *			from: If a regular string, a property to copy from formData. If a JSON pointer, the root will be this.props.
  *			target: Target where to copy the 'from'. If a regular string, it will be copied to /uischema/ui:options. If a JSON pointer, the root will be this.props.
  *		}
@@ -18,13 +18,12 @@ export default class DataLeakerField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				props: PropTypes.arrayOf(PropTypes.oneOfType([
-					PropTypes.string,
+				props: PropTypes.arrayOf(
 					PropTypes.shape({
 						from: PropTypes.string.isRequired,
 						target: PropTypes.string
 					})
-				]))
+				)
 			}),
 			uiSchema: PropTypes.object
 		}).isRequired
@@ -34,11 +33,8 @@ export default class DataLeakerField extends Component {
 
 	getStateFromProps(props) {
 		return (this.getUiOptions(props.uiSchema).props || []).reduce((props, strOrObjProp) => {
-			const [fromPath, targetPath] = ["from", "target"].map(p => typeof strOrObjProp === "string"
-				? strOrObjProp
-				: strOrObjProp[p]
-			);
-			const from = targetPath[0] === "/"
+			const [fromPath, targetPath] = ["from", "target"].map(p => strOrObjProp[p]);
+			const from = fromPath[0] === "/"
 				? parseJSONPointer(props, fromPath)
 				: parseJSONPointer(props.formData, fromPath);
 
