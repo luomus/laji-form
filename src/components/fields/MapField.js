@@ -60,7 +60,9 @@ export default class MapField extends Component {
 	}
 
 	setMapRef = (mapComponent) => {
-		this.map = mapComponent.refs.map.map;
+		if (mapComponent && mapComponent.refs && mapComponent.refs.map) {
+			this.map = mapComponent.refs.map.map;
+		}
 	}
 
 	render() {
