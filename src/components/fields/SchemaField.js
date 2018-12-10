@@ -150,7 +150,7 @@ export default class _SchemaField extends Component {
 			uiSchema["ui:options"].injections
 		) {
 			const {injections} = uiSchema["ui:options"];
-			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.formContext.uiSchemaContext);
+			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.registry.formContext.uiSchemaContext);
 			uiSchema = {
 				...injectedUiSchema,
 				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
