@@ -138,7 +138,7 @@ export default class DateTimeWidget extends Component {
 		const {translations} = this.props.formContext;
 		const momentValue = moment(value);
 
-		if (!this.state.textInputFocused && !momentValue.isValid()) {
+		if (!this.state.textInputFocused && value !== null && !momentValue.isValid()) {
 			const {TextWidget} = this.props.registry.widgets;
 			return <TextWidget {...this.props} onFocus={this.onTextWidgetFocus} />;
 		}
