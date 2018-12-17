@@ -7,7 +7,7 @@ import Context from "../Context";
 export default class ErrorListTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {popped: true};
+		this.state = {popped: false};
 		new Context(this.props.formContext.contextId).errorList = this;
 	}
 
