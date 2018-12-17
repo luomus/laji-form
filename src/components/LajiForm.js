@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
 import merge from "deepmerge";
@@ -548,7 +548,13 @@ export default class LajiForm extends Component {
 
 	onError = () => {
 		this.popBlockingLoader();
-		if (this.propagateSubmit) this._context.errorList.expand();
+
+		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(findDOMNode(this._context.errorList), this.props.topOffset, this.props.bottomOffset);
+		const scrollAmount = wouldScrollTo - getWindowScrolled();
+
+		if (!this._context.errorList.state.poppedTouched && scrollAmount !== 0) {
+			this._context.errorList.expand();
+		}
 		this.propagateSubmit = true;
 		this.validationSettings.ignoreWarnings = false;
 	}

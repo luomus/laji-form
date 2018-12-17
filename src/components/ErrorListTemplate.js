@@ -58,7 +58,7 @@ export default class ErrorListTemplate extends Component {
 
 		const poppedToggle = (e) => {
 			e.stopPropagation();
-			this.setState({popped: !this.state.popped});
+			this.setState({popped: !this.state.popped, poppedTouched: true});
 		};
 		const revalidate = () => {
 			const that = new Context(this.props.formContext.contextId).formInstance;
@@ -72,7 +72,7 @@ export default class ErrorListTemplate extends Component {
 		};
 
 		return (
-			<div className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""} ${errors.length === 0 ? " laji-form-warning-list" : ""}`}
+			<div className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
 				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
 				<ErrorPanel classNames="error-panel"
 							ref="errorPanel"
