@@ -6,7 +6,7 @@
     "collectionID": "HR.61",
     "description": "T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Muiden linjojen kuin vakiolinjojen tulokset ilmoitetaan toistaiseksi tuttuun tapaan Excel-lomakkeella. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a><ol><li>Ilmoita lomakkeella laskennan ja reitin perustiedot sek\u00e4 havaitut linnut biotoopeittain. Saat lis\u00e4ohjeita ?-kuvakkeista kenttien vieress\u00e4.</li><li>Lomakkeella voit siirty\u00e4 kent\u00e4st\u00e4 toiseen joko hiiren avulla tai pikan\u00e4pp\u00e4imill\u00e4 (tab = seuraavaan kentt\u00e4\u00e4n, Alt + nuoli yl\u00f6s = edelliselle havaintoriville, Alt + nuoli alas = seuraavalle havaintoriville).</li><li>Kirjaa havaitut linnut biotoopeittain. Voit valita biotooppip\u00e4tk\u00e4t joko kartalta klikkaamalla tai liikkua biotooppip\u00e4tk\u00e4st\u00e4 toiseen nuolin\u00e4pp\u00e4imill\u00e4 havaintojensy\u00f6t\u00f6n yl\u00e4puolella. Kirjaa muuttuneet biotoopit \u201dp\u00e4\u00e4saran biotooppi\u201d -kentt\u00e4\u00e4n.</li><li>Tee mahdolliset muutokset biotooppip\u00e4tkien pituuteen tai reitin kulkuun kartan ty\u00f6kaluja k\u00e4ytt\u00e4en. Voit muokata linjan pistett\u00e4 ensin tuplaklikkaamalla ja sitten raahaamalla. Pisteen voi poistaa klikkaamalla sit\u00e4 hiiren oikealla n\u00e4pp\u00e4imell\u00e4. Jos teit virheen kartan muokkauksessa, k\u00e4yt\u00e4 \u201dKumoa\u201d-ty\u00f6kalua kartan oikeasta reunasta. Seuraa kartalla kursorin viereen tulevia ohjetekstej\u00e4 ja katso perusteellisempaa ohjetta Linjalaskentojen etusivun k\u00e4ytt\u00f6ohjeesta.</li><li>Havaintoja voit sy\u00f6tt\u00e4\u00e4 joko ns. pikasy\u00f6tt\u00f6tilassa tai erillisten kenttien avulla. Pikasy\u00f6tt\u00f6tilaan ja siit\u00e4 pois siirryt\u00e4\u00e4n havaintojensy\u00f6t\u00f6n oikean reunan nuolikuvakkeesta. K\u00e4yt\u00f6ss\u00e4 ovat 3+3 lyhenteet, tieteelliset ja suomenkieliset nimet sek\u00e4 pikasy\u00f6tt\u00f6tilassa lis\u00e4ksi yleisimpien lajien 2-kirjaimiset lyhenteet (linkki 2-kirjaimisiin lyhenteisiin: <a target=\"_blank\" rel=\"noreferrer noopener\" href=\"https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet\">https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet</a>). Voit k\u00e4ytt\u00e4\u00e4 pieni\u00e4 tai isoja kirjaimia ja k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. Katso ohjetta \u201dHavainnot\u201d-kent\u00e4n alla.</li><li>Kun olet sy\u00f6tt\u00e4nyt havainnot, ja haluat tallentaa ja l\u00e4hett\u00e4\u00e4 tiedot eteenp\u00e4in Linnustonseurannalle, paina: \u201dTallenna julkisena\u201d.</li><li>Tallennuksen j\u00e4lkeen tulee n\u00e4kyviin lista mahdollisista virheist\u00e4 ja varoituksista. Korjaa virheet ja tallenna uudelleen.</li><li>Tallennuksen j\u00e4lkeen n\u00e4et koosteen tallentamastasi havaintoer\u00e4st\u00e4, esimerkiksi havaituista lajeista ja parim\u00e4\u00e4rist\u00e4, p\u00e4\u00e4sarkaprosentista, kokonaislajim\u00e4\u00e4r\u00e4st\u00e4, etenemisnopeudesta jne.</li><li>P\u00e4\u00e4set tarvittaessa muokkaamaan tallennettua havaintoer\u00e4\u00e4 \u201dOmat havaintoer\u00e4ni\u201d \u2013kohdasta. Kunkin havaintoer\u00e4n vasemmassa laidassa on valittavana \u201dN\u00e4yt\u00e4 havaintoer\u00e4\u201d ja \u201dSiirry muokkaussivulle\u201d -kuvakkeet.</li></ol>",
     "excludeFromCopy": [
-        "units"
+        "$.gatherings[*].units"
     ],
     "features": [
         "MHL.featureNamedPlace",
@@ -303,7 +303,7 @@
         "required": [],
         "type": "object"
     },
-    "title": "Vakiolinjalaskentalomake",
+    "title": "Maalintujen linjalaskennat",
     "uiSchema": {
         "editors": {
             "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
@@ -865,6 +865,7 @@
             "ui:functions": {
                 "ui:field": "MapArrayField",
                 "ui:options": {
+                    "activeIdx": 0,
                     "geometryField": "geometry",
                     "geometryMapper": "lineTransect",
                     "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
@@ -891,7 +892,6 @@
             },
             "ui:help": "Valitse seuraava/edellinen biotooppip\u00e4tk\u00e4 joko sivulla olevista nuolista tai kartasta klikkaamalla",
             "ui:options": {
-                "affixed": true,
                 "canAdd": false,
                 "headerFormatters": [
                     "lineTransect"

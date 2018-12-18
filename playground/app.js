@@ -53,6 +53,8 @@ const notifier = [["warning", "warning"], ["success", "success"], ["info", undef
 
 promise.then(data => {
 	const lajiForm = new LajiForm({
+		topOffset: 50,
+		bottomOffset: 50,
 		...data,
 		uiSchema: {
 			...data.uiSchema,

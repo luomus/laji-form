@@ -292,8 +292,8 @@ export function isDescendant(parent, child) {
 }
 
 export function getKeyHandlerTargetId(target = "", context, formData) { // eslint-disable-line no-unused-vars
-	while (target.match(/%\{(.*)\}/)) {
-		const path = /%\{(.*)\}/.exec(target)[1];
+	while (target.match(/%\{([^{}]*)\}/)) {
+		const path = /%\{([^{}]*)\}/.exec(target)[1];
 		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");
 		target = target.replace(`%{${path}}`, eval(path));
 	}
@@ -432,7 +432,7 @@ export function getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset = 0, 
 	if (inView) return pageScrolled;
 
 	// Priorize scrolling the top of the element into view if showing the bottom would obscure the top of the element.
-	if (elemTopDistFromViewportTop <= topOffset) {
+	if (pageScrolled + elemTopDistFromViewportTop - topOffset > elemTopDistFromViewportTop) {
 		return pageScrolled + elemTopDistFromViewportTop - topOffset;
 	} else {
 		return pageScrolled - elemBottomDistFromViewportBottom + bottomOffset;
@@ -586,12 +586,11 @@ export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true)
 		}
 		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
 		const scrollAmount = wouldScrollTo - getWindowScrolled();
-		const {top, bottom} = elemToFocus.getBoundingClientRect();
+		const {top} = elemToFocus.getBoundingClientRect();
 		const viewTopDistanceFromTop = top - scrollAmount;
-		const viewBottomDistanceFromBottom = (window.innerHeight || document.documentElement.clientHeight) - bottom + scrollAmount;
 
-		// Don't scroll if scrolling would hide focused elem.
-		if (viewTopDistanceFromTop < topOffset || viewBottomDistanceFromBottom < bottomOffset) {
+		// Don't scroll if scrolling would hide focused elem top.
+		if (viewTopDistanceFromTop < topOffset) {
 			return end();
 		} else {
 			scrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
