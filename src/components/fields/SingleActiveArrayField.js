@@ -98,6 +98,15 @@ export default class SingleActiveArrayField extends Component {
 		}
 	}
 
+	shouldComponentUpdate(prevProps, prevState) {
+		if ((this.state.formContext && !prevState.formContext)
+			|| (this.state.formContext && this.state.formContext.topOffset !== prevState.formContext.topOffset)
+		) {
+			return false;
+		}
+		return true;
+	}
+
 	updatePopups = (props) => {
 		const {popupFields} = getUiOptions(this.props.uiSchema);
 		let {popups} = this.state;
