@@ -236,7 +236,7 @@ export function focusById(formContext = {}, id, focus = true) {
 			focus && tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
 			const _context = new Context(formContext.contextId);
-			_context.lastIdToScroll = id; // Mark for components that manipulate height/scroll positions
+			_context.lastIdToFocus = id; // Mark for components that manipulate scroll positions
 			_context.windowScrolled = getWindowScrolled();
 			return true;
 		}
@@ -600,6 +600,7 @@ export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true)
 
 	function end() {
 		_context.lastIdToScroll = idToScroll;
+		_context.lastIdToFocus = idToFocus;
 		_context.windowScrolled = getWindowScrolled();
 		return true;
 	}
@@ -611,7 +612,8 @@ export function shouldSyncScroll(formContext) {
 
 export function syncScroll(formContext, force = false) {
 	if (force || shouldSyncScroll(formContext)) {
-		focusAndScroll(formContext, undefined, new Context(formContext.contextId).lastIdToScroll);
+		const {lastIdToFocus, lastIdToScroll} = new Context(formContext.contextId);
+		focusAndScroll(formContext, lastIdToFocus, lastIdToScroll, false);
 	}
 }
 
