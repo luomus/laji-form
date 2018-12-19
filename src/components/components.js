@@ -212,13 +212,7 @@ export class Affix extends Component {
 			: undefined;
 
 		const fixerHeight = affixState === AFFIXED
-			? Math.max(
-					Math.min(
-						wrapperHeight + Math.min(containerTop, 0),
-						wrapperHeight
-					),
-					0
-				)
+			?  wrapperHeight
 			: 0;
 		return {affixState, width, top, affixHeight, fixerHeight};
 	}
