@@ -188,33 +188,51 @@ export class Affix extends Component {
 
 	getState = (props) => {
 		const container = props.getContainer();
-		if (!container) return;
+		const wrapperElem = findDOMNode(this.refs.wrapper);
+		if (!container || !document.body.contains(container) || !wrapperElem) return;
 
 		const {topOffset = 0} = props;
 
 		const containerTop = container.getBoundingClientRect().top;
 		const containerHeight = container.offsetHeight;
 		const containerVisibleHeight = containerHeight + containerTop;
-		const wrapperHeight = findDOMNode(this.refs.wrapper).offsetHeight;
-		const wrapperScrollHeight = findDOMNode(this.refs.wrapper).scrollHeight;
+		const wrapperHeight = wrapperElem.offsetHeight;
+		const wrapperScrollHeight = wrapperElem.scrollHeight;
 		const scrolled = containerTop < topOffset;
 
 		let affixState = TOP;
 		if (scrolled && containerVisibleHeight < wrapperScrollHeight + topOffset) affixState = BOTTOM;
 		else if (scrolled) affixState = AFFIXED;
 
-		const wrapperNode = findDOMNode(this.refs.wrapper);
-		const width = wrapperNode ? wrapperNode.offsetWidth : undefined;
+		const width = wrapperElem ? wrapperElem.offsetWidth : undefined;
 		const top = topOffset;
 
 		const affixHeight = affixState === BOTTOM
 			? Math.max(containerVisibleHeight - topOffset, 0)
 			: undefined;
+		const wrapperCutHeight = wrapperHeight - (affixHeight || 0);
+
+		let change;
+		if (affixState === BOTTOM) {
+			if (!this.state) {
+				change = wrapperCutHeight;
+			} else {
+				if (this.state.affixState === BOTTOM) {
+					const lastChange = this.state.change;
+					const changeNow = wrapperCutHeight;
+					change = lastChange + changeNow;
+				} else {
+					change = wrapperCutHeight;
+				}
+			}
+		}
 
 		const fixerHeight = affixState === AFFIXED
-			?  wrapperHeight
-			: 0;
-		return {affixState, width, top, affixHeight, fixerHeight};
+			? wrapperHeight - (affixHeight || 0)
+			: affixState === BOTTOM
+				? affixHeight + change
+				: 0;
+		return {affixState, width, top, affixHeight, fixerHeight, change};
 	}
 
 	_onScroll = () => {

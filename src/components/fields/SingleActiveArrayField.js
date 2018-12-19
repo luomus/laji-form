@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import merge from "deepmerge";
@@ -420,6 +421,17 @@ const AccordionButtonsWrapper = ({props, position}) => {
 
 @handlesButtonsAndFocus
 class AccordionArrayFieldTemplate extends Component {
+
+	setContainerRef = (elem) => {
+		this.containerRef = elem;
+	}
+
+	getContainerRef = () => findDOMNode(this.containerRef)
+
+	setHeaderRef = (elem) => {
+		this.headerRef = elem;
+	}
+
 	render() {
 		const that = this.props.formContext.this;
 		const arrayFieldTemplateProps = this.props;
@@ -428,25 +440,38 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const onSelect = key => that.onActiveChange(key);
 
-		const {confirmDelete, closeButton} = getUiOptions(arrayFieldTemplateProps.uiSchema);
+		const {confirmDelete, closeButton, affixed} = getUiOptions(arrayFieldTemplateProps.uiSchema);
 		const {translations} = this.props.formContext;
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
-		const getHeader = idx => (
-			<AccordionHeader 
-				that={that}
-				idx={idx}
-				wrapperClassName="panel-title"
-				className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
-				<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
-											disabled={disabled || readonly}
-											ref={this.setDeleteButtonRef(idx)}
-											className="pull-right"
-											confirm={confirmDelete}
-											translations={translations}
-											onClick={that.onDelete(idx)} />
-			</AccordionHeader>
-		);
+		const getHeader = idx => {
+			let header = 
+				<AccordionHeader 
+					ref={this.setHeaderRef}
+					that={that}
+					idx={idx}
+					wrapperClassName="panel-title"
+					className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
+					<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
+						disabled={disabled || readonly}
+						ref={this.setDeleteButtonRef(idx)}
+						className="pull-right"
+						confirm={confirmDelete}
+						translations={translations}
+						onClick={that.onDelete(idx)} />
+				</AccordionHeader>;
+
+			if (affixed && activeIdx === idx) {
+				const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
+				header = (
+					<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
+						{header}
+					</Affix>
+				);
+			}
+
+			return header;
+		};
 
 		return (
 			<div className="laji-form-single-active-array no-transition">
@@ -454,6 +479,7 @@ class AccordionArrayFieldTemplate extends Component {
 				<Accordion onSelect={onSelect} activeKey={activeIdx === undefined ? -1 : activeIdx} id={`${that.props.idSchema.$id}-accordion`}>
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
+									 ref={idx === activeIdx ? this.setContainerRef : undefined}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
@@ -494,10 +520,10 @@ class PagerArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
-		const {buttons, affixed} = getUiOptions(arrayTemplateFieldProps.uiSchema);
+		const {buttons, affixed, headerClassName} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
 		let header = (
-			<div className="laji-form-panel-header laji-form-accordion-header" ref={this.setHeaderRef}>
+			<div className={`laji-form-panel-header laji-form-accordion-header${headerClassName ? ` ${headerClassName}` : ""}`} ref={this.setHeaderRef}>
 				<Pager>
 					<Pager.Item previous 
 											href="#"
