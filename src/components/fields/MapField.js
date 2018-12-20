@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
+import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
@@ -91,19 +92,23 @@ export default class MapField extends Component {
 			mapOptions.locate = [this.onLocate];
 		}
 
+		const {lang, topOffset, bottomOffset} = this.props.formContext;
+
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
-				<div style={{height}}>
-					<MapComponent {..._mapOptions}
-												ref={this.setMapRef}
-					              draw={this.getDrawOptions()}
-					              lang={this.props.formContext.lang}
-					              zoomToData={true}
-												panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
-					              formContext={this.props.formContext}
-					              onOptionsChanged={this.onOptionsChanged} />
-				</div>
+					<Affix {...{topOffset, bottomOffset}}>
+						<div style={{height}}>
+							<MapComponent {..._mapOptions}
+								ref={this.setMapRef}
+								draw={this.getDrawOptions()}
+								lang={lang}
+								zoomToData={true}
+								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
+								formContext={this.props.formContext}
+								onOptionsChanged={this.onOptionsChanged} />
+						</div>
+					</Affix>
 			</div>
 		);
 	}

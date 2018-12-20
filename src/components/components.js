@@ -187,11 +187,11 @@ export class Affix extends Component {
 	}
 
 	getState = (props) => {
-		const container = props.getContainer();
+		const {topOffset = 0, bottomOffset = 0, getContainer} = props;
+
+		const container = getContainer ? getContainer() : this.refs.container;
 		const wrapperElem = findDOMNode(this.refs.wrapper);
 		if (!container || !document.body.contains(container) || !wrapperElem) return;
-
-		const {topOffset = 0} = props;
 
 		const containerTop = container.getBoundingClientRect().top;
 		const containerHeight = container.offsetHeight;
@@ -199,6 +199,10 @@ export class Affix extends Component {
 		const wrapperHeight = wrapperElem.offsetHeight;
 		const wrapperScrollHeight = wrapperElem.scrollHeight;
 		const scrolled = containerTop < topOffset;
+
+		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+		const bottomDist = viewportHeight - container.getBoundingClientRect().top - containerHeight;
+		const bottomInvisibleHeight = Math.min(bottomDist, 0);
 
 		let affixState = TOP;
 		if (scrolled && containerVisibleHeight < wrapperScrollHeight + topOffset) affixState = BOTTOM;
@@ -208,7 +212,12 @@ export class Affix extends Component {
 		const top = topOffset;
 
 		const affixHeight = affixState === BOTTOM
-			? Math.max(containerVisibleHeight - topOffset, 0)
+			? Math.max(
+				containerVisibleHeight
+					- topOffset
+					+ Math.min(bottomInvisibleHeight, 0)
+					- (bottomDist < bottomOffset ? Math.min(bottomOffset - bottomDist, bottomOffset) : 0),
+				0)
 			: undefined;
 		const wrapperCutHeight = wrapperHeight - (affixHeight || 0);
 
@@ -276,7 +285,7 @@ export class Affix extends Component {
 			}
 		}
 		return (
-			<div style={containerStyle}>
+			<div style={containerStyle} ref="container">
 				<div ref="positioner" />
 				<div ref="wrapper" style={style} className={this.props.className}>
 					{children}
