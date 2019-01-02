@@ -218,7 +218,7 @@ class FriendsAutosuggestWidget extends Component {
 	}
 
 	findExactMatch = (suggestions, value) => {
-		return suggestions.find(suggestion => (suggestion && suggestion.payload.name.toLowerCase() === value.toLowerCase()));
+		return suggestions.find(suggestion => (suggestion && suggestion.payload.name.toLowerCase() === value.trim().toLowerCase()));
 	}
 
 	renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}}
@@ -411,7 +411,7 @@ export class Autosuggest extends Component {
 		const {findExactMatch} = this.props;
 		return findExactMatch
 			? findExactMatch(suggestions, value)
-			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
+			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.trim().toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
 	}
 
 	findOnlyOneMatch = (suggestions) => {
