@@ -449,7 +449,7 @@ class Thumbnail extends PureComponent {
 	}
 
 	updateURL = ({id}) => {
-		new ApiClient().fetchCached("/images/" + id).then(response => {
+		new ApiClient().fetchCached("/images/" + id, undefined, {failSilently: true}).then(response => {
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL});
 		});

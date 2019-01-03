@@ -928,7 +928,7 @@ const headerFormatters = {
 
 			fetch = (props) => {
 				const {namedPlaceID} = props.that.props.formData[props.idx];
-				if (namedPlaceID) new ApiClient().fetchCached(`/named-places/${namedPlaceID}`).then(response => {
+				if (namedPlaceID) new ApiClient().fetchCached(`/named-places/${namedPlaceID}`, undefined, {failSilently: true}).then(response => {
 					if (this.mounted && name !== this.state.name) this.setState({
 						namedPlaceID,
 						name: response.name

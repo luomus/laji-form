@@ -28,20 +28,21 @@ export default class ApiClient {
 		return this.apiClient.fetch(path, {lang, ...(query || {})}, options);
 	}
 
-	fetch(path, query, options) {
-		return this.fetchRaw(path, query, options).then(response => {
-			if (response.status >= 400) {
+	fetch(path, query, options = {}) {
+		const {failSilently = false, ...fetchOptions} = options;
+		return this.fetchRaw(path, query, fetchOptions).then(response => {
+			if (!failSilently && response.status >= 400) {
 				throw new Error("Request failed");
 			}
 			return response.json();
 		});
 	}
 
-	fetchCached(path, query) {
-		const cacheQuery = JSON.stringify(query);
+	fetchCached(path, query, options) {
+		const cacheQuery = JSON.stringify(query) + JSON.stringify(options);
 
 		if (!cache[path])  cache[path] = {};
-		cache[path][cacheQuery] = cache[path].hasOwnProperty(cacheQuery) ? cache[path][cacheQuery] : this.fetch(path, query);
+		cache[path][cacheQuery] = cache[path].hasOwnProperty(cacheQuery) ? cache[path][cacheQuery] : this.fetch(path, query, options);
 		return cache[path][cacheQuery];
 	}
 
