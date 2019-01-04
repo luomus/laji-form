@@ -194,9 +194,14 @@ class FriendsAutosuggestWidget extends Component {
 
 	getSuggestionFromValue(value) {
 		if (this.isValueSuggested(value)) {
-			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName}) => {
+			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName, group}) => {
 				if (fullName) {
-					return {value: fullName, key: value};
+					return {
+						value: group
+							? `${fullName} (${group})`
+							: fullName,
+						key: value
+					};
 				}
 			});
 		} else {
@@ -218,7 +223,7 @@ class FriendsAutosuggestWidget extends Component {
 	}
 
 	findExactMatch = (suggestions, value) => {
-		return suggestions.find(suggestion => (suggestion && suggestion.payload.name.toLowerCase() === value.trim().toLowerCase()));
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.trim().toLowerCase()));
 	}
 
 	renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}}
