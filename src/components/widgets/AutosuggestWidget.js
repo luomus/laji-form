@@ -348,7 +348,7 @@ export class Autosuggest extends Component {
 		this.setState({isLoading: true});
 		getSuggestionFromValue(value).then(suggestion => {
 			if (!this.mounted) return;
-			this.setState({suggestion, value: this.getSuggestionValue(suggestion), isLoading: false}, () => this.onSuggestionsFetchRequested(this.state, !"no debounce"));
+			this.setState({suggestion, value: this.getSuggestionValue(suggestion), isLoading: false});
 		}).catch(() => {
 			if (!this.mounted) return;
 			this.setState({isLoading: false});
