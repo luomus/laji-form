@@ -111,7 +111,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		isValueSuggested = (value) => {
 			return !isEmptyString(value) && !!value.match(/MX\.\d+/);
 		}
-		
+
 		renderUnsuggested = (props) => (input) => {
 			const tooltip = (
 				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
@@ -338,7 +338,7 @@ export class Autosuggest extends Component {
 
 	triggerConvert = (props) => {
 		const {value, getSuggestionFromValue} = props;
-		if (isEmptyString(value) || !getSuggestionFromValue)  {
+		if (isEmptyString(value) || !getSuggestionFromValue) {
 			if (this.state.suggestion && Object.keys(this.state.suggestion).length > 0) {
 				this.setState({suggestion: undefined, value});
 			}
@@ -419,7 +419,7 @@ export class Autosuggest extends Component {
 			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.trim().toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
 	}
 
-	findOnlyOneMatch = (suggestions) => {
+	findTheOnlyOneMatch = (suggestions) => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
 		const filtered = suggestions.filter(suggestion => !suggestion || !suggestion.payload || !suggestion.payload.isNonMatching);
 		if (filtered.length === 1) {
@@ -528,7 +528,7 @@ export class Autosuggest extends Component {
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
 		const exactMatch = this.findExactMatch(suggestions, value);
-		const onlyOneMatch = selectOnlyOne ? this.findOnlyOneMatch(suggestions) : undefined;
+		const onlyOneMatch = selectOnlyOne ? this.findTheOnlyOneMatch(suggestions) : undefined;
 		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
 		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
