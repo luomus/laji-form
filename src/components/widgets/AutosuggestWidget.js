@@ -522,8 +522,15 @@ export class Autosuggest extends Component {
 
 	afterBlurAndFetch = (suggestions, callback) => {
 		const {value = ""} = this.state;
-		if (this._valueForBlurAndFetch === undefined) this._valueForBlurAndFetch = "";
-		if (this.mounted && (this.state.focused || this.state.isLoading) || (this.props.controlledValue && this._valueForBlurAndFetch !== value)) return;
+		if (this._valueForBlurAndFetch === undefined) {
+			this._valueForBlurAndFetch = "";
+		}
+		if (this.mounted
+			&& (this.state.focused || this.state.isLoading)
+			|| (this.props.controlledValue && this._valueForBlurAndFetch !== value)
+		) {
+			return;
+		}
 
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
