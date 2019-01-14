@@ -7,7 +7,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
@@ -616,7 +616,10 @@ class TableArrayFieldTemplate extends Component {
 	}
 
 	componentDidMount() {
-		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
+		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) {
+			this.updateRenderingMode();
+			return;
+		}
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", (data, callback) => {
@@ -663,12 +666,18 @@ class TableArrayFieldTemplate extends Component {
 
 	// Sets state.normalRendering on if screen is too small for table layout.
 	updateRenderingMode = (callback) => {
-		requestAnimationFrame(() => {
-			const that = this.props.formContext.this;
-			const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
-			if (!normalRenderingTreshold) return;
-			let treshold = bsSizeToPixels(normalRenderingTreshold);
+		const that = this.props.formContext.this;
+		const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
+		if (!normalRenderingTreshold) {
+			const state = this.getStyles();
+			if (state) {
+				this.setState(state);
+			}
+			return;
+		}
+		let treshold = bsSizeToPixels(normalRenderingTreshold);
 
+		requestAnimationFrame(() => {
 			let normalRendering = undefined;
 			if (!this.state.normalRendering && window.innerWidth <= treshold) {
 				normalRendering = true;
@@ -697,20 +706,10 @@ class TableArrayFieldTemplate extends Component {
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
 			const scrollBack = shouldSyncScroll(this.props.formContext);
-			const that = this.props.formContext.this;
-			const {activeIdx} = that.state;
-			const rowElem = this.itemElems[activeIdx];
-			if (!rowElem || !this.activeElem) return;
-			const state = {
-				activeStyle: activeIdx !== undefined ? {
-					position: "absolute",
-					top: rowElem.offsetTop,
-					width: "100%"
-				} : {},
-				activeTrStyle: activeIdx !== undefined ? {
-					height: this.activeElem.offsetHeight
-				} : {}
-			};
+			const state = this.getStyles();
+			if (!state) {
+				return;
+			}
 			if (idx !== null) state.activeIdx = idx;
 			const _callback = () => {
 				if (scrollBack) {
@@ -722,25 +721,45 @@ class TableArrayFieldTemplate extends Component {
 		});
 	}
 
+	getStyles = () => {
+		const that = this.props.formContext.this;
+		const {activeIdx} = that.state;
+		const rowElem = this.itemElems[activeIdx];
+		if (!rowElem || !this.activeElem) return;
+		return {
+			activeStyle: activeIdx !== undefined ? {
+				position: "absolute",
+				top: rowElem.offsetTop,
+				width: "100%"
+			} : {},
+			activeTrStyle: activeIdx !== undefined ? {
+				height: this.activeElem.offsetHeight
+			} : {}
+		}
+	}
+
 	render() {
 		if (this.state.normalRendering) {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
 		const {schema, uiSchema, formData, items, TitleField, DescriptionField, disabled, readonly} = this.props;
-		const {renderTitleAsLabel, formatters = {}} = getUiOptions(this.props.uiSchema);
+		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(this.props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
+		const shownColumnsDict = dictionarify(shownColumns);
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
 				const found = 
-					foundProps[prop] || 
-					(
-						item.hasOwnProperty(prop) && 
-						!isEmptyString(item[prop]) && 
-						(!Array.isArray(item[prop]) || Array.isArray(item[prop]) && !item[prop].every(isEmptyString)) &&
-						!isHidden(uiSchema.items, prop) &&
-						!isHidden(getNestedTailUiSchema(uiSchema.items), prop)
+					shownColumnsDict[prop]
+					|| foundProps[prop]
+					|| (
+						item.hasOwnProperty(prop)
+						&& !isEmptyString(item[prop])
+						&& (!Array.isArray(item[prop])
+						    || Array.isArray(item[prop]) && !item[prop].every(isEmptyString))
+						&& !isHidden(uiSchema.items, prop)
+						&& !isHidden(getNestedTailUiSchema(uiSchema.items), prop)
 					);
 				if (found) foundProps[prop] = true;
 				return found;
