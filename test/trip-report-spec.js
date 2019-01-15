@@ -245,7 +245,12 @@ describe("Trip report (JX.519)", () => {
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($modal), 5000, "Additionals modal waiting timeout");
 
-			const $additionalItem = $$(".scope-field-modal-item").first().all(by.css(".list-group-item")).get(1);
+			const $firstGroup = $$(".scope-field-modal-item").first();
+
+			const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
+			const fieldCount = await getFieldCount();
+
+			const $additionalItem = $firstGroup.all(by.css(".list-group-item")).get(1);
 
 			await expect($modal.isDisplayed()).toBe(true);
 			await expect($additionalItem.isDisplayed()).toBe(true);
@@ -254,7 +259,7 @@ describe("Trip report (JX.519)", () => {
 			await $modal.$(".close").click();
 
 			await expect($additionalItem.isPresent()).toBe(false);
-			await expect(lajiFormLocate("gatherings.0.units.0.identifications.0.det").isDisplayed()).toBe(true);
+			await expect(await getFieldCount()).toBe(fieldCount + 1);
 		});
 
 		const $getLocationButtonFor = (gatheringIdx, unitIdx) => $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-location`);
