@@ -13,9 +13,11 @@ export default class StringToArrayField extends Component {
 	}
 
 	static getName() {return "StringToArrayField";}
+
 	getStateFromProps(props, propsWithUiOptions) {
 		const {formData = ""} = props;
 		const {delimiter = " "} = this.getUiOptions();
+		const {"ui:disabled": disabled, "ui:readonly": readonly} = props.uiSchema;
 		const innerUiSchema = getUiOptions(propsWithUiOptions.uiSchema).uiSchema || {};
 		return {
 			schema: {
@@ -27,7 +29,11 @@ export default class StringToArrayField extends Component {
 				}
 			},
 			formData: formData.split(delimiter),
-			uiSchema: innerUiSchema
+			uiSchema: {
+				"ui:disabled": disabled,
+				"ui:readonly": readonly,
+				...innerUiSchema
+			}
 		};
 	}
 
