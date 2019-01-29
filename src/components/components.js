@@ -278,7 +278,7 @@ export class Affix extends Component {
 			style.position = "fixed";
 			style.width = width;
 			style.top = top;
-			style.zIndex = 10000;
+			style.zIndex = 1000;
 			style.height = affixHeight;
 			if (affixState === BOTTOM) {
 				style.overflow = "hidden";
