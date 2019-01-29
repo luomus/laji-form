@@ -75,7 +75,8 @@ promise.then(data => {
 			creator: properties.userId,
 			isAdmin: query.admin,
 			isEdit: query.edit,
-			municipalityEnum:  require("./municipalityEnum.json")
+			municipalityEnum:  require("./municipalityEnum.json"),
+			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json")
 		},
 		onSubmit,
 		apiClient,

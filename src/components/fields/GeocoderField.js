@@ -21,7 +21,7 @@ export default class GeocoderField extends Component {
 				updateOnlyEmpty: PropTypes.bool,
 				button: PropTypes.bool,
 				fields: PropTypes.arrayOf(PropTypes.oneOf((["country", "municipality",
-					"biologicalProvince", "administrativeProvince"]))),
+					"biologicalProvince", "biogeographicalProvince", "administrativeProvince"]))),
 				geometryField: PropTypes.string,
 				"fieldOptions": PropTypes.arrayOf(
 					PropTypes.shape({
@@ -63,7 +63,7 @@ export default class GeocoderField extends Component {
 		return {
 			updateOnlyEmpty: false,
 			button: false,
-			fields: ["country", "municipality", "biologicalProvince", "administrativeProvince"],
+			fields: ["country", "municipality", "biologicalProvince", "biogeographicalProvince", "administrativeProvince"],
 			...getUiOptions((props || this.props).uiSchema)
 		};
 	}
@@ -220,6 +220,9 @@ export default class GeocoderField extends Component {
 			if (fieldByKeys.biologicalProvince) {
 				changes.biologicalProvince = undefined;
 			}
+			if (fieldByKeys.biogeographicalProvince) {
+				changes.biogeographicalProvince = undefined;
+			}
 			if (fieldByKeys.administrativeProvince) {
 				changes.administrativeProvince = undefined;
 			}
@@ -238,6 +241,10 @@ export default class GeocoderField extends Component {
 					responseField: "long_name"
 				},
 				biologicalProvince: {
+					type: ["biogeographicalProvince"],
+					responseField: "long_name"
+				},
+				biogeographicalProvince: {
 					type: ["biogeographicalProvince"],
 					responseField: "long_name"
 				}
@@ -278,9 +285,9 @@ export default class GeocoderField extends Component {
 								})].enum;
 
 								// Find enum value from key (eg. municipalityName --> municipalityId)
-								const mEnum = this.props.formContext.uiSchemaContext[enumField];
-								const enumValue = mEnum.enum[
-									mEnum.enumNames.indexOf(value)
+								const _enum = this.props.formContext.uiSchemaContext[enumField];
+								const enumValue = _enum.enum[
+									_enum.enumNames.indexOf(value)
 								];
 
 								// Push enum value to changes (ignore duplicates)
@@ -343,7 +350,7 @@ export default class GeocoderField extends Component {
 				body: JSON.stringify(geometry)
 			}).then(response => {
 				return response.json();
-			}).then(handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince")).catch(() => {
+			}).then(handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince",  "biogeographicalProvince")).catch(() => {
 				afterFetch(callback);
 			});
 	}
