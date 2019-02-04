@@ -31,7 +31,7 @@ const casePropType = PropTypes.shape({
 });
 
 /**
- * Transforms uiSchema according to conditional cases. 
+ * Transforms uiSchema according to conditional cases. Cases are not mutually exclusive.
  * uiSchema = {"ui:options": {
  *	cases: [
  *		rules: [
@@ -84,7 +84,7 @@ export default class ConditionalUiSchemaField extends Component {
 		const {uiSchema} = props;
 
 		let computedUiSchema = uiSchema;
-		(Array.isArray(cases) ? cases : [cases]).some(({rules = [], operations = []}, idx) => {
+		(Array.isArray(cases) ? cases : [cases]).forEach(({rules = [], operations = []}, idx) => {
 
 			let passes;
 			if (cache) {
@@ -102,7 +102,6 @@ export default class ConditionalUiSchemaField extends Component {
 			if (passes)  {
 				computedUiSchema = computeUiSchema(computedUiSchema, operations);
 			}
-			return passes;
 		});
 
 		return {uiSchema: computedUiSchema};
