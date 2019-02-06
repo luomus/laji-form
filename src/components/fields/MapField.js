@@ -36,24 +36,26 @@ export default class MapField extends Component {
 				this.onLocate(map.userLocation.latlng);
 			}
 		}
-		this.geocode();
+		this.geocode(this.props);
 	}
 
-	componentDidUpdate() {
-		this.geocode();
+	componentDidUpdate(prevProps) {
+		this.geocode(prevProps);
 	}
 
-	geocode = () => {
+	geocode = (prevProps) => {
 		let {area} = getUiOptions(this.props.uiSchema);
 		if (area instanceof Array) {
 			area = area[0];
 		}
-		const {geoData} = this.getDrawOptions();
-		const isEmpty = !geoData
-			|| (isObject(geoData) && Object.keys(geoData).length === 0)
-			|| (geoData.type === "GeometryCollection" && geoData.geometries.length === 0)
-			|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
-		if (isEmpty && area && area.length > 0) {
+		const isEmptyAndWasEmpty = [this.props, prevProps].every(props => {
+			const {geoData} = this.getDrawOptions(props);
+			return !geoData
+				|| (isObject(geoData) && Object.keys(geoData).length === 0)
+				|| (geoData.type === "GeometryCollection" && geoData.geometries.length === 0)
+				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0)
+		});
+		if (isEmptyAndWasEmpty && area && area.length > 0) {
 			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
 			});
@@ -101,7 +103,7 @@ export default class MapField extends Component {
 						<div style={{height}}>
 							<MapComponent {..._mapOptions}
 								ref={this.setMapRef}
-								draw={this.getDrawOptions()}
+								draw={this.getDrawOptions(this.props)}
 								lang={lang}
 								zoomToData={true}
 								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
@@ -113,11 +115,11 @@ export default class MapField extends Component {
 		);
 	}
 
-	getDrawOptions = () => {
-		const {uiSchema, disabled, readonly} = this.props;
+	getDrawOptions = (props) => {
+		const {uiSchema, disabled, readonly} = props;
 		const options = getUiOptions(uiSchema);
 		const {mapOptions = {}} = options;
-		const {formData} = this.props;
+		const {formData} = props;
 		return {
 			...(mapOptions.draw || {}),
 			geoData: formData && Object.keys(formData).length ? formData : undefined,
