@@ -735,7 +735,7 @@ class TableArrayFieldTemplate extends Component {
 			activeTrStyle: activeIdx !== undefined ? {
 				height: this.activeElem.offsetHeight
 			} : {}
-		}
+		};
 	}
 
 	render() {

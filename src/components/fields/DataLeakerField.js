@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { parseJSONPointer, getUpdateObjectFromJSONPath, updateSafelyWithJSONPath } from  "../../utils";
+import { parseJSONPointer, updateSafelyWithJSONPath } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**

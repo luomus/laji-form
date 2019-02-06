@@ -53,7 +53,7 @@ export default class MapField extends Component {
 			return !geoData
 				|| (isObject(geoData) && Object.keys(geoData).length === 0)
 				|| (geoData.type === "GeometryCollection" && geoData.geometries.length === 0)
-				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0)
+				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
 		});
 		if (isEmptyAndWasEmpty && area && area.length > 0) {
 			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
