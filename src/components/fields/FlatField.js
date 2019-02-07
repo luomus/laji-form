@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -38,8 +38,8 @@ export default class FlatField extends Component {
 
 		const {fields} = this.getUiOptions();
 
-		fields.forEach(field => {
-			let innerSchema = props.schema.properties[field];
+		fields.sort().forEach(field => {
+			let innerSchema = state.schema.properties[field];
 			const isArray = innerSchema.type === "array";
 			if (isArray) innerSchema = innerSchema.items;
 			let {properties} = innerSchema;
@@ -50,15 +50,19 @@ export default class FlatField extends Component {
 					state.schema.required = update(state.schema.required || [], {$push: [getPropName(field, innerField, isArray)]});
 				}
 
-				if (props.uiSchema[field]) {
-					if (!isArray && props.uiSchema[field][innerField]) {
-						state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: props.uiSchema[field][innerField]}});
-					} else if (isArray && props.uiSchema[field].items && props.uiSchema[field].items[innerField]) {
-						state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: props.uiSchema[field].items[innerField]}});
+				if (state.uiSchema[field]) {
+					if (!isArray && state.uiSchema[field][innerField]) {
+						state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: state.uiSchema[field][innerField]}});
+					} else if (isArray && state.uiSchema[field].items && state.uiSchema[field].items[innerField]) {
+						state.uiSchema = update(state.uiSchema, {$merge: {[getPropName(field, innerField, isArray)]: state.uiSchema[field].items[innerField]}});
 					}
 				}
 
-				let innerId = props.idSchema[field][innerField].$id;
+				state.idSchema = {
+					...state.idSchema,
+					[field]: toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`, props.registry.definitions)
+				};
+				let innerId = state.idSchema[field][innerField].$id;
 				if (isArray) {
 					innerId = innerId.replace(/(.*)_(.*)$/, "$1_0_$2");
 				}
@@ -80,13 +84,13 @@ export default class FlatField extends Component {
 				state.uiSchema["ui:order"] = [...head, ...Object.keys(properties).map(innerField => getPropName(field, innerField, isArray)), ...tail];
 			}
 
-			if (props.formData && props.formData[field]) {
-				let innerData = props.formData[field];
+			if (state.formData && state.formData[field]) {
+				let innerData = state.formData[field];
 
-				if (!innerData && props.schema.properties[field].type === "object") {
-					innerData = getDefaultFormState(props.schema.properties[field], undefined, props.registry);
-				} else if (!innerData && props.schema.properties[field].type === "array") {
-					innerData = [getDefaultFormState(props.schema.properties[field].items, undefined, props.registry)];
+				if (!innerData && state.schema.properties[field].type === "object") {
+					innerData = getDefaultFormState(state.schema.properties[field], undefined, props.registry);
+				} else if (!innerData && state.schema.properties[field].type === "array") {
+					innerData = [getDefaultFormState(state.schema.properties[field].items, undefined, props.registry)];
 				}
 
 				if (Array.isArray(innerData)) {
@@ -99,13 +103,13 @@ export default class FlatField extends Component {
 				state.formData = immutableDelete(state.formData, field);
 			}
 
-			if (props.errorSchema) {
-				Object.keys(props.errorSchema).forEach(errorField => {
+			if (state.errorSchema) {
+				Object.keys(state.errorSchema).forEach(errorField => {
 					if (errorField === field) {
 						if (isArray) {
-							Object.keys(props.errorSchema[errorField])
+							Object.keys(state.errorSchema[errorField])
 								.filter(key => key !== "__errors")
-								.map(key => props.errorSchema[errorField][key]).forEach(error => {
+								.map(key => state.errorSchema[errorField][key]).forEach(error => {
 									Object.keys(error).forEach(innerError => {
 										state.errorSchema = {
 											...state.errorSchema,
@@ -117,16 +121,16 @@ export default class FlatField extends Component {
 									});
 								});
 							state.errorSchema = immutableDelete(state.errorSchema, field);
-							if (props.errorSchema[field] && props.errorSchema[field].__errors) {
-								state.errorSchema = {...state.errorSchema, __errors: props.errorSchema[field].__errors};
+							if (state.errorSchema[field] && state.errorSchema[field].__errors) {
+								state.errorSchema = {...state.errorSchema, __errors: state.errorSchema[field].__errors};
 							}
 						} else {
-							Object.keys(props.errorSchema[errorField]).forEach(innerError => {
+							Object.keys(state.errorSchema[errorField]).forEach(innerError => {
 								state.errorSchema = {
 									...state.errorSchema,
 									[getPropName(field, innerError, isArray)]: {
 										...(state.errorSchema[getPropName(field, innerError, isArray)] || {}),
-										...props.errorSchema[errorField][innerError]
+										...state.errorSchema[errorField][innerError]
 									}
 								};
 							});
@@ -148,15 +152,18 @@ export default class FlatField extends Component {
 		return state;
 	}
 
-	onChange(formData) {
-		const {fields} = this.getUiOptions();
-		Object.keys(formData).forEach(prop => {
-			if (prop.includes("_")) fields.forEach(field => {
+	_onChange = (formData, schema, fields) => {
+		let _fields = [], deepFields = [];
+		fields.forEach(f => {
+			(f.includes("_") ? deepFields : _fields).push(f);
+		});
+		Object.keys(formData).sort().forEach(prop => {
+			if (prop.includes("_")) _fields.forEach(field => {
 				if (prop.includes(`${field}_`)) {
-					const isArray = (this.props.schema.properties[field].type === "array");
+					const isArray = (schema.properties[field].type === "array");
 					const newItemName = prop.replace(`${field}_${isArray ? "0_" : ""}`, "");
 					const newItemBase = isArray ?
-						((formData[field] && formData[field][0]) ? formData[field][0] : {} || {}) :
+						((formData[field] && formData[field][0]) ? formData[field][0] : {}) :
 						(formData[field] || {});
 					const updatedItem = {...newItemBase, [newItemName]: formData[prop]};
 					formData = {...formData, [field]: isArray ? [updatedItem] : updatedItem};
@@ -164,6 +171,19 @@ export default class FlatField extends Component {
 				}
 			});
 		});
-		this.props.onChange(formData);
+		deepFields.forEach(deepField => {
+			const deepContainerName = deepField.match(/^[^_]*/)[0];
+			const deepContainer = formData[deepContainerName][0] || formData[deepContainerName];
+			deepField = deepField.replace(/^[^_]*_(0_)?/, "");
+			const deepSchema = schema.properties[deepContainerName];
+			const changedDeep = this._onChange(deepContainer, deepSchema.items || deepSchema, [deepField]);
+			formData = {...formData, [deepContainerName]: deepSchema.type === "array" ? [changedDeep] : changedDeep};
+		});
+		return formData;
+	}
+
+	onChange(formData) {
+		const _formData = this._onChange(formData, this.props.schema, this.getUiOptions().fields);
+		this.props.onChange(_formData);
 	}
 }

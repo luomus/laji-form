@@ -108,7 +108,6 @@ class LocationButton extends Component {
 		const {formData,disabled, readonly} = that.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		if (!map) return;
 
 		const geometryField = this.getGeometryField();
 
@@ -116,10 +115,14 @@ class LocationButton extends Component {
 
 		this.triggerLayer = undefined;
 
-		const {rootElem, customControls, ...mapOptions} = map.getOptions(); // eslint-disable-line no-unused-vars
-		const gatheringData = map.getDraw();
+		const emptyFeatureCollection = {featureCollection: {type: "FeatureCollection", features: []}};
 
-		const [unitGeometriesData, ...unitGeometryCollectionsData] = map.data.filter(i => i) || [];
+		const {rootElem, customControls, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const gatheringData = map ? map.getDraw() : emptyFeatureCollection;
+
+		const [unitGeometriesData, ...unitGeometryCollectionsData] = map
+			? map.data.filter(i => i) || [emptyFeatureCollection]
+			: [emptyFeatureCollection];
 
 		let data = [
 			{
@@ -180,7 +183,7 @@ class LocationButton extends Component {
 				controls: {
 					...mapOptions.controls,
 					draw: {
-						...(mapOptions.controls.draw || {}),
+						...((mapOptions.controls || {}).draw || {}),
 						clear: false,
 						delete: false
 					}
@@ -213,8 +216,8 @@ class LocationButton extends Component {
 
 			switch (type) {
 			case "create": {
-				if (geometryRef.type && maxShapes > 1) {
-					if (geometryRef.geometries && geometryRef.geometries.length >= maxShapes) {
+				if (geometryRef.type && (maxShapes > 1 || maxShapes === -1)) {
+					if (geometryRef.geometries && maxShapes !== -1 && geometryRef.geometries.length >= maxShapes) {
 						this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
 						return;
 					}
