@@ -10,6 +10,7 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
+	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 }
 
 export function beforeAdd(props) {
