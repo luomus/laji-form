@@ -129,6 +129,12 @@ export default class _SchemaField extends Component {
 		return computedProps;
 	}
 
+	componentDidUpdate(prevProps) {
+		if (!deepEquals(prevProps.errorSchema, this.props.errorSchema)) {
+			new Context(this.props.registry.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+		}
+	}
+
 	render() {
 		const props = this.functionOutputProps || this.props;
 		let {schema, uiSchema = {}, registry} = props;
