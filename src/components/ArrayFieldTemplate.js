@@ -13,6 +13,11 @@ function onAdd(e, props) {
 	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 }
 
+export const onDelete = (item, props) => (e) => {
+	item.onDropIndexClick(item.index)(e);
+	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+}
+
 export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
@@ -249,7 +254,7 @@ export default class ArrayFieldTemplate extends Component {
 				<DeleteButton id={`${props.idSchema.$id}_${i}`}
 										  disabled={disabled || readonly}
 				              ref={getRefFor(i)}
-				              onClick={item.onDropIndexClick(item.index)}
+				              onClick={onDelete(item, props)}
 				              className="laji-form-field-template-buttons"
 				              confirm={confirmDelete}
 				              corner={deleteCorner}
