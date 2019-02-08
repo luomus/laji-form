@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Label } from "../components";
+import Context from "../../Context";
+import deepEquals from "deep-equal";
 
 @BaseComponent
 export default class TagArrayField extends Component {
@@ -37,6 +39,12 @@ export class TagInputComponent extends Component {
 
 	componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
+	}
+
+	componentDidUpdate(prevProps) {
+		if (!deepEquals(prevProps.formData, this.props.formData)) {
+			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+		}
 	}
 
 	getStateFromProps = ({value}) => {
@@ -86,7 +94,7 @@ export class TagInputComponent extends Component {
 		findDOMNode(this.inputRef).focus();
 	}
 
-	onChange = (e) => {
+	onInputChange = (e) => {
 		const {onInputChange} = this.props;
 		onInputChange && e.persist();
 		const {target: {value}} = e;
@@ -113,7 +121,7 @@ export class TagInputComponent extends Component {
 			className: "rw-input",
 			ref: this.setInputRef,
 			value: value,
-			onChange: this.onChange,
+			onChange: this.onInputChange,
 			id: this.props.id,
 			...this.props.inputProps,
 			onFocus: this.onFocus,

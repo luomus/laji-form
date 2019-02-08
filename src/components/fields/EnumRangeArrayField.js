@@ -6,7 +6,6 @@ import { getUiOptions, focusNextInput } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
 import { Label } from "../components";
-import Context from "../../Context";
 
 @BaseComponent
 export default class EnumRangeArrayField extends Component {
@@ -98,7 +97,6 @@ export default class EnumRangeArrayField extends Component {
 		}
 		this.setState({value: ""}, () => {
 			this.props.onChange(formData);
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
 		});
 	}
 }
