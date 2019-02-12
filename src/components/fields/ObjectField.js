@@ -155,13 +155,13 @@ function getCols(props, schema, uiSchema, property) {
 	const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 	const uiField = uiSchema && uiSchema["ui:field"] ? uiSchema["ui:field"] : undefined;
 	if (
-		schema.type === "array" &&
-		!(
-			schema.items && schema.items.enum && isMultiSelect(schema, uiSchema) ||
-			uiField === "SingleItemArrayField" ||
-			(schema.items && schema.items.type === "string" && uiField !== "ImageArrayField")
-		) ||
-		(schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))
+		schema.type === "array"
+		&& !(
+			schema.items && schema.items.enum && isMultiSelect(schema, uiSchema)
+			|| uiField === "SingleItemArrayField"
+			|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField")
+		)
+		|| (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))
 	) {
 		return cols;
 	}

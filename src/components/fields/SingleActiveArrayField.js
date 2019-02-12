@@ -10,7 +10,7 @@ import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBoot
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ApiClient from "../../ApiClient";
@@ -279,11 +279,11 @@ export default class SingleActiveArrayField extends Component {
 		onActiveChange ? onActiveChange(idx, prop, callback) : this.setState({activeIdx: idx}, callback);
 	}
 
-	onDelete = (idx) => () => {
-		const formData = update(this.props.formData, {$splice: [[idx, 1]]});
-		if (!formData.length) this.onActiveChange(undefined);
-		if (this.state.activeIdx >= formData.length) this.onActiveChange(formData.length - 1);
-		this.props.onChange(formData);
+	onDelete = (idx, item) => (e) => {
+		const newLength = this.props.formData.length - 1;
+		if (newLength) this.onActiveChange(undefined);
+		if (this.state.activeIdx >= newLength) this.onActiveChange(newLength - 1);
+		onDelete(item, this.props)(e);
 	}
 
 	buttonDefinitions = {
@@ -371,8 +371,6 @@ function handlesButtonsAndFocus(ComposedComponent) {
 				});
 				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
 			}
-
-			this.prevLength = this.props.items.length;
 		}
 
 		removeFocusHandlers() {
@@ -444,7 +442,7 @@ class AccordionArrayFieldTemplate extends Component {
 		const {translations} = this.props.formContext;
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
-		const getHeader = idx => {
+		const getHeader = (item, idx) => {
 			let header = 
 				<AccordionHeader 
 					ref={this.setHeaderRef}
@@ -458,7 +456,7 @@ class AccordionArrayFieldTemplate extends Component {
 						className="pull-right"
 						confirm={confirmDelete}
 						translations={translations}
-						onClick={that.onDelete(idx)} />
+						onClick={that.onDelete(idx, item)} />
 				</AccordionHeader>;
 
 			if (affixed && activeIdx === idx) {
@@ -484,7 +482,7 @@ class AccordionArrayFieldTemplate extends Component {
 									 eventKey={idx}
 									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
 							<PanelHeading>
-								{getHeader(idx)}
+								{getHeader(item, idx)}
 							</PanelHeading>
 							{idx === activeIdx ? (
 								<PanelBody>
@@ -622,6 +620,7 @@ class TableArrayFieldTemplate extends Component {
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		this.updateRenderingMode();
+		this._prevCheckedLength = this.props.items.length;
 	}
 
 	componentWillUnmount() {
@@ -645,7 +644,7 @@ class TableArrayFieldTemplate extends Component {
 
 		if (!updated) {
 			const activeChanged = this.state.activeIdx !== that.state.activeIdx;
-			const itemsLengthChanged = prevProps.items.length !== this.props.items.length;
+			const itemsLengthChanged = this._prevCheckedLength !== this.props.items.length;
 
 			let tHeadHeight, tHeadHeightChanged;
 			if (this.tHeadRef) {
@@ -657,18 +656,16 @@ class TableArrayFieldTemplate extends Component {
 				this.updateLayout(this.props.formContext.this.state.activeIdx);
 			}
 			if (tHeadHeight) this.prevTHeadHeight = tHeadHeight;
+			this._prevCheckedLength = this.props.items.length;
 		}
 	}
 
 	// Sets state.normalRendering on if screen is too small for table layout.
 	updateRenderingMode = (callback) => {
 		const _callback = (updateLayout = true) => {
-			if (updateLayout && this._lastWidth) {
-				if (pixelsToBsSize(this._lastWidth) !== pixelsToBsSize(window.innerWidth)) {
-					this.updateLayout(null, callback);
-				}
+			if (updateLayout && this._lastWidth && pixelsToBsSize(this._lastWidth) !== pixelsToBsSize(window.innerWidth)) {
+				this.updateLayout(null, callback);
 			}
-			this._lastWidth = window.innerWidth;
 		}
 		const that = this.props.formContext.this;
 		const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
@@ -718,6 +715,7 @@ class TableArrayFieldTemplate extends Component {
 
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
+			this._lastWidth = window.innerWidth;
 			const scrollBack = shouldSyncScroll(this.props.formContext);
 			const state = this.getStyles();
 			if (!state) {
@@ -795,7 +793,7 @@ class TableArrayFieldTemplate extends Component {
 
 		const {confirmDelete, titleClassName, titleFormatters} = getUiOptions(uiSchema);
 
-		const getDeleteButtonFor = idx => {
+		const getDeleteButtonFor = (idx, item) => {
 			const getDeleteButtonRef = elem => {that.deleteButtonRefs[idx] = elem;};
 			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
 										       disabled={disabled || readonly}
@@ -803,7 +801,7 @@ class TableArrayFieldTemplate extends Component {
 			                     key={idx}
 			                     confirm={confirmDelete}
 			                     translations={this.props.formContext.translations}
-			                     onClick={that.onDelete(idx)} />;
+			                     onClick={that.onDelete(idx, item)} />;
 		};
 
 		const setItemRef = idx => elem => {
@@ -855,7 +853,7 @@ class TableArrayFieldTemplate extends Component {
 														{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}
 													</td>
 												)),
-												idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx)}</td>
+												idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx, item)}</td>
 											]}
 										</tr>
 									];
@@ -868,7 +866,7 @@ class TableArrayFieldTemplate extends Component {
 				{activeIdx !== undefined && items[activeIdx] ? (
 					<div key={activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
 						<div className="laji-form-field-template-schema">{items[activeIdx].children}</div>
-						<div className="laji-form-field-template-buttons">{getDeleteButtonFor(activeIdx)}</div>
+						<div className="laji-form-field-template-buttons">{getDeleteButtonFor(activeIdx, items[activeIdx])}</div>
 					</div>
 				): null}
 				<ButtonsWrapper props={this.props} />
