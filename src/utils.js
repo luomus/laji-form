@@ -372,6 +372,18 @@ export function bsSizeToPixels(bsSize) {
 	}
 }
 
+export function pixelsToBsSize(pixels) {
+	if (pixels < 576) {
+		return "xs";
+	} else if (pixels < 768) {
+		return "sm";
+	} else if (pixels < 992) {
+		return "md";
+	} else if (pixels < 1200) {
+		return "lg";
+	}
+}
+
 export function applyFunction(props) {
 	let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
 

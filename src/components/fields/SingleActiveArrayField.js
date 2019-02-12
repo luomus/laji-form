@@ -7,7 +7,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd } from "../ArrayFieldTemplate";
@@ -619,10 +619,6 @@ class TableArrayFieldTemplate extends Component {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", (data, callback) => {
 			this.updateRenderingMode(callback);
 		});
-		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) {
-			this.updateRenderingMode();
-			return;
-		}
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		this.updateRenderingMode();
@@ -666,15 +662,32 @@ class TableArrayFieldTemplate extends Component {
 
 	// Sets state.normalRendering on if screen is too small for table layout.
 	updateRenderingMode = (callback) => {
+		const _callback = (updateLayout = true) => {
+			if (updateLayout && this._lastWidth) {
+				if (pixelsToBsSize(this._lastWidth) !== pixelsToBsSize(window.innerWidth)) {
+					this.updateLayout(null, callback);
+				}
+			}
+			this._lastWidth = window.innerWidth;
+		}
 		const that = this.props.formContext.this;
 		const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
-		if (!normalRenderingTreshold) {
+		let initialized = false;
+		if (Object.keys(this.state).length === 0) {
+			initialized = true;
 			const state = this.getStyles();
 			if (state) {
-				this.setState(state);
+				this.setState(state, _callback);
+			}
+		}
+
+		if (!normalRenderingTreshold) {
+			if (!initialized) {
+				_callback();
 			}
 			return;
 		}
+
 		let treshold = bsSizeToPixels(normalRenderingTreshold);
 
 		requestAnimationFrame(() => {
@@ -687,10 +700,10 @@ class TableArrayFieldTemplate extends Component {
 
 			if (normalRendering !== undefined) {
 				that.updateRenderingMode(normalRendering, () => 
-					this.setState({normalRendering}, () => this.updateLayout(null, callback))
+					this.setState({normalRendering}, () => this.updateLayout(null, () => _callback(false)))
 				);
 			}	else if (!this.state.normalRendering) {
-				this.updateLayout(null, callback);
+				this.updateLayout(null, _callback);
 			}
 		});
 	}
