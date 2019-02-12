@@ -292,7 +292,7 @@ export default class GeocoderField extends Component {
 								const enumValue = _enum.enum[_enum.enumNames.indexOf(value)];
 
 								// Push enum value to changes (ignore duplicates)
-								if (!temp.includes(enumValue)) {
+								if (enumValue !== undefined && !temp.includes(enumValue)) {
 									temp.push(enumValue);
 									changes[field] = temp;
 								}
@@ -301,7 +301,7 @@ export default class GeocoderField extends Component {
 							}
 						});
 					} else {
-						changes[field] = "";
+						changes[field] = this.props.schema.properties[field].type === "array" ? [] : "";
 					}
 				});
 				if (country && fieldByKeys.country) changes.country = country;
