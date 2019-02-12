@@ -281,8 +281,11 @@ export default class SingleActiveArrayField extends Component {
 
 	onDelete = (idx, item) => (e) => {
 		const newLength = this.props.formData.length - 1;
-		if (newLength) this.onActiveChange(undefined);
-		if (this.state.activeIdx >= newLength) this.onActiveChange(newLength - 1);
+		if (!newLength) {
+			this.onActiveChange(undefined);
+		} else if (this.state.activeIdx > newLength - 1) {
+			this.onActiveChange(newLength - 1);
+		}
 		onDelete(item, this.props)(e);
 	}
 

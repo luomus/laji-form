@@ -59,7 +59,9 @@ export class DeleteButton extends Component {
 		});
 	}
 
-	onConfirmedClick = () => {
+	onConfirmedClick = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
 		this.props.onClick();
 		this.onHideConfirm();
 		this.deleted = true;
@@ -67,7 +69,7 @@ export class DeleteButton extends Component {
 
 	onClick = (e, callback) => {
 		this.callback = callback;
-		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick();
+		this.props.confirm ? this.onShowConfirm(e) : this.onConfirmedClick(e);
 	}
 
 	componentWillUnmount = () => {
