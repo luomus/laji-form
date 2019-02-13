@@ -36,7 +36,7 @@ export function hasData(formData) {
 	else {
 		if (!Array.isArray(formData)) formData = [formData];
 		return formData.some(data => {
-			if (typeof data === "object") {
+			if (isObject(data)) {
 				return Object.keys(data).some(_field => propertyHasData(_field, data));
 			}
 			else return hasValue(data);
@@ -51,7 +51,7 @@ export function propertyHasData(field, container) {
 	if (!container) return false;
 	const data = container[field];
 	return !!(data &&
-	(data.constructor !== Object || (Object.keys(data).length > 0 && hasData(data))) &&
+	(!isObject(data) || (Object.keys(data).length > 0 && hasData(data))) &&
 	(!Array.isArray(data) || (data.length > 0 && hasData(data))));
 }
 
