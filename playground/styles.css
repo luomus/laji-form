@@ -885,13 +885,18 @@ min-height: 20px;
 	padding: 0px !important;
 	border: 0px !important;
 }
-.laji-form .single-active-array-table td > img, .laji-form .single-active-array-table td > .image-loading {
+.laji-form .single-active-array-table td > img, .laji-form .single-active-array-table td > .image-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
 	height: 15px;
 	width: 15px;
 }
 .laji-form .single-active-array-table .image-loading {
 	border: none;
 }
+.laji-form .single-active-array-table-array .react-spinner {
+	float: left;
+	top: 8px !important;
+}
+
 .laji-form .single-active-array-table .react-spinner {
     height: 18px;
     width: 18px;

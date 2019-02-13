@@ -68,18 +68,18 @@ export default class _AutosuggestWidget extends Component {
 class SimpleValueRenderer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {value: this.props.value};
+		this.state = {value: this.props.value, loading: true};
 	}
 	componentDidMount() {
 		if (this.props.getSuggestionFromValue) {
 			this.isValueSuggested = FriendsAutosuggestWidget.prototype.isValueSuggested.bind(this);
 			this.props.getSuggestionFromValue.call(this, this.props.value).then((suggestion) => {
-				this.setState({value: suggestion.value});
-			}).catch(() => {});
+				this.setState({value: suggestion.value, loading: false});
+			}).catch(() => this.setState({loading: false}));
 		}
 	}
 	render() {
-		return <span>{this.state.value}</span>;
+		return this.state.loading ? <Spinner /> : <span>{this.state.value}</span>;
 	}
 
 }

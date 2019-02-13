@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import update from "immutability-helper";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
@@ -669,7 +668,7 @@ class TableArrayFieldTemplate extends Component {
 			if (updateLayout && this._lastWidth && pixelsToBsSize(this._lastWidth) !== pixelsToBsSize(window.innerWidth)) {
 				this.updateLayout(null, callback);
 			}
-		}
+		};
 		const that = this.props.formContext.this;
 		const {normalRenderingTreshold} = getUiOptions(this.props.uiSchema);
 		let initialized = false;

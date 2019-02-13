@@ -520,21 +520,25 @@ export function formatValue(props, col, _formatter) {
 	let {formData, uiSchema, schema, registry} = props;
 
 	schema = schema.properties[col];
-	
+
 	const val = formData[col];
 	const _uiSchema = uiSchema[col] || getNestedTailUiSchema(uiSchema[col] || {});
 
-	let formatterComponent = undefined;
-	if (_uiSchema["ui:widget"]) formatterComponent = registry.widgets[_uiSchema["ui:widget"]];
-	else if (schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
-	else if (_uiSchema["ui:field"]) formatterComponent = registry.fields[_uiSchema["ui:field"]];
+	const getFormatterForUiSchema = __uiSchema => {
+		let formatterComponent = undefined;
+		if (__uiSchema["ui:widget"]) formatterComponent = registry.widgets[__uiSchema["ui:widget"]];
+		else if (schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
+		else if (__uiSchema["ui:field"]) formatterComponent = registry.fields[__uiSchema["ui:field"]];
 
-	let formatter = undefined;
-	if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
-		formatter = formatterComponent.prototype.formatValue;
-	} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
-		formatter = formatterComponent.prototype.__proto__.formatValue;
-	}
+		let formatter = undefined;
+		if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
+			formatter = formatterComponent.prototype.formatValue;
+		} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
+			formatter = formatterComponent.prototype.__proto__.formatValue;
+		}
+		return formatter;
+	};
+	let formatter = getFormatterForUiSchema(_uiSchema);
 
 	let formatted = val;
 	if (formatter) {
@@ -543,6 +547,19 @@ export function formatValue(props, col, _formatter) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
 		formatted = val.map(_val => schema.items.enumNames[schema.items.enum.indexOf(_val)]).join(", ");
+	} else if (schema.type === "array") {
+		const childFormatter = getFormatterForUiSchema(_uiSchema.items);
+		formatted = <span className="single-active-array-table-array">{val.map((_val, i) => {
+			const child = <span key={i}>{
+				childFormatter
+					? childFormatter(_val, getUiOptions(_uiSchema.items), {...props, schema: props.schema.items, uiSchema: props.uiSchema.items})
+					: _val
+			}</span>;
+			const comma = <span key={`_${i}`}>{", "}</span>;
+
+			return i < val.length - 1
+				? [child, comma] : [child];
+		})}</span>;
 	} else if (isSelect(schema)) {
 		formatted = isEmptyString(val) ? val : schema.enumNames[schema.enum.indexOf(val)];
 	} else if (schema.type === "boolean") {

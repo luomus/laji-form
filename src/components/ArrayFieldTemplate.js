@@ -16,7 +16,7 @@ function onAdd(e, props) {
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
 	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
-}
+};
 
 export function beforeAdd(props) {
 	if (!canAdd(props)) return;
