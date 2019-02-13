@@ -617,7 +617,7 @@ class TableArrayFieldTemplate extends Component {
 
 	componentDidMount() {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", (data, callback) => {
-			this.updateRenderingMode(callback);
+			this.updateLayout(null, callback);
 		});
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
