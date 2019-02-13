@@ -446,8 +446,8 @@ export class Autosuggest extends Component {
 	}
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
-		if (value === undefined) value = "";
-		if (value === undefined || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
+		if (value === undefined || value === null) value = "";
+		if (value === undefined || value === null || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
 			this.setState({suggestions: []});
 			return;
 		}	
