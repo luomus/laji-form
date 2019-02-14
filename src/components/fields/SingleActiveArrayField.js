@@ -850,11 +850,13 @@ class TableArrayFieldTemplate extends Component {
 										    onMouseLeave={onMouseLeave(idx)}
 										>
 											{[
-												...cols.map(col => (
+												...cols.map(col => {
+													return (
 													<td key={col}>
-														{formatValue({...that.props, schema: schema.items, uiSchema: uiSchema.items, formData: formData[idx]}, col, formatters[col])}
+														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: uiSchema.items[col], formData: formData[idx][col]}, formatters[col])}
 													</td>
-												)),
+													);
+												}),
 												idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx, item)}</td>
 											]}
 										</tr>

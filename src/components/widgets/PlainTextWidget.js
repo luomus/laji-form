@@ -9,10 +9,10 @@ function PlainTextWidget(props) {
 
 	const formattedValue = formatValue({
 		...props,
-		uiSchema: formatterWidget ? {field: {"ui:widget": formatterWidget, options: formatterOptions}} : {field: props.uiSchema},
-		schema: {properties: {field: props.schema}},
-		formData: {field: props.value}
-	}, "field");
+		uiSchema: formatterWidget ? {"ui:widget": formatterWidget, options: formatterOptions} : props.uiSchema,
+		schema: props.schema,
+		formData: props.value
+	});
 	return (
     <span className="plainText">
 		{strong ? <strong>{formattedValue}</strong> : formattedValue}

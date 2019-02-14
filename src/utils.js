@@ -516,54 +516,53 @@ const tableFormatters = {
 		return (isEmptyString(item) || item[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
 	}
 };
-export function formatValue(props, col, _formatter) {
-	let {formData, uiSchema, schema, registry} = props;
+export function formatValue(props, _formatter) {
+	let {formData, uiSchema = {}, schema, registry} = props;
 
-	schema = schema.properties[col];
 
-	const val = formData[col];
-	const _uiSchema = uiSchema[col] || getNestedTailUiSchema(uiSchema[col] || {});
+	let formatter = undefined;
+	let formatterComponent = undefined;
+	if (uiSchema["ui:widget"]) formatterComponent = registry.widgets[uiSchema["ui:widget"]];
+	else if (schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
+	else if (uiSchema["ui:field"]) formatterComponent = registry.fields[uiSchema["ui:field"]];
 
-	const getFormatterForUiSchema = __uiSchema => {
-		let formatterComponent = undefined;
-		if (__uiSchema["ui:widget"]) formatterComponent = registry.widgets[__uiSchema["ui:widget"]];
-		else if (schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
-		else if (__uiSchema["ui:field"]) formatterComponent = registry.fields[__uiSchema["ui:field"]];
+	if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
+		formatter = formatterComponent.prototype.formatValue;
+	} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
+		formatter = formatterComponent.prototype.__proto__.formatValue;
+	}
 
-		let formatter = undefined;
-		if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
-			formatter = formatterComponent.prototype.formatValue;
-		} else if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.__proto__ && formatterComponent.prototype.__proto__.formatValue) {
-			formatter = formatterComponent.prototype.__proto__.formatValue;
-		}
-		return formatter;
+	const arrayJoiner = (value, i, length, separator = "; ") => {
+		const comma = <React.Fragment key={`_${i}`}>{separator}</React.Fragment>;
+		return i < length - 1
+			? [value, comma] : [value];
 	};
-	let formatter = getFormatterForUiSchema(_uiSchema);
 
-	let formatted = val;
+	let formatted = formData;
 	if (formatter) {
-		formatted = formatter(val, getUiOptions(_uiSchema), props);
-	} else if (isEmptyString(val)) {
+		formatted = formatter(formData, getUiOptions(uiSchema), props);
+	} else if (isEmptyString(formData)) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
-		formatted = val.map(_val => schema.items.enumNames[schema.items.enum.indexOf(_val)]).join(", ");
+		formatted = formData.map(_val => schema.items.enumNames[schema.items.enum.indexOf(_val)]).join(", ");
+	} else if (schema.type === "object") {
+		const keys = Object.keys(formData);
+		return keys.map((_col, i) => {
+			const child = <React.Fragment key={_col}>{formatValue({...props, schema: schema.properties[_col], uiSchema: uiSchema[_col], formData: formData[_col]})}</React.Fragment>;
+			return arrayJoiner(child, i, keys.length);
+		});
 	} else if (schema.type === "array") {
-		const childFormatter = getFormatterForUiSchema(_uiSchema.items);
-		formatted = <span className="single-active-array-table-array">{val.map((_val, i) => {
-			const child = <span key={i}>{
-				childFormatter
-					? childFormatter(_val, getUiOptions(_uiSchema.items), {...props, schema: props.schema.items, uiSchema: props.uiSchema.items})
-					: _val
-			}</span>;
-			const comma = <span key={`_${i}`}>{", "}</span>;
+		formatted = <span className="single-active-array-table-array">{formData.map((_val, i) => {
+			const child = <React.Fragment key={i}>{
+				formatValue({...props, schema: props.schema.items, uiSchema: uiSchema.items, formData: _val})
+			}</React.Fragment>;
 
-			return i < val.length - 1
-				? [child, comma] : [child];
+			return arrayJoiner(child, i, formData.length, "; ");
 		})}</span>;
 	} else if (isSelect(schema)) {
-		formatted = isEmptyString(val) ? val : schema.enumNames[schema.enum.indexOf(val)];
+		formatted = isEmptyString(formData) ? formData : schema.enumNames[schema.enum.indexOf(formData)];
 	} else if (schema.type === "boolean") {
-		formatted = props.formContext.translations[val ? "yes" : "no"];
+		formatted = props.formContext.translations[formData ? "yes" : "no"];
 	}
 
 	if (_formatter) {
