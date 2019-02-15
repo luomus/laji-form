@@ -90,8 +90,8 @@ export default class MapField extends Component {
 			}
 		}
 
-		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered ||  singletonHasLocate)) {
-			mapOptions.locate = [this.onLocate];
+		if (mapOptions.createOnLocate && !this.state.mapOptions && (!singletonRendered || singletonHasLocate)) {
+			_mapOptions.locate = [this.onLocate];
 		}
 
 		const {lang, topOffset, bottomOffset} = this.props.formContext;
@@ -159,12 +159,11 @@ export default class MapField extends Component {
 	}
 
 	onLocate = (latlng) => {
-		if (!latlng) return;
-		const {formData} = this.props;
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
-		if (!isEmpty) {
+		if (!latlng || !isEmpty) {
 			return;
 		}
+		const {formData} = this.props;
 		this.props.onChange({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [latlng.lng, latlng.lat]}]});
 	}
 }
