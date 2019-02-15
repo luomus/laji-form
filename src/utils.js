@@ -519,7 +519,6 @@ const tableFormatters = {
 export function formatValue(props, _formatter) {
 	let {formData, uiSchema = {}, schema, registry} = props;
 
-
 	let formatter = undefined;
 	let formatterComponent = undefined;
 	if (uiSchema["ui:widget"]) formatterComponent = registry.widgets[uiSchema["ui:widget"]];

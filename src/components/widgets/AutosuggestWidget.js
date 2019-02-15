@@ -57,9 +57,8 @@ export default class _AutosuggestWidget extends Component {
 			default:
 				component = RangeAutosuggestWidget;
 			}
-			const getSuggestionFromValue = component.prototype.getSuggestionFromValue;
-			if (getSuggestionFromValue) {
-				return <SimpleValueRenderer getSuggestionFromValue={getSuggestionFromValue} value={value}/>;
+			if (component) {
+				return <SimpleValueRenderer component={component} value={value} />;
 			}
 		}
 	}
@@ -71,9 +70,10 @@ class SimpleValueRenderer extends Component {
 		this.state = {value: this.props.value, loading: true};
 	}
 	componentDidMount() {
-		if (this.props.getSuggestionFromValue) {
-			this.isValueSuggested = FriendsAutosuggestWidget.prototype.isValueSuggested.bind(this);
-			this.props.getSuggestionFromValue.call(this, this.props.value).then((suggestion) => {
+		const {getSuggestionFromValue, isValueSuggested} = this.props.component.prototype;
+		if (getSuggestionFromValue && isValueSuggested) {
+			this.isValueSuggested = isValueSuggested.bind(this);
+			getSuggestionFromValue.call(this, this.props.value).then((suggestion) => {
 				this.setState({value: suggestion.value, loading: false});
 			}).catch(() => this.setState({loading: false}));
 		}
@@ -108,7 +108,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			}
 		}
 
-		isValueSuggested = (value) => {
+		isValueSuggested(value) {
 			return !isEmptyString(value) && !!value.match(/MX\.\d+/);
 		}
 
