@@ -16,11 +16,8 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	const titleContent = <span><span>{renderedFormatters}</span> {title} {helpComponent} {buttons}</span>;
 
-	const Legend = ({children}) => (
-		<legend className={className}>{children}</legend>
-	);
 
-	if (!help) return <Legend>{titleContent}</Legend>;
+	if (!help) return <legend className={className}>{titleContent}</legend>;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>
 							<span>
@@ -30,11 +27,11 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 						</Tooltip>;
 
 	return (
-		<Legend>
+		<legend className={className}>
 			<OverlayTrigger placement="right" overlay={tooltipElem}>
 				{titleContent}
 			</OverlayTrigger>
-		</Legend>
+		</legend>
 	);
 };
 
