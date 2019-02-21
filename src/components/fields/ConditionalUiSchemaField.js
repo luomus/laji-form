@@ -85,7 +85,6 @@ export default class ConditionalUiSchemaField extends Component {
 
 		let computedUiSchema = uiSchema;
 		(Array.isArray(cases) ? cases : [cases]).forEach(({rules = [], operations = []}, idx) => {
-
 			let passes;
 			if (cache) {
 				if (!this.cache[idx]) {

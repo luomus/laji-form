@@ -6,6 +6,7 @@ import deepEquals from "deep-equal";
 import merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
+import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
@@ -52,6 +53,8 @@ export default class MapArrayField extends Component {
 			return <UnitsMapArrayField {...this.props} />;
 		case "lineTransect":
 			return <LineTransectMapArrayField {...this.props} />;
+		case "lolife":
+			return <LolifeMapArrayField {...this.props} />;
 		}
 	}
 }
@@ -103,6 +106,9 @@ class DefaultMapArrayField extends Component {
 
 	onMapChangeCreateGathering(events) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
+		if (!geometryField) {
+			return;
+		}
 		events.forEach(e => {
 			if (e.type !== "create") {
 				return;
@@ -242,13 +248,13 @@ class UnitsMapArrayField extends Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlightUnit", this.startHighlightUnit);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlightUnit", this.endHighlightUnit);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlightUnit");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlightUnit");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight");
 	}
 
 	isGeometryCollection = (idx) => {
@@ -358,7 +364,7 @@ class UnitsMapArrayField extends Component {
 		return {draw, data, controls, emptyMode};
 	}
 
-	startHighlightUnit = (idx) => {
+	startHighlight = (idx) => {
 		const color = combineColors(this.getUnitFeatureStyle().color, "#ffffff", 30);
 		if (idx in this.unitIdxToGeometryCollectionIdx) {
 			const _idx = this.unitIdxToGeometryCollectionIdx[idx];
@@ -372,7 +378,7 @@ class UnitsMapArrayField extends Component {
 		}
 	};
 
-	endHighlightUnit = (idx) => {
+	endHighlight = (idx) => {
 		const color = this.getUnitFeatureStyle().color;
 		if (idx in this.unitIdxToGeometryCollectionIdx) {
 			const _idx = this.unitIdxToGeometryCollectionIdx[idx];
@@ -393,7 +399,8 @@ class UnitsMapArrayField extends Component {
 			return;
 		}
 
-		this.startHighlightUnit(idx);
+		this._highlightedUnit = idx;
+		this.startHighlight(idx);
 
 		const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
 		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
@@ -410,7 +417,9 @@ class UnitsMapArrayField extends Component {
 			return;
 		}
 
-		this.endHighlightUnit(unitIdx);
+		this._highlightedUnit = undefined;
+		this.endHighlight(idx);
+
 		if (this.highlightedElem) {
 			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
 		}
@@ -725,15 +734,102 @@ class LineTransectMapArrayField extends Component {
 	}
 }
 
+@_MapArrayField
+class LolifeMapArrayField extends Component {
+	componentDidMount() {
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+	}
+
+	componentWillUnmount() {
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight");
+	}
+
+	getOptions() {
+		const data = this.getData();
+		return {
+			draw: false,
+			data
+		};
+	}
+
+	getData = () => {
+		return (this.props.formData || []).map((gathering, idx) => {
+			return {
+				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {idx}, geometry: g}))},
+				getFeatureStyle: this.getFeatureStyle(gathering),
+				on: {
+					mouseover: this.onMouseOver,
+					mouseout: this.onMouseOut,
+				}
+			};
+		});
+	}
+
+	ruokailuStyle = () => ({color: "#00ff00"})
+	levähdysStyle =  () => ({color: "#ffff00"})
+	kolopuuStyle = () => ({color: "#ff0000"})
+	havaintoStyle = () => ({color: NORMAL_COLOR})
+
+	getFeatureStyle = (gathering) => {
+		const {lowtype} = gathering;
+		switch (lowtype) {
+		case "ruokailu":
+			return this.ruokailuStyle;
+		case "levähdys": 
+			return this.levähdysStyle;
+		case "kolopuu": 
+			return this.kolopuuStyle;
+		case "havainto": 
+			return this.havaintoStyle;
+		}
+	}
+
+	onMouseOver = (e, {dataIdx: idx}) => {
+		this.startHighlight(idx);
+
+		const id = `${this.props.idSchema.$id}_${idx}`;
+		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+
+		if (this.highlightedElem) {
+			this.highlightedElem.className += " map-highlight";
+		}
+	}
+
+	onMouseOut = (e, {dataIdx: idx}) => {
+		this.endHighlight(idx);
+
+		const id = `${this.props.idSchema.$id}_${idx}`;
+		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+
+		if (this.highlightedElem) {
+			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
+		}
+	}
+
+	startHighlight = (idx) => {
+		const color = combineColors(this.map.data[idx].getFeatureStyle().color, "#ffffff", 150);
+		const layer = this.map.getLayerByIdxTuple([idx, 0]);
+		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
+	};
+
+	endHighlight = (idx) => {
+		const color = this.map.data[idx].getFeatureStyle().color;
+		const layer = this.map.getLayerByIdxTuple([idx, 0]);
+		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
+	};
+}
+
 function _MapArrayField(ComposedComponent) { return (
 @BaseComponent
 class _MapArrayField extends ComposedComponent {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				geometryField: PropTypes.string.isRequired,
+				geometryField: PropTypes.string,
 				// Strategy for getting geometry data.
-				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect"]),
+				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect", "lolife"]),
 				topOffset: PropTypes.integer,
 				bottomOffset: PropTypes.integer,
 				popupFields: PropTypes.arrayOf(PropTypes.object),
@@ -788,7 +884,7 @@ class _MapArrayField extends ComposedComponent {
 	}
 
 	afterActiveChange(idx) {
-		super.afterActiveChange(idx);
+		super.afterActiveChange && super.afterActiveChange(idx);
 		this.onLocateOrAddNew();
 	}
 
@@ -1087,7 +1183,7 @@ class _MapArrayField extends ComposedComponent {
 			? _errors.__errors.map(formatErrorMessage)
 			: null;
 
-		const errorId = geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
+		const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
 		const mapPropsToPass = {
 			formContext: this.props.formContext,
 			onPopupClose: this.onPopupClose,
@@ -1177,7 +1273,10 @@ class _MapArrayField extends ComposedComponent {
 	}
 	
 	getUnitFeatureStyle = () => {
-		const color = "#55AEFA";
+		let color = "#55AEFA";
+		if (this._highlightedUnit !== undefined) {
+			color = combineColors(color, "#ffffff", 30);
+		}
 		return {color: color, fillColor: color, weight: 4};
 	}
 

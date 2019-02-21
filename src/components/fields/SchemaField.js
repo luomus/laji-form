@@ -144,7 +144,7 @@ export default class _SchemaField extends Component {
 		}
 
 		const options = getUiOptions(uiSchema);
-		if (typeof options.label === "string")  {
+		if (typeof options.label === "string") {
 			schema = {...schema, title: options.label};
 		}
 

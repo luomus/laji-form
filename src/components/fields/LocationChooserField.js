@@ -18,6 +18,7 @@ export default class LocationChooserField extends Component {
 				uiSchema: PropTypes.object,
 				taxonField: PropTypes.string,
 				geometryField: PropTypes.string,
+				strategy: PropTypes.string,
 				mapDrawOptions: PropTypes.shape({
 					marker: PropTypes.bool,
 					polyline: PropTypes.bool,
@@ -32,13 +33,14 @@ export default class LocationChooserField extends Component {
 		}).isRequired,
 		formData: PropTypes.object.isRequired
 	}
+
 	getStateFromProps(props) {
 		let uiSchema = getInnerUiSchema(props.uiSchema);
 
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
-				(uiSchema["ui:buttons"] || []),
+				...(uiSchema["ui:buttons"] || []),
 				<LocationButton key={`$${this.props.idSchema.$id}-location`} that={this} />
 			]
 		};
@@ -86,7 +88,7 @@ class LocationButton extends Component {
 		const idx = this.getIdx();
 		this._hovered = true;
 		if (typeof idx === "number" && !isNaN(idx)) {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx);
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", idx);
 		}
 	}
 
@@ -95,65 +97,114 @@ class LocationButton extends Component {
 		const idx = this.getIdx();
 		this._hovered = false;
 		if (typeof idx === "number" && !isNaN(idx)) {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx);
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", idx);
 		}
 	}
 
-	getDrawFeatureStyle = () => ({color: "#55AEFA"})
+	getUnitDrawFeatureStyle = () => ({color: "#55AEFA"})
 
 	getDataFeatureStyle = () => ({color: "#aaaaaa", opacity: 0.7})
 
-	onClick = () => {
+	getData = () => {
 		const {that} = this.props;
-		const {formData,disabled, readonly} = that.props;
+		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
+
+		switch (strategy) {
+		case "unit": return this.getUnitData();
+		case "lolife": return this.getLolifeData();
+		}
+	}
+
+	getUnitData = () => {
+		const {that} = this.props;
+		const {formData} = that.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-
 		const geometryField = this.getGeometryField();
-
-		const idx = this.getIdx();
-
-		this.triggerLayer = undefined;
-
 		const emptyFeatureCollection = {featureCollection: {type: "FeatureCollection", features: []}};
 
-		const {rootElem, customControls, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const {rootElem, customControls} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 		const gatheringData = map ? map.getDraw() : emptyFeatureCollection;
 
 		const [unitGeometriesData, ...unitGeometryCollectionsData] = map
 			? map.data.filter(i => i) || [emptyFeatureCollection]
-			: [emptyFeatureCollection];
+			: [emptyFeatureCollection]; 
 
-		let data = [
-			{
-				featureCollection: gatheringData.featureCollection,
-				getFeatureStyle: this.getDataFeatureStyle
-			},
-			{
-				featureCollection: {
-					type: "FeatureCollection",
-					features: unitGeometriesData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+		const idx = this.getIdx();
+
+		const draw = formData[geometryField] && formData[geometryField].type
+			? {
+				featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]},
+				getFeatureStyle: this.getUnitDrawFeatureStyle,
+			}
+			: undefined;
+
+		if (unitGeometriesData && draw) draw.getFeatureStyle = unitGeometriesData.getFeatureStyle;
+
+		return [
+			draw,
+			[
+				{
+					featureCollection: gatheringData.featureCollection,
+					getFeatureStyle: this.getDataFeatureStyle
 				},
-				getFeatureStyle: this.getDataFeatureStyle
-			},
-			...unitGeometryCollectionsData.map(data => ({
-				featureCollection: {
-					type: "FeatureCollection",
-					features: data.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+				{
+					featureCollection: {
+						type: "FeatureCollection",
+						features: unitGeometriesData.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+					},
+					getFeatureStyle: this.getDataFeatureStyle
 				},
-				getFeatureStyle: this.getDataFeatureStyle
-			}))
+				...unitGeometryCollectionsData.map(data => ({
+					featureCollection: {
+						type: "FeatureCollection",
+						features: data.featureCollection.features.filter(feature => feature.properties.idx !== idx)
+					},
+					getFeatureStyle: this.getDataFeatureStyle
+				}))
+			]
 		];
+	}
 
+	getLolifeData = () => {
+		const {that} = this.props;
+		const {formData} = that.props;
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const {map} = mapContext;
+		const geometryField = this.getGeometryField();
+
+		const {rootElem, customControls} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+
+		const idx = this.getIdx();
+
+		const draw = formData[geometryField] && formData[geometryField].type
+				? {featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]}}
+				: undefined;
+
+		if (draw && map.data[idx]) {
+			draw.getFeatureStyle = map.data[idx].getFeatureStyle;
+		}
+
+		return [
+			draw,
+			map.data.filter(({featureCollection}) => featureCollection.features[0] && featureCollection.features[0].properties.idx !== idx)
+		];
+	}
+
+	onClick = () => {
+		const {that} = this.props;
+		const {disabled, readonly} = that.props;
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const {map} = mapContext;
+
+		this.triggerLayer = undefined;
+
+		let [draw, data] = this.getData();
 		if (disabled || readonly) {
 			data = data.map(d => ({...d, editable: false}));
 		}
 
-		const drawData = formData[geometryField] && formData[geometryField].type
-			? { featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]} }
-			: undefined;
-
-		if (unitGeometriesData && drawData) drawData.getFeatureStyle = unitGeometriesData.getFeatureStyle;
+		const {rootElem, customControls, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 
 		const {
 			mapOptions: {
@@ -170,8 +221,7 @@ class LocationButton extends Component {
 				...mapOptions,
 				data,
 				draw: {
-					...drawData,
-					getFeatureStyle: this.getDrawFeatureStyle,
+					...draw,
 					marker,
 					polyline,
 					rectangle,
@@ -189,7 +239,7 @@ class LocationButton extends Component {
 					}
 				},
 				fullscreenable: true,
-				zoomToData: drawData ? {draw: true} : true,
+				zoomToData: draw ? {draw: true} : true,
 				onComponentDidMount: this.onMapMounted
 			}
 		});
@@ -295,18 +345,21 @@ class LocationButton extends Component {
 		}
 	}
 
-	onEntered = () => {
+	getMiniMapData = () => {
+		const {that} = this.props;
+		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
+
+		switch (strategy) {
+		case "unit": return this.getUnitMiniMapData();
+		case "lolife": return this.getLolifeMiniMapData();
+		}
+	}
+
+
+	getUnitMiniMapData = () => {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
-		if (!mapContext) return;
-
 		const {map} = mapContext;
-		let mapOptions = {};
-		if (map) {
-			const {rootElem, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
-			mapOptions = _mapOptions;
-		}
-
 		const geometryField = this.getGeometryField();
 		const geometry = that.props.formData[geometryField];
 
@@ -324,8 +377,35 @@ class LocationButton extends Component {
 				getFeatureStyle: this.getFeatureStyle
 			}
 		];
+		return [
+			data,
+			{dataIdxs: [data.length - 1]}
+		];
+	}
 
-		const zoomToData = {dataIdxs: [data.length - 1]};
+	getLolifeMiniMapData = () => {
+		const {that} = this.props;
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const {map} = mapContext;
+		return [map.data, {dataIdxs: [this.getIdx()]}];
+	}
+
+	onEntered = () => {
+		const {that} = this.props;
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		if (!mapContext) {
+			return;
+		}
+
+		const {map} = mapContext;
+		let mapOptions = {};
+		if (map) {
+			const {rootElem, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			mapOptions = _mapOptions;
+		}
+
+		const [data, zoomToData] = this.getMiniMapData();
+
 		this.setState({
 			miniMap: {
 				...mapOptions,
@@ -337,11 +417,11 @@ class LocationButton extends Component {
 				clickBeforeZoomAndPan: false
 			}
 		});
-	};
+	}
 
 	onHide = () => {
 		this.setState({modalMap: undefined});
-	};
+	}
 
 	onModalMapKeyDown = (e) => {
 		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e)) {
@@ -361,6 +441,7 @@ class LocationButton extends Component {
 		const {that, glyph = "map-marker", label} = this.props;
 		const {shapeAlert} = this.state;
 		const id = that.props.idSchema.$id;
+		const {taxonField, color} = getUiOptions(that.props.uiSchema);
 
 		const hasCoordinates = this.hasCoordinates();
 
@@ -371,7 +452,9 @@ class LocationButton extends Component {
 				onMouseEnter={this.onMouseEnter}
 				onMouseLeave={this.onMouseLeave}
 				glyph={glyph}
-				onClick={this.onClick} />
+				onClick={this.onClick}
+				style={hasCoordinates && color ? {backgroundColor: color} : undefined}
+			/>
 		);
 
 		const {translations} = that.props.formContext;
@@ -383,7 +466,6 @@ class LocationButton extends Component {
 			<Tooltip id={`${id}-location-peeker`}>{label || that.props.formContext.translations.ChooseLocation}</Tooltip>
 		);
 
-		const {taxonField} = getUiOptions(that.props.uiSchema);
 		return (
 			<React.Fragment>
 				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 

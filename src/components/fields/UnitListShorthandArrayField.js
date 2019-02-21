@@ -29,7 +29,10 @@ export default class UnitListShorthandArrayField extends Component {
 			glyph: "align-justify",
 			label: this.props.formContext.translations.AddUnitList,
 			id: this.props.idSchema.$id,
-			changesFormData: true
+			changesFormData: true,
+			rules: {
+				canAdd: true
+			}
 		};
 
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);

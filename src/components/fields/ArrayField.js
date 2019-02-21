@@ -83,15 +83,26 @@ export default class _ArrayField extends Component {
 				beforeAdd(this.props);
 				this.props.onChange([
 					...this.props.formData,
-					() => {
-						copyItemFunction(this, this.props.formData[this.props.formData.length  - 1])(...params);
-					}
+					copyItemFunction(this, this.props.formData[this.props.formData.length  - 1])(...params)
 				]);
 			},
 			rules: {
-				minLength:  1
+				minLength:  1,
+				canAdd: true
 			},
 			changesFormData: true
+		},
+		addPredefined: {
+			fn: () => (onClickProps, {default: _default}) => {
+				beforeAdd(this.props);
+				this.props.onChange([
+					...this.props.formData,
+					getDefaultFormState(this.props.schema.items, _default, this.props.registry.definitions)
+				]);
+			},
+			rules: {
+				canAdd: true
+			},
 		}
 	}
 }
