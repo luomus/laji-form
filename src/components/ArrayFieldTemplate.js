@@ -124,10 +124,11 @@ export function getButtonElems(buttons = [], props = {}) {
 	);
 }
 
+
 export function getButtonsForPosition(props, buttonDescriptions = [], position, defaultPosition = "bottom") {
 	buttonDescriptions = buttonDescriptions.filter(button => button.position === position || (!button.position && position === defaultPosition));
 	return (buttonDescriptions && buttonDescriptions.length) ? 
-		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
+		getButtonElems(buttonDescriptions, props) :
 		null;
 }
 
