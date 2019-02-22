@@ -115,7 +115,13 @@ export function getButtonElems(buttons = [], props = {}) {
 		buttonElems = [...buttonElems, ...props.uiSchema["ui:buttons"]];
 	}
 
-	if (buttonElems.length === 0) return null;
+	return getButtonsElem(buttonElems, props);
+}
+
+function getButtonsElem(buttonElems = [], props = {}) {
+	if (buttonElems.length === 0) {
+		return null;
+	}
 
 	return (
 		<ButtonToolbar className={getUiOptions(props.uiSchema)["ui:buttonsDesktopLayout"] ? "desktop-layout" : undefined} key="buttons">
@@ -124,11 +130,10 @@ export function getButtonElems(buttons = [], props = {}) {
 	);
 }
 
-
 export function getButtonsForPosition(props, buttonDescriptions = [], position, defaultPosition = "bottom") {
 	buttonDescriptions = buttonDescriptions.filter(button => button.position === position || (!button.position && position === defaultPosition));
 	return (buttonDescriptions && buttonDescriptions.length) ? 
-		getButtonElems(buttonDescriptions, props) :
+		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
 		null;
 }
 
@@ -245,8 +250,8 @@ export default class ArrayFieldTemplate extends Component {
 
 		const _buttons = getButtons(buttons, props);
 
-		const topButtons = getButtonsForPosition(props, _buttons, "top");
-		const bottomButtons = getButtonsForPosition(props, _buttons, "bottom");
+		const topButtons = getButtonsElem(getButtonsForPosition(props, _buttons, "top"), props);
+		const bottomButtons = getButtonsElem(getButtonsForPosition(props, _buttons, "bottom"), props);
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
