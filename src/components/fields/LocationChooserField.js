@@ -204,7 +204,7 @@ class LocationButton extends Component {
 			data = data.map(d => ({...d, editable: false}));
 		}
 
-		const {rootElem, customControls, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const {rootElem, customControls, zoom, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 
 		const {
 			mapOptions: {

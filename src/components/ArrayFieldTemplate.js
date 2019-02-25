@@ -119,7 +119,7 @@ export function getButtonElems(buttons = [], props = {}) {
 }
 
 function getButtonsElem(buttonElems = [], props = {}) {
-	if (buttonElems.length === 0) {
+	if (!Array.isArray(buttonElems) || buttonElems.length === 0) {
 		return null;
 	}
 
@@ -132,7 +132,7 @@ function getButtonsElem(buttonElems = [], props = {}) {
 
 export function getButtonsForPosition(props, buttonDescriptions = [], position, defaultPosition = "bottom") {
 	buttonDescriptions = buttonDescriptions.filter(button => button.position === position || (!button.position && position === defaultPosition));
-	return (buttonDescriptions && buttonDescriptions.length) ? 
+	return (buttonDescriptions && buttonDescriptions.length) ?
 		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
 		null;
 }
