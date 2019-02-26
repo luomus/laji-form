@@ -853,7 +853,7 @@ class TableArrayFieldTemplate extends Component {
 												...cols.map(col => {
 													return (
 													<td key={col}>
-														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: uiSchema.items[col], formData: formData[idx][col]}, formatters[col])}
+														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: uiSchema.items[col], formData: formData[idx][col]}, formatters[col], {...that.props, schema: schema.items.properties, uiSchema: uiSchema.items, formData: formData[idx]})}
 													</td>
 													);
 												}),

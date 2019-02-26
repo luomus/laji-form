@@ -512,11 +512,11 @@ export function dictionarify(array, getKey, getValue) {
 }
 
 const tableFormatters = {
-	unknownTaxon: (item, formatted, options) => {
-		return (isEmptyString(item) || item[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
+	unknownTaxon: (item, formatted, options, parentProps = {}) => {
+		return (isEmptyString(item) || parentProps.formData[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
 	}
 };
-export function formatValue(props, _formatter) {
+export function formatValue(props, _formatter, parentProps) {
 	let {formData, uiSchema = {}, schema, registry} = props;
 
 	let formatter = undefined;
@@ -565,7 +565,7 @@ export function formatValue(props, _formatter) {
 	}
 
 	if (_formatter) {
-		formatted = tableFormatters[_formatter.formatter](formData, formatted, _formatter);
+		formatted = tableFormatters[_formatter.formatter](formData, formatted, _formatter, parentProps);
 	}
 
 	return formatted;
