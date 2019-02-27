@@ -240,6 +240,7 @@ class LocationButton extends Component {
 				},
 				fullscreenable: true,
 				zoomToData: draw ? {draw: true} : true,
+				clickBeforeZoomAndPan: false,
 				onComponentDidMount: this.onMapMounted
 			}
 		});
