@@ -134,11 +134,11 @@ export default class GeocoderField extends Component {
 
 	onButtonClick = () => (props) => {
 		this.mounted ? this.setState(this.getStateFromProps(this.props, true), () => {
-			this.update(props, (failed = false) => {
+			this.update(this.props, (failed = false) => {
 				this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
 			});
 		}) : 
-		this.update(props, (failed = false) => {
+		this.update(this.props, (failed = false) => {
 			this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
 		});
 	}
