@@ -10,6 +10,7 @@ import Context from "../../Context";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "laji-map/lib/globals";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 const cache = {};
 
@@ -301,11 +302,12 @@ export default class GeocoderField extends Component {
 							}
 						});
 					} else {
-						changes[field] = this.props.schema.properties[field].type === "array" ? [] : "";
+						changes[field] = getDefaultFormState(this.props.schema, undefined, this.props.registry.definitions);
 					}
 				});
 				if (country && fieldByKeys.country) changes.country = country;
 				afterFetch(() => {
+					console.log(changes);
 					this.props.onChange({...props.formData, ...changes});
 					if (callback) callback();
 				});
