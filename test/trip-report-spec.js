@@ -154,15 +154,6 @@ describe("Trip report (JX.519)", () => {
 			await expect(lajiFormLocate("gatherings.1").isPresent()).toBe(false);
 		});
 
-		it("first gathering can be activated", async () => {
-			await $("#root_gatherings_0-header").click();
-
-			await expect(lajiFormLocate("gatherings.0").isDisplayed()).toBe(true); // Test that the first field is visible.
-
-			if (!googleApiKey) {
-				await waitUntilBlockingLoaderHides(6000);
-			}
-		});
 	});
 
 	describe("units", () => {
