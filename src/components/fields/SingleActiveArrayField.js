@@ -813,10 +813,10 @@ class TableArrayFieldTemplate extends Component {
 		const title = that.getTitle(that.state.activeIdx);
 
 		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
-			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlightUnit", idx)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", idx)
 			: undefined;
 		const onMouseLeave = (idx) => that.props.idSchema.$id.match(/units$/)
-			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlightUnit", idx)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", idx)
 			: undefined;
 
 		return (
@@ -853,7 +853,7 @@ class TableArrayFieldTemplate extends Component {
 												...cols.map(col => {
 													return (
 													<td key={col}>
-														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: uiSchema.items[col], formData: formData[idx][col]}, formatters[col], {...that.props, schema: schema.items.properties, uiSchema: uiSchema.items, formData: formData[idx]})}
+														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: uiSchema.items[col], formData: formData[idx][col]}, formatters[col], {formData: formData[idx]})}
 													</td>
 													);
 												}),

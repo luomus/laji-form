@@ -513,7 +513,7 @@ export function dictionarify(array, getKey, getValue) {
 
 const tableFormatters = {
 	unknownTaxon: (item, formatted, options, parentProps = {}) => {
-		return (isEmptyString(item) || parentProps.formData[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
+		return (isEmptyString(item) || (parentProps.formData || {})[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
 	}
 };
 export function formatValue(props, _formatter, parentProps) {
