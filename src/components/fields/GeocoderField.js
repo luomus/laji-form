@@ -268,16 +268,13 @@ export default class GeocoderField extends Component {
 					});
 				});
 				Object.keys(parsers).forEach(field => {
-					if (!fieldByKeys[field]) {
+					if (!fieldByKeys[field] || !this.props.schema.properties[field]) {
 						return;
 					}
 					if (found[field]) {
 						const keys = Object.keys(found[field]);
 						const responseForField = found[field][keys[0]];
 						Object.keys(responseForField).forEach(value => {
-							if (!this.props.schema.properties[field]) {
-								return;
-							}
 							// If target field is array
 							if (this.props.schema.properties[field].type === "array") {
 								const temp = Array.from(this.props.formData[field]);
@@ -302,12 +299,11 @@ export default class GeocoderField extends Component {
 							}
 						});
 					} else {
-						changes[field] = getDefaultFormState(this.props.schema, undefined, this.props.registry.definitions);
+						changes[field] = getDefaultFormState(this.props.schema.properties[field], undefined, this.props.registry.definitions);
 					}
 				});
-				if (country && fieldByKeys.country) changes.country = country;
+				if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
 				afterFetch(() => {
-					console.log(changes);
 					this.props.onChange({...props.formData, ...changes});
 					if (callback) callback();
 				});
