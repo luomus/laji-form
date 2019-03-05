@@ -11,6 +11,6 @@ export default (props) => (
 		{...props}
 		onChange={onChange(props.onChange)}
 		time={false}
-		value={props.value ? moment().format("YYYY-MM-DD") : null}
+		value={props.value ? moment(props.value).format("YYYY-MM-DD") : null}
 	/>
 );

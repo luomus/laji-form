@@ -196,7 +196,8 @@ export default class DateTimeWidget extends Component {
 	}
 
 	getDateWithCurrentTime = (date) => {
-		const time = this.props.value !== undefined ? this.props.value.split("T")[1] : false;
+		const {value} = this.props;
+		const time = value !== undefined && value !== null ? value.split("T")[1] : false;
 		return time ? `${date}T${time}` : date;
 	}
 
