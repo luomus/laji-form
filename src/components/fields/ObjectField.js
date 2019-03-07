@@ -116,7 +116,8 @@ function GridTemplate(props) {
 	if (lastRow.length > 0) rows.push(lastRow);
 
 	const {title} = schema;
-	let fieldTitle = title !== undefined ? title : props.name;
+	const {"ui:title": _title} = uiSchema;
+	let fieldTitle = _title || (title !== undefined ? title : props.name);
 
 	let buttons = getGlyphButtons(props);
 	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
