@@ -49,6 +49,7 @@ const casePropType = PropTypes.shape({
  *				uiSchema: conditional uiSchema to use.
  *			}
  *		],
+ *		else: [<same as operations>] // Operations performed if the rules do not pass.
  *		cache: <boolean> true by default. If you know the cases will cache, set this to false.
  *		       There will be a performance penalty on valueIn rule, as they are not indexed without caching.
  *	]
@@ -84,7 +85,7 @@ export default class ConditionalUiSchemaField extends Component {
 		const {uiSchema} = props;
 
 		let computedUiSchema = uiSchema;
-		(Array.isArray(cases) ? cases : [cases]).forEach(({rules = [], operations = []}, idx) => {
+		(Array.isArray(cases) ? cases : [cases]).forEach(({rules = [], operations = [], else: _else}, idx) => {
 			let passes;
 			if (cache) {
 				if (!this.cache[idx]) {
@@ -100,6 +101,8 @@ export default class ConditionalUiSchemaField extends Component {
 
 			if (passes)  {
 				computedUiSchema = computeUiSchema(computedUiSchema, operations);
+			} else if (_else) {
+				computedUiSchema = computeUiSchema(computedUiSchema, _else);
 			}
 		});
 
