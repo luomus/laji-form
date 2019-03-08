@@ -756,6 +756,7 @@ class LolifeMapArrayField extends Component {
 		this.onMouseOut = this.onMouseOut.bind(this);
 		this.startHighlight = this.startHighlight.bind(this);
 		this.endHighlight = this.endHighlight.bind(this);
+		this.onChanges = {};
 	}
 
 	componentDidMount() {
@@ -772,7 +773,8 @@ class LolifeMapArrayField extends Component {
 		const data = this.getData();
 		return {
 			draw: false,
-			data
+			data,
+			controls: true
 		};
 	}
 
@@ -792,26 +794,21 @@ class LolifeMapArrayField extends Component {
 	}
 
 	_getData(formData) {
-		const data = (formData || []).map((gathering, idx) => {
+		// Store so change detection doesn't think it's a new function.
+		return (formData || []).map((gathering, idx) => {
+			const onChangeForIdx = this.onChanges[idx] || this.onChangeForIdx(idx);
+			this.onChanges[idx] = onChangeForIdx;
 			return {
 				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {idx}, geometry: g}))},
 				getFeatureStyle: this.getFeatureStyle(gathering),
 				on: {
 					mouseover: this.onMouseOver,
 					mouseout: this.onMouseOut,
-				}
+				},
+				onChange: onChangeForIdx,
+				editable: true
 			};
 		});
-		return [
-			//{
-			//	featureCollection: {
-			//		type: "FeatureCollection",
-			//		features: parseGeometries(getUiOptions(this.props.uiSchema).data).map(g => ({type: "Feature", geometry: g, properties: {}}))
-			//	},
-			//	getFeatureStyle: this.namedPlaceStyle
-			//},
-			...data, 
-		];
 	}
 
 	getGeometries() {
@@ -823,6 +820,43 @@ class LolifeMapArrayField extends Component {
 			...geometries,
 			...featureCollection.features.map(f => f.geometry)
 		], []);
+	}
+
+	onChangeForIdx = (idx) => (events) => {
+		let formData = this.getGatherings ? this.getGatherings() : this.props.formData;
+		events.forEach(e => {
+			switch (e.type) {
+			case "edit":
+				formData = update(formData,
+					formData[idx].geometry.type === "GeometryCollection"
+					?  Object.keys(e.features).reduce((updates, _idx) => ({
+						...updates,
+						[idx]: {geometry: {geometries: {[_idx]: {$set: e.features[_idx].geometry}}}}
+					}), {})
+					: {[idx]: {geometry: {$set: e.features[0].geometry}}}
+				);
+				break;
+			case "create":
+				formData = update(formData, {[idx]: {geometry: {$set: e.feature.geometry}}});
+				break;
+			case "delete":
+				if (formData[idx].geometry.type === "GeometryCollection") {
+					let splices = [];
+					e.idxs.sort().reverse().forEach((idx) => {
+						splices.push([idx, 1]);
+					});
+					formData = update(formData, {[idx]: {geometry: {geometries: {$splice: splices}}}});
+				} else {
+					formData = update(formData, {[idx]: {geometry: {$set: undefined}}});
+				}
+				break;
+			}
+		});
+		this.onGatheringChange(formData);
+	}
+
+	onGatheringChange(formData) {
+		this.props.onChange(formData);
 	}
 
 	namedPlaceStyle() {return {color: "#aaaaaa", fillOpacity: 0.2};}
@@ -903,14 +937,18 @@ class LolifeMapArrayField extends Component {
 
 @_MapArrayField
 class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
-	constructor(props) {
-		super(props);
-	}
-
 	getData() {
 		const data = super._getData(this.props.formData.prepopulatedDocument.gatherings);
 		return [
-			{geoData: this.getNamedPlaceGeometry(), getFeatureStyle: this.getNamedPlaceStyle},
+			{
+				featureCollection: {
+					type: "FeatureCollection",
+					features: [{type: "Feature", properties: {}, geometry: this.getNamedPlaceGeometry()}]
+				},
+				getFeatureStyle: this.getNamedPlaceStyle,
+				editable: true,
+				onChange: this.onChange
+			},
 			...data
 		];
 	}
@@ -955,6 +993,19 @@ class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 			}
 		});
 		this.props.onChange({...this.props.formData, geometry});
+	}
+
+	getGatherings() {
+		return this.props.formData.prepopulatedDocument.gatherings;
+	}
+
+	onGatheringChange(formData) {
+		this.props.onChange({
+			...this.props.formData,
+			prepopulatedDocument: {
+				...this.props.formData.prepopulatedDocument.gatherings,
+				gatherings: formData
+			}});
 	}
 
 	getIdForDataIdx(idx) {
