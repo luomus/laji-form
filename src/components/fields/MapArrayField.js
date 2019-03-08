@@ -1147,11 +1147,15 @@ class _MapArrayField extends ComposedComponent {
 		};
 	}
 
-	getContainer = () => {
-		return findDOMNode(this.refs._stretch);
-	}
+	getContainer = () => findDOMNode(this.refs._stretch)
 	onResize = () => this.refs.map.map.map.invalidateSize({debounceMoveend: true})
-	onPopupClose = () => this.setState({popupIdx: undefined})
+	onPopupClose = () => {
+		// Move popup content back to the React container so React won't crash.
+		if (this.refs.popupContainer && this.refs.popup.refs.popup) {
+			findDOMNode(this.refs.popupContainer).appendChild(this.refs.popup.refs.popup);
+		}
+		this.setState({popupIdx: undefined});
+	}
 	onFocusGrab = () => this.setState({focusGrabbed: true})
 	onFocusRelease = () => this.setState({focusGrabbed: false})
 	onOptionsChanged = (options) => this.setState({mapOptions: {...this.state.mapOptions, ...options}}, () => {
@@ -1389,7 +1393,7 @@ class _MapArrayField extends ComposedComponent {
 
 		const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
 		const wholeErrorId = this.props.schema.type === "array"
-			?  `${this.props.idSchema.$id}_${activeIdx}${errorId}`
+			? `${this.props.idSchema.$id}_${activeIdx}${errorId}`
 			: `${this.props.idSchema.$id}${errorId}`;
 		const mapPropsToPass = {
 			formContext: this.props.formContext,
@@ -1460,18 +1464,18 @@ class _MapArrayField extends ComposedComponent {
 					</Col>
 				</Row>
 				{popupFields ?
-					<div style={{display: "none"}}>
+					<div style={{display: "none"}} ref="popupContainer">
 						<Popup data={this.getFeaturePopupData(this.state.popupIdx)} ref="popup"/>
 					</div> : null}
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
 				</Row>
 				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
-				<Row className="map-array-field-below-buttons">
-					<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
-					<ButtonToolbar>{buttons}</ButtonToolbar>
-				</Row>
-				): null}
+					<Row className="map-array-field-below-buttons">
+						<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
+						<ButtonToolbar>{buttons}</ButtonToolbar>
+					</Row>
+					): null}
 			</React.Fragment>
 		);
 	}
@@ -1479,7 +1483,7 @@ class _MapArrayField extends ComposedComponent {
 	getDraftStyle = () => {
 		return {color: "#25B4CA", opacity: 1};
 	}
-	
+
 	getUnitFeatureStyle = () => {
 		let color = "#55AEFA";
 		if (this._highlightedUnit !== undefined) {
