@@ -29,7 +29,7 @@ const popupMappers = {
 	}
 };
 
-function parseGeometries(geometry) {
+export function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
 		.filter(geometry => geometry)
 		.reduce((geometries, _geometry) => {
@@ -55,6 +55,8 @@ export default class MapArrayField extends Component {
 			return <LineTransectMapArrayField {...this.props} />;
 		case "lolife":
 			return <LolifeMapArrayField {...this.props} />;
+		case "lolifeNamedPlace":
+			return <LolifeNamedPlaceMapArrayField {...this.props} />;
 		}
 	}
 }
@@ -152,6 +154,10 @@ class DefaultMapArrayField extends Component {
 		}
 		const geometryItem = parseJSONPointer(formData[activeIdx], _geometryField || geometryField);
 		return geometryItem;
+	}
+
+	getGeometries() {
+		return this.getData();
 	}
 
 	getData() {
@@ -425,7 +431,7 @@ class UnitsMapArrayField extends Component {
 		}
 	}
 
-	getData = () => {
+	getData()  {
 		const {formData} = this.props;
 		const idx = this.state.activeIdx;
 		if (!formData) return;
@@ -444,6 +450,14 @@ class UnitsMapArrayField extends Component {
 			}
 		}, []);
 		return {gatherings, units};
+	}
+
+	getGeometries() {
+		const {gatherings, units} = this.getData();
+		return [
+			...parseGeometries(gatherings),
+			...parseGeometries(units)
+		];
 	}
 
 	onUnitChange = (unitIdx) => (events) => {
@@ -736,9 +750,17 @@ class LineTransectMapArrayField extends Component {
 
 @_MapArrayField
 class LolifeMapArrayField extends Component {
+	constructor(props) {
+		super(props);
+		this.onMouseOver = this.onMouseOver.bind(this);
+		this.onMouseOut = this.onMouseOut.bind(this);
+		this.startHighlight = this.startHighlight.bind(this);
+		this.endHighlight = this.endHighlight.bind(this);
+	}
+
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", (...params) => this.startHighlight(...params));
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", (...params) => this.endHighlight(...params));
 	}
 
 	componentWillUnmount() {
@@ -754,8 +776,23 @@ class LolifeMapArrayField extends Component {
 		};
 	}
 
-	getData = () => {
-		return (this.props.formData || []).map((gathering, idx) => {
+	getData() {
+		return [
+			{
+				featureCollection: {
+					type: "FeatureCollection",
+					features: parseGeometries(getUiOptions(this.props.uiSchema).data).map(g => ({type: "Feature", geometry: g, properties: {}}))
+				},
+				getFeatureStyle: this.namedPlaceStyle
+			},
+			...this._getData(this.props.formData)
+		];
+
+		//return this._getData(this.props.formData);
+	}
+
+	_getData(formData) {
+		const data = (formData || []).map((gathering, idx) => {
 			return {
 				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {idx}, geometry: g}))},
 				getFeatureStyle: this.getFeatureStyle(gathering),
@@ -765,31 +802,64 @@ class LolifeMapArrayField extends Component {
 				}
 			};
 		});
+		return [
+			//{
+			//	featureCollection: {
+			//		type: "FeatureCollection",
+			//		features: parseGeometries(getUiOptions(this.props.uiSchema).data).map(g => ({type: "Feature", geometry: g, properties: {}}))
+			//	},
+			//	getFeatureStyle: this.namedPlaceStyle
+			//},
+			...data, 
+		];
 	}
 
-	ruokailuStyle = () => ({color: "#00ff00"})
-	levähdysStyle =  () => ({color: "#ffff00"})
-	kolopuuStyle = () => ({color: "#ff0000"})
-	havaintoStyle = () => ({color: NORMAL_COLOR})
+	getGeometries() {
+		return this._getGeometries(this.getData());
+	}
 
-	getFeatureStyle = (gathering) => {
-		const {lowtype} = gathering;
-		switch (lowtype) {
-		case "ruokailu":
-			return this.ruokailuStyle;
-		case "levähdys": 
-			return this.levähdysStyle;
-		case "kolopuu": 
-			return this.kolopuuStyle;
-		case "havainto": 
-			return this.havaintoStyle;
+	_getGeometries(data) {
+		return data.reduce((geometries, {featureCollection}) => [
+			...geometries,
+			...featureCollection.features.map(f => f.geometry)
+		], []);
+	}
+
+	namedPlaceStyle() {return {color: "#aaaaaa", fillOpacity: 0.2};}
+	foragingStyle() {return {color: "#ffc000"};}
+	breedingAndRestingStyle() {return {color: "#a9d18e"};}
+	cavityTreeStyle() {return {color: "#9e713b"};}
+	droppingsTreeStyle() {return {color: "#b89220"};}
+	nestTreeStyle() {return {color: "#ff0000"};}
+	observationStyle() {return {color: NORMAL_COLOR};}
+
+	getFeatureStyle(gathering) {
+		const {gatheringType} = gathering;
+		switch (gatheringType) {
+		case "MY.gatheringTypeForagingArea":
+			return this.foragingStyle;
+		case "MY.gatheringTypeBreedingAndRestingArea": 
+			return this.breedingAndRestingStyle;
+		case "MY.gatheringTypeCavityTree": 
+			return this.cavityTreeStyle;
+		case "MY.gatheringTypeDroppingsTree": 
+			return this.droppingsTreeStyle;
+		case "MY.gatheringTypeNestTree": 
+			return this.nestTreeStyle;
+		default:
+			return this.observationStyle;
 		}
 	}
 
-	onMouseOver = (e, {dataIdx: idx}) => {
+	getIdForDataIdx(idx) {
+		return `${this.props.idSchema.$id}_${idx}`;
+	}
+
+	onMouseOver(e, {dataIdx}) {
+		const idx = dataIdx - 1;
 		this.startHighlight(idx);
 
-		const id = `${this.props.idSchema.$id}_${idx}`;
+		const id = this.getIdForDataIdx(idx);
 		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
 
 		if (this.highlightedElem) {
@@ -797,10 +867,11 @@ class LolifeMapArrayField extends Component {
 		}
 	}
 
-	onMouseOut = (e, {dataIdx: idx}) => {
+	onMouseOut(e, {dataIdx}) {
+		const idx = dataIdx - 1;
 		this.endHighlight(idx);
 
-		const id = `${this.props.idSchema.$id}_${idx}`;
+		const id = this.getIdForDataIdx(idx);
 		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
 
 		if (this.highlightedElem) {
@@ -808,17 +879,87 @@ class LolifeMapArrayField extends Component {
 		}
 	}
 
-	startHighlight = (idx) => {
-		const color = combineColors(this.map.data[idx].getFeatureStyle().color, "#ffffff", 150);
+	startHighlight(idx) {
+		idx = idx + 1;
+		let {color} = this.map.data[idx].getFeatureStyle();
+		if (!color) {
+			return;
+		}
+		color = combineColors(color, "#ffffff", 150);
 		const layer = this.map.getLayerByIdxTuple([idx, 0]);
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
-	};
+	}
 
-	endHighlight = (idx) => {
-		const color = this.map.data[idx].getFeatureStyle().color;
+	endHighlight(idx) {
+		idx = idx + 1;
+		const {color} = this.map.data[idx].getFeatureStyle();
+		if (!color) {
+			return;
+		}
 		const layer = this.map.getLayerByIdxTuple([idx, 0]);
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
-	};
+	}
+}
+
+@_MapArrayField
+class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
+	constructor(props) {
+		super(props);
+	}
+
+	getData() {
+		const data = super._getData(this.props.formData.prepopulatedDocument.gatherings);
+		return [
+			{geoData: this.getNamedPlaceGeometry(), getFeatureStyle: this.getNamedPlaceStyle},
+			...data
+		];
+	}
+
+	getNamedPlaceStyle = () => ({fillOpacity: 0.6})
+
+	getNamedPlaceGeometry() {
+		const {geometry} = this.props.formData;
+		return geometry && Object.keys(geometry).length ? this.props.formData.geometry : undefined;
+	}
+
+	getGeometries() {
+		const namedPlaceGeometry = this.getNamedPlaceGeometry();
+		const geometries = super._getGeometries(super._getData(this.props.formData.prepopulatedDocument.gatherings));
+		return namedPlaceGeometry ? [
+			namedPlaceGeometry,
+			...geometries
+		] : geometries;
+	}
+
+	onChange = (events) => {
+		let geometry;
+		events.forEach(e => {
+			switch (e.type) {
+			case "create":
+				geometry = {
+					type: "GeometryCollection",
+					geometries: [e.feature.geometry]
+				};
+				break;
+			case "edit":
+				geometry = {
+					type: "GeometryCollection",
+					geometries: [e.features[0].geometry]
+				};
+				break;
+			case "delete":
+				geometry = {
+					type: "GeometryCollection",
+					geometries: []
+				};
+			}
+		});
+		this.props.onChange({...this.props.formData, geometry});
+	}
+
+	getIdForDataIdx(idx) {
+		return `${this.props.idSchema.$id}_prepopulatedDocument_gatherings_${idx}`;
+	}
 }
 
 function _MapArrayField(ComposedComponent) { return (
@@ -829,7 +970,7 @@ class _MapArrayField extends ComposedComponent {
 			"ui:options": PropTypes.shape({
 				geometryField: PropTypes.string,
 				// Strategy for getting geometry data.
-				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect", "lolife"]),
+				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect", "lolife", "lolifeNamedPlace"]),
 				topOffset: PropTypes.integer,
 				bottomOffset: PropTypes.integer,
 				popupFields: PropTypes.arrayOf(PropTypes.object),
@@ -845,9 +986,9 @@ class _MapArrayField extends ComposedComponent {
 			}))
 		}),
 		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["array"])
+			type: PropTypes.oneOf(["array", "object"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired
 	}
 
 	constructor(props) {
@@ -929,7 +1070,7 @@ class _MapArrayField extends ComposedComponent {
 		}
 
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
-		const item = (this.props.formData || [])[this.state.activeIdx];
+		const item = this.props.schema.type === "array" ? (this.props.formData || [])[this.state.activeIdx] : this.props.formData;
 		const {areaField} = getUiOptions(this.props.uiSchema);
 		if (!item || !areaField) {
 			return;
@@ -938,7 +1079,7 @@ class _MapArrayField extends ComposedComponent {
 		if (area instanceof Array) {
 			area = area[0];
 		}
-		const geometries = this.getData();
+		const geometries = this.getGeometries();
 		if (geometries.length === 0 && area && area.length > 0) {
 			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
@@ -1024,9 +1165,14 @@ class _MapArrayField extends ComposedComponent {
 		this.setState({activeIdx: nextActive});
 	}
 
+	getSchemas() {
+		if (super.getSchemas) return super.getSchemas();
+		 return this.props;
+	}
+
 	render() {
 		const {registry: {fields: {SchemaField}}} = this.props;
-		let {uiSchema, errorSchema, schema} = this.props;
+		let {uiSchema, errorSchema, schema} = this.getSchemas();
 		const options = getUiOptions(this.props.uiSchema);
 		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp} = options;
 		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
@@ -1038,6 +1184,7 @@ class _MapArrayField extends ComposedComponent {
 			idToFocusAfterNavigate,
 			idToScrollAfterNavigate
 		};
+
 		uiSchema = getInnerUiSchema(uiSchema);
 		if (getUiOptions(this.props.uiSchema).buttons) {
 			uiSchema = {
@@ -1102,8 +1249,14 @@ class _MapArrayField extends ComposedComponent {
 			return _props;
 		}, {});
 
-		const inlineSchemaProps = putChildsToParents(getPropsForFields(getChildProps(), Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))));
-		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(getChildProps(), belowFields)) : null;
+		const childProps = schema.type === "array"
+			? getChildProps()
+			: {...this.props, uiSchema: getInnerUiSchema(this.props.uiSchema)};
+		const inlineSchemaProps = schema.type === "array"
+			? putChildsToParents(getPropsForFields(childProps, Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))))
+			: childProps;
+
+		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(childProps, belowFields)) : null;
 
 		const inlineItemsUiSchema = {...uiSchema.items, ...inlineSchemaProps.uiSchema.items};
 		let inlineUiSchema = {
@@ -1129,7 +1282,7 @@ class _MapArrayField extends ComposedComponent {
 		}
 		belowUiSchema.items["ui:options"].reserveId = false;
 
-		const {buttonsPath, addButtonPath} = getUiOptions(this.props.uiSchema);
+		const {buttonsPath, addButtonPath, showErrors = true} = getUiOptions(this.props.uiSchema);
 		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
 		let _buttonsPath = buttonsPath || addButtonPath;
 
@@ -1178,12 +1331,15 @@ class _MapArrayField extends ComposedComponent {
 			})).filter(button => button)
 			: undefined;
 
-		const _errors = errorSchema && errorSchema[activeIdx] && parseJSONPointer(errorSchema[activeIdx], geometryField);
+		const _errors = errorSchema && parseJSONPointer(schema.type === "array" ? (errorSchema[activeIdx] || {}) : errorSchema, geometryField);
 		const errors = _errors
 			? _errors.__errors.map(formatErrorMessage)
 			: null;
 
 		const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
+		const wholeErrorId = this.props.schema.type === "array"
+			?  `${this.props.idSchema.$id}_${activeIdx}${errorId}`
+			: `${this.props.idSchema.$id}${errorId}`;
 		const mapPropsToPass = {
 			formContext: this.props.formContext,
 			onPopupClose: this.onPopupClose,
@@ -1192,10 +1348,11 @@ class _MapArrayField extends ComposedComponent {
 			popupOnHover: true,
 			onFocusGrab: this.onFocusGrab,
 			onFocusRelease: this.onFocusRelease,
-			panel: errors ? {
+			panel: errors && showErrors ? {
 				header: this.props.formContext.translations.Error,
-				panelTextContent: <div id={`laji-form-error-container-${this.props.idSchema.$id}_${activeIdx}${errorId}`}>{errors}</div>,
-				bsStyle: "danger"
+				panelTextContent: <div>{errors}</div>,
+				bsStyle: "danger",
+				id: `laji-form-error-container-${wholeErrorId}`
 			} : null,
 			draw: false,
 			zoomToData: true,
@@ -1455,7 +1612,8 @@ export class MapComponent extends Component {
 		const {panel, onFocusGrab, onFocusRelease, onOptionsChanged, ...mapOptions} = this.props; // eslint-disable-line
 
 		const controlledPanel = panel ?
-			<MapPanel bsStyle={panel.bsStyle || undefined}
+			<MapPanel id={panel.id}
+			          bsStyle={panel.bsStyle || undefined}
 			          buttonBsStyle={panel.buttonBsStyle}
 			          header={panel.header}
 			          text={panel.panelTextContent} />
@@ -1465,7 +1623,8 @@ export class MapComponent extends Component {
 			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
 				{controlledPanel}
 				{this.state.panel ?
-					<MapPanel show={this.state.panel}
+					<MapPanel id={panel.id}
+					          show={this.state.panel}
 					          text={this.state.panelTextContent}
 					          onClick={this.state.panelButtonOnClick}
 					          buttonText={this.state.panelButtonContent}
@@ -1562,7 +1721,8 @@ export class Map extends Component {
 			emptyMode, // eslint-disable-line no-unused-vars
 			onComponentDidMount, // eslint-disable-line no-unused-vars
 			fullscreenable, // eslint-disable-line no-unused-vars
-			formContext,  // eslint-disable-line no-unused-vars
+			formContext, // eslint-disable-line no-unused-vars
+			controlSettings, // eslint-disable-line no-unused-vars
 			...mapOptions
 		} = props;
 		return mapOptions;
@@ -1661,7 +1821,7 @@ const FullscreenPortal = React.forwardRef((props, ref) => {
 class MapPanel extends Component {
 	render() {
 		return (
-				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped">
+				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
 					{this.props.header ? (
 						<PanelHeading>
 							{this.props.header}

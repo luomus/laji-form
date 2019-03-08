@@ -1323,3 +1323,13 @@ min-height: 20px;
 .laji-form .darker-bottom-border {
 	border-bottom: 1px solid #d2d2d2;
 }
+.laji-form .location-chooser-errors .tooltip-inner {
+	background: #bd362f;
+}
+.laji-form .location-chooser-errors .tooltip-arrow {
+	border-left-color: #bd362f !important;
+}
+.laji-form .location-chooser-errors ul {
+	list-style: none;
+	padding: 0;
+}

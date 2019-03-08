@@ -1,13 +1,14 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { Modal, Tooltip, Popover } from "react-bootstrap";
+import { Modal, Tooltip, Popover, Overlay } from "react-bootstrap";
 import update from "immutability-helper";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
-import { hasData, getUiOptions, getInnerUiSchema } from "../../utils";
-import { Map } from "./MapArrayField";
+import { hasData, getUiOptions, getInnerUiSchema, formatErrorMessage } from "../../utils";
+import { Map, parseGeometries } from "./MapArrayField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
@@ -80,7 +81,7 @@ class LocationButton extends Component {
 	hasCoordinates = () => {
 		const {that} = this.props;
 		const geometryField = this.getGeometryField();
-		return hasData(that.props.formData[geometryField]);
+		return parseGeometries(that.props.formData[geometryField]).length;
 	}
 
 	onMouseEnter = () => {
@@ -181,13 +182,16 @@ class LocationButton extends Component {
 				? {featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]}}
 				: undefined;
 
-		if (draw && map.data[idx]) {
-			draw.getFeatureStyle = map.data[idx].getFeatureStyle;
+		if (draw && map.data[idx + 1]) {
+			draw.getFeatureStyle = map.data[idx + 1].getFeatureStyle;
 		}
 
 		return [
 			draw,
-			map.data.filter(({featureCollection}) => featureCollection.features[0] && featureCollection.features[0].properties.idx !== idx)
+			map.data.filter(({featureCollection}) =>
+				featureCollection.features[0]
+				&& featureCollection.features[0].properties.hasOwnProperty("idx")
+				&& featureCollection.features[0].properties.idx !== idx)
 		];
 	}
 
@@ -204,7 +208,7 @@ class LocationButton extends Component {
 			data = data.map(d => ({...d, editable: false}));
 		}
 
-		const {rootElem, customControls, zoom, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 
 		const {
 			mapOptions: {
@@ -239,6 +243,8 @@ class LocationButton extends Component {
 					}
 				},
 				fullscreenable: true,
+				center,
+				zoom,
 				zoomToData: draw ? {draw: true} : true,
 				clickBeforeZoomAndPan: false,
 				onComponentDidMount: this.onMapMounted
@@ -388,7 +394,7 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		return [map.data, {dataIdxs: [this.getIdx()]}];
+		return [map.data, {dataIdxs: [this.getIdx() + 1]}];
 	}
 
 	onEntered = () => {
@@ -438,37 +444,60 @@ class LocationButton extends Component {
 		this.miniMapRef = elem;
 	}
 
-	render ()  {
+	setButtonRef = (elem) => {
+		this.buttonRef = elem;
+	}
+	getButtonElem = () => findDOMNode(this.buttonRef)
+
+	renderButton = () => {
 		const {that, glyph = "map-marker", label} = this.props;
-		const {shapeAlert} = this.state;
 		const id = that.props.idSchema.$id;
-		const {taxonField, color} = getUiOptions(that.props.uiSchema);
+		const {color} = getUiOptions(that.props.uiSchema);
 
 		const hasCoordinates = this.hasCoordinates();
+		const geometryField = this.getGeometryField();
+		const hasErrors = that.props.errorSchema[geometryField];
 
-		const button = (
-			<GlyphButton
+		const bsStyle = hasErrors
+			? "danger"
+			: hasCoordinates
+				? "primary"
+				: "default"; 
+
+		const button = <LocationButtonComp
+				key={`${that.props.idSchema.$id}-location`}
 				id={`${that.props.idSchema.$id}-location`}
-				bsStyle={hasCoordinates ? "primary" : "default"}
+				bsStyle={bsStyle}
 				onMouseEnter={this.onMouseEnter}
 				onMouseLeave={this.onMouseLeave}
 				glyph={glyph}
 				onClick={this.onClick}
-				style={hasCoordinates && color ? {backgroundColor: color} : undefined}
-			/>
-		);
+				style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
+				ref={this.setButtonRef}
+			/>;
 
-		const {translations} = that.props.formContext;
-		const overlay = hasCoordinates ? (
-			<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-				<Map {...this.state.miniMap} hidden={!this.state.miniMap || this.state.modalMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false} ref={this.setMiniMapRef}/>
-			</Popover>
-		) : (
-			<Tooltip id={`${id}-location-peeker`}>{label || that.props.formContext.translations.ChooseLocation}</Tooltip>
-		);
+		if (hasErrors) {
+			return (
+				<React.Fragment>
+					{button}
+					<Overlay show={true} container={this} target={this.getButtonElem} placement="left">
+						<Tooltip id={`laji-form-error-container-${id}_${geometryField}`} className="location-chooser-errors">
+							<ul>{hasErrors.__errors.map((e, i) => <li key={i}>{formatErrorMessage(e)}</li>)}</ul>
+						</Tooltip>
+					</Overlay>
+				</React.Fragment>
+			);
+		} else {
+			const {translations} = that.props.formContext;
+			const overlay = hasCoordinates ? (
+				<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
+					<Map {...this.state.miniMap} hidden={!this.state.miniMap || this.state.modalMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false} ref={this.setMiniMapRef}/>
+				</Popover>
+			) : (
+				<Tooltip id={`${id}-location-peeker`}>{label || that.props.formContext.translations.ChooseLocation}</Tooltip>
+			);
 
-		return (
-			<React.Fragment>
+			return (
 				<OverlayTrigger key={`${id}-set-coordinates-${glyph}`} 
 					overlay={overlay}
 					placement="left"
@@ -477,10 +506,24 @@ class LocationButton extends Component {
 					onEntered={hasCoordinates ? this.onEntered : undefined}>
 					{button}
 				</OverlayTrigger>
+			);
+		}
+	}
+
+	render () {
+		const {that} = this.props;
+		const {shapeAlert} = this.state;
+		const {taxonField, title} = getUiOptions(that.props.uiSchema);
+
+		const {translations} = that.props.formContext;
+
+		return (
+			<React.Fragment>
+				{this.renderButton()}
 				{this.state.modalMap &&
 						<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={this.onHide} keyboard={false} onKeyDown={this.onModalMapKeyDown}>
 							<Modal.Header closeButton={true}>
-								<Modal.Title>{translations.SetLocationToUnit(that.props.formData[taxonField])}</Modal.Title>
+								<Modal.Title>{title || translations.SetLocationToUnit(that.props.formData[taxonField])}</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
 								{shapeAlert && <Alert bsStyle="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}
@@ -489,6 +532,14 @@ class LocationButton extends Component {
 						</Modal>
 				}
 			</React.Fragment>
+		);
+	}
+}
+
+class LocationButtonComp extends Component {
+	render() {
+		return (
+			<GlyphButton {...this.props} />
 		);
 	}
 }

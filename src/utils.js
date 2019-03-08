@@ -71,6 +71,9 @@ export function getUpdateObjectFromJSONPath(path, injection) {
 }
 
 export function immutableDelete(obj, delProp) {
+	if (!obj.hasOwnProperty(delProp)) {
+		return obj;
+	}
 	const newObj = {};
 	Object.keys(obj).forEach(prop => {
 		if (prop !== delProp) newObj[prop] = obj[prop];
