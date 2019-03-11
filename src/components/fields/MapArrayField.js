@@ -554,8 +554,8 @@ class UnitsMapArrayField extends Component {
 		}
 	}
 
-	getPopupIdxFromPopupOptions(options) {
-		return options.feature.properties.idx;
+	parsePopupPointer(col, options) {
+		return col.replace("[idx]", options.feature.properties.idx);
 	}
 }
 
@@ -943,12 +943,8 @@ class LolifeMapArrayField extends Component {
 		scrollIntoViewIfNeeded(getSchemaElementById(contextId, this.getIdForDataIdx(idx)), topOffset, bottomOffset);
 	}
 
-	getPopupIdxFromPopupOptions(options) {
-		return options.dataIdx - 1;
-	}
-
-	getFormDataForPopup(idx) {
-		return this.props.formData[idx];
+	getFormDataForPopup({feature}) {
+		return this.props.formData[feature.properties.idx];
 	}
 }
 
@@ -964,7 +960,8 @@ class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 				},
 				getFeatureStyle: this.getNamedPlaceStyle,
 				editable: true,
-				onChange: this.onChange
+				onChange: this.onChange,
+				getPopup: this.getPopup
 			},
 			...data
 		];
@@ -1029,8 +1026,12 @@ class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 		return `${this.props.idSchema.$id}_prepopulatedDocument_gatherings_${idx}`;
 	}
 
-	getFormDataForPopup(idx) {
+	getFormDataForPopup() {
 		return this.props.formData;
+	}
+
+	parsePopupPointer(col, options) {
+		return col.replace("[idx]", options.feature.properties.idx);
 	}
 }
 
@@ -1519,61 +1520,68 @@ class _MapArrayField extends ComposedComponent {
 		}
 	};
 
-	getPopupIdxFromPopupOptions(options) {
-		if (super.getPopupIdxFromPopupOptions) {
-			return super.getPopupIdxFromPopupOptions(options);
-		}
-		return options.featureIdx;
+	filterPopupOptions({dataIdx, featureIdx, feature}) {
+		return {dataIdx, featureIdx, feature};
 	}
 
 	getPopup = (options, openPopupCallback) => {
 		if (!this.refs.popup) return;
-		this.setState({popupIdx: this.getPopupIdxFromPopupOptions(options)}, () => {
-			this.refs.popup && hasData(this.getPopupData(this.getPopupIdxFromPopupOptions(options))) && openPopupCallback(this.refs.popup.refs.popup);
+		this.setState({popupIdx: this.filterPopupOptions(options)}, () => {
+			this.refs.popup && hasData(this.getPopupData(options)) && openPopupCallback(this.refs.popup.refs.popup);
 		});
 	}
 
-	getPopupData(idx) {
+	getPopupData(options) {
 		if (super.getPopupData) {
-			return super.getPopupData(idx);
+			return super.getPopupData(options);
 		} else {
-			return this.getFeaturePopupData(idx);
+			return this.getFeaturePopupData(options);
 		}
 	}
 
-	getFormDataForPopup(idx) {
+	getFormDataForPopup(options) {
 		if (super.getFormDataForPopup) {
-			return super.getFormDataForPopup(idx);
+			return super.getFormDataForPopup(options);
 		} else {
 			return this.state.activeIdx !== undefined ? this.props.formData[this.state.activeIdx] : undefined;
 		}
 	}
 
-	getFeaturePopupData = (idx) => {
+	getFeaturePopupData = (options) => {
+		if (!options) return [];
+
 		const {popupFields} = getUiOptions(this.props.uiSchema);
-		const formData = this.getFormDataForPopup(idx);
+		const formData = this.getFormDataForPopup(options)
 
 		let data = [];
-		if (!formData
-			|| idx === undefined) {
-			return data;
-		}
 
-		popupFields.forEach(({field: col, template, value: _value, title: _title}) => {
+		popupFields.forEach(({field: col, template, value: _value, title: _title, if: _if}) => {
 			let value, title;
 			if (_value) {
 				value = _value;
 				title = _title;
-			} else {
-				col = col.replace("[idx]", idx);
+			} else if (col) {
+				if (this.parsePopupPointer) {
+					col = this.parsePopupPointer(col, options);
+				}
 				const _formData = parseJSONPointer(formData, col);
 				const schema = parseSchemaFromFormDataPointer(this.props.schema.items || this.props.schema, col);
 				const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items || this.props.uiSchema, col);
 				title = schema.title;
 				value = formatValue({...this.props, formData: _formData, schema, uiSchema});
 			}
+
 			if (!isEmptyString(value)) {
-				data.push({title, template, value});
+				let result;
+				if (_if) {
+					result = ["dataIdx", "featureIdx"].every(opt => !_if.hasOwnProperty(opt) || options[opt] === _if[opt])
+					if (_if.reverse) {
+						result = !result;
+					}
+				}
+				if (!_if || result) {
+					data.push({title, template, value});
+				}
 			}
 		});
 		return data;
