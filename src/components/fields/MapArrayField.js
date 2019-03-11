@@ -11,7 +11,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -552,7 +552,10 @@ class UnitsMapArrayField extends Component {
 				}
 			}));
 		}
+	}
 
+	getPopupIdxFromPopupOptions(options) {
+		return options.feature.properties.idx;
 	}
 }
 
@@ -789,8 +792,6 @@ class LolifeMapArrayField extends Component {
 			},
 			...this._getData(this.props.formData)
 		];
-
-		//return this._getData(this.props.formData);
 	}
 
 	_getData(formData) {
@@ -804,6 +805,7 @@ class LolifeMapArrayField extends Component {
 				on: {
 					mouseover: this.onMouseOver,
 					mouseout: this.onMouseOut,
+					click: this.onClick
 				},
 				onChange: onChangeForIdx,
 				editable: true,
@@ -935,6 +937,12 @@ class LolifeMapArrayField extends Component {
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
 	}
 
+	onClick = (e, {dataIdx}) => {
+		const {contextId, topOffset, bottomOffset} = this.props.formContext;
+		const idx = dataIdx - 1;
+		scrollIntoViewIfNeeded(getSchemaElementById(contextId, this.getIdForDataIdx(idx)), topOffset, bottomOffset);
+	}
+
 	getPopupIdxFromPopupOptions(options) {
 		return options.dataIdx - 1;
 	}
@@ -1019,6 +1027,10 @@ class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 
 	getIdForDataIdx(idx) {
 		return `${this.props.idSchema.$id}_prepopulatedDocument_gatherings_${idx}`;
+	}
+
+	getFormDataForPopup(idx) {
+		return this.props.formData;
 	}
 }
 
@@ -1533,12 +1545,12 @@ class _MapArrayField extends ComposedComponent {
 		if (super.getFormDataForPopup) {
 			return super.getFormDataForPopup(idx);
 		} else {
-			return this.state.activeIdx !== undefined ?this.props.formData[this.state.activeIdx] : undefined;
+			return this.state.activeIdx !== undefined ? this.props.formData[this.state.activeIdx] : undefined;
 		}
 	}
 
 	getFeaturePopupData = (idx) => {
-		const {popupFields, template} = getUiOptions(this.props.uiSchema);
+		const {popupFields} = getUiOptions(this.props.uiSchema);
 		const formData = this.getFormDataForPopup(idx);
 
 		let data = [];
@@ -1547,13 +1559,19 @@ class _MapArrayField extends ComposedComponent {
 			return data;
 		}
 
-		popupFields.forEach(({field: col, template}) => {
-			col = col.replace("[activeIdx]", idx);
-			const _formData = parseJSONPointer(formData, col);
-			const schema = parseSchemaFromFormDataPointer(this.props.schema.items, col);
-			const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items, col);
-			const title = schema.title;
-			const value = formatValue({...this.props, formData: _formData, schema, uiSchema});
+		popupFields.forEach(({field: col, template, value: _value, title: _title}) => {
+			let value, title;
+			if (_value) {
+				value = _value;
+				title = _title;
+			} else {
+				col = col.replace("[idx]", idx);
+				const _formData = parseJSONPointer(formData, col);
+				const schema = parseSchemaFromFormDataPointer(this.props.schema.items || this.props.schema, col);
+				const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items || this.props.uiSchema, col);
+				title = schema.title;
+				value = formatValue({...this.props, formData: _formData, schema, uiSchema});
+			}
 			if (!isEmptyString(value)) {
 				data.push({title, template, value});
 			}
@@ -1597,12 +1615,14 @@ class Popup extends Component {
 		const { data } = this.props;
 		return data && data.length &&
 			<ul ref="popup" className="map-data-tooltip">
-				{data.map(({value, title, template}) => {
+				{data.map(({value, title, template}, i) => {
 					switch (template) {
 					case "title":
-						return <li key={title}><strong>{Array.isArray(value) ? value.join(", ") : value}</strong></li>;
+						return <li key={title || i}><strong>{Array.isArray(value) ? value.join(", ") : value}</strong></li>;
+					case "description":
+						return <li key={title || i}><i>{Array.isArray(value) ? value.join(", ") : value}</i></li>;
 					default:
-						return <li key={title}><strong>{title}:</strong> {Array.isArray(value) ? value.join(", ") : value}</li>;
+						return <li key={title || i}><strong>{title}:</strong> {Array.isArray(value) ? value.join(", ") : value}</li>;
 					}
 				})}
 			</ul>;
