@@ -11,7 +11,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -806,7 +806,8 @@ class LolifeMapArrayField extends Component {
 					mouseout: this.onMouseOut,
 				},
 				onChange: onChangeForIdx,
-				editable: true
+				editable: true,
+				getPopup: this.getPopup
 			};
 		});
 	}
@@ -932,6 +933,14 @@ class LolifeMapArrayField extends Component {
 		}
 		const layer = this.map.getLayerByIdxTuple([idx, 0]);
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
+	}
+
+	getPopupIdxFromPopupOptions(options) {
+		return options.dataIdx - 1;
+	}
+
+	getFormDataForPopup(idx) {
+		return this.props.formData[idx];
 	}
 }
 
@@ -1465,7 +1474,7 @@ class _MapArrayField extends ComposedComponent {
 				</Row>
 				{popupFields ?
 					<div style={{display: "none"}} ref="popupContainer">
-						<Popup data={this.getFeaturePopupData(this.state.popupIdx)} ref="popup"/>
+						<Popup data={this.getPopupData(this.state.popupIdx)} ref="popup"/>
 					</div> : null}
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
@@ -1498,43 +1507,55 @@ class _MapArrayField extends ComposedComponent {
 		}
 	};
 
-	getPopup = (idx, feature, openPopupCallback) => {
+	getPopupIdxFromPopupOptions(options) {
+		if (super.getPopupIdxFromPopupOptions) {
+			return super.getPopupIdxFromPopupOptions(options);
+		}
+		return options.featureIdx;
+	}
+
+	getPopup = (options, openPopupCallback) => {
 		if (!this.refs.popup) return;
-		this.setState({popupIdx: idx}, () => {
-			this.refs.popup && hasData(this.getFeaturePopupData(idx)) && openPopupCallback(this.refs.popup.refs.popup);
+		this.setState({popupIdx: this.getPopupIdxFromPopupOptions(options)}, () => {
+			this.refs.popup && hasData(this.getPopupData(this.getPopupIdxFromPopupOptions(options))) && openPopupCallback(this.refs.popup.refs.popup);
 		});
 	}
 
+	getPopupData(idx) {
+		if (super.getPopupData) {
+			return super.getPopupData(idx);
+		} else {
+			return this.getFeaturePopupData(idx);
+		}
+	}
+
+	getFormDataForPopup(idx) {
+		if (super.getFormDataForPopup) {
+			return super.getFormDataForPopup(idx);
+		} else {
+			return this.state.activeIdx !== undefined ?this.props.formData[this.state.activeIdx] : undefined;
+		}
+	}
+
 	getFeaturePopupData = (idx) => {
-		const {popupFields} = getUiOptions(this.props.uiSchema);
-		const geometryMapperField = this.field;
-		const {formData} = this.props;
+		const {popupFields, template} = getUiOptions(this.props.uiSchema);
+		const formData = this.getFormDataForPopup(idx);
 
-		if (!geometryMapperField) return false;
+		let data = [];
+		if (!formData
+			|| idx === undefined) {
+			return data;
+		}
 
-		let data = {};
-		if (!formData || this.state.activeIdx === undefined || !formData[this.state.activeIdx] ||
-		    !formData[this.state.activeIdx][geometryMapperField] || idx === undefined) return data;
-
-		popupFields.forEach(field => {
-			const fieldName = field.field;
-			const itemFormData = formData[this.state.activeIdx][geometryMapperField][idx];
-			let fieldSchema = this.props.schema.items.properties[geometryMapperField].items.properties;
-			let fieldData = itemFormData ? itemFormData[fieldName] : undefined;
-			if (field.mapper) {
-				try {
-					const mappedData = popupMappers[field.mapper](fieldSchema, itemFormData, field);
-
-					for (let label in mappedData) {
-						const item = mappedData[label];
-						if (hasData(item)) data[label] = item;
-					}
-				} catch (e) {
-					console.warn(`Warning: Popup mapper ${field.mapper} crashed!`);
-				}
-			} else if (fieldData) {
-				const title = fieldSchema[fieldName].title || fieldName;
-				data[title] = fieldData;
+		popupFields.forEach(({field: col, template}) => {
+			col = col.replace("[activeIdx]", idx);
+			const _formData = parseJSONPointer(formData, col);
+			const schema = parseSchemaFromFormDataPointer(this.props.schema.items, col);
+			const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items, col);
+			const title = schema.title;
+			const value = formatValue({...this.props, formData: _formData, schema, uiSchema});
+			if (!isEmptyString(value)) {
+				data.push({title, template, value});
 			}
 		});
 		return data;
@@ -1574,14 +1595,17 @@ class _MapArrayField extends ComposedComponent {
 class Popup extends Component {
 	render() {
 		const { data } = this.props;
-		return (data && Object.keys(data).length) ? (
+		return data && data.length &&
 			<ul ref="popup" className="map-data-tooltip">
-				{data ? Object.keys(data).map(fieldName => {
-					const item = data[fieldName];
-					return <li key={fieldName}><strong>{fieldName}:</strong> {Array.isArray(item) ? item.join(", ") : item}</li>;
-				}) : null}
-			</ul>
-		) : null;
+				{data.map(({value, title, template}) => {
+					switch (template) {
+					case "title":
+						return <li key={title}><strong>{Array.isArray(value) ? value.join(", ") : value}</strong></li>;
+					default:
+						return <li key={title}><strong>{title}:</strong> {Array.isArray(value) ? value.join(", ") : value}</li>;
+					}
+				})}
+			</ul>;
 	}
 }
 

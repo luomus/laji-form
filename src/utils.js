@@ -665,3 +665,23 @@ export function triggerParentComponent(eventName, e, props) {
 		props[eventName](e);
 	}
 }
+
+export function parseSchemaFromFormDataPointer(schema, pointer) {
+	const splits = pointer.split("/").filter(s => !isEmptyString(s));
+	const value = splits.reduce((o, s)=> {
+		if (!isNaN(parseInt(s))) {
+			return o["items"];
+		}
+		if (o.type === "array") return o["items"];
+		return o["properties"][s];
+	}, schema);
+	return value
+}
+
+export function parseUiSchemaFromFormDataPointer(uiSchema, pointer) {
+	const splits = pointer.split("/").filter(s => !isEmptyString(s));
+	return splits.reduce((o, s)=> {
+		if (o && o.items) return o["items"][s];
+		return o ? o[s] : {};
+	}, uiSchema);
+}

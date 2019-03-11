@@ -43,19 +43,27 @@
           "images": [
             "MM.93028"
           ],
+		  "sex": "MY.sexM",
           "preservation": [],
           "birdBehavior": [],
+          "movingStatus": [],
           "identifications": [
             {
               "identificationBasis": [],
               "taxon": "varpunen"
             }
           ],
-          "unitGathering": {
-            "geometry": {}
-          },
           "unitFact": {
             "autocompleteSelectedTaxonID": "MX.36573"
+          },
+          "unitGathering": {
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                24.10955899999999,
+                49.459027
+              ]
+            }
           }
         }
       ],

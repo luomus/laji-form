@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { immutableDelete } from "../../utils";
+import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Inject a schema object property to nested schema.
@@ -47,7 +47,7 @@ export default class InjectField extends Component {
 				const splits = fieldPath.split("/");
 				const fieldName = splits[splits.length - 1];
 
-				let parentProperties = this.getSchemaProperties(schema, splits);
+				let parentProperties = this.getSchemaProperties(schema, splits.slice(0, splits.length - 1));
 				schema = update(schema,
 					{properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target],
                     {$merge: {[fieldName]: parentProperties.properties[fieldName]}})}});
@@ -59,7 +59,7 @@ export default class InjectField extends Component {
 					schema = update(schema, this.getSchemaPath(splits, {required: {$splice: [[idx, 1]]}}));
 				}
 
-				let parentUiSchemaProperties = this.getUiSchemaProperties(uiSchema, splits);
+				let parentUiSchemaProperties = this.getUiSchemaProperties(uiSchema, splits.slice(0, splits.length - 1));
 				uiSchema = update(uiSchema, {[target]: this.getUpdateUiSchemaPropertiesPath(
 					uiSchema[target],
 					{$merge: {[fieldName]: parentUiSchemaProperties[fieldName]}})});
@@ -153,25 +153,13 @@ export default class InjectField extends Component {
 		else throw "schema is not object or array";
 	}
 	getSchemaProperties = (schema, splits) => {
-		return splits.reduce((o, s, i)=> {
-			if (i === splits.length - 1) {
-				return o;
-			}
-			if (o.type === "array") return o["items"];
-			return o["properties"][s];
-		}, schema);
+		return parseSchemaFromFormDataPointer(schema, splits.join("/"));
 	}
 	getUpdateUiSchemaPropertiesPath = (uiSchema, $operation) => {
 		return uiSchema.items ? {items: $operation} : $operation;
 	}
 	getUiSchemaProperties = (uiSchema, splits) => {
-		return splits.reduce((o, s, i)=> {
-			if (i === splits.length - 1) {
-				return o;
-			}
-			if (o && o.items) return o["items"][s];
-			return o ? o[s] : {};
-		}, uiSchema);
+		return parseUiSchemaFromFormDataPointer(uiSchema, splits.join("/"));
 	}
 	getInnerData = (data, splits) => {
 		if (!data) return data;

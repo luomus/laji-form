@@ -2535,8 +2535,7 @@
                             },
                             {
                                 "field": "localityDescription"
-                            }
-                        ],
+                            }                        ],
                         "titleFormat": "%{Title} %{idx}"
                     }
                 },
@@ -2560,13 +2559,13 @@
                 "minHeight": 435,
                 "popupFields": [
                     {
-                        "mapper": "unitTaxon"
+						"field": "/units/[activeIdx]/identifications/0/taxon"
                     },
                     {
-                        "field": "sex"
+						"field": "/units/[activeIdx]/sex"
                     },
                     {
-                        "field": "notes"
+						"field": "/units/[activeIdx]/notes"
                     }
                 ],
                 "propsToPassToInlineSchema": [
