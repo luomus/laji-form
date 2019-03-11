@@ -952,11 +952,12 @@ class LolifeMapArrayField extends Component {
 class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 	getData() {
 		const data = super._getData(this.props.formData.prepopulatedDocument.gatherings);
+		const namedPlaceGeom = this.getNamedPlaceGeometry();
 		return [
 			{
 				featureCollection: {
 					type: "FeatureCollection",
-					features: [{type: "Feature", properties: {}, geometry: this.getNamedPlaceGeometry()}]
+					features: namedPlaceGeom ? [{type: "Feature", properties: {}, geometry: namedPlaceGeom}] : []
 				},
 				getFeatureStyle: this.getNamedPlaceStyle,
 				editable: true,

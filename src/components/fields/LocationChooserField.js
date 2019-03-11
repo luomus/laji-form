@@ -190,7 +190,6 @@ class LocationButton extends Component {
 			draw,
 			map.data.filter(({featureCollection}) =>
 				featureCollection.features[0]
-				&& featureCollection.features[0].properties.hasOwnProperty("idx")
 				&& featureCollection.features[0].properties.idx !== idx)
 		];
 	}
