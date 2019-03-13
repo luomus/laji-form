@@ -1760,9 +1760,10 @@ export class Map extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
 		let options = {...this.props};
 
-		// Backward compability for bad settings.
+		// Backward compatibility for bad settings.
 		["tileLayerName", "overlayNames", "tileLayerOpacity"].forEach(prop => {
 			if (prop in options && options[prop] === undefined) {
 				options = immutableDelete(options, prop);
@@ -1774,32 +1775,28 @@ export class Map extends Component {
 		}
 
 		this.initializeMap(options);
-		if (this.props.onComponentDidMount) this.props.onComponentDidMount(this.map);
-		if (!this.map) {
-			return;
-		}
-		setImmediate(() => {
-			this.map.map.invalidateSize();
-			this.mounted && this.props.singleton && this.props.zoomToData && this.map.zoomToData(this.props.zoomToData);
-		});
-		this.mounted = true;
 	}
 
 	componentWillUnmount() {
 		!this.props.singleton && this.map && this.map.destroy();
+		if (this.hasSingletonHandle) {
+			new Context(this.props.formContext.contextId).onSingletonHandleGrabbed = undefined;
+		}
 		this.mounted = false;
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const {hidden, onComponentDidMount} = this.props;
+		const {hidden, onComponentDidMount, singleton} = this.props;
 		const {...props} = this.props;
+		if (!singleton || this.hasSingletonHandle) {
 
-		if (this.map && prevProps.lineTransect && props.lineTransect && "activeIdx" in props.lineTransect) {
-			this.map.setLTActiveIdx(props.lineTransect.activeIdx);
+			if (this.map && prevProps.lineTransect && props.lineTransect && "activeIdx" in props.lineTransect) {
+				this.map.setLTActiveIdx(props.lineTransect.activeIdx);
+			}
+			if (prevProps.lineTransect) delete props.lineTransect;
+
+			this.setMapOptions(prevProps, this.props);
 		}
-		if (prevProps.lineTransect) delete props.lineTransect;
-
-		this.setMapOptions(prevProps, this.props);
 
 		if (!hidden && !this.map) {
 			this.initializeMap(props);
@@ -1882,6 +1879,9 @@ export class Map extends Component {
 			default:
 				if (!deepEquals(mapOptions[key], prevMapOptions[key])) {
 					this.map.setOption(key, mapOptions[key]);
+					if (this.props.singleton && mapOptions.zoomToData && key === "data") {
+						this.map.zoomToData(mapOptions.zoomToData);
+					}
 				}
 			}
 		});
@@ -1891,16 +1891,24 @@ export class Map extends Component {
 		const mapOptions = this.getEnhancedMapOptions(props);
 		if (props.singleton) {
 			const context = new Context(props.formContext.contextId);
+			context.onSingletonHandleGrabbed && context.onSingletonHandleGrabbed();
+			this.hasSingletonHandle = true;
 			if (!context.singletonMap) {
 				context.singletonMap = new LajiMap(mapOptions);
 				this.map = context.singletonMap;
+				this.mounted && props.singleton && this.hasSingletonHandle && props.zoomToData && this.map.zoomToData(props.zoomToData);
 			} else {
 				this.map = context.singletonMap;
 				this.setMapOptions(context.singletonMap.getOptions(), mapOptions);
 			}
+			context.onSingletonHandleGrabbed = () => {
+				this.hasSingletonHandle = false;
+			};
 		} else {
 			this.map = new LajiMap(mapOptions);
 		}
+		this.map.map.invalidateSize();
+		if (props.onComponentDidMount) props.onComponentDidMount(this.map);
 	}
 
 	setFullscreenRef = (elem) => {

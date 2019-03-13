@@ -203,9 +203,7 @@ class LocationButton extends Component {
 		this.triggerLayer = undefined;
 
 		let [draw, data] = this.getData();
-		if (disabled || readonly) {
-			data = data.map(d => ({...d, editable: false}));
-		}
+		data = data.map(d => ({...d, editable: false}));
 
 		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 
@@ -231,7 +229,7 @@ class LocationButton extends Component {
 					polygon,
 					circle,
 					onChange: this.onChange,
-					editable: !readonly && !disabled
+					editable: !readonly && !disabled,
 				},
 				controls: {
 					...mapOptions.controls,
@@ -346,6 +344,7 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const {disabled, readonly} = that.props; 
 		const {preselectMarker = true} = getUiOptions(that.props.uiSchema);
+		map.resetDrawUndoStack();
 		if (!disabled && !readonly && preselectMarker) {
 			this.triggerLayer = map.triggerDrawing("marker");
 		}
@@ -406,7 +405,7 @@ class LocationButton extends Component {
 		const {map} = mapContext;
 		let mapOptions = {};
 		if (map) {
-			const {rootElem, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
 			mapOptions = _mapOptions;
 		}
 
@@ -490,7 +489,13 @@ class LocationButton extends Component {
 			const {translations} = that.props.formContext;
 			const overlay = hasCoordinates ? (
 				<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
-					<Map {...this.state.miniMap} hidden={!this.state.miniMap || this.state.modalMap} style={{width: 200, height: 200}} singleton={true} formContext={that.props.formContext} bodyAsDialogRoot={false} ref={this.setMiniMapRef}/>
+					<Map {...this.state.miniMap}
+						hidden={!this.state.miniMap || this.state.modalMap}
+						style={{width: 200, height: 200}}
+						singleton={true}
+						formContext={that.props.formContext}
+						bodyAsDialogRoot={false}
+						ref={this.setMiniMapRef} />
 				</Popover>
 			) : (
 				<Tooltip id={`${id}-location-peeker`}>{label || that.props.formContext.translations.ChooseLocation}</Tooltip>
