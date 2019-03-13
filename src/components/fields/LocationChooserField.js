@@ -7,9 +7,10 @@ import update from "immutability-helper";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
-import { hasData, getUiOptions, getInnerUiSchema, formatErrorMessage } from "../../utils";
+import { getUiOptions, getInnerUiSchema, formatErrorMessage } from "../../utils";
 import { Map, parseGeometries } from "./MapArrayField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { combineColors } from "laji-map/lib/utils";
 
 @BaseComponent
 export default class LocationChooserField extends Component {
@@ -88,7 +89,7 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const idx = this.getIdx();
 		this._hovered = true;
-		if (typeof idx === "number" && !isNaN(idx)) {
+		if (typeof idx === "number") {
 			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", idx);
 		}
 	}
@@ -97,7 +98,7 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const idx = this.getIdx();
 		this._hovered = false;
-		if (typeof idx === "number" && !isNaN(idx)) {
+		if (typeof idx === "number") {
 			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", idx);
 		}
 	}
@@ -190,7 +191,10 @@ class LocationButton extends Component {
 			draw,
 			map.data.filter(({featureCollection}) =>
 				featureCollection.features[0]
-				&& featureCollection.features[0].properties.idx !== idx)
+				&& isNaN(idx)
+					? featureCollection.features[0].properties.hasOwnProperty("idx")
+					: featureCollection.features[0].properties.idx !== idx
+			).map(item => ({...item, getPopup: undefined, on: undefined}))
 		];
 	}
 
@@ -392,7 +396,31 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		return [map.data, {dataIdxs: [this.getIdx() + 1]}];
+		const idx = this.getIdx();
+		return [
+			map.data.map((item, i) => ({
+				...item,
+				getPopup: undefined,
+				on: undefined,
+				editable: false,
+				getFeatureStyle: item.getFeatureStyle
+					? (isNaN(idx) && i === 0) || i === idx + 1
+						? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
+						: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
+					: undefined
+			})),
+			{dataIdxs: [isNaN(idx) ? 0 : idx + 1]}
+		];
+	}
+
+	getFeatureStyleWithLowerOpacity = getFeatureStyle => (...params) => {
+		const style = getFeatureStyle(...params);
+		return {...style, opacity: 0.5, fillOpacity: 0.5};
+	}
+
+	getFeatureStyleWithHighlight = getFeatureStyle => (...params) => {
+		const style = getFeatureStyle(...params);
+		return {...style, color: combineColors(style.color, "#ffffff", 30)};
 	}
 
 	onEntered = () => {

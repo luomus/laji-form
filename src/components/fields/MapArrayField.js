@@ -917,7 +917,7 @@ class LolifeMapArrayField extends Component {
 	}
 
 	startHighlight(idx) {
-		idx = idx + 1;
+		idx = isNaN(idx) ? 0 : idx + 1;
 		let {color} = this.map.data[idx].getFeatureStyle();
 		if (!color) {
 			return;
@@ -928,7 +928,7 @@ class LolifeMapArrayField extends Component {
 	}
 
 	endHighlight(idx) {
-		idx = idx + 1;
+		idx = isNaN(idx) ? 0 : idx + 1;
 		const {color} = this.map.data[idx].getFeatureStyle();
 		if (!color) {
 			return;
@@ -968,7 +968,7 @@ class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 		];
 	}
 
-	getNamedPlaceStyle = () => ({fillOpacity: 0.6})
+	getNamedPlaceStyle = () => ({fillOpacity: 0.6, color: NORMAL_COLOR})
 
 	getNamedPlaceGeometry() {
 		const {geometry} = this.props.formData;
