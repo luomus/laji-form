@@ -181,14 +181,7 @@ export default class GeocoderField extends Component {
 		}, {});
 
 		if (!geometry || !geometry.geometries || !geometry.geometries.length) {
-			let {formData} = props;
-			fields.forEach(field => {
-				formData = {
-					...formData,
-					[field]: undefined
-				};
-			});
-			this.props.onChange(formData);
+			this.setState(this.getStateFromProps(props, false));
 			return;
 		}
 
