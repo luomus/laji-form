@@ -8,6 +8,7 @@ import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
+import { parseGeometries } from "./MapArrayField";
 
 const SAVE = "SAVE", FETCH = "FETCH";
 
@@ -44,7 +45,8 @@ export default class NamedPlaceSaverField extends Component {
 			label: props.formContext.translations.SaveNamedPlace,
 			fn: this.onButtonClick,
 			glyph: "floppy-disk",
-			position: "top"
+			position: "top",
+			disabled: !parseGeometries(props.formData.geometry).length
 		};
 	}
 

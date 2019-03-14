@@ -68,7 +68,7 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, changesFormData, key, ...options} = button;
+	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, changesFormData, key, disabled, ...options} = button;
 	const id = button.id || (props.idSchema || {}).$id;
 
 	label = label !== undefined
@@ -93,7 +93,7 @@ export function getButton(button, props = {}) {
 
 	const buttonId = `${id}-${fnName}${key ? `-${key}` : ""}`;
 	return render ? render(onClick, button) : (
-		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement} disabled={(fnName ===  "add" || changesFormData) && (props.disabled || props.readonly)}>
+		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 		</Button>
