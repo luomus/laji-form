@@ -112,6 +112,10 @@ function TaxonAutosuggest(ComposedComponent) {
 			return !isEmptyString(value) && !!value.match(/MX\.\d+/);
 		}
 
+		parseValue(value) {
+			return value.replace(/ sp(\.|p)?\.?$/, "");
+		}
+
 		renderUnsuggested = (props) => (input) => {
 			const tooltip = (
 				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
@@ -144,14 +148,14 @@ function TaxonAutosuggest(ComposedComponent) {
 				renderSuggested: this.renderSuggested,
 				renderUnsuggested: this.renderUnsuggested(props),
 				renderSuccessGlyph: this.renderSuccessGlyph,
-				renderSuggestion: this.renderSuggestion
+				renderSuggestion: this.renderSuggestion,
+				parseValue: this.parseValue
 			};
 			const _options = {
 				...options,
 				...propsWithoutOptions,
 				...(propsOptions || {}),
 				query: {
-					observationMode: true,
 					...(options.query || {}),
 					...(propsWithoutOptions.query || {}),
 					...(propsOptions.query || {}),
@@ -370,6 +374,7 @@ export class Autosuggest extends Component {
 	}
 
 	selectSuggestion = (suggestion) => {
+		console.log("select", suggestion);
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
 		const afterStateChange = () => {
 			onSuggestionSelected ?
@@ -447,7 +452,8 @@ export class Autosuggest extends Component {
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
 		if (value === undefined || value === null) value = "";
-		if (value === undefined || value === null || value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
+		value = this.props.parseValue ? this.props.parseValue(value) : value;
+		if (value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
 			this.setState({suggestions: []});
 			return;
 		}	
@@ -522,6 +528,7 @@ export class Autosuggest extends Component {
 
 	afterBlurAndFetch = (suggestions, callback) => {
 		const {value = ""} = this.state;
+		const parsedValue = this.props.parseValue ? this.props.parseValue(value) : value;
 		if (this._valueForBlurAndFetch === undefined) {
 			this._valueForBlurAndFetch = "";
 		}
@@ -534,7 +541,7 @@ export class Autosuggest extends Component {
 
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
-		const exactMatch = this.findExactMatch(suggestions, value);
+		const exactMatch = this.findExactMatch(suggestions, parsedValue);
 		const onlyOneMatch = selectOnlyOne ? this.findTheOnlyOneMatch(suggestions) : undefined;
 		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
 		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
@@ -548,7 +555,7 @@ export class Autosuggest extends Component {
 		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
 			this.selectSuggestion(nonMatching);
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
-			this.selectUnsuggested(value);
+			this.selectUnsuggested(parsedValue);
 		}
 
 		callback && callback();

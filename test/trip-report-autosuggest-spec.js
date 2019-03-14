@@ -119,6 +119,18 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await removeUnit(0, 0);
 	});
 
+	it("typing exact match with sp suffix keeps sp suffix in value but select the exact match", async () => {
+		for (const suffix of ["sp", "spp", "sp.", "spp."]) {
+			await $taxonInput.sendKeys(`parus ${suffix}`);
+			await $taxonInput.sendKeys(protractor.Key.ENTER);
+			await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
+			await expect($okSign.isDisplayed()).toBe(true);
+			await expect($taxonInput.getAttribute("value")).toBe(`parus ${suffix}`);
+
+			await removeUnit(0, 0);
+		}
+	});
+
 	it("shows power user for taxon field", async () => {
 		await $taxonInput.click();
 
