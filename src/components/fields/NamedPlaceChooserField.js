@@ -272,7 +272,7 @@ class NamedPlaceChooser extends Component {
 			that.mapElem = elem;
 		}
 
-		function getPopup(_idx, feature, callback) {
+		function getPopup({feature}, callback) {
 			const {idx} = feature.properties;
 			that.setState({popupIdx: idx});
 			callback(findDOMNode(that.popupElem));
