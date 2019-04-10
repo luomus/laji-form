@@ -336,6 +336,10 @@ export class Stretch extends Component {
 		requestAnimationFrame(this._onScroll);
 	}
 
+	invalidate = (callback) => {
+		this.update(this.getState(), callback);
+	}
+
 	update = (state, callback) => {
 		const afterStateChange = () => {
 			if (this.props.onResize) this.props.onResize();

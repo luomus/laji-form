@@ -1093,6 +1093,10 @@ class _MapArrayField extends ComposedComponent {
 			this._tileLayerNameOnNextTickCallback = callback;
 		});
 
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", () => {
+			this.refs.stretch.invalidate();
+		});
+
 		if (this.state.activeIdx !== undefined) {
 			this.afterActiveChange(this.state.activeIdx, !!"initial call");
 		}
@@ -1109,6 +1113,7 @@ class _MapArrayField extends ComposedComponent {
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData");
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayerName");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize");
 	}
 
 	componentDidUpdate(...params) {

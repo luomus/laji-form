@@ -40,6 +40,15 @@ export default class LajiFormWrapper {
 	}
 
 	unmount = this.destroy
+
+	invalidateSize = () => {
+		const lajiForm = this.app.refs.lajiform;
+		const {resize} = lajiForm.customEventListeners;
+
+		Object.keys(resize || {}).sort().reverse().forEach(id => {
+			lajiForm._context.sendCustomEvent(id, "resize", undefined, undefined, {bubble: false})
+		});
+	}
 }
 
 class LajiFormApp extends Component {

@@ -259,11 +259,12 @@ export default class LajiForm extends Component {
 		this._context.removeCustomEventListener = (id, eventName) => {
 			delete this.customEventListeners[eventName][id];
 		};
-		this._context.sendCustomEvent = (id, eventName, data, callback) => {
+		this._context.sendCustomEvent = (id, eventName, data, callback, {bubble = true} = {}) => {
 			const ids = Object.keys(this.customEventListeners[eventName] || {}).filter(_id => id.startsWith(_id)).sort().reverse();
 
 			for (let _id of ids) {
 				const result = this.customEventListeners[eventName][_id](data, callback);
+				if (!bubble) break;
 				if (result === true || result === undefined) {
 					return;
 				}
