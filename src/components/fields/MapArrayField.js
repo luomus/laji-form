@@ -1677,6 +1677,13 @@ export class MapComponent extends Component {
 		});
 	}
 
+	componentWillUnmount() {
+		const {map} = this.refs.map;
+		Object.keys(map._listenedEvents).forEach(name => {
+			map.map.removeEventListener(name, map._listenedEvents[name]);
+		});
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		if (this._callback) this._callback();
 		this._callback = undefined;

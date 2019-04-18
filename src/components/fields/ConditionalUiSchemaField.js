@@ -75,7 +75,7 @@ export default class ConditionalUiSchemaField extends Component {
 		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
 	}
 
-	static getName() {return  "ConditionalUiSchemaField";}
+	static getName() {return "ConditionalUiSchemaField";}
 
 	cache = {};
 
