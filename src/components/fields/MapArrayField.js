@@ -100,7 +100,7 @@ class DefaultMapArrayField extends Component {
 			};
 
 		const extraData = (options.data || []).map((dataItem) => (
-				{geoData: dataItem.geometryField ? this.getGeometry(dataItem.geometryField) : dataItem}
+				{geoData: dataItem.geometryField ? this.getGeometry(formData, dataItem.geometryField) : dataItem}
 		));
 
 		return {draw, controls, emptyMode, data: [...data, ...extraData]};
@@ -141,8 +141,8 @@ class DefaultMapArrayField extends Component {
 		});
 	}
 
-	getGeometry(_geometryField) {
-		const {formData, uiSchema} = this.props;
+	getGeometry(formData, _geometryField) {
+		const {uiSchema} = this.props;
 		const {geometryField} = getUiOptions(uiSchema);
 		const {activeIdx} = this.state;
 		if (!formData) {
@@ -161,7 +161,7 @@ class DefaultMapArrayField extends Component {
 	}
 
 	getData() {
-		const geometryItem = this.getGeometry();
+		const geometryItem = this.getGeometry(this.props.formData);
 		if (geometryItem && geometryItem.type) {
 			return parseGeometries(geometryItem);
 		}
@@ -169,66 +169,67 @@ class DefaultMapArrayField extends Component {
 	}
 
 	onChange(events) {
+		let formData = this.props.formData ||
+			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
 		events.forEach(e => {
 			switch (e.type) {
 			case "create":
-				this.onAdd(e);
+				formData = this.onAdd(e, formData);
 				break;
 			case "delete":
-				this.onRemove(e);
+				formData = this.onRemove(e, formData);
 				break;
 			case "edit":
-				this.onEdited(e);
+				formData = this.onEdited(e, formData);
 				break;
 			case "insert":
-				this.onInsert(e);
+				formData = this.onInsert(e, formData);
 				break;
 			}
 		});
+		this.props.onChange(formData);
 	}
 
-	onAdd({feature: {geometry}}) {
-		const formData = this.props.formData ||
-			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+	onAdd({feature: {geometry}}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
-		this.props.onChange(update(formData,
+		return update(formData,
 			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, {$set: {type: "GeometryCollection", geometries: [
-				...parseGeometries(this.getGeometry()), geometry
-			]}})}));
+				...parseGeometries(this.getGeometry(formData)), geometry
+			]}})});
 	}
 
-	onRemove({idxs}) {
+	onRemove({idxs}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		let splices = [];
 		idxs.sort().reverse().forEach((idx) => {
 			splices.push([idx, 1]);
 		});
-		const geometry = this.getGeometry();
-		this.props.onChange(update(this.props.formData,
+		const geometry = this.getGeometry(formData);
+		return update(formData,
 			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, geometry && geometry.type === "GeometryCollection" ?
 				{geometries: {$splice: splices}} : {$set: undefined}
-			)}));
+			)});
 	}
 
-	onEdited({features}) {
+	onEdited({features}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
-		const geometry = this.getGeometry();
-		this.props.onChange(update(this.props.formData,
+		const geometry = this.getGeometry(formData);
+		return update(formData,
 			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, geometry.type === "GeometryCollection" ? {
 				geometries: Object.keys(features).reduce((obj, idx) => {
 					obj[idx] = {$set: features[idx].geometry};
 					return obj;
 				}, {})
 			} : {$set: features[0].geometry}
-			)}));
+			)});
 	}
 
-	onInsert({idx, feature}) {
+	onInsert({idx, feature}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
-		this.props.onChange(update(this.props.formData,
+		return update(formData,
 			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, {
 				geometries: {$splice: [[idx, 0, feature.geometry]]}
-			})}));
+			})});
 	}
 
 	afterActiveChange(idx) {
@@ -462,6 +463,7 @@ class UnitsMapArrayField extends Component {
 
 	onUnitChange = (unitIdx) => (events) => {
 		events.forEach(e => {
+			console.log(e);
 			switch (e.type) {
 			case "delete":
 				this.onUnitRemove(e, unitIdx);
@@ -1605,7 +1607,7 @@ class _MapArrayField extends ComposedComponent {
 		const {createOnLocate} = getUiOptions(this.props.uiSchema);
 		if (!createOnLocate) return;
 
-		const geometry = this.getGeometry();
+		const geometry = this.getGeometry(formData);
 		if (this.props.formData.length === 0 || (!geometry || !Object.keys(geometry).length)) {
 			let geometry = undefined;
 			if (createOnLocate === "marker") {
