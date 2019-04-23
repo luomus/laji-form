@@ -5,11 +5,12 @@
     "category": "MHL.categoryGeneric",
     "description": "T\u00e4ll\u00e4 lomakkeella voit ilmoittaa yhden tai useamman p\u00e4iv\u00e4n kest\u00e4neen maastoretken kaikki havaintotiedot ja mahdollisesti kokoelman\u00e4ytteeksi otettujen yksil\u00f6iden tiedot.",
     "excludeFromCopy": [
-        "dateBegin",
-        "dateEnd",
-        "images",
-        "weather",
-        "units"
+        "$.gatheringEvent.dateBegin",
+        "$.gatheringEvent.dateEnd",
+        "$.gatherings[*].dateBegin",
+        "$.gatherings[*].images",
+        "$.gatherings[*].weather",
+        "$.gatherings[*].units"
     ],
     "extra": {
         "habitat": {
@@ -712,6 +713,13 @@
                             "excludeFromCopy": true,
                             "items": {
                                 "properties": {
+                                    "additionalIDs": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Muut tunnisteet",
+                                        "type": "array"
+                                    },
                                     "atlasCode": {
                                         "enum": [
                                             "",
@@ -963,6 +971,13 @@
                                         "title": "Muotoryhm\u00e4t",
                                         "type": "array"
                                     },
+                                    "keywords": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Kokoelma/Avainsanat",
+                                        "type": "array"
+                                    },
                                     "lifeStage": {
                                         "enum": [
                                             "",
@@ -1212,7 +1227,6 @@
                                                 "MY.preservationFormalin",
                                                 "MY.preservationBouinSolution",
                                                 "MY.preservationPampelsFluid",
-                                                "MY.preservationEulan",
                                                 "MY.preservationGlycerol",
                                                 "MY.preservationParaffin",
                                                 "MY.preservationMercuricChloride",
@@ -1228,7 +1242,9 @@
                                                 "MY.preservationSlideEuparal",
                                                 "MY.preservationSlidePolyviol",
                                                 "MY.preservationStuffed",
-                                                "MY.preservationCast"
+                                                "MY.preservationCast",
+                                                "MY.preservationPlastinated",
+                                                "MY.preservationFrozenMinus80CAndEthanolMinus20C"
                                             ],
                                             "enumNames": [
                                                 "",
@@ -1237,7 +1253,7 @@
                                                 "Kriittisen pisteen kuivaus",
                                                 "Neulattu",
                                                 "Liimattu",
-                                                "Nesten\u00e4yte",
+                                                "Neste (m\u00e4\u00e4rittelem\u00e4t\u00f6n)",
                                                 "Etanoli (tuntematon %)",
                                                 "Etanoli (tuntematon %) puhdas",
                                                 "Etanoli 70 %",
@@ -1250,7 +1266,6 @@
                                                 "Formaliini",
                                                 "Bouin'n liuos",
                                                 "Pampelin neste",
-                                                "Eulan",
                                                 "Glyseroli",
                                                 "Parafiini",
                                                 "Sublimaatti",
@@ -1266,7 +1281,9 @@
                                                 "Objektilasi, Euparal",
                                                 "Objektilasi, Polyviol",
                                                 "T\u00e4ytetty",
-                                                "Valos"
+                                                "Valos",
+                                                "Plastinoitu",
+                                                "Pakastettu -80 \u00b0C ja etanoli -20 \u00b0C (duplikaatti)"
                                             ],
                                             "type": "string"
                                         },
@@ -1872,10 +1889,17 @@
                                     "fields": [
                                         "locality",
                                         "localityDescription",
-                                        "images",
                                         "weather",
                                         "notes",
                                         "namedPlaceID"
+                                    ],
+                                    "glyphFields": [
+                                        {
+                                            "glyph": "camera",
+                                            "label": "Lis\u00e4\u00e4 valokuva",
+                                            "open": false,
+                                            "show": "images"
+                                        }
                                     ],
                                     "includeAdditionalFieldsChooserButton": true,
                                     "titles": {
@@ -1920,6 +1944,9 @@
                 ],
                 "units": {
                     "items": {
+                        "additionalIDs": {
+                            "ui:field": "TagArrayField"
+                        },
                         "classNames": "well well-sm",
                         "hostID": {
                             "ui:widget": "HiddenWidget"
@@ -1939,6 +1966,9 @@
                         },
                         "informalTaxonGroups": {
                             "ui:field": "HiddenField"
+                        },
+                        "keywords": {
+                            "ui:field": "TagArrayField"
                         },
                         "movingStatus": {
                             "ui:field": "EnumRangeArrayField",
@@ -2133,8 +2163,8 @@
                                                     "femaleIndividualCount",
                                                     "nativeStatus",
                                                     "checklistID",
-                                                    "taxonConfidence",
-                                                    "recordBasis"
+                                                    "keywords",
+                                                    "additionalIDs"
                                                 ],
                                                 "title": "Kaikki"
                                             },
@@ -2158,10 +2188,6 @@
                                                     "atlasCode",
                                                     "twitched",
                                                     "distance"
-                                                ],
-                                                "excludeFields": [
-                                                    "taxonConfidence",
-                                                    "recordBasis"
                                                 ],
                                                 "uiSchema": {
                                                     "ui:grid": {
@@ -2221,17 +2247,6 @@
                                                     ]
                                                 }
                                             },
-                                            "MVL.21": {
-                                                "additionalFields": [
-                                                    "plantLifeStage",
-                                                    "plantStatusCode"
-                                                ],
-                                                "defaultFields": [
-                                                    "plantLifeStage",
-                                                    "plantStatusCode",
-                                                    "nativeStatus"
-                                                ]
-                                            },
                                             "MVL.232": {
                                                 "additionalFields": [
                                                     "lifeStage",
@@ -2250,10 +2265,6 @@
                                                     "femaleIndividualCount",
                                                     "preservation",
                                                     "samplingMethod"
-                                                ],
-                                                "excludeFields": [
-                                                    "taxonConfidence",
-                                                    "recordBasis"
                                                 ],
                                                 "uiSchema": {
                                                     "hostInformalNameString": {
@@ -2296,6 +2307,17 @@
                                                     "tasteNotes"
                                                 ],
                                                 "title": "Sienet"
+                                            },
+                                            "MVL.343": {
+                                                "additionalFields": [
+                                                    "plantLifeStage",
+                                                    "plantStatusCode"
+                                                ],
+                                                "defaultFields": [
+                                                    "plantLifeStage",
+                                                    "plantStatusCode",
+                                                    "nativeStatus"
+                                                ]
                                             }
                                         }
                                     },
@@ -2520,7 +2542,7 @@
                 "geometryField": "geometry",
                 "geometryMapper": "units",
                 "inlineUiSchemaRoot": {
-                    "ui:field": "AccordionArrayField",
+                    "ui:field": "SingleActiveArrayField",
                     "ui:options": {
                         "confirmDelete": true,
                         "headerFormatters": [
@@ -2535,7 +2557,9 @@
                             },
                             {
                                 "field": "localityDescription"
-                            }                        ],
+                            }
+                        ],
+                        "renderer": "accordion",
                         "titleFormat": "%{Title} %{idx}"
                     }
                 },
@@ -2543,10 +2567,12 @@
                     "controls": {
                         "draw": {
                             "clear": true,
+                            "copy": true,
                             "delete": true,
                             "redo": false,
                             "reverse": true,
-                            "undo": false
+                            "undo": false,
+                            "upload": true
                         }
                     }
                 },
@@ -2559,13 +2585,13 @@
                 "minHeight": 435,
                 "popupFields": [
                     {
-						"field": "/units/[idx]/identifications/0/taxon"
+                        "field": "/units/[idx]/identifications/0/taxon"
                     },
                     {
-						"field": "/units/[idx]/sex"
+                        "field": "/units/[idx]/sex"
                     },
                     {
-						"field": "/units/[idx]/notes"
+                        "field": "/units/[idx]/notes"
                     }
                 ],
                 "propsToPassToInlineSchema": [

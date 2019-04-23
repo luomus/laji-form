@@ -181,7 +181,7 @@ export default class GeocoderField extends Component {
 		}, {});
 
 		if (!geometry || !geometry.geometries || !geometry.geometries.length) {
-			this.setState(this.getStateFromProps(props, false));
+			this.mounted && this.setState(this.getStateFromProps(props, false));
 			return;
 		}
 
