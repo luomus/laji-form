@@ -463,7 +463,6 @@ class UnitsMapArrayField extends Component {
 
 	onUnitChange = (unitIdx) => (events) => {
 		events.forEach(e => {
-			console.log(e);
 			switch (e.type) {
 			case "delete":
 				this.onUnitRemove(e, unitIdx);

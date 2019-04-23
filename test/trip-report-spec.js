@@ -105,10 +105,6 @@ describe("Trip report (JX.519)", () => {
 			await expect(lajiFormLocate("gatherings.0.localityDescription").isDisplayed()).toBe(true);
 		});
 
-		it("contains images", async () => {
-			await expect(lajiFormLocate("gatherings.0.images").isDisplayed()).toBe(true);
-		});
-
 		it("contains weather", async () => {
 			await expect(lajiFormLocate("gatherings.0.weather").isDisplayed()).toBe(true);
 		});
@@ -309,7 +305,7 @@ describe("Trip report (JX.519)", () => {
 		});
 
 		it("hovering unit table row changes gathering map unit color", async () => {
-			$unitAdd.click();
+			await $unitAdd.click();
 
 			const unitFill = await $$gatheringMarkerPaths.last().getAttribute("style");
 
@@ -360,16 +356,14 @@ describe("Trip report (JX.519)", () => {
 
 			await $("#root_gatherings_1-delete").click();
 			await $("#root_gatherings_1-delete-confirm-yes").click();
-			await $("#root_gatherings_0-header").click();
 
 			if (!googleApiKey) {
 				await waitUntilBlockingLoaderHides(6000);
 			}
 		});
 
-		const $informalTaxonGroupButton = $(".informal-taxon-group-chooser");
 		it("choosing informal taxon group changes fields", async () => {
-			await $informalTaxonGroupButton.click();
+			await $(".informal-taxon-group-chooser").click();
 
 			const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
 			const fieldCount = await getFieldCount();
