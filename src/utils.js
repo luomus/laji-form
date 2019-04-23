@@ -675,7 +675,7 @@ export function parseSchemaFromFormDataPointer(schema, pointer) {
 		if (o.type === "array") return o["items"];
 		return o["properties"][s];
 	}, schema);
-	return value
+	return value;
 }
 
 export function parseUiSchemaFromFormDataPointer(uiSchema, pointer) {

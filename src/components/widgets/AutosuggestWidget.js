@@ -374,7 +374,6 @@ export class Autosuggest extends Component {
 	}
 
 	selectSuggestion = (suggestion) => {
-		console.log("select", suggestion);
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
 		const afterStateChange = () => {
 			onSuggestionSelected ?

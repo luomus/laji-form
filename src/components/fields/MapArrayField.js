@@ -19,16 +19,6 @@ import { getPropsForFields } from "./NestField";
 import { getButton } from "../ArrayFieldTemplate";
 import ApiClient from "../../ApiClient";
 
-const popupMappers = {
-	unitTaxon: (schema, formData, options = {}) => {
-		try {
-			return {[schema.identifications.items.properties.taxon.title]: parseJSONPointer(formData, options.valuePath, !!"safe mode")};
-		} catch (e) {
-			return {};
-		}
-	}
-};
-
 export function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
 		.filter(geometry => geometry)
@@ -1558,7 +1548,7 @@ class _MapArrayField extends ComposedComponent {
 		if (!options) return [];
 
 		const {popupFields} = getUiOptions(this.props.uiSchema);
-		const formData = this.getFormDataForPopup(options)
+		const formData = this.getFormDataForPopup(options);
 
 		let data = [];
 
@@ -1581,7 +1571,7 @@ class _MapArrayField extends ComposedComponent {
 			if (!isEmptyString(value)) {
 				let result;
 				if (_if) {
-					result = ["dataIdx", "featureIdx"].every(opt => !_if.hasOwnProperty(opt) || options[opt] === _if[opt])
+					result = ["dataIdx", "featureIdx"].every(opt => !_if.hasOwnProperty(opt) || options[opt] === _if[opt]);
 					if (_if.reverse) {
 						result = !result;
 					}
@@ -1606,7 +1596,7 @@ class _MapArrayField extends ComposedComponent {
 		const {createOnLocate} = getUiOptions(this.props.uiSchema);
 		if (!createOnLocate) return;
 
-		const geometry = this.getGeometry(formData);
+		const geometry = this.getGeometry(this.props.formData);
 		if (this.props.formData.length === 0 || (!geometry || !Object.keys(geometry).length)) {
 			let geometry = undefined;
 			if (createOnLocate === "marker") {

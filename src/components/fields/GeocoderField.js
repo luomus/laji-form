@@ -86,7 +86,7 @@ export default class GeocoderField extends Component {
 			||
 			(((this.state.loading === undefined && !this.state && geometry) || !geometriesEqual))
 		) {
-			button ? this.onButtonClick()(this.props) : this.update(this.props);
+			button ? this.onButtonClick()() : this.update(this.props);
 		}
 	}
 
@@ -133,7 +133,7 @@ export default class GeocoderField extends Component {
 		};
 	}
 
-	onButtonClick = () => (props) => {
+	onButtonClick = () => () => {
 		this.mounted ? this.setState(this.getStateFromProps(this.props, true), () => {
 			this.update(this.props, (failed = false) => {
 				this.setState({...this.getStateFromProps(this.props, false), timeout: failed});

@@ -46,7 +46,7 @@ export default class LajiFormWrapper {
 		const {resize} = lajiForm.customEventListeners;
 
 		Object.keys(resize || {}).sort().reverse().forEach(id => {
-			lajiForm._context.sendCustomEvent(id, "resize", undefined, undefined, {bubble: false})
+			lajiForm._context.sendCustomEvent(id, "resize", undefined, undefined, {bubble: false});
 		});
 	}
 }
