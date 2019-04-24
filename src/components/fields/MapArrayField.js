@@ -11,7 +11,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPath } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -1139,6 +1139,10 @@ class _MapArrayField extends ComposedComponent {
 			this.map.setTileLayerByName(tileLayerName);
 		}
 
+		this.computeArea(prevProps);
+	}
+
+	geocode = () => {
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
 		const item = this.props.schema.type === "array" ? (this.props.formData || [])[this.state.activeIdx] : this.props.formData;
 		const {areaField} = getUiOptions(this.props.uiSchema);
@@ -1156,6 +1160,39 @@ class _MapArrayField extends ComposedComponent {
 			});
 		}
 	}
+
+	computeArea = () => {
+		const {activeIdx} = this.state;
+		if (activeIdx === undefined) return;
+		let {computeAreaField} = getUiOptions(this.props.uiSchema);
+		const {formData} = this.props;
+
+		if (!computeAreaField) return;
+		const geometries = this.getGeometries();
+		const polygonsArea = geometries
+			.filter(({type}) => type === "Polygon")
+			.map(({coordinates}) => coordinates[0].slice(1).map(c => L.latLng(c.slice(0).reverse())))
+			.reduce((area, latLngs) =>
+				area + L.GeometryUtil.geodesicArea(latLngs)
+			, 0);
+		const circlesArea = geometries
+			.filter(({type, radius}) => type === "Point" && radius)
+			.reduce((_area, {radius}) => 
+				_area + (Math.PI) * (radius * radius)
+			, 0);
+		const sumArea =  polygonsArea + circlesArea;
+		const area = sumArea === 0
+			? undefined
+			: Math.round(sumArea);
+
+		const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField);
+		currentArea !== area && this.props.onChange(updateSafelyWithJSONPath(
+			formData,
+			area,
+			`/${activeIdx}/${computeAreaField}`
+		));
+	}
+
 
 
 	_getPlaceholderStyle() {
