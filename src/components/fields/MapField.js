@@ -13,7 +13,8 @@ export default class MapField extends Component {
 			"ui:options": PropTypes.shape({
 				mapOptions: PropTypes.object,
 				height: PropTypes.number,
-				emptyHelp: PropTypes.string
+				emptyHelp: PropTypes.string,
+				geometryCollection: PropTypes.boolean,
 			}).isRequired
 		}),
 		schema: PropTypes.shape({
@@ -133,38 +134,41 @@ export default class MapField extends Component {
 	}
 
 	onChange = (events) => {
+		const {geometryCollection = true} = getUiOptions(this.props.uiSchema);
 		let formData;
 		events.forEach(e => {
 			switch (e.type) {
 			case "create":
-				formData = {
+				formData = geometryCollection ? {
 					type: "GeometryCollection",
 					geometries: [e.feature.geometry]
-				};
+				} : e.feature.geometry;
 				break;
 			case "edit":
-				formData = {
+				formData = geometryCollection ? {
 					type: "GeometryCollection",
 					geometries: [e.features[0].geometry]
-				};
+				} : e.feature.geometry;
 				break;
 			case "delete":
-				formData = {
+				formData = geometryCollection ? {
 					type: "GeometryCollection",
 					geometries: []
-				};
+				} : {};
 			}
 		});
 		this.props.onChange(formData);
 	}
 
 	onLocate = (latlng) => {
+		const {geometryCollection = true} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		if (!latlng || !isEmpty) {
 			return;
 		}
 		const {formData} = this.props;
-		this.props.onChange({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [latlng.lng, latlng.lat]}]});
+		const geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
+		this.props.onChange(geometryCollection ? {type: "GeometryCollection", geometries: [geometry]} : geometry);
 	}
 }
 
