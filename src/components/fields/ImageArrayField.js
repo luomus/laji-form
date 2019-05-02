@@ -5,10 +5,10 @@ import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
-import DropZone from "react-dropzone";
-import { DeleteButton, Alert as PopupAlert } from "../components";
+import DropZone, { useDropzone } from "react-dropzone";
+import { DeleteButton, Alert as PopupAlert, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
@@ -21,7 +21,18 @@ export default class ImageArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				titleClassName: PropTypes.string
+				titleClassName: PropTypes.string,
+				imageAddModal: PropTypes.oneOfType([
+					PropTypes.bool,
+					PropTypes.shape({
+						labels: PropTypes.shape({
+							cancel: PropTypes.string
+						})
+					})
+
+				]),
+				autoOpenImageAddModal: PropTypes.bool,
+				autoOpenMetadataModal: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({
@@ -40,6 +51,10 @@ export default class ImageArrayField extends Component {
 		if (!this._context.metadatas) this._context.metadatas = {};
 		this.mainContext = this.getContext();
 		this.state = {};
+		const options = getUiOptions(props.uiSchema);
+		if (options.imageAddModal && options.autoOpenImageAddModal) {
+			this.state.imageAddModal = options.imageAddModal; // eslint-disable-line react/no-direct-mutation-state
+		}
 	}
 
 	componentDidMount() {
@@ -73,11 +88,20 @@ export default class ImageArrayField extends Component {
 		}
 	}
 
+	onDragEnter = () => {this.setState({dragging: true});};
+
+	onDragLeave = () => {this.setState({dragging: false});};
+
+	onDrop = files => {
+		this.state.dragging && this.setState({dragging: false});
+		this.onFileFormChange(files);
+	};
+
 	render() {
 		const {schema, uiSchema, idSchema, name, formContext, readonly, disabled} = this.props;
 		const {translations} = formContext;
 
-		const {description, titleClassName} = getUiOptions(uiSchema);
+		const {description, titleClassName, imageAddModal} = getUiOptions(uiSchema);
 		const title = (schema.title === undefined) ? name : schema.title;
 		const {TitleField} = this.props.registry.fields;
 
@@ -90,14 +114,6 @@ export default class ImageArrayField extends Component {
 			</Tooltip>
 		);
 
-		const onDragEnter = () => {this.setState({dragging: true});};
-		const onDragLeave = () => {this.setState({dragging: false});};
-		const onDrop = files => {
-			this.setState({dragging: false});
-			this.onFileFormChange(files);
-		};
-		const onGlyphClick = e => e.preventDefault();
-
 		const {dragging} = this.state;
 
 		return (
@@ -109,18 +125,31 @@ export default class ImageArrayField extends Component {
 						{this.renderImgs()}
 						{this.renderLoadingImgs()}
 						<OverlayTrigger overlay={tooltip}>
-							<DropZone className={`laji-form-drop-zone${dragging ? " dragging" : ""}${readonly || disabled ? " disabled" : ""}`}
-							          accept="image/*, application/pdf"
-							          onDragEnter={onDragEnter}
-							          onDragLeave={onDragLeave}
-												onDrop={onDrop}
+							<DropZone accept="image/*, application/pdf"
+							          onDragEnter={this.onDragEnter}
+							          onDragLeave={this.onDragLeave}
+												onDrop={this.onDrop}
 												disabled={readonly || disabled}
 											>
-								<a href="#" onClick={onGlyphClick}><Glyphicon glyph="camera" /></a>
+									{({getRootProps, getInputProps}) => {
+										const {onClick: _onClick, ...rootProps} = getRootProps();
+										const onClick = imageAddModal ? () => {
+											this.setState({imageAddModal});
+										} : _onClick;
+										return (
+											<div className={`laji-form-drop-zone${dragging ? " dragging" : ""}${readonly || disabled ? " disabled" : ""}`}
+												onClick={onClick}
+												{...rootProps}>
+											<input {...getInputProps()} />
+											<Glyphicon glyph="camera" />
+										</div>
+										);
+									}}
 							</DropZone>
 						</OverlayTrigger>
 						{this.renderModal()}
 						{this.renderAlert()}
+						{this.renderImageAddModal()}
 					</div>
 				</Col>
 			</Row>
@@ -231,6 +260,52 @@ export default class ImageArrayField extends Component {
 			</Modal> : null;
 	}
 
+	onTakeNewPhoto = () => {
+	}
+
+	onSelectPhoto = () => {
+	}
+
+	onHideImageAddModal = () => this.setState({imageAddModal: undefined})
+
+	renderImageAddModal = () => {
+		const {disabled, readonly} = this.props;
+		const {imageAddModal} = this.state;
+		const {labels: {cancel} = {}} = isObject(imageAddModal) ? imageAddModal : {};
+		const {translations} = this.props.formContext;
+
+		if (!imageAddModal) return null;
+
+		return (
+			<Modal dialogClassName="laji-form" show={true} onHide={this.onHideImageAddModal}>
+				<Modal.Header closeButton={true}>
+				</Modal.Header>
+				<Modal.Body>
+					{[["camera", "TakeNewPhoto"], ["filesys", "SelectPhoto"]].map(([captureMethod, label]) =>
+						<DropZone key={captureMethod}
+						          accept="image/*, application/pdf"
+						          onDrop={this.onDrop}
+						          disabled={readonly || disabled}
+						>
+							{({getRootProps, getInputProps}) => {
+								const {onKeyDown, onFocus, onBlur, ...rootProps} = getRootProps();
+								return (
+									<div className="btn-block" {...getRootProps()}>
+									<input {...getInputProps()} capture={captureMethod}>
+									</input>
+									<Button block disabled={readonly || disabled}>{translations[label]}</Button>
+								</div>
+								);
+							}}
+						</DropZone>
+					)}
+					<Button block onClick={this.onHideImageAddModal}>{cancel || translations.Cancel}</Button>
+				</Modal.Body>
+			</Modal>
+		);
+				
+	}
+
 	onAlertOk = () => {
 		this.setState({alert: false, alertMsg: undefined});
 	}
@@ -317,12 +392,22 @@ export default class ImageArrayField extends Component {
 			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
 			onChange([...formData, ...ids]);
 
+			const {autoOpenMetadataModal} = getUiOptions(this.props.uiSchema);
 			this.setState({loading: 0});
 			this.mainContext.popBlockingLoader();
 			if (files.length !== ids.length) {
 				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer});
 			} else {
-				this.openModalFor(this.props.formData.length - files.length)();
+				const openMetadataModal =  () => {
+					if (autoOpenMetadataModal) {
+						this.openModalFor(this.props.formData.length - files.length)();
+					}
+				};
+				if (this.state.imageAddModal) {
+					this.setState({imageAddModal: undefined}, openMetadataModal);
+				} else {
+					openMetadataModal();
+				}
 			}
 		}).catch(() => {
 			this.setState({loading: 0});

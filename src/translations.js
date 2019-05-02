@@ -613,5 +613,15 @@
 		fi: "Liian monta kuviota. Maksimi: ",
 		en: "Too many shapes. Maximum: ",
 		sv: "???"
-	}
+	},
+	takeNewPhoto: {
+		fi: "Ota uusi kuva",
+		en: "Take new photo",
+		sv: "Ta ett nytt foto"
+	},
+	selectPhoto: {
+		fi: "Valitse kuva",
+		en: "Select photo",
+		sv: "Välj photo"
+	},
 };
