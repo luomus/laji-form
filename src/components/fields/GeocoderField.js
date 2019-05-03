@@ -54,10 +54,14 @@ export default class GeocoderField extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
+			this.updateForGeometry(this.props, undefined, this.normalizeGeometry(geometry));
+		});
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate");
 	}
 
 	getOptions = (props) => {
@@ -147,17 +151,23 @@ export default class GeocoderField extends Component {
 	getGeometry = (props) => {
 		const {uiSchema, formData} = props;
 		const {geometryField = "geometry"} = getUiOptions(uiSchema);
-		let geometry = formData[geometryField];
-		if (!geometry || !geometry.type) {
-			geometry = {type: "GeometryCollection", geometries: []};
-		} else if ("type" in geometry && geometry.type !== "GeometryCollection") {
-			geometry = {type: "GeometryCollection", geometries: [geometry]};
-		}
+		let geometry = this.normalizeGeometry(formData[geometryField]);
+
+		// TODO misses geometry collections
 		if (formData.units) formData.units.forEach(({unitGathering}) => {
 			if (unitGathering && unitGathering.geometry  && unitGathering.geometry.coordinates) {
 				geometry = update(geometry, {geometries: {$push: [unitGathering.geometry]}});
 			}
 		});
+		return geometry
+	}
+
+	normalizeGeometry = (geometry) => {
+		if (!geometry || !geometry.type) {
+			geometry = {type: "GeometryCollection", geometries: []};
+		} else if ("type" in geometry && geometry.type !== "GeometryCollection") {
+			geometry = {type: "GeometryCollection", geometries: [geometry]};
+		}
 		return geometry;
 	}
 
@@ -173,6 +183,10 @@ export default class GeocoderField extends Component {
 
 	update = (props, callback) => {
 		const geometry = this.getGeometry(props);
+		this.updateForGeometry(props, callback, geometry);
+	}
+
+	updateForGeometry = (props, callback, geometry) => {
 		const mainContext = new Context(props.formContext.contextId);
 		const {fields} = this.getOptions();
 		const fieldByKeys = fields.reduce((_fields, option) => {

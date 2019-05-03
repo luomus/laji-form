@@ -387,7 +387,6 @@ export default class ImageArrayField extends Component {
 					});
 				}
 				if (type === "event") {
-					console.log(`root_${JSONPointerToId(field)}`);
 					new Context(contextId).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 				}
 			});
@@ -480,7 +479,6 @@ export default class ImageArrayField extends Component {
 			const finish = () => {
 				const _finish = () => {
 					this.parseExif(files);
-					//new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "files", files);
 					if (shouldOpenMetadataModal) {
 						this.openModalFor(this.props.formData.length - files.length)();
 					}
