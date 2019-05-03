@@ -5,6 +5,8 @@ import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ApiClient from "../../ApiClient";
+import equals from "deep-equal";
+import Context from "../../Context";
 
 @BaseComponent
 export default class MapField extends Component {
@@ -38,10 +40,23 @@ export default class MapField extends Component {
 			}
 		}
 		this.geocode(this.props);
+
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
+			if (geometry) {
+				this.map.setCenter(geometry.coordinates.slice(0).reverse());
+			} else {
+				this.setState({mapOptions: {locate: true}});
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate");
 	}
 
 	componentDidUpdate(prevProps) {
 		this.geocode(prevProps);
+		this.zoomIfExternalEdit(prevProps);
 	}
 
 	geocode = (prevProps) => {
@@ -60,6 +75,12 @@ export default class MapField extends Component {
 			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
 			});
+		}
+	}
+
+	zoomIfExternalEdit = (prevProps) => {
+		if (!equals(this._lastFormData, prevProps.formData)) {
+			this.map.zoomToData();
 		}
 	}
 
@@ -157,6 +178,7 @@ export default class MapField extends Component {
 				} : {};
 			}
 		});
+		this._lastFormData = formData;
 		this.props.onChange(formData);
 	}
 

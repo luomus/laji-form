@@ -468,7 +468,25 @@ export function filter(properties, filter, filterType = "blacklist", getValue) {
 	return properties.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
 }
 
-export function updateSafelyWithJSONPath(obj, value, path) {
+export function updateSafelyWithJSONPath(obj, value, path, immutably = true, createNew) {
+	if (!createNew) {
+		createNew = () => ({});
+	}
+	if (!immutably) {
+		const splitted = path.split("/").filter(s => !isEmptyString(s));
+		splitted.reduce((o, split, i) => {
+			if (i === splitted.length - 1) {
+				o[split] = value;
+				return;
+			}
+			if (!o[split]) {
+				o[split] = createNew(o, split);
+			}
+			return o[split];
+		}, obj);
+		return obj;
+	}
+
 	let injectionTarget = false;
 	try {
 		injectionTarget = parseJSONPointer(obj, path);
@@ -491,9 +509,9 @@ export function updateSafelyWithJSONPath(obj, value, path) {
 			_splitPath += `/${split}`;
 			console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
 			if (!o[split]) {
-				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: {}}));
+				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: createNew(obj, _splitPath, o, split)}));
 			}
-			const next = o[split] || {};
+			const next = parseJSONPointer(obj, _splitPath);
 			injectionTarget = next;
 			return next;
 		}, obj);
@@ -685,3 +703,20 @@ export function parseUiSchemaFromFormDataPointer(uiSchema, pointer) {
 		return o ? o[s] : {};
 	}, uiSchema);
 }
+
+export function checkJSONPointer(obj, pointer) {
+	if (!obj) return false;
+	const splits = pointer.split("/").filter(s => !isEmptyString(s));
+	pointer = obj;
+	try {
+		return splits.every(split => {
+			const exists = pointer.hasOwnProperty(split);
+			pointer = pointer[split];
+			return exists;
+		});
+	} catch (e) {
+		return false;
+	}
+}
+
+export const JSONPointerToId = fieldName => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;

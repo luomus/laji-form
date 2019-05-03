@@ -8,13 +8,24 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } fro
 import DropZone, { useDropzone } from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId  } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
+import exif from "exif-js";
+import { schemaJSONPointer } from "./NestField";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
+import moment from "moment";
 
 const MAX_IMAGE_SIZE = 20000000;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif", "application/pdf"];
+
+function toDecimal(number) {
+	if (!number) return undefined;
+	return number[0].numerator + number[1].numerator /
+		(60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
+}
 
 @BaseComponent
 export default class ImageArrayField extends Component {
@@ -266,7 +277,9 @@ export default class ImageArrayField extends Component {
 	onSelectPhoto = () => {
 	}
 
-	onHideImageAddModal = () => this.setState({imageAddModal: undefined})
+	onHideImageAddModal = () => this.setState({imageAddModal: undefined}, () => {
+		this.parseExif([]);
+	});
 
 	renderImageAddModal = () => {
 		const {disabled, readonly} = this.props;
@@ -315,6 +328,71 @@ export default class ImageArrayField extends Component {
       <PopupAlert onOk={this.onAlertOk}>
 				{` ${this.state.alertMsg}`}
       </PopupAlert>) : null;
+	}
+
+	parseExif = (files) => {
+		const {exifParsers} = getUiOptions(this.props.uiSchema);
+		if (!exifParsers) return;
+
+		const found = exifParsers.reduce((found, {parse}) => {
+			found[parse] = false;
+			return found;
+		}, {});
+		files.reduce((promise, file) => {
+			if (Object.keys(found).every(k => found[k])) {
+				return promise;
+			}
+			return promise.then(found =>
+				new Promise(resolve => {
+					exif.getData(file, function() {
+						if (found.hasOwnProperty("geometry")) try {
+							const coordinates = ["GPSLongitude", "GPSLatitude"].map(tag => toDecimal(exif.getTag(this, tag)));
+							const rawDatum = exif.getTag(this, "GPSMapDatum");
+							const datum = typeof rawDatum === "string"
+								? rawDatum.trim().toUpperCase()
+								: undefined;
+							if ((datum === "WGS-84" || datum === "WGS84") && validateLatLng(coordinates, wgs84Validator)) {
+								found.geometry = {
+									type: "Point",
+									coordinates
+								}
+							}
+						} catch (e) {
+							console.warn("Reading GPS from EXIF failed", e);
+						}
+
+						if (found.hasOwnProperty("date")) try {
+							const rawDate = exif.getTag(this, "DateTimeOriginal");
+							const momentDate = moment(rawDate, "YYYY:MM:DD HH:mm:ss");
+							if (momentDate.isValid()) {
+								found.date = momentDate.toISOString();
+							}
+
+						} catch (e) {
+							console.warn("Reading date from EXIF failed", e);
+						}
+						resolve(found);
+					});
+				})
+			);
+		}, Promise.resolve(found)).then((found) => {
+			let {registry: {definitions}, formContext: {contextId, getFormRef}} = this.props;
+			const formInstance = getFormRef();
+			let {formData, schema} = formInstance.state;
+			exifParsers.filter(f => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}) => {
+				if (type === "mutate") {
+					formData = updateSafelyWithJSONPath(formData, found[parse], field, !!"immutably", (__formData, path) => {
+						const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
+						return getDefaultFormState(_schema, undefined, definitions);
+					});
+				}
+				if (type === "event") {
+					console.log(`root_${JSONPointerToId(field)}`);
+					new Context(contextId).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
+				}
+			});
+			formInstance.onChange(formData);
+		});
 	}
 
 	onFileFormChange = (files) => {
@@ -392,22 +470,33 @@ export default class ImageArrayField extends Component {
 			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
 			onChange([...formData, ...ids]);
 
-			const {autoOpenMetadataModal} = getUiOptions(this.props.uiSchema);
+
+			const {autoOpenMetadataModal = true} = getUiOptions(this.props.uiSchema);
 			this.setState({loading: 0});
 			this.mainContext.popBlockingLoader();
-			if (files.length !== ids.length) {
-				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer});
-			} else {
-				const openMetadataModal =  () => {
-					if (autoOpenMetadataModal) {
+
+			let shouldOpenMetadataModal = autoOpenMetadataModal;
+
+			const finish = () => {
+				const _finish = () => {
+					this.parseExif(files);
+					//new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "files", files);
+					if (shouldOpenMetadataModal) {
 						this.openModalFor(this.props.formData.length - files.length)();
 					}
 				};
 				if (this.state.imageAddModal) {
-					this.setState({imageAddModal: undefined}, openMetadataModal);
+					this.setState({imageAddModal: undefined}, _finish);
 				} else {
-					openMetadataModal();
+					_finish();
 				}
+			};
+
+			if (files.length !== ids.length) {
+				shouldOpenMetadataModal = false;
+				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer}, finish);
+			} else {
+				finish();
 			}
 		}).catch(() => {
 			this.setState({loading: 0});

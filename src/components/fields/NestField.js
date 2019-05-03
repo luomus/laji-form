@@ -1,8 +1,8 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { toIdSchema } from  "react-jsonschema-form/lib/utils";
-import { immutableDelete, getUiOptions } from  "../../utils";
+import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, isEmptyString } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -134,7 +134,7 @@ export default class NestField extends Component {
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 
-		let {schema, uiSchema, idSchema, errorSchema, formData} = props;
+		let {schema, uiSchema, idSchema, errorSchema, formData, registry} = props;
 
 		const {nests, buttonsNest} = options;
 		const buttons = getUiOptions(uiSchema).buttons;
@@ -149,7 +149,7 @@ export default class NestField extends Component {
 
 		Object.keys(nests).forEach((wrapperFieldName) => {
 			const nest = nests[wrapperFieldName];
-			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, registry: props.registry}, nests[wrapperFieldName].fields, nest.title);
+			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, registry}, nests[wrapperFieldName].fields, nest.title);
 			nestedPropsMap[wrapperFieldName] = nestedProps;
 
 			schema = {...schema, properties: {...schema.properties, [wrapperFieldName]: nestedProps.schema}};
@@ -254,7 +254,42 @@ export default class NestField extends Component {
 	}
 }
 
-export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {definitions}}, fields, title) {
+export function schemaJSONPointer(schema, JSONPointer) {
+	if (JSONPointer[0] !== "/") return JSONPointer;
+
+	let schemaPointer = schema;
+	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
+		if (schemaPointer[s]) {
+			schemaPointer = schemaPointer[s];
+			return `${path}/${s}`;
+		} else if (!isNaN(s) && schemaPointer.items && schemaPointer.items.properties) {
+			schemaPointer = schemaPointer.items.properties;
+			return `${path}/items/properties`;
+		} else if (schemaPointer.properties && schemaPointer.properties[s]) {
+			schemaPointer = schemaPointer.properties[s];
+			return `${path}/properties/${s}`;
+		}
+		return undefined;
+	}, "");
+}
+
+export function uiSchemaJSONPointer(uiSchema, JSONPointer) {
+	if (JSONPointer[0] !== "/") return JSONPointer;
+
+	let uiSchemaPointer = uiSchema;
+	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
+		if (uiSchemaPointer[s]) {
+			uiSchemaPointer = uiSchemaPointer[s];
+			return `${path}/${s}`;
+		} else if (!isNaN(s) && uiSchemaPointer.items) {
+			uiSchemaPointer = uiSchemaPointer.items;
+			return `${path}/items`;
+		}
+		return undefined;
+	}, "");
+}
+
+export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {definitions}, }, fields, title) {
 	const newSchema = {type: "object", properties: {}, title};
 	const newErrorSchema = {};
 	const newFormData = {};
@@ -262,20 +297,26 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		if (prop in _uiSchema) _uiSchema[prop] = uiSchema[prop];
 		return _uiSchema;
 	}, {});
-
 	const fieldsDictionarified = {};
 
-	fields.forEach((fieldName) => {
-		[[schema.properties, newSchema.properties],
-			[uiSchema, newUiSchema],
-		 [errorSchema, newErrorSchema],
-		 [formData, newFormData]
-		].forEach(([originalPropContainer, newPropContainer]) => {
-			if (originalPropContainer && originalPropContainer.hasOwnProperty(fieldName)) newPropContainer[fieldName] = originalPropContainer[fieldName];
+	// For keeping field names compatible with idSchema.
+	const flattenPointerName = fieldName => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;
+
+	fields.forEach(fieldName => {
+		[
+			[schema.properties, newSchema.properties, schemaJSONPointer(schema.properties, fieldName)],
+			[uiSchema, newUiSchema, uiSchemaJSONPointer(uiSchema, fieldName)],
+			[errorSchema, newErrorSchema, fieldName],
+			[formData, newFormData, fieldName]
+		].forEach(([originalPropContainer, newPropContainer, _fieldName]) => {
+			if (_fieldName !== undefined && checkJSONPointer(originalPropContainer, _fieldName)) {
+				newPropContainer[flattenPointerName(fieldName)] = parseJSONPointer(originalPropContainer, _fieldName);
+			}
 		});
 		fieldsDictionarified[fieldName] = true;
 	});
 
+	// TODO Doesn't work for JSON Pointer fields.
 	if (uiSchema["ui:order"]) newUiSchema["ui:order"] = uiSchema["ui:order"].filter(ord => fieldsDictionarified[ord] || ord === "*");
 	if (schema.required) newSchema.required = schema.required.filter(req => fieldsDictionarified[req]);
 
@@ -287,7 +328,11 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 
 	const newOnChange = formData => {
 		let newFormData = fields.reduce((_formData, field) => {
-			_formData = {..._formData, [field]: formData[field]};
+			_formData = updateSafelyWithJSONPath(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
+				const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
+				return getDefaultFormState(_schema, undefined, definitions);
+			});
+			_formData = immutableDelete(_formData, flattenPointerName(field));
 			return _formData;
 		}, formData);
 		return onChange(newFormData);
