@@ -160,8 +160,8 @@
 		sv: "Observationer"
 	},
 	setLocation: {
-		fi: "Aseta sijainti",
-		en: "Set a location",
+		fi: "Valitse sijainti",
+		en: "Select location",
 		sv: "Ange platsen"
 	},
 	currentLocation: {
@@ -624,4 +624,14 @@
 		en: "Select photo",
 		sv: "Välj photo"
 	},
+	searchingForLocation: {
+		fi: "Etsitään sijaintia",
+		en: "Searching for location",
+		sv: "Söker efter plats"
+	},
+	selectGeometryByPanningCircle: {
+		fi: "Rajaa sijainti ympyrän sisälle",
+		en: "Pan the location inside the circle",
+		sv: "Placera platsen inne i cirkeln"
+	}
 };

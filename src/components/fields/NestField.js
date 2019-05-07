@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, isEmptyString } from  "../../utils";
+import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, isEmptyString, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -254,42 +254,7 @@ export default class NestField extends Component {
 	}
 }
 
-export function schemaJSONPointer(schema, JSONPointer) {
-	if (JSONPointer[0] !== "/") return JSONPointer;
-
-	let schemaPointer = schema;
-	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
-		if (schemaPointer[s]) {
-			schemaPointer = schemaPointer[s];
-			return `${path}/${s}`;
-		} else if (!isNaN(s) && schemaPointer.items && schemaPointer.items.properties) {
-			schemaPointer = schemaPointer.items.properties;
-			return `${path}/items/properties`;
-		} else if (schemaPointer.properties && schemaPointer.properties[s]) {
-			schemaPointer = schemaPointer.properties[s];
-			return `${path}/properties/${s}`;
-		}
-		return undefined;
-	}, "");
-}
-
-export function uiSchemaJSONPointer(uiSchema, JSONPointer) {
-	if (JSONPointer[0] !== "/") return JSONPointer;
-
-	let uiSchemaPointer = uiSchema;
-	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
-		if (uiSchemaPointer[s]) {
-			uiSchemaPointer = uiSchemaPointer[s];
-			return `${path}/${s}`;
-		} else if (!isNaN(s) && uiSchemaPointer.items) {
-			uiSchemaPointer = uiSchemaPointer.items;
-			return `${path}/items`;
-		}
-		return undefined;
-	}, "");
-}
-
-export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {definitions}, }, fields, title) {
+export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {definitions}}, fields, title) {
 	const newSchema = {type: "object", properties: {}, title};
 	const newErrorSchema = {};
 	const newFormData = {};

@@ -5,15 +5,14 @@ import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
-import DropZone, { useDropzone } from "react-dropzone";
+import DropZone from "react-dropzone";
 import { DeleteButton, Alert as PopupAlert, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId  } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer  } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
 import exif from "exif-js";
-import { schemaJSONPointer } from "./NestField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import moment from "moment";
@@ -301,7 +300,6 @@ export default class ImageArrayField extends Component {
 						          disabled={readonly || disabled}
 						>
 							{({getRootProps, getInputProps}) => {
-								const {onKeyDown, onFocus, onBlur, ...rootProps} = getRootProps();
 								return (
 									<div className="btn-block" {...getRootProps()}>
 									<input {...getInputProps()} capture={captureMethod}>
@@ -355,10 +353,10 @@ export default class ImageArrayField extends Component {
 								found.geometry = {
 									type: "Point",
 									coordinates
-								}
+								};
 							}
 						} catch (e) {
-							console.warn("Reading GPS from EXIF failed", e);
+							console.info("Reading GPS from EXIF failed", e);
 						}
 
 						if (found.hasOwnProperty("date")) try {
@@ -369,7 +367,7 @@ export default class ImageArrayField extends Component {
 							}
 
 						} catch (e) {
-							console.warn("Reading date from EXIF failed", e);
+							console.info("Reading date from EXIF failed", e);
 						}
 						resolve(found);
 					});

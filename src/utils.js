@@ -720,3 +720,48 @@ export function checkJSONPointer(obj, pointer) {
 }
 
 export const JSONPointerToId = fieldName => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;
+
+export function schemaJSONPointer(schema, JSONPointer) {
+	if (JSONPointer[0] !== "/") return JSONPointer;
+
+	let schemaPointer = schema;
+	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
+		if (schemaPointer[s]) {
+			schemaPointer = schemaPointer[s];
+			return `${path}/${s}`;
+		} else if (!isNaN(s) && schemaPointer.items && schemaPointer.items.properties) {
+			schemaPointer = schemaPointer.items.properties;
+			return `${path}/items/properties`;
+		} else if (schemaPointer.properties && schemaPointer.properties[s]) {
+			schemaPointer = schemaPointer.properties[s];
+			return `${path}/properties/${s}`;
+		}
+		return undefined;
+	}, "");
+}
+
+export function uiSchemaJSONPointer(uiSchema, JSONPointer) {
+	if (JSONPointer[0] !== "/") return JSONPointer;
+
+	let uiSchemaPointer = uiSchema;
+	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
+		if (uiSchemaPointer[s]) {
+			uiSchemaPointer = uiSchemaPointer[s];
+			return `${path}/${s}`;
+		} else if (!isNaN(s) && uiSchemaPointer.items) {
+			uiSchemaPointer = uiSchemaPointer.items;
+			return `${path}/items`;
+		}
+		return undefined;
+	}, "");
+}
+
+export function updateFormDataWithJSONPointer(schemaProps, value, path) {
+	if (path === "/") {
+		return value;
+	}
+	return updateSafelyWithJSONPath(schemaProps.formData, value, path, !!"immutably", (__formData, _path) => {
+		const _schema = parseJSONPointer(schemaProps.schema, schemaJSONPointer(schemaProps.schema, _path));
+		return getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
+	});
+}

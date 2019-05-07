@@ -125,7 +125,6 @@ class LocationButton extends Component {
 		const geometryField = this.getGeometryField();
 		const emptyFeatureCollection = {featureCollection: {type: "FeatureCollection", features: []}};
 
-		const {rootElem, customControls} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 		const gatheringData = map ? map.getDraw() : emptyFeatureCollection;
 
 		const [unitGeometriesData, ...unitGeometryCollectionsData] = map
@@ -175,7 +174,6 @@ class LocationButton extends Component {
 		const {map} = mapContext;
 		const geometryField = this.getGeometryField();
 
-		const {rootElem, customControls} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
 
 		const idx = this.getIdx();
 

@@ -1685,31 +1685,35 @@ export class MapComponent extends Component {
 		this._context.setOnUpdateMap = this.setOnUpdateMap;
 	}
 
+	tileLayerChange = ({tileLayerName}) => {
+		this.setState({mapOptions: {...this.state.mapOptions, tileLayerName}});
+	}
+	overlaysChange = ({overlayNames}) => {
+		this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
+	}
+	tileLayerOpacityChangeEnd = ({tileLayerOpacity}) => {
+		this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
+	}
+	locateToggle = ({locate}) => {
+		this.setState({mapOptions: {...this.state.mapOptions, locate}});
+	}
+
 	componentDidMount() {
 		this.map = this.refs.map.map;
 		this._context.map = this.map;
 
-		this.map.setEventListeners({
-			tileLayerChange: ({tileLayerName}) => {
-				this.setState({mapOptions: {...this.state.mapOptions, tileLayerName}});
-			},
-			overlaysChange: ({overlayNames}) => {
-				this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
-			},
-			tileLayerOpacityChangeEnd: ({tileLayerOpacity}) => {
-				this.setState({mapOptions: {...this.state.mapOptions, tileLayerOpacity}});
-			},
-			locateToggle: ({locate}) => {
-				this.setState({mapOptions: {...this.state.mapOptions, locate}});
-			}
-		});
+		this.map.map.on("tileLayerChange", this.tileLayerChange);
+		this.map.map.on("overlaysChange", this.overlaysChange);
+		this.map.map.on("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
+		this.map.map.on("locateToggle", this.locateToggle);
 	}
 
 	componentWillUnmount() {
 		const {map} = this.refs.map;
-		Object.keys(map._listenedEvents).forEach(name => {
-			map.map.removeEventListener(name, map._listenedEvents[name]);
-		});
+		this.map.map.off("tileLayerChange", this.tileLayerChange);
+		this.map.map.off("overlaysChange", this.overlaysChange);
+		this.map.map.off("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
+		this.map.map.off("locateToggle", this.locateToggle);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -1969,7 +1973,7 @@ export class Map extends Component {
 
 const FullscreenPortal = React.forwardRef((props, ref) => {
 	return props.on && createPortal(
-		<div className="laji-form map-fullscreen" ref={ref} />,
+		<div className="laji-form fullscreen" ref={ref} />,
 		document.body
 	);
 });
