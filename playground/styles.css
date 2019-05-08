@@ -1376,3 +1376,8 @@ min-height: 20px;
 .laji-form .margin-top {
 	margin-top: 5px;
 }
+
+.laji-form .top-no-border-radius.panel {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}

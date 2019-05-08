@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getInnerUiSchema, isEmptyString } from "../../utils";
+import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
 import { Row, Col, Panel, Modal } from "react-bootstrap";
@@ -27,7 +27,7 @@ export default class LocalityField extends Component {
 		return (
 			<Row>
 				<Col xs={12}>
-					<Panel>
+					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
 						<Panel.Body>
 								{fieldsWithValue.map((f, i) => (
 								<span key={f}>{this.props.formData[f]}{i < fieldsWithValue.length - 1 ? ", " : ""}</span>
