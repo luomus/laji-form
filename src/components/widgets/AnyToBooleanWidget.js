@@ -5,8 +5,8 @@ import equals from "deep-equal";
 
 export const anyToBoolean = (widget) => (props) => {
 	const options = getUiOptions(widget ? props : props.uiSchema);
-	const {trueValue, falseValue} = options;
-	const schema = {...props.schema, type: "boolean"};
+	const {trueValue, falseValue, allowUndefined = true} = options;
+	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
 	const value = equals(props[widget ? "value": "formData"], trueValue)
 		? true
 		: equals(props[widget ? "value": "formData"], falseValue)
