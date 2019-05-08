@@ -92,6 +92,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "resolutions": {
-    "laji-map": "1.0.494"
+    "laji-map": "1.0.494",
+    "webdriver-manager": "12.1.4"
   }
 }
