@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { findDOMNode } from "react-dom";
+import { findDOMNode, createPortal } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
@@ -613,5 +613,24 @@ export class OverlayTrigger extends Component {
 				</_OverlayTrigger>
 			</div>
 		);
+	}
+}
+
+export class Fullscreen extends Component {
+	componentDidMount() {
+		this.bodyOverFlow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+	}
+
+	componentWillUnmount() {
+		document.body.style.overflow = this.bodyOverFlow;
+	}
+
+	render() {
+		return createPortal((
+			<div className="laji-form fullscreen" onKeyDown={this.props.onKeyDown}>
+					{this.props.children}
+			</div>
+		), document.body);
 	}
 }

@@ -9,7 +9,7 @@ import ApiClient from "../../ApiClient";
 import equals from "deep-equal";
 import Context from "../../Context";
 import Spinner from "react-spinner";
-import { Button } from "../components";
+import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
 
 @BaseComponent
@@ -100,14 +100,14 @@ export default class MapField extends Component {
 		}
 	}
 
-	showConfirmModal = () => {
-		this.setState({confirmModal: true});
+	showMobileEditorMap = () => {
+		this.setState({mobileEditor: true});
 	}
 
 	render() {
 		const {TitleField} = this.props.registry.fields;
 		const {uiSchema, formData} = this.props;
-		const {height = 400, emptyHelp, mapOptions = {}, editWithModal} = getUiOptions(uiSchema);
+		const {height = 400, emptyHelp, mapOptions = {}, mobileEditor: _mobileEditor} = getUiOptions(uiSchema);
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		const _mapOptions = {
 			clickBeforeZoomAndPan: true,
@@ -134,20 +134,20 @@ export default class MapField extends Component {
 			_mapOptions.locate.on = true;
 		}
 
-		if (editWithModal) {
+		if (_mobileEditor) {
 			_mapOptions.controls = false;
 			_mapOptions.customControls = [{
 				text: this.props.formContext.translations.SetLocation,
-				fn: this.showConfirmModal,
+				fn: this.showMobileEditorMap,
 				iconCls: "glyphicon glyphicon-pencil"
 			}];
 		}
 
 		const {lang, topOffset, bottomOffset} = this.props.formContext;
 
-		const {confirmModal} = this.state;
+		const {mobileEditor} = this.state;
 
-		let confirmModalOptions = isObject(confirmModal) ? confirmModal : {};
+		let mobileEditorOptions = isObject(mobileEditor) ? mobileEditor : {};
 		const geometry = this.getGeometry(this.props);
 		if (geometry) {
 			const findSingleGeometry = geoJSON => {
@@ -178,7 +178,7 @@ export default class MapField extends Component {
 				center = bounds.getCenter();
 				radius = bounds.getSouthWest().distanceTo(bounds.getNorthEast());
 			}
-			confirmModalOptions = {
+			mobileEditorOptions = {
 				center,
 				radius
 			};
@@ -186,7 +186,7 @@ export default class MapField extends Component {
 		}
 
 		if (this.map && this.map.userLocation) {
-			confirmModalOptions.userLocation = this.map.userLocation;
+			mobileEditorOptions.userLocation = this.map.userLocation;
 		}
 
 		return (
@@ -206,10 +206,10 @@ export default class MapField extends Component {
 								{this.renderBlocker()}
 						</div>
 					</Affix>
-						{this.state.mapRendered && confirmModal &&
-								<ConfirmMap {...confirmModalOptions}
-									onChange={this.onConfirm}
-									onClose={this.onHideConfirmMap}
+						{this.state.mapRendered && mobileEditor &&
+								<MobileEditorMap {...mobileEditorOptions}
+									onChange={this.onMobileEditorChange}
+									onClose={this.onHideMobileEditorMap}
 									map={this.map}
 									formContext={this.props.formContext}
 								/>
@@ -221,14 +221,14 @@ export default class MapField extends Component {
 	getDrawOptions = (props) => {
 		const {uiSchema, disabled, readonly} = props;
 		const options = getUiOptions(uiSchema);
-		const {mapOptions = {}, editWithModal} = options;
+		const {mapOptions = {}, mobileEditor} = options;
 		const drawOptions = {
 			...(mapOptions.draw || {}),
 			geoData: this.getGeometry(props),
 			onChange: this.onChange,
 			editable: !disabled && !readonly
 		};
-		if (editWithModal) {
+		if (mobileEditor) {
 			drawOptions.getFeatureStyle = this.getEditWithModalFeatureStyle;
 		}
 		return drawOptions;
@@ -278,7 +278,7 @@ export default class MapField extends Component {
 		this.props.onChange(formData);
 	}
 
-	onConfirm = (point) => {
+	onMobileEditorChange = (point) => {
 		const geometry = this.getGeometry(this.props);
 		const feature = {
 			type: "Feature",
@@ -291,19 +291,20 @@ export default class MapField extends Component {
 		}
 	}
 
-	onHideConfirmMap = () => {
-		this.setState({confirmModal: false});
+	onHideMobileEditorMap = () => {
+		this.setState({mobileEditor: false});
 	}
 
 	onLocate = (latlng, radius) => {
-		const {geometryCollection = true, editWithModal, createOnLocate} = getUiOptions(this.props.uiSchema);
+		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		if (!latlng || !isEmpty) {
+			this.located = true;
 			return;
 		}
-		if (editWithModal) {
-			!this.located && this.setState({confirmModal: {center: latlng, radius}});
+		if (mobileEditor) {
+			!this.located && this.setState({mobileEditor: {center: latlng, radius}});
 			this.located = true;
 			return;
 		}
@@ -330,7 +331,7 @@ export default class MapField extends Component {
 	}
 }
 
-class ConfirmMap extends Component {
+class MobileEditorMap extends Component {
 	DEFAULT_RADIUS_PIXELS = 100;
 
 	constructor(props) {
@@ -340,7 +341,7 @@ class ConfirmMap extends Component {
 		this.state = {mapOptions: this.setViewFromCenterAndRadius(center, radius)};
 	}
 
-	setConfirmMapRef = (mapComponent) => {
+	setMobileEditorMapRef = (mapComponent) => {
 		if (mapComponent && mapComponent.refs && mapComponent.refs.map) {
 			this.map = mapComponent.refs.map.map;
 		}
@@ -353,19 +354,25 @@ class ConfirmMap extends Component {
 	}
 
 	componentDidMount() {
+		this.bodyOverFlow = document.querySelector("body").style.overflow;
+		document.querySelector("body").style.overflow = "hidden";
 		this.okButtonElem.focus();
+	}
+
+	componentWillUnmount() {
+		document.querySelector("body").style.overflow = this.bodyOverFlow;
 	}
 
 	getCircle(radiusPixels) {
 		return (
-			<svg id="test" viewBox="0 0 100vh 100vw" width="100vw" height="100vh" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
+			<svg viewBox="0 0" width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
 				<defs>
-					<mask id="mask" x="0" y="0" width="100vw" height="100vh">
-						<rect x="0" y="0" width="100vw" height="100vh" fill="#fff"></rect>
+					<mask id="mask" x="0" y="0" width="100%" height="100%">
+						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
 						<circle cx="50%" cy="50%" r={radiusPixels}></circle>
 					</mask>
 				</defs>
-				<rect x="0" y="0" width="100vw" height="100vh" mask="url(#mask)" fillOpacity="0.2"></rect>    
+				<rect x="0" y="0" width="100%" height="100%" mask="url(#mask)" fillOpacity="0.2"></rect>    
 				<circle cx="50%" cy="50%" r={radiusPixels} stroke="black" strokeWidth="2" fillOpacity="0"></circle>
 			</svg>
 		);
@@ -385,7 +392,7 @@ class ConfirmMap extends Component {
 		this.props.onClose();
 	}
 
-	computeZoom = () => {
+	computePadding = () => {
 		// If the rendered element wasn't full screen, we couldn't use these as height/width.
 		const height = window.innerHeight;
 		const width = window.innerWidth;
@@ -411,7 +418,7 @@ class ConfirmMap extends Component {
 					getFeatureStyle: this.invisibleStyle
 				};
 				const zoomToData = {
-					padding: this.computeZoom()
+					padding: this.computePadding()
 				};
 				return {data, zoomToData};
 			}
@@ -434,11 +441,12 @@ class ConfirmMap extends Component {
 	}
 
 	onLocate = (latlng, accuracy) => {
+		if (this.props.center) return;
+
 		const options = this.setViewFromCenterAndRadius(latlng, accuracy);
 		if (options.data && options.zoomToData) {
 			this.setState({mapOptions: {data: options.data}}, () => {
 				this.map.zoomToData(options.zoomToData);
-				
 			});
 		} else if (options.center) {
 			this.map.setCenter(options.center);
@@ -462,23 +470,22 @@ class ConfirmMap extends Component {
 
 		const {translations} = this.props.formContext;
 
-		return createPortal((
-				<div className="laji-form fullscreen" onKeyDown={this.onKeyDown} tabIndex={-1}>
-					<MapComponent
-						{...options}
-						clickBeforeZoomAndPan={false}
-						viewLocked={false}
-						controls={{draw: false}}
-						ref={this.setConfirmMapRef}
-						formContext={this.props.formContext} />
-					{this.state.mapRendered && createPortal(this.getCircle(this.DEFAULT_RADIUS_PIXELS), this.map.container)}
-					<div className="floating-buttons-container">
-							<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.SetLocation}</Button>
-							<Button block onClick={this.props.onClose}>{translations.Cancel}</Button>
-					</div>
+		return (
+			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef}>
+				<MapComponent
+					{...options}
+					clickBeforeZoomAndPan={false}
+					viewLocked={false}
+					controls={{draw: false}}
+					ref={this.setMobileEditorMapRef}
+					formContext={this.props.formContext} />
+				{/* Circle is rendered inside the map container so the controls z-index can be above the circle mask.*/}
+				{this.state.mapRendered && createPortal(this.getCircle(this.DEFAULT_RADIUS_PIXELS), this.map.container)}
+				<div className="floating-buttons-container">
+					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.SetLocation}</Button>
+					<Button block onClick={this.props.onClose}>{translations.Cancel}</Button>
 				</div>
-			),
-			document.body
+			</Fullscreen>
 		);
 	}
 }

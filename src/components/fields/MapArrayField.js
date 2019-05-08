@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { findDOMNode, createPortal } from "react-dom";
+import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
 import deepEquals from "deep-equal";
 import merge from "deepmerge";
@@ -10,7 +10,7 @@ import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
-import { Button, Stretch } from "../components";
+import { Button, Stretch, Fullscreen } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPath } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -1700,20 +1700,21 @@ export class MapComponent extends Component {
 
 	componentDidMount() {
 		this.map = this.refs.map.map;
+		const {map} = this.map;
 		this._context.map = this.map;
 
-		this.map.map.on("tileLayerChange", this.tileLayerChange);
-		this.map.map.on("overlaysChange", this.overlaysChange);
-		this.map.map.on("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
-		this.map.map.on("locateToggle", this.locateToggle);
+		map.on("tileLayerChange", this.tileLayerChange);
+		map.on("overlaysChange", this.overlaysChange);
+		map.on("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
+		map.on("locateToggle", this.locateToggle);
 	}
 
 	componentWillUnmount() {
-		const {map} = this.refs.map;
-		this.map.map.off("tileLayerChange", this.tileLayerChange);
-		this.map.map.off("overlaysChange", this.overlaysChange);
-		this.map.map.off("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
-		this.map.map.off("locateToggle", this.locateToggle);
+		const {map} = this.map;
+		map.off("tileLayerChange", this.tileLayerChange);
+		map.off("overlaysChange", this.overlaysChange);
+		map.off("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
+		map.off("locateToggle", this.locateToggle);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -1965,18 +1966,11 @@ export class Map extends Component {
 				<div key="map"
 					className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
 					style={this.props.style} ref="map" />
-				<FullscreenPortal ref={this.setFullscreenRef} on={this.state.fullscreen} />
+					{this.state.fullscreen && <Fullscreen ref={this.setFullscreenRef} on={this.state.fullscreen} />}
 		 </React.Fragment>
 		);
 	}
 }
-
-const FullscreenPortal = React.forwardRef((props, ref) => {
-	return props.on && createPortal(
-		<div className="laji-form fullscreen" ref={ref} />,
-		document.body
-	);
-});
 
 class MapPanel extends Component {
 	render() {
