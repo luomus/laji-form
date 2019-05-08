@@ -47,7 +47,7 @@ export default class MapField extends Component {
 
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
 			if (geometry) {
-				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]});
+				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100);
 				this.map.setCenter(geometry.coordinates.slice(0).reverse());
 			} else {
 				this.setState({locateOn: true});
@@ -182,7 +182,6 @@ export default class MapField extends Component {
 				center,
 				radius
 			};
-
 		}
 
 		if (this.map && this.map.userLocation) {
