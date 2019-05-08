@@ -698,8 +698,9 @@ min-height: 20px;
 }
 .laji-form .panel-body:not(.laji-map-dialog) {
 	padding: 8px;
+	line-height: 21px;
 }
-.laji-form .panel:not(.laji-form-popped) .panel-body {
+.laji-form .panel.laji-form-error-list:not(.laji-form-popped) .panel-body {
 	padding-top: 3px;
 }
 
@@ -1370,4 +1371,8 @@ min-height: 20px;
 	z-index: 1;
 	left: 50%;
 	transform: translate(-50%, 0);
+}
+
+.laji-form .margin-top {
+	margin-top: 5px;
 }

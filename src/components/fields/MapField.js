@@ -201,7 +201,6 @@ export default class MapField extends Component {
 								zoomToData={true}
 								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
 								formContext={this.props.formContext}
-								controls={true}
 								onOptionsChanged={this.onOptionsChanged} />
 								{this.renderBlocker()}
 						</div>

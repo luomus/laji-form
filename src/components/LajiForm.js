@@ -70,6 +70,7 @@ const fields = importLocalComponents("fields", [
 	"UnitListShorthandArrayField",
 	"LocationChooserField",
 	"DataLeakerField",
+	"LocalityField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
