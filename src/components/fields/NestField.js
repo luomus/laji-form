@@ -270,7 +270,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 	fields.forEach(fieldName => {
 		[
 			[schema.properties, newSchema.properties, schemaJSONPointer(schema.properties, fieldName)],
-			[uiSchema, newUiSchema, uiSchemaJSONPointer(uiSchema, fieldName)],
+			[uiSchema, newUiSchema, uiSchemaJSONPointer(schema.properties, fieldName)],
 			[errorSchema, newErrorSchema, fieldName],
 			[formData, newFormData, fieldName]
 		].forEach(([originalPropContainer, newPropContainer, _fieldName]) => {

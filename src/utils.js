@@ -722,7 +722,9 @@ export function checkJSONPointer(obj, pointer) {
 export const JSONPointerToId = fieldName => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;
 
 export function schemaJSONPointer(schema, JSONPointer) {
-	if (JSONPointer[0] !== "/") return JSONPointer;
+	if (JSONPointer[0] !== "/") {
+		JSONPointer = `/${JSONPointer}`;
+	}
 
 	let schemaPointer = schema;
 	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
@@ -740,16 +742,19 @@ export function schemaJSONPointer(schema, JSONPointer) {
 	}, "");
 }
 
-export function uiSchemaJSONPointer(uiSchema, JSONPointer) {
+export function uiSchemaJSONPointer(schema, JSONPointer) {
 	if (JSONPointer[0] !== "/") return JSONPointer;
 
-	let uiSchemaPointer = uiSchema;
+	let schemaPointer = schema;
 	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
-		if (uiSchemaPointer[s]) {
-			uiSchemaPointer = uiSchemaPointer[s];
+		if (schemaPointer[s]) {
+			schemaPointer = schemaPointer[s];
 			return `${path}/${s}`;
-		} else if (!isNaN(s) && uiSchemaPointer.items) {
-			uiSchemaPointer = uiSchemaPointer.items;
+		} else if (schemaPointer.properties && schemaPointer.properties[s]) {
+			schemaPointer = schemaPointer.properties[s];
+			return `${path}/${s}`;
+		} else if (!isNaN(s) && schemaPointer.items) {
+			schemaPointer = schemaPointer.items;
 			return `${path}/items`;
 		}
 		return undefined;

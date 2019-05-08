@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPath, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -131,8 +131,8 @@ export default class AutosuggestField extends Component {
 
 		const {suggestionInputField} = options;
 
-		if (suggestionInputField && props.formData && !isEmptyString(props.formData[suggestionInputField])) {
-			options.value = props.formData[suggestionInputField];
+		if (suggestionInputField && props.formData && !isEmptyString(parseJSONPointer(props.formData, suggestionInputField, !!"safe"))) {
+			options.value = parseJSONPointer(props.formData, suggestionInputField);
 		}
 
 		if (options.query) {
@@ -140,17 +140,14 @@ export default class AutosuggestField extends Component {
 		}
 
 		const innerUiSchema = getInnerUiSchema(uiSchema);
-		const _uiSchema = {
-			...innerUiSchema,
-			[suggestionInputField]: {
-				"ui:widget": "AutosuggestWidget",
-				...(innerUiSchema[suggestionInputField] || {}),
-				"ui:options": {
-					...getUiOptions(innerUiSchema[suggestionInputField]),
-					...options
-				},
-			}
-		};
+		const _uiSchema = updateSafelyWithJSONPath(innerUiSchema, {
+			"ui:widget": "AutosuggestWidget",
+			...(innerUiSchema[suggestionInputField] || {}),
+			"ui:options": {
+				...getUiOptions(innerUiSchema[suggestionInputField]),
+				...options
+			},
+		}, uiSchemaJSONPointer(schema, suggestionInputField));
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
 	}
@@ -180,7 +177,7 @@ export default class AutosuggestField extends Component {
 						fieldVal = suggestion[suggestionValPath];
 					}
 				}
-				formData = {...formData, [fieldName]: fieldVal};
+				formData = updateFormDataWithJSONPointer({...this.props, formData}, fieldVal, fieldName);
 			}
 			return formData;
 		};
@@ -196,8 +193,8 @@ export default class AutosuggestField extends Component {
 				return state.formData;
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
-			formData = {...formData, [suggestionValueField]: undefined, ...unit};
-			if (isEmptyString(this.props.formData[suggestionInputField]) && autocopy && !equals(this.props.formData, formData)) {
+			formData = {...updateFormDataWithJSONPointer({...this.props, formData}, undefined, suggestionValueField), ...unit}
+			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !equals(this.props.formData, formData)) {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
@@ -210,9 +207,10 @@ export default class AutosuggestField extends Component {
 		let {formData, uiSchema} = this.props;
 		const {suggestionReceivers, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 		Object.keys(suggestionReceivers).forEach(fieldName => {
-			formData = {...formData, [fieldName]: getDefaultFormState(this.props.schema.properties[fieldName], undefined, this.props.registry.definitions)};
+			const defaultValue = getDefaultFormState(parseJSONPointer(this.props.schema, schemaJSONPointer(this.props.schema, fieldName), undefined, this.props.registry.definitions));
+			formData = updateFormDataWithJSONPointer({...this.props, formData}, defaultValue, fieldName);
 		});
-		formData = {...formData, [suggestionInputField]: value};
+		formData = updateFormDataWithJSONPointer({...this.props, formData}, value, suggestionInputField);
 		this.props.onChange(formData);
 	}
 
@@ -238,7 +236,7 @@ export default class AutosuggestField extends Component {
 	isValueSuggested = () => {
 		const {formData, uiSchema} = this.props;
 		for (let fieldName in this.getActiveOptions(getUiOptions(uiSchema)).suggestionReceivers) {
-			if (!formData || !formData[fieldName]) return false;
+			if (!formData || !parseJSONPointer(formData, fieldName, !!"safe")) return false;
 		}
 		return true;
 	}
@@ -247,10 +245,13 @@ export default class AutosuggestField extends Component {
 		const {formData, uiSchema} = this.props;
 		const {suggestionValueField, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 
-		const value = suggestionInputField && formData && !isEmptyString(formData[suggestionInputField]) ? 
-			formData[suggestionInputField] : undefined;
-		const key = suggestionValueField && formData && !isEmptyString(formData[suggestionValueField]) ?
-			formData[suggestionValueField] : undefined;
+		const suggestionValue = parseJSONPointer(formData, suggestionValueField, !!"safe");
+		const suggestionInputValue = parseJSONPointer(formData, suggestionInputField, !!"safe");
+
+		const value = suggestionInputField && formData && !isEmptyString(suggestionValue) ? 
+			suggestionInputValue : undefined;
+		const key = suggestionValueField && formData && !isEmptyString(suggestionValue) ?
+			suggestionValue : undefined;
 
 		let suggestion = undefined;
 		if (value !== undefined && key !== undefined) {
