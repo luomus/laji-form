@@ -70,7 +70,7 @@ export default class LocalityField extends Component {
 						validators={{}}
 						warnings={{}}
 					/>
-					<Button block onClick={this.onSubmitClick} className="margin-top">OK</Button>
+					<Button block onClick={this.onSubmitClick}>OK</Button>
 					<Button block onClick={this.hideEditor}>{this.props.formContext.translations.Cancel}</Button>
 			</Modal.Body>
 			</Modal>

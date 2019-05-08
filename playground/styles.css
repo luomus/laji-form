@@ -696,6 +696,9 @@ min-height: 20px;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
+.laji-form .panel:not(.laji-map-dialog) {
+	margin-bottom: 5px;
+}
 .laji-form .panel-body:not(.laji-map-dialog) {
 	padding: 8px;
 	line-height: 21px;

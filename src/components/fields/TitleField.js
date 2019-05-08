@@ -10,7 +10,7 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 		return _titleFormatters[renderer]({...titleFormatter, formData});
 	}).filter(i => i);
 
-	if (renderedFormatters.length === 0 && isEmptyString(title)) return null;
+	if (renderedFormatters.length === 0 && isEmptyString(title)) return <div className="margin-top" />;
 
 	const helpComponent = help ? <Help /> : null;
 
