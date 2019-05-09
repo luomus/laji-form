@@ -4,7 +4,7 @@ import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
 import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
 import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent } from "../../utils";
+import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -125,11 +125,14 @@ function TaxonAutosuggest(ComposedComponent) {
 			);
 		}
 
-		renderSuggested = (input, suggestion) => (
-			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover">
+		renderSuggested = (input, suggestion) => {
+			const {taxonCardPlacement: placement = "top" } = getUiOptions(this.props);
+			return (
+			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
 				{input}
 			</TaxonCardOverlay>
-		)
+			);
+		}
 
 		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
