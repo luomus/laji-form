@@ -194,7 +194,7 @@ export default class ScopeField extends Component {
 		fields.forEach(field => {
 			fieldsToShow[field] = schema.properties[field];
 		});
-		
+
 		let hasSetLocation = false;
 
 		glyphFields.reduce((additionalFields, {show, open, fn}) => {
@@ -270,6 +270,26 @@ export default class ScopeField extends Component {
 					}
 				});
 			});
+		}
+
+		function findScopedFields(fieldScope = {}, _fields = []) {
+			const {fields =[], additionalFields = [], fieldScopes = {}} = fieldScope;
+			[...fields, ...additionalFields].forEach(f => {
+				_fields[f] = true;
+			});
+			Object.keys(fieldScopes).forEach(f => Object.keys(fieldScopes[f]).forEach(_f => findScopedFields(fieldScopes[f][_f], _fields)));
+			return _fields;
+		}
+
+		// If no root fields defined, show all fields that aren't in any scopes` fields or additional fields.
+		if (fields.length === 0) {
+			const scopedFields = findScopedFields(options);
+			fieldsToShow = Object.keys(props.schema.properties).reduce((_fields, f) => {
+				if (!scopedFields[f]) {
+					_fields[f] = props.schema.properties[f];
+				}
+				return _fields;
+			}, {});
 		}
 
 		addFieldScopeFieldsToFieldsToShow(options);
