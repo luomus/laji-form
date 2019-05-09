@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Label } from "../components";
 import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
 import Switch from "react-bootstrap-switch";
+import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 
 export default class CheckboxWidget extends Component {
 	static propTypes = {
@@ -60,6 +61,13 @@ export default class CheckboxWidget extends Component {
 		this.props.onChange(_value);
 	}
 
+	onButtonGroupChange = (value) => {
+		if (value === "undefined") {
+			value = undefined;
+		}
+		this.props.onChange(value);
+	}
+
 	render() {
 		const {
 			value,
@@ -74,50 +82,28 @@ export default class CheckboxWidget extends Component {
 		const {allowUndefined = true, invert = false, help, label: uiOptionsLabel} = options;
 		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
 
-		if (allowUndefined || value === undefined) {
-			const schema = {
-				...this.props.schema,
-				type: "string",
-				enum: [
-					"undefined",
-					"true",
-					"false"
-				],
-				enumNames: [
-					" ",
-					registry.formContext.translations.Yes,
-					registry.formContext.translations.No,
-				]
-			};
+		const {Yes, No, Unknown} = registry.formContext.translations;
 
-			const formData =
-				value === true
-				? "true"
-				: value === false
-					? "false"
-					: undefined;
+		// "undefined" for silencing ToggleButton warning.
+		const _value = value === undefined ? "undefined" : value;
 
-			const uiSchema = {"ui:options": options};
-			const {SchemaField} = registry.fields;
-			return <SchemaField
-				{...this.props}
-				schema={schema}
-				uiSchema={uiSchema}
-				formData={formData}
-				onChange={this.onSelectChange}
-				idSchema={{$id: this.props.id}}
-			/>;
-		}
-
-		const checkbox = (
+		const checkbox = allowUndefined || value === undefined ? (
+			<ButtonToolbar className="tristate-buttons">
+				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
+					<ToggleButton value={true}>{Yes}</ToggleButton>
+					<ToggleButton value={false}>{No}</ToggleButton>
+					<ToggleButton value={"undefined"}>{Unknown}</ToggleButton>
+				</ToggleButtonGroup>
+			</ButtonToolbar>
+		) : (
 			<div onClick={this.onClick} onKeyDown={this.onKeyDown} className="checkbox-container">
 				<Switch
 					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
 					defaultValue={allowUndefined ? null : false}
 					disabled={disabled}
 					readonly={readonly}
-					onText={registry.formContext.translations.Yes}
-					offText={registry.formContext.translations.No}
+					onText={Yes}
+					offText={No}
 					bsSize="mini"
 					tristate={allowUndefined}
 				/>

@@ -633,5 +633,10 @@
 		fi: "Rajaa sijainti ympyrän sisälle",
 		en: "Pan the location inside the circle",
 		sv: "Placera platsen inne i cirkeln"
+	},
+	unknown: {
+		fi: "Ei tietoa",
+		en: "Unknown",
+		sv: "Okänd"
 	}
 };

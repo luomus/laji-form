@@ -116,7 +116,11 @@ body .laji-form {
 .laji-form .form-control, .laji-form .rw-widget, .laji-form .rw-widget-container, .laji-form .rw-list-option {
 	border-radius: 2px !important;
 }
-.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper, .laji-form .rw-datetimepicker {
+.laji-form label[type="button"] {
+	border-radius: 2px;
+	line-height: 12.5px;
+}
+.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper, .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
 	height: 25px !important;
 }
 .laji-form .form-control-feedback {
@@ -185,7 +189,7 @@ min-height: 20px;
 .laji-form legend.lg {
 	font-size: 20px;
 }
-.laji-form label {
+.laji-form label:not([type="button"]) {
 	font-size: 13px;
 	white-space: nowrap;
 	margin-bottom: 1px;
