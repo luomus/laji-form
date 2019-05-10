@@ -47,7 +47,7 @@ export default class MapField extends Component {
 
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
 			if (geometry) {
-				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100);
+				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
 				this.map.setCenter(geometry.coordinates.slice(0).reverse());
 			} else {
 				this.setState({locateOn: true});
@@ -293,7 +293,7 @@ export default class MapField extends Component {
 		this.setState({mobileEditor: false});
 	}
 
-	onLocate = (latlng, radius) => {
+	onLocate = (latlng, radius, forceShow) => {
 		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
@@ -302,7 +302,7 @@ export default class MapField extends Component {
 			return;
 		}
 		if (mobileEditor) {
-			!this.located && this.setState({mobileEditor: {center: latlng, radius}});
+			(!this.located || forceShow) && this.setState({mobileEditor: {center: latlng, radius}});
 			this.located = true;
 			return;
 		}
