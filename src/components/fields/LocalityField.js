@@ -22,15 +22,19 @@ export default class LocalityField extends Component {
 	}
 
 	render() {
+		const {radius} = getUiOptions(this.props.uiSchema);
 		const fields = Object.keys(this.props.schema.properties);
-		const fieldsWithValue = fields.filter(s => !isEmptyString(this.props.formData[s]));
+		const values = fields.filter(s => !isEmptyString(this.props.formData[s])).map(f => this.props.formData[f]);
+		if (typeof radius === "number") {
+			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
+		}
 		return (
 			<Row>
 				<Col xs={12}>
 					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
 						<Panel.Body>
-								{fieldsWithValue.map((f, i) => (
-								<span key={f}>{this.props.formData[f]}{i < fieldsWithValue.length - 1 ? ", " : ""}</span>
+								{values.map((v, i) => (
+								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
 							))}
 							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
 						</Panel.Body>

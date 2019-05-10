@@ -638,5 +638,11 @@
 		fi: "Ei tietoa",
 		en: "Unknown",
 		sv: "Okänd"
+	},
+	accuracy: {
+		fi: "Tarkkuus",
+		en: "Accuracy",
+		sv: "Noggrannhet"
+		
 	}
 };

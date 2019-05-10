@@ -32,7 +32,8 @@ export default class DataLeakerField extends Component {
 	static getName() {return "DataLeakerField";}
 
 	getStateFromProps(props) {
-		return (this.getUiOptions(props.uiSchema).props || []).reduce((props, strOrObjProp) => {
+		const {props: _props = []} = this.getUiOptions(props.uiSchema);
+		return (Array.isArray(_props) ? _props : [_props]).reduce((props, strOrObjProp) => {
 			const [fromPath, targetPath] = ["from", "target"].map(p => strOrObjProp[p]);
 			const from = fromPath[0] === "/"
 				? parseJSONPointer(props, fromPath)
