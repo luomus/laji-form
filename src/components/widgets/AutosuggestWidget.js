@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Glyphicon, Popover, InputGroup, Tooltip } from "react-bootstrap";
+import { Glyphicon, Popover, InputGroup, Tooltip, Modal } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
-import { FetcherInput, TooltipComponent, OverlayTrigger } from "../components";
+import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
+import Thumbnail from "../fields/ImageArrayField";
 
 function renderFlag(suggestion) {
 	return (suggestion && suggestion.payload || {}).finnish
@@ -140,6 +141,30 @@ function TaxonAutosuggest(ComposedComponent) {
 			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
 		}
 
+		renderChooseImages = () => {
+			const {chooseImages} = this.props.options;
+			return (
+				<React.Fragment>
+					<div className="laji-form-images">
+						{chooseImages.map(taxonID => <TaxonImgChooser id={taxonID} key={taxonID} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
+					</div>
+					<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
+				</React.Fragment>
+			);
+		}
+
+		onTaxonImgSelected = (taxonID, taxon) => {
+			this.autosuggestRef.selectSuggestion({
+				key: taxonID,
+				value: taxon.vernacularName,
+				payload: taxon
+			});
+		}
+
+		setAutosuggestRef = (elem) => {
+			this.autosuggestRef = elem;
+		}
+
 		render() {
 			const {props} = this;
 
@@ -165,7 +190,11 @@ function TaxonAutosuggest(ComposedComponent) {
 				}
 			};
 
-			return <Autosuggest {..._options}/>;
+			if (propsOptions.chooseImages) {
+				_options.renderExtra = this.renderChooseImages;
+			}
+
+			return <Autosuggest ref={this.setAutosuggestRef} {..._options}/>;
 		}
 	};
 }
@@ -599,26 +628,31 @@ export class Autosuggest extends Component {
 			? this.props.highlightFirstSuggestion
 			: !this.props.allowNonsuggestedValue;
 
+		const {renderExtra} = props;
+
 		return (
-			<div className="autosuggest-wrapper">
-				<ReactAutosuggest
-					ref={this.setRef}
-					id={`${this.props.id}-autosuggest`}
-					inputProps={inputProps}
-					renderInputComponent={this.renderInput}
-					suggestions={suggestions}
-					getSuggestionValue={this.getSuggestionValue}
-					renderSuggestion={this.renderSuggestion}
-					renderSuggestionsContainer={this.renderSuggestionsContainer}
-					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-					onSuggestionSelected={this.onSuggestionSelected}
-					focusInputOnSuggestionClick={false}
-					highlightFirstSuggestion={highlightFirstSuggestion}
-					alwaysRenderSuggestions={true}
-					theme={cssClasses}
-				/>
-			</div>
+			<React.Fragment>
+				{renderExtra && renderExtra()}
+				<div className="autosuggest-wrapper">
+					<ReactAutosuggest
+						ref={this.setRef}
+						id={`${this.props.id}-autosuggest`}
+						inputProps={inputProps}
+						renderInputComponent={this.renderInput}
+						suggestions={suggestions}
+						getSuggestionValue={this.getSuggestionValue}
+						renderSuggestion={this.renderSuggestion}
+						renderSuggestionsContainer={this.renderSuggestionsContainer}
+						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+						onSuggestionSelected={this.onSuggestionSelected}
+						focusInputOnSuggestionClick={false}
+						highlightFirstSuggestion={highlightFirstSuggestion}
+						alwaysRenderSuggestions={true}
+						theme={cssClasses}
+					/>
+				</div>
+		</React.Fragment>
 		);
 	}
 
@@ -836,19 +870,6 @@ class TaxonCardOverlay extends Component {
 
 		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
 
-		const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) => {
-			const _scientificName = vernacularName && scientificName
-				?  `(${scientificName})`
-				: (scientificName || "");
-			return (
-				<React.Fragment>
-					{`${vernacularName}${vernacularName ? " " : ""}`}
-					{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-					{renderFlag({payload: {finnish}})}
-				</React.Fragment>
-			);
-		};
-
 		const popover = (
 			<Popover id={`${id}-popover`}>
 				<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
@@ -934,4 +955,85 @@ class InformalTaxonGroupsAddon extends Component {
 		);
 	}
 }
+
+class TaxonImgChooser extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
+	componentDidMount(){
+		this.mounted = true;
+		new ApiClient().fetch(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
+			if (!this.mounted) return;
+
+			if (taxon.multimedia && taxon.multimedia.length) {
+				const [media] = taxon.multimedia;
+				this.setState({
+					taxon: taxon,
+					thumbnail: media.squareThumbnailURL || media.thumbnailURL,
+					large: media.largeURL
+				});
+			} else {
+				this.setState({taxon});
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		this.mounted = false;
+	}
+
+	showModal = () => {
+		this.setState({modal: true});
+	}
+
+	hideModal = () => {
+		this.setState({modal: false});
+	}
+
+	onSelected = () => {
+		this.props.onSelect(this.props.id, this.state.taxon);
+		this.hideModal();
+	}
+
+	render() {
+		const {thumbnail, taxon, modal} = this.state;
+
+		const {translations} = this.props.formContext;
+		return (
+			<React.Fragment>
+				<div className="taxon-img img-container" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
+						{!taxon && <div className="image-loading"><Spinner /></div>}
+						{thumbnail || !taxon ? "" : taxon.vernacularName}
+				</div>
+					{modal && 
+						<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideModal}>
+							<Modal.Body>
+								<img src={this.state.large} />
+								<div>
+									<h3 className="text-center"><TaxonName {...this.state.taxon} finnish={false} /></h3>
+									<Button block onClick={this.onSelected}>{translations.Select}</Button>
+									<Button block onClick={this.hideModal}>{translations.Cancel}</Button>
+								</div>
+							</Modal.Body>
+						</Modal>
+					}
+			</React.Fragment>
+		);
+	}
+}
+
+const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) => {
+	const _scientificName = vernacularName && scientificName
+		?  `(${scientificName})`
+		: (scientificName || "");
+	return (
+		<React.Fragment>
+				{`${vernacularName}${vernacularName ? " " : ""}`}
+				{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+					{renderFlag({payload: {finnish}})}
+			</React.Fragment>
+	);
+};
 

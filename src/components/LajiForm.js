@@ -94,6 +94,7 @@ const widgets = importLocalComponents("widgets", [
 	"AnyToBooleanWidget",
 	"URLWidget",
 	"InformalTaxonGroupChooserWidget",
+	"TaxonImageWidget",
 	"UpperCaseWidget"
 ]);
 

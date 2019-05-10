@@ -448,9 +448,11 @@ min-height: 20px;
 }
 .laji-form .laji-form-images {
 	margin-top: 10px;
+	overflow: auto;
 }
 .laji-form .laji-form-images > div {
 	margin-right: 7px;
+	margin-bottom: 7px;
 	width: 120px;
 	height: 120px;
 	float: left;
@@ -461,7 +463,14 @@ min-height: 20px;
 	height: inherit;
 }
 
-.laji-form .laji-form-drop-zone, .laji-form .image-loading {
+.laji-form .taxon-img {
+	line-height: 120px;
+	border: 1px solid #eeeeee;
+	text-align: center;
+	background-size: cover;
+}
+
+.laji-form .laji-form-drop-zone {
 	border: 2px dashed #cacaca;
 }
 .laji-form  .laji-form-drop-zone:hover:not(.disabled), .laji-form .laji-form-drop-zone.dragging:not(.disabled)  {

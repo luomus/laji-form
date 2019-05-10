@@ -643,6 +643,15 @@
 		fi: "Tarkkuus",
 		en: "Accuracy",
 		sv: "Noggrannhet"
-		
+	},
+	choose: {
+		fi: "Choose",
+		en: "Select",
+		sv: "Välj"
+	},
+	orWriteSpeciesName: {
+		fi: "tai kirjoita lajinimi",
+		en: "Or write species name",
+		sv: "eller skriv artnamn"
 	}
 };

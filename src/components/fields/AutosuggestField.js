@@ -9,7 +9,7 @@ import equals from "deep-equal";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
-		return suggestion.payload ? suggestion.payload.informalTaxonGroups.map(item => item.id) : [];
+		return suggestion.payload ? suggestion.payload.informalTaxonGroups.map(item => typeof item === "string" ? item : item.id) : [];
 	}
 };
 
