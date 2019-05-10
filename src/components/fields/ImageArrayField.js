@@ -157,7 +157,7 @@ export default class ImageArrayField extends Component {
 									}}
 							</DropZone>
 						</OverlayTrigger>
-						{this.renderModal()}
+						{this.renderMetadataModal()}
 						{this.renderAlert()}
 						{this.renderImageAddModal()}
 					</div>
@@ -190,7 +190,7 @@ export default class ImageArrayField extends Component {
 
 	openModalFor = (i) => () => {
 		const item = this.props.formData[i];
-		this.setState({modalOpen: i});
+		this.setState({metadataModalOpen: i});
 		this.fetching = item;
 		this.apiClient.fetch(`/images/${item}`).then(response => {
 			if (response.id !== this.fetching) return;
@@ -203,13 +203,17 @@ export default class ImageArrayField extends Component {
 		this.props.onChange(update(this.props.formData, {$splice: [[i, 1]]}));
 	}
 
-	renderModal = () => {
-		const {modalOpen, modalIdx, modalMetadata, metadataSaveSuccess, modalImgSrc} = this.state;
+	hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
+
+	onMetadataFormChange = formData => this.setState({modalMetadata: formData});
+
+	renderMetadataModal = () => {
+		const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess, modalImgSrc} = this.state;
 		const {lang, translations} = this.props.registry.formContext;
 
 		const metadataForm = this.state.metadataForm || {};
 
-		if (typeof modalOpen === "number" && !this.state.metadataForm) {
+		if (typeof metadataModalOpen === "number" && !this.state.metadataForm) {
 			this.apiClient.fetchCached("/forms/JX.111712", {lang, format: "schema"})
 				.then(metadataForm => {
 					if (this.mounted) {
@@ -218,12 +222,9 @@ export default class ImageArrayField extends Component {
 				});
 		}
 
-		const onHide = () => this.setState({modalOpen: false, metadataSaveSuccess: undefined});
-		const onChange = formData => this.setState({modalMetadata: formData});
-
 		const {Previous, Next} = this.props.formContext.translations;
 
-		const isOpen = modalIdx === modalOpen && modalMetadata && metadataForm.schema;
+		const isOpen = modalIdx === metadataModalOpen && modalMetadata && metadataForm.schema;
 
 		const uiSchema = isOpen ? {
 			...metadataForm.uiSchema,
@@ -232,26 +233,28 @@ export default class ImageArrayField extends Component {
 			"ui:readonly": this.props.readonly,
 		} : undefined;
 
-		return typeof modalOpen === "number" ?
+		const {metadataModal = true} = getUiOptions(this.props.uiSchema);
+
+		return typeof metadataModalOpen === "number" ?
 			<Modal dialogClassName="laji-form image-modal" show={true}
-			       onHide={onHide}>
+			       onHide={this.hideMetadataModal}>
 				<Modal.Header closeButton={true}>
 					<br />
 					<Pager>
-						<Pager.Item previous onClick={this.openModalFor(modalOpen - 1)} disabled={modalOpen <= 0}>&larr; {Previous}</Pager.Item>
-						<Pager.Item next onClick={this.openModalFor(modalOpen + 1)} disabled={modalOpen >= this.props.formData.length - 1}>{Next} &rarr;</Pager.Item>
+						<Pager.Item previous onClick={this.openModalFor(metadataModalOpen - 1)} disabled={metadataModalOpen <= 0}>&larr; {Previous}</Pager.Item>
+						<Pager.Item next onClick={this.openModalFor(metadataModalOpen + 1)} disabled={metadataModalOpen >= this.props.formData.length - 1}>{Next} &rarr;</Pager.Item>
 					</Pager>
 				</Modal.Header>
 				<Modal.Body>
-					<div className="laji-form image-modal-content">
+					<div className={`laji-form${metadataModal ? " image-modal-content" : ""}`}>
 					{isOpen
 						? <React.Fragment>
 							<img src={modalImgSrc} />
-							<LajiForm
+								{metadataModal && <LajiForm
 								{...metadataForm}
 								uiSchema={uiSchema}
 								formData={modalMetadata}
-								onChange={onChange}
+								onChange={this.onMetadataFormChange}
 								onSubmit={this.onImageMetadataUpdate}
 								submitText={translations.Save}
 								lang={lang}
@@ -262,7 +265,7 @@ export default class ImageArrayField extends Component {
 										</Alert>
 									) : null
 								}
-							</LajiForm>
+							</LajiForm>}
 						</React.Fragment>
 					: <Spinner />}
 					</div>
@@ -536,7 +539,7 @@ export default class ImageArrayField extends Component {
 			body: JSON.stringify(formData)
 		}).then(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({modalOpen: false}, () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess));
+			this.setState({metadataModalOpen: false}, () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess));
 			this.onSettingsChange({
 				intellectualRights: formData.intellectualRights,
 				capturerVerbatim: formData.capturerVerbatim,
