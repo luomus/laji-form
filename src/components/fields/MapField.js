@@ -176,7 +176,7 @@ export default class MapField extends Component {
 			} else {
 				const bounds = new L.GeoJSON(anyToFeatureCollection(geometry)).getBounds();
 				center = bounds.getCenter();
-				radius = bounds.getSouthWest().distanceTo(bounds.getNorthEast());
+				radius = bounds.getSouthWest().distanceTo(bounds.getSouthEast()) / 2;
 			}
 			mobileEditorOptions = {
 				center,
@@ -352,13 +352,7 @@ class MobileEditorMap extends Component {
 	}
 
 	componentDidMount() {
-		this.bodyOverFlow = document.querySelector("body").style.overflow;
-		document.querySelector("body").style.overflow = "hidden";
 		this.okButtonElem.focus();
-	}
-
-	componentWillUnmount() {
-		document.querySelector("body").style.overflow = this.bodyOverFlow;
 	}
 
 	getCircle(radiusPixels) {
@@ -452,7 +446,7 @@ class MobileEditorMap extends Component {
 	}
 
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, center, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
 		const {userLocation} = this.props;
 
 		options = {...options, ...this.state.mapOptions};
