@@ -85,7 +85,7 @@ export default class MapField extends Component {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
 			if (geometry) {
 				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
-			} else {
+			} else if (!this.getGeometry(this.props)) {
 				this.setState({locateOn: true});
 			}
 		});
@@ -323,7 +323,8 @@ export default class MapField extends Component {
 
 	renderBlocker() {
 		const {blockBeforeLocation} = getUiOptions(this.props.uiSchema);
-		if (blockBeforeLocation && !this.located) {
+		const geometry = this.getGeometry(this.props);
+		if (blockBeforeLocation && !this.located && !geometry) {
 			return (
 				<React.Fragment>
 					<div className="blocker" />

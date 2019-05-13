@@ -1711,6 +1711,7 @@ export class MapComponent extends Component {
 
 	componentWillUnmount() {
 		const {map} = this.map;
+		if (!map) return;
 		map.off("tileLayerChange", this.tileLayerChange);
 		map.off("overlaysChange", this.overlaysChange);
 		map.off("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
