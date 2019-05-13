@@ -12,6 +12,43 @@ import Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
 
+export function findSingleGeometry(geoJSON) {
+	if (!geoJSON) return undefined;
+	switch (geoJSON.type) {
+	case "FeatureCollection":
+		return geoJSON.features.length === 1
+			? findSingleGeometry(geoJSON.features[0])
+			: undefined;
+	case "GeometryCollection":
+		return geoJSON.geometries.length === 1
+			? findSingleGeometry(geoJSON.geometries[0])
+			: undefined;
+	case "Feature":
+		return findSingleGeometry(geoJSON.geometry);
+	case undefined:
+		return undefined;
+	default:
+		return geoJSON && geoJSON.coordinates ? geoJSON : undefined;
+	}
+}
+
+export function getCenterAndRadiusFromGeometry(geometry) {
+	const singleGeometry = findSingleGeometry(geometry);
+	if (!singleGeometry) {
+		return {};
+	}
+	let center, radius;
+	if (singleGeometry && singleGeometry.type === "Point") {
+		center = singleGeometry.coordinates.slice(0).reverse();
+		radius = singleGeometry.radius;
+	} else {
+		const bounds = new L.GeoJSON(anyToFeatureCollection(geometry)).getBounds();
+		center = bounds.getCenter();
+		radius = bounds.getSouthWest().distanceTo(bounds.getSouthEast()) / 2;
+	}
+	return {center, radius};
+}
+
 @BaseComponent
 export default class MapField extends Component {
 	static propTypes = {
@@ -149,34 +186,7 @@ export default class MapField extends Component {
 		let mobileEditorOptions = isObject(mobileEditor) ? mobileEditor : {};
 		const geometry = this.getGeometry(this.props);
 		if (geometry) {
-			const findSingleGeometry = geoJSON => {
-				switch (geoJSON.type) {
-				case "FeatureCollection":
-					return geoJSON.features.length === 1
-						? findSingleGeometry(geoJSON.features[0])
-						: undefined;
-				case "GeometryCollection":
-					return geoJSON.geometries.length === 1
-						? findSingleGeometry(geoJSON.geometries[0])
-						: undefined;
-				case "Feature":
-					return findSingleGeometry(geoJSON.geometry);
-				case undefined:
-					return undefined;
-				default:
-					return geoJSON && geoJSON.coordinates ? geoJSON : undefined;
-				}
-			};
-			const singleGeometry = findSingleGeometry(geometry);
-			let center, radius;
-			if (singleGeometry && singleGeometry.type === "Point") {
-				center = singleGeometry.coordinates.slice(0).reverse();
-				radius = singleGeometry.radius;
-			} else {
-				const bounds = new L.GeoJSON(anyToFeatureCollection(geometry)).getBounds();
-				center = bounds.getCenter();
-				radius = bounds.getSouthWest().distanceTo(bounds.getSouthEast()) / 2;
-			}
+			const {center, radius} = getCenterAndRadiusFromGeometry(geometry);
 			mobileEditorOptions = {
 				center,
 				radius

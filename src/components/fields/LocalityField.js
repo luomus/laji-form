@@ -5,6 +5,7 @@ import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
 import { Row, Col, Panel, Modal } from "react-bootstrap";
 import LajiForm from "../LajiForm";
+import { getCenterAndRadiusFromGeometry } from "./MapField";
 
 @BaseComponent
 export default class LocalityField extends Component {
@@ -22,9 +23,14 @@ export default class LocalityField extends Component {
 	}
 
 	render() {
-		const {radius} = getUiOptions(this.props.uiSchema);
+		const {radius: _radius, geometry} = getUiOptions(this.props.uiSchema);
 		const fields = Object.keys(this.props.schema.properties);
 		const values = fields.filter(s => !isEmptyString(this.props.formData[s])).map(f => this.props.formData[f]);
+		const radius = typeof _radius === "number"
+			? _radius
+			: geometry
+				? getCenterAndRadiusFromGeometry(geometry).radius
+				: undefined
 		if (typeof radius === "number") {
 			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
 		}
@@ -58,6 +64,7 @@ export default class LocalityField extends Component {
 	}
 
 	renderModal = () => {
+		const {onChange, ...props} = this.props; // eslint-disable-line no-unused-vars
 		return (
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideEditor}>
 				<Modal.Header closeButton={true}>
@@ -65,7 +72,7 @@ export default class LocalityField extends Component {
 				<Modal.Body>
 					<LajiForm 
 						ref={this.setFormRef}
-						{...this.props}
+						{...props}
 						uiSchema={getInnerUiSchema(this.props.uiSchema)}
 						onSubmit={this.onSubmit}
 						lang={this.props.formContext.lang}
