@@ -39,7 +39,6 @@ export default class ImageArrayField extends Component {
 							cancel: PropTypes.string
 						})
 					})
-
 				]),
 				autoOpenImageAddModal: PropTypes.bool,
 				autoOpenMetadataModal: PropTypes.bool
@@ -62,7 +61,7 @@ export default class ImageArrayField extends Component {
 		this.mainContext = this.getContext();
 		this.state = {};
 		const options = getUiOptions(props.uiSchema);
-		if (options.imageAddModal && options.autoOpenImageAddModal) {
+		if (options.imageAddModal && options.autoOpenImageAddModal && (props.formData).length === 0) {
 			this.state.imageAddModal = options.imageAddModal; // eslint-disable-line react/no-direct-mutation-state
 		}
 	}

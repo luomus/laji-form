@@ -48,7 +48,6 @@ export default class MapField extends Component {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
 			if (geometry) {
 				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
-				this.map.setCenter(geometry.coordinates.slice(0).reverse());
 			} else {
 				this.setState({locateOn: true});
 			}
@@ -295,14 +294,13 @@ export default class MapField extends Component {
 
 	onLocate = (latlng, radius, forceShow) => {
 		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
-		const {formData} = this.props;
-		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
+		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
 			this.located = true;
 			return;
 		}
 		if (mobileEditor) {
-			(!this.located || forceShow) && this.setState({mobileEditor: {center: latlng, radius}});
+			((!this.located || forceShow)) && this.setState({mobileEditor: {center: latlng, radius}});
 			this.located = true;
 			return;
 		}
@@ -446,16 +444,13 @@ class MobileEditorMap extends Component {
 	}
 
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, zoom, center, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
 		const {userLocation} = this.props;
 
 		options = {...options, ...this.state.mapOptions};
 
-		if (userLocation) {
-			options.locate = [undefined, undefined, userLocation];
-		}
 		options.locate = {
-			on: !!userLocation,
+			on: false,
 			userLocation,
 			onLocationFound: this.onLocate
 		};
