@@ -223,6 +223,8 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 }
 
 export function focusNextInput(...params) {
+	const width = pixelsToBsSize(window.outerWidth);
+	if (width === "xs") return false;
 	const field = getNextInput(...params);
 	if (field) {
 		field.focus();

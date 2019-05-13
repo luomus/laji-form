@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
@@ -535,8 +536,8 @@ export class Autosuggest extends Component {
 	}
 
 	onKeyDown = (e) => {
-		if (this.props.controlledValue && e.key === "Enter" && this.props.allowNonsuggestedValue && !this.state.loading && !isEmptyString(this.state.value)) {
-			this.selectUnsuggested(this.state.value);
+		if (e.key === "Enter") {
+			findDOMNode(this.inputElem).blur();
 		}
 
 		triggerParentComponent("onKeyDown", e, this.props.inputProps);
