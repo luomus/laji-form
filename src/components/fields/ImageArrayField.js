@@ -295,9 +295,9 @@ export default class ImageArrayField extends Component {
 				<Modal.Header closeButton={true}>
 				</Modal.Header>
 				<Modal.Body>
-					{[["camera", "TakeNewPhoto"], ["filesys", "SelectPhoto"]].map(([captureMethod, label]) =>
+					{[["environment", "TakeNewPhoto", "image/*"], ["filesystem", "SelectPhoto", "image/*, application/pdf"]].map(([captureMethod, label, accept]) =>
 						<DropZone key={captureMethod}
-						          accept="image/*, application/pdf"
+						          accept={accept}
 						          onDrop={this.onDrop}
 						          disabled={readonly || disabled}
 						>
