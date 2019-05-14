@@ -167,7 +167,7 @@ min-height: 20px;
 }
 
 .laji-form .form-group {
-	margin-bottom: 0;
+	margin-bottom: 5px;
 }
 .laji-form .form-group-padding-bottom {
 	margin-bottom: 6px;
@@ -195,7 +195,6 @@ min-height: 20px;
 	margin-bottom: 1px;
 	display: inline-block;
 	max-width: 100%;
-	margin-top: 5px;
 }
 .laji-form .leaflet-container label {
 	display: inherit;
@@ -270,6 +269,7 @@ min-height: 20px;
 	height: 100%;
 	overflow: hidden;
 	position: relative;
+	border: 1px solid #ddd;
 }
 .laji-form .laji-form-map-container .laji-form-popped {
 	position: absolute;
@@ -1396,4 +1396,9 @@ min-height: 20px;
 .laji-form .top-no-border-radius.panel {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
+	border-top: none;
+}
+
+.laji-form .clear-margin-above {
+	margin-top: -5px;
 }
