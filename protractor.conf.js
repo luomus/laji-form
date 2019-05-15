@@ -1,6 +1,6 @@
 // Firefox isn't run default since it has a bug with mousemove (See https://github.com/angular/protractor/issues/4715 )
 
-const [width, height] = [800, 600];
+const [width, height] = [800, 1000];
 const common = {
 	shardTestFiles: true,
 	maxInstances: 4
