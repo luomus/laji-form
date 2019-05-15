@@ -30,7 +30,7 @@ if (process.env.TEST_BROWSER === "chrome") {
 } else if (process.env.TEST_BROWSER === "firefox") {
 	multiCapabilities = [firefox];
 }
-if (process.env.NO_HEADLESS) multiCapabilities.forEach(capabilities => {
+if (process.env.HEADLESS && process.env.HEADLESS !== "true") multiCapabilities.forEach(capabilities => {
 	const options = [capabilities["chromeOptions"], capabilities["firefoxOptions"], capabilities["moz:firefoxOptions"]];
 	options.filter(o => o).forEach(_options => {
 		_options.args = _options.args.filter(a => a !== "--headless");
@@ -60,5 +60,4 @@ exports.config = {
 	plugins: [{
 		package: "protractor-console-plugin"
 	}]
-
 };

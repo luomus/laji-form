@@ -144,4 +144,4 @@ Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome yarn tes
 Option         | Default | Description
 ---------------|---------|-----------------------------------------------------------------------------------------------
 TEST_BROWSER   | -       | `chrome` or `firefox`. Tests are run for both by default.
-NO_HEADLESS    | `false` | Run the tests in a visible browser window if `true`.
+HEADLESS       | `true`  | Run the tests in a visible browser window if `true`.

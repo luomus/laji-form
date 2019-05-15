@@ -33,3 +33,29 @@ export async function removeUnit(gatheringIdx, unitIdx) {
 	return $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
 }
 
+
+const _mockGeo = (lat, lon) => `window.navigator.geolocation.getCurrentPosition =
+	function (success, error) {
+		success({
+			coords : {
+				latitude: ${lat},
+				longitude: ${lon}
+			}
+		})
+	}
+`;
+
+export const mockGeo = (lat, lon) => browser.executeScript(_mockGeo(lat, lon));
+
+const _mockGeoError = code => `window.navigator.geolocation.getCurrentPosition =
+	function (success, error) {
+		error({
+			code: ${code},
+			PERMISSION_DENIED: 1,
+			POSITION_UNAVAILABLE: 2,
+			TIMEOUT: 3
+		});
+	}
+`;
+
+export const mockGeoError = (code) => browser.executeScript(_mockGeoError(code));

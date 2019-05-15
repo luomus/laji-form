@@ -68,7 +68,7 @@ export default class MapField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {located: false};
 	}
 
 	componentDidMount() {
@@ -306,15 +306,14 @@ export default class MapField extends Component {
 		const {geometryCollection = true, mobileEditor, createOnLocate} = getUiOptions(this.props.uiSchema);
 		const isEmpty = !this.getGeometry(this.props);
 		if (!latlng || !isEmpty) {
-			this.located = true;
+			this.setState({located: true});
 			return;
 		}
 		if (mobileEditor) {
-			((!this.located || forceShow)) && this.setState({mobileEditor: {center: latlng, radius}});
-			this.located = true;
+			((!this.located || forceShow)) && this.setState({mobileEditor: {center: latlng, radius}, located: true});
 			return;
 		}
-		this.located = true;
+		this.setState({located: true});
 		if (createOnLocate) {
 			const geometry = {type: "Point", coordinates: [latlng.lng, latlng.lat]};
 			this.props.onChange(geometryCollection ? {type: "GeometryCollection", geometries: [geometry]} : geometry);
@@ -324,7 +323,7 @@ export default class MapField extends Component {
 	renderBlocker() {
 		const {blockBeforeLocation} = getUiOptions(this.props.uiSchema);
 		const geometry = this.getGeometry(this.props);
-		if (blockBeforeLocation && !this.located && !geometry) {
+		if (blockBeforeLocation && !this.state.located && !geometry) {
 			return (
 				<React.Fragment>
 					<div className="blocker" />

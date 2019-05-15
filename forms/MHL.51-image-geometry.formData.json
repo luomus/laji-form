@@ -1,0 +1,36 @@
+{
+  "gatheringEvent": {
+    "leg": [
+      "MA.308"
+    ],
+    "legPublic": true
+  },
+  "editors": [],
+  "secureLevel": "MX.secureLevelNone",
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          11.8791116666389,
+          43.4660116733137
+        ],
+        "radius": 100.69636111866727
+      },
+      "country": "Italy",
+      "municipality": "Arezzo",
+      "units": [
+        {
+          "images": [
+            "MM.95325"
+          ],
+          "informalTaxonGroups": [],
+          "identifications": [
+            {}
+          ],
+          "unitFact": {}
+        }
+      ]
+    }
+  ]
+}

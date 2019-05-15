@@ -291,7 +291,7 @@ export default class ImageArrayField extends Component {
 		if (!imageAddModal) return null;
 
 		return (
-			<Modal dialogClassName="laji-form" show={true} onHide={this.onHideImageAddModal}>
+			<Modal dialogClassName="laji-form image-add-modal" show={true} onHide={this.onHideImageAddModal}>
 				<Modal.Header closeButton={true}>
 				</Modal.Header>
 				<Modal.Body>
@@ -312,7 +312,7 @@ export default class ImageArrayField extends Component {
 							}}
 						</DropZone>
 					)}
-					<Button block onClick={this.onHideImageAddModal}>{cancel || translations.Cancel}</Button>
+					<Button className="cancel" block onClick={this.onHideImageAddModal}>{cancel || translations.Cancel}</Button>
 				</Modal.Body>
 			</Modal>
 		);
