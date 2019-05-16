@@ -1,7 +1,7 @@
 import React from "react";
 import { findDOMNode } from "react-dom";
 import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { Glyphicon }  from "react-bootstrap";
+import { Glyphicon }  from "./components/components";
 import Context from "./Context";
 import update from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";

@@ -8,8 +8,8 @@ import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+//import PanelHeading from "react-bootstrap/lib/PanelHeading";
+//import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch, Fullscreen } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPath } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
@@ -1767,7 +1767,7 @@ export class MapComponent extends Component {
 
 		const controlledPanel = panel ?
 			<MapPanel id={panel.id}
-			          bsStyle={panel.bsStyle || undefined}
+			          variant={panel.bsStyle || undefined}
 			          buttonBsStyle={panel.buttonBsStyle}
 			          header={panel.header}
 			          text={panel.panelTextContent} />
@@ -1976,19 +1976,19 @@ export class Map extends Component {
 class MapPanel extends Component {
 	render() {
 		return (
-				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
+				<Panel variant={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
 					{this.props.header ? (
-						<PanelHeading>
+						<Panel.Heading>
 							{this.props.header}
-						</PanelHeading>
+						</Panel.Heading>
 					) : null}
-					<PanelBody>
+					<Panel.Body>
 						{this.props.text}
 						{this.props.buttonText ?
-							<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+							<Button variant={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 							null
 						}
-					</PanelBody>
+					</Panel.Body>
 				</Panel>
 		);
 	}

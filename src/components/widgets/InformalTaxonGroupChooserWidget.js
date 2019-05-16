@@ -248,7 +248,7 @@ export class InformalTaxonGroupChooser extends Component {
 			</ListGroupItem>
 		) : (
 			<Col key={id} {...grid}>
-				<Panel header={this.getLabel(id)} onClick={this.onSelected(id)} bsStyle={id === activeId ? "primary" : undefined}>
+				<Panel header={this.getLabel(id)} onClick={this.onSelected(id)} variant={id === activeId ? "primary" : undefined}>
 					<div className={`informal-group-image ${id}`} />
 				</Panel>
 			</Col>

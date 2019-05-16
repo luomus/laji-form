@@ -390,7 +390,7 @@ export default class ScopeField extends Component {
 		return (
 			<div key="scope-additionals-dropdown">
 				<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
-				          bsStyle="primary"
+				          variant="primary"
 				          pullRight
 				          open={this.state.additionalsOpen}
 				          onSelect={onSelect}
@@ -508,7 +508,7 @@ export default class ScopeField extends Component {
 						<OverlayTrigger key={property} overlay={tooltip} placement="left">
 							<GlyphButton glyph={glyph}
 													 disabled={hasData}
-													 bsStyle={isIncluded ? "primary" : "default"}
+													 variant={isIncluded ? "primary" : "default"}
 													 onClick={onButtonClick}
 							/>
 						</OverlayTrigger>

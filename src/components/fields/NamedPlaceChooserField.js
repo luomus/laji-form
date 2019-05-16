@@ -166,7 +166,7 @@ export default class NamedPlaceChooserField extends Component {
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
 							<Modal.Body>
-								{failed && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
+								{failed && <Alert variant="danger">{translations.NamedPlacesUseFail}</Alert>}
 								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} />
 							</Modal.Body>
 						</Modal>
@@ -279,7 +279,7 @@ class NamedPlaceChooser extends Component {
 		}
 
 		if (failed) {
-			return <Alert bsStyle="danger">{`${translations.NamedPlacesFetchFail} ${translations.TryAgainLater}`}</Alert>;
+			return <Alert variant="danger">{`${translations.NamedPlacesFetchFail} ${translations.TryAgainLater}`}</Alert>;
 		} else {
 			const enums = (places || []).map((place, idx) => {
 				return {value: idx, label: place.name};

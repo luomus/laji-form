@@ -4,9 +4,9 @@ import update from "immutability-helper";
 import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
-import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
+import { Modal, Row, Col, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
-import { DeleteButton, Alert as PopupAlert, Button } from "../components";
+import { DeleteButton, Alert as PopupAlert, Button, Glyphicon } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer  } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -125,6 +125,7 @@ export default class ImageArrayField extends Component {
 
 		const {dragging} = this.state;
 
+		return null;
 		return (
 			<Row>
 				<Col xs={12}>
@@ -236,7 +237,9 @@ export default class ImageArrayField extends Component {
 
 		return typeof metadataModalOpen === "number" ?
 			<Modal dialogClassName="laji-form image-modal" show={true}
-			       onHide={this.hideMetadataModal}>
+				onHide={this.hideMetadataModal}
+				ref={this.setModalRef}
+			>
 				<Modal.Header closeButton={true}>
 					<br />
 					<Pager>
@@ -259,7 +262,7 @@ export default class ImageArrayField extends Component {
 								lang={lang}
 								showShortcutButton={false}>
 								{(metadataSaveSuccess !== undefined) ? (
-										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
+										<Alert variant={metadataSaveSuccess ? "success" : "danger"}>
 											{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
 										</Alert>
 									) : null

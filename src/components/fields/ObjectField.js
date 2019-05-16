@@ -190,7 +190,7 @@ function getClassNames(props, buttons) {
 		containerClassName = "laji-form-field-template-item" + (vertical ? " keep-vertical" : "");
 		schemaClassName = "laji-form-field-template-schema";
 		buttonsClassName = "laji-form-field-template-buttons";
-		if (props.title) buttonsClassName += " pull-right";
+		if (props.title) buttonsClassName += " float-right";
 	}
 	return {containerClassName, schemaClassName, buttonsClassName};
 }

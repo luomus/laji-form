@@ -3,8 +3,8 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+//import PanelHeading from "react-bootstrap/lib/PanelHeading";
+//import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
@@ -455,7 +455,7 @@ class AccordionArrayFieldTemplate extends Component {
 					<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
 						disabled={disabled || readonly}
 						ref={this.setDeleteButtonRef(idx)}
-						className="pull-right"
+						className="float-right"
 						confirm={confirmDelete}
 						translations={translations}
 						onClick={that.onDelete(idx, item)} />
@@ -482,15 +482,15 @@ class AccordionArrayFieldTemplate extends Component {
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
-									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
-							<PanelHeading>
+									 variant={that.props.errorSchema[idx] ? "danger" : "default"}>
+							<Panel.Heading>
 								{getHeader(item, idx)}
-							</PanelHeading>
+							</Panel.Heading>
 							{idx === activeIdx ? (
-								<PanelBody>
+								<Panel.Body>
 									{item.children}
-									{closeButton ? <Button onClick={onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
-								</PanelBody>
+									{closeButton ? <Button onClick={onSelect} bsSize="small" className="float-right">{translations.Close}</Button> : null}
+								</Panel.Body>
 							) : null}
 						</Panel>
 					))}
@@ -561,15 +561,15 @@ class PagerArrayFieldTemplate extends Component {
 		return (
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
 				<Panel className="laji-form-panel">
-					<PanelHeading>
+					<Panel.Heading>
 							{header}
-					</PanelHeading>
-					<PanelBody>
+					</Panel.Heading>
+					<Panel.Body>
 						<div key={activeIdx}>
 							{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
 						</div>
 						{getButtonElems(buttons, arrayTemplateFieldProps)}
-					</PanelBody>
+					</Panel.Body>
 				</Panel>
 			</div>
 		);

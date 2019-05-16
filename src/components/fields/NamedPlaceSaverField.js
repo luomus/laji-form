@@ -229,7 +229,7 @@ class PlaceSaverDialog extends Component {
 		};
 
 		return this.state.failed ? (
-			<Alert bsStyle="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
+			<Alert variant="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
 		): (
 			<div className="place-saver-dialog">
 				<Form inline onSubmit={this.onSubmit}>
@@ -246,10 +246,10 @@ class PlaceSaverDialog extends Component {
 						{existingPlaces.length === 1 && !this.props.gathering.namedPlaceID ? 
 								getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
 					</FormGroup>
-					{loading ? <div className="pull-right"><Spinner /></div> : null}
+					{loading ? <div className="float-right"><Spinner /></div> : null}
 				</Form>
 				{!this.props.gathering.namedPlaceID && existingPlaces.length ?
-					<Alert bsStyle="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple} ${translations.or} ${translations.saveCurrentOverwrite}.` : ""}`}</Alert>
+					<Alert variant="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple} ${translations.or} ${translations.saveCurrentOverwrite}.` : ""}`}</Alert>
 					: null}
 				{existingPlaces.length > 1 ? (
 					<FormGroup>

@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent } from "./components";
-import { Panel, Table } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
+import { Card, Table } from "react-bootstrap";
+//import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
@@ -382,7 +382,7 @@ export default class LajiForm extends Component {
 		this._context.formData = formData;
 	}
 
-	getRef = form => {this.formRef = form;}
+	getRef = form => {this.formRef = form; console.log(form)}
 
 	getBlockerRef = elem => {this.blockingLoaderRef = elem;}
 
@@ -402,7 +402,7 @@ export default class LajiForm extends Component {
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
 				{this.props.showShortcutButton !== false && shortcuts && (
 					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
-						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
+						<Button variant={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 					</TooltipComponent>
 				)}
 				<Form
@@ -433,15 +433,15 @@ export default class LajiForm extends Component {
 					</div>
 			</Form>
 			{shortcuts ? 
-				<Panel 
+				<Card 
 					ref={this.getPanelRef} 
 					className="shortcut-help laji-form-popped z-depth-3 hidden" 
 					style={{bottom: (this.props.bottomOffset || 0) + 5}}
-					bsStyle="info" 
+					variant="info" 
 				>
-					<PanelHeading>
-						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-					</PanelHeading>
+					<Card.Header>
+						<h3>{translations.Shortcuts}<button type="button" className="close float-right" onClick={this.dismissHelp}>×</button></h3>
+					</Card.Header>
 						<Table>
 							<tbody className="well">{
 								Object.keys(shortcuts).map((keyCombo, idx) => {
@@ -459,7 +459,7 @@ export default class LajiForm extends Component {
 								})
 							}</tbody>
 						</Table>
-				</Panel> 
+				</Card> 
 			: null}
 		</div>
 		);

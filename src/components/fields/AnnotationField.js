@@ -240,7 +240,7 @@ class AnnotationBox extends Component {
 			>
 				{<div>
 					{this.state.fail !== undefined && 
-							<Alert bsStyle={this.state.fail ? "danger" : "success"}>
+							<Alert variant={this.state.fail ? "danger" : "success"}>
 								{translations[this.state.fail ? "SaveFail" : "SaveSuccess"]}
 							</Alert>
 					}
@@ -301,7 +301,7 @@ class AnnotationBox extends Component {
 					) : <Spinner />}
 				</ListGroup>
 				{this.state.deleteFail &&
-					<Alert bsStyle={"danger"}>
+					<Alert variant={"danger"}>
 						{translations["DeleteFail"]}
 					</Alert>
 				}

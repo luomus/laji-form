@@ -3,10 +3,10 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
 import ApiClient from "../../ApiClient";
-import { Glyphicon, Popover, InputGroup, Tooltip, Modal } from "react-bootstrap";
+import { Popover, InputGroup, Tooltip, Modal } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
-import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
+import { Glyphicon, FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 import Thumbnail from "../fields/ImageArrayField";
@@ -750,9 +750,9 @@ export class Autosuggest extends Component {
 		const toggler = onToggle && this.state.focused
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} >
-					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
+					<InputGroup.Append className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
 						<Glyphicon glyph="flash"/>
-				</InputGroup.Addon>
+				</InputGroup.Append>
 				</TooltipComponent>
 			) : null;
 
@@ -949,9 +949,9 @@ class InformalTaxonGroupsAddon extends Component {
 	render() {
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} tabIndex={0}>
+				<InputGroup.Append className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} tabIndex={0}>
 					{this.renderGlyph()}
-				</InputGroup.Addon>
+				</InputGroup.Append>
 			</TooltipComponent>
 		);
 	}

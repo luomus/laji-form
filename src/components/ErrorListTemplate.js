@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Button, ErrorPanel } from "./components";
-import { Glyphicon } from "react-bootstrap";
+import { Button, ErrorPanel, Glyphicon } from "./components";
+import { Card } from "react-bootstrap";
 import { parseJSONPointer, formatErrorMessage } from "../utils";
 import Context from "../Context";
 
@@ -88,7 +88,8 @@ export default class ErrorListTemplate extends Component {
 							clickHandler={clickHandler}
 							showToggle={errors.length === 0}
 							poppedToggle={poppedToggle}/>
-				<div className="panel-footer">
+				<Card>
+				<Card.Footer>
 					<div>
 					 {errors.length > 0 ?
 							<Button onClick={revalidate}><Glyphicon glyph="refresh"/>
@@ -97,7 +98,8 @@ export default class ErrorListTemplate extends Component {
 							<Button onClick={submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
 						}
 					</div>
-				</div>
+				</Card.Footer>
+			</Card>
 			</div>
 		);
 	}

@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
-import { Row, Col, Panel, Modal } from "react-bootstrap";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+import { Row, Col, Card, Modal } from "react-bootstrap";
+//import PanelBody from "react-bootstrap/lib/PanelBody";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 
@@ -36,19 +36,17 @@ export default class LocalityField extends Component {
 			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
 		}
 		return (
-			<Row>
-				<Col xs={12}>
-					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
-						<PanelBody>
-								{values.map((v, i) => (
-								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
-							))}
-							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
-						</PanelBody>
-					</Panel>
-				</Col>
+			<React.Fragment>
+				<Card className={getUiOptions(this.props.uiSchema).panelClassName}>
+					<Card.Text>
+							{values.map((v, i) => (
+							<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
+						))}
+						<GlyphButton onClick={this.showEditor} glyph="pencil" variant="default" className="float-right"/>
+					</Card.Text>
+				</Card>
 				{this.state.modal && this.renderModal()}
-			</Row>
+			</React.Fragment>
 		);
 	}
 

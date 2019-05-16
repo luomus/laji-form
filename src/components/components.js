@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
+import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Modal, Row, Col, FormControl, Card, ListGroup, ListGroupItem, Collapse } from "react-bootstrap";
+//import PanelHeading from "react-bootstrap/lib/PanelHeading";
+//import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Spinner from "react-spinner";
 
 export class Button extends Component {
@@ -17,7 +17,7 @@ export class Button extends Component {
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
 				<_Button
-				bsStyle="primary"
+				variant="primary"
 				{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
@@ -99,7 +99,7 @@ export class DeleteButton extends Component {
 			<div className={props.className} style={this.props.style}>
 				<Button id={`${props.id}-delete`}
 				        disabled={disabled || readonly}
-				        bsStyle="danger"
+				        variant="danger"
 								className={buttonClassName}
 								ref="del"
 								onKeyDown={this.onButtonKeyDown}
@@ -110,10 +110,10 @@ export class DeleteButton extends Component {
 						<Popover id={`${this.props.id}-delete-confirm`}>
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>
+								<Button variant="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>
 									{translations.Remove}
 								</Button>
-								<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+								<Button variant="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
 									{translations.Cancel}
 								</Button>
 							</ButtonGroup>
@@ -150,14 +150,16 @@ export class Alert extends Component {
 	}
 }
 
+export const Glyphicon = ({glyph}) => <span className={`glyphicon glyphicon-${glyph}`} />;
+
 export const GlyphButton = (props) => {
 	const {glyph, ...buttonProps} = props;
 	return (
 		<Button {...buttonProps} 
 		        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
 			      tooltipPlacement={props.tooltipPlacement || "left"}>
-			<Glyphicon glyph={glyph} />
 			{props.children}
+		<Glyphicon glyph={glyph} />
 		</Button>
 	);
 };
@@ -461,20 +463,20 @@ export class ErrorPanel extends Component {
 		if (errors.length === 0) return null;
 
 		return (
-			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle}
+			<Card expanded={this.state.expanded} onToggle={this.collapseToggle}
 				   className={classNames}>
-				<PanelHeading>
+				<Card.Header>
 					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 						   <div className="panel-title">
 							   {title}
-							   <span className="pull-right">
-								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
-								   {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
+							   <span className="float-right">
+								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} variant="link" />
+								   {showToggle ? <GlyphButton glyph="new-window" variant="link" onClick={poppedToggle} /> : null}
 							   </span>
 						   </div>
 					   </div>
-				</PanelHeading>
-				<PanelCollapse>
+				</Card.Header>
+				<Collapse in={this.state.expanded}>
 					<ListGroup>
 						{errors.map(({label, error, id}, i) =>  {
 							const _clickHandler = () => clickHandler(id);
@@ -485,14 +487,16 @@ export class ErrorPanel extends Component {
 							);
 						})}
 					</ListGroup>
-				</PanelCollapse>
-			</Panel>
+				</Collapse>
+			</Card>
 		);
 	}
 }
 
-function NullTooltip() {
-	return <div />;
+class NullTooltip extends Component {
+	render() {
+		return <div />;
+	}
 }
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
@@ -507,7 +511,7 @@ export class TooltipComponent extends Component {
 		const {tooltip, children, id, placement, trigger} = this.props;
 
 		const overlay = (
-			<_OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
+			<_OverlayTrigger placement={placement} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
 			}>
 				{children}
@@ -515,7 +519,7 @@ export class TooltipComponent extends Component {
 		);
 
 		return (trigger === "hover") ? (
-			<div onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
+			<div>
 				{overlay}
 			</div>
 		) : overlay;
