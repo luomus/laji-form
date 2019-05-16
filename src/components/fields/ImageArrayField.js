@@ -125,7 +125,6 @@ export default class ImageArrayField extends Component {
 
 		const {dragging} = this.state;
 
-		return null;
 		return (
 			<Row>
 				<Col xs={12}>
