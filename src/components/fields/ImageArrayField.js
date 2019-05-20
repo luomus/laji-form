@@ -355,7 +355,7 @@ export default class ImageArrayField extends Component {
 							const datum = typeof rawDatum === "string"
 								? rawDatum.trim().toUpperCase()
 								: undefined;
-							if ((datum === "WGS-84" || datum === "WGS84") && validateLatLng(coordinates, wgs84Validator)) {
+							if ((!datum || datum === "WGS-84" || datum === "WGS84") && validateLatLng(coordinates, wgs84Validator)) {
 								found.geometry = {
 									type: "Point",
 									coordinates
