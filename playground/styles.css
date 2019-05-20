@@ -1382,7 +1382,7 @@ min-height: 20px;
 }
 
 .laji-form .floating-buttons-container {
-	bottom: 5%;
+	bottom: 10%;
 	position: absolute;
 	z-index: 1;
 	left: 50%;
