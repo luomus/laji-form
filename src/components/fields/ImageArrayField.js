@@ -312,7 +312,7 @@ export default class ImageArrayField extends Component {
 							}}
 						</DropZone>
 					)}
-					<Button className="cancel" block onClick={this.onHideImageAddModal}>{cancel || translations.Cancel}</Button>
+					<Button className="cancel" block onClick={this.onHideImageAddModal}>{cancel || translations.NoPhoto}</Button>
 				</Modal.Body>
 			</Modal>
 		);

@@ -653,5 +653,10 @@
 		fi: "tai kirjoita lajinimi",
 		en: "Or write species name",
 		sv: "eller skriv artnamn"
+	},
+	noPhoto: {
+		fi: "Ei kuvaa",
+		en: "No photo",
+		sv: "Inget foto"
 	}
 };
