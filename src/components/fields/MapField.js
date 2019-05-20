@@ -137,7 +137,7 @@ export default class MapField extends Component {
 	}
 
 	showMobileEditorMap = () => {
-		this.setState({mobileEditor: true});
+		this.setState({mobileEditor: {visible: true, options: this.state.mobileEditor.options || {}}});
 	}
 
 	render() {
@@ -213,8 +213,9 @@ export default class MapField extends Component {
 								{this.renderBlocker()}
 						</div>
 					</Affix>
-						{this.state.mapRendered && mobileEditor &&
+						{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
 								<MobileEditorMap {...mobileEditorOptions}
+									options={mobileEditor.options}
 									onChange={this.onMobileEditorChange}
 									onClose={this.onHideMobileEditorMap}
 									map={this.map}
@@ -298,8 +299,8 @@ export default class MapField extends Component {
 		}
 	}
 
-	onHideMobileEditorMap = () => {
-		this.setState({mobileEditor: false});
+	onHideMobileEditorMap = (options) => {
+		this.setState({mobileEditor: {visible: false, options}});
 	}
 
 	onLocate = (latlng, radius, forceShow) => {
@@ -310,7 +311,17 @@ export default class MapField extends Component {
 			return;
 		}
 		if (mobileEditor) {
-			((!this.located || forceShow)) && this.setState({mobileEditor: {center: latlng, radius}, located: true});
+			if (!this.located || forceShow) {
+				this.setState({
+					mobileEditor: {
+						visible: true,
+						center: latlng,
+						radius,
+						options: (this.state.mobileEditor || {}).options || {}
+					},
+					located: true
+				});
+			}
 			return;
 		}
 		this.setState({located: true});
@@ -389,7 +400,7 @@ class MobileEditorMap extends Component {
 			coordinates: [centerLatLng.lng, centerLatLng.lat],
 			radius
 		});
-		this.props.onClose();
+		this.onClose();
 	}
 
 	computePadding = () => {
@@ -436,7 +447,7 @@ class MobileEditorMap extends Component {
 
 	onKeyDown = ({key}) => {
 		if (key === "Escape") {
-			this.props.onClose();
+			this.onClose();
 		}
 	}
 
@@ -457,7 +468,8 @@ class MobileEditorMap extends Component {
 		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
 		const {userLocation} = this.props;
 
-		options = {...options, ...this.state.mapOptions};
+		
+		options = {...options, ...(this.props.options || {}), ...this.state.mapOptions};
 
 		options.locate = {
 			on: false,
@@ -471,6 +483,7 @@ class MobileEditorMap extends Component {
 			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef}>
 				<MapComponent
 					{...options}
+					singleton={true}
 					clickBeforeZoomAndPan={false}
 					viewLocked={false}
 					controls={{draw: false}}
@@ -480,9 +493,13 @@ class MobileEditorMap extends Component {
 				{this.state.mapRendered && createPortal(this.getCircle(this.DEFAULT_RADIUS_PIXELS), this.map.container)}
 				<div className="floating-buttons-container">
 					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.SetLocation}</Button>
-					<Button block onClick={this.props.onClose}>{translations.Cancel}</Button>
+					<Button block onClick={this.onClose}>{translations.Cancel}</Button>
 				</div>
 			</Fullscreen>
 		);
+	}
+
+	onClose = () => {
+		this.props.onClose(this.map.getOptions());
 	}
 }

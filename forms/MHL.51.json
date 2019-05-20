@@ -233,7 +233,6 @@
                         "geometryCollection": false,
                         "mapOptions": {
                             "clickBeforeZoomAndPan": true,
-                            "singleton": true,
                             "zoomToData": true
                         },
                         "mobileEditor": true
