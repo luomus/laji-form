@@ -1402,3 +1402,10 @@ min-height: 20px;
 .laji-form .clear-margin-above {
 	margin-top: -5px;
 }
+
+.laji-form.image-add-modal button {
+	margin-bottom: 12px;
+}
+.laji-form.image-add-modal .modal-body > *:last-child {
+	margin-bottom: inherit;
+}
