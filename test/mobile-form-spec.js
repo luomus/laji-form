@@ -107,4 +107,19 @@ describe("Mobile form (MHL.51)", () => {
 		});
 
 	});
+
+	describe("with formData without image and edit mode", () => {
+		it("navigate to form", async () => {
+			await navigateToForm("MHL.51", "&localFormData=MHL.51-geometry&edit=true");
+		});
+
+		it("is displayed", async () => {
+			await expect($(".laji-form form").isPresent()).toBe(true);
+		});
+
+		it("image add modal isn't displayed", async () => {
+			await expect($imageAddModal.isPresent()).toBe(false);
+		});
+
+	});
 });
