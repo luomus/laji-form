@@ -1797,6 +1797,7 @@ export class MapComponent extends Component {
 
 export class Map extends Component {
 	static defaultProps = {
+		tileLayerName: "maastokartta",
 		availableTileLayerNamesBlacklist: ["pohjakartta"]
 	};
 

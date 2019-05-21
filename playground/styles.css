@@ -1382,7 +1382,7 @@ min-height: 20px;
 }
 
 .laji-form .floating-buttons-container {
-	bottom: 5%;
+	bottom: 10%;
 	position: absolute;
 	z-index: 1;
 	left: 50%;
@@ -1401,6 +1401,13 @@ min-height: 20px;
 
 .laji-form .clear-margin-above {
 	margin-top: -5px;
+}
+
+.laji-form.image-add-modal button {
+	margin-bottom: 12px;
+}
+.laji-form.image-add-modal .modal-body > *:last-child {
+	margin-bottom: inherit;
 }
 
 .laji-form .valid-feedback {

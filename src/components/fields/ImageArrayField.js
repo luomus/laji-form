@@ -61,7 +61,11 @@ export default class ImageArrayField extends Component {
 		this.mainContext = this.getContext();
 		this.state = {};
 		const options = getUiOptions(props.uiSchema);
-		if (options.imageAddModal && options.autoOpenImageAddModal && (props.formData).length === 0) {
+		if (options.imageAddModal
+			&& options.autoOpenImageAddModal
+			&& (props.formData).length === 0
+			&& !props.formContext.uiSchemaContext.isEdit
+		) {
 			this.state.imageAddModal = options.imageAddModal; // eslint-disable-line react/no-direct-mutation-state
 		}
 	}
@@ -314,7 +318,7 @@ export default class ImageArrayField extends Component {
 							}}
 						</DropZone>
 					)}
-					<Button className="cancel" block onClick={this.onHideImageAddModal}>{cancel || translations.Cancel}</Button>
+					<Button className="cancel" block onClick={this.onHideImageAddModal}>{cancel || translations.NoPhoto}</Button>
 				</Modal.Body>
 			</Modal>
 		);
@@ -353,7 +357,7 @@ export default class ImageArrayField extends Component {
 							const datum = typeof rawDatum === "string"
 								? rawDatum.trim().toUpperCase()
 								: undefined;
-							if ((datum === "WGS-84" || datum === "WGS84") && validateLatLng(coordinates, wgs84Validator)) {
+							if ((!datum || datum === "WGS-84" || datum === "WGS84") && validateLatLng(coordinates, wgs84Validator)) {
 								found.geometry = {
 									type: "Point",
 									coordinates

@@ -352,6 +352,13 @@ export default class LajiForm extends Component {
 		document.body.removeChild(this.blockingLoaderRef);
 	}
 
+	componentDidCatch(e, i) {
+		this.setState({error: true});
+		if (this.props.onError) {
+			this.props.onError(e, i);
+		}
+	}
+
 	constructTranslations = () => {
 		let dictionaries = {};
 		for (let word in translations) {
@@ -391,6 +398,7 @@ export default class LajiForm extends Component {
 	getFormRef = () => this.formRef
 
 	render() {
+		if (this.state.error) return null;
 		const {translations} = this.state;
 		const {
 			"ui:shortcuts": shortcuts,
