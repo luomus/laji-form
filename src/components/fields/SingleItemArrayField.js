@@ -24,7 +24,6 @@ export default class SingleItemArrayField extends Component {
 				"ui:field": "SingleActiveArrayField",
 				"ui:options": {
 					activeIdx: 0,
-					renderTitleAsLabel: true,
 					...getUiOptions(props.uiSchema),
 					renderer: "uncontrolled",
 					addable: false
