@@ -826,7 +826,7 @@ class TableArrayFieldTemplate extends Component {
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
-							{items.length !== 1 || that.state.activeIdx !== 0 ? (
+								{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
 								<thead ref={this.setTHeadRef}>
 										<tr className="darker">
 											{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
