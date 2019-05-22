@@ -147,7 +147,9 @@ function TaxonAutosuggest(ComposedComponent) {
 			return (
 				<React.Fragment>
 					<div className="laji-form-images">
-						{chooseImages.map(taxonID => <TaxonImgChooser id={taxonID} key={taxonID} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
+							{chooseImages
+									.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj)
+									.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
 					</div>
 					<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
 				</React.Fragment>
@@ -972,8 +974,8 @@ class TaxonImgChooser extends Component {
 				const [media] = taxon.multimedia;
 				this.setState({
 					taxon: taxon,
-					thumbnail: media.squareThumbnailURL || media.thumbnailURL,
-					large: media.largeURL
+					thumbnail: this.props.url || media.squareThumbnailURL || media.thumbnailURL,
+					large: this.props.url || media.largeURL
 				});
 			} else {
 				this.setState({taxon});
