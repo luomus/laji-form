@@ -219,35 +219,42 @@ class LocationButton extends Component {
 			} = {}
 		} = getUiOptions(that.props.uiSchema);
 
-		this.setState({
-			modalMap: {
-				...mapOptions,
-				data,
+		const modalMap = {
+			...mapOptions,
+			data,
+			draw: {
+				...draw,
+				marker,
+				polyline,
+				rectangle,
+				polygon,
+				circle,
+				onChange: this.onChange,
+				editable: !readonly && !disabled,
+			},
+			controls: {
+				...mapOptions.controls,
 				draw: {
-					...draw,
-					marker,
-					polyline,
-					rectangle,
-					polygon,
-					circle,
-					onChange: this.onChange,
-					editable: !readonly && !disabled,
-				},
-				controls: {
-					...mapOptions.controls,
-					draw: {
-						...((mapOptions.controls || {}).draw || {}),
-						clear: false,
-						delete: false
-					}
-				},
-				fullscreenable: true,
-				center,
-				zoom,
-				zoomToData: draw ? {draw: true} : true,
-				clickBeforeZoomAndPan: false,
-				onComponentDidMount: this.onMapMounted
-			}
+					...((mapOptions.controls || {}).draw || {}),
+					clear: false,
+					delete: false
+				}
+			},
+			fullscreenable: true,
+			zoomToData: draw ? {draw: true} : true,
+			clickBeforeZoomAndPan: false,
+			onComponentDidMount: this.onMapMounted
+		};
+
+		if (center) {
+			modalMap.center = center;
+		}
+		if (zoom) {
+			modalMap.zoom = zoom;
+		}
+
+		this.setState({
+			modalMap
 		});
 	}
 
