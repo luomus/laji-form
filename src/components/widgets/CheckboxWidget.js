@@ -90,9 +90,9 @@ export default class CheckboxWidget extends Component {
 		const checkbox = allowUndefined || value === undefined ? (
 			<ButtonToolbar className="tristate-buttons">
 				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButton value={true}>{Yes}</ToggleButton>
-					<ToggleButton value={false}>{No}</ToggleButton>
-					<ToggleButton value={"undefined"}>{Unknown}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={true}>{Yes}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={false}>{No}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={"undefined"}>{Unknown}</ToggleButton>
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		) : (
