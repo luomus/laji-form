@@ -39,6 +39,6 @@ export default class SingleItemArrayField extends Component {
 	}
 
 	onChange(formData) {
-		this.props.onChange([formData]);
+		this.props.onChange(isMultiSelect(this.props.schema, this.props.registry.definitions) ? [formData] : formData);
 	}
 }
