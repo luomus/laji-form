@@ -15,7 +15,7 @@ function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
+	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
 		<ButtonToolbar key={`buttons-${pos}`}>
 			{getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "right")}
 		</ButtonToolbar>
@@ -45,7 +45,13 @@ function ObjectFieldTemplate(props) {
 						description={props.description}
 						formContext={props.formContext}
 					/>}
+				<div className="pull-left">
+					{leftButtons}
+				</div>
 				{props.properties.map(({content}) => content)}
+				<div className="pull-right">
+					{rightButtons}
+				</div>
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : undefined}
@@ -120,7 +126,7 @@ function GridTemplate(props) {
 	let fieldTitle = _title || (title !== undefined ? title : props.name);
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
+	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
 		<ButtonToolbar key={`buttons-${pos}`}>
 			{getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "right")}
 		</ButtonToolbar>
@@ -140,11 +146,13 @@ function GridTemplate(props) {
 								help={uiSchema["ui:help"]}
 								id={idSchema.$id} /> : null}
 				{topButtons}
+				<div className="pull-left">{leftButtons}</div>
 				{rows.map((row, i) =>
 					<Row key={i}>
 						{row}
 					</Row>
 				)}
+				<div className="pull-right">{rightButtons}</div>
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : null}
