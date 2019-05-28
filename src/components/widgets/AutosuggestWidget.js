@@ -9,7 +9,6 @@ import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionari
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
-import Thumbnail from "../fields/ImageArrayField";
 
 function renderFlag(suggestion) {
 	return (suggestion && suggestion.payload || {}).finnish
@@ -1006,7 +1005,7 @@ class TaxonImgChooser extends Component {
 		const {translations} = this.props.formContext;
 		return (
 			<React.Fragment>
-				<div className="taxon-img img-container" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
+				<div className="taxon-img img-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
 						{!taxon && <div className="image-loading"><Spinner /></div>}
 						{thumbnail || !taxon ? "" : taxon.vernacularName}
 				</div>
