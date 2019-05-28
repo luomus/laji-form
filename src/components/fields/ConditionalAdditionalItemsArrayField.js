@@ -35,12 +35,12 @@ export default class ConditionalAdditionalItemsArrayField extends Component {
 		formData: PropTypes.array.isRequired
 	}
 
-	static getName() {return  "ConditionalAdditionalItemsArrayField";}
+	static getName() {return "ConditionalAdditionalItemsArrayField";}
 
 	cache = {};
 
 	getStateFromProps(props) {
-		let {rules = [], itemsOperations, cache = true} = this.getUiOptions();
+		let {rules = [], itemsOperations, additionalItemsOperations, cache = true} = this.getUiOptions();
 
 		let items = [];
 		let additionalItems = [];
@@ -68,7 +68,9 @@ export default class ConditionalAdditionalItemsArrayField extends Component {
 
 		schema = update(schema, {additionalItems: {$set: itemSchema}});
 		const uiSchema = items.length
-			? update(props.uiSchema, {items: {$set: computeUiSchema(props.uiSchema.items, itemsOperations)}, additionalItems: {$set: props.uiSchema.items}} : props.uiSchema)
+			? update(props.uiSchema, {
+				items: {$set: computeUiSchema(props.uiSchema.items, itemsOperations)},
+				additionalItems: {$set: computeUiSchema(props.uiSchema.items, additionalItemsOperations)}} : props.uiSchema)
 			: props.uiSchema;
 		return {...props, schema, uiSchema, formData: [...items, ...additionalItems]};
 	}

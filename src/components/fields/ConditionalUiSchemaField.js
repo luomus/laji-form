@@ -111,6 +111,7 @@ export default class ConditionalUiSchemaField extends Component {
 }
 
 export const computeUiSchema = (uiSchema, operations) => {
+	if (!operations) return uiSchema;
 	return (Array.isArray(operations) ? operations : [operations]).reduce((_uiSchema, op) => {
 		switch (op.type) {
 		case "merge":
