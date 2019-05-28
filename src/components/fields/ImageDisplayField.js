@@ -11,9 +11,9 @@ export default class ImageDisplayField extends Component {
 		const {urls = [], buttons = []} = getUiOptions(this.props.uiSchema);
 		uiSchema = update(uiSchema, {"ui:options": {buttons: {$set: [...buttons, 
 			{position: "left", render: () => 
-			<div className="laji-form-images">
+			<div className="laji-form-images" key="image-display">
 				{(Array.isArray(urls) ? urls : [urls]).map(url => 
-					<div className="img-container">
+					<div className="img-container" key={url}>
 						<img src={url}></img>
 					</div>
 				)}
