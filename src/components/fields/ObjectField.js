@@ -2,7 +2,7 @@ import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
-import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
+import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
 import { Label } from "../components";
 
@@ -168,8 +168,8 @@ function getCols(props, schema, uiSchema, property) {
 	Object.keys(cols).forEach(col => {
 		const optionCol = options[col];
 		if (
-			!optionCol[property] &&
-			schema.type === "array"
+			(!isObject(optionCol) || !optionCol[property])
+			&& schema.type === "array"
 			&& !(
 				schema.items && schema.items.enum && isMultiSelect(schema, uiSchema)
 				|| uiField === "SingleItemArrayField"
@@ -179,7 +179,7 @@ function getCols(props, schema, uiSchema, property) {
 		) {
 			return cols;
 		}
-		if (typeof optionCol === "object") {
+		if (isObject(optionCol)) {
 			let selector = undefined;
 			if (optionCol[property]) selector = property;
 			else if (optionCol["*"]) selector = "*";
