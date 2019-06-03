@@ -284,6 +284,11 @@ export default class ScopeField extends Component {
 		// If no root fields defined, show all fields that aren't in any scopes` fields or additional fields.
 		if (fields.length === 0) {
 			const scopedFields = findScopedFields(options);
+			glyphFields.forEach(({show, open}) => {
+				if (open === false) {
+					scopedFields[show] = true;
+				}
+			});
 			fieldsToShow = Object.keys(props.schema.properties).reduce((_fields, f) => {
 				if (!scopedFields[f]) {
 					_fields[f] = props.schema.properties[f];
@@ -356,7 +361,13 @@ export default class ScopeField extends Component {
 	}
 
 	renderAdditionalsButtons = () => {
-		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData || {}).length === 0) return [];
+		const glyphButtons = this.renderGlyphFields();
+		if (!this.state.includeAdditionalFieldsChooserButton || Object.keys(this.props.formData || {}).length === 0) {
+			if (glyphButtons) {
+				return glyphButtons;
+			}
+			return [];
+		}
 
 		const {additionalsGroupingPath} = getUiOptions(this.props.uiSchema);
 
@@ -367,7 +378,6 @@ export default class ScopeField extends Component {
 				additionalProperties[property] = this.props.schema.properties[property];
 		});
 
-		const glyphButtons = this.renderGlyphFields();
 
 		return [
 			additionalsGroupingPath
