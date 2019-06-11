@@ -159,11 +159,6 @@
 		en: "Observations",
 		sv: "Observationer"
 	},
-	setLocation: {
-		fi: "Valitse sijainti",
-		en: "Select location",
-		sv: "Ange platsen"
-	},
 	currentLocation: {
 		fi: "Nykyinen sijainti",
 		en: "Current location",
@@ -658,5 +653,10 @@
 		fi: "Ei kuvaa",
 		en: "No photo",
 		sv: "Inget foto"
-	}
+	},
+	chooseThisLocation: {
+		fi: "Valitse tämä sijainti",
+		en: "Choose this location",
+		sv: "Välj den här platsen"
+	},
 };
