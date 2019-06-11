@@ -172,6 +172,7 @@ export default class MapField extends Component {
 
 		if (_mobileEditor) {
 			_mapOptions.controls = false;
+			_mapOptions.viewLocked = true;
 			_mapOptions.customControls = [{
 				text: this.props.formContext.translations.ChooseLocation,
 				fn: this.showMobileEditorMap,
@@ -197,6 +198,7 @@ export default class MapField extends Component {
 			mobileEditorOptions.userLocation = this.map.userLocation;
 		}
 
+		console.log(_mapOptions);
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
@@ -206,7 +208,7 @@ export default class MapField extends Component {
 								ref={this.setMapRef}
 								draw={this.getDrawOptions(this.props)}
 								lang={lang}
-								zoomToData={true}
+								zoomToData={{paddingInMeters: 200}}
 								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
 								formContext={this.props.formContext}
 								onOptionsChanged={this.onOptionsChanged} />
