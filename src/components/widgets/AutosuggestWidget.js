@@ -1029,7 +1029,9 @@ class TaxonImgChooser extends Component {
 			<React.Fragment>
 				<div className="taxon-img img-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
 						{!taxon && <div className="image-loading"><Spinner /></div>}
-						{thumbnail || !taxon ? "" : taxon.vernacularName}
+						<span>
+							{taxon && taxon.vernacularName || ""}
+						</span>
 				</div>
 					{modal && 
 						<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideModal}>
