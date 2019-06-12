@@ -94,6 +94,25 @@ function TaxonAutosuggest(ComposedComponent) {
 			if (super.renderSuggestion) this.renderSuggestion = super.renderSuggestion.bind(this);
 		}
 
+		componentDidMount() {
+			this.mounted = true;
+		}
+
+		componentWillUnmount() {
+			this.mounted = false;
+		}
+
+		componentDidUpdate(prevProps) {
+			const {value, options = {}} = this.props;
+			if (value !== prevProps.value && options.getSuggestionFromValue && options.chooseImages) {
+				options.getSuggestionFromValue(value).then(suggestion => {
+					if (!this.mounted) return;
+					const found = this.parseChooseImages(options.chooseImages).find(({id}) => suggestion.key === id);
+					this.setState({chooseImages: found ? [found] : undefined});
+				});
+			}
+		}
+
 		getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
 				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
@@ -141,13 +160,16 @@ function TaxonAutosuggest(ComposedComponent) {
 			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
 		}
 
+		parseChooseImages = (chooseImages) => {
+			return chooseImages.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj)
+		}
+
 		renderChooseImages = () => {
-			const {chooseImages} = this.props.options;
+			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages
 			return (
 				<React.Fragment>
 					<div className="laji-form-images">
-							{chooseImages
-									.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj)
+							{this.parseChooseImages(chooseImages)
 									.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
 					</div>
 					<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
@@ -966,7 +988,7 @@ class TaxonImgChooser extends Component {
 
 	componentDidMount(){
 		this.mounted = true;
-		new ApiClient().fetch(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
+		new ApiClient().fetchCached(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
 			if (!this.mounted) return;
 
 			if (taxon.multimedia && taxon.multimedia.length) {
