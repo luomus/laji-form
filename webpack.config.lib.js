@@ -6,7 +6,8 @@ var nodeExternals = require('webpack-node-externals');
 module.exports = {
 	entry: {
 		"laji-form": "./src/app",
-		styles: "./src/styles"
+		styles: "./src/styles",
+		utils: ["./src/utils"],
 	},
 	output: {
 		path: path.join(__dirname, "lib"),

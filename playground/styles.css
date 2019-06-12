@@ -456,7 +456,6 @@ min-height: 20px;
 	width: 120px;
 	height: 120px;
 	float: left;
-	cursor: pointer;
 }
 .laji-form .laji-form-images img, .laji-form .image-loading {
 	width: inherit;
@@ -464,10 +463,22 @@ min-height: 20px;
 }
 
 .laji-form .taxon-img {
-	line-height: 120px;
 	border: 1px solid #eeeeee;
-	text-align: center;
 	background-size: cover;
+}
+.laji-form .taxon-img span {
+	bottom: 0px;
+	position: absolute;
+	height: 21px;
+	width: 100%;
+	color: white;
+	text-align: center;
+	text-overflow: ellipsis;
+	width: 118px;
+	background-color: rgba(0,0,0,.7);
+	font-weight: bold;
+	font-size: 10px;
+	line-height: 20px;
 }
 
 .laji-form .laji-form-drop-zone {
@@ -632,6 +643,9 @@ min-height: 20px;
 .laji-form .date-widget .btn-group .btn {
 	height: 25px;
 	line-height: 12.5px;
+}
+.laji-form .interactive {
+	cursor: pointer;
 }
 
 .laji-form .laji-form-clickable-panel-header {

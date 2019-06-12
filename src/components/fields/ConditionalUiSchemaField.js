@@ -80,12 +80,12 @@ export default class ConditionalUiSchemaField extends Component {
 	cache = {};
 
 	getStateFromProps(props) {
-		const {cases = [], cache = true} = this.getUiOptions();
+		const {cases = [], cache = true, arrayMerge} = this.getUiOptions();
 
 		const {uiSchema} = props;
 
 		let computedUiSchema = uiSchema;
-		(Array.isArray(cases) ? cases : [cases]).forEach(({rules = [], operations = [], else: _else}, idx) => {
+		(Array.isArray(cases) ? cases : [cases]).forEach(({rules = [], operations = [], else: _else, arrayMerge: _arrayMerge}, idx) => {
 			let passes;
 			if (cache) {
 				if (!this.cache[idx]) {
@@ -100,9 +100,9 @@ export default class ConditionalUiSchemaField extends Component {
 			}
 
 			if (passes)  {
-				computedUiSchema = computeUiSchema(computedUiSchema, operations);
+				computedUiSchema = computeUiSchema(computedUiSchema, operations, _arrayMerge || arrayMerge);
 			} else if (_else) {
-				computedUiSchema = computeUiSchema(computedUiSchema, _else);
+				computedUiSchema = computeUiSchema(computedUiSchema, _else, _arrayMerge || arrayMerge);
 			}
 		});
 
@@ -110,11 +110,14 @@ export default class ConditionalUiSchemaField extends Component {
 	}
 }
 
-export const computeUiSchema = (uiSchema, operations) => {
+export const computeUiSchema = (uiSchema, operations, arrayMerge = "replace") => {
+	if (!operations) return uiSchema;
 	return (Array.isArray(operations) ? operations : [operations]).reduce((_uiSchema, op) => {
 		switch (op.type) {
 		case "merge":
-			uiSchema = deepmerge(uiSchema, op.uiSchema, {arrayMerge: (a1, a2) => a2});
+			uiSchema = deepmerge(uiSchema, op.uiSchema, {arrayMerge: arrayMerge === "replace"
+				? (a1, a2) => a2
+				: (a1, a2) => [...a1, ...a2]});
 			break;
 		case "wrap":
 			uiSchema = {...op.uiSchema, uiSchema};

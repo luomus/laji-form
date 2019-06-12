@@ -2,7 +2,7 @@ import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
-import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString } from "../../utils";
+import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
 import { Label } from "../components";
 
@@ -15,7 +15,7 @@ function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
+	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
 		<ButtonToolbar key={`buttons-${pos}`}>
 			{getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "right")}
 		</ButtonToolbar>
@@ -45,7 +45,13 @@ function ObjectFieldTemplate(props) {
 						description={props.description}
 						formContext={props.formContext}
 					/>}
+				<div className="pull-left">
+					{leftButtons}
+				</div>
 				{props.properties.map(({content}) => content)}
+				<div className="pull-right">
+					{rightButtons}
+				</div>
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : undefined}
@@ -120,7 +126,7 @@ function GridTemplate(props) {
 	let fieldTitle = _title || (title !== undefined ? title : props.name);
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons] = ["top", "bottom"].map(pos => (
+	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
 		<ButtonToolbar key={`buttons-${pos}`}>
 			{getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "right")}
 		</ButtonToolbar>
@@ -140,11 +146,13 @@ function GridTemplate(props) {
 								help={uiSchema["ui:help"]}
 								id={idSchema.$id} /> : null}
 				{topButtons}
+				<div className="pull-left">{leftButtons}</div>
 				{rows.map((row, i) =>
 					<Row key={i}>
 						{row}
 					</Row>
 				)}
+				<div className="pull-right">{rightButtons}</div>
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : null}
@@ -153,24 +161,25 @@ function GridTemplate(props) {
 }
 
 function getCols(props, schema, uiSchema, property) {
+	const options = props.uiSchema["ui:grid"];
 	const cols = {lg: 12, md: 12, sm: 12, xs: 12};
 	const uiField = uiSchema && uiSchema["ui:field"] ? uiSchema["ui:field"] : undefined;
-	if (
-		schema.type === "array"
-		&& !(
-			schema.items && schema.items.enum && isMultiSelect(schema, uiSchema)
-			|| uiField === "SingleItemArrayField"
-			|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField")
-		)
-		|| (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))
-	) {
-		return cols;
-	}
 
-	const options = props.uiSchema["ui:grid"];
 	Object.keys(cols).forEach(col => {
 		const optionCol = options[col];
-		if (typeof optionCol === "object") {
+		if (
+			(!isObject(optionCol) || !optionCol[property])
+			&& schema.type === "array"
+			&& !(
+				schema.items && schema.items.enum && isMultiSelect(schema, uiSchema)
+				|| uiField === "SingleItemArrayField"
+				|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField")
+			)
+			|| (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))
+		) {
+			return cols;
+		}
+		if (isObject(optionCol)) {
 			let selector = undefined;
 			if (optionCol[property]) selector = property;
 			else if (optionCol["*"]) selector = "*";

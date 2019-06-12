@@ -71,6 +71,7 @@ const fields = importLocalComponents("fields", [
 	"LocationChooserField",
 	"DataLeakerField",
 	"LocalityField",
+	"ImageDisplayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -402,13 +403,14 @@ export default class LajiForm extends Component {
 		const {translations} = this.state;
 		const {
 			"ui:shortcuts": shortcuts,
+			"ui:showShortcutsButton": showShortcutsButton = true,
 			"ui:readonly": readonly,
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
 		return (
 			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
-				{this.props.showShortcutButton !== false && shortcuts && (
+				{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
 					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
 						<Button variant={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 					</TooltipComponent>

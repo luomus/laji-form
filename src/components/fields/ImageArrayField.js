@@ -185,7 +185,7 @@ export default class ImageArrayField extends Component {
 
 	renderLoadingImgs = () => {
 		return Array(this.state.loading || 0).fill(undefined).map((item, i) => (
-			<div key={i} className="img-container laji-form-drop-zone">
+			<div key={i} className="img-container laji-form-drop-zone interactive">
 				<Spinner />
 			</div>
 		));

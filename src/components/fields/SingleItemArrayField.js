@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { getUiOptions } from "../../utils";
 
 @VirtualSchemaField
@@ -16,7 +16,13 @@ export default class SingleItemArrayField extends Component {
 	static getName() {return "SingleItemArrayField";}
 
 	getStateFromProps(props) {
-		return {
+		return isMultiSelect(props.schema, props.registry.definitions) ? {
+			...props,
+			formData: props.formData && props.formData.length ? props.formData[0] : getDefaultFormState(props.schema.items, undefined, props.registry.definitions),
+			schema: {title:props.schema.title, ...props.schema.items},
+			uiSchema: props.uiSchema.items || {},
+			onChange: this.onChange
+		} : {
 			...props,
 			formData: props.formData && props.formData.length ? props.formData : [getDefaultFormState(props.schema.items, undefined, props.registry.definitions)],
 			uiSchema: {
@@ -24,12 +30,15 @@ export default class SingleItemArrayField extends Component {
 				"ui:field": "SingleActiveArrayField",
 				"ui:options": {
 					activeIdx: 0,
-					renderTitleAsLabel: true,
 					...getUiOptions(props.uiSchema),
 					renderer: "uncontrolled",
 					addable: false
-				},
+				}
 			}
 		};
+	}
+
+	onChange(formData) {
+		this.props.onChange(isMultiSelect(this.props.schema, this.props.registry.definitions) ? [formData] : formData);
 	}
 }
