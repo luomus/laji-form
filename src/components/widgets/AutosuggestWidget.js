@@ -611,6 +611,8 @@ export class Autosuggest extends Component {
 			this.selectSuggestion(nonMatching);
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(parsedValue);
+		} else if (!allowNonsuggestedValue) {
+			this.setState({value: ""});
 		}
 
 		callback && callback();
