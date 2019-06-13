@@ -9,7 +9,7 @@
     "build:lib": "rimraf lib && NODE_ENV=production webpack --config webpack.config.lib.js && rimraf lib/styles.js",
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build": "npm run build:lib && npm run build:dist",
-    "publish-to-npm": "npm version patch && git push && npm run build && npm publish",
+    "publish-to-npm": "npm version patch && npm run build && npm publish && git push",
     "push-to-git": "npm run lint && git push",
     "lint": "eslint -c .eslintrc.prod.json src playground",
     "test": "HOST=127.0.0.1 PORT=8083 TEST_BROWSER=chrome protractor protractor.conf.js",
