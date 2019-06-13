@@ -367,14 +367,16 @@ export default class ImageArrayField extends Component {
 
 						const readDateFromFile = () => {
 							if (file.lastModified) {
-								const date = moment(file.lastModified).format("YYYY-MM-DDTHH:mm");
-								if (date) {
-									found.date = date;
+								const momentDate = moment(file.lastModified);
+								if (momentDate.isValid()) {
+									const date = momentDate.format("YYYY-MM-DDTHH:mm");
+									if (date) {
+										found.date = date;
+									}
 								}
 							}
 						}
 
-						console.log(file);
 						if (found.hasOwnProperty("date")) {
 							try {
 								const rawDate = exif.getTag(this, "DateTimeOriginal");
@@ -385,7 +387,7 @@ export default class ImageArrayField extends Component {
 									readDateFromFile();
 								}
 							} catch (e) {
-								console.info("Reading date from EXIF failed", e);
+								console.info("Reading date from EXIF failed, trying to read from file", e);
 								readDateFromFile();
 							}
 						} else {
