@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	entry: {
@@ -14,6 +15,7 @@ module.exports = {
 	},
 	plugins: [
 		new ExtractTextPlugin("[name].css", {allChunks: true}),
+		new CopyPlugin([{from: "src/img/*.png", to: "images/", flatten: true}]),
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
 		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"production\""})
 	],

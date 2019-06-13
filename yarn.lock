@@ -1054,6 +1054,7 @@ blocking-proxy@^1.0.0:
 bluebird@^2.10.2:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
+  integrity sha1-U0uQM8AiyVecVro7Plpcqvu2UOE=
 
 body-parser@1.18.2:
   version "1.18.2"
@@ -1415,9 +1416,10 @@ cookie@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
-copy-webpack-plugin@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/copy-webpack-plugin/-/copy-webpack-plugin-3.0.1.tgz#9bb3e9d6c6064de65c5bce44cf236b4d077a2131"
+copy-webpack-plugin@^2.1.0:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/copy-webpack-plugin/-/copy-webpack-plugin-2.1.6.tgz#4f88c388fceaf2b7ab0bb239c7d6222c829c9f60"
+  integrity sha1-T4jDiPzq8rerC7I5x9YiLIKcn2A=
   dependencies:
     bluebird "^2.10.2"
     fs-extra "^0.26.4"
@@ -2285,6 +2287,7 @@ fresh@0.5.2:
 fs-extra@^0.26.4:
   version "0.26.7"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-0.26.7.tgz#9ae1fdd94897798edab76d0918cf42d0c3184fa9"
+  integrity sha1-muH92UiXeY7at20JGM9C0MMYT6k=
   dependencies:
     graceful-fs "^4.1.2"
     jsonfile "^2.1.0"
@@ -2388,6 +2391,7 @@ glob-parent@^2.0.0:
 glob@^6.0.4:
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/glob/-/glob-6.0.4.tgz#0f08860f6a155127b2fadd4f9ce24b1aab6e4d22"
+  integrity sha1-DwiGD2oVUSey+t1PnOJLGqtuTSI=
   dependencies:
     inflight "^1.0.4"
     inherits "2"
@@ -3468,6 +3472,7 @@ next-tick@1:
 node-dir@^0.1.10:
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/node-dir/-/node-dir-0.1.17.tgz#5f5665d93351335caabef8f1c554516cf5f1e4e5"
+  integrity sha1-X1Zl2TNRM1yqvvjxxVRRbPXx5OU=
   dependencies:
     minimatch "^3.0.2"
 
