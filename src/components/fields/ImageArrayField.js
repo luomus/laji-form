@@ -367,15 +367,33 @@ export default class ImageArrayField extends Component {
 							console.info("Reading GPS from EXIF failed", e);
 						}
 
-						if (found.hasOwnProperty("date")) try {
-							const rawDate = exif.getTag(this, "DateTimeOriginal");
-							const momentDate = moment(rawDate, "YYYY:MM:DD HH:mm:ss");
-							if (momentDate.isValid()) {
-								found.date = momentDate.toISOString();
+						const readDateFromFile = () => {
+							if (file.lastModified) {
+								const momentDate = moment(file.lastModified);
+								if (momentDate.isValid()) {
+									const date = momentDate.format("YYYY-MM-DDTHH:mm");
+									if (date) {
+										found.date = date;
+									}
+								}
 							}
+						}
 
-						} catch (e) {
-							console.info("Reading date from EXIF failed", e);
+						if (found.hasOwnProperty("date")) {
+							try {
+								const rawDate = exif.getTag(this, "DateTimeOriginal");
+								const momentDate = moment(rawDate, "YYYY:MM:DD HH:mm:ss");
+								if (momentDate.isValid()) {
+									found.date = momentDate.format("YYYY-MM-DDTHH:mm");
+								} else {
+									readDateFromFile();
+								}
+							} catch (e) {
+								console.info("Reading date from EXIF failed, trying to read from file", e);
+								readDateFromFile();
+							}
+						} else {
+							readDateFromFile();
 						}
 						resolve(found);
 					});
