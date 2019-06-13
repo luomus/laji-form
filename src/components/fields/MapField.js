@@ -137,7 +137,7 @@ export default class MapField extends Component {
 	}
 
 	showMobileEditorMap = () => {
-		this.setState({mobileEditor: {visible: true, options: this.state.mobileEditor.options || {}}});
+		this.setState({mobileEditor: {visible: true, options: (this.state.mobileEditor || {}).options || {}}});
 	}
 
 	render() {
@@ -172,8 +172,9 @@ export default class MapField extends Component {
 
 		if (_mobileEditor) {
 			_mapOptions.controls = false;
+			_mapOptions.viewLocked = true;
 			_mapOptions.customControls = [{
-				text: this.props.formContext.translations.SetLocation,
+				text: this.props.formContext.translations.ChooseLocation,
 				fn: this.showMobileEditorMap,
 				iconCls: "glyphicon glyphicon-pencil"
 			}];
@@ -197,6 +198,7 @@ export default class MapField extends Component {
 			mobileEditorOptions.userLocation = this.map.userLocation;
 		}
 
+		console.log(_mapOptions);
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
@@ -206,7 +208,7 @@ export default class MapField extends Component {
 								ref={this.setMapRef}
 								draw={this.getDrawOptions(this.props)}
 								lang={lang}
-								zoomToData={true}
+								zoomToData={{paddingInMeters: 200}}
 								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
 								formContext={this.props.formContext}
 								onOptionsChanged={this.onOptionsChanged} />
@@ -492,7 +494,7 @@ class MobileEditorMap extends Component {
 				{/* Circle is rendered inside the map container so the controls z-index can be above the circle mask.*/}
 				{this.state.mapRendered && createPortal(this.getCircle(this.DEFAULT_RADIUS_PIXELS), this.map.container)}
 				<div className="floating-buttons-container">
-					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.SetLocation}</Button>
+					<Button block onClick={this.onChange} ref={this.setOkButtonRef}>{translations.ChooseThisLocation}</Button>
 					<Button block onClick={this.onClose}>{translations.Cancel}</Button>
 				</div>
 			</Fullscreen>

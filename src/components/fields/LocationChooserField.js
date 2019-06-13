@@ -521,7 +521,7 @@ class LocationButton extends Component {
 		} else {
 			const {translations} = that.props.formContext;
 			const overlay = hasCoordinates ? (
-				<Popover id={`${id}-location-peeker`} title={`${translations.SetLocation} (${translations.below} ${translations.currentLocation})`}>
+				<Popover id={`${id}-location-peeker`} title={`${translations.ChooseLocation} (${translations.below} ${translations.currentLocation})`}>
 					<Map {...this.state.miniMap}
 						hidden={!this.state.miniMap || this.state.modalMap}
 						style={{width: 200, height: 200}}
