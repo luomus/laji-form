@@ -17,7 +17,7 @@ function ObjectFieldTemplate(props) {
 	let buttons = getGlyphButtons(props);
 	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
 		<ButtonToolbar key={`buttons-${pos}`}>
-			{getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "right")}
+			{getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "no default")}
 		</ButtonToolbar>
 	));
 
@@ -128,7 +128,7 @@ function GridTemplate(props) {
 	let buttons = getGlyphButtons(props);
 	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
 		<ButtonToolbar key={`buttons-${pos}`}>
-			{getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "right")}
+			{getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "no default")}
 		</ButtonToolbar>
 	));
 
