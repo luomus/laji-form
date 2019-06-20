@@ -101,34 +101,32 @@ class DefaultMapArrayField extends Component {
 		if (!geometryField) {
 			return;
 		}
-		events.forEach(e => {
-			if (e.type !== "create") {
-				return;
-			}
+		let formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+		console.log(formData);
+		const geometries = events.filter(e => e.type === "create").map(e => e.feature.geometry);
 
-			let splittedPath = geometryField.split("/").filter(s => !isEmptyString(s));
+		let splittedPath = geometryField.split("/").filter(s => !isEmptyString(s));
 
-			let _cumulatedPointer = "";
-			let _schema = this.props.schema.items;
-			const formData = splittedPath.reduce((formData, split, i) => {
-				_cumulatedPointer += `/${split}`;
-				_schema = _schema.properties
-					? _schema.properties[split]
-					: _schema.items;
-				return update(formData, getUpdateObjectFromJSONPath(_cumulatedPointer,
-					{$set: i === splittedPath.length - 1
-						? {
-							type: "GeometryCollection",
-							geometries: [e.feature.geometry]
-						}
-						: getDefaultFormState(_schema, undefined, this.props.registry.definitions)
+		let _cumulatedPointer = "";
+		let _schema = this.props.schema.items;
+		formData = splittedPath.reduce((_formData, split, i) => {
+			_cumulatedPointer += `/${split}`;
+			_schema = _schema.properties
+				? _schema.properties[split]
+				: _schema.items;
+			return update(_formData, getUpdateObjectFromJSONPath(_cumulatedPointer,
+				{$set: i === splittedPath.length - 1
+					? {
+						type: "GeometryCollection",
+						geometries
 					}
-				));
-			}, getDefaultFormState(_schema, undefined, this.props.registry.definitions));
+					: getDefaultFormState(_schema, undefined, this.props.registry.definitions)
+				}
+			));
+		}, formData);
 
-			this.props.onChange([formData]);
-			this.setState({activeIdx: 0});
-		});
+		this.props.onChange([formData]);
+		this.setState({activeIdx: 0});
 	}
 
 	getGeometry(formData, _geometryField) {

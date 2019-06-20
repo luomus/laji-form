@@ -212,7 +212,8 @@ export default class GeocoderField extends Component {
 
 		const afterFetch = (callback, timeout = false) => {
 			if (this.fetching) {
-				mainContext.popBlockingLoader();
+				this.pushed && mainContext.popBlockingLoader();
+				this.pushed = false;
 				if (callback) callback(timeout);
 			}
 			this.fetching = false;
@@ -332,7 +333,8 @@ export default class GeocoderField extends Component {
 				});
 		};
 
-		mainContext.pushBlockingLoader();
+		!this.pushed && mainContext.pushBlockingLoader();
+		this.pushed = true;
 
 		this.fetching = true;
 
