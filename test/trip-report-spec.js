@@ -88,7 +88,7 @@ describe("Trip report (JX.519)", () => {
 			});
 
 			it("contains biologicalProvince", async () => {
-				await expect(lajiFormLocate("gatherings.0.administrativeProvince").isDisplayed()).toBe(true);
+				await expect(lajiFormLocate("gatherings.0.biologicalProvince").isDisplayed()).toBe(true);
 			});
 
 			it("contains municipality", async () => {

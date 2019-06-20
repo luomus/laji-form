@@ -145,3 +145,4 @@ Option         | Default | Description
 ---------------|---------|-----------------------------------------------------------------------------------------------
 TEST_BROWSER   | -       | `chrome` or `firefox`. Tests are run for both by default.
 HEADLESS       | `true`  | Run the tests in a visible browser window if `true`.
+THREADS        | 4       | How many browser instances to use for parallel testing.

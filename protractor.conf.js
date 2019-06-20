@@ -3,7 +3,7 @@
 const [width, height] = [800, 1000];
 const common = {
 	shardTestFiles: true,
-	maxInstances: 4
+	maxInstances: process.env.THREADS ? parseInt(process.env.THREADS) :  4
 };
 const chrome = {
 	...common,
