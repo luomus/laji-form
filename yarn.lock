@@ -19,6 +19,11 @@
   version "7946.0.4"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.4.tgz#4e049756383c3f055dd8f3d24e63fb543e98eb07"
 
+"@types/jasmine@^3.3.13":
+  version "3.3.13"
+  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.3.13.tgz#d5daabb0af47bcddee40597acf6e804433bab439"
+  integrity sha512-iczmLoIiVymaD1TIr2UctxjFkNEslVE/QtNAUmpDsD71cZfZBAsPCUv1Y+8AwsfA8bLx2ccr7d95T9w/UAirlQ==
+
 "@types/leaflet-draw@*":
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-0.4.13.tgz#479d4a5909d3c7be600953d4ab26ba79a5427574"
@@ -3085,13 +3090,14 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-laji-map@1.0.506, laji-map@^1.0.395, laji-map@^1.0.506:
-  version "1.0.506"
-  resolved "https://registry.yarnpkg.com/laji-map/-/laji-map-1.0.506.tgz#4d64b802dd1481a0eb7709fe5bca28ad073a9a13"
-  integrity sha512-XjwjQAjqs0ZjzhecEAXOew3tWAM0vhYrLWVHWTQdxOCNPG9z5EOTujy8kJEIJWA1Xc3KGi0rPEpixkYdOpTYWw==
+laji-map@1.0.507, laji-map@^1.0.507:
+  version "1.0.507"
+  resolved "https://registry.yarnpkg.com/laji-map/-/laji-map-1.0.507.tgz#b4f463d5d9de82f43b2e6f16c6a9e989b89f09ea"
+  integrity sha512-DESxXjCjGCV8CD0mhE+QHlUNUDrPI7jJGolQHULVRhdK29wPyEjJiNYhhIL6O9s5V2Ba3wbwnRpaTvuvQbFuFw==
   dependencies:
+    "@types/jasmine" "^3.3.13"
     Leaflet.vector-markers "git+https://git@github.com/olzraiti/Leaflet.vector-markers.git#17601bee91f2dae098a0a76e96714d59ec958fe6"
-    leaflet "1.4.0"
+    leaflet "1.5.1"
     leaflet-contextmenu "1.4.0"
     leaflet-draw "1.0.3"
     leaflet-geometryutil "0.8.0"
@@ -3109,13 +3115,14 @@ laji-map@1.0.506, laji-map@^1.0.395, laji-map@^1.0.506:
     "@types/leaflet.markercluster" "*"
     "@types/node" "*"
 
-laji-validate@0.0.73:
-  version "0.0.73"
-  resolved "https://registry.yarnpkg.com/laji-validate/-/laji-validate-0.0.73.tgz#e6387d9c0d4dd9eb4b32f2461ebfb6667dbb4644"
+laji-validate@0.0.75:
+  version "0.0.75"
+  resolved "https://registry.yarnpkg.com/laji-validate/-/laji-validate-0.0.75.tgz#a5be701f69069ea002830358f84bf71292c3d30a"
+  integrity sha512-4yny2XTj59VkhBqeG4PFhgGOb9/SIxyAG0+M7Li9nxhLiP6X7fz61Si78koJ+WDU7KtlcELjUCIdtBrweU1Tlg==
   dependencies:
     "@mapbox/geojson-area" "^0.2.2"
     geojson-bounds "^1.0.1"
-    laji-map "^1.0.395"
+    laji-map "^1.0.507"
     moment "*"
     validate.js "github:vixriihi/validate.js#dev"
 
@@ -3162,10 +3169,10 @@ leaflet.markercluster@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/leaflet.markercluster/-/leaflet.markercluster-1.3.0.tgz#58eb0654e90bd3274a660390ab0bc734212b204d"
 
-leaflet@*, leaflet@1.4.0, leaflet@>=0.7.0, leaflet@^1.0.1:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.4.0.tgz#d5f56eeb2aa32787c24011e8be4c77e362ae171b"
-  integrity sha512-x9j9tGY1+PDLN9pcWTx9/y6C5nezoTMB8BLK5jTakx+H7bPlnbCHfi9Hjg+Qt36sgDz/cb9lrSpNQXmk45Tvhw==
+leaflet@*, leaflet@>=0.7.0, leaflet@^1.0.1, leaflet@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.5.1.tgz#9afb9d963d66c870066b1342e7a06f92840f46bf"
+  integrity sha512-ekM9KAeG99tYisNBg0IzEywAlp0hYI5XRipsqRXyRTeuU8jcuntilpp+eFf5gaE0xubc9RuSNIVtByEKwqFV0w==
 
 less-loader@^2.2.3:
   version "2.2.3"
