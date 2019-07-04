@@ -30,7 +30,7 @@
     "exif-js": "^2.3.0",
     "immutability-helper": "^2.1.2",
     "laji-map": "^1.0.507",
-    "laji-validate": "0.0.75",
+    "laji-validate": "0.0.77",
     "moment": "*",
     "prop-types": "^15.5.8",
     "react": "^16.8.6",

@@ -3115,10 +3115,10 @@ laji-map@1.0.507, laji-map@^1.0.507:
     "@types/leaflet.markercluster" "*"
     "@types/node" "*"
 
-laji-validate@0.0.75:
-  version "0.0.75"
-  resolved "https://registry.yarnpkg.com/laji-validate/-/laji-validate-0.0.75.tgz#a5be701f69069ea002830358f84bf71292c3d30a"
-  integrity sha512-4yny2XTj59VkhBqeG4PFhgGOb9/SIxyAG0+M7Li9nxhLiP6X7fz61Si78koJ+WDU7KtlcELjUCIdtBrweU1Tlg==
+laji-validate@0.0.77:
+  version "0.0.77"
+  resolved "https://registry.yarnpkg.com/laji-validate/-/laji-validate-0.0.77.tgz#1fe7813ac3b2ee5c41cd3230aadd805e4649f543"
+  integrity sha512-7tBnR6xJFgLFW0uW6PyMvYGdFD+ODFAvGxZ1mTSSpF+gnpXSgGl5ntkP4p0Usj68NlQ3N7Omd0CCP3W4Hk7AAg==
   dependencies:
     "@mapbox/geojson-area" "^0.2.2"
     geojson-bounds "^1.0.1"
@@ -3169,7 +3169,7 @@ leaflet.markercluster@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/leaflet.markercluster/-/leaflet.markercluster-1.3.0.tgz#58eb0654e90bd3274a660390ab0bc734212b204d"
 
-leaflet@*, leaflet@>=0.7.0, leaflet@^1.0.1, leaflet@1.5.1:
+leaflet@*, leaflet@1.5.1, leaflet@>=0.7.0, leaflet@^1.0.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.5.1.tgz#9afb9d963d66c870066b1342e7a06f92840f46bf"
   integrity sha512-ekM9KAeG99tYisNBg0IzEywAlp0hYI5XRipsqRXyRTeuU8jcuntilpp+eFf5gaE0xubc9RuSNIVtByEKwqFV0w==
