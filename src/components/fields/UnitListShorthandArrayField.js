@@ -5,7 +5,6 @@ import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
 import { Button } from "../components";
 import { Modal } from "react-bootstrap";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { TagInputComponent } from "./TagArrayField";
 
@@ -67,10 +66,10 @@ export default class UnitListShorthandArrayField extends Component {
 		const value = this.state.value + (isEmptyString(this.tagRef.state.value) ? "" : `,${this.tagRef.state.value}`);
 
 		this.onHide();
-		const {translations, contextId, notifier} = this.props.formContext;
+		const {translations, contextId, notifier, apiClient} = this.props.formContext;
 		const context = new Context(contextId);
 		context.pushBlockingLoader();
-		new ApiClient().fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
+		apiClient.fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
 			units = units.map(unit => {
 				unit = getDefaultFormState(this.props.schema.items, unit, this.props.registry.definitions);
 				unit = bringRemoteFormData(unit, this.props.formContext);

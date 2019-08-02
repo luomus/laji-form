@@ -12,7 +12,6 @@ import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../c
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
-import ApiClient from "../../ApiClient";
 import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 
@@ -962,7 +961,7 @@ const headerFormatters = {
 
 			fetch = (props) => {
 				const {namedPlaceID} = props.that.props.formData[props.idx];
-				if (namedPlaceID) new ApiClient().fetchCached(`/named-places/${namedPlaceID}`, undefined, {failSilently: true}).then(response => {
+				if (namedPlaceID) props.that.props.formContext.apiClient.fetchCached(`/named-places/${namedPlaceID}`, undefined, {failSilently: true}).then(response => {
 					if (this.mounted && name !== this.state.name) this.setState({
 						namedPlaceID,
 						name: response.name

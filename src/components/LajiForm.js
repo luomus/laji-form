@@ -332,7 +332,8 @@ export default class LajiForm extends Component {
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
-				notifier: props.notifier || this.getDefaultNotifier()
+				notifier: props.notifier || this.getDefaultNotifier(),
+				apiClient: this.apiClient
 			}
 		};
 	}

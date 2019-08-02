@@ -5,7 +5,6 @@ import { MapComponent } from "./MapArrayField";
 import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import ApiClient from "../../ApiClient";
 import equals from "deep-equal";
 import Context from "../../Context";
 import Spinner from "react-spinner";
@@ -117,7 +116,7 @@ export default class MapField extends Component {
 				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
 		});
 		if (isEmptyAndWasEmpty && area && area.length > 0) {
-			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
 			});
 		}

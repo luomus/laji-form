@@ -6,7 +6,6 @@ import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Col
 import Dropdown from "react-bootstrap/lib/Dropdown";
 import DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import Spinner from "react-spinner";
-import ApiClient from "../../ApiClient";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
 import Context from "../../Context";
@@ -16,7 +15,7 @@ import { computeUiSchema } from "./ConditionalUiSchemaField";
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (props, taxonGroup) => {
-			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
+			return props.formContext.apiClient.fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			}).catch(() => {
 				return "";

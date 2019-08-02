@@ -81,6 +81,7 @@ export default class LocalityField extends Component {
 						renderSubmit={false}
 						validators={{}}
 						warnings={{}}
+						warnings={{}}
 					/>
 					<Button block onClick={this.onSubmitClick}>OK</Button>
 					<Button block onClick={this.hideEditor}>{this.props.formContext.translations.Cancel}</Button>

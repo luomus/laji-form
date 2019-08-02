@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
@@ -55,7 +54,7 @@ export default class ImageArrayField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
 		this._context = new Context("IMAGE_ARRAY_FIELD");
 		if (!this._context.metadatas) this._context.metadatas = {};
 		this.mainContext = this.getContext();
@@ -173,7 +172,7 @@ export default class ImageArrayField extends Component {
 		const {disabled, readonly} = this.props;
 		return (this.props.formData || []).map((item, i) => (
 			<div key={i} className="img-container">
-				<a onClick={this.openModalFor(i)}><Thumbnail id={item} /></a>
+				<a onClick={this.openModalFor(i)}><Thumbnail id={item} apiClient={this.props.formContext.apiClient} /></a>
 				<DeleteButton corner={true}
 					translations={this.props.formContext.translations}
 					onClick={this.onImgRmClick(i)}
@@ -618,8 +617,8 @@ export default class ImageArrayField extends Component {
 		return formats;
 	}
 
-	formatValue(value) {
-		return value.length ? <Thumbnail id={value} /> : null;
+	formatValue(value, options, props) {
+		return value.length ? <Thumbnail id={value} apiClient={props.formContext.apiClient} /> : null;
 	}
 }
 
@@ -643,7 +642,7 @@ class Thumbnail extends PureComponent {
 	}
 
 	updateURL = ({id}) => {
-		new ApiClient().fetchCached("/images/" + id, undefined, {failSilently: true}).then(response => {
+		this.props.apiClient.fetchCached("/images/" + id, undefined, {failSilently: true}).then(response => {
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL});
 		});

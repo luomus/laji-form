@@ -5,7 +5,6 @@ import equals from "deep-equal";
 import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { Button } from "../components";
 import Spinner from "react-spinner";
@@ -349,7 +348,7 @@ export default class GeocoderField extends Component {
 
 		!bounds.overlaps(FINLAND_BOUNDS) ? 
 			fetchForeign() :
-			new ApiClient().fetchRaw("/coordinates/location", undefined, {
+			this.props.formContext.apiClient.fetchRaw("/coordinates/location", undefined, {
 				method: "POST",
 				headers: {
 					"accept": "application/json",

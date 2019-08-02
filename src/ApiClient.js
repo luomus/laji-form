@@ -1,21 +1,14 @@
-let singletonInstance = null;
-let cache = {};
-
-let lang = "en";
 
 /**
  * ApiClient "interface". Wraps the given apiClient as a singleton object.
  * Given apiClient must implement fetch().
  */
 export default class ApiClient {
-	constructor(apiClient, _lang) {
-		if (!singletonInstance) singletonInstance = this;
+	constructor(apiClient, lang = "en") {
 		this.apiClient = apiClient;
 		this.on = {};
-		if (_lang) {
-			lang = _lang;
-		}
-		return singletonInstance;
+		this.lang = lang;
+		this.cache = {};
 	}
 
 	/**
@@ -25,7 +18,7 @@ export default class ApiClient {
 	 * @returns a Promise.
 	 */
 	fetchRaw(path, query, options) {
-		return this.apiClient.fetch(path, {lang, ...(query || {})}, options);
+		return this.apiClient.fetch(path, {lang: this.lang, ...(query || {})}, options);
 	}
 
 	fetch(path, query, options = {}) {
@@ -41,13 +34,13 @@ export default class ApiClient {
 	fetchCached(path, query, options) {
 		const cacheQuery = JSON.stringify(query) + JSON.stringify(options);
 
-		if (!cache[path])  cache[path] = {};
-		cache[path][cacheQuery] = cache[path].hasOwnProperty(cacheQuery) ? cache[path][cacheQuery] : this.fetch(path, query, options);
-		return cache[path][cacheQuery];
+		if (!this.cache[path])  this.cache[path] = {};
+		this.cache[path][cacheQuery] = this.cache[path].hasOwnProperty(cacheQuery) ? this.cache[path][cacheQuery] : this.fetch(path, query, options);
+		return this.cache[path][cacheQuery];
 	}
 
 	invalidateCachePath(path) {
-		delete cache[path];
+		delete this.cache[path];
 		if (this.on[path]) {
 			this.on[path].forEach(callback => callback());
 		}
@@ -55,11 +48,11 @@ export default class ApiClient {
 
 	//TODO on invalidation callbacks
 	invalidateCachePathQuery(path, query) {
-		if (cache[path]) delete cache[path][query];
+		if (this.cache[path]) delete this.cache[path][query];
 	}
 
-	flushCache() {
-		cache = {};
+	flushCache = () => {
+		this.cache = {};
 	}
 
 	onCachePathInvalidation(path, callback) {
@@ -74,8 +67,8 @@ export default class ApiClient {
 		}
 	}
 
-	setLang (_lang) {
-		lang = _lang;
+	setLang(lang) {
+		this.lang = lang;
 		this.flushCache();
 	}
 }

@@ -17,7 +17,6 @@ import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import { getButton } from "../ArrayFieldTemplate";
-import ApiClient from "../../ApiClient";
 
 export function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
@@ -1153,7 +1152,7 @@ class _MapArrayField extends ComposedComponent {
 		}
 		const geometries = this.getGeometries();
 		if (geometries.length === 0 && area && area.length > 0) {
-			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
 				this.map.geocode(result.name, undefined, 8);
 			});
 		}

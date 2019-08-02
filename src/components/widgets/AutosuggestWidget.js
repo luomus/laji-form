@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
-import ApiClient from "../../ApiClient";
 import { Glyphicon, Popover, InputGroup, Tooltip, Modal } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
@@ -41,7 +40,7 @@ export default class _AutosuggestWidget extends Component {
 		return <Autosuggest {...this.props} />;
 	}
 
-	formatValue(value, options) {
+	formatValue(value, options, parentProps) {
 		if (options) {
 			let component = undefined;
 			switch (options.autosuggestField) {
@@ -59,7 +58,7 @@ export default class _AutosuggestWidget extends Component {
 				component = RangeAutosuggestWidget;
 			}
 			if (component) {
-				return <SimpleValueRenderer component={component} value={value} />;
+				return <SimpleValueRenderer component={component} value={value} formContext={parentProps.formContext} />;
 			}
 		}
 	}
@@ -115,7 +114,7 @@ function TaxonAutosuggest(ComposedComponent) {
 
 		getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
-				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
+				return this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
 					if (vernacularName !== undefined) {
 						return {value: vernacularName, key: value};
 					}
@@ -254,7 +253,7 @@ class FriendsAutosuggestWidget extends Component {
 
 	getSuggestionFromValue(value) {
 		if (this.isValueSuggested(value)) {
-			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName, group}) => {
+			return this.props.formContext.apiClient.fetchCached(`/person/by-id/${value}`).then(({fullName, group}) => {
 				if (fullName) {
 					return {
 						value: group
@@ -351,7 +350,7 @@ export class Autosuggest extends Component {
 			suggestion: isSuggested ? {} : undefined,
 		};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
-		this.apiClient = new ApiClient();
+		this.apiClient = this.props.formContext.apiClient;
 	}
 
 	getStateFromProps(props) {
@@ -806,7 +805,7 @@ export class Autosuggest extends Component {
 			component = (
 				<div>
 					{component}
-					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations} lang={lang} />}
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} formContext={this.props.formContext} lang={lang} />}
 				</div>
 			);
 		}
@@ -837,16 +836,16 @@ class TaxonCardOverlay extends Component {
 		if ( isEmptyString(value)) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
-			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
+			this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
 				if (!this.mounted) return;
 				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
 
-				getInformalGroups().then(({informalTaxonGroupsById}) => {
+				getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 					if (!this.mounted) return;
 					this.setState({informalTaxonGroupsById});
 				});
 			});
-			new ApiClient().fetchCached(`/taxa/${value}/parents`).then(parents => {
+			this.props.formContext.apiClient.fetchCached(`/taxa/${value}/parents`).then(parents => {
 				if (!this.mounted) return;
 				const state = {order: undefined, family: undefined};
 				for (let parent of parents) {
@@ -863,7 +862,7 @@ class TaxonCardOverlay extends Component {
 				}
 				this.setState({...state, higherThanOrder: !state.order && !state.family});
 			});
-			new ApiClient().fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
+			this.props.formContext.apiClient.fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
 				if (!this.mounted) return;
 				this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
 			});
@@ -940,7 +939,7 @@ class InformalTaxonGroupsAddon extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		getInformalGroups().then(({informalTaxonGroupsById}) => {
+		getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 			if (!this.mounted) return;
 			this.setState({informalTaxonGroupsById});
 		});
@@ -990,7 +989,7 @@ class TaxonImgChooser extends Component {
 
 	componentDidMount(){
 		this.mounted = true;
-		new ApiClient().fetchCached(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
+		this.props.formContext.apiClient.fetchCached(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
 			if (!this.mounted) return;
 
 			if (taxon.multimedia && taxon.multimedia.length) {

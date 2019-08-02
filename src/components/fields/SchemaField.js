@@ -35,11 +35,11 @@ export default class _SchemaField extends Component {
 		} = (props.uiSchema || {});
 
 		const objectOrArrayAsArray = item => (
-			item ? 
-				(Array.isArray(item) ?
-					item : 
-					[item]) :
-				[]
+			item
+			? (Array.isArray(item)
+				? item
+				: [item])
+			: []
 		);
 
 		if (childFunctions) {
@@ -82,7 +82,7 @@ export default class _SchemaField extends Component {
 				};
 			}
 
-			const buttons =  !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema).buttons : undefined;
+			const buttons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema).buttons : undefined;
 			const uiButtons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema)["ui:buttons"] : undefined;
 			_props = {
 				..._props, 

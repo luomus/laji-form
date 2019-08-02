@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
@@ -155,7 +154,7 @@ class CodeReader extends Component {
 		super(props);
 		this.state = {value: ""};
 		this.state = this.getStateFromProps(props);
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
 	}
 
 	getStateFromProps = (props) => {

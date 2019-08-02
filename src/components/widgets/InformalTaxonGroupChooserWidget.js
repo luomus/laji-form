@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Panel, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import Spinner from "react-spinner";
 import BaseComponent from "../BaseComponent";
@@ -24,7 +23,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		getInformalGroups().then(state => {
+		getInformalGroups(this.props.formContext.apiClient).then(state => {
 			if (!this.mounted) return;
 			this.setState(state);
 		});
@@ -34,7 +33,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 	componentWillReceiveProps(props) {
 		if (props.value !== this.state.informalTaxonGroup) {
 			if (!props.value) this.setState({name: undefined});
-			getInformalGroups().then(({informalTaxonGroupsById}) => {
+			getInformalGroups(props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 				if (!this.mounted) return;
 				this.setState({informalTaxonGroup: informalTaxonGroupsById[this.props.value]});
 			});
@@ -84,7 +83,7 @@ export default class InformalTaxonGroupChooserWidget extends Component {
 				onHide={this.hide}
 				activeId={this.props.value}
 				onSelected={this.onSelected}
-				translations={this.props.formContext.translations}
+				formContext={this.props.formContext}
 				lang={this.props.formContext.lang}
 				rootOnly={rootOnly}
 				grid={grid}
@@ -133,11 +132,11 @@ const mapGroupsById = _groups => _groups.reduce((groups, group) => {
 
 let informalTaxonGroups, informalTaxonGroupsById;
 
-export function getInformalGroups() {
+export function getInformalGroups(apiClient) {
 	if (informalTaxonGroups) {
 		return Promise.resolve({informalTaxonGroups, informalTaxonGroupsById});
 	}
-	return new ApiClient().fetchCached("/informal-taxon-groups/tree").then(response => {
+	return apiClient.fetchCached("/informal-taxon-groups/tree").then(response => {
 		// Contains the current taxon group.
 		const informalTaxonGroups = mapGroupsById(response.results);
 		// Contains all groups in flat object.
@@ -150,7 +149,7 @@ export function getInformalGroups() {
 export class InformalTaxonGroupChooser extends Component {
 	static propTypes = {
 		onSelected: PropTypes.func.isRequired,
-		translations: PropTypes.object.isRequired
+		formContext: PropTypes.object.isRequired
 	}
 
 	constructor(props) {
@@ -160,7 +159,7 @@ export class InformalTaxonGroupChooser extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		getInformalGroups().then(state => {
+		getInformalGroups(this.props.formContext.apiClient).then(state => {
 			if (!this.mounted) return;
 			this.setState({...state, root: state.informalTaxonGroups});
 		});
@@ -169,7 +168,7 @@ export class InformalTaxonGroupChooser extends Component {
 	componentWillReceiveProps(props) {
 		if (this.props.lang === props.lang) return;
 
-		getInformalGroups().then(state => {
+		getInformalGroups(this.props.formContext.apiClient).then(state => {
 			if (!this.mounted) return;
 			this.setState({...state, root: state.informalTaxonGroups});
 		});
@@ -198,7 +197,8 @@ export class InformalTaxonGroupChooser extends Component {
 	}
 
 	Container = ({children}) => {
-		const {translations, modal, onHide} = this.props;
+		const {modal, onHide} = this.props;
+		const {translations} = this.props.formContext;
 		return modal ? (
 			<Modal show={true} onHide={onHide} dialogClassName="laji-form informal-taxon-group-chooser">
 				<Modal.Header closeButton={true}>
@@ -216,7 +216,7 @@ export class InformalTaxonGroupChooser extends Component {
 	}
 
 	getButtonGroup = (id) => {
-		const {translations} = this.props;
+		const {translations} = this.props.formContext;
 		const {informalTaxonGroupsById} = this.state;
 		return (
 			<ButtonGroup>
@@ -257,7 +257,9 @@ export class InformalTaxonGroupChooser extends Component {
 
 	render() {
 		const {path, informalTaxonGroupsById, informalTaxonGroups} = this.state;
-		const {translations, rootOnly} = this.props;
+		const {rootOnly} = this.props;
+		const {translations} = this.props.formContext;
+
 
 		const {Container, GroupsContainer, Item} = this;
 

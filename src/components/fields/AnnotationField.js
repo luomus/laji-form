@@ -4,7 +4,6 @@ import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../uti
 import { Panel, ListGroup, ListGroupItem, Modal, Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { Button, DeleteButton } from "../components";
 import Spinner from "react-spinner";
@@ -125,7 +124,7 @@ class AnnotationBox extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		new ApiClient().fetchCached(`/forms/${this.props.formId}`, {lang: this.props.lang, format: "schema"})
+		this.props.formContext.apiClient.fetchCached(`/forms/${this.props.formId}`, {lang: this.props.lang, format: "schema"})
 			.then(metadataForm => {
 				if (!this.mounted) return;
 				const {filter: _filter} = this.props;
@@ -147,7 +146,7 @@ class AnnotationBox extends Component {
 
 	onAnnotationSubmit = ({formData}) => {
 		const {type} = this.getAddOptions();
-		new ApiClient().fetchRaw("/annotations", undefined, {
+		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
 			method: "POST",
 			body: JSON.stringify({...formData, targetID: this.props.id, rootID: new Context(this.props.formContext.contextId).formData.id, type})
 		}).then(response => {
@@ -259,12 +258,13 @@ class AnnotationBox extends Component {
 			"ui:shortcuts": {
 				...((metadataForm.uiSchema || {})["ui:shorcuts"] || {}),
 				...(mainContext.shortcuts || {})
-			}
+			},
+			"ui:showShortcutsButton": false
 		};
 	}
 
 	onDelete = (id) => () => {
-		new ApiClient().fetchRaw(`/annotations/${id}`, undefined, {
+		this.props.formContext.apiClient.fetchRaw(`/annotations/${id}`, undefined, {
 			method: "DELETE"
 		}).then(() => {
 			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
@@ -277,7 +277,7 @@ class AnnotationBox extends Component {
 	}
 
 	render() {
-		const {formContext: {translations, lang, uiSchemaContext: {creator}}} = this.props;
+		const {formContext: {translations, lang, uiSchemaContext: {creator}, apiClient}} = this.props;
 		const {metadataForm = {}, annotations = []} = this.state;
 		const _uiSchema = this.getUiSchema();
 
@@ -294,6 +294,7 @@ class AnnotationBox extends Component {
 									lang={lang}
 									formData={annotation}
 									renderSubmit={false}
+									apiClient={apiClient}
 								/>
 								{annotation.annotationByPerson === creator ? <DeleteButton onClick={this.onDelete(annotation.id)} translations={translations} corner={true}/> : null}
 							</div>

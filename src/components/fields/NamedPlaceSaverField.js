@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Panel, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
@@ -93,7 +92,7 @@ class PlaceSaverDialog extends Component {
 		if (namedPlaceID) {
 			this.state = {value: "", loading: true};
 		}
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
 	}
 
 	componentWillUnmount() {

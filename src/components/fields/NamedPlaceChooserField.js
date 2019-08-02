@@ -6,7 +6,6 @@ import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Modal, Alert } from "react-bootstrap";
 import { Button } from "../components";
 import Spinner from "react-spinner";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -30,7 +29,7 @@ export default class NamedPlaceChooserField extends Component {
 
 	constructor(props) {
 		super(props);
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
 	}
 
 	getStateFromProps(props) {
