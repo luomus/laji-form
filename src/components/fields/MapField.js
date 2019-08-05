@@ -197,7 +197,6 @@ export default class MapField extends Component {
 			mobileEditorOptions.userLocation = this.map.userLocation;
 		}
 
-		console.log(_mapOptions);
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
@@ -312,7 +311,7 @@ export default class MapField extends Component {
 			return;
 		}
 		if (mobileEditor) {
-			if (!this.located || forceShow) {
+			if (!this.state.located || forceShow) {
 				this.setState({
 					mobileEditor: {
 						visible: true,
@@ -372,7 +371,12 @@ class MobileEditorMap extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
 		this.okButtonElem.focus();
+	}
+
+	componenWillUnmount() {
+		this.mounted = false;
 	}
 
 	getCircle(radiusPixels) {
@@ -453,7 +457,7 @@ class MobileEditorMap extends Component {
 	}
 
 	onLocate = (latlng, accuracy) => {
-		if (this.props.center) return;
+		if (this.props.center || !this.mounted) return;
 
 		const options = this.setViewFromCenterAndRadius(latlng, accuracy);
 		if (options.data && options.zoomToData) {
@@ -473,7 +477,7 @@ class MobileEditorMap extends Component {
 		options = {...options, ...(this.props.options || {}), ...this.state.mapOptions};
 
 		options.locate = {
-			on: false,
+			on: true,
 			userLocation,
 			onLocationFound: this.onLocate
 		};
