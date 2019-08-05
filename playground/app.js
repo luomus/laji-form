@@ -87,7 +87,8 @@ promise.then(data => {
 		renderSubmit: true,
 		onSettingsChange: console.info,
 		googleApiKey: properties.googleApiKey,
-		notifier
+		notifier,
+		lajiFiBase: "https://dev.laji.fi"
 	});
 	if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 });

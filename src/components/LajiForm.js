@@ -72,6 +72,7 @@ const fields = importLocalComponents("fields", [
 	"DataLeakerField",
 	"LocalityField",
 	"ImageDisplayField",
+	"DescriptionField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -146,6 +147,7 @@ export default class LajiForm extends Component {
 
 		this._context = new Context(this._id);
 		this._context.formInstance = this;
+		this._context.formData = props.formData;
 		this.propagateSubmit = true;
 		this.validationSettings = {ignoreWarnings: false};
 
@@ -333,7 +335,8 @@ export default class LajiForm extends Component {
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
-				apiClient: this.apiClient
+				apiClient: this.apiClient,
+				lajiFiBase: props.lajiFiBase
 			}
 		};
 	}
