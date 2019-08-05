@@ -81,7 +81,9 @@ export class DeleteButton extends Component {
 	setConfirmAutofocus = (elem) => {
 		if (this._focusConfirm) {
 			setImmediate(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
-				findDOMNode(elem).focus();
+				
+				const domElem = findDOMNode(elem);
+				domElem && domElem.focus();
 				this._focusConfirm = undefined;
 			});
 		}

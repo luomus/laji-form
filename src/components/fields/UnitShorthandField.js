@@ -74,18 +74,18 @@ export default class UnitShorthandField extends Component {
 		return showSchema;
 	}
 
-	getToggleButton = () => {
-		const onClick = () => () => {
-			const {persistenceKey} = getUiOptions(this.props.uiSchema);
-			this.setState({showSchema: !this.state.showSchema}, () => {
-				focusById(this.props.formContext, this.props.idSchema.$id);
-				new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
-			});
-		};
+	onToggleButtonClick = () => () => {
+		const {persistenceKey} = getUiOptions(this.props.uiSchema);
+		this.setState({showSchema: !this.state.showSchema}, () => {
+			focusById(this.props.formContext, this.props.idSchema.$id);
+			new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
+		});
+	}
 
+	getToggleButton = () => {
 		return {
 			glyph: "resize-small",
-			fn: onClick,
+			fn: this.onToggleButtonClick,
 			tooltip: this.props.formContext.translations[this.state.showSchema ? "OpenShorthand" :  "CloseShorthand"],
 			tooltipPlacement: "left",
 			bsStyle: this.state.showSchema ? "default" : "primary"
@@ -100,9 +100,8 @@ export default class UnitShorthandField extends Component {
 				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy");
 			} else if (autofocus) {
 				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "focus", "last");
-			} else {
-				this.setState({showSchema: true});
 			}
+			this.setState({showSchema: true});
 		};
 		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}, this.props.registry.definitions));
 	}
