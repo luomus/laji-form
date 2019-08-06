@@ -1371,13 +1371,13 @@ min-height: 20px;
 	background: black;
 	position: absolute;
 	top: 0;
-	z-index: 1;
+	z-index: 1000;
 	opacity: 0.5;
 }
 .laji-form .blocker-content {
 	opacity: 1;
 	background-color: transparent;
-	z-index: 1;
+	z-index: 1000;
 	position: absolute;
 	top: 50%;
 	left: 50%;

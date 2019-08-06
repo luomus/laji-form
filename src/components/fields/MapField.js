@@ -210,7 +210,7 @@ export default class MapField extends Component {
 								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
 								formContext={this.props.formContext}
 								onOptionsChanged={this.onOptionsChanged} />
-								{this.renderBlocker()}
+								{this.map && this.map.container && createPortal(this.renderBlocker(), this.map.container)}
 						</div>
 					</Affix>
 						{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
