@@ -622,15 +622,22 @@ export class Fullscreen extends Component {
 	componentDidMount() {
 		this.bodyOverFlow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
+		if (document.activeElement === document.body) {
+			this.elem.focus();
+		}
 	}
 
 	componentWillUnmount() {
 		document.body.style.overflow = this.bodyOverFlow;
 	}
 
+	setRef = (elem) => {
+		this.elem = elem;
+	}
+
 	render() {
 		return createPortal((
-			<div className="laji-form fullscreen" onKeyDown={this.props.onKeyDown}>
+			<div className="laji-form fullscreen" onKeyDown={this.props.onKeyDown} ref={this.setRef} tabIndex={0}>
 					{this.props.children}
 			</div>
 		), document.body);

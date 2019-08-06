@@ -1959,13 +1959,19 @@ export class Map extends Component {
 		this.fullscreenRef = elem;
 	}
 
+	onFullscreenKeyDown = (e) => {
+		if (e.key === "Escape") {
+			this.setState({fullscreen: false});
+		}
+	}
+
 	render() {
 		return (
 			<React.Fragment>
 				<div key="map"
 					className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
 					style={this.props.style} ref="map" />
-					{this.state.fullscreen && <Fullscreen ref={this.setFullscreenRef} on={this.state.fullscreen} />}
+					{this.state.fullscreen && <Fullscreen ref={this.setFullscreenRef} on={this.state.fullscreen} onKeyDown={this.onFullscreenKeyDown} />}
 		 </React.Fragment>
 		);
 	}
