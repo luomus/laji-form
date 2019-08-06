@@ -349,6 +349,7 @@ export default class LajiForm extends Component {
 		this.blockingLoaderRef.className = "laji-form blocking-loader";
 		if (this.blockingLoaderCounter > 0) this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 		document.body.appendChild(this.blockingLoaderRef);
+		if (this.props.componentDidMount) this.props.componentDidMount();
 	}
 
 	componentWillUnmount() {
