@@ -25,7 +25,7 @@ export default function DescriptonField(props) {
 			const ne = bounds.getNorthEast(); 
 			replacement = `${sw.lat}:${ne.lat}:${sw.lng}:${ne.lng}:WGS84`;
 		} else if (replacePattern === "lang") {
-			replacement = props.formContext.lang === "fi" ? "" : props.formContext.lang;
+			replacement = props.formContext.lang;
 		}
 		return desc.replace(`%{${replacePattern}}`, replacement);
 	}, description);
