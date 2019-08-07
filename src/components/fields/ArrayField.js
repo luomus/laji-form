@@ -3,7 +3,7 @@ import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
 
@@ -51,8 +51,22 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 	return filtered;
 };
 
+let uuid = 0;
+const assignUUID = (item) => {
+	if (isObject(item) && item._lajiFormId === undefined) {
+		uuid++;
+		return {...item, _lajiFormId: uuid};
+	}
+	return item;
+};
+
 @BaseComponent
 export default class _ArrayField extends Component {
+
+	onChange = (formData) => {
+		this.props.onChange(formData.map(assignUUID));
+	}
+
 	render() {
 		const {props} = this;
 		let {schema} = props;
@@ -68,11 +82,13 @@ export default class _ArrayField extends Component {
 				"ui:options": {
 					orderable: false, 
 					...props.uiSchema["ui:options"], 
-					buttonDefinitions: getUiOptions(props.uiSchema).buttonDefinitions ?
-						merge(this.buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions) :
-						this.buttonDefinitions
+					buttonDefinitions: getUiOptions(props.uiSchema).buttonDefinitions
+						? merge(this.buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions)
+						: this.buttonDefinitions
 				}
 			}}
+			onChange={this.onChange}
+			formData={props.formData.map(assignUUID)}
 		/>;
 	}
 
@@ -81,7 +97,7 @@ export default class _ArrayField extends Component {
 			glyph: "duplicate",
 			fn: () => (...params) => {
 				beforeAdd(this.props);
-				this.props.onChange([
+				this.onChange([
 					...this.props.formData,
 					copyItemFunction(this, this.props.formData[this.props.formData.length  - 1])(...params)
 				]);
@@ -95,7 +111,7 @@ export default class _ArrayField extends Component {
 		addPredefined: {
 			fn: () => (onClickProps, {default: _default}) => {
 				beforeAdd(this.props);
-				this.props.onChange([
+				this.onChange([
 					...this.props.formData,
 					getDefaultFormState(this.props.schema.items, _default, this.props.registry.definitions)
 				]);

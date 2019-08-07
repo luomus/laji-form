@@ -389,8 +389,21 @@ export default class LajiForm extends Component {
 		}, {});
 	}
 
+	removeLajiFormIds = (formData) => {
+		if (isObject(formData)) {
+			return Object.keys(formData).reduce((f, k) => {
+				if (k === "_lajiFormId") return f;
+				f[k] = this.removeLajiFormIds(formData[k]);
+				return f;
+			}, {});
+		} else if (Array.isArray(formData)) {
+			return formData.map(this.removeLajiFormIds);
+		}
+		return formData;
+	}
+
 	onChange = ({formData}) => {
-		if (this.props.onChange) this.props.onChange(formData);
+		if (this.props.onChange) this.props.onChange(this.removeLajiFormIds(formData));
 		this._context.formData = formData;
 	}
 

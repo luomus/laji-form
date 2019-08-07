@@ -5,6 +5,7 @@ import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
 import update from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
+import deepEquals from "deep-equal";
 
 export const isObject = _isObject;
 
@@ -771,4 +772,21 @@ export function updateFormDataWithJSONPointer(schemaProps, value, path) {
 		const _schema = parseJSONPointer(schemaProps.schema, schemaJSONPointer(schemaProps.schema, _path));
 		return getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
 	});
+}
+
+export const filterLajiFormId = (item) => {
+	if (item && item._lajiFormId) {
+		const {_lajiFormId, ..._item} = item; // eslint-disable-line no-unused-vars
+		item = _item;
+	}
+	return item;
+}
+
+export const formDataIsEmpty = (props) => {
+	let item = filterLajiFormId(props.formData);
+	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.definitions));
+};
+
+export const formDataEquals = (f1, f2) => {
+	return deepEquals(...[f1, f2].map(filterLajiFormId));
 }

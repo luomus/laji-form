@@ -1,8 +1,8 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import deepEquals from "deep-equal";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+import { formDataEquals } from "../../utils";
 
 @VirtualSchemaField
 export default class AutoArrayField extends Component {
@@ -26,15 +26,16 @@ export default class AutoArrayField extends Component {
 		const state = {formData};
 
 		const emptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
-		if (formData && (formData.length === 0 || !deepEquals(formData[formData.length - 1], emptyItem))) {
+		if (formData && (formData.length === 0 || !formDataEquals(formData[formData.length - 1], emptyItem))) {
 			state.formData = [...formData, emptyItem];
 		}
 		state.uiSchema = {
-			...uiSchema, 
+			...uiSchema,
 			"ui:options": {
 				canAdd: false,
-				...(uiSchema["ui:options"] || {}), 
-				nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]
+				...(uiSchema["ui:options"] || {}),
+				nonOrderables: [state.formData.length - 1],
+				nonRemovables: [state.formData.length - 1]
 			}
 		};
 
@@ -43,7 +44,7 @@ export default class AutoArrayField extends Component {
 
 	onChange(formData) {
 		const emptyItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-		if (formData && formData.length !== 0 && deepEquals(formData[formData.length - 1], emptyItem)) {
+		if (formData && formData.length !== 0 && formDataEquals(formData[formData.length - 1], emptyItem)) {
 			formData = formData.slice(0, formData.length - 1);
 		}
 		this.props.onChange(formData);

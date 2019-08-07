@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, DeleteButton, Label } from "./components";
 import merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined } from "../utils";
+import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
 import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll } from "../utils";
@@ -213,10 +213,11 @@ export function handlesArrayKeys(ComposedComponent) {
 	};
 }
 
-const SortableList = SortableContainer(({items, itemProps, nonOrderables}) => (
+const SortableList = SortableContainer(({items, itemProps, nonOrderables, formData}) => (
 	<div>
-		{items.map((item, i) => 
-			<SortableItem key={i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
+		{items.map((item, i) => {
+			return <SortableItem key={isObject(formData[i]) ? formData[i]._lajiFormId : i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
+		}
 		)}
 	</div>)
 );
@@ -268,7 +269,7 @@ export default class ArrayFieldTemplate extends Component {
 				              translations={props.formContext.translations}/>
 			);
 			return (
-				<div key={item.index} className="laji-form-field-template-item keep-vertical field-array-row">
+				<div key={isObject(props.formData[item.index]) ? props.formData[item.index]._lajiFormId : item.index} className="laji-form-field-template-item keep-vertical field-array-row">
 					<div className="laji-form-field-template-schema">{item.children}</div>
 					{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 				</div>
@@ -283,12 +284,13 @@ export default class ArrayFieldTemplate extends Component {
 				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
-					orderable ? 
-						<SortableList helperClass="laji-form reorder-active" 
-						              distance={5} 
-						              items={items} 
-						              onSortEnd={this.onSort} 
-						              itemProps={props.items} 
+					orderable ?
+						<SortableList helperClass="laji-form reorder-active"
+						              distance={5}
+						              items={items}
+						              formData={props.formData}
+						              onSortEnd={this.onSort}
+						              itemProps={props.items}
 						              nonOrderables={nonOrderables} /> :
 						items
 				}

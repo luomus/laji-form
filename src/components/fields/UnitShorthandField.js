@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import { FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
-import deepEquals from "deep-equal";
 import { getButton } from "../ArrayFieldTemplate";
 
 const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
@@ -66,9 +65,8 @@ export default class UnitShorthandField extends Component {
 
 	shouldShowSchema = (props) => {
 		let {showSchema} = this.state;
-		const isEmpty = () => deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 
-		if (this.state.showSchema === undefined && !isEmpty()) {
+		if (this.state.showSchema === undefined && !formDataIsEmpty(props)) {
 			showSchema = true;
 		}
 		return showSchema;

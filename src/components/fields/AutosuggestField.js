@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPath, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPath, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import merge from "deepmerge";
-import equals from "deep-equal";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
@@ -194,7 +193,7 @@ export default class AutosuggestField extends Component {
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...updateFormDataWithJSONPointer({...this.props, formData}, undefined, suggestionValueField), ...unit}
-			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !equals(this.props.formData, formData)) {
+			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !formDataEquals(this.props.formData, formData)) {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
