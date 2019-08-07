@@ -704,7 +704,7 @@ export default class LajiForm extends Component {
 			if (currentId.startsWith(id)) return true;
 			return; 
 		}).sort((a, b) => {
-			return a.length < b.length;
+			return b.length - a.length;
 		});
 
 		const targets = this._context.keyHandlerTargets.filter(({handler}) => {
