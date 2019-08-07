@@ -400,8 +400,10 @@ export default class ImageArrayField extends Component {
 			let {registry: {definitions}, formContext: {contextId, getFormRef}} = this.props;
 			const formInstance = getFormRef();
 			let {formData, schema} = formInstance.state;
+			let changed = false;
 			exifParsers.filter(f => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}) => {
 				if (type === "mutate") {
+					changed = true;
 					formData = updateSafelyWithJSONPath(formData, found[parse], field, !!"immutably", (__formData, path) => {
 						const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
 						return getDefaultFormState(_schema, undefined, definitions);
@@ -411,7 +413,9 @@ export default class ImageArrayField extends Component {
 					new Context(contextId).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 				}
 			});
-			formInstance.onChange(formData);
+			if (changed) {
+				formInstance.onChange(formData);
+			}
 		});
 	}
 
