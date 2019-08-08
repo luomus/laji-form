@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, immutableDelete } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
 import merge from "deepmerge";
@@ -313,6 +313,9 @@ export default class LajiForm extends Component {
 		new Context().staticImgPath = props.staticImgPath;
 		this._context.formData = props.formData;
 		const translations = this.translations[props.lang];
+		if (!this.tmpIdTree || props.schema !== this.props.schema) {
+			this.setTmpIdTree(props.schema);
+		}
 		return {
 			translations,
 			formContext: {
@@ -389,21 +392,39 @@ export default class LajiForm extends Component {
 		}, {});
 	}
 
-	removeLajiFormIds = (formData) => {
-		if (isObject(formData)) {
-			return Object.keys(formData).reduce((f, k) => {
-				if (k === "_lajiFormId") return f;
-				f[k] = this.removeLajiFormIds(formData[k]);
-				return f;
-			}, {});
-		} else if (Array.isArray(formData)) {
-			return formData.map(this.removeLajiFormIds);
+	setTmpIdTree = (schema) => {
+		function walk(_schema, prop) {
+			if (_schema.properties) {
+				return Object.keys(_schema.properties).reduce((paths, key) => {
+					return {...paths, ...walk(_schema.properties[key], key)};
+				}, {});
+			} else if (_schema.type === "array" && _schema.items.type === "object") {
+				return {[prop]: walk(_schema.items, prop)};
+			}
+			return {};
 		}
-		return formData;
+		this.tmpIdTree = walk(schema, "");
+	}
+
+	removeLajiFormIds = (formData) => {
+		const getPointers = (formData, tmpIdTree, pointer) => {
+			return Object.keys(tmpIdTree).reduce((pointers, key) => {
+				return (formData[key] || []).reduce((p,item, idx) => {
+					return [...p, `${pointer}/${key}/${idx}/_lajiFormIdx`, ...getPointers(item, tmpIdTree[key], `${pointer}/${key}/${idx}`)]
+				}, pointers);
+			}, []);
+		}
+
+		return getPointers(formData, this.tmpIdTree, "").reduce((_formData, pointer) => {
+			return immutableDelete(_formData, pointer);
+		}, formData);
 	}
 
 	onChange = ({formData}) => {
-		if (this.props.onChange) this.props.onChange(this.removeLajiFormIds(formData));
+		if (this.props.onChange) {
+			const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
+			this.props.onChange(_formData);
+		}
 		this._context.formData = formData;
 	}
 
@@ -707,9 +728,9 @@ export default class LajiForm extends Component {
 			return b.length - a.length;
 		});
 
-		const targets = this._context.keyHandlerTargets.filter(({handler}) => {
-			return handler.conditions.every(condition => condition(e));
-		}).map(({id}) => getKeyHandlerTargetId(id, this._context));
+		const targets = this._context.keyHandlerTargets
+			.filter(({handler}) => handler.conditions.every(condition => condition(e)))
+			.map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
 
 		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some(keyHandleListener => keyHandleListener(e)));
