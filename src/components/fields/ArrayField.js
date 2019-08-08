@@ -52,7 +52,7 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 };
 
 let uuid = 0;
-const assignUUID = (item) => {
+export const assignUUID = (item) => {
 	if (isObject(item) && item._lajiFormId === undefined) {
 		uuid++;
 		return {...item, _lajiFormId: uuid};

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { formDataEquals } from "../../utils";
+import { assignUUID } from "./ArrayField";
 
 @VirtualSchemaField
 export default class AutoArrayField extends Component {
@@ -25,7 +26,13 @@ export default class AutoArrayField extends Component {
 
 		const state = {formData};
 
-		const emptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+		const newEmptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+		const emptyItem =  this.emptyItem
+			&& formDataEquals(newEmptyItem, this.emptyItem)
+			&& props.formData.every(item => item._lajiFormId !== this.emptyItem._lajiFormId)
+			? this.emptyItem
+			: assignUUID(newEmptyItem);
+		this.emptyItem = emptyItem;
 		if (formData && (formData.length === 0 || !formDataEquals(formData[formData.length - 1], emptyItem))) {
 			state.formData = [...formData, emptyItem];
 		}
