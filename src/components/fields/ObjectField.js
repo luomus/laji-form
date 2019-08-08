@@ -8,7 +8,10 @@ import { Label } from "../components";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
-	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template}} />;
+	const formContext = (props.formData || {}).hasOwnProperty("_lajiFormId")
+		? {...props.formContext, _parentLajiFormId: props.formData._lajiFormId}
+		: props.formContext
+	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template, formContext}} formContext={formContext} />;
 };
 
 function ObjectFieldTemplate(props) {
