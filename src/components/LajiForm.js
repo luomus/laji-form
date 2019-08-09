@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, immutableDelete } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
 import merge from "deepmerge";
@@ -407,17 +407,15 @@ export default class LajiForm extends Component {
 	}
 
 	removeLajiFormIds = (formData) => {
-		const getPointers = (formData, tmpIdTree, pointer) => {
-			return Object.keys(tmpIdTree).reduce((pointers, key) => {
-				return (formData[key] || []).reduce((p,item, idx) => {
-					return [...p, `${pointer}/${key}/${idx}/_lajiFormId`, ...getPointers(item, tmpIdTree[key], `${pointer}/${key}/${idx}`)]
-				}, pointers);
-			}, []);
+		function walk(_formData, tree) {
+			return Object.keys(_formData).reduce((f, k) => {
+				if (k === "_lajiFormId") return f;
+				f[k] = tree[k] ? _formData[k].map(item => walk(item, tree[k])) : _formData[k];
+				return f;
+			}, {});
 		}
 
-		return getPointers(formData, this.tmpIdTree, "").reduce((_formData, pointer) => {
-			return immutableDelete(_formData, pointer);
-		}, formData);
+		return walk(formData, this.tmpIdTree);
 	}
 
 	onChange = ({formData}) => {
