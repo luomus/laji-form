@@ -4,7 +4,7 @@ import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props) {
@@ -216,7 +216,7 @@ export function handlesArrayKeys(ComposedComponent) {
 const SortableList = SortableContainer(({items, itemProps, nonOrderables, formData}) => (
 	<div>
 		{items.map((item, i) => {
-			return <SortableItem key={isObject(formData[i]) ? formData[i]._lajiFormId : i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
+			return <SortableItem key={isObject(formData[i]) ? getUUID(formData[i]) : i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
 		}
 		)}
 	</div>)
@@ -269,7 +269,7 @@ export default class ArrayFieldTemplate extends Component {
 				              translations={props.formContext.translations}/>
 			);
 			return (
-				<div key={isObject(props.formData[item.index]) ? props.formData[item.index]._lajiFormId : item.index} className="laji-form-field-template-item keep-vertical field-array-row">
+				<div key={isObject(props.formData[item.index]) ? getUUID(props.formData[item.index]) : item.index} className="laji-form-field-template-item keep-vertical field-array-row">
 					<div className="laji-form-field-template-schema">{item.children}</div>
 					{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 				</div>

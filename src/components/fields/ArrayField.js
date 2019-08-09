@@ -3,7 +3,7 @@ import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { getUiOptions, isObject } from "../../utils";
+import { getUiOptions, assignUUID } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
 
@@ -49,15 +49,6 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 	}, type === "blacklist" ? copyItem : defaultItem);
 
 	return filtered;
-};
-
-let uuid = 0;
-export const assignUUID = (item) => {
-	if (isObject(item) && item._lajiFormId === undefined) {
-		uuid++;
-		return {...item, _lajiFormId: uuid};
-	}
-	return item;
 };
 
 @BaseComponent

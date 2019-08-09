@@ -802,3 +802,14 @@ export const formDataIsEmpty = (props) => {
 export const formDataEquals = (f1, f2) => {
 	return deepEquals(...[f1, f2].map(filterLajiFormId));
 }
+
+let uuid = 0;
+export const assignUUID = (item) => {
+	if (isObject(item) && !item.id && !item._lajiFormId) {
+		uuid++;
+		return {...item, _lajiFormId: uuid};
+	}
+	return item;
+};
+
+export const getUUID = (item) => item ? (item.id || item._lajiFormId) : undefined;

@@ -2,14 +2,15 @@ import React from "react";
 import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
-import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject } from "../../utils";
+import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
 import { Label } from "../components";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
-	const formContext = (props.formData || {}).hasOwnProperty("_lajiFormId")
-		? {...props.formContext, _parentLajiFormId: props.formData._lajiFormId}
+	const id = getUUID(props.formData);
+	const formContext = id
+		? {...props.formContext, _parentLajiFormId: id}
 		: props.formContext
 	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template, formContext}} formContext={formContext} />;
 };
