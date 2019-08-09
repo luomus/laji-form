@@ -410,7 +410,7 @@ export default class LajiForm extends Component {
 		const getPointers = (formData, tmpIdTree, pointer) => {
 			return Object.keys(tmpIdTree).reduce((pointers, key) => {
 				return (formData[key] || []).reduce((p,item, idx) => {
-					return [...p, `${pointer}/${key}/${idx}/_lajiFormIdx`, ...getPointers(item, tmpIdTree[key], `${pointer}/${key}/${idx}`)]
+					return [...p, `${pointer}/${key}/${idx}/_lajiFormId`, ...getPointers(item, tmpIdTree[key], `${pointer}/${key}/${idx}`)]
 				}, pointers);
 			}, []);
 		}
@@ -590,9 +590,11 @@ export default class LajiForm extends Component {
 		}
 	}
 
-	onSubmit = (...props) => {
+	onSubmit = (props) => {
 		this.popBlockingLoader();
-		this.propagateSubmit && this.props.onSubmit && this.props.onSubmit(...props);
+		if (this.propagateSubmit && this.props.onSubmit) {
+			this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
+		}
 		this.propagateSubmit = true;
 		this.validationSettings.ignoreWarnings = false;
 	}

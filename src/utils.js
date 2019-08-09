@@ -71,15 +71,27 @@ export function getUpdateObjectFromJSONPath(path, injection) {
 	return update;
 }
 
-export function immutableDelete(obj, delProp) {
-	if (!obj.hasOwnProperty(delProp)) {
-		return obj;
+export function immutableDelete(_obj, _delProp) {
+	const simple = (obj, delProp) => {
+		if (!obj.hasOwnProperty(delProp)) {
+			return obj;
+		}
+		const newObj = {};
+		Object.keys(obj).forEach(prop => {
+			if (prop !== delProp) newObj[prop] = obj[prop];
+		});
+		return newObj;
+	};
+
+	if (_delProp[0] === "/") {
+		const splits = _delProp.split("/");
+		const last = splits.pop();
+		const container = parseJSONPointer(_obj, splits.join("/"));
+		return updateSafelyWithJSONPath(_obj, simple(container, last), splits.join("/"));
+	} else {
+		return simple(_obj, _delProp);
 	}
-	const newObj = {};
-	Object.keys(obj).forEach(prop => {
-		if (prop !== delProp) newObj[prop] = obj[prop];
-	});
-	return newObj;
+
 }
 
 export function getUiOptions(container) {

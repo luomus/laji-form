@@ -6,16 +6,11 @@ export default class LajiFormWrapper {
 	constructor(props) {
 		this.props = props;
 		this.rootElem = props.rootElem;
-		this.app = render(<LajiFormApp {...props} onChange={this.onChange} />, this.rootElem);
+		this.app = render(<LajiFormApp {...props} />, this.rootElem);
 	}
 
 	submit = () => {
 		this.app.refs.lajiform.submit();
-	}
-
-	onChange = (formData) => {
-		if (this.props.onChange) this.props.onChange(formData);
-		this.setState({formData});
 	}
 
 	setState = (state) => {
