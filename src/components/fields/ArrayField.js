@@ -55,7 +55,8 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 export default class _ArrayField extends Component {
 
 	onChange = (formData) => {
-		this.props.onChange(formData.map(assignUUID));
+		formData.forEach(assignUUID);
+		this.props.onChange(formData);
 	}
 
 	render() {
@@ -64,6 +65,8 @@ export default class _ArrayField extends Component {
 		if (props.uiSchema.items && props.uiSchema.items["ui:field"]) {
 			schema = {...schema, uniqueItems: false};
 		}
+
+		props.formData.forEach(assignUUID);
 
 		return <ArrayField
 			{...props}
@@ -79,7 +82,6 @@ export default class _ArrayField extends Component {
 				}
 			}}
 			onChange={this.onChange}
-			formData={props.formData.map(assignUUID)}
 		/>;
 	}
 

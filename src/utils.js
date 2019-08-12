@@ -807,7 +807,9 @@ let uuid = 0;
 export const assignUUID = (item) => {
 	if (isObject(item) && !item.id && !item._lajiFormId) {
 		uuid++;
-		return {...item, _lajiFormId: uuid};
+		//return {...item, _lajiFormId: uuid};
+		item._lajiFormId = uuid;
+		return item;
 	}
 	return item;
 };
