@@ -85,7 +85,7 @@ export default class ConditionalOnChangeField extends Component {
 					passes = reverse ? !result : result;
 				}
 				if (passes && length !== undefined) {
-					const result = formData[field].length >= length;
+					const result = (formData[field] || []).length >= length;
 					passes = reverse ? !result : result;
 				}
 				if (!passes) break;

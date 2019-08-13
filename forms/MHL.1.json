@@ -826,7 +826,6 @@
                             "fields": [
                                 "unitFact_autocompleteSelectedTaxonID",
                                 "shortHandText",
-                                "unitGathering_taxonID",
                                 "identifications_0_taxon",
                                 "unitFact_lineTransectObsType",
                                 "unitFact_lineTransectRouteFieldType",
@@ -851,11 +850,6 @@
                             },
                             "lineTransectRouteFieldType": {
                                 "ui:help": "A = apusarka, P = p\u00e4\u00e4sarka. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, havainto tulkitaan apusaralle."
-                            }
-                        },
-                        "unitGathering": {
-                            "geometry": {
-                                "ui:field": "HiddenField"
                             }
                         }
                     },

@@ -101,7 +101,6 @@ class DefaultMapArrayField extends Component {
 			return;
 		}
 		let formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-		console.log(formData);
 		const geometries = events.filter(e => e.type === "create").map(e => e.feature.geometry);
 
 		let splittedPath = geometryField.split("/").filter(s => !isEmptyString(s));
@@ -422,7 +421,7 @@ class UnitsMapArrayField extends Component {
 	getData()  {
 		const {formData} = this.props;
 		const idx = this.state.activeIdx;
-		if (!formData) return;
+		if (!formData) return {};
 
 		const item = formData[idx];
 
@@ -718,7 +717,7 @@ class LineTransectMapArrayField extends Component {
 
 	hasLineTransectFeature(props) {
 		const {geometryField} = getUiOptions(props.uiSchema);
-		return Object.keys(props.formData[0][geometryField]).length;
+		return props.formData && props.formData[0] && Object.keys(props.formData[0][geometryField] || {}).length;
 	}
 
 	focusOnMap = (idx) => {
@@ -1050,7 +1049,7 @@ class _MapArrayField extends ComposedComponent {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array", "object"])
 		}).isRequired,
-		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired
+		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 	}
 
 	constructor(props) {

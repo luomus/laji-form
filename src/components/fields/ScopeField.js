@@ -182,6 +182,11 @@ export default class ScopeField extends Component {
 	getSchemasAndAdditionals = (props, state) => {
 		let {schema, uiSchema, formData} = props;
 		let additionalFields = (state && state.additionalFields) ? {...state.additionalFields} : {};
+		Object.keys(additionalFields).forEach(key => {
+			if (!props.schema.properties[key]) {
+				delete additionalFields[key];
+			}
+		});
 		let defaultFields = (state && state.defaultFields) ? {...state.defaultFields} : {};
 
 		const options = getUiOptions(uiSchema);

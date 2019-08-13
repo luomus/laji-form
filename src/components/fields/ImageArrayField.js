@@ -49,7 +49,7 @@ export default class ImageArrayField extends Component {
 				type: PropTypes.oneOf(["string"]).isRequired
 			}).isRequired
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	constructor(props) {
@@ -62,7 +62,7 @@ export default class ImageArrayField extends Component {
 		const options = getUiOptions(props.uiSchema);
 		if (options.imageAddModal
 			&& options.autoOpenImageAddModal
-			&& (props.formData).length === 0
+			&& (props.formData || []).length === 0
 			&& !props.formContext.uiSchemaContext.isEdit
 		) {
 			this.state.imageAddModal = options.imageAddModal; // eslint-disable-line react/no-direct-mutation-state

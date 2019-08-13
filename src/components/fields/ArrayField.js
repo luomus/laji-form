@@ -66,7 +66,9 @@ export default class _ArrayField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
-		props.formData.forEach(assignUUID);
+		if (props.formData) {
+			props.formData.forEach(assignUUID);
+		}
 
 		return <ArrayField
 			{...props}

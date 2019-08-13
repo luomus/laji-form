@@ -24,7 +24,7 @@ export default class NamedPlaceChooserField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object", "array"])
 		}).isRequired,
-		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 	}
 
 	constructor(props) {

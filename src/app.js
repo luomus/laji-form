@@ -14,7 +14,7 @@ export default class LajiFormWrapper {
 	}
 
 	setState = (state) => {
-		this.app.setState(state);
+		this.app && this.app.setState(state);
 	}
 
 	pushBlockingLoader = () => {

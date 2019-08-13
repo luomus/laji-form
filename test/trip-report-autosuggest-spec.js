@@ -11,6 +11,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon")
 	const $poweruserButton = $taxon.$(".power-user-addon");
 	const $taxonInput = $taxon.$("input");
+	const $addUnit = $("#root_gatherings_0_units-add");
 
 	const $okSign = $taxon.$(".glyphicon-ok");
 	const $warningSign = $taxon.$(".glyphicon-warning-sign");
@@ -27,6 +28,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match and pressing enter after waiting for suggestion list selects exact match", async () => {
@@ -39,6 +41,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
@@ -49,6 +52,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match and pressing tab after waiting for suggestion list selects exact match", async () => {
@@ -61,6 +65,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match and pressing tab without waiting for suggestion list selects exact match", async () => {
@@ -72,6 +77,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing non exact match and blurring after waiting for suggestion list shows warning sign", async () => {
@@ -84,6 +90,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kett");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing non exact match and blurring without waiting for suggestion list shows warning sign", async () => {
@@ -95,6 +102,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kett");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match and blurring after waiting for suggestion list selects exact match", async () => {
@@ -106,6 +114,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match and blurring before waiting for suggestion list selects exact match", async () => {
@@ -117,6 +126,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await expect($taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
 	it("typing exact match with sp suffix keeps sp suffix in value but select the exact match", async () => {
@@ -128,6 +138,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 			await expect($taxonInput.getAttribute("value")).toBe(`parus ${suffix}`);
 
 			await removeUnit(0, 0);
+		await $addUnit.click();
 		}
 	});
 
@@ -165,6 +176,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	
 		await removeUnit(0, 0);
 		await removeUnit(0, 0);
+		await $addUnit.click();
 		await $taxonInput.click();
 		await $poweruserButton.click();
 	});

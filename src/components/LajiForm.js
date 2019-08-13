@@ -311,12 +311,11 @@ export default class LajiForm extends Component {
 
 	getStateFromProps(props) {
 		new Context().staticImgPath = props.staticImgPath;
-		this._context.formData = props.formData;
 		const translations = this.translations[props.lang];
 		if (!this.tmpIdTree || props.schema !== this.props.schema) {
 			this.setTmpIdTree(props.schema);
 		}
-		return {
+		const state = {
 			translations,
 			formContext: {
 				translations,
@@ -338,13 +337,20 @@ export default class LajiForm extends Component {
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
-				apiClient: this.apiClient
+				apiClient: this.apiClient,
+				tmpIdTree: this.tmpIdTree
 			}
 		};
+		if (props.formData) {
+			state.formData = props.formData;
+			this._context.formData = props.formData;
+		}
+		return state;
 	}
 
 	componentDidMount() {
 		this.mounted = true;
+		//this._context.formData = this.formRef.state.formData;
 		this.props.autoFocus && focusById(this.state.formContext, "root");
 
 		this.blockingLoaderRef = document.createElement("div");
@@ -423,10 +429,13 @@ export default class LajiForm extends Component {
 			const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
 			this.props.onChange(_formData);
 		}
+		this.setState({formData});
 		this._context.formData = formData;
 	}
 
-	getRef = form => {this.formRef = form;}
+	getRef = form => {
+		this.formRef = form;
+	}
 
 	getBlockerRef = elem => {this.blockingLoaderRef = elem;}
 
@@ -454,6 +463,7 @@ export default class LajiForm extends Component {
 				<Form
 					{...this.props}
 					ref={this.getRef}
+					formData={this.state.formData}
 					onChange={this.onChange}
 					onError={this.onError}
 					onSubmit={this.onSubmit}
@@ -589,12 +599,14 @@ export default class LajiForm extends Component {
 	}
 
 	onSubmit = (props) => {
-		this.popBlockingLoader();
-		if (this.propagateSubmit && this.props.onSubmit) {
-			this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
-		}
-		this.propagateSubmit = true;
-		this.validationSettings.ignoreWarnings = false;
+		Promise.all(Object.keys(this._submitHooks).map(id => this._submitHooks[id])).then(() => {
+			this.popBlockingLoader();
+			if (this.propagateSubmit && this.props.onSubmit) {
+				this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
+			}
+			this.propagateSubmit = true;
+			this.validationSettings.ignoreWarnings = false;
+		});
 	}
 
 	onError = () => {
@@ -624,7 +636,7 @@ export default class LajiForm extends Component {
 		this.validateAll = true;
 		this.propagateSubmit = propagate;
 		this.validationSettings.ignoreWarnings = ignoreWarnings;
-		this.formRef.onSubmit({preventDefault: () => {}});
+		this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
 	}
 
 	getShorcutButtonTooltip = () => {
