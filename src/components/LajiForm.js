@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, assignUUID } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
 import merge from "deepmerge";
@@ -341,8 +341,8 @@ export default class LajiForm extends Component {
 				tmpIdTree: this.tmpIdTree
 			}
 		};
-		if (props.formData) {
-			state.formData = props.formData;
+		if (!this.state || props.formData && props.formData !== this.props.formData) {
+			state.formData = this.addLajiFormIds(props.formData, this.tmpIdTree);
 			this._context.formData = props.formData;
 		}
 		return state;
@@ -350,7 +350,6 @@ export default class LajiForm extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		//this._context.formData = this.formRef.state.formData;
 		this.props.autoFocus && focusById(this.state.formContext, "root");
 
 		this.blockingLoaderRef = document.createElement("div");
@@ -411,6 +410,14 @@ export default class LajiForm extends Component {
 		}
 		this.tmpIdTree = walk(schema, "");
 	}
+
+	addLajiFormIds = (_formData, tree) => {
+		return Object.keys(_formData).reduce((f, k) => {
+			f[k] = tree[k] ? _formData[k].map(item => assignUUID(this.addLajiFormIds(item, tree[k]), "immutably")) : _formData[k];
+			return f;
+		}, {});
+	}
+
 
 	removeLajiFormIds = (formData) => {
 		function walk(_formData, tree) {
