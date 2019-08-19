@@ -5,9 +5,9 @@ import Context from "../../Context";
 import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
-import { DeleteButton, Alert as PopupAlert, Button } from "../components";
+import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer  } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getRelativePointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
@@ -24,6 +24,8 @@ function toDecimal(number) {
 	return number[0].numerator + number[1].numerator /
 		(60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
 }
+
+let imgUuid = 0;
 
 @BaseComponent
 export default class ImageArrayField extends Component {
@@ -57,8 +59,9 @@ export default class ImageArrayField extends Component {
 		this.apiClient = props.formContext.apiClient;
 		this._context = new Context("IMAGE_ARRAY_FIELD");
 		if (!this._context.metadatas) this._context.metadatas = {};
+		if (!this._context.tmpImgs) this._context.tmpImgs = {};
 		this.mainContext = this.getContext();
-		this.state = {};
+		this.state = {tmpImgs: Object.keys(this._context.tmpImgs[this.getContainerId()] || {})};
 		const options = getUiOptions(props.uiSchema);
 		if (options.imageAddModal
 			&& options.autoOpenImageAddModal
@@ -93,7 +96,8 @@ export default class ImageArrayField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const getCount = (_props, _state) => ((_props.formData || []).length + (_state.loading || 0));
+		//const getCount = (_props, _state) => ((_props.formData || []).length + (_state.loading || 0));
+		const getCount = (_props, _state) => ((_props.formData || []).length + (_state.tmpImgs || []).length);
 
 		if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
 			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
@@ -160,7 +164,6 @@ export default class ImageArrayField extends Component {
 							</DropZone>
 						</OverlayTrigger>
 						{this.renderMetadataModal()}
-						{this.renderAlert()}
 						{this.renderImageAddModal()}
 					</div>
 				</Col>
@@ -183,11 +186,15 @@ export default class ImageArrayField extends Component {
 	}
 
 	renderLoadingImgs = () => {
-		return Array(this.state.loading || 0).fill(undefined).map((item, i) => (
-			<div key={i} className="img-container laji-form-drop-zone interactive">
-				<Spinner />
-			</div>
-		));
+		const containerId = this.getContainerId();
+		return (this.state.tmpImgs || []).map((item, i) => {
+			if (!this._context.tmpImgs[containerId][item]) return null;
+			return (
+				<div key={i} className="img-container">
+					<a><Thumbnail dataURL={this._context.tmpImgs[containerId][item]} loading={true} /></a>
+				</div>
+			);
+		});
 	}
 
 	openModalFor = (i) => () => {
@@ -326,13 +333,6 @@ export default class ImageArrayField extends Component {
 		this.setState({alert: false, alertMsg: undefined});
 	}
 
-	renderAlert = () => {
-		return this.state.alert ? (
-      <PopupAlert onOk={this.onAlertOk}>
-				{` ${this.state.alertMsg}`}
-      </PopupAlert>) : null;
-	}
-
 	parseExif = (files) => {
 		const {exifParsers} = getUiOptions(this.props.uiSchema);
 		if (!exifParsers) return;
@@ -420,23 +420,67 @@ export default class ImageArrayField extends Component {
 	}
 
 	onFileFormChange = (files) => {
-		const {onChange} = this.props;
-		let formData = this.props.formData || [];
+		if (this.state.imageAddModal) {
+			this.setState({imageAddModal: undefined});
+		}
 
-		this.mainContext.pushBlockingLoader();
-		this.setState({loading: files.length});
+
+		const id = this.getContainerId();
+
+		const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+		const formInstance = this.props.formContext.getFormRef();
+		const saveAndOnChange = this.saveImages(files).then(imgIds => {
+			if (!lajiFormInstance.mounted) {
+				return;
+			}
+
+			const newFormData = [...(this.props.formData || []), ...imgIds];
+
+			if (!lajiFormInstance.mounted) return;
+
+			if (this.mounted || id === "root") {
+				this.props.onChange(newFormData);
+				return;
+			}
+
+			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, id);
+			formInstance.onChange(updateSafelyWithJSONPath(formInstance.state.formData, newFormData, pointer));
+		});
+
+		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, id);
+		new Context(this.props.formContext.contextId).addSubmitHook(id, relativePointer, saveAndOnChange);
+	}
+
+	getContainerId = () => {
+		const {_parentLajiFormId = "root"} = this.props.formContext;
+		return _parentLajiFormId;
+	}
+
+	saveImages(files) {
+		const containerId = this.getContainerId();
+		let tmpImgs;
 
 		const fail = (translationKey, additionalInfo="") => {
-			this.mainContext.popBlockingLoader();
-			this.setState({alert: true, alertMsg:
-				`${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations[translationKey]} ${additionalInfo}`
-			});
+			throw `${this.props.formContext.translations[translationKey]} ${additionalInfo}`;
 		};
 
-		this.processFiles(files).then(() => {
+		return this.processFiles(files).then((processedFiles) => {
+			fail("InvalidFile");
 			let invalidFile = (files.length <= 0);
 			let fileTooLarge = false;
 			let noValidData = true;
+
+			if (this.mounted) {
+				if (!this._context.tmpImgs[containerId]) {
+					this._context.tmpImgs[containerId] = {};
+				}
+				tmpImgs = processedFiles.map(f => {
+					imgUuid++;
+					this._context.tmpImgs[containerId][imgUuid] = f.dataURL;
+					return imgUuid;
+				});
+				this.setState({tmpImgs: [...(this.state.tmpImgs || []), ...tmpImgs]});
+			}
 
 			const formDataBody = files.reduce((body, file) => {
 				if (!ALLOWED_FILE_TYPES.includes(file.type)) {
@@ -492,39 +536,33 @@ export default class ImageArrayField extends Component {
 		}).then(response => {
 			if (!response) return;
 			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
-			onChange([...formData, ...ids]);
-
 
 			const {autoOpenMetadataModal = true} = getUiOptions(this.props.uiSchema);
-			this.setState({loading: 0});
-			this.mainContext.popBlockingLoader();
+
+			tmpImgs.forEach(id => {
+				delete this._context.tmpImgs[containerId][id];
+			});
+			this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
+
 
 			let shouldOpenMetadataModal = autoOpenMetadataModal;
 
-			const finish = () => {
-				const _finish = () => {
-					this.parseExif(files);
-					if (shouldOpenMetadataModal) {
-						this.openModalFor(this.props.formData.length - files.length)();
-					}
-				};
-				if (this.state.imageAddModal) {
-					this.setState({imageAddModal: undefined}, _finish);
-				} else {
-					_finish();
-				}
-			};
-
-			if (files.length !== ids.length) {
-				shouldOpenMetadataModal = false;
-				this.setState({alert: true, alertMsg: this.props.formContext.translations.FilesLengthDiffer}, finish);
-			} else {
-				finish();
+			this.parseExif(files);
+			if (shouldOpenMetadataModal && this.mounted) {
+				this.openModalFor(this.props.formData.length - files.length)();
 			}
-		}).catch(() => {
-			this.setState({loading: 0});
-			this.mainContext.popBlockingLoader();
-			this.setState({alert: true, alertMsg: `${this.props.formContext.translations.SaveFail} ${this.props.formContext.translations.TryAgainLater}`});
+			return ids;
+
+		}).catch((e) => {
+			if (tmpImgs) {
+				tmpImgs.forEach(id => {
+					delete this._context.tmpImgs[containerId][id];
+				});
+				if (this.mounted) {
+					this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
+				}
+			}
+			throw e;
 		});
 	}
 
@@ -621,8 +659,15 @@ export default class ImageArrayField extends Component {
 		return formats;
 	}
 
-	formatValue(value, options, props) {
-		return value.length ? <Thumbnail id={value} apiClient={props.formContext.apiClient} /> : null;
+	formatValue(value, options, props, parentProps) {
+		const imgs = value && value.length ? value.map((id, idx) => <Thumbnail key={idx} id={id} apiClient={props.formContext.apiClient} />) : [];
+		const parentFormData = (parentProps ||{}).formData || {};
+		const {_lajiFormId} = parentFormData || {};
+		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");
+		if (_lajiFormId && tmpImgs[_lajiFormId]) {
+			return [...imgs, ...Object.keys(tmpImgs[_lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpImgs[_lajiFormId][id]} />)];
+		}
+		return imgs;
 	}
 }
 
@@ -645,14 +690,19 @@ class Thumbnail extends PureComponent {
 		this.updateURL(props);
 	}
 
-	updateURL = ({id}) => {
-		this.props.apiClient.fetchCached("/images/" + id, undefined, {failSilently: true}).then(response => {
+	updateURL = ({id, apiClient}) => {
+		if (!id) return;
+		apiClient.fetchCached("/images/" + id, undefined, {failSilently: true}).then(response => {
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL});
 		});
 	}
 
 	render() {
-		return this.state.url ? <img src={this.state.url} /> : <div className="image-loading"><Spinner /></div>;
+		const url = this.state.url || this.props.dataURL;
+		const img = url ? <img src={url} /> : null;
+		return !url || this.props.loading
+			?  <div className="image-loading">{img}<Spinner /></div>
+			: img;
 	}
 }

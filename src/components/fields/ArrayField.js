@@ -3,9 +3,10 @@ import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { getUiOptions, assignUUID } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
+import Context from "../../Context";
 
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 	const nestedFilters = filter;
@@ -51,12 +52,36 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 	return filtered;
 };
 
+export function onArrayFieldChange(formData, props) {
+	const rootTmpIdTree = new Context(props.formContext.contextId).formInstance.tmpIdTree;
+
+	let tmpIdTree = rootTmpIdTree;
+	const treePath = props.idSchema.$id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
+	for (const k of treePath) {
+		if (tmpIdTree[k]) {
+			tmpIdTree = tmpIdTree[k];
+		} else {
+			tmpIdTree = undefined;
+			break;
+		}
+	}
+
+	const [withLajiFormIds, ids] = addLajiFormIds(formData, tmpIdTree, false);
+	const oldIds = getAllLajiFormIdsDeeply(props.formData, tmpIdTree);
+
+	Object.keys(oldIds).forEach(id => {
+		if (!ids[id]) {
+			new Context(props.formContext.contextId).removeSubmitHook(id);
+		}
+	});
+	return withLajiFormIds;
+}
+
 @BaseComponent
 export default class _ArrayField extends Component {
 
 	onChange = (formData) => {
-		formData.forEach(assignUUID);
-		this.props.onChange(formData);
+		this.props.onChange(onArrayFieldChange(formData, this.props));
 	}
 
 	render() {
@@ -64,10 +89,6 @@ export default class _ArrayField extends Component {
 		let {schema} = props;
 		if (props.uiSchema.items && props.uiSchema.items["ui:field"]) {
 			schema = {...schema, uniqueItems: false};
-		}
-
-		if (props.formData) {
-			props.formData.forEach(assignUUID);
 		}
 
 		return <ArrayField

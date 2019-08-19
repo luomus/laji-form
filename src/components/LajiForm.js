@@ -3,12 +3,13 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
-import { Button, TooltipComponent } from "./components";
+import { Button, TooltipComponent, ErrorPanel, FailedBackgroundJobsPanel } from "./components";
 import { Panel, Table } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, assignUUID } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, assignUUID, addLajiFormIds, idSchemaIdToJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import merge from "deepmerge";
 
 import Form from "react-jsonschema-form";
@@ -299,6 +300,41 @@ export default class LajiForm extends Component {
 			}
 		};
 
+		this._submitHooks = {};
+		this._context.addSubmitHook = (lajiFormId, relativePointer, hook) => {
+			if (!this._submitHooks[lajiFormId]) this._submitHooks[lajiFormId] = [];
+			const _hook = hook.catch(e => {
+				const failedBackgroundJobs = ((this.state.failedBackgroundJobs || []).filter((job) => job.lajiFormId !== lajiFormId || job.hook !== _hook));
+				this.setState({
+					failedBackgroundJobs: [
+						...failedBackgroundJobs,
+						{lajiFormId, relativePointer, hook: _hook, e}
+					]
+				});
+				throw e;
+			});
+			this._submitHooks[lajiFormId].push(_hook);
+		};
+		this._context.removeSubmitHook = (lajiFormId, hook) => {
+			if (!this._submitHooks[lajiFormId]) {
+				return;
+			}
+			const hookFilterer = submitHook => submitHook !== hook;
+			const lajiFormIdFilterer = submitHook => submitHook.lajiFormId !== +lajiFormId;
+			if (hook) {
+				this._submitHooks[lajiFormId] = this._submitHooks[lajiFormId].filter(hookFilterer);
+			} else {
+				delete this._submitHooks[lajiFormId];
+			}
+			this.setState({
+				failedBackgroundJobs: (this.state.failedBackgroundJobs || []).map(({hook}) => hook).filter(hook ? hookFilterer : lajiFormIdFilterer)
+			});
+		};
+		this._context.removeAllSubmitHook = () => {
+			this._submitHooks = {};
+			this.setState({failedBackgroundJobs: undefined});
+		};
+
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -342,8 +378,10 @@ export default class LajiForm extends Component {
 			}
 		};
 		if (!this.state || props.formData && props.formData !== this.props.formData) {
-			state.formData = this.addLajiFormIds(props.formData, this.tmpIdTree);
-			this._context.formData = props.formData;
+			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, undefined), this.tmpIdTree);
+			this._context.formData = state.formData;
+		} else {
+			state.formData = this.formRef.state.formData;
 		}
 		return state;
 	}
@@ -398,45 +436,63 @@ export default class LajiForm extends Component {
 	}
 
 	setTmpIdTree = (schema) => {
-		function walk(_schema, prop) {
+		function walk(_schema) {
 			if (_schema.properties) {
-				return Object.keys(_schema.properties).reduce((paths, key) => {
-					return {...paths, ...walk(_schema.properties[key], key)};
-				}, {});
+				const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
+					const walked = walk(_schema.properties[key]);
+					if (walked) {
+						paths[key] = walked;
+					}
+					return paths;
+				}, {})
+				if (Object.keys(_walked).length) return _walked;
 			} else if (_schema.type === "array" && _schema.items.type === "object") {
-				return {[prop]: walk(_schema.items, prop)};
+				return Object.keys(_schema.items.properties).reduce((paths, key) => {
+					const walked = walk(_schema.items.properties[key]);
+					if (walked) {
+						paths[key] = walked;
+					}
+					return paths;
+				}, {});
 			}
-			return {};
 		}
-		this.tmpIdTree = walk(schema, "");
+		this.tmpIdTree = walk(schema);
 	}
 
-	addLajiFormIds = (_formData, tree) => {
-		return Object.keys(_formData).reduce((f, k) => {
-			f[k] = tree[k] ? _formData[k].map(item => assignUUID(this.addLajiFormIds(item, tree[k]), "immutably")) : _formData[k];
-			return f;
-		}, {});
+	addLajiFormIds = (formData) => {
+		return addLajiFormIds(formData, this.tmpIdTree)[0];
 	}
-
 
 	removeLajiFormIds = (formData) => {
 		function walk(_formData, tree) {
-			return Object.keys(_formData).reduce((f, k) => {
-				if (k === "_lajiFormId") return f;
-				f[k] = tree[k] ? _formData[k].map(item => walk(item, tree[k])) : _formData[k];
-				return f;
-			}, {});
+			if (tree && isObject(_formData)) {
+				return Object.keys(_formData).reduce((f, k) => {
+					if (k === "_lajiFormId") return f;
+					if (tree[k]) {
+						f[k] = walk(_formData[k], tree[k]);
+					} else {
+						f[k] = _formData[k];
+					}
+					return f;
+				}, {});
+			} else if (tree && Array.isArray(_formData)) {
+				return _formData.map(item => walk(item, tree));
+			}
+			return _formData;
 		}
 
 		return walk(formData, this.tmpIdTree);
 	}
 
 	onChange = ({formData}) => {
+		this.onChangeTimestamp = Date.now();
 		if (this.props.onChange) {
 			const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
 			this.props.onChange(_formData);
 		}
-		this.setState({formData});
+		if (this.formRef) {
+			this.setState({formData: this.formRef.state.formData});
+		}
 		this._context.formData = formData;
 	}
 
@@ -469,8 +525,8 @@ export default class LajiForm extends Component {
 				)}
 				<Form
 					{...this.props}
-					ref={this.getRef}
 					formData={this.state.formData}
+					ref={this.getRef}
 					onChange={this.onChange}
 					onError={this.onError}
 					onSubmit={this.onSubmit}
@@ -495,7 +551,7 @@ export default class LajiForm extends Component {
 						null}
 					</div>
 			</Form>
-			{shortcuts ? 
+			{shortcuts && 
 				<Panel 
 					ref={this.getPanelRef} 
 					className="shortcut-help laji-form-popped z-depth-3 hidden" 
@@ -523,7 +579,15 @@ export default class LajiForm extends Component {
 							}</tbody>
 						</Table>
 				</Panel> 
-			: null}
+			}
+			<FailedBackgroundJobsPanel jobs={this.state.failedBackgroundJobs}
+																 schema={this.props.schema}
+																 uiSchema={this.props.uiSchema}
+																 context={this._context}
+																 translations={translations}
+																 errorClickHandler={this.errorClickHandler}
+			                           tmpIdTree={this.tmpIdTree}
+			/>
 		</div>
 		);
 	}
@@ -606,19 +670,16 @@ export default class LajiForm extends Component {
 	}
 
 	onSubmit = (props) => {
-		Promise.all(Object.keys(this._submitHooks).map(id => this._submitHooks[id])).then(() => {
-			this.popBlockingLoader();
-			if (this.propagateSubmit && this.props.onSubmit) {
-				this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
-			}
-			this.propagateSubmit = true;
-			this.validationSettings.ignoreWarnings = false;
-		});
+		this.popBlockingLoader();
+		if (this.propagateSubmit && this.props.onSubmit) {
+			this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
+		}
+		this.propagateSubmit = true;
+		this.validationSettings.ignoreWarnings = false;
 	}
 
 	onError = () => {
 		this.popBlockingLoader();
-
 		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(findDOMNode(this._context.errorList), this.props.topOffset, this.props.bottomOffset);
 		const scrollAmount = wouldScrollTo - getWindowScrolled();
 
@@ -637,13 +698,27 @@ export default class LajiForm extends Component {
 	submit = (propagate = true, ignoreWarnings = false) => {
 		const {uiSchema} = this.props;
 		if (uiSchema["ui:disabled"] || uiSchema["ui:readonly"]) {
-			return;
+			return false;
 		}
 		this.pushBlockingLoader();
-		this.validateAll = true;
-		this.propagateSubmit = propagate;
-		this.validationSettings.ignoreWarnings = ignoreWarnings;
-		this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
+		const {onChangeTimestamp} = this;
+		Promise.all(Object.keys(this._submitHooks).reduce((ps, id) => ([ps, ...this._submitHooks[id]]), [])).then(() => {
+			// RJSF onChange call happens after setState call, so we must wait for the onChange call. Not necessarily very robust?
+			setTimeout(() => {
+				if (onChangeTimestamp !== this.onChangeTimestamp) {
+					if (this.submit(propagate, ignoreWarnings) !== false) {
+						this.popBlockingLoader();
+					}
+					return;
+				}
+				this.validateAll = true;
+				this.propagateSubmit = propagate;
+				this.validationSettings.ignoreWarnings = ignoreWarnings;
+				this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
+			}, 0);
+		}).catch(() => {
+			this.popBlockingLoader();
+		});
 	}
 
 	getShorcutButtonTooltip = () => {

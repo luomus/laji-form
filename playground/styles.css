@@ -461,6 +461,9 @@ min-height: 20px;
 	width: inherit;
 	height: inherit;
 }
+.laji-form .laji-form-images .image-loading img {
+	opacity: 0.5;
+}
 
 .laji-form .taxon-img {
 	border: 1px solid #eeeeee;
@@ -778,6 +781,10 @@ min-height: 20px;
 	max-height: 90%;
 	overflow: auto;
 }
+.laji-form .laji-form-failed-jobs-list {
+	left: initial !important;
+	right: 5px;
+}
 .laji-form .laji-form-error-list {
 	top: 5px;
 	left: 5px;
@@ -916,7 +923,7 @@ min-height: 20px;
 	padding: 0px !important;
 	border: 0px !important;
 }
-.laji-form .single-active-array-table td > img, .laji-form .single-active-array-table td > .image-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
+.laji-form .single-active-array-table td img, .laji-form .single-active-array-table td > .image-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
 	height: 15px;
 	width: 15px;
 }

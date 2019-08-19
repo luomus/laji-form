@@ -17,6 +17,7 @@ import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import { getButton } from "../ArrayFieldTemplate";
+import { onArrayFieldChange } from "./ArrayField";
 
 export function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
@@ -123,7 +124,7 @@ class DefaultMapArrayField extends Component {
 			));
 		}, formData);
 
-		this.props.onChange([formData]);
+		this.props.onChange(onArrayFieldChange([formData], this.props));
 		this.setState({activeIdx: 0});
 	}
 
@@ -157,23 +158,27 @@ class DefaultMapArrayField extends Component {
 	onChange(events) {
 		let formData = this.props.formData ||
 			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+		let addOrDelete = false;
 		events.forEach(e => {
 			switch (e.type) {
 			case "create":
+				addOrDelete = true;
 				formData = this.onAdd(e, formData);
 				break;
 			case "delete":
+				addOrDelete = true;
 				formData = this.onRemove(e, formData);
 				break;
 			case "edit":
 				formData = this.onEdited(e, formData);
 				break;
 			case "insert":
+				addOrDelete = true;
 				formData = this.onInsert(e, formData);
 				break;
 			}
 		});
-		this.props.onChange(formData);
+		this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
 	}
 
 	onAdd({feature: {geometry}}, formData) {
@@ -608,9 +613,9 @@ class LineTransectMapArrayField extends Component {
 	}
 
 	onLineCreate = ([event]) => {
-		this.props.onChange(update(this.props.formData, {0: {geometry: {$set: 
+		this.props.onChange(onArrayFieldChange(update(this.props.formData, {0: {geometry: {$set: 
 			event.feature.geometry
-		}}}));
+		}}}), this.props));
 	}
 
 	onChange = (events) => {
@@ -618,10 +623,12 @@ class LineTransectMapArrayField extends Component {
 		let state = {};
 		let {formData} = this.props;
 		let formDataChanged = false;
+		let addOrDelete = false;
 		events.forEach(e => {
 			switch (e.type) {
 			case "insert": {
 				formDataChanged = true;
+				addOrDelete = true;
 				const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
 				newItem[geometryField] = e.geometry;
 				formData = update(formData, {
@@ -640,11 +647,13 @@ class LineTransectMapArrayField extends Component {
 			}
 			case "delete": {
 				formDataChanged = true;
+				addOrDelete = true;
 				formData = update(formData, {$splice: [[e.idx, 1]]});
 				break;
 			}
 			case "merge": {
 				formDataChanged = true;
+				addOrDelete = true;
 				const [first, second] = e.idxs;
 				formData = update(formData, {[first]: {units: {$set: [
 					...formData[first].units,
@@ -678,7 +687,7 @@ class LineTransectMapArrayField extends Component {
 		});
 		const afterState = () => {
 			if (formDataChanged) {
-				this.props.onChange(formData);
+				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
 			}
 			if ("activeIdx" in state) {
 				this.afterActiveChange(state.activeIdx);
@@ -1268,7 +1277,7 @@ class _MapArrayField extends ComposedComponent {
 	
 	customAdd = () => () => {
 		const nextActive = this.props.formData.length;
-		this.props.onChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]);
+		this.props.onChange([...this.props.formData, onArrayFieldChange([getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)], this.props)[0]]);
 		this.setState({activeIdx: nextActive});
 	}
 

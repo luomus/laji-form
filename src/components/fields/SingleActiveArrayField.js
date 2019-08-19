@@ -755,11 +755,12 @@ class TableArrayFieldTemplate extends Component {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
-		const {schema, uiSchema, formData, items, TitleField, DescriptionField, disabled, readonly} = this.props;
+		const {schema, uiSchema = {}, formData, items, TitleField, DescriptionField, disabled, readonly} = this.props;
 		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(this.props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
 		const shownColumnsDict = dictionarify(shownColumns);
+		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
 				const found = 
@@ -772,7 +773,9 @@ class TableArrayFieldTemplate extends Component {
 						    || Array.isArray(item[prop]) && !item[prop].every(isEmptyString))
 						&& !isHidden(uiSchema.items, prop)
 						&& !isHidden(getNestedTailUiSchema(uiSchema.items), prop)
-					);
+					)
+					|| uiSchema.items && uiSchema.items[prop] && uiSchema.items[prop]["ui:field"] === "ImageArrayField" && item._lajiFormId && tmpImgs[item._lajiFormId]
+				;
 				if (found) foundProps[prop] = true;
 				return found;
 			})) {
@@ -825,7 +828,7 @@ class TableArrayFieldTemplate extends Component {
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
-								{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
+							{items.length > 1 || (that.state.activeIdx !== undefined && that.state.activeIdx !== 0) ? (
 								<thead ref={this.setTHeadRef}>
 										<tr className="darker">
 											{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
@@ -867,7 +870,7 @@ class TableArrayFieldTemplate extends Component {
 					<div className="laji-form-field-template-buttons" />
 				</div>
 				{activeIdx !== undefined && items[activeIdx] ? (
-					<div key={activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
+					<div key={formData[activeIdx]._lajiFormId || activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
 						<div className="laji-form-field-template-schema">{items[activeIdx].children}</div>
 						<div className="laji-form-field-template-buttons">{getDeleteButtonFor(activeIdx, items[activeIdx])}</div>
 					</div>

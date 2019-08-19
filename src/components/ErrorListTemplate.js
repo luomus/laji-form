@@ -72,7 +72,7 @@ export default class ErrorListTemplate extends Component {
 		};
 
 		return (
-			<div className={`laji-form-clickable-panel laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
+			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
 				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
 				<ErrorPanel classNames="error-panel"
 							ref="errorPanel"
@@ -90,11 +90,9 @@ export default class ErrorListTemplate extends Component {
 							poppedToggle={poppedToggle}/>
 				<div className="panel-footer">
 					<div>
-					 {errors.length > 0 ?
-							<Button onClick={revalidate}><Glyphicon glyph="refresh"/>
-							 {translations.Revalidate}
-							</Button> :
-							<Button onClick={submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
+						{errors.length > 0
+							? <Button onClick={revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
+							: <Button onClick={submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
 						}
 					</div>
 				</div>

@@ -5,6 +5,7 @@ import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover,
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Spinner from "react-spinner";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
 
 export class Button extends Component {
 	render() {
@@ -478,11 +479,14 @@ export class ErrorPanel extends Component {
 				</PanelHeading>
 				<PanelCollapse>
 					<ListGroup>
-						{errors.map(({label, error, id}, i) =>  {
-							const _clickHandler = () => clickHandler(id);
+						{errors.map(({label, error, id, getId, extra = null}, i) => {
+							const _clickHandler = () => {
+								clickHandler(id || (getId ? getId() : undefined));
+							};
+
 							return (
 								<ListGroupItem key={i} onClick={_clickHandler}>
-									{label ? <b>{label}:</b> : null} {error}
+									{label ? <b>{label}:</b> : null} {error} {extra}
 								</ListGroupItem>
 							);
 						})}
@@ -641,5 +645,51 @@ export class Fullscreen extends Component {
 					{this.props.children}
 			</div>
 		), document.body);
+	}
+}
+
+export class FailedBackgroundJobsPanel extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {popped: true};
+	}
+
+	dismissFailedJob = (id, hook) => (e) => {
+		e.stopPropagation();
+		this.props.context.removeSubmitHook(id, hook);
+	}
+	render() {
+		const {jobs = [], schema, uiSchema, translations} = this.props;
+		if (!jobs.length) return null;
+
+		const errors = jobs.map(({lajiFormId, relativePointer, e, hook}) => {
+			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer)
+			const jsonPointer = getJsonPointer();
+			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
+				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely")
+				|| lajiFormId.match(/[^_]+$/)[0];
+			const dismissButton = <a className="pull-right" onClick={this.dismissFailedJob(lajiFormId, hook)}>{translations.Dismiss}</a>;
+
+			const getId = () => {
+				const jsonPointer = getJsonPointer();
+				return `root_${JSONPointerToId(jsonPointer)}`;
+			}
+			return {getId, label, error: e, extra: dismissButton}
+		});
+
+		return (
+			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}>
+				<ErrorPanel 
+					title={translations.FailedBackgroundJobs}
+					errors={errors}
+					showToggle={true}
+					clickHandler={this.props.errorClickHandler}
+					classNames="error-panel"
+				/>
+				<div className="panel-footer">
+					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+				</div>
+			</div>
+		);
 	}
 }

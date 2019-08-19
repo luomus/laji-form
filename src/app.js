@@ -46,14 +46,18 @@ export default class LajiFormWrapper {
 	}
 }
 
+//TODO SADF:LKJ
 class LajiFormApp extends Component {
-	constructor(props) {
-		super(props);
-		this.state = props;
+	onChange = (formData) => {
+		if (this.props.onChange) {
+			this.props.onChange(formData);
+		}
+		//this.setState({formData});
 	}
 
 	render() {
-		if (!this.state.schema) return null;
-		return <LajiForm {...this.state} ref="lajiform"/>;
+		if (!this.props.schema) return null;
+		//return <LajiForm {...this.state} onChange={this.onChange} ref="lajiform"/>;
+		return <LajiForm {...this.props} ref="lajiform"/>;
 	}
 }

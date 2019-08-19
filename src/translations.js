@@ -659,4 +659,14 @@
 		en: "Choose this location",
 		sv: "Välj den här platsen"
 	},
+	failedBackgroundJobs: {
+		fi: "Jokin meni pieleen, tarkista alla olevat tiedot",
+		en: "Something went wrong, please check the details below",
+		sv: "Något gick fel, kolla detaljerna nedan"
+	},
+	dismiss: {
+		fi: "Kuittaa",
+		en: "Dismiss",
+		sv: "Avfärda"
+	}
 };

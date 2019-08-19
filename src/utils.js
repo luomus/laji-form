@@ -575,7 +575,7 @@ export function formatValue(props, _formatter, parentProps) {
 
 	let formatted = formData;
 	if (formatter) {
-		formatted = formatter(formData, getUiOptions(uiSchema), props);
+		formatted = formatter(formData, getUiOptions(uiSchema), props, parentProps);
 	} else if (isEmptyString(formData)) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
@@ -736,6 +736,8 @@ export function checkJSONPointer(obj, pointer) {
 
 export const JSONPointerToId = fieldName => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;
 
+export const idSchemaIdToJSONPointer = id => id.replace(/root_|_/g, "/");
+
 export function schemaJSONPointer(schema, JSONPointer) {
 	if (JSONPointer[0] !== "/") {
 		JSONPointer = `/${JSONPointer}`;
@@ -818,3 +820,93 @@ export const assignUUID = (item, immutably = false) => {
 };
 
 export const getUUID = (item) => item ? (item.id || item._lajiFormId) : undefined;
+
+
+function walkFormDataWithIdTree(_formData, tree, itemOperator) {
+	const ids = {};
+	const walk = (_formData, tree) => {
+		if (!tree) return _formData;
+		if (Object.keys(tree).length && isObject(_formData)) {
+			return Object.keys(_formData).reduce((f, k) => {
+				if (tree[k]) {
+					f[k] = walk(_formData[k], tree[k], itemOperator);
+				} else {
+					f[k] = _formData[k];
+				}
+				return f;
+			}, {});
+		} else if (tree && Array.isArray(_formData)) {
+			return _formData.map(item => {
+				item = walk(item, tree, itemOperator);
+				item = itemOperator ? itemOperator(item) : item;
+				if (item._lajiFormId) {
+					ids[item._lajiFormId] = true;
+				}
+				return item;
+			});
+		}
+		return _formData;
+	};
+
+	const formData = walk(_formData, tree);
+	return [formData, ids];
+}
+
+export function addLajiFormIds(_formData, tree, immutably = true) {
+	const itemOperator = item => assignUUID(item, immutably);
+	return walkFormDataWithIdTree(_formData, tree, itemOperator);
+}
+
+export function getAllLajiFormIdsDeeply(_formData, tree) {
+	return walkFormDataWithIdTree(_formData, tree)[1];
+}
+
+export function findPointerForLajiFormId(tmpIdTree, formData, lajiFormId) {
+	if (formData && formData._lajiFormId === lajiFormId) {
+		return "";
+	}
+	for (const k of Object.keys(tmpIdTree)) {
+		if (isObject(formData[k])) {
+			const find = findPointerForLajiFormId(tmpIdTree[k], formData[k], lajiFormId);
+			if (find !== undefined || find === "") {
+				return `/${k}${find}`;
+			}
+		} else if (Array.isArray(formData[k])) {
+			for (const i in formData[k]) {
+				const item = formData[k][i];
+				const find = findPointerForLajiFormId(tmpIdTree[k], item, lajiFormId);
+				if (find !== undefined || find === "") {
+					return `/${k}/${i}${find}`;
+				}
+			}
+		}
+	}
+}
+
+export function getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId) {
+	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
+	if (!containerPointer) {
+		return;
+	}
+	const indicesCount = containerPointer.match(/\/[0-9]+/g).length;
+	const containerPointerWithoutArrayIndices = containerPointer.replace(/[0-9]+/g, "");
+	const thisPointer = idSchemaId.replace("root", "").replace(/_/g, "/");
+	let thisPointerWithoutContainerIndices = thisPointer;
+	for (let i = indicesCount; i > 0; i--) {
+		thisPointerWithoutContainerIndices = thisPointerWithoutContainerIndices.replace(/[0-9]+/, "");
+	}
+	return thisPointerWithoutContainerIndices.replace(containerPointerWithoutArrayIndices, "");
+}
+
+export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree, formData, idSchemaId, lajiFormId) {
+	const relativePointer = getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId);
+	return getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer);
+}
+
+export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer) {
+	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
+	if (!containerPointer) {
+		return;
+	}
+	return containerPointer + relativePointer;
+}
