@@ -626,7 +626,7 @@ export class Fullscreen extends Component {
 	componentDidMount() {
 		this.bodyOverFlow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
-		if (document.activeElement === document.body) {
+		if (!document.activeElem || document.activeElement === document.body) {
 			this.elem.focus();
 		}
 	}
