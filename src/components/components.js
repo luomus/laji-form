@@ -662,7 +662,10 @@ export class FailedBackgroundJobsPanel extends Component {
 		const {jobs = [], schema, uiSchema, translations} = this.props;
 		if (!jobs.length) return null;
 
-		const errors = jobs.map(({lajiFormId, relativePointer, e, hook}) => {
+		const errors = jobs.reduce((_errors, {lajiFormId, relativePointer, e, hook}) => {
+			if (!e) {
+				return _errors;
+			}
 			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer)
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
@@ -675,8 +678,10 @@ export class FailedBackgroundJobsPanel extends Component {
 			}
 			const error = {getId, error: e, extra: dismissButton};
 			if (label) error.label = label;
-			return error;
-		});
+			return [..._errors, error];
+		}, []);
+
+		if (!errors.length) return null;
 
 		return (
 			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}>

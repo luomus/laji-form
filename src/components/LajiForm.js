@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, ErrorPanel, FailedBackgroundJobsPanel } from "./components";
-import { Panel, Table } from "react-bootstrap";
+import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, assignUUID, addLajiFormIds, idSchemaIdToJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer } from "../utils";
 import equals from "deep-equal";
@@ -300,40 +300,25 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		this._submitHooks = {};
-		this._context.addSubmitHook = (lajiFormId, relativePointer, hook) => {
-			if (!this._submitHooks[lajiFormId]) this._submitHooks[lajiFormId] = [];
-			const _hook = hook.catch(e => {
-				const failedBackgroundJobs = ((this.state.failedBackgroundJobs || []).filter((job) => job.lajiFormId !== lajiFormId || job.hook !== _hook));
-				this.setState({
-					failedBackgroundJobs: [
-						...failedBackgroundJobs,
-						{lajiFormId, relativePointer, hook: _hook, e}
-					]
-				});
+		this._context.addSubmitHook = (lajiFormId, relativePointer, hook, description) => {
+			const _hook = hook.then(() => {
+				this._context.removeSubmitHook(lajiFormId, _hook);
+			}).catch(e => {
+				this.setState({submitHooks: this.state.submitHooks.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false} : hookItem)});
 				throw e;
 			});
-			this._submitHooks[lajiFormId].push(_hook);
+
+			this.setState({submitHooks: [
+				...(this.state.submitHooks || []),
+				{hook: _hook, lajiFormId, description, relativePointer, running: true}
+			]});
 			return _hook;
 		};
 		this._context.removeSubmitHook = (lajiFormId, hook) => {
-			if (!this._submitHooks[lajiFormId]) {
-				return;
-			}
-			const hookFilterer = submitHook => submitHook !== hook;
-			const lajiFormIdFilterer = submitHook => submitHook.lajiFormId !== +lajiFormId;
-			if (hook) {
-				this._submitHooks[lajiFormId] = this._submitHooks[lajiFormId].filter(hookFilterer);
-			} else {
-				delete this._submitHooks[lajiFormId];
-			}
-			this.setState({
-				failedBackgroundJobs: (this.state.failedBackgroundJobs || []).filter(hook ? job => hookFilterer(job.hook) : lajiFormIdFilterer)
-			});
+			this.setState({submitHooks: (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId))});
 		};
 		this._context.removeAllSubmitHook = () => {
-			this._submitHooks = {};
-			this.setState({failedBackgroundJobs: undefined});
+			this.setState({submitHooks: []});
 		};
 
 		this.state = this.getStateFromProps(props);
@@ -581,15 +566,30 @@ export default class LajiForm extends Component {
 						</Table>
 				</Panel> 
 			}
-			<FailedBackgroundJobsPanel jobs={this.state.failedBackgroundJobs}
-																 schema={this.props.schema}
-																 uiSchema={this.props.uiSchema}
-																 context={this._context}
-																 translations={translations}
-																 errorClickHandler={this.errorClickHandler}
+			<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
+			                           schema={this.props.schema}
+			                           uiSchema={this.props.uiSchema}
+			                           context={this._context}
+			                           translations={translations}
+			                           errorClickHandler={this.errorClickHandler}
 			                           tmpIdTree={this.tmpIdTree}
 			/>
+			{this.renderSubmitHooks()}
 		</div>
+		);
+	}
+
+	renderSubmitHooks = () => {
+		if (!this.state || !this.state.submitHooks) return;
+		const jobsAmount = this.state.submitHooks.length;
+		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
+		if (!this.state.submitting) return null;
+
+		return (
+			<div className="running-jobs">
+					{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
+				<ProgressBar now={100 / jobsAmount * (jobsAmount - runningAmount)} />
+			</div>
 		);
 	}
 
@@ -703,7 +703,9 @@ export default class LajiForm extends Component {
 		}
 		this.pushBlockingLoader();
 		const {onChangeTimestamp} = this;
-		Promise.all(Object.keys(this._submitHooks).reduce((ps, id) => ([ps, ...this._submitHooks[id]]), [])).then(() => {
+		this.setState({submitting: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
+		Promise.all((this.state.submitHooks || []).map(({hook}) => hook)).then(() => {
+			this.setState({submitting: false});
 			// RJSF onChange call happens after setState call, so we must wait for the onChange call. Not necessarily very robust?
 			setTimeout(() => {
 				if (onChangeTimestamp !== this.onChangeTimestamp) {
@@ -718,6 +720,7 @@ export default class LajiForm extends Component {
 				this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
 			}, 0);
 		}).catch(() => {
+			this.setState({submitting: false});
 			this.popBlockingLoader();
 		});
 	}

@@ -385,12 +385,14 @@ export default class GeocoderField extends Component {
 						"content-type": "application/json"
 					},
 					body: JSON.stringify(geometry)
-				}).then(response => {
-					return response.json();
-				}).then(handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince", "biogeographicalProvince")).catch((e) => {
+				}).then(
+					response => response.json()
+				).then(
+					handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince", "biogeographicalProvince")
+				).catch((e) => {
 					fail(e.message);
 				});
-		}));
+		}), "Haetaan sijaintia");
 	}
 
 	render() {

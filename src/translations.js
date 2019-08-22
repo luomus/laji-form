@@ -678,5 +678,10 @@
 		fi: "Pyyntö epäonnistui",
 		en: "Request failed",
 		sv: "Begäran misslyckades"
+	},
+	pendingRunningJobs: {
+		fi: "Odotetaan taustaprosesseja",
+		en: "Waiting for background jobs",
+		sv: "väntar på bakgrundsjobb"
 	}
 };

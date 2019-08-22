@@ -1430,3 +1430,16 @@ min-height: 20px;
 .laji-form.image-add-modal .modal-body > *:last-child {
 	margin-bottom: inherit;
 }
+
+.laji-form .running-jobs {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, 0);
+	z-index: 100009000;
+	color: white;
+	font-weight: bold;
+}
+.laji-form .running-jobs .progress {
+	margin-top: 5px;
+}

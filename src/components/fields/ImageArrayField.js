@@ -439,6 +439,7 @@ export default class ImageArrayField extends Component {
 
 			if (this.mounted || id === "root") {
 				this.props.onChange(newFormData);
+				// Settimeout because the resource is undefined 404 if fetched right away.
 				setTimeout(() => {
 					if (!this.mounted) return;
 					const {autoOpenMetadataModal = true} = getUiOptions(this.props.uiSchema);
