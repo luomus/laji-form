@@ -424,7 +424,6 @@ export default class ImageArrayField extends Component {
 			this.setState({imageAddModal: undefined});
 		}
 
-
 		const id = this.getContainerId();
 
 		const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
@@ -440,6 +439,14 @@ export default class ImageArrayField extends Component {
 
 			if (this.mounted || id === "root") {
 				this.props.onChange(newFormData);
+				setTimeout(() => {
+					if (!this.mounted) return;
+					const {autoOpenMetadataModal = true} = getUiOptions(this.props.uiSchema);
+					let shouldOpenMetadataModal = autoOpenMetadataModal;
+					if (shouldOpenMetadataModal) {
+						this.openModalFor(newFormData.length - imgIds.length)();
+					}
+				}, 0);
 				return;
 			}
 
@@ -465,7 +472,6 @@ export default class ImageArrayField extends Component {
 		};
 
 		return this.processFiles(files).then((processedFiles) => {
-			fail("InvalidFile");
 			let invalidFile = (files.length <= 0);
 			let fileTooLarge = false;
 			let noValidData = true;
@@ -537,22 +543,12 @@ export default class ImageArrayField extends Component {
 			if (!response) return;
 			const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
 
-			const {autoOpenMetadataModal = true} = getUiOptions(this.props.uiSchema);
-
 			tmpImgs.forEach(id => {
 				delete this._context.tmpImgs[containerId][id];
 			});
 			this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
-
-
-			let shouldOpenMetadataModal = autoOpenMetadataModal;
-
 			this.parseExif(files);
-			if (shouldOpenMetadataModal && this.mounted) {
-				this.openModalFor(this.props.formData.length - files.length)();
-			}
 			return ids;
-
 		}).catch((e) => {
 			if (tmpImgs) {
 				tmpImgs.forEach(id => {
