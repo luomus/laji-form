@@ -1858,9 +1858,12 @@ export class Map extends Component {
 		if (this.state.fullscreen && !prevState.fullscreen) {
 			this._mapContainer = this.map.rootElem;
 			this.map.setRootElem(findDOMNode(this.fullscreenRef));
+			this.origBodyAsDialogRoot = this.map._dialogRoot === document.body;
+			this.map.setOption("bodyAsDialogRoot", false);
 			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", false);
 		} else if (!this.state.fullscreen && prevState.fullscreen) {
 			this.map.setRootElem(this._mapContainer);
+			this.map.setOption("bodyAsDialogRoot", this.origBodyAsDialogRoot);
 			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", true);
 		}
 	}
@@ -1899,9 +1902,6 @@ export class Map extends Component {
 					text: formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
 				}
 			];
-			mapOptions.bodyAsDialogRoot = mapOptions.bodyAsDialogRoot !== undefined
-				? mapOptions.bodyAsDialogRoot
-				: !this.state.fullscreen;
 		}
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;
