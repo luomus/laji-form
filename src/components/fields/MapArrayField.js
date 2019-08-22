@@ -1277,7 +1277,7 @@ class _MapArrayField extends ComposedComponent {
 	
 	customAdd = () => () => {
 		const nextActive = this.props.formData.length;
-		this.props.onChange([...this.props.formData, onArrayFieldChange([getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)], this.props)[0]]);
+		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)], this.props));
 		this.setState({activeIdx: nextActive});
 	}
 

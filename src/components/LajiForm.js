@@ -314,6 +314,7 @@ export default class LajiForm extends Component {
 				throw e;
 			});
 			this._submitHooks[lajiFormId].push(_hook);
+			return _hook;
 		};
 		this._context.removeSubmitHook = (lajiFormId, hook) => {
 			if (!this._submitHooks[lajiFormId]) {
@@ -327,7 +328,7 @@ export default class LajiForm extends Component {
 				delete this._submitHooks[lajiFormId];
 			}
 			this.setState({
-				failedBackgroundJobs: (this.state.failedBackgroundJobs || []).map(({hook}) => hook).filter(hook ? hookFilterer : lajiFormIdFilterer)
+				failedBackgroundJobs: (this.state.failedBackgroundJobs || []).filter(hook ? job => hookFilterer(job.hook) : lajiFormIdFilterer)
 			});
 		};
 		this._context.removeAllSubmitHook = () => {

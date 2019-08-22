@@ -666,15 +666,16 @@ export class FailedBackgroundJobsPanel extends Component {
 			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer)
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
-				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely")
-				|| lajiFormId.match(/[^_]+$/)[0];
+				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely");
 			const dismissButton = <a className="pull-right" onClick={this.dismissFailedJob(lajiFormId, hook)}>{translations.Dismiss}</a>;
 
 			const getId = () => {
 				const jsonPointer = getJsonPointer();
 				return `root_${JSONPointerToId(jsonPointer)}`;
 			}
-			return {getId, label, error: e, extra: dismissButton}
+			const error = {getId, error: e, extra: dismissButton};
+			if (label) error.label = label;
+			return error;
 		});
 
 		return (

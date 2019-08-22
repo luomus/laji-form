@@ -668,5 +668,15 @@
 		fi: "Kuittaa",
 		en: "Dismiss",
 		sv: "Avfärda"
+	},
+	geocodingTimeout: {
+		fi: "Paikkatietojen haussa kesti liian kauan",
+		en: "Geocoding timed out",
+		sv: "Geokodning avbröts"
+	},
+	requestFailed: {
+		fi: "Pyyntö epäonnistui",
+		en: "Request failed",
+		sv: "Begäran misslyckades"
 	}
 };
