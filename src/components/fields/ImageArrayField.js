@@ -260,6 +260,7 @@ export default class ImageArrayField extends Component {
 								onSubmit={this.onImageMetadataUpdate}
 								submitText={translations.Save}
 								lang={lang}
+								apiClient={this.props.formContext.apiClient.apiClient}
 								showShortcutButton={false}>
 								{(metadataSaveSuccess !== undefined) ? (
 										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>

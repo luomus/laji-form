@@ -236,6 +236,7 @@ class AnnotationBox extends Component {
 				renderSubmit={renderSubmit}
 				formData={addFormData}
 				lang={lang}
+				apiClient={this.props.formContext.apiClient.apiClient}
 			>
 				{<div>
 					{this.state.fail !== undefined && 
@@ -294,7 +295,7 @@ class AnnotationBox extends Component {
 									lang={lang}
 									formData={annotation}
 									renderSubmit={false}
-									apiClient={apiClient}
+									apiClient={apiClient.apiClient}
 								/>
 								{annotation.annotationByPerson === creator ? <DeleteButton onClick={this.onDelete(annotation.id)} translations={translations} corner={true}/> : null}
 							</div>

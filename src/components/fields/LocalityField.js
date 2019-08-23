@@ -82,6 +82,7 @@ export default class LocalityField extends Component {
 						validators={{}}
 						warnings={{}}
 						warnings={{}}
+						apiClient={this.props.formContext.apiClient.apiClient}
 					/>
 					<Button block onClick={this.onSubmitClick}>OK</Button>
 					<Button block onClick={this.hideEditor}>{this.props.formContext.translations.Cancel}</Button>
