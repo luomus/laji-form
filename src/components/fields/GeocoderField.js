@@ -225,6 +225,8 @@ export default class GeocoderField extends Component {
 		const lajiFormInstance = mainContext.formInstance;
 		const formInstance = this.props.formContext.getFormRef();
 		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, this.getID());
+		const timestamp = Date.now();
+		this.promiseTimestamp = timestamp;
 		if (this.getComponentContext().hook) {
 			mainContext.removeSubmitHook(this.getID(), this.getComponentContext().hook);
 		}
@@ -338,12 +340,13 @@ export default class GeocoderField extends Component {
 					});
 					if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
 					success(() => {
+						if (timestamp !== this.promiseTimestamp) return;
 						if (this.mounted) {
 							this.props.onChange({...this.props.formData, ...changes});
 						} else {
 							const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, this.getID());
 							const newFormData = {...parseJSONPointer(formInstance.state.formData, pointer), ...changes};
-							formInstance.onChange(updateSafelyWithJSONPath(formInstance.state.formData, newFormData, pointer));
+							lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(formInstance.state.formData, newFormData, pointer)});
 						}
 						if (callback) callback();
 					});
@@ -368,6 +371,7 @@ export default class GeocoderField extends Component {
 			this.getComponentContext().fetching = true;
 
 			this.getContext().setTimeout(() => {
+				if (timestamp !== this.promiseTimestamp) return;
 				if (this.getComponentContext().fetching) {
 					fail(this.props.formContext.translations.GeocodingTimeout);
 					this.mounted && this.setState({timeout: true}, () => {
