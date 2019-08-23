@@ -522,7 +522,9 @@ export function updateSafelyWithJSONPath(obj, value, path, immutably = true, cre
 		let _splitPath = "";
 		splitPath.reduce((o, split) => {
 			_splitPath += `/${split}`;
-			console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
+			if (process.env.NODE_ENV === "production"){
+				console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
+			}
 			if (!o[split]) {
 				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: createNew(obj, _splitPath, o, split)}));
 			}
