@@ -527,6 +527,7 @@ export default class LajiForm extends Component {
 					noHtml5Validate={true}
 					liveValidate={true}
 					autocomplete="off"
+					safeRenderCompletion={true}
 				>
 				<div>
 					{this.props.children}
