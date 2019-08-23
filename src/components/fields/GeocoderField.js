@@ -223,8 +223,7 @@ export default class GeocoderField extends Component {
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
 		const lajiFormInstance = mainContext.formInstance;
-		const formInstance = this.props.formContext.getFormRef();
-		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, this.getID());
+		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getID());
 		const timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
 		if (this.getComponentContext().hook) {
@@ -344,9 +343,9 @@ export default class GeocoderField extends Component {
 						if (this.mounted) {
 							this.props.onChange({...this.props.formData, ...changes});
 						} else {
-							const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, this.getID());
-							const newFormData = {...parseJSONPointer(formInstance.state.formData, pointer), ...changes};
-							lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(formInstance.state.formData, newFormData, pointer)});
+							const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getID());
+							const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};
+							lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
 						}
 						if (callback) callback();
 					});

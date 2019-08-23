@@ -5,7 +5,7 @@ import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover,
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Spinner from "react-spinner";
-import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, isObject } from "../utils";
 
 export class Button extends Component {
 	render() {
@@ -480,13 +480,14 @@ export class ErrorPanel extends Component {
 				<PanelCollapse>
 					<ListGroup>
 						{errors.map(({label, error, id, getId, extra = null}, i) => {
+							const message = error && error.message ? error.message : error;
 							const _clickHandler = () => {
 								clickHandler(id || (getId ? getId() : undefined));
 							};
 
 							return (
 								<ListGroupItem key={i} onClick={_clickHandler}>
-									{label ? <b>{label}:</b> : null} {error} {extra}
+									{label ? <b>{label}:</b> : null} {message} {extra}
 								</ListGroupItem>
 							);
 						})}

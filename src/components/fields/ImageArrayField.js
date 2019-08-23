@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } fro
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getRelativePointer } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getRelativePointer, getUUID } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
@@ -375,7 +375,7 @@ export default class ImageArrayField extends Component {
 									}
 								}
 							}
-						}
+						};
 
 						if (found.hasOwnProperty("date")) {
 							try {
@@ -398,9 +398,9 @@ export default class ImageArrayField extends Component {
 				})
 			);
 		}, Promise.resolve(found)).then((found) => {
-			let {registry: {definitions}, formContext: {contextId, getFormRef}} = this.props;
-			const formInstance = getFormRef();
-			let {formData, schema} = formInstance.state;
+			let {registry: {definitions}, formContext: {contextId, formInstance}} = this.props;
+			const {schema} = formInstance.props;
+			let {formData} = formInstance.state;
 			let changed = false;
 			exifParsers.filter(f => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}) => {
 				if (type === "mutate") {
@@ -415,7 +415,7 @@ export default class ImageArrayField extends Component {
 				}
 			});
 			if (changed) {
-				formInstance.onChange(formData);
+				formInstance.onChange({formData});
 			}
 		});
 	}
@@ -428,7 +428,6 @@ export default class ImageArrayField extends Component {
 		const id = this.getContainerId();
 
 		const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
-		const formInstance = this.props.formContext.getFormRef();
 		const saveAndOnChange = this.saveImages(files).then(imgIds => {
 			if (!lajiFormInstance.mounted) {
 				return;
@@ -452,11 +451,11 @@ export default class ImageArrayField extends Component {
 				return;
 			}
 
-			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, id);
-			formInstance.onChange(updateSafelyWithJSONPath(formInstance.state.formData, newFormData, pointer));
+			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+			lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
 		});
 
-		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, formInstance.state.formData, this.props.idSchema.$id, id);
+		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
 		new Context(this.props.formContext.contextId).addSubmitHook(id, relativePointer, saveAndOnChange);
 	}
 
@@ -487,7 +486,7 @@ export default class ImageArrayField extends Component {
 					this._context.tmpImgs[containerId][imgUuid] = f.dataURL;
 					return imgUuid;
 				});
-				this.setState({tmpImgs: [...(this.state.tmpImgs || []), ...tmpImgs]});
+				this.mounted && this.setState({tmpImgs: [...(this.state.tmpImgs || []), ...tmpImgs]});
 			}
 
 			const formDataBody = files.reduce((body, file) => {
@@ -548,7 +547,7 @@ export default class ImageArrayField extends Component {
 			tmpImgs.forEach(id => {
 				delete this._context.tmpImgs[containerId][id];
 			});
-			this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
+			this.mounted && this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
 			this.parseExif(files);
 			return ids;
 		}).catch((e) => {
@@ -556,9 +555,7 @@ export default class ImageArrayField extends Component {
 				tmpImgs.forEach(id => {
 					delete this._context.tmpImgs[containerId][id];
 				});
-				if (this.mounted) {
-					this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
-				}
+				this.mounted && this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
 			}
 			throw e;
 		});
@@ -599,7 +596,12 @@ export default class ImageArrayField extends Component {
 			body: JSON.stringify(formData)
 		}).then(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({metadataModalOpen: false}, () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess));
+			const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess);
+			if (this.mounted) {
+				this.setState({metadataModalOpen: false}, notify);
+			} else {
+				notify();
+			}
 			this.onSettingsChange({
 				intellectualRights: formData.intellectualRights,
 				capturerVerbatim: formData.capturerVerbatim,
@@ -607,7 +609,7 @@ export default class ImageArrayField extends Component {
 			});
 		}).catch(() => {
 			this.mainContext.popBlockingLoader();
-			this.setState({metadataSaveSuccess: false});
+			this.mounted && this.setState({metadataSaveSuccess: false});
 		});
 	}
 
@@ -660,10 +662,10 @@ export default class ImageArrayField extends Component {
 	formatValue(value, options, props, parentProps) {
 		const imgs = value && value.length ? value.map((id, idx) => <Thumbnail key={idx} id={id} apiClient={props.formContext.apiClient} />) : [];
 		const parentFormData = (parentProps ||{}).formData || {};
-		const {_lajiFormId} = parentFormData || {};
+		const lajiFormId = getUUID(parentFormData || {});
 		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");
-		if (_lajiFormId && tmpImgs[_lajiFormId]) {
-			return [...imgs, ...Object.keys(tmpImgs[_lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpImgs[_lajiFormId][id]} />)];
+		if (lajiFormId && tmpImgs[lajiFormId]) {
+			return [...imgs, ...Object.keys(tmpImgs[lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpImgs[lajiFormId][id]} />)];
 		}
 		return imgs;
 	}

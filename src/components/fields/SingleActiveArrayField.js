@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
@@ -774,7 +774,7 @@ class TableArrayFieldTemplate extends Component {
 						&& !isHidden(uiSchema.items, prop)
 						&& !isHidden(getNestedTailUiSchema(uiSchema.items), prop)
 					)
-					|| uiSchema.items && uiSchema.items[prop] && uiSchema.items[prop]["ui:field"] === "ImageArrayField" && item._lajiFormId && tmpImgs[item._lajiFormId]
+					|| uiSchema.items && uiSchema.items[prop] && uiSchema.items[prop]["ui:field"] === "ImageArrayField" && getUUID(item) && tmpImgs[getUUID(item)]
 				;
 				if (found) foundProps[prop] = true;
 				return found;
@@ -870,7 +870,7 @@ class TableArrayFieldTemplate extends Component {
 					<div className="laji-form-field-template-buttons" />
 				</div>
 				{activeIdx !== undefined && items[activeIdx] ? (
-					<div key={formData[activeIdx]._lajiFormId || activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
+					<div key={getUUID(formData[activeIdx]) || activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
 						<div className="laji-form-field-template-schema">{items[activeIdx].children}</div>
 						<div className="laji-form-field-template-buttons">{getDeleteButtonFor(activeIdx, items[activeIdx])}</div>
 					</div>

@@ -476,9 +476,7 @@ export default class LajiForm extends Component {
 			const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
 			this.props.onChange(_formData);
 		}
-		if (this.formRef) {
-			this.setState({formData: this.formRef.state.formData});
-		}
+		this.setState({formData});
 		this._context.formData = formData;
 	}
 

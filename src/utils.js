@@ -841,8 +841,8 @@ function walkFormDataWithIdTree(_formData, tree, itemOperator) {
 			return _formData.map(item => {
 				item = walk(item, tree, itemOperator);
 				item = itemOperator ? itemOperator(item) : item;
-				if (item._lajiFormId) {
-					ids[item._lajiFormId] = true;
+				if (getUUID(item)) {
+					ids[getUUID(item)] = true;
 				}
 				return item;
 			});
@@ -864,7 +864,7 @@ export function getAllLajiFormIdsDeeply(_formData, tree) {
 }
 
 export function findPointerForLajiFormId(tmpIdTree, formData, lajiFormId) {
-	if (formData && formData._lajiFormId === lajiFormId) {
+	if (formData && getUUID(formData) === lajiFormId) {
 		return "";
 	}
 	for (const k of Object.keys(tmpIdTree)) {
