@@ -16,9 +16,10 @@ export function isHidden(uiSchema, property) {
 }
 
 export function isDefaultData(formData, schema, definitions = {}) {
+	console.log(formData, schema);
 	switch (schema.type) {
 	case "object":
-		return Object.keys(formData || {}).every(field => isDefaultData(formData[field], schema.properties[field], definitions));
+		return Object.keys(schema.properties).every(field => isDefaultData(formData[field], schema.properties[field], definitions));
 	case "array":
 		return (Array.isArray(formData) || formData === undefined) && (formData || []).every(item => isDefaultData(item, schema.items, definitions));
 	default:
