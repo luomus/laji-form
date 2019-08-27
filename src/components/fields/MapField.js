@@ -97,6 +97,7 @@ export default class MapField extends Component {
 	componentDidUpdate(prevProps) {
 		this.geocode(prevProps);
 		this.zoomIfExternalEdit(this.props);
+		this._lastFormData = this.props.formData;
 		if (this._zoomToDataOnNextTick) {
 			this.map.zoomToData();
 			this._zoomToDataOnNextTick = undefined;
@@ -116,7 +117,7 @@ export default class MapField extends Component {
 				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
 		});
 		if (isEmptyAndWasEmpty && area && area.length > 0) {
-			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result) => {
 				this.map.geocode(result.name, undefined, 8);
 			});
 		}
@@ -281,7 +282,6 @@ export default class MapField extends Component {
 				} : {};
 			}
 		});
-		this._lastFormData = formData;
 		this._zoomToDataOnNextTick = true;
 		this.props.onChange(formData);
 	}

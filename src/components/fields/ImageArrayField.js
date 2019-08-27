@@ -398,9 +398,10 @@ export default class ImageArrayField extends Component {
 				})
 			);
 		}, Promise.resolve(found)).then((found) => {
-			let {registry: {definitions}, formContext: {contextId, formInstance}} = this.props;
-			const {schema} = formInstance.props;
-			let {formData} = formInstance.state;
+			let {registry: {definitions}, formContext: {contextId}} = this.props;
+			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+			const {schema} = lajiFormInstance.props;
+			let {formData} = lajiFormInstance.state;
 			let changed = false;
 			exifParsers.filter(f => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}) => {
 				if (type === "mutate") {
@@ -415,7 +416,7 @@ export default class ImageArrayField extends Component {
 				}
 			});
 			if (changed) {
-				formInstance.onChange({formData});
+				lajiFormInstance.onChange({formData});
 			}
 		});
 	}
