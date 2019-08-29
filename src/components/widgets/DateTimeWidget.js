@@ -68,8 +68,6 @@ export default class DateTimeWidget extends Component {
 			timeFormat = localeFormats.LT;
 		}
 
-		dateFormat = dateFormat.replace("YYYY", "Y");
-
 		let inputFormat = dateFormat;
 		const format = `${dateFormat}${dateFormat ? DATE_TIME_SEPARATOR : ""}${timeFormat}`;
 
