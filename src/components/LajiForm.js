@@ -315,6 +315,7 @@ export default class LajiForm extends Component {
 			return _hook;
 		};
 		this._context.removeSubmitHook = (lajiFormId, hook) => {
+			lajiFormId = +lajiFormId;
 			this.setState({submitHooks: (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId))});
 		};
 		this._context.removeAllSubmitHook = () => {
