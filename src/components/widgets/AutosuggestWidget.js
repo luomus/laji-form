@@ -160,11 +160,11 @@ function TaxonAutosuggest(ComposedComponent) {
 		}
 
 		parseChooseImages = (chooseImages) => {
-			return chooseImages.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj)
+			return chooseImages.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj);
 		}
 
 		renderChooseImages = () => {
-			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages
+			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
 			return (
 				<React.Fragment>
 					<div className="laji-form-images">

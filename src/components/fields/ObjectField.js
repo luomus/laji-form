@@ -11,7 +11,7 @@ export default (props) => {
 	const id = getUUID(props.formData);
 	const formContext = id
 		? {...props.formContext, _parentLajiFormId: id}
-		: props.formContext
+		: props.formContext;
 	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template, formContext}} formContext={formContext} />;
 };
 

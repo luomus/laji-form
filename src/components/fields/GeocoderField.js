@@ -162,7 +162,7 @@ export default class GeocoderField extends Component {
 				geometry = update(geometry, {geometries: {$push: [unitGathering.geometry]}});
 			}
 		});
-		return geometry
+		return geometry;
 	}
 
 	normalizeGeometry = (geometry) => {

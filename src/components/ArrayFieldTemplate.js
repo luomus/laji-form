@@ -216,7 +216,7 @@ export function handlesArrayKeys(ComposedComponent) {
 const SortableList = SortableContainer(({items, itemProps, nonOrderables, formData}) => (
 	<div>
 		{items.map((item, i) => {
-			return <SortableItem key={isObject(formData[i]) ? getUUID(formData[i]) : i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
+			return <SortableItem key={isObject(formData[i]) ? getUUID(formData[i]) : i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />;
 		}
 		)}
 	</div>)

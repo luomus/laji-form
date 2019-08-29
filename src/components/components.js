@@ -5,7 +5,7 @@ import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover,
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Spinner from "react-spinner";
-import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, isObject } from "../utils";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
 
 export class Button extends Component {
 	render() {
@@ -667,7 +667,7 @@ export class FailedBackgroundJobsPanel extends Component {
 			if (!e) {
 				return _errors;
 			}
-			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer)
+			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer);
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
 				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely");
@@ -676,7 +676,7 @@ export class FailedBackgroundJobsPanel extends Component {
 			const getId = () => {
 				const jsonPointer = getJsonPointer();
 				return `root_${JSONPointerToId(jsonPointer)}`;
-			}
+			};
 			const error = {getId, error: e, extra: dismissButton};
 			if (label) error.label = label;
 			return [..._errors, error];

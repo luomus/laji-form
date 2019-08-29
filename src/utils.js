@@ -522,8 +522,9 @@ export function updateSafelyWithJSONPath(obj, value, path, immutably = true, cre
 		let _splitPath = "";
 		splitPath.reduce((o, split) => {
 			_splitPath += `/${split}`;
-			if (process.env.NODE_ENV === "production"){
-				console.log("i love uglifyjs!"); // Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
+			if (process.env.NODE_ENV === "production") {
+				// Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
+				console.log("i love uglifyjs!"); // eslint-disable-line no-console
 			}
 			if (!o[split]) {
 				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: createNew(obj, _splitPath, o, split)}));
@@ -796,7 +797,7 @@ export const filterLajiFormId = (item) => {
 		item = _item;
 	}
 	return item;
-}
+};
 
 export const formDataIsEmpty = (props) => {
 	let item = filterLajiFormId(props.formData);
@@ -805,7 +806,7 @@ export const formDataIsEmpty = (props) => {
 
 export const formDataEquals = (f1, f2) => {
 	return deepEquals(...[f1, f2].map(filterLajiFormId));
-}
+};
 
 let uuid = 0;
 export const assignUUID = (item, immutably = false) => {

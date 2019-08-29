@@ -31,7 +31,7 @@ export default class LocalityField extends Component {
 			? _radius
 			: geometry
 				? getCenterAndRadiusFromGeometry(geometry).radius
-				: undefined
+				: undefined;
 		if (typeof radius === "number") {
 			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
 		}
@@ -80,7 +80,6 @@ export default class LocalityField extends Component {
 						showShortcutButton={false}
 						renderSubmit={false}
 						validators={{}}
-						warnings={{}}
 						warnings={{}}
 						apiClient={this.props.formContext.apiClient.apiClient}
 					/>

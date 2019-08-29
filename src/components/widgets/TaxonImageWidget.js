@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 
 export default class TaxonImageWidget extends Component {
@@ -19,7 +18,6 @@ export default class TaxonImageWidget extends Component {
 	}
 
 	onTaxonImageClick = (taxonID) => () => {
-		console.log(taxonID);
 		this.props.onChange(taxonID);
 	}
 }

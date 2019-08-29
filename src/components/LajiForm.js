@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
-import { Button, TooltipComponent, ErrorPanel, FailedBackgroundJobsPanel } from "./components";
+import { Button, TooltipComponent, FailedBackgroundJobsPanel } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem } from "../utils";
@@ -431,7 +431,7 @@ export default class LajiForm extends Component {
 						paths[key] = walked;
 					}
 					return paths;
-				}, {})
+				}, {});
 				if (Object.keys(_walked).length) return _walked;
 			} else if (_schema.type === "array" && _schema.items.type === "object") {
 				return Object.keys(_schema.items.properties).reduce((paths, key) => {

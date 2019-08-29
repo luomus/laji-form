@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, isEmptyString, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
+import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**

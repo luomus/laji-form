@@ -29,5 +29,5 @@ export default function DescriptonField(props) {
 		}
 		return desc.replace(`%{${replacePattern}}`, replacement);
 	}, description);
-	return<span dangerouslySetInnerHTML={{__html: _description}} />
+	return <span dangerouslySetInnerHTML={{__html: _description}} />;
 }
