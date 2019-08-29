@@ -45,7 +45,7 @@ export default class SingleActiveArrayField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	constructor(props) {
@@ -125,7 +125,7 @@ export default class SingleActiveArrayField extends Component {
 		const state = {};
 		const options = getUiOptions(props.uiSchema);
 		if (options.hasOwnProperty("activeIdx")) state.activeIdx = options.activeIdx;
-		else if (props.formData.length === 1 && this.props.formData.length === 0) {
+		else if ((props.formData || []).length === 1 && this.props.formData.length === 0) {
 			state.activeIdx = 0;
 		}
 

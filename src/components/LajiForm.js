@@ -652,7 +652,7 @@ export default class LajiForm extends Component {
 			return cached;
 		}
 
-		function splitLive(validators, schema, live = {}, rest = {}) {
+		function splitLive(validators = {}, schema, live = {}, rest = {}) {
 			Object.keys(validators).forEach(key => {
 				if (schema[key]) {
 					live[key] = {};

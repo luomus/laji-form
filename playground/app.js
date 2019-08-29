@@ -38,7 +38,9 @@ const apiClient = new ApiClientImplementation(
 const ownerFilledFormData = {gatheringEvent: {leg: [properties.userId]}};
 
 let promise = undefined;
-if (query.id !== undefined && query.local !== "true") {
+if (query.test === "true") {
+	promise = Promise.resolve({});
+} else if (query.id !== undefined && query.local !== "true") {
 	promise = apiClient.fetch(`/forms/${query.id}`, {lang, format: "schema"}).then(response => {
 		return response.json();
 	});
@@ -46,13 +48,8 @@ if (query.id !== undefined && query.local !== "true") {
 	promise = Promise.resolve(query.id ? require(`../forms/${query.id}.json`) : schemas);
 }
 
-const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
-	notifier[method] = message => notus.send({message, alertType: notusType, title: ""});
-	return notifier;
-}, {});
-
-promise.then(data => {
-	const lajiForm = new LajiForm({
+if (query.test !== "true") {
+	promise = promise.then(data => ({
 		...data,
 		uiSchema: {
 			...data.uiSchema,
@@ -79,17 +76,30 @@ promise.then(data => {
 			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json")
 		},
 		onSubmit,
-		apiClient,
 		lang,
 		onError: log("errors"),
-		rootElem: document.getElementById("app"),
-		staticImgPath: "/build",
 		renderSubmit: true,
 		onSettingsChange: console.info,
 		googleApiKey: properties.googleApiKey,
 		notifier,
 		optimizeOnChange: true
-	});
+	}));
+}
+
+promise = promise.then(data => ({ 
+	...data,
+	apiClient,
+	rootElem: document.getElementById("app"),
+	staticImgPath: "/build",
+}));
+
+const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
+	notifier[method] = message => notus.send({message, alertType: notusType, title: ""});
+	return notifier;
+}, {});
+
+promise.then(data => {
+	const lajiForm = new LajiForm(data);
 	if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
 });
 
