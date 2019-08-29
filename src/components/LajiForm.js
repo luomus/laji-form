@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, ErrorPanel, FailedBackgroundJobsPanel } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, assignUUID, addLajiFormIds, idSchemaIdToJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
@@ -141,6 +141,7 @@ export default class LajiForm extends Component {
 
 	constructor(props) {
 		super(props);
+		this.bgJobRef = React.createRef();
 		this.apiClient = new ApiClient(props.apiClient, props.lang);
 		initializeValidation(this.apiClient);
 		this.translations = this.constructTranslations();
@@ -235,8 +236,7 @@ export default class LajiForm extends Component {
 
 				if (!elem) return;
 
-				if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
-				this.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
+				highlightElem(elem);
 			});
 		};
 
@@ -572,6 +572,7 @@ export default class LajiForm extends Component {
 			                           translations={translations}
 			                           errorClickHandler={this.errorClickHandler}
 			                           tmpIdTree={this.tmpIdTree}
+			                           ref={this.bgJobRef}
 			/>
 			{this.renderSubmitHooks()}
 		</div>
@@ -680,7 +681,8 @@ export default class LajiForm extends Component {
 
 	onError = () => {
 		this.popBlockingLoader();
-		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(findDOMNode(this._context.errorList), this.props.topOffset, this.props.bottomOffset);
+		const errorListElem = findDOMNode(this._context.errorList);
+		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(errorListElem, this.props.topOffset, this.props.bottomOffset);
 		const scrollAmount = wouldScrollTo - getWindowScrolled();
 
 		if (!this._context.errorList.state.poppedTouched && scrollAmount !== 0) {
@@ -688,6 +690,7 @@ export default class LajiForm extends Component {
 		}
 		this.propagateSubmit = true;
 		this.validationSettings.ignoreWarnings = false;
+		highlightElem(errorListElem);
 	}
 
 	_onDefaultSubmit = (e) => {
@@ -721,6 +724,7 @@ export default class LajiForm extends Component {
 		}).catch(() => {
 			this.setState({submitting: false});
 			this.popBlockingLoader();
+			highlightElem(findDOMNode(this.bgJobRef.current));
 		});
 	}
 
