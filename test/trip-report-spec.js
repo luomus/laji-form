@@ -23,7 +23,7 @@ describe("Trip report (JX.519)", () => {
 
 			await expect($gatheringEvent.element($secureLevel.locator()).isDisplayed()).toBe(true);
 		});
-		
+
 		//TODO TableField messes up ids!
 		//it("contains gatheringEvent.observer.0", () => {
 		//	expect(lajiFormLocate("gatheringEvent.leg.0").isDisplayed()).toBe(true);
@@ -67,31 +67,33 @@ describe("Trip report (JX.519)", () => {
 			await expect(lajiFormLocate("gatherings.0").isDisplayed()).toBe(true);
 		});
 
-		const $blockingLoader = $(".laji-form.blocking-loader");
-
 		describe("geocoding", () => {
 
-			it("geocoding starts and finished after adding gathering", async () => {
-				await expect($blockingLoader.isDisplayed()).toBe(true);
+			it("geocoding starts and finishes after adding gathering", async () => {
+				if (await lajiFormLocate("gatherings.0.country").isDisplayed()) {
+					return;
+				}
+				const $loadingGeocoderButton = $geocoderButton.$(".geocoder-btn .react-spinner");
+				await expect($loadingGeocoderButton.isDisplayed()).toBe(true);
 
-				await waitUntilBlockingLoaderHides(6000);
+				await browser.wait(protractor.ExpectedConditions.invisibilityOf($loadingGeocoderButton), 6000, "Geocoding timeout");
 
-				await expect($blockingLoader.isDisplayed()).toBe(false);
+				await expect($loadingGeocoderButton.isPresent()).toBe(false);
 			});
 
 			if (!googleApiKey) {
 				pending("Google API key missing");
 			}
 
-			it("contains country", async () => {
+			it("adds country", async () => {
 				await expect(lajiFormLocate("gatherings.0.country").isDisplayed()).toBe(true);
 			});
 
-			it("contains biologicalProvince", async () => {
+			it("adds biologicalProvince", async () => {
 				await expect(lajiFormLocate("gatherings.0.biologicalProvince").isDisplayed()).toBe(true);
 			});
 
-			it("contains municipality", async () => {
+			it("adds municipality", async () => {
 				await expect(lajiFormLocate("gatherings.0.municipality").isDisplayed()).toBe(true);
 			});
 

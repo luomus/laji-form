@@ -44,7 +44,6 @@ export default class GeocoderField extends Component {
 		super(props);
 		const loading = this.getComponentContext().fetching;
 		this.state = this.getStateFromProps(props, loading);
-		this.componentDidUpdate();
 	}
 
 	componentWillReceiveProps(props) {
@@ -54,6 +53,7 @@ export default class GeocoderField extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
+		this.componentDidUpdate();
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
 			this.updateForGeometry(this.props, undefined, this.normalizeGeometry(geometry));
 		});
@@ -128,7 +128,7 @@ export default class GeocoderField extends Component {
 			position: "top",
 			key: loading,
 			render: onClick => (
-				<Button key="geolocate" onClick={onClick} disabled={loading || props.disabled || props.readonly || !this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)}>
+				<Button key="geolocate" onClick={onClick} disabled={loading || props.disabled || props.readonly || !this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)} className="geocoder-btn">
 					<strong>
 						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
 						{" "}
@@ -175,7 +175,7 @@ export default class GeocoderField extends Component {
 	}
 
 	fetch = (url) => {
-		cache[url] = cache[url] || fetch(url).then(response => {
+		cache[url] = cache[url] || fetch(url).then(r => new Promise(resolve => setTimeout(() => resolve(r), 100000))).then(response => {
 			if (response.status >= 400) {
 				throw new Error(this.props.formContext.translations);
 			}
