@@ -882,12 +882,12 @@ export default class LajiForm extends Component {
 		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
 		return Object.keys(settingSavers).reduce((settings, key) => {
 			try {
-				settings[key] = settingSavers[key]();
+				return {...settings, [key]: settingSavers[key]()};
 			} catch (e) {
 				// Swallow failing settings parsing.
 			} 
 			return settings;
-		}, {});
+		}, this.props.settings || {});
 	}
 
 	onSettingsChange = (global = false) => {
