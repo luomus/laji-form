@@ -548,9 +548,9 @@ export default class ScopeField extends Component {
 			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
 			let contextEntry = this._context || {};
 			if (additionalsPersistenceField) {
-				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceField].type === "array") ?
-						additionalsPersistenceVal :
-						[additionalsPersistenceVal]);
+				let additionalsKeys = this.props.schema.properties[additionalsPersistenceField].type === "array"
+					? additionalsPersistenceVal
+					: [additionalsPersistenceVal];
 				if (additionalsKeys.length === 0) additionalsKeys = ["undefined"];
 				additionalsKeys.forEach(persistenceKey => {
 					contextEntry[persistenceKey] = additionalFields;
@@ -562,7 +562,6 @@ export default class ScopeField extends Component {
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
 	}
-
 
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};

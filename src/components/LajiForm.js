@@ -889,7 +889,7 @@ export default class LajiForm extends Component {
 			return settings;
 		}, {});
 	}
-	
+
 	onSettingsChange = (global = false) => {
 		const settings = this.getSettings(global);
 		if (!equals(this.state.formContext.settings, settings)) {

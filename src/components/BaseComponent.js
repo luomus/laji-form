@@ -31,7 +31,7 @@ export default function BaseComponent(ComposedComponent) {
 							const withoutLastMatch = key.match(/^(%[^/]+)?(\/.*)\/.*$/);
 							const withoutLast = withoutLastMatch ? withoutLastMatch[2] : "/";
 							const lastContainer = parseJSONPointer(target, withoutLast || "/", "createParents");
-							lastContainer[last] = settings[this.getSettingsKey(props, key)];
+							lastContainer[last] = JSON.parse(JSON.stringify(settings[this.getSettingsKey(props, key)]));
 						}
 					}
 				});
