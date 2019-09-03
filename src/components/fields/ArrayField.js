@@ -55,14 +55,17 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 export function onArrayFieldChange(formData, props) {
 	const rootTmpIdTree = new Context(props.formContext.contextId).formInstance.tmpIdTree;
 
-	let tmpIdTree = rootTmpIdTree;
-	const treePath = props.idSchema.$id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
-	for (const k of treePath) {
-		if (tmpIdTree[k]) {
-			tmpIdTree = tmpIdTree[k];
-		} else {
-			tmpIdTree = undefined;
-			break;
+	let tmpIdTree;
+	if (rootTmpIdTree) {
+		tmpIdTree = rootTmpIdTree;
+		const treePath = props.idSchema.$id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
+		for (const k of treePath) {
+			if (tmpIdTree[k]) {
+				tmpIdTree = tmpIdTree[k];
+			} else {
+				tmpIdTree = undefined;
+				break;
+			}
 		}
 	}
 
