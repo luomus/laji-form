@@ -697,7 +697,7 @@ export function bringRemoteFormData(formData, formContext) {
 
 export function triggerParentComponent(eventName, e, props) {
 	if (props && props[eventName]) {
-		e.persist();
+		e.persist && e.persist();
 		props[eventName](e);
 	}
 }

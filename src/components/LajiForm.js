@@ -125,6 +125,7 @@ function getNewId() {
 	return _id;
 }
 
+
 export default class LajiForm extends Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
@@ -278,6 +279,37 @@ export default class LajiForm extends Component {
 			callback && callback();
 		};
 
+		this._globalEventsRootHandler = {};
+		this._globalEventHandlers = {};
+		this._context.addGlobalEventHandler = (name, fn) => {
+			if (!this._globalEventHandlers[name]) {
+				this._globalEventsRootHandler[name] = e => {
+					if (!e.persist) e.persist = () => {};
+					const origStopPropagation = e.stopPropagation;
+					e.stopPropagation = () => {
+						e._lajiFormStoppedFlag = true;
+						origStopPropagation.call(e);
+					}
+					this._globalEventHandlers[name].some(h => {
+						if (e._lajiFormStoppedFlag) {
+							return true;
+						}
+						h(e);
+					});
+				};
+				document.addEventListener(name, this._globalEventsRootHandler[name]);
+				this._globalEventHandlers[name] = [];
+			}
+			this._globalEventHandlers[name].push(fn);
+		};
+		this._context.removeGlobalEventHandler = (name, fn) => {
+			this._globalEventHandlers[name] = this._globalEventHandlers[name].filter(_fn => _fn !== fn);
+			if (this._globalEventHandlers[name].length === 0) {
+				delete this._globalEventHandlers[name];
+				document.removeEventListener(name, this._globalEventsRootHandler[name]);
+			}
+		};
+
 		this.ids = {};
 
 		// First call returns id, next call (and only the very next) reserves the id until it is released.
@@ -381,6 +413,10 @@ export default class LajiForm extends Component {
 		this.blockingLoaderRef.className = "laji-form blocking-loader";
 		if (this.blockingLoaderCounter > 0) this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 		document.body.appendChild(this.blockingLoaderRef);
+
+		this._context.addGlobalEventHandler("keydown", this.onKeyDown);
+
+
 		if (this.props.componentDidMount) this.props.componentDidMount();
 	}
 
@@ -388,6 +424,7 @@ export default class LajiForm extends Component {
 		this.mounted = false;
 		if (this._context.singletonMap) this._context.singletonMap.destroy();
 		document.body.removeChild(this.blockingLoaderRef);
+		this._context.removeGlobalEventHandler("keydown", this.onKeyDown);
 	}
 
 	componentDidCatch(e, i) {
@@ -502,7 +539,7 @@ export default class LajiForm extends Component {
 		} = this.props.uiSchema;
 
 		return (
-			<div onKeyDown={this.onKeyDown} className="laji-form" tabIndex={0}>
+			<div className="laji-form">
 				{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
 					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
 						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>

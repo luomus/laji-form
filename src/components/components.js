@@ -6,6 +6,7 @@ import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
+import Context from "../Context";
 
 export class Button extends Component {
 	render() {
@@ -626,23 +627,23 @@ export class OverlayTrigger extends Component {
 export class Fullscreen extends Component {
 	componentDidMount() {
 		this.bodyOverFlow = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
-		if (!document.activeElem || document.activeElement === document.body) {
-			this.elem.focus();
+
+		if (this.props.onKeyDown) {
+			this._onKeyDown = true;
+			new Context(this.props.contextId).addGlobalEventHandler("keydown", this.props.onKeyDown);
 		}
 	}
 
 	componentWillUnmount() {
 		document.body.style.overflow = this.bodyOverFlow;
-	}
-
-	setRef = (elem) => {
-		this.elem = elem;
+		if (this._onKeyDown) {
+			new Context(this.props.contextId).removeGlobalEventHandler("keydown", this.props.onKeyDown);
+		}
 	}
 
 	render() {
 		return createPortal((
-			<div className="laji-form fullscreen" onKeyDown={this.props.onKeyDown} ref={this.setRef} tabIndex={0}>
+			<div className="laji-form fullscreen">
 					{this.props.children}
 			</div>
 		), document.body);

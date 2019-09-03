@@ -1979,7 +1979,7 @@ export class Map extends Component {
 				<div key="map"
 					className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
 					style={this.props.style} ref="map" />
-					{this.state.fullscreen && <Fullscreen ref={this.setFullscreenRef} on={this.state.fullscreen} onKeyDown={this.onFullscreenKeyDown} />}
+					{this.state.fullscreen && <Fullscreen ref={this.setFullscreenRef} on={this.state.fullscreen} onKeyDown={this.onFullscreenKeyDown} contextId={this.props.formContext.contextId} />}
 		 </React.Fragment>
 		);
 	}
