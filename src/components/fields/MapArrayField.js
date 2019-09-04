@@ -1858,6 +1858,7 @@ export class Map extends Component {
 		if (this.state.fullscreen && !prevState.fullscreen) {
 			this._mapContainer = this.map.rootElem;
 			this.map.setRootElem(findDOMNode(this.fullscreenRef));
+			this.map.map.getContainer().focus();
 			this.origBodyAsDialogRoot = this.map._dialogRoot === document.body;
 			this.map.setOption("bodyAsDialogRoot", false);
 			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", false);

@@ -660,6 +660,7 @@ export class FailedBackgroundJobsPanel extends Component {
 		e.stopPropagation();
 		this.props.context.removeSubmitHook(id, hook);
 	}
+
 	render() {
 		const {jobs = [], schema, uiSchema, translations} = this.props;
 		if (!jobs.length) return null;
