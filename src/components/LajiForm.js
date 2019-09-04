@@ -289,7 +289,7 @@ export default class LajiForm extends Component {
 					e.stopPropagation = () => {
 						e._lajiFormStoppedFlag = true;
 						origStopPropagation.call(e);
-					}
+					};
 					this._globalEventHandlers[name].some(h => {
 						if (e._lajiFormStoppedFlag) {
 							return true;
