@@ -223,13 +223,12 @@ export default class GeocoderField extends Component {
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
 		const lajiFormInstance = mainContext.formInstance;
-		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getID());
 		const timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
 		if (this.getComponentContext().hook) {
 			mainContext.removeSubmitHook(this.getID(), this.getComponentContext().hook);
 		}
-		this.getComponentContext().hook = mainContext.addSubmitHook(this.getID(), relativePointer, new Promise((resolve, reject) => {
+		this.getComponentContext().hook = this.addSubmitHook(new Promise((resolve, reject) => {
 			const afterFetch = (callback, timeout = false) => {
 				if (this.getComponentContext().fetching) {
 					if (callback) callback(timeout);

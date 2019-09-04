@@ -913,6 +913,7 @@ export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formDa
 	}
 	return containerPointer + relativePointer;
 }
+
 export function highlightElem(elem) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");

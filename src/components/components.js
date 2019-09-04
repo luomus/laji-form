@@ -94,7 +94,7 @@ export class DeleteButton extends Component {
 	render() {
 		const {props, state} = this;
 		const {show} = state;
-		const {translations, corner, tooltip, disabled, readonly} = props;
+		const {translations, corner, tooltip, disabled, readonly, confirmPlacement = "left"} = props;
 		let buttonClassName = "glyph-button";
 		buttonClassName += corner ? " delete-corner" : "";
 		const getOverlayTarget = () => findDOMNode(this.refs.del);
@@ -109,7 +109,7 @@ export class DeleteButton extends Component {
 								onKeyDown={this.onButtonKeyDown}
 								onClick={onClick}>✖</Button>
 				{show ?
-					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
+					<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
 									 target={getOverlayTarget}>
 						<Popover id={`${this.props.id}-delete-confirm`}>
 							<span>{translations.ConfirmRemove}</span>

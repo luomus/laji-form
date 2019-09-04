@@ -177,6 +177,8 @@ export default class ImageArrayField extends Component {
 			<div key={i} className="img-container">
 				<a onClick={this.openModalFor(i)}><Thumbnail id={item} apiClient={this.props.formContext.apiClient} /></a>
 				<DeleteButton corner={true}
+					confirm={true}
+					confirmPlacement="top"
 					translations={this.props.formContext.translations}
 					onClick={this.onImgRmClick(i)}
 					disabled={disabled || readonly}
@@ -209,7 +211,12 @@ export default class ImageArrayField extends Component {
 	}
 
 	onImgRmClick = (i) => () => {
+		const id = this.props.formData[i];
 		this.props.onChange(update(this.props.formData, {$splice: [[i, 1]]}));
+		this.apiClient.fetch(`/images/${id}`, undefined, {
+			method: "DELETE",
+			failSilently: true
+		});
 	}
 
 	hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
@@ -456,8 +463,7 @@ export default class ImageArrayField extends Component {
 			lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
 		});
 
-		const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
-		new Context(this.props.formContext.contextId).addSubmitHook(id, relativePointer, saveAndOnChange);
+		this.addSubmitHook(saveAndOnChange);
 	}
 
 	getContainerId = () => {
