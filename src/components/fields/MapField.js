@@ -485,7 +485,7 @@ class MobileEditorMap extends Component {
 		const {translations} = this.props.formContext;
 
 		return (
-			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef}>
+			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} contextId={this.props.formContext.contextId}>
 				<MapComponent
 					{...options}
 					singleton={true}
