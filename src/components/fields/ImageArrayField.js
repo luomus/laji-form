@@ -442,9 +442,13 @@ export default class ImageArrayField extends Component {
 			}
 
 			let pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
-			const newFormData = this.mounted
-				? [...(this.props.formData || []), ...imgIds]
-				: parseJSONPointer(lajiFormInstance.state.formData, pointer);
+			const newFormData = [
+				...(this.mounted
+					? parseJSONPointer(lajiFormInstance.state.formData, pointer)
+					: this.props.formData || []
+				),
+				...imgIds
+			];
 
 			if (!lajiFormInstance.mounted) return;
 
@@ -487,17 +491,15 @@ export default class ImageArrayField extends Component {
 			let fileTooLarge = false;
 			let noValidData = true;
 
-			if (this.mounted) {
-				if (!this._context.tmpImgs[containerId]) {
-					this._context.tmpImgs[containerId] = {};
-				}
-				tmpImgs = processedFiles.map(f => {
-					imgUuid++;
-					this._context.tmpImgs[containerId][imgUuid] = f.dataURL;
-					return imgUuid;
-				});
-				this.mounted && this.setState({tmpImgs: [...(this.state.tmpImgs || []), ...tmpImgs]});
+			if (!this._context.tmpImgs[containerId]) {
+				this._context.tmpImgs[containerId] = {};
 			}
+			tmpImgs = processedFiles.map(f => {
+				imgUuid++;
+				this._context.tmpImgs[containerId][imgUuid] = f.dataURL;
+				return imgUuid;
+			});
+			this.mounted && this.setState({tmpImgs: [...(this.state.tmpImgs || []), ...tmpImgs]});
 
 			const formDataBody = files.reduce((body, file) => {
 				if (!ALLOWED_FILE_TYPES.includes(file.type)) {
