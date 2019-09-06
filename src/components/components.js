@@ -689,7 +689,7 @@ export class FailedBackgroundJobsPanel extends Component {
 				return `root_${JSONPointerToId(jsonPointer)}`;
 			};
 			const _error = {getId, error: e, extra: [dismissButton, retryButton], disabled: running};
-			if (label) error.label = label;
+			if (label) _error.label = label;
 			return [..._errors, _error];
 		}, []);
 
