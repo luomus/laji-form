@@ -372,7 +372,7 @@ export default class GeocoderField extends Component {
 							this.mounted && this.setState(this.getStateFromProps(this.props, false));
 						});
 					}
-				}, 5 * 1000);
+				}, 30 * 1000);
 
 				!bounds.overlaps(FINLAND_BOUNDS)
 					? fetchForeign()
