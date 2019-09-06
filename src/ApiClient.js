@@ -4,10 +4,11 @@
  * Given apiClient must implement fetch().
  */
 export default class ApiClient {
-	constructor(apiClient, lang = "en") {
+	constructor(apiClient, lang = "en", translations) {
 		this.apiClient = apiClient;
 		this.on = {};
 		this.lang = lang;
+		this.translations = translations;
 		this.cache = {};
 	}
 
@@ -18,7 +19,9 @@ export default class ApiClient {
 	 * @returns a Promise.
 	 */
 	fetchRaw(path, query, options) {
-		return this.apiClient.fetch(path, {lang: this.lang, ...(query || {})}, options);
+		return this.apiClient.fetch(path, {lang: this.lang, ...(query || {})}, options).catch(() => {
+			throw new Error(this.translations[this.lang].RequestFailed);
+		});
 	}
 
 	fetch(path, query, options = {}) {
@@ -28,15 +31,21 @@ export default class ApiClient {
 				throw new Error("Request failed");
 			}
 			return response.json();
+		}).catch(() => {
+			if (this.cache[path]) delete this.cache[path][this.getCacheKey(query, options)];
+			throw new Error(this.translations[this.lang].RequestFailed);
 		});
 	}
 
-	fetchCached(path, query, options) {
-		const cacheQuery = JSON.stringify(query) + JSON.stringify(options);
+	getCacheKey(query, options) {
+		return JSON.stringify(query) + JSON.stringify(options);
+	}
 
+	fetchCached(path, query, options) {
+		const cacheKey = this.getCacheKey(query, options)
 		if (!this.cache[path])  this.cache[path] = {};
-		this.cache[path][cacheQuery] = this.cache[path].hasOwnProperty(cacheQuery) ? this.cache[path][cacheQuery] : this.fetch(path, query, options);
-		return this.cache[path][cacheQuery];
+		this.cache[path][cacheKey] = this.cache[path].hasOwnProperty(cacheKey) ? this.cache[path][cacheKey] : this.fetch(path, query, options);
+		return this.cache[path][cacheKey];
 	}
 
 	invalidateCachePath(path) {

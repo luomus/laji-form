@@ -683,5 +683,10 @@
 		fi: "Odotetaan taustaprosesseja",
 		en: "Waiting for background jobs",
 		sv: "väntar på bakgrundsjobb"
+	},
+	retry: {
+		fi: "Koita uudestaan",
+		en: "Rety",
+		sv: "Försök igen"
 	}
 };

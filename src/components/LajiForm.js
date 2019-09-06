@@ -143,9 +143,9 @@ export default class LajiForm extends Component {
 	constructor(props) {
 		super(props);
 		this.bgJobRef = React.createRef();
-		this.apiClient = new ApiClient(props.apiClient, props.lang);
-		initializeValidation(this.apiClient);
 		this.translations = this.constructTranslations();
+		this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
+		initializeValidation(this.apiClient);
 		this._id = getNewId();
 
 		this._context = new Context(this._id);
@@ -333,22 +333,43 @@ export default class LajiForm extends Component {
 		};
 
 		this._context.addSubmitHook = (lajiFormId, relativePointer, hook, description) => {
-			const _hook = hook.then(() => {
-				this._context.removeSubmitHook(lajiFormId, _hook);
-			}).catch(e => {
-				this.setState({submitHooks: this.state.submitHooks.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false} : hookItem)});
-				throw e;
-			});
+			lajiFormId = +lajiFormId;
+			let promise;
+			const _hook = () => {
+				promise = new Promise((resolve) => {
+					let isRetry = false;
+					const hooks = (this.state.submitHooks || []).map(hookItem => {
+						if (hookItem.hook === _hook) {
+							isRetry = true;
+							return {...hookItem, running: true, promise};
+						}
+						return hookItem;
+					})
+					if (isRetry) {
+						this.setState({submitHooks: hooks});
+					}
+					resolve(hook());
+				}).then(() => {
+					this._context.removeSubmitHook(lajiFormId, _hook);
+				}).catch(e => {
+					this.setState({submitHooks: this.state.submitHooks.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false, failed: true} : hookItem)});
+					throw e;
+				});
+			}
+
+			_hook();
 
 			this.setState({submitHooks: [
 				...(this.state.submitHooks || []),
-				{hook: _hook, lajiFormId, description, relativePointer, running: true}
+				{hook: _hook, promise, lajiFormId, description, relativePointer, running: true}
 			]});
 			return _hook;
 		};
 		this._context.removeSubmitHook = (lajiFormId, hook) => {
-			lajiFormId = +lajiFormId;
-			this.setState({submitHooks: (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId))});
+			return new Promise(resolve => {
+				lajiFormId = +lajiFormId;
+				this.setState({submitHooks: (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId))}, resolve);
+			});
 		};
 		this._context.removeAllSubmitHook = () => {
 			this.setState({submitHooks: []});
@@ -619,8 +640,8 @@ export default class LajiForm extends Component {
 
 	renderSubmitHooks = () => {
 		if (!this.state || !this.state.submitHooks) return;
-		const jobsAmount = this.state.submitHooks.length;
-		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
+		const jobsAmount = this.state.submitHooks.filter(({failed}) => !failed).length;
+		const  runningAmount = this.state.submitHooks.reduce((count, {running, failed}) => running ? count + 1 : count, 0);
 		if (!this.state.submitting) return null;
 
 		return (
@@ -744,7 +765,15 @@ export default class LajiForm extends Component {
 		this.pushBlockingLoader();
 		const {onChangeTimestamp} = this;
 		this.setState({submitting: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
-		Promise.all((this.state.submitHooks || []).map(({hook}) => hook)).then(() => {
+		Promise.all((this.state.submitHooks || []).map(({promise, hook}) => {
+			const setNotRunning = () => {
+				this.setState({submitHooks: (this.state.submitHooks || []).map(hookItem =>
+					({...hookItem, running: hookItem.hook === hook ? false : hookItem.running}))
+				});
+			};
+			return promise.then(setNotRunning).catch(setNotRunning);
+		}
+		)).then(() => {
 			this.setState({submitting: false});
 			// RJSF onChange call happens after setState call, so we must wait for the onChange call. Not necessarily very robust?
 			setTimeout(() => {
@@ -759,7 +788,7 @@ export default class LajiForm extends Component {
 				this.validationSettings.ignoreWarnings = ignoreWarnings;
 				this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
 			}, 0);
-		}).catch(() => {
+		}).catch((e ) => {
 			this.setState({submitting: false});
 			this.popBlockingLoader();
 			highlightElem(findDOMNode(this.bgJobRef.current));

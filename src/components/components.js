@@ -480,14 +480,14 @@ export class ErrorPanel extends Component {
 				</PanelHeading>
 				<PanelCollapse>
 					<ListGroup>
-						{errors.map(({label, error, id, getId, extra = null}, i) => {
+						{errors.map(({label, error, id, getId, extra = null, disabled}, i) => {
 							const message = error && error.message ? error.message : error;
 							const _clickHandler = () => {
 								clickHandler(id || (getId ? getId() : undefined));
 							};
 
 							return (
-								<ListGroupItem key={i} onClick={_clickHandler}>
+								<ListGroupItem key={i} onClick={_clickHandler} disabled={disabled}>
 									{label ? <b>{label}:</b> : null} {message} {extra}
 								</ListGroupItem>
 							);
@@ -656,16 +656,24 @@ export class FailedBackgroundJobsPanel extends Component {
 		this.state = {popped: true};
 	}
 
-	dismissFailedJob = (id, hook) => (e) => {
+	dismissFailedJob = ({id, hook, running}) => (e) => {
 		e.stopPropagation();
+		if (running) return;
 		this.props.context.removeSubmitHook(id, hook);
+	}
+
+	retryFailedJob = ({hook, running}) => (e) => {
+		e.stopPropagation();
+		if (running) return;
+		hook();
 	}
 
 	render() {
 		const {jobs = [], schema, uiSchema, translations} = this.props;
 		if (!jobs.length) return null;
 
-		const errors = jobs.reduce((_errors, {lajiFormId, relativePointer, e, hook}) => {
+		const errors = jobs.reduce((_errors, error) => {
+			const {lajiFormId, relativePointer, e, running} = error;
 			if (!e) {
 				return _errors;
 			}
@@ -673,15 +681,16 @@ export class FailedBackgroundJobsPanel extends Component {
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
 				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely");
-			const dismissButton = <a className="pull-right" onClick={this.dismissFailedJob(lajiFormId, hook)}>{translations.Dismiss}</a>;
+			const retryButton = <a key="rety" className="pull-right" disabled={running} onClick={this.retryFailedJob(error)}><Glyphicon className={running ? "rotating" : ""} glyph="refresh" /> {translations.Retry}</a>;
+			const dismissButton = <a key="dismiss" className="pull-right" onClick={this.dismissFailedJob(error)}><Glyphicon glyph="ok" /> {translations.Dismiss}</a>;
 
 			const getId = () => {
 				const jsonPointer = getJsonPointer();
 				return `root_${JSONPointerToId(jsonPointer)}`;
 			};
-			const error = {getId, error: e, extra: dismissButton};
+			const _error = {getId, error: e, extra: [dismissButton, retryButton], disabled: running};
 			if (label) error.label = label;
-			return [..._errors, error];
+			return [..._errors, _error];
 		}, []);
 
 		if (!errors.length) return null;

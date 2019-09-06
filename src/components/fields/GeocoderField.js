@@ -175,11 +175,14 @@ export default class GeocoderField extends Component {
 	}
 
 	fetch = (url) => {
-		cache[url] = cache[url] || fetch(url).then(r => new Promise(resolve => setTimeout(() => resolve(r), 100000))).then(response => {
+		cache[url] = cache[url] || fetch(url).then(response => {
 			if (response.status >= 400) {
-				throw new Error(this.props.formContext.translations);
+				throw new Error(this.props.formContext.translations.RequestFailed);
 			}
 			return response.json();
+		}).catch(() => {
+			delete cache[url];
+			throw new Error(this.props.formContext.translations.RequestFailed);
 		});
 		return cache[url];
 	}
@@ -189,13 +192,8 @@ export default class GeocoderField extends Component {
 		this.updateForGeometry(props, callback, geometry);
 	}
 
-	getID = () => {
-		const {_parentLajiFormId = "root"} = this.props.formContext;
-		return getUUID(this.props.formData) || _parentLajiFormId;
-	}
-
 	getComponentContext = () => {
-		return new Context(`${this.props.formContext.contextId}_${this.getID()}_GEOCODERFIELD`);
+		return new Context(`${this.props.formContext.contextId}_${this.getUUID()}_GEOCODERFIELD`);
 	}
 
 	updateForGeometry = (props, callback, geometry) => {
@@ -225,176 +223,181 @@ export default class GeocoderField extends Component {
 		const lajiFormInstance = mainContext.formInstance;
 		const timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
-		if (this.getComponentContext().hook) {
-			mainContext.removeSubmitHook(this.getID(), this.getComponentContext().hook);
-		}
-		this.getComponentContext().hook = this.addSubmitHook(new Promise((resolve, reject) => {
-			const afterFetch = (callback, timeout = false) => {
-				if (this.getComponentContext().fetching) {
-					if (callback) callback(timeout);
-				}
-				this.getComponentContext().fetching = false;
-				if (this.getComponentContext().resetRemountedState) this.getComponentContext().resetRemountedState(false);
-			};
-			const success = (callback, timeout) => {
-				afterFetch(callback, timeout);
-				resolve();
-			};
-			const fail = (e, callback, timeout) => {
-				afterFetch(callback, timeout);
-				reject(e);
-			};
+		const doAsync = () => {
+			this.getComponentContext().hook = this.addSubmitHook(() => new Promise((resolve, reject) => {
+				const afterFetch = (callback, timeout = false) => {
+					if (this.getComponentContext().fetching) {
+						if (callback) callback(timeout);
+					}
+					this.getComponentContext().fetching = false;
+					if (this.getComponentContext().resetRemountedState) this.getComponentContext().resetRemountedState(false);
+				};
+				const success = (callback, timeout) => {
+					afterFetch(callback, timeout);
+					resolve();
+				};
+				const fail = (e, callback, timeout) => {
+					afterFetch(callback, timeout);
+					reject(e);
+				};
 
-			const handleResponse = (country, ...fields) => (response) => {
-				fields = fields.reduce((_fields, field) => {
-					_fields[field] = true;
-					return _fields;
-				}, {});
+				const handleResponse = (country, ...fields) => (response) => {
+					fields = fields.reduce((_fields, field) => {
+						_fields[field] = true;
+						return _fields;
+					}, {});
 
-				const changes = {};
-				if (fieldByKeys.biologicalProvince) {
-					changes.biologicalProvince = undefined;
-				}
-				if (fieldByKeys.biogeographicalProvince) {
-					changes.biogeographicalProvince = undefined;
-				}
-				if (fieldByKeys.administrativeProvince) {
-					changes.administrativeProvince = undefined;
-				}
+					const changes = {};
+					if (fieldByKeys.biologicalProvince) {
+						changes.biologicalProvince = undefined;
+					}
+					if (fieldByKeys.biogeographicalProvince) {
+						changes.biogeographicalProvince = undefined;
+					}
+					if (fieldByKeys.administrativeProvince) {
+						changes.administrativeProvince = undefined;
+					}
 
-				const parsers = {
-					country: {
-						type: ["country"],
-						responseField: "long_name"
-					},
-					administrativeProvince: {
-						type: ["administrative_area_level_1"],
-						responseField: "long_name"
-					},
-					municipality: {
-						type: ["municipality", "administrative_area_level_3", "administrative_area_level_2"],
-						responseField: "long_name"
-					},
-					biologicalProvince: {
-						type: ["biogeographicalProvince"],
-						responseField: "long_name"
-					},
-					biogeographicalProvince: {
-						type: ["biogeographicalProvince"],
-						responseField: "long_name"
+					const parsers = {
+						country: {
+							type: ["country"],
+							responseField: "long_name"
+						},
+						administrativeProvince: {
+							type: ["administrative_area_level_1"],
+							responseField: "long_name"
+						},
+						municipality: {
+							type: ["municipality", "administrative_area_level_3", "administrative_area_level_2"],
+							responseField: "long_name"
+						},
+						biologicalProvince: {
+							type: ["biogeographicalProvince"],
+							responseField: "long_name"
+						},
+						biogeographicalProvince: {
+							type: ["biogeographicalProvince"],
+							responseField: "long_name"
+						}
+					};
+
+					if (response.status === "OK") {
+						const found = {};
+						Object.keys(parsers).forEach(field => {
+							const parser = parsers[field];
+							parser.type.some((type, typeIdx) => {
+								response.results.forEach(result => result.address_components.forEach(addressComponent => {
+									if (addressComponent.types.includes(type)) {
+										if (!found[field]) found[field] = {};
+										if (!found[field][typeIdx]) found[field][typeIdx] = {};
+										const responseField = addressComponent[parser.responseField] ? parser.responseField : "short_name";
+										found[field][typeIdx][addressComponent[responseField]] = true;
+									}
+								}));
+								return found[field] && found[field][typeIdx];
+							});
+						});
+						Object.keys(parsers).forEach(field => {
+							if (!fieldByKeys[field] || !this.props.schema.properties[field]) {
+								return;
+							}
+							if (found[field]) {
+								const keys = Object.keys(found[field]);
+								const responseForField = found[field][keys[0]];
+								Object.keys(responseForField).forEach(value => {
+									// If target field is array
+									if (this.props.schema.properties[field].type === "array") {
+										const temp = Array.from(this.props.formData[field]);
+
+										// Find correct enum from fieldOptions
+										const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
+										const enumField = fieldOptions[fieldOptions.findIndex(element => {
+											return element.field === field;
+										})].enum;
+
+										// Find enum value from key (eg. municipalityName --> municipalityId)
+										const _enum = this.props.formContext.uiSchemaContext[enumField];
+										const enumValue = _enum.enum[_enum.enumNames.indexOf(value)];
+
+										// Push enum value to changes (ignore duplicates)
+										if (enumValue !== undefined && !temp.includes(enumValue)) {
+											temp.push(enumValue);
+											changes[field] = temp;
+										}
+									} else {
+										changes[field] = join(changes[field], value);
+									}
+								});
+							} else {
+								changes[field] = getDefaultFormState(this.props.schema.properties[field], undefined, this.props.registry.definitions);
+							}
+						});
+						if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
+						success(() => {
+							if (timestamp !== this.promiseTimestamp) return;
+							if (this.mounted) {
+								this.props.onChange({...this.props.formData, ...changes});
+							} else {
+								const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
+								const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};
+								lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
+							}
+							if (callback) callback();
+						});
+					} else if (country) {
+						fetchForeign();
 					}
 				};
 
-				if (response.status === "OK") {
-					const found = {};
-					Object.keys(parsers).forEach(field => {
-						const parser = parsers[field];
-						parser.type.some((type, typeIdx) => {
-							response.results.forEach(result => result.address_components.forEach(addressComponent => {
-								if (addressComponent.types.includes(type)) {
-									if (!found[field]) found[field] = {};
-									if (!found[field][typeIdx]) found[field][typeIdx] = {};
-									const responseField = addressComponent[parser.responseField] ? parser.responseField : "short_name";
-									found[field][typeIdx][addressComponent[responseField]] = true;
-								}
-							}));
-							return found[field] && found[field][typeIdx];
-						});
-					});
-					Object.keys(parsers).forEach(field => {
-						if (!fieldByKeys[field] || !this.props.schema.properties[field]) {
-							return;
-						}
-						if (found[field]) {
-							const keys = Object.keys(found[field]);
-							const responseForField = found[field][keys[0]];
-							Object.keys(responseForField).forEach(value => {
-								// If target field is array
-								if (this.props.schema.properties[field].type === "array") {
-									const temp = Array.from(this.props.formData[field]);
+				const fetchForeign = () => {
+					if (!props.formContext.googleApiKey) return fail("No Google API key", callback);
 
-									// Find correct enum from fieldOptions
-									const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
-									const enumField = fieldOptions[fieldOptions.findIndex(element => {
-										return element.field === field;
-									})].enum;
-
-									// Find enum value from key (eg. municipalityName --> municipalityId)
-									const _enum = this.props.formContext.uiSchemaContext[enumField];
-									const enumValue = _enum.enum[_enum.enumNames.indexOf(value)];
-
-									// Push enum value to changes (ignore duplicates)
-									if (enumValue !== undefined && !temp.includes(enumValue)) {
-										temp.push(enumValue);
-										changes[field] = temp;
-									}
-								} else {
-									changes[field] = join(changes[field], value);
-								}
-							});
-						} else {
-							changes[field] = getDefaultFormState(this.props.schema.properties[field], undefined, this.props.registry.definitions);
-						}
-					});
-					if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;
-					success(() => {
-						if (timestamp !== this.promiseTimestamp) return;
-						if (this.mounted) {
-							this.props.onChange({...this.props.formData, ...changes});
-						} else {
-							const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getID());
-							const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};
-							lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
-						}
-						if (callback) callback();
-					});
-				} else if (country) {
-					fetchForeign();
-				}
-			};
-
-			const fetchForeign = () => {
-				if (!props.formContext.googleApiKey) return fail("No Google API key", callback);
-
-				this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
+					this.fetch(`https://maps.googleapis.com/maps/api/geocode/json\
 					?latlng=${lat},${lng}\
 					&key=${props.formContext.googleApiKey}\
 					&language=en\
 					&filter=country|administrative_area_level_1|administrative_area_level_2|administrative_area_level_3`
-				).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch((e) => {
-					fail(e.message, callback, !!"failed");
-				});
-			};
-
-			this.getComponentContext().fetching = true;
-
-			this.getContext().setTimeout(() => {
-				if (timestamp !== this.promiseTimestamp) return;
-				if (this.getComponentContext().fetching) {
-					fail(this.props.formContext.translations.GeocodingTimeout);
-					this.mounted && this.setState({timeout: true}, () => {
-						this.mounted && this.setState(this.getStateFromProps(this.props, false));
+					).then(handleResponse(undefined, "country", "municipality", "administrativeProvince")).catch((e) => {
+						fail(e.message, callback, !!"failed");
 					});
-				}
-			}, 5 * 1000);
+				};
 
-			!bounds.overlaps(FINLAND_BOUNDS) ? 
-				fetchForeign() :
-				this.props.formContext.apiClient.fetchRaw("/coordinates/location", undefined, {
-					method: "POST",
-					headers: {
-						"accept": "application/json",
-						"content-type": "application/json"
-					},
-					body: JSON.stringify(geometry)
-				}).then(
-					response => response.json()
-				).then(
-					handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince", "biogeographicalProvince")
-				).catch((e) => {
-					fail(e.message);
-				});
-		}), "Haetaan sijaintia");
+				this.getComponentContext().fetching = true;
+
+				this.getContext().setTimeout(() => {
+					if (timestamp !== this.promiseTimestamp) return;
+					if (this.getComponentContext().fetching) {
+						fail(this.props.formContext.translations.GeocodingTimeout);
+						this.mounted && this.setState({timeout: true}, () => {
+							this.mounted && this.setState(this.getStateFromProps(this.props, false));
+						});
+					}
+				}, 5 * 1000);
+
+				!bounds.overlaps(FINLAND_BOUNDS)
+					? fetchForeign()
+					: this.props.formContext.apiClient.fetchRaw("/coordinates/location", undefined, {
+						method: "POST",
+						headers: {
+							"accept": "application/json",
+							"content-type": "application/json"
+						},
+						body: JSON.stringify(geometry)
+					}).then(
+						response => response.json()
+					).then(
+						handleResponse(props.formContext.translations.Finland, "municipality", "biologicalProvince", "biogeographicalProvince")
+					).catch((e) => {
+						fail(e.message);
+					});
+			}));
+		};
+
+		if (this.getComponentContext().hook) {
+			mainContext.removeSubmitHook(this.getUUID(), this.getComponentContext().hook).then(doAsync);
+		} else {
+			doAsync();
+		}
 	}
 
 	render() {

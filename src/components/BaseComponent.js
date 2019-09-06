@@ -1,5 +1,5 @@
 import deepEquals from "deep-equal";
-import { getReactComponentName, parseJSONPointer, getRelativePointer } from "../utils";
+import { getReactComponentName, parseJSONPointer, getRelativePointer, getUUID as _getUUID } from "../utils";
 import Context from "../Context";
 
 /**
@@ -131,11 +131,15 @@ export default function BaseComponent(ComposedComponent) {
 			return new Context(this.props.formContext.contextId);
 		}
 
+		getUUID() {
+			return _getUUID(this.props.formData) || this.props.formContext._parentLajiFormId || "root";
+		}
+
 		addSubmitHook(hook) {
-			const {_parentLajiFormId = "root"} = this.props.formContext;
+			const id = this.getUUID(this.props.formData) || this.props.formContext._parentLajiFormId || "root";
 			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
-			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, _parentLajiFormId);
-		new Context(this.props.formContext.contextId).addSubmitHook(_parentLajiFormId, relativePointer, hook);
+			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+			return new Context(this.props.formContext.contextId).addSubmitHook(id, relativePointer, hook);
 		}
 	};
 }

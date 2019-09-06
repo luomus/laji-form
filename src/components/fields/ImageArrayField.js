@@ -436,12 +436,15 @@ export default class ImageArrayField extends Component {
 		const id = this.getContainerId();
 
 		const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
-		const saveAndOnChange = this.saveImages(files).then(imgIds => {
+		const saveAndOnChange = () => this.saveImages(files).then(imgIds => {
 			if (!lajiFormInstance.mounted) {
 				return;
 			}
 
-			const newFormData = [...(this.props.formData || []), ...imgIds];
+			let pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+			const newFormData = this.mounted
+				? [...(this.props.formData || []), ...imgIds]
+				: parseJSONPointer(lajiFormInstance.state.formData, pointer);
 
 			if (!lajiFormInstance.mounted) return;
 
@@ -459,7 +462,7 @@ export default class ImageArrayField extends Component {
 				return;
 			}
 
-			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+			pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
 			lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
 		});
 
