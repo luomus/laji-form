@@ -444,8 +444,8 @@ export default class ImageArrayField extends Component {
 			let pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
 			const newFormData = [
 				...(this.mounted
-					? parseJSONPointer(lajiFormInstance.state.formData, pointer)
-					: this.props.formData || []
+					? this.props.formData || []
+					: parseJSONPointer(lajiFormInstance.state.formData, pointer)
 				),
 				...imgIds
 			];
