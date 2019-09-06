@@ -344,7 +344,7 @@ export default class LajiForm extends Component {
 							return {...hookItem, running: true, promise};
 						}
 						return hookItem;
-					})
+					});
 					if (isRetry) {
 						this.setState({submitHooks: hooks});
 					}
@@ -355,7 +355,7 @@ export default class LajiForm extends Component {
 					this.setState({submitHooks: this.state.submitHooks.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false, failed: true} : hookItem)});
 					throw e;
 				});
-			}
+			};
 
 			_hook();
 
@@ -641,7 +641,7 @@ export default class LajiForm extends Component {
 	renderSubmitHooks = () => {
 		if (!this.state || !this.state.submitHooks) return;
 		const jobsAmount = this.state.submitHooks.filter(({failed}) => !failed).length;
-		const  runningAmount = this.state.submitHooks.reduce((count, {running, failed}) => running ? count + 1 : count, 0);
+		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
 		if (!this.state.submitting) return null;
 
 		return (
@@ -788,7 +788,7 @@ export default class LajiForm extends Component {
 				this.validationSettings.ignoreWarnings = ignoreWarnings;
 				this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
 			}, 0);
-		}).catch((e ) => {
+		}).catch(() => {
 			this.setState({submitting: false});
 			this.popBlockingLoader();
 			highlightElem(findDOMNode(this.bgJobRef.current));

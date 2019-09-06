@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import equals from "deep-equal";
-import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativePointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPath, getUUID, parseJSONPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPath, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import Context from "../../Context";
