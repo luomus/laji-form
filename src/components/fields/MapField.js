@@ -479,7 +479,8 @@ class MobileEditorMap extends Component {
 		options.locate = {
 			on: true,
 			userLocation,
-			onLocationFound: this.onLocate
+			onLocationFound: this.onLocate,
+			panOnFound: false
 		};
 
 		const {translations} = this.props.formContext;
