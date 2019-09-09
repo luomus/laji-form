@@ -10,7 +10,7 @@
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build": "npm run build:lib && npm run build:dist",
     "preversion": "npm run lint && npm test",
-    "version": "./update-changelog.sh",
+    "version": "bin/update-changelog.sh",
     "postversion": "npm run build && npm publish && git push",
     "lint": "eslint -c .eslintrc.prod.json src playground",
     "test": "HOST=127.0.0.1 PORT=8083 TEST_BROWSER=chrome protractor protractor.conf.js",
