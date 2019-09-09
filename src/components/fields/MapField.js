@@ -381,7 +381,7 @@ class MobileEditorMap extends Component {
 
 	getCircle(radiusPixels) {
 		return (
-			<svg viewBox="0 0" width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
+			<svg width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
 				<defs>
 					<mask id="mask" x="0" y="0" width="100%" height="100%">
 						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
