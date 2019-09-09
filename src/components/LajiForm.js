@@ -595,11 +595,11 @@ export default class LajiForm extends Component {
 						null}
 					</div>
 			</Form>
-			{shortcuts && 
+			{shortcuts &&
 				<Panel 
 					ref={this.getPanelRef} 
 					className="shortcut-help laji-form-popped z-depth-3 hidden" 
-					style={{bottom: (this.props.bottomOffset || 0) + 5}}
+					style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
 					bsStyle="info" 
 				>
 					<PanelHeading>

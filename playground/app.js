@@ -82,7 +82,7 @@ if (query.test !== "true") {
 		onSettingsChange: console.info,
 		googleApiKey: properties.googleApiKey,
 		notifier,
-		optimizeOnChange: true
+		optimizeOnChange: true,
 	}));
 }
 
