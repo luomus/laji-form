@@ -12,8 +12,8 @@ function getJsonFromUrl() {
 
 export const getLocatorForContextId = contextId => path =>  `#_laji-form_${contextId}_root_${path.replace(/\./g, "_")}`;
 
-export const emptyForm = async (params = "") => browser.get(`http://${HOST}:${PORT}?test=true&{params}`);
-export const navigateToForm = async (formID, params = "") => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false${params}`);
+export const emptyForm = async (params = "") => browser.get(`http://${HOST}:${PORT}?test=true&settings=false&mockApi=true&${params}`);
+export const navigateToForm = async (formID, params = "") => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false&mockApi=true${params}`);
 export const lajiFormLocator = getLocatorForContextId(0);
 export const lajiFormLocate = str => $(lajiFormLocator(str));
 
@@ -22,17 +22,18 @@ export class Form {
 		this.props = params;
 	}
 
-	initialize() {
+	async initialize() {
 		const query = params => Object.keys(params).reduce((q, key, i) =>
 			`${q}${i === 0 ? "?" : "&"}${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
 		, "");
 		if (this.props.id) {
 			const {id, ..._props} = this.props;
-			return navigateToForm(id, query(_props));
+			await navigateToForm(id, query(_props));
 		} else {
 			this.props.test = true;
-			return emptyForm(query(this.props));
+			await emptyForm(query(this.props));
 		}
+		this.contextId = await this.e("app.refs.lajiform._id");
 	}
 
 	e(path) {
@@ -62,16 +63,21 @@ export class Form {
 		return browser.executeScript("return window.changedData");
 	}
 
-	async locate(path, selector) {
-		const contextId = await this.e("app.refs.lajiform._id");
-		const $elem = $(getLocatorForContextId(contextId)(path));
-		if (!selector) {
-			return $elem;
-		}
-		return $elem.$(selector);
+	$locate(path) {
+		return $(getLocatorForContextId(this.contextId)(path));
 	}
-	async locateButton(path, selector) {
+
+	$locateButton(path, selector) {
 		return $(`#root_${path.replace(/\./g, "_")}-${selector}`)
+	}
+
+	async setMockResponse(path, query, response) {
+		await browser.executeScript(`return window.setMockResponse(${JSON.stringify(path)}, ${JSON.stringify(query)}, ${JSON.stringify(response)})`);
+		console.log('returning resolver');
+		return {
+			resolve: () => browser.executeScript(`return window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})].resolve()`)
+			remove: () => browser.executeScript(`return window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})].remove()`)
+		};
 	}
 }
 

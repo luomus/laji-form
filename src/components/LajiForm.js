@@ -137,6 +137,7 @@ export default class LajiForm extends Component {
 
 	static defaultProps = {
 		lang: "en",
+		schema: {},
 		uiSchema: {}
 	}
 
@@ -887,7 +888,7 @@ export default class LajiForm extends Component {
 		}
 		this._context.keyTimeouts = [];
 
-		const currentId = findNearestParentSchemaElemId(this._id, e.target);
+		const currentId = findNearestParentSchemaElemId(this._id, e.target) || "";
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;

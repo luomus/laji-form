@@ -54,7 +54,6 @@ class LajiFormApp extends Component {
 	}
 
 	render() {
-		if (!this.props.schema && !(this.state || {}).schema) return null;
 		return <LajiForm {...this.props} {...(this.state || {})} ref="lajiform"/>;
 	}
 }

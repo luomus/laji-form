@@ -3,6 +3,7 @@ import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
 import _notus from "notus";
+import queryString from "querystring";
 
 import "../src/styles";
 import "./styles.css";
@@ -34,6 +35,36 @@ const apiClient = new ApiClientImplementation(
 	properties.userToken,
 	lang
 );
+
+if (query.mockApi) {
+	let mockResponses = {};
+	window.mockResponses = mockResponses;
+	const getKey = (path, queryObject) => queryObject
+			? `${path}?${queryString.stringify(queryObject)})}`
+			: path;
+	window.getMockQueryKey = getKey;
+	window.setMockResponse = (path, query, response) => {
+		let resolve;
+		const promise = new Promise(_resolve => {
+			resolve = () => _resolve({json: () => response});
+		});
+		const key = getKey(path, query);
+		const remove = () => {
+			delete mockResponses[key];
+		};
+		mockResponses[key] = {promise, resolve, remove};
+		return mockResponses[key];
+	};
+	const fetch = apiClient.fetch;
+	apiClient.fetch = (path, query, options) => {
+		const key = getKey(path, query);
+		const keyWithoutQuery = getKey(path, false);
+		const mock = mockResponses[key] || mockResponses[keyWithoutQuery];
+		return mock
+			? mock.promise
+			: fetch.call(apiClient, path, query, options);
+	};
+}
 
 const ownerFilledFormData = {gatheringEvent: {leg: [properties.userId]}};
 

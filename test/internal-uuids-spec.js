@@ -117,8 +117,7 @@ describe("Internal UUIDs", () => {
 	});
 
 	it("are removed on change by default", async () => {
-		const addButton = await form.locateButton("arrayOfObjects", "add");
-		await addButton.click();
+		await form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
 		await expect(changed.arrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
 		await expect(changed.arrayOfObjects[0].innerArrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
@@ -127,8 +126,7 @@ describe("Internal UUIDs", () => {
 
 	it("are not removed on change if optimizeOnChange", async () => {
 		await form.setState({optimizeOnChange: true});
-		const addButton = await form.locateButton("arrayOfObjects", "add");
-		await addButton.click();
+		await form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
 		await expect(changed.arrayOfObjects[0]._lajiFormId).not.toBe(undefined);
 		await form.setState({optimizeOnChange: false});
@@ -136,8 +134,7 @@ describe("Internal UUIDs", () => {
 
 	it("are added to new array items", async () => {
 		await form.setState({optimizeOnChange: true, formData: {...formData}});
-		const addButton = await form.locateButton("arrayOfObjects", "add");
-		await addButton.click();
+		form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
 		await expect(changed.arrayOfObjects[1]._lajiFormId).not.toBe(undefined);
 	});

@@ -864,7 +864,7 @@ export function getAllLajiFormIdsDeeply(_formData, tree) {
 	return walkFormDataWithIdTree(_formData, tree)[1];
 }
 
-export function findPointerForLajiFormId(tmpIdTree, formData, lajiFormId) {
+export function findPointerForLajiFormId(tmpIdTree = {}, formData, lajiFormId) {
 	if (formData && getUUID(formData) === lajiFormId) {
 		return "";
 	}
