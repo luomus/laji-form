@@ -78,7 +78,6 @@ describe("Internal UUIDs", () => {
 		},
 		number: 2
 	};
-	
 
 	beforeAll(async () => {
 		form = await createForm();
@@ -107,6 +106,7 @@ describe("Internal UUIDs", () => {
 		await expect(submitted.arrayOfObjects[0].innerArrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
 		await expect(submitted.object.innerObject.arrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
 	});
+
 	it("keeps data intact when ids removed", async () => {
 		await form.submit();
 		const submitted = await form.getSubmittedData();		

@@ -10,7 +10,7 @@ describe("Line transect (MHL.1)", () => {
 	const $unit = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon");
 
 	it("shorthand unit is shown", async () => {
-		await expect($shorthand.isDisplayed()).toBe(true);
+		expect(await $shorthand.isDisplayed()).toBe(true);
 	});
 	
 
@@ -24,6 +24,6 @@ describe("Line transect (MHL.1)", () => {
 
 		await waitUntilShorthandShowsSchema();
 
-		await expect($unit.isDisplayed()).toBe(true);
+		expect(await $unit.isDisplayed()).toBe(true);
 	});
 });

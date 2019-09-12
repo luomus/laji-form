@@ -334,7 +334,7 @@ export default class LajiForm extends Component {
 		};
 
 		this._context.addSubmitHook = (lajiFormId, relativePointer, hook, description) => {
-			lajiFormId = +lajiFormId;
+			lajiFormId = `${lajiFormId}`;
 			let promise;
 			const _hook = () => {
 				promise = new Promise((resolve) => {
@@ -354,7 +354,6 @@ export default class LajiForm extends Component {
 					this._context.removeSubmitHook(lajiFormId, _hook);
 				}).catch(e => {
 					this.setState({submitHooks: this.state.submitHooks.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false, failed: true} : hookItem)});
-					throw e;
 				});
 			};
 
@@ -368,7 +367,7 @@ export default class LajiForm extends Component {
 		};
 		this._context.removeSubmitHook = (lajiFormId, hook) => {
 			return new Promise(resolve => {
-				lajiFormId = +lajiFormId;
+				lajiFormId = `${lajiFormId}`;
 				this.setState({submitHooks: (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId))}, resolve);
 			});
 		};

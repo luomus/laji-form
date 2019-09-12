@@ -15,21 +15,21 @@ describe("Mobile form (MHL.51)", () => {
 		});
 
 		it("is displayed", async () => {
-			await expect($(".laji-form form").isPresent()).toBe(true);
+			expect(await $(".laji-form form").isPresent()).toBe(true);
 		});
 
 
 		it("image add modal is displayed", async () => {
-			await expect($imageAddModal.isPresent()).toBe(true);
+			expect(await $imageAddModal.isPresent()).toBe(true);
 		});
 
 		it("clicking cancel on image add modal hides it", async () => {
 			await $imageAddModal.$(".cancel").click();
-			await expect($imageAddModal.isPresent()).toBe(false);
+			expect(await $imageAddModal.isPresent()).toBe(false);
 		});
 
 		it("map shows geolocating blocker after image add modal hides", async () => {
-			await expect($blocker.isPresent()).toBe(true);
+			expect(await $blocker.isPresent()).toBe(true);
 		});
 
 		describe("after geolocating", () => {
@@ -41,13 +41,13 @@ describe("Mobile form (MHL.51)", () => {
 			it("map removes geolocating blocker", async () => {
 				await mockGeo(60, 25);
 				await browser.wait(protractor.ExpectedConditions.invisibilityOf($blocker), 1000, "Blocker didn't hide");
-				await expect($blocker.isPresent()).toBe(false);
+				expect(await $blocker.isPresent()).toBe(false);
 			});
 
 			it("map shows mobile editor", async () => {
 				const $mobileEditorMap = $(".laji-form.fullscreen .laji-form-map");
 				await browser.wait(protractor.ExpectedConditions.visibilityOf($mobileEditorMap), 1000, "Mobile editor map didn't show up");
-				await expect($mobileEditorMap.isPresent()).toBe(true);
+				expect(await $mobileEditorMap.isPresent()).toBe(true);
 			});
 
 		});
@@ -59,7 +59,7 @@ describe("Mobile form (MHL.51)", () => {
 			await navigateToForm("MHL.51");
 			mockGeoError();
 			await browser.sleep(100);
-			await expect($blocker.isPresent()).toBe(true);
+			expect(await $blocker.isPresent()).toBe(true);
 		});
 	});
 
@@ -69,21 +69,21 @@ describe("Mobile form (MHL.51)", () => {
 		});
 
 		it("is displayed", async () => {
-			await expect($(".laji-form form").isPresent()).toBe(true);
+			expect(await $(".laji-form form").isPresent()).toBe(true);
 		});
 
 
 		it("image add modal is displayed", async () => {
-			await expect($imageAddModal.isPresent()).toBe(true);
+			expect(await $imageAddModal.isPresent()).toBe(true);
 		});
 
 		it("map doesn't geolocating blocker since it has geometry", async () => {
-			await expect($blocker.isPresent()).toBe(false);
+			expect(await $blocker.isPresent()).toBe(false);
 		});
 
 		it("map doesn't show mobile editor", async () => {
 			await browser.sleep(100);
-			await expect($mobileEditorMap.isPresent()).toBe(false);
+			expect(await $mobileEditorMap.isPresent()).toBe(false);
 		});
 
 	});
@@ -94,35 +94,35 @@ describe("Mobile form (MHL.51)", () => {
 		});
 
 		it("is displayed", async () => {
-			await expect($(".laji-form form").isPresent()).toBe(true);
+			expect(await $(".laji-form form").isPresent()).toBe(true);
 		});
 
 		it("image add modal isn't displayed", async () => {
-			await expect($imageAddModal.isPresent()).toBe(false);
+			expect(await $imageAddModal.isPresent()).toBe(false);
 		});
 
 		it("map doesn't geolocating blocker since it has geometry", async () => {
-			await expect($blocker.isPresent()).toBe(false);
+			expect(await $blocker.isPresent()).toBe(false);
 		});
 
 		it("map doesn't show mobile editor", async () => {
 			await browser.sleep(100);
-			await expect($mobileEditorMap.isPresent()).toBe(false);
+			expect(await $mobileEditorMap.isPresent()).toBe(false);
 		});
 
 	});
 
 	describe("with formData without image and edit mode", () => {
 		it("navigate to form", async () => {
-			await navigateToForm("MHL.51", "&localFormData=MHL.51-geometry&edit=true");
+			await navigateToForm("MHL.51", "&localFormData=MHL.51-geometry&isEdit=true");
 		});
 
 		it("is displayed", async () => {
-			await expect($(".laji-form form").isPresent()).toBe(true);
+			expect(await $(".laji-form form").isPresent()).toBe(true);
 		});
 
 		it("image add modal isn't displayed", async () => {
-			await expect($imageAddModal.isPresent()).toBe(false);
+			expect(await $imageAddModal.isPresent()).toBe(false);
 		});
 
 	});

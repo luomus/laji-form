@@ -73,20 +73,61 @@ describe("Geocoder", () => {
 		]
 	};
 
-	beforeAll(async () => {
+	beforeEach(async () => {
 		form = await createForm();
 	});
 
 	it("parses location in Finland correctly", async () => {
 		const {resolve, remove} = await form.setMockResponse("/coordinates/location", false, response);
-		await form.setState({ schema, uiSchema, formData });
-		await expect(form.$locate("country").$("input").getAttribute("value")).toBe("");
-		await expect(form.$locate("municipality").$("input").getAttribute("value")).toBe("");
-		await expect(form.$locate("biologicalProvince").$("input").getAttribute("value")).toBe("");
+		await form.setState({schema, uiSchema, formData});
+		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("");
+		expect(await form.$locate("municipality").$("input").getAttribute("value")).toBe("");
+		expect(await form.$locate("biologicalProvince").$("input").getAttribute("value")).toBe("");
 		await resolve();
 		await remove();
-		await expect(form.$locate("country").$("input").getAttribute("value")).toBe("Finland");
-		await expect(form.$locate("municipality").$("input").getAttribute("value")).toBe("Helsinki");
-		await expect(form.$locate("biologicalProvince").$("input").getAttribute("value")).toBe("Nylandia");
+		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("Suomi");
+		expect(await form.$locate("municipality").$("input").getAttribute("value")).toBe("Helsinki");
+		expect(await form.$locate("biologicalProvince").$("input").getAttribute("value")).toBe("Nylandia");
+	});
+
+	const $runningJobs = $(".running-jobs");
+
+	it("blocks submit until done", async () => {
+		const {resolve, remove} = await form.setMockResponse("/coordinates/location", false, response);
+		await form.setState({schema, uiSchema, formData});
+		await form.e("submit()");
+		expect(await $runningJobs.isDisplayed()).toBe(true);
+		await resolve();
+		await remove();
+		expect(await $runningJobs.isPresent()).toBe(false);
+		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("Suomi");
+		//TODO test submit called. Implement spy
+	});
+
+	describe("rejecting", () => {
+		it("blocks submit", async () => {
+			const {reject, remove} = await form.setMockResponse("/coordinates/location", false, response);
+			await form.setState({schema, uiSchema, formData});
+			await form.setState({formData: {}});
+			await form.setState({formData});
+			await form.e("submit()");
+			expect(await $runningJobs.isDisplayed()).toBe(true);
+			await reject();
+			await remove();
+			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(1);
+			expect(await $runningJobs.isPresent()).toBe(false);
+		});
+
+		it("and then locating again removes old bg job", async () => {
+			const {resolve, remove} = await form.setMockResponse("/coordinates/location", false, response);
+			await form.setState({schema, uiSchema, formData});
+			await form.e("submit()");
+			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(0);
+			expect(await $runningJobs.isDisplayed()).toBe(true);
+			await resolve();
+			await remove();
+			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(0);
+			expect(await $runningJobs.isPresent()).toBe(false);
+		});
 	});
 });

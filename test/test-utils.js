@@ -73,10 +73,11 @@ export class Form {
 
 	async setMockResponse(path, query, response) {
 		await browser.executeScript(`return window.setMockResponse(${JSON.stringify(path)}, ${JSON.stringify(query)}, ${JSON.stringify(response)})`);
-		console.log('returning resolver');
+		const mock = (method) => browser.executeScript(`return window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})].${method}()`);
 		return {
-			resolve: () => browser.executeScript(`return window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})].resolve()`)
-			remove: () => browser.executeScript(`return window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})].remove()`)
+			resolve: () => mock("resolve"),
+			reject: () => mock("reject"),
+			remove: () => mock("remove")
 		};
 	}
 }
@@ -99,15 +100,11 @@ export async function putForeignMarkerToMap() {
 	const $gatheringsMap = lajiFormLocate("gatherings").$(".laji-map");
 	const $markerButton = $(".leaflet-draw-draw-marker");
 
-	await expect($markerButton.isDisplayed()).toBe(true);
+	expect(await $markerButton.isDisplayed()).toBe(true);
 
 	await $markerButton.click();
 
-	await browser.actions()
-		.mouseMove($gatheringsMap, {x: 100, y: 100}).perform();
-
-	return browser.actions()
-		.click().perform();
+	return browser.actions({bridge: true}).move({origin: $gatheringsMap.getWebElement(), x: -100, y: -100}).click().perform();
 }
 
 export async function removeUnit(gatheringIdx, unitIdx) {

@@ -24,8 +24,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $$taxonSuggestions.first().click();
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
 
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -37,8 +37,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
 
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -48,8 +48,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys("kettu");
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -61,8 +61,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.TAB);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
 
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -73,8 +73,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.TAB);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
 
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -86,8 +86,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.TAB);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($warningSign), 5000, "taxon warning glyph didn't show up");
 
-		await expect($warningSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kett");
+		expect(await $warningSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kett");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -98,8 +98,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.TAB);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($warningSign), 5000, "taxon warning glyph didn't show up");
 
-		await expect($warningSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kett");
+		expect(await $warningSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kett");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -110,8 +110,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
 		await $taxonInput.sendKeys(protractor.Key.TAB);
 
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -122,8 +122,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.TAB);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
 
-		await expect($okSign.isDisplayed()).toBe(true);
-		await expect($taxonInput.getAttribute("value")).toBe("kettu");
+		expect(await $okSign.isDisplayed()).toBe(true);
+		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
 		await removeUnit(0, 0);
 		await $addUnit.click();
@@ -134,8 +134,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 			await $taxonInput.sendKeys(`parus ${suffix}`);
 			await $taxonInput.sendKeys(protractor.Key.ENTER);
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-			await expect($okSign.isDisplayed()).toBe(true);
-			await expect($taxonInput.getAttribute("value")).toBe(`parus ${suffix}`);
+			expect(await $okSign.isDisplayed()).toBe(true);
+			expect(await $taxonInput.getAttribute("value")).toBe(`parus ${suffix}`);
 
 			await removeUnit(0, 0);
 		await $addUnit.click();
@@ -145,17 +145,17 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	it("shows power user for taxon field", async () => {
 		await $taxonInput.click();
 
-		await expect($poweruserButton.isDisplayed()).toBe(true);
+		expect(await $poweruserButton.isDisplayed()).toBe(true);
 	});
 
 	it("clicking power user button toggles power user mode on/off", async () => {
 		await $poweruserButton.click();
 
-		await expect($poweruserButton.getAttribute("class")).toContain("active");
+		expect(await $poweruserButton.getAttribute("class")).toContain("active");
 
 		await $poweruserButton.click();
 
-		await expect($poweruserButton.getAttribute("class")).not.toContain("active");
+		expect(await $poweruserButton.getAttribute("class")).not.toContain("active");
 	});
 
 
@@ -168,11 +168,11 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $$taxonSuggestions.last().click();
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "Suggestion list timeout");
 
-		await expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
+		expect(await lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
 
 		const enteredUnitTaxon = await lajiFormLocate("gatherings.0.units.0").$$("td").first().getText();
 
-		await expect(enteredUnitTaxon).not.toBe("kettu");
+		expect(await enteredUnitTaxon).not.toBe("kettu");
 	
 		await removeUnit(0, 0);
 		await removeUnit(0, 0);
@@ -189,15 +189,15 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "New unit didn't show up");
 
-		await expect(lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
-		await expect(lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("div");
+		expect(await lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
+		expect(await lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("div");
 
 		await removeUnit(0, 1);
 
 		await $taxonInput.click();
 		await $poweruserButton.click();
 
-		await expect($poweruserButton.getAttribute("class")).not.toContain("active");
+		expect(await $poweruserButton.getAttribute("class")).not.toContain("active");
 	});
 
 });

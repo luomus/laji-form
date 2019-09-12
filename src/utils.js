@@ -909,7 +909,7 @@ export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree, 
 export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
-		return;
+		return  "";
 	}
 	return containerPointer + relativePointer;
 }

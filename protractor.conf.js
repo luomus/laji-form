@@ -55,7 +55,7 @@ exports.config = {
 		}));
 
 		// Set manually since Firefox cli size options don't work.
-		await browser.driver.manage().window().setSize(width, height);
+		await browser.driver.manage().window().setRect({width, height});
 	},
 	plugins: [{
 		package: "protractor-console-plugin"

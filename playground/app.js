@@ -4,6 +4,7 @@ import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
 import _notus from "notus";
 import queryString from "querystring";
+import { isObject } from "../src/utils";
 
 import "../src/styles";
 import "./styles.css";
@@ -14,13 +15,21 @@ import "notus/src/notus.css";
 const notus = _notus();
 
 function getJsonFromUrl() {
-	  var query = location.search.substr(1);
-	  var result = {};
-	  query.split("&").forEach(function(part) {
-			    var item = part.split("=");
-			    result[item[0]] = decodeURIComponent(item[1]);
-			  });
-	  return result;
+	const type = (value) => {
+		try {
+			return JSON.parse(value);
+		} catch (e) {
+			return value;
+		}
+	};
+
+	let query = location.search.substr(1);
+	let result = {};
+	query.split("&").forEach(function(part) {
+		var item = part.split("=");
+		result[item[0]] = type(decodeURIComponent(item[1]));
+	});
+	return result;
 }
 
 const query = getJsonFromUrl();
@@ -36,7 +45,9 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
-if (query.mockApi) {
+const {mockApi, test, id, local, localFormData, settings, ...lajiFormOptions} = query;
+
+if (mockApi) {
 	let mockResponses = {};
 	window.mockResponses = mockResponses;
 	const getKey = (path, queryObject) => queryObject
@@ -44,15 +55,16 @@ if (query.mockApi) {
 			: path;
 	window.getMockQueryKey = getKey;
 	window.setMockResponse = (path, query, response) => {
-		let resolve;
-		const promise = new Promise(_resolve => {
+		let resolve, reject;
+		const promise = new Promise((_resolve, _reject) => {
 			resolve = () => _resolve({json: () => response});
+			reject = _reject;
 		});
 		const key = getKey(path, query);
 		const remove = () => {
 			delete mockResponses[key];
 		};
-		mockResponses[key] = {promise, resolve, remove};
+		mockResponses[key] = {promise, resolve, reject, remove};
 		return mockResponses[key];
 	};
 	const fetch = apiClient.fetch;
@@ -69,26 +81,34 @@ if (query.mockApi) {
 const ownerFilledFormData = {gatheringEvent: {leg: [properties.userId]}};
 
 let promise = undefined;
-if (query.test === "true") {
+if (test === true) {
 	promise = Promise.resolve({});
-} else if (query.id !== undefined && query.local !== "true") {
-	promise = apiClient.fetch(`/forms/${query.id}`, {lang, format: "schema"}).then(response => {
+} else if (id !== undefined && local !== true) {
+	promise = apiClient.fetch(`/forms/${id}`, {lang, format: "schema"}).then(response => {
 		return response.json();
 	});
 } else {
-	promise = Promise.resolve(query.id ? require(`../forms/${query.id}.json`) : schemas);
+	promise = Promise.resolve(id ? require(`../forms/${id}.json`) : schemas);
 }
 
-if (query.test !== "true") {
+promise = promise.then(data => ({...data, ...lajiFormOptions}));
+
+if (test !== true) {
 	promise = promise.then(data => ({
 		...data,
 		uiSchema: {
 			...data.uiSchema,
 			"ui:disabled": query.readonly
 		},
-		settings: query.settings === "false" ? undefined : schemas.settings,
+		settings: query.hasOwnProperty("settings")
+			? isObject(settings)
+				? settings
+				: settings !== false
+					? schemas.settings
+					: undefined
+			: schemas.settings,
 		formData: query.localFormData
-			? require(`../forms/${query.localFormData === "true" ? query.id : query.localFormData}.formData.json`)
+			? require(`../forms/${localFormData === true ? id : localFormData}.formData.json`)
 			: data.prepopulatedDocument
 				? {
 					...data.prepopulatedDocument,
@@ -101,13 +121,12 @@ if (query.test !== "true") {
 		uiSchemaContext: {
 			...(data.uiSchemaContext || {}),
 			creator: properties.userId,
-			isAdmin: query.admin,
-			isEdit: query.edit,
+			isAdmin: query.isAdmin,
+			isEdit: query.isEdit,
 			municipalityEnum:  require("./municipalityEnum.json"),
 			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json")
 		},
 		onSubmit,
-		lang,
 		onError: log("errors"),
 		renderSubmit: true,
 		onSettingsChange: console.info,
@@ -122,6 +141,7 @@ promise = promise.then(data => ({
 	apiClient,
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
+	lang,
 }));
 
 const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
