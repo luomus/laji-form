@@ -35,7 +35,18 @@ export function getInjectedUiSchema(uiSchema, injections, uiSchemaContext) {
 			if (!pointer[path]) pointer[path] = {};
 			return pointer[path];
 		}, updateObject);
-		tail[last] = {$set: parseJSONPointer(uiSchemaContext, injections[injectionPath])};
+		let value = injections[injectionPath];
+		console.log("value start", value);
+		if (value.match(/%{.*}/)) {
+			while (value.match(/%{.*}/)) {
+				const [match, innerValue] = value.match(/%{(.*)}/);
+				value = value.replace(/%{.*}/, parseJSONPointer(uiSchemaContext, innerValue));
+			}
+		} else {
+			value = parseJSONPointer(uiSchemaContext, value);
+		}
+		console.log(value);
+		tail[last] = {$set: value};
 		injected = true;
 	}
 	if (injected) uiSchema = update(uiSchema, updateObject);
