@@ -101,7 +101,7 @@ describe("Geocoder", () => {
 		await remove();
 		expect(await $runningJobs.isPresent()).toBe(false);
 		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("Suomi");
-		//TODO test submit called. Implement spy
+		expect(await form.getSubmittedData()).not.toBe(null);
 	});
 
 	describe("rejecting", () => {
@@ -111,11 +111,13 @@ describe("Geocoder", () => {
 			await form.setState({formData: {}});
 			await form.setState({formData});
 			await form.e("submit()");
+			expect(await form.getSubmittedData()).toBe(null);
 			expect(await $runningJobs.isDisplayed()).toBe(true);
 			await reject();
 			await remove();
 			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(1);
 			expect(await $runningJobs.isPresent()).toBe(false);
+			expect(await form.getSubmittedData()).not.toBe(null);
 		});
 
 		it("and then locating again removes old bg job", async () => {
