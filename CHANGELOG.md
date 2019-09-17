@@ -1,3 +1,6 @@
+## 1.2.6
+* `lib` keeps src folder structure & doesn't include styles
+
 ## 1.2.5
 * include `src` in npm package
 

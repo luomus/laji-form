@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/app.js",
   "scripts": {
