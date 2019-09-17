@@ -1,3 +1,6 @@
+## 6.4.1
+* Fix 'main' in package.json
+
 ## 1.2.0
 * Background jobs can be retried
 * ImageArrayField sends DELETE request to API when image is removed
