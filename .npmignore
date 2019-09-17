@@ -1,8 +1,8 @@
 properties.json*
-src/
 playground/
 test/
 forms/
 protractor*
 webpack*
 .*
+bin/
