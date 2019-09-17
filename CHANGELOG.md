@@ -1,3 +1,6 @@
+## 1.2.5
+* include `src` in npm package
+
 ## 1.2.4
 * Fix 'main' in package.json
 
