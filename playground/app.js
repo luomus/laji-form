@@ -7,7 +7,6 @@ import queryString from "querystring";
 import { isObject } from "../src/utils";
 
 import "../src/styles";
-import "./styles.css";
 import "./styles-dev.css";
 
 import "notus/src/notus.css";
