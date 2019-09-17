@@ -1,4 +1,4 @@
-## 1.2.3
+## 1.2.4
 * Fix 'main' in package.json
 
 ## 1.2.0
