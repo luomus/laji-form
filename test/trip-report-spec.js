@@ -70,13 +70,14 @@ describe("Trip report (JX.519)", () => {
 		describe("geocoding", () => {
 
 			it("starts and finishes after adding gathering", async () => {
-				if (await lajiFormLocate("gatherings.0.country").isDisplayed()) {
+				if (await lajiFormLocate("gatherings.0.country").isPresent()) {
 					return;
 				}
 				const $loadingGeocoderButton = $(".geocoder-btn .react-spinner");
-				expect(await $loadingGeocoderButton.isDisplayed()).toBe(true);
 
-				await browser.wait(protractor.ExpectedConditions.invisibilityOf($loadingGeocoderButton), 6000, "Geocoding timeout");
+				if (await $loadingGeocoderButton.isPresent()) {
+					await browser.wait(protractor.ExpectedConditions.invisibilityOf($loadingGeocoderButton), 6000, "Geocoding timeout");
+				}
 
 				expect(await $loadingGeocoderButton.isPresent()).toBe(false);
 			});
@@ -367,6 +368,11 @@ describe("Trip report (JX.519)", () => {
 
 			const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
 			const fieldCount = await getFieldCount();
+
+			const $spinner = $(".informal-taxon-group-chooser.modal-dialog .react-spinner");
+			if (await $spinner.isPresent()) {
+				await browser.wait(protractor.ExpectedConditions.invisibilityOf($spinner), 5000, "Informal taxon groups timeout");
+			}
 
 			const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last();
 

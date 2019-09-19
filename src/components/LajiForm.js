@@ -353,6 +353,7 @@ export default class LajiForm extends Component {
 				}).then(() => {
 					this._context.removeSubmitHook(lajiFormId, _hook);
 				}).catch(e => {
+					console.warn("LajiForm submit hook caught error:", e);
 					this.setState({submitHooks: this.state.submitHooks.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false, failed: true} : hookItem)});
 				});
 			};
