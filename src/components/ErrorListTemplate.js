@@ -15,7 +15,24 @@ export default class ErrorListTemplate extends Component {
 		if (!this.state.popped) this.setState({popped: true});
 		this.refs.errorPanel.expand();
 		this.refs.warningPanel.expand();
-	};
+	}
+
+	poppedToggle = (e) => {
+		e.stopPropagation();
+		this.setState({popped: !this.state.popped, poppedTouched: true});
+	}
+
+	revalidate = () => {
+		const that = new Context(this.props.formContext.contextId).formInstance;
+		that.submit(!"don`t propagate");
+		this.refs.errorPanel.expand();
+		this.refs.warningPanel.expand();
+	}
+
+	submitWithWarnings = () => {
+		const that = new Context(this.props.formContext.contextId).formInstance;
+		that.submit("propagate", "ignore warnings");
+	}
 
 	render() {
 		const {errorSchema, schema, formContext, uiSchema} = this.props;
@@ -55,22 +72,6 @@ export default class ErrorListTemplate extends Component {
 		}
 
 		const {errors, warnings} = walkErrors("", "root", errorSchema);
-
-		const poppedToggle = (e) => {
-			e.stopPropagation();
-			this.setState({popped: !this.state.popped, poppedTouched: true});
-		};
-		const revalidate = () => {
-			const that = new Context(this.props.formContext.contextId).formInstance;
-			that.submit(!"don`t propagate");
-			this.refs.errorPanel.expand();
-			this.refs.warningPanel.expand();
-		};
-		const submitWithWarnings = () => {
-			const that = new Context(this.props.formContext.contextId).formInstance;
-			that.submit("propagate", "ignore warnings");
-		};
-
 		return (
 			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
 				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
@@ -80,19 +81,19 @@ export default class ErrorListTemplate extends Component {
 							title={translations.Errors}
 							clickHandler={clickHandler}
 							showToggle={true}
-							poppedToggle={poppedToggle}/>
+							poppedToggle={this.poppedToggle}/>
 				<ErrorPanel classNames="warning-panel"
 							ref="warningPanel"
 							errors={warnings}
 							title={translations.Warnings}
 							clickHandler={clickHandler}
 							showToggle={errors.length === 0}
-							poppedToggle={poppedToggle}/>
+							poppedToggle={this.poppedToggle}/>
 				<div className="panel-footer">
 					<div>
 						{errors.length > 0
-							? <Button onClick={revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
-							: <Button onClick={submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
+							? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
+							: <Button onClick={this.submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
 						}
 					</div>
 				</div>

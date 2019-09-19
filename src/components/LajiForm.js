@@ -567,6 +567,15 @@ export default class LajiForm extends Component {
 						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 					</TooltipComponent>
 				)}
+				<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
+																	 schema={this.props.schema}
+																	 uiSchema={this.props.uiSchema}
+																	 context={this._context}
+																	 formContext={this.state.formContext}
+																	 errorClickHandler={this.errorClickHandler}
+																	 tmpIdTree={this.tmpIdTree}
+																	 ref={this.bgJobRef}
+				/>
 				<Form
 					{...this.props}
 					formData={this.state.formData}
@@ -625,15 +634,6 @@ export default class LajiForm extends Component {
 						</Table>
 				</Panel> 
 			}
-			<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
-			                           schema={this.props.schema}
-			                           uiSchema={this.props.uiSchema}
-			                           context={this._context}
-			                           translations={translations}
-			                           errorClickHandler={this.errorClickHandler}
-			                           tmpIdTree={this.tmpIdTree}
-			                           ref={this.bgJobRef}
-			/>
 			{this.renderSubmitHooks()}
 		</div>
 		);

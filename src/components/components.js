@@ -668,8 +668,14 @@ export class FailedBackgroundJobsPanel extends Component {
 		hook();
 	}
 
+	poppedToggle = (e) => {
+		e.stopPropagation();
+		this.setState({popped: !this.state.popped, poppedTouched: true});
+	}
+
 	render() {
-		const {jobs = [], schema, uiSchema, translations} = this.props;
+		const {jobs = [], schema, uiSchema, formContext: {translations}} = this.props;
+
 		if (!jobs.length) return null;
 
 		const errors = jobs.reduce((_errors, error) => {
@@ -696,11 +702,13 @@ export class FailedBackgroundJobsPanel extends Component {
 		if (!errors.length) return null;
 
 		return (
-			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}>
+			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}
+			     style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null} >
 				<ErrorPanel 
 					title={translations.FailedBackgroundJobs}
 					errors={errors}
 					showToggle={true}
+					poppedToggle={this.poppedToggle}
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
 				/>
