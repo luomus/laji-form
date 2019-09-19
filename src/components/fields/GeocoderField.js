@@ -307,7 +307,7 @@ export default class GeocoderField extends Component {
 								Object.keys(responseForField).forEach(value => {
 									// If target field is array
 									if (this.props.schema.properties[field].type === "array") {
-										const temp = Array.from(this.props.formData[field]);
+										const temp = Array.from(this.props.formData[field] || []);
 
 										// Find correct enum from fieldOptions
 										const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
