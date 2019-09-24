@@ -58,6 +58,7 @@ exports.config = {
 		await browser.driver.manage().window().setRect({width, height});
 	},
 	plugins: [{
-		package: "protractor-console-plugin"
+		package: "protractor-console-plugin",
+		exclude: [/Uncaught \(in promise\)/]
 	}]
 };
