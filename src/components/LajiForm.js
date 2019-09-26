@@ -56,7 +56,6 @@ const fields = importLocalComponents("fields", [
 	"SumField",
 	"NamedPlaceChooserField",
 	"NamedPlaceSaverField",
-	"TemplateArrayField",
 	"MapField",
 	"GeocoderField",
 	"TagArrayField",

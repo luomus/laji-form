@@ -15,20 +15,20 @@ export default class AutoArrayField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	static getName() {return "AutoArrayField";}
 
 	getStateFromProps(props) {
-		const {formData, schema, uiSchema, registry} = props;
+		const {formData = [], schema, uiSchema, registry} = props;
 
 		const state = {formData};
 
 		const newEmptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
 		const emptyItem =  this.emptyItem
 			&& formDataEquals(newEmptyItem, this.emptyItem)
-			&& props.formData.every(item => getUUID(item) !== getUUID(this.emptyItem))
+			&& formData.every(item => getUUID(item) !== getUUID(this.emptyItem))
 			? this.emptyItem
 			: assignUUID(newEmptyItem);
 		this.emptyItem = emptyItem;
