@@ -1,3 +1,6 @@
+## 2.0.0
+* rm `TemplateArrayField`
+
 ## 1.2.6
 * `lib` keeps src folder structure & doesn't include styles
 
