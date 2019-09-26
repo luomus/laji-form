@@ -84,10 +84,10 @@ class DefaultMapArrayField extends Component {
 
 		const data = geometries && geometries.length || !options.placeholderGeometry
 			? []
-			: {
+			: [{
 				geoData: options.placeholderGeometry,
 				getFeatureStyle: this._getPlaceholderStyle
-			};
+			}];
 
 		const extraData = (options.data || []).map((dataItem) => (
 				{geoData: dataItem.geometryField ? this.getGeometry(formData, dataItem.geometryField) : dataItem}
