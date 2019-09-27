@@ -193,7 +193,7 @@ export default class AutosuggestField extends Component {
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...updateFormDataWithJSONPointer({...this.props, formData}, undefined, suggestionValueField), ...unit};
-			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !formDataEquals(this.props.formData, formData)) {
+			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !formDataEquals(this.props.formData, formData, this.props)) {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
@@ -235,7 +235,9 @@ export default class AutosuggestField extends Component {
 	isValueSuggested = () => {
 		const {formData, uiSchema} = this.props;
 		for (let fieldName in this.getActiveOptions(getUiOptions(uiSchema)).suggestionReceivers) {
-			if (!formData || !parseJSONPointer(formData, fieldName, !!"safe")) return false;
+			if (!formData || !parseJSONPointer(formData, fieldName, !!"safe")) {
+				return false;
+			}
 		}
 		return true;
 	}

@@ -26,13 +26,13 @@ export default class AutoArrayField extends Component {
 		const state = {formData};
 
 		const newEmptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
-		const emptyItem =  this.emptyItem
-			&& formDataEquals(newEmptyItem, this.emptyItem)
+		const emptyItem = this.emptyItem
+			&& formDataEquals(newEmptyItem, this.emptyItem, props)
 			&& formData.every(item => getUUID(item) !== getUUID(this.emptyItem))
 			? this.emptyItem
 			: assignUUID(newEmptyItem);
 		this.emptyItem = emptyItem;
-		if (formData && (formData.length === 0 || !formDataEquals(formData[formData.length - 1], emptyItem))) {
+		if (formData && (formData.length === 0 || !formDataEquals(formData[formData.length - 1], emptyItem, props))) {
 			state.formData = [...formData, emptyItem];
 		}
 		state.uiSchema = {
@@ -50,7 +50,7 @@ export default class AutoArrayField extends Component {
 
 	onChange(formData) {
 		const emptyItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-		if (formData && formData.length !== 0 && formDataEquals(formData[formData.length - 1], emptyItem)) {
+		if (formData && formData.length !== 0 && formDataEquals(formData[formData.length - 1], emptyItem, this.props)) {
 			formData = formData.slice(0, formData.length - 1);
 		}
 		this.props.onChange(formData);

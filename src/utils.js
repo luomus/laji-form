@@ -799,13 +799,23 @@ export const filterLajiFormId = (item) => {
 	return item;
 };
 
+export const filterItemId = (item) => {
+	if (item && (item._lajiFormId || item.id)) {
+		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line no-unused-vars
+		item = _item;
+	}
+	return item;
+};
+
 export const formDataIsEmpty = (props) => {
-	let item = filterLajiFormId(props.formData);
+	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
+	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
 	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 };
 
-export const formDataEquals = (f1, f2) => {
-	return deepEquals(...[f1, f2].map(filterLajiFormId));
+export const formDataEquals = (f1, f2, props) => {
+	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
+	return deepEquals(...[f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]));
 };
 
 let uuid = 0;
@@ -824,12 +834,15 @@ export const assignUUID = (item, immutably = false) => {
 
 export const getUUID = (item) => item ? (item.id || item._lajiFormId) : undefined;
 
-
 function walkFormDataWithIdTree(_formData, tree, itemOperator) {
 	const ids = {};
 	const walk = (_formData, tree) => {
 		if (!tree) return _formData;
-		if (Object.keys(tree).length && isObject(_formData)) {
+		const {_hasId, ..._tree}  = tree;
+		if (_hasId && isObject(_formData)) {
+			_formData = itemOperator ? itemOperator(_formData) : _formData;
+		}
+		if (Object.keys(_tree).length && isObject(_formData)) {
 			return Object.keys(_formData).reduce((f, k) => {
 				if (tree[k]) {
 					f[k] = walk(_formData[k], tree[k], itemOperator);
@@ -850,7 +863,6 @@ function walkFormDataWithIdTree(_formData, tree, itemOperator) {
 		}
 		return _formData;
 	};
-
 	const formData = walk(_formData, tree);
 	return [formData, ids];
 }
@@ -918,4 +930,23 @@ export function highlightElem(elem) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
 	setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
+}
+
+export function getRelativeTmpIdTree(contextId, id)  {
+	const rootTmpIdTree = new Context(contextId).formInstance.tmpIdTree;
+
+	let tmpIdTree;
+	if (rootTmpIdTree) {
+		tmpIdTree = rootTmpIdTree;
+		const treePath = id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
+		for (const k of treePath) {
+			if (tmpIdTree[k]) {
+				tmpIdTree = tmpIdTree[k];
+			} else {
+				tmpIdTree = undefined;
+				break;
+			}
+		}
+	}
+	return tmpIdTree;
 }

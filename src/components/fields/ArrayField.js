@@ -3,7 +3,7 @@ import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
 import update from "immutability-helper";
 import merge from "deepmerge";
-import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
 import Context from "../../Context";
@@ -53,21 +53,7 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 };
 
 export function onArrayFieldChange(formData, props) {
-	const rootTmpIdTree = new Context(props.formContext.contextId).formInstance.tmpIdTree;
-
-	let tmpIdTree;
-	if (rootTmpIdTree) {
-		tmpIdTree = rootTmpIdTree;
-		const treePath = props.idSchema.$id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
-		for (const k of treePath) {
-			if (tmpIdTree[k]) {
-				tmpIdTree = tmpIdTree[k];
-			} else {
-				tmpIdTree = undefined;
-				break;
-			}
-		}
-	}
+	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id)
 
 	const [withLajiFormIds, ids] = addLajiFormIds(formData, tmpIdTree, false);
 	const oldIds = getAllLajiFormIdsDeeply(props.formData, tmpIdTree);

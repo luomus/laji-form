@@ -413,8 +413,7 @@ export default class LajiForm extends Component {
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
-				apiClient: this.apiClient,
-				tmpIdTree: this.tmpIdTree
+				apiClient: this.apiClient
 			}
 		};
 		if (!this.state || props.formData && props.formData !== this.props.formData) {
@@ -498,7 +497,7 @@ export default class LajiForm extends Component {
 						paths[key] = walked;
 					}
 					return paths;
-				}, {});
+				}, {_hasId: true});
 			}
 		}
 		this.tmpIdTree = walk(schema);
