@@ -82,7 +82,7 @@ export default class NamedPlaceChooserField extends Component {
 				];
 				this.setState({show: false});
 				targetId = this.props.idSchema.$id;
-				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "activeIdx", this.props.formData.length);
+				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "activeIdx", (this.props.formData || []).length);
 			} else { // gathering object
 				gathering = getGathering(this.props.schema);
 				gathering.namedPlaceID = place.id;
