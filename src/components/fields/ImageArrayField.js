@@ -96,7 +96,6 @@ export default class ImageArrayField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		//const getCount = (_props, _state) => ((_props.formData || []).length + (_state.loading || 0));
 		const getCount = (_props, _state) => ((_props.formData || []).length + (_state.tmpImgs || []).length);
 
 		if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
@@ -433,6 +432,8 @@ export default class ImageArrayField extends Component {
 			this.setState({imageAddModal: undefined});
 		}
 
+		this.parseExif(files);
+
 		const id = this.getContainerId();
 
 		const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
@@ -560,7 +561,6 @@ export default class ImageArrayField extends Component {
 				delete this._context.tmpImgs[containerId][id];
 			});
 			this.mounted && this.setState({tmpImgs: this.state.tmpImgs.filter(id => !tmpImgs.includes(id))});
-			this.parseExif(files);
 			return ids;
 		}).catch((e) => {
 			if (tmpImgs) {
