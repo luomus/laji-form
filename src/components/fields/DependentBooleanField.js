@@ -38,8 +38,7 @@ export default class DependentBooleanField extends Component {
 		let booleanFieldDataDictionarified = this.getDictionarifiedBooleanFieldData(formData);
 
 		let booleanFieldData = [];
-		if (this.checkFieldSanity(formData, booleanDefiner) &&
-		    this.checkFieldSanity(formData, booleanField)) formData[booleanDefiner].forEach((definerItem) => {
+		(formData[booleanDefiner] || []).forEach((definerItem) => {
 			booleanFieldData.push(!!booleanFieldDataDictionarified[definerItem]);
 		});
 		formData = {...props.formData, [booleanField]: booleanFieldData};
@@ -72,19 +71,13 @@ export default class DependentBooleanField extends Component {
 
 	getDictionarifiedFormData = (formData, field) => {
 		let formDataDictionarified = {};
-		if (!this.checkFieldSanity(formData, field)) return formDataDictionarified;
-		formData[field].forEach((value) => {
+		(formData[field] || []).forEach((value) => {
 			formDataDictionarified[value] = true;
 		});
 		return formDataDictionarified;
-
 	}
 
 	getDictionarifiedBooleanFieldData = (formData) => {
 		return this.getDictionarifiedFormData(formData, this.getUiOptions().booleanField);
-	}
-
-	checkFieldSanity = (formData, field) => {
-		return formData[field] && Array.isArray(formData[field]);
 	}
 }

@@ -112,7 +112,7 @@ export default class ArrayCombinerField extends Component {
 			});
 		} else {
 			formData.forEach((obj) => {
-				Object.keys(obj).forEach((arrName) => {
+				Object.keys(this.props.schema.properties).forEach((arrName) => {
 					origArraysContainer[arrName] ?
 						origArraysContainer[arrName].push(obj[arrName]) :
 						( origArraysContainer[arrName] = [obj[arrName]] );
