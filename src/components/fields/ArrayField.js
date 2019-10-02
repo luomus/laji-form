@@ -53,7 +53,7 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 };
 
 export function onArrayFieldChange(formData, props) {
-	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id)
+	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
 
 	const [withLajiFormIds, ids] = addLajiFormIds(formData, tmpIdTree, false);
 	const oldIds = getAllLajiFormIdsDeeply(props.formData, tmpIdTree);
