@@ -313,11 +313,9 @@ export default class ScopeField extends Component {
 
 		if (formData) {
 			Object.keys(formData).forEach((property) => {
-				if (!propertyHasData(property, formData) ||
-				    (formData.hasOwnProperty(property) &&
-				     schema.properties.hasOwnProperty(property) &&
-				     formData[property] === schema.properties[property].default)) return;
-				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
+				if (!schema.properties[property]) return;
+				const isDefault = isDefaultData(formData[property], schema.properties[property], this.props.registry.definitions);
+				if (!isDefault) {
 					fieldsToShow[property] = props.schema.properties[property];
 				}
 			});

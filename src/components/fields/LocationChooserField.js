@@ -340,8 +340,8 @@ class LocationButton extends Component {
 					));
 				}
 			}
-
 			}
+
 			if (geometryRef
 				&& geometryRef.geometries
 				&& geometryRef.geometries.length <= maxShapes
