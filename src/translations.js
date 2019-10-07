@@ -19,6 +19,11 @@
 		en: "Yesterday",
 		sv: "Igår"
 	},
+	dateLocale: {
+		fi: "DD.MM.YYYY",
+		en: "DD/MM/YYYY",
+		sv: "DD.MM.YYYY"
+	},
 	datePlaceholderDay: {
 		fi: "pp.kk.vvvv",
 		en: "dd/mm/yyyy",

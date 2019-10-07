@@ -59,7 +59,7 @@ export default class DateTimeWidget extends Component {
 		let timeFormat = "";
 		let placeholder = "";
 		if (props.calendar) {
-			dateFormat += localeFormats.L;
+			dateFormat += translations.DateLocale;
 			placeholder += translations.datePlaceholderDay;
 		}
 		if (props.time) {
