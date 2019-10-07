@@ -1,15 +1,16 @@
 {
+  "secureLevel": "MX.secureLevelNone",
   "gatheringEvent": {
     "legPublic": true,
+    "dateBegin": "2019-10-07",
     "leg": [
       "MA.308"
-    ]
+    ],
+    "id": "JX.163606#1",
+    "@type": "MZ.gatheringEvent"
   },
-  "editors": [
-    "MA.308"
-  ],
-  "secureLevel": "MX.secureLevelNone",
-  "keywords": [],
+  "formID": "JX.519",
+  "creator": "MA.308",
   "gatherings": [
     {
       "geometry": {
@@ -18,56 +19,51 @@
           {
             "type": "Point",
             "coordinates": [
-              24.110223,
-              49.458848
+              27.665099,
+              63.275408
             ]
           }
         ]
       },
-      "country": "Ukraine",
-      "administrativeProvince": "Lviv Oblast",
-      "biologicalProvince": "",
-      "municipality": "Mykolaivs'kyi district",
-      "images": [],
-      "habitat": [],
-      "taxonCensus": [],
       "units": [
         {
           "taxonConfidence": "MY.taxonConfidenceSure",
-          "recordBasis": "MY.recordBasisHumanObservationPhoto",
-          "checklistID": "",
+          "recordBasis": "MY.recordBasisHumanObservation",
           "informalTaxonGroups": [
-            "MVL.145",
-            "MVL.1"
+            "MVL.2"
           ],
-          "images": [
-            "MM.93028"
-          ],
-		  "sex": "MY.sexM",
-          "preservation": [],
-          "birdBehavior": [],
-          "movingStatus": [],
           "identifications": [
             {
-              "identificationBasis": [],
-              "taxon": "varpunen"
+              "taxon": "kettu",
+              "id": "JX.163606#5",
+              "@type": "MY.identification"
             }
           ],
           "unitFact": {
-            "autocompleteSelectedTaxonID": "MX.36573"
+            "autocompleteSelectedTaxonID": "MX.46587"
           },
           "unitGathering": {
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.10955899999999,
-                49.459027
-              ]
-            }
-          }
+            "id": "JX.163606#3",
+            "@type": "MZ.unitGathering"
+          },
+          "id": "JX.163606#4",
+          "@type": "MY.unit"
         }
       ],
-      "eventTime": {}
+      "biologicalProvince": "Pohjois-Savo",
+      "country": "Suomi",
+      "municipality": "Lapinlahti",
+      "id": "JX.163606#2",
+      "@type": "MY.gathering"
     }
-  ]
+  ],
+  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+  "sourceID": "KE.389",
+  "collectionID": "HR.1747",
+  "editor": "MA.308",
+  "dateEdited": "2019-10-07T09:54:06+03:00",
+  "dateCreated": "2019-10-07T09:54:06+03:00",
+  "id": "JX.163606",
+  "@type": "MY.document",
+  "@context": "http://schema.laji.fi/context/document.jsonld"
 }

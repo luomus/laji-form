@@ -279,7 +279,7 @@ class LocationButton extends Component {
 
 			switch (type) {
 			case "create": {
-				if (geometryRef.type && (maxShapes > 1 || maxShapes === -1)) {
+				if (geometryRef && geometryRef.type && (maxShapes > 1 || maxShapes === -1)) {
 					if (geometryRef.geometries && maxShapes !== -1 && geometryRef.geometries.length >= maxShapes) {
 						this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
 						return;
@@ -287,8 +287,8 @@ class LocationButton extends Component {
 					const geometries = geometryRef && geometryRef.geometries
 						? geometryRef.geometries
 						: geometryRef && geometryRef.type
-						? [geometryRef]
-						: [];
+							? [geometryRef]
+							: [];
 					that.props.onChange(update(
 						that.props.formData,
 						{[geometryField]: {$set: [...geometries, event.feature.geometry]}}
@@ -340,10 +340,12 @@ class LocationButton extends Component {
 					));
 				}
 			}
+
 			}
-			if ((geometryRef.geometries
+			if (geometryRef
+				&& geometryRef.geometries
 				&& geometryRef.geometries.length <= maxShapes
-				&& type !== "edit")) {
+				&& type !== "edit") {
 				this.setState({shapeAlert: undefined});
 			}
 		}
@@ -462,7 +464,7 @@ class LocationButton extends Component {
 	}
 
 	onModalMapKeyDown = (e) => {
-		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e)) {
+		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e.nativeEvent)) {
 			this.onHide();
 		}
 	}
