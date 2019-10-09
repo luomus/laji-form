@@ -581,8 +581,8 @@ export default class LajiForm extends Component {
 					onChange={this.onChange}
 					onError={this.onError}
 					onSubmit={this.onSubmit}
-					fields={fields}
-					widgets={widgets}
+					fields={{...fields, ...this.props.fields}}
+					widgets={{...widgets, ...this.props.widgets}}
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
