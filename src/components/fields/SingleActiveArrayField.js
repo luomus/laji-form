@@ -87,7 +87,7 @@ export default class SingleActiveArrayField extends Component {
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
 		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion"} = getUiOptions(this.props.uiSchema);
 		if (renderer === "uncontrolled") return;
-		if (prevProps.formData.length === this.props.formData.length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
+		if ((prevProps.formData || []).length === (this.props.formData || []).length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
 			const idToScroll = idToScrollAfterNavigate
 				? idToScrollAfterNavigate
 				: renderer === "accordion" || renderer === "pager" 
@@ -125,7 +125,7 @@ export default class SingleActiveArrayField extends Component {
 		const state = {};
 		const options = getUiOptions(props.uiSchema);
 		if (options.hasOwnProperty("activeIdx")) state.activeIdx = options.activeIdx;
-		else if ((props.formData || []).length === 1 && this.props.formData.length === 0) {
+		else if ((props.formData || []).length === 1 && (this.props.formData || []).length === 0) {
 			state.activeIdx = 0;
 		}
 
@@ -289,24 +289,25 @@ export default class SingleActiveArrayField extends Component {
 
 	buttonDefinitions = {
 		add: {
-			callback: () => this.onActiveChange(this.props.formData.length)
+			callback: () => this.onActiveChange((this.props.formData || []).length)
 		},
 		copy: {
 			fn: () => (...params) => {
+				const {formData = []} = this.props;
 				const idx = this.state.activeIdx !== undefined ?
 					this.state.activeIdx :
-					this.props.formData.length - 1;
+					formData.length - 1;
 				beforeAdd(this.props);
 				this.props.onChange([
-					...this.props.formData.slice(0, idx + 1),
-					copyItemFunction(this, this.props.formData[idx])(...params),
-					...this.props.formData.slice(idx + 1)
+					...formData.slice(0, idx + 1),
+					copyItemFunction(this, formData[idx])(...params),
+					...formData.slice(idx + 1)
 				]);
 			},
 			callback: () => {
 				const idx = this.state.activeIdx !== undefined ?
 					this.state.activeIdx :
-					this.props.formData.length - 1;
+					(this.props.formData || []).length - 1;
 				this.onActiveChange(idx + 1);
 			},
 			rules: {
@@ -340,7 +341,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			const that = this.props.formContext.this;
 			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
 				getProps: () => this.props,
-				insertCallforward: callback => that.onActiveChange(that.props.formData.length, undefined, callback),
+				insertCallforward: callback => that.onActiveChange((that.props.formData || []).length, undefined, callback),
 				getCurrentIdx: () => that.state.activeIdx,
 				focusByIdx: (idx, prop, callback) => idx === that.state.activeIdx
 					? callback()
@@ -541,7 +542,7 @@ class PagerArrayFieldTemplate extends Component {
 							: null}
 					<Pager.Item next 
 											href="#"
-											disabled={activeIdx >= that.props.formData.length - 1 || activeIdx === undefined}
+											disabled={activeIdx >= (that.props.formData || []).length - 1 || activeIdx === undefined}
 											onClick={this.navigateNext}>
 						{translations.Next}  &rarr;</Pager.Item>
 				</Pager>
@@ -755,7 +756,7 @@ class TableArrayFieldTemplate extends Component {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
-		const {schema, uiSchema = {}, formData, items, TitleField, DescriptionField, disabled, readonly} = this.props;
+		const {schema, uiSchema = {}, formData = [], items, TitleField, DescriptionField, disabled, readonly} = this.props;
 		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(this.props.uiSchema);
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
