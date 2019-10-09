@@ -1,3 +1,7 @@
+## 2.0.5
+* Pass `fields` and `widgets` from props to RJSF
+* don't `src` in npm package
+
 ## 2.0.0
 * rm `TemplateArrayField`
 
