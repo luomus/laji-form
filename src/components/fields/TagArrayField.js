@@ -11,7 +11,7 @@ import deepEquals from "deep-equal";
 export default class TagArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
-			"ui:option": PropTypes.shape({
+			"ui:options": PropTypes.shape({
 				separatorKeys: PropTypes.arrayOf(PropTypes.string)
 			})
 		}),

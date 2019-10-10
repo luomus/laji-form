@@ -39,7 +39,7 @@ export default class SingleActiveArrayField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled", "table", "split"]),
-				activeIdx: PropTypes.integer
+				activeIdx: PropTypes.number
 			})
 		}),
 		schema: PropTypes.shape({

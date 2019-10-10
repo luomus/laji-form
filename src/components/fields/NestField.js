@@ -121,7 +121,6 @@ export default class NestField extends Component {
 					}
 				}
 			}),
-			uiSchema: PropTypes.object
 		}).isRequired,
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])

@@ -11,10 +11,10 @@ export default class ExtraLabelRowField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				labels: PropTypes.arrayOf(PropTypes.object).isRequired,
-				lg: PropTypes.integer,
-				md: PropTypes.integer,
-				sm: PropTypes.integer,
-				xs: PropTypes.integer,
+				lg: PropTypes.number,
+				md: PropTypes.number,
+				sm: PropTypes.number,
+				xs: PropTypes.number,
 				hiddenXs: PropTypes.boolean
 			})
 		}).isRequired,

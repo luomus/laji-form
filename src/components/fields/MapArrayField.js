@@ -34,6 +34,32 @@ export function parseGeometries(geometry) {
 
 
 export default class MapArrayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				geometryField: PropTypes.string,
+				// Strategy for getting geometry data.
+				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect", "lolife", "lolifeNamedPlace"]),
+				topOffset: PropTypes.number,
+				bottomOffset: PropTypes.number,
+				popupFields: PropTypes.arrayOf(PropTypes.object),
+				mapSizes: PropTypes.shape({
+					lg: PropTypes.number,
+					md: PropTypes.number,
+					sm: PropTypes.number,
+					xs: PropTypes.number
+				}),
+				data: PropTypes.arrayOf(PropTypes.shape({
+					geometryField: PropTypes.string.isRequired
+				}))
+			}).isRequired,
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array", "object"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+	}
+
 	render() {
 		const {geometryMapper = "default"} = getUiOptions(this.props.uiSchema);
 		switch (geometryMapper) {
@@ -1035,32 +1061,6 @@ class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
 function _MapArrayField(ComposedComponent) { return (
 @BaseComponent
 class _MapArrayField extends ComposedComponent {
-	static propTypes = {
-		uiSchema: PropTypes.shape({
-			"ui:options": PropTypes.shape({
-				geometryField: PropTypes.string,
-				// Strategy for getting geometry data.
-				geometryMapper: PropTypes.oneOf(["default", "units", "lineTransect", "lolife", "lolifeNamedPlace"]),
-				topOffset: PropTypes.integer,
-				bottomOffset: PropTypes.integer,
-				popupFields: PropTypes.arrayOf(PropTypes.object),
-				mapSizes: PropTypes.shape({
-					lg: PropTypes.integer,
-					md: PropTypes.integer,
-					sm: PropTypes.integer,
-					xs: PropTypes.integer
-				})
-			}).isRequired,
-			data: PropTypes.arrayOf(PropTypes.shape({
-				geometryField: PropTypes.string.isRequired
-			}))
-		}),
-		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["array", "object"])
-		}).isRequired,
-		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
-	}
-
 	constructor(props) {
 		super(props);
 		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
