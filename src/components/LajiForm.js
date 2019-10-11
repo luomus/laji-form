@@ -548,6 +548,9 @@ export default class LajiForm extends Component {
 
 	getFormRef = () => this.formRef
 
+	getFields = (_fields) => ({...fields, ...(_fields || {})})
+	getWidgets = (_widgets) => ({...widgets, ...(_widgets || {})})
+
 	render() {
 		if (this.state.error) return null;
 		const {translations} = this.state;
@@ -581,8 +584,8 @@ export default class LajiForm extends Component {
 					onChange={this.onChange}
 					onError={this.onError}
 					onSubmit={this.onSubmit}
-					fields={{...fields, ...this.props.fields}}
-					widgets={{...widgets, ...this.props.widgets}}
+					fields={this.getFields(this.props.fields)}
+					widgets={this.getWidgets(this.props.widgets)}
 					FieldTemplate={FieldTemplate}
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
