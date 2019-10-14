@@ -1084,8 +1084,8 @@ class _MapArrayField extends ComposedComponent {
 		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", () => {
 			this._zoomToDataOnNextTick = true;
 		});
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayerName", (tileLayerName, callback) => {
-			this._tileLayerNameOnNextTick = tileLayerName;
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayers", (tileLayerOptions, callback) => {
+			this._tileLayerNameOnNextTick = tileLayerOptions;
 			this._tileLayerNameOnNextTickCallback = callback;
 		});
 
@@ -1108,7 +1108,7 @@ class _MapArrayField extends ComposedComponent {
 		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayerName");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayers");
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize");
 	}
 
@@ -1690,8 +1690,8 @@ export class MapComponent extends Component {
 		this._context.setOnUpdateMap = this.setOnUpdateMap;
 	}
 
-	tileLayerChange = ({tileLayerName}) => {
-		this.setState({mapOptions: {...this.state.mapOptions, tileLayerName}});
+	tileLayerChange = ({tileLayers}) => {
+		this.setState({mapOptions: {...this.state.mapOptions, tileLayers}});
 	}
 	overlaysChange = ({overlayNames}) => {
 		this.setState({mapOptions: {...this.state.mapOptions, overlayNames}});
@@ -1708,18 +1708,14 @@ export class MapComponent extends Component {
 		const {map} = this.map;
 		this._context.map = this.map;
 
-		map.on("tileLayerChange", this.tileLayerChange);
-		map.on("overlaysChange", this.overlaysChange);
-		map.on("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
+		map.on("tileLayersChange", this.tileLayerChange);
 		map.on("locateToggle", this.locateToggle);
 	}
 
 	componentWillUnmount() {
 		const {map} = this.map;
 		if (!map) return;
-		map.off("tileLayerChange", this.tileLayerChange);
-		map.off("overlaysChange", this.overlaysChange);
-		map.off("tileLayerOpacityChangeEnd", this.tileLayerOpacityChangeEnd);
+		map.off("tileLayersChange", this.tileLayerChange);
 		map.off("locateToggle", this.locateToggle);
 	}
 
@@ -1727,7 +1723,7 @@ export class MapComponent extends Component {
 		if (this._callback) this._callback();
 		this._callback = undefined;
 
-		if  (this.props.onOptionsChanged && ["tileLayerName", "tileLayerOpacity", "overlayNames", "locate"].some(name => 
+		if  (this.props.onOptionsChanged && ["tileLayers", "locate"].some(name => 
 			!deepEquals(...[this.state, prevState].map(state => state.mapOptions[name])) 
 		)) {
 			this.props.onOptionsChanged(this.state.mapOptions);
