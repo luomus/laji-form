@@ -1858,10 +1858,13 @@ export class Map extends Component {
 			this.origBodyAsDialogRoot = this.map._dialogRoot === document.body;
 			this.map.setOption("bodyAsDialogRoot", false);
 			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", false);
+			this._bodyOverflowYWas = document.body.style.overflowY;
+			document.body.style.overflowY = "hidden";
 		} else if (!this.state.fullscreen && prevState.fullscreen) {
 			this.map.setRootElem(this._mapContainer);
 			this.map.setOption("bodyAsDialogRoot", this.origBodyAsDialogRoot);
 			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", true);
+			document.body.style.overflowY = this._bodyOverflowYWas;
 		}
 	}
 
