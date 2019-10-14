@@ -457,6 +457,9 @@ min-height: 20px;
 	height: 120px;
 	float: left;
 }
+.laji-form .laji-form-images a > img {
+	cursor: pointer;
+}
 .laji-form .laji-form-images img, .laji-form .image-loading {
 	width: inherit;
 	height: inherit;
@@ -485,6 +488,7 @@ min-height: 20px;
 }
 
 .laji-form .laji-form-drop-zone {
+	cursor: pointer;
 	border: 2px dashed #cacaca;
 }
 .laji-form  .laji-form-drop-zone:hover:not(.disabled), .laji-form .laji-form-drop-zone.dragging:not(.disabled)  {
