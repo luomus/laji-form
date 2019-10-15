@@ -1,7 +1,14 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 
 export default class TaxonImageWidget extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}).isRequired,
+		value: PropTypes.string
+	}
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		const {uiSchema} = getUiOptions(this.props);

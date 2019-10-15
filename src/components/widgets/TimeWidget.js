@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import moment from "moment";
 import DateTimeWidget from "./DateTimeWidget";
 import { isEmptyString } from "../../utils";
@@ -7,7 +8,7 @@ const onChange = onChange => value => {
 	onChange(isEmptyString(value) ? undefined : (moment(value).format("HH:mm")));
 };
 
-export default (props) => (
+const TimeWidget = (props) => (
 	<DateTimeWidget
 		{...props}
 		onChange={onChange(props.onChange)}
@@ -15,4 +16,11 @@ export default (props) => (
 		value={props.value ? (moment().format("YYYY-MM-DD") + `T${props.value}`) : null}
 	/>
 );
+TimeWidget.propTypes = {
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["string"])
+	}),
+	value: PropTypes.string
+};
 
+export default TimeWidget;

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Row, Col, FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
@@ -6,6 +7,12 @@ import BaseComponent from "../BaseComponent";
 
 @BaseComponent
 export default class SeparatedDateTimeWidget extends Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}).isRequired,
+		value: PropTypes.string
+	}
 
 	getStateFromProps(props) {
 		let {value} = props;

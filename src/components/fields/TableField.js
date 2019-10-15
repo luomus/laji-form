@@ -36,6 +36,7 @@ export default class TableField extends Component {
 			})
 		}),
 		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"]),
 			items: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 		}).isRequired
 	}

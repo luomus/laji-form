@@ -7,9 +7,11 @@ import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap"
 
 export default class CheckboxWidget extends Component {
 	static propTypes = {
-		options: PropTypes.shape({
-			allowUndefined: PropTypes.bool,
-			invert:  PropTypes.bool
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				allowUndefined: PropTypes.bool,
+				invert:  PropTypes.bool
+			})
 		}),
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["boolean"])

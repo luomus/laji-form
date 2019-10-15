@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, formatValue } from "../../utils";
 
-
 function PlainTextWidget(props) {
 	const {id, value} = props;
 	const {strong, "ui:widget": formatterWidget, "ui:options": formatterOptions} = getUiOptions(props);
@@ -26,7 +25,7 @@ if (process.env.NODE_ENV !== "production") {
 		id: PropTypes.string.isRequired,
 		value: PropTypes.string,
 		schema: PropTypes.shape({
-			type: PropTypes.string
+			type: PropTypes.oneOf(["string"])
 		})
 	};
 }

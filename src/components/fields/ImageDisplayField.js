@@ -1,10 +1,24 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import update from "immutability-helper";
 
+// TODO should work as widget also
 @BaseComponent
 export default class ImageDisplayField extends Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				urls: PropTypes.arrayOf(PropTypes.string),
+				buttons: PropTypes.arrayOf(PropTypes.string),
+			}),
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array", "object"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+	}
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		let uiSchema = getInnerUiSchema(this.props.uiSchema);

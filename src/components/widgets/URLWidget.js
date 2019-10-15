@@ -1,3 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-export default ({value}) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+const URLWidget = ({value}) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+URLWidget.propTypes = {
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["string"])
+	}),
+	value: PropTypes.string
+};
+export default URLWidget;

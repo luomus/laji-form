@@ -1,7 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 
-export default (props) => {
+const GridLayoutField = (props) => {
 	let {schema, uiSchema} = props;
 	const {SchemaField} = props.registry.fields;
 	uiSchema = {
@@ -25,3 +26,17 @@ export default (props) => {
 
 	return <SchemaField {...props} schema={schema} uiSchema={uiSchema} />;
 };
+GridLayoutField.propTypes = {
+	uiSchema: PropTypes.shape({
+		"ui:grid": PropTypes.shape({
+		 lg: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+		 md: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+		 sm: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+		 xs: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+		})
+	}),
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["object"])
+	}).isRequired
+};
+export default GridLayoutField;

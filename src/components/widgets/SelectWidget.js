@@ -188,30 +188,25 @@ SelectWidget.defaultProps = {
 	autofocus: false,
 };
 
-if (process.env.NODE_ENV !== "production") {
-	SelectWidget.propTypes = {
-		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["string", "array"])
-		}),
-		id: PropTypes.string.isRequired,
-		options: PropTypes.shape({
+SelectWidget.propTypes = {
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["string", "array"])
+	}),
+	id: PropTypes.string.isRequired,
+	uiSchema: PropTypes.shape({
+		"ui:options": PropTypes.shape({
 			enumOptions: PropTypes.array,
 			order: PropTypes.array,
 			filter: PropTypes.array,
 			filterType: PropTypes.string,
 			labels: PropTypes.object,
-		}).isRequired,
-		value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-		required: PropTypes.bool,
-		multiple: PropTypes.bool,
-		autofocus: PropTypes.bool,
-		onChange: PropTypes.func,
-	};
-}
-
-SelectWidget.defaultProps = {
-	selectOnChange: true
+		})
+	}),
+	value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+	required: PropTypes.bool,
+	multiple: PropTypes.bool,
+	autofocus: PropTypes.bool,
+	onChange: PropTypes.func,
 };
-
 
 export default SelectWidget;

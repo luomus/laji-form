@@ -13,7 +13,11 @@ export default class ContextInjectionField extends Component {
 				target: PropTypes.oneOf(["uiSchema", "schema"]),
 			}).isRequired,
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["object", "array"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 	}
 
 	static getName() {return  "ContextInjectionField";}

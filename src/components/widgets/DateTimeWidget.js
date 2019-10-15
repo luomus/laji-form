@@ -14,9 +14,11 @@ const DATE_TIME_SEPARATOR = ", ";
 @BaseComponent
 export default class DateTimeWidget extends Component {
 	static propTypes = {
-		options: PropTypes.shape({
-			showButtons: PropTypes.bool,
-			showTimeList: PropTypes.bool,
+		uiSchema:  PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				showButtons: PropTypes.bool,
+				showTimeList: PropTypes.bool,
+			})
 		}),
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])

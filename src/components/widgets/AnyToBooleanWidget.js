@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import CheckboxWidget from "./CheckboxWidget";
 import { getUiOptions } from "../../utils";
 import equals from "deep-equal";
@@ -33,4 +34,19 @@ export const anyToBoolean = (widget) => (props) => {
 	/>;
 };
 
-export default anyToBoolean(!!"widget");
+const _anyToBoolean = anyToBoolean(!!"widget");
+const valuePropType = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
+_anyToBoolean.propTypes =  {
+	uiSchema: PropTypes.shape({
+		"ui:options": PropTypes.shape({
+			trueValue: valuePropType.isRequired,
+			falseValue: valuePropType.isRequired,
+			allowUndefined: PropTypes.bool
+		})
+	}),
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["string", "number", "boolean"])
+	}).isRequired,
+	formData: valuePropType
+};
+export default _anyToBoolean;

@@ -8,7 +8,7 @@ export default function DescriptonField(props) {
 	if (!description) {
 		return null;
 	}
-	const replacePatterns = description.match(/%{.*?}/g);
+	const replacePatterns = description.match(/%{.*?}/g) || [];
 	const _description = replacePatterns.reduce((desc, replacePattern) => {
 		replacePattern = replacePattern.replace(/%|{|}/g, "");
 		let replacement;

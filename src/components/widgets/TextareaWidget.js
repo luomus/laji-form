@@ -1,9 +1,22 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { stringifyKeyCombo } from "../../utils";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
+import { getUiOptions } from "../../utils";
 
 export default class TextareaWidget extends Component {
+	static propTypes = {
+		"ui:options": PropTypes.shape({
+			emptyValue: PropTypes.string,
+			rows: PropTypes.number,
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}),
+		value: PropTypes.string
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -66,7 +79,7 @@ export default class TextareaWidget extends Component {
 			} else {
 				if (this.timeout) clearTimeout(this.timeout);
 				this.timeout = new Context(this.props.formContext.contextId).setTimeout(() => {
-					this.props.onChange(value === "" ? this.props.options.emptyValue : value);
+					this.props.onChange(value === "" ? getUiOptions(this.props).emptyValue : value);
 				}, 1000);
 			}
 		});

@@ -26,7 +26,11 @@ export default class DataLeakerField extends Component {
 				)
 			}),
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array", "object"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 	}
 
 	static getName() {return "DataLeakerField";}

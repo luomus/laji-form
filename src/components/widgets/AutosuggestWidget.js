@@ -18,7 +18,7 @@ function renderFlag(suggestion) {
 export default class _AutosuggestWidget extends Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			type: PropTypes.string
+			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
 	}
