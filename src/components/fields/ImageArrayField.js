@@ -7,12 +7,11 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } fro
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, schemaJSONPointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, getKeyHandlerTargetId } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
 import exif from "exif-js";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import moment from "moment";
 
@@ -42,7 +41,9 @@ export default class ImageArrayField extends Component {
 					})
 				]),
 				autoOpenImageAddModal: PropTypes.bool,
-				autoOpenMetadataModal: PropTypes.bool
+				autoOpenMetadataModal: PropTypes.bool,
+				sideEffects: PropTypes.arrayOf(PropTypes.object),
+				exifParsers: PropTypes.arrayOf(PropTypes.object)
 			})
 		}),
 		schema: PropTypes.shape({
@@ -348,7 +349,7 @@ export default class ImageArrayField extends Component {
 			found[parse] = false;
 			return found;
 		}, {});
-		files.reduce((promise, file) => {
+		return files.reduce((promise, file) => {
 			if (Object.keys(found).every(k => found[k])) {
 				return promise;
 			}
@@ -404,27 +405,39 @@ export default class ImageArrayField extends Component {
 				})
 			);
 		}, Promise.resolve(found)).then((found) => {
-			let {registry: {definitions}, formContext: {contextId}} = this.props;
+			let {registry, formContext: {contextId}} = this.props;
 			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
 			const {schema} = lajiFormInstance.props;
 			let {formData} = lajiFormInstance.state;
-			let changed = false;
 			exifParsers.filter(f => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}) => {
 				if (type === "mutate") {
-					changed = true;
-					formData = updateSafelyWithJSONPath(formData, found[parse], field, !!"immutably", (__formData, path) => {
-						const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
-						return getDefaultFormState(_schema, undefined, definitions);
-					});
+					formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
 				}
 				if (type === "event") {
 					new Context(contextId).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 				}
 			});
-			if (changed) {
-				lajiFormInstance.onChange({formData});
-			}
+			return formData;
 		});
+	}
+
+	sideEffects = (formData) => {
+		const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+		const {formData: lajiFormFormData} = lajiFormInstance.state;
+		const {schema} = lajiFormInstance.props;
+		const {sideEffects} = getUiOptions(this.props.uiSchema);
+		if (sideEffects) {
+			formData = Object.keys(sideEffects).reduce((formData, field) =>
+				updateFormDataWithJSONPointer({schema, registry: this.props.registry, formData},
+					sideEffects[field],
+					getKeyHandlerTargetId(field, new Context(this.props.formContext.contextId))
+				),
+				formData
+			);
+		}
+		if (formData !== lajiFormFormData) {
+			lajiFormInstance.onChange({formData});
+		}
 	}
 
 	onFileFormChange = (files) => {
@@ -432,7 +445,7 @@ export default class ImageArrayField extends Component {
 			this.setState({imageAddModal: undefined});
 		}
 
-		this.parseExif(files);
+		this.parseExif(files).then(this.sideEffects);
 
 		const id = this.getContainerId();
 
