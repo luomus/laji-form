@@ -42,8 +42,8 @@ export default class ImageArrayField extends Component {
 				]),
 				autoOpenImageAddModal: PropTypes.bool,
 				autoOpenMetadataModal: PropTypes.bool,
-				sideEffects: PropTypes.arrayOf(PropTypes.object),
-				exifParsers: PropTypes.arrayOf(PropTypes.object)
+				sideEffects: PropTypes.object,
+				exifParsers: PropTypes.object
 			})
 		}),
 		schema: PropTypes.shape({
