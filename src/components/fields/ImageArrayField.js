@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } fro
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, getKeyHandlerTargetId } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPath, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Spinner from "react-spinner";
 import equals from "deep-equal";
@@ -43,7 +43,7 @@ export default class ImageArrayField extends Component {
 				autoOpenImageAddModal: PropTypes.bool,
 				autoOpenMetadataModal: PropTypes.bool,
 				sideEffects: PropTypes.object,
-				exifParsers: PropTypes.object
+				exifParsers: PropTypes.arrayOf(PropTypes.object)
 			})
 		}),
 		schema: PropTypes.shape({
@@ -342,7 +342,7 @@ export default class ImageArrayField extends Component {
 	}
 
 	parseExif = (files) => {
-		const {exifParsers} = getUiOptions(this.props.uiSchema);
+		const {exifParsers = []} = getUiOptions(this.props.uiSchema);
 		if (!exifParsers) return;
 
 		const found = exifParsers.reduce((found, {parse}) => {
@@ -427,10 +427,19 @@ export default class ImageArrayField extends Component {
 		const {schema} = lajiFormInstance.props;
 		const {sideEffects} = getUiOptions(this.props.uiSchema);
 		if (sideEffects) {
+			const thisPath = idSchemaIdToJSONPointer(this.props.idSchema.$id);
+			const containerPath = thisPath.replace(/^(\/.*)\/.*$/, "$1");
+			const parseRelativePaths = (path, containerPath) => {
+				while ((path.match(/\/\.\./g) || []).length > 1) {
+					containerPath = containerPath.replace(/^(\/.*)\/.*$/, "$1");
+					path = path.replace(/^(.*)\/\.\.(.*)/, "$1$2");
+				}
+				return path.replace(/^(.*)\/\.\.(.*)/, `$1${containerPath}$2`);
+			};
 			formData = Object.keys(sideEffects).reduce((formData, field) =>
 				updateFormDataWithJSONPointer({schema, registry: this.props.registry, formData},
 					sideEffects[field],
-					getKeyHandlerTargetId(field, new Context(this.props.formContext.contextId))
+					parseRelativePaths(field, containerPath)
 				),
 				formData
 			);
