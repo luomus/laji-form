@@ -64,14 +64,25 @@ export default class ConditionalAdditionalItemsArrayField extends Component {
 
 		let {schema} = props;
 		const itemSchema = props.schema.items;
-		schema = update(schema, {items: {$set: Array(items.length).fill(itemSchema)}});
 
-		schema = update(schema, {additionalItems: {$set: itemSchema}});
-		const uiSchema = items.length
-			? update(props.uiSchema, {
+		let uiSchemaUpdate, formData;
+		if (items.length) {
+			schema = update(schema, {items: {$set: Array(items.length).fill(itemSchema)}});
+			schema = update(schema, {additionalItems: {$set: itemSchema}});
+			uiSchemaUpdate = {
 				items: {$set: computeUiSchema(props.uiSchema.items, itemsOperations, arrayMerge)},
-				additionalItems: {$set: computeUiSchema(props.uiSchema.items, additionalItemsOperations, arrayMerge)}} : props.uiSchema)
-			: props.uiSchema;
-		return {...props, schema, uiSchema, formData: [...items, ...additionalItems]};
+				additionalItems: {$set: computeUiSchema(props.uiSchema.items, additionalItemsOperations, arrayMerge)}
+			};
+			formData = [...items, ...additionalItems];
+		} else {
+			schema = update(schema, {items: {$set: itemSchema}});
+			uiSchemaUpdate =  {
+				items: {$set: computeUiSchema(props.uiSchema.items, additionalItemsOperations, arrayMerge)}
+			};
+			formData = additionalItems;
+		}
+
+		const uiSchema = update(props.uiSchema, uiSchemaUpdate);
+		return {...props, schema, uiSchema, formData};
 	}
 }
