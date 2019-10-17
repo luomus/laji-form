@@ -190,10 +190,11 @@ export default class ImageArrayField extends Component {
 	renderLoadingImgs = () => {
 		const containerId = this.getContainerId();
 		return (this.state.tmpImgs || []).map((item, i) => {
-			if (!this._context.tmpImgs[containerId][item]) return null;
+			const imgs = this._context.tmpImgs[containerId];
+			if (!imgs || !imgs[item]) return null;
 			return (
 				<div key={i} className="img-container">
-					<a><Thumbnail dataURL={this._context.tmpImgs[containerId][item]} loading={true} /></a>
+					<a><Thumbnail dataURL={imgs[item]} loading={true} /></a>
 				</div>
 			);
 		});
