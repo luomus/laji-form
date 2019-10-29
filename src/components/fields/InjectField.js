@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer } from "../../utils";
+import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Inject a schema object property to nested schema.
@@ -79,7 +79,7 @@ export default class InjectField extends Component {
 					formData = update(formData, {[target]: {[fieldName]: {$set: data}}});
 				}
 
-				formData = update(formData, this.getFormDataPath(splits, {$set: undefined}));
+				formData = updateFormDataWithJSONPointer(props, undefined, splits.join("/"));
 
 				const errors = this.getInnerData(errorSchema, splits);
 				if (errors && schema.properties[target].type === "array") {
