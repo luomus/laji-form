@@ -79,7 +79,7 @@ export default class InjectField extends Component {
 					formData = update(formData, {[target]: {[fieldName]: {$set: data}}});
 				}
 
-				formData = updateFormDataWithJSONPointer(props, undefined, splits.join("/"));
+				formData = updateFormDataWithJSONPointer({...props, formData}, undefined, splits.join("/"));
 
 				const errors = this.getInnerData(errorSchema, splits);
 				if (errors && schema.properties[target].type === "array") {
@@ -163,7 +163,7 @@ export default class InjectField extends Component {
 	}
 	getInnerData = (data, splits) => {
 		if (!data) return data;
-		return splits.reduce((o, s, i)=> {
+		return splits.reduce((o, s, i) => {
 			if (i === splits.length - 1) {
 				return o[s];
 			}
