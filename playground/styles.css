@@ -1482,3 +1482,15 @@ min-height: 20px;
 	-o-animation: rotating 2s linear infinite;
 	animation: rotating 2s linear infinite;
 }
+
+/* Hide text input arrows */
+/* Chrome, Safari, Edge, Opera */
+.laji-form input::-webkit-outer-spin-button,
+.laji-form input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+/* Firefox */
+.laji-form input[type=number] {
+	-moz-appearance:textfield;
+}
