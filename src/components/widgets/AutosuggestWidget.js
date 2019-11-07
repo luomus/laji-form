@@ -252,13 +252,15 @@ class FriendsAutosuggestWidget extends Component {
 	}
 
 	getSuggestionFromValue(value) {
+		const {showID} = getUiOptions(this.props);
+		const {isAdmin} = this.props.formContext.uiSchemaContext;
 		if (this.isValueSuggested(value)) {
-			return this.props.formContext.apiClient.fetchCached(`/person/by-id/${value}`).then(({fullName, group}) => {
+			return this.props.formContext.apiClient.fetchCached(`/person/by-id/${value}`).then(({fullName, group, id}) => {
 				if (fullName) {
+					const addGroup = str => group ? `${str} (${group})` : str;
+					const addID = str => isAdmin && showID ? `${str} (${id})` : str;
 					return {
-						value: group
-							? `${fullName} (${group})`
-							: fullName,
+						value: addID(addGroup(fullName)),
 						key: value
 					};
 				}
