@@ -394,6 +394,7 @@ export default class LajiForm extends Component {
 		const state = {
 			translations,
 			formContext: {
+				...this.props.formContext,
 				translations,
 				lang: props.lang,
 				uiSchemaContext: props.uiSchemaContext,
