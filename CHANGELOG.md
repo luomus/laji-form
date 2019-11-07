@@ -1,3 +1,10 @@
+## 2.1.0
+* Add showID option for person AutosuggestWidget (for admin only)
+* Pass `formContext` from props to RJSF
+
+## 2.0.9
+* Add `sideEffects` options for ImageArrayField
+
 ## 2.0.5
 * Pass `fields` and `widgets` from props to RJSF
 * don't `src` in npm package
