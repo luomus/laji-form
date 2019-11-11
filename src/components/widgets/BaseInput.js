@@ -64,6 +64,9 @@ export default class _BaseInput extends Component {
 			formatValue, // eslint-disable-line no-unused-vars
 			...props
 		} = this.props;
-		return <BaseInput {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />;
+		const options = props.schema.type === "number" || props.schema.type === "integer"
+			? {...props.options, inputType: "text"}
+			: props.options;
+		return <BaseInput {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur}  options={options} />;
 	}
 }
