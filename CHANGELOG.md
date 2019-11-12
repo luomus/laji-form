@@ -1,3 +1,6 @@
+## 2.1.1
+* Schema of type `number` or `integer` aren't rendered as number inputs
+
 ## 2.1.0
 * Add showID option for person AutosuggestWidget (for admin only)
 * Pass `formContext` from props to RJSF
