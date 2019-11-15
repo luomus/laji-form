@@ -7,7 +7,7 @@ import update from "immutability-helper";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
-import { getUiOptions, getInnerUiSchema, formatErrorMessage } from "../../utils";
+import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors } from "../../utils";
 import { Map, parseGeometries } from "./MapArrayField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { combineColors } from "laji-map/lib/utils";
@@ -489,7 +489,7 @@ class LocationButton extends Component {
 
 		const hasCoordinates = this.hasCoordinates();
 		const geometryField = this.getGeometryField();
-		const hasErrors = that.props.errorSchema[geometryField];
+		const hasErrors = filteredErrors(that.props.errorSchema)[geometryField];
 
 		const bsStyle = hasErrors
 			? "danger"

@@ -2,7 +2,7 @@ import { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeig
 
 describe("Trip report (JX.519) autosuggestions", () => {
 
-	it("navigate to form", async () => {
+	beforeAll(async () => {
 		await navigateToForm("JX.519");
 		await putForeignMarkerToMap();
 		await waitUntilBlockingLoaderHides(6000);
@@ -17,6 +17,14 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	const $warningSign = $taxon.$(".glyphicon-warning-sign");
 	const $taxonSuggestionList = $taxon.$(".rw-list");
 	const $$taxonSuggestions = $taxon.$$(".rw-list-option");
+
+	const moveMouseAway = () => browser.actions({bridge: true})
+		.move({origin: $taxon.getWebElement(), x: -100, y: -100})
+		.perform();
+
+	beforeEach(async () => {
+		await moveMouseAway();
+	})
 
 	it("clicking any match selects it", async () => {
 		await $taxonInput.sendKeys("kett");
@@ -45,6 +53,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	});
 
 	it("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
+		await moveMouseAway();
 		await $taxonInput.sendKeys("kettu");
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");

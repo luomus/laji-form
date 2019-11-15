@@ -950,3 +950,19 @@ export function getRelativeTmpIdTree(contextId, id)  {
 	}
 	return tmpIdTree;
 }
+
+export function filteredErrors(errorSchema) {
+	return Object.keys(errorSchema).reduce((_errorSchema, prop) => {
+		if (prop === "__errors") {
+			if (errorSchema.__errors.length) {
+				_errorSchema.__errors = errorSchema.__errors;
+			}
+			return _errorSchema;
+		}
+		const errors = filteredErrors(errorSchema[prop]);
+		if (Object.keys(errors).length) {
+			_errorSchema[prop] = errors;
+		}
+		return _errorSchema;
+	}, {});
+}

@@ -1464,7 +1464,7 @@ class _MapArrayField extends ComposedComponent {
 			popupOnHover: true,
 			onFocusGrab: this.onFocusGrab,
 			onFocusRelease: this.onFocusRelease,
-			panel: errors && showErrors ? {
+			panel: errors && errors.length && showErrors ? {
 				header: this.props.formContext.translations.Error,
 				panelTextContent: <div>{errors}</div>,
 				bsStyle: "danger",

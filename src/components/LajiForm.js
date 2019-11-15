@@ -593,10 +593,10 @@ export default class LajiForm extends Component {
 					formContext={this.state.formContext}
 					validate={this.validate}
 					transformErrors={this.transformErrors}
+					extraErrors={this.state.extraErrors}
 					noHtml5Validate={true}
 					liveValidate={true}
-					autocomplete="off"
-					safeRenderCompletion={true}
+					autoComplete="off"
 				>
 				<div>
 					{this.props.children}
@@ -666,6 +666,7 @@ export default class LajiForm extends Component {
 	}
 
 	validate = (...params) => {
+		this.validating = true;
 		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
 		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
 		const validations = {liveErrors: liveErrorValidators};
@@ -678,31 +679,47 @@ export default class LajiForm extends Component {
 		} else if (!this.validationSettings.ignoreWarnings) {
 			validations.liveWarnings = liveWarningValidators;
 		}
-		return new Promise(resolve => {
-			validate(validations, this.validationSettings)(...params).then(_validations => {
-				const errors = toErrorList(_validations);
-				if (this.validateAll) {
-					this._cachedErrors = cacheValidations(_validations);
-				} else if (this._cachedErrors) {
-					_validations = merge(_validations, this._cachedErrors);
-				}
-				// Rerun validations with warnings if errors surfaced.
-				if (this.validationSettings.ignoreWarnings && errors.length) {
-					validations.liveWarnings = liveWarningValidators;
-					validate(validations, {...this.validationSettings, ignoreWarnings: false})(...params).then(__validations => {
-						if (!this.validateAll) {
-							_validations = resolve(merge(__validations, this._cachedErrors));
-						} else {
-							resolve(__validations);
-							this.validateAll = false;
-						}
-					});
-				} else {
-					resolve(_validations);
-					this.validateAll = false;
-				}
-			});
+
+		const resolve = (extraErrors) => {
+			this.validating = false;
+			const errorsEqual = equals(extraErrors, this.extraErrors);
+			this.extraErrors = extraErrors;
+			if (this.submitDelayed) {
+				const submit = this.submitDelayed;
+				this.submitDelayed = false;
+				submit();
+			}
+			if (!errorsEqual) {
+				// Store immediately because onSubmit is called before state is in sync.
+				this.setState({extraErrors}, this.popErrorListIfNeeded);
+			}
+		}
+
+		validate(validations, this.validationSettings)(...params).then(_validations => {
+			const errors = toErrorList(_validations);
+			if (this.validateAll) {
+				this._cachedErrors = cacheValidations(_validations);
+			} else if (this._cachedErrors) {
+				_validations = merge(_validations, this._cachedErrors);
+			}
+			// Rerun validations with warnings if errors surfaced.
+			if (this.validationSettings.ignoreWarnings && errors.length) {
+				validations.liveWarnings = liveWarningValidators;
+				validate(validations, {...this.validationSettings, ignoreWarnings: false})(...params).then(__validations => {
+					if (!this.validateAll) {
+						_validations = resolve(merge(__validations, this._cachedErrors));
+					} else {
+						resolve(__validations);
+						this.validateAll = false;
+					}
+				});
+			} else {
+				resolve(_validations);
+				this.validateAll = false;
+			}
 		});
+
+		return (params[1]);
 
 		function cacheValidations(validations, cached = {}) {
 			Object.keys(validations).forEach(key => {
@@ -733,8 +750,16 @@ export default class LajiForm extends Component {
 	}
 
 	onSubmit = (props) => {
+		if (this.validating) {
+			this.submitDelayed = () => this.onSubmit(props);
+			return;
+		}
 		this.popBlockingLoader();
-		if (this.propagateSubmit && this.props.onSubmit) {
+		const extraErrors = this.extraErrors && Object.keys(this.extraErrors).length;
+		if (extraErrors) {
+			return;
+		}
+		if (!extraErrors && this.propagateSubmit && this.props.onSubmit) {
 			this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
 		}
 		this.propagateSubmit = true;
@@ -743,15 +768,25 @@ export default class LajiForm extends Component {
 
 	onError = () => {
 		this.popBlockingLoader();
-		const errorListElem = findDOMNode(this._context.errorList);
+		this.popErrorListIfNeeded();
+		this.propagateSubmit = true;
+		this.validationSettings.ignoreWarnings = false;
+	}
+
+	popErrorListIfNeeded = () => {
+		let errorListElem;
+		try {
+			errorListElem = findDOMNode(this._context.errorList);
+		} catch (e) {
+			// Empty
+		}
+		if (!errorListElem) return;
 		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(errorListElem, this.props.topOffset, this.props.bottomOffset);
 		const scrollAmount = wouldScrollTo - getWindowScrolled();
 
 		if (!this._context.errorList.state.poppedTouched && scrollAmount !== 0) {
 			this._context.errorList.expand();
 		}
-		this.propagateSubmit = true;
-		this.validationSettings.ignoreWarnings = false;
 		highlightElem(errorListElem);
 	}
 

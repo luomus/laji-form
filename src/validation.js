@@ -44,7 +44,7 @@ export default ({errors: error, liveErrors: liveError, warnings: warning, liveWa
 		});
 	}
 
-	return errors;
+	return Promise.resolve(() => errors);
 };
 
 export function transformErrors(translations, skip) {

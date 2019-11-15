@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
@@ -482,7 +482,7 @@ class AccordionArrayFieldTemplate extends Component {
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
-									 bsStyle={that.props.errorSchema[idx] ? "danger" : "default"}>
+									 bsStyle={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
 							<PanelHeading>
 								{getHeader(item, idx)}
 							</PanelHeading>
@@ -840,7 +840,7 @@ class TableArrayFieldTemplate extends Component {
 							<tbody>
 								{items.map((item, idx) => {
 									let className = "";
-									if (errorSchema[idx]) className = className ? `${className} bg-danger` : "bg-danger";
+									if (filteredErrors(errorSchema)[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
 										<tr key={idx} 
 										    onClick={changeActive(idx)}
