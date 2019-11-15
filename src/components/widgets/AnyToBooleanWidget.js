@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CheckboxWidget from "./CheckboxWidget";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, formDataEquals } from "../../utils";
 import equals from "deep-equal";
 
 export const anyToBoolean = (widget) => (props) => {
@@ -10,7 +10,7 @@ export const anyToBoolean = (widget) => (props) => {
 	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
 	const value = equals(props[widget ? "value": "formData"], trueValue)
 		? true
-		: equals(props[widget ? "value": "formData"], falseValue)
+		: formDataEquals(props[widget ? "value": "formData"], falseValue, props)
 			? false
 			: undefined;
 
