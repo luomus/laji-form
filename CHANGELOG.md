@@ -1,3 +1,6 @@
+## 2.1.2
+* Upgrade RJSF to 2.0.0-alpha (got rid of private fork finally!), fixes computing array defaults etc
+
 ## 2.1.1
 * Schema of type `number` or `integer` aren't rendered as number inputs
 
