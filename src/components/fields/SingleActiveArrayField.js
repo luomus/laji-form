@@ -838,7 +838,8 @@ class TableArrayFieldTemplate extends Component {
 								</thead>
 							) : null}
 							<tbody>
-								{items.map((item, idx) => {
+								{formData.map((_, idx) => {
+									const item = items[idx];
 									let className = "";
 									if (filteredErrors(errorSchema)[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [

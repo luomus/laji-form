@@ -693,7 +693,7 @@ export default class LajiForm extends Component {
 				// Store immediately because onSubmit is called before state is in sync.
 				this.setState({extraErrors}, this.popErrorListIfNeeded);
 			}
-		}
+		};
 
 		validate(validations, this.validationSettings)(...params).then(_validations => {
 			const errors = toErrorList(_validations);

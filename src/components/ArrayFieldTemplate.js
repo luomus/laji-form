@@ -257,7 +257,7 @@ export default class ArrayFieldTemplate extends Component {
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
 		const items = props.items.map((item, i) => {
-			const deleteButton = (
+			const getDeleteButton = () => (
 				<DeleteButton id={`${props.idSchema.$id}_${i}`}
 										  disabled={disabled || readonly}
 				              ref={getRefFor(i)}
@@ -268,10 +268,17 @@ export default class ArrayFieldTemplate extends Component {
 				              tooltip={deleteHelp}
 				              translations={props.formContext.translations}/>
 			);
+			// RJSF array keeps items in state but formData comes from props, so they are out of sync.
+			// Items & formData length can differ, and in that case we use "NEW" as key.
+			const key = item.index > props.formData.length - 1
+				? "NEW"
+				: isObject(props.formData[item.index])
+					? getUUID(props.formData[item.index])
+					: item.index;
 			return (
-				<div key={isObject(props.formData[item.index]) ? getUUID(props.formData[item.index]) : item.index} className="laji-form-field-template-item keep-vertical field-array-row">
+				<div key={key} className="laji-form-field-template-item keep-vertical field-array-row">
 					<div className="laji-form-field-template-schema">{item.children}</div>
-					{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
+					{item.hasRemove && !nonRemovables.includes(item.index) && removable && getDeleteButton()}
 				</div>
 			);
 		});
