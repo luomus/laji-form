@@ -964,8 +964,8 @@ const headerFormatters = {
 				this.fetch(props);
 			}
 
-			fetch = (props) => {
-				const {namedPlaceID} = props.that.props.formData[props.idx];
+			fetch = (props) =>  {
+				const {namedPlaceID} = (props.that.props.formData || {})[props.idx] || {};
 				if (namedPlaceID) props.that.props.formContext.apiClient.fetchCached(`/named-places/${namedPlaceID}`, undefined, {failSilently: true}).then(response => {
 					if (this.mounted && name !== this.state.name) this.setState({
 						namedPlaceID,
@@ -976,7 +976,7 @@ const headerFormatters = {
 
 			render() {
 				const {name} = this.state;
-				const {locality} = this.props.that.props.formData[this.props.idx];
+				const {locality} = (this.props.that.props.formData || {})[this.props.idx] || {};
 				return <span className="text-muted">{!isEmptyString(name) ? name : locality}</span>;
 			}
 		}
@@ -1018,7 +1018,7 @@ class AccordionHeader extends Component {
 
 	getFormatters = () => {
 		const {uiSchema} = this.props.that.props;
-		const formData = this.props.that.props.formData[this.props.idx];
+		const formData = (this.props.that.props.formData || {})[this.props.idx];
 
 		// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
 		const options = getUiOptions(uiSchema);
