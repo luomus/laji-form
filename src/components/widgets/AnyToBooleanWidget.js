@@ -8,7 +8,7 @@ export const anyToBoolean = (widget) => (props) => {
 	const options = getUiOptions(widget ? props : props.uiSchema);
 	const {trueValue, falseValue, allowUndefined = true} = options;
 	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
-	const value = equals(props[widget ? "value": "formData"], trueValue)
+	const value = equals(props[widget ? "value": "formData"], trueValue, props)
 		? true
 		: formDataEquals(props[widget ? "value": "formData"], falseValue, props)
 			? false
