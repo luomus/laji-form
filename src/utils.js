@@ -813,8 +813,8 @@ export const formDataIsEmpty = (props) => {
 	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 };
 
-export const formDataEquals = (f1, f2, props) => {
-	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
+export const formDataEquals = (f1, f2, formContext, id) => {
+	const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, id);
 	return deepEquals(...[f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]));
 };
 
