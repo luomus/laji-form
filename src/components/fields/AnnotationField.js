@@ -64,7 +64,9 @@ export default class AnnotationField extends Component {
 	render() {
 		const {adminOnly, container, add, filter, uiSchema: annotationUiSchema, buttonsPath = "/", formId} = getUiOptions(this.props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
-		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin || !this.props.formData.id
+		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin
+			|| !this.props.formContext.uiSchemaContext.isEdit
+			|| !this.props.formData.id
 			? innerUiSchema
 			: injectButtons(innerUiSchema, [this.getButton()], buttonsPath);
 
