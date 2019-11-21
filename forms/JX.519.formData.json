@@ -1,16 +1,14 @@
 {
   "secureLevel": "MX.secureLevelNone",
   "gatheringEvent": {
-    "legPublic": true,
-    "dateBegin": "2019-10-07",
     "leg": [
       "MA.308"
     ],
+    "legPublic": true,
+    "dateBegin": "2019-10-07",
     "id": "JX.163606#1",
     "@type": "MZ.gatheringEvent"
   },
-  "formID": "JX.519",
-  "creator": "MA.308",
   "gatherings": [
     {
       "geometry": {
@@ -28,23 +26,28 @@
       "units": [
         {
           "taxonConfidence": "MY.taxonConfidenceSure",
-          "recordBasis": "MY.recordBasisHumanObservation",
+          "recordBasis": "MY.recordBasisHumanObservationPhoto",
+          "checklistID": "",
           "informalTaxonGroups": [
             "MVL.2"
           ],
+          "images": [
+            "MM.96975"
+          ],
           "identifications": [
             {
-              "taxon": "kettu",
+              "@type": "MY.identification",
               "id": "JX.163606#5",
-              "@type": "MY.identification"
+              "taxon": "kettu"
             }
           ],
+          "unitGathering": {
+            "geometry": {},
+            "@type": "MZ.unitGathering",
+            "id": "JX.163606#3"
+          },
           "unitFact": {
             "autocompleteSelectedTaxonID": "MX.46587"
-          },
-          "unitGathering": {
-            "id": "JX.163606#3",
-            "@type": "MZ.unitGathering"
           },
           "id": "JX.163606#4",
           "@type": "MY.unit"
@@ -57,6 +60,8 @@
       "@type": "MY.gathering"
     }
   ],
+  "formID": "JX.519",
+  "creator": "MA.308",
   "publicityRestrictions": "MZ.publicityRestrictionsPublic",
   "sourceID": "KE.389",
   "collectionID": "HR.1747",
