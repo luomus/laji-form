@@ -276,6 +276,7 @@ export default class ImageArrayField extends Component {
 								submitText={translations.Save}
 								lang={lang}
 								apiClient={this.props.formContext.apiClient.apiClient}
+								uiSchemaContext={this.props.formContext.uiSchemaContext}
 								showShortcutButton={false}>
 								{(metadataSaveSuccess !== undefined) ? (
 										<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
