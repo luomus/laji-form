@@ -966,3 +966,20 @@ export function filteredErrors(errorSchema) {
 		return _errorSchema;
 	}, {});
 }
+export function constructTranslations(translations) {
+	let dictionaries = {};
+	for (let word in translations) {
+		for (let lang in translations[word]) {
+			const translation = translations[word][lang];
+			if (!dictionaries.hasOwnProperty(lang)) dictionaries[lang] = {};
+			if (typeof translation === "string") {
+				dictionaries[lang][word] = decapitalizeFirstLetter(translation);
+				dictionaries[lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
+			} else { // is a function
+				dictionaries[lang][word] = (s) => decapitalizeFirstLetter(translation(s));
+				dictionaries[lang][capitalizeFirstLetter(word)] = (s) => capitalizeFirstLetter(translation(s));
+			}
+		}
+	}
+	return dictionaries;
+}

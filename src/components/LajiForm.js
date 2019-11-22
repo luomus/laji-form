@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, decapitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
 import equals from "deep-equal";
 import { toErrorList } from "react-jsonschema-form/lib/validate";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
@@ -456,21 +456,7 @@ export default class LajiForm extends Component {
 	}
 
 	constructTranslations = () => {
-		let dictionaries = {};
-		for (let word in translations) {
-			for (let lang in translations[word]) {
-				const translation = translations[word][lang];
-				if (!dictionaries.hasOwnProperty(lang)) dictionaries[lang] = {};
-				if (typeof translation === "string") {
-					dictionaries[lang][word] = decapitalizeFirstLetter(translation);
-					dictionaries[lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
-				} else { // is a function
-					dictionaries[lang][word] = (s) => decapitalizeFirstLetter(translation(s));
-					dictionaries[lang][capitalizeFirstLetter(word)] = (s) => capitalizeFirstLetter(translation(s));
-				}
-			}
-		}
-		return dictionaries;
+		return constructTranslations(translations);
 	}
 
 	getDefaultNotifier = () => {
