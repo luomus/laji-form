@@ -239,6 +239,7 @@ class AnnotationBox extends Component {
 				formData={addFormData}
 				lang={lang}
 				apiClient={this.props.formContext.apiClient.apiClient}
+				uiSchemaContext={this.props.formContext.uiSchemaContext}
 			>
 				{<div>
 					{this.state.fail !== undefined && 
@@ -298,6 +299,7 @@ class AnnotationBox extends Component {
 									formData={annotation}
 									renderSubmit={false}
 									apiClient={apiClient.apiClient}
+									uiSchemaContext={this.props.formContext.uiSchemaContext}
 								/>
 								{annotation.annotationByPerson === creator ? <DeleteButton onClick={this.onDelete(annotation.id)} translations={translations} corner={true}/> : null}
 							</div>
