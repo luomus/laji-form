@@ -188,8 +188,8 @@ export default class DateTimeWidget extends Component {
 					{datePicker}
 				</div>
 				<ButtonGroup>
-					<Button onClick={this.setToday} disabled={readonly || disabled}>{translations.Today}</Button>
-					<Button onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
+					<Button className="today" onClick={this.setToday} disabled={readonly || disabled}>{translations.Today}</Button>
+					<Button className="today" onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
 				</ButtonGroup>
 			</div>
 		) : datePicker;

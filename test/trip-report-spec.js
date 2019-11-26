@@ -1,48 +1,91 @@
-import { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } from "./test-utils.js";
+import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getWidget, getCheckboxWidget, getInputWidget, getEnumWidget, getDateWidget } from "./test-utils.js";
 
 import { googleApiKey } from "../properties.json"
 
+const testWidget = form =>  async (path, type) => {
+	const parsePointer = (container, path) => {
+		const [next, ...remaining] = path.split(".");
+		const nextObject = container[next];
+		if (remaining.length) {
+			return parsePointer(nextObject, remaining.join("."));
+		}
+		return nextObject;
+	}
+
+	expect(await lajiFormLocate(path).isDisplayed()).toBe(true);
+	const beforeChange = parsePointer(await form.getChangedData(), path)
+	let widget;
+	switch (type) {
+	case "checkbox":
+		widget = await getCheckboxWidget(path);
+		await widget.click();
+		break;
+	case "enum":
+		widget = await getEnumWidget(path);
+		await widget.click();
+		await widget.$$("li")[1].click();
+		break;
+	case "date":
+		widget = await getDateWidget(path);
+		await widget.$("input").sendKeys("1.1.2019");
+		await browser.actions().sendKeys(protractor.Key.TAB).perform();
+		break;
+	default:
+		widget = await getInputWidget(path);
+		await widget.sendKeys("1");
+		await browser.actions().sendKeys(protractor.Key.TAB).perform();
+		break;
+	}
+	//await modifyValue(await getWidget(path));
+	//await browser.actions().sendKeys(protractor.Key.TAB).perform();
+	expect(beforeChange).not.toEqual(parsePointer(await form.getChangedData()), path);
+}
+
 describe("Trip report (JX.519)", () => {
 
-	it("navigate to form", async () => {
-		await navigateToForm("JX.519");
+	let form;
+	beforeAll(async () => {
+		form = await createForm({id: "JX.519"});
 	});
 
 	const $gatheringsMap = lajiFormLocate("gatherings").$(".laji-map");
 
-	describe("gatheringEvent container", () => {
+	describe("gatheringEvent", () => {
 
 		const $gatheringEvent = lajiFormLocate("gatheringEvent");
 
-		it("is displayed", async () => {
+		it("container is displayed", async () => {
 			expect(await $gatheringEvent.isPresent()).toBe(true);
 		});
 
-		it("contains secureLevel", async () => {
-			const $secureLevel = lajiFormLocate("secureLevel");
+		describe("contains", () => {
 
-			expect(await $gatheringEvent.element($secureLevel.locator()).isDisplayed()).toBe(true);
-		});
+			it("secureLevel which is editable", async () => {
+				expect(await $gatheringEvent.element(lajiFormLocate("secureLevel").locator()).isDisplayed()).toBe(true);
+				testWidget("secureLevel", "checkbox")
+			});
 
-		//TODO TableField messes up ids!
-		//it("contains gatheringEvent.observer.0", () => {
-		//	expect(lajiFormLocate("gatheringEvent.leg.0").isDisplayed()).toBe(true);
-		//});
+			//TODO TableField messes up ids!
+			//it("contains gatheringEvent.observer.0", () => {
+			//	expect(lajiFormLocate("gatheringEvent.leg.0").isDisplayed()).toBe(true);
+			//});
 
-		it("contains gatheringEvent.legPublic", async () => {
-			expect(await lajiFormLocate("gatheringEvent.legPublic").isDisplayed()).toBe(true);
-		});
+			it("gatheringEvent.legPublic which is editable", async () => {
+				testWidget("gatheringEvent.legPublic", "checkbox")
+			});
 
-		it("contains gatheringEvent.dateBegin", async () => {
-			expect(await lajiFormLocate("gatheringEvent.dateBegin").isDisplayed()).toBe(true);
-		});
+			it("gatheringEvent.dateBegin which is editable", async () => {
+				testWidget("gatheringEvent.dateBegin", "date")
+			});
 
-		it("contains gatheringEvent.dateEnd", async () => {
-			expect(await lajiFormLocate("gatheringEvent.dateEnd").isDisplayed()).toBe(true);
-		});
+			it("gatheringEvent.dateEnd which is editable", async () => {
+				testWidget("gatheringEvent.dateEnd", "date")
+			});
 
-		it("contains keywords", async () => {
-			expect(await lajiFormLocate("keywords").isDisplayed()).toBe(true);
+			it("keywords which is editable", async () => {
+				expect(await $gatheringEvent.element(lajiFormLocate("keywords").locator()).isDisplayed()).toBe(true);
+				testWidget("keywords")
+			});
 		});
 	});
 
@@ -86,34 +129,34 @@ describe("Trip report (JX.519)", () => {
 				pending("Google API key missing");
 			}
 
-			it("adds country", async () => {
-				expect(await lajiFormLocate("gatherings.0.country").isDisplayed()).toBe(true);
+			it("adds country which is editable", async () => {
+				testWidget("gatherings.0.country");
 			});
 
-			it("adds administrativeProvince", async () => {
-				expect(await lajiFormLocate("gatherings.0.administrativeProvince").isDisplayed()).toBe(true);
+			it("adds administrativeProvince which is editable", async () => {
+				testWidget("gatherings.0.administrativeProvince");
 			});
 
-			it("adds municipality", async () => {
-				expect(await lajiFormLocate("gatherings.0.municipality").isDisplayed()).toBe(true);
+			it("adds municipality which is editable", async () => {
+				testWidget("gatherings.0.municipality");
 			});
 
 		});
 
-		it("contains locality", async () => {
-			expect(await lajiFormLocate("gatherings.0.locality").isDisplayed()).toBe(true);
+		it("contains locality which is editable", async () => {
+			testWidget("gatherings.0.locality");
 		});
 
-		it("contains localityDescription", async () => {
-			expect(await lajiFormLocate("gatherings.0.localityDescription").isDisplayed()).toBe(true);
+		it("contains localityDescription which is editable", async () => {
+			testWidget("gatherings.0.localityDescription");
 		});
 
-		it("contains weather", async () => {
-			expect(await lajiFormLocate("gatherings.0.weather").isDisplayed()).toBe(true);
+		it("contains weather which is editable", async () => {
+			testWidget("gatherings.0.weather");
 		});
 
-		it("contains notes", async () => {
-			expect(await lajiFormLocate("gatherings.0.notes").isDisplayed()).toBe(true);
+		it("contains notes which is editable", async () => {
+			testWidget("gatherings.0.notes");
 		});
 
 		const $additionalsButton = $("#root_gatherings_0-additionals");
@@ -122,17 +165,27 @@ describe("Trip report (JX.519)", () => {
 			expect(await $additionalsButton.isDisplayed()).toBe(true);
 		});
 
-		it("can add additional fields", async () => {
-			await $additionalsButton.click();
-			const $$additionalListItems = $$(".dropdown.open li a");
-			await $$additionalListItems.last().click();
 
-			expect(await lajiFormLocate("gatherings.0.taxonCensus").isDisplayed()).toBe(true);
+		describe("taxonCensus", () => {
+			it("can be added from additional fields", async () => {
+				await $additionalsButton.click();
+				const $$additionalListItems = $$(".dropdown.open li a");
+				await $$additionalListItems.last().click();
 
-			await $additionalsButton.click();
+				expect(await form.$locate("gatherings.0.taxonCensus").isDisplayed()).toBe(true);
 
-			expect(await $$additionalListItems.isPresent()).toBe(false);
+				await $additionalsButton.click();
+
+				expect(await $$additionalListItems.isPresent()).toBe(false);
+			});
+
+			it("can add items", async () => {
+				await form.$locateButton("gatherings.0.taxonCensus", "add").click();
+				testWidget("gatherings.0.taxonCensus.0.taxonCensusID");
+				testWidget("gatherings.0.taxonCensus.0.taxonCensusType", "enum");
+			});
 		});
+
 
 		it("add button works", async () => {
 			await $gatheringAdd.click();
@@ -202,20 +255,20 @@ describe("Trip report (JX.519)", () => {
 			expect(await lajiFormLocate("gatherings.0.units.0.identifications.0.taxon").isDisplayed()).toBe(true);
 		});
 
-		it("contains count", async () => {
-			expect(await lajiFormLocate("gatherings.0.units.0.count").isDisplayed()).toBe(true);
+		it("contains count which is editable", async () => {
+			testWidget("gatherings.0.units.0.count");
 		});
 
-		it("contains notes", async () => {
-			expect(await lajiFormLocate("gatherings.0.units.0.notes").isDisplayed()).toBe(true);
+		it("contains notes which is editable", async () => {
+			testWidget("gatherings.0.units.0.notes");
 		});
 
-		it("contains taxonConfidence", async () => {
-			expect(await lajiFormLocate("gatherings.0.units.0.taxonConfidence").isDisplayed()).toBe(true);
+		it("contains taxonConfidence which is editable", async () => {
+			testWidget("gatherings.0.units.0.taxonConfidence", "enum");
 		});
 
-		it("contains recordBasis", async () => {
-			expect(await lajiFormLocate("gatherings.0.units.0.recordBasis").isDisplayed()).toBe(true);
+		it("contains recordBasis which is editable", async () => {
+			testWidget("gatherings.0.units.0.recordBasis", "enum");
 		});
 
 		it("contains images", async () => {

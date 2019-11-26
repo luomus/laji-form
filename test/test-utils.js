@@ -33,6 +33,7 @@ export class Form {
 			this.props.test = true;
 			await emptyForm(query(this.props));
 		}
+		await this.setState({});
 		this.contextId = await this.e("app.refs.lajiform._id");
 	}
 
@@ -61,6 +62,10 @@ export class Form {
 
 	getChangedData() {
 		return browser.executeScript("return window.changedData");
+	}
+
+	getPropsData() {
+		return this.e("app.refs.lajiform.props.formData");
 	}
 
 	$locate(path) {
@@ -137,3 +142,25 @@ const _mockGeoError = code => `window.navigator.geolocation.getCurrentPosition =
 `;
 
 export const mockGeoError = (code) => browser.executeScript(_mockGeoError(code));
+
+export const getCheckboxWidget = (str) => {
+	return $(`${lajiFormLocator(str)} .checkbox-container`);
+}
+export const getInputWidget = (str) => {
+	return $(`${lajiFormLocator(str)} input`);
+}
+export const getEnumWidget = (str) => {
+	return $(`${lajiFormLocator(str)} date-widget`);
+}
+export const getWidget = async (str, type) => {
+	const $afterLabel = $(`${lajiFormLocator(str)} > div > div`);
+	if (await $afterLabel.isPresent()) {
+		return $afterLabel;
+	}
+	const $afterLabelNotSoDeep = $(`${lajiFormLocator(str)} > div`);
+	if (await $afterLabelNotSoDeep.isPresent()) {
+		return $afterLabelNotSoDeep;
+	}
+	const $insideLabel = $(`${lajiFormLocator(str)} > div > label > div`);
+	return $insideLabel;
+};
