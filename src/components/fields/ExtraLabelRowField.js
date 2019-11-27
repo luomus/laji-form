@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Row , Col} from "react-bootstrap";
-import { Label, Affix } from "../components";
+import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
@@ -79,6 +79,7 @@ export default class ExtraLabelRowField extends Component {
 	getColContent = (label, i) => {
 		const cols = this.getCols(label.size);
 
+		const {Label} = this.props.formContext;
 		return (
 			<Col {...cols} key={i}>
 				<Label label={label.label} id={this.props.idSchema.$id} help={label.help}/>

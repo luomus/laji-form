@@ -5,7 +5,6 @@ import BaseComponent from "../BaseComponent";
 import { getUiOptions, focusNextInput } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
-import { Label } from "../components";
 
 @BaseComponent
 export default class EnumRangeArrayField extends Component {
@@ -52,6 +51,7 @@ export default class EnumRangeArrayField extends Component {
 			},
 		};
 
+		const {Label} = this.props.formContext;
 		return (
 			<React.Fragment>
 				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />

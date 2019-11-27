@@ -8,7 +8,7 @@ import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
-import { DeleteButton, Label, Help, TooltipComponent, Button, Affix } from "../components";
+import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
@@ -592,6 +592,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
 		const {TitleField, DescriptionField} =  arrayTemplateFieldProps;
+		const {Label} = this.props.formContext;
 		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label : TitleField;
 		const {titleFormatters} = getUiOptions(that.props.uiSchema);
 		const title = that.getTitle(activeIdx);
@@ -758,6 +759,7 @@ class TableArrayFieldTemplate extends Component {
 
 		const {schema, uiSchema = {}, formData = [], items, TitleField, DescriptionField, disabled, readonly} = this.props;
 		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(this.props.uiSchema);
+		const {Label} = this.props.formContext;
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
 		const shownColumnsDict = dictionarify(shownColumns);

@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { Label } from "../components";
 import Context from "../../Context";
 import deepEquals from "deep-equal";
 
@@ -22,6 +21,7 @@ export default class TagArrayField extends Component {
 	}
 
 	render() {
+		const {Label} = this.props.formContext;
 		return (
 			<React.Fragment>
 				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />

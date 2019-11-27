@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, DeleteButton, Label } from "./components";
+import { Button, DeleteButton } from "./components";
 import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
@@ -245,6 +245,7 @@ export default class ArrayFieldTemplate extends Component {
 			buttons = []
 		} = getUiOptions(props.uiSchema);
 		const {readonly, disabled} = this.props;
+		const {Label} = this.props.formContext;
 		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];

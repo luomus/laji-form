@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Context from "../Context";
-import { Label, Help } from "./components";
+import { Help } from "./components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
 
 export default class FieldTemplate extends Component {
@@ -80,6 +80,7 @@ export default class FieldTemplate extends Component {
 		}, []);
 		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
 
+		const {Label} = this.props.formContext;
 		return (
 			<div className={classNames + warningClassName} id={htmlId}>
 				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} id={id} required={required} _context={new Context(formContext.contextId)} /> : null}

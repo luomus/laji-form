@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
-import { Button, TooltipComponent, FailedBackgroundJobsPanel } from "./components";
+import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
@@ -414,7 +414,8 @@ export default class LajiForm extends Component {
 				reserveId: this.reserveId,
 				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
-				apiClient: this.apiClient
+				apiClient: this.apiClient,
+				Label: (props.fields || {}).Label || Label
 			}
 		};
 		if (!this.state || props.formData && props.formData !== this.props.formData) {

@@ -4,7 +4,6 @@ import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils"
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
-import { Label } from "../components";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
@@ -78,6 +77,7 @@ function GridTemplate(props) {
 	});
 
 	const {rowTitles = []} = gridOptions;
+	const {Label} = props.formContext;
 
 	const addRowTitles = (rows, rowTitles) => {
 		for (let i = 0; i < rowTitles.length; i++) {

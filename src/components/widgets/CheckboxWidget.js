@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Label } from "../components";
 import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
 import Switch from "react-bootstrap-switch";
 import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
@@ -112,6 +111,7 @@ export default class CheckboxWidget extends Component {
 			</div>
 		);
 
+		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : (
 			<Label label={label} required={required} help={help}>
 				{checkbox}

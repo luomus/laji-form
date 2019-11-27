@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema } from "../../utils";
 import { Row, Col } from "react-bootstrap";
-import { DeleteButton, Label } from "../components";
+import { DeleteButton } from "../components";
 import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
 
@@ -131,6 +131,7 @@ class TableArrayFieldTemplate extends Component {
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 
+		const {Label} = this.props.formContext;
 		const labels =schemaPropsArray.map(propName => 
 			<Col {...cols} key={propName + "-label"}>
 				<Label
