@@ -1,3 +1,6 @@
+## 2.2.0
+* Label can be overridden through `fields` prop
+
 ## 2.1.2
 * Upgrade RJSF to 2.0.0-alpha (got rid of private fork finally!), fixes computing array defaults etc
 
