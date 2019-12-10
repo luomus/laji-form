@@ -1,3 +1,8 @@
+## 3.0.0
+* `validate()` signature has changed
+* `onSubmit()` signature has changed, uses `formData` from `state`
+* `submit()` signature has changed
+
 ## 2.2.0
 * Label can be overridden through `fields` prop
 
