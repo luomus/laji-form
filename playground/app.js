@@ -47,30 +47,62 @@ const apiClient = new ApiClientImplementation(
 const {mockApi, test, id, local, localFormData, settings, ...lajiFormOptions} = query;
 
 if (mockApi) {
-	let mockResponses = {};
+	const mockResponses = {};
+	const mockQueues = {};
 	window.mockResponses = mockResponses;
+	window.mockQueues = mockQueues;
 	const getKey = (path, queryObject) => queryObject
 			? `${path}?${queryString.stringify(queryObject)})}`
 			: path;
 	window.getMockQueryKey = getKey;
-	window.setMockResponse = (path, query, response) => {
+	const createMock = () => {
 		let resolve, reject;
 		const promise = new Promise((_resolve, _reject) => {
-			resolve = () => _resolve({json: () => response});
-			reject = _reject;
+			resolve = (response, raw) => _resolve(raw ? {...(response || {}), json: () =>  (response || {}).json} : {json: () => response, status: 200});
+			reject = (response, raw) => _reject(raw ? {...(response || {}), json: () => (response || {}).json} : response);
 		});
+		const mock = {promise, resolve, reject};
+		return mock;
+	};
+
+	window.setMockResponse = (path, query) => {
 		const key = getKey(path, query);
-		const remove = () => {
+		const mock = createMock();
+		mock.remove = () => {
 			delete mockResponses[key];
 		};
-		mockResponses[key] = {promise, resolve, reject, remove};
-		return mockResponses[key];
+		mockResponses[key] =  mock;
+		return mock;
+	};
+	window.createMockResponseQueue = (path, query) => {
+		const key = getKey(path, query);
+		const create = () => {
+			const mock = createMock();
+			mockResponses[key] = [ ...(mockResponses[key] || []), mock ];
+			return mock;
+		};
+		const remove = () => {
+			delete mockQueues[key];
+			delete mockResponses[key];
+		};
+		const mock = {create, remove, pointer: 0};
+		mockQueues[key] = mock;
+		return mock;
 	};
 	const fetch = apiClient.fetch;
 	apiClient.fetch = (path, query, options) => {
 		const key = getKey(path, query);
 		const keyWithoutQuery = getKey(path, false);
-		const mock = mockResponses[key] || mockResponses[keyWithoutQuery];
+		let mock = mockResponses[key] || mockResponses[keyWithoutQuery];
+		if (Array.isArray(mock)) {
+			const queue = mockQueues[key] || mockQueues[keyWithoutQuery];
+			const {pointer} = queue;
+			if (pointer > mock.length - 1) {
+				throw new Error("used mock queue when no more mocks in queue");
+			}
+			queue.pointer = queue.pointer + 1;
+			mock = mock[pointer];
+		}
 		return mock
 			? mock.promise
 			: fetch.call(apiClient, path, query, options);

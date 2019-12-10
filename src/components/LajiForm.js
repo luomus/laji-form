@@ -8,7 +8,7 @@ import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
 import equals from "deep-equal";
-import { toErrorList } from "react-jsonschema-form/lib/validate";
+import validateFormData from "react-jsonschema-form/lib/validate";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import merge from "deepmerge";
 
@@ -152,7 +152,6 @@ export default class LajiForm extends Component {
 		this._context.formInstance = this;
 		this._context.formData = props.formData;
 		this.propagateSubmit = true;
-		this.validationSettings = {ignoreWarnings: false};
 
 		this.blockingLoaderCounter = 0;
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
@@ -424,6 +423,9 @@ export default class LajiForm extends Component {
 		} else {
 			state.formData = this.formRef.state.formData;
 		}
+		if (this.state && props.schema !== this.props.schema) {
+			state.extraErrors = {};
+		}
 		return state;
 	}
 
@@ -517,12 +519,11 @@ export default class LajiForm extends Component {
 	}
 
 	onChange = ({formData}) => {
-		this.onChangeTimestamp = Date.now();
 		if (this.props.onChange) {
 			const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
 			this.props.onChange(_formData);
 		}
-		this.setState({formData});
+		this.setState({formData}, () => !this.validating && this.validate(!!"warnings", !"nonlive"));
 		this._context.formData = formData;
 	}
 
@@ -570,7 +571,6 @@ export default class LajiForm extends Component {
 					formData={this.state.formData}
 					ref={this.getRef}
 					onChange={this.onChange}
-					onError={this.onError}
 					onSubmit={this.onSubmit}
 					fields={this.getFields(this.props.fields)}
 					widgets={this.getWidgets(this.props.widgets)}
@@ -578,8 +578,7 @@ export default class LajiForm extends Component {
 					ArrayFieldTemplate={ArrayFieldTemplate}
 					ErrorList={ErrorListTemplate}
 					formContext={this.state.formContext}
-					validate={this.validate}
-					transformErrors={this.transformErrors}
+					noValidate={true}
 					extraErrors={this.state.extraErrors}
 					noHtml5Validate={true}
 					liveValidate={true}
@@ -588,7 +587,7 @@ export default class LajiForm extends Component {
 				<div>
 					{this.props.children}
 					{(!this.props.children && this.props.renderSubmit !== false) ?
-							(<Button id="submit" type="submit" onClick={this._onDefaultSubmit} disabled={readonly || disabled}>
+							(<Button id="submit" type="submit" disabled={readonly || disabled}>
 								{this.props.submitText || translations.Submit}
 							</Button>) :
 						null}
@@ -632,7 +631,7 @@ export default class LajiForm extends Component {
 		if (!this.state || !this.state.submitHooks) return;
 		const jobsAmount = this.state.submitHooks.filter(({failed}) => !failed).length;
 		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
-		if (!this.state.submitting) return null;
+		if (!this.state.runningSubmitHooks) return null;
 
 		return (
 			<div className="running-jobs">
@@ -642,82 +641,49 @@ export default class LajiForm extends Component {
 		);
 	}
 
-	transformErrors = (...params) => {
-		const errors =  transformErrors(this.state.translations, !this.validateAll)(...params);
-		if (this.validateAll) {
-			this._cachedNativeErrors = errors;
-		} else if (this._cachedNativeErrors) {
-			return this._cachedNativeErrors;
-		}
-		return errors;
-	}
-
-	validate = (...params) => {
-		this.validating = true;
-		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
-		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
-		const validations = {liveErrors: liveErrorValidators};
-		if (this.validateAll) {
-			validations.errors = errorValidators;
-			if (!this.validationSettings.ignoreWarnings) {
-				validations.warnings = warningValidators;
-				validations.liveWarnings = liveWarningValidators;
-			}
-		} else if (!this.validationSettings.ignoreWarnings) {
-			validations.liveWarnings = liveWarningValidators;
-		}
-
-		const resolve = (extraErrors) => {
-			this.validating = false;
-			const errorsEqual = equals(extraErrors, this.extraErrors);
-			this.extraErrors = extraErrors;
-			if (this.submitDelayed) {
-				const submit = this.submitDelayed;
-				this.submitDelayed = false;
-				submit();
-			}
-			if (!errorsEqual) {
-				// Store immediately because onSubmit is called before state is in sync.
-				this.setState({extraErrors}, this.popErrorListIfNeeded);
-			}
-		};
-
-		validate(validations, this.validationSettings)(...params).then(_validations => {
-			const errors = toErrorList(_validations);
-			if (this.validateAll) {
-				this._cachedErrors = cacheValidations(_validations);
-			} else if (this._cachedErrors) {
-				_validations = merge(_validations, this._cachedErrors);
-			}
-			// Rerun validations with warnings if errors surfaced.
-			if (this.validationSettings.ignoreWarnings && errors.length) {
-				validations.liveWarnings = liveWarningValidators;
-				validate(validations, {...this.validationSettings, ignoreWarnings: false})(...params).then(__validations => {
-					if (!this.validateAll) {
-						_validations = resolve(merge(__validations, this._cachedErrors));
-					} else {
-						resolve(__validations);
-						this.validateAll = false;
-					}
-				});
-			} else {
-				resolve(_validations);
-				this.validateAll = false;
+	validateAndSubmit = (warnings = true) => {
+		const {formData} = this.state;
+		return this.validate(warnings, true).then((valid) => {
+			if (formData !== this.state.formData) {
+				this.validateAndSubmit(warnings);
+			} else if (valid) {
+				this.props.onSubmit({formData: this.removeLajiFormIds(formData)});
 			}
 		});
 
-		return (params[1]);
+	}
 
-		function cacheValidations(validations, cached = {}) {
-			Object.keys(validations).forEach(key => {
-				if (isObject(validations[key])) {
-					cached[key] = cacheValidations(validations[key]);
-				} else if (validations[key].some(err => err.includes("[error]") || err.includes("[warning]"))) {
-					cached[key] = validations[key].filter(err => err.includes("[error]") || err.includes("[warning]"));
-				}
-			});
-			return cached;
+	validate = (warnings = true, nonlive = true) => {
+		this.validating = true;
+		const {formData} = this.state;
+		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
+		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
+		const validations = {liveErrors: liveErrorValidators};
+		if (nonlive) {
+			validations.errors = errorValidators;
 		}
+		if (warnings) {
+			validations.liveWarnings = liveWarningValidators;
+			if (nonlive) {
+				validations.warnings = warningValidators;
+			}
+		}
+		const schemaErrors = nonlive
+			? validateFormData(formData, this.props.schema, undefined, (e => transformErrors(this.state.translations, e))).errorSchema
+			: {};
+		nonlive && this.pushBlockingLoader();
+		return new Promise(resolve =>
+			validate(validations, formData).then(_validations => {
+				nonlive && this.popBlockingLoader();
+				const merged = merge(schemaErrors, _validations);
+				this.validating = false;
+				resolve(!Object.keys(merged).length);
+				!equals(this.state.extraErrors, merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
+			}).catch((e) => {
+				nonlive && this.popBlockingLoader();
+				throw e;
+			})
+		);
 
 		function splitLive(validators = {}, schema, live = {}, rest = {}) {
 			Object.keys(validators).forEach(key => {
@@ -736,28 +702,30 @@ export default class LajiForm extends Component {
 		}
 	}
 
-	onSubmit = (props) => {
-		if (this.validating) {
-			this.submitDelayed = () => this.onSubmit(props);
-			return;
+	onSubmit = () => {
+		const {uiSchema} = this.props;
+		if (uiSchema["ui:disabled"] || uiSchema["ui:readonly"]) {
+			return false;
 		}
-		this.popBlockingLoader();
-		const extraErrors = this.extraErrors && Object.keys(this.extraErrors).length;
-		if (extraErrors) {
-			return;
-		}
-		if (!extraErrors && this.propagateSubmit && this.props.onSubmit) {
-			this.propagateSubmit && this.props.onSubmit && this.props.onSubmit({...props, formData: this.removeLajiFormIds(props.formData)});
-		}
-		this.propagateSubmit = true;
-		this.validationSettings.ignoreWarnings = false;
-	}
 
-	onError = () => {
-		this.popBlockingLoader();
-		this.popErrorListIfNeeded();
-		this.propagateSubmit = true;
-		this.validationSettings.ignoreWarnings = false;
+		this.pushBlockingLoader();
+		this.setState({runningSubmitHooks: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
+		Promise.all((this.state.submitHooks || []).map(({promise, hook}) => {
+			const setNotRunning = () => {
+				this.setState({submitHooks: (this.state.submitHooks || []).map(hookItem =>
+					({...hookItem, running: hookItem.hook === hook ? false : hookItem.running}))
+				});
+			};
+			return promise.then(setNotRunning).catch(setNotRunning);
+		})).then(() => {
+			this.popBlockingLoader();
+			this.setState({runningSubmitHooks: false});
+			this.validateAndSubmit();
+		}).catch(() => {
+			this.setState({runningSubmitHooks: false});
+			this.popBlockingLoader();
+			highlightElem(findDOMNode(this.bgJobRef.current));
+		});
 	}
 
 	popErrorListIfNeeded = () => {
@@ -782,42 +750,8 @@ export default class LajiForm extends Component {
 		this.submit();
 	}
 
-	submit = (propagate = true, ignoreWarnings = false) => {
-		const {uiSchema} = this.props;
-		if (uiSchema["ui:disabled"] || uiSchema["ui:readonly"]) {
-			return false;
-		}
-		this.pushBlockingLoader();
-		const {onChangeTimestamp} = this;
-		this.setState({submitting: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
-		Promise.all((this.state.submitHooks || []).map(({promise, hook}) => {
-			const setNotRunning = () => {
-				this.setState({submitHooks: (this.state.submitHooks || []).map(hookItem =>
-					({...hookItem, running: hookItem.hook === hook ? false : hookItem.running}))
-				});
-			};
-			return promise.then(setNotRunning).catch(setNotRunning);
-		}
-		)).then(() => {
-			this.setState({submitting: false});
-			// RJSF onChange call happens after setState call, so we must wait for the onChange call. Not necessarily very robust?
-			setTimeout(() => {
-				if (onChangeTimestamp !== this.onChangeTimestamp) {
-					if (this.submit(propagate, ignoreWarnings) !== false) {
-						this.popBlockingLoader();
-					}
-					return;
-				}
-				this.validateAll = true;
-				this.propagateSubmit = propagate;
-				this.validationSettings.ignoreWarnings = ignoreWarnings;
-				this.formRef.onSubmit({preventDefault: () => {}, persist: () => {}});
-			}, 0);
-		}).catch(() => {
-			this.setState({submitting: false});
-			this.popBlockingLoader();
-			highlightElem(findDOMNode(this.bgJobRef.current));
-		});
+	submit = () => {
+		this.onSubmit();
 	}
 
 	getShorcutButtonTooltip = () => {

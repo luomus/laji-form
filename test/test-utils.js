@@ -1,3 +1,4 @@
+import path from "path";
 const {HOST, PORT} = process.env;
 
 function getJsonFromUrl() {
@@ -56,6 +57,10 @@ export class Form {
 		return waitUntilBlockingLoaderHides();
 	}
 
+	startSubmit() {
+		return this.e("submit()");
+	}
+
 	getSubmittedData() {
 		return browser.executeScript("return window.submittedData");
 	}
@@ -76,13 +81,85 @@ export class Form {
 		return $(`#root_${path.replace(/\./g, "_")}-${selector}`)
 	}
 
-	async setMockResponse(path, query, response) {
-		await browser.executeScript(`return window.setMockResponse(${JSON.stringify(path)}, ${JSON.stringify(query)}, ${JSON.stringify(response)})`);
-		const mock = (method) => browser.executeScript(`return window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})].${method}()`);
+	getMockStr = (path, query) => `window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})]`;
+
+	async setMockResponse(path, query) {
+		await browser.executeScript(`return window.setMockResponse(${JSON.stringify(path)}, ${JSON.stringify(query)})`);
+		const mock = (method, response, raw) => browser.executeScript(`return ${this.getMockStr(path, query)}.${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`);
 		return {
-			resolve: () => mock("resolve"),
-			reject: () => mock("reject"),
+			resolve: (response, raw) => mock("resolve", response, raw),
+			reject: (response, raw) => mock("reject", response, raw),
 			remove: () => mock("remove")
+		};
+	}
+
+	async createMockResponseQueue(path, query) {
+		await browser.executeScript(`return window.createMockResponseQueue(${JSON.stringify(path)}, ${JSON.stringify(query)})`);
+		const queueStr = `window.mockQueues[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})]`;
+		const mock = (method, response, raw, pointer) => {
+			return browser.executeScript(`return ${this.getMockStr(path, query)}[${pointer}].${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`);
+		};
+		let pointer = 0;
+		return {
+			create: async () => {
+				await browser.executeScript(`return ${queueStr}.create()`);
+				const _pointer = pointer;
+				pointer = pointer + 1;
+				return {
+					resolve: (response, raw) => mock("resolve", response, raw, _pointer),
+					reject: (response, raw) => mock("reject", response, raw, _pointer),
+				};
+			},
+			remove: () => {
+				browser.executeScript(`return ${queueStr}.remove()`);
+			}
+		};
+	}
+
+	createValidatorPO = (type) => ({
+		$$all: $$(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel .list-group button`),
+		$panel: $(`.laji-form-error-list:not(.laji-form-failed-jobs-list) .${type}-panel`)
+	})
+
+	errors = this.createValidatorPO("error")
+	warnings = this.createValidatorPO("warning")
+
+	$acknowledgeWarnings = $(".laji-form-warning-list .panel-footer button")
+
+	isBlocked = () => $(".laji-form.blocking-loader").isDisplayed()
+
+	mockImageUpload = async (lajiFormLocator) => {
+		const filePath = path.resolve(__dirname, "./pixel.png");
+		const imageResponse = [{name: "data", filename: "pixel.png", id: "mock", expires: 1575979685}];
+		const {resolve, remove} = await this.setMockResponse("/images", false);
+		const mdResponse = {
+			  "id": "mock",
+			  "capturerVerbatim": [
+			    "mock"
+			  ],
+			  "intellectualOwner": "mock",
+			  "intellectualRights": "MZ.intellectualRightsCC-BY-SA-4.0",
+			  "fullURL": "https://imagetest.laji.fi/MM.97056/pixel_full.jpg",
+			  "largeURL": "https://imagetest.laji.fi/MM.97056/pixel_large.jpg",
+			  "squareThumbnailURL": "https://imagetest.laji.fi/MM.97056/pixel_square.jpg",
+			  "thumbnailURL": "https://imagetest.laji.fi/MM.97056/pixel_thumb.jpg",
+			  "originalURL": "https://imagetest.laji.fi/MM.97056/pixel.png",
+			  "uploadedBy": "MA.308",
+			  "@context": "http://schema.laji.fi/context/image-en.jsonld"
+		};
+
+		const {resolve: mdResolve, remove: mdRemove} = await this.setMockResponse("/images/mock", false);
+
+		await this.$locate(lajiFormLocator).$(".laji-form-drop-zone input").sendKeys(filePath);
+		return {
+			resolve: async () => {
+				await resolve(imageResponse);
+				await mdResolve(mdResponse);
+			},
+			remove: async () => {
+				await remove();
+				await mdRemove();
+			}
 		};
 	}
 }
@@ -152,7 +229,7 @@ export const getInputWidget = (str) => {
 export const getEnumWidget = (str) => {
 	return $(`${lajiFormLocator(str)} date-widget`);
 }
-export const getWidget = async (str, type) => {
+export const getWidget = async (str) => {
 	const $afterLabel = $(`${lajiFormLocator(str)} > div > div`);
 	if (await $afterLabel.isPresent()) {
 		return $afterLabel;
@@ -163,4 +240,12 @@ export const getWidget = async (str, type) => {
 	}
 	const $insideLabel = $(`${lajiFormLocator(str)} > div > label > div`);
 	return $insideLabel;
+};
+
+export const updateValue = async ($input, value, blur = true) => {
+	const current = await $input.getAttribute("value");
+	await $input.sendKeys("\b".repeat((current || "").length) + value);
+	if (blur) {
+		return browser.actions().sendKeys(protractor.Key.TAB).perform();
+	}
 };

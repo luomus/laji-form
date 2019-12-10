@@ -1,4 +1,4 @@
-import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getWidget, getCheckboxWidget, getInputWidget, getEnumWidget, getDateWidget } from "./test-utils.js";
+import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getCheckboxWidget, getInputWidget, getEnumWidget, getDateWidget } from "./test-utils.js";
 
 import { googleApiKey } from "../properties.json"
 
@@ -36,8 +36,6 @@ const testWidget = form =>  async (path, type) => {
 		await browser.actions().sendKeys(protractor.Key.TAB).perform();
 		break;
 	}
-	//await modifyValue(await getWidget(path));
-	//await browser.actions().sendKeys(protractor.Key.TAB).perform();
 	expect(beforeChange).not.toEqual(parsePointer(await form.getChangedData()), path);
 }
 

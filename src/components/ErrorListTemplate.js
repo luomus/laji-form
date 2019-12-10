@@ -24,14 +24,14 @@ export default class ErrorListTemplate extends Component {
 
 	revalidate = () => {
 		const that = new Context(this.props.formContext.contextId).formInstance;
-		that.submit(!"don`t propagate");
+		that.validate();
 		this.refs.errorPanel.expand();
 		this.refs.warningPanel.expand();
 	}
 
 	submitWithWarnings = () => {
 		const that = new Context(this.props.formContext.contextId).formInstance;
-		that.submit("propagate", "ignore warnings");
+		that.validateAndSubmit(!"warnings");
 	}
 
 	render() {
