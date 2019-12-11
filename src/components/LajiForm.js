@@ -519,12 +519,14 @@ export default class LajiForm extends Component {
 	}
 
 	onChange = ({formData}) => {
-		if (this.props.onChange) {
-			const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
-			this.props.onChange(_formData);
-		}
-		this.setState({formData}, () => !this.validating && this.validate(!!"warnings", !"nonlive"));
-		this._context.formData = formData;
+		this.setState({formData}, () => {
+			if (this.props.onChange) {
+				const _formData = this.props.optimizeOnChange ? formData : this.removeLajiFormIds(formData);
+				this.props.onChange(_formData);
+			}
+			this._context.formData = formData;
+			!this.validating && this.validate(!!"warnings", !"nonlive");
+		});
 	}
 
 	getRef = form => {
