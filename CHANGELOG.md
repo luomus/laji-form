@@ -1,3 +1,6 @@
+## 3.0.1
+* add deprecation warning about utils `getUpdateObjectFromJSONPath` and `updateSafelyWithJSONPath` (renamed to 'JSONPointer')
+
 ## 3.0.0
 * `validate()` signature has changed
 * `onSubmit()` signature has changed, uses `formData` from `state`
