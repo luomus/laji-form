@@ -1,52 +1,32 @@
 import React, { Component } from "react";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import update from "immutability-helper";
 import merge from "deepmerge";
-import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
 import Context from "../../Context";
 
+// Doesn't work with arrays properly since uses JSON Pointers but not JSON path.
+// e.g. "copy all array item values expect these" is impossible.
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
-	const nestedFilters = filter;
 
-	const {schema, registry} = that.props;
+	const {schema, registry, formContext} = that.props;
 	const defaultItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+
+	copyItem = filterItemIdsDeeply(copyItem, formContext.contextId, that.props.idSchema.$id);
 
 	const source = type === "blacklist" ? defaultItem : copyItem;
 
-	const filtered = nestedFilters.reduce((target, filter) => {
-		const splitted = filter.includes("/") ? filter.substring(1).split("/") : [filter];
-		const splittedWithoutLast = splitted.slice(0);
-		const last = splittedWithoutLast.pop();
-
-		let hasValue = false;
-		let nestedPointer = source;
-		for (let path of splitted) {
-			if (nestedPointer && path in nestedPointer) {
-				nestedPointer = nestedPointer[path];
-				hasValue = true;
-			} else {
-				hasValue = false;
-				break;
-			}
+	const filtered = filter.sort().reverse().reduce((target, f) => {
+		let sourceValue;
+		try {
+			sourceValue = parseJSONPointer(source, f);
+		} catch (e) {
+			const schema = schemaJSONPointer(schema.items, f);
+			sourceValue = getDefaultFormState(schema, undefined, registry.definitions);
 		}
-
-		if (!hasValue) return target;
-
-		let pointer = undefined;
-		let value = source;
-		const updateObject = splittedWithoutLast.reduce((updateObject, path) => {
-			updateObject[path] = {};
-			pointer = updateObject[path];
-			value = value[path];
-			return pointer;
-		}, {});
-
-		updateObject[last] = {$set: value[last]};
-
-		return update(target, updateObject);
+		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
 
 	return filtered;

@@ -751,9 +751,9 @@ export function schemaJSONPointer(schema, JSONPointer) {
 		if (schemaPointer[s]) {
 			schemaPointer = schemaPointer[s];
 			return `${path}/${s}`;
-		} else if (!isNaN(s) && schemaPointer.items && schemaPointer.items.properties) {
-			schemaPointer = schemaPointer.items.properties;
-			return `${path}/items/properties`;
+		} else if (!isNaN(s) && schemaPointer.items) {
+			schemaPointer = schemaPointer.items;
+			return `${path}/items`;
 		} else if (schemaPointer.properties && schemaPointer.properties[s]) {
 			schemaPointer = schemaPointer.properties[s];
 			return `${path}/properties/${s}`;
@@ -787,7 +787,11 @@ export function updateFormDataWithJSONPointer(schemaProps, value, path) {
 	}
 	return updateSafelyWithJSONPath(schemaProps.formData, value, path, !!"immutably", (__formData, _path) => {
 		const _schema = parseJSONPointer(schemaProps.schema, schemaJSONPointer(schemaProps.schema, _path));
-		return getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
+		let _default = getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
+		if (!_default && _schema.type === "array") {
+			return [];
+		}
+		return _default;
 	});
 }
 
@@ -806,6 +810,12 @@ export const filterItemId = (item) => {
 	}
 	return item;
 };
+
+export const filterItemIdsDeeply = (item, contextId, idSchemaId) => {
+	const tmpIdTree = getRelativeTmpIdTree(contextId, idSchemaId);
+	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
+	return _item;
+}
 
 export const formDataIsEmpty = (props) => {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
