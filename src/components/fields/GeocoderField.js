@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import equals from "deep-equal";
-import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPath, parseJSONPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import Context from "../../Context";
@@ -340,7 +340,7 @@ export default class GeocoderField extends Component {
 							} else {
 								const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
 								const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};
-								lajiFormInstance.onChange({formData: updateSafelyWithJSONPath(lajiFormInstance.state.formData, newFormData, pointer)});
+								lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
 							}
 							if (callback) callback();
 						});

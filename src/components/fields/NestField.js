@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
+import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -292,7 +292,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 
 	const newOnChange = formData => {
 		let newFormData = fields.reduce((_formData, field) => {
-			_formData = updateSafelyWithJSONPath(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
+			_formData = updateSafelyWithJSONPointer(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
 				const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
 				return getDefaultFormState(_schema, undefined, definitions);
 			});

@@ -11,7 +11,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch, Fullscreen } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPath, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPath } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -139,7 +139,7 @@ class DefaultMapArrayField extends Component {
 			_schema = _schema.properties
 				? _schema.properties[split]
 				: _schema.items;
-			return update(_formData, getUpdateObjectFromJSONPath(_cumulatedPointer,
+			return update(_formData, getUpdateObjectFromJSONPointer(_cumulatedPointer,
 				{$set: i === splittedPath.length - 1
 					? {
 						type: "GeometryCollection",
@@ -210,7 +210,7 @@ class DefaultMapArrayField extends Component {
 	onAdd({feature: {geometry}}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		return update(formData,
-			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, {$set: {type: "GeometryCollection", geometries: [
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPointer(geometryField, {$set: {type: "GeometryCollection", geometries: [
 				...parseGeometries(this.getGeometry(formData)), geometry
 			]}})});
 	}
@@ -223,7 +223,7 @@ class DefaultMapArrayField extends Component {
 		});
 		const geometry = this.getGeometry(formData);
 		return update(formData,
-			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, geometry && geometry.type === "GeometryCollection" ?
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPointer(geometryField, geometry && geometry.type === "GeometryCollection" ?
 				{geometries: {$splice: splices}} : {$set: undefined}
 			)});
 	}
@@ -232,7 +232,7 @@ class DefaultMapArrayField extends Component {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		const geometry = this.getGeometry(formData);
 		return update(formData,
-			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, geometry.type === "GeometryCollection" ? {
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPointer(geometryField, geometry.type === "GeometryCollection" ? {
 				geometries: Object.keys(features).reduce((obj, idx) => {
 					obj[idx] = {$set: features[idx].geometry};
 					return obj;
@@ -244,7 +244,7 @@ class DefaultMapArrayField extends Component {
 	onInsert({idx, feature}, formData) {
 		const {geometryField} = getUiOptions(this.props.uiSchema);
 		return update(formData,
-			{[this.state.activeIdx]: getUpdateObjectFromJSONPath(geometryField, {
+			{[this.state.activeIdx]: getUpdateObjectFromJSONPointer(geometryField, {
 				geometries: {$splice: [[idx, 0, feature.geometry]]}
 			})});
 	}
@@ -1191,7 +1191,7 @@ class _MapArrayField extends ComposedComponent {
 			: Math.round(sumArea);
 
 		const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField);
-		currentArea !== area && this.props.onChange(updateSafelyWithJSONPath(
+		currentArea !== area && this.props.onChange(updateSafelyWithJSONPointer(
 			formData,
 			area,
 			`/${activeIdx}/${computeAreaField}`

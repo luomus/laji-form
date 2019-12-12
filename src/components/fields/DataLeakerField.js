@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { parseJSONPointer, updateSafelyWithJSONPath } from  "../../utils";
+import { parseJSONPointer, updateSafelyWithJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -47,7 +47,7 @@ export default class DataLeakerField extends Component {
 				? targetPath
 				: `/uiSchema/ui:options/${targetPath}`;
 
-			props = updateSafelyWithJSONPath(props, from, _targetPath);
+			props = updateSafelyWithJSONPointer(props, from, _targetPath);
 			return props;
 		}, props);
 	}

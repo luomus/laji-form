@@ -56,7 +56,11 @@ export function propertyHasData(field, container) {
 	(!Array.isArray(data) || (data.length > 0 && hasData(data))));
 }
 
-export function getUpdateObjectFromJSONPath(path, injection) {
+export function getUpdateObjectFromJSONPath(...params) {
+	console.warn("'getUpdateObjectFromJSONPath' works with JSON pointers, not JSON path! This function is deprecated and will be removed in the future, please use 'getUpdateObjectFromJSONPointer' instead");
+	return getUpdateObjectFromJSONPointer(...params);
+}
+export function getUpdateObjectFromJSONPointer(path, injection) {
 	let update = {};
 	let updatePointer = update;
 	let lastPathName = "";
@@ -87,7 +91,7 @@ export function immutableDelete(_obj, _delProp) {
 		const splits = _delProp.split("/");
 		const last = splits.pop();
 		const container = parseJSONPointer(_obj, splits.join("/"));
-		return updateSafelyWithJSONPath(_obj, simple(container, last), splits.join("/"));
+		return updateSafelyWithJSONPointer(_obj, simple(container, last), splits.join("/"));
 	} else {
 		return simple(_obj, _delProp);
 	}
@@ -483,7 +487,11 @@ export function filter(properties, filter, filterType = "blacklist", getValue) {
 	return properties.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
 }
 
-export function updateSafelyWithJSONPath(obj, value, path, immutably = true, createNew) {
+export function updateSafelyWithJSONPath(...params) {
+	console.warn("'updateSafelyWithJSONPath' works with JSON pointers, not JSON path! This function is deprecated and will be removed in the future, please use 'updateSafelyWithJSONPointer' instead");
+	return updateSafelyWithJSONPointer(...params);
+}
+export function updateSafelyWithJSONPointer(obj, value, path, immutably = true, createNew) {
 	if (!createNew) {
 		createNew = () => ({});
 	}
@@ -514,7 +522,7 @@ export function updateSafelyWithJSONPath(obj, value, path, immutably = true, cre
 		injectionTarget = makePath(injectionTarget);
 	}
 
-	const updateObject = getUpdateObjectFromJSONPath(path, {$set: value});
+	const updateObject = getUpdateObjectFromJSONPointer(path, {$set: value});
 	return update(obj, updateObject);
 
 	function makePath(injectionTarget) {
@@ -527,7 +535,7 @@ export function updateSafelyWithJSONPath(obj, value, path, immutably = true, cre
 				console.log("i love uglifyjs!"); // eslint-disable-line no-console
 			}
 			if (!o[split]) {
-				obj = update(obj, getUpdateObjectFromJSONPath(_splitPath, {$set: createNew(obj, _splitPath, o, split)}));
+				obj = update(obj, getUpdateObjectFromJSONPointer(_splitPath, {$set: createNew(obj, _splitPath, o, split)}));
 			}
 			const next = parseJSONPointer(obj, _splitPath);
 			injectionTarget = next;
@@ -540,7 +548,7 @@ export function updateSafelyWithJSONPath(obj, value, path, immutably = true, cre
 
 export function injectButtons(uiSchema, buttons, buttonsPath) {
 	const existingButtons = parseJSONPointer(uiSchema,  `${buttonsPath}/ui:options/buttons`);
-	return updateSafelyWithJSONPath(uiSchema, existingButtons ? [...existingButtons, ...buttons] : buttons, `${buttonsPath}/ui:options/buttons`);
+	return updateSafelyWithJSONPointer(uiSchema, existingButtons ? [...existingButtons, ...buttons] : buttons, `${buttonsPath}/ui:options/buttons`);
 }
 
 export function dictionarify(array, getKey, getValue) {
@@ -785,7 +793,7 @@ export function updateFormDataWithJSONPointer(schemaProps, value, path) {
 	if (path === "/") {
 		return value;
 	}
-	return updateSafelyWithJSONPath(schemaProps.formData, value, path, !!"immutably", (__formData, _path) => {
+	return updateSafelyWithJSONPointer(schemaProps.formData, value, path, !!"immutably", (__formData, _path) => {
 		const _schema = parseJSONPointer(schemaProps.schema, schemaJSONPointer(schemaProps.schema, _path));
 		let _default = getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
 		if (!_default && _schema.type === "array") {
@@ -815,7 +823,7 @@ export const filterItemIdsDeeply = (item, contextId, idSchemaId) => {
 	const tmpIdTree = getRelativeTmpIdTree(contextId, idSchemaId);
 	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
 	return _item;
-}
+};
 
 export const formDataIsEmpty = (props) => {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
