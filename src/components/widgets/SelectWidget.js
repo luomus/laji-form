@@ -69,7 +69,6 @@ class SelectWidget extends Component {
 
 		if (order) enumOptions = sort(enumOptions, order);
 
-
 		const valsToItems = enumOptions.reduce((map, item) => {
 			map[item.value] = item;
 			return map;
@@ -78,7 +77,7 @@ class SelectWidget extends Component {
 		return {
 			valsToItems,
 			enumOptions,
-			value: valsToItems[value]
+			value: multiple ? value : valsToItems[value]
 		};
 	}
 
@@ -110,7 +109,7 @@ class SelectWidget extends Component {
 	onSelect = (item) => {
 		this.state.open && this._context.setImmediate(() => this.setState({open: false, value: item.value}));
 		const value = this.getEnum(item.value);
-		value !== this.state.value.value && this.props.onChange(value);
+		!this.state.value || value !== this.state.value.value && this.props.onChange(value);
 	}
 
 	onToggle = () => {
