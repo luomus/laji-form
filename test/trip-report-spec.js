@@ -17,21 +17,21 @@ const testWidget = form =>  async (path, type) => {
 	let widget;
 	switch (type) {
 	case "checkbox":
-		widget = await getCheckboxWidget(path);
+		widget = await form.$getCheckboxWidget(path);
 		await widget.click();
 		break;
 	case "enum":
-		widget = await getEnumWidget(path);
+		widget = await form.$getEnumWidget(path);
 		await widget.click();
 		await widget.$$("li")[1].click();
 		break;
 	case "date":
-		widget = await getDateWidget(path);
+		widget = await form.$getDateWidget(path);
 		await widget.$("input").sendKeys("1.1.2019");
 		await browser.actions().sendKeys(protractor.Key.TAB).perform();
 		break;
 	default:
-		widget = await getInputWidget(path);
+		widget = await form.$getInputWidget(path);
 		await widget.sendKeys("1");
 		await browser.actions().sendKeys(protractor.Key.TAB).perform();
 		break;

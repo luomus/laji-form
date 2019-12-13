@@ -11,7 +11,7 @@ function getJsonFromUrl() {
 	  return result;
 }
 
-export const getLocatorForContextId = contextId => path =>  `#_laji-form_${contextId}_root_${path.replace(/\./g, "_")}`;
+export const getLocatorForContextId = contextId => path => `#_laji-form_${contextId}_root${typeof path === "string" && path.length ? `_${path.replace(/\./g, "_")}` : ""}`;
 
 export const emptyForm = async (params = "") => browser.get(`http://${HOST}:${PORT}?test=true&settings=false&mockApi=true&${params}`);
 export const navigateToForm = async (formID, params = "") => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false&mockApi=true${params}`);
@@ -34,7 +34,7 @@ export class Form {
 			this.props.test = true;
 			await emptyForm(query(this.props));
 		}
-		await this.setState({});
+		await this.setState(this.props);
 		this.contextId = await this.e("app.refs.lajiform._id");
 	}
 
@@ -162,6 +162,18 @@ export class Form {
 			}
 		};
 	}
+	$getCheckboxWidget = (str) => {
+		return this.$locate(str).$(".checkbox-container");
+	}
+	$getInputWidget = (str) => {
+		return this.$locate(str).$("input");
+	}
+	$getEnumWidget = (str) => {
+		return this.$locate(str).$(".rw-combobox");
+	}
+	$getDateWidget = (str) => {
+		return this.$locate(str).$(".date-widget");
+	}
 }
 
 export async function createForm(props) {
@@ -220,15 +232,6 @@ const _mockGeoError = code => `window.navigator.geolocation.getCurrentPosition =
 
 export const mockGeoError = (code) => browser.executeScript(_mockGeoError(code));
 
-export const getCheckboxWidget = (str) => {
-	return $(`${lajiFormLocator(str)} .checkbox-container`);
-}
-export const getInputWidget = (str) => {
-	return $(`${lajiFormLocator(str)} input`);
-}
-export const getEnumWidget = (str) => {
-	return $(`${lajiFormLocator(str)} date-widget`);
-}
 export const getWidget = async (str) => {
 	const $afterLabel = $(`${lajiFormLocator(str)} > div > div`);
 	if (await $afterLabel.isPresent()) {

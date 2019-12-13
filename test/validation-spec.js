@@ -55,7 +55,7 @@ describe("Validations", () => {
 	it("doesn't run schema validators before submitted", async () => {
 		const _formData = {...formData, a: "foo"};
 		await form.setState({ schema: {...schema, required: ["a"]}, formData: _formData });
-		await updateValue(getInputWidget("a"), "");
+		await updateValue(form.$getInputWidget("a"), "");
 		expect(await form.errors.$$all.count()).toBe(0);
 
 		await form.submit();
@@ -105,7 +105,7 @@ describe("Validations", () => {
 			const validators = getCustom(message, "live");
 			const formData = {a: "bar"};
 			await form.setState({ schema, formData, [propName]: validators });
-			await updateValue(getInputWidget("a"), "");
+			await updateValue(form.$getInputWidget("a"), "");
 
 			expect(await form[type].$$all.get(0).getText()).toBe(message);
 		});
@@ -115,7 +115,7 @@ describe("Validations", () => {
 			const validators = getCustom(message, "live");
 			const formData = {a: "bar"};
 			await form.setState({ schema, formData, validators });
-			await updateValue(getInputWidget("a"), "");
+			await updateValue(form.$getInputWidget("a"), "");
 			expect (await form.isBlocked()).toBe(false);
 	});
 
@@ -123,7 +123,7 @@ describe("Validations", () => {
 		const validators = getCustom(message, "live");
 		const formData = {a: "bar"};
 		await form.setState({ schema, formData, validators, warnings: validators });
-		await updateValue(getInputWidget("a"), "");
+		await updateValue(form.$getInputWidget("a"), "");
 
 		for (const type of ["errors", "warnings"]) {
 			expect(await form[type].$$all.get(0).getText()).toBe(message);
@@ -141,7 +141,7 @@ describe("Validations", () => {
 			b: validators.a
 		};
 		await form.setState({ schema, formData, validators: _validators, warnings });
-		await updateValue(getInputWidget("b"), "");
+		await updateValue(form.$getInputWidget("b"), "");
 		await form.submit();
 		expect(await form.getSubmittedData()).not.toEqual(formData);
 		expect(await form.errors.$$all.count()).toBe(2);
