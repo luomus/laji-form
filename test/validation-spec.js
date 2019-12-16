@@ -130,6 +130,25 @@ describe("Validations", () => {
 		}
 	});
 
+	it("keeps non live errors when doing only live validation", async () => {
+		const validators = getCustom(message, "live");
+		const warnings = getCustom(message);
+		const formData = {a: "bar"};
+		await form.setState({ schema, formData, validators, warnings });
+		await updateValue(form.$getInputWidget("a"), "");
+		await form.submit();
+		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		await updateValue(form.$getInputWidget("a"), "bar");
+		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.count()).toBe(0);
+		await updateValue(form.$getInputWidget("a"), "");
+
+		for (const type of ["errors", "warnings"]) {
+			expect(await form[type].$$all.get(0).getText()).toBe(message);
+		}
+	});
+
 	it("runs all validator types on submit", async () => {
 		const validators = getCustom(message, "live");
 		const _validators = {

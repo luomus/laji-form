@@ -660,12 +660,13 @@ export default class LajiForm extends Component {
 		const {formData} = this.state;
 		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
 		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
-		const validations = {liveErrors: liveErrorValidators};
+		const liveValidations = {errors: liveErrorValidators};
+		const validations = {};
 		if (nonlive) {
 			validations.errors = errorValidators;
 		}
 		if (warnings) {
-			validations.liveWarnings = liveWarningValidators;
+			liveValidations.warnings = liveWarningValidators;
 			if (nonlive) {
 				validations.warnings = warningValidators;
 			}
@@ -675,9 +676,12 @@ export default class LajiForm extends Component {
 			: {};
 		nonlive && this.pushBlockingLoader();
 		return new Promise(resolve =>
-			validate(validations, formData).then(_validations => {
-				nonlive && this.popBlockingLoader();
-				const merged = merge(schemaErrors, _validations);
+			Promise.all([validate(validations, formData), validate(liveValidations, formData)]).then(([_validations, _liveValidations]) => {
+				if (nonlive) {
+					this.cachedNonliveValidations = merge(schemaErrors, _validations);
+					nonlive && this.popBlockingLoader();
+				}
+				const merged = merge(_liveValidations, !nonlive ? (this.cachedNonliveValidations || {}) : merge(_validations, schemaErrors));
 				this.validating = false;
 				resolve(!Object.keys(merged).length);
 				!equals(this.state.extraErrors, merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);

@@ -6,7 +6,7 @@ export function initializeValidation(apiClient) {
 	});
 }
 
-export default ({errors: error, liveErrors: liveError, warnings: warning, liveWarnings: liveWarning}, data) => {
+export default ({errors: error, warnings: warning}, data) => {
 	const promises = [];
 
 	const getPromiseForValidator = (type, validator) => {
@@ -16,7 +16,7 @@ export default ({errors: error, liveErrors: liveError, warnings: warning, liveWa
 			.then(err => {return {type, err};});
 	};
 
-	const _validators = {error, liveError, warning, liveWarning};
+	const _validators = {error, warning};
 
 	Object.keys(_validators).forEach(type => {
 		const validator = _validators[type];
