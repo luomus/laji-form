@@ -1,3 +1,6 @@
+## 4.0.0
+* `src/validation.js` default export function doesn't take in `liveErrors` or `liveWarnings` parameters any more
+
 ## 3.0.1
 * add deprecation warning about utils `getUpdateObjectFromJSONPath` and `updateSafelyWithJSONPath` (renamed to 'JSONPointer')
 
