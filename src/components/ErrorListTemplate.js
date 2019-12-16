@@ -45,7 +45,7 @@ export default class ErrorListTemplate extends Component {
 			const {__errors, ...properties} = errorSchema;
 			let {errors, warnings} = (__errors || []).reduce(({errors, warnings}, _error) => {
 				const _schema = parseJSONPointer(schema, path);
-				if (_error.includes("[warning]") || _error.includes("[liveWarning]")) {
+				if (_error.includes("[warning]")) {
 					warnings.push({
 						label: _schema.title,
 						error: formatErrorMessage(_error),

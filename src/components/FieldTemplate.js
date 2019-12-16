@@ -71,7 +71,7 @@ export default class FieldTemplate extends Component {
 
 		let warnings = [];
 		const errors = (rawErrors || []).reduce((arr, err) => {
-			if (err.includes("[warning]") || err.includes("[liveWarning]")) {
+			if (err.includes("[warning]")) {
 				warnings.push(formatErrorMessage(err));
 			} else {
 				arr.push(formatErrorMessage(err));
