@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import CheckboxWidget from "./CheckboxWidget";
-import { getUiOptions, formDataEquals } from "../../utils";
+import { getUiOptions, formDataEquals, getInnerUiSchema } from "../../utils";
 import equals from "deep-equal";
 
 export const anyToBoolean = (widget) => (props) => {
@@ -24,15 +23,31 @@ export const anyToBoolean = (widget) => (props) => {
 		props.onChange(newValue);
 	};
 
-	return <CheckboxWidget 
-		{...props}
-		id={widget ? props.id : props.idSchema.$id}
-		schema={schema}
-		value={value}
-		onChange={onChange}
-		label={widget ? "" : props.schema.title}
-		options={options}
-	/>;
+	const { CheckboxWidget } = props.registry.widgets; 
+	const { SchemaField } = props.registry.fields; 
+
+	return widget
+		? (
+			<CheckboxWidget
+					{...props}
+					id={props.id}
+					schema={schema}
+					value={value}
+					onChange={onChange}
+					label={""}
+					options={options}
+			/>
+		) : (
+			<SchemaField
+					{...props}
+					schema={schema}
+					uiSchema={getInnerUiSchema(props.uiSchema)}
+					formData={value}
+					onChange={onChange}
+					label={""}
+					options={options}
+			/>
+		);
 };
 
 const _anyToBoolean = anyToBoolean(!!"widget");
