@@ -44,7 +44,7 @@ export default class InjectField extends Component {
 			const {fields, target} = injection;
 
 			fields.forEach((fieldPath) => {
-				const splits = fieldPath.split("/");
+				const splits = fieldPath.split("/").filter(s => s);
 				const fieldName = splits[splits.length - 1];
 
 				let parentProperties = this.getSchemaProperties(schema, splits.slice(0, splits.length - 1));
