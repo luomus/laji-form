@@ -57,12 +57,12 @@ export default class MapField extends Component {
 				height: PropTypes.number,
 				emptyHelp: PropTypes.string,
 				geometryCollection: PropTypes.boolean,
-			}).isRequired
+			})
 		}),
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	constructor(props) {
@@ -143,9 +143,10 @@ export default class MapField extends Component {
 	render() {
 		const {TitleField} = this.props.registry.fields;
 		const {uiSchema, formData} = this.props;
-		const {height = 400, emptyHelp, mapOptions = {}, mobileEditor: _mobileEditor} = getUiOptions(uiSchema);
+		const {height = 400, emptyHelp, mapOptions = {}, mobileEditor: _mobileEditor, data} = getUiOptions(uiSchema);
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		const _mapOptions = {
+			controls: true,
 			clickBeforeZoomAndPan: true,
 			...mapOptions,
 			...(this.state.mapOptions || {}),
@@ -198,14 +199,18 @@ export default class MapField extends Component {
 			mobileEditorOptions.userLocation = this.map.userLocation;
 		}
 
+		const extraData = Array.isArray(data) ? data : [data].map((geoData) => ({geoData}));
+
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
 					<Affix {...{topOffset, bottomOffset}}>
 						<div style={{height}}>
-							<MapComponent {..._mapOptions}
+							<MapComponent
+								{..._mapOptions}
 								ref={this.setMapRef}
 								draw={this.getDrawOptions(this.props)}
+								data={extraData}
 								lang={lang}
 								zoomToData={{paddingInMeters: 200}}
 								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
