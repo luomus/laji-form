@@ -1,3 +1,8 @@
+## 4.1.0
+* Add `FakePropertyField`
+* add `data` option to `MapField`
+* InjectField works with proper JSON pointers
+
 ## 4.0.0
 * `src/validation.js` default export function doesn't take in `liveErrors` or `liveWarnings` parameters any more
 
