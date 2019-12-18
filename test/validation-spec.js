@@ -149,6 +149,27 @@ describe("Validations", () => {
 		}
 	});
 
+	it("cached non live errors are cleared when validated again against valid", async () => {
+		const validators = getCustom(message, "live");
+		const warnings = getCustom(message);
+		const formData = {a: "bar"};
+		await form.setState({ schema, formData, validators, warnings });
+		await updateValue(form.$getInputWidget("a"), "");
+		await form.submit();
+		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		await updateValue(form.$getInputWidget("a"), "bar");
+		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.count()).toBe(0);
+		await updateValue(form.$getInputWidget("a"), "");
+		await updateValue(form.$getInputWidget("a"), "bar");
+		await form.submit();
+
+		for (const type of ["errors", "warnings"]) {
+			expect(await form[type].$$all.count()).toBe(0);
+		}
+	});
+
 	it("runs all validator types on submit", async () => {
 		const validators = getCustom(message, "live");
 		const _validators = {
