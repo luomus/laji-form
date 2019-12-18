@@ -43,7 +43,7 @@
     "react-dom": "~16.8.6",
     "react-dropzone": "^10.1.4",
     "react-inlinesvg": "^0.6.0",
-    "react-jsonschema-form": "github:olzraiti/react-jsonschema-form#build2alpha2try",
+    "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#6d8d9a467eb047d728dbe2e849d3d62acebef59a",
     "react-sortable-hoc": "^0.6.3",
     "react-spinner": "^0.2.7",
     "react-transition-group": "^1.1.1",
