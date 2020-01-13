@@ -97,14 +97,22 @@ export class DeleteButton extends Component {
 		const {translations, corner, tooltip, disabled, readonly, confirmPlacement = "left"} = props;
 		let buttonClassName = "glyph-button";
 		buttonClassName += corner ? " delete-corner" : "";
+		if (props.className) {
+			buttonClassName = `${buttonClassName} ${props.className}`;
+		}
 		const getOverlayTarget = () => findDOMNode(this.refs.del);
 		const onClick = e => this.onClick(e);
+		const maybeProps = {};
+		if (props.id !== undefined) {
+			maybeProps.id = `${props.id}-delete`;
+		}
 		const button = (
-			<div className={props.className} style={this.props.style}>
-				<Button id={`${props.id}-delete`}
+			<React.Fragment>
+				<Button {...maybeProps}
 				        disabled={disabled || readonly}
 				        bsStyle="danger"
 								className={buttonClassName}
+								style={this.props.style}
 								ref="del"
 								onKeyDown={this.onButtonKeyDown}
 								onClick={onClick}>✖</Button>
@@ -125,7 +133,7 @@ export class DeleteButton extends Component {
 					</Overlay>
 					: null
 				}
-			</div>
+			</React.Fragment>
 		);
 		return tooltip ? <TooltipComponent tooltip={tooltip}>{button}</TooltipComponent> : button;
 	}

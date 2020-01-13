@@ -682,6 +682,9 @@ min-height: 20px;
 	background-color: #f5f5f5;
 	border: 1px solid #e3e3e3;
 }
+.laji-form .nonbordered {
+	border: none;
+}
 .laji-form .darker {
 	background-color: #e2e2e2;
 }
@@ -1493,4 +1496,27 @@ min-height: 20px;
 /* Firefox */
 .laji-form input[type=number] {
 	-moz-appearance:textfield;
+}
+
+.laji-form .horizontally-centered {
+	display: block !important;
+	margin: auto;
+	text-align: center;
+}
+
+.laji-form .row-height {
+	height: 25px;
+	line-height: 25px;
+}
+
+.laji-form legend.hidden-title-text span {
+	visibility: hidden;
+}
+
+.laji-form .not-strong {
+	font-weight: normal;
+}
+
+.laji-form .invisible {
+	visibility: hidden;
 }

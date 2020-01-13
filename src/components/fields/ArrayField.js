@@ -60,8 +60,18 @@ export default class _ArrayField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
-		return <ArrayField
+		// MultiArrayField needs to intercept default ArrayField internals, the instance is passed in formContext.
+		const {ArrayField: _ArrayField} = props.formContext;
+		const Component = _ArrayField || ArrayField;
+
+		// Reset formContext.ArrayField
+		const formContext = _ArrayField ? {...props.formContext, ArrayField: undefined} : props.formContext;
+		const registry = _ArrayField ? {...props.registry, formContext} : props.registry;
+
+		return <Component
 			{...props}
+			formContext={formContext}
+			registry={registry}
 			schema={schema}
 			uiSchema={{
 				...props.uiSchema, 
@@ -104,6 +114,7 @@ export default class _ArrayField extends Component {
 			rules: {
 				canAdd: true
 			},
+			changesFormData: true
 		}
 	}
 }

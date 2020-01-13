@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const HiddenField = () => { return <div />; };
 HiddenField.propTypes =  {
 	schema: PropTypes.shape({
-		type: PropTypes.oneOf(["object", "array", "string", "number", "boolean"])
+		type: PropTypes.oneOf(["object", "array", "string", "number", "boolean", "integer"])
 	}).isRequired
 };
 

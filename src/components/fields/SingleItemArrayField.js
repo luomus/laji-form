@@ -32,7 +32,8 @@ export default class SingleItemArrayField extends Component {
 					activeIdx: 0,
 					...getUiOptions(props.uiSchema),
 					renderer: "uncontrolled",
-					addable: false
+					addable: false,
+					removable: false
 				}
 			}
 		};

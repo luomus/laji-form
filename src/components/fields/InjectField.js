@@ -141,7 +141,7 @@ export default class InjectField extends Component {
 
 	formatToOriginal = (formData, props, fields) => {
 		fields.forEach((fieldPath) => {
-			const splits = fieldPath.split("/");
+			const splits = fieldPath.split("/").filter(s => s);
 			const fieldName = splits[splits.length - 1];
 			formData = update(formData, this.getFormDataPath(splits, {$set: props.formData[fieldName]}));
 		});

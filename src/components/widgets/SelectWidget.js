@@ -17,10 +17,12 @@ class SelectWidget extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
 		this._context.addFocusHandler(this.props.id, this.onFocus);
 	}
 
 	componentWillUnmount() {
+		this.mounted = false;
 		this._context.removeFocusHandler(this.props.id, this.onFocus);
 	}
 
@@ -107,7 +109,7 @@ class SelectWidget extends Component {
 	}
 
 	onSelect = (item) => {
-		this.state.open && this._context.setImmediate(() => this.setState({open: false, value: item.value}));
+		this.state.open && this._context.setImmediate(() => this.mounted && this.setState({open: false, value: item.value}));
 		const value = this.getEnum(item.value);
 		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}

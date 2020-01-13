@@ -26,7 +26,7 @@ export default class _SchemaField extends Component {
 		}
 	}
 
-	applyFunction = (props) => {
+	applyFunction(props) {
 		let {
 			"ui:functions": functions,
 			"ui:childFunctions": childFunctions,

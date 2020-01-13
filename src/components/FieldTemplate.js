@@ -32,8 +32,21 @@ export default class FieldTemplate extends Component {
 		}
 	}
 
+	componentWillReceiveProps(props) {
+		const id = props.formContext.reserveId(props.id, this.receiveId);
+		if (id !== undefined && id !== this.state.id) {
+			this.props.formContext.releaseId(this.props.id, this.receiveId);
+			this.receiveId(id);
+		}
+	}
+
 	receiveId = (id) => {
-		this.setState({id});
+		this.setState({id}, () => {
+			const {idToFocus, idToScroll} = new Context(this.props.formContext.contextId);
+			if (idToFocus === id) {
+				focusAndScroll(this.props.formContext, idToFocus, idToScroll);
+			}
+		});
 	}
 
 	componentWillUnmount() {

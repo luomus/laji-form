@@ -89,7 +89,7 @@ class DefaultMapArrayField extends Component {
 	getOptions(options) {
 		const {formData} = this.props;
 		const geometries = this.getData();
-		
+
 		const emptyMode = !formData || !formData.length;
 
 		const draw = (options.draw === false || (isNullOrUndefined(this.state.activeIdx) && !emptyMode)) ? false : {

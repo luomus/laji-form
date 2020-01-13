@@ -20,11 +20,12 @@ export const onDelete = (item, props) => (e) => {
 
 export function beforeAdd(props) {
 	if (!canAdd(props)) return;
+	const {contextId} = props.formContext;
 	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
-	const idToFocus =  `${props.idSchema.$id}_${idx}`;
+	let idToFocus =  `${props.idSchema.$id}_${idx}`;
 	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`} = getUiOptions(props.uiSchema || {});
-	new Context(props.formContext.contextId).idToFocus = idToFocus;
-	new Context(props.formContext.contextId).idToScroll = idToScrollAfterAdd;
+	new Context(contextId).idToFocus = idToFocus;
+	new Context(contextId).idToScroll = idToScrollAfterAdd;
 }
 
 const buttonDefinitions = {
@@ -93,7 +94,7 @@ export function getButton(button, props = {}) {
 
 	const buttonId = `${id}-${fnName}${key ? `-${key}` : ""}`;
 	return render ? render(onClick, button) : (
-		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))}>
+		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))} style={button.style}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 		</Button>
@@ -259,15 +260,16 @@ export default class ArrayFieldTemplate extends Component {
 
 		const items = props.items.map((item, i) => {
 			const getDeleteButton = () => (
-				<DeleteButton id={`${props.idSchema.$id}_${i}`}
-										  disabled={disabled || readonly}
-				              ref={getRefFor(i)}
-				              onClick={onDelete(item, props)}
-				              className="laji-form-field-template-buttons"
-				              confirm={confirmDelete}
-				              corner={deleteCorner}
-				              tooltip={deleteHelp}
-				              translations={props.formContext.translations}/>
+				<div className="laji-form-field-template-buttons">
+					<DeleteButton id={`${props.idSchema.$id}_${i}`}
+												disabled={disabled || readonly}
+												ref={getRefFor(i)}
+												onClick={onDelete(item, props)}
+												confirm={confirmDelete}
+												corner={deleteCorner}
+												tooltip={deleteHelp}
+												translations={props.formContext.translations}/>
+			</div>
 			);
 			// RJSF array keeps items in state but formData comes from props, so they are out of sync.
 			// Items & formData length can differ, and in that case we use "NEW" as key.

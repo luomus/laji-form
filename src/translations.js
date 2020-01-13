@@ -693,5 +693,35 @@
 		fi: "Koita uudestaan",
 		en: "Rety",
 		sv: "Försök igen"
+	},
+	section: {
+		fi: "lohko",
+		en: "section",
+		sv: "sektion"
+	},
+	sum: {
+		fi: "Summa",
+		en: "Sum",
+		sv: "Summa"
+	},
+	addSection: {
+		fi: "Lisää lohko",
+		en: "add a section",
+		sv: "Lägg till ett sektion"
+	},
+	addNewSection: {
+		fi: "Lisää uusi lohko",
+		en: "add a new section",
+		sv: "Lägg till ett nytt sektion"
+	},
+	number: {
+		fi: "Numero",
+		en: "Number",
+		sv: "Siffra"
+	},
+	enterNewSectionNumber: {
+		fi: "Anna uuden lohkon numero",
+		en: "Enter new section's number",
+		sv: "Ange det nya avsnittets nummer"
 	}
 };

@@ -4,7 +4,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { isEmptyString, parseJSONPointer } from "../../utils";
 import Context from "../../Context";
 
-const TitleField = ({title, className, buttons, help, id, formData, titleFormatters = []}) => {
+const TitleField = ({title, className, buttons, help, id, formData, titleFormatters = [], style}) => {
 	const renderedFormatters = titleFormatters.map((titleFormatter) => {
 		const {renderer} = titleFormatter;
 		return _titleFormatters[renderer]({...titleFormatter, formData});
@@ -16,8 +16,9 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	const titleContent = <span><span>{renderedFormatters}</span> {title} {helpComponent} {buttons}</span>;
 
+	const Legend = ({children, ...props}) => <legend className={className} style={style} {...props}>{children}</legend>;
 
-	if (!help) return <legend className={className}>{titleContent}</legend>;
+	if (!help) return <Legend>{titleContent}</Legend>;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>
 							<span>
@@ -27,11 +28,11 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 						</Tooltip>;
 
 	return (
-		<legend className={className}>
+		<Legend>
 			<OverlayTrigger placement="right" overlay={tooltipElem}>
 				{titleContent}
 			</OverlayTrigger>
-		</legend>
+		</Legend>
 	);
 };
 

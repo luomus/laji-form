@@ -139,14 +139,16 @@ export default class AutosuggestField extends Component {
 		}
 
 		const innerUiSchema = getInnerUiSchema(uiSchema);
+		const _uiSchemaJSONPointer = uiSchemaJSONPointer(schema, suggestionInputField)
+		const suggestionInputFieldExistingUiSchema = parseJSONPointer(innerUiSchema, _uiSchemaJSONPointer);
 		const _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
 			"ui:widget": "AutosuggestWidget",
-			...(innerUiSchema[suggestionInputField] || {}),
+			...(suggestionInputFieldExistingUiSchema || {}),
 			"ui:options": {
-				...getUiOptions(innerUiSchema[suggestionInputField]),
+				...getUiOptions((suggestionInputFieldExistingUiSchema || {})[suggestionInputField]),
 				...options
 			},
-		}, uiSchemaJSONPointer(schema, suggestionInputField));
+		}, _uiSchemaJSONPointer);
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
 	}
