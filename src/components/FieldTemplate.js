@@ -24,7 +24,7 @@ export default class FieldTemplate extends Component {
 		const contextId = formContext.contextId;
 		const _context = new Context(contextId);
 		const {idToFocus, idToScroll} = _context;
-		if (idToFocus !== undefined && this.props.id === idToFocus) {
+		if (idToFocus !== undefined && this.state.id === idToFocus) {
 			if (focusAndScroll(formContext, idToFocus, idToScroll)) {
 				_context.idToFocus = undefined;
 				_context.idToScroll = undefined;
@@ -33,10 +33,10 @@ export default class FieldTemplate extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		const id = props.formContext.reserveId(props.id, this.receiveId);
-		if (id !== undefined && id !== this.state.id) {
+		if (getUiOptions(props.uiSchema).reserveId !== false && this.props.id !== props.id) {
 			this.props.formContext.releaseId(this.props.id, this.receiveId);
-			this.receiveId(id);
+			const id = props.formContext.reserveId(props.id, this.receiveId);
+			id && this.receiveId(id);
 		}
 	}
 
