@@ -374,7 +374,7 @@ export const arrayKeyFunctions = {
 			onAdd(e, props);
 		}
 
-		if (!props.disabled && !props.readonly &&  canAdd(props)) {
+		if (!props.disabled && !props.readonly && canAdd(props)) {
 			if (insertCallforward) {
 				e.persist();
 				beforeAdd(props);
@@ -387,6 +387,7 @@ export const arrayKeyFunctions = {
 			}
 			return true;
 		}
+		return false;
 	}
 };
 
