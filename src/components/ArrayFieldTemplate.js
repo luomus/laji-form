@@ -8,7 +8,9 @@ import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDesce
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props) {
+	console.log("try add");
 	if (!canAdd(props)) return;
+	console.log("ADD");
 	props.onAddClick(e);
 	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 }
@@ -22,6 +24,7 @@ export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const {contextId} = props.formContext;
 	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
+	console.log("beforeAdd", idx, (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0));
 	let idToFocus =  `${props.idSchema.$id}_${idx}`;
 	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`} = getUiOptions(props.uiSchema || {});
 	new Context(contextId).idToFocus = idToFocus;
@@ -143,6 +146,9 @@ export function handlesArrayKeys(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
+			//if (this.props.idSchema.$id === "root_gatherings_units") {
+			//	console.log("mount");
+			//}
 			(super.addKeyHandlers || this.addKeyHandlers).call(this);
 			(super.addChildKeyHandlers ||  this.addChildKeyHandlers).call(this);
 			(super.addCustomEventListeners || this.addCustomEventListeners).call(this);
@@ -157,8 +163,10 @@ export function handlesArrayKeys(ComposedComponent) {
 		addKeyHandlers() {
 			const context = new Context(this.props.formContext.contextId);
 
-			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
-			context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+			//context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
+			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(this.props.uiSchema);
+			this.arrayKeyFunctions = {..._arrayKeyFunctions} || {...arrayKeyFunctions};
+			context.addKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions, {
 				getProps: () => this.props
 			});
 		}
@@ -201,10 +209,13 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		componentWillUnmount() {
+			//if (this.props.idSchema.$id === "root_gatherings_units") {
+			//	console.log("unmount");
+			//}
 			const context = new Context(this.props.formContext.contextId);
 
 			context.removeCustomEventListener(this.props.idSchema.$id, "focus");
-			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
+			context.removeKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions);
 			if (this.childKeyHandlers) {
 				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
 			}
@@ -225,8 +236,7 @@ const SortableList = SortableContainer(({items, itemProps, nonOrderables, formDa
 
 const SortableItem = SortableElement(({item}) => item);
 
-@handlesArrayKeys
-export default class ArrayFieldTemplate extends Component {
+export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 	onSort = ({oldIndex, newIndex}) => {
 		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
 	}
@@ -310,6 +320,8 @@ export default class ArrayFieldTemplate extends Component {
 	}
 }
 
+export default handlesArrayKeys(ArrayFieldTemplateWithoutKeyHandling);
+
 export const arrayKeyFunctions = {
 	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
 		function focusIdx(idx, prop) {
@@ -370,6 +382,7 @@ export const arrayKeyFunctions = {
 	insert: function(e, _props) {
 		const {getProps, insertCallforward} = _props;
 		const props = getProps();
+		//console.log(props);
 		function afterInsert() {
 			onAdd(e, props);
 		}

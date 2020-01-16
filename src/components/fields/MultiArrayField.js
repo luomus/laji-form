@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import { rulePropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
-import { checkRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer } from "../../utils";
+import { checkRules, getInnerUiSchema, getUiOptions, getUUID, getReactComponentName, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Row, Col } from "react-bootstrap";
 import Context from "../../Context";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
+import { ArrayFieldTemplateWithoutKeyHandling, handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
 import { toIdSchema } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
@@ -107,6 +108,8 @@ export default class MultiArrayField extends Component {
 				: innerUiSchema;
 
 			//uiSchema = updateSafelyWithJSONPointer(uiSchema, {add: {beforeAdd: "flash"}}, "/ui:options/buttonDefinitions");
+			//uiSchema = updateSafelyWithJSONPointer(uiSchema, MultiArrayFieldButtonHandlingTemplate, "/ui:ArrayFieldTemplate");
+			uiSchema = updateSafelyWithJSONPointer(uiSchema, _arrayKeyFunctions, "/ui:options/arrayKeyFunctions");
 
 			let offset = 0;
 			for (let i = 0; i < idx; i++) {
@@ -134,6 +137,7 @@ export default class MultiArrayField extends Component {
 	}
 
 	onChange = (idx) => (formData) => {
+		console.log("on change", idx, formData);
 		let offset = 0;
 		for (let i = 0; i < idx; i++) {
 			offset += Object.keys(this.groupedItems[i]).length;
@@ -159,6 +163,69 @@ export default class MultiArrayField extends Component {
 	}
 }
 
+const _arrayKeyFunctions = {
+	...arrayKeyFunctions,
+	insert: (e, _props) => {
+		console.log("CUSTOM INSERT");
+		const props = _props.getProps();
+		const inputElem = findNearestParentTabbableElem(document.activeElement);
+		if (!inputElem) {
+			return false;
+		}
+		if (!inputElem.id.startsWith(props.idSchema.$id)) {
+			return false;
+		}
+		const itemIdx = inputElem.id.replace(props.idSchema.$id, "").replace(/^_?([0-9]+).*$/, "$1");
+		const {startIdx} = getUiOptions(props.uiSchema);
+		console.log(itemIdx, startIdx, startIdx + props.formData.length);
+		if (itemIdx < startIdx || itemIdx >= startIdx + props.formData.length) {
+			console.log("not in group");
+			return false;
+		}
+		console.log("INSERTING");
+		return arrayKeyFunctions.insert(e, _props);
+	}
+}
+
+function customButtonsHandling(ComposedComponent) {
+	return @handlesArrayKeys
+	class MultiArrayFieldButtonHandlingTemplate extends ComposedComponent {
+		static displayName = "MultiArrayFieldButtonHandlingTemplate";
+
+		addKeyHandlers() {
+			console.log("custom add");
+			//const that = this.props.formContext.this;
+			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+				getProps: () => this.props,
+				//insertCallforward: callback => that.onActiveChange((that.props.formData || []).length, undefined, callback),
+				//getCurrentIdx: () => that.state.activeIdx,
+				//focusByIdx: (idx, prop, callback) => idx === that.state.activeIdx
+				//	? callback()
+				//	: that.onActiveChange(idx, prop, callback),
+				//getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager"
+				//	? () => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
+				//	: undefined
+			});
+		}
+
+		addChildKeyHandlers() {
+		}
+
+		addCustomEventListener() {
+		}
+
+		componentWillUnmount() {
+			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
+			//new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
+			//this.removeFocusHandlers();
+			if (super.componentWillUnmount) super.componentWillUnmount();
+		}
+	}
+}
+
+
+const MultiArrayFieldButtonHandlingTemplate = customButtonsHandling(ArrayFieldTemplateWithoutKeyHandling);
+
 const getArrayFieldIdFixed = (that, idx) => {
 	function ArrayFieldIdFixed(props) {
 		ArrayField.call(this, props);
@@ -175,5 +242,6 @@ const getArrayFieldIdFixed = (that, idx) => {
 		const idSchema = toIdSchema(props.itemSchema, `${idWithoutIdx}_${index}`, that.props.registry.definitions, props.item, that.props.idPrefix);
 		return ArrayField.prototype.renderArrayFieldItem.call(this, {...props, itemIdSchema: idSchema});
 	};
+	//return customButtonsHandling(ArrayFieldIdFixed);
 	return ArrayFieldIdFixed;
 };
