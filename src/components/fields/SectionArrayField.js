@@ -8,6 +8,7 @@ import { DeleteButton, Button } from "../components";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Overlay, Popover, Glyphicon, Row, Col } from "react-bootstrap";
 import Context from "../../Context";
+import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
 
 const getOptions = (options) => {
 	const {
@@ -82,6 +83,11 @@ export default class SectionArrayField extends Component {
 
 	static getName() {return  "SectionArrayField";}
 
+	constructor(props) {
+		super(props);
+		this.arrayKeyFunctions = getArrayKeyFunctions(this);
+	}
+
 	getStateFromProps(props) {
 		const {uiSchema, schema, registry} = props;
 		const {sectionField, rowDefinerField} = getOptions(this.getUiOptions());
@@ -100,6 +106,9 @@ export default class SectionArrayField extends Component {
 
 		_uiSchema = walkUiOrder(schema, _uiSchema, rowDefinerField.replace("%{row}", 0));
 
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, this.arrayKeyFunctions, "/ui:options/arrayKeyFunctions");
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, true, "/ui:options/keepPropFocusOnNavigate");
+
 		return {uiSchema: _uiSchema, formContext, registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}};
 	}
 }
@@ -109,11 +118,16 @@ export default class SectionArrayField extends Component {
 
 const Section = ({children, width = 100, ...rest}) => <div style={{width, float: "left"}} {...rest}>{children}</div>;
 
+@handlesArrayKeys
 class SectionArrayFieldTemplate extends Component {
 	constructor(props) {
 		super(props);
 		this.addButtonRef = React.createRef();
 		this.sectionInputRef = React.createRef();
+	}
+	onFocuses = []
+	getOnFocus = (i) => () => {
+		this.props.formContext.this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
 	render() {
@@ -126,7 +140,7 @@ class SectionArrayFieldTemplate extends Component {
 				}
 				const {children, hasRemove, index, disabled, readonly, onDropIndexClick} = this.props.items[idx];
 				return (
-					<Section key={getUUID(item)} className={index % 2 ? undefined : "gray nonbordered"}>
+					<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "gray nonbordered"}>
 						{hasRemove && <DeleteButton
 							id={`${this.props.idSchema.$id}_${index}`}
 							disabled={disabled || readonly}
@@ -199,7 +213,7 @@ class SectionArrayFieldTemplate extends Component {
 		};
 		return (
 			<React.Fragment>
-				<Button id={`${this.props.idSchema.$id}-add-section`} onClick={this.showAddSection} style={{whiteSpace: "nowrap", position: "absolute"}} ref={this.addButtonRef}><Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}</Button>
+				<Button id={`${this.props.idSchema.$id}-add`} onClick={this.showAddSection} style={{whiteSpace: "nowrap", position: "absolute"}} ref={this.addButtonRef}><Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}</Button>
 				{(this.state || {}).showAddSection &&
 						<Overlay show={true} placement="left" rootClose={true} onHide={this.hideAddSection} target={this.getAddButtonElem}>
 							<Popover id={`${this.props.id}-show-add-section`}>
@@ -485,3 +499,10 @@ const RowDefinerObjectFieldTemplate = (props) => {
 		return <div key={prop.name} className="form-group row-height"><label>{prop.name}</label></div>;
 	});
 };
+
+const getArrayKeyFunctions = (that) => ({
+	...arrayKeyFunctions,
+	insert: (e, props) => {
+		document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
+	}
+});
