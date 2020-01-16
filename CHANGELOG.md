@@ -1,3 +1,6 @@
+## 4.2.0
+* Add SectionArrayField & MultiArrayField
+
 ## 4.1.0
 * Add `FakePropertyField`
 * add `data` option to `MapField`
