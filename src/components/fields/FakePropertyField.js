@@ -23,7 +23,9 @@ export default class FakePropertyField extends Component {
 			const {schema, uiSchema: _uiSchema, formData: _formData} = fields[prop];
 			properties = updateSafelyWithJSONPointer(properties, schema, prop);
 			uiSchema = updateSafelyWithJSONPointer(uiSchema, _uiSchema, prop);
-			formData = updateSafelyWithJSONPointer(formData, _formData, prop);
+			formData = _formData
+				?  updateSafelyWithJSONPointer(formData, _formData, prop)
+				: formData;
 		});
 		return {
 			schema: {
