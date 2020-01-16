@@ -139,7 +139,7 @@ export default class AutosuggestField extends Component {
 		}
 
 		const innerUiSchema = getInnerUiSchema(uiSchema);
-		const _uiSchemaJSONPointer = uiSchemaJSONPointer(schema, suggestionInputField)
+		const _uiSchemaJSONPointer = uiSchemaJSONPointer(schema, suggestionInputField);
 		const suggestionInputFieldExistingUiSchema = parseJSONPointer(innerUiSchema, _uiSchemaJSONPointer);
 		const _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
 			"ui:widget": "AutosuggestWidget",

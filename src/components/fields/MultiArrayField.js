@@ -38,11 +38,11 @@ export default class MultiArrayField extends Component {
 		const {props} = this;
 		let {groups, cache = true, arrayMerge, persistenceKey} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
-			this.cache = Array(groups.length).fill(undefined).map(_ => ({}));
+			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
 			this.ArrayFieldIdFixed = Array(groups.length + 1).fill(undefined).map((_, idx) => (getArrayFieldIdFixed(this, idx)));
 		}
 		if (groups.length && !this.groupItemIds) {
-			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({}));
+			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
 			if (typeof persistenceKey === "string") {
 				const context = new Context(`${persistenceKey}_MULTI`);
 				this.groupItemIds = context.groupItemIds || getGroupItemIds();
@@ -52,7 +52,7 @@ export default class MultiArrayField extends Component {
 			}
 		}
 
-		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []); 
+		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);  // eslint-disable-line no-unused-vars
 		const addToGroup = (idx, item) => {
 			const id = getUUID(item);
 			itemGroups[idx].push(item);

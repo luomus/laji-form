@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, immutableDelete, getUUID } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button } from "../components";
-import { getButton, beforeAdd } from "../ArrayFieldTemplate";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Overlay, Popover, Glyphicon, Row, Col } from "react-bootstrap";
 import Context from "../../Context";
@@ -66,7 +65,7 @@ const walkFieldTemplate = (schema, uiSchema = {}, template) => {
 
 const InvisibleTitle = (props) => {
 	return <TitleField {...props} className="hidden-title-text" />;
-}
+};
 
 @VirtualSchemaField
 export default class SectionArrayField extends Component {
@@ -230,7 +229,7 @@ class SectionArrayFieldTemplate extends Component {
 	showAddSection = () => {
 		this.setState({showAddSection: true}, () => {
 			setImmediate(() => {
-				findDOMNode(this.sectionInputRef.current).focus()
+				findDOMNode(this.sectionInputRef.current).focus();
 			});
 		});
 	}
@@ -321,7 +320,7 @@ class SectionArrayFieldTemplate extends Component {
 		let _formData = formData[0];
 		const sums = formData.reduce((sums, item) => {
 			parseJSONPointer(item, containerPointer).forEach((definerItem, idx) => {
-				sums[idx] = (sums[idx] || 0) + (parseJSONPointer(definerItem, valueField) || 0)
+				sums[idx] = (sums[idx] || 0) + (parseJSONPointer(definerItem, valueField) || 0);
 			});
 			return sums;
 		}, []);
@@ -445,7 +444,7 @@ const InvisibleLabelObjectFieldTemplate = (props) => {
 		}
 		return <div key={prop.name} className="form-group row-height"><label></label></div>;
 	});
-}
+};
 
 const SumObjectFieldTemplate = (props) => {
 	const {containerPointer} = props.formContext;
@@ -465,11 +464,11 @@ const SumObjectFieldTemplate = (props) => {
 		}
 		return <div key={prop.name} className={"form-group row-height " + prop.name}><label></label></div>;
 	});
-}
+};
 
 const NoLabelsObjectFieldTemplate = (props) => {
 	return props.properties.map(prop => prop.content);
-}
+};
 
 const RowDefinerObjectFieldTemplate = (props) => {
 	const pointer = idSchemaIdToJSONPointer(props.idSchema.$id);
