@@ -163,29 +163,32 @@ export default class MultiArrayField extends Component {
 	}
 }
 
-const getArrayKeyFunctions = (that) => ({
-	...arrayKeyFunctions,
-	insert: (e, _props) => {
-		const props = _props.getProps();
-		const inputElem = findNearestParentTabbableElem(document.activeElement);
-		if (!inputElem) {
-			return false;
+const getArrayKeyFunctions = (that) => {
+	const {arrayKeyFunctions: optionsArrayKeyFunctions} = getUiOptions(that.props.uiSchema);
+	const _arrayKeyFunctions = optionsArrayKeyFunctions || arrayKeyFunctions;
+	return {
+		..._arrayKeyFunctions,
+		insert: (e, _props) => {
+			const props = _props.getProps();
+			const inputElem = findNearestParentTabbableElem(document.activeElement);
+			if (!inputElem) {
+				return false;
+			}
+			if (!inputElem.id.startsWith(props.idSchema.$id)) {
+				return false;
+			}
+			const itemIdx = inputElem.id.replace(props.idSchema.$id, "").replace(/^_?([0-9]+).*$/, "$1");
+			const {startIdx, } = getUiOptions(props.uiSchema);
+			if (itemIdx < startIdx || itemIdx >= startIdx + props.formData.length) {
+				return false;
+			}
+			return _arrayKeyFunctions.insert(e, _props);
+		},
+		navigateArray: (e, options) => {
+			const _options = {...options, getProps: () => ({...options.getProps(), formData: that.props.formData})};
+			return _arrayKeyFunctions.navigateArray(e, _options);
 		}
-		if (!inputElem.id.startsWith(props.idSchema.$id)) {
-			return false;
-		}
-		const itemIdx = inputElem.id.replace(props.idSchema.$id, "").replace(/^_?([0-9]+).*$/, "$1");
-		const {startIdx} = getUiOptions(props.uiSchema);
-		if (itemIdx < startIdx || itemIdx >= startIdx + props.formData.length) {
-			return false;
-		}
-		return arrayKeyFunctions.insert(e, _props);
-	},
-	navigateArray: (e, options) => {
-		const _options = {...options, getProps: () => ({...options.getProps(), formData: that.props.formData})};
-		return arrayKeyFunctions.navigateArray(e, _options);
-	}
-});
+	}};
 
 const getArrayFieldIdFixed = (that, idx) => {
 	function ArrayFieldIdFixed(props) {

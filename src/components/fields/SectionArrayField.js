@@ -101,6 +101,7 @@ export default class SectionArrayField extends Component {
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, false, `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/removable`);
 
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, [{fn: "add", className: "invisible"}],  `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/buttons`);
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, containerArrayKeyFunctions, `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/arrayKeyFunctions`);
 		_uiSchema = walkFieldTemplate(schema, _uiSchema, NoLabelsObjectFieldTemplate);
 		//_uiSchema = updateSafelyWithJSONPointer(_uiSchema, {"ui:functions": [{"ui:field": "SingleItemArrayField"}, ...currentUiFunctions], ...contentUiSchema }, uiSchemaJSONPointer(schema, containerPointer));
 
@@ -506,3 +507,11 @@ const getArrayKeyFunctions = (that) => ({
 		document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
 	}
 });
+
+const containerArrayKeyFunctions = {
+	...arrayKeyFunctions,
+	// Disable insert, insert should bubble to section adding.
+	insert: () => {
+		return false;
+	}
+};
