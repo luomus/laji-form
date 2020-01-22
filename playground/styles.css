@@ -1511,6 +1511,7 @@ min-height: 20px;
 
 .laji-form legend.hidden-title-text span {
 	visibility: hidden;
+	white-space: nowrap;
 }
 
 .laji-form .not-strong {

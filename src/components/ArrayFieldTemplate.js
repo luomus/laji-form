@@ -323,7 +323,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 export default handlesArrayKeys(ArrayFieldTemplateWithoutKeyHandling);
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate, lol}) {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
 		function focusIdx(idx, prop) {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);

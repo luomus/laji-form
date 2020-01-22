@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer } from "../../utils";
+import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Inject a schema object property to nested schema.
@@ -60,9 +60,7 @@ export default class InjectField extends Component {
 				}
 
 				let parentUiSchemaProperties = this.getUiSchemaProperties(uiSchema, splits.slice(0, splits.length - 1));
-				uiSchema = update(uiSchema, {[target]: this.getUpdateUiSchemaPropertiesPath(
-					uiSchema[target],
-					{$merge: {[fieldName]: parentUiSchemaProperties[fieldName]}})});
+				uiSchema = updateSafelyWithJSONPointer(uiSchema, parentUiSchemaProperties[fieldName], fieldName);
 
 				idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema.$id + "_" + fieldPath.replace(/\//g, "_")}}}});
 				idSchema = update(idSchema, this.getIdSchemaPath(splits, {$set: undefined}));

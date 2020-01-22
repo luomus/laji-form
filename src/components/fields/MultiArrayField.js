@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import update from "immutability-helper";
 import { rulePropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
-import { checkRules, getInnerUiSchema, getUiOptions, getUUID, getReactComponentName, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
+import { checkRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Row, Col } from "react-bootstrap";
 import Context from "../../Context";
 import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
-import { ArrayFieldTemplateWithoutKeyHandling, handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
+import { arrayKeyFunctions } from "../ArrayFieldTemplate";
 import { toIdSchema } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
@@ -36,7 +35,7 @@ export default class MultiArrayField extends Component {
 
 	render() {
 		const {props} = this;
-		let {groups, cache = true, arrayMerge, persistenceKey} = getUiOptions(this.props.uiSchema);
+		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
 			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
 			this.ArrayFieldIdFixed = Array(groups.length + 1).fill(undefined).map((_, idx) => (getArrayFieldIdFixed(this, idx)));
@@ -53,7 +52,7 @@ export default class MultiArrayField extends Component {
 			}
 		}
 
-		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);  // eslint-disable-line no-unused-vars
+		const itemGroups = Array(groups.length + (renderNonGrouped ? 1 : 0)).fill(undefined).map(_ => []);  // eslint-disable-line no-unused-vars
 		const addToGroup = (idx, item) => {
 			const id = getUUID(item);
 			itemGroups[idx].push(item);
@@ -84,13 +83,13 @@ export default class MultiArrayField extends Component {
 					return addToGroup(groupIdx, item);
 				}
 			});
-			if (!addedToGroup) {
+			if (!addedToGroup  && renderNonGrouped) {
 				nonGrouped.push([item, idx]);
 			}
 			return itemGroups;
 		}, itemGroups);
 
-		nonGrouped.forEach(([item, idx]) => {
+		renderNonGrouped && nonGrouped.forEach(([item, idx]) => {
 			const context = new Context(`${persistenceKey}_MULTI`);
 			const groupIdx = this.groupItemIds.length - 1;
 			if (typeof persistenceKey === "string" && (context.nonGroupedMap || {})[idx] !== undefined && this.groupItemIds[groupIdx]) {
@@ -105,11 +104,9 @@ export default class MultiArrayField extends Component {
 			const {operations} = groups[idx] || {};
 			const innerUiSchema = getInnerUiSchema(props.uiSchema);
 			let uiSchema = operations
-				? update(innerUiSchema, {$set: computeUiSchema(props.uiSchema, operations, arrayMerge)})
+				? computeUiSchema(innerUiSchema, operations, arrayMerge)
 				: innerUiSchema;
 
-			//uiSchema = updateSafelyWithJSONPointer(uiSchema, {add: {beforeAdd: "flash"}}, "/ui:options/buttonDefinitions");
-			//uiSchema = updateSafelyWithJSONPointer(uiSchema, MultiArrayFieldButtonHandlingTemplate, "/ui:ArrayFieldTemplate");
 			uiSchema = updateSafelyWithJSONPointer(uiSchema, this.arrayKeyFunctions[idx], "/ui:options/arrayKeyFunctions");
 
 			let offset = 0;
@@ -188,7 +185,7 @@ const getArrayKeyFunctions = (that) => {
 			const _options = {...options, getProps: () => ({...options.getProps(), formData: that.props.formData})};
 			return _arrayKeyFunctions.navigateArray(e, _options);
 		}
-	}};
+	};};
 
 const getArrayFieldIdFixed = (that, idx) => {
 	function ArrayFieldIdFixed(props) {

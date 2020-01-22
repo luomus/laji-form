@@ -15,17 +15,16 @@ const getOptions = (options) => {
 		sectionField = "/section",
 		rowDefinerField = "/units/%{row}/identifications/0/taxonVerbatim",
 		rowDefinerFields = [
-			 "/units/%{row}/identifications/0/taxonID",
-			 "/units/%{row}/informalTaxonGroups"
+			 "/units/%{row}/identifications/0/taxonID"
 		],
 		rowValueField = "/units/%{row}/individualCount",
 	} = options;
 	return {...options, sectionField, rowDefinerField, rowDefinerFields, rowValueField};
 };
 
-const hideFields = (schema, uiSchema, fields) => fields.reduce((_uiSchema, field) => (
+const hideFields = (schema, uiSchema, fields) => fields.reduce((_uiSchema, field) => 
 	updateSafelyWithJSONPointer(_uiSchema, {"ui:field": "HiddenField"}, uiSchemaJSONPointer(schema, field.replace("%{row}", "0")))
-), uiSchema);
+, uiSchema);
 
 const walkUiOrder = (schema, uiSchema, pathToShouldBeLast) => {
 	let [prop, ...next] = pathToShouldBeLast.split("/").filter(s => !isEmptyString(s));
@@ -83,11 +82,6 @@ export default class SectionArrayField extends Component {
 
 	static getName() {return  "SectionArrayField";}
 
-	constructor(props) {
-		super(props);
-		this.arrayKeyFunctions = getArrayKeyFunctions(this);
-	}
-
 	getStateFromProps(props) {
 		const {uiSchema, schema, registry} = props;
 		const {sectionField, rowDefinerField} = getOptions(this.getUiOptions());
@@ -107,7 +101,7 @@ export default class SectionArrayField extends Component {
 
 		_uiSchema = walkUiOrder(schema, _uiSchema, rowDefinerField.replace("%{row}", 0));
 
-		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, this.arrayKeyFunctions, "/ui:options/arrayKeyFunctions");
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, _arrayKeyFunctions, "/ui:options/arrayKeyFunctions");
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, true, "/ui:options/keepPropFocusOnNavigate");
 
 		return {uiSchema: _uiSchema, formContext, registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}};
@@ -368,6 +362,7 @@ class SectionArrayFieldTemplate extends Component {
 			}, `${containerPointer}/items/sum`);
 
 		__uiSchema = walkFieldTemplate(schema.items, __uiSchema, SumObjectFieldTemplate);
+		__uiSchema = walkUiOrder(schema.items, __uiSchema, rowDefinerField.replace("%{row}", 0));
 		const formContext = {
 			...this.props.formContext,
 			containerPointer,
@@ -497,16 +492,17 @@ const RowDefinerObjectFieldTemplate = (props) => {
 		if ((rowDefinerFieldWithoutItemPointers.startsWith(pointerWithoutItemPointers.replace(props.formContext.sectionPointer, "") + "/" + prop.name))) {
 			return <React.Fragment key={prop.name}>{prop.content}</React.Fragment>;
 		}
-		return <div key={prop.name} className="form-group row-height"><label>{prop.name}</label></div>;
+		const title = (props.uiSchema[prop.name] || {})["ui:title"] || props.schema.properties[prop.name].title || prop.name;
+		return <div key={prop.name} className="form-group row-height"><label>{title}</label></div>;
 	});
 };
 
-const getArrayKeyFunctions = (that) => ({
+const _arrayKeyFunctions = {
 	...arrayKeyFunctions,
 	insert: (e, props) => {
 		document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
 	}
-});
+};
 
 const containerArrayKeyFunctions = {
 	...arrayKeyFunctions,
