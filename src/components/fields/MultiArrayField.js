@@ -52,7 +52,7 @@ export default class MultiArrayField extends Component {
 			}
 		}
 
-		const itemGroups = Array(groups.length + (renderNonGrouped ? 1 : 0)).fill(undefined).map(_ => []);  // eslint-disable-line no-unused-vars
+		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);  // eslint-disable-line no-unused-vars
 		const addToGroup = (idx, item) => {
 			const id = getUUID(item);
 			itemGroups[idx].push(item);
@@ -83,13 +83,13 @@ export default class MultiArrayField extends Component {
 					return addToGroup(groupIdx, item);
 				}
 			});
-			if (!addedToGroup  && renderNonGrouped) {
+			if (!addedToGroup) {
 				nonGrouped.push([item, idx]);
 			}
 			return itemGroups;
 		}, itemGroups);
 
-		renderNonGrouped && nonGrouped.forEach(([item, idx]) => {
+		nonGrouped.forEach(([item, idx]) => {
 			const context = new Context(`${persistenceKey}_MULTI`);
 			const groupIdx = this.groupItemIds.length - 1;
 			if (typeof persistenceKey === "string" && (context.nonGroupedMap || {})[idx] !== undefined && this.groupItemIds[groupIdx]) {
@@ -100,7 +100,9 @@ export default class MultiArrayField extends Component {
 		});
 
 		this.groupedItems = groupedItems;
-		return groupedItems.map((items, idx) => {
+		const withoutNonGrouped = [...groupedItems];
+		withoutNonGrouped.pop();
+		return (renderNonGrouped ? groupedItems : withoutNonGrouped).map((items, idx) => {
 			const {operations} = groups[idx] || {};
 			const innerUiSchema = getInnerUiSchema(props.uiSchema);
 			let uiSchema = operations
