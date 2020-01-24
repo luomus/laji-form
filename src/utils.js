@@ -240,6 +240,10 @@ export function getNextInput(formReactNode, inputElem, reverseDirection) {
 }
 
 export function focusNextInput(...params) {
+	const {uiSchema = {}} = params[0].props;
+	if (uiSchema.autoFocus === false) {
+		return false;
+	}
 	const width = pixelsToBsSize(window.outerWidth);
 	if (width === "xs") return false;
 	const field = getNextInput(...params);

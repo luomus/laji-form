@@ -468,6 +468,7 @@ export class Autosuggest extends Component {
 			// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
 			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
 				this.selectSuggestion(suggestion);
+				findDOMNode(this.inputElem).blur();
 			}
 		}
 	}

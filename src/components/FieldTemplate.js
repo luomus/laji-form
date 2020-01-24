@@ -24,6 +24,10 @@ export default class FieldTemplate extends Component {
 		const contextId = formContext.contextId;
 		const _context = new Context(contextId);
 		const {idToFocus, idToScroll} = _context;
+		const {uiSchema = {}} = formContext.getFormRef() || {};
+		if (uiSchema.autoFocus === false) {
+			return false;
+		}
 		if (idToFocus !== undefined && this.state.id === idToFocus) {
 			if (focusAndScroll(formContext, idToFocus, idToScroll)) {
 				_context.idToFocus = undefined;
