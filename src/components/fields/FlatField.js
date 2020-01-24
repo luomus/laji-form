@@ -22,7 +22,7 @@ export default class FlatField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	static getName() {return "FlatField";}

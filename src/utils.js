@@ -654,6 +654,32 @@ export function checkRules(rules, props, cache, prop = "formData") {
 	return cache ? {passes, cache} : passes;
 }
 
+export function checkArrayRules(rules, props, idx, cache, prop = "formData") {
+	const arrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => {
+		if ("isLast" in rule) {
+			return true;
+		}
+	});
+	const passes = arrayRules.every(rule => {
+		if ("isLast" in rule) {
+			return (idx === props.formData.length - 1) === rule.isLast;
+		}
+		return true;
+	});
+	const nonArrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => !arrayRules.includes(rule));
+	if (nonArrayRules.length) {
+		const nonArrayRulesCheck = checkRules(nonArrayRules, {...props, formData: props.formData[idx]}, cache, prop);
+		const allPass = passes && nonArrayRulesCheck.passes;
+		if (cache) {
+			return {passes: allPass, cache};
+		} else {
+			return allPass;
+		}
+	} else {
+		return cache ? {cache, passes} : passes;
+	}
+}
+
 export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true) {
 	const {contextId, topOffset, bottomOffset} = formContext;
 	const _context = new Context(contextId);

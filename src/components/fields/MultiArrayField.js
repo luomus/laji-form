@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { rulePropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
-import { checkRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
+import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Row, Col } from "react-bootstrap";
 import Context from "../../Context";
@@ -36,7 +36,7 @@ export default class MultiArrayField extends Component {
 
 	render() {
 		const {props} = this;
-		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false} = getUiOptions(this.props.uiSchema);
+		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false, nonGroupedOperations = {}} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
 			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
 			this.arrayKeyFunctions = Array(groups.length + 1).fill(undefined).map((_, idx) => getArrayKeyFunctions(this, idx));
@@ -80,24 +80,24 @@ export default class MultiArrayField extends Component {
 				const {rules = []} = group; 
 				let passes;
 				if (cache) {
-					const check = checkRules(rules, {formData: item}, this.cache[groupIdx]);
+					const check = checkArrayRules(rules, {formData: props.formData || []}, idx, this.cache[groupIdx]);
 					const {cache}  = check;
 					passes = check.passes;
 					this.cache[groupIdx] = cache;
 				} else {
-					passes = checkRules(rules, {formData: item});
+					passes = checkArrayRules(rules, {formData: props.formData || []}, idx);
 				}
 
 				if (passes) {
 					return addToGroup(groupIdx, item);
 				}
 			});
+
 			if (!addedToGroup) {
 				nonGrouped.push([item, idx]);
 			}
 			return itemGroups;
 		}, itemGroups);
-
 
 		nonGrouped.forEach(([item, idx]) => {
 			const context = new Context(`${persistenceKey}_MULTI`);
@@ -127,7 +127,9 @@ export default class MultiArrayField extends Component {
 		//});
 
 		return (renderNonGrouped ? groupedItems : withoutNonGrouped).map((items, idx) => {
-			const {operations} = groups[idx] || {};
+			const operations = renderNonGrouped && idx === groupedItems.length - 1
+				? nonGroupedOperations
+				: groups[idx].operations;
 			const innerUiSchema = getInnerUiSchema(props.uiSchema);
 			let uiSchema = operations
 				? computeUiSchema(innerUiSchema, operations, arrayMerge)
