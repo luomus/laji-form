@@ -32,15 +32,16 @@ export default class MultiArrayField extends Component {
 	}
 
 	itemIds = {}
+	arrayFieldIdHashes = [];
 
 	render() {
 		const {props} = this;
 		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
 			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
-			this.ArrayFieldIdFixed = Array(groups.length + 1).fill(undefined).map((_, idx) => (getArrayFieldIdFixed(this, idx)));
 			this.arrayKeyFunctions = Array(groups.length + 1).fill(undefined).map((_, idx) => getArrayKeyFunctions(this, idx));
 		}
+
 		if (groups.length && !this.groupItemIds) {
 			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
 			if (typeof persistenceKey === "string") {
@@ -61,11 +62,19 @@ export default class MultiArrayField extends Component {
 			return true;
 		};
 
+		props.formData.forEach(item => {
+			this.groupItemIds.forEach((_, groupIdx) => {
+				if (this.groupItemIds[groupIdx][getUUID(item)]) {
+					addToGroup(groupIdx, item);
+				}
+			});
+		});
+
 		const nonGrouped = [];
 		const groupedItems = (props.formData || []).reduce((itemGroups, item, idx) => {
 			const addedToGroup = groups.some((group, groupIdx) => {
-				if (this.groupItemIds[groupIdx][getUUID(item)]) {
-					return addToGroup(groupIdx, item);
+				if (this.itemIds[getUUID(item)]) {
+					return true;
 				}
 
 				const {rules = []} = group; 
@@ -89,6 +98,7 @@ export default class MultiArrayField extends Component {
 			return itemGroups;
 		}, itemGroups);
 
+
 		nonGrouped.forEach(([item, idx]) => {
 			const context = new Context(`${persistenceKey}_MULTI`);
 			const groupIdx = this.groupItemIds.length - 1;
@@ -102,6 +112,20 @@ export default class MultiArrayField extends Component {
 		this.groupedItems = groupedItems;
 		const withoutNonGrouped = [...groupedItems];
 		withoutNonGrouped.pop();
+
+		//this.ArrayFieldIdFixed = Array(groups.length + 1).fill(undefined).map((_, idx) => {
+		//	let offset = 0;
+		//	for (let i = 0; i < idx; i++) {
+		//		offset += this.groupedItems[i].length;
+		//	}
+		//	const hash = offset;
+		//	const [_hash] = this.arrayFieldIdHashes[idx] || [];
+		//	if (_hash !== hash) {
+		//		this.arrayFieldIdHashes[idx] = [hash, getArrayFieldIdFixed(this, idx)];
+		//	}
+		//	return this.arrayFieldIdHashes[idx][1];
+		//});
+
 		return (renderNonGrouped ? groupedItems : withoutNonGrouped).map((items, idx) => {
 			const {operations} = groups[idx] || {};
 			const innerUiSchema = getInnerUiSchema(props.uiSchema);
@@ -118,15 +142,15 @@ export default class MultiArrayField extends Component {
 
 			uiSchema = {...uiSchema, "ui:options": {...getUiOptions(uiSchema), startIdx: offset}};
 
-			const formContext = {...this.props.formContext, ArrayField: this.ArrayFieldIdFixed[idx]};
+			//const formContext = {...this.props.formContext, ArrayField: this.ArrayFieldIdFixed[idx]};
 
 			const {SchemaField} = this.props.registry.fields;
 			return (
 				<Row key={`${idx}-${this.groupedItems[idx].length}-${offset}`}><Col xs={12}>
 					<SchemaField
 						{...props}
-						formContext={formContext}
-						registry={{...this.props.registry, formContext}}
+					//formContext={formContext}
+					//registry={{...this.props.registry, formContext}}
 						uiSchema={uiSchema}
 						formData={items}
 						onChange={this.onChange(idx)}
@@ -189,22 +213,22 @@ const getArrayKeyFunctions = (that) => {
 		}
 	};};
 
-const getArrayFieldIdFixed = (that, idx) => {
-	function ArrayFieldIdFixed(props) {
-		ArrayField.call(this, props);
-	}
-	ArrayFieldIdFixed.prototype = Object.create(ArrayField.prototype);
-	ArrayFieldIdFixed.prototype.constructor = ArrayFieldIdFixed;
-	ArrayFieldIdFixed.prototype.renderArrayFieldItem = function(props) {
-		const idWithoutIdx = props.itemIdSchema.$id.replace(/(.*)_[0-9]+/, "$1");
-		let offset = 0;
-		for (let i = 0; i < idx; i++) {
-			offset += Object.keys(that.groupedItems[i]).length;
-		}
-		const index = offset + props.index;
-		const idSchema = toIdSchema(props.itemSchema, `${idWithoutIdx}_${index}`, that.props.registry.definitions, props.item, that.props.idPrefix);
-		return ArrayField.prototype.renderArrayFieldItem.call(this, {...props, itemIdSchema: idSchema});
-	};
-	//return customButtonsHandling(ArrayFieldIdFixed);
-	return ArrayFieldIdFixed;
-};
+//const getArrayFieldIdFixed = (that, idx) => {
+//	function ArrayFieldIdFixed(props) {
+//		ArrayField.call(this, props);
+//	}
+//	ArrayFieldIdFixed.prototype = Object.create(ArrayField.prototype);
+//	ArrayFieldIdFixed.prototype.constructor = ArrayFieldIdFixed;
+//	ArrayFieldIdFixed.prototype.renderArrayFieldItem = function(props) {
+//		const idWithoutIdx = props.itemIdSchema.$id.replace(/(.*)_[0-9]+/, "$1");
+//		let offset = 0;
+//		for (let i = 0; i < idx; i++) {
+//			offset += Object.keys(that.groupedItems[i]).length;
+//		}
+//		const index = offset + props.index;
+//		const idSchema = toIdSchema(props.itemSchema, `${idWithoutIdx}_${index}`, that.props.registry.definitions, props.item, that.props.idPrefix);
+//		return ArrayField.prototype.renderArrayFieldItem.call(this, {...props, itemIdSchema: idSchema});
+//	};
+//	//return customButtonsHandling(ArrayFieldIdFixed);
+//	return ArrayFieldIdFixed;
+//};
