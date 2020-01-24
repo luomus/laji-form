@@ -5,9 +5,9 @@ import { checkRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJS
 import BaseComponent from "../BaseComponent";
 import { Row, Col } from "react-bootstrap";
 import Context from "../../Context";
-import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
+//import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { arrayKeyFunctions } from "../ArrayFieldTemplate";
-import { toIdSchema } from "react-jsonschema-form/lib/utils";
+//import { toIdSchema } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
 export default class MultiArrayField extends Component {
