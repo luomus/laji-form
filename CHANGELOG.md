@@ -1,3 +1,6 @@
+## 4.3.0
+* add `autoFocus` root uiSchema option
+
 ## 4.2.0
 * Add SectionArrayField & MultiArrayField
 
