@@ -28,7 +28,7 @@ export default class MultiArrayField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	itemIds = {}
@@ -62,7 +62,7 @@ export default class MultiArrayField extends Component {
 			return true;
 		};
 
-		props.formData.forEach(item => {
+		(props.formData || []).forEach(item => {
 			this.groupItemIds.forEach((_, groupIdx) => {
 				if (this.groupItemIds[groupIdx][getUUID(item)]) {
 					addToGroup(groupIdx, item);

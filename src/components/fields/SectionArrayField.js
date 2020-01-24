@@ -328,7 +328,7 @@ class SectionArrayFieldTemplate extends Component {
 
 		let _formData = formData[0];
 		const sums = formData.reduce((sums, item) => {
-			parseJSONPointer(item, containerPointer).forEach((definerItem, idx) => {
+			(parseJSONPointer(item, containerPointer) || []).forEach((definerItem, idx) => {
 				sums[idx] = (sums[idx] || 0) + (parseJSONPointer(definerItem, valueField) || 0);
 			});
 			return sums;
@@ -425,7 +425,7 @@ class SectionArrayFieldTemplate extends Component {
 			});
 			return updateFormDataWithJSONPointer(
 				{
-					schema: parseSchemaFromFormDataPointer(this.props.schema.items, containerPointer),
+					schema: this.props.schema.items,
 					formData: item,
 					registry: this.props.registry
 				},
