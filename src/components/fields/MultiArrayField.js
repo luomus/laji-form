@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { rulePropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { Row, Col } from "react-bootstrap";
 import Context from "../../Context";
 //import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { arrayKeyFunctions } from "../ArrayFieldTemplate";
