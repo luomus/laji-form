@@ -148,7 +148,7 @@ export default class MultiArrayField extends Component {
 
 			const {SchemaField} = this.props.registry.fields;
 			return (
-				<Row key={`${idx}-${this.groupedItems[idx].length}-${offset}`}><Col xs={12}>
+				<React.Fragment key={`${idx}-${this.groupedItems[idx].length}-${offset}`}>
 					<SchemaField
 						{...props}
 					//formContext={formContext}
@@ -157,7 +157,7 @@ export default class MultiArrayField extends Component {
 						formData={items}
 						onChange={this.onChange(idx)}
 					/>
-				</Col></Row>
+				</React.Fragment>
 			);
 		});
 	}

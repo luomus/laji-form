@@ -111,7 +111,7 @@ export default class SectionArrayField extends Component {
 // Päiväperhoset MVL.181
 // Suurperhoset MVL.237
 
-const Section = ({children, width = 100, ...rest}) => <div style={{width, float: "left"}} {...rest}>{children}</div>;
+const Section = ({children, width = 100, ...rest}) => <div style={{width}} {...rest}>{children}</div>;
 
 @handlesArrayKeys
 class SectionArrayFieldTemplate extends Component {
@@ -126,31 +126,19 @@ class SectionArrayFieldTemplate extends Component {
 	}
 
 	render() {
-		const {sectionField} = getOptions(getUiOptions(this.props.uiSchema));
-		return [
-			<Section key="definer" width={200}>{this.renderRowDefinerColumn()}</Section>,
-			...(this.props.formData || []).map((item, idx) => {
-				if (!this.props.items[idx]) {
-					return null;
-				}
-				const {children, hasRemove, index, disabled, readonly, onDropIndexClick} = this.props.items[idx];
-				return (
-					<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "gray nonbordered"}>
-						{hasRemove && <DeleteButton
-							id={`${this.props.idSchema.$id}_${index}`}
-							disabled={disabled || readonly}
-							translations={this.props.formContext.translations}
-							onClick={onDropIndexClick(index)}
-							className="horizontally-centered"
-						/>}
-							<label className="horizontally-centered">{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
-						{children}
-					</Section>
-				);
-			}),
-			<Section key="sums" width={50} className="bg-info">{this.renderRowDefinerSumColumn()}</Section>,
-			<Section key="deletes" width={30}>{this.renderRowDefinerDeleteColumn()}</Section>,
-		];
+		return (
+			<div style={{display: "flex"}}>
+				<div style={{display: "flex", overflowX: "auto"}}>
+					<Section key="definer" width={200}>{this.renderRowDefinerColumn()}</Section>
+					{this.renderSections()
+					}
+				</div>
+				<div style={{display: "flex"}}>
+					<Section key="sums" width={50} className="bg-info">{this.renderRowDefinerSumColumn()}</Section>
+					<Section key="deletes" width={"auto"}>{this.renderRowDefinerDeleteColumn()}</Section>
+				</div>
+			</div>
+		);
 	}
 
 	renderRowDefinerColumn() {
@@ -189,6 +177,29 @@ class SectionArrayFieldTemplate extends Component {
 		);
 	}
 
+	renderSections() {
+		const {sectionField} = getOptions(getUiOptions(this.props.uiSchema));
+		return (this.props.formData || []).map((item, idx) => {
+			if (!this.props.items[idx]) {
+				return null;
+			}
+			const {children, hasRemove, index, disabled, readonly, onDropIndexClick} = this.props.items[idx];
+			return (
+				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "gray nonbordered"}>
+					{hasRemove && <DeleteButton
+					id={`${this.props.idSchema.$id}_${index}`}
+					disabled={disabled || readonly}
+					translations={this.props.formContext.translations}
+					onClick={onDropIndexClick(index)}
+					className="horizontally-centered"
+				/>}
+						<label className="horizontally-centered">{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
+						{children}
+					</Section>
+			);
+		});
+	}
+
 	renderRowDefinerDeleteColumn() {
 		const {schema, registry, formData} = this.props;
 		const {rowDefinerField, rowValueField, sectionField} = getOptions(getUiOptions(this.props.uiSchema));
@@ -198,7 +209,7 @@ class SectionArrayFieldTemplate extends Component {
 		let _schema = schema.items;
 		const _formData = formData[0];
 		let __uiSchema = hideFields(schema, originalUiSchema, [rowValueField, sectionField]);
-		__uiSchema = updateSafelyWithJSONPointer(__uiSchema, [{fn: "add", className: "invisible"}],  `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/buttons`);
+		__uiSchema = updateSafelyWithJSONPointer(__uiSchema, [{fn: "add", className: "invisible"}], `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/buttons`);
 		__uiSchema = walkUiOrder(schema.items, __uiSchema.items, rowDefinerField.replace("%{row}", 0));
 		__uiSchema = walkFieldTemplate(schema.items, __uiSchema, InvisibleLabelObjectFieldTemplate);
 		const formContext = {
@@ -208,7 +219,9 @@ class SectionArrayFieldTemplate extends Component {
 		};
 		return (
 			<React.Fragment>
-				<Button id={`${this.props.idSchema.$id}-add`} onClick={this.showAddSection} style={{whiteSpace: "nowrap", position: "absolute"}} ref={this.addButtonRef}><Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}</Button>
+				<div style={{height: 25}}>
+					<Button id={`${this.props.idSchema.$id}-add`} onClick={this.showAddSection} style={{whiteSpace: "nowrap"}} ref={this.addButtonRef}><Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}</Button>
+				</div>
 				{(this.state || {}).showAddSection &&
 						<Overlay show={true} placement="left" rootClose={true} onHide={this.hideAddSection} target={this.getAddButtonElem}>
 							<Popover id={`${this.props.id}-show-add-section`}>
@@ -216,7 +229,6 @@ class SectionArrayFieldTemplate extends Component {
 							</Popover>
 						</Overlay>
 				}
-				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
 				<label style={{visibility: "hidden"}}>{"hidden"}</label>
 				<SchemaField
 					{...this.props}

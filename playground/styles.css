@@ -185,6 +185,8 @@ min-height: 20px;
 	font-size: 15px;
 	margin-bottom: 5px;
 	margin-top: 5px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 .laji-form legend.lg {
 	font-size: 20px;
