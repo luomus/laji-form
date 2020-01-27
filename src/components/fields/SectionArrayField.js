@@ -299,7 +299,7 @@ class SectionArrayFieldTemplate extends Component {
 
 		const {rowDefinerField, rowDefinerFields, sectionField} = getOptions(getUiOptions(uiSchema));
 		const [containerPointer] = rowDefinerField.split("/%{row}");
-		const copiedRowDefinerData = parseJSONPointer(this.props.formData[0], containerPointer).reduce((result, item, idx) => {
+		const copiedRowDefinerData = (parseJSONPointer(this.props.formData[0] || {}, containerPointer) || []).reduce((result, item, idx) => {
 			return [rowDefinerField, ...rowDefinerFields].reduce((_result, field) => {
 				const [_, parsedField] = field.split("/%{row}"); // eslint-disable-line no-unused-vars
 				return updateFormDataWithJSONPointer(
@@ -407,7 +407,7 @@ class SectionArrayFieldTemplate extends Component {
 		const {rowDefinerField, rowDefinerFields} = getOptions(getUiOptions(this.props.uiSchema));
 		const [containerPointer] = rowDefinerField.split("%{row}");
 
-		const rowDefinerItemIdsToContainerIdxs = parseJSONPointer(this.props.formData[0], containerPointer).reduce((map, item, idx) => {
+		const rowDefinerItemIdsToContainerIdxs = (parseJSONPointer(this.props.formData[0] || {}, containerPointer) || []).reduce((map, item, idx) => {
 			map[getUUID(item)] = idx;
 			return map;
 		}, {});
