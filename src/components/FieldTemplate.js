@@ -19,16 +19,18 @@ export default class FieldTemplate extends Component {
 		}
 	}
 
+	canFocus = () => {
+		const {formContext} = this.props;
+		const {uiSchema = {}} = (formContext.getFormRef() || {props: {}}).props;
+		return uiSchema.autoFocus !== false;
+	}
+
 	componentDidMount() {
 		const {formContext} = this.props;
 		const contextId = formContext.contextId;
 		const _context = new Context(contextId);
 		const {idToFocus, idToScroll} = _context;
-		const {uiSchema = {}} = formContext.getFormRef() || {};
-		if (uiSchema.autoFocus === false) {
-			return false;
-		}
-		if (idToFocus !== undefined && this.state.id === idToFocus) {
+		if (this.canFocus() && idToFocus !== undefined && this.state.id === idToFocus) {
 			if (focusAndScroll(formContext, idToFocus, idToScroll)) {
 				_context.idToFocus = undefined;
 				_context.idToScroll = undefined;
@@ -47,7 +49,7 @@ export default class FieldTemplate extends Component {
 	receiveId = (id) => {
 		this.setState({id}, () => {
 			const {idToFocus, idToScroll} = new Context(this.props.formContext.contextId);
-			if (idToFocus === id) {
+			if (this.canFocus() && idToFocus === id) {
 				focusAndScroll(this.props.formContext, idToFocus, idToScroll);
 			}
 		});

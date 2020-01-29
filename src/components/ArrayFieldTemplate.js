@@ -422,7 +422,7 @@ export const arrayItemKeyFunctions = {
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
 		const elem = getSchemaElementById(contextId, `${idSchema.$id}_${idx}`);
 		const prevElem = elem ? getNextInput(getFormRef(), getTabbableFields(elem)[0], !!"reverse") : null;
-		
+
 		deleteButton.onClick(e, (deleted) => {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
