@@ -1,3 +1,6 @@
+## 4.4.0
+* Add `AudioArrayField`
+
 ## 4.3.0
 * add `autoFocus` root uiSchema option
 
