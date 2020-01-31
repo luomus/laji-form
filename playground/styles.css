@@ -534,8 +534,11 @@ min-height: 20px;
 }
 .laji-form .audios-container .media-container > a > div > .glyphicon {
 	padding-left: 2px;
-	padding-top: 2px;
+	padding-top: 0px;
 	color: #868686;
+}
+.laji-form .audios-container .media-container > a > div > .glyphicon-pause {
+	padding-left: 6px;
 }
 .laji-form .audio-container {
 	border: 2px solid #cacaca;
