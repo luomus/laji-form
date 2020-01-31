@@ -55,9 +55,9 @@ describe("Image array", () => {
 	it("deletes image", async () => {
 		await browser.sleep(1000);
 		expect(await $$(".media-container").count()).toBe(1);
-		expect(await $(".media-container .delete-corner").isDisplayed()).toBe(true)
+		expect(await $(".media-container .button-corner").isDisplayed()).toBe(true)
 		const {resolve, remove} = await form.setMockResponse("/images/mock", false);
-		await $(".media-container .delete-corner").click();
+		await $(".media-container .button-corner").click();
 		await form.$locateButton("0", "delete-confirm-yes").click();
 		expect(await $$(".media-container").count()).toBe(0);
 		await resolve();

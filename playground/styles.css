@@ -471,7 +471,7 @@ min-height: 20px;
 
 .laji-form .audios-container > .media-container, .laji-form .audios-container > .laji-form-drop-zone {
 	width: 90px;
-	height: 90px;
+	height: 105px;
 }
 
 .laji-form .taxon-img {
@@ -518,7 +518,7 @@ min-height: 20px;
 	width: 100%;
 	height: 100%;
 }
-.laji-form .laji-form-medias .glyphicon {
+.laji-form .laji-form-medias .media-container > a > div > .glyphicon, .laji-form .laji-form-medias .laji-form-drop-zone .glyphicon {
 	font-size: 78px;
 	color: #dedede;
 	display: table-cell;
@@ -530,15 +530,31 @@ min-height: 20px;
 .laji-form .audios-container .laji-form-drop-zone .glyphicon {
 	font-size: 60px;
 	padding-left: 12px;
-	padding-top: 12px;
+	padding-top: 19px;
 }
-.laji-form .audios-container .media-container .glyphicon {
+.laji-form .audios-container .media-container > a > div > .glyphicon {
 	padding-left: 2px;
 	padding-top: 2px;
 	color: #868686;
 }
+.laji-form .audio-container {
+	border: 2px solid #cacaca;
+	border-radius: 2px;
+	background: white;
+}
+.laji-form .audio-container.loading {
+	height: 105.5px;
+	width: 90px;
+}
 .laji-form .darker .laji-form-medias .glyphicon {
 	color: #cacaca;
+}
+.laji-form .audio-metadata-button {
+    width: 100%;
+    height: 20px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-radius: 0px !important;
 }
 
 .laji-form.media-modal {
@@ -556,7 +572,7 @@ min-height: 20px;
 	top: 50%;
 	left: 50%;
 }
-.laji-form .delete-corner {
+.laji-form .button-corner {
 	border-radius: 7px !important;
 	padding: 4px 2px !important;
 	top: -9px;

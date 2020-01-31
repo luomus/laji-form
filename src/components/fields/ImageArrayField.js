@@ -30,7 +30,6 @@ export default class ImageArrayField extends Component {
 	KEY = "IMAGE";
 	ENDPOINT = "images";
 	GLYPH = "camera";
-	METADATA_SETTINGS_KEY = "defaultImageMetadata";
 	TRANSLATION_TAKE_NEW = "TakeNewPhoto";
 	TRANSLATION_SELECT_FILE = "SelectPhoto";
 	TRANSLATION_NO_MEDIA = "NoPhoto"
@@ -39,6 +38,18 @@ export default class ImageArrayField extends Component {
 	renderMedia = (id) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} />
 	renderLoadingMedia = (id) => <Thumbnail dataURL={id} loading={true} />
 	onMediaClick = (i) => this.openModalFor(i)
+	renderModalMedia = () => <img src={this.state.modalMediaSrc} />
+
+	formatValue(value, options, props, parentProps) {
+		const imgs = value && value.length ? value.map((id, idx) => <Thumbnail key={idx} id={id} apiClient={props.formContext.apiClient} />) : [];
+		const parentFormData = (parentProps ||{}).formData || {};
+		const lajiFormId = getUUID(parentFormData || {});
+		const {tmpMedias = {}} = new Context("IMAGE_ARRAY_FIELD");
+		if (lajiFormId && tmpMedias[lajiFormId]) {
+			return [...imgs, ...Object.keys(tmpMedias[lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpMedias[lajiFormId][id]} />)];
+		}
+		return imgs;
+	}
 }
 
 export function MediaArrayField(ComposedComponent) {
@@ -86,9 +97,10 @@ export function MediaArrayField(ComposedComponent) {
 				"KEY",
 				"ENDPOINT",
 				"GLYPH",
-				"METADATA_SETTINGS_KEY",
 				"renderMedia",
 				"renderLoadingMedia",
+				"onMediaClick",
+				"formatValue",
 				"TRANSLATION_TAKE_NEW",
 				"TRANSLATION_SELECT_FILE",
 				"TRANSLATION_NO_MEDIA",
@@ -136,10 +148,10 @@ export function MediaArrayField(ComposedComponent) {
 		componentDidMount() {
 			this.mounted = true;
 			const settings = this.props.formContext.settings || {};
-			if (settings && settings[this.METADATA_SETTINGS_KEY]) {
-				this._context.defaultMetadata = settings[this.METADATA_SETTINGS_KEY];
+			if (settings && settings.defaultImageMetadata) {
+				this._context.defaultMetadata = settings.defaultImageMetadata;
 			}
-			this.mainContext.addSettingSaver(this.METADATA_SETTINGS_KEY, () => {
+			this.mainContext.addSettingSaver("defaultImageMetadata", () => {
 				return this._context.defaultMetadata;
 			}, !!"global");
 		}
@@ -245,7 +257,6 @@ export function MediaArrayField(ComposedComponent) {
 					disabled={disabled || readonly}
 					id={`${this.props.idSchema.$id}_${i}`}
 				>✖</DeleteButton>
-				{this.renderMediaExtra && this.renderMediaExtra(this.props)}
 			</div>
 			));
 		}
@@ -270,7 +281,7 @@ export function MediaArrayField(ComposedComponent) {
 			this.apiClient.fetch(`/${this.ENDPOINT}/${item}`).then(response => {
 				if (response.id !== this.fetching) return;
 				this._context.metadatas[item] = response;
-				this.setState({modalIdx: i, modalMediaSrc: response.originalURL, modalMetadata: this._context.metadatas[item]});
+				this.setState({modalIdx: i, modalMediaSrc: response.fullURL, modalMetadata: this._context.metadatas[item]});
 			});
 		}
 
@@ -288,7 +299,7 @@ export function MediaArrayField(ComposedComponent) {
 		onMetadataFormChange = formData => this.setState({modalMetadata: formData});
 
 		renderMetadataModal = () => {
-			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess, modalMediaSrc} = this.state;
+			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess} = this.state;
 			const {lang, translations} = this.props.registry.formContext;
 
 			const metadataForm = this.state.metadataForm || {};
@@ -329,7 +340,7 @@ export function MediaArrayField(ComposedComponent) {
 					<div className={`laji-form${metadataModal ? " media-modal-content" : ""}`}>
 						{isOpen
 							? <React.Fragment>
-								<img src={modalMediaSrc} />
+								{this.renderModalMedia(modalIdx)}
 								{metadataModal && <LajiForm
 								{...metadataForm}
 								uiSchema={uiSchema}
@@ -759,27 +770,6 @@ export function MediaArrayField(ComposedComponent) {
 			}
 
 			return formats;
-		}
-
-		formatValue(value, options, props, parentProps) {
-			const {"ui:field": component} = props.uiSchema;
-			let key = "";
-			if (component === "ImageArrayField") {
-				key = "IMAGE";
-			} else if (component === "AudioArrayField") {
-				key = "AUDIO";
-			}
-			if (!key) {
-				throw new Error("Failed to inspect MediaArrayField type");
-			}
-			const imgs = value && value.length ? value.map((id, idx) => <Thumbnail key={idx} id={id} apiClient={props.formContext.apiClient} />) : [];
-			const parentFormData = (parentProps ||{}).formData || {};
-			const lajiFormId = getUUID(parentFormData || {});
-			const {tmpMedias = {}} = new Context(`${key}_ARRAY_FIELD`);
-			if (lajiFormId && tmpMedias[lajiFormId]) {
-				return [...imgs, ...Object.keys(tmpMedias[lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpMedias[lajiFormId][id]} />)];
-			}
-			return imgs;
 		}
 	};
 }

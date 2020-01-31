@@ -96,7 +96,7 @@ export class DeleteButton extends Component {
 		const {show} = state;
 		const {translations, corner, tooltip, disabled, readonly, confirmPlacement = "left"} = props;
 		let buttonClassName = "glyph-button";
-		buttonClassName += corner ? " delete-corner" : "";
+		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
 			buttonClassName = `${buttonClassName} ${props.className}`;
 		}
@@ -119,7 +119,7 @@ export class DeleteButton extends Component {
 				{show ?
 					<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
 									 target={getOverlayTarget}>
-						<Popover id={`${this.props.id}-delete-confirm`}>
+						<Popover id={`${this.props.id}-button-confirm`}>
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
 								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>

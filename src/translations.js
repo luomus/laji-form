@@ -739,4 +739,14 @@
 		en: "No recording",
 		sv: "Ingen inspelning"
 	},
+	edit: {
+		fi: "Muokkaa",
+		en: "Edit",
+		sv: "Redigera"
+	},
+	download: {
+		fi: "Lataa",
+		en: "Download",
+		sv: "Ladda ner"
+	},
 };
