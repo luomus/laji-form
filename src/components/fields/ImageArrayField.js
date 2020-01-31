@@ -34,6 +34,7 @@ export default class ImageArrayField extends Component {
 	TRANSLATION_SELECT_FILE = "SelectPhoto";
 	TRANSLATION_NO_MEDIA = "NoPhoto"
 	CONTAINER_CLASS = "images-container"
+	METADATA_FORM_ID = "JX.111712"
 
 	renderMedia = (id) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} />
 	renderLoadingMedia = (id) => <Thumbnail dataURL={id} loading={true} />
@@ -305,7 +306,7 @@ export function MediaArrayField(ComposedComponent) {
 			const metadataForm = this.state.metadataForm || {};
 
 			if (typeof metadataModalOpen === "number" && !this.state.metadataForm) {
-				this.apiClient.fetchCached("/forms/JX.111712", {lang, format: "schema"})
+				this.apiClient.fetchCached(`/forms/${this.METADATA_FORM_ID}`, {lang, format: "schema"})
 					.then(metadataForm => {
 						if (this.mounted) {
 							this.setState({metadataForm});

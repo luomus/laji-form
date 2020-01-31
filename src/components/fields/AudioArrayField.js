@@ -6,20 +6,6 @@ import { GlyphButton } from "../components";
 
 @MediaArrayField
 export default class AudioArrayField extends Component {
-	constructor(props) {
-		super(props);
-		//this._refs = (this.props.formData || []).map(() => React.createRef());
-		this._refs = [];
-		this.setRefs = (this.props.formData || []).map((_, i) => (elem) => {this._refs[i] = elem;});
-	}
-
-	componentWillReceiveProps(props) {
-		if ((props.formData || []).length > this._refs.length) {
-			//	this._refs = (this.props.formData || []).map((_, i) => this._refs[i] || React.createRef());
-			this.setRefs = (this.props.formData || []).map((_, i) => (elem) => {this._refs[i] = elem;});
-		}
-	}
-
 	ALLOWED_FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave"];
 	MAX_FILE_SIZE = 20000000;
 	KEY = "AUDIO";
@@ -29,6 +15,7 @@ export default class AudioArrayField extends Component {
 	TRANSLATION_SELECT_FILE = "SelectRecording";
 	TRANSLATION_NO_MEDIA = "NoRecording"
 	CONTAINER_CLASS = "audios-container"
+	METADATA_FORM_ID = "MHL.63"
 
 	renderMedia = (id, idx) => (
 		<div className="audio-container">
@@ -36,7 +23,6 @@ export default class AudioArrayField extends Component {
 				idx={idx}
 				apiClient={this.props.formContext.apiClient}
 				translations={this.props.formContext.translations}
-				ref={this.setRefs[idx]}
 			/>
 				<GlyphButton className="audio-metadata-button" bsStyle="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
 		</div>
