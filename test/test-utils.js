@@ -132,21 +132,7 @@ export class Form {
 		const filePath = path.resolve(__dirname, "./pixel.png");
 		const imageResponse = [{name: "data", filename: "pixel.png", id: "mock", expires: 1575979685}];
 		const {resolve, remove} = await this.setMockResponse("/images", false);
-		const mdResponse = {
-			  "id": "mock",
-			  "capturerVerbatim": [
-			    "mock"
-			  ],
-			  "intellectualOwner": "mock",
-			  "intellectualRights": "MZ.intellectualRightsCC-BY-SA-4.0",
-			  "fullURL": "https://imagetest.laji.fi/MM.97056/pixel_full.jpg",
-			  "largeURL": "https://imagetest.laji.fi/MM.97056/pixel_large.jpg",
-			  "squareThumbnailURL": "https://imagetest.laji.fi/MM.97056/pixel_square.jpg",
-			  "thumbnailURL": "https://imagetest.laji.fi/MM.97056/pixel_thumb.jpg",
-			  "originalURL": "https://imagetest.laji.fi/MM.97056/pixel.png",
-			  "uploadedBy": "MA.308",
-			  "@context": "http://schema.laji.fi/context/image-en.jsonld"
-		};
+		const mdResponse = mockImageMetadata;
 
 		const {resolve: mdResolve, remove: mdRemove} = await this.setMockResponse("/images/mock", false);
 
@@ -154,6 +140,7 @@ export class Form {
 		return {
 			resolve: async () => {
 				await resolve(imageResponse);
+				await browser.sleep(100);
 				await mdResolve(mdResponse);
 			},
 			remove: async () => {
@@ -251,4 +238,20 @@ export const updateValue = async ($input, value, blur = true) => {
 	if (blur) {
 		return browser.actions().sendKeys(protractor.Key.TAB).perform();
 	}
+};
+
+export const mockImageMetadata = {
+	"id": "mock",
+	"capturerVerbatim": [
+		"mock"
+	],
+	"intellectualOwner": "mock",
+	"intellectualRights": "MZ.intellectualRightsCC-BY-SA-4.0",
+	"fullURL": "https://imagetest.laji.fi/MM.97056/pixel_full.jpg",
+	"largeURL": "https://imagetest.laji.fi/MM.97056/pixel_large.jpg",
+	"squareThumbnailURL": "https://imagetest.laji.fi/MM.97056/pixel_square.jpg",
+	"thumbnailURL": "https://imagetest.laji.fi/MM.97056/pixel_thumb.jpg",
+	"originalURL": "https://imagetest.laji.fi/MM.97056/pixel.png",
+	"uploadedBy": "MA.308",
+	"@context": "http://schema.laji.fi/context/image-en.jsonld"
 };

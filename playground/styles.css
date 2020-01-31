@@ -301,7 +301,7 @@ min-height: 20px;
 	padding: 0;
 	text-align: initial;
 }
-.laji-form .laji-form-images .btn-danger {
+.laji-form .laji-form-medias .btn-danger {
 	width: auto;
 	height: auto;
 	line-height: 5px;
@@ -363,13 +363,13 @@ min-height: 20px;
 .laji-form button .react-spinner .react-spinner_bar {
 	background-color: white !important;
 }
-.laji-form.image-modal-content > .react-spinner {
+.laji-form.media-modal-content > .react-spinner {
 	left: 50%;
 	top: 50%;
 	height: 100px;
 	width: 100px;
 }
-.laji-form.image-modal .image-modal-content {
+.laji-form.media-modal .media-modal-content {
 	min-height: 700px;
 }
 
@@ -448,26 +448,30 @@ min-height: 20px;
 .laji-form .laji-form-map-navi {
 	margin-bottom: 5px;
 }
-.laji-form .laji-form-images {
+.laji-form .laji-form-medias {
 	margin-top: 10px;
-	overflow: auto;
 }
-.laji-form .laji-form-images > div {
+.laji-form .laji-form-medias > .media-container, .laji-form .laji-form-medias > .laji-form-drop-zone {
 	margin-right: 7px;
 	margin-bottom: 7px;
 	width: 120px;
 	height: 120px;
 	float: left;
 }
-.laji-form .laji-form-images a > img {
+.laji-form .laji-form-medias a > img, .laji-form .audios-container a {
 	cursor: pointer;
 }
-.laji-form .laji-form-images img, .laji-form .image-loading {
+.laji-form .laji-form-medias img, .laji-form .media-loading {
 	width: inherit;
 	height: inherit;
 }
-.laji-form .laji-form-images .image-loading img {
+.laji-form .laji-form-medias .media-loading img {
 	opacity: 0.5;
+}
+
+.laji-form .audios-container > .media-container, .laji-form .audios-container > .laji-form-drop-zone {
+	width: 90px;
+	height: 90px;
 }
 
 .laji-form .taxon-img {
@@ -497,7 +501,7 @@ min-height: 20px;
 	background-color: #d8fbc6;
 	border-color: #a7d490;
 }
-.laji-form .laji-form-images a:hover, .laji-form .laji-form-images a:active {
+.laji-form .laji-form-medias a:hover, .laji-form .laji-form-medias a:active {
 	text-decoration: none;
 	color: #337ab7;
 }
@@ -508,13 +512,13 @@ min-height: 20px;
 	cursor: not-allowed;
 }
 
-.laji-form .laji-form-images a {
+.laji-form .laji-form-medias a {
 	text-align: center;
 	vertical-align: middle;
 	width: 100%;
 	height: 100%;
 }
-.laji-form .laji-form-images .glyphicon {
+.laji-form .laji-form-medias .glyphicon {
 	font-size: 78px;
 	color: #dedede;
 	display: table-cell;
@@ -523,22 +527,32 @@ min-height: 20px;
 	padding-left: 16px;
 	padding-top: 16px;
 }
-.laji-form .darker .laji-form-images .glyphicon {
+.laji-form .audios-container .laji-form-drop-zone .glyphicon {
+	font-size: 60px;
+	padding-left: 12px;
+	padding-top: 12px;
+}
+.laji-form .audios-container .media-container .glyphicon {
+	padding-left: 2px;
+	padding-top: 2px;
+	color: #868686;
+}
+.laji-form .darker .laji-form-medias .glyphicon {
 	color: #cacaca;
 }
 
-.laji-form.image-modal {
+.laji-form.media-modal {
 	width: 90vmin;
 }
 
-.laji-form.image-modal img {
+.laji-form.media-modal img {
 	width: 100%;
 }
 
-.laji-form .img-container {
+.laji-form .media-container {
 	position: relative;
 }
-.laji-form .img-container .react-spinner {
+.laji-form .media-container .react-spinner {
 	top: 50%;
 	left: 50%;
 }
@@ -932,11 +946,11 @@ min-height: 20px;
 	padding: 0px !important;
 	border: 0px !important;
 }
-.laji-form .single-active-array-table td img, .laji-form .single-active-array-table td > .image-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
+.laji-form .single-active-array-table td img, .laji-form .single-active-array-table td > .media-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
 	height: 15px;
 	width: 15px;
 }
-.laji-form .single-active-array-table .image-loading {
+.laji-form .single-active-array-table .media-loading {
 	border: none;
 }
 .laji-form .single-active-array-table-array .react-spinner {
@@ -1433,10 +1447,10 @@ min-height: 20px;
 	margin-top: -5px;
 }
 
-.laji-form.image-add-modal button {
+.laji-form.media-add-modal button {
 	margin-bottom: 12px;
 }
-.laji-form.image-add-modal .modal-body > *:last-child {
+.laji-form.media-add-modal .modal-body > *:last-child {
 	margin-bottom: inherit;
 }
 

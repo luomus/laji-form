@@ -58,7 +58,7 @@ if (mockApi) {
 	const createMock = () => {
 		let resolve, reject;
 		const promise = new Promise((_resolve, _reject) => {
-			resolve = (response, raw) => _resolve(raw ? {...(response || {}), json: () =>  (response || {}).json} : {json: () => response, status: 200});
+			resolve = (response, raw) => console.log("RESOLVE", response) || _resolve(raw ? {...(response || {}), json: () =>  (response || {}).json} : {json: () => response, status: 200});
 			reject = (response, raw) => _reject(raw ? {...(response || {}), json: () => (response || {}).json} : response);
 		});
 		const mock = {promise, resolve, reject};
@@ -72,6 +72,7 @@ if (mockApi) {
 			delete mockResponses[key];
 		};
 		mockResponses[key] =  mock;
+		console.log("set mock" ,path);
 		return mock;
 	};
 	window.createMockResponseQueue = (path, query) => {
@@ -94,6 +95,7 @@ if (mockApi) {
 		const key = getKey(path, query);
 		const keyWithoutQuery = getKey(path, false);
 		let mock = mockResponses[key] || mockResponses[keyWithoutQuery];
+		console.log("FETCH", path, mock);
 		if (Array.isArray(mock)) {
 			const queue = mockQueues[key] || mockQueues[keyWithoutQuery];
 			const {pointer} = queue;

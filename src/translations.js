@@ -723,5 +723,20 @@
 		fi: "Anna uuden lohkon numero",
 		en: "Enter new section's number",
 		sv: "Ange det nya avsnittets nummer"
-	}
+	},
+	takeNewRecording: {
+		fi: "Äänitä uusi",
+		en: "Record a new recording",
+		sv: "Spela in nytt"
+	},
+	selectRecording: {
+		fi: "Valitse äänite",
+		en: "Select recording",
+		sv: "Välj en inspelning"
+	},
+	noRecording: {
+		fi: "Ei äänitettä",
+		en: "No recording",
+		sv: "Ingen inspelning"
+	},
 };

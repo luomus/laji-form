@@ -177,7 +177,7 @@ function getCols(props, schema, uiSchema, property) {
 			&& !(
 				schema.items && schema.items.enum && isMultiSelect(schema, uiSchema)
 				|| uiField === "SingleItemArrayField"
-				|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField")
+				|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField" && uiField !== "AudioArrayField")
 			)
 			|| (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))
 		) {

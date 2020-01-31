@@ -42,6 +42,7 @@
     "react-bootstrap-switch": "^15.0.4",
     "react-dom": "~16.8.6",
     "react-dropzone": "^10.1.4",
+    "react-h5-audio-player": "^2.3.0",
     "react-inlinesvg": "^0.6.0",
     "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#6d8d9a467eb047d728dbe2e849d3d62acebef59a",
     "react-sortable-hoc": "^0.6.3",
