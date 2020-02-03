@@ -4,7 +4,7 @@ import { navigateToForm, lajiFormLocate, mockGeo, mockGeoError } from "./test-ut
 import { googleApiKey } from "../properties.json"
 
 const $blocker = lajiFormLocate("gatherings.0.geometry").$(".blocker");
-const $imageAddModal = $(".image-add-modal");
+const $imageAddModal = $(".media-add-modal");
 const $mobileEditorMap = $(".laji-form.fullscreen .laji-form-map");
 
 describe("Mobile form (MHL.51)", () => {
