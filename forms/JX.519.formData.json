@@ -1,74 +1,78 @@
 {
-  "secureLevel": "MX.secureLevelNone",
-  "gatheringEvent": {
-    "leg": [
-      "MA.308"
-    ],
-    "legPublic": true,
-    "dateBegin": "2019-10-07",
-    "id": "JX.163606#1",
-    "@type": "MZ.gatheringEvent"
-  },
-  "gatherings": [
-    {
-      "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              27.665099,
-              63.275408
-            ]
-          }
-        ]
-      },
-      "units": [
+    "@context": "http://schema.laji.fi/context/document.jsonld",
+    "@type": "MY.document",
+    "collectionID": "HR.1747",
+    "creator": "MA.308",
+    "dateCreated": "2019-10-07T09:54:06+03:00",
+    "dateEdited": "2019-10-07T09:54:06+03:00",
+    "editor": "MA.308",
+    "formID": "JX.519",
+    "gatheringEvent": {
+        "@type": "MZ.gatheringEvent",
+        "dateBegin": "2019-10-07",
+        "id": "JX.163606#1",
+        "leg": [
+            "MA.308"
+        ],
+        "legPublic": true
+    },
+    "gatherings": [
         {
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "recordBasis": "MY.recordBasisHumanObservationPhoto",
-          "checklistID": "",
-          "informalTaxonGroups": [
-            "MVL.2"
-          ],
-          "images": [
-            "MM.96975"
-          ],
-          "identifications": [
-            {
-              "@type": "MY.identification",
-              "id": "JX.163606#5",
-              "taxon": "kettu"
-            }
-          ],
-          "unitGathering": {
-            "geometry": {},
-            "@type": "MZ.unitGathering",
-            "id": "JX.163606#3"
-          },
-          "unitFact": {
-            "autocompleteSelectedTaxonID": "MX.46587"
-          },
-          "id": "JX.163606#4",
-          "@type": "MY.unit"
+            "@type": "MY.gathering",
+            "_lajiFormId": 1,
+            "biologicalProvince": "Pohjois-Savo",
+            "country": "Suomi",
+            "geometry": {
+                "geometries": [
+                    {
+                        "coordinates": [
+                            27.665099,
+                            63.275408
+                        ],
+                        "type": "Point"
+                    }
+                ],
+                "type": "GeometryCollection"
+            },
+            "id": "JX.163606#2",
+            "municipality": "Lapinlahti",
+            "units": [
+                {
+                    "@type": "MY.unit",
+                    "audio": [
+                        "MM.97760"
+                    ],
+                    "checklistID": "",
+                    "id": "JX.163606#4",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.163606#5",
+                            "taxon": "kettu"
+                        }
+                    ],
+                    "images": [
+                        "MM.96975"
+                    ],
+                    "informalTaxonGroups": [
+                        "MVL.2"
+                    ],
+                    "recordBasis": "MY.recordBasisHumanObservationPhoto",
+                    "taxonConfidence": "MY.taxonConfidenceSure",
+                    "unitFact": {
+                        "autocompleteSelectedTaxonID": "MX.46587"
+                    },
+                    "unitGathering": {
+                        "@type": "MZ.unitGathering",
+                        "geometry": {},
+                        "id": "JX.163606#3"
+                    }
+                }
+            ]
         }
-      ],
-      "biologicalProvince": "Pohjois-Savo",
-      "country": "Suomi",
-      "municipality": "Lapinlahti",
-      "id": "JX.163606#2",
-      "@type": "MY.gathering"
-    }
-  ],
-  "formID": "JX.519",
-  "creator": "MA.308",
-  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
-  "sourceID": "KE.389",
-  "collectionID": "HR.1747",
-  "editor": "MA.308",
-  "dateEdited": "2019-10-07T09:54:06+03:00",
-  "dateCreated": "2019-10-07T09:54:06+03:00",
-  "id": "JX.163606",
-  "@type": "MY.document",
-  "@context": "http://schema.laji.fi/context/document.jsonld"
+    ],
+    "id": "JX.163606",
+    "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+    "secureLevel": "MX.secureLevelNone",
+    "sourceID": "KE.389"
 }
