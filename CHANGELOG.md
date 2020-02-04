@@ -1,3 +1,7 @@
+## 4.6.0
+* Add `FilterArrayField`
+* uiSchema option `rules` allows `complement` option
+
 ## 4.5.0
 * Add `FilterArrayField`
 * uiSchema components that use `rules` allow `complement` option, which complements the rule result
