@@ -992,6 +992,11 @@ const headerFormatters = {
 			if (lineTransectFeature) [start, end] = getLineTransectStartEndDistancesForIdx(lineTransectFeature, props.idx, 10);
 			return props.idx !== undefined && end ? <span className="text-muted">{`${start}-${end}m`}</span> : null;
 		}
+	},
+	number: {
+		component: (props) => {
+			return props.idx !== undefined ? (props.idx + 1) + "." : null;
+		}
 	}
 };
 
