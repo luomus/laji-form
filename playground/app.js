@@ -155,8 +155,7 @@ if (test !== true) {
 			isAdmin: query.isAdmin,
 			isEdit: query.isEdit,
 			municipalityEnum:  require("./municipalityEnum.json"),
-			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json"),
-			placeholderGeometry: {type: "Point", coordinates: [25, 60]}
+			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json")
 		},
 		onSubmit,
 		onError: log("errors"),

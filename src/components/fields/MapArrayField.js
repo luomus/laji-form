@@ -1290,7 +1290,7 @@ class _MapArrayField extends ComposedComponent {
 		const {registry: {fields: {SchemaField}}} = this.props;
 		let {uiSchema, errorSchema, schema} = this.getSchemas();
 		const options = getUiOptions(this.props.uiSchema);
-		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp} = options;
+		const {popupFields, geometryField, topOffset, bottomOffset, belowFields, propsToPassToInlineSchema = [], emptyHelp, passActiveIdxToBelow = true} = options;
 		let {belowUiSchemaRoot = {}, inlineUiSchemaRoot = {}, idToFocusAfterNavigate, idToScrollAfterNavigate} = options;
 		const {activeIdx} = this.state;
 
@@ -1388,7 +1388,7 @@ class _MapArrayField extends ComposedComponent {
 		let belowUiSchema =  belowSchemaProps ? {...belowSchemaProps.uiSchema, ...belowUiSchemaRoot} : {};
 
 		inlineUiSchema = {...inlineUiSchema, "ui:options": {...(inlineUiSchema["ui:options"] || {}), ...activeIdxProps}};
-		belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...activeIdxProps}};
+		belowUiSchema = {...belowUiSchema, "ui:options": {...(belowUiSchema["ui:options"] || {}), ...(passActiveIdxToBelow ? activeIdxProps : {})}};
 
 		if (!belowUiSchema.items) {
 			belowUiSchema.items = {};
@@ -1428,8 +1428,9 @@ class _MapArrayField extends ComposedComponent {
 				inlineUiSchema["ui:options"].renderAdd = false;
 				renderButtonsBelow = true;
 			}
-		} else if (activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
-			inlineUiSchema["ui:options"].buttons = uiSchema["ui:options"].buttons || [];
+		} 
+		if (activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
+			inlineUiSchema["ui:options"].buttons = options.buttons || [];
 		}
 
 		const inlineSchema = <SchemaField {...defaultProps} {...inlineSchemaProps} uiSchema={inlineUiSchema} {...overrideProps} />;

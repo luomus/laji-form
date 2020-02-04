@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
@@ -1019,8 +1019,9 @@ class AccordionHeader extends Component {
 	};
 
 	getFormatters = () => {
-		const {uiSchema} = this.props.that.props;
-		const formData = (this.props.that.props.formData || {})[this.props.idx];
+		const {that} = this.props;
+		const {uiSchema, schema} = that.props;
+		const formData = (that.props.formData || {})[this.props.idx];
 
 		// try both headerFormatters & headerFormatter for backward compatibility. TODO: Remove in future.
 		const options = getUiOptions(uiSchema);
@@ -1034,7 +1035,9 @@ class AccordionHeader extends Component {
 			if (headerFormatters[formatter]) return headerFormatters[formatter];
 			else return {
 				component: () => {
-					return <span className="text-muted">{formatter[0] === "/" ? parseJSONPointer(formData, formatter, !!"safe") : formData[formatter]}</span>;
+					return <span className="text-muted">{
+						formatValue({...that.props, schema: parseSchemaFromFormDataPointer(schema.items, "gatheringType"), uiSchema: parseUiSchemaFromFormDataPointer(uiSchema.items, "gatheringType"), formData: parseJSONPointer(formData, "gatheringType")})
+					}</span>;
 				}
 			};
 		});
