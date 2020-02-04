@@ -626,43 +626,48 @@ export const formatErrorMessage = msg => msg.replace(/^\[.*\]/, "");
 
 export function checkRules(rules, props, cache, prop = "formData") {
 	const passes = (Array.isArray(rules) ? rules : [rules]).every((rule, idx) => {
+		let passes;
 		if (rule === "isAdmin") {
-			return props.formContext.uiSchemaContext.isAdmin;
+			passes = props.formContext.uiSchemaContext.isAdmin;
 		} else if (rule === "isEdit") {
-			return props.formContext.uiSchemaContext.isEdit;
+			passes = props.formContext.uiSchemaContext.isEdit;
 		} else {
 			const {field, regexp, valueIn, valueIncludes} = rule;
 			let value = parseJSONPointer(props[prop] || {}, field);
 			if (value === undefined) value = "";
 			if (regexp) {
-				return `${value}`.match(new RegExp(regexp));
+				passes = `${value}`.match(new RegExp(regexp));
 			} else if (valueIn) {
 				if (cache) {
 					if (!cache[idx]) {
 						cache[idx] = dictionarify(valueIn);
 					}
-					return cache[idx][value];
+					passes = cache[idx][value];
 				} else {
-					return dictionarify(valueIn)[value];
+					passes = dictionarify(valueIn)[value];
 				}
 			} else if (valueIncludes !== undefined) {
-				return value.includes(valueIncludes);
+				passes = value.includes(valueIncludes);
 			}
 		}
+		console.log(rule);
+		return rule.complement ? !passes : passes;
 	});
 
 	return cache ? {passes, cache} : passes;
 }
 
 export function checkArrayRules(rules, props, idx, cache, prop = "formData") {
-	const arrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => {
-		if ("isLast" in rule) {
-			return true;
-		}
-	});
+	const arrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => ["isLast", "idx"].some(r => r in rule));
 	const passes = arrayRules.every(rule => {
+		let passes;
 		if ("isLast" in rule) {
-			return (idx === props.formData.length - 1) === rule.isLast;
+			passes = (idx === props.formData.length - 1) === rule.isLast;
+		} else if ("idx" in rule) {
+			passes = idx === rule.idx;
+		}
+		if (passes !== undefined) {
+			return rule.complement ? !passes : passes;
 		}
 		return true;
 	});
