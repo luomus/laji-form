@@ -1,3 +1,7 @@
+## 4.5.0
+* Add `FilterArrayField`
+* uiSchema components that use `rules` allow `complement` option, which complements the rule result
+
 ## 4.4.0
 * Add `AudioArrayField`
 
