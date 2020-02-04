@@ -1324,7 +1324,7 @@ class _MapArrayField extends ComposedComponent {
 		const getChildProps = () => {
 			return {
 				schema: schema.items,
-				uiSchema: uiSchema.items,
+				uiSchema: uiSchema.items || {},
 				idSchema: toIdSchema(
 					schema.items,
 					`${this.props.idSchema.$id}_${activeIdx}`,
