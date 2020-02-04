@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { Component } from "react";
 import { checkArrayRules, getUiOptions } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -22,6 +21,6 @@ export default class FilterArrayField extends Component {
 					return checkArrayRules(rules, {formData: props.formData}, idx);
 				}
 			})
-		}
+		};
 	}
 }

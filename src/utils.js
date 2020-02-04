@@ -650,7 +650,6 @@ export function checkRules(rules, props, cache, prop = "formData") {
 				passes = value.includes(valueIncludes);
 			}
 		}
-		console.log(rule);
 		return rule.complement ? !passes : passes;
 	});
 
