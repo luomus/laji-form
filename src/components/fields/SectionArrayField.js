@@ -69,7 +69,7 @@ const InvisibleTitle = (props) => {
 
 const NoLineBreakTitle = (props) => {
 	return <TitleField {...props} className="no-line-break" />;
-}
+};
 
 @VirtualSchemaField
 export default class SectionArrayField extends Component {
