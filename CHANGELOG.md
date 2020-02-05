@@ -1,3 +1,7 @@
+## 4.7.0
+* `ScopeField` doesn't remove props from `schema`, but hides them with `uiSchema`
+* `LocationChooserField` allows JSON pointer for `geometryField`
+
 ## 4.6.0
 * Add `FilterArrayField`
 * uiSchema option `rules` allows `complement` option
