@@ -185,6 +185,8 @@ min-height: 20px;
 	font-size: 15px;
 	margin-bottom: 5px;
 	margin-top: 5px;
+}
+.laji-form legend.no-line-break {
 	white-space: nowrap;
 	overflow: hidden;
 }

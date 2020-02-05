@@ -67,6 +67,10 @@ const InvisibleTitle = (props) => {
 	return <TitleField {...props} className="hidden-title-text" />;
 };
 
+const NoLineBreakTitle = (props) => {
+	return <TitleField {...props} className="no-line-break" />;
+}
+
 @VirtualSchemaField
 export default class SectionArrayField extends Component {
 	static propTypes = {
@@ -170,7 +174,7 @@ class SectionArrayFieldTemplate extends Component {
 					uiSchema={__uiSchema}
 					formData={_formData}
 					onChange={this.onRowDefinerChange}
-					registry={{...registry, formContext, fields: {...registry.fields, TitleField}}}
+					registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
 					formContext={formContext}
 				/>
 		</React.Fragment>
