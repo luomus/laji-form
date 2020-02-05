@@ -121,7 +121,7 @@ export default class ScopeField extends Component {
 			getUiOptions(prevProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
 			this.translateAdditionalsGroups(this.props);
 		}
-		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
+		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
 			const context = new Context(this.props.formContext.contextId);
 			syncScroll(this.props.formContext);
 			context.sendCustomEvent(this.props.idSchema.$id, "resize");
@@ -321,14 +321,11 @@ export default class ScopeField extends Component {
 			});
 		}
 
-		schema = {...schema, properties: fieldsToShow};
-
-		if (generatedUiSchema["ui:order"]) {
-			generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => schema.properties[field] || field === "*");
-			if (!generatedUiSchema["ui:order"].includes("*")) {
-				generatedUiSchema["ui:order"] = [...generatedUiSchema["ui:order"], "*"];
+		Object.keys(schema.properties).forEach(prop => {
+			if (!fieldsToShow[prop]) {
+				generatedUiSchema[prop] = {"ui:field": "HiddenField"};
 			}
-		}
+		});
 
 		if (hasSetLocation) {
 			console.warn("ScopeField's glyphField fn 'setLocation' is deprecated and will be removed in the future. The functionality is separated to a new component function 'LocationChooserField', use it instead.");
@@ -354,7 +351,8 @@ export default class ScopeField extends Component {
 			schema: schema,
 			uiSchema: generatedUiSchema,
 			additionalFields,
-			defaultFields
+			defaultFields,
+			fieldsToShow
 		};
 	}
 
@@ -375,8 +373,8 @@ export default class ScopeField extends Component {
 
 		let additionalProperties = {};
 		Object.keys(this.props.schema.properties).forEach(property => {
-			if (!this.state.schema.properties[property] ||
-				(this.state.schema.properties[property] && this.state.additionalFields[property]))
+			if (!this.state.fieldsToShow[property] ||
+				(this.state.fieldsToShow[property] && this.state.additionalFields[property]))
 				additionalProperties[property] = this.props.schema.properties[property];
 		});
 
@@ -531,7 +529,7 @@ export default class ScopeField extends Component {
 
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
-		const isIncluded = additionalFields[property] === true || this.state.schema.properties[property];
+		const isIncluded = additionalFields[property] === true || this.state.fieldsToShow[property];
 		return !!isIncluded;
 	}
 
