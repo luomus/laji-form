@@ -10,7 +10,7 @@ export default class ImageDisplayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				urls: PropTypes.arrayOf(PropTypes.string),
+				urls: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 				buttons: PropTypes.arrayOf(PropTypes.string),
 			}),
 		}),

@@ -11,7 +11,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch, Fullscreen } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -804,25 +804,16 @@ class LolifeMapArrayField extends Component {
 	}
 
 	getData() {
-		return [
-			{
-				featureCollection: {
-					type: "FeatureCollection",
-					features: parseGeometries(getUiOptions(this.props.uiSchema).data).map(g => ({type: "Feature", geometry: g, properties: {}}))
-				},
-				getFeatureStyle: this.namedPlaceStyle
-			},
-			...this._getData(this.props.formData)
-		];
+		return this._getData(this.props.formData);
 	}
 
 	_getData(formData) {
-		// Store so change detection doesn't think it's a new function.
-		return (formData || []).map((gathering, idx) => {
+		const gatherings = (formData || []).map((gathering, idx) => {
+			// Store so change detection doesn't think it's a new function.
 			const onChangeForIdx = this.onChanges[idx] || this.onChangeForIdx(idx);
 			this.onChanges[idx] = onChangeForIdx;
 			return {
-				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {idx}, geometry: g}))},
+				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {id: getUUID(gathering)}, geometry: g}))},
 				getFeatureStyle: this.getFeatureStyle(gathering),
 				on: {
 					mouseover: this.onMouseOver,
@@ -834,6 +825,16 @@ class LolifeMapArrayField extends Component {
 				getPopup: this.getPopup
 			};
 		});
+
+		const units = {
+			featureCollection: {
+				type: "FeatureCollection",
+				features: formData[0].units.filter(unit => Object.keys(unit.unitGathering.geometry).length).map((unit) => ({type: "Feature", properties: {id: getUUID(unit), unit: true}, geometry: unit.unitGathering.geometry}))
+			},
+			getFeatureStyle: this.getFeatureStyle(formData[0], !!"unit"),
+		};
+
+		return [...gatherings, units];
 	}
 
 	getGeometries() {
@@ -892,7 +893,10 @@ class LolifeMapArrayField extends Component {
 	nestTreeStyle() {return {color: "#ff0000"};}
 	observationStyle() {return {color: NORMAL_COLOR};}
 
-	getFeatureStyle(gathering) {
+	getFeatureStyle(gathering, isUnits) {
+		if (isUnits) {
+			return this.observationStyle;
+		}
 		const {gatheringType} = gathering;
 		switch (gatheringType) {
 		case "MY.gatheringTypeForagingArea":
@@ -906,7 +910,7 @@ class LolifeMapArrayField extends Component {
 		case "MY.gatheringTypeNestTree": 
 			return this.nestTreeStyle;
 		default:
-			return this.observationStyle;
+			return this.namedPlaceStyle;
 		}
 	}
 
@@ -966,95 +970,7 @@ class LolifeMapArrayField extends Component {
 	}
 
 	getFormDataForPopup({feature}) {
-		return this.props.formData[feature.properties.idx];
-	}
-}
-
-@_MapArrayField
-class LolifeNamedPlaceMapArrayField extends LolifeMapArrayField {
-	getData() {
-		const data = super._getData(this.props.formData.prepopulatedDocument.gatherings);
-		const namedPlaceGeom = this.getNamedPlaceGeometry();
-		return [
-			{
-				featureCollection: {
-					type: "FeatureCollection",
-					features: namedPlaceGeom ? [{type: "Feature", properties: {}, geometry: namedPlaceGeom}] : []
-				},
-				getFeatureStyle: this.getNamedPlaceStyle,
-				editable: true,
-				onChange: this.onChange,
-				getPopup: this.getPopup
-			},
-			...data
-		];
-	}
-
-	getNamedPlaceStyle = () => ({fillOpacity: 0.6, color: NORMAL_COLOR})
-
-	getNamedPlaceGeometry() {
-		const {geometry} = this.props.formData;
-		return geometry && Object.keys(geometry).length ? this.props.formData.geometry : undefined;
-	}
-
-	getGeometries() {
-		const namedPlaceGeometry = this.getNamedPlaceGeometry();
-		const geometries = super._getGeometries(super._getData(this.props.formData.prepopulatedDocument.gatherings));
-		return namedPlaceGeometry ? [
-			namedPlaceGeometry,
-			...geometries
-		] : geometries;
-	}
-
-	onChange = (events) => {
-		let geometry;
-		events.forEach(e => {
-			switch (e.type) {
-			case "create":
-				geometry = {
-					type: "GeometryCollection",
-					geometries: [e.feature.geometry]
-				};
-				break;
-			case "edit":
-				geometry = {
-					type: "GeometryCollection",
-					geometries: [e.features[0].geometry]
-				};
-				break;
-			case "delete":
-				geometry = {
-					type: "GeometryCollection",
-					geometries: []
-				};
-			}
-		});
-		this.props.onChange({...this.props.formData, geometry});
-	}
-
-	getGatherings() {
-		return this.props.formData.prepopulatedDocument.gatherings;
-	}
-
-	onGatheringChange(formData) {
-		this.props.onChange({
-			...this.props.formData,
-			prepopulatedDocument: {
-				...this.props.formData.prepopulatedDocument.gatherings,
-				gatherings: formData
-			}});
-	}
-
-	getIdForDataIdx(idx) {
-		return `${this.props.idSchema.$id}_prepopulatedDocument_gatherings_${idx}`;
-	}
-
-	getFormDataForPopup() {
-		return this.props.formData;
-	}
-
-	parsePopupPointer(col, options) {
-		return col.replace("[idx]", options.feature.properties.idx);
+		return this.props.formData.find(item => getUUID(item) === feature.properties.id);
 	}
 }
 
@@ -1604,6 +1520,7 @@ class _MapArrayField extends ComposedComponent {
 				if (this.parsePopupPointer) {
 					col = this.parsePopupPointer(col, options);
 				}
+				console.log(formData, col);
 				const _formData = parseJSONPointer(formData, col);
 				const schema = parseSchemaFromFormDataPointer(this.props.schema.items || this.props.schema, col);
 				const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items || this.props.uiSchema, col);

@@ -6,7 +6,7 @@ import { Modal, Tooltip, Popover, Overlay } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
-import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId } from "../../utils";
+import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
 import { Map, parseGeometries } from "./MapArrayField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { combineColors } from "laji-map/lib/utils";
@@ -114,8 +114,11 @@ class LocationButton extends Component {
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
 		switch (strategy) {
-		case "unit": return this.getUnitData();
-		case "lolife": return this.getLolifeData();
+			case "unit":
+				return this.getUnitData();
+			case "lolifeUnit":
+			case "lolife":
+				return this.getLolifeData();
 		}
 	}
 
@@ -180,18 +183,40 @@ class LocationButton extends Component {
 				? {featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry}]}}
 				: undefined;
 
-		if (draw && map.data[idx + 1]) {
+		const {strategy} = getUiOptions(that.props.uiSchema);
+		if (strategy === "lolife" && draw && map.data[idx + 1]) {
 			draw.getFeatureStyle = map.data[idx + 1].getFeatureStyle;
+		} else if (draw && map.data[map.data.length - 1]) { // Units are last
+			draw.getFeatureStyle = map.data[map.data.length - 1].getFeatureStyle;
 		}
 
+		const id = getUUID(that.props.formData);
+		let data = map.data.filter((item) => {
+			const feature = item.featureCollection.features[0]
+			const {properties} = (feature || {});
+			return feature
+				&& (
+					isNaN(idx)
+					? properties.hasOwnProperty("id")
+					: strategy !== "lolife" || (!properties.unit && properties.id !== id)
+				)
+		}).map(item => ({...item, getPopup: undefined, on: undefined}));
+
+		if (strategy === "lolifeUnit") {
+			data = data.map(item => 
+				item.featureCollection.features[0].properties.unit === true
+				? {
+					...item, featureCollection: {
+						...item.featureCollection,
+						features: item.featureCollection.features.filter(f => f.properties.id !== id)
+					}
+				}
+				: item
+			);
+		}
 		return [
 			draw,
-			map.data.filter(({featureCollection}) =>
-				featureCollection.features[0]
-				&& (isNaN(idx)
-					? featureCollection.features[0].properties.hasOwnProperty("idx")
-					: featureCollection.features[0].properties.idx !== idx)
-			).map(item => ({...item, getPopup: undefined, on: undefined}))
+			data
 		];
 	}
 
@@ -306,6 +331,7 @@ class LocationButton extends Component {
 				break;
 			}
 			case "edit": {
+				console.log(geometryRef);
 				if (!geometryRef || !geometryRef.type) {
 					break;
 				}
@@ -346,8 +372,11 @@ class LocationButton extends Component {
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
 		switch (strategy) {
-		case "unit": return this.getUnitMiniMapData();
-		case "lolife": return this.getLolifeMiniMapData();
+			case "unit":
+				return this.getUnitMiniMapData();
+			case "lolifeUnit": 
+			case "lolife": 
+				return this.getLolifeMiniMapData();
 		}
 	}
 
