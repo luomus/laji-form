@@ -299,7 +299,7 @@ class LocationButton extends Component {
 		const geometryField = this.getGeometryField();
 		for (let event of events) {
 			const {type} = event;
-			const geometryRef = that.props.formData[geometryField];
+			const geometryRef = parseJSONPointer(that.props.formData, geometryField);
 
 			switch (type) {
 			case "create": {
@@ -331,7 +331,6 @@ class LocationButton extends Component {
 				break;
 			}
 			case "edit": {
-				console.log(geometryRef);
 				if (!geometryRef || !geometryRef.type) {
 					break;
 				}
