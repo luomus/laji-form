@@ -1056,6 +1056,5 @@ export function getIdxWithoutOffset(idx, offsets, totalOffset) {
 	let offset = `_${idx}` in (offsets || {})
 		? (offsets || {})[`_${idx}`]
 		: totalOffset
-	console.log("GET WITHOUT", idx, offset, offsets);
 	return idx - (offset || 0);
 }

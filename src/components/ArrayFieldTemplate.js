@@ -395,14 +395,11 @@ export const arrayKeyFunctions = {
 	insert: function(e, _props) {
 		const {getProps, insertCallforward} = _props;
 		const props = getProps();
-		if (getUiOptions(props.uiSchema).renderAdd === false) {
-			return false;
-		}
 		function afterInsert() {
 			onAdd(e, props);
 		}
 
-		if (!props.disabled && !props.readonly && canAdd(props)) {
+		if (!props.disabled && !props.readonly && canAdd(props) && getUiOptions(props.uiSchema).canAddByKey !== false) {
 			if (insertCallforward) {
 				e.persist();
 				beforeAdd(props);
