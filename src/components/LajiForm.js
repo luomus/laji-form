@@ -265,19 +265,24 @@ export default class LajiForm extends Component {
 		this.customEventListeners = {};
 		this._context.addCustomEventListener = (id, eventName, fn) => {
 			if (!this.customEventListeners[eventName]) this.customEventListeners[eventName] = {};
-			if (!this.customEventListeners[eventName][id]) this.customEventListeners[eventName][id] = fn;
+			if (!this.customEventListeners[eventName][id]) this.customEventListeners[eventName][id] = [];
+			this.customEventListeners[eventName][id].push(fn);
+			//this.customEventListeners[eventName][id] = [fn, ...this.customEventListeners[eventName][id]];
 		};
-		this._context.removeCustomEventListener = (id, eventName) => {
-			delete this.customEventListeners[eventName][id];
+		this._context.removeCustomEventListener = (id, eventName, fn) => {
+			this.customEventListeners[eventName][id] = this.customEventListeners[eventName][id].filter(_fn => _fn !== fn);
+			//delete this.customEventListeners[eventName][id];
 		};
 		this._context.sendCustomEvent = (id, eventName, data, callback, {bubble = true} = {}) => {
 			const ids = Object.keys(this.customEventListeners[eventName] || {}).filter(_id => id.startsWith(_id)).sort().reverse();
 
-			for (let _id of ids) {
-				const result = this.customEventListeners[eventName][_id](data, callback);
-				if (!bubble) break;
-				if (result === true || result === undefined) {
-					return;
+			outer: for (let _id of ids) {
+				for (let listener of this.customEventListeners[eventName][_id]) {
+					const result = listener(data, callback);
+					if (!bubble) break outer;
+					if (result === true || result === undefined) {
+						return;
+					}
 				}
 			}
 			callback && callback();

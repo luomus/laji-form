@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
@@ -65,14 +65,16 @@ export default class SingleActiveArrayField extends Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.updatePopups(this.props);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
-			this.onActiveChange(idx);
-		});
+		if (getUiOptions(this.props.uiSchema).receiveActiveIdxEvents !== false) {
+			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+		}
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
+		if (getUiOptions(this.props.uiSchema).receiveActiveIdxEvents !== false) {
+			new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+		}
 	}
 
 	componentWillReceiveProps(props) {
@@ -85,15 +87,15 @@ export default class SingleActiveArrayField extends Component {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
-		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion"} = getUiOptions(this.props.uiSchema);
+		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", idxOffsets, totalOffset} = getUiOptions(this.props.uiSchema);
 		if (renderer === "uncontrolled") return;
 		if ((prevProps.formData || []).length === (this.props.formData || []).length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
 			const idToScroll = idToScrollAfterNavigate
 				? idToScrollAfterNavigate
 				: renderer === "accordion" || renderer === "pager" 
-					? `${this.props.idSchema.$id}_${this.state.activeIdx}-header`
+					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
 					: `${this.props.idSchema.$id}-add`;
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScroll, focusOnNavigate));
+			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate));
 		}
 	}
 
@@ -291,6 +293,9 @@ export default class SingleActiveArrayField extends Component {
 		add: {
 			callback: () => this.onActiveChange((this.props.formData || []).length)
 		},
+		addPredefined: {
+			callback: () =>  this.onActiveChange((this.props.formData || []).length)
+		},
 		copy: {
 			fn: () => (...params) => {
 				const {formData = []} = this.props;
@@ -371,7 +376,8 @@ function handlesButtonsAndFocus(ComposedComponent) {
 						that.onActiveChange(i, undefined, () => resolve());
 					});
 				});
-				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
+				const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets)
+				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${idx}`, this.focusHandlers[i]);
 			}
 		}
 
@@ -379,7 +385,8 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			const that = this.props.formContext.this;
 			if (this.focusHandlers) {
 				this.focusHandlers.forEach((handler, i) => {
-					new Context(this.props.formContext.contextId).removeFocusHandler(`${that.props.idSchema.$id}_${i}`, this.focusHandlers[i]);
+					const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets);
+					new Context(this.props.formContext.contextId).removeFocusHandler(`${that.props.idSchema.$id}_${idx}`, this.focusHandlers[i]);
 				});
 			}
 		}
@@ -616,10 +623,12 @@ class TableArrayFieldTemplate extends Component {
 		this.itemElems = [];
 	}
 
+	onResize = (data, callback) => {
+		this.updateLayout(null, callback);
+	}
+
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", (data, callback) => {
-			this.updateLayout(null, callback);
-		});
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		this.updateRenderingMode();
@@ -627,9 +636,8 @@ class TableArrayFieldTemplate extends Component {
 	}
 
 	componentWillUnmount() {
-		if (!getUiOptions(this.props.uiSchema).normalRenderingTreshold) return;
 		window.removeEventListener("resize", this._updateRenderingMode);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -1072,7 +1080,7 @@ class AccordionHeader extends Component {
 
 		const header = (
 			<div className={this.props.className}
-			     id={`${that.props.idSchema.$id}_${idx}-header`}
+			     id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-header`}
 			     tabIndex={0}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}

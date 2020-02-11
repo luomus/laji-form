@@ -70,6 +70,14 @@ export default class MapField extends Component {
 		this.state = {located: false};
 	}
 
+	onLocateEventHandler = (geometry) => {
+		if (geometry) {
+			this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
+		} else if (!this.getGeometry(this.props)) {
+			this.setState({locateOn: true});
+		}
+	}
+
 	componentDidMount() {
 		const {uiSchema} = this.props;
 		const {mapOptions = {}} = getUiOptions(uiSchema);
@@ -81,17 +89,11 @@ export default class MapField extends Component {
 		}
 		this.geocode(this.props);
 
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
-			if (geometry) {
-				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
-			} else if (!this.getGeometry(this.props)) {
-				this.setState({locateOn: true});
-			}
-		});
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentDidUpdate(prevProps) {
