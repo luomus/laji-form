@@ -51,18 +51,20 @@ export default class GeocoderField extends Component {
 		this.setState(this.getStateFromProps(props, geometryUpdated));
 	}
 
+	onLocate = (geometry) => {
+		this.updateForGeometry(this.props, undefined, this.normalizeGeometry(geometry));
+	}
+
 	componentDidMount() {
 		this.mounted = true;
 		this.componentDidUpdate();
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
-			this.updateForGeometry(this.props, undefined, this.normalizeGeometry(geometry));
-		});
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", this.onLocate);
 		this.getComponentContext().resetRemountedState = (loading) => this.setState(this.getStateFromProps(this.props, loading));
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate", this.onLocate);
 		delete this.getComponentContext().resetRemountedState;
 	}
 
