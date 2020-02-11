@@ -55,7 +55,7 @@ export default class MapArrayField extends Component {
 			}).isRequired,
 		}),
 		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["array", "object"])
+			type: PropTypes.oneOf(["array"])
 		}).isRequired,
 		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 	}
@@ -71,8 +71,6 @@ export default class MapArrayField extends Component {
 			return <LineTransectMapArrayField {...this.props} />;
 		case "lolife":
 			return <LolifeMapArrayField {...this.props} />;
-		case "lolifeNamedPlace":
-			return <LolifeNamedPlaceMapArrayField {...this.props} />;
 		}
 	}
 }
@@ -277,8 +275,8 @@ class UnitsMapArrayField extends Component {
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	isGeometryCollection = (idx) => {
@@ -785,13 +783,13 @@ class LolifeMapArrayField extends Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", (...params) => this.startHighlight(...params));
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", (...params) => this.endHighlight(...params));
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	getOptions() {
@@ -942,7 +940,7 @@ class LolifeMapArrayField extends Component {
 		}
 	}
 
-	startHighlight(idx) {
+	startHighlight = (idx) => {
 		idx = isNaN(idx) ? 0 : idx + 1;
 		let {color} = this.map.data[idx].getFeatureStyle();
 		if (!color) {
@@ -953,7 +951,7 @@ class LolifeMapArrayField extends Component {
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
 	}
 
-	endHighlight(idx) {
+	endHighlight= (idx) => {
 		idx = isNaN(idx) ? 0 : idx + 1;
 		const {color} = this.map.data[idx].getFeatureStyle();
 		if (!color) {
@@ -994,20 +992,24 @@ class _MapArrayField extends ComposedComponent {
 		this.setState({mounted: true});
 		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		this.map = this.refs.map.refs.map.map;
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", idx => {
+		this._setActiveEventHandler = idx => {
 			this.setState({activeIdx: idx});
-		});
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", () => {
+		};
+		this._zoomToDataEventHandler = () => {
 			this._zoomToDataOnNextTick = true;
-		});
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayers", (tileLayerOptions, callback) => {
+		};
+		this._tileLayersEventHandler = (tileLayerOptions, callback) => {
 			this._tileLayerNameOnNextTick = tileLayerOptions;
 			this._tileLayerNameOnNextTickCallback = callback;
-		});
-
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", () => {
+		};
+		this._resizeEventHandler = () => {
 			this.refs.stretch.invalidate();
-		});
+		};
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 
 		if (this.state.activeIdx !== undefined) {
 			this.afterActiveChange(this.state.activeIdx, !!"initial call");
@@ -1022,10 +1024,10 @@ class _MapArrayField extends ComposedComponent {
 	componentWillUnmount() {
 		this.setState({mounted: false});
 		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayers");
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 	}
 
 	componentDidUpdate(...params) {
@@ -1065,7 +1067,7 @@ class _MapArrayField extends ComposedComponent {
 
 	geocode = () => {
 		// Zoom map to area. Area ID is accessed from schema field defined in options.areaField
-		const item = this.props.schema.type === "array" ? (this.props.formData || [])[this.state.activeIdx] : this.props.formData;
+		const item = (this.props.formData || [])[this.state.activeIdx];
 		const {areaField} = getUiOptions(this.props.uiSchema);
 		if (!item || !areaField) {
 			return;
@@ -1258,7 +1260,7 @@ class _MapArrayField extends ComposedComponent {
 				schema: {...schema, items: props.schema},
 				uiSchema: {...uiSchema, items: props.uiSchema},
 				idSchema: this.props.idSchema,
-				formData: update((this.props.formData || []), {$merge: {[activeIdx]: props.formData}}),
+				formData: activeIdx !== undefined ? update((this.props.formData || []), {$merge: {[activeIdx]: props.formData}}) : this.props.formData,
 				errorSchema: props.errorSchema && Object.keys(props.errorSchema).length ? 
 					{[activeIdx]: props.errorSchema} : 
 					{},
@@ -1281,12 +1283,8 @@ class _MapArrayField extends ComposedComponent {
 			return _props;
 		}, {});
 
-		const childProps = schema.type === "array"
-			? getChildProps()
-			: {...this.props, uiSchema: getInnerUiSchema(this.props.uiSchema)};
-		const inlineSchemaProps = schema.type === "array"
-			? putChildsToParents(getPropsForFields(childProps, Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))))
-			: childProps;
+		const childProps = getChildProps();
+		const inlineSchemaProps = putChildsToParents(getPropsForFields(childProps, Object.keys(schema.items.properties).filter(field => !(belowFields || []).includes(field))));
 
 		const belowSchemaProps = belowFields ? putChildsToParents(getPropsForFields(childProps, belowFields)) : null;
 
@@ -1364,15 +1362,13 @@ class _MapArrayField extends ComposedComponent {
 			})).filter(button => button)
 			: undefined;
 
-		const _errors = errorSchema && parseJSONPointer(schema.type === "array" ? (errorSchema[activeIdx] || {}) : errorSchema, geometryField);
+		const _errors = errorSchema && parseJSONPointer(errorSchema[activeIdx] || {}, geometryField);
 		const errors = _errors
 			? _errors.__errors.map(formatErrorMessage)
 			: null;
 
 		const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
-		const wholeErrorId = this.props.schema.type === "array"
-			? `${this.props.idSchema.$id}_${activeIdx}${errorId}`
-			: `${this.props.idSchema.$id}${errorId}`;
+		const wholeErrorId = `${this.props.idSchema.$id}_${activeIdx}${errorId}`;
 		const mapPropsToPass = {
 			formContext: this.props.formContext,
 			onPopupClose: this.onPopupClose,
@@ -1520,7 +1516,6 @@ class _MapArrayField extends ComposedComponent {
 				if (this.parsePopupPointer) {
 					col = this.parsePopupPointer(col, options);
 				}
-				console.log(formData, col);
 				const _formData = parseJSONPointer(formData, col);
 				const schema = parseSchemaFromFormDataPointer(this.props.schema.items || this.props.schema, col);
 				const uiSchema = parseUiSchemaFromFormDataPointer(this.props.uiSchema.items || this.props.uiSchema, col);

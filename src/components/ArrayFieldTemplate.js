@@ -4,7 +4,7 @@ import merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props) {
@@ -21,9 +21,16 @@ export const onDelete = (item, props) => (e) => {
 export function beforeAdd(props) {
 	if (!canAdd(props)) return;
 	const {contextId} = props.formContext;
-	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
-	let idToFocus =  `${props.idSchema.$id}_${idx}`;
-	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`} = getUiOptions(props.uiSchema || {});
+	const startIdx = props.startIdx  || getUiOptions(props.uiSchema).startIdx;
+	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`, idxOffsets, totalOffset} = getUiOptions(props.uiSchema || {});
+	let idx = (props.items || props.formData).length;
+	const offset = startIdx !== undefined
+		? startIdx
+		: idxOffsets
+			? getIdxWithOffset(idx, idxOffsets, totalOffset) - idx
+			: 0;
+	idx = offset + idx;
+	let idToFocus = `${props.idSchema.$id}_${idx}`;
 	new Context(contextId).idToFocus = idToFocus;
 	new Context(contextId).idToScroll = idToScrollAfterAdd;
 }
@@ -179,33 +186,39 @@ export function handlesArrayKeys(ComposedComponent) {
 			});
 		}
 
+		onFocus = target => {
+			const context = new Context(this.props.formContext.contextId);
+			if (target === "last") {
+				context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
+				context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
+			} else {
+				console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
+			}
+		}
+
+		onCopy = (options = {}) => {
+			const {type = "blacklist", filter = []} = options;
+			const {buttonDefinitions = {}} = getUiOptions(this.props.uiSchema);
+			const {copy} = buttonDefinitions;
+			if (copy) {
+				copy.fn()(this.props, {type, filter});
+				if (copy.callback) {
+					copy.callback();
+				}
+			}
+		}
+
 		addCustomEventListeners() {
 			const context = new Context(this.props.formContext.contextId);
-			context.addCustomEventListener(this.props.idSchema.$id, "focus", target => {
-				if (target === "last") {
-					context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
-					context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
-				} else {
-					console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
-				}
-			});
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "copy", (options = {}) => {
-				const {type = "blacklist", filter = []} = options;
-				const {buttonDefinitions = {}} = getUiOptions(this.props.uiSchema);
-				const {copy} = buttonDefinitions;
-				if (copy) {
-					copy.fn()(this.props, {type, filter});
-					if (copy.callback) {
-						copy.callback();
-					}
-				}
-			});
+			context.addCustomEventListener(this.props.idSchema.$id, "focus", this.onFocus);
+			context.addCustomEventListener(this.props.idSchema.$id, "copy", this.onCopy);
 		}
 
 		componentWillUnmount() {
 			const context = new Context(this.props.formContext.contextId);
 
-			context.removeCustomEventListener(this.props.idSchema.$id, "focus");
+			context.removeCustomEventListener(this.props.idSchema.$id, "focus", this.onFocus);
+			context.removeCustomEventListener(this.props.idSchema.$id, "copy", this.onCopy);
 			context.removeKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions);
 			if (this.childKeyHandlers) {
 				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
@@ -350,7 +363,7 @@ export const arrayKeyFunctions = {
 		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
-		const focusedIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
+		const focusedIdx = activeItemQuery ? getIdxWithoutOffset(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getUiOptions(getProps().uiSchema).idxOffsets) : undefined;
 		const lastId = nearestSchemaElemId.substring(`${getProps().idSchema.$id}_${focusedIdx}`.length + 1, nearestSchemaElemId.length);
 		const focusedProp = isNaN(lastId) ? lastId : undefined;
 
@@ -386,7 +399,7 @@ export const arrayKeyFunctions = {
 			onAdd(e, props);
 		}
 
-		if (!props.disabled && !props.readonly && canAdd(props)) {
+		if (!props.disabled && !props.readonly && canAdd(props) && getUiOptions(props.uiSchema).canAddByKey !== false) {
 			if (insertCallforward) {
 				e.persist();
 				beforeAdd(props);

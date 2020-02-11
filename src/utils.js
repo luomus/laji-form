@@ -1045,3 +1045,16 @@ export function constructTranslations(translations) {
 	}
 	return dictionaries;
 }
+
+export function getIdxWithOffset(idx, offsets, totalOffset) {
+	let offset = idx in (offsets || {})
+		? (offsets || {})[idx]
+		: totalOffset
+	return (offset || 0) + idx;
+}
+export function getIdxWithoutOffset(idx, offsets, totalOffset) {
+	let offset = `_${idx}` in (offsets || {})
+		? (offsets || {})[`_${idx}`]
+		: totalOffset
+	return idx - (offset || 0);
+}
