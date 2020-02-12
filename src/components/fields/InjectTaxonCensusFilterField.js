@@ -10,9 +10,7 @@ export default class InjectTaxonCensusFilterField extends Component {
 			"ui:options": PropTypes.shape({
 				"taxonCensusPath": PropTypes.string.isRequired,
 				"taxonCensusField": PropTypes.string.isRequired,
-				"injectObjectPath": PropTypes.string.isRequired,
-				"injectObjectKey": PropTypes.string.isRequired,
-				"injectKey": PropTypes.string.isRequired
+				"injectPath": PropTypes.string.isRequired
 			}).isRequired,
 		}),
 		schema: PropTypes.shape({
@@ -25,20 +23,13 @@ export default class InjectTaxonCensusFilterField extends Component {
 
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
-		const {taxonCensusPath, taxonCensusField, injectObjectPath, injectObjectKey, injectKey} = options;
+		const {taxonCensusPath, taxonCensusField, injectPath} = options;
 		let {schema, uiSchema, idSchema, formData, errorSchema} = props;
-
 
 		const taxonCensusData = parseJSONPointer(formData, taxonCensusPath);
 		const injectData = (taxonCensusData || []).map(d => d[taxonCensusField]).join(",");
 
-		/*
-		updateSafelyWithJSONPointer(uiSchema, injectData, injectObjectPath + "/" + injectObjectKey + "/" + injectKey);
-
-		const injectUiSchema =  parseJSONPointer(uiSchema, injectObjectPath);
-		injectUiSchema[injectObjectKey] = {...injectUiSchema[injectObjectKey], [injectKey]: injectData};
-		*/
-		console.log(uiSchema);
+		uiSchema = updateSafelyWithJSONPointer(uiSchema, injectData, injectPath);
 
 		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
