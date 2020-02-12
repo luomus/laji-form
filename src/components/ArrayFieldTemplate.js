@@ -164,9 +164,8 @@ export function handlesArrayKeys(ComposedComponent) {
 		addKeyHandlers() {
 			const context = new Context(this.props.formContext.contextId);
 
-			//context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(this.props.uiSchema);
-			this.arrayKeyFunctions = {..._arrayKeyFunctions} || {...arrayKeyFunctions};
+			this.arrayKeyFunctions = _arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions};
 			context.addKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions, {
 				getProps: () => this.props
 			});
