@@ -184,9 +184,9 @@ class LocationButton extends Component {
 				: undefined;
 
 		const {strategy} = getUiOptions(that.props.uiSchema);
-		if (strategy === "lolife" && draw && map.data[idx + 1]) {
-			draw.getFeatureStyle = map.data[idx + 1].getFeatureStyle;
-		} else if (draw && map.data[map.data.length - 1]) { // Units are last
+		if (strategy === "lolife" && draw && map.data[idx]) {
+			draw.getFeatureStyle = map.data[idx].getFeatureStyle;
+		} else if (strategy === "lolifeUnit" && draw && map.data[map.data.length - 1]) { // Units are last
 			draw.getFeatureStyle = map.data[map.data.length - 1].getFeatureStyle;
 		}
 
@@ -198,12 +198,12 @@ class LocationButton extends Component {
 				&& (
 					isNaN(idx)
 					? properties.hasOwnProperty("id")
-					: strategy !== "lolife" || (!properties.unit && properties.id !== id)
+					: strategy !== "lolife" || properties.unit || properties.id !== id
 				);
 		}).map(item => ({...item, getPopup: undefined, on: undefined}));
 
 		if (strategy === "lolifeUnit") {
-			data = data.map(item => 
+			data = data.map(item =>
 				item.featureCollection.features[0].properties.unit === true
 				? {
 					...item, featureCollection: {
