@@ -1558,3 +1558,8 @@ min-height: 20px;
 .laji-form .invisible {
 	visibility: hidden;
 }
+
+.laji-form .checkbox-row > .form-group {
+	display: inline-block;
+	margin-right: 10px;
+}
