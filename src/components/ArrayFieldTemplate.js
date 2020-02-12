@@ -293,16 +293,8 @@ export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 				this.onFocuses[i] = this.getOnFocus(i);
 			}
 
-			// TODO remove once RJSF PR #1513 merged
-			// RJSF array keeps items in state but formData comes from props, so they are out of sync.
-			// Items & formData length can differ, and in that case we use props.formData.length as key.
-			const key = item.index > props.formData.length - 1
-				? props.formData.length
-				: isObject(props.formData[item.index])
-					? getUUID(props.formData[item.index])
-					: item.index;
 			return (
-				<div key={key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
+				<div key={item.key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
 					<div className="laji-form-field-template-schema">{item.children}</div>
 					{item.hasRemove && !nonRemovables.includes(item.index) && removable && getDeleteButton()}
 				</div>
