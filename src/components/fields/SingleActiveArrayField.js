@@ -376,7 +376,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 						that.onActiveChange(i, undefined, () => resolve());
 					});
 				});
-				const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets)
+				const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets);
 				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${idx}`, this.focusHandlers[i]);
 			}
 		}

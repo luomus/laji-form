@@ -114,11 +114,11 @@ class LocationButton extends Component {
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
 		switch (strategy) {
-			case "unit":
-				return this.getUnitData();
-			case "lolifeUnit":
-			case "lolife":
-				return this.getLolifeData();
+		case "unit":
+			return this.getUnitData();
+		case "lolifeUnit":
+		case "lolife":
+			return this.getLolifeData();
 		}
 	}
 
@@ -192,14 +192,14 @@ class LocationButton extends Component {
 
 		const id = getUUID(that.props.formData);
 		let data = map.data.filter((item) => {
-			const feature = item.featureCollection.features[0]
+			const feature = item.featureCollection.features[0];
 			const {properties} = (feature || {});
 			return feature
 				&& (
 					isNaN(idx)
 					? properties.hasOwnProperty("id")
 					: strategy !== "lolife" || (!properties.unit && properties.id !== id)
-				)
+				);
 		}).map(item => ({...item, getPopup: undefined, on: undefined}));
 
 		if (strategy === "lolifeUnit") {
@@ -371,11 +371,11 @@ class LocationButton extends Component {
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
 		switch (strategy) {
-			case "unit":
-				return this.getUnitMiniMapData();
-			case "lolifeUnit": 
-			case "lolife": 
-				return this.getLolifeMiniMapData();
+		case "unit":
+			return this.getUnitMiniMapData();
+		case "lolifeUnit": 
+		case "lolife": 
+			return this.getLolifeMiniMapData();
 		}
 	}
 
