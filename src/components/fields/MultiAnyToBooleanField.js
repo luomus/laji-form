@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import BaseComponent from "../BaseComponent";
 import PropTypes from "prop-types";
-import { getUiOptions } from "../../utils";
+import { getUiOptions, formDataEquals } from "../../utils";
 import anyToBoolean from "./AnyToBooleanField";
 
 @BaseComponent
@@ -12,8 +12,8 @@ export default class MultiAnyToBooleanField extends Component {
 				groups: PropTypes.arrayOf(
 					PropTypes.shape({
 						label: PropTypes.string,
-						trueValue: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-						falseValue: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+						trueValue: PropTypes.any,
+						falseValue: PropTypes.any,
 						allowUndefined: PropTypes.bool
 					})
 				)
@@ -43,12 +43,11 @@ export default class MultiAnyToBooleanField extends Component {
 				if (value === undefined) {
 					return;
 				}
-
-				const trueIndex = trueValues.indexOf(value);
+				const trueIndex = trueValues.findIndex(trueValue => formDataEquals(value, trueValue, props.formContext, props.idSchema.$id));
 				if (trueIndex !== -1) {
 					groupsFormData[trueIndex] = value;
 				} else {
-					const falseIndex = falseValues.indexOf(value);
+					const falseIndex = falseValues.findIndex(falseValue => formDataEquals(value, falseValue, props.formContext, props.idSchema.$id));
 					if (falseIndex !== -1) {
 						groupsFormData[falseIndex] = value;
 					}
