@@ -164,9 +164,8 @@ export function handlesArrayKeys(ComposedComponent) {
 		addKeyHandlers() {
 			const context = new Context(this.props.formContext.contextId);
 
-			//context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
 			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(this.props.uiSchema);
-			this.arrayKeyFunctions = {..._arrayKeyFunctions} || {...arrayKeyFunctions};
+			this.arrayKeyFunctions = _arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions};
 			context.addKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions, {
 				getProps: () => this.props
 			});
@@ -294,15 +293,8 @@ export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 				this.onFocuses[i] = this.getOnFocus(i);
 			}
 
-			// RJSF array keeps items in state but formData comes from props, so they are out of sync.
-			// Items & formData length can differ, and in that case we use "NEW" as key.
-			const key = item.index > props.formData.length - 1
-				? "NEW"
-				: isObject(props.formData[item.index])
-					? getUUID(props.formData[item.index])
-					: item.index;
 			return (
-				<div key={key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
+				<div key={item.key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
 					<div className="laji-form-field-template-schema">{item.children}</div>
 					{item.hasRemove && !nonRemovables.includes(item.index) && removable && getDeleteButton()}
 				</div>

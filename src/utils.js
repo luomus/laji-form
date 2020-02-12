@@ -1049,12 +1049,13 @@ export function constructTranslations(translations) {
 export function getIdxWithOffset(idx, offsets, totalOffset) {
 	let offset = idx in (offsets || {})
 		? (offsets || {})[idx]
-		: totalOffset
+		: totalOffset;
 	return (offset || 0) + idx;
 }
+
 export function getIdxWithoutOffset(idx, offsets, totalOffset) {
 	let offset = `_${idx}` in (offsets || {})
 		? (offsets || {})[`_${idx}`]
-		: totalOffset
+		: totalOffset;
 	return idx - (offset || 0);
 }
