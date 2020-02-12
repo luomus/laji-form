@@ -293,10 +293,11 @@ export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 				this.onFocuses[i] = this.getOnFocus(i);
 			}
 
+			// TODO remove once RJSF PR #1513 merged
 			// RJSF array keeps items in state but formData comes from props, so they are out of sync.
-			// Items & formData length can differ, and in that case we use "NEW" as key.
+			// Items & formData length can differ, and in that case we use props.formData.length as key.
 			const key = item.index > props.formData.length - 1
-				? "NEW"
+				? props.formData.length
 				: isObject(props.formData[item.index])
 					? getUUID(props.formData[item.index])
 					: item.index;
