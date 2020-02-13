@@ -826,10 +826,10 @@ class TableArrayFieldTemplate extends Component {
 		const title = that.getTitle(that.state.activeIdx);
 
 		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
-			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", idx)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx})
 			: undefined;
 		const onMouseLeave = (idx) => that.props.idSchema.$id.match(/units$/)
-			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", idx)
+			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx})
 			: undefined;
 
 		return (

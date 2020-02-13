@@ -386,7 +386,7 @@ class UnitsMapArrayField extends Component {
 		return {draw, data, controls, emptyMode};
 	}
 
-	startHighlight = (idx) => {
+	startHighlight = ({idx}) => {
 		const color = combineColors(this.getUnitFeatureStyle().color, "#ffffff", 30);
 		if (idx in this.unitIdxToGeometryCollectionIdx) {
 			const _idx = this.unitIdxToGeometryCollectionIdx[idx];
@@ -400,7 +400,7 @@ class UnitsMapArrayField extends Component {
 		}
 	};
 
-	endHighlight = (idx) => {
+	endHighlight = ({idx}) => {
 		const color = this.getUnitFeatureStyle().color;
 		if (idx in this.unitIdxToGeometryCollectionIdx) {
 			const _idx = this.unitIdxToGeometryCollectionIdx[idx];
@@ -940,24 +940,24 @@ class LolifeMapArrayField extends Component {
 		}
 	}
 
-	startHighlight = (idx) => {
-		idx = isNaN(idx) ? 0 : idx + 1;
-		let {color} = this.map.data[idx].getFeatureStyle();
+	startHighlight = ({id}) => {
+		const mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
+		let {color} = this.map.data[mapIdx].getFeatureStyle();
 		if (!color) {
 			return;
 		}
 		color = combineColors(color, "#ffffff", 150);
-		const layer = this.map.getLayerByIdxTuple([idx, 0]);
+		const layer = this.map.getLayerByIdxTuple([mapIdx, 0]);
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
 	}
 
-	endHighlight= (idx) => {
-		idx = isNaN(idx) ? 0 : idx + 1;
-		const {color} = this.map.data[idx].getFeatureStyle();
+	endHighlight = ({id}) => {
+		const mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
+		const {color} = this.map.data[mapIdx].getFeatureStyle();
 		if (!color) {
 			return;
 		}
-		const layer = this.map.getLayerByIdxTuple([idx, 0]);
+		const layer = this.map.getLayerByIdxTuple([mapIdx, 0]);
 		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
 	}
 

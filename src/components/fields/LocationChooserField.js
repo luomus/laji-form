@@ -92,7 +92,7 @@ class LocationButton extends Component {
 		const idx = this.getIdx();
 		this._hovered = true;
 		if (typeof idx === "number") {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", idx);
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx, id: getUUID(that.props.formData)});
 		}
 	}
 
@@ -101,7 +101,7 @@ class LocationButton extends Component {
 		const idx = this.getIdx();
 		this._hovered = false;
 		if (typeof idx === "number") {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", idx);
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx, id: getUUID(that.props.formData)});
 		}
 	}
 
@@ -411,19 +411,24 @@ class LocationButton extends Component {
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		const idx = this.getIdx();
+		const id = getUUID(that.props.formData);
 		return [
-			map.data.map((item, i) => ({
-				...item,
-				getPopup: undefined,
-				on: undefined,
-				editable: false,
-				getFeatureStyle: item.getFeatureStyle
-					? (isNaN(idx) && i === 0) || i === idx + 1
-						? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
-						: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
+			map.data.map((item) => {
+				const feature = item.featureCollection.features[0];
+				const {properties = {}} = feature || {};
+				return {
+					...item,
+					getPopup: undefined,
+					on: undefined,
+					editable: false,
+					getFeatureStyle: item.getFeatureStyle
+					? properties.id === id
+					? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
+					: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
 					: undefined
-			})),
-			{dataIdxs: [isNaN(idx) ? 0 : idx + 1]}
+				};
+			}),
+			{dataIdxs: [map.data.findIndex(d => d.featureCollection.features[0].properties.id === id)]}
 		];
 	}
 
