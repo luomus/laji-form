@@ -79,7 +79,6 @@ const fields = importLocalComponents("fields", [
 	"AudioArrayField",
 	"FilterArrayField",
 	"MultiAnyToBooleanField",
-	"InjectTaxonCensusFilterField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
