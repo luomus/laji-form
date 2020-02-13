@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getInnerUiSchema, getUiOptions, isEmptyString, parseJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
+import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 
-@BaseComponent
+@VirtualSchemaField
 export default class UnitCountShorthandField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -25,10 +26,9 @@ export default class UnitCountShorthandField extends Component {
 		this.parseCode = this.parseCode.bind(this);
 	}
 
-	render() {
-		const {uiSchema, formData} = this.props;
-		const {SchemaField} = this.props.registry.fields;
-		const {shorthandField, taxonIDField} = getUiOptions(this.props.uiSchema);
+	getStateFromProps(props) {
+		const {uiSchema, formData} = props;
+		const {shorthandField, taxonIDField} = getUiOptions(props.uiSchema);
 
 		const shortHandUiSchema = {
 			"ui:widget": CodeReader,
@@ -38,10 +38,9 @@ export default class UnitCountShorthandField extends Component {
 			}
 		};
 
-		let innerUiSchema = getInnerUiSchema(uiSchema);
-		innerUiSchema = updateSafelyWithJSONPointer(innerUiSchema, shortHandUiSchema, shorthandField);
+		const _uiSchema = updateSafelyWithJSONPointer(uiSchema, shortHandUiSchema, shorthandField);
 
-		return <SchemaField {...this.props} uiSchema={innerUiSchema} />;
+		return {...props, uiSchema: _uiSchema};
 	}
 
 	// TODO
