@@ -44,10 +44,7 @@ export default class UnitCountShorthandField extends Component {
 	}
 
 	// TODO
-	parseCode(value, taxonID) {
-		console.log(value);
-		console.log(taxonID);
-
+	parseCode() {
 		return new Promise((resolve) => {
 			setTimeout( () => {
 				this.props.onChange({...this.props.formData, pairCount: 2});

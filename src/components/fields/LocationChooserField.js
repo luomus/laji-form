@@ -410,7 +410,6 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		const idx = this.getIdx();
 		const id = getUUID(that.props.formData);
 		return [
 			map.data.map((item) => {

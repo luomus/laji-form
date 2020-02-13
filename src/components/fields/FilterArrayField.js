@@ -77,13 +77,13 @@ export default class FilterArrayField extends Component {
 			options = {
 				...options,
 				onActiveChange: this.getOnActiveChange
-			}
+			};
 		}
 		if (activeIdx !== undefined) {
 			options = {
 				...options,
 				activeIdx: options.activeIdx - this.idxToOffsets[options.activeIdx]
-			}
+			};
 		}
 		return options;
 	}
@@ -91,7 +91,7 @@ export default class FilterArrayField extends Component {
 	getOnActiveChange = (idx, prop, callback) => {
 		const offset = (idx in this.filteredToOffsets)
 			? this.filteredToOffsets[idx]
-			: this.filteredTotal
+			: this.filteredTotal;
 		this.cachedOnActiveChange(idx + offset, prop, callback);
 	}
 
