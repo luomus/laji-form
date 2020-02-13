@@ -21,7 +21,9 @@ export default class DataLeakerField extends Component {
 				props: PropTypes.arrayOf(
 					PropTypes.shape({
 						from: PropTypes.string.isRequired,
-						target: PropTypes.string
+						fromArrayKey: PropTypes.string,
+						target: PropTypes.string,
+						joinArray: PropTypes.bool
 					})
 				)
 			}),
@@ -38,15 +40,22 @@ export default class DataLeakerField extends Component {
 	getStateFromProps(props) {
 		const {props: _props = []} = this.getUiOptions(props.uiSchema);
 		return (Array.isArray(_props) ? _props : [_props]).reduce((props, strOrObjProp) => {
-			const [fromPath, targetPath] = ["from", "target"].map(p => strOrObjProp[p]);
-			const from = fromPath[0] === "/"
+			const [fromPath, fromArrayKey, targetPath, joinArray] = ["from", "fromArrayKey", "target", "joinArray"]
+				.map(p => strOrObjProp[p]);
+			let from = fromPath[0] === "/"
 				? parseJSONPointer(props, fromPath)
 				: parseJSONPointer(props.formData, fromPath);
+
+			if (fromArrayKey) {
+				from = (from || []).map(obj => obj[fromArrayKey]);
+			}
+			if (joinArray && Array.isArray(from)) {
+				from = from.join(",");
+			}
 
 			const _targetPath = targetPath[0] === "/"
 				? targetPath
 				: `/uiSchema/ui:options/${targetPath}`;
-
 			props = updateSafelyWithJSONPointer(props, from, _targetPath);
 			return props;
 		}, props);
