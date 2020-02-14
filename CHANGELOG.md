@@ -1,3 +1,6 @@
+## 4.9.0
+* Add `ToggleAdditionalArrayFieldsField`
+
 ## 4.8.0
 * Add `InjectTaxonCensusFilterField`
 * Add `MultiAnyToBooleanField`
