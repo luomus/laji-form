@@ -43,6 +43,8 @@ export default class MapArrayField extends Component {
 				topOffset: PropTypes.number,
 				bottomOffset: PropTypes.number,
 				popupFields: PropTypes.arrayOf(PropTypes.object),
+				computeAreaField: PropTypes.string,
+				areaInHectares: PropTypes.bool,
 				mapSizes: PropTypes.shape({
 					lg: PropTypes.number,
 					md: PropTypes.number,
@@ -1117,7 +1119,7 @@ class _MapArrayField extends ComposedComponent {
 	computeArea = () => {
 		const {activeIdx} = this.state;
 		if (activeIdx === undefined) return;
-		let {computeAreaField} = getUiOptions(this.props.uiSchema);
+		let {computeAreaField, areaInHectares} = getUiOptions(this.props.uiSchema);
 		const {formData} = this.props;
 
 		if (!computeAreaField) return;
@@ -1136,7 +1138,7 @@ class _MapArrayField extends ComposedComponent {
 		const sumArea =  polygonsArea + circlesArea;
 		const area = sumArea === 0
 			? undefined
-			: Math.round(sumArea);
+			: Math.round(areaInHectares ? sumArea / 10000 : sumArea);
 
 		const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField);
 		currentArea !== area && this.props.onChange(updateSafelyWithJSONPointer(
