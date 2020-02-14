@@ -88,23 +88,23 @@ class LocationButton extends Component {
 	}
 
 	onMouseEnter = () => {
-		return;
-		const {that} = this.props;
-		const idx = this.getIdx();
-		this._hovered = true;
-		if (typeof idx === "number") {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx, id: getUUID(that.props.formData)});
-		}
+		//return;
+		//const {that} = this.props;
+		//const idx = this.getIdx();
+		//this._hovered = true;
+		//if (typeof idx === "number") {
+		//	new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx, id: getUUID(that.props.formData)});
+		//}
 	}
 
 	onMouseLeave = () => {
-		return;
-		const {that} = this.props;
-		const idx = this.getIdx();
-		this._hovered = false;
-		if (typeof idx === "number") {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx, id: getUUID(that.props.formData)});
-		}
+		//return;
+		//const {that} = this.props;
+		//const idx = this.getIdx();
+		//this._hovered = false;
+		//if (typeof idx === "number") {
+		//	new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx, id: getUUID(that.props.formData)});
+		//}
 	}
 
 	getUnitDrawFeatureStyle = () => ({color: "#55AEFA"})

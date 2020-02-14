@@ -946,30 +946,32 @@ class LolifeMapArrayField extends Component {
 		return `${this.props.idSchema.$id}_${idx}`;
 	}
 
-	onMouseOver(e, {dataIdx}) {
-		return;
-		const idx = dataIdx - 1;
-		this.startHighlight(idx);
+	onMouseOver() {
+	//onMouseOver(e, {dataIdx}) {
+		//return;
+		//const idx = dataIdx - 1;
+		//this.startHighlight(idx);
 
-		const id = this.getIdForDataIdx(idx);
-		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+		//const id = this.getIdForDataIdx(idx);
+		//this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
 
-		if (this.highlightedElem) {
-			this.highlightedElem.className += " map-highlight";
-		}
+		//if (this.highlightedElem) {
+		//	this.highlightedElem.className += " map-highlight";
+		//}
 	}
 
-	onMouseOut(e, {dataIdx}) {
-		return;
-		const idx = dataIdx - 1;
-		this.endHighlight(idx);
+	onMouseOut() {
+		//onMouseOut(e, {dataIdx}) {
+		//return;
+		//const idx = dataIdx - 1;
+		//this.endHighlight(idx);
 
-		const id = this.getIdForDataIdx(idx);
-		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+		//const id = this.getIdForDataIdx(idx);
+		//this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
 
-		if (this.highlightedElem) {
-			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
-		}
+		//if (this.highlightedElem) {
+		//	this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
+		//}
 	}
 
 	startHighlight = ({id}) => {
