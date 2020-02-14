@@ -88,6 +88,7 @@ class LocationButton extends Component {
 	}
 
 	onMouseEnter = () => {
+		return;
 		const {that} = this.props;
 		const idx = this.getIdx();
 		this._hovered = true;
@@ -97,6 +98,7 @@ class LocationButton extends Component {
 	}
 
 	onMouseLeave = () => {
+		return;
 		const {that} = this.props;
 		const idx = this.getIdx();
 		this._hovered = false;
@@ -184,11 +186,11 @@ class LocationButton extends Component {
 				: undefined;
 
 		const {strategy} = getUiOptions(that.props.uiSchema);
-		if (strategy === "lolife" && draw && map.data[idx]) {
-			draw.getFeatureStyle = map.data[idx].getFeatureStyle;
-		} else if (strategy === "lolifeUnit" && draw && map.data[map.data.length - 1]) { // Units are last
-			draw.getFeatureStyle = map.data[map.data.length - 1].getFeatureStyle;
-		}
+		//if (strategy === "lolife" && draw && map.data[idx]) {
+		//	draw.getFeatureStyle = map.data[idx].getFeatureStyle;
+		//} else if (strategy === "lolifeUnit" && draw && map.data[map.data.length - 1]) { // Units are last
+		//	draw.getFeatureStyle = map.data[map.data.length - 1].getFeatureStyle;
+		//}
 
 		const id = getUUID(that.props.formData);
 		let data = map.data.filter((item) => {

@@ -945,6 +945,7 @@ class LolifeMapArrayField extends Component {
 	}
 
 	onMouseOver(e, {dataIdx}) {
+		return;
 		const idx = dataIdx - 1;
 		this.startHighlight(idx);
 
@@ -957,6 +958,7 @@ class LolifeMapArrayField extends Component {
 	}
 
 	onMouseOut(e, {dataIdx}) {
+		return;
 		const idx = dataIdx - 1;
 		this.endHighlight(idx);
 
