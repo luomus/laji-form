@@ -26,6 +26,8 @@ export default class UnitCountShorthandField extends Component {
 		this.parseCode = this.parseCode.bind(this);
 	}
 
+	static getName() {return "UnitCountShorthandField";}
+
 	getStateFromProps(props) {
 		const {uiSchema, formData} = props;
 		const {shorthandField, taxonIDField} = getUiOptions(props.uiSchema);
