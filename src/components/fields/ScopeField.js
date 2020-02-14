@@ -190,12 +190,12 @@ export default class ScopeField extends Component {
 		let defaultFields = (state && state.defaultFields) ? {...state.defaultFields} : {};
 
 		const options = getUiOptions(uiSchema);
-		let {fields = [], definitions, glyphFields = [], geometryField = "unitGathering_geometry", taxonField} = options;
+		let {fields, definitions, glyphFields = [], geometryField = "unitGathering_geometry", taxonField} = options;
 		let generatedUiSchema = getInnerUiSchema(uiSchema);
 
 		let fieldsToShow = {};
 
-		fields.forEach(field => {
+		(fields || []).forEach(field => {
 			fieldsToShow[field] = schema.properties[field];
 		});
 
@@ -256,13 +256,12 @@ export default class ScopeField extends Component {
 			let scopes = fieldScope.fieldScopes;
 
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
-				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!fieldSelectorValues || Array.isArray(fieldSelectorValues) && !fieldSelectorValues.length) {
 					fieldSelectorValues = that.getAdditionalPersistenceValue(props);
 				}
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
-				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
+				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => _fieldSelectorValue !== "undefined" && hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
 				}
 				if (scopes[fieldSelector]["*"]) {
@@ -276,7 +275,7 @@ export default class ScopeField extends Component {
 			});
 		}
 
-		function findScopedFields(fieldScope = {}, _fields = []) {
+		function findScopedFields(fieldScope = {}, _fields = {}) {
 			const {fields =[], additionalFields = [], fieldScopes = {}} = fieldScope;
 			[...fields, ...additionalFields].forEach(f => {
 				_fields[f] = true;
@@ -285,8 +284,8 @@ export default class ScopeField extends Component {
 			return _fields;
 		}
 
-		// If no root fields defined, show all fields that aren't in any scopes` fields or additional fields.
-		if (fields.length === 0) {
+		// If no root fields defined, show all fields that aren't in any scopes' fields or additional fields.
+		if (!fields) {
 			const scopedFields = findScopedFields(options);
 			glyphFields.forEach(({show, open}) => {
 				if (open === false) {
