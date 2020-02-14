@@ -386,6 +386,15 @@ class UnitsMapArrayField extends Component {
 		return {draw, data, controls, emptyMode};
 	}
 
+	getUnitFeatureStyle = () => {
+		let color = "#55AEFA";
+		if (this._highlightedUnit !== undefined) {
+			color = combineColors(color, "#ffffff", 30);
+		}
+		return {color: color, fillColor: color, weight: 4};
+	}
+
+
 	startHighlight = ({idx}) => {
 		const color = combineColors(this.getUnitFeatureStyle().color, "#ffffff", 30);
 		if (idx in this.unitIdxToGeometryCollectionIdx) {
@@ -812,7 +821,7 @@ class LolifeMapArrayField extends Component {
 			this.onChanges[idx] = onChangeForIdx;
 			return {
 				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {id: getUUID(gathering)}, geometry: g}))},
-				getFeatureStyle: this.getFeatureStyle(gathering),
+				getFeatureStyle: this.getFeatureStyle,
 				on: {
 					mouseover: this.onMouseOver,
 					mouseout: this.onMouseOut,
@@ -829,7 +838,7 @@ class LolifeMapArrayField extends Component {
 				type: "FeatureCollection",
 				features: formData[0].units.filter(unit => Object.keys(unit.unitGathering.geometry).length).map((unit) => ({type: "Feature", properties: {id: getUUID(unit), unit: true}, geometry: unit.unitGathering.geometry}))
 			},
-			getFeatureStyle: this.getFeatureStyle(formData[0], !!"unit"),
+			getFeatureStyle: this.getUnitFeatureStyle,
 		};
 
 		return [...gatherings, units];
@@ -883,33 +892,52 @@ class LolifeMapArrayField extends Component {
 		this.props.onChange(formData);
 	}
 
-	namedPlaceStyle() {return {color: "#aaaaaa", fillOpacity: 0.2};}
-	foragingStyle() {return {color: "#ffc000"};}
-	breedingAndRestingStyle() {return {color: "#a9d18e"};}
 	cavityTreeStyle() {return {color: "#9e713b"};}
 	droppingsTreeStyle() {return {color: "#b89220"};}
 	nestTreeStyle() {return {color: "#ff0000"};}
 	observationStyle() {return {color: NORMAL_COLOR};}
 
-	getFeatureStyle(gathering, isUnits) {
-		if (isUnits) {
-			return this.observationStyle;
-		}
+	getFeatureStyle = ({dataIdx}) => {
+		const namedPlaceStyle = {color: "#aaaaaa", fillOpacity: 0.2};
+		const foragingStyle = {color: "#ffc000"};
+		const breedingAndRestingStyle = {color: "#a9d18e"};
+		const accessStyle = {color: "#ff0000"};
+		const coreZoneStyle = {color: "#ff00ff"};
+		const habitatZoneStyle = {color: "#ffff00"};
+		const applicableZoneStyle = {color: "#00ff00"};
+		const gathering = this.props.formData[dataIdx];
 		const {gatheringType} = gathering;
 		switch (gatheringType) {
 		case "MY.gatheringTypeForagingArea":
-			return this.foragingStyle;
+			return foragingStyle;
 		case "MY.gatheringTypeBreedingAndRestingArea": 
-			return this.breedingAndRestingStyle;
-		case "MY.gatheringTypeCavityTree": 
-			return this.cavityTreeStyle;
-		case "MY.gatheringTypeDroppingsTree": 
-			return this.droppingsTreeStyle;
-		case "MY.gatheringTypeNestTree": 
-			return this.nestTreeStyle;
+			return breedingAndRestingStyle;
+		case "MY.gatheringTypeLolifeAccess": 
+			return accessStyle;
+		case "MY.gatheringTypeLolifeCoreZone": 
+			return coreZoneStyle;
+		case "MY.gatheringTypeLolifeHabitatZone": 
+			return habitatZoneStyle;
+		case "MY.gatheringTypeLolifeApplicableZone": 
+			return applicableZoneStyle;
 		default:
-			return this.namedPlaceStyle;
+			return namedPlaceStyle;
 		}
+	}
+
+	getUnitFeatureStyle = ({featureIdx}) => {
+		const droppingsTreeStyle = {color: "#b89220"};
+		const nestTreeStyle = {color: "#9e713b"};
+		const observationStyle = {color: NORMAL_COLOR};
+
+		const unit = this.props.formData[0].units[featureIdx];
+		const {nestType, indirectObservationType} = unit;
+		if (nestType) {
+			return nestTreeStyle;
+		} else if (indirectObservationType) {
+			return droppingsTreeStyle;
+		}
+		return observationStyle;
 	}
 
 	getIdForDataIdx(idx) {
@@ -942,7 +970,7 @@ class LolifeMapArrayField extends Component {
 
 	startHighlight = ({id}) => {
 		const mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
-		let {color} = this.map.data[mapIdx].getFeatureStyle();
+		let {color} = this.map.data[mapIdx].getFeatureStyle({dataIdx: mapIdx});
 		if (!color) {
 			return;
 		}
@@ -1456,14 +1484,6 @@ class _MapArrayField extends ComposedComponent {
 
 	getDraftStyle = () => {
 		return {color: "#25B4CA", opacity: 1};
-	}
-
-	getUnitFeatureStyle = () => {
-		let color = "#55AEFA";
-		if (this._highlightedUnit !== undefined) {
-			color = combineColors(color, "#ffffff", 30);
-		}
-		return {color: color, fillColor: color, weight: 4};
 	}
 
 	mapKeyFunctions = {
