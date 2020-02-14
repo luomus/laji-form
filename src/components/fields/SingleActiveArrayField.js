@@ -412,7 +412,7 @@ const AccordionButtonsWrapper = ({props, position}) => {
 	if (!buttons) return null;
 
 	const cols = Object.keys(getBootstrapCols()).reduce((cols, colType) => {
-		cols[colType] = (colType === "xs") ? 12 : 12 / buttons.length;
+		cols[colType] = (colType === "xs" || buttons.length > 3) ? 12 : 12 / buttons.length;
 		return cols;
 	}, {});
 
