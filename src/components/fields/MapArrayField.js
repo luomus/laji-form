@@ -823,6 +823,10 @@ class LolifeMapArrayField extends Component {
 		};
 	}
 
+	getDraftStyle() {
+		return this.getFeatureStyle({feature: {properties: {id: getUUID(this.props.formData[this.state.activeIdx])}}}, !!"higlight");
+	}
+
 	getDraw() {
 		const active = this.props.formData[this.state.activeIdx];
 		if (!active) {
@@ -833,7 +837,7 @@ class LolifeMapArrayField extends Component {
 			geoData: this.getFeatureCollection(active, {idx: this.state.activeIdx}),
 			onChange: this.getOnChangeForIdx(this.state.activeIdx),
 			getFeatureStyle: this.getFeatureStyle,
-			getDraftStyle: () => this.getFeatureStyle({feature: {properties: {id: getUUID(active)}}}, !!"higlight"),
+			getDraftStyle: this.getDraftStyle,
 			marker: false,
 			on: {
 				mouseover: this.onMouseOver,
@@ -869,7 +873,7 @@ class LolifeMapArrayField extends Component {
 				},
 				onChange: idx && this.getOnChangeForIdx(idx),
 				editable: !!idx,
-				//getPopup: this.getPopup
+				getPopup: idx && this.getPopup
 			}
 		));
 
@@ -887,7 +891,8 @@ class LolifeMapArrayField extends Component {
 				mouseover: this.onMouseOver,
 				mouseout: this.onMouseOut,
 				click: this.onClick
-			}
+			},
+			getPopup: this.getPopup
 		})).filter(item => item.featureCollection.features.length);
 
 		return [...gatherings, ...units];
@@ -1114,6 +1119,9 @@ class LolifeMapArrayField extends Component {
 	}
 
 	getFormDataForPopup({feature}) {
+		if (feature.properties.unit) {
+			return this.props.formData[0].units.find(item => getUUID(item) === feature.properties.id);
+		}
 		return this.props.formData.find(item => getUUID(item) === feature.properties.id);
 	}
 }
@@ -1131,6 +1139,8 @@ class _MapArrayField extends ComposedComponent {
 		const options = getUiOptions(props.uiSchema);
 		if ((this.props.formData || []).length && "activeIdx" in options) initialState.activeIdx = options.activeIdx;
 		this.state = {...initialState, ...(this.state || {})};
+
+		this.getDraftStyle = this.getDraftStyle.bind(this);
 	}
 
 	componentDidMount() {
@@ -1600,7 +1610,10 @@ class _MapArrayField extends ComposedComponent {
 		);
 	}
 
-	getDraftStyle = () => {
+	getDraftStyle() {
+		if (super.getDraftStyle) {
+			return super.getDraftStyle();
+		}
 		return {color: "#25B4CA", opacity: 1};
 	}
 
@@ -1637,6 +1650,19 @@ class _MapArrayField extends ComposedComponent {
 		}
 	}
 
+	popupStrategies = {
+		lolifeUnit: (formData) => {
+			const {nestType, indirectObservationType, identifications} = formData;
+			if (nestType) {
+				return {value: this.props.formContext.translations.NestObservation};
+			} else if (indirectObservationType) {
+				return {value: this.props.formContext.translations.TraceObservation};
+			} else if (identifications) {
+				return {value: this.props.formContext.translations.Observation};
+			}
+		}
+	}
+
 	getFeaturePopupData = (options) => {
 		if (!options) return [];
 
@@ -1645,9 +1671,15 @@ class _MapArrayField extends ComposedComponent {
 
 		let data = [];
 
-		popupFields.forEach(({field: col, template, value: _value, title: _title, if: _if}) => {
+		popupFields.forEach(({field: col, template, value: _value, title: _title, if: _if, strategy}) => {
 			let value, title;
-			if (_value) {
+			if (strategy) {
+				const strategyResult = this.popupStrategies[strategy](formData);
+				if (strategyResult) {
+					value = strategyResult.value;
+					title = strategyResult.title;
+				}
+			} else if (_value) {
 				value = _value;
 				title = _title;
 			} else if (col) {

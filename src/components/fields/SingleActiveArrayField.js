@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject } from "../../utils";
 import { orderProperties } from "react-jsonschema-form/lib/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
@@ -1004,6 +1004,14 @@ const headerFormatters = {
 		component: (props) => {
 			return props.idx !== undefined ? (props.idx + 1) + "." : null;
 		}
+	},
+	lolife: {
+		onMouseEnter: (that, idx) => {
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData[idx])});
+		},
+		onMouseLeave: (that, idx) => {
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
+		}
 	}
 };
 
@@ -1047,9 +1055,10 @@ class AccordionHeader extends Component {
 			if (headerFormatters[formatter]) return headerFormatters[formatter];
 			else return {
 				component: () => {
-					return <span className="text-muted">{
-						formatValue({...that.props, schema: parseSchemaFromFormDataPointer(schema.items, "gatheringType"), uiSchema: parseUiSchemaFromFormDataPointer(uiSchema.items, "gatheringType"), formData: parseJSONPointer(formData, "gatheringType")})
-					}</span>;
+					const {field, default: _default} = isObject(formatter) ? formatter : {field: formatter};
+					const formattedValue = formatValue({...that.props, schema: parseSchemaFromFormDataPointer(schema.items, field), uiSchema: parseUiSchemaFromFormDataPointer(uiSchema.items, field), formData: parseJSONPointer(formData, field)});
+					const value = isEmptyString(formattedValue) ? _default : formattedValue;
+					return <span className="text-muted">{value}</span>;
 				}
 			};
 		});
@@ -1067,9 +1076,9 @@ class AccordionHeader extends Component {
 				{title}
 				{this.getFormatters().map((formatter, i) => {
 					const {component: Formatter} = formatter;
-					return (
+					return Formatter && (
 						<span key={i}> <Formatter that={that} idx={idx} /></span>
-					);
+					) || null;
 				})}
 				{hasHelp ? <Help/> : null}
 			</span>

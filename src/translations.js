@@ -749,4 +749,19 @@
 		en: "Download",
 		sv: "Ladda ner"
 	},
+	nestObservation: {
+		fi: "Pesähavainto",
+		en: "Nest observation",
+		sv: "Nest observation"
+	},
+	traceObservation: {
+		fi: "Jälkihavainto",
+		en: "Trace observation",
+		sv: "Spår observation"
+	},
+	observation: {
+		fi: "Havainto",
+		en: "Observation",
+		sv: "Observation"
+	},
 };
