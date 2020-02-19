@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import ReactAutosuggest from "react-autosuggest";
-import { Glyphicon, Popover, InputGroup, Tooltip, Modal } from "react-bootstrap";
+import { Glyphicon, Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
 import Spinner from "react-spinner";
 import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
@@ -166,13 +166,17 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderChooseImages = () => {
 			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
 			return (
-				<React.Fragment>
-					<div className="laji-form-images">
-							{this.parseChooseImages(chooseImages)
-									.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
-					</div>
-					<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
-				</React.Fragment>
+				<Row>
+					<Col xs={12}>
+						<div className="laji-form-medias">
+								{this.parseChooseImages(chooseImages)
+										.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
+						</div>
+					</Col>
+					<Col xs={12}>
+						<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
+					</Col>
+				</Row>
 			);
 		}
 
@@ -1030,15 +1034,15 @@ class TaxonImgChooser extends Component {
 
 		const {translations} = this.props.formContext;
 		return (
-			<React.Fragment>
-				<div className="taxon-img img-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
-						{!taxon && <div className="image-loading"><Spinner /></div>}
+			<div className="laji-form-medias">
+				<div className="taxon-img media-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
+						{!taxon && <div className="media-loading"><Spinner /></div>}
 						<span>
 							{taxon && taxon.vernacularName || ""}
 						</span>
 				</div>
 					{modal && 
-						<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideModal}>
+						<Modal dialogClassName="laji-form media-modal" show={true} onHide={this.hideModal}>
 							<Modal.Body>
 								<img src={this.state.large} />
 								<div>
@@ -1049,7 +1053,7 @@ class TaxonImgChooser extends Component {
 							</Modal.Body>
 						</Modal>
 					}
-			</React.Fragment>
+			</div>
 		);
 	}
 }
