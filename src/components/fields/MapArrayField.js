@@ -878,7 +878,7 @@ class LolifeMapArrayField extends Component {
 			gatherings.splice(activeIdx, 1);
 		}
 
-		const units = formData[0].units.map((unit, idx) => ({
+		const units = (formData[0].units || []).map((unit, idx) => ({
 			featureCollection: this.getFeatureCollection(unit, {unit: true, idx}, "/unitGathering/geometry"),
 			editable: true,
 			onChange: this.onChangeForUnits,
