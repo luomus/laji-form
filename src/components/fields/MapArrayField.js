@@ -11,7 +11,7 @@ import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch, Fullscreen } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -803,13 +803,54 @@ class LolifeMapArrayField extends Component {
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (this.highlightedElem && prevState.activeIdx !== this.state.activeIdx) {
+			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
+		}
+	}
+
 	getOptions() {
 		const data = this.getData();
 		return {
-			draw: false,
+			draw: this.getDraw(),
 			data,
-			controls: true
+			controls: {
+				draw: {
+					undo: false,
+					redo: false
+				}
+			}
 		};
+	}
+
+	getDraw() {
+		const active = this.props.formData[this.state.activeIdx];
+		if (!active) {
+			return false;
+		}
+
+		return {
+			geoData: this.getFeatureCollection(active, {idx: this.state.activeIdx}),
+			onChange: this.getOnChangeForIdx(this.state.activeIdx),
+			getFeatureStyle: this.getFeatureStyle,
+			getDraftStyle: () => this.getFeatureStyle({feature: {properties: {id: getUUID(active)}}}, !!"higlight"),
+			marker: false,
+			on: {
+				mouseover: this.onMouseOver,
+				mouseout: this.onMouseOut,
+			},
+		};
+	}
+
+	getOnChangeForIdx(idx) {
+		// Store so change detection doesn't think it's a new function.
+		const onChangeForIdx = this.onChanges[idx] || this.onChangeForGathering(idx);
+		this.onChanges[idx] = onChangeForIdx;
+		return onChangeForIdx;
+	}
+
+	getFeatureCollection(geometryContainer, properties = {}, geometryField = "/geometry") {
+		return {type: "FeatureCollection", features: parseGeometries(parseJSONPointer(geometryContainer, geometryField)).map(g => ({type: "Feature", properties: {id: getUUID(geometryContainer), ...properties}, geometry: g}))};
 	}
 
 	getData() {
@@ -817,33 +858,39 @@ class LolifeMapArrayField extends Component {
 	}
 
 	_getData(formData) {
-		const gatherings = (formData || []).map((gathering, idx) => {
-			// Store so change detection doesn't think it's a new function.
-			const onChangeForIdx = this.onChanges[idx] || this.onChangeForIdx(idx);
-			this.onChanges[idx] = onChangeForIdx;
-			return {
-				featureCollection: {type: "FeatureCollection", features: parseGeometries(gathering.geometry).map(g => ({type: "Feature", properties: {id: getUUID(gathering)}, geometry: g}))},
+		let gatherings = (formData || []).map((gathering, idx) => (
+			{
+				featureCollection: this.getFeatureCollection(gathering, {idx}),
 				getFeatureStyle: this.getFeatureStyle,
 				on: {
 					mouseover: this.onMouseOver,
 					mouseout: this.onMouseOut,
 					click: this.onClick
 				},
-				onChange: onChangeForIdx,
-				editable: true,
-				getPopup: this.getPopup
-			};
-		});
+				onChange: idx && this.getOnChangeForIdx(idx),
+				editable: !!idx,
+				//getPopup: this.getPopup
+			}
+		));
 
-		const units = {
-			featureCollection: {
-				type: "FeatureCollection",
-				features: formData[0].units.filter(unit => Object.keys(unit.unitGathering.geometry).length).map((unit) => ({type: "Feature", properties: {id: getUUID(unit), unit: true}, geometry: unit.unitGathering.geometry}))
-			},
+		const {activeIdx} = this.state;
+		if (activeIdx !== undefined && !isNaN(activeIdx)) {
+			gatherings.splice(activeIdx, 1);
+		}
+
+		const units = formData[0].units.map((unit, idx) => ({
+			featureCollection: this.getFeatureCollection(unit, {unit: true, idx}, "/unitGathering/geometry"),
+			editable: true,
+			onChange: this.onChangeForUnits,
 			getFeatureStyle: this.getUnitFeatureStyle,
-		};
+			on: {
+				mouseover: this.onMouseOver,
+				mouseout: this.onMouseOut,
+				click: this.onClick
+			}
+		})).filter(item => item.featureCollection.features.length);
 
-		return [...gatherings, units];
+		return [...gatherings, ...units];
 	}
 
 	getGeometries() {
@@ -857,7 +904,7 @@ class LolifeMapArrayField extends Component {
 		], []);
 	}
 
-	onChangeForIdx = (idx) => (events) => {
+	onChangeForGathering = (idx) => (events) => {
 		let formData = this.getGatherings ? this.getGatherings() : this.props.formData;
 		events.forEach(e => {
 			switch (e.type) {
@@ -887,11 +934,24 @@ class LolifeMapArrayField extends Component {
 				break;
 			}
 		});
-		this.onGatheringChange(formData);
+		this.props.onChange(formData);
 	}
 
-	onGatheringChange(formData) {
-		this.props.onChange(formData);
+	onChangeForUnits = (events) => {
+		let formData = this.props.formData[0].units;
+		events.forEach(e => {
+			switch (e.type) {
+			case "edit":
+				formData = updateSafelyWithJSONPointer(formData, e.features[0].geometry, `/${e.features[0].properties.idx}/unitGathering/geometry`);
+				break;
+			case "create":
+				throw new Error("Lolife map shouldn't me able to send create for unit");
+			case "delete":
+				formData = updateSafelyWithJSONPointer(formData, undefined, `/${e.features[0].properties.idx}/unitGathering/geometry`);
+				break;
+			}
+		});
+		this.props.onChange(updateSafelyWithJSONPointer(this.props.formData, formData, "/0/units"));
 	}
 
 	cavityTreeStyle() {return {color: "#9e713b"};}
@@ -899,106 +959,158 @@ class LolifeMapArrayField extends Component {
 	nestTreeStyle() {return {color: "#ff0000"};}
 	observationStyle() {return {color: NORMAL_COLOR};}
 
-	getFeatureStyle = ({dataIdx}) => {
+	getFeatureStyle = ({feature}, highlight) => {
+		if (!feature) {
+			return {};
+		}
 		const namedPlaceStyle = {color: "#aaaaaa", fillOpacity: 0.2};
-		const foragingStyle = {color: "#ffc000"};
+		const foragingStyle = {color: "#FFCD38"};
 		const breedingAndRestingStyle = {color: "#a9d18e"};
-		const accessStyle = {color: "#ff0000"};
-		const coreZoneStyle = {color: "#ff00ff"};
-		const habitatZoneStyle = {color: "#ffff00"};
-		const applicableZoneStyle = {color: "#00ff00"};
-		const gathering = this.props.formData[dataIdx];
+		const accessStyle = {color: "#F489A7"};
+		const coreZoneStyle = {color: "#F2764D"};
+		const habitatZoneStyle = {color: "#937D32"};
+		const applicableZoneStyle = {color: "#8EC0D1"};
+		let idx = undefined;
+		const gathering = this.props.formData.find((item, _idx) => {
+			idx =_idx;
+			return getUUID(item) === feature.properties.id;
+		});
+		if (!gathering) {
+			return {};
+		}
+		let style;
 		const {gatheringType} = gathering;
 		switch (gatheringType) {
 		case "MY.gatheringTypeForagingArea":
-			return foragingStyle;
+			style = foragingStyle;
+			break;
 		case "MY.gatheringTypeBreedingAndRestingArea": 
-			return breedingAndRestingStyle;
+			style = breedingAndRestingStyle;
+			break;
 		case "MY.gatheringTypeLolifeAccess": 
-			return accessStyle;
+			style = accessStyle;
+			break;
 		case "MY.gatheringTypeLolifeCoreZone": 
-			return coreZoneStyle;
+			style = coreZoneStyle;
+			break;
 		case "MY.gatheringTypeLolifeHabitatZone": 
-			return habitatZoneStyle;
+			style = habitatZoneStyle;
+			break;
 		case "MY.gatheringTypeLolifeApplicableZone": 
-			return applicableZoneStyle;
+			style = applicableZoneStyle;
+			break;
 		default:
-			return namedPlaceStyle;
+			style = namedPlaceStyle;
 		}
+
+		const {activeIdx} = this.state;
+		if (highlight || activeIdx !== undefined && !isNaN(activeIdx)) {
+			if (idx !== activeIdx) {
+				return getFeatureStyleWithLowerOpacity(style);
+			}
+			return getFeatureStyleWithHighlight(style);
+		}
+		return style;
 	}
 
-	getUnitFeatureStyle = ({featureIdx}) => {
+	getUnitFeatureStyle = ({feature}) => {
 		const droppingsTreeStyle = {color: "#b89220"};
 		const nestTreeStyle = {color: "#9e713b"};
 		const observationStyle = {color: NORMAL_COLOR};
 
-		const unit = this.props.formData[0].units[featureIdx];
-		const {nestType, indirectObservationType} = unit;
-		if (nestType) {
-			return nestTreeStyle;
-		} else if (indirectObservationType) {
-			return droppingsTreeStyle;
+		const unit = this.props.formData[0].units.find((item) => getUUID(item) === feature.properties.id);
+		if (!unit) {
+			return {};
 		}
-		return observationStyle;
+		const {nestType, indirectObservationType} = unit;
+		let style = observationStyle;
+		if (nestType) {
+			style = nestTreeStyle;
+		} else if (indirectObservationType) {
+			style = droppingsTreeStyle;
+		}
+
+		const {activeIdx} = this.state;
+		if (activeIdx !== undefined && !isNaN(activeIdx)) {
+			return getFeatureStyleWithLowerOpacity(style);
+		}
+		return style;
 	}
 
-	getIdForDataIdx(idx) {
-		return `${this.props.idSchema.$id}_${idx}`;
+	getHighlightElem(idx, unit) {
+		if (unit) {
+			return getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0_units_${idx}`);
+		} else {
+			return document.getElementById(`${this.props.idSchema.$id}_${idx}-panel`);
+		}
 	}
 
-	onMouseOver() {
-	//onMouseOver(e, {dataIdx}) {
-		//return;
-		//const idx = dataIdx - 1;
-		//this.startHighlight(idx);
+	onMouseOver(e, {feature}) {
+		const {idx, unit} = feature.properties;
 
-		//const id = this.getIdForDataIdx(idx);
-		//this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+		if (!unit && !idx) {
+			return;
+		}
 
-		//if (this.highlightedElem) {
-		//	this.highlightedElem.className += " map-highlight";
-		//}
+		this.highlightedElem = this.getHighlightElem(idx, unit);
+
+		if (this.highlightedElem) {
+			this.highlightedElem.className += " map-highlight";
+		}
 	}
 
-	onMouseOut() {
-		//onMouseOut(e, {dataIdx}) {
-		//return;
-		//const idx = dataIdx - 1;
-		//this.endHighlight(idx);
+	onMouseOut(e, {feature}) {
+		const {idx, unit} = feature.properties;
 
-		//const id = this.getIdForDataIdx(idx);
-		//this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+		if (!unit && !idx) {
+			return;
+		}
 
-		//if (this.highlightedElem) {
-		//	this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
-		//}
+		this.highlightedElem = this.getHighlightElem(idx, unit);
+
+		if (this.highlightedElem) {
+			this.highlightedElem.className = this.highlightedElem.className.replace(" map-highlight", "");
+		}
 	}
 
 	startHighlight = ({id}) => {
-		const mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
-		let {color} = this.map.data[mapIdx].getFeatureStyle({dataIdx: mapIdx});
-		if (!color) {
+		let mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
+		let style = this.map.data[mapIdx].getFeatureStyle({dataIdx: mapIdx, feature: this.map.data[mapIdx].featureCollection.features[0]});
+		if (!style.color) {
 			return;
 		}
-		color = combineColors(color, "#ffffff", 150);
+		const color = combineColors(style.color, "#ffffff", 150);
 		const layer = this.map.getLayerByIdxTuple([mapIdx, 0]);
-		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
+		layer && this.map.setLayerStyle(layer, {...style, color, fillColor: color});
 	}
 
 	endHighlight = ({id}) => {
-		const mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
-		const {color} = this.map.data[mapIdx].getFeatureStyle();
-		if (!color) {
+		let mapIdx = this.map.data.findIndex(d => ((d.featureCollection.features[0] || {}).properties || {}).id === id);
+		const style = this.map.data[mapIdx].getFeatureStyle({dataIdx: mapIdx, feature: this.map.data[mapIdx].featureCollection.features[0]});
+		if (!style) {
 			return;
 		}
+		if (!style.fillOpacity) {
+			style.fillOpacity = 0.4; // LajiMap default fill opacity.
+		}
 		const layer = this.map.getLayerByIdxTuple([mapIdx, 0]);
-		layer && this.map.setLayerStyle(layer, {color, fillColor: color});
+		layer && this.map.setLayerStyle(layer, style);
 	}
 
-	onClick = (e, {dataIdx}) => {
-		const {contextId, topOffset, bottomOffset} = this.props.formContext;
-		const idx = dataIdx - 1;
-		scrollIntoViewIfNeeded(getSchemaElementById(contextId, this.getIdForDataIdx(idx)), topOffset, bottomOffset);
+	onClick = (e, {feature}) => {
+		const {idx, unit} = feature.properties;
+
+		if (!unit && !idx) {
+			return;
+		}
+
+		const {topOffset, bottomOffset} = this.props.formContext;
+		if (!unit) {
+			this.setState({activeIdx: idx});
+		}
+		const elem = this.getHighlightElem(idx, unit);
+		scrollIntoViewIfNeeded(elem, topOffset, bottomOffset);
+		highlightElem(elem);
 	}
 
 	getFormDataForPopup({feature}) {
@@ -1944,3 +2056,20 @@ class MapPanel extends Component {
 		);
 	}
 }
+
+const saneOpacityRange = (opacity) => Math.min(1, Math.max(0, opacity || 0));
+
+export const getFeatureStyleWithLowerOpacity = style => (
+	{
+		...style,
+		opacity: saneOpacityRange(style.opacity || 1 - 0.5),
+		fillOpacity: saneOpacityRange(style.fillOpacity || 0.4 - 0.3)
+	}
+);
+
+export const getFeatureStyleWithHighlight = style => {
+	const color = style.color
+		? combineColors(style.color, "#ffffff", 30)
+		: undefined;
+	return {...style, color, fillOpacity: saneOpacityRange(style.fillOpacity || 0.4 + 0.4)};
+};

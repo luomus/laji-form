@@ -459,7 +459,7 @@ class AccordionArrayFieldTemplate extends Component {
 					idx={idx}
 					wrapperClassName="panel-title"
 					className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
-					<DeleteButton id={`${that.props.idSchema.$id}_${idx}`}
+					<DeleteButton id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
 						disabled={disabled || readonly}
 						ref={this.setDeleteButtonRef(idx)}
 						className="pull-right"
@@ -487,6 +487,7 @@ class AccordionArrayFieldTemplate extends Component {
 					{arrayFieldTemplateProps.items.map((item, idx) => (
 						<Panel key={idx}
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
+						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
 									 bsStyle={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
@@ -939,9 +940,7 @@ const headerFormatters = {
 
 			map.addData({
 				featureCollection: {type: "featureCollection", features: geometries},
-				getFeatureStyle: () => {
-					return {opacity: 0.6, color: "#888888"};
-				},
+				getFeatureStyle: () => ({opacity: 0.6, color: "#888888"}),
 				temp: true
 			});
 		},

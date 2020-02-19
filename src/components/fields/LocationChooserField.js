@@ -7,9 +7,8 @@ import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
-import { Map, parseGeometries } from "./MapArrayField";
+import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { combineColors } from "laji-map/lib/utils";
 
 @BaseComponent
 export default class LocationChooserField extends Component {
@@ -88,23 +87,21 @@ class LocationButton extends Component {
 	}
 
 	onMouseEnter = () => {
-		//return;
-		//const {that} = this.props;
-		//const idx = this.getIdx();
-		//this._hovered = true;
-		//if (typeof idx === "number") {
-		//	new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx, id: getUUID(that.props.formData)});
-		//}
+		const {that} = this.props;
+		const idx = this.getIdx();
+		this._hovered = true;
+		if (typeof idx === "number") {
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData)});
+		}
 	}
 
 	onMouseLeave = () => {
-		//return;
-		//const {that} = this.props;
-		//const idx = this.getIdx();
-		//this._hovered = false;
-		//if (typeof idx === "number") {
-		//	new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx, id: getUUID(that.props.formData)});
-		//}
+		const {that} = this.props;
+		const idx = this.getIdx();
+		this._hovered = false;
+		if (typeof idx === "number") {
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData)});
+		}
 	}
 
 	getUnitDrawFeatureStyle = () => ({color: "#55AEFA"})
@@ -177,45 +174,31 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
+		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
-		const idx = this.getIdx();
-
-		const geometry = this.getGeometry();
-		const draw = geometry && geometry.type
-				? {featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry}]}}
-				: undefined;
-
-		const {strategy} = getUiOptions(that.props.uiSchema);
-		//if (strategy === "lolife" && draw && map.data[idx]) {
-		//	draw.getFeatureStyle = map.data[idx].getFeatureStyle;
-		//} else if (strategy === "lolifeUnit" && draw && map.data[map.data.length - 1]) { // Units are last
-		//	draw.getFeatureStyle = map.data[map.data.length - 1].getFeatureStyle;
-		//}
-
+		let draw;
+		if (strategy === "lolife") {
+			draw = map.getDraw();
+		}
 		const id = getUUID(that.props.formData);
 		let data = map.data.filter((item) => {
-			const feature = item.featureCollection.features[0];
-			const {properties} = (feature || {});
-			return feature
-				&& (
-					isNaN(idx)
-					? properties.hasOwnProperty("id")
-					: strategy !== "lolife" || properties.unit || properties.id !== id
-				);
-		}).map(item => ({...item, getPopup: undefined, on: undefined}));
+			const isCurrent = item.featureCollection.features[0].properties.id === id;
+			if (strategy === "lolifeUnit" && isCurrent) {
+				draw = {...item,
+					idx: map.drawIdx,
+					getPopup: undefined,
+					on: undefined,
+					getFeatureStyle: this.getFeatureStyleWithHighlight(item.getFeatureStyle),
+					getDraftStyle: () => this.getFeatureStyleWithHighlight(item.getFeatureStyle)({feature: {properties: {id}}}, !!"higlight")
+				};
+			}
+			return !isCurrent;
+		}).map(item => ({...item, getPopup: undefined, on: undefined, getFeatureStyle: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)}));
 
 		if (strategy === "lolifeUnit") {
-			data = data.map(item =>
-				item.featureCollection.features[0].properties.unit === true
-				? {
-					...item, featureCollection: {
-						...item.featureCollection,
-						features: item.featureCollection.features.filter(f => f.properties.id !== id)
-					}
-				}
-				: item
-			);
+			data.push(map.getDraw());
 		}
+
 		return [
 			draw,
 			data
@@ -376,6 +359,7 @@ class LocationButton extends Component {
 		case "unit":
 			return this.getUnitMiniMapData();
 		case "lolifeUnit": 
+			return this.getLolifeUnitMiniMapData();
 		case "lolife": 
 			return this.getLolifeMiniMapData();
 		}
@@ -412,35 +396,58 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
+		const draw = map.getDraw();
+		return [
+			[
+				draw,
+				...map.data.map((item) => {
+					return {
+						...item,
+						getPopup: undefined,
+						on: undefined,
+						editable: false,
+						getFeatureStyle: item.getFeatureStyle
+					};
+				})
+			],
+			{dataIdxs: [draw.idx || 0]}
+		];
+	}
+
+	getLolifeUnitMiniMapData = () => {
+		const {that} = this.props;
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const {map} = mapContext;
 		const id = getUUID(that.props.formData);
 		return [
-			map.data.map((item) => {
-				const feature = item.featureCollection.features[0];
-				const {properties = {}} = feature || {};
-				return {
-					...item,
-					getPopup: undefined,
-					on: undefined,
-					editable: false,
-					getFeatureStyle: item.getFeatureStyle
-					? properties.id === id
-					? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
-					: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
-					: undefined
-				};
-			}),
+			[
+				...map.data.map((item) => (
+					{
+						...item,
+						getPopup: undefined,
+						on: undefined,
+						editable: false,
+						getFeatureStyle: item.getFeatureStyle
+						? item.featureCollection.features[0].properties.id === id
+							? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
+							: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
+						: undefined
+					}
+				)),
+				map.getDraw()
+			],
 			{dataIdxs: [map.data.findIndex(d => d.featureCollection.features[0].properties.id === id)]}
 		];
 	}
 
 	getFeatureStyleWithLowerOpacity = getFeatureStyle => (...params) => {
 		const style = getFeatureStyle(...params);
-		return {...style, opacity: 0.5, fillOpacity: 0.5};
+		return getFeatureStyleWithLowerOpacity(style);
 	}
 
 	getFeatureStyleWithHighlight = getFeatureStyle => (...params) => {
 		const style = getFeatureStyle(...params);
-		return {...style, color: combineColors(style.color, "#ffffff", 30)};
+		return getFeatureStyleWithHighlight(style);
 	}
 
 	onEntered = () => {
