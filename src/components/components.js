@@ -423,7 +423,7 @@ export function Help({help, id}) {
 	const helpGlyph = <span className="label-info laji-form-help-glyph"><strong>?</strong></span>;
 
 	return help ? (
-		<OverlayTrigger placement="right" overlay={<Tooltip id={id}>{help}</Tooltip> }>
+		<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
 			{helpGlyph}
 		</OverlayTrigger>
 	) : helpGlyph;
@@ -524,7 +524,7 @@ export class TooltipComponent extends Component {
 
 		const overlay = (
 			<_OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
-				(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
+				(tooltip) ? <Tooltip id={`${id}-tooltip`}><span dangerouslySetInnerHTML={{__html: tooltip}} /></Tooltip> : <NullTooltip />
 			}>
 				{children}
 			</_OverlayTrigger>
