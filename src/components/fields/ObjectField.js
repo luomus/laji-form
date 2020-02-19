@@ -76,14 +76,14 @@ function GridTemplate(props) {
 		});
 	});
 
-	const {rowTitles = []} = gridOptions;
+	const {rowTitles = [], classNames = {}} = gridOptions;
 	const {Label} = props.formContext;
 
 	const addRowTitles = (rows, rowTitles) => {
 		for (let i = 0; i < rowTitles.length; i++) {
 			rows[i] = [];
 			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
-			rows[i].push(<Col {...titleCols} key={"title_" + i}>
+			rows[i].push(<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
 							<Label id={idSchema.$id + "_row_" + i}
 								   label={rowTitles[i].title}
 								   help={rowTitles[i].help}/>
@@ -117,7 +117,7 @@ function GridTemplate(props) {
 		}, {});
 
 		if (!isHidden(uiSchema, propertyName)) getRow(propertyName, colsToRows, rows).push(
-			<Col key={propertyName} {...cols}>
+			<Col key={propertyName} {...cols} className={classNames[propertyName]}>
 				{propertiesByName[propertyName].content}
 			</Col>
 		);
