@@ -4,9 +4,8 @@ import { rulePropType, operationPropType, computeUiSchema } from "./ConditionalU
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-//import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
 import { arrayKeyFunctions } from "../ArrayFieldTemplate";
-//import { toIdSchema } from "react-jsonschema-form/lib/utils";
+import { ArrayFieldIdFixed } from "./FilterArrayField";
 
 @BaseComponent
 export default class MultiArrayField extends Component {
@@ -31,7 +30,6 @@ export default class MultiArrayField extends Component {
 	}
 
 	itemIds = {}
-	arrayFieldIdHashes = [];
 
 	render() {
 		const {props} = this;
@@ -112,18 +110,20 @@ export default class MultiArrayField extends Component {
 		const withoutNonGrouped = [...groupedItems];
 		withoutNonGrouped.pop();
 
-		//this.ArrayFieldIdFixed = Array(groups.length + 1).fill(undefined).map((_, idx) => {
-		//	let offset = 0;
-		//	for (let i = 0; i < idx; i++) {
-		//		offset += this.groupedItems[i].length;
-		//	}
-		//	const hash = offset;
-		//	const [_hash] = this.arrayFieldIdHashes[idx] || [];
-		//	if (_hash !== hash) {
-		//		this.arrayFieldIdHashes[idx] = [hash, getArrayFieldIdFixed(this, idx)];
-		//	}
-		//	return this.arrayFieldIdHashes[idx][1];
-		//});
+		let offset = 0;
+		const offsets = (renderNonGrouped ? groupedItems : withoutNonGrouped).map((group, idx) => {
+			let idxOffsets;
+			if (!idx) {
+				idxOffsets = {};
+			} else {
+				idxOffsets = group.reduce((g, i, _idx) => {
+					g[_idx] = offset;
+					return  g;
+				}, {});
+			}
+			offset += group.length;
+			return idxOffsets;
+		}, []);
 
 		return (renderNonGrouped ? groupedItems : withoutNonGrouped).map((items, idx) => {
 			const operations = renderNonGrouped && idx === groupedItems.length - 1
@@ -135,6 +135,7 @@ export default class MultiArrayField extends Component {
 				: innerUiSchema;
 
 			uiSchema = updateSafelyWithJSONPointer(uiSchema, this.arrayKeyFunctions[idx], "/ui:options/arrayKeyFunctions");
+			uiSchema = updateSafelyWithJSONPointer(uiSchema, offsets[idx], "/ui:options/idxOffsets");
 
 			let offset = 0;
 			for (let i = 0; i < idx; i++) {
@@ -143,15 +144,15 @@ export default class MultiArrayField extends Component {
 
 			uiSchema = {...uiSchema, "ui:options": {...getUiOptions(uiSchema), startIdx: offset}};
 
-			//const formContext = {...this.props.formContext, ArrayField: this.ArrayFieldIdFixed[idx]};
+			const formContext = {...this.props.formContext, ArrayField: ArrayFieldIdFixed};
 
 			const {SchemaField} = this.props.registry.fields;
 			return (
-				<React.Fragment key={`${idx}-${this.groupedItems[idx].length}-${offset}`}>
+				<React.Fragment key={idx}>
 					<SchemaField
 						{...props}
-					//formContext={formContext}
-					//registry={{...this.props.registry, formContext}}
+						formContext={formContext}
+						registry={{...this.props.registry, formContext}}
 						uiSchema={uiSchema}
 						formData={items}
 						onChange={this.onChange(idx)}
@@ -212,24 +213,5 @@ const getArrayKeyFunctions = (that) => {
 			const _options = {...options, getProps: () => ({...options.getProps(), formData: that.props.formData})};
 			return _arrayKeyFunctions.navigateArray(e, _options);
 		}
-	};};
-
-//const getArrayFieldIdFixed = (that, idx) => {
-//	function ArrayFieldIdFixed(props) {
-//		ArrayField.call(this, props);
-//	}
-//	ArrayFieldIdFixed.prototype = Object.create(ArrayField.prototype);
-//	ArrayFieldIdFixed.prototype.constructor = ArrayFieldIdFixed;
-//	ArrayFieldIdFixed.prototype.renderArrayFieldItem = function(props) {
-//		const idWithoutIdx = props.itemIdSchema.$id.replace(/(.*)_[0-9]+/, "$1");
-//		let offset = 0;
-//		for (let i = 0; i < idx; i++) {
-//			offset += Object.keys(that.groupedItems[i]).length;
-//		}
-//		const index = offset + props.index;
-//		const idSchema = toIdSchema(props.itemSchema, `${idWithoutIdx}_${index}`, that.props.registry.definitions, props.item, that.props.idPrefix);
-//		return ArrayField.prototype.renderArrayFieldItem.call(this, {...props, itemIdSchema: idSchema});
-//	};
-//	//return customButtonsHandling(ArrayFieldIdFixed);
-//	return ArrayFieldIdFixed;
-//};
+	};
+};

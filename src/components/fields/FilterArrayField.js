@@ -111,7 +111,7 @@ export default class FilterArrayField extends Component {
 	}
 }
 
-class ArrayFieldIdFixed extends ArrayField {
+export class ArrayFieldIdFixed extends ArrayField {
 	renderArrayFieldItem(props) {
 		const idWithoutIdx = props.itemIdSchema.$id.replace(/(.*)_[0-9]+/, "$1");
 		const {idxOffsets} = getUiOptions(this.props.uiSchema);
