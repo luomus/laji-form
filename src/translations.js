@@ -764,4 +764,9 @@
 		en: "Observation",
 		sv: "Observation"
 	},
+	somethingWentWrong: {
+		fi: "Jokin meni pieleen",
+		en: "Something went wrong",
+		sv: "Något gick fel"
+	},
 };

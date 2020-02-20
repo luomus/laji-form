@@ -586,7 +586,10 @@ export function MediaArrayField(ComposedComponent) {
 			let tmpMedias;
 
 			const fail = (translationKey, additionalInfo="") => {
-				throw `${this.props.formContext.translations[translationKey]} ${additionalInfo}`;
+				const translation = (Array.isArray(translationKey) ? translationKey : [translationKey])
+					.map(key => this.props.formContext.translations[key])
+					.join(". ");
+				throw `${translation} ${additionalInfo}`;
 			};
 
 			return this.processFiles(files).then((processedFiles) => {
@@ -635,7 +638,7 @@ export function MediaArrayField(ComposedComponent) {
 				} else if (response.status === 503) {
 					fail("InsufficientSpace");
 				} else {
-					fail("TryAgainLater");
+					fail(["SomethingWentWrong", "TryAgainLater"]);
 				}
 			}).then(response => {
 				if (!response) return;
