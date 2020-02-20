@@ -320,9 +320,8 @@ class SectionArrayFieldTemplate extends Component {
 		const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);
-		//let item = _item;
 		item = updateFormDataWithJSONPointer({schema: schema.items, formData: item, registry}, parseInt(newSection), sectionField);
-		const items = [...this.props.formData, item].sort((a, b) => parseJSONPointer(a, sectionField) - parseJSONPointer(b, sectionField));
+		const items = [...this.props.formData, item];
 		const idx = items.findIndex(i => i === item);
 
 		const idToFocus =  `${this.props.idSchema.$id}_${idx}`;
