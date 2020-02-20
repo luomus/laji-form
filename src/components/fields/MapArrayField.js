@@ -1411,25 +1411,25 @@ class _MapArrayField extends ComposedComponent {
 			};
 		};
 
-		const putChildsToParents = (props) => {
-			return {
-				schema: {...schema, items: props.schema},
-				uiSchema: {...uiSchema, items: props.uiSchema},
-				idSchema: this.props.idSchema,
-				formData: activeIdx !== undefined ? update((this.props.formData || []), {$merge: {[activeIdx]: props.formData}}) : this.props.formData,
-				errorSchema: props.errorSchema && Object.keys(props.errorSchema).length ? 
-					{[activeIdx]: props.errorSchema} : 
-					{},
-				onChange: formData => {
+		const putChildsToParents = (props, key) => {
+			if (!this.onChangeFor) {
+				this.onChangeFor = { }
+			}
+			if (!this.onChangeFor[key]) {
+				this.onChangeFor[key] = formData => {
 					this.props.onChange(formData.map((item, idx) => {
 						return {
 							...(this.props.formData[idx] || getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)), 
 							...item
 						};
 					}));
-				},
-				registry: this.props.registry,
-				formContext: this.props.formContext
+				};
+			}
+			return {
+				...this.props,
+				schema: {...schema, items: props.schema},
+				uiSchema: {...uiSchema, items: props.uiSchema},
+				onChange: this.onChangeFor[key]
 			};
 		};
 
