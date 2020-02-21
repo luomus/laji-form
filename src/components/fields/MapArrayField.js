@@ -968,7 +968,7 @@ class LolifeMapArrayField extends Component {
 		if (!feature) {
 			return {};
 		}
-		const namedPlaceStyle = {color: "#aaaaaa", fillOpacity: 0.2};
+		const namedPlaceStyle = {color: "#777777", fillOpacity: 0.2, weight: 6};
 		const foragingStyle = {color: "#FFCD38"};
 		const breedingAndRestingStyle = {color: "#a9d18e"};
 		const accessStyle = {color: "#F489A7"};
@@ -1413,7 +1413,7 @@ class _MapArrayField extends ComposedComponent {
 
 		const putChildsToParents = (props, key) => {
 			if (!this.onChangeFor) {
-				this.onChangeFor = { }
+				this.onChangeFor = {};
 			}
 			if (!this.onChangeFor[key]) {
 				this.onChangeFor[key] = formData => {
