@@ -1563,3 +1563,7 @@ min-height: 20px;
 	display: inline-block;
 	margin-right: 10px;
 }
+.tooltip.lg .tooltip-inner {
+	font-size: 14px;
+	max-width: 400px;
+}

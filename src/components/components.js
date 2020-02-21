@@ -14,10 +14,11 @@ export class Button extends Component {
 			tooltip,
 			tooltipPlacement,
 			tooltipTrigger,
+			tooltipClass,
 			..._props
 		} = this.props;
 		return (
-			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
+			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
 				bsStyle="primary"
 				{..._props}
@@ -520,11 +521,11 @@ export class TooltipComponent extends Component {
 	onMouseOut = () => this.overlayElem.hide();
 
 	render() {
-		const {tooltip, children, id, placement, trigger} = this.props;
+		const {tooltip, children, id, placement, trigger, className} = this.props;
 
 		const overlay = (
 			<_OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
-				(tooltip) ? <Tooltip id={`${id}-tooltip`}><span dangerouslySetInnerHTML={{__html: tooltip}} /></Tooltip> : <NullTooltip />
+				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}><span dangerouslySetInnerHTML={{__html: tooltip}} /></Tooltip> : <NullTooltip />
 			}>
 				{children}
 			</_OverlayTrigger>
