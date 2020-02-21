@@ -151,38 +151,70 @@ export function handlesArrayKeys(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
-			(super.addKeyHandlers || this.addKeyHandlers).call(this);
-			(super.addChildKeyHandlers ||  this.addChildKeyHandlers).call(this);
-			(super.addCustomEventListeners || this.addCustomEventListeners).call(this);
+			this.addKeyHandlers(this.props);
+			this.addChildKeyHandlers(this.props);
+			this.addCustomEventListeners(this.props);
 			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentDidUpdate(prevProps, prevState) {
-			(super.addChildKeyHandlers || this.addChildKeyHandlers).call(this);
+			this.removeKeyHandlers(prevProps);
+			this.addKeyHandlers(this.props);
+			this.removeChildKeyHandlers(prevProps);
+			this.addChildKeyHandlers(this.props);
+			this.removeCustomEventListeners(prevProps);
+			this.addCustomEventListeners(this.props);
 			if (super.componentDidUpdate) super.componentDidUpdate(prevProps, prevState);
+		}
+
+		componentWillUnmount() {
+			this.removeKeyHandlers(this.props);
+			this.removeChildKeyHandlers(this.props);
+			this.removeCustomEventListeners(this.props);
+			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
 		addKeyHandlers() {
 			const context = new Context(this.props.formContext.contextId);
+			const [keys, options] = (super.getKeyHandlers || this.getKeyHandlers).call(this, this.props);
+			this.arrayKeyFunctions = keys;
+			context.addKeyHandler(this.props.idSchema.$id, keys, options);
+		}
 
-			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(this.props.uiSchema);
-			this.arrayKeyFunctions = _arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions};
-			context.addKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions, {
+		removeKeyHandlers(props) {
+			const context = new Context(props.formContext.contextId);
+			context.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
+		}
+
+		getKeyHandlers(props) {
+			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(props.uiSchema);
+			return [_arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions}, {
 				getProps: () => this.props
+			}];
+		}
+
+		addChildKeyHandlers(props) {
+			const context = new Context(props.formContext.contextId);
+			this.childKeyHandlers = (super.getChildKeyHandlers || this.getChildKeyHandlers).call(this, props);
+			this.childKeyHandlers.forEach(handler => {
+				context.addKeyHandler(...handler);
 			});
 		}
 
-		addChildKeyHandlers() {
-			const context = new Context(this.props.formContext.contextId);
+		removeChildKeyHandlers(props) {
+			const context = new Context(props.formContext.contextId);
+			this.childKeyHandlers.forEach(handler => {
+				context.removeKeyHandler(...handler);
+			});
+		}
 
-			if (!this.childKeyHandlers) this.childKeyHandlers = [];
-			else this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
-			this.props.items.forEach((item, i) => {
-				const id = `${this.props.idSchema.$id}_${i}`;
-				this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
-				context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
+		getChildKeyHandlers(props) {
+
+			return props.items.map((item, i) => {
+				const id = `${props.idSchema.$id}_${i}`;
+				return [id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
 					return this.deleteButtonRefs[i];
-				}});
+				}}];
 			});
 		}
 
@@ -208,24 +240,24 @@ export function handlesArrayKeys(ComposedComponent) {
 			}
 		}
 
-		addCustomEventListeners() {
-			const context = new Context(this.props.formContext.contextId);
-			context.addCustomEventListener(this.props.idSchema.$id, "focus", this.onFocus);
-			context.addCustomEventListener(this.props.idSchema.$id, "copy", this.onCopy);
+		getCustomEventListeners() {
+			return [
+				["focus", this.onFocus],
+				["copy", this.onCopy]
+			];
 		}
 
-		componentWillUnmount() {
-			const context = new Context(this.props.formContext.contextId);
-
-			context.removeCustomEventListener(this.props.idSchema.$id, "focus", this.onFocus);
-			context.removeCustomEventListener(this.props.idSchema.$id, "copy", this.onCopy);
-			context.removeKeyHandler(this.props.idSchema.$id, this.arrayKeyFunctions);
-			if (this.childKeyHandlers) {
-				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
-			}
-			if (super.componentWillUnmount) super.componentWillUnmount();
+		addCustomEventListeners(props) {
+			const context = new Context(props.formContext.contextId);
+			const customEventListeners = (super.getCustomEventListeners || this.getCustomEventListeners).call(this, props);
+			this.customEventListeners = customEventListeners;
+			customEventListeners.forEach(params => context.addCustomEventListener(props.idSchema.$id, ...params));
 		}
 
+		removeCustomEventListeners(props) {
+			const context = new Context(props.formContext.contextId);
+			this.customEventListeners.forEach(params => context.removeCustomEventListener(props.idSchema.$id, ...params));
+		}
 	};
 }
 

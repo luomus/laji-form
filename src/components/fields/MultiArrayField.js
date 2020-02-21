@@ -203,7 +203,7 @@ const getArrayKeyFunctions = (that) => {
 				return false;
 			}
 			const itemIdx = inputElem.id.replace(props.idSchema.$id, "").replace(/^_?([0-9]+).*$/, "$1");
-			const {startIdx, } = getUiOptions(props.uiSchema);
+			const {startIdx} = getUiOptions(props.uiSchema);
 			if (itemIdx < startIdx || itemIdx >= startIdx + props.formData.length) {
 				return false;
 			}

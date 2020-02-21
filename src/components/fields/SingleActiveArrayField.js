@@ -341,10 +341,10 @@ function handlesButtonsAndFocus(ComposedComponent) {
 	class SingleActiveArrayTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
 
-		addKeyHandlers() {
-			const {renderer = "accordion"} = getUiOptions(this.props.uiSchema);
-			const that = this.props.formContext.this;
-			new Context(this.props.formContext.contextId).addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+		getKeyHandlers(props) {
+			const {renderer = "accordion"} = getUiOptions(props.uiSchema);
+			const that = props.formContext.this;
+			return [arrayKeyFunctions, {
 				getProps: () => this.props,
 				insertCallforward: callback => that.onActiveChange((that.props.formData || []).length, undefined, callback),
 				getCurrentIdx: () => that.state.activeIdx,
@@ -352,52 +352,63 @@ function handlesButtonsAndFocus(ComposedComponent) {
 					? callback()
 					: that.onActiveChange(idx, prop, callback),
 				getIdToScrollAfterNavigate: renderer === "accordion" || renderer === "pager"
-					? () => `${this.props.idSchema.$id}_${that.state.activeIdx}-header`
+					? () => `${props.idSchema.$id}_${that.state.activeIdx}-header`
 					: undefined
-			});
+			}];
 		}
 
-		addChildKeyHandlers() {
-			const that = this.props.formContext.this;
-			if (this.childKeyHandlerId) new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
-			if (that.state.activeIdx !== undefined) {
-				const id = `${this.props.idSchema.$id}_${that.state.activeIdx}`;
-				this.childKeyHandlerId = id;
-				new Context(this.props.formContext.contextId).addKeyHandler(id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
-					return that.deleteButtonRefs[that.state.activeIdx];
-				}});
-			}
+		componentDidMount() {
+			this.addFocusHandlers();
+			if (super.componentDidMount) super.componentDidMount();
+		}
 
+		componentDidUpdate(...params) {
 			this.removeFocusHandlers();
-			this.focusHandlers = [];
-			for (let i = 0; i < this.props.items.length; i++) {
-				this.focusHandlers.push(() => {
-					if (that.state.activeIdx !== i) return new Promise(resolve => {
-						that.onActiveChange(i, undefined, () => resolve());
-					});
-				});
-				const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets);
-				new Context(this.props.formContext.contextId).addFocusHandler(`${that.props.idSchema.$id}_${idx}`, this.focusHandlers[i]);
-			}
-		}
-
-		removeFocusHandlers() {
-			const that = this.props.formContext.this;
-			if (this.focusHandlers) {
-				this.focusHandlers.forEach((handler, i) => {
-					const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets);
-					new Context(this.props.formContext.contextId).removeFocusHandler(`${that.props.idSchema.$id}_${idx}`, this.focusHandlers[i]);
-				});
-			}
+			this.addFocusHandlers();
+			if (super.componentDidUpdate) super.componentDidUpdate(...params);
 		}
 
 		componentWillUnmount() {
-			new Context(this.props.formContext.contextId).removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
-			new Context(this.props.formContext.contextId).removeKeyHandler(this.childKeyHandlerId, arrayItemKeyFunctions);
 			this.removeFocusHandlers();
 			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
+		addFocusHandlers() {
+			this.focusHandlers = this.getFocusHandlers(this.props);
+			this.focusHandlers.forEach(handler => {
+				new Context(this.props.formContext.contextId).addFocusHandler(...handler);
+			});
+		}
+
+		removeFocusHandlers() {
+			this.focusHandlers.forEach(handler => {
+				new Context(this.props.formContext.contextId).removeFocusHandler(...handler);
+			});
+		}
+
+		getFocusHandlers = (props) => {
+			const that = props.formContext.this;
+			return props.items.map((_, i) => {
+				const idx = getIdxWithOffset(i, getUiOptions(that.props.uiSchema).idxOffsets);
+				return [`${that.props.idSchema.$id}_${idx}`,() => {
+					if (that.state.activeIdx !== i) return new Promise(resolve => {
+						that.onActiveChange(i, undefined, () => resolve());
+					});
+				}];
+			});
+		}
+
+		getChildKeyHandlers(props) {
+			const that = props.formContext.this;
+			const handlers = [];
+			if (that.state.activeIdx !== undefined) {
+				const id = `${props.idSchema.$id}_${that.state.activeIdx}`;
+				handlers.push([id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
+					return that.deleteButtonRefs[that.state.activeIdx];
+				}}]);
+			}
+			return handlers;
+		}
 	};
 }
 
