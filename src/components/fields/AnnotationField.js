@@ -158,7 +158,7 @@ class AnnotationBox extends Component {
 			return response.json();
 		}).then(annotation => {
 			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
-			const annotations = [...this.state.annotations, annotation];
+			const annotations = [annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
 		}).catch(() => {
