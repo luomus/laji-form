@@ -89,10 +89,12 @@ export default class FilterArrayField extends Component {
 	}
 
 	getOnActiveChange = (idx, prop, callback) => {
-		const offset = (idx in this.filteredToOffsets)
-			? this.filteredToOffsets[idx]
-			: this.filteredTotal;
-		this.cachedOnActiveChange(idx + offset, prop, callback);
+		const offset = idx === undefined 
+			? 0
+			: (idx in this.filteredToOffsets)
+				? this.filteredToOffsets[idx]
+				: this.filteredTotal;
+		this.cachedOnActiveChange(idx  || 0 + offset, prop, callback);
 	}
 
 	onChange = (formData) => {

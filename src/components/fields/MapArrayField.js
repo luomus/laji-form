@@ -878,7 +878,7 @@ class LolifeMapArrayField extends Component {
 		));
 
 		const {activeIdx} = this.state;
-		if (activeIdx !== undefined && !isNaN(activeIdx)) {
+		if (activeIdx !== undefined) {
 			gatherings.splice(activeIdx, 1);
 		}
 
@@ -1009,7 +1009,7 @@ class LolifeMapArrayField extends Component {
 		}
 
 		const {activeIdx} = this.state;
-		if (highlight || activeIdx !== undefined && !isNaN(activeIdx)) {
+		if (highlight || activeIdx !== undefined) {
 			if (idx !== activeIdx) {
 				return getFeatureStyleWithLowerOpacity(style);
 			}
@@ -1036,7 +1036,7 @@ class LolifeMapArrayField extends Component {
 		}
 
 		const {activeIdx} = this.state;
-		if (activeIdx !== undefined && !isNaN(activeIdx)) {
+		if (activeIdx !== undefined) {
 			return getFeatureStyleWithLowerOpacity(style);
 		}
 		return style;
@@ -1488,7 +1488,7 @@ class _MapArrayField extends ComposedComponent {
 
 		let buttons = undefined;
 		let renderButtonsBelow = false;
-		if (options.buttons) {
+		if (activeIdx !== undefined && options.buttons) {
 			if (_buttonsPath) {
 				buttons = appendAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
@@ -1499,6 +1499,7 @@ class _MapArrayField extends ComposedComponent {
 				renderButtonsBelow = true;
 			}
 		} 
+
 		if (activeIdx === undefined || (!_buttonsPath && !renderButtonsBelow)) {
 			inlineUiSchema["ui:options"].buttons = options.buttons || [];
 		}
