@@ -5,7 +5,7 @@ import { Panel, ListGroup, ListGroupItem, Modal, Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-import { Button, DeleteButton } from "../components";
+import { Button } from "../components";
 import Spinner from "react-spinner";
 import { isObject } from "laji-map/lib/utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
@@ -281,9 +281,9 @@ class AnnotationBox extends Component {
 	}
 
 	render() {
-		const {formContext: {translations, lang, uiSchemaContext: {creator}, apiClient}} = this.props;
+		const {formContext: {translations, lang, apiClient}} = this.props;
 		const {metadataForm = {}, annotations = []} = this.state;
-		const _uiSchema = this.getUiSchema();
+		const _uiSchema = {...this.getUiSchema(), "ui:readonly": true};
 
 		return (
 			<Panel header={<strong>{translations.Comments}</strong>}>
@@ -301,7 +301,6 @@ class AnnotationBox extends Component {
 									apiClient={apiClient.apiClient}
 									uiSchemaContext={this.props.formContext.uiSchemaContext}
 								/>
-								{annotation.annotationByPerson === creator ? <DeleteButton onClick={this.onDelete(annotation.id)} translations={translations} corner={true}/> : null}
 							</div>
 						</ListGroupItem>
 					) : <Spinner />}
