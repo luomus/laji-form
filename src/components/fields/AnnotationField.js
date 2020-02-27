@@ -148,20 +148,24 @@ class AnnotationBox extends Component {
 
 	onAnnotationSubmit = ({formData}) => {
 		const {type} = this.getAddOptions();
+		const context = new Context(this.props.formContext.contextId);
+		context.pushBlockingLoader();
 		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
 			method: "POST",
-			body: JSON.stringify({...formData, targetID: this.props.id, rootID: new Context(this.props.formContext.contextId).formData.id, type})
+			body: JSON.stringify({...formData, targetID: this.props.id, rootID: context.formData.id, type, byRole: "MMAN.formAdmin"})
 		}).then(response => {
 			if (response.status >= 400) {
 				throw new Error("Request failed");
 			}
 			return response.json();
 		}).then(annotation => {
+			context.popBlockingLoader();
 			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
 			const annotations = [annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
 		}).catch(() => {
+			context.popBlockingLoader();
 			this.setState({fail: true});
 		});
 	}
