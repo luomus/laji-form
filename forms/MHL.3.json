@@ -88,7 +88,8 @@
         "MHL.featureEditingNamedPlacesNotAllowed",
         "MHL.featureCopyLatestDocumentToNamedPlace",
         "MHL.featureAdminister",
-        "MHL.featureAdminLockable"
+        "MHL.featureAdminLockable",
+        "MHL.featureEditingOldDocumentWarning"
     ],
     "id": "MHL.3",
     "instructions": {
@@ -111,7 +112,7 @@
         "prepopulatedDocumentFields": {
             "/gatherings/0/locality": "/locality"
         },
-        "useLabel": "Ilmoita havainnot t\u00e4lt\u00e4 reitilt\u00e4"
+        "useLabel": "Ilmoita uusi laskenta t\u00e4lt\u00e4 reitilt\u00e4"
     },
     "options": {
         "namedPlaceList": [
@@ -783,6 +784,29 @@
     },
     "schema": {
         "properties": {
+            "dataOrigin": {
+                "default": [
+                    "MY.dataOriginWebForm"
+                ],
+                "items": {
+                    "enum": [
+                        "",
+                        "MY.dataOriginPaperForm",
+                        "MY.dataOriginWebForm",
+                        "MY.dataOriginSpreadsheetFile"
+                    ],
+                    "enumNames": [
+                        "",
+                        "MY.dataOriginPaperForm",
+                        "MY.dataOriginWebForm",
+                        "MY.dataOriginSpreadsheetFile"
+                    ],
+                    "type": "string"
+                },
+                "title": "Tallennettu paperilomakkeelta",
+                "type": "array",
+                "uniqueItems": true
+            },
             "editors": {
                 "excludeFromCopy": true,
                 "items": {
@@ -1029,10 +1053,10 @@
                                     "enumNames": [
                                         "",
                                         "Ei tietoa",
-                                        "Enimm\u00e4kseen kirkasta",
-                                        "Vaihtelevaa pilvisyytt\u00e4",
-                                        "Enimm\u00e4kseen t\u00e4yspilvist\u00e4",
-                                        "Ajoittain sadetta tai pyry\u00e4"
+                                        "1 - Enimm\u00e4kseen kirkasta",
+                                        "2 - Vaihtelevaa pilvisyytt\u00e4",
+                                        "3 - Enimm\u00e4kseen t\u00e4yspilvist\u00e4",
+                                        "4 - Ajoittain sadetta tai pyry\u00e4"
                                     ],
                                     "excludeFromCopy": true,
                                     "title": "Pilvisyys ja sade",
@@ -1410,14 +1434,12 @@
                                 },
                                 "wayOfTravel": {
                                     "enum": [
-                                        "",
                                         "WBC.wayOfTravelEnum0",
                                         "WBC.wayOfTravelEnum1",
                                         "WBC.wayOfTravelEnum2",
                                         "WBC.wayOfTravelEnum9"
                                     ],
                                     "enumNames": [
-                                        "",
                                         "Jalkaisin",
                                         "Suksilla",
                                         "Muu, mik\u00e4",
@@ -1498,9 +1520,6 @@
                                 {
                                     "censusTaxonID": "MX.37580",
                                     "taxonCensusType": "MY.taxonCensusTypeCounted"
-                                },
-                                {
-                                    "censusTaxonID": "MX.37612"
                                 }
                             ],
                             "excludeFromCopy": true,
@@ -1522,7 +1541,6 @@
                                     }
                                 },
                                 "required": [
-                                    "censusTaxonID",
                                     "taxonCensusType"
                                 ],
                                 "type": "object"
@@ -1661,6 +1679,19 @@
     ],
     "title": "Talvilintulaskenta",
     "uiSchema": {
+        "dataOrigin": {
+            "ui:field": "AnyToBooleanField",
+            "ui:help": "Jos olet tallentamassa havaintoja, jotka on alun perin kirjattu Talvilintuilaskennan paperiselle lomakkeelle, valitse t\u00e4h\u00e4n Kyll\u00e4.",
+            "ui:options": {
+                "allowUndefined": false,
+                "falseValue": [
+                    "MY.dataOriginWebForm"
+                ],
+                "trueValue": [
+                    "MY.dataOriginPaperForm"
+                ]
+            }
+        },
         "editors": {
             "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata lomaketta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
             "ui:options": {
@@ -1712,6 +1743,7 @@
                     "allowNonsuggestedValue": true,
                     "autosuggestField": "friends",
                     "preventTypingPattern": "^MA\\.\\d+$",
+                    "showID": true,
                     "suggestionReceive": "key"
                 },
                 "ui:widget": "AutosuggestWidget"
@@ -1828,7 +1860,7 @@
                                                             "ui:field": "ContextInjectionField",
                                                             "ui:options": {
                                                                 "injections": {
-                                                                    "/ui:options/rules/0/regexp": "/creator"
+                                                                    "/ui:options/rules/0/regexp": "^%{/creator}$"
                                                                 }
                                                             }
                                                         },
@@ -1894,6 +1926,7 @@
             "ui:order": [
                 "*",
                 "count",
+                "dataOrigin",
                 "legPublic",
                 "eventTime"
             ]
@@ -2442,15 +2475,7 @@
                                         },
                                         "ui:annotations": {
                                             "add": {
-                                                "formData": {
-                                                    "annotationClass": "MAN.annotationClassReliable"
-                                                },
-                                                "type": "MAN.typeOpinion",
-                                                "uiSchema": {
-                                                    "annotationClass": {
-                                                        "ui:title": "Havainnon luotettavuus"
-                                                    }
-                                                }
+                                                "type": "MAN.typeOpinion"
                                             },
                                             "adminOnly": true,
                                             "container": "modal",
@@ -2634,41 +2659,61 @@
                                             "ui:field": "HiddenField"
                                         }
                                     },
-                                    "ui:field": "SingleActiveArrayField",
+                                    "ui:field": "MultiArrayField",
                                     "ui:options": {
-                                        "renderer": "split",
-                                        "splitRule": {
-                                            "fieldPath": "/identifications/0/taxonID",
-                                            "rules": [
-                                                "^MX\\.(?!4|5).*$",
-                                                "^MX\\.\\d+$"
-                                            ]
-                                        },
-                                        "uiOptions": [
+                                        "groups": [
                                             {
-                                                "addable": false,
-                                                "keepPropFocusOnNavigate": true,
-                                                "removable": false
-                                            },
-                                            {
-                                                "addable": false,
-                                                "keepPropFocusOnNavigate": true,
-                                                "removable": false,
-                                                "title": "Nis\u00e4kk\u00e4\u00e4t"
-                                            },
-                                            {
-                                                "addable": true,
-                                                "buttons": [
-                                                    {
-                                                        "fn": "add",
-                                                        "label": "Lis\u00e4\u00e4 laji"
+                                                "operations": {
+                                                    "type": "merge",
+                                                    "uiSchema": {
+                                                        "ui:options": {
+                                                            "addable": false,
+                                                            "keepPropFocusOnNavigate": true,
+                                                            "removable": false
+                                                        }
                                                     }
-                                                ],
-                                                "keepPropFocusOnNavigate": true,
-                                                "removable": true,
-                                                "title": "Lis\u00e4lajit"
+                                                },
+                                                "rules": {
+                                                    "field": "/identifications/0/taxonID",
+                                                    "regexp": "^MX\\.(?!4|5).*$"
+                                                }
+                                            },
+                                            {
+                                                "operations": {
+                                                    "type": "merge",
+                                                    "uiSchema": {
+                                                        "ui:options": {
+                                                            "addable": false,
+                                                            "keepPropFocusOnNavigate": true,
+                                                            "removable": false
+                                                        },
+                                                        "ui:title": "Nis\u00e4kk\u00e4\u00e4t"
+                                                    }
+                                                },
+                                                "rules": {
+                                                    "field": "/identifications/0/taxonID",
+                                                    "regexp": "^MX\\.\\d+$"
+                                                }
                                             }
-                                        ]
+                                        ],
+                                        "nonGroupedOperations": {
+                                            "type": "merge",
+                                            "uiSchema": {
+                                                "ui:options": {
+                                                    "addable": true,
+                                                    "buttons": [
+                                                        {
+                                                            "fn": "add",
+                                                            "label": "Lis\u00e4\u00e4 laji"
+                                                        }
+                                                    ],
+                                                    "keepPropFocusOnNavigate": true,
+                                                    "removable": true
+                                                },
+                                                "ui:title": "Lis\u00e4lajit"
+                                            }
+                                        },
+                                        "renderNonGrouped": true
                                     }
                                 }
                             }
@@ -2965,25 +3010,27 @@
                             },
                             "taxonCensus": {
                                 "classNames": "well well-sm",
-                                "items": {
-									"censusTaxonID": {
-										"ui:widget": "HiddenWidget"
-									},
-                                    "taxonCensusType": {
-                                        "ui:options": {
-                                            "allowUndefined": true,
-                                            "falseValue": "",
-                                            "label": false,
-                                            "trueValue": "MY.taxonCensusTypeCounted"
+                                "ui:field": "AnyToBooleanField",
+                                "ui:help": "Jos kaikki laskennassa havaitut nis\u00e4kk\u00e4\u00e4t on kirjattu, valitse: \u201dKyll\u00e4\u201d. Lomakkeelle kirjataan vain n\u00e4hdyt ja kuullut, el\u00e4v\u00e4t nis\u00e4kk\u00e4\u00e4t, ei j\u00e4lki\u00e4. Muista valita: \u201dKaikki havaitut nis\u00e4kk\u00e4\u00e4t kirjattu\u201d, vaikka reitill\u00e4 ei olisi havaittu yht\u00e4\u00e4n nis\u00e4k\u00e4st\u00e4.",
+                                "ui:options": {
+                                    "allowUndefined": false,
+                                    "falseValue": [
+                                        {
+                                            "censusTaxonID": "MX.37580",
+                                            "taxonCensusType": "MY.taxonCensusTypeCounted"
+                                        }
+                                    ],
+                                    "trueValue": [
+                                        {
+                                            "censusTaxonID": "MX.37580",
+                                            "taxonCensusType": "MY.taxonCensusTypeCounted"
                                         },
-                                        "ui:widget": "AnyToBooleanWidget"
-                                    }
-                                },
-								"ui:field": "SingleItemArrayField",
-								"ui:options": {
-									"activeIdx": 1
-								},
-                                "ui:help": "Jos kaikki laskennassa havaitut nis\u00e4kk\u00e4\u00e4t on kirjattu, valitse: \u201dKyll\u00e4\u201d. Lomakkeelle kirjataan vain n\u00e4hdyt ja kuullut, el\u00e4v\u00e4t nis\u00e4kk\u00e4\u00e4t, ei j\u00e4lki\u00e4. Muista valita: \u201dKaikki havaitut nis\u00e4kk\u00e4\u00e4t kirjattu\u201d, vaikka reitill\u00e4 ei olisi havaittu yht\u00e4\u00e4n nis\u00e4k\u00e4st\u00e4."
+                                        {
+                                            "censusTaxonID": "MX.37612",
+                                            "taxonCensusType": "MY.taxonCensusTypeCounted"
+                                        }
+                                    ]
+                                }
                             },
                             "ui:field": "NestField",
                             "ui:options": {
@@ -3103,9 +3150,10 @@
                             "draw": {
                                 "clear": true,
                                 "coordinateInput": false,
-                                "copy": false,
+                                "copy": true,
                                 "delete": true,
-                                "reverse": true
+                                "reverse": true,
+                                "upload": true
                             }
                         },
                         "draw": {
@@ -3151,16 +3199,13 @@
                     ],
                     "filterType": "blacklist"
                 },
-                "formData": {
-                    "annotationClass": "MAN.annotationClassReliable"
-                },
                 "type": "MAN.typeOpinion",
                 "uiSchema": {
-                    "censusAnnotation": {
+                    "addedTags": {
                         "ui:options": {
                             "filter": [
-                                "MAN.countError",
-                                "MAN.otherError"
+                                "MMAN.11",
+                                "MMAN.13"
                             ],
                             "filterType": "whitelist"
                         }
@@ -3180,7 +3225,8 @@
                         {
                             "fields": [
                                 "editors",
-                                "gatherings/0/gatheringFact/observerCount"
+                                "gatherings/0/gatheringFact/observerCount",
+                                "dataOrigin"
                             ],
                             "target": "gatheringEvent"
                         },
@@ -3420,7 +3466,6 @@
                             "routeLengthBiotopeA": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeA",
                                         "feedingStationCountBiotopeA",
                                         "birdFeederCountBiotopeA",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeA"
@@ -3435,7 +3480,6 @@
                             "routeLengthBiotopeB": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeB",
                                         "feedingStationCountBiotopeB",
                                         "birdFeederCountBiotopeB",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeB"
@@ -3450,7 +3494,6 @@
                             "routeLengthBiotopeC": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeC",
                                         "feedingStationCountBiotopeC",
                                         "birdFeederCountBiotopeC",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeC"
@@ -3465,7 +3508,6 @@
                             "routeLengthBiotopeD": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeD",
                                         "feedingStationCountBiotopeD",
                                         "birdFeederCountBiotopeD",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeD"
@@ -3480,7 +3522,6 @@
                             "routeLengthBiotopeE": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeE",
                                         "feedingStationCountBiotopeE",
                                         "birdFeederCountBiotopeE",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeE"
@@ -3501,7 +3542,6 @@
                             "routeLengthBiotopeG": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeG",
                                         "feedingStationCountBiotopeG",
                                         "birdFeederCountBiotopeG",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeG"
@@ -3516,7 +3556,6 @@
                             "routeLengthBiotopeH": {
                                 "crossCheck": {
                                     "check": [
-                                        "routeLengthChangeBiotopeH",
                                         "feedingStationCountBiotopeH",
                                         "birdFeederCountBiotopeH",
                                         "#/gatherings/0/units/*/unitFact/individualCountBiotopeH"
