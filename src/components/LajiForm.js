@@ -621,7 +621,7 @@ export default class LajiForm extends Component {
 							<tbody className="well">{
 								Object.keys(shortcuts).map((keyCombo, idx) => {
 									const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
-									if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn)) return;
+									if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn) || fn === "navigateSection" && rest.goOverRow) return;
 									let translation = "";
 									if (translation) translation = label;
 									else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")];

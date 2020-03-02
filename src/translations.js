@@ -769,4 +769,24 @@
 		en: "Something went wrong",
 		sv: "Något gick fel"
 	},
+	navigateSectionDown: {
+		fi: "Liiku matriisissa alas",
+		en: "Navigate down in matrix",
+		sv: "Navigera ner i matris"
+	},
+	navigateSectionUp: {
+		fi: "Liiku matriisissa ylös",
+		en: "Navigate up in matrix",
+		sv: "Navigera upp i matris"
+	},
+	navigateSectionLeft: {
+		fi: "Liiku matriisissa vasemmalle",
+		en: "Navigate left in matrix",
+		sv: "Navigera vänster i matris"
+	},
+	navigateSectionRight: {
+		fi: "Liiku matriisissa oikealle",
+		en: "Navigate right in matrix",
+		sv: "Navigera höger nästa fält"
+	},
 };

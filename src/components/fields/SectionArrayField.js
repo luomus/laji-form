@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button } from "../components";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
 import { Overlay, Popover, Glyphicon, Row, Col } from "react-bootstrap";
 import Context from "../../Context";
 import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
@@ -105,7 +105,7 @@ export default class SectionArrayField extends Component {
 
 		_uiSchema = walkUiOrder(schema, _uiSchema, rowDefinerField.replace("%{row}", 0));
 
-		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, _arrayKeyFunctions, "/ui:options/arrayKeyFunctions");
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, _arrayKeyFunctions(getOptions(this.getUiOptions())), "/ui:options/arrayKeyFunctions");
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, true, "/ui:options/keepPropFocusOnNavigate");
 
 		return {uiSchema: _uiSchema, formContext, registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}};
@@ -133,7 +133,7 @@ class SectionArrayFieldTemplate extends Component {
 		return (
 			<div style={{display: "flex"}}>
 				<div style={{display: "flex", overflowX: "auto"}}>
-					<Section key="definer" width={200}>{this.renderRowDefinerColumn()}</Section>
+					<Section key="definer" width={200} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 					{this.renderSections()
 					}
 				</div>
@@ -164,6 +164,8 @@ class SectionArrayFieldTemplate extends Component {
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id)
 		};
 
+		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
+
 		return (
 			<React.Fragment>
 				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
@@ -173,6 +175,7 @@ class SectionArrayFieldTemplate extends Component {
 					schema={_schema}
 					uiSchema={__uiSchema}
 					formData={_formData}
+					idSchema={idSchema}
 					onChange={this.onRowDefinerChange}
 					registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
 					formContext={formContext}
@@ -189,7 +192,7 @@ class SectionArrayFieldTemplate extends Component {
 			}
 			const {children, hasRemove, index, disabled, readonly, onDropIndexClick} = this.props.items[idx];
 			return (
-				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "gray nonbordered"}>
+				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "gray nonbordered"} id={`${this.props.idSchema.$id}_${idx}-section`}>
 					{hasRemove && <DeleteButton
 					id={`${this.props.idSchema.$id}_${index}`}
 					disabled={disabled || readonly}
@@ -512,17 +515,130 @@ const RowDefinerObjectFieldTemplate = (props) => {
 	});
 };
 
-const _arrayKeyFunctions = {
+const _arrayKeyFunctions = options => ({
 	...arrayKeyFunctions,
 	insert: (e, props) => {
 		document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
+	},
+	navigateSection: (e, {getProps, left, right, up, goOverRow}) => {
+		const {rowDefinerField, rowValueField} = options;
+		const currentId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+		const amount = left || up ? -1 : 1;
+		const id = getProps().idSchema.$id;
+		let nextId;
+
+		const getIdxs = (_id) => {
+			const sectionIdx = _id.match(new RegExp(`${id}_(\\d+)`))
+				&& !_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+"))}`))
+				? +_id.match(new RegExp(`${id}_(\\d+)`))[1]
+				: undefined;
+			const [containerPointer] = rowDefinerField.split("%{row}");
+			const horizontalIdx = _id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}`))
+				? +_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}(\\d+)`))[1]
+				: undefined;
+			return [horizontalIdx, sectionIdx];
+		};
+		getIdxs(currentId);
+		const [currentRow, currentSection] = getIdxs(currentId);
+
+		if (currentRow === undefined && currentSection === undefined) {
+			return false;
+		}
+
+		const getNonRowSectionFieldsForSectionIdx = sectionIdx => {
+			let tabbable = getTabbableFields(document.getElementById(`${id}_${sectionIdx}-section`));
+			return tabbable.filter(elem => {
+				return !elem.id.match(new RegExp(JSONPointerToId(rowValueField.replace("%{row}", "\\d+"))));
+			});
+		};
+		const goOverToNonRowLogic = (currentProp, reverse = true, last = true) => {
+			let tabbableInSection = getTabbableFields(document.getElementById(`${id}_${last ? getProps().formData.length - 1 : 0}-section`));
+			if (reverse) {
+				tabbableInSection = tabbableInSection.reverse();
+			}
+			let currentPropEncountered = false;
+			const elem = tabbableInSection.find(elem => {
+				if (!elem.id.match(new RegExp(JSONPointerToId(rowValueField.replace("%{row}", "\\d+"))))) {
+					if (!currentProp || currentPropEncountered) {
+						return elem;
+					}
+					if (elem.id.match(currentProp)) {
+						currentPropEncountered = true;
+					}
+				}
+			});
+			nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, elem);
+		};
+
+		if (left || right) {
+			// Horizontal navigation from row definer column to row value column.
+			if (right && amount === 1 && currentSection === undefined) {
+				const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow));
+				nextId = `${id}_0_${idSuffix}`;
+			// Horizontal navigation from row value column to row definer column.
+			} else if (left && amount === -1 && currentSection === 0 && currentRow !== undefined) {
+				const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow));
+				nextId = `${id}_${currentSection}_${idSuffix}`;
+			// Horizontal navigation to next/prev row if goOverRow.
+			} else if (right && currentSection === getProps().formData.length - 1) {
+				if (!goOverRow) {
+					return false;
+				}
+				// Horizontal navigation inside row matrix.
+				if (currentRow !== undefined) {
+					const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow + 1));
+					nextId = `${id}_${0}_${idSuffix}`;
+				} else {
+					let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
+					// Horizontal navigation inside non row section field.
+					if (currentId === findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableInSection[tabbableInSection.length - 1])) {
+						nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
+					// Horizontal navigation from non row section to row field.
+					} else {
+						const currentProp = currentId.match(`${id}_${currentSection}_(.+)`)[1];
+						goOverToNonRowLogic(currentProp, false, false);
+					}
+				}
+			} else if (left && currentSection === undefined) {
+				if (goOverRow) {
+					// Horizontal navigation from row field to non row section field.
+					if (currentRow === 0) {
+						goOverToNonRowLogic();
+					// Horizontal navigation inside row value fields.
+					} else  {
+						const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow - 1));
+						nextId = `${id}_${getProps().formData.length - 1}_${idSuffix}`;
+					}
+				}
+				// Horizontal navigation inside non row section fields.
+			} else if (left && currentRow === undefined && currentSection === 0) {
+				if (goOverRow) {
+					const currentProp = currentId.match(`${id}_${currentSection}_(.+)`)[1];
+					goOverToNonRowLogic(currentProp);
+				}
+			// Horizontal navigation inside value matrix.
+			} else {
+				const [idPrefix] = currentId.match(new RegExp(`${id}_(\\d+)`));
+				const idSuffix = currentId.replace(`${idPrefix}_`, "");
+				nextId = `${id}_${+currentSection + amount}_${idSuffix}`;
+			}
+		} else {
+			// Vertical navigation.
+			const containerId = currentSection !== undefined
+				? `${id}_${currentSection}-section`
+				: `${id}-section-definer`;
+			const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
+			const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
+			nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableOutsideContainer[tabbableIdx + amount]);
+		}
+		focusAndScroll(getProps().formContext, nextId);
 	}
-};
+});
 
 const containerArrayKeyFunctions = {
 	...arrayKeyFunctions,
 	// Disable insert, insert should bubble to section adding.
 	insert: () => {
 		return false;
-	}
+	},
 };
