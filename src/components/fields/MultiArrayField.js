@@ -33,7 +33,7 @@ export default class MultiArrayField extends Component {
 
 	render() {
 		const {props} = this;
-		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false, nonGroupedOperations = {}} = getUiOptions(this.props.uiSchema);
+		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false, nonGroupedOperations} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
 			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
 			this.arrayKeyFunctions = Array(groups.length + 1).fill(undefined).map((_, idx) => getArrayKeyFunctions(this, idx));

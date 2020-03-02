@@ -38,7 +38,7 @@ export default class SingleActiveArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled", "table", "split"]),
+				renderer: PropTypes.oneOf(["accordion", "pager", "uncontrolled", "table"]),
 				activeIdx: PropTypes.number
 			})
 		}),
@@ -185,9 +185,6 @@ export default class SingleActiveArrayField extends Component {
 			break;
 		case "table":
 			ArrayFieldTemplate = TableArrayFieldTemplate;
-			break;
-		case "split":
-			ArrayFieldTemplate = SplitArrayFieldTemplate;
 			break;
 		default:
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
@@ -1118,70 +1115,6 @@ class AccordionHeader extends Component {
 			</OverlayTrigger>
 		) : (
 			header
-		);
-	}
-}
-
-class SplitArrayFieldTemplate extends Component {
-	static propTypes = {
-		uiSchema: PropTypes.shape({
-			"ui:options": PropTypes.shape({
-				splitRule: PropTypes.shape({
-					fieldPath: PropTypes.string.isRequired,
-					rules: PropTypes.arrayOf(PropTypes.string).isRequired
-				}).isRequired,
-				uiOptions: PropTypes.arrayOf(PropTypes.object)
-			})
-		}).isRequired
-	};
-
-	render() {
-		const {props} = this;
-		const uiOptions = getUiOptions(props.uiSchema);
-
-		const splitItems = [];
-		for (let i = 0; i <= uiOptions.splitRule.rules.length; i++) {
-			splitItems.push([]);
-			if (!uiOptions.uiOptions[i]) uiOptions.uiOptions[i] = {};
-		}
-
-		for (let i = 0; i < props.formData.length; i++) {
-			const value = parseJSONPointer(props.formData[i], uiOptions.splitRule.fieldPath) + "";
-			let match = -1;
-
-			for (let j = 0; j < uiOptions.splitRule.rules.length; j++) {
-				if (value.match(uiOptions.splitRule.rules[j])) {
-					match = j;
-					break;
-				}
-			}
-			if (match === -1) { match = splitItems.length - 1; }
-
-			if (uiOptions.uiOptions[match].removable === false) {
-				props.items[i].hasRemove = false;
-			}
-			splitItems[match].push(props.items[i]);
-		}
-
-		let startIdx = 0;
-
-		return (
-			<div>
-				{splitItems.map((items, i) => {
-					const idx = startIdx;
-					startIdx = startIdx + items.length;
-					const title = (i === 0) ? props.schema.title : "";
-
-					return (<_ArrayFieldTemplate key={i}
-										 {...this.props}
-										 className={uiOptions.uiOptions[i].classNames}
-										 title={uiOptions.uiOptions[i].title || title}
-										 items={items}
-										 startIdx={idx}
-										 canAdd={uiOptions.uiOptions[i].addable}
-										 uiSchema={{...props.uiSchema, "ui:options": uiOptions.uiOptions[i]}}/>
-					);})}
-			</div>
 		);
 	}
 }

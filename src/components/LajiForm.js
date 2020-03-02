@@ -64,7 +64,6 @@ const fields = importLocalComponents("fields", [
 	"ConditionalUiSchemaField",
 	"AnnotationField",
 	"PrefillingArrayField",
-	"ConditionalAdditionalItemsArrayField",
 	"AnyToBooleanField",
 	"EnumRangeArrayField",
 	"UnitListShorthandArrayField",
