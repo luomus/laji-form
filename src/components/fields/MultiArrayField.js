@@ -143,6 +143,12 @@ export default class MultiArrayField extends Component {
 			}
 
 			uiSchema = {...uiSchema, "ui:options": {...getUiOptions(uiSchema), startIdx: offset}};
+			const errorSchema = {};
+			for (const key in props.errorSchema) {
+				if (key >= offset && key < offset + this.groupedItems[idx].length) {
+					errorSchema[key - offset] = {...props.errorSchema[key]};
+				}
+			}
 
 			const formContext = {...this.props.formContext, ArrayField: ArrayFieldIdFixed};
 
@@ -154,6 +160,7 @@ export default class MultiArrayField extends Component {
 						formContext={formContext}
 						registry={{...this.props.registry, formContext}}
 						uiSchema={uiSchema}
+						errorSchema={errorSchema}
 						formData={items}
 						onChange={this.onChange(idx)}
 					/>
