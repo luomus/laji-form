@@ -1567,3 +1567,6 @@ min-height: 20px;
 	font-size: 14px;
 	max-width: 400px;
 }
+.text-left {
+	text-align: left;
+}
