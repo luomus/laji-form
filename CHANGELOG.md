@@ -1,3 +1,7 @@
+## 5.0.0
+* Remove `ConditionalAdditionalItemsArrayField` (can be implemented with `MultiArrayField`).
+* Remove `SingleActiveArrayField` `split` renderer (can be implemented with `MultiArrayField`).
+
 ## 4.9.0
 * Add `ToggleAdditionalArrayFieldsField`
 
@@ -63,7 +67,7 @@
 * don't `src` in npm package
 
 ## 2.0.0
-* rm `TemplateArrayField`
+* Remove `TemplateArrayField`
 
 ## 1.2.6
 * `lib` keeps src folder structure & doesn't include styles
