@@ -162,7 +162,6 @@ class TableArrayFieldTemplate extends Component {
 						<DeleteButton ref={getRefFor(i)}
 						              disabled={readonly || disabled}
 						              onClick={onDelete(item, props)}
-						              className="laji-form-field-template-buttons"
 						              confirm={confirmDelete}
 						              corner={deleteCorner}
 						              tooltip={deleteHelp}
