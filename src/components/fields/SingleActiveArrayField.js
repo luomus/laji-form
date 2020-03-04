@@ -1096,8 +1096,8 @@ class AccordionHeader extends Component {
 
 		const header = (
 			<div className={this.props.className}
+			     role="tab"
 			     id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-header`}
-			     tabIndex={0}
 			     onClick={this.onHeaderClick}
 				   onMouseEnter={this.onMouseEnter}
 				   onMouseLeave={this.onMouseLeave} >
