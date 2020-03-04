@@ -584,9 +584,9 @@ class PagerArrayFieldTemplate extends Component {
 						<div key={activeIdx}>
 							{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
 						</div>
-						{getButtonElems(buttons, arrayTemplateFieldProps)}
 					</PanelBody>
 				</Panel>
+				{getButtonElems(buttons, arrayTemplateFieldProps)}
 			</div>
 		);
 	}

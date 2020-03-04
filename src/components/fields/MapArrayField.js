@@ -1264,7 +1264,7 @@ class _MapArrayField extends ComposedComponent {
 			? undefined
 			: Math.round(areaInHectares ? sumArea / 10000 : sumArea);
 
-		const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField);
+		const currentArea = parseJSONPointer(formData[activeIdx], computeAreaField, true);
 		currentArea !== area && this.props.onChange(updateSafelyWithJSONPointer(
 			formData,
 			area,
