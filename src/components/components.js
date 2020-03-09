@@ -213,7 +213,7 @@ export class Affix extends Component {
 		const containerVisibleHeight = containerHeight + containerTop;
 		const wrapperHeight = wrapperElem.offsetHeight;
 		const wrapperScrollHeight = wrapperElem.scrollHeight;
-		const scrolled = containerTop < topOffset;
+		const scrolled = this.refs.container.getBoundingClientRect().top < topOffset;
 
 		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		const bottomDist = viewportHeight - container.getBoundingClientRect().top - containerHeight;
