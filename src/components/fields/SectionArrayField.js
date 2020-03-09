@@ -512,125 +512,129 @@ const RowDefinerObjectFieldTemplate = (props) => {
 	});
 };
 
-const _arrayKeyFunctions = options => ({
-	...arrayKeyFunctions,
-	insert: (e, props) => {
-		document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
-	},
-	navigateSection: (e, {getProps, left, right, up, goOverRow}) => {
-		const {rowDefinerField, rowValueField} = options;
-		const currentId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
-		const amount = left || up ? -1 : 1;
-		const id = getProps().idSchema.$id;
-		let nextId;
+const _arrayKeyFunctions = options => {
+	const keyFunctions = {
+		...arrayKeyFunctions,
+		insert: (e, props) => {
+			document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
+		},
+		navigateSection: (e, {getProps, left, right, up, goOverRow}) => {
+			const {rowDefinerField, rowValueField} = options;
+			const currentId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+			const amount = left || up ? -1 : 1;
+			const id = getProps().idSchema.$id;
+			let nextId;
 
-		const getIdxs = (_id) => {
-			const sectionIdx = _id.match(new RegExp(`${id}_(\\d+)`))
-				&& !_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+"))}`))
-				? +_id.match(new RegExp(`${id}_(\\d+)`))[1]
-				: undefined;
-			const [containerPointer] = rowDefinerField.split("%{row}");
-			const horizontalIdx = _id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}`))
-				? +_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}(\\d+)`))[1]
-				: undefined;
-			return [horizontalIdx, sectionIdx];
-		};
-		getIdxs(currentId);
-		const [currentRow, currentSection] = getIdxs(currentId);
+			const getIdxs = (_id) => {
+				const sectionIdx = _id.match(new RegExp(`${id}_(\\d+)`))
+					&& !_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+"))}`))
+					? +_id.match(new RegExp(`${id}_(\\d+)`))[1]
+					: undefined;
+				const [containerPointer] = rowDefinerField.split("%{row}");
+				const horizontalIdx = _id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}`))
+					? +_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}(\\d+)`))[1]
+					: undefined;
+				return [horizontalIdx, sectionIdx];
+			};
+			getIdxs(currentId);
+			const [currentRow, currentSection] = getIdxs(currentId);
 
-		if (currentRow === undefined && currentSection === undefined) {
-			return false;
-		}
-
-		const getNonRowSectionFieldsForSectionIdx = sectionIdx => {
-			let tabbable = getTabbableFields(document.getElementById(`${id}_${sectionIdx}-section`));
-			return tabbable.filter(elem => {
-				return !elem.id.match(new RegExp(JSONPointerToId(rowValueField.replace("%{row}", "\\d+"))));
-			});
-		};
-		const goOverToNonRowLogic = (currentProp, reverse = true, last = true) => {
-			let tabbableInSection = getTabbableFields(document.getElementById(`${id}_${last ? getProps().formData.length - 1 : 0}-section`));
-			if (reverse) {
-				tabbableInSection = tabbableInSection.reverse();
+			if (currentRow === undefined && currentSection === undefined) {
+				return false;
 			}
-			let currentPropEncountered = false;
-			const elem = tabbableInSection.find(elem => {
-				if (!elem.id.match(new RegExp(JSONPointerToId(rowValueField.replace("%{row}", "\\d+"))))) {
-					if (!currentProp || currentPropEncountered) {
-						return elem;
-					}
-					if (elem.id.match(currentProp)) {
-						currentPropEncountered = true;
-					}
-				}
-			});
-			nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, elem);
-		};
 
-		if (left || right) {
-			// Horizontal navigation from row definer column to row value column.
-			if (right && amount === 1 && currentSection === undefined) {
-				const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow));
-				nextId = `${id}_0_${idSuffix}`;
-			// Horizontal navigation from row value column to row definer column.
-			} else if (left && amount === -1 && currentSection === 0 && currentRow !== undefined) {
-				const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow));
-				nextId = `${id}_${currentSection}_${idSuffix}`;
-			// Horizontal navigation to next/prev row if goOverRow.
-			} else if (right && currentSection === getProps().formData.length - 1) {
-				if (!goOverRow) {
-					return false;
+			const getNonRowSectionFieldsForSectionIdx = sectionIdx => {
+				let tabbable = getTabbableFields(document.getElementById(`${id}_${sectionIdx}-section`));
+				return tabbable.filter(elem => {
+					return !elem.id.match(new RegExp(JSONPointerToId(rowValueField.replace("%{row}", "\\d+"))));
+				});
+			};
+			const goOverToNonRowLogic = (currentProp, reverse = true, last = true) => {
+				let tabbableInSection = getTabbableFields(document.getElementById(`${id}_${last ? getProps().formData.length - 1 : 0}-section`));
+				if (reverse) {
+					tabbableInSection = tabbableInSection.reverse();
 				}
-				// Horizontal navigation inside row matrix.
-				if (currentRow !== undefined) {
-					const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow + 1));
-					nextId = `${id}_${0}_${idSuffix}`;
-				} else {
-					let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
-					// Horizontal navigation inside non row section field.
-					if (currentId === findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableInSection[tabbableInSection.length - 1])) {
-						nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
-					// Horizontal navigation from non row section to row field.
+				let currentPropEncountered = false;
+				const elem = tabbableInSection.find(elem => {
+					if (!elem.id.match(new RegExp(JSONPointerToId(rowValueField.replace("%{row}", "\\d+"))))) {
+						if (!currentProp || currentPropEncountered) {
+							return elem;
+						}
+						if (elem.id.match(currentProp)) {
+							currentPropEncountered = true;
+						}
+					}
+				});
+				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, elem);
+			};
+
+			if (left || right) {
+				// Horizontal navigation from row definer column to row value column.
+				if (right && amount === 1 && currentSection === undefined) {
+					const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow));
+					nextId = `${id}_0_${idSuffix}`;
+					// Horizontal navigation from row value column to row definer column.
+				} else if (left && amount === -1 && currentSection === 0 && currentRow !== undefined) {
+					const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow));
+					nextId = `${id}_${currentSection}_${idSuffix}`;
+					// Horizontal navigation to next/prev row if goOverRow.
+				} else if (right && currentSection === getProps().formData.length - 1) {
+					if (!goOverRow) {
+						return false;
+					}
+					// Horizontal navigation inside row matrix.
+					if (currentRow !== undefined) {
+						const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow + 1));
+						nextId = `${id}_${0}_${idSuffix}`;
 					} else {
+						let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
+						// Horizontal navigation inside non row section field.
+						if (currentId === findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableInSection[tabbableInSection.length - 1])) {
+							nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
+							// Horizontal navigation from non row section to row field.
+						} else {
+							const currentProp = currentId.match(`${id}_${currentSection}_(.+)`)[1];
+							goOverToNonRowLogic(currentProp, false, false);
+						}
+					}
+				} else if (left && currentSection === undefined) {
+					if (goOverRow) {
+						// Horizontal navigation from row field to non row section field.
+						if (currentRow === 0) {
+							goOverToNonRowLogic();
+							// Horizontal navigation inside row value fields.
+						} else  {
+							const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow - 1));
+							nextId = `${id}_${getProps().formData.length - 1}_${idSuffix}`;
+						}
+					}
+					// Horizontal navigation inside non row section fields.
+				} else if (left && currentRow === undefined && currentSection === 0) {
+					if (goOverRow) {
 						const currentProp = currentId.match(`${id}_${currentSection}_(.+)`)[1];
-						goOverToNonRowLogic(currentProp, false, false);
+						goOverToNonRowLogic(currentProp);
 					}
+					// Horizontal navigation inside value matrix.
+				} else {
+					const [idPrefix] = currentId.match(new RegExp(`${id}_(\\d+)`));
+					const idSuffix = currentId.replace(`${idPrefix}_`, "");
+					nextId = `${id}_${+currentSection + amount}_${idSuffix}`;
 				}
-			} else if (left && currentSection === undefined) {
-				if (goOverRow) {
-					// Horizontal navigation from row field to non row section field.
-					if (currentRow === 0) {
-						goOverToNonRowLogic();
-					// Horizontal navigation inside row value fields.
-					} else  {
-						const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow - 1));
-						nextId = `${id}_${getProps().formData.length - 1}_${idSuffix}`;
-					}
-				}
-				// Horizontal navigation inside non row section fields.
-			} else if (left && currentRow === undefined && currentSection === 0) {
-				if (goOverRow) {
-					const currentProp = currentId.match(`${id}_${currentSection}_(.+)`)[1];
-					goOverToNonRowLogic(currentProp);
-				}
-			// Horizontal navigation inside value matrix.
 			} else {
-				const [idPrefix] = currentId.match(new RegExp(`${id}_(\\d+)`));
-				const idSuffix = currentId.replace(`${idPrefix}_`, "");
-				nextId = `${id}_${+currentSection + amount}_${idSuffix}`;
+				// Vertical navigation.
+				const containerId = currentSection !== undefined
+					? `${id}_${currentSection}-section`
+					: `${id}-section-definer`;
+				const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
+				const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
+				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableOutsideContainer[tabbableIdx + amount]);
 			}
-		} else {
-			// Vertical navigation.
-			const containerId = currentSection !== undefined
-				? `${id}_${currentSection}-section`
-				: `${id}-section-definer`;
-			const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
-			const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
-			nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableOutsideContainer[tabbableIdx + amount]);
+			focusAndScroll(getProps().formContext, nextId);
 		}
-		focusAndScroll(getProps().formContext, nextId);
-	}
-});
+	};
+	keyFunctions.navigate = (e, options) => keyFunctions.navigateSection(e, {...options, right: !options.reverse, left: options.reverse, goOverRow: true});
+	return keyFunctions;
+};
 
 const containerArrayKeyFunctions = {
 	...arrayKeyFunctions,

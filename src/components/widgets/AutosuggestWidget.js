@@ -565,10 +565,6 @@ export class Autosuggest extends Component {
 	}
 
 	onKeyDown = (e) => {
-		if (e.key === "Enter") {
-			findDOMNode(this.inputElem).blur();
-		}
-
 		triggerParentComponent("onKeyDown", e, this.props.inputProps);
 	}
 
