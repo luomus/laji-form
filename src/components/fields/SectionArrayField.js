@@ -196,7 +196,7 @@ class SectionArrayFieldTemplate extends Component {
 					className="horizontally-centered"
 				/>}
 						<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-							<label className={`horizontally-centered nonbordere ${index % 2 ? "" : " darker"}`}>{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
+							<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
 					</Affix>
 						{children}
 					</Section>
@@ -387,7 +387,9 @@ class SectionArrayFieldTemplate extends Component {
 		return (
 			<React.Fragment>
 				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
-				<label>{this.props.formContext.translations.Sum}</label>
+				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+					<label className="bg-info">{this.props.formContext.translations.Sum}</label>
+				</Affix>
 				<SchemaField
 					{...this.props}
 					schema={_schema}

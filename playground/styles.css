@@ -715,13 +715,13 @@ min-height: 20px;
 	width: 100%;
 }
 
-.laji-form .gray, .laji-form .white {
+.laji-form .gray, .laji-form .background {
 	border: 1px solid #e3e3e3;
 }
 .laji-form .gray {
 	background-color: #f5f5f5;
 }
-.laji-form .white {
+.laji-form .background {
 	background-color: #f6f8f8;
 }
 .laji-form .nonbordered {
