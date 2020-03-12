@@ -127,9 +127,36 @@ class SectionArrayFieldTemplate extends Component {
 		this.props.formContext.this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
+	getElemsForRowIdx = (rowIdx) => {
+		const {rowValueField, rowDefinerField} = getOptions(getUiOptions(this.props.uiSchema));
+		return [
+			`${this.props.idSchema.$id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", rowIdx))}`,
+			...this.props.formData.map((_, idx) => `${this.props.idSchema.$id}_${idx}_${JSONPointerToId(rowValueField.replace("%{row}", rowIdx))}`)
+		].map(id => document.getElementById(id));
+	}
+
+	onContainerFocus = (e) => {
+		const {id} = e.target;
+		const [rowIdx] = getIdxsFromId(this.props.idSchema, getOptions(getUiOptions(this.props.uiSchema)), id);
+		if (rowIdx !== undefined) {
+			this.focusedRowIdx = rowIdx;
+			this.getElemsForRowIdx(rowIdx).forEach(elem => {
+				elem.className += " input-highlight";
+			});
+		}
+	}
+
+	onContainerBlur = () => {
+		if (this.focusedRowIdx !== undefined) {
+			this.getElemsForRowIdx(this.focusedRowIdx).forEach(elem => {
+				elem.className = elem.className.replace(" input-highlight", "");
+			});
+		}
+	}
+
 	render() {
 		return (
-			<div style={{display: "flex", width: "100%"}} ref={this.ref}>
+			<div style={{display: "flex", width: "100%"}} ref={this.ref} onFocus={this.onContainerFocus} onBlur={this.onContainerBlur} tabIndex={0}>
 				<Section key="definer" style={{flexGrow: "initial", maxWidth: 200}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 				{this.renderSections()}
 				<Section key="sums" className="bg-info">{this.renderRowDefinerSumColumn()}</Section>
@@ -512,6 +539,20 @@ const RowDefinerObjectFieldTemplate = (props) => {
 	});
 };
 
+const getIdxsFromId = (idSchema, options, _id) => {
+	const {rowDefinerField} = options;
+	const id = idSchema.$id;
+	const sectionIdx = _id.match(new RegExp(`${id}_(\\d+)`))
+		&& !_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+"))}`))
+		? +_id.match(new RegExp(`${id}_(\\d+)`))[1]
+		: undefined;
+	const [containerPointer] = rowDefinerField.split("%{row}");
+	const horizontalIdx = _id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}`))
+		? +_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}(\\d+)`))[1]
+		: undefined;
+	return [horizontalIdx, sectionIdx];
+};
+
 const _arrayKeyFunctions = options => {
 	const keyFunctions = {
 		...arrayKeyFunctions,
@@ -525,19 +566,7 @@ const _arrayKeyFunctions = options => {
 			const id = getProps().idSchema.$id;
 			let nextId;
 
-			const getIdxs = (_id) => {
-				const sectionIdx = _id.match(new RegExp(`${id}_(\\d+)`))
-					&& !_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+"))}`))
-					? +_id.match(new RegExp(`${id}_(\\d+)`))[1]
-					: undefined;
-				const [containerPointer] = rowDefinerField.split("%{row}");
-				const horizontalIdx = _id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}`))
-					? +_id.match(new RegExp(`${id}_\\d+_${JSONPointerToId(containerPointer)}(\\d+)`))[1]
-					: undefined;
-				return [horizontalIdx, sectionIdx];
-			};
-			getIdxs(currentId);
-			const [currentRow, currentSection] = getIdxs(currentId);
+			const [currentRow, currentSection] = getIdxsFromId(getProps().idSchema, options, currentId);
 
 			if (currentRow === undefined && currentSection === undefined) {
 				return false;
