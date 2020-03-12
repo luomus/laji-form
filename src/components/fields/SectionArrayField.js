@@ -130,10 +130,10 @@ class SectionArrayFieldTemplate extends Component {
 	render() {
 		return (
 			<div style={{display: "flex", width: "100%"}} ref={this.ref}>
-				<Section key="definer" style={{flexGrow: 2, width: "initial"}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
+				<Section key="definer" style={{flexGrow: "initial", maxWidth: 200}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 				{this.renderSections()}
 				<Section key="sums" className="bg-info">{this.renderRowDefinerSumColumn()}</Section>
-				<Section key="deletes" style={{flexGrow: 2, width: "initial"}}>{this.renderRowDefinerDeleteColumn()}</Section>
+				<Section key="deletes" style={{flexGrow: "initial", maxWidth: 120}}>{this.renderRowDefinerDeleteColumn()}</Section>
 			</div>
 		);
 	}
