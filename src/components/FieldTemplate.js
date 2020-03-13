@@ -100,7 +100,7 @@ export default class FieldTemplate extends Component {
 		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
 
 		const {Label, invisibleErrors, errorsWidth} = this.props.formContext;
-		const className = `laji-form-error-container${invisibleErrors ? " invisible" : ""}`
+		const className = `laji-form-error-container${invisibleErrors ? " invisible" : ""}`;
 		const style = errorsWidth ? {width: errorsWidth} : undefined;
 		return (
 			<div className={classNames + warningClassName} id={htmlId}>
