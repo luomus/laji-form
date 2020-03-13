@@ -160,7 +160,7 @@ class SectionArrayFieldTemplate extends Component {
 				<Section key="definer" style={{flexGrow: "initial", maxWidth: 200}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 				{this.renderSections()}
 				<Section key="sums" className="bg-info">{this.renderRowDefinerSumColumn()}</Section>
-				<Section key="deletes" style={{flexGrow: "initial", maxWidth: 120}}>{this.renderRowDefinerDeleteColumn()}</Section>
+				<Section key="deletes" style={{flexGrow: "initial", maxWidth: 140}}>{this.renderRowDefinerDeleteColumn()}</Section>
 			</div>
 		);
 	}
