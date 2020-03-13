@@ -469,10 +469,11 @@ export class Autosuggest extends Component {
 		const {suggestion} = data;
 		e.preventDefault();
 		if ("id" in this.props) {
-			// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
-			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
+			new Context(this.props.formContext.contextId).formInstance.onKeyDown(e);
+			this.selectSuggestion(suggestion);
+			// If event triggered for LajiForm didn't cause a navigation and thus blur, select the suggestion.
+			if (document.activeElement !== findDOMNode(this.inputElem)) {
 				this.selectSuggestion(suggestion);
-				findDOMNode(this.inputElem).blur();
 			}
 		}
 	}
@@ -557,7 +558,7 @@ export class Autosuggest extends Component {
 		triggerParentComponent("onFocus", e, this.props.inputProps);
 	}
 
-	onBlur = (e, {highlightedSuggestion}) => {
+	onBlur = (e, {highlightedSuggestion} = {}) => {
 		this.highlightedSuggestionOnBlur = highlightedSuggestion;
 		this._valueForBlurAndFetch = this.state.value;
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));

@@ -661,7 +661,9 @@ const _arrayKeyFunctions = options => {
 			focusAndScroll(getProps().formContext, nextId);
 		}
 	};
-	keyFunctions.navigate = (e, options) => keyFunctions.navigateSection(e, {...options, right: !options.reverse, left: options.reverse, goOverRow: true});
+	keyFunctions.navigate = (e, options) => {
+		return keyFunctions.navigateSection(e, {...options, right: !options.reverse, left: options.reverse, goOverRow: true});
+	}
 	return keyFunctions;
 };
 
