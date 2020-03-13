@@ -438,7 +438,7 @@ export class Autosuggest extends Component {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
 		const afterStateChange = () => {
 			onSuggestionSelected ?
-				onSuggestionSelected(suggestion) :
+				onSuggestionSelected(suggestion, this.mounted) :
 				onChange(suggestion[suggestionReceive || "key"]);
 		};
 		const state = {suggestion, value: this.getSuggestionValue(suggestion)};
@@ -531,9 +531,9 @@ export class Autosuggest extends Component {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}
-				this.mounted ?
-					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
-					this.afterBlurAndFetch(suggestions);
+				this.mounted
+					? this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions))
+					: this.afterBlurAndFetch(suggestions);
 			}).catch(() => {
 				this.mounted
 					? this.setState({isLoading: false}, this.afterBlurAndFetch)

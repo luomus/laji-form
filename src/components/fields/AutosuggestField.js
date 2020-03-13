@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import Context from "../../Context";
@@ -158,7 +158,7 @@ export default class AutosuggestField extends Component {
 		return toggled ? merge(options, options.toggleable) : options;
 	}
 
-	onSuggestionSelected = (suggestion) => {
+	onSuggestionSelected = (suggestion, mounted) => {
 		if (suggestion === null) suggestion = undefined;
 
 		let {formData, uiSchema, formContext} = this.props;
@@ -189,7 +189,7 @@ export default class AutosuggestField extends Component {
 				unit.informalTaxonGroups = unit.unitType;
 				delete unit.unitType;
 			}
-			unit = (formContext.formDataTransformers || []).reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+			unit = (mounted && formContext.formDataTransformers || []).reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
 				const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData: unit});
 				return state.formData;
 			}, unit);
@@ -201,7 +201,14 @@ export default class AutosuggestField extends Component {
 		} else {
 			formData = handleSuggestionReceivers(formData, suggestion);
 		}
-		this.props.onChange(formData);
+		if (mounted) {
+			this.props.onChange(formData);
+		} else {
+			const lajiFormInstance = new Context(formContext.contextId).formInstance;
+			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
+			const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...formData};
+			lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+		}
 	}
 
 	onConfirmUnsuggested = (value) => {
