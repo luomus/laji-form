@@ -89,7 +89,7 @@ export default class SectionArrayField extends Component {
 	getStateFromProps(props) {
 		const {uiSchema, schema, registry} = props;
 		const {sectionField, rowDefinerField} = getOptions(this.getUiOptions());
-		const formContext = {...props.formContext, Label: () => null, this: this, originalUiSchema: uiSchema};
+		const formContext = {...props.formContext, Label: () => null, this: this, originalUiSchema: uiSchema, errorSchema: props.errorSchema, invisibleErrors: true, errorsWidth: 198};
 		let _uiSchema = hideFields(schema, {
 			...uiSchema,
 			"ui:ArrayFieldTemplate": SectionArrayFieldTemplate,
@@ -108,7 +108,11 @@ export default class SectionArrayField extends Component {
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, _arrayKeyFunctions(getOptions(this.getUiOptions())), "/ui:options/arrayKeyFunctions");
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, true, "/ui:options/keepPropFocusOnNavigate");
 
-		return {uiSchema: _uiSchema, formContext, registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}};
+		return {
+			uiSchema: _uiSchema,
+			formContext,
+			registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}
+		};
 	}
 }
 
@@ -160,7 +164,7 @@ class SectionArrayFieldTemplate extends Component {
 				<Section key="definer" style={{flexGrow: "initial", maxWidth: 200}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 				{this.renderSections()}
 				<Section key="sums" className="bg-info">{this.renderRowDefinerSumColumn()}</Section>
-				<Section key="deletes" style={{flexGrow: "initial", maxWidth: 140}}>{this.renderRowDefinerDeleteColumn()}</Section>
+				<Section key="deletes" style={{flexGrow: "initial", maxWidth: 143}}>{this.renderRowDefinerDeleteColumn()}</Section>
 			</div>
 		);
 	}
@@ -181,7 +185,8 @@ class SectionArrayFieldTemplate extends Component {
 		const formContext = {
 			...this.props.formContext,
 			rowDefinerField,
-			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id)
+			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id),
+			invisibleErrors: false
 		};
 
 		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
@@ -199,6 +204,7 @@ class SectionArrayFieldTemplate extends Component {
 					onChange={this.onRowDefinerChange}
 					registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
 					formContext={formContext}
+					errorSchema={this.props.formContext.errorSchema[0] || {}}
 				/>
 		</React.Fragment>
 		);
