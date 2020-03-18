@@ -536,8 +536,9 @@ class PagerArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
-		const {buttons, affixed, headerClassName} = getUiOptions(arrayTemplateFieldProps.uiSchema);
+		const {buttons, affixed, headerClassName, confirmDelete, hasRemove} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
+
 		let header = (
 			<div className={`laji-form-panel-header laji-form-accordion-header${headerClassName ? ` ${headerClassName}` : ""}`} ref={this.setHeaderRef}>
 				<Pager>
@@ -576,17 +577,35 @@ class PagerArrayFieldTemplate extends Component {
 
 		return (
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
-				<Panel className="laji-form-panel">
-					<PanelHeading>
-							{header}
-					</PanelHeading>
-					<PanelBody>
-						<div key={activeIdx}>
-							{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
-						</div>
-					</PanelBody>
-				</Panel>
-				{getButtonElems(buttons, arrayTemplateFieldProps)}
+				<div className="laji-form-field-template-item">
+					<div className="laji-form-field-template-schema">
+						<Panel className="laji-form-panel">
+							<PanelHeading>
+								{header}
+							</PanelHeading>
+							<PanelBody>
+								<div key={activeIdx}>
+									{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+								</div>
+							</PanelBody>
+						</Panel>
+						{getButtonElems(buttons, arrayTemplateFieldProps)}
+					</div>
+					<div className="laji-form-field-template-buttons">
+						{activeIdx !== undefined && hasRemove
+							? (
+								<DeleteButton
+									id={`${that.props.idSchema.$id}_${getIdxWithOffset(activeIdx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
+									ref={this.setDeleteButtonRef(activeIdx)}
+									className="pull-right"
+									confirm={confirmDelete}
+									translations={translations}
+									onClick={that.onDelete(activeIdx, arrayTemplateFieldProps.items[activeIdx])}
+								/>
+							)
+							: null}
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -599,6 +618,8 @@ class PagerArrayFieldTemplate extends Component {
 
 	navigatePrev = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx - 1);
 	navigateNext = () => this.props.formContext.this.onActiveChange(this.props.formContext.this.state.activeIdx + 1);
+
+	setDeleteButtonRef = idx => elem => {this.props.formContext.this.deleteButtonRefs[idx] = elem;};
 }
 
 @handlesButtonsAndFocus
