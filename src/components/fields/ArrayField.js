@@ -107,7 +107,7 @@ export default class _ArrayField extends Component {
 			fn: () => (onClickProps, {default: _default}) => {
 				beforeAdd(this.props);
 				this.onChange([
-					...this.props.formData,
+					...(this.props.formData || []),
 					getDefaultFormState(this.props.schema.items, _default, this.props.registry.definitions)
 				]);
 			},

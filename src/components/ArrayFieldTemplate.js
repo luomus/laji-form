@@ -23,7 +23,7 @@ export function beforeAdd(props) {
 	const {contextId} = props.formContext;
 	const startIdx = props.startIdx  || getUiOptions(props.uiSchema).startIdx;
 	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`, idxOffsets, totalOffset} = getUiOptions(props.uiSchema || {});
-	let idx = (props.items || props.formData).length;
+	let idx = (props.items || props.formData || []).length;
 	const offset = startIdx !== undefined
 		? startIdx
 		: idxOffsets
