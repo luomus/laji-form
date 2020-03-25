@@ -321,9 +321,9 @@ export default class GeocoderField extends Component {
 										const _enum = this.props.formContext.uiSchemaContext[enumField];
 										const enumValue = _enum.enum[_enum.enumNames.indexOf(value)];
 
-										// Push enum value to changes (ignore duplicates)
-										if (enumValue !== undefined && !temp.includes(enumValue)) {
-											temp.push(enumValue);
+										// Push enum value to changes.
+										if (enumValue !== undefined) {
+											!temp.includes(enumValue) && temp.push(enumValue);
 											changes[field] = temp;
 										}
 									} else {
