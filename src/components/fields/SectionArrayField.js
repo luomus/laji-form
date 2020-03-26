@@ -145,7 +145,9 @@ class SectionArrayFieldTemplate extends Component {
 		if (rowIdx !== undefined) {
 			this.focusedRowIdx = rowIdx;
 			this.getElemsForRowIdx(rowIdx).forEach(elem => {
-				elem.className += " input-highlight";
+				if (elem) {
+					elem.className += " input-highlight";
+				}
 			});
 		}
 	}
@@ -153,7 +155,9 @@ class SectionArrayFieldTemplate extends Component {
 	onContainerBlur = () => {
 		if (this.focusedRowIdx !== undefined) {
 			this.getElemsForRowIdx(this.focusedRowIdx).forEach(elem => {
-				elem.className = elem.className.replace(" input-highlight", "");
+				if (elem) {
+					elem.className = elem.className.replace(" input-highlight", "");
+				}
 			});
 		}
 	}

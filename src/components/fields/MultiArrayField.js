@@ -154,17 +154,16 @@ export default class MultiArrayField extends Component {
 
 			const {SchemaField} = this.props.registry.fields;
 			return (
-				<React.Fragment key={idx}>
-					<SchemaField
-						{...props}
-						formContext={formContext}
-						registry={{...this.props.registry, formContext}}
-						uiSchema={uiSchema}
-						errorSchema={errorSchema}
-						formData={items}
-						onChange={this.onChange(idx)}
-					/>
-				</React.Fragment>
+				<SchemaField
+					key={idx}
+					{...props}
+					formContext={formContext}
+					registry={{...this.props.registry, formContext}}
+					uiSchema={uiSchema}
+					errorSchema={errorSchema}
+					formData={items}
+					onChange={this.onChange(idx)}
+				/>
 			);
 		});
 	}
