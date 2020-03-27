@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getSchemaElementById, getNextInputInInputs } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -84,6 +84,12 @@ export default class SectionArrayField extends Component {
 		formData: PropTypes.array
 	}
 
+	constructor(props) {
+		super(props);
+		// Assume that options don't change.
+		this.arrayKeyFunctions = _arrayKeyFunctions(getOptions(this.getUiOptions()));
+	}
+
 	static getName() {return  "SectionArrayField";}
 
 	getStateFromProps(props) {
@@ -98,14 +104,14 @@ export default class SectionArrayField extends Component {
 		const [containerPointer] = rowDefinerField.split("%{row}");
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, false, `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/removable`);
 
-		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, [{fn: "add", className: "invisible"}],  `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/buttons`);
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, [{fn: "add", className: "invisible"}], `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/buttons`);
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, containerArrayKeyFunctions, `/${uiSchemaJSONPointer(schema, containerPointer)}/ui:options/arrayKeyFunctions`);
 		_uiSchema = walkFieldTemplate(schema, _uiSchema, NoLabelsObjectFieldTemplate);
 		//_uiSchema = updateSafelyWithJSONPointer(_uiSchema, {"ui:functions": [{"ui:field": "SingleItemArrayField"}, ...currentUiFunctions], ...contentUiSchema }, uiSchemaJSONPointer(schema, containerPointer));
 
 		_uiSchema = walkUiOrder(schema, _uiSchema, rowDefinerField.replace("%{row}", 0));
 
-		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, _arrayKeyFunctions(getOptions(this.getUiOptions())), "/ui:options/arrayKeyFunctions");
+		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, this.arrayKeyFunctions, "/ui:options/arrayKeyFunctions");
 		_uiSchema = updateSafelyWithJSONPointer(_uiSchema, true, "/ui:options/keepPropFocusOnNavigate");
 
 		return {
@@ -611,11 +617,11 @@ const _arrayKeyFunctions = options => {
 
 			if (left || right) {
 				// Horizontal navigation from row definer column to row value column.
-				if (right && amount === 1 && currentSection === undefined) {
+				if (right && currentSection === undefined) {
 					const idSuffix = JSONPointerToId(rowValueField.replace("%{row}", currentRow));
 					nextId = `${id}_0_${idSuffix}`;
 					// Horizontal navigation from row value column to row definer column.
-				} else if (left && amount === -1 && currentSection === 0 && currentRow !== undefined) {
+				} else if (left && currentSection === 0 && currentRow !== undefined) {
 					const idSuffix = JSONPointerToId(rowDefinerField.replace("%{row}", currentRow));
 					nextId = `${id}_${currentSection}_${idSuffix}`;
 					// Horizontal navigation to next/prev row if goOverRow.
@@ -669,11 +675,38 @@ const _arrayKeyFunctions = options => {
 				const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
 				const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
 				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableOutsideContainer[tabbableIdx + amount]);
+				if (nextId === "root") {
+					return true;
+				}
 			}
 			focusAndScroll(getProps().formContext, nextId);
 		}
 	};
-	keyFunctions.navigate = (e, options) => keyFunctions.navigateSection(e, {...options, right: !options.reverse, left: options.reverse, goOverRow: true});
+	keyFunctions.navigate = (e, props) => {
+		const {getProps, reverse} = props;
+		const id = getProps().idSchema.$id;
+		if (!reverse) {
+			const lastSectionElems = getTabbableFields(document.getElementById(`${id}_${getProps().formData.length - 1}-section`));
+			const lastElem = lastSectionElems[lastSectionElems.length - 1];
+			if (document.activeElement === lastElem) {
+				return false;
+			}
+		} else {
+			const {rowDefinerField} = options;
+			const firstElem = getTabbableFields(document.getElementById(`${id}_0-section`))[0];
+			if (document.activeElement === firstElem) {
+				const allTabbableFields = getTabbableFields(findDOMNode(getProps().formContext.getFormRef()));
+				const matcher = new RegExp(JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+")));
+				const allTabbableFieldsWithoutRowDefinerInputs = allTabbableFields.filter(f => !f.id.match(matcher))
+				const input = getNextInputInInputs(getProps().formContext.getFormRef(), undefined, true, allTabbableFieldsWithoutRowDefinerInputs)
+				if (input) {
+					input.focus();
+				}
+				return true;
+			}
+		}
+		return keyFunctions.navigateSection(e, {...props, right: !props.reverse, left: props.reverse, goOverRow: true});
+	};
 	return keyFunctions;
 };
 
