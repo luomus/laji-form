@@ -448,7 +448,7 @@ class SectionArrayFieldTemplate extends Component {
 			<React.Fragment>
 				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-					<label className="bg-info">{this.props.formContext.translations.Sum}</label>
+					<label className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</label>
 				</Affix>
 				<SchemaField
 					{...this.props}
