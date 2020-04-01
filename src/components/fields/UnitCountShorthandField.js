@@ -63,6 +63,7 @@ export default class UnitCountShorthandField extends Component {
 				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
 				this.props.onChange(formData);
 				resolve({success: undefined});
+				return;
 			}
 
 			apiClient.fetchCached("/autocomplete/pairCount", {q: value, taxonID: taxonId}).then(suggestion => {
@@ -72,7 +73,7 @@ export default class UnitCountShorthandField extends Component {
 				formData = updateSafelyWithJSONPointer(formData, suggestion.key, shorthandField);
 				formData = updateSafelyWithJSONPointer(formData, suggestion.value, pairCountField);
 				this.props.onChange(formData);
-				resolve({success: true});
+				resolve({success: suggestion.key ? true : undefined});
 			}).catch(() => {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
@@ -156,7 +157,7 @@ class CodeReader extends Component {
 		if (e.key === "Enter") {
 			this.onBlur();
 		}
-	}
+	};
 
 	onBlur() {
 		const {value, options} = this.props;
