@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
+import {
+	getUiOptions,
+	parseJSONPointer,
+	updateSafelyWithJSONPointer
+} from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
@@ -12,6 +16,7 @@ export default class UnitCountShorthandField extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				shorthandField: PropTypes.string.isRequired,
+				pairCountField: PropTypes.string.isRequired,
 				taxonIDField: PropTypes.string.isRequired
 			}).isRequired
 		}).isRequired,
@@ -45,13 +50,37 @@ export default class UnitCountShorthandField extends Component {
 		return {...props, uiSchema: _uiSchema};
 	}
 
-	// TODO
-	parseCode() {
+	parseCode(value, taxonId) {
+		const {apiClient} = this.props.formContext;
+		let formData = this.props.formData;
+		const {shorthandField, pairCountField} = getUiOptions(this.props.uiSchema);
+
+		let timestamp = Date.now();
+		this.promiseTimestamp = timestamp;
+
 		return new Promise((resolve) => {
-			setTimeout( () => {
-				this.props.onChange({...this.props.formData, pairCount: 2});
-				resolve();
-			}, 1000);
+			if (!value || !taxonId) {
+				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
+				this.props.onChange(formData);
+				resolve({success: undefined});
+			}
+
+			apiClient.fetchCached("/autocomplete/pairCount", {q: value, taxonID: taxonId}).then(suggestion => {
+				if (timestamp !== this.promiseTimestamp) {
+					return;
+				}
+				formData = updateSafelyWithJSONPointer(formData, suggestion.key, shorthandField);
+				formData = updateSafelyWithJSONPointer(formData, suggestion.value, pairCountField);
+				this.props.onChange(formData);
+				resolve({success: true});
+			}).catch(() => {
+				if (timestamp !== this.promiseTimestamp) {
+					return;
+				}
+				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
+				this.props.onChange(formData);
+				resolve({success: false});
+			});
 		});
 	}
 }
@@ -67,7 +96,7 @@ class CodeReader extends Component {
 			type: PropTypes.oneOf(["string"])
 		}),
 		value: PropTypes.string
-	}
+	};
 
 	constructor(props) {
 		super(props);
@@ -78,7 +107,7 @@ class CodeReader extends Component {
 
 	onChange = ({target: {value}}) => {
 		this.props.onChange(value);
-	}
+	};
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.options.taxonID !== this.props.options.taxonID) {
@@ -88,8 +117,11 @@ class CodeReader extends Component {
 
 	render() {
 		let validationState = "default";
-		if (this.state.failed === true) validationState = "warning";
-		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
+		if (this.state.success === false) {
+			validationState = "error";
+		} else if (this.state.success) {
+			validationState = "success";
+		}
 
 		const {formContext} = this.props;
 		const {translations} = formContext;
@@ -107,9 +139,9 @@ class CodeReader extends Component {
 		);
 
 		return (
-			<FormGroup validationState={this.state.failed ? "error" : undefined}>
+			<FormGroup validationState={this.state.success === false ? "error" : undefined}>
 				{inputElem}
-				{this.state.failed ? (
+				{this.state.success === false ? (
 					<HelpBlock>
 						{translations.InvalidUnitCode}
 					</HelpBlock>
@@ -130,15 +162,11 @@ class CodeReader extends Component {
 		const {value, options} = this.props;
 		const {parseCode, taxonID} = options;
 
-		if (value && value.length >= 3) {
-			if (!(value === this.state.value && taxonID === this.state.taxonID)) {
-				this.setState({value, taxonID, loading: true});
-				parseCode(value, taxonID).then(() => {
-					this.setState({loading: false});
-				}).catch(() => {
-					this.setState({loading: false});
-				});
-			}
+		if (!(value === this.state.value && taxonID === this.state.taxonID)) {
+			this.setState({value, taxonID, loading: true, success: undefined});
+			parseCode(value, taxonID).then((result) => {
+				this.setState({loading: false, success: result.success});
+			});
 		}
 	}
 }
