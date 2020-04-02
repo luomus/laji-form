@@ -73,14 +73,14 @@ export default class UnitCountShorthandField extends Component {
 				formData = updateSafelyWithJSONPointer(formData, suggestion.key, shorthandField);
 				formData = updateSafelyWithJSONPointer(formData, suggestion.value, pairCountField);
 				this.props.onChange(formData);
-				resolve({success: suggestion.key ? true : undefined});
+				resolve({success: suggestion.key ? true : undefined, value: suggestion.key});
 			}).catch(() => {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}
 				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
 				this.props.onChange(formData);
-				resolve({success: false});
+				resolve({success: false, value: value});
 			});
 		});
 	}
@@ -166,7 +166,7 @@ class CodeReader extends Component {
 		if (!(value === this.state.value && taxonID === this.state.taxonID)) {
 			this.setState({value, taxonID, loading: true, success: undefined});
 			parseCode(value, taxonID).then((result) => {
-				this.setState({loading: false, success: result.success});
+				this.setState({loading: false, success: result.success, value: result.value});
 			});
 		}
 	}
