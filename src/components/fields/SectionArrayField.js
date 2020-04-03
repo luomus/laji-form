@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getSchemaElementById, getNextInputInInputs } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -95,7 +95,21 @@ export default class SectionArrayField extends Component {
 	getStateFromProps(props) {
 		const {uiSchema, schema, registry} = props;
 		const {sectionField, rowDefinerField} = getOptions(this.getUiOptions());
-		const formContext = {...props.formContext, Label: () => null, this: this, originalUiSchema: uiSchema, errorSchema: props.errorSchema, invisibleErrors: true, errorsWidth: 198};
+		const formContext = {
+			...props.formContext,
+			Label: () => null,
+			this: this,
+			originalUiSchema: uiSchema,
+			errorSchema: props.errorSchema,
+			invisibleErrors: true,
+			errorsStyle: {
+				height: 25,
+				textOverflow: "ellipsis",
+				whiteSpace: "nowrap",
+				overflow: "hidden",
+				width: 0
+			},
+		};
 		let _uiSchema = hideFields(schema, {
 			...uiSchema,
 			"ui:ArrayFieldTemplate": SectionArrayFieldTemplate,
@@ -196,7 +210,8 @@ class SectionArrayFieldTemplate extends Component {
 			...this.props.formContext,
 			rowDefinerField,
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id),
-			invisibleErrors: false
+			invisibleErrors: false,
+			errorsStyle: {...this.props.formContext.errorsStyle, width: 198}
 		};
 
 		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
@@ -433,7 +448,7 @@ class SectionArrayFieldTemplate extends Component {
 			<React.Fragment>
 				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-					<label className="bg-info">{this.props.formContext.translations.Sum}</label>
+					<label className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</label>
 				</Affix>
 				<SchemaField
 					{...this.props}
@@ -697,8 +712,8 @@ const _arrayKeyFunctions = options => {
 			if (document.activeElement === firstElem) {
 				const allTabbableFields = getTabbableFields(findDOMNode(getProps().formContext.getFormRef()));
 				const matcher = new RegExp(JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+")));
-				const allTabbableFieldsWithoutRowDefinerInputs = allTabbableFields.filter(f => !f.id.match(matcher))
-				const input = getNextInputInInputs(getProps().formContext.getFormRef(), undefined, true, allTabbableFieldsWithoutRowDefinerInputs)
+				const allTabbableFieldsWithoutRowDefinerInputs = allTabbableFields.filter(f => !f.id.match(matcher));
+				const input = getNextInputInInputs(getProps().formContext.getFormRef(), undefined, true, allTabbableFieldsWithoutRowDefinerInputs);
 				if (input) {
 					input.focus();
 				}
