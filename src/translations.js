@@ -789,4 +789,9 @@
 		en: "Navigate right in matrix",
 		sv: "Navigera höger nästa fält"
 	},
+	instructions: {
+		fi: "Ohjeet",
+		en: "Instructions",
+		sv: "Instruktioner"
+	},
 };

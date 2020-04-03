@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
-import { Row, Col, Panel, Popover, ButtonToolbar } from "react-bootstrap";
+import { Row, Col, Panel, Popover, ButtonToolbar, Modal } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch, Fullscreen } from "../components";
@@ -53,7 +53,8 @@ export default class MapArrayField extends Component {
 				}),
 				data: PropTypes.arrayOf(PropTypes.shape({
 					geometryField: PropTypes.string.isRequired
-				}))
+				})),
+				help: PropTypes.string
 			}).isRequired,
 		}),
 		schema: PropTypes.shape({
@@ -1544,6 +1545,7 @@ class _MapArrayField extends ComposedComponent {
 			zoomToData: true,
 			onOptionsChanged: this.onOptionsChanged,
 			fullscreenable: true,
+			help: options.help,
 			...mapOptions
 		};
 
@@ -1838,6 +1840,15 @@ export class MapComponent extends Component {
 		this.setState({panel: false});
 	}
 
+	showHelp = () => {
+		this.setState({showHelp: true});
+	}
+
+	hideHelp = () => {
+		this.setState({showHelp: false});
+	}
+
+
 	setMapState = (options, callback) => {
 		this._callback = callback;
 		this.setState({mapOptions: options});
@@ -1861,18 +1872,29 @@ export class MapComponent extends Component {
 		return (
 			<div className={"laji-form-map-container" + (this.state.focusGrabbed ? " pass-block" : "")}>
 				{controlledPanel}
-				{this.state.panel ?
+				{this.state.panel &&
 					<MapPanel id={panel.id}
 					          show={this.state.panel}
 					          text={this.state.panelTextContent}
 					          onClick={this.state.panelButtonOnClick}
 					          buttonText={this.state.panelButtonContent}
 					          buttonBsStyle={this.state.panelButtonBsStyle}
-					/> : null
+					/>
+				}
+				{this.state.showHelp &&
+						<Modal dialogClassName="laji-form" show={true} onHide={this.hideHelp}>
+							<Modal.Header closeButton={true} />
+							<Modal.Body>
+								<span dangerouslySetInnerHTML={{__html: mapOptions.help}} />
+							</Modal.Body>
+						</Modal>
+					
 				}
 				<Map className={this.props.className}
 				     style={this.props.style} 
 				     ref="map" 
+				     showHelp={this.showHelp}
+				     hideHelp={this.hideHelp}
 				     {...{...mapOptions, ...this.state.mapOptions}}
 				/>
 			</div>
@@ -1885,6 +1907,7 @@ export class Map extends Component {
 		tileLayerName: "maastokartta",
 		availableTileLayerNamesBlacklist: ["pohjakartta"]
 	};
+
 
 	constructor(props) {
 		super(props);
@@ -1974,7 +1997,7 @@ export class Map extends Component {
 
 	getEnhancedMapOptions = (props) => {
 		const mapOptions = this.getMapOptions(props);
-		const {fullscreenable, formContext = {}} = props;
+		const {fullscreenable, help, formContext = {}} = props;
 
 		if (fullscreenable) {
 			mapOptions.customControls = [
@@ -1986,6 +2009,17 @@ export class Map extends Component {
 					text: formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
 				}
 			];
+		}
+		if (help) {
+			mapOptions.customControls = [
+				...(mapOptions.customControls || []),
+				{
+					iconCls: "glyphicon glyphicon-question-sign",
+					fn: this.props.showHelp,
+					position: "bottomright",
+					text: formContext.translations.Instructions
+				}
+			]
 		}
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;
