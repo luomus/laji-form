@@ -2019,7 +2019,7 @@ export class Map extends Component {
 					position: "bottomright",
 					text: formContext.translations.Instructions
 				}
-			]
+			];
 		}
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;

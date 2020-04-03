@@ -83,7 +83,6 @@ export default class MultiAnyToBooleanField extends Component {
 				<div className={"checkbox-row"}>
 					{groups.map((group, idx) => {
 						const {"ui:help": help, "ui:helpHoverable": helpHoverable, helpPlacement, ..._group} = group;
-						helpPlacement && console.log(helpPlacement);
 						const groupProps = {
 							...this.props,
 							schema: {...this.props.schema.items, title: group.label},
