@@ -430,7 +430,7 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id, required, _context, helpHoverable}) {
+export function Label({label, help, children, id, required, _context, helpHoverable, helpPlacement}) {
 	const showHelp = label && help;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
@@ -451,7 +451,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 	);
 
 	return (label || help) ? (
-		<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;

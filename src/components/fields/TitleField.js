@@ -23,7 +23,7 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>
 							<span>
 								<strong>{title}</strong><br />
-								{help}
+								<span dangerouslySetInnerHTML={{__html: help}} />
 							</span>
 						</Tooltip>;
 

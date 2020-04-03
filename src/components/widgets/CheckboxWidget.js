@@ -80,7 +80,7 @@ export default class CheckboxWidget extends Component {
 		} = this.props;
 
 		const options = getUiOptions(this.props);
-		const {allowUndefined = true, invert = false, help, label: uiOptionsLabel} = options;
+		const {allowUndefined = true, invert = false, help, helpHoverable, helpPlacement, label: uiOptionsLabel} = options;
 		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
 
 		const {Yes, No, Unknown} = registry.formContext.translations;
@@ -113,7 +113,7 @@ export default class CheckboxWidget extends Component {
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : (
-			<Label label={label} required={required} help={help}>
+			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement}>
 				{checkbox}
 			</Label>
 		);

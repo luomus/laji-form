@@ -104,7 +104,7 @@ export default class FieldTemplate extends Component {
 		const style = errorsWidth ? {width: errorsWidth} : undefined;
 		return (
 			<div className={classNames + warningClassName} id={htmlId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} id={id} required={required} _context={new Context(formContext.contextId)} /> : null}
+				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required} _context={new Context(formContext.contextId)} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}
