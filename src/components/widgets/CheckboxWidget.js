@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
 import Switch from "react-bootstrap-switch";
 import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import Context from "../../Context";
 
 export default class CheckboxWidget extends Component {
 	static propTypes = {
@@ -113,7 +114,7 @@ export default class CheckboxWidget extends Component {
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : (
-			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement}>
+			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement} _context={new Context(this.props.formContext.contextId)}>
 				{checkbox}
 			</Label>
 		);
