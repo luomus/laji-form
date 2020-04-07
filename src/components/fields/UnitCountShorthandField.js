@@ -9,6 +9,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
+import merge from "deepmerge";
 
 @VirtualSchemaField
 export default class UnitCountShorthandField extends Component {
@@ -37,13 +38,13 @@ export default class UnitCountShorthandField extends Component {
 		const {uiSchema, formData} = props;
 		const {shorthandField, taxonIDField} = getUiOptions(props.uiSchema);
 
-		const shortHandUiSchema = {
+		const shortHandUiSchema = merge(parseJSONPointer(props.uiSchema, shorthandField) || {}, {
 			"ui:widget": CodeReader,
 			"ui:options": {
 				parseCode: this.parseCode,
 				taxonID: parseJSONPointer(formData, taxonIDField)
 			}
-		};
+		});
 
 		const _uiSchema = updateSafelyWithJSONPointer(uiSchema, shortHandUiSchema, shorthandField);
 
