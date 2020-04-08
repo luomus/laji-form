@@ -80,8 +80,7 @@ export default class CheckboxWidget extends Component {
 			disabled,
 			registry,
 			readonly,
-			label,
-			required
+			label
 		} = this.props;
 
 		const {Yes, No, Unknown} = registry.formContext.translations;
@@ -94,6 +93,7 @@ export default class CheckboxWidget extends Component {
 			trueLabel = Yes,
 			falseLabel = No,
 			unknownLabel = Unknown,
+			required = this.props.required,
 			help,
 			helpHoverable,
 			helpPlacement,

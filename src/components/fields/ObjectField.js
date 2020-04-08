@@ -40,7 +40,7 @@ function ObjectFieldTemplate(props) {
 					<TitleField
 						id={`${props.idSchema.$id}__title`}
 						title={props.title}
-						required={props.required}
+						required={props.required || props.uiSchema["ui:required"]}
 						formContext={props.formContext}
 						className={getUiOptions(props.uiSchema).titleClassName}
 						help={props.uiSchema["ui:help"]}

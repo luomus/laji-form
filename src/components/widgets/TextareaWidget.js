@@ -87,9 +87,13 @@ export default class TextareaWidget extends Component {
 
 	render() {
 		const {
-			id, options, placeholder, required, disabled, readonly, autofocus
+			id, options, placeholder, disabled, readonly, autofocus
 		}  = this.props;
 		const {value} = this.state;
+
+		const {
+			required = this.props.required
+		} = options;
 
 		const textarea = <textarea
 			id={id}
