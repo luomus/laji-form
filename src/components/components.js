@@ -435,7 +435,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
 		<span>
-			<strong>{label}</strong><br />
+			<strong dangerouslySetInnerHTML={{__html: label}} /><br />
 			<span dangerouslySetInnerHTML={{__html: help}} />
 		</span>
 	): label}</Tooltip>;
@@ -443,7 +443,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 	const labelElem = (
 		<label htmlFor={id}>
 			<div>
-				<strong>{label}{required ? "*" :  ""}</strong>
+				<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
                 {showHelp ? <Help /> : null}
 			</div>
 			{children}
