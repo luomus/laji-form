@@ -109,7 +109,7 @@ export default class CheckboxWidget extends Component {
 				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
 					<ToggleButton disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButton>
 					<ToggleButton disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButton>
-					<ToggleButton className={showUndefined ? "" : "hidden"} disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton>
+					{(showUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		) : (
