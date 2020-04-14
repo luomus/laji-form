@@ -100,7 +100,8 @@ export default class FieldTemplate extends Component {
 		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
 
 		const {Label, invisibleErrors, errorsStyle} = this.props.formContext;
-		const className = `laji-form-error-container${invisibleErrors ? " invisible" : ""}`;
+		const errorClass = `laji-form-error-container${invisibleErrors ? " invisible" : ""}`;
+		const warningClass = `laji-form-warning-container${invisibleErrors ? " invisible" : ""}`;
 		const style = errorsStyle || undefined;
 		return (
 			<div className={classNames + warningClassName} id={htmlId}>
@@ -118,14 +119,14 @@ export default class FieldTemplate extends Component {
 					null
 				}
 				{errors.length > 0 ?
-						<ul id={`laji-form-error-container-${id}`} className={className}>
+						<ul id={`laji-form-error-container-${id}`} className={errorClass}>
 							{errors.map((error, i) => (
 								<li key={i} style={style}>{error}</li>
 							))}
 						</ul>
 					 : null}
 				{warnings.length > 0 ?
-					<ul  id={`laji-form-warning-container-${id}`} className={className}>
+					<ul  id={`laji-form-warning-container-${id}`} className={warningClass}>
 						{warnings.map((warning, i) => (
 							<li key={i} style={style}>{warning}</li>
 						))}
