@@ -1489,7 +1489,7 @@ class _MapArrayField extends ComposedComponent {
 
 		let buttons = undefined;
 		let renderButtonsBelow = false;
-		if (activeIdx !== undefined && options.buttons) {
+		if (((this.props.formData || []).length === 0 || activeIdx !== undefined) && options.buttons) {
 			if (_buttonsPath) {
 				buttons = appendAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
