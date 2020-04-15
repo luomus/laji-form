@@ -130,7 +130,6 @@ class TableArrayFieldTemplate extends Component {
 		const {props} = this;
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
-
 		const {Label} = this.props.formContext;
 		const labels =schemaPropsArray.map(propName => 
 			<Col {...cols} key={propName + "-label"}>
@@ -138,7 +137,8 @@ class TableArrayFieldTemplate extends Component {
 					label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
 					disabled={false}
 					id={idSchema[propName].$id}
-					required={schema.items.required && schema.items.required.indexOf(propName) > -1}
+					required={(schema.items.required && schema.items.required.indexOf(propName) > -1)
+					|| ((uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:required"] : undefined)}
 					help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
 			</Col>
 		);

@@ -10,7 +10,11 @@ export default class CheckboxWidget extends Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				allowUndefined: PropTypes.bool,
-				invert:  PropTypes.bool
+				showUndefined: PropTypes.bool,
+				invert:  PropTypes.bool,
+				trueLabel: PropTypes.string,
+				falseLabel: PropTypes.string,
+				unknownLabel: PropTypes.string
 			})
 		}),
 		schema: PropTypes.shape({
@@ -76,15 +80,26 @@ export default class CheckboxWidget extends Component {
 			disabled,
 			registry,
 			readonly,
-			label,
-			required
+			label
 		} = this.props;
 
-		const options = getUiOptions(this.props);
-		const {allowUndefined = true, invert = false, help, helpHoverable, helpPlacement, label: uiOptionsLabel} = options;
-		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
-
 		const {Yes, No, Unknown} = registry.formContext.translations;
+
+		const options = getUiOptions(this.props);
+		const {
+			allowUndefined = true,
+			showUndefined = true,
+			invert = false,
+			trueLabel = Yes,
+			falseLabel = No,
+			unknownLabel = Unknown,
+			required = this.props.required,
+			help,
+			helpHoverable,
+			helpPlacement,
+			label: uiOptionsLabel
+		} = options;
+		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
 
 		// "undefined" for silencing ToggleButton warning.
 		const _value = value === undefined ? "undefined" : value;
@@ -92,9 +107,9 @@ export default class CheckboxWidget extends Component {
 		const checkbox = allowUndefined || value === undefined ? (
 			<ButtonToolbar className="tristate-buttons">
 				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButton disabled={disabled || readonly} value={true}>{Yes}</ToggleButton>
-					<ToggleButton disabled={disabled || readonly} value={false}>{No}</ToggleButton>
-					<ToggleButton disabled={disabled || readonly} value={"undefined"}>{Unknown}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButton>
+					{(showUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		) : (
@@ -104,8 +119,8 @@ export default class CheckboxWidget extends Component {
 					defaultValue={allowUndefined ? null : false}
 					disabled={disabled}
 					readonly={readonly}
-					onText={Yes}
-					offText={No}
+					onText={trueLabel}
+					offText={falseLabel}
 					bsSize="mini"
 					tristate={allowUndefined}
 				/>
