@@ -4,9 +4,12 @@ import Spinner from "react-spinner";
 import { Glyphicon } from "react-bootstrap";
 import { GlyphButton } from "../components";
 
+const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave"]
+
 @MediaArrayField
 export default class AudioArrayField extends Component {
-	ALLOWED_FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave"];
+	ALLOWED_FILE_TYPES = FILE_TYPES;
+	ACCEPT_FILE_TYPES = ["audio/*"];
 	MAX_FILE_SIZE = 20000000;
 	KEY = "AUDIO";
 	ENDPOINT = "audio";
