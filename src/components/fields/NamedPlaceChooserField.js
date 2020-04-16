@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Modal, Alert } from "react-bootstrap";
 import { Button } from "../components";
@@ -68,7 +68,10 @@ export default class NamedPlaceChooserField extends Component {
 				}
 			});
 			gathering.namedPlaceID = place.id;
-			return gathering;
+			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
+
+			const [withLajiFormIds] = addLajiFormIds(gathering, tmpIdTree, false);
+			return withLajiFormIds;
 		};
 
 		try {
