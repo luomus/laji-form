@@ -25,7 +25,8 @@ let mediaUuid = 0;
 
 @MediaArrayField
 export default class ImageArrayField extends Component {
-	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif", "application/pdf"];
+	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
+	ACCEPT_FILE_TYPES = ["image/*"];
 	MAX_FILE_SIZE = 20000000;
 	KEY = "IMAGE";
 	ENDPOINT = "images";
@@ -214,7 +215,7 @@ export function MediaArrayField(ComposedComponent) {
 							{this.renderMedias()}
 							{this.renderLoadingMedias()}
 							<OverlayTrigger overlay={tooltip}>
-								<DropZone accept={this.ALLOWED_FILE_TYPES.join(", ")}
+								<DropZone accept={this.ACCEPT_FILE_TYPES}
 								onDragEnter={this.onDragEnter}
 								onDragLeave={this.onDragLeave}
 								onDrop={this.onDrop}
@@ -387,15 +388,15 @@ export function MediaArrayField(ComposedComponent) {
 					<Modal.Body>
 						{[
 							["environment",
-								this.TRANSLATION_TAKE_NEW,
-								this.ALLOWED_FILE_TYPES.filter(t => t !== "application/pdf").join(", ")],
+								this.TRANSLATION_TAKE_NEW
+							],
 							[
 								"filesystem",
-								this.TRANSLATION_SELECT_FILE,
-								this.ALLOWED_FILE_TYPES.join(", ")]
-						].map(([captureMethod, label, accept]) =>
+								this.TRANSLATION_SELECT_FILE
+							]
+						].map(([captureMethod, label]) =>
 							<DropZone key={captureMethod}
-							accept={accept}
+							accept={this.ACCEPT_FILE_TYPES}
 							onDrop={this.onDrop}
 							disabled={readonly || disabled}
 						>
