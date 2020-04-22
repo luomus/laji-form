@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, updateTailUiSchema } from "../../utils";
+import { getUiOptions, updateTailUiSchema, isHidden } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { DeleteButton } from "../components";
 import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
@@ -42,7 +42,7 @@ export default class TableField extends Component {
 	}
 
 	render() {
-		const {schema, uiSchema, formData, registry: {fields: {ArrayField}}, formContext} = this.props;
+		const {schema, uiSchema = {}, formData, registry: {fields: {ArrayField}}, formContext} = this.props;
 		const {uiSchemaContext} = formContext;
 
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
@@ -58,9 +58,9 @@ export default class TableField extends Component {
 			});
 		}
 
-		const schemaLength = schemaPropsArray.length;
+		const schemaLength = schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)).length;
 		const defaultCol = parseInt(12 / schemaLength);
-		const defaultWrapperCol = parseInt(12 / (1 + (Object.keys(schemaProps).length  - schemaLength)));
+		const defaultWrapperCol = parseInt(12 / (1 + (Object.keys(schemaProps).filter(col => !isHidden(uiSchema.items, col)).length  - schemaLength)));
 
 		const cols = {xs: undefined, sm: undefined, md: undefined, lg: undefined};
 		const wrapperCols = Object.assign({}, cols);
@@ -95,8 +95,9 @@ export default class TableField extends Component {
 						uiSchema: itemsUiSchema
 					}
 				};
+			} else {
+				_uiSchema = {..._uiSchema, items: {...(uiSchema.items || {}), ...itemsUiSchema, "ui:options": {...getUiOptions(uiSchema.items), ...getUiOptions(itemsUiSchema)}}};
 			}
-
 		}
 
 		const _formContext = {
@@ -131,7 +132,7 @@ class TableArrayFieldTemplate extends Component {
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const {Label} = this.props.formContext;
-		const labels =schemaPropsArray.map(propName => 
+		const labels =schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)).map(propName => 
 			<Col {...cols} key={propName + "-label"}>
 				<Label
 					label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
@@ -170,7 +171,7 @@ class TableArrayFieldTemplate extends Component {
 					return (
 						<Row key={item.index} >
 							<Col {...wrapperCols}>
-								<div className="laji-form-field-template-item keep-vertical">
+								<div key={item.index} className="laji-form-field-template-item keep-vertical">
 									<div className="laji-form-field-template-schema">{item.children}</div>
 									{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 								</div>

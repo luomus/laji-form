@@ -278,7 +278,7 @@ export function focusById(formContext = {}, id, focus = true) {
 }
 
 export function getNestedTailUiSchema(uiSchema) {
-	while (uiSchema.uiSchema) {
+	while (uiSchema && uiSchema.uiSchema) {
 		uiSchema = uiSchema.uiSchema;
 	}
 	return uiSchema;

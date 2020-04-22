@@ -796,7 +796,7 @@ class TableArrayFieldTemplate extends Component {
 		}
 
 		const {schema, uiSchema = {}, formData = [], items, TitleField, DescriptionField, disabled, readonly} = this.props;
-		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(this.props.uiSchema);
+		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(uiSchema);
 		const {Label} = this.props.formContext;
 		const Title = renderTitleAsLabel ? Label :  TitleField;
 		const foundProps = {};
@@ -812,8 +812,8 @@ class TableArrayFieldTemplate extends Component {
 						&& !isEmptyString(item[prop])
 						&& (!Array.isArray(item[prop])
 						    || Array.isArray(item[prop]) && !item[prop].every(isEmptyString))
-						&& !isHidden(uiSchema.items, prop)
-						&& !isHidden(getNestedTailUiSchema(uiSchema.items), prop)
+						&& !isHidden(uiSchema.items || {}, prop)
+						&& !isHidden(getNestedTailUiSchema(uiSchema.items || {}), prop)
 					)
 					|| uiSchema.items && uiSchema.items[prop] && uiSchema.items[prop]["ui:field"] === "ImageArrayField" && getUUID(item) && tmpImgs[getUUID(item)]
 				;
@@ -865,7 +865,7 @@ class TableArrayFieldTemplate extends Component {
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
 				<Title title={title} label={title} className={titleClassName} titleFormatters={titleFormatters} formData={formData} />
-				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
+				<DescriptionField description={uiSchema["ui:description"]}/>
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">
@@ -897,7 +897,7 @@ class TableArrayFieldTemplate extends Component {
 												...cols.map(col => {
 													return (
 													<td key={col}>
-														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: uiSchema.items[col], formData: formData[idx][col]}, formatters[col], {formData: formData[idx]})}
+														{formatValue({...that.props, schema: schema.items.properties[col], uiSchema: (uiSchema.items || {})[col], formData: formData[idx][col]}, formatters[col], {formData: formData[idx]})}
 													</td>
 													);
 												}),
