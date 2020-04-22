@@ -639,7 +639,7 @@ export function checkRules(rules, props, cache, prop = "formData") {
 		} else if (rule === "isEdit") {
 			passes = props.formContext.uiSchemaContext.isEdit;
 		} else {
-			const {field, regexp, valueIn, valueIncludes} = rule;
+			const {field, regexp, valueIn, valueIncludes, valueLengthLessThan} = rule;
 			let value = parseJSONPointer(props[prop] || {}, field);
 			if (value === undefined) value = "";
 			if (regexp) {
@@ -655,6 +655,8 @@ export function checkRules(rules, props, cache, prop = "formData") {
 				}
 			} else if (valueIncludes !== undefined) {
 				passes = value.includes(valueIncludes);
+			} else if (valueLengthLessThan !== undefined) {
+				passes = value.length < valueLengthLessThan;
 			}
 		}
 		return rule.complement ? !passes : passes;

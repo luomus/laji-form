@@ -10,6 +10,7 @@ export const rulePropType = PropTypes.oneOfType([
 		field: PropTypes.string.isRequired,
 		regexp: PropTypes.string,
 		valueIn: PropTypes.arrayOf(PropTypes.string),
+		valueLengthLessThan: PropTypes.number
 	}),
 	PropTypes.oneOf(["isAdmin", "isEdit"])
 ]);
