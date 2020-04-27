@@ -2947,10 +2947,6 @@
 			"sex": false,
 			"breeding": false,
 			"unitGathering_substrate": true
-		},
-		"undefined": {
-			"movingStatus": true,
-			"movingDirection": true
 		}
 	},
 	"%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": false,
