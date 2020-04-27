@@ -91,6 +91,10 @@ export default class EnumRangeArrayField extends Component {
 	}
 
 	onChange = (formData, reason) => {
+		function onlyUnique(value, index, self) { 
+			return self.indexOf(value) === index;
+		}
+		formData = formData.filter(onlyUnique);
 		if (reason !== "remove" && reason !== "suggestion selected" && reason !== "unsuggested selected") {
 			this.setState({value: ""});
 			return;
