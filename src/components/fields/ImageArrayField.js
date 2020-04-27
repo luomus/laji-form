@@ -395,7 +395,7 @@ export function MediaArrayField(ComposedComponent) {
 								this.TRANSLATION_SELECT_FILE
 							]
 						].map(([captureMethod, label]) =>
-							<DropZone key={captureMethod}
+							<DropZone key={captureMethod || ""}
 							accept={this.ACCEPT_FILE_TYPES}
 							onDrop={this.onDrop}
 							disabled={readonly || disabled}
