@@ -5,6 +5,8 @@ import BaseComponent from "../BaseComponent";
 import { getUiOptions, focusNextInput } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
+import Context from "../../Context";
+import deepEquals from "deep-equal";
 
 @BaseComponent
 export default class EnumRangeArrayField extends Component {
@@ -25,6 +27,12 @@ export default class EnumRangeArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
+	}
+
+	componentWillReceiveProps(props) {
+		if (!deepEquals(props.formData, this.props.formData)) {
+			new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize");
+		}
 	}
 
 	setRef = (elem) => {
