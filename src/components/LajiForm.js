@@ -396,7 +396,7 @@ export default class LajiForm extends Component {
 	}
 
 	getStateFromProps(props) {
-		new Context().staticImgPath = props.staticImgPath;
+		if (props.staticImgPath) new Context().staticImgPath = props.staticImgPath;
 		const translations = this.translations[props.lang];
 		if (!this.tmpIdTree || props.schema !== this.props.schema) {
 			this.setTmpIdTree(props.schema);
