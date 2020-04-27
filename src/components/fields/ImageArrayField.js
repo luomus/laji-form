@@ -391,7 +391,7 @@ export function MediaArrayField(ComposedComponent) {
 								this.TRANSLATION_TAKE_NEW
 							],
 							[
-								"filesystem",
+								undefined,
 								this.TRANSLATION_SELECT_FILE
 							]
 						].map(([captureMethod, label]) =>
