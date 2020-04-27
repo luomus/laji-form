@@ -120,7 +120,7 @@ body .laji-form {
 	border-radius: 2px;
 	line-height: 12.5px;
 }
-.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper, .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
+.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper:not(.laji-form-enum-range), .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
 	height: 25px !important;
 }
 .laji-form .form-control-feedback {

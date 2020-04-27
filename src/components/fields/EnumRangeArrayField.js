@@ -41,6 +41,7 @@ export default class EnumRangeArrayField extends Component {
 			value: this.state.value,
 			controlledValue: true,
 			minFetchLength: 0,
+			wrapperClassName: "laji-form-enum-range",
 			inputProps: {
 				value: this.state.value,
 				that: this,

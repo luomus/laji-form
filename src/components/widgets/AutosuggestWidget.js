@@ -662,7 +662,7 @@ export class Autosuggest extends Component {
 		return (
 			<React.Fragment>
 				{renderExtra && renderExtra()}
-				<div className="autosuggest-wrapper">
+				<div className={`autosuggest-wrapper${props.wrapperClassName ? ` ${props.wrapperClassName}` : ""}`}>
 					<ReactAutosuggest
 						ref={this.setRef}
 						id={`${this.props.id}-autosuggest`}
