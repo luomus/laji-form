@@ -132,17 +132,21 @@ class TableArrayFieldTemplate extends Component {
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const {Label} = this.props.formContext;
-		const labels =schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)).map(propName => 
-			<Col {...cols} key={propName + "-label"}>
-				<Label
-					label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
-					disabled={false}
-					id={idSchema[propName].$id}
-					required={(schema.items.required && schema.items.required.indexOf(propName) > -1)
-					|| ((uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:required"] : undefined)}
-					help={(uiSchema && uiSchema.items && uiSchema.items[propName]) ? uiSchema.items[propName]["ui:help"] : undefined} />
-			</Col>
-		);
+		const labels =schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)).map(propName => {
+			const propUiSchema = uiSchema && uiSchema.items && uiSchema.items[propName] || {};
+			return (
+				<Col {...cols} key={propName + "-label"}>
+					<Label
+						label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
+						disabled={false}
+						id={idSchema[propName].$id}
+						required={(schema.items.required && schema.items.required.indexOf(propName) > -1)
+						|| propUiSchema["ui:required"]}
+						help={propUiSchema["ui:help"]}
+						helpPlacement={propUiSchema["ui:helpPlacement"]} />
+				</Col>
+			);
+		});
 
 		const options = getUiOptions(props.uiSchema);
 		const {confirmDelete, deleteCorner, removable = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
