@@ -118,6 +118,12 @@ export default class UiFieldMapperArrayField extends Component {
 			this.functionOutputProps[0] : 
 			this.getFunctionOutputForIdx(origProps, undefined);
 
+		const addBaseErrors = (errorSchema) => {
+			return (props.errorSchema || {}).__errors
+				? {...errorSchema, __errors: props.errorSchema.__errors}
+				: errorSchema;
+		};
+
 		const schema = {...props.schema, items: templateOutput.schema};
 		const state = {
 			...props,
@@ -125,11 +131,11 @@ export default class UiFieldMapperArrayField extends Component {
 			uiSchema: {...props.uiSchema, items: {...props.uiSchema.items, ...templateOutput.uiSchema}},
 			formData: (props.formData || []).map((item, idx) => this.functionOutputProps[idx].formData),
 			idSchema: templateOutput.idSchema,
-			errorSchema: Object.keys((props.errorSchema || {})).reduce((errorSchema, idx) => {
+			errorSchema: addBaseErrors(Object.keys((props.errorSchema || {})).reduce((errorSchema, idx) => {
 				if (!this.functionOutputProps[idx]) return errorSchema;
 				errorSchema[idx] = this.functionOutputProps[idx].errorSchema;
 				return errorSchema;
-			}, {}),
+			}, {})),
 			formContext: templateOutput.formContext
 		};
 
