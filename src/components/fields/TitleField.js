@@ -14,7 +14,7 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	const helpComponent = help ? <Help /> : null;
 
-	const titleContent = <span><span>{renderedFormatters}</span> {title} {helpComponent} {buttons}</span>;
+	const titleContent = <span><span>{renderedFormatters}</span> <span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent} {buttons}</span>;
 
 	const Legend = ({children, ...props}) => <legend className={className} style={style} {...props}>{children}</legend>;
 
@@ -22,7 +22,7 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>
 							<span>
-								<strong>{title}</strong><br />
+								<strong dangerouslySetInnerHTML={{__html: title}} /><br />
 								<span dangerouslySetInnerHTML={{__html: help}} />
 							</span>
 						</Tooltip>;
