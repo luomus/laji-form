@@ -455,7 +455,7 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const onSelect = key => that.onActiveChange(key);
 
-		const {confirmDelete, closeButton, affixed} = getUiOptions(arrayFieldTemplateProps.uiSchema);
+		const {confirmDelete, closeButton, affixed, hasRemove} = getUiOptions(arrayFieldTemplateProps.uiSchema);
 		const {translations} = this.props.formContext;
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
@@ -467,13 +467,13 @@ class AccordionArrayFieldTemplate extends Component {
 					idx={idx}
 					wrapperClassName="panel-title"
 					className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
-					<DeleteButton id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
+				{hasRemove && <DeleteButton id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
 						disabled={disabled || readonly}
 						ref={this.setDeleteButtonRef(idx)}
 						className="pull-right"
 						confirm={confirmDelete}
 						translations={translations}
-						onClick={that.onDelete(idx, item)} />
+						onClick={that.onDelete(idx, item)} />}
 				</AccordionHeader>;
 
 			if (affixed && activeIdx === idx) {
