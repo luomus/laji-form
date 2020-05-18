@@ -58,8 +58,8 @@ function getMessages(result, type) {
 }
 
 
-// these are taken from react-jsonschema-form to convert error messages to wanted form
-// see https://github.com/mozilla-services/react-jsonschema-form/blob/master/src/validate.js
+// these are taken from @rjsf/core to convert error messages to wanted form
+// see https://github.com/mozilla-services/@rjsf/core/blob/master/src/validate.js
 function toErrorSchema(errors) {
 	// Transforms a jsonschema validation errors list:
 	// [

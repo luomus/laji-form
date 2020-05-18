@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { deepEquals } from  "react-jsonschema-form/lib/utils";
+import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
 import { getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 

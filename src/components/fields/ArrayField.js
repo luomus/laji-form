@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
+import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
