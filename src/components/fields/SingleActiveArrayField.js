@@ -455,7 +455,7 @@ class AccordionArrayFieldTemplate extends Component {
 
 		const onSelect = key => that.onActiveChange(key);
 
-		const {confirmDelete, closeButton, affixed, hasRemove} = getUiOptions(arrayFieldTemplateProps.uiSchema);
+		const {confirmDelete, closeButton, affixed} = getUiOptions(arrayFieldTemplateProps.uiSchema);
 		const {translations} = this.props.formContext;
 		const {disabled, readonly} = arrayFieldTemplateProps;
 
@@ -467,7 +467,7 @@ class AccordionArrayFieldTemplate extends Component {
 					idx={idx}
 					wrapperClassName="panel-title"
 					className="laji-form-panel-header laji-form-clickable-panel-header laji-form-accordion-header">
-				{hasRemove && <DeleteButton id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
+				{item.hasRemove && <DeleteButton id={`${that.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
 						disabled={disabled || readonly}
 						ref={this.setDeleteButtonRef(idx)}
 						className="pull-right"
@@ -536,7 +536,7 @@ class PagerArrayFieldTemplate extends Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const {translations} = that.props.formContext;
-		const {buttons, affixed, headerClassName, confirmDelete, hasRemove} = getUiOptions(arrayTemplateFieldProps.uiSchema);
+		const {buttons, affixed, headerClassName, confirmDelete} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
 
 		let header = (
@@ -592,7 +592,7 @@ class PagerArrayFieldTemplate extends Component {
 						{getButtonElems(buttons, arrayTemplateFieldProps)}
 					</div>
 					<div className="laji-form-field-template-buttons">
-						{activeIdx !== undefined && hasRemove
+						{activeIdx !== undefined && arrayTemplateFieldProps.items[activeIdx].hasRemove
 							? (
 								<DeleteButton
 									id={`${that.props.idSchema.$id}_${getIdxWithOffset(activeIdx, getUiOptions(that.props.uiSchema).idxOffsets)}`}
