@@ -1085,7 +1085,7 @@ class AccordionHeader extends Component {
 			else return {
 				component: () => {
 					const {field, default: _default} = isObject(formatter) ? formatter : {field: formatter};
-					const formattedValue = formatValue({...that.props, schema: parseSchemaFromFormDataPointer(schema.items, field), uiSchema: parseUiSchemaFromFormDataPointer(uiSchema.items, field), formData: parseJSONPointer(formData, field)});
+					const formattedValue = formatValue({...that.props, schema: parseSchemaFromFormDataPointer(schema.items, field), uiSchema: parseUiSchemaFromFormDataPointer(uiSchema.items, field), formData: parseJSONPointer(formData, field, !!"safely")});
 					const value = isEmptyString(formattedValue) ? _default : formattedValue;
 					return <span className="text-muted">{value}</span>;
 				}
