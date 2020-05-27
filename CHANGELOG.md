@@ -1,3 +1,6 @@
+## 5.1.0
+* Add `onValidationError` prop
+
 ## 5.0.0
 * Remove `ConditionalAdditionalItemsArrayField` (can be implemented with `MultiArrayField`).
 * Remove `SingleActiveArrayField` `split` renderer (can be implemented with `MultiArrayField`).
