@@ -656,11 +656,14 @@ export default class LajiForm extends Component {
 
 	validateAndSubmit = (warnings = true) => {
 		const {formData} = this.state;
+		const {onSubmit, onValidationError} = this.props;
 		return this.validate(warnings, true).then((valid) => {
 			if (formData !== this.state.formData) {
 				this.validateAndSubmit(warnings);
 			} else if (valid) {
-				this.props.onSubmit({formData: this.removeLajiFormIds(formData)});
+				onSubmit && onSubmit({formData: this.removeLajiFormIds(formData)});
+			} else {
+				onValidationError && onValidationError(this.state.extraErrors);
 			}
 		});
 

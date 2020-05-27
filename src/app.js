@@ -47,12 +47,6 @@ export default class LajiFormWrapper {
 }
 
 class LajiFormApp extends Component {
-	onChange = (formData) => {
-		if (this.props.onChange) {
-			this.props.onChange(formData);
-		}
-	}
-
 	render() {
 		return <LajiForm {...this.props} {...(this.state || {})} ref="lajiform"/>;
 	}
