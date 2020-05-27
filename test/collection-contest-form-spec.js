@@ -7,7 +7,7 @@ describe("Collection contest form (MHL.25)", () => {
 		form = await createForm({id: "MHL.25"});
 	});
 
-	it("adds unit", async () => {
+	it("adds observation", async () => {
 		await form.$locateButton("gatherings", "add").click();
 	});
 });

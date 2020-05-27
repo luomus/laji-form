@@ -165,6 +165,7 @@ function TaxonAutosuggest(ComposedComponent) {
 
 		renderChooseImages = () => {
 			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
+			const {orWriteSpeciesNameLabel} = getUiOptions(this.props);
 			return (
 				<Row>
 					<Col xs={12}>
@@ -174,7 +175,7 @@ function TaxonAutosuggest(ComposedComponent) {
 						</div>
 					</Col>
 					<Col xs={12}>
-						<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
+						<label>{orWriteSpeciesNameLabel || this.props.formContext.translations.orWriteSpeciesName}</label>
 					</Col>
 				</Row>
 			);
@@ -615,7 +616,7 @@ export class Autosuggest extends Component {
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(parsedValue);
 		} else if (!allowNonsuggestedValue) {
-			this.setState({value: ""});
+			this.setState({value: ""}, () => this.props.onChange(""));
 		}
 
 		callback && callback();
