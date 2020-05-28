@@ -311,7 +311,7 @@ min-height: 20px;
 	padding: 5px;
 	margin: 2px;
 }
-.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button:not(.delete-corner) {
+.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button:not(.button-corner) {
 	width: 25px;
 	height: 25px;
 	font-size: 11px;
