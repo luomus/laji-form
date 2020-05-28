@@ -5,7 +5,7 @@ import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSc
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import { getDefaultFormState, toIdSchema } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
 import { Overlay, Popover, Glyphicon, Row, Col } from "react-bootstrap";
 import Context from "../../Context";
 import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";

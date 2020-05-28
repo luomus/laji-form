@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import { immutableDelete } from "../../utils";
 import merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";

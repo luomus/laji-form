@@ -3,8 +3,8 @@ import Context from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
-import { deepEquals } from  "react-jsonschema-form/lib/utils";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
+import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 
 export default class _SchemaField extends Component {

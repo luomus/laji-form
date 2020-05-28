@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
-import { toIdSchema } from "react-jsonschema-form/lib/utils";
+import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
+import { toIdSchema } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
 export default class FilterArrayField extends Component {

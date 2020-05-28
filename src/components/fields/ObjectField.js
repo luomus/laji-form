@@ -1,6 +1,6 @@
 import React from "react";
-import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
-import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
+import ObjectField from "@rjsf/core/dist/cjs/components/fields/ObjectField";
+import { orderProperties, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
