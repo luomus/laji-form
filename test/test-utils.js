@@ -18,14 +18,16 @@ export const navigateToForm = async (formID, params = "") => browser.get(`http:/
 export const lajiFormLocator = getLocatorForContextId(0);
 export const lajiFormLocate = str => $(lajiFormLocator(str));
 
+export const getFocusedId = () => browser.driver.switchTo().activeElement().getAttribute("id");
+
 export class Form {
 	constructor(params = {}) {
 		this.props = params;
 	}
 
 	async initialize() {
-		const query = params => Object.keys(params).reduce((q, key, i) =>
-			`${q}${i === 0 ? "?" : "&"}${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+		const query = params => Object.keys(params).reduce((q, key) =>
+			`${q}&${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
 		, "");
 		if (this.props.id) {
 			const {id, ..._props} = this.props;

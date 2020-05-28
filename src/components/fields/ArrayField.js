@@ -46,6 +46,18 @@ export function onArrayFieldChange(formData, props) {
 	return withLajiFormIds;
 }
 
+export class ArrayFieldAddPatched extends ArrayField {
+	constructor(...params) {
+		super(...params);
+		const {_getNewFormDataRow} = this;
+		this._getNewFormDataRow = () => {
+			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
+			const [item] = addLajiFormIds(_getNewFormDataRow.call(this), tmpIdTree, false);
+			return item;
+		}
+	}
+}
+
 @BaseComponent
 export default class _ArrayField extends Component {
 
@@ -62,7 +74,7 @@ export default class _ArrayField extends Component {
 
 		// MultiArrayField needs to intercept default ArrayField internals, the instance is passed in formContext.
 		const {ArrayField: _ArrayField} = props.formContext;
-		const Component = _ArrayField || ArrayField;
+		const Component = _ArrayField || ArrayFieldAddPatched;
 
 		// Reset formContext.ArrayField
 		const formContext = _ArrayField ? {...props.formContext, ArrayField: undefined} : props.formContext;

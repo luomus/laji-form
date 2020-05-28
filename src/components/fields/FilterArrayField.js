@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
+import { ArrayFieldAddPatched } from "./ArrayField";
 import { toIdSchema } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
@@ -113,7 +113,7 @@ export default class FilterArrayField extends Component {
 	}
 }
 
-export class ArrayFieldIdFixed extends ArrayField {
+export class ArrayFieldIdFixed extends ArrayFieldAddPatched {
 	renderArrayFieldItem(props) {
 		const idWithoutIdx = props.itemIdSchema.$id.replace(/(.*)_[0-9]+/, "$1");
 		const {idxOffsets} = getUiOptions(this.props.uiSchema);

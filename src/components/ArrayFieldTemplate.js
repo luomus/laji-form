@@ -327,7 +327,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 			}
 
 			return (
-				<div key={item.key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
+				<div key={getUUID(props.formData[i]) || item.key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
 					<div className="laji-form-field-template-schema">{item.children}</div>
 					{item.hasRemove && !nonRemovables.includes(item.index) && removable && getDeleteButton()}
 				</div>

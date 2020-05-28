@@ -1,4 +1,4 @@
-import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getCheckboxWidget, getInputWidget, getEnumWidget, getDateWidget } from "./test-utils.js";
+import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId } from "./test-utils.js";
 
 import { googleApiKey } from "../properties.json"
 
@@ -182,6 +182,15 @@ describe("Trip report (JX.519)", () => {
 				testWidget("gatherings.0.taxonCensus.0.taxonCensusID");
 				testWidget("gatherings.0.taxonCensus.0.taxonCensusType", "enum");
 			});
+
+			it("added item is focused", async () => {
+				expect(await form.$getInputWidget("gatherings.0.taxonCensus.0.censusTaxonID").getAttribute("id") === await getFocusedId()).toBe(true);
+			});
+
+			it("second added item is focused", async () => {
+				await form.$locateButton("gatherings.0.taxonCensus", "add").click();
+				expect(await form.$getInputWidget("gatherings.0.taxonCensus.1.censusTaxonID").getAttribute("id") === await getFocusedId()).toBe(true);
+			});
 		});
 
 
@@ -221,6 +230,10 @@ describe("Trip report (JX.519)", () => {
 			await $unitAdd.click();
 
 			expect(await lajiFormLocate("gatherings.0.units.1").isDisplayed()).toBe(true);
+		});
+
+		it("added is focused", async () => {
+			expect(await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxon").getAttribute("id") === await getFocusedId()).toBe(true);
 		});
 
 		it("first is shown as table row after activating second", async () => {

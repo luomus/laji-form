@@ -479,9 +479,8 @@ class SectionArrayFieldTemplate extends Component {
 			const items = parseJSONPointer(formData, containerPointer).map((unit, idx) => {
 				let rowDefinerItem = parseJSONPointer(item, `${containerPointer}/${rowDefinerItemIdsToContainerIdxs[getUUID(unit)]}`);
 				if (!rowDefinerItem) {
-					const unitWithoutIds = filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id);
 					const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
-					rowDefinerItem = addLajiFormIds(unitWithoutIds, tmpIdTree, false)[0];
+					rowDefinerItem = addLajiFormIds(unit, tmpIdTree, false)[0];
 				}
 				return [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
 					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line no-unused-vars
