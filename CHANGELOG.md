@@ -1,3 +1,6 @@
+## 5.1.2
+* Use upstream react-jsonschema-form instead of private fork
+
 ## 5.1.0
 * Add `onValidationError` prop
 
