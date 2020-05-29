@@ -33,8 +33,7 @@ export class Form {
 			const {id, ..._props} = this.props;
 			await navigateToForm(id, query(_props));
 		} else {
-			this.props.test = true;
-			await emptyForm(query(this.props));
+			await emptyForm();
 		}
 		await this.setState(this.props);
 		this.contextId = await this.e("app.refs.lajiform._id");
