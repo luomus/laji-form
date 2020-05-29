@@ -54,7 +54,7 @@ export class ArrayFieldAddPatched extends ArrayField {
 			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
 			const [item] = addLajiFormIds(_getNewFormDataRow.call(this), tmpIdTree, false);
 			return item;
-		}
+		};
 	}
 }
 

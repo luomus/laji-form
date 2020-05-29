@@ -485,7 +485,7 @@ class SectionArrayFieldTemplate extends Component {
 					// we don't define it again, or else it will be rendered again and won't be autofocused properly
 					rowDefinerItem = containerIdx === 0 && getUUID(unit)
 						? addLajiFormIds(unit, tmpIdTree)[0]
-						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false)[0]
+						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false)[0];
 				}
 				const updatedUnit = [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
 					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line no-unused-vars
