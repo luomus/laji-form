@@ -475,14 +475,19 @@ class SectionArrayFieldTemplate extends Component {
 			return map;
 		}, {});
 
-		const _formData = this.props.formData.map((item) => {
+		const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
+
+		const _formData = this.props.formData.map((item, containerIdx) => {
 			const items = parseJSONPointer(formData, containerPointer).map((unit, idx) => {
 				let rowDefinerItem = parseJSONPointer(item, `${containerPointer}/${rowDefinerItemIdsToContainerIdxs[getUUID(unit)]}`);
 				if (!rowDefinerItem) {
-					const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
-					rowDefinerItem = addLajiFormIds(unit, tmpIdTree, false)[0];
+					// If container is first and it has UUID, it's an item added to the definer column. It has a UUID already, so 
+					// we don't define it again, or else it will be rendered again and won't be autofocused properly
+					rowDefinerItem = containerIdx === 0 && getUUID(unit)
+						? addLajiFormIds(unit, tmpIdTree)[0]
+						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false)[0]
 				}
-				return [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
+				const updatedUnit = [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
 					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line no-unused-vars
 					const pointer = field.replace("%{row}", idx);
 					const value = parseJSONPointer(formData, pointer);
@@ -496,6 +501,7 @@ class SectionArrayFieldTemplate extends Component {
 						contentPointer
 					);
 				}, rowDefinerItem);
+				return addLajiFormIds(updatedUnit, tmpIdTree, false)[0];
 			});
 			return updateFormDataWithJSONPointer(
 				{
