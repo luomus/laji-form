@@ -174,9 +174,26 @@ export default class MultiArrayField extends Component {
 			offset += Object.keys(this.groupedItems[i]).length;
 		}
 		let {persistenceKey} = getUiOptions(this.props.uiSchema);
+		const lengthChange = formData.length - this.groupedItems[idx].length;
+		const context = new Context(`${persistenceKey}_MULTI`);
+
+		// Fix idxs map for items after this group.
+		if (lengthChange && context.nonGroupedMap) {
+			const changes = {};
+			const changeFrom = {};
+			for (let i = offset + Object.keys(this.groupedItems[idx]).length; i < this.props.formData.length; i++) {
+				if (context.nonGroupedMap[i]) {
+					changes[i + lengthChange] = context.nonGroupedMap[i];
+					changeFrom[i] = true;
+				}
+			}
+			context.nonGroupedMap = {...context.nonGroupedMap, ...changes};
+			Object.keys(changeFrom).filter(idx => !(idx in changes)).forEach(idx => {
+				delete context.nonGroupedMap[idx];
+			});
+		}
+
 		if (typeof persistenceKey === "string" && formData.length !== this.groupedItems[idx].length) {
-			const context = new Context(`${persistenceKey}_MULTI`);
-			context.addedToGroup = idx;
 			if (!context.nonGroupedMap) {
 				context.nonGroupedMap = {};
 			}

@@ -875,7 +875,6 @@ export const filterItemIdsDeeply = (item, contextId, idSchemaId) => {
 	const tmpIdTree = getRelativeTmpIdTree(contextId, idSchemaId);
 	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
 	return _item;
-
 };
 
 export const formDataIsEmpty = (props) => {

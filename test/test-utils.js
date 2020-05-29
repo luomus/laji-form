@@ -83,6 +83,10 @@ export class Form {
 		return $(`#root${typeof path === "string" && path.length > 0 ? `_${path.replace(/\./g, "_")}` : ""}-${selector}`)
 	}
 
+	$locateAddition(path, selector) {
+		return this.$locateButton(path, selector);
+	}
+
 	getMockStr = (path, query) => `window.mockResponses[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})]`;
 
 	async setMockResponse(path, query) {
