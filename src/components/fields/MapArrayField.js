@@ -692,8 +692,8 @@ class LineTransectMapArrayField extends Component {
 				addOrDelete = true;
 				const [first, second] = e.idxs;
 				formData = update(formData, {[first]: {units: {$set: [
-					...formData[first].units,
-					...formData[second].units
+					...(formData[first].units || []),
+					...(formData[second].units || [])
 				]}}});
 				formData = update(formData, {
 					[first]: {
