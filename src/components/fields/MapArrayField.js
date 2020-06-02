@@ -771,7 +771,7 @@ class LineTransectMapArrayField extends Component {
 			return;
 		}
 		this.getContext().setImmediate(() =>{
-			this.map && this.map.fitBounds(L.featureGroup(this.map._lineLayers[idx]).getBounds(), {maxZoom: 13}); // eslint-disable-line no-undef
+			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100}); // eslint-disable-line no-undef
 		});
 	}
 
