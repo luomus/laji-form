@@ -164,7 +164,7 @@ export default class SingleActiveArrayField extends Component {
 		if (value) {
 			this.scrollHeightFixed = elem.scrollHeight;
 			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
-				syncScroll(this.state.formContext);
+				syncScroll(this.state.formContext, !!"force");
 			});
 		} else {
 			this.scrollHeightFixed = 0;
