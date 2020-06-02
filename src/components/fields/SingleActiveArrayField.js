@@ -87,15 +87,17 @@ export default class SingleActiveArrayField extends Component {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
 		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
-		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", idxOffsets, totalOffset} = getUiOptions(this.props.uiSchema);
+		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", idxOffsets, totalOffset, affixed} = getUiOptions(this.props.uiSchema);
 		if (renderer === "uncontrolled") return;
 		if ((prevProps.formData || []).length === (this.props.formData || []).length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {
 			const idToScroll = idToScrollAfterNavigate
 				? idToScrollAfterNavigate
-				: renderer === "accordion" || renderer === "pager" 
+				: !affixed && (renderer === "accordion" || renderer === "pager")
 					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
 					: `${this.props.idSchema.$id}-add`;
-			setImmediate(() => focusAndScroll(this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate));
+			setImmediate(() => {
+				focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate)
+			});
 		}
 	}
 
