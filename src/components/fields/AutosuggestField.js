@@ -204,6 +204,16 @@ export default class AutosuggestField extends Component {
 		if (mounted) {
 			this.props.onChange(formData);
 		} else {
+			if (formContext.formDataTransformers) {
+				formData = formContext.formDataTransformers.reduce((unit, {"ui:field": uiField, props: fieldProps}) => {
+					let changed;
+					const getChanged = (_changed) => {
+						changed = _changed;
+					};
+					new fieldProps.registry.fields[uiField]({...fieldProps, onChange: getChanged}).onChange(formData);
+					return changed;
+				}, formData);
+			}
 			const lajiFormInstance = new Context(formContext.contextId).formInstance;
 			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
 			const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...formData};
