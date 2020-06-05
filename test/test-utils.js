@@ -1,4 +1,5 @@
 import path from "path";
+import { isObject } from "../src/utils";
 const {HOST, PORT} = process.env;
 
 function getJsonFromUrl() {
@@ -259,4 +260,16 @@ export const mockImageMetadata = {
 	"originalURL": "https://imagetest.laji.fi/MM.97056/pixel.png",
 	"uploadedBy": "MA.308",
 	"@context": "http://schema.laji.fi/context/image-en.jsonld"
+};
+
+export const filterUUIDs = (any) => {
+	if (isObject(any)) {
+		return Object.keys(any).filter(key => key !== "_lajiFormId").reduce((_any, key) => ({
+			..._any,
+			[key]: filterUUIDs(any[key])
+		}), {});
+	} else if (Array.isArray(any)) {
+		return any.map(filterUUIDs);
+	}
+	return any;
 };

@@ -1,4 +1,4 @@
-import { navigateToForm, lajiFormLocate, createForm, getFocusedId } from "./test-utils.js";
+import { navigateToForm, lajiFormLocate, createForm, getFocusedId, filterUUIDs } from "./test-utils.js";
 
 describe("Line transect (MHL.1)", () => {
 
@@ -100,6 +100,15 @@ describe("Line transect (MHL.1)", () => {
 		expect(await $shortHandForIdx(0, 1).isDisplayed()).toBe(true);
 	});
 
+	it("unit formData matches response", async () => {
+		const formData = await form.getChangedData();
+		expect(filterUUIDs(formData.gatherings[0].units[0])).toEqual(unitAutocompleteResponse.payload.unit);
+		expect(formData.gatherings[0].units[0].identifications_0_taxon).toBe(undefined);
+		expect(formData.gatherings[0].units[0].unitFact_autocompleteSelectedTaxonID).toBe(undefined);
+		expect(formData.gatherings[0].units[0].unitFact_lineTransectObsType).toBe(undefined);
+		expect(formData.gatherings[0].units[0].unitFact_lineTransectRouteFieldType).toBe(undefined);
+	});
+
 	it("next unit is focused", async () => {
 		expect(await getFocusedId() === await $shortHandForIdx(0, 1).getAttribute("id")).toBe(true);
 	});
@@ -113,9 +122,11 @@ describe("Line transect (MHL.1)", () => {
 		await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, protractor.Key.RIGHT));
 		expect(await getFocusedId() === await await $shortHandForIdx(1, 0).getAttribute("id")).toBe(true);
 	});
+
 	it("when prev focused taxon autocomplete finishes, data isn't in FlatField format", async () => {
 		await taxonAutocompleteMock.resolve(taxonAutocompleteResponse);
 		const formData = await form.getChangedData();
+		expect(filterUUIDs(formData.gatherings[0].units[0])).toEqual(unitAutocompleteResponse.payload.unit);
 		expect(formData.gatherings[0].units[0].identifications_0_taxon).toBe(undefined);
 	});
 });
