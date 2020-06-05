@@ -295,7 +295,20 @@ describe("Trip report (JX.519)", () => {
 
 			expect(await $additionalsButton.isDisplayed()).toBe(true);
 
+			const informalGroups = [1, 343, 232, 187];
+			let mocks = [];
+			for (let id of informalGroups) {
+				mocks.push(await form.setMockResponse(`/informal-taxon-groups/MVL.${id}`));
+			}
+
 			await $additionalsButton.click();
+
+			for (let idx in informalGroups) {
+				await mocks[idx].resolve({
+					"id": informalGroups[idx],
+					"name": ""
+				});
+			}
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($modal), 5000, "Additionals modal waiting timeout");
 
