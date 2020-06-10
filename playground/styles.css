@@ -1410,13 +1410,22 @@ min-height: 20px;
 .laji-form .darker-bottom-border {
 	border-bottom: 1px solid #d2d2d2;
 }
-.laji-form .location-chooser-errors .tooltip-inner {
+.location-chooser-errors .tooltip-inner {
 	background: #bd362f;
 }
-.laji-form .location-chooser-errors .tooltip-arrow {
+.location-chooser-errors.tooltip.left .tooltip-arrow {
 	border-left-color: #bd362f !important;
 }
-.laji-form .location-chooser-errors ul {
+.location-chooser-errors.tooltip.right .tooltip-arrow {
+	border-right-color: #bd362f !important;
+}
+.location-chooser-errors.tooltip.bottom .tooltip-arrow {
+	border-bottom-color: #bd362f !important;
+}
+.location-chooser-errors.tooltip.top .tooltip-arrow {
+	border-top-color: #bd362f !important;
+}
+.location-chooser-errors ul {
 	list-style: none;
 	padding: 0;
 }

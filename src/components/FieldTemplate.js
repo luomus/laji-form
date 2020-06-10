@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Context from "../Context";
-import { Help } from "./components";
+import { Help, TooltipComponent } from "./components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
 
 export default class FieldTemplate extends Component {
@@ -99,11 +99,8 @@ export default class FieldTemplate extends Component {
 		}, []);
 		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
 
-		const {Label, invisibleErrors, errorsStyle} = this.props.formContext;
-		const errorClass = `laji-form-error-container${invisibleErrors ? " invisible" : ""}`;
-		const warningClass = `laji-form-warning-container${invisibleErrors ? " invisible" : ""}`;
-		const style = errorsStyle || undefined;
-		return (
+		const {Label, errorsAsPopup} = this.props.formContext;
+		const component = (errorsComponent) => (
 			<div className={classNames + warningClassName} id={htmlId}>
 				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} _context={new Context(formContext.contextId)} /> : null}
 				{_displayLabel && description ? description : null}
@@ -118,22 +115,33 @@ export default class FieldTemplate extends Component {
 					<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
 					null
 				}
-				{errors.length > 0 ?
-						<ul id={`laji-form-error-container-${id}`} className={errorClass}>
-							{errors.map((error, i) => (
-								<li key={i} style={style}>{error}</li>
-							))}
-						</ul>
-					 : null}
-				{warnings.length > 0 ?
-					<ul  id={`laji-form-warning-container-${id}`} className={warningClass}>
-						{warnings.map((warning, i) => (
-							<li key={i} style={style}>{warning}</li>
-						))}
-					</ul>
-					: null}
+					{errorsComponent}
 			</div>
 		);
+
+		const errorsComponent = (
+			<React.Fragment>
+				{errors.length > 0 ?
+					<ul id={`laji-form-error-container-${id}`} className= "laji-form-error-container">
+						{errors.map((error, i) => (
+							<li key={i}>{error}</li>
+						))}
+						</ul>
+					: null}
+				{warnings.length > 0 ?
+					<ul  id={`laji-form-warning-container-${id}`} className="laji-form-warning-container">
+						{warnings.map((warning, i) => (
+							<li key={i}>{warning}</li>
+						))}
+						</ul>
+					: null}
+			</React.Fragment>
+		);
+
+		if (errorsAsPopup && (rawErrors || []).length) {
+			return <TooltipComponent placement="bottom" tooltip={errorsComponent} className="location-chooser-errors">{component()}</TooltipComponent>;
+		}
+		return component(errorsComponent);
 	}
 }
 

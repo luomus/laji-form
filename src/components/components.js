@@ -525,7 +525,7 @@ export class TooltipComponent extends Component {
 
 		const overlay = (
 			<_OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
-				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}><span dangerouslySetInnerHTML={{__html: tooltip}} /></Tooltip> : <NullTooltip />
+				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
 			}>
 				{children}
 			</_OverlayTrigger>

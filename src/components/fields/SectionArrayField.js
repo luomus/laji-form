@@ -101,14 +101,7 @@ export default class SectionArrayField extends Component {
 			this: this,
 			originalUiSchema: uiSchema,
 			errorSchema: props.errorSchema,
-			invisibleErrors: true,
-			errorsStyle: {
-				height: 25,
-				textOverflow: "ellipsis",
-				whiteSpace: "nowrap",
-				overflow: "hidden",
-				width: 0
-			},
+			errorsAsPopup: true
 		};
 		let _uiSchema = hideFields(schema, {
 			...uiSchema,
@@ -210,8 +203,6 @@ class SectionArrayFieldTemplate extends Component {
 			...this.props.formContext,
 			rowDefinerField,
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id),
-			invisibleErrors: false,
-			errorsStyle: {...this.props.formContext.errorsStyle, width: 198}
 		};
 
 		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
