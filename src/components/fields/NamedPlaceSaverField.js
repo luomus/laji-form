@@ -102,7 +102,7 @@ class PlaceSaverDialog extends Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetch("/named-places", {includePublic: false}).then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
 			if (!this.mounted) return;
 			const state = {
 				places: response.results,
@@ -128,7 +128,7 @@ class PlaceSaverDialog extends Component {
 					findDOMNode(this.inputRef).focus();
 				}
 			});
-		}).catch(() => {
+		}).catch((e) => {
 			this.setState({failed: FETCH});
 		});
 	}
@@ -248,12 +248,12 @@ class PlaceSaverDialog extends Component {
 					{loading ? <div className="pull-right"><Spinner /></div> : null}
 				</Form>
 				{!this.props.gathering.namedPlaceID && existingPlaces.length ?
-					<Alert bsStyle="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple} ${translations.or} ${translations.saveCurrentOverwrite}.` : ""}`}</Alert>
+					<Alert bsStyle="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple}.` : ""}`}</Alert>
 					: null}
 				{existingPlaces.length > 1 ? (
 					<FormGroup>
 						<Panel header={translations.ClickPlaceToOverwrite}>
-							<ListGroup fill>
+							<ListGroup fill={"fill"}>
 								{existingPlaces.map(place =>
 									<ListGroupItem header={place.name} key={place.id} onClick={loading ? undefined : this.onOverwriteSelected(place)} disabled={loading}>
 										{place.notes}
