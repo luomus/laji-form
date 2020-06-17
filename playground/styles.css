@@ -1163,7 +1163,7 @@ min-height: 20px;
 .laji-form #named-place-chooser-select {
 	margin-bottom: 5px;
 }
-.laji-form.map-dialog .react-spinner {
+.laji-form.map-dialog .modal-body > div > .react-spinner {
 	left: 50%;
 	top: 50%;
 	z-index: 1000;

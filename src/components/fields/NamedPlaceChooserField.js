@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { Modal, Alert } from "react-bootstrap";
+import { Modal, Alert, ButtonGroup } from "react-bootstrap";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import Context from "../../Context";
@@ -14,6 +14,7 @@ import SelectWidget from "../widgets/SelectWidget";
 
 const PLACES_FETCH_FAIL = "PLACES_FETCH_FAIL";
 const PLACE_USE_FAIL = "PLACE_USE_FAIL";
+const PLACE_DELETE_FAIL = "PLACE_DELETE_FAIL";
 
 /**
  * Compatible only with gatherings array and gathering object.
@@ -30,6 +31,7 @@ export default class NamedPlaceChooserField extends Component {
 	constructor(props) {
 		super(props);
 		this.apiClient = props.formContext.apiClient;
+		this.removeIds = {};
 	}
 
 	getStateFromProps(props) {
@@ -104,6 +106,21 @@ export default class NamedPlaceChooserField extends Component {
 		}
 	}
 
+	onPlaceDeleted = (place, success) => {
+		this.apiClient.fetchRaw(`/named-places/${place.id}`, undefined, {method: "DELETE"}).then(response => {
+			if (response.status === 204) {
+				// It takes a while for API to remove the place, so we remove it locally and then invalidate again after some time.
+				this.removeIds[place.id] = true;
+				this.apiClient.invalidateCachePath("/named-places");
+				this.getContext().setTimeout(() => this.apiClient.invalidateCachePath("/named-places"), 2000);
+				success();
+			}
+		}).catch(() => {
+			this.setState({failed: PLACE_DELETE_FAIL});
+			this.props.formContext.notifier.error(this.props.formContext.translations.PlaceRemovalFailed);
+		});
+	}
+
 	onButtonClick = () => () => {
 		this.setState({show: true});
 	}
@@ -112,7 +129,7 @@ export default class NamedPlaceChooserField extends Component {
 		this.buttonDefinition = undefined;
 		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
 			if (!this.mounted) return;
-			const state = {places: response.results.sort((a, b) => {
+			const state = {places: response.results.filter(p => !this.removeIds[p.id]).sort((a, b) => {
 				if (a.name < b.name) return -1;
 				if (a.name > b.name) return 1;
 				return 0;
@@ -168,8 +185,8 @@ export default class NamedPlaceChooserField extends Component {
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
 							<Modal.Body>
-								{failed && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
-								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} />
+								{failed === PLACES_FETCH_FAIL && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
+								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} onDeleted={this.onPlaceDeleted} />
 							</Modal.Body>
 						</Modal>
 					) : null
@@ -188,6 +205,15 @@ class NamedPlaceChooser extends Component {
 
 	onPlaceSelected = (place) => {
 		this.props.onSelected(place);
+	}
+
+	onPlaceDeleted = (place) => {
+		const onDelete = () => {
+			this.setState({deleting: false});
+			this.mapElem.map.map.closePopup();
+		};
+		this.setState({deleting: true});
+		this.props.onDeleted(place, onDelete);
 	}
 
 	onSelectChange = (idx) => {
@@ -338,6 +364,8 @@ class NamedPlaceChooser extends Component {
 						<Popup ref={getPopupRef} 
 							place={(places || [])[this.state.popupIdx]} 
 							onPlaceSelected={this.onPlaceSelected}
+							onPlaceDeleted={this.onPlaceDeleted}
+							deleting={this.state.deleting}
 							contextId={this.props.formContext.contextId}
 							translations={translations} />
 					</div>
@@ -351,6 +379,9 @@ class Popup extends Component {
 	_onPlaceSelected = () => {
 		this.props.onPlaceSelected(this.props.place);
 	}
+	_onPlaceDeleted = () => {
+		this.props.onPlaceDeleted(this.props.place);
+	}
 
 	componentDidUpdate() {
 		new Context(this.props.contextId).setImmediate(() => {
@@ -363,7 +394,7 @@ class Popup extends Component {
 	}
 
 	render() {
-		const {place, translations} = this.props;
+		const {place, translations, deleting} = this.props;
 
 		return place ? (
 			<div>
@@ -385,7 +416,8 @@ class Popup extends Component {
 					}
 				</tbody>
 				</table>
-				<Button ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
+				<Button block ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
+				<Button block bsStyle="danger" onClick={this._onPlaceDeleted} disabled={deleting}>{translations.Remove} {deleting && <Spinner />}</Button>
 		</div>
 		) : <Spinner />;
 	}

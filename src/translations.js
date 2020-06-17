@@ -794,4 +794,9 @@
 		en: "Instructions",
 		sv: "Instruktioner"
 	},
+	placeRemovalFailed: {
+		fi: "Paikan poisto epäonnistui",
+		en: "Removing place failed",
+		sv: "Ta bort platsen misslyckades"
+	}
 };
