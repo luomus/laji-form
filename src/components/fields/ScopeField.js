@@ -117,8 +117,11 @@ export default class ScopeField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (!this.state.additionalsGroupsTranslations || prevProps.formContext.lang !== this.props.formContext.lang ||
-			getUiOptions(prevProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
+		if (this.state.additionalsOpen
+			&& (
+				!this.state.additionalsGroupsTranslations || prevProps.formContext.lang !== this.props.formContext.lang ||
+				getUiOptions(prevProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator
+			)) {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
