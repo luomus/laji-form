@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { Modal, Alert, ButtonGroup } from "react-bootstrap";
+import { Modal, Alert } from "react-bootstrap";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import Context from "../../Context";

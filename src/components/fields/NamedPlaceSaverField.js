@@ -128,7 +128,7 @@ class PlaceSaverDialog extends Component {
 					findDOMNode(this.inputRef).focus();
 				}
 			});
-		}).catch((e) => {
+		}).catch(() => {
 			this.setState({failed: FETCH});
 		});
 	}
