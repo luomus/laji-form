@@ -1,3 +1,6 @@
+## 5.2.0
+* Adde named place removal
+
 ## 5.1.2
 * Use upstream react-jsonschema-form instead of private fork
 
