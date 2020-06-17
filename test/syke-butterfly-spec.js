@@ -8,7 +8,18 @@ describe("SYKE butterfly form (MHL.59)", () => {
 	let $gatheringsAdd;
 
 	it("navigate to form", async () => {
-		form = await createForm({id: "MHL.59"});
+		const formData = {
+			"gatherings": [
+				{
+					"section": 1,
+					"units": []
+				},
+				{
+					"units": []
+				}
+			]
+		};
+		form = await createForm({id: "MHL.59", formData});
 		const $$addButtons = await form.$locate("gatherings.0.units").$$("button");
 		$firstUnitsAdd = $$addButtons[0];
 		$secondUnitsAdd = $$addButtons[1];
@@ -39,6 +50,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 	describe("adding unit to first group", () => {
 		it("works", async () => {
 			await $firstUnitsAdd.click();
+
 			expect(await form.$locate("gatherings.0.units.0.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.0.individualCount").isDisplayed()).toBe(true);
 		});
@@ -67,6 +79,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 			await $gatheringsAdd.click();
 			await form.$locateAddition("gatherings", "section-input").sendKeys("2");
 			await form.$locateAddition("gatherings", "section-input").sendKeys(protractor.Key.ENTER);
+
 			expect(await form.$locate("gatherings.0.units.1.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.0.individualCount").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.1.individualCount").isDisplayed()).toBe(true);
@@ -83,6 +96,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 	describe("adding unit to first group again", () => {
 		it("works", async () => {
 			await $firstUnitsAdd.click();
+
 			expect(await form.$locate("gatherings.0.units.0.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.1.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.2.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
@@ -102,6 +116,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 	describe("adding unit to second group again", () => {
 		it("works", async () => {
 			await $secondUnitsAdd.click();
+
 			expect(await form.$locate("gatherings.0.units.0.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.1.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.2.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
@@ -126,6 +141,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 			await $gatheringsAdd.click();
 			await form.$locateAddition("gatherings", "section-input").sendKeys("3");
 			await form.$locateAddition("gatherings", "section-input").sendKeys(protractor.Key.ENTER);
+
 			expect(await form.$locate("gatherings.0.units.0.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.1.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.2.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
@@ -148,5 +164,15 @@ describe("SYKE butterfly form (MHL.59)", () => {
 		//it("autofocuses", async () => {
 		//	expect(await getFocusedId() === await form.$getInputWidget("gatherings.2.gatheringFact.sykeButterFlyCensusWind").getAttribute("id")).toBe(true);
 		//});
+	});
+
+	it ("removing new section works", async () => {
+		const gatheringsLength = (await form.getChangedData()).gatherings.length;
+		await form.$locateButton("gatherings.0", "delete").click();
+		const formData = await form.getChangedData();
+
+		expect(formData.gatherings.length).not.toBe(gatheringsLength);
+		expect(formData.gatherings[0].section).toBe(2);
+		expect(formData.gatherings[formData.gatherings.length - 1].section).toBe(undefined);
 	});
 });

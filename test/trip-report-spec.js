@@ -286,15 +286,11 @@ describe("Trip report (JX.519)", () => {
 			expect(await lajiFormLocate("gatherings.0.units.0.images").isDisplayed()).toBe(true);
 		});
 
-		it("can add additional fields", async () => {
-			const $additionalsButton = $("#root_gatherings_0_units_0-additionals");
-			const $modal = $(".scope-field-modal");
+		const $additionalsButton = $("#root_gatherings_0_units_0-additionals");
+		const $modal = $(".scope-field-modal");
 
+		it("can open additionals chooser", async () => {
 			expect(await $additionalsButton.isDisplayed()).toBe(true);
-			expect(await lajiFormLocate("gatherings.0.units.0.identifications.0.det").isPresent()).toBe(false);
-
-			expect(await $additionalsButton.isDisplayed()).toBe(true);
-
 			const informalGroups = [1, 343, 232, 187];
 			let mocks = [];
 			for (let id of informalGroups) {
@@ -303,14 +299,25 @@ describe("Trip report (JX.519)", () => {
 
 			await $additionalsButton.click();
 
+			await browser.wait(protractor.ExpectedConditions.visibilityOf($modal), 5000, "Additionals modal waiting timeout");
+
+			expect(await $modal.$(".list-group .react-spinner").isDisplayed()).toBe(true);
+
 			for (let idx in informalGroups) {
 				await mocks[idx].resolve({
 					"id": informalGroups[idx],
-					"name": ""
+					"name": "test"
 				});
 			}
+			expect(await $modal.$(".list-group .react-spinner").isPresent()).toBe(false);
+			expect(await $modal.$$(".list-group").get(1).$(".list-group-item strong").getText()).toBe("test");
+		});
 
-			await browser.wait(protractor.ExpectedConditions.visibilityOf($modal), 5000, "Additionals modal waiting timeout");
+		it("can add additional fields", async () => {
+			expect(await lajiFormLocate("gatherings.0.units.0.identifications.0.det").isPresent()).toBe(false);
+
+			expect(await $additionalsButton.isDisplayed()).toBe(true);
+
 
 			const $firstGroup = $$(".scope-field-modal-item").first();
 
