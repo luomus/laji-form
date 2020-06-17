@@ -32,7 +32,8 @@ export class DeleteButton extends Component {
 	static propTypes = {
 		confirm: PropTypes.bool,
 		onClick: PropTypes.func.isRequired,
-		translations: PropTypes.object.isRequired
+		translations: PropTypes.object.isRequired,
+		confirmStyle: PropTypes.oneOf(["popup", "browser"])
 	}
 
 	constructor(props) {
@@ -59,12 +60,15 @@ export class DeleteButton extends Component {
 		e.stopPropagation();
 		this.setState({show: true}, () => {
 			this._focusConfirm = true;
+			if (this.props.confirmStyle === "browser") {
+				this.browserConfirm();
+			}
 		});
 	}
 
 	onConfirmedClick = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
+		e && e.preventDefault();
+		e && e.stopPropagation();
 		this.props.onClick();
 		this.onHideConfirm();
 		this.deleted = true;
@@ -93,15 +97,13 @@ export class DeleteButton extends Component {
 	}
 
 	render() {
-		const {props, state} = this;
-		const {show} = state;
-		const {translations, corner, tooltip, disabled, readonly, confirmPlacement = "left"} = props;
-		let buttonClassName = "glyph-button";
+		const {props} = this;
+		const {corner, tooltip, disabled, readonly, glyphButton = true} = props;
+		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
 			buttonClassName = `${buttonClassName} ${props.className}`;
 		}
-		const getOverlayTarget = () => findDOMNode(this.refs.del);
 		const onClick = e => this.onClick(e);
 		const maybeProps = {};
 		if (props.id !== undefined) {
@@ -116,14 +118,35 @@ export class DeleteButton extends Component {
 								style={this.props.style}
 								ref="del"
 								onKeyDown={this.onButtonKeyDown}
-								onClick={onClick}>✖</Button>
-				{show ?
+								onClick={onClick}>{this.props.children || "✖"}</Button>
+				{this.renderConfirm()}
+			</React.Fragment>
+		);
+		return tooltip ? <TooltipComponent tooltip={tooltip}>{button}</TooltipComponent> : button;
+	}
+
+	renderConfirm = () => {
+		const {show} = this.state;
+		if (!show) {
+			return null;
+		}
+		const {confirmStyle = "popup"} = this.props;
+		if (confirmStyle === "popup") {
+			return this.renderConfirmPopup();
+		}
+		return null;
+	}
+
+	renderConfirmPopup() {
+		const getOverlayTarget = () => findDOMNode(this.refs.del);
+		const {translations, confirmPlacement = "left"} = this.props;
+		return (
 					<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
 									 target={getOverlayTarget}>
 						<Popover id={`${this.props.id}-button-confirm`}>
 							<span>{translations.ConfirmRemove}</span>
 							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>
+								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
 									{translations.Remove}
 								</Button>
 								<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
@@ -132,11 +155,16 @@ export class DeleteButton extends Component {
 							</ButtonGroup>
 						</Popover>
 					</Overlay>
-					: null
-				}
-			</React.Fragment>
 		);
-		return tooltip ? <TooltipComponent tooltip={tooltip}>{button}</TooltipComponent> : button;
+	}
+
+	browserConfirm() {
+		const choice = confirm(this.props.translations.ConfirmRemove);
+		if (choice) {
+			this.onConfirmedClick();
+		} else {
+			this.onHideConfirm();
+		}
 	}
 }
 

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { Modal, Alert } from "react-bootstrap";
-import { Button } from "../components";
+import { Button, DeleteButton } from "../components";
 import Spinner from "react-spinner";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
@@ -209,8 +209,11 @@ class NamedPlaceChooser extends Component {
 
 	onPlaceDeleted = (place) => {
 		const onDelete = () => {
-			this.setState({deleting: false});
+			if (this.popupContainerElem && this.popupElem) {
+				this.popupContainerElem.appendChild(findDOMNode(this.popupElem));
+			}
 			this.mapElem.map.map.closePopup();
+			this.setState({deleting: false, popupIdx: undefined});
 		};
 		this.setState({deleting: true});
 		this.props.onDeleted(place, onDelete);
@@ -289,6 +292,10 @@ class NamedPlaceChooser extends Component {
 		return {color, fillColor: color};
 	}
 
+	setPopupContainerRef = (elem) => {
+		this.popupContainerElem = elem;
+	}
+
 	render() {
 		const {places, failed, formContext: {translations}} = this.props;
 		
@@ -360,7 +367,7 @@ class NamedPlaceChooser extends Component {
 						bodyAsDialogRoot={false}
 					/>
 					{(!places) ? <Spinner /> : null}
-					<div style={{display: "none"}}>
+					<div style={{display: "none"}} ref={this.setPopupContainerRef}>
 						<Popup ref={getPopupRef} 
 							place={(places || [])[this.state.popupIdx]} 
 							onPlaceSelected={this.onPlaceSelected}
@@ -417,7 +424,15 @@ class Popup extends Component {
 				</tbody>
 				</table>
 				<Button block ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
-				<Button block bsStyle="danger" onClick={this._onPlaceDeleted} disabled={deleting}>{translations.Remove} {deleting && <Spinner />}</Button>
+				<DeleteButton block
+				              onClick={this._onPlaceDeleted}
+				              disabled={deleting}
+				              glyphButton={false}
+				              confirm={true}
+				              confirmStyle={"browser"}
+				              translations={translations}>
+					{translations.Remove} {deleting && <Spinner />}
+			</DeleteButton>
 		</div>
 		) : <Spinner />;
 	}
