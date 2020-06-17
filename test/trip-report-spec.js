@@ -301,7 +301,7 @@ describe("Trip report (JX.519)", () => {
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($modal), 5000, "Additionals modal waiting timeout");
 
-			expect(await $modal.$(".list-group .react-spinner").isDisplayed()).toBe(true);
+			expect(await $modal.$$(".list-group .react-spinner").get(1).isDisplayed()).toBe(true);
 
 			for (let idx in informalGroups) {
 				await mocks[idx].resolve({
@@ -309,7 +309,10 @@ describe("Trip report (JX.519)", () => {
 					"name": "test"
 				});
 			}
-			expect(await $modal.$(".list-group .react-spinner").isPresent()).toBe(false);
+
+			await browser.wait(protractor.ExpectedConditions.invisibilityOf($modal.$(".list-group .react-spinner")), 5000, "Additionals group title spinner didn't hide");
+
+			expect(await $modal.$$(".list-group .react-spinner").count()).toBe(0);
 			expect(await $modal.$$(".list-group").get(1).$(".list-group-item strong").getText()).toBe("test");
 		});
 
