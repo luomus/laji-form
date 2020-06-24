@@ -210,7 +210,9 @@ export default class AutosuggestField extends Component {
 					const getChanged = (_changed) => {
 						changed = _changed;
 					};
-					new fieldProps.registry.fields[uiField]({...fieldProps, onChange: getChanged}).onChange(formData);
+
+					const field = new fieldProps.registry.fields[uiField]({...fieldProps, formData: formData, onChange: getChanged});
+					field.onChange(field.state && field.state.formData ? field.state.formData : formData);
 					return changed;
 				}, formData);
 			}
