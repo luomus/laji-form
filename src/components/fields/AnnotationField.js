@@ -8,7 +8,7 @@ import Context from "../../Context";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import { isObject } from "laji-map/lib/utils";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
 
 @BaseComponent
 export default class AnnotationField extends Component {

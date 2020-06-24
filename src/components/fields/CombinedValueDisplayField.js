@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { immutableDelete, parseJSONPointer } from  "../../utils";
-import { toIdSchema } from  "@rjsf/core/dist/cjs/utils";
+import { toIdSchema } from  "react-jsonschema-form/lib/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**

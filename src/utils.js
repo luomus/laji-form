@@ -1,6 +1,6 @@
 import React from "react";
 import { findDOMNode } from "react-dom";
-import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "react-jsonschema-form/lib/utils";
 import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
 import update from "immutability-helper";

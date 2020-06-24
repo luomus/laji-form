@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
-import DescriptionField from "@rjsf/core/dist/cjs/components/fields/DescriptionField";
+import DescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
