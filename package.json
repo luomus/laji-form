@@ -26,7 +26,7 @@
   "repository": "https://bitbucket.org/luomus/laji-form.js.git",
   "license": "MIT",
   "dependencies": {
-    "@rjsf/core": "^2.0.1",
+    "@rjsf/core": "2.0.2",
     "babel-runtime": "^6.18.0",
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
