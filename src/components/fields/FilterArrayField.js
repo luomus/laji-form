@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { ArrayFieldAddPatched } from "./ArrayField";
-import { toIdSchema } from "react-jsonschema-form/lib/utils";
+import { toIdSchema } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
 export default class FilterArrayField extends Component {

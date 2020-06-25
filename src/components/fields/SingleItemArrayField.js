@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getDefaultFormState, isMultiSelect } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
 import { getUiOptions } from "../../utils";
 
 @VirtualSchemaField

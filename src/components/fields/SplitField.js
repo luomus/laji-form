@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";

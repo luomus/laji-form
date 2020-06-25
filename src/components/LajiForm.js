@@ -8,11 +8,11 @@ import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
 import equals from "deep-equal";
-import validateFormData from "react-jsonschema-form/lib/validate";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import validateFormData from "@rjsf/core/dist/cjs/validate";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import merge from "deepmerge";
 
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 import FieldTemplate from "./FieldTemplate";
 import ErrorListTemplate from "./ErrorListTemplate";

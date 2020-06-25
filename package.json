@@ -3,6 +3,7 @@
   "version": "5.2.3",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/app.js",
+  "type": "module",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline --host 0.0.0.0 --port 8083",
     "staging": "webpack-dev-server --content-base playground playground/app.js --host 0.0.0.0 --port 4010",
@@ -25,6 +26,7 @@
   "repository": "https://bitbucket.org/luomus/laji-form.js.git",
   "license": "MIT",
   "dependencies": {
+    "@rjsf/core": "^2.0.1",
     "babel-runtime": "^6.18.0",
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
@@ -43,7 +45,6 @@
     "react-dom": "~16.8.6",
     "react-dropzone": "^10.1.4",
     "react-inlinesvg": "^0.6.0",
-    "react-jsonschema-form": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#6d8d9a467eb047d728dbe2e849d3d62acebef59a",
     "react-sortable-hoc": "^0.6.3",
     "react-spinner": "^0.2.7",
     "react-transition-group": "^1.1.1",

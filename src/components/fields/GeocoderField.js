@@ -9,7 +9,7 @@ import Context from "../../Context";
 import { Button } from "../components";
 import Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "laji-map/lib/globals";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 const cache = {};
 

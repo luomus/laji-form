@@ -8,7 +8,7 @@ import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
 import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
 export default class LocationChooserField extends Component {

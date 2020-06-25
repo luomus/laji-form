@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import BaseInput from "react-jsonschema-form/lib/components/widgets/BaseInput";
+import BaseInput from "@rjsf/core/dist/cjs/components/widgets/BaseInput";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 
