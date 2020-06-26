@@ -29,15 +29,15 @@ describe("SelectWidget", () => {
 
 	it("empty value is selectable", async () => {
 		await form.$getEnumWidget("").click();
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$(".rw-popup-container")), 1000, "select list timeout");
-		await form.$getEnumWidget("").$$("li").first().click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$$(".rw-list-option").first()), 1000, "select list timeout");
+		await form.$getEnumWidget("").$$(".rw-list-option").first().click();
 		expect (await form.getChangedData()).toBe(null);
 	});
 
 	it("nonempty value is selectable after empty was selected", async () => {
 		await form.$getEnumWidget("").click();
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$(".rw-popup-container")), 1000, "select list timeout");
-		await form.$getEnumWidget("").$$("li").last().click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$$(".rw-list-option").first()), 1000, "select list timeout");
+		await form.$getEnumWidget("").$$(".rw-list-option").last().click();
 		expect(await form.$getEnumWidget("").$("input").getAttribute("value")).toBe(enums.c);
 		expect (await form.getChangedData()).toBe("c");
 	});
