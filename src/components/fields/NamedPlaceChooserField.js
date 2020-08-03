@@ -127,7 +127,7 @@ export default class NamedPlaceChooserField extends Component {
 
 	updatePlaces = () => {
 		this.buttonDefinition = undefined;
-		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 10000}).then(response => {
 			if (!this.mounted) return;
 			const state = {places: response.results.filter(p => !this.removeIds[p.id]).sort((a, b) => {
 				if (a.name < b.name) return -1;
