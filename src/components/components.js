@@ -356,11 +356,12 @@ export class Stretch extends Component {
 
 	componentDidMount() {
 		window.addEventListener("scroll", this.onScroll);
-		window.addEventListener("resize", this.onResize);
+		window.addEventListener("resize", this.onScroll);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.onScroll);
+		window.removeEventListener("resize", this.onScroll);
 	}
 
 	_onScroll = () => {
