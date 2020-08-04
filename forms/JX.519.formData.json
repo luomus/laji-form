@@ -19,7 +19,6 @@
     "gatherings": [
         {
             "@type": "MY.gathering",
-            "_lajiFormId": 1,
             "biologicalProvince": "Pohjois-Savo",
             "country": "Suomi",
             "geometry": {

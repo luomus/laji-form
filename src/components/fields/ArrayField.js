@@ -38,12 +38,13 @@ export function onArrayFieldChange(formData, props) {
 	const [withLajiFormIds, ids] = addLajiFormIds(formData, tmpIdTree, false);
 	const oldIds = getAllLajiFormIdsDeeply(props.formData, tmpIdTree);
 
-	Object.keys(oldIds).forEach(id => {
+	const promises = Object.keys(oldIds).reduce((promises, id) => {
 		if (!ids[id]) {
-			new Context(props.formContext.contextId).removeSubmitHook(id);
+			promises.push(new Context(props.formContext.contextId).removeSubmitHook(id));
 		}
-	});
-	return withLajiFormIds;
+		return promises;
+	}, []);
+	return Promise.all(promises).then(() => withLajiFormIds);
 }
 
 export class ArrayFieldAddPatched extends ArrayField {
@@ -62,7 +63,7 @@ export class ArrayFieldAddPatched extends ArrayField {
 export default class _ArrayField extends Component {
 
 	onChange = (formData) => {
-		this.props.onChange(onArrayFieldChange(formData, this.props));
+		onArrayFieldChange(formData, this.props).then(this.props.onChange);
 	}
 
 	render() {

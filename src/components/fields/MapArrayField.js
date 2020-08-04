@@ -151,8 +151,10 @@ class DefaultMapArrayField extends Component {
 			));
 		}, formData);
 
-		this.props.onChange(onArrayFieldChange([formData], this.props));
-		this.setState({activeIdx: 0});
+		onArrayFieldChange([formData], this.props).then(_formData => {
+			this.props.onChange(_formData);
+			this.setState({activeIdx: 0});
+		});
 	}
 
 	getGeometry(formData, _geometryField) {
@@ -205,7 +207,11 @@ class DefaultMapArrayField extends Component {
 				break;
 			}
 		});
-		this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
+		if (addOrDelete) {
+			onArrayFieldChange(formData, this.props).then(this.props.onChange);
+		} else {
+			this.props.onChange(formData);
+		}
 	}
 
 	onAdd({feature: {geometry}}, formData) {
@@ -649,9 +655,9 @@ class LineTransectMapArrayField extends Component {
 	}
 
 	onLineCreate = ([event]) => {
-		this.props.onChange(onArrayFieldChange(update(this.props.formData, {0: {geometry: {$set: 
+		onArrayFieldChange(update(this.props.formData, {0: {geometry: {$set: 
 			event.feature.geometry
-		}}}), this.props));
+		}}}), this.props).then(this.props.onChange);
 	}
 
 	onChange = (events) => {
@@ -723,7 +729,9 @@ class LineTransectMapArrayField extends Component {
 		});
 		const afterState = () => {
 			if (formDataChanged) {
-				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
+				addOrDelete
+					? onArrayFieldChange(formData, this.props).then(this.props.onChange)
+					: this.props.onChange(formData);
 			}
 			if ("activeIdx" in state) {
 				this.afterActiveChange(state.activeIdx);
@@ -1352,7 +1360,7 @@ class _MapArrayField extends ComposedComponent {
 	
 	customAdd = () => () => {
 		const nextActive = this.props.formData.length;
-		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)], this.props));
+		onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)], this.props).then(this.props.onChange);
 		this.setState({activeIdx: nextActive});
 	}
 
