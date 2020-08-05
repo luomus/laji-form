@@ -456,14 +456,9 @@ describe("Trip report (JX.519)", () => {
 			const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
 			const fieldCount = await getFieldCount();
 
-			const $spinner = $(".informal-taxon-group-chooser.modal-dialog .react-spinner");
-			if (await $spinner.isPresent()) {
-				await browser.wait(protractor.ExpectedConditions.invisibilityOf($spinner), 5000, "Informal taxon groups timeout");
-			}
-
 			const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last();
 
-			expect(await $birdButton.isDisplayed()).toBe(true);
+			await browser.wait(protractor.ExpectedConditions.visibilityOf($birdButton), 5000, "Bird button didn't show up");
 
 			await $birdButton.click();
 			await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.0.twitched")), 4000, "Bird field didn't appear");
