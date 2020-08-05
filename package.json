@@ -32,7 +32,7 @@
     "deepmerge": "^1.1.1",
     "exif-js": "^2.3.0",
     "immutability-helper": "^2.1.2",
-    "laji-map": "^3.0.7",
+    "laji-map": "latest",
     "laji-validate": "0.0.97",
     "moment": "*",
     "prop-types": "^15.5.8",
@@ -92,8 +92,5 @@
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2",
     "webpack-node-externals": "^1.5.4"
-  },
-  "resolutions": {
-    "laji-map": "3.0.4"
   }
 }
