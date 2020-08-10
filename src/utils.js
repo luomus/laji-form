@@ -135,8 +135,14 @@ export function isEmptyString(val) {
 	return val === "" || isNullOrUndefined(val);
 }
 
-export function parseJSONPointer(object, jsonPointer, safeMode) {
-	const splitPath = String(jsonPointer).split("/").filter(s => !isEmptyString(s));
+export function parseJSONPointer(object, jsonPointer, safeMode, strictEmptyPath = false) {
+	let splitPath = String(jsonPointer).split("/");
+	if (jsonPointer[0] === "/") {
+		splitPath = splitPath.splice(1);
+	}
+	if (!strictEmptyPath) {
+		splitPath = splitPath.filter(s => !isEmptyString(s));
+	}
 	return splitPath.reduce((o, s, i)=> {
 		if (safeMode && !o || !(s in o)) {
 			if (!o) o = {};
