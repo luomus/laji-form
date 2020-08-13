@@ -34,20 +34,10 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 
 export function onArrayFieldChange(formData, props) {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
-
-	const [withLajiFormIds, ids] = addLajiFormIds(formData, tmpIdTree, false);
-	const oldIds = getAllLajiFormIdsDeeply(props.formData, tmpIdTree);
-
-	const promises = Object.keys(oldIds).reduce((promises, id) => {
-		if (!ids[id]) {
-			promises.push(new Context(props.formContext.contextId).removeSubmitHook(id));
-		}
-		return promises;
-	}, []);
-	return Promise.all(promises).then(() => withLajiFormIds);
+	return addLajiFormIds(formData, tmpIdTree, false)[0];
 }
 
-export class ArrayFieldAddPatched extends ArrayField {
+export class ArrayFieldAddRemovePatched extends ArrayField {
 	constructor(...params) {
 		super(...params);
 		const {_getNewFormDataRow} = this;
@@ -56,6 +46,21 @@ export class ArrayFieldAddPatched extends ArrayField {
 			const [item] = addLajiFormIds(_getNewFormDataRow.call(this), tmpIdTree, false);
 			return item;
 		};
+
+		const {onDropIndexClick} = this;
+		this.onDropIndexClick = (index) => (event) => {
+			const item = this.props.formData[index];
+			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${index}`);
+			const oldIds = getAllLajiFormIdsDeeply(item, tmpIdTree);
+
+			const promises = Object.keys(oldIds).map((id) => {
+				return new Context(this.props.formContext.contextId).removeSubmitHook(id);
+			}, []);
+			return Promise.all(promises).then(() => {
+				onDropIndexClick.call(this, index)(event);
+			});
+			
+		}
 	}
 }
 
@@ -63,7 +68,7 @@ export class ArrayFieldAddPatched extends ArrayField {
 export default class _ArrayField extends Component {
 
 	onChange = (formData) => {
-		onArrayFieldChange(formData, this.props).then(this.props.onChange);
+		this.props.onChange(onArrayFieldChange(formData, this.props));
 	}
 
 	render() {
@@ -75,7 +80,7 @@ export default class _ArrayField extends Component {
 
 		// MultiArrayField needs to intercept default ArrayField internals, the instance is passed in formContext.
 		const {ArrayField: _ArrayField} = props.formContext;
-		const Component = _ArrayField || ArrayFieldAddPatched;
+		const Component = _ArrayField || ArrayFieldAddRemovePatched;
 
 		// Reset formContext.ArrayField
 		const formContext = _ArrayField ? {...props.formContext, ArrayField: undefined} : props.formContext;

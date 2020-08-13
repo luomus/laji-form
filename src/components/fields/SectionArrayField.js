@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -468,15 +468,20 @@ class SectionArrayFieldTemplate extends Component {
 
 		const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
 
+		const oldIds = getAllLajiFormIdsDeeply(this.props.formData, tmpIdTree);
+		let ids = {};
+
 		const _formData = this.props.formData.map((item, containerIdx) => {
 			const items = parseJSONPointer(formData, containerPointer).map((unit, idx) => {
 				let rowDefinerItem = parseJSONPointer(item, `${containerPointer}/${rowDefinerItemIdsToContainerIdxs[getUUID(unit)]}`);
 				if (!rowDefinerItem) {
 					// If container is first and it has UUID, it's an item added to the definer column. It has a UUID already, so 
-					// we don't define it again, or else it will be rendered again and won't be autofocused properly
-					rowDefinerItem = containerIdx === 0 && getUUID(unit)
-						? addLajiFormIds(unit, tmpIdTree)[0]
-						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false)[0];
+					// we don't define it again, or else it will be rendered again and won't be autofocused properly.
+					const [_rowDefinerItem, _ids] = containerIdx === 0 && getUUID(unit)
+						? addLajiFormIds(unit, tmpIdTree)
+						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false);
+					rowDefinerItem  = _rowDefinerItem;
+					ids = {...ids, ..._ids};
 				}
 				const updatedUnit = [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
 					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line no-unused-vars
@@ -505,6 +510,12 @@ class SectionArrayFieldTemplate extends Component {
 			);
 		});
 		this.props.formContext.this.props.onChange(_formData);
+
+		Object.keys(oldIds).forEach(id => {
+			if (!ids[id]) {
+				new Context(this.props.formContext.contextId).removeSubmitHook(id);
+			}
+		});
 	}
 }
 
