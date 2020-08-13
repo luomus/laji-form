@@ -146,7 +146,7 @@ export class Form {
 		return {
 			resolve: async () => {
 				await resolve(imageResponse);
-				await browser.sleep(100);
+				await browser.sleep(200);
 				await mdResolve(mdResponse);
 			},
 			remove: async () => {
