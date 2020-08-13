@@ -53,14 +53,11 @@ export class ArrayFieldAddRemovePatched extends ArrayField {
 			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${index}`);
 			const oldIds = getAllLajiFormIdsDeeply(item, tmpIdTree);
 
-			const promises = Object.keys(oldIds).map((id) => {
+			Object.keys(oldIds).forEach((id) => {
 				return new Context(this.props.formContext.contextId).removeSubmitHook(id);
 			}, []);
-			return Promise.all(promises).then(() => {
-				onDropIndexClick.call(this, index)(event);
-			});
-			
-		}
+			onDropIndexClick.call(this, index)(event);
+		};
 	}
 }
 
