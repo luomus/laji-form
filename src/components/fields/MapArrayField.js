@@ -107,7 +107,7 @@ class DefaultMapArrayField extends Component {
 
 		const controls = (emptyMode || this.state.activeIdx !== undefined)
 			? {drawCopy: true}
-			: {draw: false, coordinateInput: false};
+			: {draw: false};
 
 		const data = geometries && geometries.length || !options.placeholderGeometry
 			? []
