@@ -175,7 +175,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys("kettu");
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
 		await $$taxonSuggestions.last().click();
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "Suggestion list timeout");
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "auto added unit didn't appear");
 
 		expect(await lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
 

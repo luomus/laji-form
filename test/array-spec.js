@@ -181,4 +181,35 @@ describe("Array", () => {
 			});
 		});
 	});
+
+	describe("keyboard shortcut", () => {
+		let form;
+
+		beforeAll(async () => {
+			const shortcuts = {"alt+i": {fn: "insert"}};
+			const props = {schema: {type: "array", items: {type:"string"}}, uiSchema: {"ui:shortcuts": shortcuts}};
+			form = await createForm(props);
+		});
+
+		afterEach(async () => {
+			form.setState({formData: []});
+		});
+
+		describe("insert", () => {
+			it("works", async () => {
+				await form.$locateButton("", "add").click();
+				expect(await form.$locate("0").isDisplayed()).toBe(true);
+				await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, "i"));
+				expect(await form.$locate("1").isDisplayed()).toBe(true);
+			});
+
+			it("keeps entered value", async () => {
+				await form.$locateButton("", "add").click();
+				await browser.driver.switchTo().activeElement().sendKeys("test");
+				await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, "i"));
+				expect(await form.$locate("1").isDisplayed()).toBe(true);
+				expect(await form.$getInputWidget("0").getAttribute("value")).toBe("test");
+			});
+		});
+	});
 });
