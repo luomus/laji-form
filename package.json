@@ -26,7 +26,7 @@
   "repository": "https://bitbucket.org/luomus/laji-form.js.git",
   "license": "MIT",
   "dependencies": {
-    "@rjsf/core": "2.2.2",
+    "@rjsf/core": "https://git@github.com/olzraiti/react-jsonschema-form.git#38288f23ebdc3cf18b06e135ca629c4e2e1d96eb",
     "babel-runtime": "^6.18.0",
     "deep-equal": "^1.0.1",
     "deepmerge": "^1.1.1",
