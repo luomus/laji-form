@@ -360,7 +360,8 @@ export default class LajiForm extends Component {
 		this._context.removeSubmitHook = (lajiFormId, hook) => {
 			return new Promise(resolve => {
 				lajiFormId = `${lajiFormId}`;
-				this.setState({submitHooks: (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId))}, resolve);
+				const newHooks = (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId));
+				newHooks.length !== (this.state.submitHooks || []).length ? this.setState({submitHooks: newHooks}, resolve) : resolve();
 			});
 		};
 		this._context.removeAllSubmitHook = () => {
