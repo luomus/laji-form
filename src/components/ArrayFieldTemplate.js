@@ -425,6 +425,9 @@ export const arrayKeyFunctions = {
 		}
 
 		if (!props.disabled && !props.readonly && canAdd(props) && getUiOptions(props.uiSchema).canAddByKey !== false) {
+			if (e.target) {
+				e.target.blur();
+			}
 			if (insertCallforward) {
 				e.persist();
 				beforeAdd(props);
