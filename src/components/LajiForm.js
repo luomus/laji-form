@@ -187,25 +187,7 @@ export default class LajiForm extends Component {
 			}
 		};
 
-		const shortcuts = props.uiSchema["ui:shortcuts"] || {};
-		this.keyHandlers = this.getKeyHandlers(shortcuts);
-		this._context.keyHandlers = this.keyHandlers;
-		this._context.addKeyHandler("root", this.keyFunctions);
-		this._context.keyHandlerTargets = Object.keys(this.keyHandlers).reduce((targets, keyCombo) => {
-			const handler = this.keyHandlers[keyCombo];
-			if ("target" in handler) targets.push({id: handler.target, handler});
-			return targets;
-		}, []);
-
-		Object.keys(shortcuts).some(keyCombo => {
-			if (shortcuts[keyCombo].fn == "help") {
-				this.keyCombo = keyCombo;
-				this.keyComboDelay = shortcuts[keyCombo].fn;
-				return true;
-			}
-		});
-
-		this._context.shortcuts = props.uiSchema["ui:shortcuts"];
+		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
 
 		this.settingSavers = {};
 		this.globalSettingSavers = {};
@@ -468,6 +450,37 @@ export default class LajiForm extends Component {
 			this.props.onError(e, i);
 		}
 	}
+
+	componentDidUpdate(prevProps) {
+		if ((prevProps.uiSchema || {})["ui:shortcuts"] !== (this.props.uiSchema || {})["ui:shortcuts"]) {
+			this.resetShortcuts((this.props.uiSchema || {})["ui:shortcuts"]);
+		}
+	}
+
+	resetShortcuts(shortcuts = {}) {
+		this._context.keyHandleListeners = {};
+		this._context.keyHandleIdFunctions = [];
+
+		this.keyHandlers = this.getKeyHandlers(shortcuts);
+		this._context.keyHandlers = this.keyHandlers;
+		this._context.addKeyHandler("root", this.keyFunctions);
+		this.keyHandlerTargets = Object.keys(this.keyHandlers).reduce((targets, keyCombo) => {
+			const handler = this.keyHandlers[keyCombo];
+			if ("target" in handler) targets.push({id: handler.target, handler});
+			return targets;
+		}, []);
+
+		Object.keys(shortcuts).some(keyCombo => {
+			if (shortcuts[keyCombo].fn == "help") {
+				this.keyCombo = keyCombo;
+				this.keyComboDelay = shortcuts[keyCombo].fn;
+				return true;
+			}
+		});
+
+		this._context.shortcuts = shortcuts;
+	}
+
 
 	constructTranslations = () => {
 		return constructTranslations(translations);
@@ -875,7 +888,7 @@ export default class LajiForm extends Component {
 			return b.length - a.length;
 		});
 
-		const targets = this._context.keyHandlerTargets
+		const targets = this.keyHandlerTargets
 			.filter(({handler}) => handler.conditions.every(condition => condition(e)))
 			.map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
