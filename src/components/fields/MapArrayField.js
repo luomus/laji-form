@@ -1382,7 +1382,7 @@ class _MapArrayField extends ComposedComponent {
 				...uiSchema,
 				"ui:options": {
 					...uiSchema["ui:options"],
-					buttons: [...uiSchema["ui:options"], ...getUiOptions(this.props.uiSchema).buttons]
+					buttons: [...(uiSchema["ui:options"].buttons || []), ...getUiOptions(this.props.uiSchema).buttons]
 				}
 			};
 		}
