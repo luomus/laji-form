@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
@@ -16,7 +16,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }}
  */
 @VirtualSchemaField
-export default class InjectField extends Component {
+export default class InjectField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

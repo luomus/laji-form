@@ -1,5 +1,5 @@
-import { createForm, getInputWidget, updateValue, waitUntilBlockingLoaderHides } from "./test-utils.js";
-import properties from "../properties.json";
+const { createForm, getInputWidget, updateValue, waitUntilBlockingLoaderHides } = require("./test-utils.js");
+const properties = require("../properties.json");
 
 describe("Validations", () => {
 

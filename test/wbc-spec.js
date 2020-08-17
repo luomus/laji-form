@@ -1,4 +1,4 @@
-import { navigateToForm } from "./test-utils.js";
+const { navigateToForm } = require("./test-utils.js");
 
 describe("WBC (MHL.3)", () => {
 

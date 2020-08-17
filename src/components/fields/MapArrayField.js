@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
-import deepEquals from "deep-equal";
-import merge from "deepmerge";
+import * as deepEquals from "deep-equal";
+import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar, Modal } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
+import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch, Fullscreen } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -33,7 +33,7 @@ export function parseGeometries(geometry) {
 }
 
 
-export default class MapArrayField extends Component {
+export default class MapArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -79,7 +79,7 @@ export default class MapArrayField extends Component {
 }
 
 @_MapArrayField
-class DefaultMapArrayField extends Component {
+class DefaultMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
@@ -257,7 +257,7 @@ class DefaultMapArrayField extends Component {
 }
 
 @_MapArrayField
-class UnitsMapArrayField extends Component {
+class UnitsMapArrayField extends React.Component {
 	field = "units"
 
 	constructor(props) {
@@ -588,7 +588,7 @@ class UnitsMapArrayField extends Component {
 }
 
 @_MapArrayField
-class LineTransectMapArrayField extends Component {
+class LineTransectMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {showLTTools: false};
@@ -767,7 +767,7 @@ class LineTransectMapArrayField extends Component {
 
 	focusOnMap = (idx) => {
 		if (!this.hasLineTransectFeature(this.props)) {
-			setImmediate(() => this.map.zoomToData({paddingInMeters: 200}));
+			setTimeout(() => this.map.zoomToData({paddingInMeters: 200}));
 			return;
 		}
 		this.getContext().setImmediate(() =>{
@@ -784,7 +784,7 @@ class LineTransectMapArrayField extends Component {
 }
 
 @_MapArrayField
-class LolifeMapArrayField extends Component {
+class LolifeMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onMouseOver = this.onMouseOver.bind(this);
@@ -1127,7 +1127,7 @@ class LolifeMapArrayField extends Component {
 	}
 }
 
-function _MapArrayField(ComposedComponent) { return (
+function _MapArrayField(ComposedComponent) {
 @BaseComponent
 class _MapArrayField extends ComposedComponent {
 	constructor(props) {
@@ -1740,10 +1740,11 @@ class _MapArrayField extends ComposedComponent {
 			});
 		}
 	}
-});
+}
+return _MapArrayField;
 }
 
-class Popup extends Component {
+class Popup extends React.Component {
 	render() {
 		const { data } = this.props;
 		return data && data.length &&
@@ -1762,7 +1763,7 @@ class Popup extends Component {
 	}
 }
 
-export class MapComponent extends Component {
+export class MapComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {mapOptions: {}};
@@ -1902,7 +1903,7 @@ export class MapComponent extends Component {
 	}
 }
 
-export class Map extends Component {
+export class Map extends React.Component {
 	static defaultProps = {
 		tileLayerName: "maastokartta",
 		availableTileLayerNamesBlacklist: ["pohjakartta"]
@@ -2103,7 +2104,7 @@ export class Map extends Component {
 	}
 }
 
-class MapPanel extends Component {
+class MapPanel extends React.Component {
 	render() {
 		return (
 				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>

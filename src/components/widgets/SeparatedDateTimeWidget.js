@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Row, Col, FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class SeparatedDateTimeWidget extends Component {
+export default class SeparatedDateTimeWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])

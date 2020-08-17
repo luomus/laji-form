@@ -1,11 +1,11 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { formDataEquals, assignUUID, getUUID } from "../../utils";
 
 @VirtualSchemaField
-export default class AutoArrayField extends Component {
+export default class AutoArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

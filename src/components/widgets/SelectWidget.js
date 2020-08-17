@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
-import Combobox from "react-widgets/lib/Combobox";
-import Multiselect from "react-widgets/lib/Multiselect";
+import * as Combobox from "react-widgets/lib/Combobox";
+import * as Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 
 import { isEmptyString, getUiOptions, filter } from "../../utils";
 
-class SelectWidget extends Component {
+class SelectWidget extends React.Component {
 
 	constructor(props) {
 		super(props);

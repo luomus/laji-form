@@ -1,4 +1,4 @@
-import { createForm, getFocusedId } from "./test-utils.js";
+const { createForm, getFocusedId } = require("./test-utils.js");
 
 describe("SYKE butterfly form (MHL.59)", () => {
 	let form;

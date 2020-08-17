@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
 import { Row, Col, Panel, Modal } from "react-bootstrap";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 
 @BaseComponent
-export default class LocalityField extends Component {
+export default class LocalityField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.object,
 		schema: PropTypes.shape({

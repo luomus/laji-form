@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 const sumPropType = PropTypes.shape({
@@ -9,7 +9,7 @@ const sumPropType = PropTypes.shape({
 });
 
 @VirtualSchemaField
-export default class SumField extends Component {
+export default class SumField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": {

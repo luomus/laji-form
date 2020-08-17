@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import Context from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
@@ -7,7 +7,7 @@ import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
 import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 
-export default class _SchemaField extends Component {
+export default class _SchemaField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.updateVirtualInstance(props, !!"initial");

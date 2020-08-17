@@ -1,8 +1,8 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import { immutableDelete } from "../../utils";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -13,7 +13,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }
  */
 @VirtualSchemaField
-export default class ArrayCombinerField extends Component {
+export default class ArrayCombinerField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

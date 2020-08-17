@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { Modal, Alert } from "react-bootstrap";
 import { Button, DeleteButton } from "../components";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -20,7 +20,7 @@ const PLACE_DELETE_FAIL = "PLACE_DELETE_FAIL";
  * Compatible only with gatherings array and gathering object.
  */
 @BaseComponent
-export default class NamedPlaceChooserField extends Component {
+export default class NamedPlaceChooserField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object", "array"])
@@ -197,7 +197,7 @@ export default class NamedPlaceChooserField extends Component {
 	}
 }
 
-class NamedPlaceChooser extends Component {
+class NamedPlaceChooser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -382,7 +382,7 @@ class NamedPlaceChooser extends Component {
 	}
 }
 
-class Popup extends Component {
+class Popup extends React.Component {
 	_onPlaceSelected = () => {
 		this.props.onPlaceSelected(this.props.place);
 	}

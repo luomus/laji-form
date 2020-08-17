@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Button, ErrorPanel } from "./components";
 import { Glyphicon } from "react-bootstrap";
 import { parseJSONPointer, formatErrorMessage } from "../utils";
 import Context from "../Context";
 
-export default class ErrorListTemplate extends Component {
+export default class ErrorListTemplate extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {popped: false};

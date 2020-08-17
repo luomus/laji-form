@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Button, DeleteButton, Help } from "./components";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
@@ -10,12 +10,12 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {
@@ -272,7 +272,7 @@ const SortableList = SortableContainer(({items, itemProps, nonOrderables, formDa
 
 const SortableItem = SortableElement(({item}) => item);
 
-export class ArrayFieldTemplateWithoutKeyHandling extends Component {
+export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 	onSort = ({oldIndex, newIndex}) => {
 		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
 	}

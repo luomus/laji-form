@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import merge from "deepmerge";
-import equals from "deep-equal";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import * as merge from "deepmerge";
+import * as equals from "deep-equal";
 import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, } from "react-bootstrap";
-import Dropdown from "react-bootstrap/lib/Dropdown";
-import DropdownMenu from "react-bootstrap/lib/DropdownMenu";
-import Spinner from "react-spinner";
+import * as Dropdown from "react-bootstrap/lib/Dropdown";
+import * as DropdownMenu from "react-bootstrap/lib/DropdownMenu";
+import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
 import Context from "../../Context";
@@ -57,7 +57,7 @@ const scopeFieldSettings = {
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
 @BaseComponent
-export default class ScopeField extends Component {
+export default class ScopeField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { ArrayFieldAddRemovePatched } from "./ArrayField";
 import { toIdSchema } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
-export default class FilterArrayField extends Component {
+export default class FilterArrayField extends React.Component {
 	getStateFromProps(props) {
 		if (props.schema.items.type !== "object") {
 			throw new Error("Can't use FilterArrayField if items aren't objects");

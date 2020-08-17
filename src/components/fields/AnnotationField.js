@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../utils";
 import { Panel, ListGroup, ListGroupItem, Modal, Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import { Button } from "../components";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { isObject } from "laji-map/lib/utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
-export default class AnnotationField extends Component {
+export default class AnnotationField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -114,7 +114,7 @@ export default class AnnotationField extends Component {
 
 new Context("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
 
-class AnnotationBox extends Component {
+class AnnotationBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {annotations: props.annotations || []};

@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import ReactAutosuggest from "react-autosuggest";
+import * as PropTypes from "prop-types";
+import * as ReactAutosuggest from "react-autosuggest";
 import { Glyphicon, Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
@@ -15,7 +15,7 @@ function renderFlag(suggestion) {
 		: null;
 }
 
-export default class _AutosuggestWidget extends Component {
+export default class _AutosuggestWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -64,7 +64,7 @@ export default class _AutosuggestWidget extends Component {
 	}
 }
 
-class SimpleValueRenderer extends Component {
+class SimpleValueRenderer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: this.props.value, loading: true};
@@ -228,10 +228,10 @@ function TaxonAutosuggest(ComposedComponent) {
 }
 
 @TaxonAutosuggest
-class TaxonAutosuggestWidget extends Component {}
+class TaxonAutosuggestWidget extends React.Component {}
 
 @TaxonAutosuggest
-class UnitAutosuggestWidget extends Component {
+class UnitAutosuggestWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -249,7 +249,7 @@ class UnitAutosuggestWidget extends Component {
 	}
 }
 
-class FriendsAutosuggestWidget extends Component {
+class FriendsAutosuggestWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -315,14 +315,14 @@ class FriendsAutosuggestWidget extends Component {
 	}
 }
 
-class RangeAutosuggestWidget extends Component {
+class RangeAutosuggestWidget extends React.Component {
 	render() {
 		const {options: propsOptions, ...propsWithoutOptions} = this.props;
 		return <Autosuggest highlightFirstSuggestion={true} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
-export class Autosuggest extends Component {
+export class Autosuggest extends React.Component {
 	static propTypes = {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
@@ -702,7 +702,7 @@ export class Autosuggest extends Component {
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
-		setImmediate(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
+		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
 	}
 
 	setInputRef = (elem) => {
@@ -818,7 +818,7 @@ export class Autosuggest extends Component {
 	}
 }
 
-class TaxonCardOverlay extends Component {
+class TaxonCardOverlay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {converted: false};
@@ -936,7 +936,7 @@ class TaxonCardOverlay extends Component {
 	}
 }
 
-class InformalTaxonGroupsAddon extends Component {
+class InformalTaxonGroupsAddon extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -986,7 +986,7 @@ class InformalTaxonGroupsAddon extends Component {
 	}
 }
 
-class TaxonImgChooser extends Component {
+class TaxonImgChooser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};

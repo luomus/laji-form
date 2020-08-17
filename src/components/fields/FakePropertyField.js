@@ -1,10 +1,10 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { updateSafelyWithJSONPointer } from "../../utils";
 
 @VirtualSchemaField
-export default class FakePropertyField extends Component {
+export default class FakePropertyField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])

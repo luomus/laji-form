@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Panel, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions } from "../../utils";
 
 @BaseComponent
-export default class InformalTaxonGroupChooserWidget extends Component {
+export default class InformalTaxonGroupChooserWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -146,7 +146,7 @@ export function getInformalGroups(apiClient) {
 	});
 }
 
-export class InformalTaxonGroupChooser extends Component {
+export class InformalTaxonGroupChooser extends React.Component {
 	static propTypes = {
 		onSelected: PropTypes.func.isRequired,
 		formContext: PropTypes.object.isRequired

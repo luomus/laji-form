@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";
@@ -7,7 +7,7 @@ import SelectWidget from "./SelectWidget";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class ImageSelectWidget extends Component {
+export default class ImageSelectWidget extends React.Component {
 	static propTypes = {
 		options: PropTypes.object.isRequired,
 		schema: PropTypes.shape({

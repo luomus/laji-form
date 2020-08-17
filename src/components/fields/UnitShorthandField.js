@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -12,7 +12,7 @@ import { getButton } from "../ArrayFieldTemplate";
 const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
 
 @BaseComponent
-export default class UnitShorthandField extends Component {
+export default class UnitShorthandField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -146,7 +146,7 @@ export default class UnitShorthandField extends Component {
 }
 
 @BaseComponent
-class CodeReader extends Component {
+class CodeReader extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode }  from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Panel, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { parseGeometries } from "./MapArrayField";
 
 const SAVE = "SAVE", FETCH = "FETCH";
@@ -15,7 +15,7 @@ const SAVE = "SAVE", FETCH = "FETCH";
  * Compatible only with gathering field.
  */
 @BaseComponent
-export default class NamedPlaceSaverField extends Component {
+export default class NamedPlaceSaverField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
@@ -84,7 +84,7 @@ export default class NamedPlaceSaverField extends Component {
 	}
 }
 
-class PlaceSaverDialog extends Component {
+class PlaceSaverDialog extends React.Component {
 	constructor(props) {
 		super(props);
 		const {namedPlaceID, locality = ""} = props.gathering;

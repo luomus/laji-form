@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Row, Col, Collapse } from "react-bootstrap";
 import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class InitiallyHiddenField extends Component {
+export default class InitiallyHiddenField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

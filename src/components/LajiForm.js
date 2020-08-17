@@ -1,16 +1,16 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
+import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
-import equals from "deep-equal";
+import * as equals from "deep-equal";
 import validateFormData from "@rjsf/core/dist/cjs/validate";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 
 import Form from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
@@ -132,7 +132,7 @@ function getNewId() {
 }
 
 
-export default class LajiForm extends Component {
+export default class LajiForm extends React.Component {
 	static propTypes = {
 		lang: PropTypes.oneOf(["fi", "en", "sv"]),
 		uiSchemaContext: PropTypes.object,
@@ -953,7 +953,7 @@ export default class LajiForm extends Component {
 		const settings = this.getSettings(global);
 		if (!equals(this.state.formContext.settings, settings)) {
 			// setImmediate because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
-			setImmediate(() => {
+			setTimeout(() => {
 				this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
 			});
 			if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
@@ -977,7 +977,7 @@ export default class LajiForm extends Component {
 	setImmediate = (fn) => {
 		if (!this.immediates) this.immediates = [];
 
-		this.immediates.push(setImmediate(fn));
+		this.immediates.push(setTimeout(fn));
 	}
 
 	destroy = () => {

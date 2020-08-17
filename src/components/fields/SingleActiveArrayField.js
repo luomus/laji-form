@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import merge from "deepmerge";
+import * as PropTypes from "prop-types";
+import * as merge from "deepmerge";
 import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
+import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
@@ -34,7 +34,7 @@ const popupMappers = {
 };
 
 @BaseComponent
-export default class SingleActiveArrayField extends Component {
+export default class SingleActiveArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -95,7 +95,7 @@ export default class SingleActiveArrayField extends Component {
 				: !affixed && (renderer === "accordion" || renderer === "pager")
 					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
 					: `${this.props.idSchema.$id}-add`;
-			setImmediate(() => {
+			setTimeout(() => {
 				focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
 			});
 		}
@@ -321,7 +321,7 @@ export default class SingleActiveArrayField extends Component {
 	}
 }
 
-class Popup extends Component {
+class Popup extends React.Component {
 	render() {
 		const {data} = this.props;
 		return (data && Object.keys(data).length) ? (
@@ -336,7 +336,7 @@ class Popup extends Component {
 }
 
 function handlesButtonsAndFocus(ComposedComponent) {
-	return @handlesArrayKeys
+	@handlesArrayKeys
 	class SingleActiveArrayTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
 
@@ -408,7 +408,8 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			}
 			return handlers;
 		}
-	};
+	}
+	return SingleActiveArrayTemplateField;
 }
 
 // Swallow unknown prop warnings.
@@ -437,7 +438,7 @@ const AccordionButtonsWrapper = ({props, position}) => {
 };
 
 @handlesButtonsAndFocus
-class AccordionArrayFieldTemplate extends Component {
+class AccordionArrayFieldTemplate extends React.Component {
 
 	setContainerRef = (elem) => {
 		this.containerRef = elem;
@@ -522,7 +523,7 @@ class AccordionArrayFieldTemplate extends Component {
 }
 
 @handlesButtonsAndFocus
-class PagerArrayFieldTemplate extends Component {
+class PagerArrayFieldTemplate extends React.Component {
 
 	setContainerRef = (elem) => {
 		this.containerRef = elem;
@@ -625,7 +626,7 @@ class PagerArrayFieldTemplate extends Component {
 }
 
 @handlesButtonsAndFocus
-class UncontrolledArrayFieldTemplate extends Component {
+class UncontrolledArrayFieldTemplate extends React.Component {
 	render() {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
@@ -647,7 +648,7 @@ class UncontrolledArrayFieldTemplate extends Component {
 }
 
 @handlesButtonsAndFocus
-class TableArrayFieldTemplate extends Component {
+class TableArrayFieldTemplate extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -985,7 +986,7 @@ const headerFormatters = {
 		}
 	},
 	namedPlace: {
-		component: class NamedPlaceHeader extends Component {
+		component: class NamedPlaceHeader extends React.Component {
 			constructor(props) {
 				super(props);
 				this.state = {};
@@ -1046,7 +1047,7 @@ const headerFormatters = {
 	}
 };
 
-class AccordionHeader extends Component {
+class AccordionHeader extends React.Component {
 	onHeaderClick = () => {
 		const {that, idx, canHaveUndefinedIdx = true} = this.props;
 		const formatters = this.getFormatters();

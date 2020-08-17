@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
@@ -44,7 +44,7 @@ const parseQuery = (query, props, taxonGroups) => {
  * }
  */
 @BaseComponent
-export default class AutosuggestField extends Component {
+export default class AutosuggestField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

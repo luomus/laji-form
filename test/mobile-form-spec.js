@@ -1,7 +1,6 @@
+const { navigateToForm, lajiFormLocate, mockGeo, mockGeoError } = require("./test-utils.js");
 
-import { navigateToForm, lajiFormLocate, mockGeo, mockGeoError } from "./test-utils.js";
-
-import { googleApiKey } from "../properties.json"
+const { googleApiKey } = require("../properties.json");
 
 const $blocker = lajiFormLocate("gatherings.0.geometry").$(".blocker");
 const $imageAddModal = $(".media-add-modal");

@@ -1,5 +1,5 @@
-import React, { Component, PureComponent } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 import DescriptionField from "@rjsf/core/dist/cjs/components/fields/DescriptionField";
@@ -9,11 +9,11 @@ import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Spinner from "react-spinner";
-import equals from "deep-equal";
+import * as Spinner from "react-spinner";
+import * as equals from "deep-equal";
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
-import moment from "moment";
+import * as moment from "moment";
 
 function toDecimal(number) {
 	if (!number) return undefined;
@@ -24,7 +24,7 @@ function toDecimal(number) {
 let mediaUuid = 0;
 
 @MediaArrayField
-export default class ImageArrayField extends Component {
+export default class ImageArrayField extends React.Component {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
 	ACCEPT_FILE_TYPES = ["image/*"];
 	MAX_FILE_SIZE = 20000000;
@@ -55,7 +55,7 @@ export default class ImageArrayField extends Component {
 }
 
 export function MediaArrayField(ComposedComponent) {
-	return @BaseComponent
+	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
 		static propTypes = {
 			uiSchema: PropTypes.shape({
@@ -776,10 +776,11 @@ export function MediaArrayField(ComposedComponent) {
 
 			return formats;
 		}
-	};
+	}
+	return MediaArrayField;
 }
 
-class Thumbnail extends PureComponent {
+class Thumbnail extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {};

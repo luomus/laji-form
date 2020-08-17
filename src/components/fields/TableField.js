@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema, isHidden } from "../../utils";
 import { Row, Col } from "react-bootstrap";
 import { DeleteButton } from "../components";
@@ -25,7 +25,7 @@ const specialRules = {
 const specialRulesPropTypes = PropTypes.oneOf(["legEditors"]);
 
 @BaseComponent
-export default class TableField extends Component {
+export default class TableField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -126,7 +126,7 @@ export default class TableField extends Component {
 }
 
 @handlesArrayKeys
-class TableArrayFieldTemplate extends Component {
+class TableArrayFieldTemplate extends React.Component {
 	render() {
 		const {props} = this;
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;

@@ -1,5 +1,5 @@
 import LajiForm from "./components/LajiForm";
-import React, { Component } from "react";
+import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
 export default class LajiFormWrapper {
@@ -46,7 +46,7 @@ export default class LajiFormWrapper {
 	}
 }
 
-class LajiFormApp extends Component {
+class LajiFormApp extends React.Component {
 	render() {
 		return <LajiForm {...this.props} {...(this.state || {})} ref="lajiform"/>;
 	}

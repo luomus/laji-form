@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, focusNextInput } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
@@ -11,7 +11,7 @@ import BaseComponent from "../BaseComponent";
  * }
  */
 @BaseComponent
-export default class SelectTreeField extends Component {
+export default class SelectTreeField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

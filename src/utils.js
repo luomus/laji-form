@@ -1,11 +1,11 @@
-import React from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
 import update from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
-import deepEquals from "deep-equal";
+import * as deepEquals from "deep-equal";
 
 export const isObject = _isObject;
 
@@ -1005,7 +1005,7 @@ export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formDa
 export function highlightElem(elem) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
-	setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
+	window.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
 }
 
 export function getRelativeTmpIdTree(contextId, id)  {

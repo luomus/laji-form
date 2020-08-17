@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import equals from "deep-equal";
+import * as equals from "deep-equal";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import fetch from "isomorphic-fetch";
 import Context from "../../Context";
 import { Button } from "../components";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "laji-map/lib/globals";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 const cache = {};
 
 @BaseComponent
-export default class GeocoderField extends Component {
+export default class GeocoderField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

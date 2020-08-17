@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import BaseInput from "@rjsf/core/dist/cjs/components/widgets/BaseInput";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 
-export default class _BaseInput extends Component {
+export default class _BaseInput extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

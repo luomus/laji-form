@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-import deepEquals from "deep-equal";
+import * as deepEquals from "deep-equal";
 
 @BaseComponent
-export default class TagArrayField extends Component {
+export default class TagArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -31,7 +31,7 @@ export default class TagArrayField extends Component {
 	}
 }
 
-export class TagInputComponent extends Component {
+export class TagInputComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);

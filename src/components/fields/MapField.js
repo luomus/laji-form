@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { createPortal, findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
 import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import equals from "deep-equal";
+import * as equals from "deep-equal";
 import Context from "../../Context";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
 
@@ -49,7 +49,7 @@ export function getCenterAndRadiusFromGeometry(geometry) {
 }
 
 @BaseComponent
-export default class MapField extends Component {
+export default class MapField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -355,7 +355,7 @@ export default class MapField extends Component {
 	}
 }
 
-class MobileEditorMap extends Component {
+class MobileEditorMap extends React.Component {
 	DEFAULT_RADIUS_PIXELS = 100;
 
 	constructor(props) {

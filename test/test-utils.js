@@ -1,6 +1,6 @@
-import path from "path";
-import { isObject } from "../src/utils";
-const {HOST, PORT} = process.env;
+const path = require("path");
+const { isObject } = require("../lib/utils");
+const { HOST, PORT } = process.env;
 
 function getJsonFromUrl() {
 	  var query = location.search.substr(1);
@@ -12,16 +12,16 @@ function getJsonFromUrl() {
 	  return result;
 }
 
-export const getLocatorForContextId = contextId => path => `#_laji-form_${contextId}_root${typeof path === "string" && path.length ? `_${path.replace(/\./g, "_")}` : ""}`;
+const getLocatorForContextId = contextId => path => `#_laji-form_${contextId}_root${typeof path === "string" && path.length ? `_${path.replace(/\./g, "_")}` : ""}`;
 
-export const emptyForm = async (params = "") => browser.get(`http://${HOST}:${PORT}?test=true&settings=false&mockApi=true&${params}`);
-export const navigateToForm = async (formID, params = "") => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false&mockApi=true${params}`);
-export const lajiFormLocator = getLocatorForContextId(0);
-export const lajiFormLocate = str => $(lajiFormLocator(str));
+const emptyForm = async (params = "") => browser.get(`http://${HOST}:${PORT}?test=true&settings=false&mockApi=true&${params}`);
+const navigateToForm = async (formID, params = "") => browser.get(`http://${HOST}:${PORT}?id=${formID}&local=true&settings=false&mockApi=true${params}`);
+const lajiFormLocator = getLocatorForContextId(0);
+const lajiFormLocate = str => $(lajiFormLocator(str));
 
-export const getFocusedId = () => browser.driver.switchTo().activeElement().getAttribute("id");
+const getFocusedId = () => browser.driver.switchTo().activeElement().getAttribute("id");
 
-export class Form {
+class Form {
 	constructor(params = {}) {
 		this.props = params;
 	}
@@ -169,21 +169,21 @@ export class Form {
 	}
 }
 
-export async function createForm(props) {
+async function createForm(props) {
 	const form = new Form(props);
 	await form.initialize();
 	return form;
 }
 
-export function waitUntilBlockingLoaderHides(timeout) {
+function waitUntilBlockingLoaderHides(timeout) {
 	return browser.wait(protractor.ExpectedConditions.invisibilityOf($(".laji-form.blocking-loader")), timeout || 20000, "Geocoding timeout");
 }
 
-export function isDisplayed(elem) {
+function isDisplayed(elem) {
 	return elem.isDisplayed();
 }
 
-export async function putForeignMarkerToMap() {
+async function putForeignMarkerToMap() {
 	const $gatheringsMap = lajiFormLocate("gatherings").$(".laji-map");
 	const $markerButton = $(".leaflet-draw-draw-marker");
 
@@ -194,7 +194,7 @@ export async function putForeignMarkerToMap() {
 	return browser.actions({bridge: true}).move({origin: $gatheringsMap.getWebElement(), x: -100, y: -100}).click().perform();
 }
 
-export async function removeUnit(gatheringIdx, unitIdx) {
+async function removeUnit(gatheringIdx, unitIdx) {
 	await $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete`).click();
 	return $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
 }
@@ -210,7 +210,7 @@ const _mockGeo = (lat, lon) => `window.navigator.geolocation.getCurrentPosition 
 	}
 `;
 
-export const mockGeo = (lat, lon) => browser.executeScript(_mockGeo(lat, lon));
+const mockGeo = (lat, lon) => browser.executeScript(_mockGeo(lat, lon));
 
 const _mockGeoError = code => `window.navigator.geolocation.getCurrentPosition =
 	function (success, error) {
@@ -223,9 +223,9 @@ const _mockGeoError = code => `window.navigator.geolocation.getCurrentPosition =
 	}
 `;
 
-export const mockGeoError = (code) => browser.executeScript(_mockGeoError(code));
+const mockGeoError = (code) => browser.executeScript(_mockGeoError(code));
 
-export const getWidget = async (str) => {
+const getWidget = async (str) => {
 	const $afterLabel = $(`${lajiFormLocator(str)} > div > div`);
 	if (await $afterLabel.isPresent()) {
 		return $afterLabel;
@@ -238,7 +238,7 @@ export const getWidget = async (str) => {
 	return $insideLabel;
 };
 
-export const updateValue = async ($input, value, blur = true) => {
+const updateValue = async ($input, value, blur = true) => {
 	const current = await $input.getAttribute("value");
 	await $input.sendKeys("\b".repeat((current || "").length) + value);
 	if (blur) {
@@ -246,7 +246,7 @@ export const updateValue = async ($input, value, blur = true) => {
 	}
 };
 
-export const mockImageMetadata = {
+const mockImageMetadata = {
 	"id": "mock",
 	"capturerVerbatim": [
 		"mock"
@@ -262,7 +262,7 @@ export const mockImageMetadata = {
 	"@context": "http://schema.laji.fi/context/image-en.jsonld"
 };
 
-export const filterUUIDs = (any) => {
+const filterUUIDs = (any) => {
 	if (isObject(any)) {
 		return Object.keys(any).filter(key => key !== "_lajiFormId").reduce((_any, key) => ({
 			..._any,
@@ -272,4 +272,25 @@ export const filterUUIDs = (any) => {
 		return any.map(filterUUIDs);
 	}
 	return any;
+};
+
+module.exports = {
+	getLocatorForContextId,
+	emptyForm,
+	navigateToForm,
+	lajiFormLocator,
+	lajiFormLocate,
+	getFocusedId,
+	Form,
+	createForm,
+	waitUntilBlockingLoaderHides,
+	isDisplayed,
+	putForeignMarkerToMap,
+	removeUnit,
+	mockGeo,
+	mockGeoError,
+	getWidget,
+	updateValue,
+	mockImageMetadata,
+	filterUUIDs
 };

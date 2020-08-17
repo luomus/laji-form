@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
@@ -72,7 +72,7 @@ const NoLineBreakTitle = (props) => {
 };
 
 @VirtualSchemaField
-export default class SectionArrayField extends Component {
+export default class SectionArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -129,10 +129,10 @@ export default class SectionArrayField extends Component {
 	}
 }
 
-const Section = ({children, ...rest, style}) => <div style={{flexGrow: 1, width: 0, flexBasis: 0, minWidth: 1, ...style}} {...rest}>{children}</div>;
+const Section = ({children, style, ...rest}) => <div style={{flexGrow: 1, width: 0, flexBasis: 0, minWidth: 1, ...style}} {...rest}>{children}</div>;
 
 @handlesArrayKeys
-class SectionArrayFieldTemplate extends Component {
+class SectionArrayFieldTemplate extends React.Component {
 	constructor(props) {
 		super(props);
 		this.addButtonRef = React.createRef();
@@ -302,7 +302,7 @@ class SectionArrayFieldTemplate extends Component {
 
 	showAddSection = () => {
 		this.setState({showAddSection: true}, () => {
-			setImmediate(() => {
+			setTimeout(() => {
 				findDOMNode(this.sectionInputRef.current).focus();
 			});
 		});

@@ -1,5 +1,5 @@
 import { anyToBoolean } from "../widgets/AnyToBooleanWidget";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 
 const _anyToBoolean = anyToBoolean(!"field");
 _anyToBoolean.propTypes =  {

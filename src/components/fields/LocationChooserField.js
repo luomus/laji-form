@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { Modal, Tooltip, Popover, Overlay } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
@@ -11,7 +11,7 @@ import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWith
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
-export default class LocationChooserField extends Component {
+export default class LocationChooserField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -54,7 +54,7 @@ export default class LocationChooserField extends Component {
 	}
 }
 
-class LocationButton extends Component {
+class LocationButton extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -595,7 +595,7 @@ class LocationButton extends Component {
 	}
 }
 
-class LocationButtonComp extends Component {
+class LocationButtonComp extends React.Component {
 	render() {
 		return (
 			<GlyphButton {...this.props} />

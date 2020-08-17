@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
-import moment from "moment";
-import momentLocalizer from "react-widgets/lib/localizers/moment";
+import * as PropTypes from "prop-types";
+import * as DateTimePicker from "react-widgets/lib/DateTimePicker";
+import * as moment from "moment";
+import * as momentLocalizer from "react-widgets/lib/localizers/moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions, isDescendant } from "../../utils";
@@ -12,7 +12,7 @@ import BaseComponent from "../BaseComponent";
 const DATE_TIME_SEPARATOR = ", ";
 
 @BaseComponent
-export default class DateTimeWidget extends Component {
+export default class DateTimeWidget extends React.Component {
 	static propTypes = {
 		uiSchema:  PropTypes.shape({
 			"ui:options": PropTypes.shape({

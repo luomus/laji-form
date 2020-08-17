@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Help } from "../components";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { isEmptyString, parseJSONPointer } from "../../utils";

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import BaseComponent from "../BaseComponent";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getUiOptions, formDataEquals } from "../../utils";
 import anyToBoolean from "./AnyToBooleanField";
 
 @BaseComponent
-export default class MultiAnyToBooleanField extends Component {
+export default class MultiAnyToBooleanField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

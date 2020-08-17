@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
@@ -7,7 +7,7 @@ import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 
 @BaseComponent
-export default class SplitField extends Component {
+export default class SplitField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

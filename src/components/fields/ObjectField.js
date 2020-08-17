@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import ObjectField from "@rjsf/core/dist/cjs/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";

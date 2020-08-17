@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
-import Spinner from "react-spinner";
+import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
+import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
+import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
 import Context from "../Context";
 
-export class Button extends Component {
+export class Button extends React.Component {
 	render() {
 		const {
 			tooltip,
@@ -28,7 +28,7 @@ export class Button extends Component {
 	}
 }
 
-export class DeleteButton extends Component {
+export class DeleteButton extends React.Component {
 	static propTypes = {
 		confirm: PropTypes.bool,
 		onClick: PropTypes.func.isRequired,
@@ -172,7 +172,7 @@ export function AddButton({onClick}) {
 	return (<Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>);
 }
 
-export class Alert extends Component {
+export class Alert extends React.Component {
 	render() {
 		return (
 			<Modal show={true} enforceFocus={true} onKeyDown={this.onKeyDown}>
@@ -204,7 +204,7 @@ export const GlyphButton = (props) => {
 };
 
 const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
-export class Affix extends Component {
+export class Affix extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getState(props);
@@ -339,7 +339,7 @@ export class Affix extends Component {
 	}
 }
 
-export class Stretch extends Component {
+export class Stretch extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -486,7 +486,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 	) : labelElem;
 }
 
-export class ErrorPanel extends Component {
+export class ErrorPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {expanded: true};
@@ -542,7 +542,7 @@ function NullTooltip() {
 }
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
-export class TooltipComponent extends Component {
+export class TooltipComponent extends React.Component {
 	setOverlayRef = (elem) => {
 		this.overlayElem = elem;
 	}
@@ -568,7 +568,7 @@ export class TooltipComponent extends Component {
 	}
 }
 
-export class FetcherInput extends Component {
+export class FetcherInput extends React.Component {
 	setRef = (elem) => {
 		if (this.props.getRef) this.props.getRef(elem);
 	}
@@ -588,7 +588,7 @@ export class FetcherInput extends Component {
 	}
 }
 
-class FetcherInputDefaultInput extends Component {
+class FetcherInputDefaultInput extends React.Component {
 	render() {
 		const {readonly, ...inputProps} = this.props;
 		return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={this.ref} />;
@@ -596,7 +596,7 @@ class FetcherInputDefaultInput extends Component {
 }
 
 // Bootstrap OverlayTrigger that is hoverable if hoverable === true
-export class OverlayTrigger extends Component {
+export class OverlayTrigger extends React.Component {
 	
 	setOverlayTriggerRef = elem => {
 		this.overlayTriggerRef = elem;
@@ -662,7 +662,7 @@ export class OverlayTrigger extends Component {
 	}
 }
 
-export class Fullscreen extends Component {
+export class Fullscreen extends React.Component {
 	componentDidMount() {
 		this.bodyOverFlow = document.body.style.overflow;
 
@@ -688,7 +688,7 @@ export class Fullscreen extends Component {
 	}
 }
 
-export class FailedBackgroundJobsPanel extends Component {
+export class FailedBackgroundJobsPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {popped: true};

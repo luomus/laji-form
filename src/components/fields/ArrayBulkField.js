@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class ArrayBulkField extends Component {
+export default class ArrayBulkField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

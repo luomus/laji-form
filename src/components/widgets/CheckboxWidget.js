@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
 import Switch from "react-bootstrap-switch";
 import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import Context from "../../Context";
 
-export default class CheckboxWidget extends Component {
+export default class CheckboxWidget extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
