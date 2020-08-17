@@ -7,3 +7,4 @@ protractor*
 webpack*
 .*
 bin/
+yalc.lock
