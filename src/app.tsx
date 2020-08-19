@@ -1,47 +1,48 @@
-import LajiForm from "./components/LajiForm";
+import LajiForm, { LajiFormProps } from "./components/LajiForm";
 import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
 class LajiFormApp extends React.Component {
 	render() {
-		return <LajiForm {...this.props} {...(this.state || {})} ref="lajiform"/>;
+		return <LajiForm {...{...this.props, ...(this.state || {})} as LajiFormProps} ref="lajiform" />;
 	}
 }
 
 export default class LajiFormWrapper {
 	props: any;
-	ref = React.createRef<LajiForm>();
-	app = () => this.ref.current;
+	app: LajiForm;
 	rootElem: HTMLDivElement;
+	lajiForm: any;
 
 	constructor(props: any) {
 		this.props = props;
 		this.rootElem = props.rootElem;
-		render(<LajiFormApp {...props} ref={this.ref} />, this.rootElem);
+		this.app = (render(<LajiFormApp {...props} />, this.rootElem) as unknown) as LajiForm;
+		this.lajiForm = this.app.refs.lajiform;
 	}
 
 	submit = () => {
-		(this.app as any).refs?.lajiform.submit();
+		this.lajiForm.submit();
 	}
 
 	setState = (state: any) => {
-		(this.app as any)?.setState(state);
+		this.app?.setState(state);
 	}
 
 	pushBlockingLoader = () => {
-		(this.app as any).refs.lajiform.pushBlockingLoader();
+		this.lajiForm.pushBlockingLoader();
 	}
 
 	popBlockingLoader = () => {
-		(this.app as any).refs.lajiform.popBlockingLoader();
+		this.lajiForm.popBlockingLoader();
 	}
 
 	getSettings = () => {
-		return (this.app as any).refs.lajiform.getSettings();
+		return this.lajiForm.getSettings();
 	}
 
 	destroy = () => {
-		(this.app as any).refs.lajiform.destroy();
+		this.lajiForm.destroy();
 		unmountComponentAtNode(this.rootElem);
 	}
 
