@@ -20,7 +20,7 @@ export default class DefaultValueArrayField extends Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-        default: PropTypes.object.isRequired
+				default: PropTypes.object.isRequired
 			}).isRequired
 		}).isRequired,
 		schema: PropTypes.shape({
@@ -32,16 +32,15 @@ export default class DefaultValueArrayField extends Component {
 	static getName() {return "DefaultValueArrayField";}
 
 	onChange(formData) {
-    let {schema} = this.props;
-    const options = this.getUiOptions();
-    const _default = options.default;
+		const options = this.getUiOptions();
+		const _default = options.default;
 
-    Object.keys(_default).forEach(field => {
-      if (formData) formData.forEach((item, i) => {
-        formData = update(formData,
+		Object.keys(_default).forEach(field => {
+			if (formData) formData.forEach((item, i) => {
+				formData = update(formData,
           {$splice: [[i, 1, update(item, {$merge: {[field]: _default[field]}})]]});
-        });
-      });
-    this.props.onChange(formData);
+			});
+		});
+		this.props.onChange(formData);
 	}
 }

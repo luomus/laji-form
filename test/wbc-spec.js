@@ -9,6 +9,7 @@ describe("WBC (MHL.3)", () => {
 
 	it("taxon census has aves", async () => {
 		const formData = await form.getPropsData();
+
 		expect(formData.gatherings[0].taxonCensus[0].censusTaxonID).toBe("MX.37580");
 	});
 
@@ -17,6 +18,7 @@ describe("WBC (MHL.3)", () => {
 		await widget.click();
 
 		const formData = await form.getChangedData();
+
 		expect(formData.gatherings[0].taxonCensus.length).toBe(2);
 		expect(formData.gatherings[0].taxonCensus[0].censusTaxonID).toBe("MX.37580");
 		expect(formData.gatherings[0].taxonCensus[1].censusTaxonID).toBe("MX.37612");
@@ -27,6 +29,7 @@ describe("WBC (MHL.3)", () => {
 		await widget.click();
 
 		const formData = await form.getChangedData();
+
 		expect(formData.gatherings[0].taxonCensus.length).toBe(1);
 		expect(formData.gatherings[0].taxonCensus[0].censusTaxonID).toBe("MX.37580");
 	});
