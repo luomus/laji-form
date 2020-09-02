@@ -80,6 +80,7 @@ const fields = importLocalComponents("fields", [
 	"MultiAnyToBooleanField",
 	"UnitCountShorthandField",
 	"ToggleAdditionalArrayFieldsField",
+	"DefaultValueArrayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -621,11 +622,11 @@ export default class LajiForm extends Component {
 					</div>
 			</Form>
 			{shortcuts &&
-				<Panel 
-					ref={this.getPanelRef} 
-					className="shortcut-help laji-form-popped z-depth-3 hidden" 
+				<Panel
+					ref={this.getPanelRef}
+					className="shortcut-help laji-form-popped z-depth-3 hidden"
 					style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-					bsStyle="info" 
+					bsStyle="info"
 				>
 					<PanelHeading>
 						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
@@ -647,7 +648,7 @@ export default class LajiForm extends Component {
 								})
 							}</tbody>
 						</Table>
-				</Panel> 
+				</Panel>
 			}
 			{this.renderSubmitHooks()}
 		</div>
@@ -857,7 +858,7 @@ export default class LajiForm extends Component {
 					specials[key] = true;
 				}
 
-				keyHandler.conditions.push(e =>  
+				keyHandler.conditions.push(e =>
 					e.key === key || (specials.hasOwnProperty(key) && ((specials[key] && e[`${key}Key`]) || (!specials[key] && !e[`${key}Key`])))
 				);
 
@@ -884,7 +885,7 @@ export default class LajiForm extends Component {
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;
-			return; 
+			return;
 		}).sort((a, b) => {
 			return b.length - a.length;
 		});
@@ -944,7 +945,7 @@ export default class LajiForm extends Component {
 				return {...settings, [key]: settingSavers[key]()};
 			} catch (e) {
 				// Swallow failing settings parsing.
-			} 
+			}
 			return settings;
 		}, this.props.settings || {});
 	}
