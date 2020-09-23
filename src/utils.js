@@ -137,7 +137,7 @@ export function isEmptyString(val) {
 
 export function parseJSONPointer(object, jsonPointer, safeMode, strictEmptyPath = false) {
 	let splitPath = String(jsonPointer).split("/");
-	if (jsonPointer[0] === "/") {
+	if (String(jsonPointer)[0] === "/") {
 		splitPath = splitPath.splice(1);
 	}
 	if (!strictEmptyPath) {
