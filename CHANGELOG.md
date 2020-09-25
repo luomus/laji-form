@@ -1,3 +1,6 @@
+## 5.3.0
+* add `getTaxonAutocompleteHTMLString` method for ApiClient
+
 ## 5.2.0
 * Add named place removal
 
