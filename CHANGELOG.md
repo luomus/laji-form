@@ -1,3 +1,7 @@
+## 5.4.0
+* remove `getTaxonAutocompleteHTMLString` method from ApiClient
+
+
 ## 5.3.0
 * add `getTaxonAutocompleteHTMLString` method for ApiClient
 
