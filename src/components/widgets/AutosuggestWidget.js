@@ -160,8 +160,8 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		renderSuggestion(suggestion) {
-			const apiClientRenderedSuggestion = this.props.formContext.apiClient.getTaxonAutocompleteHTMLString(suggestion);
-			const renderedSuggestion = apiClientRenderedSuggestion && <span dangerouslySetInnerHTML={{__html: apiClientRenderedSuggestion}} />
+			const renderedSuggestion = "autocompleteDisplayName" in suggestion
+				&& <span dangerouslySetInnerHTML={{__html: suggestion.autocompleteDisplayName}} />
 				|| <React.Fragment>{suggestion.value}{renderFlag(suggestion)}</React.Fragment>;
 			return <span className="simple-option">{renderedSuggestion}</span>;
 		}
