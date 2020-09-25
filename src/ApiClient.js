@@ -80,4 +80,8 @@ export default class ApiClient {
 		this.lang = lang;
 		this.flushCache();
 	}
+
+	getTaxonAutocompleteHTMLString(autocompletion) {
+		return this.apiClient.getTaxonAutocompleteHTMLString ? this.apiClient.getTaxonAutocompleteHTMLString(autocompletion) : undefined;
+	}
 }

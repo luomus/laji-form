@@ -90,7 +90,11 @@ function TaxonAutosuggest(ComposedComponent) {
 			super(props);
 			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 			this.isValueSuggested = this.isValueSuggested.bind(this);
-			if (super.renderSuggestion) this.renderSuggestion = super.renderSuggestion.bind(this);
+			if (super.renderSuggestion) {
+				this.renderSuggestion = super.renderSuggestion.bind(this);
+			} else {
+				this.renderSuggestion = this.renderSuggestion.bind(this);
+			}
 		}
 
 		componentDidMount() {
@@ -156,7 +160,10 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		renderSuggestion(suggestion) {
-			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
+			const apiClientRenderedSuggestion = this.props.formContext.apiClient.getTaxonAutocompleteHTMLString(suggestion);
+			const renderedSuggestion = apiClientRenderedSuggestion && <span dangerouslySetInnerHTML={{__html: apiClientRenderedSuggestion}} />
+				|| <React.Fragment>{suggestion.value}{renderFlag(suggestion)}</React.Fragment>;
+			return <span className="simple-option">{renderedSuggestion}</span>;
 		}
 
 		parseChooseImages = (chooseImages) => {
