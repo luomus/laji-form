@@ -166,6 +166,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderChooseImages = () => {
 			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
 			const {orWriteSpeciesNameLabel} = getUiOptions(this.props);
+			const {or} = this.props.formContext.translations;
 			return (
 				<Row>
 					<Col xs={12}>
@@ -175,7 +176,7 @@ function TaxonAutosuggest(ComposedComponent) {
 						</div>
 					</Col>
 					<Col xs={12}>
-						<label>{orWriteSpeciesNameLabel || this.props.formContext.translations.orWriteSpeciesName}</label>
+						<label>{or} {orWriteSpeciesNameLabel || this.props.formContext.translations.orWriteSpeciesName}</label>
 					</Col>
 				</Row>
 			);
@@ -218,7 +219,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				}
 			};
 
-			if (propsOptions.chooseImages) {
+			if (propsOptions.chooseImages && !(props.value && props.formContext.uiSchemaContext.isEdit)) {
 				_options.renderExtra = this.renderChooseImages;
 			}
 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
@@ -141,14 +141,25 @@ export default class AutosuggestField extends Component {
 		const innerUiSchema = getInnerUiSchema(uiSchema);
 		const _uiSchemaJSONPointer = uiSchemaJSONPointer(schema, suggestionInputField);
 		const suggestionInputFieldExistingUiSchema = parseJSONPointer(innerUiSchema, _uiSchemaJSONPointer);
-		const _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
+		let widgetProps = suggestionInputFieldExistingUiSchema || {};
+
+		if (options.chooseImages && props.formContext.uiSchemaContext.isEdit && options.value) {
+			widgetProps = {
+				...widgetProps,
+				"ui:title": capitalizeFirstLetter(options.orWriteSpeciesNameLabel || props.formContext.translations.orWriteSpeciesName)
+			};
+		}
+
+		let _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
 			"ui:widget": "AutosuggestWidget",
-			...(suggestionInputFieldExistingUiSchema || {}),
+			...widgetProps,
 			"ui:options": {
 				...getUiOptions((suggestionInputFieldExistingUiSchema || {})[suggestionInputField]),
 				...options
 			},
 		}, _uiSchemaJSONPointer);
+
+
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
 	}
