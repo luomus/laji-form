@@ -536,7 +536,7 @@ export class Autosuggest extends Component {
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", ...query}).then(suggestions => {
+			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}
