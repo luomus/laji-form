@@ -6,7 +6,7 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
 import equals from "deep-equal";
 import validateFormData from "@rjsf/core/dist/cjs/validate";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
@@ -496,27 +496,7 @@ export default class LajiForm extends Component {
 	}
 
 	setTmpIdTree = (schema) => {
-		function walk(_schema) {
-			if (_schema.properties) {
-				const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
-					const walked = walk(_schema.properties[key]);
-					if (walked) {
-						paths[key] = walked;
-					}
-					return paths;
-				}, {});
-				if (Object.keys(_walked).length) return _walked;
-			} else if (_schema.type === "array" && _schema.items.type === "object") {
-				return Object.keys(_schema.items.properties).reduce((paths, key) => {
-					const walked = walk(_schema.items.properties[key]);
-					if (walked) {
-						paths[key] = walked;
-					}
-					return paths;
-				}, {_hasId: true});
-			}
-		}
-		this.tmpIdTree = walk(schema);
+		this.tmpIdTree = createTmpIdTree(schema);
 	}
 
 	addLajiFormIds = (formData) => {
@@ -524,24 +504,7 @@ export default class LajiForm extends Component {
 	}
 
 	removeLajiFormIds = (formData) => {
-		function walk(_formData, tree) {
-			if (tree && isObject(_formData)) {
-				return Object.keys(_formData).reduce((f, k) => {
-					if (k === "_lajiFormId") return f;
-					if (tree[k]) {
-						f[k] = walk(_formData[k], tree[k]);
-					} else {
-						f[k] = _formData[k];
-					}
-					return f;
-				}, {});
-			} else if (tree && Array.isArray(_formData)) {
-				return _formData.map(item => walk(item, tree));
-			}
-			return _formData;
-		}
-
-		return walk(formData, this.tmpIdTree);
+		return removeLajiFormIds(formData, this.tmpIdTree);
 	}
 
 	onChange = ({formData}) => {

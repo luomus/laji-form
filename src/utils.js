@@ -908,6 +908,30 @@ export const assignUUID = (item, immutably = false) => {
 	return item;
 };
 
+export function createTmpIdTree(schema) {
+	function walk(_schema) {
+		if (_schema.properties) {
+			const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
+				const walked = walk(_schema.properties[key]);
+				if (walked) {
+					paths[key] = walked;
+				}
+				return paths;
+			}, {});
+			if (Object.keys(_walked).length) return _walked;
+		} else if (_schema.type === "array" && _schema.items.type === "object") {
+			return Object.keys(_schema.items.properties).reduce((paths, key) => {
+				const walked = walk(_schema.items.properties[key]);
+				if (walked) {
+					paths[key] = walked;
+				}
+				return paths;
+			}, {_hasId: true});
+		}
+	}
+	return walk(schema);
+}
+
 export const getUUID = (item) => item ? (item.id || item._lajiFormId) : undefined;
 
 function walkFormDataWithIdTree(_formData, tree, itemOperator) {
@@ -950,6 +974,11 @@ export function addLajiFormIds(_formData, tree, immutably = true) {
 
 export function getAllLajiFormIdsDeeply(_formData, tree) {
 	return walkFormDataWithIdTree(_formData, tree)[1];
+}
+
+export function removeLajiFormIds(formData, tree) {
+	const itemOperator = item => immutableDelete(item, "_lajiFormId");
+	return walkFormDataWithIdTree(formData, tree, itemOperator)[0];
 }
 
 export function findPointerForLajiFormId(tmpIdTree = {}, formData, lajiFormId) {
