@@ -2,7 +2,6 @@
     "attributes": {
         "id": "JX.519"
     },
-    "category": "MHL.categoryGeneric",
     "description": "T\u00e4ll\u00e4 lomakkeella voit kirjata yhden tai useamman p\u00e4iv\u00e4n kest\u00e4neen maastoretken kaikki havaintotiedot ja/tai kokoelman\u00e4ytteeksi otettujen yksil\u00f6iden tiedot. Havaintoja voi kirjata useammalta paikalta.",
     "excludeFromCopy": [
         "$.gatheringEvent.dateBegin",
@@ -273,6 +272,14 @@
     },
     "language": "fi",
     "name": "Retkilomake",
+    "options": {
+        "allowExcel": true,
+        "instructions": {
+            "en": "https://laji.fi/about/1107",
+            "fi": "https://laji.fi/about/1107",
+            "sv": "https://laji.fi/about/1107"
+        }
+    },
     "schema": {
         "properties": {
             "editors": {
@@ -623,6 +630,7 @@
                                 "MY.samplingMethodDiverInsectTrap",
                                 "MY.samplingMethodAquaticEmergenceTrap",
                                 "MY.samplingMethodWaterBucket",
+                                "MY.samplingMethodTrampling",
                                 "MY.samplingMethodOther"
                             ],
                             "enumNames": [
@@ -671,6 +679,7 @@
                                 "Sukeltajahy\u00f6nteispyydys",
                                 "Vesihy\u00f6nteisten kuoriutumispyydys",
                                 "Vesi\u00e4mp\u00e4ri",
+                                "Polkeminen",
                                 "Muu"
                             ],
                             "title": "Keruumenetelm\u00e4",
@@ -707,7 +716,6 @@
                                     }
                                 },
                                 "required": [
-                                    "censusTaxonID",
                                     "taxonCensusType"
                                 ],
                                 "type": "object"
@@ -1062,8 +1070,8 @@
                                             "esiaikuinen",
                                             "keskenkasvuinen",
                                             "aikuinen",
-                                            "lis\u00e4\u00e4ntymiskykyinen",
-                                            "lis\u00e4\u00e4ntymiskyvyt\u00f6n",
+                                            "fertiili",
+                                            "steriili",
                                             "nuijap\u00e4\u00e4",
                                             "kuollut",
                                             "el\u00e4v\u00e4",
@@ -1412,6 +1420,7 @@
                                             "MY.samplingMethodDiverInsectTrap",
                                             "MY.samplingMethodAquaticEmergenceTrap",
                                             "MY.samplingMethodWaterBucket",
+                                            "MY.samplingMethodTrampling",
                                             "MY.samplingMethodOther"
                                         ],
                                         "enumNames": [
@@ -1460,6 +1469,7 @@
                                             "Sukeltajahy\u00f6nteispyydys",
                                             "Vesihy\u00f6nteisten kuoriutumispyydys",
                                             "Vesi\u00e4mp\u00e4ri",
+                                            "Polkeminen",
                                             "Muu"
                                         ],
                                         "title": "Keruumenetelm\u00e4",
@@ -1557,9 +1567,9 @@
                                         ],
                                         "enumNames": [
                                             "",
-                                            "varma",
-                                            "ep\u00e4varma",
-                                            "alalaji ep\u00e4varma"
+                                            "Varma",
+                                            "Ep\u00e4varma",
+                                            "Alalaji ep\u00e4varma"
                                         ],
                                         "title": "M\u00e4\u00e4rityksen varmuus",
                                         "type": "string"
@@ -1644,8 +1654,8 @@
                     "MX.secureLevelKM10"
                 ],
                 "enumNames": [
-                    "MX.secureLevelNone",
-                    "MX.secureLevelKM10"
+                    "Ei karkeistettu",
+                    "10 km"
                 ],
                 "title": "Havainnon tarkat paikkatiedot ovat julkisia",
                 "type": "string"
@@ -2151,11 +2161,12 @@
                                     },
                                     "suggestionInputField": "identifications_0_taxon",
                                     "suggestionReceivers": {
-                                        "identifications_0_taxon": "value",
+                                        "identifications_0_taxon": "autocompleteSelectedName || value",
                                         "informalTaxonGroups": "$taxonGroup",
                                         "unitFact_autocompleteSelectedTaxonID": "key"
                                     },
                                     "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
+                                    "suggestionValueParse": "autocompleteSelectedName || value",
                                     "togglePersistenceKey": "unit",
                                     "toggleable": {
                                         "autosuggestField": "unit",

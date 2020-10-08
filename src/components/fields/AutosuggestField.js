@@ -114,6 +114,7 @@ export default class AutosuggestField extends Component {
 			isValueSuggested: this.isValueSuggested,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			onInformalTaxonGroupSelected: informalTaxonGroups ? this.onInformalTaxonGroupSelected : undefined,
+			getSuggestionValue: this.getSuggestionValue,
 			informalTaxonGroupsValue: props.formData[informalTaxonGroups],
 			taxonGroupID,
 			placeholder: toggled 
@@ -169,6 +170,33 @@ export default class AutosuggestField extends Component {
 		return toggled ? merge(options, options.toggleable) : options;
 	}
 
+	getSuggestionReceiverValue(suggestion, suggestionReceiver) {
+		// undefined suggestion clears value.
+		let fieldVal = undefined;
+		if (typeof suggestion === "object") {
+			const suggestionValPath = suggestionReceiver;
+			if (suggestionValPath[0] === "$") {
+				fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
+			} else {
+				const fieldsToTry = suggestionValPath.split("||").map(s => s.trim());
+				for (let field of fieldsToTry) {
+					fieldVal = parseJSONPointer(suggestion, field);
+					if (fieldVal !== undefined) {
+						break;
+					}
+				}
+			}
+		}
+		return fieldVal;
+	}
+
+	getSuggestionValue = (suggestion, def) => {
+		const {suggestionValueParse} = this.getActiveOptions(getUiOptions(this.props.uiSchema));
+		return suggestionValueParse
+			? this.getSuggestionReceiverValue(suggestion, suggestionValueParse)
+			: def;
+	}
+
 	onSuggestionSelected = (suggestion, mounted) => {
 		if (suggestion === null) suggestion = undefined;
 
@@ -177,18 +205,7 @@ export default class AutosuggestField extends Component {
 
 		const handleSuggestionReceivers = (formData, suggestion) => {
 			for (let fieldName in suggestionReceivers) {
-				// undefined suggestion clears value.
-				let fieldVal = undefined;
-				if (typeof suggestion === "object") {
-					const suggestionValPath = suggestionReceivers[fieldName];
-					if (suggestionValPath[0] === "$") {
-						fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
-					} else if (suggestionValPath[0] === "/") {
-						fieldVal = parseJSONPointer(suggestion, suggestionValPath);
-					} else {
-						fieldVal = suggestion[suggestionValPath];
-					}
-				}
+				const fieldVal = this.getSuggestionReceiverValue(suggestion, suggestionReceivers[fieldName]);
 				formData = updateFormDataWithJSONPointer({...this.props, formData}, fieldVal, fieldName);
 			}
 			return formData;

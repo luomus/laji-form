@@ -430,7 +430,11 @@ export class Autosuggest extends Component {
 	}
 
 	getSuggestionValue = (suggestion) => {
-		return suggestion.value;
+		const {getSuggestionValue} = this.props;
+		const def = suggestion.value;
+		return getSuggestionValue
+			? getSuggestionValue(suggestion, def)
+			: def;
 	}
 
 	renderSuggestion = (suggestion) => {
