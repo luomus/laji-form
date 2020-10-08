@@ -1,3 +1,6 @@
+## 5.5.0
+* `AutosuggestField`: added `suggestionValueParse` & `suggestionReceivers` support fallback field to use
+
 ## 5.4.0
 * remove `getTaxonAutocompleteHTMLString` method from ApiClient
 
