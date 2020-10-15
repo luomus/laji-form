@@ -10,7 +10,7 @@ import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar, Modal } from "react-bootstrap";
 import PanelHeading from "react-bootstrap/lib/PanelHeading";
 import PanelBody from "react-bootstrap/lib/PanelBody";
-import { Button, Stretch, Fullscreen } from "../components";
+import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
@@ -1527,6 +1527,7 @@ class _MapArrayField extends ComposedComponent {
 
 		const errorId = geometryField && geometryField[0] === "/" ? geometryField.replace(/\//g, "_") : `_${geometryField}`;
 		const wholeErrorId = `${this.props.idSchema.$id}_${activeIdx}${errorId}`;
+
 		const mapPropsToPass = {
 			formContext: this.props.formContext,
 			onPopupClose: this.onPopupClose,
@@ -1911,7 +1912,7 @@ export class Map extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {fullscreen: false};
+		this.state = {};
 	}
 
 	componentDidMount() {
@@ -1940,7 +1941,7 @@ export class Map extends Component {
 		this.mounted = false;
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(prevProps) {
 		const {hidden, onComponentDidMount, singleton} = this.props;
 		const {...props} = this.props;
 		if (!singleton || this.hasSingletonHandle) {
@@ -1950,33 +1951,13 @@ export class Map extends Component {
 			}
 			if (prevProps.lineTransect) delete props.lineTransect;
 
-			this.setMapOptions(prevProps, this.props);
+			this.setMapOptions(this.getEnhancedMapOptions(prevProps), this.getEnhancedMapOptions(this.props));
 		}
 
 		if (!hidden && !this.map) {
 			this.initializeMap(props);
 			if (onComponentDidMount) onComponentDidMount(this.map);
 		}
-
-		if (this.state.fullscreen && !prevState.fullscreen) {
-			this._mapContainer = this.map.rootElem;
-			this.map.setRootElem(findDOMNode(this.fullscreenRef));
-			this.map.map.getContainer().focus();
-			this.origBodyAsDialogRoot = this.map._dialogRoot === document.body;
-			this.map.setOption("bodyAsDialogRoot", false);
-			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", false);
-			this._bodyOverflowYWas = document.body.style.overflowY;
-			document.body.style.overflowY = "hidden";
-		} else if (!this.state.fullscreen && prevState.fullscreen) {
-			this.map.setRootElem(this._mapContainer);
-			this.map.setOption("bodyAsDialogRoot", this.origBodyAsDialogRoot);
-			this.props.clickBeforeZoomAndPan && this.map.setOption("clickBeforeZoomAndPan", true);
-			document.body.style.overflowY = this._bodyOverflowYWas;
-		}
-	}
-
-	toggleFullscreen = () => {
-		this.setState({fullscreen: !this.state.fullscreen});
 	}
 
 	getMapOptions = (props) => {
@@ -2000,15 +1981,12 @@ export class Map extends Component {
 		const {fullscreenable, help, formContext = {}} = props;
 
 		if (fullscreenable) {
-			mapOptions.customControls = [
-				...(mapOptions.customControls || []),
-				{
-					iconCls: `glyphicon glyphicon-resize-${this.state.fullscreen ? "small" : "full"}`,
-					fn: this.toggleFullscreen,
-					position: "bottomright",
-					text: formContext.translations[this.state.fullscreen ? "MapExitFullscreen" : "MapFullscreen"]
-				}
-			];
+			mapOptions.controls = {
+				fullscreen: true,
+				...(isObject(mapOptions.controls)
+					? mapOptions.controls
+					: {})
+			};
 		}
 		if (help) {
 			mapOptions.customControls = [
@@ -2081,23 +2059,12 @@ export class Map extends Component {
 		if (props.onComponentDidMount) props.onComponentDidMount(this.map);
 	}
 
-	setFullscreenRef = (elem) => {
-		this.fullscreenRef = elem;
-	}
-
-	onFullscreenKeyDown = (e) => {
-		if (e.key === "Escape") {
-			this.setState({fullscreen: false});
-		}
-	}
-
 	render() {
 		return (
 			<React.Fragment>
 				<div key="map"
 					className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
 					style={this.props.style} ref="map" />
-					{this.state.fullscreen && <Fullscreen ref={this.setFullscreenRef} on={this.state.fullscreen} onKeyDown={this.onFullscreenKeyDown} contextId={this.props.formContext.contextId} />}
 		 </React.Fragment>
 		);
 	}
