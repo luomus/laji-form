@@ -1,3 +1,6 @@
+## 5.6.0
+* add `NumberWidget`
+
 ## 5.5.0
 * `AutosuggestField`: added `suggestionValueParse` & `suggestionReceivers` support fallback field to use
 
