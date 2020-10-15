@@ -298,7 +298,7 @@ class LocationButton extends Component {
 						: geometryRef && geometryRef.type
 							? [geometryRef]
 							: [];
-					that.props.onChange(updateFormDataWithJSONPointer(that.props, [...geometries, event.feature.geometry], geometryField));
+					that.props.onChange(updateFormDataWithJSONPointer(that.props, {type: "GeometryCollection", geometries: [...geometries, event.feature.geometry]}, geometryField));
 				} else {
 					that.props.onChange(updateFormDataWithJSONPointer(that.props, event.feature.geometry, geometryField));
 				}
