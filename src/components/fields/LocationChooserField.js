@@ -18,14 +18,11 @@ export default class LocationChooserField extends Component {
 				uiSchema: PropTypes.object,
 				taxonField: PropTypes.string,
 				geometryField: PropTypes.string,
-				strategy: PropTypes.string,
-				mapDrawOptions: PropTypes.shape({
-					marker: PropTypes.bool,
-					polyline: PropTypes.bool,
-					rectangle: PropTypes.bool,
-					polygon: PropTypes.bool,
-					circle: PropTypes.bool,
-				})
+				strategy: PropTypes.oneOf(["unit", "lolife", "lolifeUnit"]),
+				mapOptions: PropTypes.object,
+				maxShapes: PropTypes.number,
+				preselectMarker: PropTypes.bool,
+				color: PropTypes.string
 			})
 		}).isRequired,
 		schema: PropTypes.shape({
