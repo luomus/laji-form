@@ -12,6 +12,7 @@ function PlainTextWidget(props) {
 		schema: props.schema,
 		formData: props.value
 	});
+	console.log(formattedValue)
 	return (
     <span className={`plainText${centered ? " horizontally-centered row-height": ""}`}>
 		{strong ? <strong>{formattedValue}</strong> : formattedValue}
