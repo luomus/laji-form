@@ -242,8 +242,8 @@ class LocationButton extends Component {
 				...mapOptions.controls,
 				draw: {
 					...((mapOptions.controls || {}).draw || {}),
-					clear: false,
-					delete: false
+					clear: true,
+					delete: true
 				}
 			},
 			fullscreenable: true,
