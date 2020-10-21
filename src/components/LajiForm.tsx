@@ -13,6 +13,7 @@ const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import merge from "deepmerge";
 
 import Form from "@rjsf/core";
+import { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 import FieldTemplate from "./FieldTemplate";
 import ErrorListTemplate from "./ErrorListTemplate";
@@ -173,12 +174,12 @@ interface LajiFormState {
 	runningSubmitHooks?: boolean;
 }
 
-interface FormContext {
+export interface FormContext {
 	translations: ByLang;
 	lang: Lang;
 	uiSchemaContext: any;
 	settings: any;
-	contextId: string;
+	contextId: number;
 	getFormRef: () => Form<any>
 	topOffset: number;
 	bottomOffset: number;
@@ -189,6 +190,7 @@ interface FormContext {
 	notifier: Notifier;
 	apiClient: ApiClient;
 	Label: React.Component;
+	formDataTransformers?: any[]
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -212,15 +214,25 @@ interface ShortcutKey {
 	[param: string]: any;
 }
 
+export interface FieldProps extends RJSFFieldProps {
+	formContext: FormContext;
+	registry: {
+            fields: { [name: string]: Field }; 
+            widgets: { [name: string]: Widget };
+            definitions: { [name: string]: any };
+            formContext: FormContext;
+	}
+}
+
 type ShortcutKeys = Record<string, ShortcutKey>;
 
-interface InternalKeyHandler extends ShortcutKey {
+export interface InternalKeyHandler extends ShortcutKey {
 	conditions: ((e: KeyboardEvent) => boolean)[];
 }
 type InternalKeyHandlers = InternalKeyHandler[];
 type InternalKeyHandlerTargets = {id: string, handler: InternalKeyHandler}[];
 
-type KeyFunctions = {[fnName: string]: (e: KeyboardEvent, options: any) => boolean | void}
+export type KeyFunctions = {[fnName: string]: (e: KeyboardEvent, options: any) => boolean | void}
 
 type KeyHandleListener = (e: KeyboardEvent) => boolean | undefined;
 
@@ -236,7 +248,7 @@ export type TranslateFn = (...args: any[]) => string;
 export type ByLang = {[key: string]: string | TranslateFn};
 export type Translations = Record<Lang, ByLang>;
 
-interface RootContext {
+export interface RootContext {
 	formInstance: LajiForm;
 	formData: any;
 	blockingLoaderCounter: number;
@@ -267,6 +279,7 @@ interface RootContext {
 	shortcuts: ShortcutKeys;
 	errorList: ErrorListTemplate
 	keyTimeouts: number[];
+	[prop: string]: any;
 }
 
 interface GlobalContext {
@@ -918,7 +931,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}).catch(() => {
 			this.setState({runningSubmitHooks: false});
 			this.popBlockingLoader();
-			highlightElem(findDOMNode(this.bgJobRef?.current));
+			highlightElem(findDOMNode(this.bgJobRef?.current) as Element);
 		});
 		return undefined;
 	}
@@ -926,7 +939,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	popErrorListIfNeeded = () => {
 		let errorListElem;
 		try {
-			errorListElem = findDOMNode(this._context.errorList);
+			errorListElem = findDOMNode(this._context.errorList) as Element;
 		} catch (e) {
 			// Empty
 		}
@@ -962,7 +975,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	showHelp = () => {
-		const node = findDOMNode(this.shortcutHelpRef) as HTMLElement;
+		const node = findDOMNode(this.shortcutHelpRef) as Element;
 		if (!this.helpVisible) {
 			if (node) node.className = node.className.replace(" hidden", "");
 			this.helpVisible = true;
@@ -970,7 +983,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	dismissHelp = (e: Event | React.SyntheticEvent) => {
-		const node = findDOMNode(this.shortcutHelpRef) as HTMLElement;
+		const node = findDOMNode(this.shortcutHelpRef) as Element;
 		e.preventDefault();
 		e.stopPropagation();
 		if (this.helpVisible && node) {
@@ -985,7 +998,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	keyFunctions = {
 		navigate: (e: KeyboardEvent, {reverse}: any) => {
-			return focusNextInput(this.formRef, e.target, reverse);
+			return focusNextInput(this.formRef, e.target as HTMLElement, reverse);
 		},
 		help: (e: KeyboardEvent, {delay}: any) => {
 			if (this.helpStarted) return false;
@@ -1042,7 +1055,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 		this._context.keyTimeouts = [];
 
-		const currentId = findNearestParentSchemaElemId(this._id, e.target) || "";
+		const currentId = findNearestParentSchemaElemId(this._id, e.target as HTMLElement) || "";
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;
