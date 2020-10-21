@@ -28,8 +28,8 @@ export default class FakePropertyField extends Component {
 				?  updateSafelyWithJSONPointer(formData, _formData, prop)
 				: formData;	
 
-			if(!_formData) {
-			properties = immutableDelete(properties, prop);
+			if(!formData[prop]) {
+			delete properties[prop];
 			delete uiSchema['ui:options']['fields'][prop];
 			}	
 
