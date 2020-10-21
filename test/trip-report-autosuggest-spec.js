@@ -1,12 +1,6 @@
-const { navigateToForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } = require("./test-utils.js");
+const { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } = require("./test-utils.js");
 
 describe("Trip report (JX.519) autosuggestions", () => {
-
-	beforeAll(async () => {
-		await navigateToForm("JX.519");
-		await putForeignMarkerToMap();
-		await waitUntilBlockingLoaderHides(6000);
-	});
 
 	const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon")
 	const $poweruserButton = $taxon.$(".power-user-addon");
@@ -21,6 +15,14 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	const moveMouseAway = () => browser.actions({bridge: true})
 		.move({origin: $taxon.getWebElement(), x: -100, y: -100})
 		.perform();
+
+	let form;
+
+	beforeAll(async () => {
+		form = await createForm({id: "JX.519"});
+		await putForeignMarkerToMap();
+		await waitUntilBlockingLoaderHides(6000);
+	});
 
 	beforeEach(async () => {
 		await moveMouseAway();
@@ -53,7 +55,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	});
 
 	it("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
-		await moveMouseAway();
 		await $taxonInput.sendKeys("kettu");
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
@@ -207,6 +208,43 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $poweruserButton.click();
 
 		expect(await $poweruserButton.getAttribute("class")).not.toContain("active");
+		await removeUnit(0, 0);
+		await $addUnit.click();
 	});
 
+	it("works when autocomplete response has autocompleteSelectedName", async() => {
+		if (process.env.HEADLESS !== "false") {
+			pending("Fails when headless (idk go figure, something to do with mocking?)");
+		}
+		const mock = await form.setMockResponse("/autocomplete/taxon");
+		await $taxonInput.sendKeys("kuusi");
+		const autocompleteSelectedName = "metsäkuusi";
+		await mock.resolve([{
+			"key": "MX.37812",
+			"value": "kuusi",
+			autocompleteSelectedName,
+			"payload": {
+				"matchingName": "kuusi",
+				"informalTaxonGroups": [
+					{
+						"id": "MVL.343",
+						"name": "Putkilokasvit"
+					}
+				],
+				"scientificName": "Picea abies",
+				"scientificNameAuthorship": "(L.) H. Karst.",
+				"taxonRankId": "MX.species",
+				"matchType": "exactMatches",
+				"cursiveName": true,
+				"finnish": true,
+				"species": true,
+				"nameType": "MX.obsoleteVernacularName",
+				"vernacularName": "metsäkuusi"
+			}
+		}]);
+		await $taxonInput.sendKeys(protractor.Key.ENTER);
+		await mock.remove();
+
+		expect(await $taxonInput.getAttribute("value")).toBe(autocompleteSelectedName);
+	});
 });

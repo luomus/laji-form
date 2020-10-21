@@ -148,7 +148,7 @@ export function isEmptyString(val: any) {
 
 export function parseJSONPointer(object: any, jsonPointer: string, safeMode?: boolean | "createParents", strictEmptyPath = false) {
 	let splitPath = String(jsonPointer).split("/");
-	if (jsonPointer[0] === "/") {
+	if (String(jsonPointer)[0] === "/") {
 		splitPath = splitPath.splice(1);
 	}
 	if (!strictEmptyPath) {
@@ -939,6 +939,31 @@ export const assignUUID = (item: any, immutably = false) => {
 	return item;
 };
 
+export function createTmpIdTree(schema: JSONSchema7) {
+	function walk(_schema: any) {
+		if (_schema.properties) {
+			const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
+				const walked = walk(_schema.properties[key]);
+				if (walked) {
+					(paths as any)[key] = walked;
+				}
+				return paths;
+			}, {});
+			if (Object.keys(_walked).length) return _walked;
+		} else if (_schema.type === "array" && _schema.items.type === "object") {
+			return Object.keys(_schema.items.properties).reduce((paths, key) => {
+				const walked = walk(_schema.items.properties[key]);
+				if (walked) {
+					(paths as any)[key] = walked;
+				}
+				return paths;
+			}, {_hasId: true});
+		}
+		return undefined;
+	}
+	return walk(schema);
+}
+
 export const getUUID = (item: any) => item ? (item.id || item._lajiFormId) : undefined;
 
 function walkFormDataWithIdTree(_formData: any, tree: any, itemOperator?: (item: any) => void): [any, {[id: string]: true}] {
@@ -981,6 +1006,11 @@ export function addLajiFormIds(_formData: any, tree: any, immutably = true) {
 
 export function getAllLajiFormIdsDeeply(_formData: any, tree: any) {
 	return walkFormDataWithIdTree(_formData, tree)[1];
+}
+
+export function removeLajiFormIds(formData: any, tree: any) {
+	const itemOperator = (item: any) => immutableDelete(item, "_lajiFormId");
+	return walkFormDataWithIdTree(formData, tree, itemOperator)[0];
 }
 
 export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, lajiFormId: any): string {

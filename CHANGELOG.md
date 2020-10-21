@@ -1,3 +1,16 @@
+## 5.6.0
+* add `NumberWidget`
+
+## 5.5.0
+* `AutosuggestField`: added `suggestionValueParse` & `suggestionReceivers` support fallback field to use
+
+## 5.4.0
+* remove `getTaxonAutocompleteHTMLString` method from ApiClient
+
+
+## 5.3.0
+* add `getTaxonAutocompleteHTMLString` method for ApiClient
+
 ## 5.2.0
 * Add named place removal
 

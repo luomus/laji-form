@@ -185,7 +185,8 @@ export default class NamedPlaceChooserField extends React.Component {
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
 							<Modal.Body>
-								{failed === PLACES_FETCH_FAIL && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
+								{failed === PLACE_USE_FAIL && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
+								{failed === PLACES_FETCH_FAIL && <Alert bsStyle="danger">{translations.NamedPlacesFetchFail}</Alert>}
 								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} onDeleted={this.onPlaceDeleted} />
 							</Modal.Body>
 						</Modal>

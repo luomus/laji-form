@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
@@ -114,6 +114,7 @@ export default class AutosuggestField extends React.Component {
 			isValueSuggested: this.isValueSuggested,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			onInformalTaxonGroupSelected: informalTaxonGroups ? this.onInformalTaxonGroupSelected : undefined,
+			getSuggestionValue: this.getSuggestionValue,
 			informalTaxonGroupsValue: props.formData[informalTaxonGroups],
 			taxonGroupID,
 			placeholder: toggled 
@@ -141,14 +142,25 @@ export default class AutosuggestField extends React.Component {
 		const innerUiSchema = getInnerUiSchema(uiSchema);
 		const _uiSchemaJSONPointer = uiSchemaJSONPointer(schema, suggestionInputField);
 		const suggestionInputFieldExistingUiSchema = parseJSONPointer(innerUiSchema, _uiSchemaJSONPointer);
-		const _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
+		let widgetProps = suggestionInputFieldExistingUiSchema || {};
+
+		if (options.chooseImages && props.formContext.uiSchemaContext.isEdit && options.value) {
+			widgetProps = {
+				...widgetProps,
+				"ui:title": capitalizeFirstLetter(options.orWriteSpeciesNameLabel || props.formContext.translations.orWriteSpeciesName)
+			};
+		}
+
+		let _uiSchema = updateSafelyWithJSONPointer(innerUiSchema, {
 			"ui:widget": "AutosuggestWidget",
-			...(suggestionInputFieldExistingUiSchema || {}),
+			...widgetProps,
 			"ui:options": {
 				...getUiOptions((suggestionInputFieldExistingUiSchema || {})[suggestionInputField]),
 				...options
 			},
 		}, _uiSchemaJSONPointer);
+
+
 
 		return {schema, uiSchema: _uiSchema, toggled, taxonGroupID};
 	}
@@ -156,6 +168,33 @@ export default class AutosuggestField extends React.Component {
 	getActiveOptions = (options, toggled) => {
 		toggled = (toggled !== undefined) ? toggled : (this.state || {}).toggled;
 		return toggled ? merge(options, options.toggleable) : options;
+	}
+
+	getSuggestionReceiverValue(suggestion, suggestionReceiver) {
+		// undefined suggestion clears value.
+		let fieldVal = undefined;
+		if (typeof suggestion === "object") {
+			const suggestionValPath = suggestionReceiver;
+			if (suggestionValPath[0] === "$") {
+				fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
+			} else {
+				const fieldsToTry = suggestionValPath.split("||").map(s => s.trim());
+				for (let field of fieldsToTry) {
+					fieldVal = parseJSONPointer(suggestion, field);
+					if (fieldVal !== undefined) {
+						break;
+					}
+				}
+			}
+		}
+		return fieldVal;
+	}
+
+	getSuggestionValue = (suggestion, def) => {
+		const {suggestionValueParse} = this.getActiveOptions(getUiOptions(this.props.uiSchema));
+		return suggestionValueParse
+			? this.getSuggestionReceiverValue(suggestion, suggestionValueParse)
+			: def;
 	}
 
 	onSuggestionSelected = (suggestion, mounted) => {
@@ -166,18 +205,7 @@ export default class AutosuggestField extends React.Component {
 
 		const handleSuggestionReceivers = (formData, suggestion) => {
 			for (let fieldName in suggestionReceivers) {
-				// undefined suggestion clears value.
-				let fieldVal = undefined;
-				if (typeof suggestion === "object") {
-					const suggestionValPath = suggestionReceivers[fieldName];
-					if (suggestionValPath[0] === "$") {
-						fieldVal = suggestionParsers[suggestionValPath.substring(1)](suggestion);
-					} else if (suggestionValPath[0] === "/") {
-						fieldVal = parseJSONPointer(suggestion, suggestionValPath);
-					} else {
-						fieldVal = suggestion[suggestionValPath];
-					}
-				}
+				const fieldVal = this.getSuggestionReceiverValue(suggestion, suggestionReceivers[fieldName]);
 				formData = updateFormDataWithJSONPointer({...this.props, formData}, fieldVal, fieldName);
 			}
 			return formData;

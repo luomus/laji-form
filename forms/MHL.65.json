@@ -1,0 +1,2105 @@
+{
+  "id": "MHL.65",
+  "name": "Vesilintulaskenta (parilaskenta)",
+  "category": "MHL.categoryBirdMonitoringSchemes",
+  "supportedLanguage": [
+    "fi"
+  ],
+  "language": "fi",
+  "title": "Vesilintulaskenta (parilaskenta)",
+  "collectionID": "HR.62",
+  "description": "",
+  "logo": "https://cdn.laji.fi/images/logos/vesilintulaskenta_1.jpg",
+  "actions": {
+    "save": "Tallenna havainnot",
+    "temp": "Tallenna julkaisematta",
+    "cancel": "Poistu tallentamatta"
+  },
+  "features": [
+    "MHL.featureNamedPlace",
+    "MHL.featureCopyLatestDocumentToNamedPlace",
+    "MHL.featureAdminister",
+    "MHL.featureAdminLockable",
+    "MHL.featureEditingOldDocumentWarning"
+  ],
+  "options": {
+    "namedPlaceList": [
+      "$.name",
+      "$.municipality",
+      "$.locality",
+      "$.prepopulatedDocument.gatherings.length",
+      "$.alternativeIDs[0]",
+      "$.prepopulatedDocument.gatherings[0].dateBegin"
+    ],
+    "actions": {
+      "save": "Tallenna havainnot",
+      "temp": "Tallenna julkaisematta",
+      "cancel": "Poistu tallentamatta"
+    },
+    "namedPlaceOptions": {
+      "formID": "MHL.73",
+      "hideMapTab": true,
+      "createDescription": "<h3>Luo uusi kohde</h3>Hae avautuvasta kartasta kohteesi sijainti ja lisää kartan oikeassa yläkulmassa olevilla <strong>Piirrä viiva</strong> tai <strong>Lisää nasta</strong> –työkaluilla laskentakohteen kierto tai havainnointipiste. Lisää kartan alapuolelle kohteen nimi. Viimeistele uuden paikan perustaminen painamalla kohtaa <strong>Luo paikka</strong> vasemmasta alanurkasta. Luotu paikka löytyy tämän jälkeen laskentakohteiden luettelosta. Mikäli vesistöllä on jo aikaisemmin laskentapaikka, vältä uuden laskentapaikan luontia kohteelle. Isoille vesistöille voi kuitenkin perustaa useita laskentapaikkoja, kunhan laskentasektorit ovat selkeästi erillään.",
+      "description": "Aloita valitsemalla kohde.",
+      "useLabel": "Ilmoita uusi laskenta tältä kohteelta",
+      "createNewLabels": {
+        "desc": "Valitse laskentakohde alla olevasta luettelosta tai"
+      },
+      "infoFields": [
+        "name",
+        "notes",
+        "locality"
+      ],
+      "headerFields": [
+        "alternativeIDs",
+        "municipality",
+        "locality"
+      ],
+      "prepopulatedDocumentFields": {
+        "/gatherings/0/geometry": "/geometry"
+      },
+      "listColumnNameMapping": {
+        "$.alternativeIDs[0]": "Kohteen numero"
+      },
+      "listColumns": [
+        "$.name",
+        "$.municipality",
+        "$.locality",
+        "$.prepopulatedDocument.gatherings.length",
+        "$.alternativeIDs[0]",
+        "$.prepopulatedDocument.gatherings[0].dateBegin"
+      ]
+    }
+  },
+  "namedPlaceOptions": {
+    "formID": "MHL.73",
+    "hideMapTab": true,
+    "createDescription": "<h3>Luo uusi kohde</h3>Hae avautuvasta kartasta kohteesi sijainti ja lisää kartan oikeassa yläkulmassa olevilla <strong>Piirrä viiva</strong> tai <strong>Lisää nasta</strong> –työkaluilla laskentakohteen kierto tai havainnointipiste. Lisää kartan alapuolelle kohteen nimi. Viimeistele uuden paikan perustaminen painamalla kohtaa <strong>Luo paikka</strong> vasemmasta alanurkasta. Luotu paikka löytyy tämän jälkeen laskentakohteiden luettelosta. Mikäli vesistöllä on jo aikaisemmin laskentapaikka, vältä uuden laskentapaikan luontia kohteelle. Isoille vesistöille voi kuitenkin perustaa useita laskentapaikkoja, kunhan laskentasektorit ovat selkeästi erillään.",
+    "description": "Aloita valitsemalla kohde.",
+    "useLabel": "Ilmoita uusi laskenta tältä kohteelta",
+    "createNewLabels": {
+      "desc": "Valitse laskentakohde alla olevasta luettelosta tai"
+    },
+    "infoFields": [
+      "name",
+      "notes",
+      "locality"
+    ],
+    "headerFields": [
+      "alternativeIDs",
+      "municipality",
+      "locality"
+    ],
+    "prepopulatedDocumentFields": {
+      "/gatherings/0/geometry": "/geometry"
+    },
+    "listColumnNameMapping": {
+      "$.alternativeIDs[0]": "Kohteen numero"
+    }
+  },
+  "uiSchema": {
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "Enter": {
+        "fn": "navigate"
+      },
+      "shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "ctrl+Enter": {
+        "fn": "textareaRowInsert"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "pisteeseen / kiertoon"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      }
+    },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings",
+      "*"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel"
+        ],
+        "target": "gatheringEvent"
+      }
+    },
+    "namedPlaceID": {
+      "ui:field": "HiddenField"
+    },
+    "gatheringEvent": {
+      "ui:field": "NestField",
+      "classNames": "well well-sm",
+      "ui:order": [
+        "legEditor",
+        "legPublic",
+        "secureLevel",
+        "eventTime",
+        "censusHinderedByEnviromentalFactors",
+        "censusHinderedBy",
+        "weather",
+        "gatheringFact",
+        "*"
+      ],
+      "ui:options": {
+        "nests": {
+          "legEditor": {
+            "fields": [
+              "leg",
+              "editors"
+            ],
+            "rootUiSchema": {
+              "ui:field": "NestField",
+              "ui:options": {
+                "nests": {
+                  "_legEditor": {
+                    "fields": [
+                      "leg",
+                      "editors"
+                    ],
+                    "title": "",
+                    "rootUiSchema": {
+                      "ui:functions": [
+                        {
+                          "ui:field": "DependentBooleanField",
+                          "ui:options": {
+                            "booleanField": "editors",
+                            "booleanDefiner": "leg"
+                          }
+                        },
+                        {
+                          "ui:field": "ArrayCombinerField"
+                        }
+                      ],
+                      "ui:field": "TableField",
+                      "ui:options": {
+                        "specialRules": "legEditors",
+                        "ui:buttonsDesktopLayout": true
+                      },
+                      "items": {
+                        "ui:functions": {
+                          "ui:field": "ContextInjectionField",
+                          "ui:options": {
+                            "injections": {
+                              "/ui:options/rules/0/regexp": "^%{/creator}$"
+                            }
+                          }
+                        },
+                        "ui:field": "DependentDisableField",
+                        "ui:options": {
+                          "rules": [
+                            {
+                              "disableDefiner": "leg",
+                              "disableField": "editors",
+                              "regexp": "creator is injected here",
+                              "inlineHelp": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata lomaketta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+                              "disabledValueToDisplay": true
+                            },
+                            {
+                              "disableDefiner": "leg",
+                              "disableField": "editors",
+                              "regexp": "^((?!(MA\\.\\d)).)*$"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "legEditorSizeFixer": {
+                    "fields": [
+                      "_legEditor"
+                    ],
+                    "title": "",
+                    "rootUiSchema": {
+                      "ui:grid": {
+                        "lg": 6,
+                        "md": 6,
+                        "sm": 9,
+                        "xs": 12
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "eventTime": {
+            "fields": [
+              "dateBegin"
+            ],
+            "title": "",
+            "rootUiSchema": {
+              "ui:grid": {
+                "lg": 3,
+                "md": 4,
+                "sm": 5,
+                "xs": 12
+              }
+            }
+          },
+          "censusHinderedBy": {
+            "fields": [
+              "censusHinderedByWind",
+              "censusHinderedByRain",
+              "censusHinderedByFog"
+            ],
+            "title": "",
+            "rootUiSchema": {
+              "ui:grid": {
+                "lg": 2,
+                "md": 3,
+                "sm": 4,
+                "xs": 12
+              }
+            }
+          }
+        }
+      },
+      "leg": {
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla.  Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa.",
+        "ui:options": {
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
+      "legPublic": {
+        "ui:options": {
+          "allowUndefined": false
+        },
+        "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
+      },
+      "gatheringFact": {
+        "ui:grid": {
+          "lg": 3,
+          "md": 4,
+          "sm": 5,
+          "xs": 12
+        },
+        "waterbirdCensusPeriod": {
+          "ui:help": "Valitse, koskeeko laskentapäivämäärä ensimmäistä vai toista laskentakertaa. Lisälaskenta on tarkoitettu tapauksiin, joissa seurantaa tehdään intensiivisemmin ja samalla kohteella käydään laskemassa useammin kuin kahdesti kevään aikana."
+        }
+      }
+    },
+    "editors": {
+      "ui:help": "@editorsHelp",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    },
+    "ui:functions": {
+      "ui:field": "ConditionalField",
+      "ui:options": {
+        "cases": {
+          "rules": {
+            "field": "gatherings",
+            "valueLengthLessThan": 2
+          },
+          "operations": {
+            "type": "merge",
+            "uiSchema": {
+              "gatherings": {
+                "ui:options": {
+                  "inlineUiSchemaRoot": {
+                    "items": {
+                      "skipped": {
+                        "ui:widget": "HiddenWidget"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gatherings": {
+      "ui:field": "MapArrayField",
+      "ui:settings": [
+        "/mapOptions/tileLayerName",
+        "/mapOptions/overlayNames",
+        "/mapOptions/tileLayerOpacity",
+        "/mapOptions/tileLayers"
+      ],
+      "uiSchema": {
+        "ui:field": "SingleActiveArrayField",
+        "ui:options": {
+          "canAdd": false,
+          "hasRemove": false,
+          "removable": false,
+          "affixed": true,
+          "renderer": "pager",
+          "headerClassName": "darker-bottom-border",
+          "headerFormatters": [
+            "number"
+          ]
+        }
+      },
+      "ui:options": {
+        "geometryField": "geometry",
+        "geometryMapper": "default",
+        "mapSizes": {
+          "lg": 4,
+          "md": 4,
+          "sm": 6,
+          "xs": 12
+        },
+        "help": "<p>Karttatyökalusta löytyy useita toimintoja. Vasemmasta yläkulmasta kolmen päällekkäisen arkin symbolin kohdalta voit valita erilaisia karttapohjia. Oletuksena on mm. karttapaikasta tuttu maastokartta. Ortokuva –vaihtoehto antaa ilmakuvan kohteesta. Karttapohjavalikon alapuolella olevalla ”Suurennuslasi” –työkalulla voit etsiä kohdetta tämän nimen perusteella. Plus- ja miinus-merkeillä voit lähentää tai loitontaa karttakuvaa (zoomaus sisään tai ulos).</p> <p>Kartan oikeasta yläkulmasta löydät kolme erilaista piirtotyökalua. Näillä voit piirtää kartalle i) kohteen laskentasektorin, ii) havaintopisteen tai pisteet tai iii) kuljetun kiertolaskennan reitti.</p> <p>”Piirrä monikulmio” -työkalulla voit rajata kartalle laskentasektorin, jolta tehdyt havainnot ovat. Aloita sektorin piirtäminen valitsemalla monikulmio työkalu. Tämän jälkeen klikkaa hiirellä laskenta-alueen reunaa ja rajaa klikkaamalla ja hiirtä liikuttamalla laskenta-alue kartalle. Lopeta sektorin rajaaminen klikkaamalla hiirellä kahdesti. Laskentasektorin piirtämisen jälkeen pinta-ala -tiedot päivittyvät automaattisesti lomakkeen puolella olevaan ”Laskentasektorin pinta-ala/ha” –kohtaan.</p> <p>”Lisää nasta” -työkalulla voit lisätä laskentapisteen (tai pisteitä useamman pisteen kiertolaskennassa) kartalle. Voit myös siirtää karttapistettä klikkaamalla sitä hiirellä kahdesti tai painamalla sitä hiiren vasemmalla näppäimellä ja valitse ”Muokkaa kuvio”, jolloin sen ympärille muodostuu katkoviivakehikko. Tällöin voit siirtää pisteen haluamaasi paikkaan valitsemalla kohde hiirellä ja pitämällä hiiren näppäin pohjassa siihen asti, kun olet siirtänyt kohteen haluamaasi paikkaan.</p> <p>”Piirrä viiva” työkalulla voit piirtää kyseisellä kohteella kävelty tai soudettu kiertolaskennan reitti.</p>",
+        "mapOptions": {
+          "tileLayerName": "maastokartta",
+          "controls": {
+            "location": false
+          },
+          "draw": {
+            "rectangle": false,
+            "circle": false
+          },
+          "tileLayerOpacity": 1
+        },
+        "computeAreaField": "/gatheringFact/censusAreaHectares",
+        "areaInHectares": true,
+        "minHeight": 435,
+        "resizeTimeout": 210,
+        "activeIdx": 0,
+        "emptyHelp": "Aloita havaintojen ilmoittaminen piirtämällä havaintoalue kartalle",
+        "belowFields": [
+          "acknowledgeNoUnitsInCensus",
+          "units"
+        ],
+        "inlineUiSchemaRoot": {
+          "ui:title": "Piste/kierto",
+          "items": {
+            "ui:functions": [
+              {
+                "ui:field": "ConditionalField",
+                "ui:options": {
+                  "cases": {
+                    "rules": {
+                      "field": "censusHinderedByEnviromentalFactors",
+                      "regexp": "^(?!true).*$"
+                    },
+                    "operations": {
+                      "type": "merge",
+                      "uiSchema": {
+                        "censusHinderedByWind": {
+                          "ui:widget": "HiddenWidget"
+                        },
+                        "censusHinderedByRain": {
+                          "ui:widget": "HiddenWidget"
+                        },
+                        "censusHinderedByFog": {
+                          "ui:widget": "HiddenWidget"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "ui:field": "FlatField",
+                "ui:options": {
+                  "fields": [
+                    "gatheringFact"
+                  ]
+                }
+              }
+            ],
+            "ui:grid": {
+              "rows": [
+                [
+                  "skipped"
+                ],
+                [
+                  "gatheringType"
+                ],
+                [
+                  "dateBegin"
+                ],
+                [
+                  "timeStart",
+                  "timeEnd"
+                ],
+                [
+                  "censusHinderedByEnviromentalFactors"
+                ],
+                [
+                  "censusHinderedByWind",
+                  "censusHinderedByRain",
+                  "censusHinderedByFog"
+                ],
+                [
+                  "weather"
+                ],
+                [
+                  "gatheringFact_waterbirdHabitat"
+                ],
+                [
+                  "gatheringFact_censusAreaHectares"
+                ],
+                [
+                  "gatheringFact_shorelineLengthMeters"
+                ],
+                [
+                  "gatheringFact_wayOfTravel",
+                  "gatheringFact_binocularsUsed",
+                  "gatheringFact_spottingScopeUsed"
+                ],
+                [
+                  "notes"
+                ],
+                [
+                  "images"
+                ],
+                [
+                  "taxonCensus"
+                ]
+              ],
+              "lg": {
+                "*": 6,
+                "timeStart": 3,
+                "timeEnd": 3,
+                "censusHinderedByWind": 3,
+                "censusHinderedByRain": 3,
+                "censusHinderedByFog": 3,
+                "gatheringFact_wayOfTravel": 3,
+                "gatheringFact_binocularsUsed": 3,
+                "gatheringFact_spottingScopeUsed": 3,
+                "notes": 12,
+                "images": 12
+              },
+              "md": {
+                "*": 8,
+                "timeStart": 4,
+                "timeEnd": 4,
+                "censusHinderedByWind": 4,
+                "censusHinderedByRain": 4,
+                "censusHinderedByFog": 4,
+                "gatheringFact_wayOfTravel": 4,
+                "gatheringFact_binocularsUsed": 4,
+                "gatheringFact_spottingScopeUsed": 4,
+                "notes": 12,
+                "images": 12
+              },
+              "sm": {
+                "*": 12,
+                "timeStart": 6,
+                "timeEnd": 6
+              },
+              "xs": 12
+            },
+            "ui:order": [
+              "*"
+            ],
+            "taxonCensus": {
+              "ui:field": "MultiAnyToBooleanField",
+              "ui:options": {
+                "groups": [
+                  {
+                    "label": "vesilinnut",
+                    "trueValue": {
+                      "censusTaxonSetID": "MX.taxonSetWaterbirdWaterbirds",
+                      "taxonCensusType": "MY.taxonCensusTypeCounted"
+                    },
+                    "allowUndefined": false,
+                    "ui:help": "Vesilintuihin kuuluvat kyhmyjoutsen, laulujoutsen, metsähanhi, merihanhi, kanadanhanhi, valkoposkihanhi, ristisorsa, haapana, harmaasorsa, tavi, sinisorsa, jouhisorsa, heinätavi, lapasorsa, punasotka, tukkasotka, lapasotka, haahka, alli, mustalintu, pilkkasiipi, telkkä, uivelo, tukkakoskelo, isokoskelo, kuikka, kaakkuri, silkkiuikku, härkälintu, mustakurkku-uikku, pikku-uikku, merimetso ja nokikana."
+                  },
+                  {
+                    "label": "kahlaajat",
+                    "trueValue": {
+                      "censusTaxonSetID": "MX.taxonSetWaterbirdWaders",
+                      "taxonCensusType": "MY.taxonCensusTypeCounted"
+                    },
+                    "allowUndefined": false,
+                    "ui:help": "Kahlaajiin kuuluu kahlaajien lisäksi myös haikarat ja rantakanat (poislukien nokikana): harmaahaikara, jalohaikara, kaulushaikara, luhtakana, luhtahuitti, pikkuhuitti, liejukana, ruisrääkkä, kurki, meriharakka, kapustarinta, töyhtöhyyppä, pikkutylli, tylli, isokuovi, pikkukuovi, mustapyrstökuiri, lapinsirri, suosirri, jänkäsirriäinen, suokukko, rantasipi, metsäviklo, mustaviklo, valkoviklo, lampiviklo, liro, punajalkaviklo, jänkäkurppa, taivaanvuohi ja heinäkurppa."
+                  },
+                  {
+                    "label": "lokkilinnut",
+                    "trueValue": {
+                      "censusTaxonSetID": "MX.taxonSetWaterbirdGulls",
+                      "taxonCensusType": "MY.taxonCensusTypeCounted"
+                    },
+                    "allowUndefined": false,
+                    "ui:help": "Lokkilintuihin kuuluvat lokit ja tiirat: pikkutiira, räyskä, mustatiira, kalatiira, lapintiira, pikkulokki, naurulokki, kalalokki, selkälokki, harmaalokki ja merilokki."
+                  },
+                  {
+                    "label": "varpuslinnut",
+                    "trueValue": {
+                      "censusTaxonSetID": "MX.taxonSetWaterbirdPasserines",
+                      "taxonCensusType": "MY.taxonCensusTypeCounted"
+                    },
+                    "allowUndefined": false,
+                    "ui:help": "Varpuslinnuista laskettaviin kuuluvat rantojen lajit västäräkki, ruokokerttunen, rytikerttunen, viitakerttunen, luhtakerttunen, rastaskerttunen, pajusirkku ja viiksitimali, mutta muidenkin lajien tietoja saa ilmoittaa."
+                  },
+                  {
+                    "label": "sammakkoeläimet",
+                    "trueValue": {
+                      "censusTaxonSetID": "MX.taxonSetWaterbirdAmphibia",
+                      "taxonCensusType": "MY.taxonCensusTypeCounted"
+                    },
+                    "allowUndefined": false,
+                    "ui:help": "Sammakkoeläimiin kuuluvat kotoperäiset lajit sammakko (ruskosammakko), viitasammakko, rupikonna, manteri (entinen vesilisko), rupimanteri (entinen rupilisko) sekä satunnaiset lajit vuoristokellosammakko, viherkonna, euroopanlehtisammakko, ruokasammakko (syötävä sammakko), pikkuvihersammakko (lessonansammakko), mölysammakko ja alppimanteri. Lajitunnistukseen (mm. ääntelyyn) voi tutustua lajitietokeskuksen sammakkoeläinten ja matelijoiden levinneisyyskartoitussivulta: <a href=\"https://laji.fi/theme/herpetology\" rel=\"nofollow\" target=\"_blank\">https://laji.fi/theme/herpetology</a>",
+                    "ui:helpHoverable": true
+                  }
+                ]
+              },
+              "ui:help": "Valitse ne lajiryhmät, jotka otit laskennassa huomioon riippumatta siitä, havaitsitko laskennassa yhtään lajin yksilöä vai et. Oletuksena on, että laskija laskee vähintään kaikki vesilinnut. Jos et ole valinnut esimerkiksi kahlaajia, mutta ilmoitat lomakkeella taivaanvuohen, järjestelmä olettaa, että tämä on vain satunnaishavainto, etkä ole laskenut kaikkia kahlaajia. Jos kuitenkin olet laskenut kaikki kahlaajat, mutta näit vain taivaanvuohen, valitse kahlaajat kohdassa ”Kyllä” ja ilmoita taivaanvuohihavaintosi normaaliin tapaan."
+            },
+            "skipped": {
+              "ui:options": {
+                "allowUndefined": false
+              },
+              "ui:help": "Luomuksen vanhassa aineistossa kohteilla on laskettu useita pisteitä tai kiertoja. Mikäli tällaisella kohteella jokin pisteistä tai kierroista on jäänyt laskematta, valitse \"Kyllä\"."
+            },
+            "gatheringType": {
+              "ui:widget": "AnyToBooleanWidget",
+              "ui:options": {
+                "trueValue": "MY.gatheringTypeWaterbirdPoint",
+                "falseValue": "MY.gatheringTypeWaterbirdRound",
+                "trueLabel": "Piste",
+                "falseLabel": "Kierto",
+                "showUndefined": false
+              },
+              "ui:help": "Valitse koskiko laskentasi yhdestä pisteestä tehtyä pistelaskentaa vai kohdetta kiertäen tehtyä kiertolaskentaa. Vanhassa aineistossa Luken koordinoimat laskennat koskevat aina pistelaskentoja."
+            },
+            "dateBegin": {
+              "ui:widget": "DateWidget",
+              "ui:required": true,
+              "ui:options": {
+                "showButtons": true
+              },
+              "ui:help": "Kirjoita laskentapäivämäärä tai valitse päivämäärä kalenterista tai pikavalikolla."
+            },
+            "censusHinderedByEnviromentalFactors": {
+              "ui:options": {
+                "allowUndefined": false
+              },
+              "ui:help": "Haittasiko sää olennaisesti laskentaa? Oletusvalintana on, että ei haitannut. Mikäli sää kuitenkin haittasi laskentaa, niin klikkaa valikkoa, jolloin solun tila muuttuu arvoksi Kyllä ja kohdan alle avautuu kolme uutta valikkoa. Valitse haittasiko tuuli, sade tai sumu/usva laskentaa tai kirjoita kohtaan ”Lisätietoja säästä”, miten muutoin sää haittasi."
+            },
+            "censusHinderedByWind": {
+              "ui:options": {
+                "allowUndefined": false
+              }
+            },
+            "censusHinderedByRain": {
+              "ui:options": {
+                "allowUndefined": false
+              }
+            },
+            "censusHinderedByFog": {
+              "ui:options": {
+                "allowUndefined": false
+              }
+            },
+            "weather": {
+              "ui:help": "Tähän voi lisätä lisätietoja säästä, etenkin siinä tapauksessa, jos sää haittasi havainnointia. Esimerkiksi ” Voimakas vastavalo haittasi lahden itäosan näkemistä."
+            },
+            "timeStart": {
+              "ui:widget": "TimeWidget",
+              "ui:options": {
+                "showTimeList": false
+              },
+              "ui:required": true,
+              "ui:help": "Kirjoita laskennan aloituksen ja lopetuksen kellonajat"
+            },
+            "timeEnd": {
+              "ui:widget": "TimeWidget",
+              "ui:options": {
+                "showTimeList": false
+              },
+              "ui:required": true
+            },
+            "gatheringFact_wayOfTravel": {
+              "ui:widget": "AnyToBooleanWidget",
+              "ui:options": {
+                "trueValue": "WBC.wayOfTravelEnum3",
+                "allowUndefined": false
+              },
+              "ui:help": "Valitse onko laskennassa käytetty venettä. Oletuksena on, että ei ole käytetty, mutta voit muuttaa tämän klikkaamalla valikkoa, jolloin solun arvoksi muuttuu ”Kyllä”."
+            },
+            "gatheringFact_binocularsUsed": {
+              "ui:options": {
+                "showUndefined": false
+              },
+              "ui:help": "Valitse onko laskennassa käytetty kiikareita.",
+              "ui:required": true
+            },
+            "gatheringFact_spottingScopeUsed": {
+              "ui:options": {
+                "showUndefined": false
+              },
+              "ui:help": "Valitse onko laskennassa käytetty kaukoputkea.",
+              "ui:required": true
+            },
+            "gatheringFact_censusAreaHectares": {
+              "ui:disabled": true,
+              "ui:help": "Laskentasektorin pinta-ala lasketaan piirtämällä laskentasektori karttatyökalun monikulmiolla kartalle. Tieto päivittyy automaattisesti sarakkeeseen kuvion piirtämisen jälkeen."
+            },
+            "gatheringFact_shorelineLengthMeters": {
+              "ui:help": "Voit ilmoittaa piste- tai kiertolaskennan kohteen rantaviivan pituuden metreinä, mikä on mitattavissa Lajitietokeskuksen karttapalvelussa olevalla mittaustyökalulla osoitteessa laji.fi/map. Huom. Karttatyökalun ”Piirrä viiva”-työkalulla piirretään vain kiertolaskennassa kuljettu reitti, ei rantaviivaa."
+            },
+            "gatheringFact_waterbirdHabitat": {
+              "ui:help": "Valitse vetovalikosta vesistötyyppi (habitaatti), mikä parhaiten kuvaa laskentakohteen nykyistä elinympäristöä. Jos valitset kohdan ”Muu”, täsmennä elinympäristötietoa alla olevaan ”Lisätiedot”-kenttään (esimerkiksi ”Laskentakohde on joki.”). Vesistötyyppi voi myös muuttua pitkällä aikajänteellä esimerkiksi rehevöitymisen takia. Huomaa myös uudet luokat ”Umpeenkasvanut / Kuivatettu (ei avovettä)” ja ”Rakennetut kosteikot”",
+              "ui:required": true
+            },
+            "notes": {
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 3
+              },
+              "ui:help": "Lisätiedot-sarakkeeseen voit kirjoittaa lisätietoja kohteesta, esimerkiksi tarkempia yksityiskohtia, miten laskenta on tehty tai kuvausta kohteesta."
+            },
+            "images": {
+              "ui:field": "ImageArrayField",
+              "ui:options": {
+                "capturerVerbatimPath": "/gatheringEvent/leg"
+              },
+              "ui:help": "Voit halutessasi lisätä kuvan tai kuvia kohteesta painamalla kameran symbolia. Kuvat voivat paljastaa mahdollisia pitkäaikaisia muutoksia kohteen kasvillisuudessa ja siten auttaa ymmärtämään kohteen linnustomuutoksia."
+            },
+            "geometry": {
+              "ui:field": "HiddenField"
+            }
+          }
+        },
+        "belowUiSchemaRoot": {
+          "ui:options": {
+            "renderer": "uncontrolled"
+          },
+          "items": {
+            "ui:functions": {
+              "ui:field": "DataLeakerField",
+              "ui:options": {
+                "props": {
+                  "from": "taxonCensus",
+                  "fromArrayKey": "censusTaxonSetID",
+                  "target": "/uiSchema/units/ui:options/groups/0/operations/uiSchema/items/ui:functions/1/ui:options/query/taxonSet",
+                  "joinArray": true
+                }
+              }
+            },
+            "acknowledgeNoUnitsInCensus": {
+              "ui:options": {
+                "allowUndefined": false
+              },
+              "ui:help": "Valitse kyllä, mikäli pisteellä/kierrolla ei havaittu lintuja."
+            },
+            "units": {
+              "ui:field": "MultiArrayField",
+              "ui:options": {
+                "buttons": [
+                  {
+                    "fn": "add",
+                    "label": "Lisää havainto"
+                  }
+                ],
+                "groups": [
+                  {
+                    "rules": [
+                      {
+                        "field": "/unitType/0",
+                        "regexp": "^pairObservation$"
+                      }
+                    ],
+                    "operations": {
+                      "type": "merge",
+                      "uiSchema": {
+                        "ui:functions": [
+                          {
+                            "ui:field": "DefaultValueArrayField",
+                            "ui:options": {
+                              "default": {
+                                "unitType": [
+                                  "pairObservation"
+                                ]
+                              }
+                            }
+                          }
+                        ],
+                        "ui:title": "Parilaskennan havainnot",
+                        "ui:field": "ToggleAdditionalArrayFieldsField",
+                        "ui:options": {
+                          "toggleLabel": "Haluatko tehdä omia tulkintoja parimääristä?",
+                          "toggleClassName": "well well-sm darker",
+                          "toggleHelp": "Järjestelmä tekee yleisesti käytössä olevien kriteereiden perusteella havainnoista parimäärätulkinnan. Jos haluat nähdä havaintojesi pohjalta tehdyn parimäärätulkinnan tai perustellusta syystä muuttaa tätä tulkintaan, valitse tässä ”Kyllä”. Tällöin parihavaintoriville ilmestyy lisäsarakkeita, joihin voit lisätä omat tulkintasi.",
+                          "togglePersistenceKey": "pairCount",
+                          "additionalFields": [
+                            "pairCount",
+                            "pairCountOpinion",
+                            "unitFact/waterbirdPairCountOpinionReasoning",
+                            "unitFact/waterbirdObserverOpinionSelectedCensus"
+                          ],
+                          "buttons": [
+                            {
+                              "fn": "add",
+                              "label": "Lisää laji"
+                            }
+                          ]
+                        },
+                        "items": {
+                          "ui:functions": [
+                            {
+                              "ui:field": "UnitCountShorthandField",
+                              "ui:options": {
+                                "shorthandField": "shortHandText",
+                                "pairCountField": "pairCount",
+                                "taxonIDField": "/identifications/0/taxonID"
+                              }
+                            },
+                            {
+                              "ui:field": "AutosuggestField",
+                              "ui:options": {
+                                "autosuggestField": "taxon",
+                                "suggestionInputField": "/identifications/0/taxonVerbatim",
+                                "suggestionValueField": "/identifications/0/taxonID",
+                                "suggestionReceivers": {
+                                  "/identifications/0/taxonVerbatim": "value",
+                                  "/identifications/0/taxonID": "key"
+                                },
+                                "query": {
+                                  "onlySpecies": true,
+                                  "taxonSet": "MX.taxonSetWaterbirdWaterbirds,MX.taxonSetWaterbirdWaders,MX.taxonSetWaterbirdGulls,MX.taxonSetWaterbirdPasserines,MX.taxonSetWaterbirdAmphibia"
+                                }
+                              }
+                            },
+                            {
+                              "ui:field": "FlatField",
+                              "ui:options": {
+                                "fields": [
+                                  "identifications",
+                                  "unitFact"
+                                ]
+                              }
+                            }
+                          ],
+                          "ui:order": [
+                            "identifications",
+                            "shortHandText",
+                            "notes",
+                            "pairCount",
+                            "pairCountOpinion",
+                            "unitFact_waterbirdPairCountOpinionReasoning",
+                            "unitFact_waterbirdObserverOpinionSelectedCensus",
+                            "*"
+                          ],
+                          "ui:grid": {
+                            "lg": {
+                              "*": 1,
+                              "shortHandText": 4,
+                              "identifications_0_taxonVerbatim": 2,
+                              "notes": 2,
+                              "unitFact_waterbirdPairCountOpinionReasoning": 1,
+                              "unitFact_waterbirdObserverOpinionSelectedCensus": 1
+                            },
+                            "md": {
+                              "*": 1,
+                              "shortHandText": 4,
+                              "identifications_0_taxonVerbatim": 2,
+                              "notes": 2,
+                              "unitFact_waterbirdPairCountOpinionReasoning": 1,
+                              "unitFact_waterbirdObserverOpinionSelectedCensus": 1
+                            },
+                            "sm": {
+                              "*": 1,
+                              "shortHandText": 4,
+                              "identifications_0_taxonVerbatim": 2,
+                              "notes": 2,
+                              "unitFact_waterbirdPairCountOpinionReasoning": 1,
+                              "unitFact_waterbirdObserverOpinionSelectedCensus": 1
+                            },
+                            "xs": 12,
+                            "classNames": {
+                              "pairCountOpinion": "darker",
+                              "unitFact_waterbirdPairCountOpinionReasoning": "darker",
+                              "unitFact_waterbirdObserverOpinionSelectedCensus": "darker"
+                            }
+                          },
+                          "pairCount": {
+                            "ui:disabled": true
+                          },
+                          "unitFact_waterbirdPairCountOpinionReasoning": {
+                            "ui:help": "Jos olet tehnyt lajin havainnoista oman parimäärätulkinnan, niin valitse jokin valikossa oleva perustelu, miksi olet poikennut automaattisesta tulkinnasta. Jos valitsit ”Muu perustelu – mikä?” niin lisää perustelu lajin ”Lisätiedot”-kenttään. <br><br> Vaihtoehdot: <br> 1) Laji ei varmasti pesi kohteella, linnut ruokailevia (esim. muuttomatkalla) <br> 2) Alueella levähti 1. laskennan aikaan vielä runsaasti muuttajia ja tulkinta 2. laskennan perusteella <br> 3) Lajin pesä(t) ovat jääneet jo kasvaneen järviruovikon suojiin 2. laskennassa, tulkinta tehty 1. laskennan perusteella <br> 4) Muu perustelu - mikä (kirjoita lisätietoihin)?"
+                          },
+                          "unitFact_waterbirdObserverOpinionSelectedCensus": {
+                            "ui:options": {
+                              "allowUndefined": false
+                            },
+                            "ui:help": "Mikäli parimäärätulkinta tulisi tehdä kyseisen lajin kohdalla yleisistä ohjeista poiketen tällä laskentakerralla valitse ”Kyllä”. Ohjeista poikkeava tulkinta tulee perustella kohdassa ”Perustelut omalle tulkinnalle”.",
+                            "ui:helpPlacement": "left"
+                          },
+                          "unitFact_waterbirdFemale": {
+                            "ui:widget": "HiddenWidget",
+                            "ui:help": "Valitse alasvetovalikosta, onko naaras havaittu poikasten kanssa vai ei, vai koskeeko havainto yksinäistä hätäilevää naarasta, jonka poikaset ovat oletettavasti jossain lähistöllä."
+                          },
+                          "juvenileIndividualCount": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "unitFact_waterbirdJuvenileCountAccurate": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "unitFact_waterbirdJuvenileAgeClass": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "count": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "sex": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "shortHandText": {
+                            "ui:required": true,
+                            "ui:help": "<p>Kirjoita havainnot erottaen ryhmät pilkuilla. Käytä koiraista k ja naaraista n merkintöjä sekä sukupuolelleen tunnistamattomat kirjataan pelkillä numeroilla.</p> <p>Esimerkiksi kn, 2k, n, 3, 3k2n tarkoittaa seuraavia ryhmiä: pari, kaksi koirasta, naaras, kolme sukupuolelleen tunnistamatonta, kolme koirasta ja kaksi naarasta. Huom. 2kn tarkoittaa 2 koirasta ja 1 naaras ja 2k2n tarkoittaa kahta paria. Mikäli ryhmässä oli sekä sukupuolelleen tunnistettuja että tunnistamattomia lintuja, erottele tunnistamattomat pilkulla sukupuolelleen tunnistetuista.</p> <p>Nuoret telkkäkoiraat tulee ilmoittaa vain lisätiedot-kenttään, jotta nämä pesimättömät linnut eivät tule tulkituksi pareiksi.</p>"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "rules": [
+                      {
+                        "field": "/unitType/0",
+                        "regexp": "^additional$"
+                      }
+                    ],
+                    "operations": {
+                      "type": "merge",
+                      "uiSchema": {
+                        "ui:title": "Laskennan <strong>ulkopuoliset</strong> havainnot",
+                        "ui:help": "Laskennan ulkopuoliset havainnot sisältävät havaintoja lajiryhmistä, joista et ole laskenut kohdan ”Lajiryhmät, joista laskit kaikki lajit ja yksilöt” -perusteella kaikkia lajeja. Lisäksi voit ilmoittaa havaintoja myös muista lajiryhmistä, kuten petolinnuista, nisäkkäistä tai kasveista.",
+                        "items": {
+                          "ui:functions": [
+                            {
+                              "ui:field": "AutosuggestField",
+                              "ui:options": {
+                                "autosuggestField": "taxon",
+                                "suggestionInputField": "/identifications/0/taxonVerbatim",
+                                "suggestionValueField": "/identifications/0/taxonID",
+                                "suggestionReceivers": {
+                                  "/identifications/0/taxonVerbatim": "value",
+                                  "/identifications/0/taxonID": "key"
+                                },
+                                "query": {
+                                  "onlyFinnish": true,
+                                  "onlySpecies": true
+                                }
+                              }
+                            }
+                          ],
+                          "ui:order": [
+                            "identifications",
+                            "count",
+                            "juvenileIndividualCount",
+                            "sex",
+                            "notes",
+                            "*"
+                          ],
+                          "ui:grid": {
+                            "lg": {
+                              "*": 2,
+                              "count": 1,
+                              "juvenileIndividualCount": 1
+                            },
+                            "md": {
+                              "*": 2,
+                              "count": 1,
+                              "juvenileIndividualCount": 1
+                            },
+                            "sm": {
+                              "*": 2,
+                              "count": 1,
+                              "juvenileIndividualCount": 1
+                            },
+                            "xs": 12
+                          },
+                          "count": {
+                            "ui:required": true
+                          },
+                          "shortHandText": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "pairCount": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "pairCountOpinion": {
+                            "ui:widget": "HiddenWidget"
+                          },
+                          "unitFact": {
+                            "ui:field": "HiddenField"
+                          },
+                          "juvenileIndividualCount": {
+                            "ui:field": "HiddenField"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "items": {
+                "identifications": {
+                  "ui:field": "SingleItemArrayField",
+                  "items": {
+                    "taxonID": {
+                      "ui:widget": "HiddenWidget"
+                    },
+                    "taxonVerbatim": {
+                      "ui:help": "<p>Lisää pisteen/kierron parilaskentahavainnot laji kerrallaan. Kirjaa kaikki yhden lajin havainnot samalta pisteeltä/kierrolta yhdelle riville. Parihavainnot-kohdassa voit ilmoittaa havaintoja vain niistä lajiryhmistä, jotka olet aikaisemmin valinnut kohdassa ”Lajiryhmät, joista laskit kaikki lajit ja yksilöt”. Muut lajihavainnot tulee kirjata kohtaan ”Laskennan ulkopuoliset havainnot”.</p> <p>Kirjoita vasemmanpuolimmaiseen sarakkeeseen lajin nimi. Järjestelmässä on automaattinen nimentunnistin eli jos esimerkiksi aloitat kirjoittamaan ”sini…”, niin järjestelmä tarjoaa sinisorsa-vaihtoehtoa. Valitse oikea laji. Mikäli lajinimisarakkeessa on oikeassa reunassa kolmio, järjestelmä ei ole tunnistanut lajinimeä ja havaintoerää ei voi tallentaa. Vastaavasti vihreä V-merkki tarkoittaa, että lajinimi on tunnistettu järjestelmän puolesta.</p>"
+                    }
+                  }
+                },
+                "unitType": {
+                  "ui:widget": "HiddenWidget"
+                },
+                "pairCountOpinion": {
+                  "ui:help": "Omatulkinta/pareja -sarakkeeseen voit kirjata oman tulkintasi parimäärästä havaintojen perusteella. Tämä tulee perustella, jollakin ”Perustelut omalle tulkinnalle” –valikon vaihtoehdolla."
+                },
+                "notes": {
+                  "ui:help": "<p>Lisätiedot kohtaan voit kirjata yksityiskohtaisempia tietoja havainnoista, esimerkiksi </p> <p>- joutsenparin toinen emo hautomassa </p> <p>- silkkiuikuilla yhteensä kymmenen hautovaa emoa </p> <p>- lisäksi 2 nuorta telkkäkoirasta</p>"
+                }
+              }
+            },
+            "ui:options": {
+              "reserveId": false
+            }
+          }
+        }
+      },
+      "ui:help": "Luomuksen koordinoimissa vesilintulaskennoissa vanha aineisto on ryhmitelty useiden pisteiden/kiertojen kohteiksi. Mikäli ilmoitat havaintoja tällaiselta kohteelta, jossa on useita laskentapisteitä/-kiertoja, voit siirtyä kohteen sisällä pisteeltä/kierrolta toiselle ”Edellinen” ja ”Seuraava” -painikkeilla. Tämä ei koske Luken koordinoimia pistelaskentoja tai uusia perustettavia kohteita."
+    }
+  },
+  "attributes": {
+    "id": "MHL.65"
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "namedPlaceID": {
+        "type": "string",
+        "title": "Nimetty paikka"
+      },
+      "editors": {
+        "type": "array",
+        "title": "Muokkausoikeus",
+        "excludeFromCopy": true,
+        "items": {
+          "type": "string"
+        }
+      },
+      "secureLevel": {
+        "type": "string",
+        "title": "Havainnon tarkat paikkatiedot ovat julkisia",
+        "default": "MX.secureLevelNone",
+        "enum": [
+          "MX.secureLevelNone",
+          "MX.secureLevelKM10"
+        ],
+        "enumNames": [
+          "Ei karkeistettu",
+          "10 km"
+        ]
+      },
+      "gatheringEvent": {
+        "type": "object",
+        "title": "",
+        "excludeFromCopy": true,
+        "properties": {
+          "gatheringFact": {
+            "type": "object",
+            "title": "",
+            "properties": {
+              "waterbirdCensusPeriod": {
+                "type": "string",
+                "title": "Laskentakerta",
+                "enum": [
+                  "MY.waterbirdCensusPeriodEnum1",
+                  "MY.waterbirdCensusPeriodEnum2",
+                  "MY.waterbirdCensusPeriodEnumAdditional"
+                ],
+                "enumNames": [
+                  "1. laskenta",
+                  "2. laskenta",
+                  "Lisälaskenta"
+                ]
+              }
+            },
+            "required": [
+              "waterbirdCensusPeriod"
+            ]
+          },
+          "leg": {
+            "type": "array",
+            "title": "Laskijat",
+            "items": {
+              "type": "string",
+              "title": "Laskijat"
+            }
+          },
+          "legPublic": {
+            "type": "boolean",
+            "title": "Havainnoijien nimet ovat julkisia",
+            "default": true
+          }
+        },
+        "required": [
+          "leg"
+        ]
+      },
+      "gatherings": {
+        "type": "array",
+        "title": "",
+        "items": {
+          "type": "object",
+          "properties": {
+            "geometry": {
+              "type": "object",
+              "properties": {},
+              "title": "Koordinaatit"
+            },
+            "gatheringType": {
+              "type": "string",
+              "title": "Oliko laskenta piste- vai kiertolaskenta?",
+              "default": "MY.gatheringTypeWaterbirdPoint",
+              "enum": [
+                "MY.gatheringTypeWaterbirdPoint",
+                "MY.gatheringTypeWaterbirdRound"
+              ],
+              "enumNames": [
+                "Piste",
+                "Kierto"
+              ]
+            },
+            "dateBegin": {
+              "type": "string",
+              "title": "Laskentapäivämäärä",
+              "excludeFromCopy": true
+            },
+            "timeStart": {
+              "type": "string",
+              "title": "Laskennan aloitusaika",
+              "excludeFromCopy": true
+            },
+            "timeEnd": {
+              "type": "string",
+              "title": "Lopetusaika",
+              "excludeFromCopy": true
+            },
+            "censusHinderedByEnviromentalFactors": {
+              "type": "boolean",
+              "title": "Haittasiko sää laskentaa?",
+              "default": false,
+              "excludeFromCopy": true
+            },
+            "censusHinderedByWind": {
+              "type": "boolean",
+              "title": "Haittasiko tuuli?",
+              "default": false,
+              "excludeFromCopy": true
+            },
+            "censusHinderedByRain": {
+              "type": "boolean",
+              "title": "Haittasiko sade?",
+              "default": false,
+              "excludeFromCopy": true
+            },
+            "censusHinderedByFog": {
+              "type": "boolean",
+              "title": "Haittasiko sumu/usva?",
+              "default": false,
+              "excludeFromCopy": true
+            },
+            "weather": {
+              "type": "string",
+              "title": "Lisätietoja säästä",
+              "excludeFromCopy": true
+            },
+            "taxonCensus": {
+              "type": "array",
+              "title": "Lajiryhmät, joista laskit kaikki lajit ja yksilöt",
+              "default": [
+                {
+                  "censusTaxonSetID": "MX.taxonSetWaterbirdWaterbirds",
+                  "taxonCensusType": "MY.taxonCensusTypeCounted"
+                }
+              ],
+              "excludeFromCopy": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "censusTaxonSetID": {
+                    "type": "string",
+                    "title": "Laskettu taksonijoukko",
+                    "enum": [
+                      "MX.taxonSetWaterbirdWaterbirds",
+                      "MX.taxonSetWaterbirdWaders",
+                      "MX.taxonSetWaterbirdGulls",
+                      "MX.taxonSetWaterbirdPasserines",
+                      "MX.taxonSetWaterbirdAmphibia"
+                    ],
+                    "enumNames": [
+                      "Vesilintulaskentalomake: Vesilinnut",
+                      "Vesilintulaskentalomake: Kahlaajalinnut",
+                      "Vesilintulaskentalomake: Lokkilinnut",
+                      "Vesilintulaskentalomake: Varpuslinnut",
+                      "Vesilintulaskentalomake: Sammakkoeläimet"
+                    ]
+                  },
+                  "taxonCensusType": {
+                    "type": "string",
+                    "title": "Laskennan kattavuus",
+                    "enum": [
+                      "MY.taxonCensusTypeCounted"
+                    ],
+                    "enumNames": [
+                      "Määritetty ja laskettu yksilöt kaikista lajeista"
+                    ]
+                  }
+                },
+                "required": [
+                  "censusTaxonSetID",
+                  "taxonCensusType"
+                ]
+              }
+            },
+            "gatheringFact": {
+              "type": "object",
+              "title": "",
+              "properties": {
+                "waterbirdHabitat": {
+                  "type": "string",
+                  "title": "Vesistötyyppi",
+                  "enum": [
+                    "",
+                    "MY.waterbirdHabitatEnum1",
+                    "MY.waterbirdHabitatEnum2",
+                    "MY.waterbirdHabitatEnum3",
+                    "MY.waterbirdHabitatEnum4",
+                    "MY.waterbirdHabitatEnum5",
+                    "MY.waterbirdHabitatEnum6",
+                    "MY.waterbirdHabitatEnum7",
+                    "MY.waterbirdHabitatEnum8",
+                    "MY.waterbirdHabitatEnum9",
+                    "MY.waterbirdHabitatEnum10"
+                  ],
+                  "enumNames": [
+                    "",
+                    "1. Karu, metsä- tai suorantainen järvi tai lampi",
+                    "2. Syvä, osittain rehevöitynyt järvi, lahdissa laajahkoja ruovikoita",
+                    "3. Matala, metsä- tai suorantainen runsaskasvustoinen järvi tai lampi",
+                    "4. Runsaskasvustoinen järvi maanviljelyksen tai asutuksen vaikutuspiirissä",
+                    "5. Karu, vähäkasvustoinen merenranta",
+                    "6. Rehevähkö merenranta, jonkun verran ruovikoita (sekä matalia, että syviä rantoja)",
+                    "7. Runsaskasvustoinen merenlahti (sekä matalia että syviä rantoja)",
+                    "8. Muu, mm. tekoaltaat ja joet",
+                    "9. Umpeenkasvanut / Kuivatettu (ei avovettä)",
+                    "10. Rakennetut kosteikot"
+                  ]
+                },
+                "censusAreaHectares": {
+                  "type": "integer",
+                  "title": "Laskentasektorin pinta-ala (ha), rajataan kartalta"
+                },
+                "shorelineLengthMeters": {
+                  "type": "integer",
+                  "title": "Rantaviivan pituus (m), työkalu mittaamiseen: <a href=\"https://laji.fi/map\" target=\"_blank\">laji.fi/map</a>"
+                },
+                "wayOfTravel": {
+                  "type": "string",
+                  "title": "Vene",
+                  "enum": [
+                    "WBC.wayOfTravelEnum3"
+                  ],
+                  "enumNames": [
+                    "Vene"
+                  ]
+                },
+                "binocularsUsed": {
+                  "type": "boolean",
+                  "title": "Kiikarit"
+                },
+                "spottingScopeUsed": {
+                  "type": "boolean",
+                  "title": "Kaukoputki"
+                }
+              },
+              "required": []
+            },
+            "notes": {
+              "type": "string",
+              "title": "Lisätiedot"
+            },
+            "images": {
+              "type": "array",
+              "title": "Valokuvia kohteesta",
+              "excludeFromCopy": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "acknowledgeNoUnitsInCensus": {
+              "type": "boolean",
+              "title": "Pisteellä/kierrolla ei ollut lintuja",
+              "default": false,
+              "excludeFromCopy": true
+            },
+            "units": {
+              "type": "array",
+              "title": "Havainnot",
+              "excludeFromCopy": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "identifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxonVerbatim": {
+                          "type": "string",
+                          "title": "Laji"
+                        },
+                        "taxonID": {
+                          "type": "string",
+                          "title": "Laskennan havainnot"
+                        }
+                      },
+                      "required": [
+                        "taxonVerbatim"
+                      ]
+                    },
+                    "minItems": 1
+                  },
+                  "shortHandText": {
+                    "type": "string",
+                    "title": "Havainnot"
+                  },
+                  "pairCount": {
+                    "type": "integer",
+                    "title": "Parimäärä"
+                  },
+                  "pairCountOpinion": {
+                    "type": "integer",
+                    "title": "Oma tulkinta/pareja"
+                  },
+                  "count": {
+                    "type": "string",
+                    "title": "Määrä"
+                  },
+                  "juvenileIndividualCount": {
+                    "type": "integer",
+                    "title": "Poikasten lukumäärä"
+                  },
+                  "sex": {
+                    "type": "string",
+                    "title": "Sukupuoli",
+                    "enum": [
+                      "MY.sexM",
+                      "MY.sexF"
+                    ],
+                    "enumNames": [
+                      "koiras",
+                      "naaras"
+                    ]
+                  },
+                  "notes": {
+                    "type": "string",
+                    "title": "Lisätiedot"
+                  },
+                  "unitType": {
+                    "type": "array",
+                    "title": "Näytteen tyyppi",
+                    "default": [
+                      "additional"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "unitFact": {
+                    "type": "object",
+                    "title": "",
+                    "properties": {
+                      "waterbirdPairCountOpinionReasoning": {
+                        "type": "string",
+                        "title": "Perustelut omalle tulkinnalle",
+                        "enum": [
+                          "",
+                          "MY.waterbirdPairCountOpinionReasoningEnum1",
+                          "MY.waterbirdPairCountOpinionReasoningEnum2",
+                          "MY.waterbirdPairCountOpinionReasoningEnum3",
+                          "MY.waterbirdPairCountOpinionReasoningEnumOther"
+                        ],
+                        "enumNames": [
+                          "",
+                          "1) Laji ei varmasti pesi kohteella, linnut ruokailevia (esim. muuttomatkalla)",
+                          "2) Alueella levähti 1. laskennan aikaan vielä runsaasti muuttajia ja tulkinta 2. laskennan perusteella",
+                          "3) Lajin pesä(t) ovat jääneet jo kasvaneen järviruovikon suojiin 2. laskennassa, tulkinta tehty 1. laskennan perusteella",
+                          "4) Muu perustelu - mikä (kirjoita lisätietoihin)?"
+                        ]
+                      },
+                      "waterbirdObserverOpinionSelectedCensus": {
+                        "type": "boolean",
+                        "title": "Tee tulkinta tämän laskennan perusteella?",
+                        "default": false
+                      },
+                      "waterbirdFemale": {
+                        "type": "string",
+                        "title": "Naaras havaittu",
+                        "enum": [
+                          "",
+                          "MY.waterbirdFemaleEnumYes",
+                          "MY.waterbirdFemaleEnumNo",
+                          "MY.waterbirdFemaleEnumLonelyPanicking"
+                        ],
+                        "enumNames": [
+                          "",
+                          "kyllä",
+                          "ei",
+                          "yksinäinen hätäilevä naaras"
+                        ]
+                      },
+                      "waterbirdJuvenileCountAccurate": {
+                        "type": "boolean",
+                        "title": "Lukumäärä tarkka?"
+                      },
+                      "waterbirdJuvenileAgeClass": {
+                        "type": "string",
+                        "title": "Poikasten ikäluokka",
+                        "enum": [
+                          "",
+                          "MY.waterbirdJuvenileAgeClassIa",
+                          "MY.waterbirdJuvenileAgeClassIb",
+                          "MY.waterbirdJuvenileAgeClassIc",
+                          "MY.waterbirdJuvenileAgeClassIIa",
+                          "MY.waterbirdJuvenileAgeClassIIb",
+                          "MY.waterbirdJuvenileAgeClassIIc",
+                          "MY.waterbirdJuvenileAgeClassIIIa",
+                          "MY.waterbirdJuvenileAgeClassUnknown"
+                        ],
+                        "enumNames": [
+                          "",
+                          "1. Aivan pienet kirkasväriset untuvapallot (Ia)",
+                          "2. Pienet, hieman haalistuneet untuvikot (Ib)",
+                          "3. Pienehköt, haalistuneet untuvikkopoikaset (Ic)",
+                          "4. Alle puolikasvuiset poikaset (IIa)",
+                          "5. Puolikasvuiset poikaset (IIb)",
+                          "6. Yli puolikasvuiset poikaset viimeisin untuvin (IIc)",
+                          "7. Lähes täysikasvuiset höyhenpeitteiset poikaset (IIIa)",
+                          "8. Ei tiedossa (vältä tätä vaihtoehtoa)"
+                        ]
+                      }
+                    },
+                    "required": []
+                  }
+                },
+                "required": []
+              }
+            },
+            "skipped": {
+              "type": "boolean",
+              "title": "Pisteen/kierron laskenta jätetty väliin",
+              "default": false
+            }
+          },
+          "required": [
+            "gatheringType"
+          ]
+        }
+      }
+    },
+    "required": []
+  },
+  "validators": {
+    "gatheringEvent": {
+      "properties": {
+        "leg": {
+          "stringArray": {
+            "mustNotBeEmpty": true,
+            "message": "Vähintään yksi havainnoija täytyy ilmoittaa."
+          }
+        }
+      },
+      "presence": {
+        "allowEmpty": false
+      }
+    },
+    "gatherings": {
+      "items": {
+        "properties": {
+          "geometry": {
+            "geometry": {
+              "requireShape": true,
+              "message": {
+                "missingGeometries": "Paikalla täytyy olla vähintään yksi kuvio."
+              }
+            }
+          },
+          "dateBegin": {
+            "presence": {
+              "message": "Pakollinen kenttä"
+            },
+            "datetime": {
+              "latest": "now",
+              "message": "Päivämäärä ei voi olla tulevaisuudessa."
+            }
+          },
+          "timeStart": {
+            "presence": {
+              "message": "Pakollinen kenttä"
+            }
+          },
+          "timeEnd": {
+            "presence": {
+              "message": "Pakollinen kenttä"
+            },
+            "compareNumerically": {
+              "greaterThan": "timeStart",
+              "message": "Lopetusajan on oltava aloitusajan jälkeen."
+            }
+          },
+          "gatheringFact": {
+            "properties": {
+              "waterbirdHabitat": {
+                "presence": {
+                  "message": "Pakollinen kenttä"
+                }
+              },
+              "binocularsUsed": {
+                "presence": {
+                  "message": "Pakollinen kenttä"
+                }
+              },
+              "spottingScopeUsed": {
+                "presence": {
+                  "message": "Pakollinen kenttä"
+                }
+              }
+            }
+          },
+          "acknowledgeNoUnitsInCensus": {
+            "crossCheck_0": {
+              "check": "units/*/unitType",
+              "onlyWhenCheckNotIn": [
+                "pairObservation",
+                "juvenileObservation"
+              ],
+              "valueMustBeIn": [
+                true
+              ],
+              "message": "\"Pisteellä/kierrolla ei ollut lintuja\" täytyy olla \"Kyllä\", jos yhtään havaintoa ei ole kirjattu."
+            },
+            "crossCheck_1": {
+              "check": "units/*/unitType",
+              "onlyWhenCheckIn": [
+                "pairObservation",
+                "juvenileObservation"
+              ],
+              "valueMustBeIn": [
+                false
+              ],
+              "message": "\"Pisteellä/kierrolla ei ollut lintuja\" täytyy olla \"Ei\", jos havaintoja on kirjattu."
+            }
+          },
+          "units": {
+            "items": {
+              "properties": {
+                "identifications": {
+                  "items": {
+                    "properties": {
+                      "taxonID": {
+                        "crossCheck": {
+                          "check": "../unitType",
+                          "onlyWhenCheckIn": [
+                            "pairObservation",
+                            "juvenileObservation"
+                          ],
+                          "mustHaveValue": true,
+                          "message": "Olet ilmoittamassa lajia, jonka nimeä ei tunnisteta."
+                        },
+                        "valueInArray": {
+                          "arrayField": "../../taxonCensus/*/censusTaxonSetID",
+                          "arrayValueMap": {
+                            "MX.taxonSetWaterbirdWaterbirds": [
+                              "MX.26277",
+                              "MX.26280",
+                              "MX.26287",
+                              "MX.26291",
+                              "MX.26298",
+                              "MX.26299",
+                              "MX.26427",
+                              "MX.26419",
+                              "MX.26429",
+                              "MX.26431",
+                              "MX.26435",
+                              "MX.26438",
+                              "MX.26440",
+                              "MX.26442",
+                              "MX.26323",
+                              "MX.26407",
+                              "MX.26415",
+                              "MX.26416",
+                              "MX.26388",
+                              "MX.26394",
+                              "MX.26364",
+                              "MX.26360",
+                              "MX.26366",
+                              "MX.26373",
+                              "MX.26382",
+                              "MX.25844",
+                              "MX.25859",
+                              "MX.25860",
+                              "MX.25861",
+                              "MX.27381",
+                              "MX.25836",
+                              "MX.25837",
+                              "MX.26043"
+                            ],
+                            "MX.taxonSetWaterbirdWaders": [
+                              "MX.27276",
+                              "MX.27328",
+                              "MX.27345",
+                              "MX.27342",
+                              "MX.27364",
+                              "MX.27214",
+                              "MX.26164",
+                              "MX.26094",
+                              "MX.26105",
+                              "MX.27459",
+                              "MX.27553",
+                              "MX.27559",
+                              "MX.27562",
+                              "MX.27527",
+                              "MX.27610",
+                              "MX.27613",
+                              "MX.27603",
+                              "MX.27689",
+                              "MX.27699",
+                              "MX.27704",
+                              "MX.27710",
+                              "MX.27665",
+                              "MX.27666",
+                              "MX.27674",
+                              "MX.27634",
+                              "MX.27619",
+                              "MX.27620",
+                              "MX.27621",
+                              "MX.27622",
+                              "MX.27626",
+                              "MX.27628"
+                            ],
+                            "MX.taxonSetWaterbirdGulls": [
+                              "MX.27774",
+                              "MX.27777",
+                              "MX.27748",
+                              "MX.27750",
+                              "MX.27753",
+                              "MX.27759",
+                              "MX.27821",
+                              "MX.27797",
+                              "MX.27791",
+                              "MX.27801",
+                              "MX.27802"
+                            ],
+                            "MX.taxonSetWaterbirdPasserines": [
+                              "MX.36871",
+                              "MX.37122",
+                              "MX.73566",
+                              "MX.32183",
+                              "MX.35182",
+                              "MX.33492",
+                              "MX.33641",
+                              "MX.33646",
+                              "MX.33649",
+                              "MX.33650",
+                              "MX.33651"
+                            ],
+                            "MX.taxonSetWaterbirdAmphibia": [
+                              "MX.37626",
+                              "MX.37621",
+                              "MX.37623",
+                              "MX.201015",
+                              "MX.201018",
+                              "MX.37628",
+                              "MX.200927",
+                              "MX.37630"
+                            ]
+                          },
+                          "onlyWhenField": "../unitType",
+                          "onlyWhenFieldIn": [
+                            "pairObservation",
+                            "juvenileObservation"
+                          ],
+                          "message": "Olet ilmoittamassa lajia, jonka lajiryhmästä ei ilmoiteta kaikkia havaintoja. Valitse joko laskettu lajiryhmä ylhäältä tai ilmoita havainto laskennan ulkopuolisiin havaintoihin (kohta alla)."
+                        }
+                      }
+                    }
+                  }
+                },
+                "shortHandText": {
+                  "crossCheck": {
+                    "check": "unitType",
+                    "onlyWhenCheckIn": [
+                      "pairObservation"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "Pakollinen kenttä."
+                  }
+                },
+                "pairCountOpinion": {
+                  "crossCheck": {
+                    "check": "unitFact/waterbirdPairCountOpinionReasoning",
+                    "mustHaveValue": true,
+                    "message": "Pakollinen kenttä, kun on ilmoitettu perustelu omalle tulkinnalle."
+                  }
+                },
+                "count": {
+                  "crossCheck": {
+                    "check": "unitType",
+                    "onlyWhenCheckIn": [
+                      "additional"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "Pakollinen kenttä."
+                  }
+                },
+                "juvenileIndividualCount": {
+                  "crossCheck_0": {
+                    "check": "unitType",
+                    "onlyWhenCheckIn": [
+                      "juvenileObservation"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "Pakollinen kenttä."
+                  },
+                  "crossCheck_1": {
+                    "check": "unitFact/waterbirdFemale",
+                    "onlyWhenCheckIn": [
+                      "MY.waterbirdFemaleEnumLonelyPanicking"
+                    ],
+                    "valueMustBeIn": [
+                      0
+                    ],
+                    "message": "Kun \"yksinäinen hätäilevä naaras\"-vaihtoehto on valittu, poikasten lukumäärän täytyy olla 0."
+                  }
+                },
+                "notes": {
+                  "crossCheck": {
+                    "check": "unitFact/waterbirdPairCountOpinionReasoning",
+                    "onlyWhenCheckIn": [
+                      "MY.waterbirdPairCountOpinionReasoningEnumOther"
+                    ],
+                    "mustHaveValue": true,
+                    "message": "Pakollinen kenttä, kun \"Perustelu omalle tulkinnalle\" on \"Muu perustelu\"."
+                  }
+                },
+                "unitType": {
+                  "presence": true
+                },
+                "unitFact": {
+                  "properties": {
+                    "waterbirdPairCountOpinionReasoning": {
+                      "crossCheck_0": {
+                        "check": "../pairCountOpinion",
+                        "mustHaveValue": true,
+                        "message": "Pakollinen kenttä, kun on ilmoitettu oma tulkinta parimäärästä."
+                      },
+                      "crossCheck_1": {
+                        "check": "waterbirdObserverOpinionSelectedCensus",
+                        "onlyWhenCheckIn": [
+                          true
+                        ],
+                        "mustHaveValue": true,
+                        "message": "Pakollinen kenttä, kun \"Tee tulkinta tämän laskennan perusteella\" on \"Kyllä\"."
+                      }
+                    },
+                    "waterbirdFemale": {
+                      "crossCheck": {
+                        "check": "../unitType",
+                        "onlyWhenCheckIn": [
+                          "juvenileObservation"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "Pakollinen kenttä."
+                      }
+                    },
+                    "waterbirdJuvenileCountAccurate": {
+                      "crossCheck": {
+                        "check": "../unitType",
+                        "onlyWhenCheckIn": [
+                          "juvenileObservation"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "Pakollinen kenttä."
+                      }
+                    },
+                    "waterbirdJuvenileAgeClass": {
+                      "crossCheck": {
+                        "check": "../unitType",
+                        "onlyWhenCheckIn": [
+                          "juvenileObservation"
+                        ],
+                        "mustHaveValue": true,
+                        "message": "Pakollinen kenttä."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "presence": {
+        "message": "Vähintään yksi paikka täytyy ilmoittaa.",
+        "allowEmpty": false
+      },
+      "remote": {
+        "validator": "waterbirdPairCount",
+        "message": "Parilaskennan havainnot: Tarkista, ettei Oma tulkinta/pareja ole isompi kuin kokonaisyksilömäärä."
+      },
+      "valueInArray": {
+        "value": false,
+        "arrayField": "gatherings/*/skipped",
+        "message": "Kaikkia pisteitä/kiertoja ei voi jättää väliin."
+      }
+    }
+  },
+  "warnings": {
+    "gatherings": {
+      "items": {
+        "properties": {
+          "dateBegin": {
+            "date": {
+              "earliest": "lastSixMonths",
+              "message": "Päivämäärä on yli kuusi kuukautta vanha."
+            },
+            "monthDayRange_0": {
+              "ranges": [
+                {
+                  "earliestMonth": 4,
+                  "earliestDay": 11,
+                  "latestMonth": 5,
+                  "latestDay": 14
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateSmallerThan": 690,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnum1"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_1": {
+              "ranges": [
+                {
+                  "earliestMonth": 4,
+                  "earliestDay": 26,
+                  "latestMonth": 5,
+                  "latestDay": 24
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateSmallerThan": 690,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnum2"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_2": {
+              "ranges": [
+                {
+                  "earliestMonth": 6,
+                  "earliestDay": 2,
+                  "latestMonth": 7,
+                  "latestDay": 30
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateSmallerThan": 690,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnumJuvenile"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_3": {
+              "ranges": [
+                {
+                  "earliestMonth": 4,
+                  "earliestDay": 21,
+                  "latestMonth": 5,
+                  "latestDay": 19
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateBiggerThan": 689,
+              "onlyWhenYkjNorthCoordinateSmallerThan": 731,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnum1"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_4": {
+              "ranges": [
+                {
+                  "earliestMonth": 5,
+                  "earliestDay": 2,
+                  "latestMonth": 5,
+                  "latestDay": 30
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateBiggerThan": 689,
+              "onlyWhenYkjNorthCoordinateSmallerThan": 731,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnum2"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_5": {
+              "ranges": [
+                {
+                  "earliestMonth": 6,
+                  "earliestDay": 11,
+                  "latestMonth": 7,
+                  "latestDay": 30
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateBiggerThan": 689,
+              "onlyWhenYkjNorthCoordinateSmallerThan": 731,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnumJuvenile"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_6": {
+              "ranges": [
+                {
+                  "earliestMonth": 5,
+                  "earliestDay": 11,
+                  "latestMonth": 6,
+                  "latestDay": 9
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateBiggerThan": 730,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnum1"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_7": {
+              "ranges": [
+                {
+                  "earliestMonth": 6,
+                  "earliestDay": 2,
+                  "latestMonth": 6,
+                  "latestDay": 24
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateBiggerThan": 730,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnum2"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            },
+            "monthDayRange_8": {
+              "ranges": [
+                {
+                  "earliestMonth": 6,
+                  "earliestDay": 16,
+                  "latestMonth": 7,
+                  "latestDay": 30
+                }
+              ],
+              "onlyWhenYkjNorthCoordinateBiggerThan": 730,
+              "onlyWhenField": "#/gatheringEvent/gatheringFact/waterbirdCensusPeriod",
+              "onlyWhenFieldIn": [
+                "MY.waterbirdCensusPeriodEnumJuvenile"
+              ],
+              "message": "Laskenta-ajankohta on poikkeava. Tarkista päivämäärä."
+            }
+          },
+          "timeStart": {
+            "time": {
+              "earliestHour": 4,
+              "latestHour": 12,
+              "latestMinute": 0,
+              "message": {
+                "tooEarly": "Laskenta-aika on huomattavan aikainen. Oletko varma?",
+                "tooLate": "Laskenta-aika on huomattavan myöhäinen. Oletko varma?"
+              }
+            }
+          },
+          "timeEnd": {
+            "timeDifference": {
+              "compareTo": "timeStart",
+              "maxDifference": 120,
+              "message": "Laskennan kesto on huomattavan pitkä. Oletko varma?"
+            },
+            "time": {
+              "earliestHour": 4,
+              "latestHour": 12,
+              "latestMinute": 0,
+              "message": {
+                "tooEarly": "Laskenta-aika on huomattavan aikainen. Oletko varma?",
+                "tooLate": "Laskenta-aika on huomattavan myöhäinen. Oletko varma?"
+              }
+            }
+          },
+          "weather": {
+            "crossCheck": {
+              "check": "censusHinderedByEnviromentalFactors",
+              "onlyWhenCheckIn": [
+                true
+              ],
+              "mustHaveValue": true,
+              "message": "Miten sää haittasi laskentaa?"
+            }
+          },
+          "taxonCensus": {
+            "presence": {
+              "message": "Mitään lajiryhmää ei ole valittu.",
+              "allowEmpty": false
+            }
+          },
+          "gatheringFact": {
+            "properties": {
+              "censusAreaHectares": {
+                "numericality": {
+                  "lessThanOrEqualTo": 100,
+                  "message": "Oletko varma, että kohteen pinta-ala on näin suuri?"
+                }
+              },
+              "spottingScopeUsed": {
+                "crossCheck": {
+                  "check": "binocularsUsed",
+                  "mustHaveValue": false,
+                  "onlyWhenCheckIn": [
+                    false
+                  ],
+                  "valueMustBeIn": [
+                    true
+                  ],
+                  "message": "Oletko varma, ettei kiikaria tai kaukoputkea ollut käytössä?"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "excludeFromCopy": [
+    "$.editors",
+    "$.gatheringEvent",
+    "$.gatherings[*].dateBegin",
+    "$.gatherings[*].timeStart",
+    "$.gatherings[*].timeEnd",
+    "$.gatherings[*].censusHinderedByEnviromentalFactors",
+    "$.gatherings[*].censusHinderedByWind",
+    "$.gatherings[*].censusHinderedByRain",
+    "$.gatherings[*].censusHinderedByFog",
+    "$.gatherings[*].weather",
+    "$.gatherings[*].taxonCensus",
+    "$.gatherings[*].images",
+    "$.gatherings[*].acknowledgeNoUnitsInCensus",
+    "$.gatherings[*].units"
+  ]
+}

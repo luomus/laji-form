@@ -6,11 +6,12 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, isObject, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
 import equals from "deep-equal";
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import merge from "deepmerge";
+import { JSONSchema7 } from "json-schema";
 
 import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
@@ -81,6 +82,7 @@ const fields = importLocalComponents("fields", [
 	"MultiAnyToBooleanField",
 	"UnitCountShorthandField",
 	"ToggleAdditionalArrayFieldsField",
+	"DefaultValueArrayField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -105,7 +107,8 @@ const widgets = importLocalComponents("widgets", [
 	"URLWidget",
 	"InformalTaxonGroupChooserWidget",
 	"TaxonImageWidget",
-	"UpperCaseWidget"
+	"UpperCaseWidget",
+	"NumberWidget"
 ]);
 
 function importLocalComponents(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: React.Component} {
@@ -668,29 +671,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		return this.defaultNotifier;
 	}
 
-	setTmpIdTree = (schema: any) => {
-		function walk(_schema: any) {
-			if (_schema.properties) {
-				const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
-					const walked = walk(_schema.properties[key]);
-					if (walked) {
-						paths[key] = walked;
-					}
-					return paths;
-				}, {} as any);
-				if (Object.keys(_walked).length) return _walked;
-			} else if (_schema.type === "array" && _schema.items.type === "object") {
-				return Object.keys(_schema.items.properties).reduce((paths, key) => {
-					const walked = walk(_schema.items.properties[key]);
-					if (walked) {
-						paths[key] = walked;
-					}
-					return paths;
-				}, {_hasId: true} as any);
-			}
-			return undefined;
-		}
-		this.tmpIdTree = walk(schema);
+	setTmpIdTree = (schema: JSONSchema7) => {
+		this.tmpIdTree = createTmpIdTree(schema);
 	}
 
 	addLajiFormIds = (formData: any) => {
@@ -698,24 +680,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	removeLajiFormIds = (formData: any) => {
-		function walk(_formData: any, tree: any): any {
-			if (tree && isObject(_formData)) {
-				return Object.keys(_formData).reduce((f, k) => {
-					if (k === "_lajiFormId") return f;
-					if (tree[k]) {
-						f[k] = walk(_formData[k], tree[k]);
-					} else {
-						f[k] = _formData[k];
-					}
-					return f;
-				}, {} as any);
-			} else if (tree && Array.isArray(_formData)) {
-				return _formData.map(item => walk(item, tree));
-			}
-			return _formData;
-		}
-
-		return walk(formData, this.tmpIdTree);
+		return removeLajiFormIds(formData, this.tmpIdTree);
 	}
 
 	onChange = ({formData}: {formData: any}) => {
@@ -794,11 +759,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					</div>
 			</Form>
 			{shortcuts &&
-				<Panel 
-					ref={this.getPanelRef} 
-					className="shortcut-help laji-form-popped z-depth-3 hidden" 
+				<Panel
+					ref={this.getPanelRef}
+					className="shortcut-help laji-form-popped z-depth-3 hidden"
 					style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-					bsStyle="info" 
+					bsStyle="info"
 				>
 					<PanelHeading>
 						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
@@ -820,7 +785,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 								})
 							}</tbody>
 						</Table>
-				</Panel> 
+				</Panel>
 			}
 			{this.renderSubmitHooks()}
 		</div>
@@ -1021,7 +986,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	getKeyHandlers = (shortcuts: ShortcutKeys = {}): InternalKeyHandlers => {
 		return Object.keys(shortcuts).reduce((list, keyCombo) => {
 			const shortcut = shortcuts[keyCombo];
-			const specials = {
+			const specials: any = {
 				alt: false,
 				ctrl: false,
 				shift: false,
@@ -1032,8 +997,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					(specials as any)[key] = true;
 				}
 
-				keyHandler.conditions.push(e =>  
-					e.key === key || (specials.hasOwnProperty(key) && (((specials as any)[key] && (e as any)[`${key}Key`]) || (!(specials as any)[key] && !(e as any)[`${key}Key`])))
+				keyHandler.conditions.push(e =>
+					e.key === key || (specials.hasOwnProperty(key) && ((specials[key] && (e as any)[`${key}Key`]) || (!specials[key] && !(e as any)[`${key}Key`])))
 				);
 
 				return keyHandler;
@@ -1059,7 +1024,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;
-			return; 
+			return;
 		}).sort((a, b) => {
 			return b.length - a.length;
 		});
@@ -1119,7 +1084,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				return {...settings, [key]: settingSavers[key]()};
 			} catch (e) {
 				// Swallow failing settings parsing.
-			} 
+			}
 			return settings;
 		}, this.props.settings || {});
 	}

@@ -90,7 +90,11 @@ function TaxonAutosuggest(ComposedComponent) {
 			super(props);
 			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 			this.isValueSuggested = this.isValueSuggested.bind(this);
-			if (super.renderSuggestion) this.renderSuggestion = super.renderSuggestion.bind(this);
+			if (super.renderSuggestion) {
+				this.renderSuggestion = super.renderSuggestion.bind(this);
+			} else {
+				this.renderSuggestion = this.renderSuggestion.bind(this);
+			}
 		}
 
 		componentDidMount() {
@@ -156,7 +160,10 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		renderSuggestion(suggestion) {
-			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
+			const renderedSuggestion = "autocompleteDisplayName" in suggestion
+				&& <span dangerouslySetInnerHTML={{__html: suggestion.autocompleteDisplayName}} />
+				|| <React.Fragment>{suggestion.value}{renderFlag(suggestion)}</React.Fragment>;
+			return <span className="simple-option">{renderedSuggestion}</span>;
 		}
 
 		parseChooseImages = (chooseImages) => {
@@ -166,6 +173,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderChooseImages = () => {
 			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
 			const {orWriteSpeciesNameLabel} = getUiOptions(this.props);
+			const {or} = this.props.formContext.translations;
 			return (
 				<Row>
 					<Col xs={12}>
@@ -175,7 +183,7 @@ function TaxonAutosuggest(ComposedComponent) {
 						</div>
 					</Col>
 					<Col xs={12}>
-						<label>{orWriteSpeciesNameLabel || this.props.formContext.translations.orWriteSpeciesName}</label>
+						<label>{or} {orWriteSpeciesNameLabel || this.props.formContext.translations.orWriteSpeciesName}</label>
 					</Col>
 				</Row>
 			);
@@ -218,7 +226,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				}
 			};
 
-			if (propsOptions.chooseImages) {
+			if (propsOptions.chooseImages && !(props.value && props.formContext.uiSchemaContext.isEdit)) {
 				_options.renderExtra = this.renderChooseImages;
 			}
 
@@ -422,7 +430,11 @@ export class Autosuggest extends React.Component {
 	}
 
 	getSuggestionValue = (suggestion) => {
-		return suggestion.value;
+		const {getSuggestionValue} = this.props;
+		const def = suggestion.value;
+		return getSuggestionValue
+			? getSuggestionValue(suggestion, def)
+			: def;
 	}
 
 	renderSuggestion = (suggestion) => {
@@ -528,7 +540,7 @@ export class Autosuggest extends React.Component {
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", ...query}).then(suggestions => {
+			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}

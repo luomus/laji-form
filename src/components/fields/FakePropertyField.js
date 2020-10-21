@@ -19,6 +19,7 @@ export default class FakePropertyField extends React.Component {
 		let properties = props.schema.properties;
 		let uiSchema = props.uiSchema;
 		let formData = props.formData;
+		let data;
 		Object.keys(fields).forEach((prop) => {
 			const {schema, uiSchema: _uiSchema, formData: _formData} = fields[prop];
 			properties = updateSafelyWithJSONPointer(properties, schema, prop);
@@ -26,14 +27,15 @@ export default class FakePropertyField extends React.Component {
 			formData = _formData
 				?  updateSafelyWithJSONPointer(formData, _formData, prop)
 				: formData;
+			data = formData[prop];		
 		});
-		return {
+		return data ? {
 			schema: {
 				...props.schema,
 				properties
 			},
 			uiSchema,
 			formData
-		};
+		} : undefined;
 	}
 }
