@@ -1,3 +1,7 @@
+## 5.7.0
+* `FakePropertyField`: add `skipIfEmpty` to field options
+* `URLWidget`: add `template` option
+
 ## 5.6.0
 * add `NumberWidget`
 
