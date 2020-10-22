@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { updateSafelyWithJSONPointer } from "../../utils";
-import { immutableDelete } from "../../utils";
+import { hasData } from "../../utils";
 
 @VirtualSchemaField
 export default class FakePropertyField extends Component {
@@ -20,10 +20,11 @@ export default class FakePropertyField extends Component {
 		let properties = props.schema.properties;
 		let uiSchema = props.uiSchema;
 		let formData = props.formData;
-		
+
 		Object.keys(fields).forEach((prop) => {
-			const {schema, uiSchema: _uiSchema, formData: _formData} = fields[prop];
-			if (formData[prop] === undefined) {
+			const {schema, uiSchema: _uiSchema, formData: _formData, skipIfEmpty = false} = fields[prop];
+
+			if (skipIfEmpty && !hasData(_formData) && !hasData(formData[prop])) { 
 				return false;
 			}
 			
@@ -32,6 +33,7 @@ export default class FakePropertyField extends Component {
 			formData = _formData
 				?  updateSafelyWithJSONPointer(formData, _formData, prop)
 				: formData;
+			console.log(formData)	
 		});
 		return {
 			schema: {
