@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const URLWidget = ({value, template}) => <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+const URLWidget = (props) => <a href={props.options.template ? props.options.template + props.value : props.value} target="_blank" rel="noopener noreferrer">{props.options.template ? props.options.template + props.value : props.value}</a>;
 URLWidget.propTypes = {
 	schema: PropTypes.shape({
 		type: PropTypes.oneOf(["string"])

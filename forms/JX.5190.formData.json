@@ -1,0 +1,93 @@
+{
+  "secureLevel": "MX.secureLevelNone",
+  "gatheringEvent": {
+    "leg": ["MA.1617"],
+    "legPublic": true,
+    "dateBegin": "2020-10-19",
+    "id": "JX.184852#1",
+    "@type": "MZ.gatheringEvent"
+  },
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [26.619503, 64.814157]
+          }
+        ]
+      },
+      "units": [
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisPreservedSpecimen",
+          "checklistID": "",
+          "informalTaxonGroups": ["MVL.2"],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.184852#5",
+              "taxon": "Cat"
+            }
+          ],
+          "unitGathering": {
+            "geometry": {},
+            "@type": "MZ.unitGathering",
+            "id": "JX.184852#3"
+          },
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.53004"
+          },
+          "id": "JX.184852#4",
+          "uiSchema": {
+              "ui:widget": "URLWidget",
+              "ui:options": {
+                  "template": "http://tun.fi/"
+              }
+          },
+          "@type": "MY.unit"
+        },
+        {
+          "taxonConfidence": "MY.taxonConfidenceSure",
+          "recordBasis": "MY.recordBasisPreservedSpecimen",
+          "checklistID": "",
+          "informalTaxonGroups": ["MVL.232", "MVL.224", "MVL.341"],
+          "identifications": [
+            {
+              "@type": "MY.identification",
+              "id": "JX.184852#8",
+              "taxon": "Elephantomyia edwardsi "
+            }
+          ],
+          "unitGathering": {
+            "geometry": {},
+            "@type": "MZ.unitGathering",
+            "id": "JX.184852#6"
+          },
+          "unitFact": {
+            "autocompleteSelectedTaxonID": "MX.272921"
+          },
+          "id": "JX.184852#7",
+          "@type": "MY.unit"
+        }
+      ],
+      "biologicalProvince": "Oulun Pohjanmaa",
+      "country": "Suomi",
+      "municipality": "Utajärvi",
+      "id": "JX.184852#2",
+      "@type": "MY.gathering"
+    }
+  ],
+  "id": "JX.184852",
+  "formID": "JX.5190",
+  "creator": "MA.1617",
+  "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+  "sourceID": "KE.542",
+  "collectionID": "HR.1747",
+  "editor": "MA.1617",
+  "dateEdited": "2020-10-21T15:58:32+03:00",
+  "dateCreated": "2020-10-20T15:35:52+03:00",
+  "@type": "MY.document",
+  "@context": "http://schema.laji.fi/context/document.jsonld"
+}
