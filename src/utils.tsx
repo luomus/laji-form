@@ -5,7 +5,7 @@ import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
-import deepEquals from "deep-equal";
+const deepEquals = require("deep-equal");
 import Form, { UiSchema } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
 import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, ByLang, FieldProps } from "./components/LajiForm";

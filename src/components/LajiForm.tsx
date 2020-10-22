@@ -7,10 +7,10 @@ import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./co
 import { Panel, Table, ProgressBar } from "react-bootstrap";
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
-import equals from "deep-equal";
+const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
 
 import Form from "@rjsf/core";
