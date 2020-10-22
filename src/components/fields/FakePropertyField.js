@@ -41,6 +41,6 @@ export default class FakePropertyField extends Component {
 			},
 			uiSchema,
 			formData
-		}
+		};
 	}
 }
