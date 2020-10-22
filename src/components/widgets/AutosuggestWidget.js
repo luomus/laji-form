@@ -636,6 +636,9 @@ export class Autosuggest extends Component {
 
 	setRef = (ref) => {
 		this.reactAutosuggestRef = ref;
+		// Monkey patch to prevent suggestion mouse hover to interfere with keyboard suggestion navigation [#175274678]
+		ref.onSuggestionMouseEnter = () => {};
+		ref.onSuggestionMouseLeave = () => {};
 	}
 
 	render() {
