@@ -242,8 +242,8 @@ class LocationButton extends React.Component {
 				...mapOptions.controls,
 				draw: {
 					...((mapOptions.controls || {}).draw || {}),
-					clear: false,
-					delete: false
+					clear: true,
+					delete: true
 				}
 			},
 			fullscreenable: true,
@@ -302,7 +302,7 @@ class LocationButton extends React.Component {
 				// TODO LajiMap doesn't send a sequence of events containing multiple events if 
 				// it sends a create event, but this isn't necessarily true in the future and
 				// closing here wouldn't be right.
-				if (maxShapes === 1) close();
+				close();
 				break;
 			}
 			case "delete": {
