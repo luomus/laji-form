@@ -20,19 +20,18 @@ export default class FakePropertyField extends Component {
 		let properties = props.schema.properties;
 		let uiSchema = props.uiSchema;
 		let formData = props.formData;
+		
 		Object.keys(fields).forEach((prop) => {
 			const {schema, uiSchema: _uiSchema, formData: _formData} = fields[prop];
+			if (formData[prop] === undefined) {
+				return false;
+			}
+			
 			properties = updateSafelyWithJSONPointer(properties, schema, prop);
 			uiSchema = updateSafelyWithJSONPointer(uiSchema, _uiSchema, prop);
 			formData = _formData
 				?  updateSafelyWithJSONPointer(formData, _formData, prop)
-				: formData;	
-
-			if(!formData[prop]) {
-			delete properties[prop];
-			delete uiSchema['ui:options']['fields'][prop];
-			}	
-
+				: formData;
 		});
 		return {
 			schema: {
