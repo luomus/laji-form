@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const URLWidget = ({value, options = {}}) => 
-        <a href={`${options.template || ""}${value}`} target="_blank" rel="noopener noreferrer">
+		<a href={`${options.template || ""}${value}`} target="_blank" rel="noopener noreferrer">
 			{`${options.template || ""}${value}`}
 		</a>;
 
