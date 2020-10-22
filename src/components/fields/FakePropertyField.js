@@ -33,7 +33,6 @@ export default class FakePropertyField extends Component {
 			formData = _formData
 				?  updateSafelyWithJSONPointer(formData, _formData, prop)
 				: formData;
-			console.log(formData)	
 		});
 		return {
 			schema: {
