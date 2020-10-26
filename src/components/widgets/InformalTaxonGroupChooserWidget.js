@@ -264,15 +264,15 @@ export class InformalTaxonGroupChooser extends React.Component {
 		const {Container, GroupsContainer, Item} = this;
 
 		return (
-				<Container>
+			<Container>
 				{!rootOnly && (
 					<Breadcrumb>
-					{path.map(id => 
-						<Breadcrumb.Item key={id === undefined ? "root" : id} onClick={this.onSubgroupSelected(id)}>
-							{id === undefined ? translations.All : informalTaxonGroupsById[id].name}
-						</Breadcrumb.Item>
-					)}
-				</Breadcrumb>
+						{path.map(id => 
+							<Breadcrumb.Item key={id === undefined ? "root" : id} onClick={this.onSubgroupSelected(id)}>
+								{id === undefined ? translations.All : informalTaxonGroupsById[id].name}
+							</Breadcrumb.Item>
+						)}
+					</Breadcrumb>
 				)}
 				{informalTaxonGroups 
 					? <GroupsContainer>{Object.keys(informalTaxonGroups).map(Item)}</GroupsContainer>

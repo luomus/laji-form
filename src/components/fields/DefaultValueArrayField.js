@@ -38,7 +38,7 @@ export default class DefaultValueArrayField extends React.Component {
 		Object.keys(_default).forEach(field => {
 			if (formData) formData.forEach((item, i) => {
 				formData = update(formData,
-          {$splice: [[i, 1, update(item, {$merge: {[field]: _default[field]}})]]});
+					{$splice: [[i, 1, update(item, {$merge: {[field]: _default[field]}})]]});
 			});
 		});
 		this.props.onChange(formData);

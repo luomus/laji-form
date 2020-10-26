@@ -1,5 +1,5 @@
 import * as React from "react";
-const { Component, useState, useEffect } = React;
+const { useState, useEffect } = React;
 import { MediaArrayField } from "./ImageArrayField";
 import * as Spinner from "react-spinner";
 import { Glyphicon } from "react-bootstrap";
@@ -28,7 +28,7 @@ export default class AudioArrayField extends React.Component {
 				apiClient={this.props.formContext.apiClient}
 				translations={this.props.formContext.translations}
 			/>
-				<GlyphButton className="audio-metadata-button" bsStyle="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
+			<GlyphButton className="audio-metadata-button" bsStyle="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
 		</div>
 	)
 	renderLoadingMedia = () => null
@@ -52,19 +52,19 @@ const AudioButton = React.forwardRef((props, ref) => {
 	const play = React.useCallback(() => {
 		setPlaying(true);
 		audioRef.current.play();
-	});
+	}, [audioRef, setPlaying]);
 	const stop = React.useCallback(() => {
 		audioRef.current.pause();
 		audioRef.current.currentTime = 0;
 		setPlaying(false);
-	});
+	}, [audioRef, setPlaying]);
 	const onKeyDown = React.useCallback((e) => {
 		if (e.key === " ") {
 			playing ? stop() : play();
 			e.preventDefault();
 			e.stopPropagation();
 		}
-	});
+	}, [playing, stop, play]);
 	return (
 		<React.Fragment>
 			{!loaded 

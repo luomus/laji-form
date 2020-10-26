@@ -103,7 +103,7 @@ export default class FilterArrayField extends React.Component {
 			updated.splice(idx, 0, this.filteredIdxs[idx]);
 			return updated;
 		},
-			formData
+		formData
 		));
 	}
 

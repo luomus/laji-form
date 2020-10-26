@@ -35,12 +35,12 @@ export default class SplitField extends React.Component {
 			<div>
 				<TitleField 
 					id={`${this.props.idSchema.$id}__title`}
-						title={_title !== undefined ? _title : this.props.title}
-						required={this.props.required || this.props.uiSchema["ui:required"]}
-						formContext={this.props.formContext}
-						className={getUiOptions(this.props.uiSchema).titleClassName}
-						help={this.props.uiSchema["ui:help"]}
-					/>
+					title={_title !== undefined ? _title : this.props.title}
+					required={this.props.required || this.props.uiSchema["ui:required"]}
+					formContext={this.props.formContext}
+					className={getUiOptions(this.props.uiSchema).titleClassName}
+					help={this.props.uiSchema["ui:help"]}
+				/>
 				<DescriptionField
 					id={`${this.props.idSchema.$id}__description`}
 					description={this.props.description}

@@ -225,8 +225,8 @@ class AnnotationBox extends React.Component {
 			submitOnChange = _submitOnChange;
 			addFormData = this.state.addFormData || (
 				formData
-				? getDefaultFormState(addSchema, formData)
-				: undefined
+					? getDefaultFormState(addSchema, formData)
+					: undefined
 			);
 		}
 

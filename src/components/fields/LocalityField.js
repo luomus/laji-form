@@ -40,7 +40,7 @@ export default class LocalityField extends React.Component {
 				<Col xs={12}>
 					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
 						<PanelBody>
-								{values.map((v, i) => (
+							{values.map((v, i) => (
 								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
 							))}
 							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
@@ -65,7 +65,7 @@ export default class LocalityField extends React.Component {
 	}
 
 	renderModal = () => {
-		const {onChange, ...props} = this.props; // eslint-disable-line no-unused-vars
+		const {onChange, ...props} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		return (
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideEditor}>
 				<Modal.Header closeButton={true}>
@@ -86,7 +86,7 @@ export default class LocalityField extends React.Component {
 					/>
 					<Button block onClick={this.onSubmitClick}>OK</Button>
 					<Button block onClick={this.hideEditor}>{this.props.formContext.translations.Cancel}</Button>
-			</Modal.Body>
+				</Modal.Body>
 			</Modal>
 		);
 	}

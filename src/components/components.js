@@ -20,8 +20,8 @@ export class Button extends React.Component {
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-				bsStyle="primary"
-				{..._props}
+					bsStyle="primary"
+					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
 		);
@@ -104,7 +104,6 @@ export class DeleteButton extends React.Component {
 		if (props.className) {
 			buttonClassName = `${buttonClassName} ${props.className}`;
 		}
-		const onClick = e => this.onClick(e);
 		const maybeProps = {};
 		if (props.id !== undefined) {
 			maybeProps.id = `${props.id}-delete`;
@@ -114,11 +113,11 @@ export class DeleteButton extends React.Component {
 				<Button {...maybeProps}
 				        disabled={disabled || readonly}
 				        bsStyle="danger"
-								className={buttonClassName}
-								style={this.props.style}
-								ref="del"
-								onKeyDown={this.onButtonKeyDown}
-								onClick={onClick}>{this.props.children || "✖"}</Button>
+				        className={buttonClassName}
+				        style={this.props.style}
+				        ref="del"
+				        onKeyDown={this.onButtonKeyDown}
+				        onClick={this.onClick}>{this.props.children || "✖"}</Button>
 				{this.renderConfirm()}
 			</React.Fragment>
 		);
@@ -137,24 +136,25 @@ export class DeleteButton extends React.Component {
 		return null;
 	}
 
+	getOverlayTarget = () => findDOMNode(this.refs.del);
+
 	renderConfirmPopup() {
-		const getOverlayTarget = () => findDOMNode(this.refs.del);
 		const {translations, confirmPlacement = "left"} = this.props;
 		return (
-					<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
-									 target={getOverlayTarget}>
-						<Popover id={`${this.props.id}-button-confirm`}>
-							<span>{translations.ConfirmRemove}</span>
-							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
-									{translations.Remove}
-								</Button>
-								<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
-									{translations.Cancel}
-								</Button>
-							</ButtonGroup>
-						</Popover>
-					</Overlay>
+			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
+							 target={this.getOverlayTarget}>
+				<Popover id={`${this.props.id}-button-confirm`}>
+					<span>{translations.ConfirmRemove}</span>
+					<ButtonGroup>
+						<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
+							{translations.Remove}
+						</Button>
+						<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+							{translations.Cancel}
+						</Button>
+					</ButtonGroup>
+				</Popover>
+			</Overlay>
 		);
 	}
 
@@ -417,7 +417,7 @@ export class Stretch extends React.Component {
 			horizontallyAligned: true,
 			containerHeight,
 			height: Math.max(
-					containerHeight
+				containerHeight
 					+ Math.min(container.getBoundingClientRect().top, 0)
 					+ Math.min(bottomInvisibleHeight, 0)
 					- (container.getBoundingClientRect().top < topOffset ? Math.min(topOffset - container.getBoundingClientRect().top, topOffset) : 0)
@@ -473,7 +473,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 		<label htmlFor={id}>
 			<div>
 				<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
-                {showHelp ? <Help /> : null}
+				{showHelp ? <Help /> : null}
 			</div>
 			{children}
 		</label>
@@ -518,23 +518,25 @@ export class ErrorPanel extends React.Component {
 				</PanelHeading>
 				<PanelCollapse>
 					<ListGroup>
-						{errors.map(({label, error, id, getId, extra = null, disabled}, i) => {
-							const message = error && error.message ? error.message : error;
-							const _clickHandler = () => {
-								clickHandler(id || (getId ? getId() : undefined));
-							};
-
-							return (
-								<ListGroupItem key={i} onClick={_clickHandler} disabled={disabled}>
-									{label ? <b>{label}:</b> : null} {message} {extra}
-								</ListGroupItem>
-							);
-						})}
+						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
 					</ListGroup>
 				</PanelCollapse>
 			</Panel>
 		);
 	}
+}
+
+function ErrorPanelError({label, error, id, getId, extra = null, disabled, clickHandler}) {
+	const message = error && error.message ? error.message : error;
+	const _clickHandler = React.useCallback(() => {
+		clickHandler(id || (getId ? getId() : undefined));
+	}, [clickHandler, id, getId]);
+
+	return (
+		<ListGroupItem onClick={_clickHandler} disabled={disabled}>
+			{label ? <b>{label}:</b> : null} {message} {extra}
+		</ListGroupItem>
+	);
 }
 
 function NullTooltip() {
@@ -574,7 +576,7 @@ export class FetcherInput extends React.Component {
 	}
 
 	render() {
-		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 		return (
 			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""} ${className}`} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
@@ -635,7 +637,7 @@ export class OverlayTrigger extends React.Component {
 		const {
 			children,
 			overlay,
-			_context, //eslint-disable-line no-unused-vars
+			_context, //eslint-disable-line @typescript-eslint/no-unused-vars
 			...props
 		} = this.props;
 
@@ -653,7 +655,7 @@ export class OverlayTrigger extends React.Component {
 				                delay={1}
 				                trigger={[]} 
 				                placement={this.props.placement || "top"}
-												ref={this.setOverlayTriggerRef}
+				                ref={this.setOverlayTriggerRef}
 				                overlay={_overlay}>
 					{children}
 				</_OverlayTrigger>
@@ -682,7 +684,7 @@ export class Fullscreen extends React.Component {
 	render() {
 		return createPortal((
 			<div className="laji-form fullscreen">
-					{this.props.children}
+				{this.props.children}
 			</div>
 		), document.body);
 	}

@@ -36,10 +36,10 @@ export default class _SchemaField extends React.Component {
 
 		const objectOrArrayAsArray = item => (
 			item
-			? (Array.isArray(item)
-				? item
-				: [item])
-			: []
+				? (Array.isArray(item)
+					? item
+					: [item])
+				: []
 		);
 
 		if (childFunctions) {

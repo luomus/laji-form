@@ -243,7 +243,7 @@ export default class NestField extends React.Component {
 		Object.keys(nests).reverse().forEach(nestName => {
 			if (formData[nestName]) {
 				Object.keys(formData[nestName]).forEach(prop => {
-					if (formData[nestName].hasOwnProperty(prop)) formData = {...formData, [prop]: formData[nestName][prop]};
+					if (prop in formData[nestName]) formData = {...formData, [prop]: formData[nestName][prop]};
 				});
 				formData = immutableDelete(formData, nestName);
 			}

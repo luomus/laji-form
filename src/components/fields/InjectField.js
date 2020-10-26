@@ -50,7 +50,7 @@ export default class InjectField extends React.Component {
 				let parentProperties = this.getSchemaProperties(schema, splits.slice(0, splits.length - 1));
 				schema = update(schema,
 					{properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target],
-                    {$merge: {[fieldName]: parentProperties.properties[fieldName]}})}});
+						{$merge: {[fieldName]: parentProperties.properties[fieldName]}})}});
 				if (splits.length === 1) parentProperties = schema;
 				schema = update(schema, this.getSchemaPath(splits, {properties: {$set: immutableDelete(parentProperties.properties, fieldName)}}));
 				const idx = parentProperties.required ? parentProperties.required.indexOf(fieldName) : -1;

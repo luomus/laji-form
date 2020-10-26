@@ -60,10 +60,10 @@ export default class CheckboxWidget extends React.Component {
 	onSelectChange = (value) => {
 		const _value =
 			value === "true"
-			? true
-			: value === "false"
-				? false
-				: undefined;
+				? true
+				: value === "false"
+					? false
+					: undefined;
 		this.props.onChange(_value);
 	}
 

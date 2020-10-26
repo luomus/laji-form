@@ -170,17 +170,18 @@ export default class NamedPlaceChooserField extends React.Component {
 		this.apiClient.removeOnCachePathInvalidation("/named-places", this.updatePlaces);
 	}
 
+	onHide = () => this.setState({show: false});
+
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {translations} = formContext;
 		const {failed} = this.state;
-		const onHide = () => this.setState({show: false});
 		return (
 			<React.Fragment>
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />
 				{
 					this.state.show ? (
-						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={onHide}>
+						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={this.onHide}>
 							<Modal.Header closeButton={true}>
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
@@ -377,7 +378,7 @@ class NamedPlaceChooser extends React.Component {
 							contextId={this.props.formContext.contextId}
 							translations={translations} />
 					</div>
-			</div>
+				</div>
 			);
 		}
 	}
@@ -407,8 +408,7 @@ class Popup extends React.Component {
 		return place ? (
 			<div>
 				<table className="named-place-popup">
-					<tbody>
-					{
+					<tbody>{
 						[
 							["Name", "name"], 
 							["Notes", "notes"]
@@ -421,8 +421,7 @@ class Popup extends React.Component {
 							);
 							return fieldset;
 						}, [])
-					}
-				</tbody>
+					}</tbody>
 				</table>
 				<Button block ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
 				<DeleteButton block
@@ -433,8 +432,8 @@ class Popup extends React.Component {
 				              confirmStyle={"browser"}
 				              translations={translations}>
 					{translations.Remove} {deleting && <Spinner />}
-			</DeleteButton>
-		</div>
+				</DeleteButton>
+			</div>
 		) : <Spinner />;
 	}
 }

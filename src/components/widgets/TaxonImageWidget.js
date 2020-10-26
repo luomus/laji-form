@@ -18,8 +18,8 @@ export default class TaxonImageWidget extends React.Component {
 
 		return (
 			<React.Fragment>
-					{["MX.45", "MX.255"].map(taxonID => <div key={taxonID} style={{height: 100, width:100}} onClick={this.onTaxonImageClick(taxonID)} />)}
-					{schemaField}
+				{["MX.45", "MX.255"].map(taxonID => <div key={taxonID} style={{height: 100, width:100}} onClick={this.onTaxonImageClick(taxonID)} />)}
+				{schemaField}
 			</React.Fragment>
 		);
 	}

@@ -151,9 +151,9 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuggested = (input, suggestion) => {
 			const {taxonCardPlacement: placement = "top" } = getUiOptions(this.props);
 			return (
-			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
-				{input}
-			</TaxonCardOverlay>
+				<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
+					{input}
+				</TaxonCardOverlay>
 			);
 		}
 
@@ -178,8 +178,13 @@ function TaxonAutosuggest(ComposedComponent) {
 				<Row>
 					<Col xs={12}>
 						<div className="laji-form-medias">
-								{this.parseChooseImages(chooseImages)
-										.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
+							{this.parseChooseImages(chooseImages).map(taxonIDObj =>
+								<TaxonImgChooser id={taxonIDObj.id}
+								                 key={taxonIDObj.id}
+								                 url={taxonIDObj.url}
+								                 onSelect={this.onTaxonImgSelected}
+								                 formContext={this.props.formContext}/>
+							)}
 						</div>
 					</Col>
 					<Col xs={12}>
@@ -699,7 +704,7 @@ export class Autosuggest extends React.Component {
 						theme={cssClasses}
 					/>
 				</div>
-		</React.Fragment>
+			</React.Fragment>
 		);
 	}
 
@@ -774,10 +779,10 @@ export class Autosuggest extends React.Component {
 
 		const addon = informalTaxonGroups && renderInformalTaxonGroupSelector
 			? <InformalTaxonGroupsAddon taxonGroupID={taxonGroupID} 
-																	onClear={this.onInformalTaxonGroupSelected} 
-																	open={this.state.informalTaxonGroupsOpen}
-																	onOpen={this.onInformalTaxonGroupsOpened} 
-																	formContext={this.props.formContext} /> 
+				                          onClear={this.onInformalTaxonGroupSelected} 
+				                          open={this.state.informalTaxonGroupsOpen}
+				                          onOpen={this.onInformalTaxonGroupsOpened} 
+				                          formContext={this.props.formContext} /> 
 			: null;
 
 		const getTogglerTooltip = () => {
@@ -798,7 +803,7 @@ export class Autosuggest extends React.Component {
 				<TooltipComponent tooltip={getTogglerTooltip()} >
 					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
 						<Glyphicon glyph="flash"/>
-				</InputGroup.Addon>
+					</InputGroup.Addon>
 				</TooltipComponent>
 			) : null;
 
@@ -946,7 +951,7 @@ class TaxonCardOverlay extends React.Component {
 			<OverlayTrigger hoverable={true}
 			                placement={placement}
 			                _context={new Context(this.props.formContext.contextId)}
-											overlay={popover}>
+			                overlay={popover}>
 				{children}
 			</OverlayTrigger>
 		);
@@ -1051,12 +1056,12 @@ class TaxonImgChooser extends React.Component {
 		return (
 			<div className="laji-form-medias">
 				<div className="taxon-img media-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
-						{!taxon && <div className="media-loading"><Spinner /></div>}
-						<span>
-							{taxon && taxon.vernacularName || ""}
-						</span>
+					{!taxon && <div className="media-loading"><Spinner /></div>}
+					<span>
+						{taxon && taxon.vernacularName || ""}
+					</span>
 				</div>
-					{modal && 
+				{modal && 
 						<Modal dialogClassName="laji-form media-modal" show={true} onHide={this.hideModal}>
 							<Modal.Body>
 								<img src={this.state.large} />
@@ -1067,7 +1072,7 @@ class TaxonImgChooser extends React.Component {
 								</div>
 							</Modal.Body>
 						</Modal>
-					}
+				}
 			</div>
 		);
 	}
@@ -1079,10 +1084,10 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 		: (scientificName || "");
 	return (
 		<React.Fragment>
-				{`${vernacularName}${vernacularName ? " " : ""}`}
-				{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-					{renderFlag({payload: {finnish}})}
-			</React.Fragment>
+			{`${vernacularName}${vernacularName ? " " : ""}`}
+			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+			{renderFlag({payload: {finnish}})}
+		</React.Fragment>
 	);
 };
 

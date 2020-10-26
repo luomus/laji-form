@@ -52,12 +52,13 @@ function ObjectFieldTemplate(props) {
 						id={`${props.idSchema.$id}__description`}
 						description={props.description}
 						formContext={props.formContext}
-					/>}
-						{leftButtons && (
-							<div className="pull-left">
-								{leftButtons}
-							</div>
-						)}
+					/>
+				}
+				{leftButtons && (
+					<div className="pull-left">
+						{leftButtons}
+					</div>
+				)}
 				{props.properties.map(({content}) => content)}
 				{rightButtons && (
 					<div className="pull-right">
@@ -93,10 +94,10 @@ function GridTemplate(props) {
 			rows[i] = [];
 			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
 			rows[i].push(<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
-							<Label id={idSchema.$id + "_row_" + i}
-								   label={rowTitles[i].title}
-								   help={rowTitles[i].help}/>
-						</Col>);
+				<Label id={idSchema.$id + "_row_" + i}
+				       label={rowTitles[i].title}
+				       help={rowTitles[i].help}/>
+			</Col>);
 		}
 	};
 
@@ -158,10 +159,10 @@ function GridTemplate(props) {
 			<fieldset className={schemaClassName}>
 				{!isEmptyString(fieldTitle) ?
 					<TitleField title={fieldTitle}
-								className={getUiOptions(props.uiSchema).titleClassName}
-								buttons={buttons}
-								help={uiSchema["ui:help"]}
-								id={idSchema.$id} /> : null}
+					            className={getUiOptions(props.uiSchema).titleClassName}
+					            buttons={buttons}
+					            help={uiSchema["ui:help"]}
+					            id={idSchema.$id} /> : null}
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>
@@ -173,7 +174,7 @@ function GridTemplate(props) {
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : null}
-	</div>
+		</div>
 	);
 }
 

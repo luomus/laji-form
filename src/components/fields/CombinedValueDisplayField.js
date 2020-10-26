@@ -51,10 +51,10 @@ export default class CombinedValueDisplayField extends React.Component {
 
 			schema = {...schema, properties: {...schema.properties, [name || ""]: {title: title || "", type: "string" }}};
 			idSchema = toIdSchema(
-                schema,
-                idSchema.$id,
-                props.registry.definitions
-            );
+				schema,
+				idSchema.$id,
+				props.registry.definitions
+			);
 
 			let value = undefined;
 

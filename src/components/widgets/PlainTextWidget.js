@@ -13,10 +13,10 @@ function PlainTextWidget(props) {
 		formData: props.value
 	});
 	return (
-    <span className={`plainText${centered ? " horizontally-centered row-height": ""}`}>
-		{strong ? <strong>{formattedValue}</strong> : formattedValue}
-      <input type="hidden" id={id} value={typeof value === "undefined" ? "" : value} />
-    </span>
+		<span className={`plainText${centered ? " horizontally-centered row-height": ""}`}>
+			{strong ? <strong>{formattedValue}</strong> : formattedValue}
+			<input type="hidden" id={id} value={typeof value === "undefined" ? "" : value} />
+		</span>
 	);
 }
 

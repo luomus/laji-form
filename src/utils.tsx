@@ -8,7 +8,7 @@ import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
 import Form, { UiSchema } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
-import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, ByLang, FieldProps } from "./components/LajiForm";
+import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps } from "./components/LajiForm";
 
 export const isObject = _isObject;
 
@@ -80,7 +80,7 @@ export function getUpdateObjectFromJSONPointer(path: string, injection: any): an
 
 export function immutableDelete(_obj: any, _delProp: string) {
 	const simple = (obj: any, delProp: string) => {
-		if (!obj.hasOwnProperty(delProp)) {
+		if (!(delProp in obj)) {
 			return obj;
 		}
 		const newObj: any = {};
@@ -344,7 +344,7 @@ export function getBootstrapCols(width: number) {
 }
 
 export function isDescendant(parent: HTMLElement | null, child: HTMLElement) {
-	var node = child.parentNode;
+	let node = child.parentNode;
 	while (node != null) {
 		if (node == parent) {
 			return true;
@@ -354,7 +354,7 @@ export function isDescendant(parent: HTMLElement | null, child: HTMLElement) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(target = "", context: RootContext, formData?: any) { // eslint-disable-line no-unused-vars
+export function getKeyHandlerTargetId(target = "", context: RootContext, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	while (target.match(/%\{([^{}]*)\}/)) {
 		const path = /%\{([^{}]*)\}/.exec(target)?.[1] || "";
 		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");
@@ -495,8 +495,8 @@ export function getWindowScrolled(): number {
 
 export function getScrollPositionForScrollIntoViewIfNeeded(elem: Element, topOffset = 0, bottomOffset = 0): number {
 	if (!elem) return getWindowScrolled();
-	var rect = elem.getBoundingClientRect();
-	var html = document.documentElement;
+	const rect = elem.getBoundingClientRect();
+	const html = document.documentElement;
 	const height = elem.scrollHeight;
 	const inView = (
 		rect.top >= topOffset &&
@@ -817,7 +817,7 @@ export function checkJSONPointer(obj: any, pointer: string) {
 	try {
 		let _pointer = obj;
 		return splits.every(split => {
-			const exists = _pointer.hasOwnProperty(split);
+			const exists = split in _pointer;
 			_pointer = _pointer[split];
 			return exists;
 		});
@@ -893,7 +893,7 @@ export function updateFormDataWithJSONPointer(schemaProps: FieldProps, value: an
 
 export const filterLajiFormId = (item: any) => {
 	if (item && item._lajiFormId) {
-		const {_lajiFormId, ..._item} = item; // eslint-disable-line no-unused-vars
+		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
 		item = _item;
 	}
 	return item;
@@ -901,7 +901,7 @@ export const filterLajiFormId = (item: any) => {
 
 export const filterItemId = (item: any) => {
 	if (item && (item._lajiFormId || item.id)) {
-		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line no-unused-vars
+		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
 		item = _item;
 	}
 	return item;
@@ -921,7 +921,7 @@ export const formDataIsEmpty = (props: FieldProps) => {
 
 export const formDataEquals = (f1: any, f2: any, formContext: FormContext, id: string) => {
 	const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, id);
-	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0])
+	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
 	return deepEquals(_f1, _f2);
 };
 

@@ -148,9 +148,9 @@ export default class GeocoderField extends React.Component {
 				this.mounted && this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
 			});
 		}) : 
-		this.update(this.props, (failed = false) => {
-			this.mounted && this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
-		});
+			this.update(this.props, (failed = false) => {
+				this.mounted && this.setState({...this.getStateFromProps(this.props, false), timeout: failed});
+			});
 	}
 
 	getGeometry = (props) => {

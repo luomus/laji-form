@@ -63,22 +63,25 @@ export default class NamedPlaceSaverField extends React.Component {
 		if (prevState.show !== this.state.show) this.setState(this.getStateFromProps(this.props));
 	}
 
+	onHide = () => this.setState({show: false});
+
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {uiSchema} = this.state;
-		const onHide = () => this.setState({show: false});
 		return (
 			<div>
 				<SchemaField  {...this.props} uiSchema={uiSchema} />
-				{this.state && this.state.show ? (
-				<Modal dialogClassName="laji-form" show={true} onHide={onHide}>
-					<Modal.Header>
-						<Modal.Title>{formContext.translations.NamedPlaces}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData} />
-					</Modal.Body>
-				</Modal>) : null}
+				{this.state && this.state.show
+					? (
+						<Modal dialogClassName="laji-form" show={true} onHide={this.onHide}>
+							<Modal.Header>
+								<Modal.Title>{formContext.translations.NamedPlaces}</Modal.Title>
+							</Modal.Header>
+							<Modal.Body>
+								<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData} />
+							</Modal.Body>
+						</Modal>
+					) : null}
 			</div>
 		);
 	}
@@ -171,7 +174,7 @@ class PlaceSaverDialog extends React.Component {
 
 	onSaveNew = (e) => {
 		e.preventDefault();
-		const {namedPlaceID, ...gathering} = this.getGathering(); //eslint-disable-line no-unused-vars
+		const {namedPlaceID, ...gathering} = this.getGathering(); //eslint-disable-line @typescript-eslint/no-unused-vars
 		this.onSave({
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
@@ -238,12 +241,12 @@ class PlaceSaverDialog extends React.Component {
 						<FormControl type="text" value={value} onChange={this.onInputChange} autoFocus onFocus={this.onFocus} disabled={loading} ref={this.setInputRef}/>
 						{" "}
 						{!existingPlaces.length ? 
-								getButton(this.onSaveNew, `${translations.Save} ${translations.new}`) : null}
+							getButton(this.onSaveNew, `${translations.Save} ${translations.new}`) : null}
 						{" "}
 						{this.props.gathering.namedPlaceID ? 
-								getButton(this.onOverwriteCurrent, translations.SaveCurrentOverwrite) : null}
+							getButton(this.onOverwriteCurrent, translations.SaveCurrentOverwrite) : null}
 						{existingPlaces.length === 1 && !this.props.gathering.namedPlaceID ? 
-								getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
+							getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
 					</FormGroup>
 					{loading ? <div className="pull-right"><Spinner /></div> : null}
 				</Form>

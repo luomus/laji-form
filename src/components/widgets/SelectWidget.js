@@ -58,7 +58,7 @@ class SelectWidget extends React.Component {
 
 		if (labels) {
 			enumOptions = enumOptions.map(({value, label}) => {
-				return {value, label: labels.hasOwnProperty(value) ? labels[value] : label};
+				return {value, label: value in labels ? labels[value] : label};
 			});
 		}
 

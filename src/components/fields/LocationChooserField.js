@@ -213,7 +213,7 @@ class LocationButton extends React.Component {
 		let [draw, data] = this.getData();
 		data = data.map(d => ({...d, editable: false}));
 
-		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 		const {
 			mapOptions: {
@@ -425,10 +425,10 @@ class LocationButton extends React.Component {
 						on: undefined,
 						editable: false,
 						getFeatureStyle: item.getFeatureStyle
-						? item.featureCollection.features[0].properties.id === id
-							? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
-							: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
-						: undefined
+							? item.featureCollection.features[0].properties.id === id
+								? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
+								: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
+							: undefined
 					}
 				)),
 				map.getDraw()
@@ -457,7 +457,7 @@ class LocationButton extends React.Component {
 		const {map} = mapContext;
 		let mapOptions = {};
 		if (map) {
-			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line @typescript-eslint/no-unused-vars
 			mapOptions = _mapOptions;
 		}
 
@@ -515,16 +515,16 @@ class LocationButton extends React.Component {
 				: "default"; 
 
 		const button = <LocationButtonComp
-				key={`${that.props.idSchema.$id}-location`}
-				id={`${that.props.idSchema.$id}-location`}
-				bsStyle={bsStyle}
-				onMouseEnter={this.onMouseEnter}
-				onMouseLeave={this.onMouseLeave}
-				glyph={glyph}
-				onClick={this.onClick}
-				style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
-				ref={this.setButtonRef}
-			/>;
+			key={`${that.props.idSchema.$id}-location`}
+			id={`${that.props.idSchema.$id}-location`}
+			bsStyle={bsStyle}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
+			glyph={glyph}
+			onClick={this.onClick}
+			style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
+			ref={this.setButtonRef}
+		/>;
 
 		if (hasErrors) {
 			return (

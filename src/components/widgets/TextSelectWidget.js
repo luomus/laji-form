@@ -73,9 +73,9 @@ class TextSelectWidget extends React.Component {
 				{enums.map((label, i) => {
 					return (
 						<Checkbox key={i}
-											title={label}
-											checked={selectedCheckboxes.has(label)}
-											onChange={this.onCheckBoxChange(label)}>{label}</Checkbox>
+						          title={label}
+						          checked={selectedCheckboxes.has(label)}
+						          onChange={this.onCheckBoxChange(label)}>{label}</Checkbox>
 					);
 				})}
 				{freeTextField ?
@@ -85,7 +85,7 @@ class TextSelectWidget extends React.Component {
 						value={otherValue}
 						onChange={this.onInputChange}
 						disabled={!selectedCheckboxes.has(freeTextField)} />
-				: null}
+					: null}
 			</div>
 		);
 	}

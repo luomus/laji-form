@@ -94,9 +94,9 @@ export default class AutosuggestField extends React.Component {
 			? toggled
 			: this.state
 				?  this.state.toggled
-					: togglePersistenceKey
-						? context[this.getTogglePersistenceContextKey(props)]
-						: false;
+				: togglePersistenceKey
+					? context[this.getTogglePersistenceContextKey(props)]
+					: false;
 
 		const taxonGroupID = !informalTaxonGroups 
 			? undefined
@@ -270,7 +270,7 @@ export default class AutosuggestField extends React.Component {
 			if (value.match(regexp)) {
 				if (!formData) formData = {};
 				let formDataChange = {};
-				value = value.replace(regexp, "\$1");
+				value = value.replace(regexp, "$1");
 				if (inputTransformer.transformations) for (let transformField in inputTransformer.transformations) {
 					formDataChange[transformField] = inputTransformer.transformations[transformField];
 				}

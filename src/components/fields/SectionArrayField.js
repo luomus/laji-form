@@ -222,7 +222,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					formContext={formContext}
 					errorSchema={this.props.formContext.errorSchema[0] || {}}
 				/>
-		</React.Fragment>
+			</React.Fragment>
 		);
 	}
 
@@ -237,18 +237,19 @@ class SectionArrayFieldTemplate extends React.Component {
 			const {children, hasRemove, index, disabled, readonly, onDropIndexClick} = this.props.items[idx];
 			return (
 				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "darker nonbordered"} id={`${this.props.idSchema.$id}_${idx}-section`}>
-					{hasRemove && <DeleteButton
-					id={`${this.props.idSchema.$id}_${index}`}
-					disabled={disabled || readonly}
-					translations={this.props.formContext.translations}
-					onClick={onDropIndexClick(index)}
-					className="horizontally-centered"
-				/>}
-						<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-							<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
+					{hasRemove && (
+						<DeleteButton
+							id={`${this.props.idSchema.$id}_${index}`}
+							disabled={disabled || readonly}
+							translations={this.props.formContext.translations}
+							onClick={onDropIndexClick(index)}
+							className="horizontally-centered" />
+					)}
+					<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+						<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
 					</Affix>
-						{children}
-					</Section>
+					{children}
+				</Section>
 			);
 		});
 	}
@@ -274,7 +275,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			<React.Fragment>
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 					<Button id={`${this.props.idSchema.$id}-add`} onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}} ref={this.addButtonRef}><Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}</Button>
-			</Affix>
+				</Affix>
 				{(this.state || {}).showAddSection &&
 						<Overlay show={true} placement="left" rootClose={true} onHide={this.hideAddSection} target={this.getAddButtonElem}>
 							<Popover id={`${this.props.id}-show-add-section`}>
@@ -321,7 +322,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				<Row>
 					<Col xs={3}><label className="row-height not-strong" htmlFor={`${this.props.idSchema.$id}-section-input`}>{translations.Number}:</label></Col>
 					<Col xs={9}><input className="form-control" id={`${this.props.idSchema.$id}-section-input`} type="text" value={newSection} onChange={this.onNewSectionChange} onKeyDown={this.onNewSectionKeyDown} ref={this.sectionInputRef}/></Col>
-			</Row>
+				</Row>
 				<div>{translations.EnterNewSectionNumber}</div>
 				<Button disabled={!this.sectorIsValid(newSection)} onClick={this.addSection}>{translations.Add}</Button>
 				<Button onClick={this.hideAddSection} bsStyle="default">{translations.Cancel}</Button>
@@ -354,7 +355,7 @@ class SectionArrayFieldTemplate extends React.Component {
 		const [containerPointer] = rowDefinerField.split("/%{row}");
 		const copiedRowDefinerData = (parseJSONPointer(this.props.formData[0] || {}, containerPointer) || []).reduce((result, item, idx) => {
 			return [rowDefinerField, ...rowDefinerFields].reduce((_result, field) => {
-				const [_, parsedField] = field.split("/%{row}"); // eslint-disable-line no-unused-vars
+				const [_, parsedField] = field.split("/%{row}"); // eslint-disable-line @typescript-eslint/no-unused-vars
 				return updateFormDataWithJSONPointer(
 					{
 						schema: schema.items,
@@ -484,7 +485,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					ids = {...ids, ..._ids};
 				}
 				const updatedUnit = [rowDefinerField, ...rowDefinerFields].reduce((updatedNewUnit, field) => {
-					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line no-unused-vars
+					const [_, contentPointer] = field.split("%{row}"); // eslint-disable-line @typescript-eslint/no-unused-vars
 					const pointer = field.replace("%{row}", idx);
 					const value = parseJSONPointer(formData, pointer);
 					return updateFormDataWithJSONPointer(

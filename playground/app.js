@@ -52,8 +52,8 @@ if (mockApi) {
 	window.mockResponses = mockResponses;
 	window.mockQueues = mockQueues;
 	const getKey = (path, queryObject) => queryObject
-			? `${path}?${queryString.stringify(queryObject)})}`
-			: path;
+		? `${path}?${queryString.stringify(queryObject)})}`
+		: path;
 	window.getMockQueryKey = getKey;
 	const createMock = () => {
 		let resolve, reject;
@@ -131,7 +131,7 @@ if (test !== true) {
 			...data.uiSchema,
 			"ui:disabled": query.readonly
 		},
-		settings: query.hasOwnProperty("settings")
+		settings: "settings" in query
 			? isObject(settings)
 				? settings
 				: settings !== false

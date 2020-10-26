@@ -2,7 +2,10 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, formDataEquals, getInnerUiSchema } from "../../utils";
 
-export const anyToBoolean = (widget) => (props) => {
+export const AnyToBoolean = (props) => <_AnyToBoolean {...props} />;
+
+const _AnyToBoolean = (props) => {
+	const {widget} = props;
 	const options = getUiOptions(widget ? props : props.uiSchema);
 	const {trueValue, falseValue, allowUndefined = true} = options;
 	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
@@ -13,14 +16,16 @@ export const anyToBoolean = (widget) => (props) => {
 			? false
 			: undefined;
 
-	const onChange = (value) => {
+	const _onChange = props.onChange;
+
+	const onChange = React.useCallback((value) => {
 		const newValue = value === undefined
 			? undefined
 			: value === true
 				? trueValue
 				: falseValue;
-		props.onChange(newValue);
-	};
+		_onChange(newValue);
+	}, [_onChange, trueValue, falseValue]);
 
 	const { CheckboxWidget } = props.registry.widgets; 
 	const { SchemaField } = props.registry.fields; 
@@ -28,34 +33,34 @@ export const anyToBoolean = (widget) => (props) => {
 	return widget
 		? (
 			<CheckboxWidget
-					{...props}
-					id={props.id}
-					schema={schema}
-					value={value}
-					onChange={onChange}
-					label={""}
-					options={options}
+				{...props}
+				id={props.id}
+				schema={schema}
+				value={value}
+				onChange={onChange}
+				label={""}
+				options={options}
 			/>
 		) : (
 			<SchemaField
-					{...props}
-					schema={schema}
-					uiSchema={getInnerUiSchema(props.uiSchema)}
-					formData={value}
-					onChange={onChange}
-					label={""}
-					options={options}
+				{...props}
+				schema={schema}
+				uiSchema={getInnerUiSchema(props.uiSchema)}
+				formData={value}
+				onChange={onChange}
+				label={""}
+				options={options}
 			/>
 		);
 };
 
-const _anyToBoolean = anyToBoolean(!!"widget");
+const _anyToBoolean = (props) => <_AnyToBoolean widget={true} {...props} />;
 const valuePropType = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
 _anyToBoolean.propTypes =  {
 	uiSchema: PropTypes.shape({
 		"ui:options": PropTypes.shape({
 			trueValue: valuePropType.isRequired,
-			falseValue: valuePropType.isRequired,
+			falseValue: valuePropType,
 			allowUndefined: PropTypes.bool
 		})
 	}),

@@ -25,13 +25,13 @@ export default class ImageDisplayField extends React.Component {
 		const {urls = [], buttons = []} = getUiOptions(this.props.uiSchema);
 		uiSchema = update(uiSchema, {"ui:options": {buttons: {$set: [...buttons, 
 			{position: "left", render: () => 
-			<div className="laji-form-medias" key="image-display">
-				{(Array.isArray(urls) ? urls : [urls]).map(url => 
-					<div className="media-container" key={url}>
-						<img src={url}></img>
-					</div>
-				)}
-			</div>
+				<div className="laji-form-medias" key="image-display">
+					{(Array.isArray(urls) ? urls : [urls]).map(url => 
+						<div className="media-container" key={url}>
+							<img src={url}></img>
+						</div>
+					)}
+				</div>
 			}
 		]}}});
 		return (

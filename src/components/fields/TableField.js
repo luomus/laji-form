@@ -137,7 +137,7 @@ class TableArrayFieldTemplate extends React.Component {
 			return (
 				<Col {...cols} key={propName + "-label"}>
 					<Label
-						label={schemaProps[propName].hasOwnProperty("title") ? schemaProps[propName].title : propName}
+						label={"title" in schemaProps[propName] ? schemaProps[propName].title : propName}
 						disabled={false}
 						id={idSchema[propName].$id}
 						required={(schema.items.required && schema.items.required.indexOf(propName) > -1)

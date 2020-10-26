@@ -209,7 +209,7 @@ interface SubmitHook {
 	relativePointer: string;
 	running: boolean;
 	failed?: boolean;
-};
+}
 
 interface ShortcutKey {
 	fn: string;
@@ -548,7 +548,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	componentWillReceiveProps(props: LajiFormProps) {
-		if (props.hasOwnProperty("lang") && this.props.lang !== props.lang) {
+		if ("lang" in props && this.props.lang !== props.lang) {
 			this.apiClient.setLang(props.lang);
 		}
 		this.setState(this.getStateFromProps(props));
@@ -567,12 +567,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				translations,
 				lang: props.lang,
 				uiSchemaContext: props.uiSchemaContext,
-				settings: JSON.parse(JSON.stringify(
-					(
+				settings: JSON.parse(JSON.stringify((
 					this.state && this.state.formContext
 						? this.state.formContext.settings
 						: props.settings
-					) || {}
+				) || {}
 				)),
 				contextId: this._id,
 				getFormRef: this.getFormRef,
@@ -749,25 +748,25 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					liveValidate={true}
 					autoComplete="off"
 				>
-				<div>
-					{this.props.children}
-					{(!this.props.children && this.props.renderSubmit !== false) ?
-							(<Button id="submit" type="submit" disabled={readonly || disabled}>
+					<div>
+						{this.props.children}
+						{(!this.props.children && this.props.renderSubmit !== false) ? (
+							<Button id="submit" type="submit" disabled={readonly || disabled}>
 								{this.props.submitText || translations.Submit}
-							</Button>) :
-						null}
+							</Button>
+						) : null}
 					</div>
-			</Form>
-			{shortcuts &&
-				<Panel
-					ref={this.getPanelRef}
-					className="shortcut-help laji-form-popped z-depth-3 hidden"
-					style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-					bsStyle="info"
-				>
-					<PanelHeading>
-						<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-					</PanelHeading>
+				</Form>
+				{shortcuts &&
+					<Panel
+						ref={this.getPanelRef}
+						className="shortcut-help laji-form-popped z-depth-3 hidden"
+						style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
+						bsStyle="info"
+					>
+						<PanelHeading>
+							<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
+						</PanelHeading>
 						<Table>
 							<tbody className="well">{
 								Object.keys(shortcuts).map((keyCombo, idx) => {
@@ -785,10 +784,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 								})
 							}</tbody>
 						</Table>
-				</Panel>
-			}
-			{this.renderSubmitHooks()}
-		</div>
+					</Panel>
+				}
+				{this.renderSubmitHooks()}
+			</div>
 		);
 	}
 
@@ -800,7 +799,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 		return (
 			<div className="running-jobs">
-					{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
+				{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
 				<ProgressBar now={100 / jobsAmount * (jobsAmount - runningAmount)} />
 			</div>
 		);
@@ -998,7 +997,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				}
 
 				keyHandler.conditions.push(e =>
-					e.key === key || (specials.hasOwnProperty(key) && ((specials[key] && (e as any)[`${key}Key`]) || (!specials[key] && !(e as any)[`${key}Key`])))
+					e.key === key || (key in specials && ((specials[key] && (e as any)[`${key}Key`]) || (!specials[key] && !(e as any)[`${key}Key`])))
 				);
 
 				return keyHandler;

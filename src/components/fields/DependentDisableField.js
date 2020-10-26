@@ -56,7 +56,7 @@ export default class DependentDisableField extends React.Component {
 						}
 					}
 				});
-				if (rule.hasOwnProperty("disabledValueToDisplay")) {
+				if ("disabledValueToDisplay" in rule) {
 					newFormData = {...formData, [disableField]: rule.disabledValueToDisplay};
 				}
 			}

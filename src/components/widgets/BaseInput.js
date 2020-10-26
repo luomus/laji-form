@@ -23,12 +23,12 @@ export default class _BaseInput extends React.Component {
 		const type = this.props.schema.type;
 		// Accept only integers
 		if (type === "integer") {
-			value = value ? value.replace(/[^0-9\-]/g, "") : value;
+			value = value ? value.replace(/[^0-9-]/g, "") : value;
 			value = value ? value.replace(/(.+)-/g, "$1") : value;
 		}
 		// Accept integers or floats
 		if (type === "number") {
-			value = value ? value.replace(/[^0-9.\-]/g, "") : value;
+			value = value ? value.replace(/[^0-9.-]/g, "") : value;
 			value = value ? value.replace(/(\..*)\./g, "$1") : value;
 			value = value ? value.replace(/(.+)-/g, "$1") : value;
 		}
@@ -61,7 +61,7 @@ export default class _BaseInput extends React.Component {
 
 	render() {
 		const {
-			formatValue, // eslint-disable-line no-unused-vars
+			formatValue, // eslint-disable-line @typescript-eslint/no-unused-vars
 			...props
 		} = this.props;
 		const options = props.schema.type === "number" || props.schema.type === "integer"

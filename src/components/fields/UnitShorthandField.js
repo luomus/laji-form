@@ -128,15 +128,15 @@ export default class UnitShorthandField extends React.Component {
 		return !this.state.showSchema ? (
 			<div className="laji-form-field-template-item" id={`_laji-form_${id}`}>
 				<CodeReader translations={this.props.formContext.translations}
-										onChange={this.onCodeChange}
-										value={this.props.formData[shorthandFieldName]}
-										formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
-										help={help} 
-										id={id}
-										formContext={formContext}
-										disabled={disabled}
-										readonly={readonly}
-										className="laji-form-field-template-schema" />
+				            onChange={this.onCodeChange}
+				            value={this.props.formData[shorthandFieldName]}
+				            formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
+				            help={help} 
+				            id={id}
+				            formContext={formContext}
+				            disabled={disabled}
+				            readonly={readonly}
+				            className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
 		) : (
@@ -193,8 +193,8 @@ class CodeReader extends React.Component {
 	renderSuggestion = (suggestion) => {
 		const {translations} = this.props;
 		return suggestion.payload.isNonMatching
-		? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
-		: suggestion.value;
+			? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
+			: suggestion.value;
 	}
 
 	render() {
@@ -238,13 +238,14 @@ class CodeReader extends React.Component {
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				{inputElem}
-				{this.state.failed ? (
-					<HelpBlock>
-						{translations.InvalidUnitCode}
-					</HelpBlock>
+				{this.state.failed
+					? (
+						<HelpBlock>
+							{translations.InvalidUnitCode}
+						</HelpBlock>
 					) : null
 				}
-			<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
+				<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
 			</FormGroup>
 		);
 	}
