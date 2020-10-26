@@ -54,7 +54,7 @@ export class TagInputComponent extends Component {
 	onKeyDown = (e) => {
 		const {value} = this.state;
 		const {tags = []} = this.props;
-		const {separatorKeys = ["Enter"]} = getUiOptions(this.props.uiSchema);
+		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(this.props.uiSchema);
 		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
 			this.props.onChange([...tags, value], "enter");
 			e.stopPropagation();
