@@ -33,4 +33,17 @@ describe("WBC (MHL.3)", () => {
 		expect(formData.gatherings[0].taxonCensus.length).toBe(1);
 		expect(formData.gatherings[0].taxonCensus[0].censusTaxonID).toBe("MX.37580");
 	});
+
+	it("entering descriptionBiotopeF doesn't clear observerCount", async () => {
+		form = await createForm({id: "MHL.3", localFormData: true, isAdmin: true});
+		const $descriptionBiotopeF = form.$locate("gatherings.0.gatheringFact.descriptionBiotopeF");
+		const $otherBiotopeFCheckbox = $descriptionBiotopeF.$$(".checkbox label input").get(2);
+		await $otherBiotopeFCheckbox.click();
+		await $otherBiotopeFCheckbox.click();
+		await $otherBiotopeFCheckbox.click();
+		//await $descriptionBiotopeF.$("input.form-control").sendKeys("test");
+		const formData = await form.getChangedData();
+
+		expect(formData.gatherings[0].gatheringFact.observerCount).toBe(1);
+	});
 });
