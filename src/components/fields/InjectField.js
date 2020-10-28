@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
-import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer, updateSafelyWithJSONPointer, parseJSONPointer, formDataEquals } from "../../utils";
+import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
  * Inject a schema object property to nested schema.

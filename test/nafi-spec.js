@@ -46,7 +46,7 @@ describe("NAFI (MHL.6)", () => {
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate(unitLocator).$(".rw-list")), 5000, "Suggestion list timeout");
 		const $$taxonSuggestions = form.$locate(unitLocator).$$(".rw-list-option");
 		await $$taxonSuggestions.first().click();
-		expect(await $unit.getAttribute("value")).toBe("kettu");
+		expect(await $unit.getAttribute("value")).toBe("Vulpes vulpes");
 		await autocompleteMock.remove();
 	});
 });
