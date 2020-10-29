@@ -62,7 +62,8 @@ export default class InjectField extends Component {
 				let parentUiSchemaProperties = this.getUiSchemaProperties(uiSchema, splits.slice(0, splits.length - 1));
 				uiSchema = updateSafelyWithJSONPointer(uiSchema, parentUiSchemaProperties[fieldName], `/${target}/${fieldName}`);
 
-				idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema.$id + "_" + fieldPath.replace(/\//g, "_")}}}});
+				const id = fieldPath[0] === "/" ? fieldPath.substr(1).replace(/\//g, "_") : fieldPath;
+				idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema.$id + "_" + id}}}});
 				idSchema = update(idSchema, this.getIdSchemaPath(splits, {$set: undefined}));
 				if (formData && formData[target] && Array.isArray(formData[target])) {
 					formData[target].forEach((item, i) => {
