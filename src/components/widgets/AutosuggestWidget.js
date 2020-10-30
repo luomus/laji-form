@@ -486,9 +486,14 @@ export class Autosuggest extends Component {
 			new Context(this.props.formContext.contextId).formInstance.onKeyDown(e);
 			this.selectSuggestion(suggestion);
 			// If event triggered for LajiForm didn't cause a navigation and thus blur, select the suggestion.
-			if (document.activeElement !== findDOMNode(this.inputElem)) {
+			if (document.activeElement === findDOMNode(this.inputElem)) {
 				this.selectSuggestion(suggestion);
 			}
+			setImmediate(() => {
+				if (this.mounted && document.activeElement !== findDOMNode(this.inputElem)) {
+					this.onBlur();
+				}
+			});
 		}
 	}
 
@@ -572,7 +577,13 @@ export class Autosuggest extends Component {
 		triggerParentComponent("onFocus", e, this.props.inputProps);
 	}
 
-	onBlur = (e, {highlightedSuggestion} = {}) => {
+	onBlur = (e,  data) => {
+		if (!data) {
+			this.setState({focused: false});
+			triggerParentComponent("onBlur", e, this.props.inputProps);
+			return;
+		}
+		const {highlightedSuggestion} = data;
 		this.highlightedSuggestionOnBlur = highlightedSuggestion;
 		this._valueForBlurAndFetch = this.state.value;
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
@@ -733,7 +744,7 @@ export class Autosuggest extends Component {
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
-		let isSuggested = !!suggestion && this.isValueSuggested(value);
+		const isSuggested = !!suggestion && this.isValueSuggested(value);
 
 		if (!isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";

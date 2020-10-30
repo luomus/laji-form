@@ -84,7 +84,7 @@ export default class AutosuggestField extends Component {
 		let {schema, uiSchema, formData} = props;
 		const context = new Context(this.props.formContext.contextId);
 		const uiOptions = getUiOptions(uiSchema);
-		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey, togglePersistenceKey} = uiOptions;
+		const {informalTaxonGroups = "informalTaxonGroups", informalTaxonGroupPersistenceKey, togglePersistenceKey, suggestionInputField, suggestionReceivers} = uiOptions;
 
 		if (togglePersistenceKey) {
 			toggled = context[this.getTogglePersistenceContextKey(props)];
@@ -119,7 +119,10 @@ export default class AutosuggestField extends Component {
 			taxonGroupID,
 			placeholder: toggled 
 				? this.props.formContext.translations.UnitAutosuggestFieldTogglePlaceholder 
-				: uiOptions["ui:placeholder"]
+				: uiOptions["ui:placeholder"],
+			controlledValue: suggestionReceivers
+				&& suggestionReceivers[suggestionInputField]
+				&& suggestionReceivers[suggestionInputField] !== "key"
 		};
 
 		if (uiOptions.toggleable) {
@@ -128,8 +131,6 @@ export default class AutosuggestField extends Component {
 
 			options = this.getActiveOptions(options, toggled);
 		}
-
-		const {suggestionInputField} = options;
 
 		if (suggestionInputField && props.formData && !isEmptyString(parseJSONPointer(props.formData, suggestionInputField, !!"safe"))) {
 			options.value = parseJSONPointer(props.formData, suggestionInputField);
