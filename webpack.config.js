@@ -41,7 +41,7 @@ module.exports = {
 			},
 			{
 				test: /\.(gif|ttf|eot|svg|woff2?)$/,
-				loader: 'url-loader?name=[name].[ext]',
+				loader: "url-loader?name=[name].[ext]",
 			}
 		],
 		noParse: [
@@ -49,6 +49,9 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: ['.tsx', '.ts',  '.jsx', '.js', '.json']
+		extensions: [".tsx", ".ts",  ".jsx", ".js", ".json"]
+	},
+	watchOptions: {
+		  ignored: /\.swp$/,
 	}
 };
