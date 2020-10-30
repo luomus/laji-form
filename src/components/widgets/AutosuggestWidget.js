@@ -322,6 +322,7 @@ class FriendsAutosuggestWidget extends React.Component {
 			renderUnsuggested: this.renderUnsuggested,
 			renderSuccessGlyph: this.renderSuccessGlyph,
 			findExactMatch: this.findExactMatch,
+			controlledValue: true
 		};
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
@@ -737,8 +738,7 @@ export class Autosuggest extends React.Component {
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
-		let isSuggested = this.isValueSuggested(value);
-		if (isSuggested) isSuggested = isSuggested && !!suggestion;
+		let isSuggested = !!suggestion && this.isValueSuggested(value);
 
 		if (!isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";

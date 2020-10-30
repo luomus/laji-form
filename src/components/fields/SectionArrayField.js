@@ -180,7 +180,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			<div style={{display: "flex", width: "100%"}} ref={this.ref} onFocus={this.onContainerFocus} onBlur={this.onContainerBlur} tabIndex={0}>
 				<Section key="definer" style={{flexGrow: "initial", maxWidth: 200}} id={`${this.props.idSchema.$id}-section-definer`}>{this.renderRowDefinerColumn()}</Section>
 				{this.renderSections()}
-				<Section key="sums" className="bg-info">{this.renderRowDefinerSumColumn()}</Section>
+				<Section key="sums" className="bg-info" style={{maxWidth: 75}}>{this.renderRowDefinerSumColumn()}</Section>
 				<Section key="deletes" style={{flexGrow: "initial", maxWidth: 143}}>{this.renderRowDefinerDeleteColumn()}</Section>
 			</div>
 		);

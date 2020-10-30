@@ -62,7 +62,8 @@ export default class InjectField extends React.Component {
 				let parentUiSchemaProperties = this.getUiSchemaProperties(uiSchema, splits.slice(0, splits.length - 1));
 				uiSchema = updateSafelyWithJSONPointer(uiSchema, parentUiSchemaProperties[fieldName], `/${target}/${fieldName}`);
 
-				idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema.$id + "_" + fieldPath.replace(/\//g, "_")}}}});
+				const id = fieldPath[0] === "/" ? fieldPath.substr(1).replace(/\//g, "_") : fieldPath;
+				idSchema = update(idSchema, {[target]: {$merge: {[fieldName]: {$id: idSchema.$id + "_" + id}}}});
 				idSchema = update(idSchema, this.getIdSchemaPath(splits, {$set: undefined}));
 				if (formData && formData[target] && Array.isArray(formData[target])) {
 					formData[target].forEach((item, i) => {
@@ -97,54 +98,25 @@ export default class InjectField extends React.Component {
 
 		return {schema, uiSchema, idSchema, formData, errorSchema};
 	}
+
 	onChange(formData) {
 		const options = this.getUiOptions();
 
 		(Array.isArray(options.injections) ? options.injections : [options.injections]).forEach((injection) => {
 			const {fields, target} = injection;
 
-			if (!formData || !formData[target]) {
-				formData = this.formatToOriginal(formData, this.props, fields);
-				return;
-			}
-
-			let formDataChanged = false;
-			fields.forEach(fieldPath => {
-				const splits = fieldPath.split("/");
-				const fieldName = splits[splits.length - 1];
-
-				if (formData && formData[target] && Array.isArray(formData[target])) {
-					for (const i in formData[target]) {
-						let item = formData[target][i];
-						if (item[fieldName] !== formData[fieldName]) {
-							formData = update(formData, this.getFormDataPath(splits, {$set: item[fieldName]}));
-							formDataChanged = true;
-						}
-						item = immutableDelete(item, fieldName);
-						formData = update(formData, {[target]: {[i]: {$set: item}}});
-					}
-				} else if (formData && formData[target] && formData[target][fieldName] !== undefined) {
-					formData = update(formData, this.getFormDataPath(splits, {$set: formData[target][fieldName]}));
-					delete formData[target][fieldName];
-					formDataChanged = true;
-				}
-			});
-			if (!formDataChanged) {
-				formData = this.formatToOriginal(formData, this.props, fields);
-			}
+			formData = fields.reduce((formData, fieldPointer) => {
+				const fieldName = fieldPointer.split("/").pop();
+				const value = formData[target][fieldName];
+				formData = updateFormDataWithJSONPointer({...this.props, formData}, value, fieldPointer);
+				formData = immutableDelete(formData, `/${target}${fieldName[0] === "/" ? fieldName : `/${fieldName}`}`);
+				return formData;
+			}, formData);
 		});
 
 		this.props.onChange(formData);
 	}
 
-	formatToOriginal = (formData, props, fields) => {
-		fields.forEach((fieldPath) => {
-			const splits = fieldPath.split("/").filter(s => s);
-			const fieldName = splits[splits.length - 1];
-			formData = update(formData, this.getFormDataPath(splits, {$set: props.formData[fieldName]}));
-		});
-		return formData;
-	}
 	getUpdateSchemaPropertiesPath = (schema, $operation) => {
 		if (schema.type === "object") return {properties: $operation};
 		else if (schema.type === "array") return {items: {properties: $operation}};
@@ -182,18 +154,6 @@ export default class InjectField extends React.Component {
 				o["properties"][s] = {};
 				return o["properties"][s];
 			}
-		}, path);
-		return path;
-	}
-	getFormDataPath = (splits, $operation) => {
-		const path = {};
-		splits.reduce((o, s, i)=> {
-			if (i === splits.length - 1) {
-				o[s] = $operation;
-			} else {
-				o[s] = {};
-			}
-			return o[s];
 		}, path);
 		return path;
 	}

@@ -1,3 +1,6 @@
+## 5.7.3
+* `InjectField` `fields` must begin with "/" if they are to be handled as JSON pointers properly
+
 ## 5.7.0
 * `FakePropertyField`: add `skipIfEmpty` to field options
 * `URLWidget`: add `template` option
