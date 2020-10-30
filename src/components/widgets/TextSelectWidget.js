@@ -109,7 +109,7 @@ class TextSelectWidget extends React.Component {
 	};
 
 	onChange = (textValue) => {
-		let newValue = [...this.state.selectedCheckboxes];
+		let newValue = [...Array.from(this.state.selectedCheckboxes)];
 		if (this.state.selectedCheckboxes.has(this.state.freeTextField)) {
 			if (textValue && textValue.length > 0) {
 				newValue = update(newValue, {$push: [textValue]});
