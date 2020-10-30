@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { createPortal, findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
 import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import equals from "deep-equal";
+import * as equals from "deep-equal";
 import Context from "../../Context";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
 
@@ -49,7 +49,7 @@ export function getCenterAndRadiusFromGeometry(geometry) {
 }
 
 @BaseComponent
-export default class MapField extends Component {
+export default class MapField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -206,30 +206,30 @@ export default class MapField extends Component {
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
-					<Affix {...{topOffset, bottomOffset}}>
-						<div style={{height}}>
-							<MapComponent
-								{..._mapOptions}
-								ref={this.setMapRef}
-								draw={this.getDrawOptions(this.props)}
-								data={extraData}
-								lang={lang}
-								zoomToData={{paddingInMeters: 200}}
-								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
-								formContext={this.props.formContext}
-								onOptionsChanged={this.onOptionsChanged} />
-								{this.map && this.map.container && createPortal(this.renderBlocker(), this.map.container)}
-						</div>
-					</Affix>
-						{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
-								<MobileEditorMap {...mobileEditorOptions}
-									options={mobileEditor.options}
-									onChange={this.onMobileEditorChange}
-									onClose={this.onHideMobileEditorMap}
-									map={this.map}
-									formContext={this.props.formContext}
-								/>
-					}
+				<Affix {...{topOffset, bottomOffset}}>
+					<div style={{height}}>
+						<MapComponent
+							{..._mapOptions}
+							ref={this.setMapRef}
+							draw={this.getDrawOptions(this.props)}
+							data={extraData}
+							lang={lang}
+							zoomToData={{paddingInMeters: 200}}
+							panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
+							formContext={this.props.formContext}
+							onOptionsChanged={this.onOptionsChanged} />
+						{this.map && this.map.container && createPortal(this.renderBlocker(), this.map.container)}
+					</div>
+				</Affix>
+				{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
+						<MobileEditorMap {...mobileEditorOptions}
+							options={mobileEditor.options}
+							onChange={this.onMobileEditorChange}
+							onClose={this.onHideMobileEditorMap}
+							map={this.map}
+							formContext={this.props.formContext}
+						/>
+				}
 			</div>
 		);
 	}
@@ -346,8 +346,8 @@ export default class MapField extends Component {
 				<React.Fragment>
 					<div className="blocker" />
 					<div className="blocker-content">
-							<span>{this.props.formContext.translations.SearchingForLocation}...</span>
-							<Spinner />
+						<span>{this.props.formContext.translations.SearchingForLocation}...</span>
+						<Spinner />
 					</div>
 				</React.Fragment>
 			);
@@ -355,7 +355,7 @@ export default class MapField extends Component {
 	}
 }
 
-class MobileEditorMap extends Component {
+class MobileEditorMap extends React.Component {
 	DEFAULT_RADIUS_PIXELS = 100;
 
 	constructor(props) {
@@ -477,7 +477,7 @@ class MobileEditorMap extends Component {
 	}
 
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
 
 		

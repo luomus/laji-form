@@ -1,4 +1,4 @@
-import { navigateToForm, lajiFormLocate, createForm, getFocusedId, filterUUIDs } from "./test-utils.js";
+const { navigateToForm, lajiFormLocate, createForm, getFocusedId, filterUUIDs } = require("./test-utils.js");
 
 describe("Line transect (MHL.1)", () => {
 

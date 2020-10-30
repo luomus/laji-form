@@ -1,4 +1,4 @@
-import lajiValidate from "laji-validate";
+import * as lajiValidate from "laji-validate";
 
 export function initializeValidation(apiClient) {
 	lajiValidate.extend(lajiValidate.validators.remote, {

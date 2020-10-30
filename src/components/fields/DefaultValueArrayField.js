@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -16,7 +16,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }}
  */
 @VirtualSchemaField
-export default class DefaultValueArrayField extends Component {
+export default class DefaultValueArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -38,7 +38,7 @@ export default class DefaultValueArrayField extends Component {
 		Object.keys(_default).forEach(field => {
 			if (formData) formData.forEach((item, i) => {
 				formData = update(formData,
-          {$splice: [[i, 1, update(item, {$merge: {[field]: _default[field]}})]]});
+					{$splice: [[i, 1, update(item, {$merge: {[field]: _default[field]}})]]});
 			});
 		});
 		this.props.onChange(formData);

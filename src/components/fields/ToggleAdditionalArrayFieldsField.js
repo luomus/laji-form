@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import {
 	getInnerUiSchema,
 	getUiOptions,
@@ -12,7 +12,7 @@ import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 
 @BaseComponent
-export default class ToggleAdditionalArrayFieldsField extends Component {
+export default class ToggleAdditionalArrayFieldsField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

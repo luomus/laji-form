@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
-import deepEquals from "deep-equal";
-import merge from "deepmerge";
+import * as deepEquals from "deep-equal";
+import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar, Modal } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
+import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -33,7 +33,7 @@ export function parseGeometries(geometry) {
 }
 
 
-export default class MapArrayField extends Component {
+export default class MapArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -79,7 +79,7 @@ export default class MapArrayField extends Component {
 }
 
 @_MapArrayField
-class DefaultMapArrayField extends Component {
+class DefaultMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
@@ -117,7 +117,7 @@ class DefaultMapArrayField extends Component {
 			}];
 
 		const extraData = (options.data || []).map((dataItem) => (
-				{geoData: dataItem.geometryField ? this.getGeometry(formData, dataItem.geometryField) : dataItem}
+			{geoData: dataItem.geometryField ? this.getGeometry(formData, dataItem.geometryField) : dataItem}
 		));
 
 		return {draw, controls, emptyMode, data: [...data, ...extraData]};
@@ -257,7 +257,7 @@ class DefaultMapArrayField extends Component {
 }
 
 @_MapArrayField
-class UnitsMapArrayField extends Component {
+class UnitsMapArrayField extends React.Component {
 	field = "units"
 
 	constructor(props) {
@@ -588,7 +588,7 @@ class UnitsMapArrayField extends Component {
 }
 
 @_MapArrayField
-class LineTransectMapArrayField extends Component {
+class LineTransectMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {showLTTools: false};
@@ -708,8 +708,8 @@ class LineTransectMapArrayField extends Component {
 				const {idx, target} = e;
 
 				let splices = [
-						[idx, 1],
-						[target, 0, formData[idx]],
+					[idx, 1],
+					[target, 0, formData[idx]],
 				];
 				 // Splices must be executed in reverse order to keep idxs correct.
 				if (target > idx) splices = splices.reverse();
@@ -748,7 +748,7 @@ class LineTransectMapArrayField extends Component {
 	getTooltip = (lineIdx, content) => {
 		const {translations} = this.props.formContext;
 		if (this.props.errorSchema[lineIdx]) {
-			content = `${content}<br/><span class=\"text-danger\">${translations.LineTransectSegmentHasErrors}!</span>`;
+			content = `${content}<br/><span class="text-danger">${translations.LineTransectSegmentHasErrors}!</span>`;
 		}
 		const {gatheringFact = {}} = this.props.formData[lineIdx];
 		const {lineTransectSegmentCounted} = gatheringFact;
@@ -767,7 +767,7 @@ class LineTransectMapArrayField extends Component {
 
 	focusOnMap = (idx) => {
 		if (!this.hasLineTransectFeature(this.props)) {
-			setImmediate(() => this.map.zoomToData({paddingInMeters: 200}));
+			setTimeout(() => this.map.zoomToData({paddingInMeters: 200}));
 			return;
 		}
 		this.getContext().setImmediate(() =>{
@@ -784,7 +784,7 @@ class LineTransectMapArrayField extends Component {
 }
 
 @_MapArrayField
-class LolifeMapArrayField extends Component {
+class LolifeMapArrayField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onMouseOver = this.onMouseOver.bind(this);
@@ -917,11 +917,11 @@ class LolifeMapArrayField extends Component {
 			case "edit":
 				formData = update(formData,
 					formData[idx].geometry.type === "GeometryCollection"
-					?  Object.keys(e.features).reduce((updates, _idx) => ({
-						...updates,
-						[idx]: {geometry: {geometries: {[_idx]: {$set: e.features[_idx].geometry}}}}
-					}), {})
-					: {[idx]: {geometry: {$set: e.features[0].geometry}}}
+						?  Object.keys(e.features).reduce((updates, _idx) => ({
+							...updates,
+							[idx]: {geometry: {geometries: {[_idx]: {$set: e.features[_idx].geometry}}}}
+						}), {})
+						: {[idx]: {geometry: {$set: e.features[0].geometry}}}
 				);
 				break;
 			case "create":
@@ -1127,9 +1127,9 @@ class LolifeMapArrayField extends Component {
 	}
 }
 
-function _MapArrayField(ComposedComponent) { return (
+function _MapArrayField(ComposedComponent) {
 @BaseComponent
-class _MapArrayField extends ComposedComponent {
+class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	constructor(props) {
 		super(props);
 		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
@@ -1570,7 +1570,10 @@ class _MapArrayField extends ComposedComponent {
 		};
 
 		const wrappedMap = (
-			<Stretch {...wrapperProps}  ref="stretch">
+			<Stretch
+				{...wrapperProps}
+				ref="stretch"
+			>
 				{map}
 			</Stretch>
 		);
@@ -1582,7 +1585,10 @@ class _MapArrayField extends ComposedComponent {
 					<Col {...mapSizes}>
 						{wrappedMap}
 					</Col>
-					<Col {...schemaSizes} ref="_stretch">
+					<Col
+						{...schemaSizes}
+						ref="_stretch"
+					>
 						{mapOptions.emptyMode ?
 							(!emptyHelp && (!buttons || !buttons.length) ? null :
 								<Popover placement="right" id={`${this.props.idSchema.$id}-help`}>{
@@ -1598,8 +1604,12 @@ class _MapArrayField extends ComposedComponent {
 					</Col>
 				</Row>
 				{popupFields ?
-					<div style={{display: "none"}} ref="popupContainer">
-						<Popup data={this.getPopupData(this.state.popupIdx)} ref="popup"/>
+					<div style={{display: "none"}}
+					     ref="popupContainer"
+					>
+						<Popup data={this.getPopupData(this.state.popupIdx)}
+						       ref="popup"
+						/>
 					</div> : null}
 				<Row>
 					{mapOptions.emptyMode ? null : belowSchema}
@@ -1609,7 +1619,7 @@ class _MapArrayField extends ComposedComponent {
 						<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
 						<ButtonToolbar>{buttons}</ButtonToolbar>
 					</Row>
-					): null}
+				): null}
 			</React.Fragment>
 		);
 	}
@@ -1700,7 +1710,7 @@ class _MapArrayField extends ComposedComponent {
 			if (!isEmptyString(value)) {
 				let result;
 				if (_if) {
-					result = ["dataIdx", "featureIdx"].every(opt => !_if.hasOwnProperty(opt) || options[opt] === _if[opt]);
+					result = ["dataIdx", "featureIdx"].every(opt => !(opt in _if) || options[opt] === _if[opt]);
 					if (_if.reverse) {
 						result = !result;
 					}
@@ -1741,14 +1751,16 @@ class _MapArrayField extends ComposedComponent {
 			});
 		}
 	}
-});
+}
+return _MapArrayField; // eslint-disable-line indent
 }
 
-class Popup extends Component {
+class Popup extends React.Component {
 	render() {
 		const { data } = this.props;
 		return data && data.length &&
-			<ul ref="popup" className="map-data-tooltip">
+			<ul ref="popup"
+			    className="map-data-tooltip">
 				{data.map(({value, title, template}, i) => {
 					switch (template) {
 					case "title":
@@ -1763,7 +1775,7 @@ class Popup extends Component {
 	}
 }
 
-export class MapComponent extends Component {
+export class MapComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {mapOptions: {}};
@@ -1893,7 +1905,7 @@ export class MapComponent extends Component {
 				}
 				<Map className={this.props.className}
 				     style={this.props.style} 
-				     ref="map" 
+				     ref="map"
 				     showHelp={this.showHelp}
 				     hideHelp={this.hideHelp}
 				     {...{...mapOptions, ...this.state.mapOptions}}
@@ -1903,7 +1915,7 @@ export class MapComponent extends Component {
 	}
 }
 
-export class Map extends Component {
+export class Map extends React.Component {
 	static defaultProps = {
 		tileLayerName: "maastokartta",
 		availableTileLayerNamesBlacklist: ["pohjakartta"]
@@ -1962,15 +1974,15 @@ export class Map extends Component {
 
 	getMapOptions = (props) => {
 		const {
-			className, // eslint-disable-line no-unused-vars
-			style, // eslint-disable-line no-unused-vars
-			hidden, // eslint-disable-line no-unused-vars
-			singleton, // eslint-disable-line no-unused-vars
-			emptyMode, // eslint-disable-line no-unused-vars
-			onComponentDidMount, // eslint-disable-line no-unused-vars
-			fullscreenable, // eslint-disable-line no-unused-vars
-			formContext, // eslint-disable-line no-unused-vars
-			controlSettings, // eslint-disable-line no-unused-vars
+			className, // eslint-disable-line @typescript-eslint/no-unused-vars
+			style, // eslint-disable-line @typescript-eslint/no-unused-vars
+			hidden, // eslint-disable-line @typescript-eslint/no-unused-vars
+			singleton, // eslint-disable-line @typescript-eslint/no-unused-vars
+			emptyMode, // eslint-disable-line @typescript-eslint/no-unused-vars
+			onComponentDidMount, // eslint-disable-line @typescript-eslint/no-unused-vars
+			fullscreenable, // eslint-disable-line @typescript-eslint/no-unused-vars
+			formContext, // eslint-disable-line @typescript-eslint/no-unused-vars
+			controlSettings, // eslint-disable-line @typescript-eslint/no-unused-vars
 			...mapOptions
 		} = props;
 		return mapOptions;
@@ -2064,29 +2076,31 @@ export class Map extends Component {
 			<React.Fragment>
 				<div key="map"
 					className={"laji-form-map" + (this.props.className ? " " + this.props.className : "")}
-					style={this.props.style} ref="map" />
+					style={this.props.style}
+					ref="map"
+				/>
 		 </React.Fragment>
 		);
 	}
 }
 
-class MapPanel extends Component {
+class MapPanel extends React.Component {
 	render() {
 		return (
-				<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
-					{this.props.header ? (
-						<PanelHeading>
-							{this.props.header}
-						</PanelHeading>
-					) : null}
-					<PanelBody>
-						{this.props.text}
-						{this.props.buttonText ?
-							<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
-							null
-						}
-					</PanelBody>
-				</Panel>
+			<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
+				{this.props.header ? (
+					<PanelHeading>
+						{this.props.header}
+					</PanelHeading>
+				) : null}
+				<PanelBody>
+					{this.props.text}
+					{this.props.buttonText ?
+						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+						null
+					}
+				</PanelBody>
+			</Panel>
 		);
 	}
 }

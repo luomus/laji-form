@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { getDefaultFormState, toIdSchema } from  "@rjsf/core/dist/cjs/utils";
 import { immutableDelete } from "../../utils";
@@ -11,7 +11,7 @@ function getPropName(field, innerField, isArray) {
 
 
 @VirtualSchemaField
-export default class FlatField extends Component {
+export default class FlatField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

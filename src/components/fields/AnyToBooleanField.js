@@ -1,12 +1,13 @@
-import { anyToBoolean } from "../widgets/AnyToBooleanWidget";
-import PropTypes from "prop-types";
+import * as React from "react";
+import { AnyToBoolean } from "../widgets/AnyToBooleanWidget";
+import * as PropTypes from "prop-types";
 
-const _anyToBoolean = anyToBoolean(!"field");
+const _anyToBoolean = (props) => <AnyToBoolean {...props} />;
 _anyToBoolean.propTypes =  {
 	uiSchema: PropTypes.shape({
 		"ui:options": PropTypes.shape({
 			trueValue: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-			falseValue: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+			falseValue: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 			allowUndefined: PropTypes.bool
 		})
 	}),

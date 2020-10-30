@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
@@ -108,7 +108,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  *
  */
 @VirtualSchemaField
-export default class NestField extends Component {
+export default class NestField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -243,7 +243,7 @@ export default class NestField extends Component {
 		Object.keys(nests).reverse().forEach(nestName => {
 			if (formData[nestName]) {
 				Object.keys(formData[nestName]).forEach(prop => {
-					if (formData[nestName].hasOwnProperty(prop)) formData = {...formData, [prop]: formData[nestName][prop]};
+					if (prop in formData[nestName]) formData = {...formData, [prop]: formData[nestName][prop]};
 				});
 				formData = immutableDelete(formData, nestName);
 			}

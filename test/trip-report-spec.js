@@ -1,6 +1,6 @@
-import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId } from "./test-utils.js";
+const { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId } = require("./test-utils.js");
 
-import { googleApiKey } from "../properties.json"
+const { googleApiKey } = require("../properties.json");
 
 const testWidget = form =>  async (path, type) => {
 	const parsePointer = (container, path) => {

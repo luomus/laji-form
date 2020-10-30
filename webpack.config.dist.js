@@ -1,9 +1,10 @@
-var path = require("path");
-var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var CopyPlugin = require("copy-webpack-plugin");
+const path = require("path");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		"laji-form": "./src/app",
 		styles: "./src/styles"
@@ -14,34 +15,36 @@ module.exports = {
 		libraryTarget: "umd"
 	},
 	plugins: [
-		new ExtractTextPlugin("[name].css", {allChunks: true}),
-		new CopyPlugin([{from: "src/img/*.png", to: "images/", flatten: true}]),
+		new MiniCssExtractPlugin({filename: "[name].css"}),
+		new CopyPlugin({patterns: [{from: "src/img/*.png", to: "images/", flatten: true}]}),
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
 		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"production\""})
 	],
 	module: {
-		loaders: [
+		rules: [
 			{
-				test: /\.jsx?$/,
+				test: /\.(j|t)sx?$/,
+				loader: "awesome-typescript-loader?module=es6",
 				include: [
 					path.join(__dirname, "src"),
-				],
-				loader: "babel"
-			},
-			{
-				test: /\.json$/,
-				loader: "json"
-			},
-			{
-				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("css-loader"),
-				exclude: [
-					path.join(__dirname, "playground", "styles-dev.css")
 				]
 			},
 			{
-				test: /\.less$/,
-				loader: ExtractTextPlugin.extract("css-loader!less-loader")
+				test: /\.json$/,
+				loader: "json-loader",
+				include: [
+					path.join(__dirname, "node_modules", "ajv", "libs", "refs", "json-schema-draft-07.json"),
+				]
+			},
+			{
+				test: /\.css$/,
+				use: [
+					MiniCssExtractPlugin.loader,
+					"css-loader"
+				],
+				exclude: [
+					path.join(__dirname, "playground", "styles-dev.css")
+				]
 			},
 			{
 				test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
@@ -55,5 +58,8 @@ module.exports = {
 		noParse: [
 			/node_modules\/proj4\/dist\/proj4\.js/
 		]
-	}
+	},
+		resolve: {
+			extensions: ['.tsx', '.ts',  '.jsx', '.js', '.json']
+		}
 };

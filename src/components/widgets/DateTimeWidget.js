@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
-import moment from "moment";
-import momentLocalizer from "react-widgets/lib/localizers/moment";
+import * as PropTypes from "prop-types";
+import * as DateTimePicker from "react-widgets/lib/DateTimePicker";
+import * as moment from "moment";
+import * as momentLocalizer from "react-widgets/lib/localizers/moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions, isDescendant } from "../../utils";
@@ -12,7 +12,7 @@ import BaseComponent from "../BaseComponent";
 const DATE_TIME_SEPARATOR = ", ";
 
 @BaseComponent
-export default class DateTimeWidget extends Component {
+export default class DateTimeWidget extends React.Component {
 	static propTypes = {
 		uiSchema:  PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -90,7 +90,7 @@ export default class DateTimeWidget extends Component {
 		};
 
 		["value", "disabled", "time", "calendar"].forEach(prop => {
-			if (props.hasOwnProperty(prop)) state[prop] = props[prop];
+			if (prop in props) state[prop] = props[prop];
 		});
 
 		return state;
@@ -133,6 +133,20 @@ export default class DateTimeWidget extends Component {
 		!isDescendant(findDOMNode(this.containerRef), document.activeElement) && this.setState({textInputFocused: false});
 	}
 
+	onDateTimePickerChange = (value) => {
+		const momentValue = moment(value);
+		let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
+		if (value !== null && !momentValue.isValid()) {
+			formattedValue = this.props.value;
+		} else if ((!this.toggle && !this.timeWritten) ||
+			(this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
+			formattedValue = momentValue.format("YYYY-MM-DD");
+		}
+		this.onChange(!value ? undefined : formattedValue);
+		this.toggle = undefined;
+		this.timeWritten = false;
+	}
+
 	render() {
 		const {value, readonly, disabled} = this.props;
 		const {translations} = this.props.formContext;
@@ -143,19 +157,6 @@ export default class DateTimeWidget extends Component {
 			return <TextWidget {...this.props} onFocus={this.onTextWidgetFocus} />;
 		}
 
-		const onChange = value => {
-			const momentValue = moment(value);
-			let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
-			if (value !== null && !momentValue.isValid()) {
-				formattedValue = this.props.value;
-			} else if ((!this.toggle && !this.timeWritten) ||
-			 (this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
-				formattedValue = momentValue.format("YYYY-MM-DD");
-			}
-			this.onChange(!value ? undefined : formattedValue);
-			this.toggle = undefined;
-			this.timeWritten = false;
-		};
 
 		const options = getUiOptions(this.props);
 		const showTimeList = options.showTimeList !== undefined ? options.showTimeList : true;
@@ -168,7 +169,7 @@ export default class DateTimeWidget extends Component {
 			timeFormat={this.state.timeFormat}
 			placeholder={this.state.placeholder}
 			onToggle={this.onToggle}
-			onChange={onChange}
+			onChange={this.onDateTimePickerChange}
 			value={value && momentValue.isValid() ? momentValue.toDate() : null}
 			parse={this.parse}
 			disabled={readonly || disabled}

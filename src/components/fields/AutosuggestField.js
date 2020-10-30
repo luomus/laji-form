@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 
 const suggestionParsers = {
 	taxonGroup: suggestion => {
@@ -44,7 +44,7 @@ const parseQuery = (query, props, taxonGroups) => {
  * }
  */
 @BaseComponent
-export default class AutosuggestField extends Component {
+export default class AutosuggestField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -94,9 +94,9 @@ export default class AutosuggestField extends Component {
 			? toggled
 			: this.state
 				?  this.state.toggled
-					: togglePersistenceKey
-						? context[this.getTogglePersistenceContextKey(props)]
-						: false;
+				: togglePersistenceKey
+					? context[this.getTogglePersistenceContextKey(props)]
+					: false;
 
 		const taxonGroupID = !informalTaxonGroups 
 			? undefined
@@ -271,7 +271,7 @@ export default class AutosuggestField extends Component {
 			if (value.match(regexp)) {
 				if (!formData) formData = {};
 				let formDataChange = {};
-				value = value.replace(regexp, "\$1");
+				value = value.replace(regexp, "$1");
 				if (inputTransformer.transformations) for (let transformField in inputTransformer.transformations) {
 					formDataChange[transformField] = inputTransformer.transformations[transformField];
 				}

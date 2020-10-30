@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
-import PanelHeading from "react-bootstrap/lib/PanelHeading";
-import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
-import Spinner from "react-spinner";
+import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
+import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
+import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
 import Context from "../Context";
 
-export class Button extends Component {
+export class Button extends React.Component {
 	render() {
 		const {
 			tooltip,
@@ -20,15 +20,15 @@ export class Button extends Component {
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-				bsStyle="primary"
-				{..._props}
+					bsStyle="primary"
+					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
 		);
 	}
 }
 
-export class DeleteButton extends Component {
+export class DeleteButton extends React.Component {
 	static propTypes = {
 		confirm: PropTypes.bool,
 		onClick: PropTypes.func.isRequired,
@@ -104,7 +104,6 @@ export class DeleteButton extends Component {
 		if (props.className) {
 			buttonClassName = `${buttonClassName} ${props.className}`;
 		}
-		const onClick = e => this.onClick(e);
 		const maybeProps = {};
 		if (props.id !== undefined) {
 			maybeProps.id = `${props.id}-delete`;
@@ -114,11 +113,11 @@ export class DeleteButton extends Component {
 				<Button {...maybeProps}
 				        disabled={disabled || readonly}
 				        bsStyle="danger"
-								className={buttonClassName}
-								style={this.props.style}
-								ref="del"
-								onKeyDown={this.onButtonKeyDown}
-								onClick={onClick}>{this.props.children || "✖"}</Button>
+				        className={buttonClassName}
+				        style={this.props.style}
+				        ref="del"
+				        onKeyDown={this.onButtonKeyDown}
+				        onClick={this.onClick}>{this.props.children || "✖"}</Button>
 				{this.renderConfirm()}
 			</React.Fragment>
 		);
@@ -137,24 +136,25 @@ export class DeleteButton extends Component {
 		return null;
 	}
 
+	getOverlayTarget = () => findDOMNode(this.refs.del);
+
 	renderConfirmPopup() {
-		const getOverlayTarget = () => findDOMNode(this.refs.del);
 		const {translations, confirmPlacement = "left"} = this.props;
 		return (
-					<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
-									 target={getOverlayTarget}>
-						<Popover id={`${this.props.id}-button-confirm`}>
-							<span>{translations.ConfirmRemove}</span>
-							<ButtonGroup>
-								<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
-									{translations.Remove}
-								</Button>
-								<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
-									{translations.Cancel}
-								</Button>
-							</ButtonGroup>
-						</Popover>
-					</Overlay>
+			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
+							 target={this.getOverlayTarget}>
+				<Popover id={`${this.props.id}-button-confirm`}>
+					<span>{translations.ConfirmRemove}</span>
+					<ButtonGroup>
+						<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
+							{translations.Remove}
+						</Button>
+						<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+							{translations.Cancel}
+						</Button>
+					</ButtonGroup>
+				</Popover>
+			</Overlay>
 		);
 	}
 
@@ -172,7 +172,7 @@ export function AddButton({onClick}) {
 	return (<Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>);
 }
 
-export class Alert extends Component {
+export class Alert extends React.Component {
 	render() {
 		return (
 			<Modal show={true} enforceFocus={true} onKeyDown={this.onKeyDown}>
@@ -204,7 +204,7 @@ export const GlyphButton = (props) => {
 };
 
 const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
-export class Affix extends Component {
+export class Affix extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getState(props);
@@ -339,7 +339,7 @@ export class Affix extends Component {
 	}
 }
 
-export class Stretch extends Component {
+export class Stretch extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -417,7 +417,7 @@ export class Stretch extends Component {
 			horizontallyAligned: true,
 			containerHeight,
 			height: Math.max(
-					containerHeight
+				containerHeight
 					+ Math.min(container.getBoundingClientRect().top, 0)
 					+ Math.min(bottomInvisibleHeight, 0)
 					- (container.getBoundingClientRect().top < topOffset ? Math.min(topOffset - container.getBoundingClientRect().top, topOffset) : 0)
@@ -473,7 +473,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 		<label htmlFor={id}>
 			<div>
 				<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
-                {showHelp ? <Help /> : null}
+				{showHelp ? <Help /> : null}
 			</div>
 			{children}
 		</label>
@@ -486,7 +486,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 	) : labelElem;
 }
 
-export class ErrorPanel extends Component {
+export class ErrorPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {expanded: true};
@@ -518,18 +518,7 @@ export class ErrorPanel extends Component {
 				</PanelHeading>
 				<PanelCollapse>
 					<ListGroup>
-						{errors.map(({label, error, id, getId, extra = null, disabled}, i) => {
-							const message = error && error.message ? error.message : error;
-							const _clickHandler = () => {
-								clickHandler(id || (getId ? getId() : undefined));
-							};
-
-							return (
-								<ListGroupItem key={i} onClick={_clickHandler} disabled={disabled}>
-									{label ? <b>{label}:</b> : null} {message} {extra}
-								</ListGroupItem>
-							);
-						})}
+						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
 					</ListGroup>
 				</PanelCollapse>
 			</Panel>
@@ -537,12 +526,25 @@ export class ErrorPanel extends Component {
 	}
 }
 
+function ErrorPanelError({label, error, id, getId, extra = null, disabled, clickHandler}) {
+	const message = error && error.message ? error.message : error;
+	const _clickHandler = React.useCallback(() => {
+		clickHandler(id || (getId ? getId() : undefined));
+	}, [clickHandler, id, getId]);
+
+	return (
+		<ListGroupItem onClick={_clickHandler} disabled={disabled}>
+			{label ? <b>{label}:</b> : null} {message} {extra}
+		</ListGroupItem>
+	);
+}
+
 function NullTooltip() {
 	return <div />;
 }
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
-export class TooltipComponent extends Component {
+export class TooltipComponent extends React.Component {
 	setOverlayRef = (elem) => {
 		this.overlayElem = elem;
 	}
@@ -568,13 +570,13 @@ export class TooltipComponent extends Component {
 	}
 }
 
-export class FetcherInput extends Component {
+export class FetcherInput extends React.Component {
 	setRef = (elem) => {
 		if (this.props.getRef) this.props.getRef(elem);
 	}
 
 	render() {
-		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 		return (
 			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""} ${className}`} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
@@ -588,7 +590,7 @@ export class FetcherInput extends Component {
 	}
 }
 
-class FetcherInputDefaultInput extends Component {
+class FetcherInputDefaultInput extends React.Component {
 	render() {
 		const {readonly, ...inputProps} = this.props;
 		return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={this.ref} />;
@@ -596,7 +598,7 @@ class FetcherInputDefaultInput extends Component {
 }
 
 // Bootstrap OverlayTrigger that is hoverable if hoverable === true
-export class OverlayTrigger extends Component {
+export class OverlayTrigger extends React.Component {
 	
 	setOverlayTriggerRef = elem => {
 		this.overlayTriggerRef = elem;
@@ -635,7 +637,7 @@ export class OverlayTrigger extends Component {
 		const {
 			children,
 			overlay,
-			_context, //eslint-disable-line no-unused-vars
+			_context, //eslint-disable-line @typescript-eslint/no-unused-vars
 			...props
 		} = this.props;
 
@@ -653,7 +655,7 @@ export class OverlayTrigger extends Component {
 				                delay={1}
 				                trigger={[]} 
 				                placement={this.props.placement || "top"}
-												ref={this.setOverlayTriggerRef}
+				                ref={this.setOverlayTriggerRef}
 				                overlay={_overlay}>
 					{children}
 				</_OverlayTrigger>
@@ -662,7 +664,7 @@ export class OverlayTrigger extends Component {
 	}
 }
 
-export class Fullscreen extends Component {
+export class Fullscreen extends React.Component {
 	componentDidMount() {
 		this.bodyOverFlow = document.body.style.overflow;
 
@@ -682,13 +684,13 @@ export class Fullscreen extends Component {
 	render() {
 		return createPortal((
 			<div className="laji-form fullscreen">
-					{this.props.children}
+				{this.props.children}
 			</div>
 		), document.body);
 	}
 }
 
-export class FailedBackgroundJobsPanel extends Component {
+export class FailedBackgroundJobsPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {popped: true};

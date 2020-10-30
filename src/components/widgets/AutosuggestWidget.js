@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import ReactAutosuggest from "react-autosuggest";
+import * as PropTypes from "prop-types";
+import * as ReactAutosuggest from "react-autosuggest";
 import { Glyphicon, Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
@@ -15,7 +15,7 @@ function renderFlag(suggestion) {
 		: null;
 }
 
-export default class _AutosuggestWidget extends Component {
+export default class _AutosuggestWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -64,7 +64,7 @@ export default class _AutosuggestWidget extends Component {
 	}
 }
 
-class SimpleValueRenderer extends Component {
+class SimpleValueRenderer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: this.props.value, loading: true};
@@ -151,9 +151,9 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuggested = (input, suggestion) => {
 			const {taxonCardPlacement: placement = "top" } = getUiOptions(this.props);
 			return (
-			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
-				{input}
-			</TaxonCardOverlay>
+				<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
+					{input}
+				</TaxonCardOverlay>
 			);
 		}
 
@@ -178,8 +178,13 @@ function TaxonAutosuggest(ComposedComponent) {
 				<Row>
 					<Col xs={12}>
 						<div className="laji-form-medias">
-								{this.parseChooseImages(chooseImages)
-										.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
+							{this.parseChooseImages(chooseImages).map(taxonIDObj =>
+								<TaxonImgChooser id={taxonIDObj.id}
+								                 key={taxonIDObj.id}
+								                 url={taxonIDObj.url}
+								                 onSelect={this.onTaxonImgSelected}
+								                 formContext={this.props.formContext}/>
+							)}
 						</div>
 					</Col>
 					<Col xs={12}>
@@ -236,10 +241,10 @@ function TaxonAutosuggest(ComposedComponent) {
 }
 
 @TaxonAutosuggest
-class TaxonAutosuggestWidget extends Component {}
+class TaxonAutosuggestWidget extends React.Component {}
 
 @TaxonAutosuggest
-class UnitAutosuggestWidget extends Component {
+class UnitAutosuggestWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -257,7 +262,7 @@ class UnitAutosuggestWidget extends Component {
 	}
 }
 
-class FriendsAutosuggestWidget extends Component {
+class FriendsAutosuggestWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -324,14 +329,14 @@ class FriendsAutosuggestWidget extends Component {
 	}
 }
 
-class RangeAutosuggestWidget extends Component {
+class RangeAutosuggestWidget extends React.Component {
 	render() {
 		const {options: propsOptions, ...propsWithoutOptions} = this.props;
 		return <Autosuggest highlightFirstSuggestion={true} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
-export class Autosuggest extends Component {
+export class Autosuggest extends React.Component {
 	static propTypes = {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
@@ -711,7 +716,7 @@ export class Autosuggest extends Component {
 						theme={cssClasses}
 					/>
 				</div>
-		</React.Fragment>
+			</React.Fragment>
 		);
 	}
 
@@ -731,7 +736,7 @@ export class Autosuggest extends Component {
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
-		setImmediate(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
+		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
 	}
 
 	setInputRef = (elem) => {
@@ -785,10 +790,10 @@ export class Autosuggest extends Component {
 
 		const addon = informalTaxonGroups && renderInformalTaxonGroupSelector
 			? <InformalTaxonGroupsAddon taxonGroupID={taxonGroupID} 
-																	onClear={this.onInformalTaxonGroupSelected} 
-																	open={this.state.informalTaxonGroupsOpen}
-																	onOpen={this.onInformalTaxonGroupsOpened} 
-																	formContext={this.props.formContext} /> 
+				                          onClear={this.onInformalTaxonGroupSelected} 
+				                          open={this.state.informalTaxonGroupsOpen}
+				                          onOpen={this.onInformalTaxonGroupsOpened} 
+				                          formContext={this.props.formContext} /> 
 			: null;
 
 		const getTogglerTooltip = () => {
@@ -809,7 +814,7 @@ export class Autosuggest extends Component {
 				<TooltipComponent tooltip={getTogglerTooltip()} >
 					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
 						<Glyphicon glyph="flash"/>
-				</InputGroup.Addon>
+					</InputGroup.Addon>
 				</TooltipComponent>
 			) : null;
 
@@ -846,7 +851,7 @@ export class Autosuggest extends Component {
 	}
 }
 
-class TaxonCardOverlay extends Component {
+class TaxonCardOverlay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {converted: false};
@@ -957,14 +962,14 @@ class TaxonCardOverlay extends Component {
 			<OverlayTrigger hoverable={true}
 			                placement={placement}
 			                _context={new Context(this.props.formContext.contextId)}
-											overlay={popover}>
+			                overlay={popover}>
 				{children}
 			</OverlayTrigger>
 		);
 	}
 }
 
-class InformalTaxonGroupsAddon extends Component {
+class InformalTaxonGroupsAddon extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -1014,7 +1019,7 @@ class InformalTaxonGroupsAddon extends Component {
 	}
 }
 
-class TaxonImgChooser extends Component {
+class TaxonImgChooser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -1062,12 +1067,12 @@ class TaxonImgChooser extends Component {
 		return (
 			<div className="laji-form-medias">
 				<div className="taxon-img media-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
-						{!taxon && <div className="media-loading"><Spinner /></div>}
-						<span>
-							{taxon && taxon.vernacularName || ""}
-						</span>
+					{!taxon && <div className="media-loading"><Spinner /></div>}
+					<span>
+						{taxon && taxon.vernacularName || ""}
+					</span>
 				</div>
-					{modal && 
+				{modal && 
 						<Modal dialogClassName="laji-form media-modal" show={true} onHide={this.hideModal}>
 							<Modal.Body>
 								<img src={this.state.large} />
@@ -1078,7 +1083,7 @@ class TaxonImgChooser extends Component {
 								</div>
 							</Modal.Body>
 						</Modal>
-					}
+				}
 			</div>
 		);
 	}
@@ -1090,10 +1095,10 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 		: (scientificName || "");
 	return (
 		<React.Fragment>
-				{`${vernacularName}${vernacularName ? " " : ""}`}
-				{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-					{renderFlag({payload: {finnish}})}
-			</React.Fragment>
+			{`${vernacularName}${vernacularName ? " " : ""}`}
+			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+			{renderFlag({payload: {finnish}})}
+		</React.Fragment>
 	);
 };
 

@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { immutableDelete, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, updateFormDataWithJSONPointer, updateSafelyWithJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
@@ -16,7 +16,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }}
  */
 @VirtualSchemaField
-export default class InjectField extends Component {
+export default class InjectField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -50,7 +50,7 @@ export default class InjectField extends Component {
 				let parentProperties = this.getSchemaProperties(schema, splits.slice(0, splits.length - 1));
 				schema = update(schema,
 					{properties: {[target]: this.getUpdateSchemaPropertiesPath(schema.properties[target],
-                    {$merge: {[fieldName]: parentProperties.properties[fieldName]}})}});
+						{$merge: {[fieldName]: parentProperties.properties[fieldName]}})}});
 				if (splits.length === 1) parentProperties = schema;
 				schema = update(schema, this.getSchemaPath(splits, {properties: {$set: immutableDelete(parentProperties.properties, fieldName)}}));
 				const idx = parentProperties.required ? parentProperties.required.indexOf(fieldName) : -1;

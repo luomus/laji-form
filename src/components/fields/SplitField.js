@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import { Row, Col } from "react-bootstrap";
@@ -7,7 +7,7 @@ import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 
 @BaseComponent
-export default class SplitField extends Component {
+export default class SplitField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -35,12 +35,12 @@ export default class SplitField extends Component {
 			<div>
 				<TitleField 
 					id={`${this.props.idSchema.$id}__title`}
-						title={_title !== undefined ? _title : this.props.title}
-						required={this.props.required || this.props.uiSchema["ui:required"]}
-						formContext={this.props.formContext}
-						className={getUiOptions(this.props.uiSchema).titleClassName}
-						help={this.props.uiSchema["ui:help"]}
-					/>
+					title={_title !== undefined ? _title : this.props.title}
+					required={this.props.required || this.props.uiSchema["ui:required"]}
+					formContext={this.props.formContext}
+					className={getUiOptions(this.props.uiSchema).titleClassName}
+					help={this.props.uiSchema["ui:help"]}
+				/>
 				<DescriptionField
 					id={`${this.props.idSchema.$id}__description`}
 					description={this.props.description}

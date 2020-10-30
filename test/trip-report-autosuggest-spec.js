@@ -1,4 +1,4 @@
-import { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } from "./test-utils.js";
+const { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } = require("./test-utils.js");
 
 describe("Trip report (JX.519) autosuggestions", () => {
 

@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import * as React from "react";
 import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
 import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
@@ -62,7 +62,7 @@ export class ArrayFieldAddRemovePatched extends ArrayField {
 }
 
 @BaseComponent
-export default class _ArrayField extends Component {
+export default class _ArrayField extends React.Component {
 
 	onChange = (formData) => {
 		this.props.onChange(onArrayFieldChange(formData, this.props));

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Help } from "../components";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { isEmptyString, parseJSONPointer } from "../../utils";
@@ -20,12 +20,14 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	if (!help) return <Legend>{titleContent}</Legend>;
 
-	const tooltipElem = <Tooltip id={id + "-tooltip"}>
-							<span>
-								<strong dangerouslySetInnerHTML={{__html: title}} /><br />
-								<span dangerouslySetInnerHTML={{__html: help}} />
-							</span>
-						</Tooltip>;
+	const tooltipElem = (
+		<Tooltip id={id + "-tooltip"}>
+			<span>
+				<strong dangerouslySetInnerHTML={{__html: title}} /><br />
+				<span dangerouslySetInnerHTML={{__html: help}} />
+			</span>
+		</Tooltip>
+	);
 
 	return (
 		<Legend>

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Row , Col} from "react-bootstrap";
 import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class ExtraLabelRowField extends Component {
+export default class ExtraLabelRowField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

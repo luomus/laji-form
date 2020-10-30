@@ -1,8 +1,8 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import { immutableDelete } from "../../utils";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -13,7 +13,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }
  */
 @VirtualSchemaField
-export default class ArrayCombinerField extends Component {
+export default class ArrayCombinerField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -35,7 +35,7 @@ export default class ArrayCombinerField extends Component {
 		let itemSchema = {type: "object", properties: {}, required: props.schema.required};
 		let schema = {type: "array"};
 		if (additionalItemsAmount) schema.additionalItems = itemSchema;
-		if (props.schema.hasOwnProperty("title")) schema.title = props.schema.title;
+		if ("title" in props.schema) schema.title = props.schema.title;
 		Object.keys(props.schema.properties).forEach((propertyName) => {
 			let propertyOrigin = props.schema.properties[propertyName];
 			let property = propertyOrigin.items;
@@ -53,7 +53,7 @@ export default class ArrayCombinerField extends Component {
 		const uiSchema = Object.keys(props.schema.properties).reduce((_uiSchema, field) => {
 			if (field in _uiSchema) {
 				_uiSchema = {..._uiSchema, items: {...(_uiSchema.items || {}), [field]: _uiSchema[field]}};
-				immutableDelete("_uiSchema", field);
+				immutableDelete(_uiSchema, field);
 			}
 			return _uiSchema;
 		}, props.uiSchema);
@@ -96,7 +96,7 @@ export default class ArrayCombinerField extends Component {
 		let formData = objectsToArray([], props.formData);
 		formData.forEach((obj) => {
 			Object.keys(itemSchema.properties).forEach((prop) => {
-				if (!obj.hasOwnProperty(prop)) {
+				if (!(prop in obj)) {
 					obj[prop] = getDefaultFormState(itemSchema.properties[prop], undefined, this.props.registry.definitions);
 				}
 			});

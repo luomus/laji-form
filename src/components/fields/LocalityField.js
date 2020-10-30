@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
 import { Row, Col, Panel, Modal } from "react-bootstrap";
-import PanelBody from "react-bootstrap/lib/PanelBody";
+import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 
 @BaseComponent
-export default class LocalityField extends Component {
+export default class LocalityField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.object,
 		schema: PropTypes.shape({
@@ -40,7 +40,7 @@ export default class LocalityField extends Component {
 				<Col xs={12}>
 					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
 						<PanelBody>
-								{values.map((v, i) => (
+							{values.map((v, i) => (
 								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
 							))}
 							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
@@ -65,7 +65,7 @@ export default class LocalityField extends Component {
 	}
 
 	renderModal = () => {
-		const {onChange, ...props} = this.props; // eslint-disable-line no-unused-vars
+		const {onChange, ...props} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		return (
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideEditor}>
 				<Modal.Header closeButton={true}>
@@ -86,7 +86,7 @@ export default class LocalityField extends Component {
 					/>
 					<Button block onClick={this.onSubmitClick}>OK</Button>
 					<Button block onClick={this.hideEditor}>{this.props.formContext.translations.Cancel}</Button>
-			</Modal.Body>
+				</Modal.Body>
 			</Modal>
 		);
 	}

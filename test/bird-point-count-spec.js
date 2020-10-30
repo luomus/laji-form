@@ -1,4 +1,4 @@
-import { createForm, getFocusedId, putForeignMarkerToMap } from "./test-utils.js";
+const { createForm, getFocusedId, putForeignMarkerToMap } = require("./test-utils.js");
 
 describe("Bird point count (MHL.75)", () => {
 	let form;

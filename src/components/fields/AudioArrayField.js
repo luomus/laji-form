@@ -1,13 +1,14 @@
-import React, { Component, useState, useEffect } from "react";
+import * as React from "react";
+const { useState, useEffect } = React;
 import { MediaArrayField } from "./ImageArrayField";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { Glyphicon } from "react-bootstrap";
 import { GlyphButton } from "../components";
 
 const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave"];
 
 @MediaArrayField
-export default class AudioArrayField extends Component {
+export default class AudioArrayField extends React.Component {
 	ALLOWED_FILE_TYPES = FILE_TYPES;
 	ACCEPT_FILE_TYPES = ["audio/*"];
 	MAX_FILE_SIZE = 20000000;
@@ -27,7 +28,7 @@ export default class AudioArrayField extends Component {
 				apiClient={this.props.formContext.apiClient}
 				translations={this.props.formContext.translations}
 			/>
-				<GlyphButton className="audio-metadata-button" bsStyle="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
+			<GlyphButton className="audio-metadata-button" bsStyle="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
 		</div>
 	)
 	renderLoadingMedia = () => null
@@ -51,19 +52,19 @@ const AudioButton = React.forwardRef((props, ref) => {
 	const play = React.useCallback(() => {
 		setPlaying(true);
 		audioRef.current.play();
-	});
+	}, [audioRef, setPlaying]);
 	const stop = React.useCallback(() => {
 		audioRef.current.pause();
 		audioRef.current.currentTime = 0;
 		setPlaying(false);
-	});
+	}, [audioRef, setPlaying]);
 	const onKeyDown = React.useCallback((e) => {
 		if (e.key === " ") {
 			playing ? stop() : play();
 			e.preventDefault();
 			e.stopPropagation();
 		}
-	});
+	}, [playing, stop, play]);
 	return (
 		<React.Fragment>
 			{!loaded 

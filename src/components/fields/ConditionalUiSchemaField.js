@@ -1,7 +1,7 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import deepmerge from "deepmerge";
+import * as deepmerge from "deepmerge";
 import { checkRules } from "../../utils";
 
 export const rulePropType = PropTypes.oneOfType([
@@ -59,7 +59,7 @@ const casePropType = PropTypes.shape({
  * }
  */
 @VirtualSchemaField
-export default class ConditionalUiSchemaField extends Component {
+export default class ConditionalUiSchemaField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

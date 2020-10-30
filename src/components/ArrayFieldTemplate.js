@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Button, DeleteButton, Help } from "./components";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
@@ -10,12 +10,12 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {
@@ -76,15 +76,20 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, tooltipClass, changesFormData, key, disabled, help, ...options} = button;
 	const id = button.id || (props.idSchema || {}).$id;
+	const buttonId = `${id}-${button.fnName}${button.key ? `-${button.key}` : ""}`;
+	return <_Button key={buttonId} buttonId={buttonId} button={button} props={props}/>;
+}
+
+function _Button({button, props, getProps, buttonId}) {
+	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, tooltipClass, changesFormData, disabled, help, ...options} = button;
 
 	label = label !== undefined
 		?  (glyph ? ` ${label}` : label)
 		: "";
 
-	const onClick = e => {
-		const onClickProps = button.getProps ? button.getProps() : props;
+	const onClick = React.useCallback(e => {
+		const onClickProps = getProps ? getProps() : props;
 		let _fn = () => fn(e)(onClickProps, options);
 		const __fn = () => {
 			beforeFn && beforeFn(onClickProps, options);
@@ -97,11 +102,10 @@ export function getButton(button, props = {}) {
 		} else {
 			__fn();
 		}
-	};
+	}, [props, getProps, options, callforward, beforeFn, callback, fn]);
 
-	const buttonId = `${id}-${fnName}${key ? `-${key}` : ""}`;
 	return render ? render(onClick, button) : (
-		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip || help} tooltipPlacement={tooltipPlacement} tooltipClass={tooltipClass} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))} style={button.style}>
+		<Button id={buttonId} className={className} onClick={onClick} bsStyle={bsStyle} tooltip={tooltip || help} tooltipPlacement={tooltipPlacement} tooltipClass={tooltipClass} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))} style={button.style}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
 			{help && <Help /> }
@@ -272,7 +276,7 @@ const SortableList = SortableContainer(({items, itemProps, nonOrderables, formDa
 
 const SortableItem = SortableElement(({item}) => item);
 
-export class ArrayFieldTemplateWithoutKeyHandling extends Component {
+export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 	onSort = ({oldIndex, newIndex}) => {
 		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
 	}
@@ -313,14 +317,14 @@ export class ArrayFieldTemplateWithoutKeyHandling extends Component {
 			const getDeleteButton = () => (
 				<div className="laji-form-field-template-buttons">
 					<DeleteButton id={`${props.idSchema.$id}_${i}`}
-												disabled={disabled || readonly}
-												ref={getRefFor(i)}
-												onClick={onDelete(item, props)}
-												confirm={confirmDelete}
-												corner={deleteCorner}
-												tooltip={deleteHelp}
-												translations={props.formContext.translations}/>
-			</div>
+					              disabled={disabled || readonly}
+					              ref={getRefFor(i)}
+					              onClick={onDelete(item, props)}
+					              confirm={confirmDelete}
+					              corner={deleteCorner}
+					              tooltip={deleteHelp}
+					              translations={props.formContext.translations}/>
+				</div>
 			);
 			if (!this.onFocuses[i]) {
 				this.onFocuses[i] = this.getOnFocus(i);

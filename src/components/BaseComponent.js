@@ -1,4 +1,4 @@
-import deepEquals from "deep-equal";
+import * as deepEquals from "deep-equal";
 import { getReactComponentName, parseJSONPointer, getRelativePointer, getUUID as _getUUID } from "../utils";
 import Context from "../Context";
 

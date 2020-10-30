@@ -1,11 +1,11 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
 import { getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
-export default class UiFieldMapperArrayField extends Component {
+export default class UiFieldMapperArrayField extends React.Component {
 
 	static propTypes = {
 		uiSchema: PropTypes.shape({

@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Button, ErrorPanel } from "./components";
 import { Glyphicon } from "react-bootstrap";
 import { parseJSONPointer, formatErrorMessage } from "../utils";
 import Context from "../Context";
 
-export default class ErrorListTemplate extends Component {
+export default class ErrorListTemplate extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {popped: false};
+		this.state = {popped: false, poppedTouched: false};
 		new Context(this.props.formContext.contextId).errorList = this;
 	}
 
@@ -76,19 +76,19 @@ export default class ErrorListTemplate extends Component {
 			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
 				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
 				<ErrorPanel classNames="error-panel"
-							ref="errorPanel"
-							errors={errors}
-							title={translations.Errors}
-							clickHandler={clickHandler}
-							showToggle={true}
-							poppedToggle={this.poppedToggle}/>
+				            ref="errorPanel"
+				            errors={errors}
+				            title={translations.Errors}
+				            clickHandler={clickHandler}
+				            showToggle={true}
+				            poppedToggle={this.poppedToggle}/>
 				<ErrorPanel classNames="warning-panel"
-							ref="warningPanel"
-							errors={warnings}
-							title={translations.Warnings}
-							clickHandler={clickHandler}
-							showToggle={errors.length === 0}
-							poppedToggle={this.poppedToggle}/>
+				            ref="warningPanel"
+				            errors={warnings}
+				            title={translations.Warnings}
+				            clickHandler={clickHandler}
+				            showToggle={errors.length === 0}
+				            poppedToggle={this.poppedToggle}/>
 				<div className="panel-footer">
 					<div>
 						{errors.length > 0

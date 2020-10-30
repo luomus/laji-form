@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { rulePropType, operationPropType, computeUiSchema } from "./ConditionalUiSchemaField";
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -8,7 +8,7 @@ import { arrayKeyFunctions } from "../ArrayFieldTemplate";
 import { ArrayFieldIdFixed } from "./FilterArrayField";
 
 @BaseComponent
-export default class MultiArrayField extends Component {
+export default class MultiArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -35,12 +35,12 @@ export default class MultiArrayField extends Component {
 		const {props} = this;
 		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false, nonGroupedOperations} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
-			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
+			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
 			this.arrayKeyFunctions = Array(groups.length + 1).fill(undefined).map((_, idx) => getArrayKeyFunctions(this, idx));
 		}
 
 		if (groups.length && !this.groupItemIds) {
-			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line no-unused-vars
+			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
 			if (typeof persistenceKey === "string") {
 				const context = new Context(`${persistenceKey}_MULTI`);
 				this.groupItemIds = context.groupItemIds || getGroupItemIds();
@@ -50,7 +50,7 @@ export default class MultiArrayField extends Component {
 			}
 		}
 
-		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);  // eslint-disable-line no-unused-vars
+		const itemGroups = Array(groups.length + 1).fill(undefined).map(_ => []);  // eslint-disable-line @typescript-eslint/no-unused-vars
 		const addToGroup = (idx, item) => {
 			const id = getUUID(item);
 			itemGroups[idx].push(item);

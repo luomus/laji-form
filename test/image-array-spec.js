@@ -1,6 +1,5 @@
-
-import { createForm, getInputWidget, updateValue, waitUntilBlockingLoaderHides, mockImageMetadata } from "./test-utils.js";
-import properties from "../properties.json";
+const { createForm, getInputWidget, updateValue, waitUntilBlockingLoaderHides, mockImageMetadata } = require("./test-utils.js");
+const properties = require("../properties.json");
 
 describe("Image array", () => {
 

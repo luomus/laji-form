@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Row, Col, FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class SeparatedDateTimeWidget extends Component {
+export default class SeparatedDateTimeWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -37,19 +37,22 @@ export default class SeparatedDateTimeWidget extends Component {
 
 	render() {
 		const hasDate = !!this.state.date;
-		return (<Row>
-			<Col lg={hasDate ? 6 : 12}>
-				<FormGroup>
-				<DateWidget {...this.props} onChange={this.onDateChange} value={this.state.date} />
-				</FormGroup>
-			</Col>
-			{hasDate ?
-				<Col lg={6}>
+		return (
+			<Row>
+				<Col lg={hasDate ? 6 : 12}>
 					<FormGroup>
-					<TimeWidget {...this.props} onChange={this.onTimeChange} value={this.state.time} />
+						<DateWidget {...this.props} onChange={this.onDateChange} value={this.state.date} />
 					</FormGroup>
-				</Col> : null
-			}
-			</Row>);
+				</Col>
+				{hasDate ? (
+					<Col lg={6}>
+						<FormGroup>
+							<TimeWidget {...this.props} onChange={this.onTimeChange} value={this.state.time} />
+						</FormGroup>
+					</Col>
+				): null
+				}
+			</Row>
+		);
 	}
 }

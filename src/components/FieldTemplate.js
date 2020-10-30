@@ -1,9 +1,9 @@
-import React, {Component} from "react";
+import * as React from "react";
 import Context from "../Context";
 import { Help, TooltipComponent } from "./components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
 
-export default class FieldTemplate extends Component {
+export default class FieldTemplate extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -64,19 +64,19 @@ export default class FieldTemplate extends Component {
 
 	render() {
 		const {
-		id,
-		classNames,
-		label,
-		children,
-		rawErrors,
-		rawHelp,
-		description,
-		hidden,
-		required,
-		displayLabel,
-		schema,
-		uiSchema,
-		formContext
+			id,
+			classNames,
+			label,
+			children,
+			rawErrors,
+			rawHelp,
+			description,
+			hidden,
+			required,
+			displayLabel,
+			schema,
+			uiSchema,
+			formContext
 		} = this.props;
 
 		if (hidden || uiSchema["ui:field"] === "HiddenField" || uiSchema["ui:widget"] === "HiddenWidget") {
@@ -106,8 +106,9 @@ export default class FieldTemplate extends Component {
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}
-					{inlineHelp ? (
-						<div className="pull-left"><Help help={inlineHelp} id={`${htmlId}-inline-help`} /></div>
+					{inlineHelp
+						? (
+							<div className="pull-left"><Help help={inlineHelp} id={`${htmlId}-inline-help`} /></div>
 						) : null
 					}
 				</div>
@@ -115,7 +116,7 @@ export default class FieldTemplate extends Component {
 					<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
 					null
 				}
-					{errorsComponent}
+				{errorsComponent}
 			</div>
 		);
 
@@ -126,14 +127,14 @@ export default class FieldTemplate extends Component {
 						{errors.map((error, i) => (
 							<li key={i}>{error}</li>
 						))}
-						</ul>
+					</ul>
 					: null}
 				{warnings.length > 0 ?
 					<ul  id={`laji-form-warning-container-${id}`} className="laji-form-warning-container">
 						{warnings.map((warning, i) => (
 							<li key={i}>{warning}</li>
 						))}
-						</ul>
+					</ul>
 					: null}
 			</React.Fragment>
 		);

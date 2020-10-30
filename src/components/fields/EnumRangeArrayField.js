@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions, focusNextInput } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
 import Context from "../../Context";
-import deepEquals from "deep-equal";
+import * as deepEquals from "deep-equal";
 
 @BaseComponent
-export default class EnumRangeArrayField extends Component {
+export default class EnumRangeArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -114,7 +114,7 @@ export default class EnumRangeArrayField extends Component {
 	}
 }
 
-class EnumRangeInputInjection extends Component {
+class EnumRangeInputInjection extends React.Component {
 	render() {
 		return <TagInputComponent {...this.props} onChange={this.onChange} onInputChange={this.onInputChange}/>;
 	}

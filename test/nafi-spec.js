@@ -1,4 +1,4 @@
-import { createForm } from "./test-utils.js";
+const { createForm } = require("./test-utils.js");
 
 const taxonAutocompleteResponse = [{
 	"key": "MX.46587",

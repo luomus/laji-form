@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import Context from "../../Context";
 import { parseJSONPointer } from "../../utils";
-import L from "leaflet";
+import * as L from "leaflet";
 
 export default function DescriptonField(props) {
 	const {description} = props;

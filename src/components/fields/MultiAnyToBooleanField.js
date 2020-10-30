@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import BaseComponent from "../BaseComponent";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getUiOptions, formDataEquals } from "../../utils";
-import anyToBoolean from "./AnyToBooleanField";
-import _anyToBoolean from "../widgets/AnyToBooleanWidget";
+import AnyToBoolean from "./AnyToBooleanField";
 
 @BaseComponent
-export default class MultiAnyToBooleanField extends Component {
+export default class MultiAnyToBooleanField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -87,14 +86,14 @@ export default class MultiAnyToBooleanField extends Component {
 						const groupProps = {
 							...this.props,
 							schema: {...this.props.schema.items, title: group.label},
-							uiSchema: {...this.props.uiSchema, "ui:options": _group, "ui:help": help, "ui:helpHoverable": helpHoverable, "ui:helpPlacement": helpPlacement},
+							uiSchema: {...this.props.uiSchema, "ui:options": {falseValue: undefined, ..._group}, "ui:help": help, "ui:helpHoverable": helpHoverable, "ui:helpPlacement": helpPlacement},
 							formData: this.state.groupsFormData[idx],
 							onChange: this.onChange(idx)
 						};
 
 						return (
 							<React.Fragment key={idx}>
-								{anyToBoolean(groupProps)}
+								<AnyToBoolean {...groupProps} />
 							</React.Fragment>
 						);
 					})}
@@ -103,18 +102,3 @@ export default class MultiAnyToBooleanField extends Component {
 		);
 	}
 }
-
-const valuePropType = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
-_anyToBoolean.propTypes =  {
-	uiSchema: PropTypes.shape({
-		"ui:options": PropTypes.shape({
-			trueValue: valuePropType,
-			falseValue: valuePropType,
-			allowUndefined: PropTypes.bool
-		})
-	}),
-	schema: PropTypes.shape({
-		type: PropTypes.oneOf(["string", "number", "boolean"])
-	}).isRequired,
-	formData: valuePropType
-};

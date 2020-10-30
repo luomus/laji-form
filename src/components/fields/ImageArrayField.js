@@ -1,5 +1,5 @@
-import React, { Component, PureComponent } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 import DescriptionField from "@rjsf/core/dist/cjs/components/fields/DescriptionField";
@@ -9,11 +9,11 @@ import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Spinner from "react-spinner";
-import equals from "deep-equal";
+import * as Spinner from "react-spinner";
+import * as equals from "deep-equal";
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
-import moment from "moment";
+import * as moment from "moment";
 
 function toDecimal(number) {
 	if (!number) return undefined;
@@ -24,7 +24,7 @@ function toDecimal(number) {
 let mediaUuid = 0;
 
 @MediaArrayField
-export default class ImageArrayField extends Component {
+export default class ImageArrayField extends React.Component {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
 	ACCEPT_FILE_TYPES = ["image/*"];
 	MAX_FILE_SIZE = 20000000;
@@ -55,7 +55,7 @@ export default class ImageArrayField extends Component {
 }
 
 export function MediaArrayField(ComposedComponent) {
-	return @BaseComponent
+	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
 		static propTypes = {
 			uiSchema: PropTypes.shape({
@@ -187,6 +187,11 @@ export function MediaArrayField(ComposedComponent) {
 			this.onFileFormChange(files);
 		};
 
+		defaultOnClick = () => {
+			const {addModal} = getUiOptions(this.props.uiSchema);
+			this.setState({addModal});
+		}
+
 		render() {
 			const {schema, uiSchema, idSchema, name, formContext, readonly, disabled} = this.props;
 			const {translations} = formContext;
@@ -216,32 +221,29 @@ export function MediaArrayField(ComposedComponent) {
 							{this.renderLoadingMedias()}
 							<OverlayTrigger overlay={tooltip}>
 								<DropZone accept={this.ACCEPT_FILE_TYPES}
-								onDragEnter={this.onDragEnter}
-								onDragLeave={this.onDragLeave}
-								onDrop={this.onDrop}
-								disabled={readonly || disabled}
-							>
+								          onDragEnter={this.onDragEnter}
+								          onDragLeave={this.onDragLeave}
+								          onDrop={this.onDrop}
+								          disabled={readonly || disabled} >
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
-										const onClick = addModal ? () => {
-											this.setState({addModal});
-										} : _onClick;
+										const onClick = addModal ? this.defaultOnClick : _onClick;
 										return (
 											<div className={`laji-form-drop-zone${dragging ? " dragging" : ""}${readonly || disabled ? " disabled" : ""}`}
-											onClick={onClick}
-											{...rootProps}>
-											<input {...getInputProps()} />
-											<Glyphicon glyph={this.GLYPH} />
-										</div>
+												onClick={onClick}
+												{...rootProps}>
+												<input {...getInputProps()} />
+												<Glyphicon glyph={this.GLYPH} />
+											</div>
 										);
 									}}
-									</DropZone>
-								</OverlayTrigger>
-								{this.renderMetadataModal()}
-								{this.renderMediaAddModal()}
-							</div>
-						</Col>
-					</Row>
+								</DropZone>
+							</OverlayTrigger>
+							{this.renderMetadataModal()}
+							{this.renderMediaAddModal()}
+						</div>
+					</Col>
+				</Row>
 			);
 		}
 
@@ -252,14 +254,14 @@ export function MediaArrayField(ComposedComponent) {
 				<div key={i} className="media-container">
 					<a onClick={this.onMediaClick(i)}>{this.renderMedia(item, i)}</a>
 					<DeleteButton corner={true}
-					confirm={true}
-					confirmPlacement={deleteConfirmPlacement}
-					translations={this.props.formContext.translations}
-					onClick={this.onMediaRmClick(i)}
-					disabled={disabled || readonly}
-					id={`${this.props.idSchema.$id}_${i}`}
-				>✖</DeleteButton>
-			</div>
+					              confirm={true}
+					              confirmPlacement={deleteConfirmPlacement}
+					              translations={this.props.formContext.translations}
+					              onClick={this.onMediaRmClick(i)}
+					              disabled={disabled || readonly}
+					              id={`${this.props.idSchema.$id}_${i}`}
+					>✖</DeleteButton>
+				</div>
 			));
 		}
 
@@ -330,42 +332,42 @@ export function MediaArrayField(ComposedComponent) {
 
 			return typeof metadataModalOpen === "number" ?
 				<Modal dialogClassName="laji-form media-modal" show={true}
-				onHide={this.hideMetadataModal}>
-				<Modal.Header closeButton={true}>
-					<br />
-					<Pager>
-						<Pager.Item previous onClick={this.openModalFor(metadataModalOpen - 1)} disabled={metadataModalOpen <= 0}>&larr; {Previous}</Pager.Item>
-						<Pager.Item next onClick={this.openModalFor(metadataModalOpen + 1)} disabled={metadataModalOpen >= this.props.formData.length - 1}>{Next} &rarr;</Pager.Item>
-					</Pager>
-				</Modal.Header>
-				<Modal.Body>
-					<div className={`laji-form${metadataModal ? " media-modal-content" : ""}`}>
-						{isOpen
-							? <React.Fragment>
-								{this.renderModalMedia(modalIdx)}
-								{metadataModal && <LajiForm
-								{...metadataForm}
-								uiSchema={uiSchema}
-								formData={modalMetadata}
-								onChange={this.onMetadataFormChange}
-								onSubmit={this.onMediaMetadataUpdate}
-								submitText={translations.Save}
-								lang={lang}
-								apiClient={this.props.formContext.apiClient.apiClient}
-								uiSchemaContext={this.props.formContext.uiSchemaContext}
-								showShortcutButton={false}>
-								{(metadataSaveSuccess !== undefined) ? (
-									<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
-										{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
-									</Alert>
-								) : null
-								}
+				       onHide={this.hideMetadataModal}>
+					<Modal.Header closeButton={true}>
+						<br />
+						<Pager>
+							<Pager.Item previous onClick={this.openModalFor(metadataModalOpen - 1)} disabled={metadataModalOpen <= 0}>&larr; {Previous}</Pager.Item>
+							<Pager.Item next onClick={this.openModalFor(metadataModalOpen + 1)} disabled={metadataModalOpen >= this.props.formData.length - 1}>{Next} &rarr;</Pager.Item>
+						</Pager>
+					</Modal.Header>
+					<Modal.Body>
+						<div className={`laji-form${metadataModal ? " media-modal-content" : ""}`}>
+							{isOpen
+								? <React.Fragment>
+									{this.renderModalMedia(modalIdx)}
+									{metadataModal && <LajiForm
+										{...metadataForm}
+										uiSchema={uiSchema}
+										formData={modalMetadata}
+										onChange={this.onMetadataFormChange}
+										onSubmit={this.onMediaMetadataUpdate}
+										submitText={translations.Save}
+										lang={lang}
+										apiClient={this.props.formContext.apiClient.apiClient}
+										uiSchemaContext={this.props.formContext.uiSchemaContext}
+										showShortcutButton={false}>
+										{(metadataSaveSuccess !== undefined) ? (
+											<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
+												{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
+											</Alert>
+										) : null
+										}
 									</LajiForm>}
 								</React.Fragment>
-							: <Spinner />}
+								: <Spinner />}
 						</div>
 					</Modal.Body>
-					</Modal> : null;
+				</Modal> : null;
 		}
 
 		onHideMediaAddModal = () => this.setState({addModal: undefined}, () => {
@@ -396,10 +398,10 @@ export function MediaArrayField(ComposedComponent) {
 							]
 						].map(([captureMethod, label]) =>
 							<DropZone key={captureMethod || ""}
-							accept={this.ACCEPT_FILE_TYPES}
-							onDrop={this.onDrop}
-							disabled={readonly || disabled}
-						>
+							          accept={this.ACCEPT_FILE_TYPES}
+							          onDrop={this.onDrop}
+							          disabled={readonly || disabled}
+							>
 								{({getRootProps, getInputProps}) => {
 									return (
 										<div className="btn-block" {...getRootProps()}>
@@ -409,13 +411,12 @@ export function MediaArrayField(ComposedComponent) {
 										</div>
 									);
 								}}
-									</DropZone>
+							</DropZone>
 						)}
-									<Button className="cancel" block onClick={this.onHideMediaAddModal}>{cancel || translations[this.TRANSLATION_NO_MEDIA]}</Button>
-								</Modal.Body>
-							</Modal>
+						<Button className="cancel" block onClick={this.onHideMediaAddModal}>{cancel || translations[this.TRANSLATION_NO_MEDIA]}</Button>
+					</Modal.Body>
+				</Modal>
 			);
-
 		}
 
 		onAlertOk = () => {
@@ -437,7 +438,7 @@ export function MediaArrayField(ComposedComponent) {
 				return promise.then(found =>
 					new Promise(resolve => {
 						exif.getData(file, function() {
-							if (found.hasOwnProperty("geometry")) try {
+							if ("geometry" in found) try {
 								const coordinates = ["GPSLongitude", "GPSLatitude"].map(tag => toDecimal(exif.getTag(this, tag)));
 								const rawDatum = exif.getTag(this, "GPSMapDatum");
 								const datum = typeof rawDatum === "string"
@@ -465,7 +466,7 @@ export function MediaArrayField(ComposedComponent) {
 								}
 							};
 
-							if (found.hasOwnProperty("date")) {
+							if ("date" in found) {
 								try {
 									const rawDate = exif.getTag(this, "DateTimeOriginal");
 									const momentDate = moment(rawDate, "YYYY:MM:DD HH:mm:ss");
@@ -522,7 +523,7 @@ export function MediaArrayField(ComposedComponent) {
 						sideEffects[field],
 						parseRelativePaths(field, containerPath)
 					),
-					formData
+				formData
 				);
 			}
 			if (formData !== lajiFormFormData) {
@@ -776,10 +777,11 @@ export function MediaArrayField(ComposedComponent) {
 
 			return formats;
 		}
-	};
+	}
+	return MediaArrayField;
 }
 
-class Thumbnail extends PureComponent {
+class Thumbnail extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -813,4 +815,4 @@ class Thumbnail extends PureComponent {
 			?  <div className="media-loading">{img}<Spinner /></div>
 			: img;
 	}
-	}
+}

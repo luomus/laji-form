@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
@@ -13,7 +13,7 @@ import { TagInputComponent } from "./TagArrayField";
  * Compatible only with unit array.
  */
 @BaseComponent
-export default class UnitListShorthandArrayField extends Component {
+export default class UnitListShorthandArrayField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])

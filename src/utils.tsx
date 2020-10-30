@@ -1,26 +1,29 @@
-import React from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import { isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+const { isSelect, isMultiSelect: _isMultiSelect, getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
-import update from "immutability-helper";
+import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
-import deepEquals from "deep-equal";
+const deepEquals = require("deep-equal");
+import Form, { UiSchema } from "@rjsf/core";
+import { JSONSchema7 } from "json-schema";
+import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps } from "./components/LajiForm";
 
 export const isObject = _isObject;
 
-export function isHidden(uiSchema, property) {
+export function isHidden(uiSchema: UiSchema, property: string) {
 	if (!uiSchema) return false;
 	if (uiSchema[property]) uiSchema = uiSchema[property];
 	return !uiSchema || uiSchema["ui:widget"] == "HiddenWidget" || uiSchema["ui:field"] == "HiddenField";
 }
 
-export function isDefaultData(formData, schema, definitions = {}) {
+export function isDefaultData(formData: any, schema: any, definitions = {}): boolean {
 	switch (schema.type) {
 	case "object":
 		return Object.keys(schema.properties).every(field => isDefaultData(formData[field], schema.properties[field], definitions));
 	case "array":
-		return (Array.isArray(formData) || formData === undefined) && (formData || []).every(item => isDefaultData(item, schema.items, definitions));
+		return (Array.isArray(formData) || formData === undefined) && (formData || []).every((item: any) => isDefaultData(item, schema.items, definitions));
 	default:
 		return formData === getDefaultFormState(schema, undefined, definitions);
 	}
@@ -29,14 +32,14 @@ export function isDefaultData(formData, schema, definitions = {}) {
 /**
  * If you use this with schema data, note that this function doesn't check default data.
  */
-export function hasData(formData) {
-	function hasValue(value)  {
+export function hasData(formData: any): boolean {
+	function hasValue(value: any)  {
 		return value !== undefined && value !== null && value !== "";
 	}
 	if (!formData && !hasValue(formData)) return false;
 	else {
 		if (!Array.isArray(formData)) formData = [formData];
-		return formData.some(data => {
+		return formData.some((data: any) => {
 			if (isObject(data)) {
 				return Object.keys(data).some(_field => propertyHasData(_field, data));
 			}
@@ -48,7 +51,7 @@ export function hasData(formData) {
 /**
  * If you use this with schema data, note that this function doesn't check default data.
  */
-export function propertyHasData(field, container) {
+export function propertyHasData(field: string, container: any): boolean {
 	if (!container) return false;
 	const data = container[field];
 	return !!(data &&
@@ -56,12 +59,12 @@ export function propertyHasData(field, container) {
 	(!Array.isArray(data) || (data.length > 0 && hasData(data))));
 }
 
-export function getUpdateObjectFromJSONPath(...params) {
+export function getUpdateObjectFromJSONPath(path: string, injection: any): any {
 	console.warn("'getUpdateObjectFromJSONPath' works with JSON pointers, not JSON path! This function is deprecated and will be removed in the future, please use 'getUpdateObjectFromJSONPointer' instead");
-	return getUpdateObjectFromJSONPointer(...params);
+	return getUpdateObjectFromJSONPointer(path, injection);
 }
-export function getUpdateObjectFromJSONPointer(path, injection) {
-	let update = {};
+export function getUpdateObjectFromJSONPointer(path: string, injection: any): any {
+	let update: any = {};
 	let updatePointer = update;
 	let lastPathName = "";
 	let splittedPath = path.split("/").filter(s => !isEmptyString(s));
@@ -75,12 +78,12 @@ export function getUpdateObjectFromJSONPointer(path, injection) {
 	return update;
 }
 
-export function immutableDelete(_obj, _delProp) {
-	const simple = (obj, delProp) => {
-		if (!obj.hasOwnProperty(delProp)) {
+export function immutableDelete(_obj: any, _delProp: string) {
+	const simple = (obj: any, delProp: string) => {
+		if (!(delProp in obj)) {
 			return obj;
 		}
-		const newObj = {};
+		const newObj: any = {};
 		Object.keys(obj).forEach(prop => {
 			if (prop !== delProp) newObj[prop] = obj[prop];
 		});
@@ -91,14 +94,14 @@ export function immutableDelete(_obj, _delProp) {
 		const splits = _delProp.split("/");
 		const last = splits.pop();
 		const container = parseJSONPointer(_obj, splits.join("/"));
-		return updateSafelyWithJSONPointer(_obj, simple(container, last), splits.join("/"));
+		return updateSafelyWithJSONPointer(_obj, simple(container, last as string), splits.join("/"));
 	} else {
 		return simple(_obj, _delProp);
 	}
 
 }
 
-export function getUiOptions(container) {
+export function getUiOptions(container: UiSchema) {
 	if (container) {
 		const options = container["ui:options"] || container.options;
 		return options ? options : {};
@@ -106,9 +109,17 @@ export function getUiOptions(container) {
 	return {};
 }
 
-export function getInnerUiSchema(parentUiSchema) {
+interface VirtualSchemaNamesContext {
+	[name: string]: boolean;
+}
+
+interface SchemaFieldWrappersContext {
+	[name: string]: boolean;
+}
+
+export function getInnerUiSchema(parentUiSchema: UiSchema) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && (new Context("VIRTUAL_SCHEMA_NAMES")[uiSchema["ui:field"]] || new Context("SCHEMA_FIELD_WRAPPERS")[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
+	if (uiSchema && ((new Context("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (new Context("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
@@ -127,15 +138,15 @@ export function getInnerUiSchema(parentUiSchema) {
 	};
 }
 
-export function isNullOrUndefined(val) {
+export function isNullOrUndefined(val: any) {
 	return val === null || val === undefined;
 }
 
-export function isEmptyString(val) {
+export function isEmptyString(val: any) {
 	return val === "" || isNullOrUndefined(val);
 }
 
-export function parseJSONPointer(object, jsonPointer, safeMode, strictEmptyPath = false) {
+export function parseJSONPointer(object: any, jsonPointer: string, safeMode?: boolean | "createParents", strictEmptyPath = false) {
 	let splitPath = String(jsonPointer).split("/");
 	if (String(jsonPointer)[0] === "/") {
 		splitPath = splitPath.splice(1);
@@ -156,7 +167,7 @@ export function parseJSONPointer(object, jsonPointer, safeMode, strictEmptyPath 
 	}, object);
 }
 
-export function getReactComponentName(WrappedComponent) {
+export function getReactComponentName(WrappedComponent: React.ComponentClass) {
 	return (
 		WrappedComponent.displayName ||
 		WrappedComponent.name ||
@@ -164,7 +175,7 @@ export function getReactComponentName(WrappedComponent) {
 	);
 }
 
-export function isMultiSelect(schema, uiSchema) {
+export function isMultiSelect(schema: any, uiSchema?: UiSchema) {
 	return _isMultiSelect(schema) && !(
 		schema.type === "array" &&
 		uiSchema &&
@@ -180,54 +191,64 @@ let tabbableSelectors = inputTypes.slice(0);
 tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`; });
 
-export function getTabbableFields(elem, reverse) {
+export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLElement[] {
 	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
-	let fields = [...fieldsNodeList];
+	let fields = Array.from(fieldsNodeList);
 
 	if (reverse) fields = fields.reverse();
-	return fields;
+	return fields as HTMLElement[];
 }
 
-export function getSchemaElementById(contextId, id) {
+export function getSchemaElementById(contextId: number, id: string) {
 	return document.getElementById(`_laji-form_${contextId}_${id}`);
 }
 
-export function isTabbableInput(elem) {
+export function isTabbableInput(elem: HTMLElement) {
 	return (elem.id.match(/^_laji-form_/) || inputTypes.includes(elem.tagName.toLowerCase()) ||
 	elem.className.includes(SWITCH_CLASS));
 }
 
-export function canFocusNextInput(root, inputElem) {
-	return (findDOMNode(root).querySelectorAll && isTabbableInput(inputElem));
+export function canFocusNextInput(root: React.ReactInstance, inputElem: HTMLElement) {
+	const node = findDOMNode(root) as HTMLElement;
+	return (node?.querySelectorAll && isTabbableInput(inputElem));
 }
 
-export function findNearestParentSchemaElem(elem) {
+export function findNearestParentSchemaElem(elem: HTMLElement | null | undefined): HTMLElement | null | undefined {
 	while (elem && !("id" in elem ? elem.id : "").match(/^_laji-form_/)) {
-		elem = elem.parentNode;
+		elem = elem.parentNode as HTMLElement;
 	}
 	return elem;
 }
 
-export function findNearestParentSchemaElemId(contextId, elem) {
+export function findNearestParentSchemaElemId(contextId: number, elem: HTMLElement) {
 	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
 	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
 }
 
-export function findNearestParentTabbableElem(elem) {
+export function findNearestParentTabbableElem(elem: HTMLElement): HTMLElement | undefined {
 	while (!isTabbableInput(elem)) {
-		elem = elem.parentNode;
+		elem = elem.parentNode as HTMLElement;
 	}
 	return elem;
 }
 
-export function getNextInputInInputs(formReactNode, inputElem, reverseDirection, fields) {
-	const formElem = findDOMNode(formReactNode);
-	if (!inputElem) inputElem = findNearestParentTabbableElem(document.activeElement);
+export function getNextInputInInputs(formReactNode: Form<any>, inputElem: HTMLElement | undefined, reverseDirection = false, fields: HTMLElement[]): HTMLElement | undefined {
+	const formElem = findDOMNode(formReactNode) as HTMLElement;
+	if (!formElem) {
+		return undefined;
+	}
+	if (!document.activeElement) {
+		return undefined;
+	}
+	if (!inputElem) inputElem = findNearestParentTabbableElem(document.activeElement as HTMLElement);
+	if (!inputElem) {
+		return undefined;
+	}
 	if (reverseDirection) {
 		fields = fields.reverse();
 	}
 
-	if (!canFocusNextInput(formElem, inputElem)) return;
+	if (!canFocusNextInput(formElem, inputElem)) return undefined;
 
 	let found = false;
 	for (let field of fields) {
@@ -244,22 +265,23 @@ export function getNextInputInInputs(formReactNode, inputElem, reverseDirection,
 			return field;
 		}
 	}
+	return undefined;
 }
 
-export function getNextInput(formReactNode, inputElem, reverseDirection) {
-	const formElem = findDOMNode(formReactNode);
+export function getNextInput(formReactNode: Form<any>, inputElem: HTMLElement, reverseDirection = false) {
+	const formElem = findDOMNode(formReactNode) as HTMLElement;
 	const fields = getTabbableFields(formElem);
 	return getNextInputInInputs(formReactNode, inputElem, reverseDirection, fields);
 }
 
-export function focusNextInput(...params) {
-	const {uiSchema = {}} = params[0].props;
+export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement, reverseDirection = false) {
+	const {uiSchema = {}} = formReactNode.props;
 	if (uiSchema.autoFocus === false) {
 		return false;
 	}
 	const width = pixelsToBsSize(window.outerWidth);
 	if (width === "xs") return false;
-	const field = getNextInput(...params);
+	const field = getNextInput(formReactNode, inputElem, reverseDirection);
 	if (field) {
 		field.focus();
 		return true;
@@ -267,14 +289,14 @@ export function focusNextInput(...params) {
 	return false;
 }
 
-export function focusById(formContext = {}, id, focus = true) {
+export function focusById(formContext: FormContext, id: string, focus = true) {
 	const elem = getSchemaElementById(formContext.contextId, id);
 	if (elem && document.body.contains(elem)) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
 			focus && tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
-			const _context = new Context(formContext.contextId);
+			const _context = new Context(formContext.contextId) as RootContext;
 			_context.lastIdToFocus = id; // Mark for components that manipulate scroll positions
 			_context.windowScrolled = getWindowScrolled();
 			return true;
@@ -283,15 +305,15 @@ export function focusById(formContext = {}, id, focus = true) {
 	return false;
 }
 
-export function getNestedTailUiSchema(uiSchema) {
+export function getNestedTailUiSchema(uiSchema: UiSchema) {
 	while (uiSchema && uiSchema.uiSchema) {
 		uiSchema = uiSchema.uiSchema;
 	}
 	return uiSchema;
 }
 
-export function updateTailUiSchema(uiSchema, updateObject) {
-	let tailPointer = {};
+export function updateTailUiSchema(uiSchema: UiSchema, updateObject: UpdateObject<any, any>) {
+	let tailPointer = {} as UpdateObject<any, any>;
 	let root = tailPointer;
 	let uiSchemaPointer = uiSchema;
 	while (uiSchemaPointer.uiSchema) {
@@ -303,7 +325,7 @@ export function updateTailUiSchema(uiSchema, updateObject) {
 	return update(uiSchema, root);
 }
 
-export function getNestedUiFieldsList(uiSchema) {
+export function getNestedUiFieldsList(uiSchema: UiSchema) {
 	const list = [];
 	while (uiSchema.uiSchema && uiSchema.uiSchema["ui:field"]) {
 		list.push(uiSchema.uiSchema["ui:field"]);
@@ -312,15 +334,17 @@ export function getNestedUiFieldsList(uiSchema) {
 	return list;
 }
 
-export function getBootstrapCols(width) {
-	return ["lg", "md", "sm", "xs"].reduce((o, c) => {
+type BootstrapColumns = {lg: number, md: number, sm: number, xs: number};
+
+export function getBootstrapCols(width: number) {
+	return (["lg", "md", "sm", "xs"] as Array<keyof BootstrapColumns>).reduce<BootstrapColumns>((o, c) => {
 		o[c] = width;
 		return o;
-	}, {});
+	}, {} as BootstrapColumns);
 }
 
-export function isDescendant(parent, child) {
-	var node = child.parentNode;
+export function isDescendant(parent: HTMLElement | null, child: HTMLElement) {
+	let node = child.parentNode;
 	while (node != null) {
 		if (node == parent) {
 			return true;
@@ -330,25 +354,25 @@ export function isDescendant(parent, child) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(target = "", context, formData) { // eslint-disable-line no-unused-vars
+export function getKeyHandlerTargetId(target = "", context: RootContext, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	while (target.match(/%\{([^{}]*)\}/)) {
-		const path = /%\{([^{}]*)\}/.exec(target)[1];
+		const path = /%\{([^{}]*)\}/.exec(target)?.[1] || "";
 		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");
 		target = target.replace(`%{${path}}`, eval(path));
 	}
 	return target;
 }
 
-export function handleKeysWith(context, id, keyFunctions = {}, e, additionalParams = {}) {
+export function handleKeysWith(context: RootContext, id: string, keyFunctions: KeyFunctions = {}, e: KeyboardEvent, additionalParams: any = {}) {
 	if (context.blockingLoaderCounter > 0 &&
-			!isDescendant(document.querySelector(".pass-block"), e.target)) {
+			!isDescendant(document.querySelector(".pass-block"), e.target as HTMLElement)) {
 		e.preventDefault();
 		return;
 	}
 
-	if (isDescendant(document.querySelector(".laji-map"), e.target)) return;
+	if (isDescendant(document.querySelector(".laji-map"), e.target as HTMLElement)) return;
 
-	function handleKey(keyHandler) {
+	function handleKey(keyHandler: InternalKeyHandler) {
 		const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
 		const eventHandled = returnValue !== undefined ? returnValue : true;
 		if (eventHandled) {
@@ -367,6 +391,7 @@ export function handleKeysWith(context, id, keyFunctions = {}, e, additionalPara
 			}
 			return true;
 		}
+		return false;
 	});
 
 	if (highPriorityHandled) return highPriorityHandled;
@@ -375,13 +400,14 @@ export function handleKeysWith(context, id, keyFunctions = {}, e, additionalPara
 		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
 			return handleKey(keyHandler);
 		}
+		return false;
 	});
 }
 
-export function capitalizeFirstLetter(string) {
+export function capitalizeFirstLetter(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
-export function decapitalizeFirstLetter(string) {
+export function decapitalizeFirstLetter(string: string) {
 	return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
@@ -392,11 +418,11 @@ export function stringifyKeyCombo(keyCombo = "") {
 	}).join(" + ");
 }
 
-export function canAdd(props) {
+export function canAdd(props: any) {
 	return (!("canAdd" in props) || props.canAdd) && getUiOptions(props.uiSchema).canAdd !== false;
 }
 
-export function bsSizeToPixels(bsSize) {
+export function bsSizeToPixels(bsSize: keyof BootstrapColumns) {
 	switch (bsSize) {
 	case "lg":
 		return 1200;
@@ -411,7 +437,7 @@ export function bsSizeToPixels(bsSize) {
 	}
 }
 
-export function pixelsToBsSize(pixels) {
+export function pixelsToBsSize(pixels: number) {
 	if (pixels < 576) {
 		return "xs";
 	} else if (pixels < 768) {
@@ -421,12 +447,13 @@ export function pixelsToBsSize(pixels) {
 	} else if (pixels < 1200) {
 		return "lg";
 	}
+	return "";
 }
 
-export function applyFunction(props) {
+export function applyFunction(props: FieldProps): any {
 	let {"ui:functions": functions, "ui:childFunctions": childFunctions} = (props.uiSchema || {});
 
-	const objectOrArrayAsArray = item => (
+	const objectOrArrayAsArray = (item: any) => (
 		item ? 
 			(Array.isArray(item) ?
 				item : 
@@ -445,7 +472,7 @@ export function applyFunction(props) {
 
 	const computedProps = ((Array.isArray(functions)) ? functions : [functions]).reduce((_props, {"ui:field": uiField, "ui:options": uiOptions}) => {
 		_props = {..._props, uiSchema: {..._props.uiSchema, "ui:field": uiField, "ui:options": uiOptions, uiSchema: undefined}};
-		const {state = {}} = new props.registry.fields[uiField](_props);
+		const {state = {}} = new (props.registry.fields[uiField] as any)(_props);
 		return {..._props, ...state};
 	}, {...props, formContext: props.registry.formContext});
 
@@ -462,14 +489,14 @@ export function applyFunction(props) {
 	};
 }
 
-export function getWindowScrolled() {
+export function getWindowScrolled(): number {
 	return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 }
 
-export function getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
-	if (!elem) return;
-	var rect = elem.getBoundingClientRect();
-	var html = document.documentElement;
+export function getScrollPositionForScrollIntoViewIfNeeded(elem: Element, topOffset = 0, bottomOffset = 0): number {
+	if (!elem) return getWindowScrolled();
+	const rect = elem.getBoundingClientRect();
+	const html = document.documentElement;
 	const height = elem.scrollHeight;
 	const inView = (
 		rect.top >= topOffset &&
@@ -490,28 +517,25 @@ export function getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset = 0, 
 	}
 }
 
-export function scrollIntoViewIfNeeded(elem, topOffset = 0, bottomOffset = 0) {
+export function scrollIntoViewIfNeeded(elem: HTMLElement, topOffset = 0, bottomOffset = 0) {
 	window.scrollTo(0, getScrollPositionForScrollIntoViewIfNeeded(elem, topOffset, bottomOffset));
 }
 
-export function filter(properties, filter, filterType = "blacklist", getValue) {
-	const filterDictionary = {};
+export function filter(properties: any[], filter: string[], filterType = "blacklist", getValue: (s: string) => any) {
+	const filterDictionary = {} as any;
 	filter.forEach(_enum => { filterDictionary[_enum] = true; });
-	const filterFn = (item) => {
+	const filterFn = (item: any) => {
 		const value = getValue ? getValue(item) : item;
 		return filterDictionary[value];
 	};
 	return properties.filter(filterType === "whitelist" ? filterFn : e => !filterFn(e));
 }
 
-export function updateSafelyWithJSONPath(...params) {
+export function updateSafelyWithJSONPath(obj: any, value: any, path: string, immutably: boolean, createNew: (obj: any, split: string) => any) {
 	console.warn("'updateSafelyWithJSONPath' works with JSON pointers, not JSON path! This function is deprecated and will be removed in the future, please use 'updateSafelyWithJSONPointer' instead");
-	return updateSafelyWithJSONPointer(...params);
+	return updateSafelyWithJSONPointer(obj, value, path, immutably, createNew);
 }
-export function updateSafelyWithJSONPointer(obj, value, path, immutably = true, createNew) {
-	if (!createNew) {
-		createNew = () => ({});
-	}
+export function updateSafelyWithJSONPointer(obj: any, value: any, path: string, immutably = true, createNew: (obj: any, split: string, o?: any, _split?: string) => any = () => ({})) {
 	if (!immutably) {
 		const splitted = path.split("/").filter(s => !isEmptyString(s));
 		splitted.reduce((o, split, i) => {
@@ -542,7 +566,7 @@ export function updateSafelyWithJSONPointer(obj, value, path, immutably = true, 
 	const updateObject = getUpdateObjectFromJSONPointer(path, {$set: value});
 	return update(obj, updateObject);
 
-	function makePath(injectionTarget) {
+	function makePath(injectionTarget: any) {
 		const splitPath = path.split("/").filter(s => !isEmptyString(s));
 		let _splitPath = "";
 		splitPath.reduce((o, split) => {
@@ -563,31 +587,33 @@ export function updateSafelyWithJSONPointer(obj, value, path, immutably = true, 
 	}
 }
 
-export function injectButtons(uiSchema, buttons, buttonsPath) {
+export function injectButtons(uiSchema: any, buttons: any[], buttonsPath: string) {
 	const existingButtons = parseJSONPointer(uiSchema,  `${buttonsPath}/ui:options/buttons`);
 	return updateSafelyWithJSONPointer(uiSchema, existingButtons ? [...existingButtons, ...buttons] : buttons, `${buttonsPath}/ui:options/buttons`);
 }
 
-export function dictionarify(array, getKey, getValue) {
+export function dictionarify(array: any[], getKey?: (item: any) => string, getValue?: (item: any) => any) {
 	return array.reduce((o, k) => {
 		o[getKey ? getKey(k) : k] = getValue ? getValue(k) : true;
 		return o;
 	}, {});
 }
 
-const tableFormatters = {
-	unknownTaxon: (item, formatted, options, parentProps = {}) => {
-		return (isEmptyString(item) || (parentProps.formData || {})[options.idField]) ? formatted : <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>;
-	}
+const tableFormatters: {[formatter: string]: (item: any, formatted: React.ReactInstance, options: any, parentProps: any) => React.ReactNode} = {
+	unknownTaxon: (item: any, formatted: React.ReactInstance, options: any, parentProps: any = {}) => 
+		(isEmptyString(item) || (parentProps.formData || {})[options.idField])
+			? formatted
+			: <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>
 };
-export function formatValue(props, _formatter, parentProps) {
+
+export function formatValue(props: FieldProps, _formatter?: any, parentProps?: any) {
 	let {formData, uiSchema = {}, schema, registry} = props;
 
 	let formatter = undefined;
 	let formatterComponent = undefined;
-	if (uiSchema["ui:widget"]) formatterComponent = registry.widgets[uiSchema["ui:widget"]];
+	if (uiSchema["ui:widget"]) formatterComponent = registry.widgets[uiSchema["ui:widget"] as string];
 	else if (schema.type === "boolean") formatterComponent = registry.widgets.CheckboxWidget;
-	else if (uiSchema["ui:field"]) formatterComponent = registry.fields[uiSchema["ui:field"]];
+	else if (uiSchema["ui:field"]) formatterComponent = registry.fields[uiSchema["ui:field"] as string];
 
 	if (formatterComponent && formatterComponent.prototype && formatterComponent.prototype.formatValue) {
 		formatter = formatterComponent.prototype.formatValue;
@@ -595,7 +621,7 @@ export function formatValue(props, _formatter, parentProps) {
 		formatter = formatterComponent.prototype.__proto__.formatValue;
 	}
 
-	const arrayJoiner = (value, i, length, separator = "; ") => {
+	const arrayJoiner = (value: React.ReactElement, i: number, length: number, separator = "; ") => {
 		const comma = <React.Fragment key={`_${i}`}>{separator}</React.Fragment>;
 		return i < length - 1
 			? [value, comma] : [value];
@@ -607,23 +633,23 @@ export function formatValue(props, _formatter, parentProps) {
 	} else if (isEmptyString(formData)) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
-		formatted = formData.map(_val => schema.items.enumNames[schema.items.enum.indexOf(_val)]).join(", ");
+		formatted = formData.map((_val: any) => (schema as any).items.enumNames[(schema as any).items.enum.indexOf(_val)]).join(", ");
 	} else if (schema.type === "object") {
 		const keys = Object.keys(formData);
 		return keys.map((_col, i) => {
-			const child = <React.Fragment key={_col}>{formatValue({...props, schema: schema.properties[_col], uiSchema: uiSchema[_col], formData: formData[_col]})}</React.Fragment>;
+			const child = <React.Fragment key={_col}>{formatValue({...props, schema: (schema as any).properties[_col], uiSchema: uiSchema[_col], formData: formData[_col]})}</React.Fragment>;
 			return arrayJoiner(child, i, keys.length);
 		});
 	} else if (schema.type === "array") {
-		formatted = <span className="single-active-array-table-array">{formData.map((_val, i) => {
+		formatted = <span className="single-active-array-table-array">{formData.map((_val: any, i: number) => {
 			const child = <React.Fragment key={i}>{
-				formatValue({...props, schema: props.schema.items, uiSchema: uiSchema.items, formData: _val})
+				formatValue({...props, schema: (props.schema as any).items, uiSchema: uiSchema.items, formData: _val})
 			}</React.Fragment>;
 
 			return arrayJoiner(child, i, formData.length, "; ");
 		})}</span>;
 	} else if (isSelect(schema)) {
-		formatted = isEmptyString(formData) ? formData : schema.enumNames[schema.enum.indexOf(formData)];
+		formatted = isEmptyString(formData) ? formData : (schema as any).enumNames[(schema.enum as any).indexOf(formData)];
 	} else if (schema.type === "boolean") {
 		formatted = props.formContext.translations[formData ? "yes" : "no"];
 	}
@@ -635,9 +661,9 @@ export function formatValue(props, _formatter, parentProps) {
 	return formatted;
 }
 
-export const formatErrorMessage = msg => msg.replace(/^\[.*\]/, "");
+export const formatErrorMessage = (msg: string) => msg.replace(/^\[.*\]/, "");
 
-export function checkRules(rules, props, cache, prop = "formData") {
+export function checkRules(rules: any[], props: FieldProps, cache?: {[key: string]: any}, prop: keyof FieldProps = "formData"): boolean | {passes: boolean, cache: {[key: string]: any}} {
 	const passes = (Array.isArray(rules) ? rules : [rules]).every((rule, idx) => {
 		let passes;
 		if (rule === "isAdmin") {
@@ -671,7 +697,7 @@ export function checkRules(rules, props, cache, prop = "formData") {
 	return cache ? {passes, cache} : passes;
 }
 
-export function checkArrayRules(rules, props, idx, cache, prop = "formData") {
+export function checkArrayRules(rules: any[], props: FieldProps, idx: number, cache?: {[key: string]: any}, prop: keyof FieldProps = "formData"): boolean | {passes: boolean, cache: {[key: string]: any}} {
 	const arrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => ["isLast", "idx"].some(r => r in rule));
 	const passes = arrayRules.every(rule => {
 		let passes;
@@ -688,7 +714,7 @@ export function checkArrayRules(rules, props, idx, cache, prop = "formData") {
 	const nonArrayRules = (Array.isArray(rules) ? rules : [rules]).filter(rule => !arrayRules.includes(rule));
 	if (nonArrayRules.length) {
 		const nonArrayRulesCheck = checkRules(nonArrayRules, {...props, formData: props.formData[idx]}, cache, prop);
-		const allPass = passes && nonArrayRulesCheck.passes;
+		const allPass = passes && cache ? (nonArrayRulesCheck as any).passes :  nonArrayRulesCheck;
 		if (cache) {
 			return {passes: allPass, cache};
 		} else {
@@ -699,9 +725,9 @@ export function checkArrayRules(rules, props, idx, cache, prop = "formData") {
 	}
 }
 
-export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true) {
+export function focusAndScroll(formContext: FormContext, idToFocus?: string, idToScroll?: string, focus = true) {
 	const {contextId, topOffset, bottomOffset} = formContext;
-	const _context = new Context(contextId);
+	const _context = new Context(contextId) as RootContext;
 	if (idToFocus === undefined && idToScroll === undefined) return;
 	if (idToFocus && !focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	if (idToScroll) {
@@ -732,18 +758,18 @@ export function focusAndScroll(formContext, idToFocus, idToScroll, focus = true)
 	}
 }
 
-export function shouldSyncScroll(formContext) {
-	return new Context(formContext.contextId).windowScrolled === getWindowScrolled();
+export function shouldSyncScroll(formContext: FormContext) {
+	return (new Context(formContext.contextId) as RootContext).windowScrolled === getWindowScrolled();
 }
 
-export function syncScroll(formContext, force = false) {
+export function syncScroll(formContext: FormContext, force = false) {
 	if (force || shouldSyncScroll(formContext)) {
-		const {lastIdToFocus, lastIdToScroll} = new Context(formContext.contextId);
+		const {lastIdToFocus, lastIdToScroll} = new Context(formContext.contextId) as RootContext;
 		focusAndScroll(formContext, lastIdToFocus, lastIdToScroll, false);
 	}
 }
 
-export function bringRemoteFormData(formData, formContext) {
+export function bringRemoteFormData(formData: any, formContext: FormContext) {
 	if (formContext.formDataTransformers) {
 		return formContext.formDataTransformers.reduce((formData, {"ui:field": uiField, props: fieldProps}) => {
 			const {state = {}} = new fieldProps.registry.fields[uiField]({...fieldProps, formData});
@@ -754,27 +780,27 @@ export function bringRemoteFormData(formData, formContext) {
 	}
 }
 
-export function triggerParentComponent(eventName, e, props) {
+export function triggerParentComponent(eventName: string, e: React.SyntheticEvent, props: any) {
 	if (props && props[eventName]) {
 		e.persist && e.persist();
 		props[eventName](e);
 	}
 }
 
-export function parseSchemaFromFormDataPointer(schema, pointer) {
+export function parseSchemaFromFormDataPointer(schema: JSONSchema7, pointer: string) {
 	const splits = pointer.split("/").filter(s => !isEmptyString(s));
 	const value = splits.reduce((o, s)=> {
 		if (!isNaN(parseInt(s))) {
 			return o.items;
 		}
-		if (o.type === "array" && o.items.properties[s]) return o.items.properties[s];
+		if (o.type === "array" && (o as any).items.properties[s]) return (o as any).items.properties[s];
 		if (o.type === "array") return o.items;
-		return o.properties[s];
+		return (o as any).properties[s];
 	}, schema);
 	return value;
 }
 
-export function parseUiSchemaFromFormDataPointer(uiSchema, pointer) {
+export function parseUiSchemaFromFormDataPointer(uiSchema: any, pointer: string) {
 	const splits = pointer.split("/").filter(s => !isEmptyString(s));
 	return splits.reduce((o, s) => {
 		if (!isNaN(parseInt(s))) {
@@ -785,14 +811,14 @@ export function parseUiSchemaFromFormDataPointer(uiSchema, pointer) {
 	}, uiSchema);
 }
 
-export function checkJSONPointer(obj, pointer) {
+export function checkJSONPointer(obj: any, pointer: string) {
 	if (!obj) return false;
 	const splits = pointer.split("/").filter(s => !isEmptyString(s));
-	pointer = obj;
 	try {
+		let _pointer = obj;
 		return splits.every(split => {
-			const exists = pointer.hasOwnProperty(split);
-			pointer = pointer[split];
+			const exists = split in _pointer;
+			_pointer = _pointer[split];
 			return exists;
 		});
 	} catch (e) {
@@ -800,21 +826,21 @@ export function checkJSONPointer(obj, pointer) {
 	}
 }
 
-export const JSONPointerToId = fieldName => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;
+export const JSONPointerToId = (fieldName: string) => fieldName[0] === "/" ? fieldName.replace(/(?!^)\//g, "_").substr(1) : fieldName;
 
-export const idSchemaIdToJSONPointer = id => id.replace(/root_|_/g, "/");
+export const idSchemaIdToJSONPointer = (id: string) => id.replace(/root_|_/g, "/");
 
-export function schemaJSONPointer(schema, JSONPointer) {
+export function schemaJSONPointer(schema: JSONSchema7, JSONPointer: string) {
 	if (JSONPointer[0] !== "/") {
 		JSONPointer = `/${JSONPointer}`;
 	}
 
-	let schemaPointer = schema;
+	let schemaPointer: any = schema;
 	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
 		if (schemaPointer[s]) {
 			schemaPointer = schemaPointer[s];
 			return `${path}/${s}`;
-		} else if (!isNaN(s) && schemaPointer.items) {
+		} else if (!isNaN(+s) && schemaPointer.items) {
 			schemaPointer = schemaPointer.items;
 			return `${path}/items`;
 		} else if (schemaPointer.properties && schemaPointer.properties[s]) {
@@ -825,10 +851,10 @@ export function schemaJSONPointer(schema, JSONPointer) {
 	}, "");
 }
 
-export function uiSchemaJSONPointer(schema, JSONPointer) {
+export function uiSchemaJSONPointer(schema: JSONSchema7, JSONPointer: string) {
 	if (JSONPointer[0] !== "/") return JSONPointer;
 
-	let schemaPointer = schema;
+	let schemaPointer: any = schema;
 	return JSONPointer.split("/").filter(s => !isEmptyString(s)).reduce((path, s) => {
 		if (schemaPointer[s]) {
 			schemaPointer = schemaPointer[s];
@@ -839,7 +865,7 @@ export function uiSchemaJSONPointer(schema, JSONPointer) {
 		} else if (schemaPointer.items.properties && schemaPointer.items.properties[s]) {
 			schemaPointer = schemaPointer.items.properties[s];
 			return `${path}/items/${s}`;
-		} else if (!isNaN(s) && schemaPointer.items) {
+		} else if (!isNaN(+s) && schemaPointer.items) {
 			schemaPointer = schemaPointer.items;
 			return `${path}/items`;
 		}
@@ -847,12 +873,16 @@ export function uiSchemaJSONPointer(schema, JSONPointer) {
 	}, "");
 }
 
-export function updateFormDataWithJSONPointer(schemaProps, value, path) {
+export function updateFormDataWithJSONPointer(schemaProps: FieldProps, value: any, path: string) {
 	if (path === "/") {
 		return value;
 	}
 	return updateSafelyWithJSONPointer(schemaProps.formData, value, path, !!"immutably", (__formData, _path) => {
-		const _schema = parseJSONPointer(schemaProps.schema, schemaJSONPointer(schemaProps.schema, _path));
+		const schemaPointer = schemaJSONPointer(schemaProps.schema, _path);
+		if (schemaPointer === undefined) {
+			throw new Error(`Bad JSON Schema pointer '${schemaPointer}!`);
+		}
+		const _schema = parseJSONPointer(schemaProps.schema, schemaPointer);
 		let _default = getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
 		if (!_default && _schema.type === "array") {
 			return [];
@@ -861,41 +891,42 @@ export function updateFormDataWithJSONPointer(schemaProps, value, path) {
 	});
 }
 
-export const filterLajiFormId = (item) => {
+export const filterLajiFormId = (item: any) => {
 	if (item && item._lajiFormId) {
-		const {_lajiFormId, ..._item} = item; // eslint-disable-line no-unused-vars
+		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
 		item = _item;
 	}
 	return item;
 };
 
-export const filterItemId = (item) => {
+export const filterItemId = (item: any) => {
 	if (item && (item._lajiFormId || item.id)) {
-		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line no-unused-vars
+		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
 		item = _item;
 	}
 	return item;
 };
 
-export const filterItemIdsDeeply = (item, contextId, idSchemaId) => {
+export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: string) => {
 	const tmpIdTree = getRelativeTmpIdTree(contextId, idSchemaId);
 	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
 	return _item;
 };
 
-export const formDataIsEmpty = (props) => {
+export const formDataIsEmpty = (props: FieldProps) => {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
 	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
 	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 };
 
-export const formDataEquals = (f1, f2, formContext, id) => {
+export const formDataEquals = (f1: any, f2: any, formContext: FormContext, id: string) => {
 	const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, id);
-	return deepEquals(...[f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]));
+	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
+	return deepEquals(_f1, _f2);
 };
 
 let uuid = 0;
-export const assignUUID = (item, immutably = false) => {
+export const assignUUID = (item: any, immutably = false) => {
 	if (isObject(item) && !item.id && !item._lajiFormId) {
 		uuid++;
 		if (immutably) {
@@ -908,13 +939,13 @@ export const assignUUID = (item, immutably = false) => {
 	return item;
 };
 
-export function createTmpIdTree(schema) {
-	function walk(_schema) {
+export function createTmpIdTree(schema: JSONSchema7) {
+	function walk(_schema: any) {
 		if (_schema.properties) {
 			const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
 				const walked = walk(_schema.properties[key]);
 				if (walked) {
-					paths[key] = walked;
+					(paths as any)[key] = walked;
 				}
 				return paths;
 			}, {});
@@ -923,29 +954,30 @@ export function createTmpIdTree(schema) {
 			return Object.keys(_schema.items.properties).reduce((paths, key) => {
 				const walked = walk(_schema.items.properties[key]);
 				if (walked) {
-					paths[key] = walked;
+					(paths as any)[key] = walked;
 				}
 				return paths;
 			}, {_hasId: true});
 		}
+		return undefined;
 	}
 	return walk(schema);
 }
 
-export const getUUID = (item) => item ? (item.id || item._lajiFormId) : undefined;
+export const getUUID = (item: any) => item ? (item.id || item._lajiFormId) : undefined;
 
-function walkFormDataWithIdTree(_formData, tree, itemOperator) {
-	const ids = {};
-	const walk = (_formData, tree) => {
+function walkFormDataWithIdTree(_formData: any, tree: any, itemOperator?: (item: any) => void): [any, {[id: string]: true}] {
+	const ids: any = {};
+	const walk = (_formData: any, tree: any) => {
 		if (!tree) return _formData;
 		const {_hasId, ..._tree}  = tree;
 		if (_hasId && isObject(_formData)) {
 			_formData = itemOperator ? itemOperator(_formData) : _formData;
 		}
 		if (Object.keys(_tree).length && isObject(_formData)) {
-			return Object.keys(_formData).reduce((f, k) => {
+			return Object.keys(_formData).reduce((f: any, k) => {
 				if (tree[k]) {
-					f[k] = walk(_formData[k], tree[k], itemOperator);
+					f[k] = walk(_formData[k], tree[k]);
 				} else {
 					f[k] = _formData[k];
 				}
@@ -953,7 +985,7 @@ function walkFormDataWithIdTree(_formData, tree, itemOperator) {
 			}, {});
 		} else if (tree && Array.isArray(_formData)) {
 			return _formData.map(item => {
-				item = walk(item, tree, itemOperator);
+				item = walk(item, tree);
 				item = itemOperator ? itemOperator(item) : item;
 				if (getUUID(item)) {
 					ids[getUUID(item)] = true;
@@ -967,21 +999,21 @@ function walkFormDataWithIdTree(_formData, tree, itemOperator) {
 	return [formData, ids];
 }
 
-export function addLajiFormIds(_formData, tree, immutably = true) {
-	const itemOperator = item => assignUUID(item, immutably);
+export function addLajiFormIds(_formData: any, tree: any, immutably = true) {
+	const itemOperator = (item: any) => assignUUID(item, immutably);
 	return walkFormDataWithIdTree(_formData, tree, itemOperator);
 }
 
-export function getAllLajiFormIdsDeeply(_formData, tree) {
+export function getAllLajiFormIdsDeeply(_formData: any, tree: any) {
 	return walkFormDataWithIdTree(_formData, tree)[1];
 }
 
-export function removeLajiFormIds(formData, tree) {
-	const itemOperator = item => immutableDelete(item, "_lajiFormId");
+export function removeLajiFormIds(formData: any, tree: any) {
+	const itemOperator = (item: any) => immutableDelete(item, "_lajiFormId");
 	return walkFormDataWithIdTree(formData, tree, itemOperator)[0];
 }
 
-export function findPointerForLajiFormId(tmpIdTree = {}, formData, lajiFormId) {
+export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, lajiFormId: any): string {
 	if (formData && getUUID(formData) === lajiFormId) {
 		return "";
 	}
@@ -1001,14 +1033,15 @@ export function findPointerForLajiFormId(tmpIdTree = {}, formData, lajiFormId) {
 			}
 		}
 	}
+	return "";
 }
 
-export function getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId) {
+export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
-		return;
+		return "";
 	}
-	const indicesCount = containerPointer.match(/\/[0-9]+/g).length;
+	const indicesCount = containerPointer.match(/\/[0-9]+/g)?.length || 0;
 	const containerPointerWithoutArrayIndices = containerPointer.replace(/[0-9]+/g, "");
 	const thisPointer = idSchemaId.replace("root", "").replace(/_/g, "/");
 	let thisPointerWithoutContainerIndices = thisPointer;
@@ -1018,27 +1051,27 @@ export function getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId) 
 	return thisPointerWithoutContainerIndices.replace(containerPointerWithoutArrayIndices, "");
 }
 
-export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree, formData, idSchemaId, lajiFormId) {
+export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string) {
 	const relativePointer = getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId);
 	return getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer);
 }
 
-export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer) {
+export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string, relativePointer: string) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
-		return  "";
+		return "";
 	}
 	return containerPointer + relativePointer;
 }
 
-export function highlightElem(elem) {
+export function highlightElem(elem?: Element) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
-	setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
+	window.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
 }
 
-export function getRelativeTmpIdTree(contextId, id)  {
-	const rootTmpIdTree = new Context(contextId).formInstance.tmpIdTree;
+export function getRelativeTmpIdTree(contextId: number, id: string)  {
+	const rootTmpIdTree = (new Context(contextId) as RootContext).formInstance.tmpIdTree;
 
 	let tmpIdTree;
 	if (rootTmpIdTree) {
@@ -1056,8 +1089,8 @@ export function getRelativeTmpIdTree(contextId, id)  {
 	return tmpIdTree;
 }
 
-export function filteredErrors(errorSchema) {
-	return Object.keys(errorSchema).reduce((_errorSchema, prop) => {
+export function filteredErrors(errorSchema: any) {
+	return Object.keys(errorSchema).reduce<any>((_errorSchema, prop) => {
 		if (prop === "__errors") {
 			if (errorSchema.__errors.length) {
 				_errorSchema.__errors = errorSchema.__errors;
@@ -1071,32 +1104,31 @@ export function filteredErrors(errorSchema) {
 		return _errorSchema;
 	}, {});
 }
-export function constructTranslations(translations) {
-	let dictionaries = {};
+export function constructTranslations(translations: any) {
+	let dictionaries: Translations = {fi: {}, en: {}, sv: {}};
 	for (let word in translations) {
 		for (let lang in translations[word]) {
 			const translation = translations[word][lang];
-			if (!dictionaries.hasOwnProperty(lang)) dictionaries[lang] = {};
 			if (typeof translation === "string") {
-				dictionaries[lang][word] = decapitalizeFirstLetter(translation);
-				dictionaries[lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
+				dictionaries[lang as Lang][word] = decapitalizeFirstLetter(translation);
+				dictionaries[lang as Lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
 			} else { // is a function
-				dictionaries[lang][word] = (s) => decapitalizeFirstLetter(translation(s));
-				dictionaries[lang][capitalizeFirstLetter(word)] = (s) => capitalizeFirstLetter(translation(s));
+				dictionaries[lang as Lang][word] = (s) => decapitalizeFirstLetter(translation(s));
+				dictionaries[lang as Lang][capitalizeFirstLetter(word)] = (s) => capitalizeFirstLetter(translation(s));
 			}
 		}
 	}
 	return dictionaries;
 }
 
-export function getIdxWithOffset(idx, offsets, totalOffset) {
+export function getIdxWithOffset(idx: number, offsets: any, totalOffset: number) {
 	let offset = idx in (offsets || {})
 		? (offsets || {})[idx]
 		: totalOffset;
 	return (offset || 0) + idx;
 }
 
-export function getIdxWithoutOffset(idx, offsets, totalOffset) {
+export function getIdxWithoutOffset(idx: number, offsets: any, totalOffset: number) {
 	let offset = `_${idx}` in (offsets || {})
 		? (offsets || {})[`_${idx}`]
 		: totalOffset;

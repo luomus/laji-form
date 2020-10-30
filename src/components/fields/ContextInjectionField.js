@@ -1,11 +1,11 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
-export default class ContextInjectionField extends Component {
+export default class ContextInjectionField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({

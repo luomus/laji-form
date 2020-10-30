@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import moment from "moment";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import * as moment from "moment";
 import DateTimeWidget from "./DateTimeWidget";
 import { isEmptyString } from "../../utils";
 

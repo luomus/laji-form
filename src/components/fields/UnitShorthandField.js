@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -12,7 +12,7 @@ import { getButton } from "../ArrayFieldTemplate";
 const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
 
 @BaseComponent
-export default class UnitShorthandField extends Component {
+export default class UnitShorthandField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -128,15 +128,15 @@ export default class UnitShorthandField extends Component {
 		return !this.state.showSchema ? (
 			<div className="laji-form-field-template-item" id={`_laji-form_${id}`}>
 				<CodeReader translations={this.props.formContext.translations}
-										onChange={this.onCodeChange}
-										value={this.props.formData[shorthandFieldName]}
-										formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
-										help={help} 
-										id={id}
-										formContext={formContext}
-										disabled={disabled}
-										readonly={readonly}
-										className="laji-form-field-template-schema" />
+				            onChange={this.onCodeChange}
+				            value={this.props.formData[shorthandFieldName]}
+				            formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
+				            help={help} 
+				            id={id}
+				            formContext={formContext}
+				            disabled={disabled}
+				            readonly={readonly}
+				            className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
 		) : (
@@ -146,7 +146,7 @@ export default class UnitShorthandField extends Component {
 }
 
 @BaseComponent
-class CodeReader extends Component {
+class CodeReader extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
@@ -193,8 +193,8 @@ class CodeReader extends Component {
 	renderSuggestion = (suggestion) => {
 		const {translations} = this.props;
 		return suggestion.payload.isNonMatching
-		? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
-		: suggestion.value;
+			? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
+			: suggestion.value;
 	}
 
 	render() {
@@ -238,13 +238,14 @@ class CodeReader extends Component {
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				{inputElem}
-				{this.state.failed ? (
-					<HelpBlock>
-						{translations.InvalidUnitCode}
-					</HelpBlock>
+				{this.state.failed
+					? (
+						<HelpBlock>
+							{translations.InvalidUnitCode}
+						</HelpBlock>
 					) : null
 				}
-			<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
+				<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
 			</FormGroup>
 		);
 	}

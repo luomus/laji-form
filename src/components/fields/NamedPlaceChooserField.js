@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { Modal, Alert } from "react-bootstrap";
 import { Button, DeleteButton } from "../components";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -20,7 +20,7 @@ const PLACE_DELETE_FAIL = "PLACE_DELETE_FAIL";
  * Compatible only with gatherings array and gathering object.
  */
 @BaseComponent
-export default class NamedPlaceChooserField extends Component {
+export default class NamedPlaceChooserField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object", "array"])
@@ -170,17 +170,18 @@ export default class NamedPlaceChooserField extends Component {
 		this.apiClient.removeOnCachePathInvalidation("/named-places", this.updatePlaces);
 	}
 
+	onHide = () => this.setState({show: false});
+
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {translations} = formContext;
 		const {failed} = this.state;
-		const onHide = () => this.setState({show: false});
 		return (
 			<React.Fragment>
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />
 				{
 					this.state.show ? (
-						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={onHide}>
+						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={this.onHide}>
 							<Modal.Header closeButton={true}>
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
@@ -198,7 +199,7 @@ export default class NamedPlaceChooserField extends Component {
 	}
 }
 
-class NamedPlaceChooser extends Component {
+class NamedPlaceChooser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -377,13 +378,13 @@ class NamedPlaceChooser extends Component {
 							contextId={this.props.formContext.contextId}
 							translations={translations} />
 					</div>
-			</div>
+				</div>
 			);
 		}
 	}
 }
 
-class Popup extends Component {
+class Popup extends React.Component {
 	_onPlaceSelected = () => {
 		this.props.onPlaceSelected(this.props.place);
 	}
@@ -407,8 +408,7 @@ class Popup extends Component {
 		return place ? (
 			<div>
 				<table className="named-place-popup">
-					<tbody>
-					{
+					<tbody>{
 						[
 							["Name", "name"], 
 							["Notes", "notes"]
@@ -421,8 +421,7 @@ class Popup extends Component {
 							);
 							return fieldset;
 						}, [])
-					}
-				</tbody>
+					}</tbody>
 				</table>
 				<Button block ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
 				<DeleteButton block
@@ -433,8 +432,8 @@ class Popup extends Component {
 				              confirmStyle={"browser"}
 				              translations={translations}>
 					{translations.Remove} {deleting && <Spinner />}
-			</DeleteButton>
-		</div>
+				</DeleteButton>
+			</div>
 		) : <Spinner />;
 	}
 }

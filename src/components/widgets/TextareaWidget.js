@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { stringifyKeyCombo } from "../../utils";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 
-export default class TextareaWidget extends Component {
+export default class TextareaWidget extends React.Component {
 	static propTypes = {
 		"ui:options": PropTypes.shape({
 			emptyValue: PropTypes.string,

@@ -1,4 +1,4 @@
-import { createForm } from "./test-utils.js";
+const { createForm } = require("./test-utils.js");
 
 describe("water bird pair count form (MHL.65)", () => {
 	let form;

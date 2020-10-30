@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import BaseInput from "./BaseInput";
 
-export default class NumberWidget extends Component {
+export default class NumberWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])

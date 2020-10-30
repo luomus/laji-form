@@ -1,11 +1,11 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { getDefaultFormState, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
 import { getUiOptions } from "../../utils";
 
 @VirtualSchemaField
-export default class SingleItemArrayField extends Component {
+export default class SingleItemArrayField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])

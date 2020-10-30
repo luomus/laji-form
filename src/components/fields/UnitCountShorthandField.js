@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import {
 	getUiOptions,
 	parseJSONPointer,
@@ -9,10 +9,10 @@ import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 
 @VirtualSchemaField
-export default class UnitCountShorthandField extends Component {
+export default class UnitCountShorthandField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -88,7 +88,7 @@ export default class UnitCountShorthandField extends Component {
 }
 
 @BaseComponent
-class CodeReader extends Component {
+class CodeReader extends React.Component {
 	static propTypes = {
 		options: PropTypes.shape({
 			parseCode: PropTypes.func.isRequired,

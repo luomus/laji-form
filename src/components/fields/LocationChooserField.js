@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { Modal, Tooltip, Popover, Overlay } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
@@ -11,7 +11,7 @@ import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWith
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
-export default class LocationChooserField extends Component {
+export default class LocationChooserField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -51,7 +51,7 @@ export default class LocationChooserField extends Component {
 	}
 }
 
-class LocationButton extends Component {
+class LocationButton extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -213,7 +213,7 @@ class LocationButton extends Component {
 		let [draw, data] = this.getData();
 		data = data.map(d => ({...d, editable: false}));
 
-		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 		const {
 			mapOptions: {
@@ -425,10 +425,10 @@ class LocationButton extends Component {
 						on: undefined,
 						editable: false,
 						getFeatureStyle: item.getFeatureStyle
-						? item.featureCollection.features[0].properties.id === id
-							? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
-							: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
-						: undefined
+							? item.featureCollection.features[0].properties.id === id
+								? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
+								: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
+							: undefined
 					}
 				)),
 				map.getDraw()
@@ -457,7 +457,7 @@ class LocationButton extends Component {
 		const {map} = mapContext;
 		let mapOptions = {};
 		if (map) {
-			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line @typescript-eslint/no-unused-vars
 			mapOptions = _mapOptions;
 		}
 
@@ -515,16 +515,16 @@ class LocationButton extends Component {
 				: "default"; 
 
 		const button = <LocationButtonComp
-				key={`${that.props.idSchema.$id}-location`}
-				id={`${that.props.idSchema.$id}-location`}
-				bsStyle={bsStyle}
-				onMouseEnter={this.onMouseEnter}
-				onMouseLeave={this.onMouseLeave}
-				glyph={glyph}
-				onClick={this.onClick}
-				style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
-				ref={this.setButtonRef}
-			/>;
+			key={`${that.props.idSchema.$id}-location`}
+			id={`${that.props.idSchema.$id}-location`}
+			bsStyle={bsStyle}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
+			glyph={glyph}
+			onClick={this.onClick}
+			style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
+			ref={this.setButtonRef}
+		/>;
 
 		if (hasErrors) {
 			return (
@@ -592,7 +592,7 @@ class LocationButton extends Component {
 	}
 }
 
-class LocationButtonComp extends Component {
+class LocationButtonComp extends React.Component {
 	render() {
 		return (
 			<GlyphButton {...this.props} />
