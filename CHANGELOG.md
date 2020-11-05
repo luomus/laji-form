@@ -1,3 +1,6 @@
+## 5.8.0
+* Include TypeScript declarations in `lib`
+
 ## 5.7.3
 * `InjectField` `fields` must begin with "/" if they are to be handled as JSON pointers properly
 
