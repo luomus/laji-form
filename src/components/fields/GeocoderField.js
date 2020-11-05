@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import * as equals from "deep-equal";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import fetch from "isomorphic-fetch";
+import * as fetch from "isomorphic-fetch";
 import Context from "../../Context";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";

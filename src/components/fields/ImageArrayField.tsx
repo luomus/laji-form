@@ -162,7 +162,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const options = this.getOptions(props.uiSchema);
 			Object.keys(this.deprecatedOptions).forEach(deprecated => {
 				if (options[deprecated] !== undefined) {
-					console.warn(`laji-form warning: {getReactComponentName(ComposedComponent)} ui:option '${deprecated}' is deprecated. Use '${(this.deprecatedOptions as any)[deprecated]}' instead!`);
+					console.warn(`laji-form warning: ${getReactComponentName(ComposedComponent)} ui:option '${deprecated}' is deprecated. Use '${(this.deprecatedOptions as any)[deprecated]}' instead!`);
 				}
 			});
 			this.apiClient = props.formContext.apiClient;
