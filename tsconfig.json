@@ -8,12 +8,11 @@
 			"es7",
 			"es2016.array.include"
 		],
-		"sourceMap": false,
 		"allowJs": true,
 		"jsx": "react",
 		"moduleResolution": "node",
 		"noImplicitReturns": true,
-		"noImplicitThis": true,
+		"noImplicitThis": false,
 		"noImplicitAny": true,
 		"strictNullChecks": true,
 		"allowSyntheticDefaultImports": true,

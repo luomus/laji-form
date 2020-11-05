@@ -59,7 +59,7 @@ module.exports = {
 			/node_modules\/proj4\/dist\/proj4\.js/
 		]
 	},
-		resolve: {
-			extensions: ['.tsx', '.ts',  '.jsx', '.js', '.json']
-		}
+	resolve: {
+		extensions: [".tsx", ".ts",  ".jsx", ".js", ".json"]
+	}
 };

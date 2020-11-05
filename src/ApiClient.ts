@@ -36,13 +36,13 @@ export default class ApiClient {
 	 * @param query Object, where keys are param names and values are param values.
 	 * @returns a Promise.
 	 */
-	fetchRaw(path: string, query: Query, options: any) {
+	fetchRaw(path: string, query?: Query, options?: any) {
 		return this.apiClient.fetch(path, {lang: this.lang, ...(query || {})}, options).catch(() => {
 			throw new Error(this.translations[this.lang].RequestFailed as string);
 		});
 	}
 
-	fetch(path: string, query: Query, options: Options = {}) {
+	fetch(path: string, query?: Query, options: Options = {}) {
 		const {failSilently = false, ...fetchOptions} = options;
 		return this.fetchRaw(path, query, fetchOptions).then(response => {
 			if (!failSilently && response.status >= 400) {
@@ -55,11 +55,11 @@ export default class ApiClient {
 		});
 	}
 
-	getCacheKey(query: Query, options: Options) {
+	getCacheKey(query?: Query, options?: Options) {
 		return JSON.stringify(query) + JSON.stringify(options);
 	}
 
-	fetchCached(path: string, query: Query, options: Options) {
+	fetchCached(path: string, query?: Query, options?: Options) {
 		const cacheKey = this.getCacheKey(query, options);
 		if (!this.cache[path])  this.cache[path] = {};
 		this.cache[path][cacheKey] = cacheKey in this.cache[path] ? this.cache[path][cacheKey] : this.fetch(path, query, options);

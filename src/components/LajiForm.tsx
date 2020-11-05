@@ -194,6 +194,7 @@ export interface FormContext {
 	apiClient: ApiClient;
 	Label: React.Component;
 	formDataTransformers?: any[]
+	_parentLajiFormId?: number
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -205,9 +206,9 @@ interface SubmitHook {
 	hook: () => void;
 	promise: Promise<any>;
 	lajiFormId: string;
-	description: string;
 	relativePointer: string;
 	running: boolean;
+	description?: string;
 	failed?: boolean;
 }
 
@@ -271,10 +272,10 @@ export interface RootContext {
 	addEventListener: (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => void;
 	addCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
 	removeCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
-	sendCustomEvent: (id: string, eventName: string, data: any, callback: () => void, options?: {bubble?: boolean}) => void;
+	sendCustomEvent: (id: string, eventName: string, data?: any, callback?: () => void, options?: {bubble?: boolean}) => void;
 	addGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
-	addSubmitHook: (lajiFormId: string, relativePointer: string, hook: () => void, description: string) => void;
+	addSubmitHook: (lajiFormId: string, relativePointer: string, hook: () => void, description?: string) => void;
 	removeSubmitHook: (lajiFormId: string, hook: SubmitHook["hook"]) => void;
 	removeAllSubmitHook: () => void;
 	singletonMap: any;
@@ -454,7 +455,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._context.removeCustomEventListener = (id: string, eventName: string, fn: CustomEventListener) => {
 			this.customEventListeners[eventName][id] = this.customEventListeners[eventName][id].filter(_fn => _fn !== fn);
 		};
-		this._context.sendCustomEvent = (id: string, eventName: string, data: any, callback: () => void, {bubble = true} = {}) => {
+		this._context.sendCustomEvent = (id: string, eventName: string, data?: any, callback?: () => void, {bubble = true} = {}) => {
 			const ids = Object.keys(this.customEventListeners[eventName] || {}).filter(_id => id.startsWith(_id)).sort().reverse();
 
 			outer: for (let _id of ids) {
@@ -500,7 +501,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		};
 
 
-		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string, hook: () => void, description: string) => {
+		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string, hook: () => void, description?: string) => {
 			lajiFormId = `${lajiFormId}`;
 			let promise: Promise<any>;
 			const _hook = (): Promise<any> => {

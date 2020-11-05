@@ -2,20 +2,22 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
-import DescriptionField from "@rjsf/core/dist/cjs/components/fields/DescriptionField";
+const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
-import BaseComponent from "../BaseComponent";
-import * as Spinner from "react-spinner";
-import * as equals from "deep-equal";
+const BaseComponent = require("../BaseComponent").default;
+import Spinner from "react-spinner";
+const equals = require("deep-equal");
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import * as moment from "moment";
+import { FieldProps, RootContext } from "../LajiForm";
+import ApiClient from "../../ApiClient";
 
-function toDecimal(number) {
+function toDecimal(number: any) {
 	if (!number) return undefined;
 	return number[0].numerator + number[1].numerator /
 		(60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
@@ -23,8 +25,19 @@ function toDecimal(number) {
 
 let mediaUuid = 0;
 
+interface ProcessedFile {
+	dataURL: string;
+	name: string;
+	size: number,
+	type: File["type"]
+}
+
+interface ImageArrayFieldState extends MediaArrayState {
+	modalMediaSrc: string;
+}
+
 @MediaArrayField
-export default class ImageArrayField extends React.Component {
+export default class ImageArrayField extends React.Component<FieldProps, ImageArrayFieldState> {
 	ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/bmp", "image/tiff", "image/gif"];
 	ACCEPT_FILE_TYPES = ["image/*"];
 	MAX_FILE_SIZE = 20000000;
@@ -37,26 +50,53 @@ export default class ImageArrayField extends React.Component {
 	CONTAINER_CLASS = "images-container"
 	METADATA_FORM_ID = "JX.111712"
 
-	renderMedia = (id) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} />
-	renderLoadingMedia = (id) => <Thumbnail dataURL={id} loading={true} />
-	onMediaClick = (i) => this.openModalFor(i)
+	renderMedia = (id: string) => <Thumbnail id={id} apiClient={this.props.formContext.apiClient} />
+	renderLoadingMedia = (id: string) => <Thumbnail dataURL={id} loading={true} apiClient={this.props.formContext.apiClient} />
+	onMediaClick = (i: number) => (this as any).openModalFor(i)
 	renderModalMedia = () => <img src={this.state.modalMediaSrc} />
 
-	formatValue(value, options, props, parentProps) {
+	formatValue(value: string[], options: any, props: FieldProps, parentProps: FieldProps) {
 		const imgs = value && value.length ? value.map((id, idx) => <Thumbnail key={idx} id={id} apiClient={props.formContext.apiClient} />) : [];
 		const parentFormData = (parentProps ||{}).formData || {};
 		const lajiFormId = getUUID(parentFormData || {});
-		const {tmpMedias = {}} = new Context("IMAGE_ARRAY_FIELD");
+		const {tmpMedias = {}} = new Context("IMAGE_ARRAY_FIELD") as any;
 		if (lajiFormId && tmpMedias[lajiFormId]) {
-			return [...imgs, ...Object.keys(tmpMedias[lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpMedias[lajiFormId][id]} />)];
+			return [...imgs, ...Object.keys(tmpMedias[lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpMedias[lajiFormId][id]} apiClient={props.formContext.apiClient}/>)];
 		}
 		return imgs;
 	}
 }
 
-export function MediaArrayField(ComposedComponent) {
+interface MediaArrayState {
+	tmpMedias: number[];
+	addModal?: any;
+	dragging?: boolean
+	metadataModalOpen?: number | false;
+	modalIdx?: number;
+	modalMediaSrc?: string;
+	modalMetadata?: any;
+	metadataSaveSuccess?: string | false;
+	metadataForm?: any;
+	alert?: boolean;
+	alertMsg?: string;
+}
+
+type Constructor<LFC> = new(...args: any[]) => LFC;
+export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps, MediaArrayState>>>(ComposedComponent: LFC) {
 	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
+		ALLOWED_FILE_TYPES: string[];
+		ACCEPT_FILE_TYPES: string[];
+		MAX_FILE_SIZE: number;
+		KEY: string;
+		ENDPOINT: string;
+		GLYPH: string;
+		TRANSLATION_TAKE_NEW: string;
+		TRANSLATION_SELECT_FILE: string;
+		TRANSLATION_NO_MEDIA: string;
+		CONTAINER_CLASS: string;
+		METADATA_FORM_ID: string;
+
 		static propTypes = {
 			uiSchema: PropTypes.shape({
 				"ui:options": PropTypes.shape({
@@ -91,8 +131,15 @@ export function MediaArrayField(ComposedComponent) {
 			autoOpenImageAddModal: "autoOpenAddModal"
 		};
 
-		constructor(props) {
-			super(props);
+		apiClient: ApiClient;
+		_context: any;
+		mainContext: RootContext;
+		mounted: boolean;
+		fetching: any;
+
+		constructor(...args: any[]) {
+			super(...args);
+			const [props] = args;
 			
 			["ALLOWED_FILE_TYPES",
 				"MAX_FILE_SIZE",
@@ -108,39 +155,39 @@ export function MediaArrayField(ComposedComponent) {
 				"TRANSLATION_NO_MEDIA",
 				"CONTAINER_CLASS"
 			].forEach(prop => {
-				if (this[prop] === undefined) {
+				if ((this as any)[prop] === undefined) {
 					throw new Error(`${getReactComponentName(ComposedComponent)} doesn't implement MediaArrayField ${prop}`);
 				}
 			});
 			const options = this.getOptions(props.uiSchema);
 			Object.keys(this.deprecatedOptions).forEach(deprecated => {
 				if (options[deprecated] !== undefined) {
-					console.warn(`laji-form warning: {getReactComponentName(ComposedComponent)} ui:option '${deprecated}' is deprecated. Use '${this.deprecatedOptions[deprecated]}' instead!`);
+					console.warn(`laji-form warning: {getReactComponentName(ComposedComponent)} ui:option '${deprecated}' is deprecated. Use '${(this.deprecatedOptions as any)[deprecated]}' instead!`);
 				}
 			});
 			this.apiClient = props.formContext.apiClient;
 			this._context = new Context(`${this.KEY}_ARRAY_FIELD`);
 			if (!this._context.metadatas) this._context.metadatas = {};
 			if (!this._context.tmpMedias) this._context.tmpMedias = {};
-			this.mainContext = this.getContext();
-			this.state = {tmpMedias: Object.keys(this._context.tmpMedias[this.getContainerId()] || {})};
+			this.mainContext = (this as any).getContext();
+			this.state = {tmpMedias: Object.keys(this._context.tmpMedias[this.getContainerId()] || {}).map(i => +i)};
 			const {addModal, autoOpenAddModal} = options;
 			if (addModal
 				&& autoOpenAddModal
 				&& (props.formData || []).length === 0
 				&& !props.formContext.uiSchemaContext.isEdit
 			) {
-				this.state.addModal = addModal; // eslint-disable-line react/no-direct-mutation-state
+				(this.state as any).addModal = addModal; // eslint-disable-line react/no-direct-mutation-state
 			}
 		}
 
-		getOptions = (uiSchema) => {
+		getOptions = (uiSchema: any) => {
 			let options = getUiOptions(uiSchema);
 			Object.keys(this.deprecatedOptions).forEach(deprecated => {
 				if (options[deprecated] !== undefined) {
 					options = {
 						...options,
-						[this.deprecatedOptions[deprecated]]: options[deprecated]
+						[(this.deprecatedOptions as any)[deprecated]]: options[deprecated]
 					};
 				}
 			});
@@ -158,7 +205,7 @@ export function MediaArrayField(ComposedComponent) {
 			}, !!"global");
 		}
 
-		onSettingsChange = (defaultMetadata) => {
+		onSettingsChange = (defaultMetadata: any) => {
 			if (!equals(this._context.defaultMetadata, defaultMetadata)) {
 				this._context.defaultMetadata = defaultMetadata;
 				this.mainContext.onSettingsChange(!!"global");
@@ -170,11 +217,11 @@ export function MediaArrayField(ComposedComponent) {
 			this.mainContext.removeSettingSaver("defaultMetadata", !!"global");
 		}
 
-		componentDidUpdate(prevProps, prevState) {
-			const getCount = (_props, _state) => ((_props.formData || []).length + (_state.tmpMedias || []).length);
+		componentDidUpdate(prevProps: FieldProps, prevState: MediaArrayState) {
+			const getCount = (_props: FieldProps, _state: MediaArrayState) => ((_props.formData || []).length + (_state.tmpMedias || []).length);
 
 			if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
-				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+				(new Context(this.props.formContext.contextId) as RootContext).sendCustomEvent(this.props.idSchema.$id, "resize");
 			}
 		}
 
@@ -182,7 +229,7 @@ export function MediaArrayField(ComposedComponent) {
 
 		onDragLeave = () => {this.setState({dragging: false});};
 
-		onDrop = files => {
+		onDrop = (files: File[]) => {
 			this.state.dragging && this.setState({dragging: false});
 			this.onFileFormChange(files);
 		};
@@ -198,7 +245,7 @@ export function MediaArrayField(ComposedComponent) {
 
 			const {description, titleClassName, addModal} = getUiOptions(uiSchema);
 			const title = (schema.title === undefined) ? name : schema.title;
-			const {TitleField} = this.props.registry.fields;
+			const TitleField = this.props.registry.fields.TitleField as any;
 
 			const tooltip = (
 				<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>
@@ -250,9 +297,9 @@ export function MediaArrayField(ComposedComponent) {
 		renderMedias = () => {
 			const {disabled, readonly} = this.props;
 			const {deleteConfirmPlacement = "top"} = getUiOptions(this.props.uiSchema);
-			return (this.props.formData || []).map((item, i) => (
+			return (this.props.formData || []).map((item: any, i : number) => (
 				<div key={i} className="media-container">
-					<a onClick={this.onMediaClick(i)}>{this.renderMedia(item, i)}</a>
+					<a onClick={(this as any).onMediaClick(i)}>{(this as any).renderMedia(item, i)}</a>
 					<DeleteButton corner={true}
 					              confirm={true}
 					              confirmPlacement={deleteConfirmPlacement}
@@ -267,18 +314,18 @@ export function MediaArrayField(ComposedComponent) {
 
 		renderLoadingMedias = () => {
 			const containerId = this.getContainerId();
-			return (this.state.tmpMedias || []).map((item, i) => {
+			return (this.state.tmpMedias || []).map((item: any, i: any) => {
 				const medias = this._context.tmpMedias[containerId];
 				if (!medias || !medias[item]) return null;
 				return (
 					<div key={i} className="media-container">
-						<a>{this.renderLoadingMedia(medias[item])}</a>
+						<a>{(this as any).renderLoadingMedia(medias[item])}</a>
 					</div>
 				);
 			});
 		}
 
-		openModalFor = (i) => () => {
+		openModalFor = (i: number) => () => {
 			const item = this.props.formData[i];
 			this.setState({metadataModalOpen: i});
 			this.fetching = item;
@@ -289,7 +336,7 @@ export function MediaArrayField(ComposedComponent) {
 			});
 		}
 
-		onMediaRmClick = (i) => () => {
+		onMediaRmClick = (i: number) => () => {
 			const id = this.props.formData[i];
 			this.props.onChange(update(this.props.formData, {$splice: [[i, 1]]}));
 			this.apiClient.fetch(`/${this.ENDPOINT}/${id}`, undefined, {
@@ -300,7 +347,7 @@ export function MediaArrayField(ComposedComponent) {
 
 		hideMetadataModal = () => this.setState({metadataModalOpen: false, metadataSaveSuccess: undefined});
 
-		onMetadataFormChange = formData => this.setState({modalMetadata: formData});
+		onMetadataFormChange = (formData: any) => this.setState({modalMetadata: formData});
 
 		renderMetadataModal = () => {
 			const {metadataModalOpen, modalIdx, modalMetadata, metadataSaveSuccess} = this.state;
@@ -344,7 +391,7 @@ export function MediaArrayField(ComposedComponent) {
 						<div className={`laji-form${metadataModal ? " media-modal-content" : ""}`}>
 							{isOpen
 								? <React.Fragment>
-									{this.renderModalMedia(modalIdx)}
+									{(this as any).renderModalMedia(modalIdx)}
 									{metadataModal && <LajiForm
 										{...metadataForm}
 										uiSchema={uiSchema}
@@ -377,7 +424,7 @@ export function MediaArrayField(ComposedComponent) {
 		renderMediaAddModal = () => {
 			const {disabled, readonly} = this.props;
 			const {addModal} = this.state;
-			const {labels: {cancel} = {}} = isObject(addModal) ? addModal : {};
+			const {labels: {cancel} = {cancel: undefined}} = isObject(addModal) ? addModal : {};
 			const {translations} = this.props.formContext;
 
 			if (!addModal) return null;
@@ -407,7 +454,7 @@ export function MediaArrayField(ComposedComponent) {
 										<div className="btn-block" {...getRootProps()}>
 											<input {...getInputProps()} capture={captureMethod}>
 											</input>
-											<Button block disabled={readonly || disabled}>{translations[label]}</Button>
+											<Button block disabled={readonly || disabled}>{label ? translations[label] : undefined}</Button>
 										</div>
 									);
 								}}
@@ -423,11 +470,11 @@ export function MediaArrayField(ComposedComponent) {
 			this.setState({alert: false, alertMsg: undefined});
 		}
 
-		parseExif = (files) => {
+		parseExif = (files: File[]): undefined | Promise<any> => {
 			const {exifParsers = []} = getUiOptions(this.props.uiSchema);
 			if (!exifParsers) return;
 
-			const found = exifParsers.reduce((found, {parse}) => {
+			const found = exifParsers.reduce((found: any, {parse} : {parse: string}) => {
 				found[parse] = false;
 				return found;
 			}, {});
@@ -437,7 +484,7 @@ export function MediaArrayField(ComposedComponent) {
 				}
 				return promise.then(found =>
 					new Promise(resolve => {
-						exif.getData(file, function() {
+						(exif.getData as any)(file, function() {
 							if ("geometry" in found) try {
 								const coordinates = ["GPSLongitude", "GPSLatitude"].map(tag => toDecimal(exif.getTag(this, tag)));
 								const rawDatum = exif.getTag(this, "GPSMapDatum");
@@ -488,30 +535,30 @@ export function MediaArrayField(ComposedComponent) {
 				);
 			}, Promise.resolve(found)).then((found) => {
 				let {registry, formContext: {contextId}} = this.props;
-				const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+				const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
 				const {schema} = lajiFormInstance.props;
 				let {formData} = lajiFormInstance.state;
-				exifParsers.filter(f => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}) => {
+				exifParsers.filter((f: any) => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}: any) => {
 					if (type === "mutate") {
 						formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
 					}
 					if (type === "event") {
-						new Context(contextId).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
+						(new Context(contextId) as RootContext).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 					}
 				});
 				return formData;
 			});
 		}
 
-		sideEffects = (formData) => {
-			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+		sideEffects = (formData: any) => {
+			const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
 			const {formData: lajiFormFormData} = lajiFormInstance.state;
 			const {schema} = lajiFormInstance.props;
 			const {sideEffects} = getUiOptions(this.props.uiSchema);
 			if (sideEffects) {
 				const thisPath = idSchemaIdToJSONPointer(this.props.idSchema.$id);
 				const containerPath = thisPath.replace(/^(\/.*)\/.*$/, "$1");
-				const parseRelativePaths = (path, containerPath) => {
+				const parseRelativePaths = (path: string, containerPath: string) => {
 					while ((path.match(/\/\.\./g) || []).length > 1) {
 						containerPath = containerPath.replace(/^(\/.*)\/.*$/, "$1");
 						path = path.replace(/^(.*)\/\.\.(.*)/, "$1$2");
@@ -531,18 +578,18 @@ export function MediaArrayField(ComposedComponent) {
 			}
 		}
 
-		onFileFormChange = (files) => {
+		onFileFormChange = (files: File[]) => {
 			if (this.state.addModal) {
 				this.setState({addModal: undefined});
 			}
 
-			this.parseExif(files).then(this.sideEffects);
+			this.parseExif(files)?.then(this.sideEffects);
 
 			const id = this.getContainerId();
 
-			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+			const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
 			const saveAndOnChange = () => this.saveMedias(files).then(mediaIds => {
-				if (!lajiFormInstance.mounted) {
+				if (!lajiFormInstance.mounted || !mediaIds) {
 					return;
 				}
 
@@ -575,7 +622,7 @@ export function MediaArrayField(ComposedComponent) {
 				lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
 			});
 
-			this.addSubmitHook(saveAndOnChange);
+			(this as any).addSubmitHook(saveAndOnChange);
 		}
 
 		getContainerId = () => {
@@ -583,18 +630,18 @@ export function MediaArrayField(ComposedComponent) {
 			return _parentLajiFormId;
 		}
 
-		saveMedias(files) {
+		saveMedias(files: File[]) {
 			const containerId = this.getContainerId();
-			let tmpMedias;
+			let tmpMedias: number[];
 
-			const fail = (translationKey, additionalInfo="") => {
+			const fail = (translationKey: string | string[], additionalInfo = "") => {
 				const translation = (Array.isArray(translationKey) ? translationKey : [translationKey])
-					.map(key => this.props.formContext.translations[key])
+					.map((key: string) => this.props.formContext.translations[key])
 					.join(". ");
 				throw `${translation} ${additionalInfo}`;
 			};
 
-			return this.processFiles(files).then((processedFiles) => {
+			return this.processFiles(files).then(processedFiles => {
 				let invalidFile = (files.length <= 0);
 				let fileTooLarge = false;
 				let noValidData = true;
@@ -623,8 +670,10 @@ export function MediaArrayField(ComposedComponent) {
 
 				if (noValidData && invalidFile) {
 					fail("AllowedFileFormats", this.getAllowedMediaFormatsAsString() + ".");
+					return;
 				} else if (noValidData && fileTooLarge) {
 					fail("AllowedFileSize", this.getMaxFileSizeAsString() + ".");
+					return;
 				} else {
 					return this.apiClient.fetchRaw(`/${this.ENDPOINT}`, undefined, {
 						method: "POST",
@@ -645,7 +694,7 @@ export function MediaArrayField(ComposedComponent) {
 			}).then(response => {
 				if (!response) return;
 				return this.getDefaultMetadataPromise().then(defaultMetadata => {
-					return Promise.all(response.map(item => {
+					return Promise.all(response.map((item: any) => {
 						return this.apiClient.fetchRaw(`/${this.ENDPOINT}/${item.id}`, undefined, {
 							method: "POST",
 							headers: {
@@ -662,7 +711,7 @@ export function MediaArrayField(ComposedComponent) {
 				});
 			}).then(response => {
 				if (!response) return;
-				const ids = response.map((item) => item ? item.id : undefined).filter(item => item !== undefined);
+				const ids = response.map((item: any) => item ? item.id : undefined).filter(item => item !== undefined);
 
 				tmpMedias.forEach(id => {
 					delete this._context.tmpMedias[containerId][id];
@@ -680,21 +729,21 @@ export function MediaArrayField(ComposedComponent) {
 			});
 		}
 
-		addNameToDataURL = (dataURL, name) => {
+		addNameToDataURL = (dataURL: string, name: string) => {
 			return dataURL.replace(";base64", `;name=${name};base64`);
 		}
 
-		processFiles = (files) => {
+		processFiles = (files: File[]): Promise<ProcessedFile[]> => {
 			return Promise.all([].map.call(files, this.processFile));
 		}
 
-		processFile = (file) => {
+		processFile = (file: File) => {
 			const {name, size, type} = file;
-			return new Promise(resolve => {
+			return new Promise<ProcessedFile>(resolve => {
 				const reader = new window.FileReader();
 				reader.onload = event => {
 					resolve({
-						dataURL: this.addNameToDataURL(event.target.result, name),
+						dataURL: this.addNameToDataURL(event.target?.result as string, name),
 						name,
 						size,
 						type
@@ -704,7 +753,7 @@ export function MediaArrayField(ComposedComponent) {
 			});
 		}
 
-		onMediaMetadataUpdate = ({formData}) => {
+		onMediaMetadataUpdate = ({formData}: {formData: any}) => {
 			this.mainContext.pushBlockingLoader();
 			this.apiClient.fetch(`/${this.ENDPOINT}/${formData.id}`, undefined, {
 				method: "PUT",
@@ -715,7 +764,7 @@ export function MediaArrayField(ComposedComponent) {
 				body: JSON.stringify(formData)
 			}).then(() => {
 				this.mainContext.popBlockingLoader();
-				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess);
+				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess as string);
 				if (this.mounted) {
 					this.setState({metadataModalOpen: false}, notify);
 				} else {
@@ -781,8 +830,20 @@ export function MediaArrayField(ComposedComponent) {
 	return MediaArrayField;
 }
 
-class Thumbnail extends React.PureComponent {
-	constructor(props) {
+interface ThumbnailProps {
+	id?: string;
+	apiClient: ApiClient;
+	dataURL?: string;
+	loading?: boolean;
+}
+interface ThumbnailState {
+	url?: string;
+}
+
+class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
+	mounted: boolean;
+
+	constructor(props: ThumbnailProps) {
 		super(props);
 		this.state = {};
 		this.updateURL(props);
@@ -796,13 +857,13 @@ class Thumbnail extends React.PureComponent {
 		this.mounted = false;
 	}
 
-	componentWillReceiveProps(props) {
+	componentWillReceiveProps(props: ThumbnailProps) {
 		this.updateURL(props);
 	}
 
-	updateURL = ({id, apiClient}) => {
+	updateURL = ({id, apiClient}: ThumbnailProps) => {
 		if (!id) return;
-		apiClient.fetchCached(`/images/${id}`, undefined, {failSilently: true}).then(response => {
+		apiClient.fetchCached(`/images/${id}`, undefined, {failSilently: true}).then((response: any) => {
 			if (!this.mounted) return;
 			this.setState({url: response.squareThumbnailURL});
 		});

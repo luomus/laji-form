@@ -873,7 +873,7 @@ export function uiSchemaJSONPointer(schema: JSONSchema7, JSONPointer: string) {
 	}, "");
 }
 
-export function updateFormDataWithJSONPointer(schemaProps: FieldProps, value: any, path: string) {
+export function updateFormDataWithJSONPointer(schemaProps: Pick<FieldProps, "formData" | "registry" | "schema">, value: any, path: string) {
 	if (path === "/") {
 		return value;
 	}
@@ -1036,7 +1036,7 @@ export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, laj
 	return "";
 }
 
-export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string) {
+export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
 		return "";
@@ -1051,12 +1051,12 @@ export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: st
 	return thisPointerWithoutContainerIndices.replace(containerPointerWithoutArrayIndices, "");
 }
 
-export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string) {
+export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
 	const relativePointer = getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId);
 	return getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer);
 }
 
-export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string, relativePointer: string) {
+export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string | number, relativePointer: string) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
 		return "";
