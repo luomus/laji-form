@@ -1067,7 +1067,7 @@ export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, f
 export function highlightElem(elem?: Element) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
-	window.setImmediate(() => elem.className = `${elem.className} highlight-error-fire`);
+	window.setTimeout(() => elem.className = `${elem.className} highlight-error-fire`);
 }
 
 export function getRelativeTmpIdTree(contextId: number, id: string)  {
