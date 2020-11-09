@@ -129,7 +129,7 @@ export default class SectionArrayField extends React.Component {
 	}
 }
 
-const Section = ({children, style, ...rest}) => <div style={{flexGrow: 1, width: 0, flexBasis: 0, minWidth: 1, ...style}} {...rest}>{children}</div>;
+const Section = ({children, style, ...rest}) => <div style={style || {flexGrow: 1, width: 0, flexBasis: 0, minWidth: 1}} {...rest}>{children}</div>;
 
 @handlesArrayKeys
 class SectionArrayFieldTemplate extends React.Component {
