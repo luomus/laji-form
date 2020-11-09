@@ -1,8 +1,6 @@
 import * as React from "react";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { ArrayFieldAddRemovePatched } from "./ArrayField";
-import { toIdSchema } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
 export default class FilterArrayField extends React.Component {
@@ -44,8 +42,6 @@ export default class FilterArrayField extends React.Component {
 			return errorSchema;
 		}, {});
 
-		const formContext = {...props.formContext, ArrayField: ArrayFieldIdFixed};
-		const registry = {...props.registry, formContext};
 
 		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		const uiSchema = {
@@ -62,8 +58,6 @@ export default class FilterArrayField extends React.Component {
 			formData,
 			uiSchema,
 			errorSchema,
-			formContext,
-			registry,
 			onChange: this.onChange,
 		};
 	}
@@ -110,15 +104,5 @@ export default class FilterArrayField extends React.Component {
 	render() {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		return <SchemaField {...this.props} {...this.state} />;
-	}
-}
-
-export class ArrayFieldIdFixed extends ArrayFieldAddRemovePatched {
-	renderArrayFieldItem(props) {
-		const idWithoutIdx = props.itemIdSchema.$id.replace(/(.*)_[0-9]+/, "$1");
-		const {idxOffsets} = getUiOptions(this.props.uiSchema);
-		const index = (idxOffsets[props.index] || 0) + props.index;
-		const idSchema = toIdSchema(props.itemSchema, `${idWithoutIdx}_${index}`, this.props.registry.definitions, props.itemData, this.props.idPrefix);
-		return super.renderArrayFieldItem({...props, itemIdSchema: idSchema});
 	}
 }

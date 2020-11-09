@@ -37,7 +37,7 @@ export function onArrayFieldChange(formData, props) {
 	return addLajiFormIds(formData, tmpIdTree, false)[0];
 }
 
-export class ArrayFieldAddRemovePatched extends ArrayField {
+export class ArrayFieldPatched extends ArrayField {
 	constructor(...params) {
 		super(...params);
 		const {_getNewFormDataRow} = this;
@@ -59,6 +59,32 @@ export class ArrayFieldAddRemovePatched extends ArrayField {
 			onDropIndexClick.call(this, index)(event);
 		};
 	}
+
+	renderArrayFieldItem(props) {
+		if (this.props.idSchema) {
+			const idSchema = this.getIdSchema(this.props, props.index);
+			return super.renderArrayFieldItem({...props, itemIdSchema: idSchema});
+		}
+		return super.renderArrayFieldItem(props);
+	}
+
+	getIdSchema(props, _index) {
+		const {idSchema, uiSchema} = props;
+		const {idxOffsets = {}} = getUiOptions(uiSchema);
+		const index = (idxOffsets[_index] || 0) + _index;
+
+		const root = idSchema.$id;
+		const reduced = (idSchema, root) => Object.keys(idSchema).reduce((idSchema, prop) => {
+			if (prop === "$id") {
+				return {
+					...idSchema,
+					"$id": idSchema.$id.replace(root, `${root}_${index}`)
+				};
+			}
+			return {...idSchema, [prop]: reduced(idSchema[prop], root)};
+		}, idSchema);
+		return reduced(idSchema, root);
+	}
 }
 
 @BaseComponent
@@ -77,7 +103,7 @@ export default class _ArrayField extends React.Component {
 
 		// MultiArrayField needs to intercept default ArrayField internals, the instance is passed in formContext.
 		const {ArrayField: _ArrayField} = props.formContext;
-		const Component = _ArrayField || ArrayFieldAddRemovePatched;
+		const Component = _ArrayField || ArrayFieldPatched;
 
 		// Reset formContext.ArrayField
 		const formContext = _ArrayField ? {...props.formContext, ArrayField: undefined} : props.formContext;

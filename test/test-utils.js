@@ -164,8 +164,16 @@ class Form {
 	$getEnumWidget = (str) => {
 		return this.$locate(str).$(".rw-combobox");
 	}
-	$getDateWidget = (str) => {
-		return this.$locate(str).$(".date-widget");
+	getDateWidget = (str) => {
+		const $widget = this.$locate(str).$(".date-widget");
+		return {
+			$container: $widget,
+			$input: $widget.$("input"),
+			buttons: {
+				$today: $widget.$(".today"),
+				$yesterday: $widget.$("yesterday"),
+			}
+		};
 	}
 }
 

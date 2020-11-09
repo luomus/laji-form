@@ -5,7 +5,6 @@ import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyW
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import { arrayKeyFunctions } from "../ArrayFieldTemplate";
-import { ArrayFieldIdFixed } from "./FilterArrayField";
 
 @BaseComponent
 export default class MultiArrayField extends React.Component {
@@ -150,15 +149,12 @@ export default class MultiArrayField extends React.Component {
 				}
 			}
 
-			const formContext = {...this.props.formContext, ArrayField: ArrayFieldIdFixed};
 
 			const {SchemaField} = this.props.registry.fields;
 			return (
 				<SchemaField
 					key={idx}
 					{...props}
-					formContext={formContext}
-					registry={{...this.props.registry, formContext}}
 					uiSchema={uiSchema}
 					errorSchema={errorSchema}
 					formData={items}

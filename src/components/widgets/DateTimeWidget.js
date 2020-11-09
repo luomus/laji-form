@@ -190,7 +190,7 @@ export default class DateTimeWidget extends React.Component {
 				</div>
 				<ButtonGroup>
 					<Button className="today" onClick={this.setToday} disabled={readonly || disabled}>{translations.Today}</Button>
-					<Button className="today" onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
+					<Button className="yesterday" onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
 				</ButtonGroup>
 			</div>
 		) : datePicker;

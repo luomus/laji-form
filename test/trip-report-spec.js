@@ -26,8 +26,8 @@ const testWidget = form =>  async (path, type) => {
 		await widget.$$("li")[1].click();
 		break;
 	case "date":
-		widget = await form.$getDateWidget(path);
-		await widget.$("input").sendKeys("1.1.2019");
+		widget = form.getDateWidget(path);
+		await widget.$input.sendKeys("1.1.2019");
 		await browser.actions().sendKeys(protractor.Key.TAB).perform();
 		break;
 	default:
