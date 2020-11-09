@@ -494,7 +494,7 @@ export class Autosuggest extends React.Component {
 			if (document.activeElement === findDOMNode(this.inputElem)) {
 				this.selectSuggestion(suggestion);
 			}
-			setImmediate(() => {
+			setTimeout(() => {
 				if (this.mounted && document.activeElement !== findDOMNode(this.inputElem)) {
 					this.onBlur();
 				}

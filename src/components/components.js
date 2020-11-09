@@ -87,7 +87,7 @@ export class DeleteButton extends React.Component {
 
 	setConfirmAutofocus = (elem) => {
 		if (this._focusConfirm) {
-			setImmediate(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
+			setTimeout(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
 				
 				const domElem = findDOMNode(elem);
 				domElem && domElem.focus();

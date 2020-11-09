@@ -13,8 +13,7 @@ const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import * as merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
 
-import Form from "@rjsf/core";
-import { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
+import Form, { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 import FieldTemplate from "./FieldTemplate";
 import ErrorListTemplate from "./ErrorListTemplate";
@@ -136,7 +135,7 @@ function getNewId() {
 }
 
 export interface LajiFormProps {
-	apiClient: ApiClientImplementation;
+	apiClient?: ApiClientImplementation;
 	lang: Lang;
 	formData?: any;
 	schema?: any
@@ -150,21 +149,21 @@ export interface LajiFormProps {
 	id?: string;
 	googleApiKey?: string;
 	notifier?: Notifier;
-	fields: {[name: string]: React.Component};
-	widgets: {[name: string]: React.Component};
+	fields?: {[name: string]: Field};
+	widgets?: {[name: string]: Widget};
 	autoFocus?: boolean
 	componentDidMount?: () => void;
-	onError: (e: Error, i: React.ErrorInfo) => void;
-	onChange: (formData: any) => void;
-	optimizeOnChange: boolean;
-	showShortcutButton: boolean;
-	renderSubmit: boolean;
-	submitText: string;
-	onSubmit: (data: {formData: any}) => void;
-	onValidationError: (extraErrors: any) => void;
-	validators: any;
-	warnings: any;
-	onSettingsChange: (settings: any, global: boolean) => void;
+	onError?: (e: Error, i: React.ErrorInfo) => void;
+	onChange?: (formData: any) => void;
+	optimizeOnChange?: boolean;
+	showShortcutButton?: boolean;
+	renderSubmit?: boolean;
+	submitText?: string;
+	onSubmit?: (data: {formData: any}) => void;
+	onValidationError?: (extraErrors: any) => void;
+	validators?: any;
+	warnings?: any;
+	onSettingsChange?: (settings: any, global: boolean) => void;
 }
 
 interface LajiFormState {
@@ -385,7 +384,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	constructor(props: LajiFormProps) {
 		super(props);
-		this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
+		if ( props.apiClient) {
+			this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
+		}
 		initializeValidation(this.apiClient);
 		this._id = getNewId();
 
@@ -549,7 +550,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	componentWillReceiveProps(props: LajiFormProps) {
-		if ("lang" in props && this.props.lang !== props.lang) {
+		if ( props.apiClient && props.apiClient !== this.apiClient) {
+			this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
+		}
+		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {
 			this.apiClient.setLang(props.lang);
 		}
 		this.setState(this.getStateFromProps(props));
@@ -702,8 +706,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	getFormRef = () => this.formRef
 
-	getFields = (_fields?: {[name: string]: React.Component}) => ({...fields, ...(_fields || {})})
-	getWidgets = (_widgets?: {[name: string]: React.Component}) => ({...widgets, ...(_widgets || {})})
+	getFields = (_fields?: {[name: string]: Field}) => ({...fields, ...(_fields || {})})
+	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})})
 
 	render() {
 		if (this.state.error) return null;
