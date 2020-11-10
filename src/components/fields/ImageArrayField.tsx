@@ -9,7 +9,7 @@ import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
 const BaseComponent = require("../BaseComponent").default;
-import Spinner from "react-spinner";
+const Spinner = require("react-spinner");
 const equals = require("deep-equal");
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
@@ -872,7 +872,7 @@ class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
 	render() {
 		const url = this.state.url || this.props.dataURL;
 		const img = url ? <img src={url} /> : null;
-		return !url || this.props.loading
+		return (!url || this.props.loading)
 			?  <div className="media-loading">{img}<Spinner /></div>
 			: img;
 	}
