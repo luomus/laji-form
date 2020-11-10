@@ -1127,7 +1127,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			clearTimeout(timeout);
 		});
 		if (this.immediates) this.immediates.forEach((immediate) => {
-			clearImmediate(immediate);
+			clearTimeout(immediate);
 		});
 		this.eventListeners = [];
 	}
