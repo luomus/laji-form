@@ -107,11 +107,13 @@ export default class InjectField extends React.Component {
 
 			formData = fields.reduce((formData, fieldPointer) => {
 				const fieldName = fieldPointer.split("/").pop();
-				const value = this.props.schema.properties[target].type === "array"
-					? parseJSONPointer(formData, `/${target}/0/${fieldName}`, !!"safely")
-					: formData[target][fieldName];
+				const fieldNamePointer = fieldName[0] === "/" ? fieldName : `/${fieldName}`;
+				const targetPointer = this.props.schema.properties[target].type === "array"
+					? `/${target}/0${fieldNamePointer}`
+					:  `/${target}${fieldNamePointer}`;
+				const value = parseJSONPointer(formData, targetPointer, !!"safely");
 				formData = updateFormDataWithJSONPointer({...this.props, formData}, value, fieldPointer);
-				formData = immutableDelete(formData, `/${target}${fieldName[0] === "/" ? fieldName : `/${fieldName}`}`);
+				formData = immutableDelete(formData, targetPointer);
 				return formData;
 			}, formData);
 		});
