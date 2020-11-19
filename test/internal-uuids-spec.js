@@ -134,7 +134,7 @@ describe("Internal UUIDs", () => {
 
 	it("are added to new array items", async () => {
 		await form.setState({optimizeOnChange: true, formData: {...formData}});
-		form.$locateButton("arrayOfObjects", "add").click();
+		await form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
 		await expect(changed.arrayOfObjects[1]._lajiFormId).not.toBe(undefined);
 	});

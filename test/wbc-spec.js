@@ -1,4 +1,4 @@
-const { createForm } = require("./test-utils.js");
+const { createForm, updateValue } = require("./test-utils.js");
 
 describe("WBC (MHL.3)", () => {
 	let form;
@@ -49,8 +49,30 @@ describe("WBC (MHL.3)", () => {
 		expect(await form.$locate("gatheringEvent.1.leg").$(".glyphicon-user").isDisplayed()).toBe(true);
 	});
 
+	describe("namedPlaceNotes", () => {
+		it("renders", async() => {
+			expect(await form.$locate("gatherings.0.namedPlaceNotes").isDisplayed()).toBe(true);
+		});
+
+		it("is textarea", async() => {
+			expect(await form.$getTextareaWidget("gatherings.0.namedPlaceNotes").isDisplayed()).toBe(true);
+		});
+
+		it("updates", async() => {
+			await updateValue(form.$getTextareaWidget("gatherings.0.namedPlaceNotes"), "test");
+
+			expect(await form.$getTextareaWidget("gatherings.0.namedPlaceNotes").getAttribute("value")).toBe("test");
+			expect((await form.getChangedData()).gatheringEvent.namedPlaceNotes).toBe("test");
+		});
+
+		it("doesn't spill into gatherings", async () => {
+			expect((await form.getChangedData()).gatherings[0]).not.toContain("namedPlaceNotes");
+		});
+	});
+
 	it("added existing user ID is shown", async () => {
 		const $input = await form.$getInputWidget("gatheringEvent.1.leg");
+
 		expect(await $input.getAttribute("value")).toMatch(/Unit.+ \(MA\.\d+\)/);
 	});
 

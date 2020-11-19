@@ -6,7 +6,7 @@ import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } fro
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, capitalizeFirstLetter, decapitalizeFirstLetter, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
@@ -135,30 +135,6 @@ export default class SingleActiveArrayField extends React.Component {
 		}
 
 		return state;
-	}
-
-	getTitle = (idx) => {
-		const options = getUiOptions(this.props.uiSchema);
-		const {titleFormat} = options;
-
-		const title = "ui:title" in this.props.uiSchema ? this.props.uiSchema["ui:title" ] : this.props.schema.title;
-		if (!titleFormat) return title;
-
-		const formatters = {
-			idx: idx + 1,
-			title: this.props.schema.title
-		};
-
-		return Object.keys(formatters).reduce((_title, key) => {
-			[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
-				while (_title.includes(replacePattern)) {
-					const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
-						decapitalizeFirstLetter : capitalizeFirstLetter;
-					_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
-				}
-			});
-			return _title;
-		}, titleFormat);
 	}
 
 	onHeaderAffixChange = (elem, value) => {
@@ -640,7 +616,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 		const {Label} = this.props.formContext;
 		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label : TitleField;
 		const {titleFormatters} = getUiOptions(that.props.uiSchema);
-		const title = that.getTitle(activeIdx);
+		const title = getTitle(this.props, activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={activeIdx}>
@@ -869,7 +845,7 @@ class TableArrayFieldTemplate extends React.Component {
 			this.itemElems[idx] = elem;
 		};
 
-		const title = that.getTitle(that.state.activeIdx);
+		const title = getTitle(this.props, that.state.activeIdx);
 
 		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
 			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx})
@@ -1120,7 +1096,7 @@ class AccordionHeader extends React.Component {
 
 	render() {
 		const {that, idx} = this.props;
-		const title = that.getTitle(idx);
+		const title = getTitle(that.props, idx);
 		const popupData = that.state.popups[idx];
 		const {uiSchema} = that.props;
 		const hasHelp = uiSchema && uiSchema["ui:help"];

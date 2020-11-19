@@ -161,6 +161,9 @@ class Form {
 	$getInputWidget = (str) => {
 		return this.$locate(str).$("input");
 	}
+	$getTextareaWidget = (str) => {
+		return this.$locate(str).$("textarea");
+	}
 	$getEnumWidget = (str) => {
 		return this.$locate(str).$(".rw-combobox");
 	}
@@ -174,6 +177,9 @@ class Form {
 				$yesterday: $widget.$("yesterday"),
 			}
 		};
+	}
+	$$getFieldErrors = (str) => {
+		return this.$locate(str).$$(".laji-form-error-container li");
 	}
 }
 
@@ -194,9 +200,6 @@ function isDisplayed(elem) {
 async function putForeignMarkerToMap() {
 	const $gatheringsMap = lajiFormLocate("gatherings").$(".laji-map");
 	const $markerButton = $(".leaflet-draw-draw-marker");
-
-	expect(await $markerButton.isDisplayed()).toBe(true);
-
 	await $markerButton.click();
 
 	return browser.actions({bridge: true}).move({origin: $gatheringsMap.getWebElement(), x: -100, y: -100}).click().perform();
@@ -282,6 +285,8 @@ const filterUUIDs = (any) => {
 	return any;
 };
 
+const maybeJSONPointerToLocator = pointer => pointer[0] === "/" ? pointer.slice(1).replace(/\//g, "_") : pointer;
+
 module.exports = {
 	getLocatorForContextId,
 	emptyForm,
@@ -300,5 +305,6 @@ module.exports = {
 	getWidget,
 	updateValue,
 	mockImageMetadata,
-	filterUUIDs
+	filterUUIDs,
+	maybeJSONPointerToLocator
 };

@@ -261,7 +261,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			return (
 				<Row>
 					<Col xs={12}>
-						<TitleField title={title} className={titleClassName} help={uiSchema["ui:help"]} id={idSchema.$id}/>
+						<TitleField {...this.props} title={title} className={titleClassName} help={uiSchema["ui:help"]} id={idSchema.$id}/>
 						{description !== undefined ? <DescriptionField description={description} /> : null}
 						<div className={`laji-form-medias ${this.CONTAINER_CLASS}`}>
 							{this.renderMedias()}

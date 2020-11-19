@@ -2634,18 +2634,13 @@
             ]
         },
         "gatherings": {
-            "ui:field": "UiFieldMapperArrayField",
-            "ui:options": {
-                "functions": [
-                    {
+			"ui:childFunctions": {
                         "ui:field": "FlatField",
                         "ui:options": {
                             "fields": [
                                 "gatheringFact"
                             ]
                         }
-                    }
-                ]
             },
             "uiSchema": {
                 "ui:field": "MapArrayField",
@@ -3938,7 +3933,7 @@
                             "fields": [
                                 "/gatheringEvent/namedPlaceNotes"
                             ],
-                            "target": "gatherings"
+                            "target": "/gatherings/0"
                         }
                     ]
                 }

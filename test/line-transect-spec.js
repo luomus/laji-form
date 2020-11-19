@@ -69,17 +69,12 @@ describe("Line transect (MHL.1)", () => {
 		taxonAutocompleteMock = await form.setMockResponse("/autocomplete/taxon", false);
 	});
 
-	it("form rendered something", async () => {
-		$taxon = form.$locate("gatherings.0.units.0.identifications.0.taxon");
-	});
-
 	const $shortHandForIdx = (idx, _idx) =>  $(`#root_gatherings_${idx}_units_${_idx}_shortHandText`);
 	const $shorthand = $shortHandForIdx(0, 0);
 
 	it("shorthand unit is shown", async () => {
 		expect(await $shorthand.isDisplayed()).toBe(true);
 	});
-	
 
 	it("shorthand unit expands code after typing code", async () => {
 		function waitUntilShorthandShowsSchema() {

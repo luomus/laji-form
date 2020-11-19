@@ -351,6 +351,27 @@
                             }
                         }
                     },
+					{
+						"ui:field": "UiFieldApplierField",
+						"ui:options": {
+							"field": "units",
+							"functions": [
+								{
+									"ui:field": "SingleItemArrayField"
+								},
+								{
+									"ui:field": "FlatField",
+									"ui:options": {
+										"fields": [
+											"identifications",
+											"unitGathering",
+											"unitFact"
+										]
+									}
+								}
+							]
+						}
+					},
                     {
                         "ui:field": "InjectField",
                         "ui:options": {
@@ -458,17 +479,6 @@
                             }
                         }
                     },
-                    "ui:childFunctions": {
-                        "ui:field": "FlatField",
-                        "ui:options": {
-                            "fields": [
-                                "identifications",
-                                "unitGathering",
-                                "unitFact"
-                            ]
-                        }
-                    },
-                    "ui:field": "SingleItemArrayField",
                     "ui:title": ""
                 }
             },

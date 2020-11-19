@@ -192,7 +192,7 @@ describe("Array", () => {
 		});
 
 		afterEach(async () => {
-			form.setState({formData: []});
+			await form.setState({formData: []});
 		});
 
 		describe("insert", () => {

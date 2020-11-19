@@ -176,5 +176,3 @@ export default class _SchemaField extends React.Component {
 		/>;
 	}
 }
-
-

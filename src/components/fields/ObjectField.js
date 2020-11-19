@@ -41,7 +41,8 @@ function ObjectFieldTemplate(props) {
 						id={`${props.idSchema.$id}__title`}
 						title={props.title}
 						required={props.required || props.uiSchema["ui:required"]}
-						formContext={props.formContext}
+						schema={props.schema}
+						uiSchema={props.uiSchema}
 						className={getUiOptions(props.uiSchema).titleClassName}
 						help={props.uiSchema["ui:help"]}
 						buttons={buttons}
@@ -159,6 +160,8 @@ function GridTemplate(props) {
 			<fieldset className={schemaClassName}>
 				{!isEmptyString(fieldTitle) ?
 					<TitleField title={fieldTitle}
+					            schema={schema}
+					            uiSchema={uiSchema}
 					            className={getUiOptions(props.uiSchema).titleClassName}
 					            buttons={buttons}
 					            help={uiSchema["ui:help"]}

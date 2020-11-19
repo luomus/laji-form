@@ -123,6 +123,5 @@ describe("Mobile form (MHL.51)", () => {
 		it("image add modal isn't displayed", async () => {
 			expect(await $imageAddModal.isPresent()).toBe(false);
 		});
-
 	});
 });

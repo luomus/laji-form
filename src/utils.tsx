@@ -68,6 +68,9 @@ export function getUpdateObjectFromJSONPointer(path: string, injection: any): an
 	let updatePointer = update;
 	let lastPathName = "";
 	let splittedPath = path.split("/").filter(s => !isEmptyString(s));
+	if (!splittedPath.length) {
+		return update;
+	}
 	splittedPath.forEach((pathStep, i) => {
 		updatePointer[pathStep] = {};
 		if (i < splittedPath.length - 1) updatePointer = updatePointer[pathStep];
@@ -92,9 +95,12 @@ export function immutableDelete(_obj: any, _delProp: string) {
 
 	if (_delProp[0] === "/") {
 		const splits = _delProp.split("/");
-		const last = splits.pop();
-		const container = parseJSONPointer(_obj, splits.join("/"));
-		return updateSafelyWithJSONPointer(_obj, simple(container, last as string), splits.join("/"));
+		const last = splits.pop() as string;
+		const container = parseJSONPointer(_obj, "/" + splits.join("/"), !!"safely");
+		if (!container || !(last in container)) {
+			return _obj;
+		}
+		return updateSafelyWithJSONPointer(_obj, simple(container, last as string), "/" + splits.join("/"));
 	} else {
 		return simple(_obj, _delProp);
 	}
@@ -154,7 +160,7 @@ export function parseJSONPointer(object: any, jsonPointer: string, safeMode?: bo
 	if (!strictEmptyPath) {
 		splitPath = splitPath.filter(s => !isEmptyString(s));
 	}
-	return splitPath.reduce((o, s, i)=> {
+	return splitPath.reduce((o, s, i) => {
 		if (safeMode && !o || !(s in o)) {
 			if (!o) o = {};
 			if (safeMode === "createParents") {
@@ -1133,4 +1139,36 @@ export function getIdxWithoutOffset(idx: number, offsets: any, totalOffset: numb
 		? (offsets || {})[`_${idx}`]
 		: totalOffset;
 	return idx - (offset || 0);
+}
+
+export function toJSONPointer(s: string) {
+	return s[0] !== "/"
+		? "/" + s
+		: s;
+}
+
+export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: string}, idx?: number) {
+	const title = ("ui:title" in (props.uiSchema || {})
+		? props.uiSchema["ui:title" ]
+		: props.schema?.title
+	) || props.name;
+	if (!title || !title.includes("%{")) {
+		return title;
+	}
+
+	const formatters = {
+		idx: typeof idx === "number" ? idx + 1 : undefined,
+		title
+	} as any;
+
+	return Object.keys(formatters).reduce((_title, key) => {
+		[key, capitalizeFirstLetter(key)].map(key => `%{${key}}`).forEach(replacePattern => {
+			while (_title.includes(replacePattern)) {
+				const fn = replacePattern[2] === replacePattern[2].toLowerCase() ? 
+					decapitalizeFirstLetter : capitalizeFirstLetter;
+				_title = _title.replace(replacePattern, fn(`${formatters[key]}`));
+			}
+		});
+		return _title;
+	}, title);
 }
