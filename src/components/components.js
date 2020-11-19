@@ -714,7 +714,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 	}
 
 	render() {
-		const {jobs = [], schema, uiSchema, formContext: {translations}} = this.props;
+		const {jobs = [], schema, uiSchema = {}, formContext: {translations}} = this.props;
 
 		if (!jobs.length) return null;
 

@@ -69,11 +69,7 @@ export default class ConditionalUiSchemaField extends React.Component {
 				]),
 				cache: PropTypes.boolean
 			})
-		}),
-		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["object", "array"])
-		}).isRequired,
-		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
+		})
 	}
 
 	static getName() {return "ConditionalUiSchemaField";}

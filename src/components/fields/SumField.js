@@ -12,12 +12,12 @@ const sumPropType = PropTypes.shape({
 export default class SumField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
-			"ui:options": {
+			"ui:options": PropTypes.shape({
 				"sums": PropTypes.oneOfType([
 					sumPropType,
 					PropTypes.arrayOf(sumPropType)
 				]).isRequired
-			},
+			}),
 			uiSchema: PropTypes.object
 		}).isRequired,
 		schema: PropTypes.shape({

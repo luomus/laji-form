@@ -8,9 +8,9 @@ import { hasData } from "../../utils";
 export default class FakePropertyField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["array"])
+			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.object.isRequired
 	}
 
 	static getName() {return "FakePropertyField";}

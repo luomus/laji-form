@@ -125,7 +125,7 @@ export default class NestField extends React.Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	static getName() {return "NestField";}
@@ -133,7 +133,7 @@ export default class NestField extends React.Component {
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 
-		let {schema, uiSchema, idSchema, errorSchema, formData, registry} = props;
+		let {schema, uiSchema, idSchema, errorSchema, formData = {}, registry} = props;
 
 		const {nests, buttonsNest} = options;
 		const buttons = getUiOptions(uiSchema).buttons;
@@ -237,7 +237,7 @@ export default class NestField extends React.Component {
 		return {schema, uiSchema, idSchema, errorSchema, formData};
 	}
 
-	onChange(formData) {
+	onChange(formData = {}) {
 		const {nests} = this.getUiOptions();
 
 		Object.keys(nests).reverse().forEach(nestName => {

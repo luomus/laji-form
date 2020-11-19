@@ -273,7 +273,7 @@ describe("Validations", () => {
 	};
 	const uiSchemaContext = {
 		creator: properties.userId
-	}
+	};
 	const schemaForAsync = {
 		...schema,
 		properties: {

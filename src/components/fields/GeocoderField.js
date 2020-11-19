@@ -35,7 +35,7 @@ export default class GeocoderField extends React.Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	static getName() {return "GeocoderField";}
@@ -79,7 +79,7 @@ export default class GeocoderField extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		const {updateOnlyEmpty, button, fields} = this.getOptions(this.props);
-		const hasData = fields.some(field => !isEmptyString(this.props.formData[field]));
+		const hasData = fields.some(field => !isEmptyString((this.props.formData || {})[field]));
 		const geometry = this.getGeometry(this.props);
 		const geometriesEqual = prevProps && equals(this.getGeometry(prevProps), geometry);
 		const geometryEmpty = geometry && geometry.geometries && geometry.geometries.length === 0;
@@ -154,7 +154,7 @@ export default class GeocoderField extends React.Component {
 	}
 
 	getGeometry = (props) => {
-		const {uiSchema, formData} = props;
+		const {uiSchema, formData = {}} = props;
 		const {geometryField = "geometry"} = getUiOptions(uiSchema);
 		let geometry = this.normalizeGeometry(formData[geometryField]);
 
@@ -309,7 +309,7 @@ export default class GeocoderField extends React.Component {
 								Object.keys(responseForField).forEach(value => {
 									// If target field is array.
 									if (this.props.schema.properties[field].type === "array") {
-										const temp = Array.from(this.props.formData[field] || []);
+										const temp = Array.from((this.props.formData || {})[field] || []);
 
 										// Find correct enum from fieldOptions.
 										const fieldOptions = this.props.uiSchema["ui:options"].fieldOptions;
@@ -338,7 +338,7 @@ export default class GeocoderField extends React.Component {
 						success(() => {
 							if (timestamp !== this.promiseTimestamp) return;
 							if (this.mounted) {
-								this.props.onChange({...this.props.formData, ...changes});
+								this.props.onChange({...(this.props.formData || {}), ...changes});
 							} else {
 								const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
 								const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};

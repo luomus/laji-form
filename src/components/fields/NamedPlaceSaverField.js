@@ -20,7 +20,7 @@ export default class NamedPlaceSaverField extends React.Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	getStateFromProps(props) {
@@ -45,7 +45,7 @@ export default class NamedPlaceSaverField extends React.Component {
 			fn: this.onButtonClick,
 			glyph: "floppy-disk",
 			position: "top",
-			disabled: !parseGeometries(props.formData.geometry).length
+			disabled: !parseGeometries((props.formData || {}).geometry).length
 		};
 	}
 
@@ -55,7 +55,7 @@ export default class NamedPlaceSaverField extends React.Component {
 
 	onSave = (place) => {
 		this.setState({show: false}, () => {
-			this.props.onChange({...this.props.formData, namedPlaceID: place.id});
+			this.props.onChange({...(this.props.formData || {}), namedPlaceID: place.id});
 		});
 	}
 
@@ -78,7 +78,7 @@ export default class NamedPlaceSaverField extends React.Component {
 								<Modal.Title>{formContext.translations.NamedPlaces}</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
-								<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData} />
+								<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData || {}} />
 							</Modal.Body>
 						</Modal>
 					) : null}

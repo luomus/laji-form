@@ -3,6 +3,13 @@ import * as PropTypes from "prop-types";
 import { parseJSONPointer, updateSafelyWithJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
+const propsPropType = PropTypes.shape({
+	from: PropTypes.string.isRequired,
+	fromArrayKey: PropTypes.string,
+	target: PropTypes.string,
+	joinArray: PropTypes.bool
+});
+
 /**
  * Enables leaking any prop to any other prop container.
  *
@@ -18,14 +25,7 @@ export default class DataLeakerField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				props: PropTypes.arrayOf(
-					PropTypes.shape({
-						from: PropTypes.string.isRequired,
-						fromArrayKey: PropTypes.string,
-						target: PropTypes.string,
-						joinArray: PropTypes.bool
-					})
-				)
+				props: PropTypes.oneOfType([PropTypes.arrayOf(propsPropType), propsPropType])
 			}),
 			uiSchema: PropTypes.object
 		}).isRequired,

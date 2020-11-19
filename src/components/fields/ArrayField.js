@@ -70,11 +70,6 @@ export class ArrayFieldPatched extends ArrayField {
 
 	getIdSchema(props, _index) {
 		const {idSchema, uiSchema} = props;
-		//console.log("IDSCHEMA", idSchema);
-		//if (idSchema.$id.match(new RegExp(`/^${idSchema.$id}_\\d+/`))) {
-		//	console.log("RETURN ORIG", idSchema);
-		//	return idSchema;
-		//}
 		const {idxOffsets = {}} = getUiOptions(uiSchema);
 		const index = (idxOffsets[_index] || 0) + _index;
 

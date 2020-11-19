@@ -4,6 +4,12 @@ import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
 import { getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
+
+const functionPropType = PropTypes.shape({
+	"ui:field": PropTypes.string.isRequired,
+	"ui:options": PropTypes.object
+});
+
 @VirtualSchemaField
 export default class UiFieldMapperArrayField extends React.Component {
 
@@ -11,16 +17,8 @@ export default class UiFieldMapperArrayField extends React.Component {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				functions: PropTypes.oneOfType([
-					PropTypes.arrayOf(
-						PropTypes.shape({
-							"ui:field": PropTypes.string.isRequired,
-							"ui:options": PropTypes.object
-						}),
-					),
-					PropTypes.shape({
-						"ui:field": PropTypes.string.isRequired,
-						"ui:options": PropTypes.object
-					})
+					PropTypes.arrayOf(functionPropType),
+					functionPropType
 				])
 			}),
 			uiSchema: PropTypes.object
@@ -28,7 +26,7 @@ export default class UiFieldMapperArrayField extends React.Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	static getName() {return "UiFieldMapperArrayField";}
