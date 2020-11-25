@@ -524,7 +524,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					this._context.removeSubmitHook(lajiFormId, _hook);
 				}).catch(e => {
 					this.setState({submitHooks: this.state.submitHooks?.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false, failed: true} : hookItem)});
-					throw e;
 				});
 			};
 
@@ -858,6 +857,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				!equals(this.state.extraErrors, merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
 			}).catch((e) => {
 				nonlive && this.popBlockingLoader();
+
 				throw e;
 			})
 		);
