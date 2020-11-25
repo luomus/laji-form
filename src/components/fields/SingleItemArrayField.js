@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import { getDefaultFormState, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
-import { getUiOptions, getTitle } from "../../utils";
+import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { ArrayFieldPatched } from "./ArrayField";
 
 @VirtualSchemaField
@@ -38,7 +38,13 @@ export default class SingleItemArrayField extends React.Component {
 		}
 		return {
 			...props,
-			formData: props.formData && props.formData.length ? props.formData[activeIdx] : getDefaultFormState(props.schema.items, undefined, props.registry.definitions),
+			formData: props.formData && props.formData.length && activeIdx in props.formData
+				? props.formData[activeIdx]
+				: addLajiFormIds(
+					getDefaultFormState(props.schema.items, undefined, props.registry.definitions),
+					getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id),
+					false
+				)[0],
 			schema: {title: props.schema.title, ...props.schema.items},
 			uiSchema,
 			idSchema: ArrayFieldPatched.prototype.getIdSchema.call(this, props, activeIdx),
@@ -48,8 +54,8 @@ export default class SingleItemArrayField extends React.Component {
 	}
 
 	onChange(formData) {
-		const {activeIdx} = this.getUiOptions();
-		const copy = (this.formData || []).slice();
+		const {activeIdx = 0} = this.getUiOptions();
+		const copy = (this.props.formData || []).slice();
 		copy[activeIdx] = formData;
 		this.props.onChange(copy);
 	}
