@@ -592,10 +592,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				Label: (props.fields || {}).Label || Label
 			}
 		};
-		if (!this.state || props.formData && props.formData !== this.props.formData) {
+		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
 			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, undefined));
 			this._context.formData = state.formData;
-		} else {
+		} else if (this.state) {
 			state.formData = (this.formRef as any)?.state.formData;
 		}
 		if (this.state && props.schema !== this.props.schema) {

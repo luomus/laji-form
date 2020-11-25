@@ -465,5 +465,28 @@ describe("Trip report (JX.519)", () => {
 
 			expect(await fieldCount).not.toBe(await getFieldCount());
 		});
+
+		it("adding image in background", async () => {
+			await $unitAdd.click();
+			const {resolve, remove} = await form.mockImageUpload("gatherings.0.units.1");
+			await form.$locate("gatherings.0.units.0").click();
+			await resolve();
+			await form.$locate("gatherings.0.units.1").click();
+
+			expect(await form.getImageArrayField("gatherings.0.units.1").$$imgs.count()).toBe(1);
+			await remove();
+			await removeUnit(0, 1);
+		});
+
+		it("removing unit with image loading", async () => {
+			await $unitAdd.click();
+			const {resolve, remove} = await form.mockImageUpload("gatherings.0.units.1");
+			await form.$locate("gatherings.0.units.0").click();
+			await removeUnit(0, 1);
+			await resolve();
+			await remove();
+
+			expect(await form.failedJobs.$container.isPresent()).toBe(false);
+		});
 	});
 });
