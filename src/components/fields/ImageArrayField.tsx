@@ -594,6 +594,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 
 				let pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+				if (!this.mounted && !pointer) {
+					return;
+				}
 				const newFormData = [
 					...(this.mounted
 						? this.props.formData || []
@@ -604,7 +607,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 				if (!lajiFormInstance.mounted) return;
 
-				if (this.mounted || id === "root") {
+				if ((this.mounted || id === "root") && id === this.getContainerId()) {
 					this.props.onChange(newFormData);
 					// Settimeout because the resource is undefined 404 if fetched right away.
 					setTimeout(() => {

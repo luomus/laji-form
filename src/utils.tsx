@@ -1013,9 +1013,18 @@ export function removeLajiFormIds(formData: any, tree: any) {
 	return walkFormDataWithIdTree(formData, tree, itemOperator)[0];
 }
 
-export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, lajiFormId: any): string {
-	if (formData && getUUID(formData) === lajiFormId) {
-		return "";
+export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, lajiFormId: any): string | undefined {
+	if (tmpIdTree._hasId) {
+		if (Array.isArray(formData)) {
+			for (let idx in (formData || [])) {
+				const item = formData[idx];
+				if (getUUID(item) === lajiFormId) {
+					return "/" + idx;
+				}
+			}
+		} else if (formData && getUUID(formData) === lajiFormId) {
+			return "";
+		}
 	}
 	for (const k of Object.keys(tmpIdTree)) {
 		if (isObject(formData[k])) {
@@ -1033,13 +1042,13 @@ export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, laj
 			}
 		}
 	}
-	return "";
+	return undefined;
 }
 
 export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
-		return "";
+		return;
 	}
 	const indicesCount = containerPointer.match(/\/[0-9]+/g)?.length || 0;
 	const containerPointerWithoutArrayIndices = containerPointer.replace(/[0-9]+/g, "");
@@ -1056,7 +1065,7 @@ export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree: 
 	return getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer);
 }
 
-export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string | number, relativePointer: string) {
+export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string | number, relativePointer?: string) {
 	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
 	if (!containerPointer) {
 		return "";

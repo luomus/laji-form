@@ -129,6 +129,9 @@ class Form {
 
 	errors = this.createValidatorPO("error")
 	warnings = this.createValidatorPO("warning")
+	failedJobs = {
+		$container: $(".laji-form-failed-jobs-list")
+	}
 
 	$acknowledgeWarnings = $(".laji-form-warning-list .panel-footer button")
 
@@ -142,7 +145,7 @@ class Form {
 
 		const {resolve: mdResolve, remove: mdRemove} = await this.setMockResponse("/images/mock", false);
 
-		await this.$locate(lajiFormLocator).$(".laji-form-drop-zone input").sendKeys(filePath);
+		await this.getImageArrayField(lajiFormLocator).$dropzone.$("input").sendKeys(filePath);
 		return {
 			resolve: async () => {
 				await resolve(imageResponse);
@@ -175,6 +178,20 @@ class Form {
 			}
 		};
 	}
+	$$getFieldErrors = (str) => {
+		return this.$locate(str).$$(".laji-form-error-container li");
+	}
+	_getImageArrayField = (form) => (lajiFormLocator) => new class ImageArrayFieldPO {
+		$container = form.$locate(lajiFormLocator).$(".laji-form-medias");
+		$$imgs = form.$locate(lajiFormLocator).$$(".media-container");
+		$$imgInteractives = this.$$imgs.$$(".media-container a");
+		$$imgRemoves = this.$$imgs.$$(".button-corner");
+		$imgRemoveConfirmButton = (id) => form.$locateAddition(id, "delete-confirm-yes");
+		$dropzone = form.$locate(lajiFormLocator).$(".laji-form-drop-zone");
+		$modal = $(".laji-form.media-modal");
+		$modalClose = this.$modal.$(".close");
+	}
+	getImageArrayField = this._getImageArrayField(this);
 }
 
 async function createForm(props) {
