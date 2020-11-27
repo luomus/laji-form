@@ -63,7 +63,10 @@
 		"prefer-const": "off",
 		"react/no-deprecated": "off",
 		"@typescript-eslint/no-this-alias": "off",
-		"react/no-string-refs": "off"
+		"react/no-string-refs": "off",
+		"protractor/no-browser-sleep": "off",
+		"protractor/no-repetitive-selectors": "off",
+		"protractor/no-repetitive-locators": "off"
     },
     "plugins": [
         "react",

@@ -193,7 +193,7 @@ export default class DateTimeWidget extends React.Component {
 					<Button className="yesterday" onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
 				</ButtonGroup>
 			</div>
-		) : datePicker;
+		) : <div className="date-widget">{datePicker}</div>;
 	}
 
 	getDateWithCurrentTime = (date) => {

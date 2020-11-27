@@ -1,21 +1,23 @@
-const { createForm } = require("./test-utils.js");
+import { Form, createForm } from "./test-utils";
+import { browser, protractor } from "protractor";
+import { JSONSchema7 } from "json-schema";
 
 describe("SelectWidget", () => {
 
-	let form;
+	let form: Form;
 
-	const enums = {
+	const enums: {[key: string]: string} = {
 		"": "",
 		a: "aLabel",
 		b: "bLabel",
 		c: "cLabel",
-	}
+	};
 
 	const schema = {
 		type: "string",
 		enum: Object.keys(enums),
 		enumNames: Object.keys(enums).map(e => enums[e])
-	}
+	} as JSONSchema7;
 
 	const initialFormData = "b";
 
@@ -31,6 +33,7 @@ describe("SelectWidget", () => {
 		await form.$getEnumWidget("").click();
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$$(".rw-list-option").first()), 1000, "select list timeout");
 		await form.$getEnumWidget("").$$(".rw-list-option").first().click();
+
 		expect (await form.getChangedData()).toBe(null);
 	});
 
@@ -38,6 +41,7 @@ describe("SelectWidget", () => {
 		await form.$getEnumWidget("").click();
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$$(".rw-list-option").first()), 1000, "select list timeout");
 		await form.$getEnumWidget("").$$(".rw-list-option").last().click();
+
 		expect(await form.$getEnumWidget("").$("input").getAttribute("value")).toBe(enums.c);
 		expect (await form.getChangedData()).toBe("c");
 	});

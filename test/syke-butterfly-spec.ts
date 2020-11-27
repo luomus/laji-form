@@ -1,11 +1,12 @@
-const { createForm, getFocusedId } = require("./test-utils.js");
+import { Form, createForm, getFocusedId } from "./test-utils";
+import { protractor, ElementFinder } from "protractor";
 
 describe("SYKE butterfly form (MHL.59)", () => {
-	let form;
+	let form: Form;
 
-	let $firstUnitsAdd;
-	let $secondUnitsAdd;
-	let $gatheringsAdd;
+	let $firstUnitsAdd: ElementFinder;
+	let $secondUnitsAdd: ElementFinder;
+	let $gatheringsAdd: ElementFinder;
 
 	it("navigate to form", async () => {
 		const formData = {
@@ -28,11 +29,11 @@ describe("SYKE butterfly form (MHL.59)", () => {
 	});
 
 	it("has gatherings", async () => {
-		await form.$locate("gatherings");
+		expect(await form.$locate("gatherings").isDisplayed()).toBe(true);
 	});
 
 	it("has one gathering by default", async () => {
-		await form.$locate("gatherings.0");
+		expect(await form.$locate("gatherings.0").isDisplayed()).toBe(true);
 	});
 
 	it("has gatherings add", async () => {
@@ -56,13 +57,14 @@ describe("SYKE butterfly form (MHL.59)", () => {
 		});
 
 		it("autofocuses", async () => {
-			expect(await getFocusedId() === await form.$getInputWidget("gatherings.0.units.0.identifications.0.taxonVerbatim").getAttribute("id")).toBe(true);
+			expect(await getFocusedId()).toBe(await form.$getInputWidget("gatherings.0.units.0.identifications.0.taxonVerbatim").getAttribute("id"));
 		});
 	});
 
 	describe("adding unit to second group", () => {
 		it("works", async () => {
 			await $secondUnitsAdd.click();
+
 			expect(await form.$locate("gatherings.0.units.0.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.1.identifications.0.taxonVerbatim").isDisplayed()).toBe(true);
 			expect(await form.$locate("gatherings.0.units.0.individualCount").isDisplayed()).toBe(true);
@@ -70,7 +72,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 		});
 
 		it("autofocuses", async () => {
-			expect(await getFocusedId() === await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxonVerbatim").getAttribute("id")).toBe(true);
+			expect(await getFocusedId()).toBe(await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxonVerbatim").getAttribute("id"));
 		});
 	});
 
@@ -109,7 +111,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 		});
 
 		it("autofocuses", async () => {
-			expect(await getFocusedId() === await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxonVerbatim").getAttribute("id")).toBe(true);
+			expect(await getFocusedId()).toBe(await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxonVerbatim").getAttribute("id"));
 		});
 	});
 
@@ -132,7 +134,7 @@ describe("SYKE butterfly form (MHL.59)", () => {
 		});
 
 		it("autofocuses", async () => {
-			expect(await getFocusedId() === await form.$getInputWidget("gatherings.0.units.3.identifications.0.taxonVerbatim").getAttribute("id")).toBe(true);
+			expect(await getFocusedId()).toBe(await form.$getInputWidget("gatherings.0.units.3.identifications.0.taxonVerbatim").getAttribute("id"));
 		});
 	});
 

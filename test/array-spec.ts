@@ -1,18 +1,20 @@
-const { createForm } = require("./test-utils.js");
+import { createForm, Form } from "./test-utils";
+import { browser, protractor } from "protractor";
+import { JSONSchema7 } from "json-schema";
 
 describe("Array", () => {
 
-	let form;
+	let form: Form;
 
 	describe("copy button", () => {
 
-		const uiSchemaForCopy = (type, filter) => ({
+		const uiSchemaForCopy = (type: string, filter: string[]): any => ({
 			"ui:options": {
 				"buttons": [{
 					fn: "copy", type, filter
 				}]
 			}
-		})
+		});
 
 		beforeAll(async () => {
 			form = await createForm();
@@ -51,8 +53,7 @@ describe("Array", () => {
 						}
 					}
 				}
-			}
-
+			};
 
 			const allButDefaultFilled = [{
 				a: "foo",
@@ -183,11 +184,11 @@ describe("Array", () => {
 	});
 
 	describe("keyboard shortcut", () => {
-		let form;
+		let form: Form;
 
 		beforeAll(async () => {
 			const shortcuts = {"alt+i": {fn: "insert"}};
-			const props = {schema: {type: "array", items: {type:"string"}}, uiSchema: {"ui:shortcuts": shortcuts}};
+			const props = {schema: {type: "array", items: {type:"string"}} as JSONSchema7, uiSchema: {"ui:shortcuts": shortcuts}};
 			form = await createForm(props);
 		});
 
@@ -198,8 +199,11 @@ describe("Array", () => {
 		describe("insert", () => {
 			it("works", async () => {
 				await form.$locateButton("", "add").click();
+
 				expect(await form.$locate("0").isDisplayed()).toBe(true);
+
 				await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, "i"));
+
 				expect(await form.$locate("1").isDisplayed()).toBe(true);
 			});
 
@@ -207,6 +211,7 @@ describe("Array", () => {
 				await form.$locateButton("", "add").click();
 				await browser.driver.switchTo().activeElement().sendKeys("test");
 				await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, "i"));
+
 				expect(await form.$locate("1").isDisplayed()).toBe(true);
 				expect(await form.$getInputWidget("0").getAttribute("value")).toBe("test");
 			});

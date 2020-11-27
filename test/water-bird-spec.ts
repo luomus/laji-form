@@ -1,7 +1,8 @@
-const { createForm } = require("./test-utils.js");
+import { Form, createForm } from "./test-utils";
+import { protractor, browser } from "protractor";
 
 describe("water bird pair count form (MHL.65)", () => {
-	let form;
+	let form: Form;
 
 	beforeAll(async () => {
 		form = await createForm({id: "MHL.65", localFormData: true});

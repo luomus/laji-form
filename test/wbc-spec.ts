@@ -1,7 +1,8 @@
-const { createForm, updateValue } = require("./test-utils.js");
+import { Form, createForm, updateValue } from "./test-utils";
+import { protractor, browser } from "protractor";
 
 describe("WBC (MHL.3)", () => {
-	let form;
+	let form: Form;
 
 	it("navigate to form", async () => {
 		form = await createForm({id: "MHL.3", localFormData: true, isAdmin: true});

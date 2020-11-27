@@ -137,7 +137,7 @@ function getNewId() {
 
 export interface LajiFormProps {
 	apiClient?: ApiClientImplementation;
-	lang: Lang;
+	lang?: Lang;
 	formData?: any;
 	schema?: any
 	uiSchema?: any;
@@ -167,7 +167,7 @@ export interface LajiFormProps {
 	onSettingsChange?: (settings: any, global: boolean) => void;
 }
 
-interface LajiFormState {
+export interface LajiFormState {
 	submitHooks?: SubmitHook[];
 	translations: ByLang;
 	formContext: FormContext;
@@ -554,14 +554,14 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.apiClient = new ApiClient(props.apiClient, props.lang, this.translations);
 		}
 		if (this.apiClient && "lang" in props && this.props.lang !== props.lang) {
-			this.apiClient.setLang(props.lang);
+			this.apiClient.setLang(props.lang as Lang);
 		}
 		this.setState(this.getStateFromProps(props));
 	}
 
 	getStateFromProps(props: LajiFormProps) {
 		if (props.staticImgPath) (new Context() as GlobalContext).staticImgPath = props.staticImgPath;
-		const translations = this.translations[props.lang];
+		const translations = this.translations[props.lang as Lang];
 		if (!this.tmpIdTree || props.schema !== this.props.schema) {
 			this.setTmpIdTree(props.schema);
 		}

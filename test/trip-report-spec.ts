@@ -1,49 +1,57 @@
-const { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId } = require("./test-utils.js");
-
+import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId } from "./test-utils";
+import { protractor, browser, $, $$, by, element, ElementFinder } from "protractor";
 const { googleApiKey } = require("../properties.json");
 
-const testWidget = form =>  async (path, type) => {
-	const parsePointer = (container, path) => {
+const _testWidget = (form: Form) => async (path: string, type?: string) => {
+	const parsePointer = (container: any, path: string): any => {
 		const [next, ...remaining] = path.split(".");
 		const nextObject = container[next];
 		if (remaining.length) {
 			return parsePointer(nextObject, remaining.join("."));
 		}
 		return nextObject;
-	}
+	};
 
 	expect(await lajiFormLocate(path).isDisplayed()).toBe(true);
-	const beforeChange = parsePointer(await form.getChangedData(), path)
+	const beforeChange = parsePointer(await form.getChangedData() || {}, path);
 	let widget;
+	let $secondOption, $otherOptionThanActive;
 	switch (type) {
 	case "checkbox":
-		widget = await form.$getCheckboxWidget(path);
+		widget = form.$getCheckboxWidget(path);
 		await widget.click();
 		break;
 	case "enum":
-		widget = await form.$getEnumWidget(path);
+		widget = form.$getEnumWidget(path);
 		await widget.click();
-		await widget.$$("li")[1].click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(widget.$$("li").first()), 300, "enum list didn't appear on widget click");
+		$secondOption = widget.$$("li").get(1);
+		$otherOptionThanActive = (await $secondOption.getAttribute("class")).includes("rw-state-selected")
+			? widget.$$("li").get(0)
+			: $secondOption;
+		await $otherOptionThanActive.click();
 		break;
 	case "date":
-		widget = form.getDateWidget(path);
-		await widget.$input.sendKeys("1.1.2019");
-		await browser.actions().sendKeys(protractor.Key.TAB).perform();
+		widget = form.getDateWidget(path).$input;
+		await widget.sendKeys("1.1.2019");
+		await widget.sendKeys(protractor.Key.TAB);
 		break;
 	default:
-		widget = await form.$getInputWidget(path);
+		widget = form.$getInputWidget(path);
 		await widget.sendKeys("1");
-		await browser.actions().sendKeys(protractor.Key.TAB).perform();
+		await widget.sendKeys(protractor.Key.TAB);
 		break;
 	}
-	expect(beforeChange).not.toEqual(parsePointer(await form.getChangedData()), path);
-}
+	expect(beforeChange).not.toEqual(parsePointer(await form.getChangedData(), path));
+};
 
 describe("Trip report (JX.519)", () => {
 
-	let form;
+	let form: Form;
+	let testWidget: (path: string, type?: string) => Promise<void>;
 	beforeAll(async () => {
 		form = await createForm({id: "JX.519"});
+		testWidget = _testWidget(form);
 	});
 
 	const $gatheringsMap = lajiFormLocate("gatherings").$(".laji-map");
@@ -60,7 +68,7 @@ describe("Trip report (JX.519)", () => {
 
 			it("secureLevel which is editable", async () => {
 				expect(await $gatheringEvent.element(lajiFormLocate("secureLevel").locator()).isDisplayed()).toBe(true);
-				testWidget("secureLevel", "checkbox")
+				await testWidget("secureLevel", "checkbox");
 			});
 
 			//TODO TableField messes up ids!
@@ -69,20 +77,20 @@ describe("Trip report (JX.519)", () => {
 			//});
 
 			it("gatheringEvent.legPublic which is editable", async () => {
-				testWidget("gatheringEvent.legPublic", "checkbox")
+				await testWidget("gatheringEvent.legPublic", "checkbox");
 			});
 
 			it("gatheringEvent.dateBegin which is editable", async () => {
-				testWidget("gatheringEvent.dateBegin", "date")
+				await testWidget("gatheringEvent.dateBegin", "date");
 			});
 
 			it("gatheringEvent.dateEnd which is editable", async () => {
-				testWidget("gatheringEvent.dateEnd", "date")
+				await testWidget("gatheringEvent.dateEnd", "date");
 			});
 
 			it("keywords which is editable", async () => {
 				expect(await $gatheringEvent.element(lajiFormLocate("keywords").locator()).isDisplayed()).toBe(true);
-				testWidget("keywords")
+				await testWidget("keywords");
 			});
 		});
 	});
@@ -128,33 +136,33 @@ describe("Trip report (JX.519)", () => {
 			}
 
 			it("adds country which is editable", async () => {
-				testWidget("gatherings.0.country");
+				await testWidget("gatherings.0.country");
 			});
 
 			it("adds administrativeProvince which is editable", async () => {
-				testWidget("gatherings.0.administrativeProvince");
+				await testWidget("gatherings.0.administrativeProvince");
 			});
 
 			it("adds municipality which is editable", async () => {
-				testWidget("gatherings.0.municipality");
+				await testWidget("gatherings.0.municipality");
 			});
 
 		});
 
 		it("contains locality which is editable", async () => {
-			testWidget("gatherings.0.locality");
+			await testWidget("gatherings.0.locality");
 		});
 
 		it("contains localityDescription which is editable", async () => {
-			testWidget("gatherings.0.localityDescription");
+			await testWidget("gatherings.0.localityDescription");
 		});
 
 		it("contains weather which is editable", async () => {
-			testWidget("gatherings.0.weather");
+			await testWidget("gatherings.0.weather");
 		});
 
 		it("contains notes which is editable", async () => {
-			testWidget("gatherings.0.notes");
+			await testWidget("gatherings.0.notes");
 		});
 
 		const $additionalsButton = $("#root_gatherings_0-additionals");
@@ -179,17 +187,21 @@ describe("Trip report (JX.519)", () => {
 
 			it("can add items", async () => {
 				await form.$locateButton("gatherings.0.taxonCensus", "add").click();
-				testWidget("gatherings.0.taxonCensus.0.taxonCensusID");
-				testWidget("gatherings.0.taxonCensus.0.taxonCensusType", "enum");
 			});
 
 			it("added item is focused", async () => {
-				expect(await form.$getInputWidget("gatherings.0.taxonCensus.0.censusTaxonID").getAttribute("id") === await getFocusedId()).toBe(true);
+				expect(await form.$getInputWidget("gatherings.0.taxonCensus.0.censusTaxonID").getAttribute("id")).toBe(await getFocusedId());
+			});
+
+			it("added item is displayed and can be edited", async () => {
+				await testWidget("gatherings.0.taxonCensus.0.censusTaxonID");
+				await testWidget("gatherings.0.taxonCensus.0.taxonCensusType", "enum");
 			});
 
 			it("second added item is focused", async () => {
 				await form.$locateButton("gatherings.0.taxonCensus", "add").click();
-				expect(await form.$getInputWidget("gatherings.0.taxonCensus.1.censusTaxonID").getAttribute("id") === await getFocusedId()).toBe(true);
+
+				expect(await form.$getInputWidget("gatherings.0.taxonCensus.1.censusTaxonID").getAttribute("id")).toBe(await getFocusedId());
 			});
 		});
 
@@ -233,7 +245,7 @@ describe("Trip report (JX.519)", () => {
 		});
 
 		it("added is focused", async () => {
-			expect(await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxon").getAttribute("id") === await getFocusedId()).toBe(true);
+			expect(await form.$getInputWidget("gatherings.0.units.1.identifications.0.taxon").getAttribute("id")).toBe(await getFocusedId());
 		});
 
 		it("first is shown as table row after activating second", async () => {
@@ -267,19 +279,19 @@ describe("Trip report (JX.519)", () => {
 		});
 
 		it("contains count which is editable", async () => {
-			testWidget("gatherings.0.units.0.count");
+			await testWidget("gatherings.0.units.0.count");
 		});
 
 		it("contains notes which is editable", async () => {
-			testWidget("gatherings.0.units.0.notes");
+			await testWidget("gatherings.0.units.0.notes");
 		});
 
 		it("contains taxonConfidence which is editable", async () => {
-			testWidget("gatherings.0.units.0.taxonConfidence", "enum");
+			await testWidget("gatherings.0.units.0.taxonConfidence", "enum");
 		});
 
 		it("contains recordBasis which is editable", async () => {
-			testWidget("gatherings.0.units.0.recordBasis", "enum");
+			await testWidget("gatherings.0.units.0.recordBasis", "enum");
 		});
 
 		it("contains images", async () => {
@@ -339,7 +351,7 @@ describe("Trip report (JX.519)", () => {
 			expect(await await getFieldCount()).toBe(fieldCount + 1);
 		});
 
-		const $getLocationButtonFor = (gatheringIdx, unitIdx) => $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-location`);
+		const $getLocationButtonFor = (gatheringIdx: number, unitIdx: number): ElementFinder => $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-location`);
 		const $locationModal = $(".map-dialog");
 		const $locationModalMap = $locationModal.$(".laji-map");
 
@@ -347,7 +359,7 @@ describe("Trip report (JX.519)", () => {
 			expect(await $getLocationButtonFor(0, 0).isDisplayed()).toBe(true);
 		});
 
-		async function clickLocationButtonAndAddLocation(gatheringIdx, unitIdx) {
+		async function clickLocationButtonAndAddLocation(gatheringIdx: number, unitIdx: number) {
 			await $getLocationButtonFor(gatheringIdx, unitIdx).click();
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($locationModal), 5000, "Map modal waiting timeout");
@@ -355,8 +367,9 @@ describe("Trip report (JX.519)", () => {
 			expect(await $locationModal.isDisplayed()).toBe(true);
 			expect(await $locationModalMap.isDisplayed()).toBe(true);
 
-			return browser.actions({bridge: true})
-				.move({origin: $locationModalMap.getWebElement(), x: 100, y: 100}).click().perform();
+			await browser.actions()
+				.mouseMove($locationModalMap.getWebElement(), {x: 100, y: 100}).perform();
+			await browser.actions().click().perform();
 		}
 
 		it("can add location", async () => {
@@ -383,8 +396,8 @@ describe("Trip report (JX.519)", () => {
 			// We check style instead of fill, since the fill attribute doesn't update.
 			const unitFill = await $$gatheringMarkerPaths.last().getAttribute("style");
 
-			await browser.actions({bridge: true})
-				.move({origin: $getLocationButtonFor(0, 0).getWebElement()})
+			await browser.actions()
+				.mouseMove($getLocationButtonFor(0, 0).getWebElement())
 				.perform();
 
 			const unitFillAfterLocationHover = await $$gatheringMarkerPaths.last().getAttribute("style");
@@ -397,8 +410,8 @@ describe("Trip report (JX.519)", () => {
 
 			const unitFill = await $$gatheringMarkerPaths.last().getAttribute("style");
 
-			await browser.actions({bridge: true})
-				.move({origin: lajiFormLocate("gatherings.0.units.0").getWebElement()})
+			await browser.actions()
+				.mouseMove(lajiFormLocate("gatherings.0.units.0").getWebElement())
 				.perform();
 
 			const unitFillAfterLocationHover = await $$gatheringMarkerPaths.last().getAttribute("style");
@@ -411,16 +424,16 @@ describe("Trip report (JX.519)", () => {
 		const $locationPeeker = $("#root_gatherings_0_units_0-location-peeker");
 
 		it("hovering location button displays location peeking map", async () => {
-			await browser.actions({bridge: true})
-				.move({origin: $getLocationButtonFor(0, 0).getWebElement()})
+			await browser.actions()
+				.mouseMove($getLocationButtonFor(0, 0).getWebElement())
 				.perform();
 
 			expect(await $locationPeeker.isDisplayed()).toBe(true);
 		});
 
 		it("location peeker shows data", async () => {
-			await browser.actions({bridge: true})
-				.move({origin: $getLocationButtonFor(0, 0).getWebElement()})
+			await browser.actions()
+				.mouseMove($getLocationButtonFor(0, 0).getWebElement())
 				.perform();
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($locationPeeker.$(".leaflet-container")), 5000, "Map peeker waiting timeout");
@@ -456,7 +469,7 @@ describe("Trip report (JX.519)", () => {
 			const getFieldCount = () => lajiFormLocate("gatherings.0.units.0").$$("input").count();
 			const fieldCount = await getFieldCount();
 
-			const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last();
+			const $birdButton = element(by.className("MVL.1")).element(by.xpath("..")).$$("button").last(); // eslint-disable-line protractor/no-by-xpath
 
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($birdButton), 5000, "Bird button didn't show up");
 

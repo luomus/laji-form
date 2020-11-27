@@ -1,4 +1,5 @@
-const { createForm, updateValue } = require("./test-utils.js");
+import { Form, createForm, updateValue } from "./test-utils";
+import  { element, by, $ } from "protractor";
 
 describe("SingleItemArrayField", () => {
 
@@ -6,7 +7,7 @@ describe("SingleItemArrayField", () => {
 		"ui:field": "SingleItemArrayField",
 	};
 
-	let form;
+	let form: Form;
 
 	beforeAll(async () => {
 		form = await createForm();

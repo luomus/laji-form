@@ -1,7 +1,7 @@
-const { createForm } = require("./test-utils.js");
+import { Form, createForm, DateWidgetPO } from "./test-utils";
 
 describe("Collection contest form (MHL.25)", () => {
-	let form;
+	let form: Form;
 
 	describe("Without data", () => {
 		beforeAll(async () => {
@@ -19,7 +19,7 @@ describe("Collection contest form (MHL.25)", () => {
 
 
 		describe("injected date field", () => {
-			let dateWidget;
+			let dateWidget: DateWidgetPO;
 			it("is date widget", async () => {
 				dateWidget = form.getDateWidget("gatherings.0.dateBegin");
 

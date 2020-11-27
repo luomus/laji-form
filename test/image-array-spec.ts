@@ -1,10 +1,11 @@
-const { createForm, getInputWidget, updateValue, waitUntilBlockingLoaderHides, mockImageMetadata } = require("./test-utils.js");
+import { Form, createForm, mockImageMetadata, ImageArrayFieldPOI } from "./test-utils";
+import { $$, browser } from "protractor";
 const properties = require("../properties.json");
 
 describe("Image array", () => {
 
-	let form;
-	let imgArrayField;
+	let form: Form;
+	let imgArrayField: ImageArrayFieldPOI;
 
 	const schema = {
 		type: "array",
@@ -22,7 +23,7 @@ describe("Image array", () => {
 
 	const uiSchemaContext = {
 		creator: properties.userId
-	}
+	};
 
 	describe("", () => {
 
@@ -40,6 +41,7 @@ describe("Image array", () => {
 		it("adds image", async () => {
 			const {resolve, remove} = await form.mockImageUpload("");
 			await resolve();
+
 			expect(await imgArrayField.$$imgs.count()).toBe(1);
 			await remove();
 		});
@@ -57,12 +59,16 @@ describe("Image array", () => {
 
 		it("deletes image", async () => {
 			await browser.sleep(1000);
+
 			expect(await imgArrayField.$$imgs.count()).toBe(1);
 			expect(await imgArrayField.$$imgRemoves.first().isDisplayed()).toBe(true);
+
 			const {resolve, remove} = await form.setMockResponse("/images/mock", false);
 			await imgArrayField.$$imgRemoves.first().click();
 			await imgArrayField.$imgRemoveConfirmButton("0").click();
+
 			expect(await imgArrayField.$$imgs.count()).toBe(0);
+
 			await resolve();
 			await remove();
 		});

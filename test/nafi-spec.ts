@@ -1,4 +1,5 @@
-const { createForm } = require("./test-utils.js");
+import { Form, createForm } from "./test-utils";
+import { browser, protractor } from "protractor";
 
 const taxonAutocompleteResponse = [{
 	"key": "MX.46587",
@@ -25,7 +26,7 @@ const taxonAutocompleteResponse = [{
 
 describe("NAFI (MHL.6)", () => {
 
-	let form;
+	let form: Form;
 
 
 	beforeAll(async () => {
@@ -34,6 +35,7 @@ describe("NAFI (MHL.6)", () => {
 
 	it("can add unit", async () => {
 		await form.$locateButton("gatherings.0.units", "add").click();
+
 		expect(await form.$locate("gatherings.0.units.121").isDisplayed()).toBe(true);
 	});
 
@@ -47,18 +49,23 @@ describe("NAFI (MHL.6)", () => {
 			await autocompleteMock.resolve(taxonAutocompleteResponse);
 			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate(unitLocator).$(".rw-list")), 5000, "Suggestion list timeout");
 			const $$taxonSuggestions = form.$locate(unitLocator).$$(".rw-list-option");
+
 			await $$taxonSuggestions.first().click();
+
 			expect(await $unitInput.getAttribute("value")).toBe("Vulpes vulpes");
+
 			await autocompleteMock.remove();
 		});
 
 		it("and is marked as suggested", async () => {
 			const $unit = form.$locate(unitLocator);
+
 			expect(await $unit.$(".glyphicon-ok").isDisplayed()).toBe(true);
 		});
 
 		it("and closes suggestion list", async () => {
 			const $unit = form.$locate(unitLocator);
+
 			expect(await $unit.$(".rw-list").isPresent()).toBe(false);
 		});
 	});
@@ -73,16 +80,19 @@ describe("NAFI (MHL.6)", () => {
 			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate(unitLocator).$(".rw-list")), 5000, "Suggestion list timeout");
 			await $unit.sendKeys(protractor.Key.DOWN);
 			await $unit.sendKeys(protractor.Key.ENTER);
+
 			expect(await $unit.getAttribute("value")).toBe("Vulpes vulpes");
 		});
 
 		it("and is marked as suggested", async () => {
 			const $unit = form.$locate(unitLocator);
+
 			expect(await $unit.$(".glyphicon-ok").isDisplayed()).toBe(true);
 		});
 
 		it("and closes suggestion list", async () => {
 			const $unit = form.$locate(unitLocator);
+
 			expect(await $unit.$(".rw-list").isPresent()).toBe(false);
 		});
 	});

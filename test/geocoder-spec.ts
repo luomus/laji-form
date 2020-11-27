@@ -1,8 +1,9 @@
-const { createForm } = require("./test-utils.js");
+import { Form, createForm } from "./test-utils";
+import { $, $$ } from "protractor";
 
 describe("Geocoder", () => {
 
-	let form;
+	let form: Form;
 
 	const schema = {
 		type: "object",
@@ -80,11 +81,14 @@ describe("Geocoder", () => {
 	it("parses location in Finland correctly", async () => {
 		const {resolve, remove} = await form.setMockResponse("/coordinates/location", false);
 		await form.setState({schema, uiSchema, formData});
+
 		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("");
 		expect(await form.$locate("municipality").$("input").getAttribute("value")).toBe("");
 		expect(await form.$locate("biologicalProvince").$("input").getAttribute("value")).toBe("");
+
 		await resolve(response);
 		await remove();
+
 		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("Suomi");
 		expect(await form.$locate("municipality").$("input").getAttribute("value")).toBe("Helsinki");
 		expect(await form.$locate("biologicalProvince").$("input").getAttribute("value")).toBe("Nylandia");
@@ -96,9 +100,11 @@ describe("Geocoder", () => {
 		const {resolve, remove} = await form.setMockResponse("/coordinates/location", false);
 		await form.setState({schema, uiSchema, formData});
 		await form.e("submit()");
+
 		expect(await $runningJobs.isDisplayed()).toBe(true);
 		await resolve(response);
 		await remove();
+
 		expect(await $runningJobs.isPresent()).toBe(false);
 		expect(await form.$locate("country").$("input").getAttribute("value")).toBe("Suomi");
 		expect(await form.getSubmittedData()).not.toBe(null);
@@ -111,10 +117,13 @@ describe("Geocoder", () => {
 			await form.setState({formData: {}});
 			await form.setState({formData});
 			await form.e("submit()");
+
 			expect(await form.getSubmittedData()).toBe(null);
 			expect(await $runningJobs.isDisplayed()).toBe(true);
+
 			await reject();
 			await remove();
+
 			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(1);
 			expect(await $runningJobs.isPresent()).toBe(false);
 			expect(await form.getSubmittedData()).not.toBe(null);
@@ -124,10 +133,13 @@ describe("Geocoder", () => {
 			const {resolve, remove} = await form.setMockResponse("/coordinates/location", false);
 			await form.setState({schema, uiSchema, formData});
 			await form.e("submit()");
+
 			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(0);
 			expect(await $runningJobs.isDisplayed()).toBe(true);
+
 			await resolve(response);
 			await remove();
+
 			expect(await $$(".laji-form-failed-jobs-list .list-group-item").count()).toBe(0);
 			expect(await $runningJobs.isPresent()).toBe(false);
 		});

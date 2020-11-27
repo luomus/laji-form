@@ -1,8 +1,8 @@
-const { createForm } = require("./test-utils.js");
+import { Form, createForm } from "./test-utils";
 
 describe("Internal UUIDs", () => {
 
-	let form;
+	let form: Form;
 
 	const schema = {
 		type: "object",
@@ -86,6 +86,7 @@ describe("Internal UUIDs", () => {
 
 	it("are generated on initialization", async () => {
 		const {formData} = await form.getState();
+
 		await expect(formData.arrayOfObjects[0]._lajiFormId).not.toBe(undefined);
 		await expect(formData.arrayOfObjects[0].innerArrayOfObjects[0]._lajiFormId).not.toBe(undefined);
 		await expect(formData.object.innerObject.arrayOfObjects[0]._lajiFormId).not.toBe(undefined);
@@ -93,6 +94,7 @@ describe("Internal UUIDs", () => {
 
 	it("keeps data intact on id generation", async () => {
 		const {formData} = await form.getState();
+
 		await expect(formData.arrayOfObjects[0].string).toBe("foo");
 		await expect(formData.arrayOfObjects[0].innerArrayOfObjects[0].string).toBe("foo");
 		await expect(formData.object.innerObject.arrayOfObjects[0].string).toBe("foo");
@@ -102,14 +104,16 @@ describe("Internal UUIDs", () => {
 	it("are removed on submit", async () => {
 		await form.submit();
 		const submitted = await form.getSubmittedData();		
-		await expect(submitted.arrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
-		await expect(submitted.arrayOfObjects[0].innerArrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
-		await expect(submitted.object.innerObject.arrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
+
+		await expect(submitted.arrayOfObjects[0]).not.toContain("_lajiFormId");
+		await expect(submitted.arrayOfObjects[0].innerArrayOfObjects[0]).not.toContain("_lajiFormId");
+		await expect(submitted.object.innerObject.arrayOfObjects[0]).not.toContain("_lajiFormId");
 	});
 
 	it("keeps data intact when ids removed", async () => {
 		await form.submit();
 		const submitted = await form.getSubmittedData();		
+
 		await expect(submitted.arrayOfObjects[0].string).toBe("foo");
 		await expect(submitted.arrayOfObjects[0].innerArrayOfObjects[0].string).toBe("foo");
 		await expect(submitted.object.innerObject.arrayOfObjects[0].string).toBe("foo");
@@ -119,15 +123,17 @@ describe("Internal UUIDs", () => {
 	it("are removed on change by default", async () => {
 		await form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
-		await expect(changed.arrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
-		await expect(changed.arrayOfObjects[0].innerArrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
-		await expect(changed.object.innerObject.arrayOfObjects[0].hasOwnProperty("_lajiFormId")).toBe(false);
+
+		await expect(changed.arrayOfObjects[0]).not.toContain("_lajiFormId");
+		await expect(changed.arrayOfObjects[0].innerArrayOfObjects[0]).not.toContain("_lajiFormId");
+		await expect(changed.object.innerObject.arrayOfObjects[0]).not.toContain("_lajiFormId");
 	});
 
 	it("are not removed on change if optimizeOnChange", async () => {
 		await form.setState({optimizeOnChange: true});
 		await form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
+
 		await expect(changed.arrayOfObjects[0]._lajiFormId).not.toBe(undefined);
 		await form.setState({optimizeOnChange: false});
 	});
@@ -136,6 +142,7 @@ describe("Internal UUIDs", () => {
 		await form.setState({optimizeOnChange: true, formData: {...formData}});
 		await form.$locateButton("arrayOfObjects", "add").click();
 		const changed = await form.getChangedData();
+
 		await expect(changed.arrayOfObjects[1]._lajiFormId).not.toBe(undefined);
 	});
 
@@ -148,13 +155,15 @@ describe("Internal UUIDs", () => {
 
 		it("instead of _lajiFormId", async () => {
 			const {formData} = await form.getState();
+
 			await expect(formData.arrayOfObjects[0].id).toBe("ID");
-			await expect(formData.arrayOfObjects[0].hasOwnProperty('_lajiFormId')).toBe(false);
+			await expect(formData.arrayOfObjects[0]).not.toContain("_lajiFormId");
 		});
 
 		it("and they are kept intact when ids are removed", async () => {
 			await form.submit();
 			const submitted = await form.getSubmittedData();		
+
 			await expect(submitted.arrayOfObjects[0].id).toBe("ID");
 		});
 	});

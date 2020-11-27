@@ -1,6 +1,5 @@
-const { navigateToForm, lajiFormLocate, mockGeo, mockGeoError } = require("./test-utils.js");
-
-const { googleApiKey } = require("../properties.json");
+import { navigateToForm, lajiFormLocate, mockGeo, mockGeoError } from "./test-utils";
+import { $, browser, protractor } from "protractor";
 
 const $blocker = lajiFormLocate("gatherings.0.geometry").$(".blocker");
 const $imageAddModal = $(".media-add-modal");
@@ -24,6 +23,7 @@ describe("Mobile form (MHL.51)", () => {
 
 		it("clicking cancel on image add modal hides it", async () => {
 			await $imageAddModal.$(".cancel").click();
+
 			expect(await $imageAddModal.isPresent()).toBe(false);
 		});
 
@@ -40,12 +40,14 @@ describe("Mobile form (MHL.51)", () => {
 			it("map removes geolocating blocker", async () => {
 				await mockGeo(60, 25);
 				await browser.wait(protractor.ExpectedConditions.invisibilityOf($blocker), 1000, "Blocker didn't hide");
+
 				expect(await $blocker.isPresent()).toBe(false);
 			});
 
 			it("map shows mobile editor", async () => {
 				const $mobileEditorMap = $(".laji-form.fullscreen .laji-form-map");
 				await browser.wait(protractor.ExpectedConditions.visibilityOf($mobileEditorMap), 1000, "Mobile editor map didn't show up");
+
 				expect(await $mobileEditorMap.isPresent()).toBe(true);
 			});
 
@@ -58,6 +60,7 @@ describe("Mobile form (MHL.51)", () => {
 			await navigateToForm("MHL.51");
 			mockGeoError();
 			await browser.sleep(100);
+
 			expect(await $blocker.isPresent()).toBe(true);
 		});
 	});
@@ -82,6 +85,7 @@ describe("Mobile form (MHL.51)", () => {
 
 		it("map doesn't show mobile editor", async () => {
 			await browser.sleep(100);
+
 			expect(await $mobileEditorMap.isPresent()).toBe(false);
 		});
 
@@ -106,6 +110,7 @@ describe("Mobile form (MHL.51)", () => {
 
 		it("map doesn't show mobile editor", async () => {
 			await browser.sleep(100);
+
 			expect(await $mobileEditorMap.isPresent()).toBe(false);
 		});
 

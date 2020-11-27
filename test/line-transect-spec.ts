@@ -1,11 +1,13 @@
-const { navigateToForm, lajiFormLocate, createForm, getFocusedId, filterUUIDs } = require("./test-utils.js");
+import { Form, Mock, createForm, getFocusedId, filterUUIDs } from "./test-utils";
+import { $, browser, protractor, ElementFinder } from "protractor";
 
 describe("Line transect (MHL.1)", () => {
 
-	let form;
-	let $taxon;
+	let form: Form;
+	let $taxon: ElementFinder;
 
-	let unitAutocompleteMock, taxonAutocompleteMock;
+	let unitAutocompleteMock: Mock;
+	let taxonAutocompleteMock: Mock;
 
 	const unitAutocompleteResponse = {
 		"key": "llx",
@@ -69,7 +71,7 @@ describe("Line transect (MHL.1)", () => {
 		taxonAutocompleteMock = await form.setMockResponse("/autocomplete/taxon", false);
 	});
 
-	const $shortHandForIdx = (idx, _idx) =>  $(`#root_gatherings_${idx}_units_${_idx}_shortHandText`);
+	const $shortHandForIdx = (idx: number, _idx: number) =>  $(`#root_gatherings_${idx}_units_${_idx}_shortHandText`);
 	const $shorthand = $shortHandForIdx(0, 0);
 
 	it("shorthand unit is shown", async () => {
@@ -97,6 +99,7 @@ describe("Line transect (MHL.1)", () => {
 
 	it("unit formData matches response", async () => {
 		const formData = await form.getChangedData();
+
 		expect(filterUUIDs(formData.gatherings[0].units[0])).toEqual(unitAutocompleteResponse.payload.unit);
 		expect(formData.gatherings[0].units[0].identifications_0_taxon).toBe(undefined);
 		expect(formData.gatherings[0].units[0].unitFact_autocompleteSelectedTaxonID).toBe(undefined);
@@ -105,22 +108,25 @@ describe("Line transect (MHL.1)", () => {
 	});
 
 	it("next unit is focused", async () => {
-		expect(await getFocusedId() === await $shortHandForIdx(0, 1).getAttribute("id")).toBe(true);
+		expect(await getFocusedId()).toBe(await $shortHandForIdx(0, 1).getAttribute("id"));
 	});
 
 	it("prev unit is focused after keyboard navigation", async () => {
 		await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, protractor.Key.UP));
-		expect(await getFocusedId() === await form.$getInputWidget("gatherings.0.units.0.identifications.0.taxon").getAttribute("id")).toBe(true);
+
+		expect(await getFocusedId()).toBe(await form.$getInputWidget("gatherings.0.units.0.identifications.0.taxon").getAttribute("id"));
 	});
 
 	it("next gathering is focused after keyboard navigation", async () => {
 		await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, protractor.Key.RIGHT));
-		expect(await getFocusedId() === await await $shortHandForIdx(1, 0).getAttribute("id")).toBe(true);
+
+		expect(await getFocusedId()).toBe(await await $shortHandForIdx(1, 0).getAttribute("id"));
 	});
 
 	it("when prev focused taxon autocomplete finishes, data isn't in FlatField format", async () => {
 		await taxonAutocompleteMock.resolve(taxonAutocompleteResponse);
 		const formData = await form.getChangedData();
+
 		expect(filterUUIDs(formData.gatherings[0].units[0])).toEqual(unitAutocompleteResponse.payload.unit);
 		expect(formData.gatherings[0].units[0].identifications_0_taxon).toBe(undefined);
 	});

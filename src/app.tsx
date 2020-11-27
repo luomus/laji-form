@@ -2,7 +2,7 @@ import LajiForm, { LajiFormProps } from "./components/LajiForm";
 import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-class LajiFormApp extends React.Component {
+class LajiFormApp extends React.Component<LajiFormProps, LajiFormProps> {
 	render() {
 		return <LajiForm {...{...this.props, ...(this.state || {})} as LajiFormProps} ref="lajiform" />;
 	}
@@ -10,22 +10,22 @@ class LajiFormApp extends React.Component {
 
 export default class LajiFormWrapper {
 	props: any;
-	app: LajiForm;
+	app: LajiFormApp;
 	rootElem: HTMLDivElement;
-	lajiForm: any;
+	lajiForm: LajiForm;
 
 	constructor(props: any) {
 		this.props = props;
 		this.rootElem = props.rootElem;
-		this.app = (render(<LajiFormApp {...props} />, this.rootElem) as unknown) as LajiForm;
-		this.lajiForm = this.app.refs.lajiform;
+		this.app = render(<LajiFormApp {...props} />, this.rootElem) as unknown as LajiFormApp;
+		this.lajiForm = this.app.refs.lajiform as unknown as LajiForm;
 	}
 
 	submit = () => {
 		this.lajiForm.submit();
 	}
 
-	setState = (state: any) => {
+	setState = (state: LajiFormProps) => {
 		this.app?.setState(state);
 	}
 

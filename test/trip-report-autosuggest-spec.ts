@@ -1,8 +1,9 @@
-const { createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } = require("./test-utils.js");
+import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } from "./test-utils";
+import { protractor, browser, $ } from "protractor";
 
 describe("Trip report (JX.519) autosuggestions", () => {
 
-	const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon")
+	const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon");
 	const $poweruserButton = $taxon.$(".power-user-addon");
 	const $taxonInput = $taxon.$("input");
 	const $addUnit = $("#root_gatherings_0_units-add");
@@ -12,11 +13,11 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	const $taxonSuggestionList = $taxon.$(".rw-list");
 	const $$taxonSuggestions = $taxon.$$(".rw-list-option");
 
-	const moveMouseAway = () => browser.actions({bridge: true})
-		.move({origin: $taxon.getWebElement(), x: -100, y: -100})
+	const moveMouseAway = () => browser.actions()
+		.mouseMove($taxon.getWebElement(), {x: -100, y: -100})
 		.perform();
 
-	let form;
+	let form: Form;
 
 	beforeAll(async () => {
 		form = await createForm({id: "JX.519"});
@@ -26,7 +27,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 	beforeEach(async () => {
 		await moveMouseAway();
-	})
+	});
 
 	it("clicking any match selects it", async () => {
 		await $taxonInput.sendKeys("kett");
@@ -58,6 +59,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await $taxonInput.sendKeys("kettu");
 		await $taxonInput.sendKeys(protractor.Key.ENTER);
 		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
+
 		expect(await $okSign.isDisplayed()).toBe(true);
 		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
 
@@ -144,11 +146,12 @@ describe("Trip report (JX.519) autosuggestions", () => {
 			await $taxonInput.sendKeys(`parus ${suffix}`);
 			await $taxonInput.sendKeys(protractor.Key.ENTER);
 			await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
+
 			expect(await $okSign.isDisplayed()).toBe(true);
 			expect(await $taxonInput.getAttribute("value")).toBe(`parus ${suffix}`);
 
 			await removeUnit(0, 0);
-		await $addUnit.click();
+			await $addUnit.click();
 		}
 	});
 

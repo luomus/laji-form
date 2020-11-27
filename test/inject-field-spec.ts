@@ -1,9 +1,11 @@
-const { createForm, lajiFormLocator, updateValue, maybeJSONPointerToLocator } = require("./test-utils.js");
-const merge = require("deepmerge");
+import { Form, createForm, lajiFormLocator, updateValue, maybeJSONPointerToLocator  } from "./test-utils";
+import { $ } from "protractor";
+import * as merge from "deepmerge";
+import { JSONSchema7 } from "json-schema";
 
 describe("InjectField", () => {
 
-	const schema = {
+	const schema: JSONSchema7 = {
 		type: "object",
 		properties: {
 			a: {
@@ -41,9 +43,9 @@ describe("InjectField", () => {
 				"classNames": "bar"
 			}
 		}
-	}
+	};
 
-	const test = (injections) => {
+	const test = (injections: any) => {
 		let uiSchema = uiSchemaBase;
 		for (let injection of injections) {
 			const [target, field] = injection;
@@ -60,7 +62,7 @@ describe("InjectField", () => {
 			});
 		}
 
-		let form;
+		let form: Form;
 
 		beforeAll(async () => {
 			form = await createForm({schema, uiSchema});
@@ -133,7 +135,7 @@ describe("InjectField", () => {
 			expect(await form.$$getFieldErrors("a.ab").count()).toBe(1);
 			expect(await form.$$getFieldErrors("b.ba").count()).toBe(1);
 		});
-	}
+	};
 
 	describe("simple field, simple target", () => {
 		test([["b", "a"]]);

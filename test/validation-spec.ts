@@ -1,10 +1,10 @@
-const { createForm, getInputWidget, updateValue, waitUntilBlockingLoaderHides } = require("./test-utils.js");
+import { Form, createForm, updateValue, waitUntilBlockingLoaderHides } from "./test-utils";
 const properties = require("../properties.json");
 
 describe("Validations", () => {
 
-	let form;
-	//
+	let form: Form;
+
 	// Uncomment when https://github.com/rjsf-team/react-jsonschema-form/pull/1528 is merged.
 	//beforeAll(async () => {
 	beforeEach(async () => {
@@ -26,7 +26,7 @@ describe("Validations", () => {
 	const formData = {b: "bar"};
 
 	const message = "foo";
-	const getCustom = (message = "foo", live) => ({
+	const getCustom = (message = "foo", live?: string) => ({
 		a: {
 			presence: {
 				message,
@@ -40,6 +40,7 @@ describe("Validations", () => {
 	it("pass on no errors", async () => {
 		await form.setState({ schema, formData });
 		await form.submit();
+
 		expect(await form.getSubmittedData()).toEqual(formData);
 	});
 
@@ -56,6 +57,7 @@ describe("Validations", () => {
 		const _formData = {...formData, a: "foo"};
 		await form.setState({ schema: {...schema, required: ["a"]}, formData: _formData });
 		await updateValue(form.$getInputWidget("a"), "");
+
 		expect(await form.errors.$$all.count()).toBe(0);
 
 		await form.submit();
@@ -70,7 +72,7 @@ describe("Validations", () => {
 		await form.submit();
 
 		expect(await form.getSubmittedData()).not.toEqual(formData);
-		expect(await form.errors.$$all.get(0).getText().getText()).toBe(message);
+		expect(await form.errors.$$all.get(0).getText()).toBe(message);
 	});
 
 	describe("warnings", () => {
@@ -89,6 +91,7 @@ describe("Validations", () => {
 			await form.setState({ schema, formData, warnings });
 			await form.submit();
 			await form.$acknowledgeWarnings.click();
+
 			expect(await form.getSubmittedData()).toEqual(formData);
 		});
 	});
@@ -98,7 +101,8 @@ describe("Validations", () => {
 			const validators = getCustom(message, "live");
 			const formData = {};
 			await form.setState({ schema, formData, [propName]: validators });
-			expect(await form[type].$panel.isPresent()).toBe(false);
+
+			expect(await (form as any)[type].$panel.isPresent()).toBe(false);
 		});
 
 		it(`runs live ${type} validators on onChange`, async () => {
@@ -107,16 +111,17 @@ describe("Validations", () => {
 			await form.setState({ schema, formData, [propName]: validators });
 			await updateValue(form.$getInputWidget("a"), "");
 
-			expect(await form[type].$$all.get(0).getText()).toBe(message);
+			expect(await (form as any)[type].$$all.get(0).getText()).toBe(message);
 		});
 	});
 
 	it("doesn't show blocker during live validation", async () => {
-			const validators = getCustom(message, "live");
-			const formData = {a: "bar"};
-			await form.setState({ schema, formData, validators });
-			await updateValue(form.$getInputWidget("a"), "");
-			expect (await form.isBlocked()).toBe(false);
+		const validators = getCustom(message, "live");
+		const formData = {a: "bar"};
+		await form.setState({ schema, formData, validators });
+		await updateValue(form.$getInputWidget("a"), "");
+
+		expect (await form.isBlocked()).toBe(false);
 	});
 
 	it("runs both validators and warnings live on Change", async () => {
@@ -126,7 +131,7 @@ describe("Validations", () => {
 		await updateValue(form.$getInputWidget("a"), "");
 
 		for (const type of ["errors", "warnings"]) {
-			expect(await form[type].$$all.get(0).getText()).toBe(message);
+			expect(await (form as any)[type].$$all.get(0).getText()).toBe(message);
 		}
 	});
 
@@ -137,15 +142,18 @@ describe("Validations", () => {
 		await form.setState({ schema, formData, validators, warnings });
 		await updateValue(form.$getInputWidget("a"), "");
 		await form.submit();
+
 		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
 		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+
 		await updateValue(form.$getInputWidget("a"), "bar");
+
 		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
 		expect(await form.errors.$$all.count()).toBe(0);
 		await updateValue(form.$getInputWidget("a"), "");
 
 		for (const type of ["errors", "warnings"]) {
-			expect(await form[type].$$all.get(0).getText()).toBe(message);
+			expect(await (form as any)[type].$$all.get(0).getText()).toBe(message);
 		}
 	});
 
@@ -156,17 +164,21 @@ describe("Validations", () => {
 		await form.setState({ schema, formData, validators, warnings });
 		await updateValue(form.$getInputWidget("a"), "");
 		await form.submit();
+
 		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
 		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+
 		await updateValue(form.$getInputWidget("a"), "bar");
+
 		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
 		expect(await form.errors.$$all.count()).toBe(0);
+
 		await updateValue(form.$getInputWidget("a"), "");
 		await updateValue(form.$getInputWidget("a"), "bar");
 		await form.submit();
 
 		for (const type of ["errors", "warnings"]) {
-			expect(await form[type].$$all.count()).toBe(0);
+			expect(await (form as any)[type].$$all.count()).toBe(0);
 		}
 	});
 
@@ -183,6 +195,7 @@ describe("Validations", () => {
 		await form.setState({ schema, formData, validators: _validators, warnings });
 		await updateValue(form.$getInputWidget("b"), "");
 		await form.submit();
+
 		expect(await form.getSubmittedData()).not.toEqual(formData);
 		expect(await form.errors.$$all.count()).toBe(2);
 		expect(await form.warnings.$$all.count()).toBe(2);
@@ -212,12 +225,15 @@ describe("Validations", () => {
 		};
 
 		const {resolve, remove} = await form.setMockResponse("/documents/validate", false);
-		const _formData = {...formData, a: "empty isn't async validated so we have value here"}
+		const _formData = {...formData, a: "empty isn't async validated so we have value here"};
 		await form.setState({ schema, formData: _formData, validators });
 		await form.startSubmit();
+
 		expect(await form.getSubmittedData()).not.toEqual(_formData);
 		expect(await form.errors.$$all.count()).toBe(0);
-		await resolve({status: 422, json: response}, "raw");
+
+		await resolve({status: 422, json: response}, !!"raw");
+
 		expect(await form.errors.$$all.count()).toBe(1);
 		expect(await form.errors.$$all.get(0).getText()).toBe(message);
 		await remove();
@@ -234,13 +250,17 @@ describe("Validations", () => {
 		};
 
 		const {resolve, remove} = await form.setMockResponse("/documents/validate", false);
-		const _formData = {...formData, a: "empty isn't async validated so we have value here"}
+		const _formData = {...formData, a: "empty isn't async validated so we have value here"};
 		await form.setState({ schema, formData: _formData, validators });
 		await form.startSubmit();
+
 		expect(await form.getSubmittedData()).not.toEqual(_formData);
 		expect(await form.errors.$$all.count()).toBe(0);
+
 		await resolve({});
+
 		expect(await form.getSubmittedData()).toEqual(_formData);
+
 		await remove();
 	});
 
@@ -258,11 +278,15 @@ describe("Validations", () => {
 		const _formData = {...formData, a: "empty isn't async validated so we have value here"};
 		await form.setState({ schema, formData: _formData, validators });
 		await form.startSubmit();
+
 		expect(await form.getSubmittedData()).not.toEqual(_formData);
 		expect(await form.errors.$$all.count()).toBe(0);
-		await resolve({status: 422, json: response}, "raw");
+
+		await resolve({status: 422, json: response}, !!"raw");
+
 		expect(await form.errors.$$all.count()).toBe(1);
 		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+
 		await remove();
 	});
 
@@ -286,7 +310,7 @@ describe("Validations", () => {
 			}
 		}
 	};
-	const imageUploaded = "imgae uploaded"
+	const imageUploaded = "imgae uploaded";
 	const asyncValidators = {
 		b: {
 			remote: {
@@ -314,9 +338,13 @@ describe("Validations", () => {
 
 		const {resolve: imageResolve, remove: imageRemove} = await form.mockImageUpload("c");
 		await form.startSubmit();
+
 		expect(await form.errors.$$all.count()).toBe(0);
+
 		await imageResolve();
+
 		expect(await form.errors.$$all.count()).toBe(0);
+
 		await resolve({});
 		await remove();
 		await imageRemove();
@@ -328,25 +356,36 @@ describe("Validations", () => {
 
 		const {resolve: imageResolve, remove: imageRemove} = await form.mockImageUpload("c");
 		await form.startSubmit();
+
 		expect(await form.errors.$$all.count()).toBe(0);
+
 		await imageResolve();
 		await resolve({});
 		await waitUntilBlockingLoaderHides();
+
 		expect(await form.errors.$$all.count()).toBe(1);
 		expect(await form.errors.$$all.get(0).getText()).toBe(imageUploaded);
+
 		await remove();
 		await imageRemove();
 	});
 
 	it("shows blocking loader when validating", async () => {
 		const {resolve, remove} = await form.setMockResponse("/documents/validate", false);
+
 		await form.setState({ schema, formData, validators: asyncValidators });
+
 		expect (await form.isBlocked()).toBe(false);
+
 		await form.startSubmit();
+
 		expect (await form.isBlocked()).toBe(true);
-		await resolve({status: 422, json: response}, "raw");
+
+		await resolve({status: 422, json: response}, !!"raw");
 		await waitUntilBlockingLoaderHides();
+
 		expect (await form.isBlocked()).toBe(false);
+
 		await remove();
 	});
 
