@@ -5,6 +5,8 @@ import { JSONSchema7 } from "json-schema";
 import { LajiFormProps, LajiFormState } from "../src/components/LajiForm";
 const { HOST, PORT } = process.env;
 
+const EC = protractor.ExpectedConditions;
+
 export const getLocatorForContextId = (contextId: number) => (path: string) => `#_laji-form_${contextId}_root${typeof path === "string" && path.length ? `_${path.replace(/\./g, "_")}` : ""}`;
 
 export const emptyForm = async (params = "") => browser.get(`http://${HOST}:${PORT}?test=true&settings=false&mockApi=true&${params}`);
@@ -87,6 +89,11 @@ export class Form {
 
 	async startSubmit() {
 		await this.e("submit()");
+	}
+
+
+	waitUntilBlockingLoaderHides(timeout?: number) {
+		return waitUntilBlockingLoaderHides(timeout);
 	}
 
 	getSubmittedData() {
@@ -233,7 +240,28 @@ export class Form {
 		$modalClose = this.$modal.$(".close") as ElementFinder;
 	}
 	getImageArrayField = this._getImageArrayField(this);
+	
+	_getTaxonAutosuggestWidget = (form: Form) => (lajiFormLocator: string): TaxonAutosuggestWidgetPOI =>
+		new class TaxonAutosuggestWidgetPO implements TaxonAutosuggestWidgetPOI {
+			$input = form.$locate(lajiFormLocator).$("input") as ElementFinder;
+			$suggestionsContainer = form.$locate(lajiFormLocator).$(".rw-list") as ElementFinder;
+			$$suggestions = form.$locate(lajiFormLocator).$$(".rw-list-option");
+			waitForSuggestionsToLoad = () => browser.wait(EC.visibilityOf(this.$suggestionsContainer), 5000, "Suggestion list timeout") as Promise<void>;
+			waitForGlyph = () => browser.wait(EC.visibilityOf(form.$locate(lajiFormLocator).$(".glyphicon.form-control-feedback")), 5000, "Glyph didn't load") as Promise<void>;
+			isSuggested = () => presentAndDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-ok") as ElementFinder);
+			isNonsuggested = () => presentAndDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-warning-sign") as ElementFinder);
+			$powerUserButton = $(".power-user-addon") as ElementFinder;
+			powerUserButtonIsActive = async () => (await this.$powerUserButton.getAttribute("class")).includes("active");
+		}
+	getTaxonAutosuggestWidget = this._getTaxonAutosuggestWidget(this);
+
+	getScopeField = (lajiFormLocator: string) => ({
+		$button: this.$locateButton(lajiFormLocator, "additionals") as ElementFinder,
+		$$listItems: this.$locate(lajiFormLocator).$$(".dropdown.open li a")
+	})
 }
+
+const presentAndDisplayed = async ($elem: ElementFinder) => (await $elem.isPresent()) && (await $elem.isDisplayed());
 
 export interface ImageArrayFieldPOI {
 	$container: ElementFinder;
@@ -244,6 +272,18 @@ export interface ImageArrayFieldPOI {
 	$dropzone: ElementFinder;
 	$modal: ElementFinder;
 	$modalClose: ElementFinder;
+}
+
+export interface TaxonAutosuggestWidgetPOI {
+	$input: ElementFinder;
+	$suggestionsContainer: ElementFinder;
+	$$suggestions: ElementArrayFinder;
+	waitForSuggestionsToLoad: () => Promise<void>;
+	waitForGlyph: () => Promise<void>;
+	isSuggested: () => Promise<boolean>;
+	isNonsuggested: () => Promise<boolean>;
+	$powerUserButton: ElementFinder;
+	powerUserButtonIsActive: () => Promise<boolean>;
 }
 
 export async function createForm(props?: FormProps): Promise<Form> {

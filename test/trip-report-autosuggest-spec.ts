@@ -1,253 +1,277 @@
-import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit } from "./test-utils";
-import { protractor, browser, $ } from "protractor";
+import { Form, createForm, putForeignMarkerToMap, removeUnit, TaxonAutosuggestWidgetPOI } from "./test-utils";
+import { protractor, browser, ElementFinder } from "protractor";
 
 describe("Trip report (JX.519) autosuggestions", () => {
-
-	const $taxon = lajiFormLocate("gatherings.0.units.0.identifications.0.taxon");
-	const $poweruserButton = $taxon.$(".power-user-addon");
-	const $taxonInput = $taxon.$("input");
-	const $addUnit = $("#root_gatherings_0_units-add");
-
-	const $okSign = $taxon.$(".glyphicon-ok");
-	const $warningSign = $taxon.$(".glyphicon-warning-sign");
-	const $taxonSuggestionList = $taxon.$(".rw-list");
-	const $$taxonSuggestions = $taxon.$$(".rw-list-option");
-
-	const moveMouseAway = () => browser.actions()
-		.mouseMove($taxon.getWebElement(), {x: -100, y: -100})
-		.perform();
 
 	let form: Form;
 
 	beforeAll(async () => {
 		form = await createForm({id: "JX.519"});
 		await putForeignMarkerToMap();
-		await waitUntilBlockingLoaderHides(6000);
+		await form.waitUntilBlockingLoaderHides(6000);
 	});
 
-	beforeEach(async () => {
-		await moveMouseAway();
+	describe("taxon census", () => {
+
+		pending("Known bug");
+
+		let censusAutosuggest: TaxonAutosuggestWidgetPOI;
+		beforeAll(async () => {
+			const scopeField = form.getScopeField("gatherings.0");
+			await scopeField.$button.click();
+			await scopeField.$$listItems.last().click();
+			censusAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.taxonCensus.0.censusTaxonID");
+		});
+
+		it("selects on click", async () => {
+			await form.$locateButton("gatherings.0.taxonCensus", "add").click();
+			await censusAutosuggest.$input.sendKeys("aves");
+			await censusAutosuggest.waitForSuggestionsToLoad();
+			await censusAutosuggest.$$suggestions.first().click();
+
+			expect(await censusAutosuggest.isSuggested()).toBe(true);
+			expect(await censusAutosuggest.$input.getAttribute("value")).toBe("Aves");
+		});
 	});
 
-	it("clicking any match selects it", async () => {
-		await $taxonInput.sendKeys("kett");
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-		await $$taxonSuggestions.first().click();
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
+	describe("unit taxon", () => {
 
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
+		let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
+		let $addUnit: ElementFinder;
 
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
+		const moveMouseAway = () => browser.actions()
+			.mouseMove(form.$locate("gatherings.0.units.0.identifications.0.taxon").getWebElement(), {x: -100, y: -100})
+			.perform();
 
-	it("typing exact match and pressing enter after waiting for suggestion list selects exact match", async () => {
-		await $taxonInput.sendKeys("kettu");
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-		await $taxonInput.sendKeys(protractor.Key.ENTER);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
+		beforeAll(async () => {
+			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.0.identifications.0.taxon");
+			$addUnit = form.$locateButton("gatherings.0.units", "add");
+		});
 
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
+		beforeEach(async () => {
+			await moveMouseAway();
+		});
 
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
+		it("clicking any match selects it", async () => {
+			await taxonAutosuggest.$input.sendKeys("kett");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$$suggestions.first().click();
+			await taxonAutosuggest.waitForGlyph();
 
-	it("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
-		await $taxonInput.sendKeys("kettu");
-		await $taxonInput.sendKeys(protractor.Key.ENTER);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing exact match and pressing tab after waiting for suggestion list selects exact match", async () => {
-		await $taxonInput.sendKeys("kettu");
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-		await $taxonInput.sendKeys(protractor.Key.TAB);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing exact match and pressing tab without waiting for suggestion list selects exact match", async () => {
-		await $taxonInput.sendKeys("kettu");
-		await $taxonInput.sendKeys(protractor.Key.TAB);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing non exact match and blurring after waiting for suggestion list shows warning sign", async () => {
-		await $taxonInput.sendKeys("kett");
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-		await $taxonInput.sendKeys(protractor.Key.TAB);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($warningSign), 5000, "taxon warning glyph didn't show up");
-
-		expect(await $warningSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kett");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing non exact match and blurring without waiting for suggestion list shows warning sign", async () => {
-		await $taxonInput.sendKeys("kett");
-		await $taxonInput.sendKeys(protractor.Key.TAB);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($warningSign), 5000, "taxon warning glyph didn't show up");
-
-		expect(await $warningSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kett");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing exact match and blurring after waiting for suggestion list selects exact match", async () => {
-		await $taxonInput.sendKeys("kettu");
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-		await $taxonInput.sendKeys(protractor.Key.TAB);
-
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing exact match and blurring before waiting for suggestion list selects exact match", async () => {
-		await $taxonInput.sendKeys("kettu");
-		await $taxonInput.sendKeys(protractor.Key.TAB);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-		expect(await $okSign.isDisplayed()).toBe(true);
-		expect(await $taxonInput.getAttribute("value")).toBe("kettu");
-
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
-
-	it("typing exact match with sp suffix keeps sp suffix in value but select the exact match", async () => {
-		for (const suffix of ["sp", "spp", "sp.", "spp."]) {
-			await $taxonInput.sendKeys(`parus ${suffix}`);
-			await $taxonInput.sendKeys(protractor.Key.ENTER);
-			await browser.wait(protractor.ExpectedConditions.visibilityOf($okSign), 5000, "taxon tag glyph didn't show up");
-
-			expect(await $okSign.isDisplayed()).toBe(true);
-			expect(await $taxonInput.getAttribute("value")).toBe(`parus ${suffix}`);
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
-		}
-	});
+		});
 
-	it("shows power user for taxon field", async () => {
-		await $taxonInput.click();
+		it("typing exact match and pressing enter after waiting for suggestion list selects exact match", async () => {
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
+			await taxonAutosuggest.waitForGlyph();
 
-		expect(await $poweruserButton.isDisplayed()).toBe(true);
-	});
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 
-	it("clicking power user button toggles power user mode on/off", async () => {
-		await $poweruserButton.click();
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
 
-		expect(await $poweruserButton.getAttribute("class")).toContain("active");
+		it("typing exact match and pressing enter without waiting for suggestion list selects exact match", async () => {
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
+			await taxonAutosuggest.waitForGlyph();
 
-		await $poweruserButton.click();
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 
-		expect(await $poweruserButton.getAttribute("class")).not.toContain("active");
-	});
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
 
+		it("typing exact match and pressing tab after waiting for suggestion list selects exact match", async () => {
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+			await taxonAutosuggest.waitForGlyph();
 
-	it("clicking any match after waiting for suggestion list works with power user mode", async () => {
-		await $taxonInput.click();
-		await $poweruserButton.click();
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 
-		await $taxonInput.sendKeys("kettu");
-		await browser.wait(protractor.ExpectedConditions.visibilityOf($taxonSuggestionList), 5000, "Suggestion list timeout");
-		await $$taxonSuggestions.last().click();
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "auto added unit didn't appear");
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
 
-		expect(await lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
+		it("typing exact match and pressing tab without waiting for suggestion list selects exact match", async () => {
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+			await taxonAutosuggest.waitForGlyph();
 
-		const enteredUnitTaxon = await lajiFormLocate("gatherings.0.units.0").$$("td").first().getText();
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 
-		expect(await enteredUnitTaxon).not.toBe("kettu");
-	
-		await removeUnit(0, 0);
-		await removeUnit(0, 0);
-		await $addUnit.click();
-		await $taxonInput.click();
-		await $poweruserButton.click();
-	});
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
 
+		it("typing non exact match and blurring after waiting for suggestion list shows warning sign", async () => {
+			await taxonAutosuggest.$input.sendKeys("kett");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+			await taxonAutosuggest.waitForGlyph();
 
-	it("entering exact match when power user mode is on adds new unit automatically", async () => {
-		await $taxonInput.click();
-		await $poweruserButton.click();
-		await $taxonInput.sendKeys("susi");
-		await $taxonInput.sendKeys(protractor.Key.ENTER);
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(lajiFormLocate("gatherings.0.units.1")), 5000, "New unit didn't show up");
+			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
 
-		expect(await lajiFormLocate("gatherings.0.units.0").getTagName()).toBe("tr");
-		expect(await lajiFormLocate("gatherings.0.units.1").getTagName()).toBe("div");
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
 
-		await removeUnit(0, 1);
+		it("typing non exact match and blurring without waiting for suggestion list shows warning sign", async () => {
+			await taxonAutosuggest.$input.sendKeys("kett");
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+			await taxonAutosuggest.waitForGlyph();
 
-		await $taxonInput.click();
-		await $poweruserButton.click();
+			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
 
-		expect(await $poweruserButton.getAttribute("class")).not.toContain("active");
-		await removeUnit(0, 0);
-		await $addUnit.click();
-	});
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
 
-	it("works when autocomplete response has autocompleteSelectedName", async() => {
-		if (process.env.HEADLESS !== "false") {
-			pending("Fails when headless (idk go figure, something to do with mocking?)");
-		}
-		const mock = await form.setMockResponse("/autocomplete/taxon");
-		await $taxonInput.sendKeys("kuusi");
-		const autocompleteSelectedName = "metsäkuusi";
-		await mock.resolve([{
-			"key": "MX.37812",
-			"value": "kuusi",
-			autocompleteSelectedName,
-			"payload": {
-				"matchingName": "kuusi",
-				"informalTaxonGroups": [
-					{
-						"id": "MVL.343",
-						"name": "Putkilokasvit"
-					}
-				],
-				"scientificName": "Picea abies",
-				"scientificNameAuthorship": "(L.) H. Karst.",
-				"taxonRankId": "MX.species",
-				"matchType": "exactMatches",
-				"cursiveName": true,
-				"finnish": true,
-				"species": true,
-				"nameType": "MX.obsoleteVernacularName",
-				"vernacularName": "metsäkuusi"
+		it("typing exact match and blurring after waiting for suggestion list selects exact match", async () => {
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
+
+		it("typing exact match and blurring before waiting for suggestion list selects exact match", async () => {
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+			await taxonAutosuggest.waitForGlyph();
+
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
+
+		it("typing exact match with sp suffix keeps sp suffix in value but select the exact match", async () => {
+			for (const suffix of ["sp", "spp", "sp.", "spp."]) {
+				await taxonAutosuggest.$input.sendKeys(`parus ${suffix}`);
+				await taxonAutosuggest.$input.sendKeys(protractor.Key.TAB);
+				await taxonAutosuggest.waitForGlyph();
+
+				expect(await taxonAutosuggest.isSuggested()).toBe(true);
+				expect(await taxonAutosuggest.$input.getAttribute("value")).toBe(`parus ${suffix}`);
+
+				await removeUnit(0, 0);
+				await $addUnit.click();
 			}
-		}]);
-		await $taxonInput.sendKeys(protractor.Key.ENTER);
-		await mock.remove();
+		});
 
-		expect(await $taxonInput.getAttribute("value")).toBe(autocompleteSelectedName);
+		it("shows power user for taxon field", async () => {
+			await taxonAutosuggest.$input.click();
+
+			expect(await taxonAutosuggest.$powerUserButton.isDisplayed()).toBe(true);
+		});
+
+		it("clicking power user button toggles power user mode on/off", async () => {
+			await taxonAutosuggest.$powerUserButton.click();
+
+			expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(true);
+
+			await taxonAutosuggest.$powerUserButton.click();
+
+			expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
+		});
+
+
+		it("clicking any match after waiting for suggestion list works with power user mode", async () => {
+			await taxonAutosuggest.$input.click();
+			await taxonAutosuggest.$powerUserButton.click();
+
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$$suggestions.last().click();
+			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "auto added unit didn't appear");
+
+			expect(await form.$locate("gatherings.0.units.0").getTagName()).toBe("tr");
+
+			const enteredUnitTaxon = await form.$locate("gatherings.0.units.0").$$("td").first().getText();
+
+			expect(await enteredUnitTaxon).not.toBe("kettu");
+
+			await removeUnit(0, 0);
+			await removeUnit(0, 0);
+			await $addUnit.click();
+			await taxonAutosuggest.$input.click();
+			await taxonAutosuggest.$powerUserButton.click();
+		});
+
+
+		it("entering exact match when power user mode is on adds new unit automatically", async () => {
+			await taxonAutosuggest.$input.click();
+			await taxonAutosuggest.$powerUserButton.click();
+			await taxonAutosuggest.$input.sendKeys("susi");
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
+			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "New unit didn't show up");
+
+			expect(await form.$locate("gatherings.0.units.0").getTagName()).toBe("tr");
+			expect(await form.$locate("gatherings.0.units.1").getTagName()).toBe("div");
+
+			await removeUnit(0, 1);
+
+			await taxonAutosuggest.$input.click();
+			await taxonAutosuggest.$powerUserButton.click();
+
+			expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
+			await removeUnit(0, 0);
+			await $addUnit.click();
+		});
+
+		it("works when autocomplete response has autocompleteSelectedName", async() => {
+			if (process.env.HEADLESS !== "false") {
+				pending("Fails when headless (idk go figure, something to do with mocking?)");
+			}
+			const mock = await form.setMockResponse("/autocomplete/taxon");
+			await taxonAutosuggest.$input.sendKeys("kuusi");
+			const autocompleteSelectedName = "metsäkuusi";
+			await mock.resolve([{
+				"key": "MX.37812",
+				"value": "kuusi",
+				autocompleteSelectedName,
+				"payload": {
+					"matchingName": "kuusi",
+					"informalTaxonGroups": [
+						{
+							"id": "MVL.343",
+							"name": "Putkilokasvit"
+						}
+					],
+					"scientificName": "Picea abies",
+					"scientificNameAuthorship": "(L.) H. Karst.",
+					"taxonRankId": "MX.species",
+					"matchType": "exactMatches",
+					"cursiveName": true,
+					"finnish": true,
+					"species": true,
+					"nameType": "MX.obsoleteVernacularName",
+					"vernacularName": "metsäkuusi"
+				}
+			}]);
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
+			await mock.remove();
+
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe(autocompleteSelectedName);
+		});
 	});
 });
