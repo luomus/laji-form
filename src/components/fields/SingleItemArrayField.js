@@ -45,7 +45,8 @@ export default class SingleItemArrayField extends React.Component {
 					getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id),
 					false
 				)[0],
-			schema: {title: props.schema.title, ...props.schema.items},
+			//schema: {title: props.schema.title, ...props.schema.items},
+			schema: props.schema.items,
 			uiSchema,
 			idSchema: ArrayFieldPatched.prototype.getIdSchema.call(this, props, activeIdx),
 			errorSchema: props.errorSchema[activeIdx] || {},

@@ -1160,7 +1160,7 @@ export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: stri
 	const title = ("ui:title" in (props.uiSchema || {})
 		? props.uiSchema["ui:title" ]
 		: props.schema?.title
-	) || props.name;
+	);
 	if (!title || !title.includes("%{")) {
 		return title;
 	}
