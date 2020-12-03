@@ -1,8 +1,6 @@
 import { browser, $, $$, protractor, ElementFinder as _ElementFinder, ElementArrayFinder } from "protractor";
 import * as path from "path";
-import { isObject } from "../src/utils";
 import { JSONSchema7 } from "json-schema";
-import { LajiFormProps, LajiFormState } from "../src/components/LajiForm";
 const { HOST, PORT } = process.env;
 
 const EC = protractor.ExpectedConditions;
@@ -35,7 +33,7 @@ export interface DateWidgetPO {
 	}
 }
 
-interface FormProps extends LajiFormProps {
+interface FormProps {
 	schema?: JSONSchema7;
 	uiSchema?: any;
 	formData?: any;
@@ -72,14 +70,14 @@ export class Form {
 		return browser.executeScript(`return window.lajiForm.${path}`) as Promise<any>;
 	}
 
-	setState(state: LajiFormProps) {
+	setState(state: any) {
 		const onSubmit = "function(data) {window.submittedData = data.formData;}";
 		const onChange = "function(formData) {window.changedData = formData;}";
 		return this.e(`setState({onSubmit: ${onSubmit}, onChange: ${onChange}, ...${JSON.stringify(state)}})`);
 	}
 
 	getState() {
-		return this.e("app.refs.lajiform.state") as Promise<LajiFormState>;
+		return this.e("app.refs.lajiform.state") as Promise<any>;
 	}
 
 	async submit() {
@@ -377,7 +375,7 @@ export const mockImageMetadata = {
 };
 
 export const filterUUIDs = (any: any): any => {
-	if (isObject(any)) {
+	if (typeof any === "object" && !Array.isArray(any) && any !== null) {
 		return Object.keys(any).filter(key => key !== "_lajiFormId").reduce((_any, key) => ({
 			..._any,
 			[key]: filterUUIDs(any[key])

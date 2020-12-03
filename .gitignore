@@ -3,6 +3,7 @@ node_modules
 *.log
 lib*
 dist
+test-export
 properties.json
 diff
 react-jsonschema-form-copys
