@@ -1,3 +1,7 @@
+## 6.0.0
+* Exclude TypeScript declarations in `lib`
+* Export tests to npm package
+
 ## 5.8.0
 * Include TypeScript declarations in `lib`
 
