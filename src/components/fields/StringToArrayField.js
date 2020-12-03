@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getUiOptions, getInnerUiSchema } from "../../utils";
+import { getInnerUiSchema } from "../../utils";
 
 @VirtualSchemaField
 export default class StringToArrayField extends React.Component {

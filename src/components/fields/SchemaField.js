@@ -60,15 +60,8 @@ export default class _SchemaField extends React.Component {
 
 		if (!functions.length) return props;
 
-		//let nonVirtualFound = false;
 		let _props = {...props, uiSchema: _uiSchema, formContext: props.registry.formContext};
-		//let uiFn = functions[0];
 		let [uiFn, ...restUiFns] = functions;
-
-		//const computedProps = functions.reduce((_props, uiFn, idx) => {
-		//if (nonVirtualFound) {
-		//	return _props;
-		//}
 
 		if (
 			uiFn["ui:field"] !== "ContextInjectionField" &&
@@ -104,8 +97,7 @@ export default class _SchemaField extends React.Component {
 				}
 			};
 		}
-		//if (!new Context("VIRTUAL_SCHEMA_NAMES")[uiFn["ui:field"]]) {
-		//nonVirtualFound = true;
+
 		return {
 			..._props,
 			uiSchema: {
@@ -113,21 +105,6 @@ export default class _SchemaField extends React.Component {
 				"ui:functions": restUiFns
 			}
 		};
-		//}
-
-		//const {state = {}} = new props.registry.fields[uiFn["ui:field"]](_props);
-		//return {
-		//	..._props, 
-		//	...state, 
-		//	registry: {
-		//		..._props.registry, 
-		//		...state.registry,
-		//		formContext: state.formContext || props.registry.formContext
-		//	}
-		//};
-		//}, {...props, uiSchema: _uiSchema, formContext: props.registry.formContext});
-
-//return computedProps;
 	}
 
 	componentDidUpdate(prevProps) {

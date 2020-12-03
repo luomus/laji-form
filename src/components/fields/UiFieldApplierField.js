@@ -44,7 +44,6 @@ export default class UiFieldApplierField extends React.Component {
 			this.functions = this.functions.slice(0, this.getFunctions().length);
 		}
 		let {field} = this.getUiOptions();
-		console.log(props);
 		return this.getFunctions().reduce((props, options, idx) => {
 			let {"ui:field": uiField, "ui:options": uiOptions} = options;
 
@@ -87,7 +86,6 @@ export default class UiFieldApplierField extends React.Component {
 					computedProps[prop] = updateSafelyWithJSONPointer(props[prop] || {}, state[prop], field);
 				}
 			});
-			console.log({...props, ...computedProps});
 			return {...props, ...computedProps};
 		}, props);
 	}
