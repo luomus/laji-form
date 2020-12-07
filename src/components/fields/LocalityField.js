@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
-import { Row, Col, Card, Modal } from "react-bootstrap";
+import { Card, Modal } from "react-bootstrap";
 //import PanelBody from "react-bootstrap/lib/PanelBody";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 
 @BaseComponent
-export default class LocalityField extends Component {
+export default class LocalityField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.object,
 		schema: PropTypes.shape({
@@ -31,7 +31,7 @@ export default class LocalityField extends Component {
 			? _radius
 			: geometry
 				? getCenterAndRadiusFromGeometry(geometry).radius
-				: undefined
+				: undefined;
 		if (typeof radius === "number") {
 			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
 		}
@@ -39,7 +39,7 @@ export default class LocalityField extends Component {
 			<React.Fragment>
 				<Card className={getUiOptions(this.props.uiSchema).panelClassName}>
 					<Card.Text>
-							{values.map((v, i) => (
+						{values.map((v, i) => (
 							<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
 						))}
 						<GlyphButton onClick={this.showEditor} glyph="pencil" variant="default" className="float-right"/>
@@ -63,7 +63,7 @@ export default class LocalityField extends Component {
 	}
 
 	renderModal = () => {
-		const {onChange, ...props} = this.props; // eslint-disable-line no-unused-vars
+		const {onChange, ...props} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		return (
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideEditor}>
 				<Modal.Header closeButton={true}>
@@ -79,10 +79,12 @@ export default class LocalityField extends Component {
 						renderSubmit={false}
 						validators={{}}
 						warnings={{}}
+						apiClient={this.props.formContext.apiClient.apiClient}
+						uiSchemaContext={this.props.formContext.uiSchemaContext}
 					/>
 					<Button block onClick={this.onSubmitClick}>OK</Button>
 					<Button block onClick={this.hideEditor}>{this.props.formContext.translations.Cancel}</Button>
-			</Modal.Body>
+				</Modal.Body>
 			</Modal>
 		);
 	}

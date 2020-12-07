@@ -1,20 +1,18 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData } from "../../utils";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { FetcherInput } from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
-import deepEquals from "deep-equal";
 import { getButton } from "../ArrayFieldTemplate";
 
 const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
 
 @BaseComponent
-export default class UnitShorthandField extends Component {
+export default class UnitShorthandField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -67,29 +65,28 @@ export default class UnitShorthandField extends Component {
 
 	shouldShowSchema = (props) => {
 		let {showSchema} = this.state;
-		const isEmpty = () => deepEquals(props.formData, getDefaultFormState(props.schema, undefined, props.registry.definitions));
 
-		if (this.state.showSchema === undefined && !isEmpty()) {
+		if (this.state.showSchema === undefined && !formDataIsEmpty(props)) {
 			showSchema = true;
 		}
 		return showSchema;
 	}
 
-	getToggleButton = () => {
-		const onClick = () => () => {
-			const {persistenceKey} = getUiOptions(this.props.uiSchema);
-			this.setState({showSchema: !this.state.showSchema}, () => {
-				focusById(this.props.formContext, this.props.idSchema.$id);
-				new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
-			});
-		};
+	onToggleButtonClick = () => () => {
+		const {persistenceKey} = getUiOptions(this.props.uiSchema);
+		this.setState({showSchema: !this.state.showSchema}, () => {
+			focusById(this.props.formContext, this.props.idSchema.$id);
+			new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
+		});
+	}
 
+	getToggleButton = () => {
 		return {
 			glyph: "resize-small",
-			fn: onClick,
+			fn: this.onToggleButtonClick,
 			tooltip: this.props.formContext.translations[this.state.showSchema ? "OpenShorthand" :  "CloseShorthand"],
 			tooltipPlacement: "left",
-			bsStyle: this.state.showSchema ? "default" : "primary"
+			variant: this.state.showSchema ? "default" : "primary"
 		};
 	}
 
@@ -101,9 +98,8 @@ export default class UnitShorthandField extends Component {
 				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy");
 			} else if (autofocus) {
 				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "focus", "last");
-			} else {
-				this.setState({showSchema: true});
 			}
+			this.setState({showSchema: true});
 		};
 		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}, this.props.registry.definitions));
 	}
@@ -132,15 +128,15 @@ export default class UnitShorthandField extends Component {
 		return !this.state.showSchema ? (
 			<div className="laji-form-field-template-item" id={`_laji-form_${id}`}>
 				<CodeReader translations={this.props.formContext.translations}
-										onChange={this.onCodeChange}
-										value={this.props.formData[shorthandFieldName]}
-										formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
-										help={help} 
-										id={id}
-										formContext={formContext}
-										disabled={disabled}
-										readonly={readonly}
-										className="laji-form-field-template-schema" />
+				            onChange={this.onCodeChange}
+				            value={this.props.formData[shorthandFieldName]}
+				            formID={getUiOptions(this.props.uiSchema).formID || formContext.formID || formContext.uiSchemaContext.formID}
+				            help={help} 
+				            id={id}
+				            formContext={formContext}
+				            disabled={disabled}
+				            readonly={readonly}
+				            className="laji-form-field-template-schema" />
 				<div className="laji-form-field-template-buttons">{getButton(toggleButton)}</div>
 			</div>
 		) : (
@@ -150,12 +146,12 @@ export default class UnitShorthandField extends Component {
 }
 
 @BaseComponent
-class CodeReader extends Component {
+class CodeReader extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
 		this.state = this.getStateFromProps(props);
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
 	}
 
 	getStateFromProps = (props) => {
@@ -197,8 +193,8 @@ class CodeReader extends Component {
 	renderSuggestion = (suggestion) => {
 		const {translations} = this.props;
 		return suggestion.payload.isNonMatching
-		? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
-		: suggestion.value;
+			? <span className="text-muted">{suggestion.value} <i>({translations.unknownSpeciesName})</i></span>
+			: suggestion.value;
 	}
 
 	render() {
@@ -242,13 +238,14 @@ class CodeReader extends Component {
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				{inputElem}
-				{this.state.failed ? (
-					<HelpBlock>
-						{translations.InvalidUnitCode}
-					</HelpBlock>
+				{this.state.failed
+					? (
+						<HelpBlock>
+							{translations.InvalidUnitCode}
+						</HelpBlock>
 					) : null
 				}
-			<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
+				<div className="small text-muted" dangerouslySetInnerHTML={{__html: this.props.help}} />
 			</FormGroup>
 		);
 	}

@@ -1,25 +1,33 @@
-import React from "react";
-import ObjectField from "react-jsonschema-form/lib/components/fields/ObjectField";
-import { orderProperties, isMultiSelect } from "react-jsonschema-form/lib/utils";
+import * as React from "react";
+import ObjectField from "@rjsf/core/dist/cjs/components/fields/ObjectField";
+import { orderProperties, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
 import { Row , Col, ButtonToolbar } from "react-bootstrap";
-import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject } from "../../utils";
+import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
-import { Label } from "../components";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
-	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template}} />;
+	const id = getUUID(props.formData);
+	const formContext = id
+		? {...props.formContext, _parentLajiFormId: id}
+		: props.formContext;
+	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template, formContext}} formContext={formContext} />;
 };
 
 function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
-		<ButtonToolbar key={`buttons-${pos}`}>
-			{getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "right")}
-		</ButtonToolbar>
-	));
+	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => {
+		const buttons = getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "no default");
+		return buttons
+			? (
+				<ButtonToolbar key={`buttons-${pos}`}>
+					{buttons}
+				</ButtonToolbar>
+			)
+			: null;
+	});
 
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
@@ -32,8 +40,7 @@ function ObjectFieldTemplate(props) {
 					<TitleField
 						id={`${props.idSchema.$id}__title`}
 						title={props.title}
-						required={props.required}
-						formContext={props.formContext}
+						required={props.required || props.uiSchema["ui:required"]}
 						className={getUiOptions(props.uiSchema).titleClassName}
 						help={props.uiSchema["ui:help"]}
 						buttons={buttons}
@@ -44,14 +51,19 @@ function ObjectFieldTemplate(props) {
 						id={`${props.idSchema.$id}__description`}
 						description={props.description}
 						formContext={props.formContext}
-					/>}
-				<div className="pull-left">
-					{leftButtons}
-				</div>
+					/>
+				}
+				{leftButtons && (
+					<div className="pull-left">
+						{leftButtons}
+					</div>
+				)}
 				{props.properties.map(({content}) => content)}
-				<div className="pull-right">
-					{rightButtons}
-				</div>
+				{rightButtons && (
+					<div className="pull-right">
+						{rightButtons}
+					</div>
+				)}
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : undefined}
@@ -73,17 +85,18 @@ function GridTemplate(props) {
 		});
 	});
 
-	const {rowTitles = []} = gridOptions;
+	const {rowTitles = [], classNames = {}} = gridOptions;
+	const {Label} = props.formContext;
 
 	const addRowTitles = (rows, rowTitles) => {
 		for (let i = 0; i < rowTitles.length; i++) {
 			rows[i] = [];
 			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
-			rows[i].push(<Col {...titleCols} key={"title_" + i}>
-							<Label id={idSchema.$id + "_row_" + i}
-								   label={rowTitles[i].title}
-								   help={rowTitles[i].help}/>
-						</Col>);
+			rows[i].push(<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
+				<Label id={idSchema.$id + "_row_" + i}
+				       label={rowTitles[i].title}
+				       help={rowTitles[i].help}/>
+			</Col>);
 		}
 	};
 
@@ -113,7 +126,7 @@ function GridTemplate(props) {
 		}, {});
 
 		if (!isHidden(uiSchema, propertyName)) getRow(propertyName, colsToRows, rows).push(
-			<Col key={propertyName} {...cols}>
+			<Col key={propertyName} {...cols} className={classNames[propertyName]}>
 				{propertiesByName[propertyName].content}
 			</Col>
 		);
@@ -126,11 +139,15 @@ function GridTemplate(props) {
 	let fieldTitle = _title || (title !== undefined ? title : props.name);
 
 	let buttons = getGlyphButtons(props);
-	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => (
-		<ButtonToolbar key={`buttons-${pos}`}>
-			{getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "right")}
-		</ButtonToolbar>
-	));
+	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => {
+		const buttons = getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "no default");
+		return buttons
+			? (
+				<ButtonToolbar key={`buttons-${pos}`}>
+					{getButtonsForPosition(props, getUiOptions(uiSchema).buttons, pos, "no default")}
+				</ButtonToolbar>
+			) : null;
+	});
 
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
@@ -141,22 +158,22 @@ function GridTemplate(props) {
 			<fieldset className={schemaClassName}>
 				{!isEmptyString(fieldTitle) ?
 					<TitleField title={fieldTitle}
-								className={getUiOptions(props.uiSchema).titleClassName}
-								buttons={buttons}
-								help={uiSchema["ui:help"]}
-								id={idSchema.$id} /> : null}
+					            schema={schema}
+					            buttons={buttons}
+					            help={uiSchema["ui:help"]}
+					            id={idSchema.$id} /> : null}
 				{topButtons}
-				<div className="pull-left">{leftButtons}</div>
+				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>
 					<Row key={i}>
 						{row}
 					</Row>
 				)}
-				<div className="pull-right">{rightButtons}</div>
+				{rightButtons && <div className="pull-right">{rightButtons}</div>}
 				{bottomButtons}
 			</fieldset>
 			{!props.title && buttons ? buttons : null}
-	</div>
+		</div>
 	);
 }
 
@@ -173,7 +190,7 @@ function getCols(props, schema, uiSchema, property) {
 			&& !(
 				schema.items && schema.items.enum && isMultiSelect(schema, uiSchema)
 				|| uiField === "SingleItemArrayField"
-				|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField")
+				|| (schema.items && schema.items.type === "string" && uiField !== "ImageArrayField" && uiField !== "AudioArrayField")
 			)
 			|| (schema.type === "string" && uiSchema && getNestedUiFieldsList(uiSchema).includes("SelectTreeField"))
 		) {

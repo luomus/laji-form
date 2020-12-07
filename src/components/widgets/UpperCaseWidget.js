@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import BaseInput from "./BaseInput";
 
-export default class UpperCaseWidget extends Component {
+export default class UpperCaseWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			type: PropTypes.string
+			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
 	}

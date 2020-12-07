@@ -1,5 +1,5 @@
-import deepEquals from "deep-equal";
-import { getReactComponentName, parseJSONPointer } from "../utils";
+import * as deepEquals from "deep-equal";
+import { getReactComponentName, parseJSONPointer, getRelativePointer, getUUID as _getUUID } from "../utils";
 import Context from "../Context";
 
 /**
@@ -31,7 +31,7 @@ export default function BaseComponent(ComposedComponent) {
 							const withoutLastMatch = key.match(/^(%[^/]+)?(\/.*)\/.*$/);
 							const withoutLast = withoutLastMatch ? withoutLastMatch[2] : "/";
 							const lastContainer = parseJSONPointer(target, withoutLast || "/", "createParents");
-							lastContainer[last] = settings[this.getSettingsKey(props, key)];
+							lastContainer[last] = JSON.parse(JSON.stringify(settings[this.getSettingsKey(props, key)]));
 						}
 					}
 				});
@@ -129,6 +129,17 @@ export default function BaseComponent(ComposedComponent) {
 
 		getContext() {
 			return new Context(this.props.formContext.contextId);
+		}
+
+		getUUID() {
+			return _getUUID(this.props.formData) || this.props.formContext._parentLajiFormId || "root";
+		}
+
+		addSubmitHook(hook) {
+			const id = this.getUUID(this.props.formData) || this.props.formContext._parentLajiFormId || "root";
+			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
+			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+			return new Context(this.props.formContext.contextId).addSubmitHook(id, relativePointer, hook);
 		}
 	};
 }

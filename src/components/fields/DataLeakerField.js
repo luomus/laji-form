@@ -1,7 +1,14 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
-import { parseJSONPointer, updateSafelyWithJSONPath } from  "../../utils";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import { parseJSONPointer, updateSafelyWithJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+
+const propsPropType = PropTypes.shape({
+	from: PropTypes.string.isRequired,
+	fromArrayKey: PropTypes.string,
+	target: PropTypes.string,
+	joinArray: PropTypes.bool
+});
 
 /**
  * Enables leaking any prop to any other prop container.
@@ -14,19 +21,18 @@ import VirtualSchemaField from "../VirtualSchemaField";
  *		}
  */
 @VirtualSchemaField
-export default class DataLeakerField extends Component {
+export default class DataLeakerField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				props: PropTypes.arrayOf(
-					PropTypes.shape({
-						from: PropTypes.string.isRequired,
-						target: PropTypes.string
-					})
-				)
+				props: PropTypes.oneOfType([PropTypes.arrayOf(propsPropType), propsPropType])
 			}),
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array", "object"])
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 	}
 
 	static getName() {return "DataLeakerField";}
@@ -34,16 +40,23 @@ export default class DataLeakerField extends Component {
 	getStateFromProps(props) {
 		const {props: _props = []} = this.getUiOptions(props.uiSchema);
 		return (Array.isArray(_props) ? _props : [_props]).reduce((props, strOrObjProp) => {
-			const [fromPath, targetPath] = ["from", "target"].map(p => strOrObjProp[p]);
-			const from = fromPath[0] === "/"
+			const [fromPath, fromArrayKey, targetPath, joinArray] = ["from", "fromArrayKey", "target", "joinArray"]
+				.map(p => strOrObjProp[p]);
+			let from = fromPath[0] === "/"
 				? parseJSONPointer(props, fromPath)
 				: parseJSONPointer(props.formData, fromPath);
+
+			if (fromArrayKey) {
+				from = (from || []).map(obj => obj[fromArrayKey]);
+			}
+			if (joinArray && Array.isArray(from)) {
+				from = from.join(",");
+			}
 
 			const _targetPath = targetPath[0] === "/"
 				? targetPath
 				: `/uiSchema/ui:options/${targetPath}`;
-
-			props = updateSafelyWithJSONPath(props, from, _targetPath);
+			props = updateSafelyWithJSONPointer(props, from, _targetPath);
 			return props;
 		}, props);
 	}

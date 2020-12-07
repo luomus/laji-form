@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 
 
 function HiddenWidget({id, value}) {
@@ -8,15 +8,13 @@ function HiddenWidget({id, value}) {
 	);
 }
 
-if (process.env.NODE_ENV !== "production") {
-	HiddenWidget.propTypes = {
-		id: PropTypes.string.isRequired,
-		value: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.number,
-			PropTypes.bool,
-		]),
-	};
-}
+HiddenWidget.propTypes = {
+	id: PropTypes.string.isRequired,
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number,
+		PropTypes.bool,
+	]),
+};
 
 export default HiddenWidget;

@@ -1,24 +1,24 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getUiOptions } from "../../utils";
+import { getInnerUiSchema } from "../../utils";
 
 @VirtualSchemaField
-export default class StringToArrayField extends Component {
+export default class StringToArrayField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["array"])
+			type: PropTypes.oneOf(["string"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.string
 	}
 
 	static getName() {return "StringToArrayField";}
 
-	getStateFromProps(props, propsWithUiOptions) {
+	getStateFromProps(props) {
 		const {formData = ""} = props;
 		const {delimiter = " "} = this.getUiOptions();
 		const {"ui:disabled": disabled, "ui:readonly": readonly} = props.uiSchema;
-		const innerUiSchema = getUiOptions(propsWithUiOptions.uiSchema).uiSchema || {};
+		const innerUiSchema = getInnerUiSchema(props.uiSchema);
 		return {
 			schema: {
 				type: "array",

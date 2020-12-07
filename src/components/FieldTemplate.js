@@ -1,9 +1,9 @@
-import React, {Component} from "react";
+import * as React from "react";
 import Context from "../Context";
-import { Label, Help } from "./components";
+import { Help, TooltipComponent } from "./components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
 
-export default class FieldTemplate extends Component {
+export default class FieldTemplate extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -19,12 +19,18 @@ export default class FieldTemplate extends Component {
 		}
 	}
 
+	canFocus = () => {
+		const {formContext} = this.props;
+		const {uiSchema = {}} = (formContext.getFormRef() || {props: {}}).props;
+		return uiSchema.autoFocus !== false;
+	}
+
 	componentDidMount() {
 		const {formContext} = this.props;
 		const contextId = formContext.contextId;
 		const _context = new Context(contextId);
 		const {idToFocus, idToScroll} = _context;
-		if (idToFocus !== undefined && this.props.id === idToFocus) {
+		if (this.canFocus() && idToFocus !== undefined && this.state.id === idToFocus) {
 			if (focusAndScroll(formContext, idToFocus, idToScroll)) {
 				_context.idToFocus = undefined;
 				_context.idToScroll = undefined;
@@ -32,8 +38,21 @@ export default class FieldTemplate extends Component {
 		}
 	}
 
+	componentWillReceiveProps(props) {
+		if (getUiOptions(props.uiSchema).reserveId !== false && this.props.id !== props.id) {
+			this.props.formContext.releaseId(this.props.id, this.receiveId);
+			const id = props.formContext.reserveId(props.id, this.receiveId);
+			id && this.receiveId(id);
+		}
+	}
+
 	receiveId = (id) => {
-		this.setState({id});
+		this.setState({id}, () => {
+			const {idToFocus, idToScroll} = new Context(this.props.formContext.contextId);
+			if (this.canFocus() && idToFocus === id) {
+				focusAndScroll(this.props.formContext, idToFocus, idToScroll);
+			}
+		});
 	}
 
 	componentWillUnmount() {
@@ -45,19 +64,19 @@ export default class FieldTemplate extends Component {
 
 	render() {
 		const {
-		id,
-		classNames,
-		label,
-		children,
-		rawErrors,
-		rawHelp,
-		description,
-		hidden,
-		required,
-		displayLabel,
-		schema,
-		uiSchema,
-		formContext
+			id,
+			classNames,
+			label,
+			children,
+			rawErrors,
+			rawHelp,
+			description,
+			hidden,
+			required,
+			displayLabel,
+			schema,
+			uiSchema,
+			formContext
 		} = this.props;
 
 		if (hidden || uiSchema["ui:field"] === "HiddenField" || uiSchema["ui:widget"] === "HiddenWidget") {
@@ -71,7 +90,7 @@ export default class FieldTemplate extends Component {
 
 		let warnings = [];
 		const errors = (rawErrors || []).reduce((arr, err) => {
-			if (err.includes("[warning]") || err.includes("[liveWarning]")) {
+			if (err.includes("[warning]")) {
 				warnings.push(formatErrorMessage(err));
 			} else {
 				arr.push(formatErrorMessage(err));
@@ -80,14 +99,16 @@ export default class FieldTemplate extends Component {
 		}, []);
 		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
 
-		return (
+		const {Label, errorsAsPopup} = this.props.formContext;
+		const component = (errorsComponent) => (
 			<div className={classNames + warningClassName} id={htmlId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} id={id} required={required} _context={new Context(formContext.contextId)} /> : null}
+				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} _context={new Context(formContext.contextId)} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="float-left">{children}</div> : children}
-					{inlineHelp ? (
-						<div className="float-left"><Help help={inlineHelp} id={`${htmlId}-inline-help`} /></div>
+					{inlineHelp
+						? (
+							<div className="float-left"><Help help={inlineHelp} id={`${htmlId}-inline-help`} /></div>
 						) : null
 					}
 				</div>
@@ -95,13 +116,19 @@ export default class FieldTemplate extends Component {
 					<div className="small text-muted" dangerouslySetInnerHTML={{__html: belowHelp}} /> :
 					null
 				}
+				{errorsComponent}
+			</div>
+		);
+
+		const errorsComponent = (
+			<React.Fragment>
 				{errors.length > 0 ?
-						<ul id={`laji-form-error-container-${id}`} className="laji-form-error-container">
-							{errors.map((error, i) => (
-								<li key={i}>{error}</li>
-							))}
-						</ul>
-					 : null}
+					<ul id={`laji-form-error-container-${id}`} className= "laji-form-error-container">
+						{errors.map((error, i) => (
+							<li key={i}>{error}</li>
+						))}
+					</ul>
+					: null}
 				{warnings.length > 0 ?
 					<ul  id={`laji-form-warning-container-${id}`} className="laji-form-warning-container">
 						{warnings.map((warning, i) => (
@@ -109,8 +136,13 @@ export default class FieldTemplate extends Component {
 						))}
 					</ul>
 					: null}
-			</div>
+			</React.Fragment>
 		);
+
+		if (errorsAsPopup && (rawErrors || []).length) {
+			return <TooltipComponent placement="bottom" tooltip={errorsComponent} className="location-chooser-errors">{component()}</TooltipComponent>;
+		}
+		return component(errorsComponent);
 	}
 }
 

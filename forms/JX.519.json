@@ -2,8 +2,7 @@
     "attributes": {
         "id": "JX.519"
     },
-    "category": "MHL.categoryGeneric",
-    "description": "T\u00e4ll\u00e4 lomakkeella voit ilmoittaa yhden tai useamman p\u00e4iv\u00e4n kest\u00e4neen maastoretken kaikki havaintotiedot ja mahdollisesti kokoelman\u00e4ytteeksi otettujen yksil\u00f6iden tiedot.",
+    "description": "T\u00e4ll\u00e4 lomakkeella voit kirjata yhden tai useamman p\u00e4iv\u00e4n kest\u00e4neen maastoretken kaikki havaintotiedot ja/tai kokoelman\u00e4ytteeksi otettujen yksil\u00f6iden tiedot. Havaintoja voi kirjata useammalta paikalta.",
     "excludeFromCopy": [
         "$.gatheringEvent.dateBegin",
         "$.gatheringEvent.dateEnd",
@@ -273,6 +272,14 @@
     },
     "language": "fi",
     "name": "Retkilomake",
+    "options": {
+        "allowExcel": true,
+        "instructions": {
+            "en": "https://laji.fi/about/1107",
+            "fi": "https://laji.fi/about/1107",
+            "sv": "https://laji.fi/about/1107"
+        }
+    },
     "schema": {
         "properties": {
             "editors": {
@@ -618,6 +625,12 @@
                                 "MY.samplingMethodSeine",
                                 "MY.samplingMethodTrawling",
                                 "MY.samplingMethodBeamTrawl",
+                                "MY.samplingMethodDungTrap",
+                                "MY.samplingMethodTrunkWindowTrap",
+                                "MY.samplingMethodDiverInsectTrap",
+                                "MY.samplingMethodAquaticEmergenceTrap",
+                                "MY.samplingMethodWaterBucket",
+                                "MY.samplingMethodTrampling",
                                 "MY.samplingMethodOther"
                             ],
                             "enumNames": [
@@ -661,6 +674,12 @@
                                 "Nuotta",
                                 "Troolaus",
                                 "Puomitrooli",
+                                "Lantapyydys",
+                                "Runkoikkunapyydys",
+                                "Sukeltajahy\u00f6nteispyydys",
+                                "Vesihy\u00f6nteisten kuoriutumispyydys",
+                                "Vesi\u00e4mp\u00e4ri",
+                                "Polkeminen",
                                 "Muu"
                             ],
                             "title": "Keruumenetelm\u00e4",
@@ -697,7 +716,6 @@
                                     }
                                 },
                                 "required": [
-                                    "censusTaxonID",
                                     "taxonCensusType"
                                 ],
                                 "type": "object"
@@ -719,6 +737,10 @@
                                         },
                                         "title": "Muut tunnisteet",
                                         "type": "array"
+                                    },
+                                    "areaInSquareMeters": {
+                                        "title": "Esiintym\u00e4n koko (m\u00b2)",
+                                        "type": "integer"
                                     },
                                     "atlasCode": {
                                         "enum": [
@@ -772,6 +794,13 @@
                                         "title": "Pesimisvarmuusindeksi",
                                         "type": "string"
                                     },
+                                    "audio": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "\u00c4\u00e4nitteet",
+                                        "type": "array"
+                                    },
                                     "batBehavior": {
                                         "enum": [
                                             "",
@@ -793,23 +822,47 @@
                                     "birdAge": {
                                         "enum": [
                                             "",
-                                            "MY.birdAgePlus1kv",
-                                            "MY.birdAge1Kv",
-                                            "MY.birdAgePlus2Kv",
                                             "MY.birdAgePp",
                                             "MY.birdAgePm",
                                             "MY.birdAgeFl",
-                                            "MY.birdAge2kv"
+                                            "MY.birdAgePlus1kv",
+                                            "MY.birdAge1Kv",
+                                            "MY.birdAgePlus2Kv",
+                                            "MY.birdAge2kv",
+                                            "MY.birdAgePlus3Kv",
+                                            "MY.birdAge3Kv",
+                                            "MY.birdAgePlus4Kv",
+                                            "MY.birdAge4Kv",
+                                            "MY.birdAgePlus5Kv",
+                                            "MY.birdAge5Kv",
+                                            "MY.birdAgePlus6Kv",
+                                            "MY.birdAge6Kv",
+                                            "MY.birdAgePlus7Kv",
+                                            "MY.birdAge7Kv",
+                                            "MY.birdAgePlus8Kv",
+                                            "MY.birdAge8Kv"
                                         ],
                                         "enumNames": [
                                             "",
-                                            "+1kv (vanhempi kuin 1. kalenterivuosi)",
-                                            "1kv (1. kalenterivuosi)",
-                                            "+2kv (vanhempi kuin 2. kalenterivuosi)",
                                             "pp (pes\u00e4poikanen",
                                             "pm (maastopoikanen)",
                                             "fl (t\u00e4ysikasvuinen)",
-                                            "2kv (edellisen\u00e4 vuonna syntynyt)"
+                                            "+1kv (vanhempi kuin 1. kalenterivuosi)",
+                                            "1kv (1. kalenterivuosi)",
+                                            "+2kv (vanhempi kuin 2. kalenterivuosi)",
+                                            "2kv (edellisen\u00e4 vuonna syntynyt)",
+                                            "+3kv",
+                                            "3kv",
+                                            "+4kv",
+                                            "4kv",
+                                            "+5kv",
+                                            "5kv",
+                                            "+6kv",
+                                            "+6kv",
+                                            "+7kv",
+                                            "7kv",
+                                            "+8kv",
+                                            "8kv"
                                         ],
                                         "title": "Linnun ik\u00e4",
                                         "type": "string"
@@ -826,7 +879,9 @@
                                             "MY.birdPlumagePull",
                                             "MY.birdPlumageSubad",
                                             "MY.birdPlumageTp",
-                                            "MY.birdPlumageVp"
+                                            "MY.birdPlumageVp",
+                                            "MY.birdPlumagePep",
+                                            "MY.birdPlumageSs"
                                         ],
                                         "enumNames": [
                                             "",
@@ -839,7 +894,9 @@
                                             "pull (untuvapoikanen)",
                                             "subad (juv ja ad v\u00e4linen puku)",
                                             "tp (talvipukuinen)",
-                                            "vp (vaihtopukuinen)"
+                                            "vp (vaihtopukuinen)",
+                                            "pep (peruspuku)",
+                                            "ss (sulkasatoinen)"
                                         ],
                                         "title": "Linnun puku",
                                         "type": "string"
@@ -1000,7 +1057,8 @@
                                             "MY.lifeStagePullus",
                                             "MY.lifeStageHatchedEgg",
                                             "MY.lifeStageHatchedPupa",
-                                            "MY.lifeStageGall"
+                                            "MY.lifeStageGall",
+                                            "MY.lifeStageMarks"
                                         ],
                                         "enumNames": [
                                             "",
@@ -1012,8 +1070,8 @@
                                             "esiaikuinen",
                                             "keskenkasvuinen",
                                             "aikuinen",
-                                            "lis\u00e4\u00e4ntymiskykyinen",
-                                            "lis\u00e4\u00e4ntymiskyvyt\u00f6n",
+                                            "fertiili",
+                                            "steriili",
                                             "nuijap\u00e4\u00e4",
                                             "kuollut",
                                             "el\u00e4v\u00e4",
@@ -1023,7 +1081,8 @@
                                             "poikanen (linnut)",
                                             "kuoriutunut muna",
                                             "kuoriutunut kotelo",
-                                            "\u00e4k\u00e4m\u00e4"
+                                            "\u00e4k\u00e4m\u00e4",
+                                            "J\u00e4ljet (sy\u00f6m\u00e4j\u00e4ljet tms.)"
                                         ],
                                         "title": "Elinvaihe",
                                         "type": "string"
@@ -1356,6 +1415,12 @@
                                             "MY.samplingMethodSeine",
                                             "MY.samplingMethodTrawling",
                                             "MY.samplingMethodBeamTrawl",
+                                            "MY.samplingMethodDungTrap",
+                                            "MY.samplingMethodTrunkWindowTrap",
+                                            "MY.samplingMethodDiverInsectTrap",
+                                            "MY.samplingMethodAquaticEmergenceTrap",
+                                            "MY.samplingMethodWaterBucket",
+                                            "MY.samplingMethodTrampling",
                                             "MY.samplingMethodOther"
                                         ],
                                         "enumNames": [
@@ -1399,6 +1464,12 @@
                                             "Nuotta",
                                             "Troolaus",
                                             "Puomitrooli",
+                                            "Lantapyydys",
+                                            "Runkoikkunapyydys",
+                                            "Sukeltajahy\u00f6nteispyydys",
+                                            "Vesihy\u00f6nteisten kuoriutumispyydys",
+                                            "Vesi\u00e4mp\u00e4ri",
+                                            "Polkeminen",
                                             "Muu"
                                         ],
                                         "title": "Keruumenetelm\u00e4",
@@ -1496,9 +1567,9 @@
                                         ],
                                         "enumNames": [
                                             "",
-                                            "varma",
-                                            "ep\u00e4varma",
-                                            "alalaji ep\u00e4varma"
+                                            "Varma",
+                                            "Ep\u00e4varma",
+                                            "Alalaji ep\u00e4varma"
                                         ],
                                         "title": "M\u00e4\u00e4rityksen varmuus",
                                         "type": "string"
@@ -1593,7 +1664,7 @@
         "required": [],
         "type": "object"
     },
-    "shortDescription": "Ilmoita yksitt\u00e4iset havainnot tai retken kaikki havaintotiedot ja mahdollisesti kokoelman\u00e4ytteeksi otettujen yksil\u00f6iden tiedot.",
+    "shortDescription": "Kirjaa maastoretken kaikki havainto- ja/tai kokoelman\u00e4ytetiedot. Havaintoja voi kirjata my\u00f6s usealta paikalta.",
     "title": "Retkilomake",
     "uiSchema": {
         "editors": {
@@ -1677,7 +1748,7 @@
                                                     "ui:field": "ContextInjectionField",
                                                     "ui:options": {
                                                         "injections": {
-                                                            "/ui:options/rules/0/regexp": "/creator"
+                                                            "/ui:options/rules/0/regexp": "^%{/creator}$"
                                                         }
                                                     }
                                                 },
@@ -1871,7 +1942,6 @@
                                 "weather",
                                 "eventTime",
                                 "notes",
-                                "geometry",
                                 "namedPlaceID",
                                 "samplingMethod",
                                 "samplingMethodNotes",
@@ -1947,6 +2017,15 @@
                         "additionalIDs": {
                             "ui:field": "TagArrayField"
                         },
+                        "audio": {
+                            "ui:field": "AudioArrayField",
+                            "ui:options": {
+                                "capturerVerbatimPath": "/gatheringEvent/leg",
+                                "sideEffects": {
+                                    "/../recordBasis": "MY.recordBasisHumanObservationAudio"
+                                }
+                            }
+                        },
                         "classNames": "well well-sm",
                         "hostID": {
                             "ui:widget": "HiddenWidget"
@@ -1961,7 +2040,10 @@
                         "images": {
                             "ui:field": "ImageArrayField",
                             "ui:options": {
-                                "capturerVerbatimPath": "/gatheringEvent/leg"
+                                "capturerVerbatimPath": "/gatheringEvent/leg",
+                                "sideEffects": {
+                                    "/../recordBasis": "MY.recordBasisHumanObservationPhoto"
+                                }
                             }
                         },
                         "informalTaxonGroups": {
@@ -2079,11 +2161,12 @@
                                     },
                                     "suggestionInputField": "identifications_0_taxon",
                                     "suggestionReceivers": {
-                                        "identifications_0_taxon": "value",
+                                        "identifications_0_taxon": "autocompleteSelectedName || value",
                                         "informalTaxonGroups": "$taxonGroup",
                                         "unitFact_autocompleteSelectedTaxonID": "key"
                                     },
                                     "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
+                                    "suggestionValueParse": "autocompleteSelectedName || value",
                                     "togglePersistenceKey": "unit",
                                     "toggleable": {
                                         "autosuggestField": "unit",
@@ -2111,27 +2194,6 @@
                                         "hostInformalNameString": "value"
                                     },
                                     "suggestionValueField": "hostID"
-                                }
-                            },
-                            {
-                                "ui:field": "InputTransformerField",
-                                "ui:options": {
-                                    "rules": [
-                                        {
-                                            "conditions": {
-                                                "images": {
-                                                    "length": 1
-                                                },
-                                                "recordBasis": {
-                                                    "regexp": "MY.recordBasisPreservedSpecimen",
-                                                    "reverse": true
-                                                }
-                                            },
-                                            "transformations": {
-                                                "recordBasis": "MY.recordBasisHumanObservationPhoto"
-                                            }
-                                        }
-                                    ]
                                 }
                             },
                             {
@@ -2207,7 +2269,8 @@
                                                         "distance",
                                                         "notes",
                                                         "*",
-                                                        "images"
+                                                        "images",
+                                                        "audio"
                                                     ]
                                                 }
                                             },
@@ -2243,7 +2306,8 @@
                                                         "identifications_0_identificationBasis",
                                                         "notes",
                                                         "*",
-                                                        "images"
+                                                        "images",
+                                                        "audio"
                                                     ]
                                                 }
                                             },
@@ -2293,7 +2357,8 @@
                                                         "notes",
                                                         "hostInformalNameString",
                                                         "*",
-                                                        "images"
+                                                        "images",
+                                                        "audio"
                                                     ]
                                                 }
                                             },
@@ -2311,7 +2376,8 @@
                                             "MVL.343": {
                                                 "additionalFields": [
                                                     "plantLifeStage",
-                                                    "plantStatusCode"
+                                                    "plantStatusCode",
+                                                    "areaInSquareMeters"
                                                 ],
                                                 "defaultFields": [
                                                     "plantLifeStage",
@@ -2336,12 +2402,21 @@
                                             "label": "Lis\u00e4\u00e4 valokuva",
                                             "open": true,
                                             "show": "images"
+                                        },
+                                        {
+                                            "glyph": "headphones",
+                                            "label": "Lis\u00e4\u00e4 \u00e4\u00e4nite",
+                                            "open": false,
+                                            "show": "audio"
                                         }
                                     ],
                                     "idToScroll": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
                                     "includeAdditionalFieldsChooserButton": true,
                                     "taxonField": "identifications_0_taxon"
-                                }
+                                },
+                                "ui:settings": [
+                                    "%additionalFields/scopeField_gathering_unit_informalTaxonGroups"
+                                ]
                             },
                             {
                                 "ui:field": "LocationChooserField",
@@ -2365,6 +2440,7 @@
                             },
                             "md": {
                                 "*": 2,
+                                "breeding": 3,
                                 "count": 1,
                                 "identifications_0_detDate": 3,
                                 "identifications_0_identificationBasis": 2,
@@ -2372,6 +2448,7 @@
                                 "notes": 3,
                                 "recordBasis": 2,
                                 "taxonConfidence": 2,
+                                "twitched": 3,
                                 "unitGathering_dateBegin": 3,
                                 "unitGathering_dateEnd": 3
                             },
@@ -2420,6 +2497,7 @@
                             "plantLifeStage",
                             "plantStatusCode",
                             "lifeStage",
+                            "areaInSquareMeters",
                             "hostInformalNameString",
                             "unitGathering_substrate",
                             "substrateSpecies",
@@ -2428,10 +2506,8 @@
                             "taste",
                             "tasteNotes",
                             "*",
-                            "images"
-                        ],
-                        "ui:settings": [
-                            "%additionalFields/scopeField_gathering_unit_informalTaxonGroups"
+                            "images",
+                            "audio"
                         ],
                         "unitFact": {
                             "autocompleteSelectedTaxonID": {
@@ -2603,7 +2679,8 @@
             "ui:settings": [
                 "/mapOptions/tileLayerName",
                 "/mapOptions/overlayNames",
-                "/mapOptions/tileLayerOpacity"
+                "/mapOptions/tileLayerOpacity",
+                "/mapOptions/tileLayers"
             ]
         },
         "keywords": {
@@ -3099,11 +3176,6 @@
                     "units": {
                         "items": {
                             "properties": {
-                                "identifications": {
-                                    "presence": {
-                                        "message": "Lajinimi t\u00e4ytyy ilmoittaa."
-                                    }
-                                },
                                 "unitGathering": {
                                     "properties": {
                                         "dateBegin": {

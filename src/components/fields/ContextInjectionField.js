@@ -1,11 +1,11 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { parseJSONPointer } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
-export default class ContextInjectionField extends Component {
+export default class ContextInjectionField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -13,7 +13,8 @@ export default class ContextInjectionField extends Component {
 				target: PropTypes.oneOf(["uiSchema", "schema"]),
 			}).isRequired,
 			uiSchema: PropTypes.object
-		}).isRequired
+		}).isRequired,
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 	}
 
 	static getName() {return  "ContextInjectionField";}
@@ -35,7 +36,16 @@ export function getInjectedUiSchema(uiSchema, injections, uiSchemaContext) {
 			if (!pointer[path]) pointer[path] = {};
 			return pointer[path];
 		}, updateObject);
-		tail[last] = {$set: parseJSONPointer(uiSchemaContext, injections[injectionPath])};
+		let value = injections[injectionPath];
+		if (value.match(/%{.*}/)) {
+			while (value.match(/%{.*}/)) {
+				const [match, innerValue] = value.match(/%{(.*)}/);
+				value = value.replace(match, parseJSONPointer(uiSchemaContext, innerValue));
+			}
+		} else {
+			value = parseJSONPointer(uiSchemaContext, value);
+		}
+		tail[last] = {$set: value};
 		injected = true;
 	}
 	if (injected) uiSchema = update(uiSchema, updateObject);

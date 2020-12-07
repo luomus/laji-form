@@ -1,26 +1,24 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
-import { deepEquals } from  "react-jsonschema-form/lib/utils";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
 import { getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
+
+const functionPropType = PropTypes.shape({
+	"ui:field": PropTypes.string.isRequired,
+	"ui:options": PropTypes.object
+});
+
 @VirtualSchemaField
-export default class UiFieldMapperArrayField extends Component {
+export default class UiFieldMapperArrayField extends React.Component {
 
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				functions: PropTypes.oneOfType([
-					PropTypes.arrayOf(
-						PropTypes.shape({
-							"ui:field": PropTypes.string.isRequired,
-							"ui:options": PropTypes.object
-						}),
-					),
-					PropTypes.shape({
-						"ui:field": PropTypes.string.isRequired,
-						"ui:options": PropTypes.object
-					})
+					PropTypes.arrayOf(functionPropType),
+					functionPropType
 				])
 			}),
 			uiSchema: PropTypes.object
@@ -28,7 +26,7 @@ export default class UiFieldMapperArrayField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	static getName() {return "UiFieldMapperArrayField";}
@@ -118,6 +116,12 @@ export default class UiFieldMapperArrayField extends Component {
 			this.functionOutputProps[0] : 
 			this.getFunctionOutputForIdx(origProps, undefined);
 
+		const addBaseErrors = (errorSchema) => {
+			return (props.errorSchema || {}).__errors
+				? {...errorSchema, __errors: props.errorSchema.__errors}
+				: errorSchema;
+		};
+
 		const schema = {...props.schema, items: templateOutput.schema};
 		const state = {
 			...props,
@@ -125,11 +129,11 @@ export default class UiFieldMapperArrayField extends Component {
 			uiSchema: {...props.uiSchema, items: {...props.uiSchema.items, ...templateOutput.uiSchema}},
 			formData: (props.formData || []).map((item, idx) => this.functionOutputProps[idx].formData),
 			idSchema: templateOutput.idSchema,
-			errorSchema: Object.keys((props.errorSchema || {})).reduce((errorSchema, idx) => {
+			errorSchema: addBaseErrors(Object.keys((props.errorSchema || {})).reduce((errorSchema, idx) => {
 				if (!this.functionOutputProps[idx]) return errorSchema;
 				errorSchema[idx] = this.functionOutputProps[idx].errorSchema;
 				return errorSchema;
-			}, {}),
+			}, {})),
 			formContext: templateOutput.formContext
 		};
 
@@ -138,7 +142,7 @@ export default class UiFieldMapperArrayField extends Component {
 
 	onChange(formData) {
 		this.props.onChange(formData.map((item, idx) => {
-			if (!deepEquals(item, this.props.formData[idx])) {
+			if (!deepEquals(item, (this.props.formData || [])[idx])) {
 				const output = this.functionOutputProps[idx] || this.getFunctionOutputForIdx(this.props, idx);
 				output.onChange(item); // Will trigger child instance onChange, which will set this.tmpItemFormData.
 				return this.tmpItemFormData;

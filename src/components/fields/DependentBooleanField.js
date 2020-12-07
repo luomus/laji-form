@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import VirtualSchemaField from "../VirtualSchemaField";
 /**
@@ -12,7 +12,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }}
  */
 @VirtualSchemaField
-export default class DependentBooleanField extends Component {
+export default class DependentBooleanField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -38,8 +38,7 @@ export default class DependentBooleanField extends Component {
 		let booleanFieldDataDictionarified = this.getDictionarifiedBooleanFieldData(formData);
 
 		let booleanFieldData = [];
-		if (this.checkFieldSanity(formData, booleanDefiner) &&
-		    this.checkFieldSanity(formData, booleanField)) formData[booleanDefiner].forEach((definerItem) => {
+		(formData[booleanDefiner] || []).forEach((definerItem) => {
 			booleanFieldData.push(!!booleanFieldDataDictionarified[definerItem]);
 		});
 		formData = {...props.formData, [booleanField]: booleanFieldData};
@@ -72,19 +71,13 @@ export default class DependentBooleanField extends Component {
 
 	getDictionarifiedFormData = (formData, field) => {
 		let formDataDictionarified = {};
-		if (!this.checkFieldSanity(formData, field)) return formDataDictionarified;
-		formData[field].forEach((value) => {
+		(formData[field] || []).forEach((value) => {
 			formDataDictionarified[value] = true;
 		});
 		return formDataDictionarified;
-
 	}
 
 	getDictionarifiedBooleanFieldData = (formData) => {
 		return this.getDictionarifiedFormData(formData, this.getUiOptions().booleanField);
-	}
-
-	checkFieldSanity = (formData, field) => {
-		return formData[field] && Array.isArray(formData[field]);
 	}
 }

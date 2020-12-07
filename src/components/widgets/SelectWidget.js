@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
-import Combobox from "react-widgets/lib/Combobox";
-import Multiselect from "react-widgets/lib/Multiselect";
+import * as Combobox from "react-widgets/lib/Combobox";
+import * as Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 
 import { isEmptyString, getUiOptions, filter } from "../../utils";
 
-class SelectWidget extends Component {
+class SelectWidget extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -17,10 +17,12 @@ class SelectWidget extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
 		this._context.addFocusHandler(this.props.id, this.onFocus);
 	}
 
 	componentWillUnmount() {
+		this.mounted = false;
 		this._context.removeFocusHandler(this.props.id, this.onFocus);
 	}
 
@@ -56,7 +58,7 @@ class SelectWidget extends Component {
 
 		if (labels) {
 			enumOptions = enumOptions.map(({value, label}) => {
-				return {value, label: labels.hasOwnProperty(value) ? labels[value] : label};
+				return {value, label: value in labels ? labels[value] : label};
 			});
 		}
 
@@ -69,7 +71,6 @@ class SelectWidget extends Component {
 
 		if (order) enumOptions = sort(enumOptions, order);
 
-
 		const valsToItems = enumOptions.reduce((map, item) => {
 			map[item.value] = item;
 			return map;
@@ -78,7 +79,7 @@ class SelectWidget extends Component {
 		return {
 			valsToItems,
 			enumOptions,
-			value
+			value: multiple ? value : valsToItems[value]
 		};
 	}
 
@@ -108,8 +109,9 @@ class SelectWidget extends Component {
 	}
 
 	onSelect = (item) => {
-		this.state.open && this._context.setImmediate(() => this.setState({open: false, value: item.value}));
-		this.props.onChange(this.getEnum(item.value));
+		this.state.open && this._context.setImmediate(() => this.mounted && this.setState({open: false, value: item.value}));
+		const value = this.getEnum(item.value);
+		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}
 
 	onToggle = () => {
@@ -188,30 +190,25 @@ SelectWidget.defaultProps = {
 	autofocus: false,
 };
 
-if (process.env.NODE_ENV !== "production") {
-	SelectWidget.propTypes = {
-		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["string", "array"])
-		}),
-		id: PropTypes.string.isRequired,
-		options: PropTypes.shape({
+SelectWidget.propTypes = {
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["string", "array"])
+	}),
+	id: PropTypes.string.isRequired,
+	uiSchema: PropTypes.shape({
+		"ui:options": PropTypes.shape({
 			enumOptions: PropTypes.array,
 			order: PropTypes.array,
 			filter: PropTypes.array,
 			filterType: PropTypes.string,
 			labels: PropTypes.object,
-		}).isRequired,
-		value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-		required: PropTypes.bool,
-		multiple: PropTypes.bool,
-		autofocus: PropTypes.bool,
-		onChange: PropTypes.func,
-	};
-}
-
-SelectWidget.defaultProps = {
-	selectOnChange: true
+		})
+	}),
+	value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+	required: PropTypes.bool,
+	multiple: PropTypes.bool,
+	autofocus: PropTypes.bool,
+	onChange: PropTypes.func,
 };
-
 
 export default SelectWidget;

@@ -1,7 +1,7 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState, toIdSchema } from  "react-jsonschema-form/lib/utils";
+import { getDefaultFormState, toIdSchema } from  "@rjsf/core/dist/cjs/utils";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -11,7 +11,7 @@ function getPropName(field, innerField, isArray) {
 
 
 @VirtualSchemaField
-export default class FlatField extends Component {
+export default class FlatField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -22,7 +22,7 @@ export default class FlatField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	static getName() {return "FlatField";}

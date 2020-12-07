@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
 import Context from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
-import { deepEquals } from  "react-jsonschema-form/lib/utils";
-import SchemaField from "react-jsonschema-form/lib/components/fields/SchemaField";
+import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
+import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
 
-export default class _SchemaField extends Component {
+export default class _SchemaField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.updateVirtualInstance(props, !!"initial");
@@ -26,7 +26,7 @@ export default class _SchemaField extends Component {
 		}
 	}
 
-	applyFunction = (props) => {
+	applyFunction(props) {
 		let {
 			"ui:functions": functions,
 			"ui:childFunctions": childFunctions,
@@ -35,98 +35,76 @@ export default class _SchemaField extends Component {
 		} = (props.uiSchema || {});
 
 		const objectOrArrayAsArray = item => (
-			item ? 
-				(Array.isArray(item) ?
-					item : 
-					[item]) :
-				[]
+			item
+				? (Array.isArray(item)
+					? item
+					: [item])
+				: []
 		);
+
+		functions = objectOrArrayAsArray(functions);
 
 		if (childFunctions) {
 			functions = [
-				{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: objectOrArrayAsArray(childFunctions)}},
-				...objectOrArrayAsArray(functions)
+				{"ui:field": "UiFieldMapperArrayField", "ui:options": {functions: childFunctions}},
+				...functions
 			];
 		}
 
 		if (annotations) {
 			functions = [
 				{"ui:field": "AnnotationField", "ui:options": (isObject(annotations) ? annotations : {})},
-				...objectOrArrayAsArray(functions)
+				...functions
 			];
 		}
 
-		if (!functions) return props;
+		if (!functions.length) return props;
 
-		let nonVirtualFound = false;
+		let _props = {...props, uiSchema: _uiSchema, formContext: props.registry.formContext};
+		let [uiFn, ...restUiFns] = functions;
 
-		const _functions = ((Array.isArray(functions)) ? functions : [functions]);
+		if (
+			uiFn["ui:field"] !== "ContextInjectionField" &&
+			uiFn["ui:field"] !== "InjectField" &&
+			getUiOptions(uiFn).injections
+		) {
+			const {injections} = uiFn["ui:options"];
+			const injectedUiSchema = getInjectedUiSchema(uiFn, injections, props.registry.formContext.uiSchemaContext);
+			uiFn = {
+				...injectedUiSchema,
+				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+			};
+		}
 
-		const computedProps = _functions.reduce((_props, uiFn, idx) => {
-			if (nonVirtualFound) {
-				return _props;
-			}
-
-			if (
-				uiFn["ui:field"] &&
-				uiFn["ui:field"] !== "ContextInjectionField" &&
-				uiFn["ui:field"] !== "InjectField" &&
-				uiFn["ui:options"] &&
-				uiFn["ui:options"].injections
-			) {
-				const {injections} = uiFn["ui:options"];
-				const injectedUiSchema = getInjectedUiSchema(uiFn, injections, props.registry.formContext.uiSchemaContext);
-				uiFn = {
-					...injectedUiSchema,
-					"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
-				};
-			}
-
-			const buttons =  !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema).buttons : undefined;
-			const uiButtons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema)["ui:buttons"] : undefined;
+		const buttons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema).buttons : undefined;
+		const uiButtons = !_props.uiSchema["ui:field"] ? getUiOptions(_props.uiSchema)["ui:buttons"] : undefined;
+		_props = {
+			..._props, 
+			uiSchema: (_props.uiSchema["ui:field"] || _props.uiSchema["ui:widget"])
+				? {...uiFn, uiSchema: _props.uiSchema}
+				: {..._props.uiSchema, ...uiFn}
+		};
+		if (buttons || uiButtons) {
 			_props = {
 				..._props, 
-				uiSchema: (_props.uiSchema["ui:field"] || _props.uiSchema["ui:widget"])
-					? {...uiFn, uiSchema: _props.uiSchema}
-					: {..._props.uiSchema, ...uiFn}
-			};
-			if (buttons || uiButtons) {
-				_props = {
-					..._props, 
-					uiSchema: {
-						..._props.uiSchema,
-						"ui:options": {
-							..._props.uiSchema["ui:options"],
-							buttons: [...(_props.uiSchema.buttons || []), ...(buttons || [])],
-							"ui:buttons": [...(_props.uiSchema["ui:buttons"] || []), ...(uiButtons || [])]
-						}
+				uiSchema: {
+					..._props.uiSchema,
+					"ui:options": {
+						..._props.uiSchema["ui:options"],
+						buttons: [...(_props.uiSchema.buttons || []), ...(buttons || [])],
+						"ui:buttons": [...(_props.uiSchema["ui:buttons"] || []), ...(uiButtons || [])]
 					}
-				};
-			}
-			if (!new Context("VIRTUAL_SCHEMA_NAMES")[uiFn["ui:field"]]) {
-				nonVirtualFound = true;
-				return {
-					..._props,
-					uiSchema: {
-						..._props.uiSchema,
-						"ui:functions": _functions.slice(idx + 1)
-					}
-				};
-			}
-
-			const {state = {}} = new props.registry.fields[uiFn["ui:field"]](_props);
-			return {
-				..._props, 
-				...state, 
-				registry: {
-					..._props.registry, 
-					...state.registry,
-					formContext: state.formContext || props.registry.formContext
 				}
 			};
-		}, {...props, uiSchema: _uiSchema, formContext: props.registry.formContext});
+		}
 
-		return computedProps;
+		return {
+			..._props,
+			uiSchema: {
+				..._props.uiSchema,
+				"ui:functions": restUiFns
+			}
+		};
 	}
 
 	componentDidUpdate(prevProps) {
@@ -176,5 +154,3 @@ export default class _SchemaField extends Component {
 		/>;
 	}
 }
-
-

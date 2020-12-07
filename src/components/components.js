@@ -1,35 +1,39 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
 import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Modal, Row, Col, FormControl, Card, ListGroup, ListGroupItem, Collapse } from "react-bootstrap";
 //import PanelHeading from "react-bootstrap/lib/PanelHeading";
 //import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
+import Context from "../Context";
 
-export class Button extends Component {
+export class Button extends React.Component {
 	render() {
 		const {
 			tooltip,
 			tooltipPlacement,
 			tooltipTrigger,
+			tooltipClass,
 			..._props
 		} = this.props;
 		return (
-			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger}>
+			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-				variant="primary"
-				{..._props}
+					variant="primary"
+					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
 		);
 	}
 }
 
-export class DeleteButton extends Component {
+export class DeleteButton extends React.Component {
 	static propTypes = {
 		confirm: PropTypes.bool,
 		onClick: PropTypes.func.isRequired,
-		translations: PropTypes.object.isRequired
+		translations: PropTypes.object.isRequired,
+		confirmStyle: PropTypes.oneOf(["popup", "browser"])
 	}
 
 	constructor(props) {
@@ -56,12 +60,15 @@ export class DeleteButton extends Component {
 		e.stopPropagation();
 		this.setState({show: true}, () => {
 			this._focusConfirm = true;
+			if (this.props.confirmStyle === "browser") {
+				this.browserConfirm();
+			}
 		});
 	}
 
 	onConfirmedClick = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
+		e && e.preventDefault();
+		e && e.stopPropagation();
 		this.props.onClick();
 		this.onHideConfirm();
 		this.deleted = true;
@@ -80,50 +87,84 @@ export class DeleteButton extends Component {
 
 	setConfirmAutofocus = (elem) => {
 		if (this._focusConfirm) {
-			setImmediate(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
-				findDOMNode(elem).focus();
+			setTimeout(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
+				
+				const domElem = findDOMNode(elem);
+				domElem && domElem.focus();
 				this._focusConfirm = undefined;
 			});
 		}
 	}
 
 	render() {
-		const {props, state} = this;
-		const {show} = state;
-		const {translations, corner, tooltip, disabled, readonly} = props;
-		let buttonClassName = "glyph-button";
-		buttonClassName += corner ? " delete-corner" : "";
-		const getOverlayTarget = () => findDOMNode(this.refs.del);
-		const onClick = e => this.onClick(e);
+		const {props} = this;
+		const {corner, tooltip, disabled, readonly, glyphButton = true} = props;
+		let buttonClassName = glyphButton ? "glyph-button" : "";
+		buttonClassName += corner ? " button-corner" : "";
+		if (props.className) {
+			buttonClassName = `${buttonClassName} ${props.className}`;
+		}
+		const maybeProps = {};
+		if (props.id !== undefined) {
+			maybeProps.id = `${props.id}-delete`;
+		}
 		const button = (
-			<div className={props.className} style={this.props.style}>
-				<Button id={`${props.id}-delete`}
+			<React.Fragment>
+				<Button {...maybeProps}
 				        disabled={disabled || readonly}
 				        variant="danger"
-								className={buttonClassName}
-								ref="del"
-								onKeyDown={this.onButtonKeyDown}
-								onClick={onClick}>✖</Button>
-				{show ?
-					<Overlay show={true} placement="left" rootClose={true} onHide={this.onHideConfirm}
-									 target={getOverlayTarget}>
-						<Popover id={`${this.props.id}-delete-confirm`}>
-							<span>{translations.ConfirmRemove}</span>
-							<ButtonGroup>
-								<Button variant="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${props.id}-delete-confirm-yes`}>
-									{translations.Remove}
-								</Button>
-								<Button variant="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
-									{translations.Cancel}
-								</Button>
-							</ButtonGroup>
-						</Popover>
-					</Overlay>
-					: null
-				}
-			</div>
+				        className={buttonClassName}
+				        style={this.props.style}
+				        ref="del"
+				        onKeyDown={this.onButtonKeyDown}
+				        onClick={this.onClick}>{this.props.children || "✖"}</Button>
+				{this.renderConfirm()}
+			</React.Fragment>
 		);
 		return tooltip ? <TooltipComponent tooltip={tooltip}>{button}</TooltipComponent> : button;
+	}
+
+	renderConfirm = () => {
+		const {show} = this.state;
+		if (!show) {
+			return null;
+		}
+		const {confirmStyle = "popup"} = this.props;
+		if (confirmStyle === "popup") {
+			return this.renderConfirmPopup();
+		}
+		return null;
+	}
+
+	getOverlayTarget = () => findDOMNode(this.refs.del);
+
+	renderConfirmPopup() {
+		const {translations, confirmPlacement = "left"} = this.props;
+		return (
+			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
+							 target={this.getOverlayTarget}>
+				<Popover id={`${this.props.id}-button-confirm`}>
+					<span>{translations.ConfirmRemove}</span>
+					<ButtonGroup>
+						<Button variant="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
+							{translations.Remove}
+						</Button>
+						<Button variant="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+							{translations.Cancel}
+						</Button>
+					</ButtonGroup>
+				</Popover>
+			</Overlay>
+		);
+	}
+
+	browserConfirm() {
+		const choice = confirm(this.props.translations.ConfirmRemove);
+		if (choice) {
+			this.onConfirmedClick();
+		} else {
+			this.onHideConfirm();
+		}
 	}
 }
 
@@ -131,7 +172,7 @@ export function AddButton({onClick}) {
 	return (<Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>);
 }
 
-export class Alert extends Component {
+export class Alert extends React.Component {
 	render() {
 		return (
 			<Modal show={true} enforceFocus={true} onKeyDown={this.onKeyDown}>
@@ -159,13 +200,13 @@ export const GlyphButton = (props) => {
 		        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
 			      tooltipPlacement={props.tooltipPlacement || "left"}>
 			{props.children}
-		<Glyphicon glyph={glyph} />
+			<Glyphicon glyph={glyph} />
 		</Button>
 	);
 };
 
 const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
-export class Affix extends Component {
+export class Affix extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getState(props);
@@ -202,7 +243,7 @@ export class Affix extends Component {
 		const containerVisibleHeight = containerHeight + containerTop;
 		const wrapperHeight = wrapperElem.offsetHeight;
 		const wrapperScrollHeight = wrapperElem.scrollHeight;
-		const scrolled = containerTop < topOffset;
+		const scrolled = this.refs.container.getBoundingClientRect().top < topOffset;
 
 		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		const bottomDist = viewportHeight - container.getBoundingClientRect().top - containerHeight;
@@ -300,7 +341,7 @@ export class Affix extends Component {
 	}
 }
 
-export class Stretch extends Component {
+export class Stretch extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -317,11 +358,12 @@ export class Stretch extends Component {
 
 	componentDidMount() {
 		window.addEventListener("scroll", this.onScroll);
-		window.addEventListener("resize", this.onResize);
+		window.addEventListener("resize", this.onScroll);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.onScroll);
+		window.removeEventListener("resize", this.onScroll);
 	}
 
 	_onScroll = () => {
@@ -377,7 +419,7 @@ export class Stretch extends Component {
 			horizontallyAligned: true,
 			containerHeight,
 			height: Math.max(
-					containerHeight
+				containerHeight
 					+ Math.min(container.getBoundingClientRect().top, 0)
 					+ Math.min(bottomInvisibleHeight, 0)
 					- (container.getBoundingClientRect().top < topOffset ? Math.min(topOffset - container.getBoundingClientRect().top, topOffset) : 0)
@@ -413,18 +455,18 @@ export function Help({help, id}) {
 	const helpGlyph = <span className="label-info laji-form-help-glyph"><strong>?</strong></span>;
 
 	return help ? (
-		<OverlayTrigger placement="right" overlay={<Tooltip id={id}>{help}</Tooltip> }>
+		<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
 			{helpGlyph}
 		</OverlayTrigger>
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id, required, _context, helpHoverable}) {
+export function Label({label, help, children, id, required, _context, helpHoverable, helpPlacement}) {
 	const showHelp = label && help;
 
 	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
 		<span>
-			<strong>{label}</strong><br />
+			<strong dangerouslySetInnerHTML={{__html: label}} /><br />
 			<span dangerouslySetInnerHTML={{__html: help}} />
 		</span>
 	): label}</Tooltip>;
@@ -432,21 +474,21 @@ export function Label({label, help, children, id, required, _context, helpHovera
 	const labelElem = (
 		<label htmlFor={id}>
 			<div>
-				<strong>{label}{required ? "*" :  ""}</strong>
-                {showHelp ? <Help /> : null}
+				<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
+				{showHelp ? <Help /> : null}
 			</div>
 			{children}
 		</label>
 	);
 
 	return (label || help) ? (
-		<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;
 }
 
-export class ErrorPanel extends Component {
+export class ErrorPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {expanded: true};
@@ -478,14 +520,7 @@ export class ErrorPanel extends Component {
 				</Card.Header>
 				<Collapse in={this.state.expanded}>
 					<ListGroup>
-						{errors.map(({label, error, id}, i) =>  {
-							const _clickHandler = () => clickHandler(id);
-							return (
-								<ListGroupItem key={i} onClick={_clickHandler}>
-									{label ? <b>{label}:</b> : null} {error}
-								</ListGroupItem>
-							);
-						})}
+						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
 					</ListGroup>
 				</Collapse>
 			</Card>
@@ -493,14 +528,25 @@ export class ErrorPanel extends Component {
 	}
 }
 
-class NullTooltip extends Component {
-	render() {
-		return <div />;
-	}
+function ErrorPanelError({label, error, id, getId, extra = null, disabled, clickHandler}) {
+	const message = error && error.message ? error.message : error;
+	const _clickHandler = React.useCallback(() => {
+		clickHandler(id || (getId ? getId() : undefined));
+	}, [clickHandler, id, getId]);
+
+	return (
+		<ListGroupItem onClick={_clickHandler} disabled={disabled}>
+			{label ? <b>{label}:</b> : null} {message} {extra}
+		</ListGroupItem>
+	);
+}
+
+function NullTooltip() {
+	return <div />;
 }
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
-export class TooltipComponent extends Component {
+export class TooltipComponent extends React.Component {
 	setOverlayRef = (elem) => {
 		this.overlayElem = elem;
 	}
@@ -508,11 +554,11 @@ export class TooltipComponent extends Component {
 	onMouseOut = () => this.overlayElem.hide();
 
 	render() {
-		const {tooltip, children, id, placement, trigger} = this.props;
+		const {tooltip, children, id, placement, trigger, className} = this.props;
 
 		const overlay = (
 			<_OverlayTrigger placement={placement} key={`${id}-overlay`} overlay={
-				(tooltip) ? <Tooltip id={`${id}-tooltip`}>{tooltip}</Tooltip> : <NullTooltip />
+				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
 			}>
 				{children}
 			</_OverlayTrigger>
@@ -526,13 +572,13 @@ export class TooltipComponent extends Component {
 	}
 }
 
-export class FetcherInput extends Component {
+export class FetcherInput extends React.Component {
 	setRef = (elem) => {
 		if (this.props.getRef) this.props.getRef(elem);
 	}
 
 	render() {
-		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line no-unused-vars
+		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 		return (
 			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""} ${className}`} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
@@ -546,7 +592,7 @@ export class FetcherInput extends Component {
 	}
 }
 
-class FetcherInputDefaultInput extends Component {
+class FetcherInputDefaultInput extends React.Component {
 	render() {
 		const {readonly, ...inputProps} = this.props;
 		return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={this.ref} />;
@@ -554,7 +600,7 @@ class FetcherInputDefaultInput extends Component {
 }
 
 // Bootstrap OverlayTrigger that is hoverable if hoverable === true
-export class OverlayTrigger extends Component {
+export class OverlayTrigger extends React.Component {
 	
 	setOverlayTriggerRef = elem => {
 		this.overlayTriggerRef = elem;
@@ -593,7 +639,7 @@ export class OverlayTrigger extends Component {
 		const {
 			children,
 			overlay,
-			_context, //eslint-disable-line no-unused-vars
+			_context, //eslint-disable-line @typescript-eslint/no-unused-vars
 			...props
 		} = this.props;
 
@@ -611,7 +657,7 @@ export class OverlayTrigger extends Component {
 				                delay={1}
 				                trigger={[]} 
 				                placement={this.props.placement || "top"}
-												ref={this.setOverlayTriggerRef}
+				                ref={this.setOverlayTriggerRef}
 				                overlay={_overlay}>
 					{children}
 				</_OverlayTrigger>
@@ -620,21 +666,98 @@ export class OverlayTrigger extends Component {
 	}
 }
 
-export class Fullscreen extends Component {
+export class Fullscreen extends React.Component {
 	componentDidMount() {
 		this.bodyOverFlow = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
+
+		if (this.props.onKeyDown) {
+			this._onKeyDown = true;
+			new Context(this.props.contextId).addGlobalEventHandler("keydown", this.props.onKeyDown);
+		}
 	}
 
 	componentWillUnmount() {
 		document.body.style.overflow = this.bodyOverFlow;
+		if (this._onKeyDown) {
+			new Context(this.props.contextId).removeGlobalEventHandler("keydown", this.props.onKeyDown);
+		}
 	}
 
 	render() {
 		return createPortal((
-			<div className="laji-form fullscreen" onKeyDown={this.props.onKeyDown}>
-					{this.props.children}
+			<div className="laji-form fullscreen">
+				{this.props.children}
 			</div>
 		), document.body);
+	}
+}
+
+export class FailedBackgroundJobsPanel extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {popped: true};
+	}
+
+	dismissFailedJob = ({id, hook, running}) => (e) => {
+		e.stopPropagation();
+		if (running) return;
+		this.props.context.removeSubmitHook(id, hook);
+	}
+
+	retryFailedJob = ({hook, running}) => (e) => {
+		e.stopPropagation();
+		if (running) return;
+		hook();
+	}
+
+	poppedToggle = (e) => {
+		e.stopPropagation();
+		this.setState({popped: !this.state.popped, poppedTouched: true});
+	}
+
+	render() {
+		const {jobs = [], schema, uiSchema = {}, formContext: {translations}} = this.props;
+
+		if (!jobs.length) return null;
+
+		const errors = jobs.reduce((_errors, error) => {
+			const {lajiFormId, relativePointer, e, running} = error;
+			if (!e) {
+				return _errors;
+			}
+			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer);
+			const jsonPointer = getJsonPointer();
+			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
+				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely");
+			const retryButton = <a key="rety" className="pull-right" disabled={running} onClick={this.retryFailedJob(error)}><Glyphicon className={running ? "rotating" : ""} glyph="refresh" /> {translations.Retry}</a>;
+			const dismissButton = <a key="dismiss" className="pull-right" onClick={this.dismissFailedJob(error)}><Glyphicon glyph="ok" /> {translations.Dismiss}</a>;
+
+			const getId = () => {
+				const jsonPointer = getJsonPointer();
+				return `root_${JSONPointerToId(jsonPointer)}`;
+			};
+			const _error = {getId, error: e, extra: [dismissButton, retryButton], disabled: running};
+			if (label) _error.label = label;
+			return [..._errors, _error];
+		}, []);
+
+		if (!errors.length) return null;
+
+		return (
+			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}
+			     style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null} >
+				<ErrorPanel 
+					title={translations.FailedBackgroundJobs}
+					errors={errors}
+					showToggle={true}
+					poppedToggle={this.poppedToggle}
+					clickHandler={this.props.errorClickHandler}
+					classNames="error-panel"
+				/>
+				<div className="panel-footer">
+					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+				</div>
+			</div>
+		);
 	}
 }

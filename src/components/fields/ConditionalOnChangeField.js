@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 window.PropTypes = PropTypes;
@@ -36,7 +36,7 @@ const rulePropType = PropTypes.shape({
  * }
  */
 @VirtualSchemaField
-export default class ConditionalOnChangeField extends Component {
+export default class ConditionalOnChangeField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -85,7 +85,7 @@ export default class ConditionalOnChangeField extends Component {
 					passes = reverse ? !result : result;
 				}
 				if (passes && length !== undefined) {
-					const result = formData[field].length >= length;
+					const result = (formData[field] || []).length >= length;
 					passes = reverse ? !result : result;
 				}
 				if (!passes) break;

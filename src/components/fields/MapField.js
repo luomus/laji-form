@@ -1,14 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { createPortal, findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { MapComponent } from "./MapArrayField";
 import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import ApiClient from "../../ApiClient";
-import equals from "deep-equal";
+import * as equals from "deep-equal";
 import Context from "../../Context";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
 
@@ -50,7 +49,7 @@ export function getCenterAndRadiusFromGeometry(geometry) {
 }
 
 @BaseComponent
-export default class MapField extends Component {
+export default class MapField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -58,17 +57,25 @@ export default class MapField extends Component {
 				height: PropTypes.number,
 				emptyHelp: PropTypes.string,
 				geometryCollection: PropTypes.boolean,
-			}).isRequired
+			})
 		}),
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	constructor(props) {
 		super(props);
 		this.state = {located: false};
+	}
+
+	onLocateEventHandler = (geometry) => {
+		if (geometry) {
+			this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
+		} else if (!this.getGeometry(this.props)) {
+			this.setState({locateOn: true});
+		}
 	}
 
 	componentDidMount() {
@@ -82,22 +89,17 @@ export default class MapField extends Component {
 		}
 		this.geocode(this.props);
 
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", (geometry) => {
-			if (geometry) {
-				this.onLocate({lat: geometry.coordinates[1], lng: geometry.coordinates[0]}, 100, !!"force");
-			} else if (!this.getGeometry(this.props)) {
-				this.setState({locateOn: true});
-			}
-		});
+		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate");
+		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentDidUpdate(prevProps) {
 		this.geocode(prevProps);
 		this.zoomIfExternalEdit(this.props);
+		this._lastFormData = this.props.formData;
 		if (this._zoomToDataOnNextTick) {
 			this.map.zoomToData();
 			this._zoomToDataOnNextTick = undefined;
@@ -117,7 +119,7 @@ export default class MapField extends Component {
 				|| (geoData.type === "FeatureCollection" && geoData.features.length === 0);
 		});
 		if (isEmptyAndWasEmpty && area && area.length > 0) {
-			new ApiClient().fetch(`/areas/${area}`, undefined, undefined).then((result)=>{
+			this.props.formContext.apiClient.fetch(`/areas/${area}`, undefined, undefined).then((result) => {
 				this.map.geocode(result.name, undefined, 8);
 			});
 		}
@@ -143,9 +145,10 @@ export default class MapField extends Component {
 	render() {
 		const {TitleField} = this.props.registry.fields;
 		const {uiSchema, formData} = this.props;
-		const {height = 400, emptyHelp, mapOptions = {}, mobileEditor: _mobileEditor} = getUiOptions(uiSchema);
+		const {height = 400, emptyHelp, mapOptions = {}, mobileEditor: _mobileEditor, data} = getUiOptions(uiSchema);
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
 		const _mapOptions = {
+			controls: true,
 			clickBeforeZoomAndPan: true,
 			...mapOptions,
 			...(this.state.mapOptions || {}),
@@ -198,32 +201,35 @@ export default class MapField extends Component {
 			mobileEditorOptions.userLocation = this.map.userLocation;
 		}
 
-		console.log(_mapOptions);
+		const extraData = Array.isArray(data) ? data : [data].map((geoData) => ({geoData}));
+
 		return (
 			<div>
 				<TitleField title={this.props.schema.title} />
-					<Affix {...{topOffset, bottomOffset}}>
-						<div style={{height}}>
-							<MapComponent {..._mapOptions}
-								ref={this.setMapRef}
-								draw={this.getDrawOptions(this.props)}
-								lang={lang}
-								zoomToData={{paddingInMeters: 200}}
-								panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
-								formContext={this.props.formContext}
-								onOptionsChanged={this.onOptionsChanged} />
-								{this.renderBlocker()}
-						</div>
-					</Affix>
-						{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
-								<MobileEditorMap {...mobileEditorOptions}
-									options={mobileEditor.options}
-									onChange={this.onMobileEditorChange}
-									onClose={this.onHideMobileEditorMap}
-									map={this.map}
-									formContext={this.props.formContext}
-								/>
-					}
+				<Affix {...{topOffset, bottomOffset}}>
+					<div style={{height}}>
+						<MapComponent
+							{..._mapOptions}
+							ref={this.setMapRef}
+							draw={this.getDrawOptions(this.props)}
+							data={extraData}
+							lang={lang}
+							zoomToData={{paddingInMeters: 200}}
+							panel={emptyHelp && isEmpty ? {panelTextContent: emptyHelp} : undefined}
+							formContext={this.props.formContext}
+							onOptionsChanged={this.onOptionsChanged} />
+						{this.map && this.map.container && createPortal(this.renderBlocker(), this.map.container)}
+					</div>
+				</Affix>
+				{this.state.mapRendered && mobileEditor && mobileEditor.visible &&
+						<MobileEditorMap {...mobileEditorOptions}
+							options={mobileEditor.options}
+							onChange={this.onMobileEditorChange}
+							onClose={this.onHideMobileEditorMap}
+							map={this.map}
+							formContext={this.props.formContext}
+						/>
+				}
 			</div>
 		);
 	}
@@ -283,7 +289,6 @@ export default class MapField extends Component {
 				} : {};
 			}
 		});
-		this._lastFormData = formData;
 		this._zoomToDataOnNextTick = true;
 		this.props.onChange(formData);
 	}
@@ -313,7 +318,7 @@ export default class MapField extends Component {
 			return;
 		}
 		if (mobileEditor) {
-			if (!this.located || forceShow) {
+			if (!this.state.located || forceShow) {
 				this.setState({
 					mobileEditor: {
 						visible: true,
@@ -341,8 +346,8 @@ export default class MapField extends Component {
 				<React.Fragment>
 					<div className="blocker" />
 					<div className="blocker-content">
-							<span>{this.props.formContext.translations.SearchingForLocation}...</span>
-							<Spinner />
+						<span>{this.props.formContext.translations.SearchingForLocation}...</span>
+						<Spinner />
 					</div>
 				</React.Fragment>
 			);
@@ -350,7 +355,7 @@ export default class MapField extends Component {
 	}
 }
 
-class MobileEditorMap extends Component {
+class MobileEditorMap extends React.Component {
 	DEFAULT_RADIUS_PIXELS = 100;
 
 	constructor(props) {
@@ -373,12 +378,17 @@ class MobileEditorMap extends Component {
 	}
 
 	componentDidMount() {
+		this.mounted = true;
 		this.okButtonElem.focus();
+	}
+
+	componenWillUnmount() {
+		this.mounted = false;
 	}
 
 	getCircle(radiusPixels) {
 		return (
-			<svg viewBox="0 0" width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
+			<svg width="100%" height="100%" style={{position: "absolute", zIndex: 1000, top: 0, pointerEvents: "none"}}>
 				<defs>
 					<mask id="mask" x="0" y="0" width="100%" height="100%">
 						<rect x="0" y="0" width="100%" height="100%" fill="#fff"></rect>
@@ -454,7 +464,7 @@ class MobileEditorMap extends Component {
 	}
 
 	onLocate = (latlng, accuracy) => {
-		if (this.props.center) return;
+		if (this.props.center || !this.mounted) return;
 
 		const options = this.setViewFromCenterAndRadius(latlng, accuracy);
 		if (options.data && options.zoomToData) {
@@ -467,22 +477,23 @@ class MobileEditorMap extends Component {
 	}
 
 	render() {
-		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line no-unused-vars
+		let {rootElem, customControls, draw, data, zoomToData, zoom, center, locate, ...options} = this.props.map.getOptions(); // eslint-disable-line @typescript-eslint/no-unused-vars
 		const {userLocation} = this.props;
 
 		
 		options = {...options, ...(this.props.options || {}), ...this.state.mapOptions};
 
 		options.locate = {
-			on: false,
+			on: true,
 			userLocation,
-			onLocationFound: this.onLocate
+			onLocationFound: this.onLocate,
+			panOnFound: false
 		};
 
 		const {translations} = this.props.formContext;
 
 		return (
-			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef}>
+			<Fullscreen onKeyDown={this.onKeyDown} tabIndex={-1} ref={this.setContainerRef} contextId={this.props.formContext.contextId}>
 				<MapComponent
 					{...options}
 					singleton={true}

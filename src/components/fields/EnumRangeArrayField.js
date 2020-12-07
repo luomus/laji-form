@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions, focusNextInput } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
-import { Label } from "../components";
+import Context from "../../Context";
+import * as deepEquals from "deep-equal";
 
 @BaseComponent
-export default class EnumRangeArrayField extends Component {
+export default class EnumRangeArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -18,7 +19,7 @@ export default class EnumRangeArrayField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	static getName() {return "EnumRangeArrayField";}
@@ -26,6 +27,12 @@ export default class EnumRangeArrayField extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
+	}
+
+	componentWillReceiveProps(props) {
+		if (!deepEquals(props.formData, this.props.formData)) {
+			new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize");
+		}
 	}
 
 	setRef = (elem) => {
@@ -42,6 +49,7 @@ export default class EnumRangeArrayField extends Component {
 			value: this.state.value,
 			controlledValue: true,
 			minFetchLength: 0,
+			wrapperClassName: "laji-form-enum-range",
 			inputProps: {
 				value: this.state.value,
 				that: this,
@@ -52,6 +60,7 @@ export default class EnumRangeArrayField extends Component {
 			},
 		};
 
+		const {Label} = this.props.formContext;
 		return (
 			<React.Fragment>
 				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />
@@ -91,6 +100,10 @@ export default class EnumRangeArrayField extends Component {
 	}
 
 	onChange = (formData, reason) => {
+		function onlyUnique(value, index, self) { 
+			return self.indexOf(value) === index;
+		}
+		formData = formData.filter(onlyUnique);
 		if (reason !== "remove" && reason !== "suggestion selected" && reason !== "unsuggested selected") {
 			this.setState({value: ""});
 			return;
@@ -101,7 +114,7 @@ export default class EnumRangeArrayField extends Component {
 	}
 }
 
-class EnumRangeInputInjection extends Component {
+class EnumRangeInputInjection extends React.Component {
 	render() {
 		return <TagInputComponent {...this.props} onChange={this.onChange} onInputChange={this.onInputChange}/>;
 	}

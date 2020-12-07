@@ -1,8 +1,35 @@
 #!/bin/bash
+set -e
+pass_manager=false
+while getopts 'p' flag; do
+	case "${flag}" in
+		p) 
+			pass_manager=true
+		;;
+  esac
+done
+
+shift $((OPTIND-1))
 form=$1
-[[ -z $form ]] && echo "No form id given" && exit
-echo -n 'form.laji.fi user: '
-read user
-echo -n 'form.laji.fi pass: '
-read -s pass
-diff <(curl -s --user $user:$pass https://form.laji.fi/lajiform/"$form" | python -m json.tool) <(curl -s http://formtest.laji.fi/lajiform/"$form" | python -m json.tool)
+[[ -z $form ]] && echo "No form id given. Usage: 'prod-dev-forms-diff [-p] \$FORM_ID' [-p for using 'pass' to get credentials]" && exit
+
+if [[ $pass_manager == true ]]; then
+	prod=$(pass luomus/form.laji.fi)
+	user=$(echo "$prod" | grep user | awk -F ":" '{print $2}' | awk '{print $1}')
+	pass=$(echo "$prod" | head -n 1)
+	test=$(pass luomus/formtest.laji.fi)
+	test_user=$(echo "$test" | grep user | awk -F ":" '{print $2}' | awk '{print $1}')
+	test_pass=$(echo "$test" | head -n 1)
+else
+	echo -n 'form.laji.fi user: '
+	read user
+	echo -n 'form.laji.fi pass: '
+	read -s pass
+	echo "\n"
+	echo -n 'formtest.laji.fi user: '
+	read test_user
+	echo -n 'formtest.laji.fi pass: '
+	read -s test_pass
+fi
+
+diff <(curl -s --user $user:$pass https://form.laji.fi/lajiform/"$form" | python -m json.tool) <(curl -s --user $test_user:$test_pass http://formtest.laji.fi/lajiform/"$form" | python -m json.tool)

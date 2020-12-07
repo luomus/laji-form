@@ -1,34 +1,29 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { Modal, Tooltip, Popover, Overlay } from "react-bootstrap";
-import update from "immutability-helper";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
-import { getUiOptions, getInnerUiSchema, formatErrorMessage } from "../../utils";
-import { Map, parseGeometries } from "./MapArrayField";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
-import { combineColors } from "laji-map/lib/utils";
+import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
+import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
-export default class LocationChooserField extends Component {
+export default class LocationChooserField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				uiSchema: PropTypes.object,
 				taxonField: PropTypes.string,
 				geometryField: PropTypes.string,
-				strategy: PropTypes.string,
-				mapDrawOptions: PropTypes.shape({
-					marker: PropTypes.bool,
-					polyline: PropTypes.bool,
-					rectangle: PropTypes.bool,
-					polygon: PropTypes.bool,
-					circle: PropTypes.bool,
-				})
-			}).isRequired
+				strategy: PropTypes.oneOf(["unit", "lolife", "lolifeUnit"]),
+				mapOptions: PropTypes.object,
+				maxShapes: PropTypes.number,
+				preselectMarker: PropTypes.bool,
+				color: PropTypes.string
+			})
 		}).isRequired,
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
@@ -56,7 +51,7 @@ export default class LocationChooserField extends Component {
 	}
 }
 
-class LocationButton extends Component {
+class LocationButton extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -80,9 +75,12 @@ class LocationButton extends Component {
 	}
 
 	hasCoordinates = () => {
-		const {that} = this.props;
+		return parseGeometries(this.getGeometry()).length;
+	}
+
+	getGeometry = () => {
 		const geometryField = this.getGeometryField();
-		return parseGeometries(that.props.formData[geometryField]).length;
+		return parseJSONPointer(this.props.that.props.formData, geometryField);
 	}
 
 	onMouseEnter = () => {
@@ -90,7 +88,7 @@ class LocationButton extends Component {
 		const idx = this.getIdx();
 		this._hovered = true;
 		if (typeof idx === "number") {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", idx);
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData), idx});
 		}
 	}
 
@@ -99,7 +97,7 @@ class LocationButton extends Component {
 		const idx = this.getIdx();
 		this._hovered = false;
 		if (typeof idx === "number") {
-			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", idx);
+			new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData), idx});
 		}
 	}
 
@@ -112,17 +110,18 @@ class LocationButton extends Component {
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
 		switch (strategy) {
-		case "unit": return this.getUnitData();
-		case "lolife": return this.getLolifeData();
+		case "unit":
+			return this.getUnitData();
+		case "lolifeUnit":
+		case "lolife":
+			return this.getLolifeData();
 		}
 	}
 
 	getUnitData = () => {
 		const {that} = this.props;
-		const {formData} = that.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		const geometryField = this.getGeometryField();
 		const emptyFeatureCollection = {featureCollection: {type: "FeatureCollection", features: []}};
 
 		const gatheringData = map ? map.getDraw() : emptyFeatureCollection;
@@ -133,9 +132,10 @@ class LocationButton extends Component {
 
 		const idx = this.getIdx();
 
-		const draw = formData[geometryField] && formData[geometryField].type
+		const geometry = this.getGeometry();
+		const draw = geometry && geometry.type
 			? {
-				featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]},
+				featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry}]},
 				getFeatureStyle: this.getUnitDrawFeatureStyle,
 			}
 			: undefined;
@@ -169,30 +169,36 @@ class LocationButton extends Component {
 
 	getLolifeData = () => {
 		const {that} = this.props;
-		const {formData} = that.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		const geometryField = this.getGeometryField();
+		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
+		let draw;
+		if (strategy === "lolife") {
+			draw = map.getDraw();
+		}
+		const id = getUUID(that.props.formData);
+		let data = map.data.filter((item) => {
+			const isCurrent = item.featureCollection.features[0].properties.id === id;
+			if (strategy === "lolifeUnit" && isCurrent) {
+				draw = {...item,
+					idx: map.drawIdx,
+					getPopup: undefined,
+					on: undefined,
+					getFeatureStyle: this.getFeatureStyleWithHighlight(item.getFeatureStyle),
+					getDraftStyle: () => this.getFeatureStyleWithHighlight(item.getFeatureStyle)({feature: {properties: {id}}}, !!"higlight")
+				};
+			}
+			return !isCurrent;
+		}).map(item => ({...item, getPopup: undefined, on: undefined, getFeatureStyle: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)}));
 
-		const idx = this.getIdx();
-
-		const draw = formData[geometryField] && formData[geometryField].type
-				? {featureCollection: {type: "FeatureCollection", features: [{type: "Feature", geometry: formData[geometryField]}]}}
-				: undefined;
-
-		if (draw && map.data[idx + 1]) {
-			draw.getFeatureStyle = map.data[idx + 1].getFeatureStyle;
+		if (strategy === "lolifeUnit") {
+			data.push(map.getDraw());
 		}
 
 		return [
 			draw,
-			map.data.filter(({featureCollection}) =>
-				featureCollection.features[0]
-				&& (isNaN(idx)
-					? featureCollection.features[0].properties.hasOwnProperty("idx")
-					: featureCollection.features[0].properties.idx !== idx)
-			).map(item => ({...item, getPopup: undefined, on: undefined}))
+			data
 		];
 	}
 
@@ -207,7 +213,7 @@ class LocationButton extends Component {
 		let [draw, data] = this.getData();
 		data = data.map(d => ({...d, editable: false}));
 
-		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line no-unused-vars
+		const {rootElem, customControls, zoom, center, ...mapOptions} = map ? map.getOptions() : {mapOptions: {}}; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 		const {
 			mapOptions: {
@@ -236,8 +242,8 @@ class LocationButton extends Component {
 				...mapOptions.controls,
 				draw: {
 					...((mapOptions.controls || {}).draw || {}),
-					clear: false,
-					delete: false
+					clear: true,
+					delete: true
 				}
 			},
 			fullscreenable: true,
@@ -275,11 +281,11 @@ class LocationButton extends Component {
 		const geometryField = this.getGeometryField();
 		for (let event of events) {
 			const {type} = event;
-			const geometryRef = that.props.formData[geometryField];
+			const geometryRef = parseJSONPointer(that.props.formData, geometryField);
 
 			switch (type) {
 			case "create": {
-				if (geometryRef.type && (maxShapes > 1 || maxShapes === -1)) {
+				if (geometryRef && geometryRef.type && (maxShapes > 1 || maxShapes === -1)) {
 					if (geometryRef.geometries && maxShapes !== -1 && geometryRef.geometries.length >= maxShapes) {
 						this.setState({shapeAlert: {label: "tooManyShapes", max: maxShapes}});
 						return;
@@ -287,35 +293,23 @@ class LocationButton extends Component {
 					const geometries = geometryRef && geometryRef.geometries
 						? geometryRef.geometries
 						: geometryRef && geometryRef.type
-						? [geometryRef]
-						: [];
-					that.props.onChange(update(
-						that.props.formData,
-						{[geometryField]: {$set: [...geometries, event.feature.geometry]}}
-					));	
+							? [geometryRef]
+							: [];
+					that.props.onChange(updateFormDataWithJSONPointer(that.props, {type: "GeometryCollection", geometries: [...geometries, event.feature.geometry]}, geometryField));
 				} else {
-					that.props.onChange(update(
-						that.props.formData,
-						{[geometryField]: {$set: event.feature.geometry}}
-					));
+					that.props.onChange(updateFormDataWithJSONPointer(that.props, event.feature.geometry, geometryField));
 				}
 				// TODO LajiMap doesn't send a sequence of events containing multiple events if 
 				// it sends a create event, but this isn't necessarily true in the future and
 				// closing here wouldn't be right.
-				if (maxShapes === 1) close();
+				close();
 				break;
 			}
 			case "delete": {
 				if (!geometryRef || !geometryRef.type) {
 					break;
 				}
-				const updateObject = geometryRef.type === "GeometryCollection" && geometryRef.geometries
-					? {geometries: {$splice: [[event.idxs[0], 1]]}}
-					: {$set: getDefaultFormState(that.props.schema.properties[geometryField], undefined, that.props.registry.definitions)};
-				that.props.onChange(update(
-					that.props.formData,
-					{[geometryField]: updateObject}
-				));
+				that.props.onChange(updateFormDataWithJSONPointer(that.props, getDefaultFormState(parseSchemaFromFormDataPointer(that.props.schema, geometryField), undefined, that.props.registry.definitions), geometryField));
 				break;
 			}
 			case "edit": {
@@ -323,27 +317,22 @@ class LocationButton extends Component {
 					break;
 				}
 				if (geometryRef.type === "GeometryCollection" && geometryRef.geometries) {
-					const splices = Object.keys(event.features).reduce((splices, idx) => {
-						idx = +idx;
-						const geometry = event.features[idx].geometry;
-						splices.push([idx, 1, geometry]);
-						return splices;
-					}, []);
-					that.props.onChange(update(
-						that.props.formData,
-						{[geometryField]: {geometries: {$splice: splices}}}
-					));
+					const geometry = Object.keys(event.features).reduce((geometry, idx) => {
+						const feature = event.features[idx];
+						geometry = {...geometry, geometries: {...geometry.geometries, [idx]: feature.geometry}};
+						return geometry;
+					}, parseJSONPointer(that.props.formData, geometryField));
+					that.props.onChange(updateFormDataWithJSONPointer(that.props, geometry, geometryField));
 				} else if (geometryRef.type) {
-					that.props.onChange(update(
-						that.props.formData,
-						{[geometryField]: {$set: event.features[0].geometry}}
-					));
+					that.props.onChange(updateFormDataWithJSONPointer(that.props, event.features[0].geometry, geometryField));
 				}
 			}
 			}
-			if ((geometryRef.geometries
+
+			if (geometryRef
+				&& geometryRef.geometries
 				&& geometryRef.geometries.length <= maxShapes
-				&& type !== "edit")) {
+				&& type !== "edit") {
 				this.setState({shapeAlert: undefined});
 			}
 		}
@@ -364,8 +353,12 @@ class LocationButton extends Component {
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
 		switch (strategy) {
-		case "unit": return this.getUnitMiniMapData();
-		case "lolife": return this.getLolifeMiniMapData();
+		case "unit":
+			return this.getUnitMiniMapData();
+		case "lolifeUnit": 
+			return this.getLolifeUnitMiniMapData();
+		case "lolife": 
+			return this.getLolifeMiniMapData();
 		}
 	}
 
@@ -374,8 +367,7 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		const geometryField = this.getGeometryField();
-		const geometry = that.props.formData[geometryField];
+		const geometry = this.getGeometry();
 
 		const data = [
 			...(map && map.getDraw() ? [{
@@ -401,31 +393,58 @@ class LocationButton extends Component {
 		const {that} = this.props;
 		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
-		const idx = this.getIdx();
+		const draw = map.getDraw();
 		return [
-			map.data.map((item, i) => ({
-				...item,
-				getPopup: undefined,
-				on: undefined,
-				editable: false,
-				getFeatureStyle: item.getFeatureStyle
-					? (isNaN(idx) && i === 0) || i === idx + 1
-						? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
-						: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
-					: undefined
-			})),
-			{dataIdxs: [isNaN(idx) ? 0 : idx + 1]}
+			[
+				draw,
+				...map.data.map((item) => {
+					return {
+						...item,
+						getPopup: undefined,
+						on: undefined,
+						editable: false,
+						getFeatureStyle: item.getFeatureStyle
+					};
+				})
+			],
+			{dataIdxs: [draw.idx || 0]}
+		];
+	}
+
+	getLolifeUnitMiniMapData = () => {
+		const {that} = this.props;
+		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const {map} = mapContext;
+		const id = getUUID(that.props.formData);
+		return [
+			[
+				...map.data.map((item) => (
+					{
+						...item,
+						getPopup: undefined,
+						on: undefined,
+						editable: false,
+						getFeatureStyle: item.getFeatureStyle
+							? item.featureCollection.features[0].properties.id === id
+								? this.getFeatureStyleWithHighlight(item.getFeatureStyle)
+								: this.getFeatureStyleWithLowerOpacity(item.getFeatureStyle)
+							: undefined
+					}
+				)),
+				map.getDraw()
+			],
+			{dataIdxs: [map.data.findIndex(d => d.featureCollection.features[0].properties.id === id)]}
 		];
 	}
 
 	getFeatureStyleWithLowerOpacity = getFeatureStyle => (...params) => {
 		const style = getFeatureStyle(...params);
-		return {...style, opacity: 0.5, fillOpacity: 0.5};
+		return getFeatureStyleWithLowerOpacity(style);
 	}
 
 	getFeatureStyleWithHighlight = getFeatureStyle => (...params) => {
 		const style = getFeatureStyle(...params);
-		return {...style, color: combineColors(style.color, "#ffffff", 30)};
+		return getFeatureStyleWithHighlight(style);
 	}
 
 	onEntered = () => {
@@ -438,7 +457,7 @@ class LocationButton extends Component {
 		const {map} = mapContext;
 		let mapOptions = {};
 		if (map) {
-			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line no-unused-vars
+			const {rootElem, zoom, center, ..._mapOptions} = map.getOptions(); //eslint-disable-line @typescript-eslint/no-unused-vars
 			mapOptions = _mapOptions;
 		}
 
@@ -462,7 +481,7 @@ class LocationButton extends Component {
 	}
 
 	onModalMapKeyDown = (e) => {
-		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e)) {
+		if (e.key === "Escape" && !this.modalMapRef.map.keyHandler(e.nativeEvent)) {
 			this.onHide();
 		}
 	}
@@ -487,7 +506,7 @@ class LocationButton extends Component {
 
 		const hasCoordinates = this.hasCoordinates();
 		const geometryField = this.getGeometryField();
-		const hasErrors = that.props.errorSchema[geometryField];
+		const hasErrors = parseJSONPointer(filteredErrors(that.props.errorSchema), geometryField);
 
 		const bsStyle = hasErrors
 			? "danger"
@@ -496,23 +515,23 @@ class LocationButton extends Component {
 				: "default"; 
 
 		const button = <LocationButtonComp
-				key={`${that.props.idSchema.$id}-location`}
-				id={`${that.props.idSchema.$id}-location`}
-				variant={bsStyle}
-				onMouseEnter={this.onMouseEnter}
-				onMouseLeave={this.onMouseLeave}
-				glyph={glyph}
-				onClick={this.onClick}
-				style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
-				ref={this.setButtonRef}
-			/>;
+			key={`${that.props.idSchema.$id}-location`}
+			id={`${that.props.idSchema.$id}-location`}
+			variant={bsStyle}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
+			glyph={glyph}
+			onClick={this.onClick}
+			style={hasCoordinates && !hasErrors && color ? {backgroundColor: color} : undefined}
+			ref={this.setButtonRef}
+		/>;
 
 		if (hasErrors) {
 			return (
 				<React.Fragment>
 					{button}
 					<Overlay show={true} container={this} target={this.getButtonElem} placement="left">
-						<Tooltip id={`laji-form-error-container-${id}_${geometryField}`} className="location-chooser-errors">
+						<Tooltip id={`laji-form-error-container-${id}_${JSONPointerToId(geometryField)}`} className="location-chooser-errors">
 							<ul>{hasErrors.__errors.map((e, i) => <li key={i}>{formatErrorMessage(e)}</li>)}</ul>
 						</Tooltip>
 					</Overlay>
@@ -573,7 +592,7 @@ class LocationButton extends Component {
 	}
 }
 
-class LocationButtonComp extends Component {
+class LocationButtonComp extends React.Component {
 	render() {
 		return (
 			<GlyphButton {...this.props} />

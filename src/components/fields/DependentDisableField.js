@@ -1,5 +1,5 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import { isNullOrUndefined } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
@@ -13,7 +13,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  * }}
  */
 @VirtualSchemaField
-export default class DependentDisableField extends Component {
+export default class DependentDisableField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -56,7 +56,7 @@ export default class DependentDisableField extends Component {
 						}
 					}
 				});
-				if (rule.hasOwnProperty("disabledValueToDisplay")) {
+				if ("disabledValueToDisplay" in rule) {
 					newFormData = {...formData, [disableField]: rule.disabledValueToDisplay};
 				}
 			}

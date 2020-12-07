@@ -1,4 +1,4 @@
-import lajiValidate from "laji-validate";
+import * as lajiValidate from "laji-validate";
 
 export function initializeValidation(apiClient) {
 	lajiValidate.extend(lajiValidate.validators.remote, {
@@ -6,58 +6,41 @@ export function initializeValidation(apiClient) {
 	});
 }
 
-export default ({errors: error, liveErrors: liveError, warnings: warning, liveWarnings: liveWarning}, settings) => (data, errors) => {
-	if (error || (liveWarning && !settings.ignoreWarnings)) {
-		const promises = [];
+export default ({errors: error, warnings: warning}, data) => {
+	const promises = [];
 
-		const getPromiseForValidator = (type, validator) => {
-			return lajiValidate.async(data, validator)
-				.then(() => {})
-				.catch(res => res)
-				.then(err => {return {type, err};});
-		};
+	const getPromiseForValidator = (type, validator) => {
+		return lajiValidate.async(data, validator)
+			.then(() => {})
+			.catch(res => res)
+			.then(err => {return {type, err};});
+	};
 
-		const _validators = {error, liveError};
-		if (!settings.ignoreWarnings) {
-			_validators.warning = warning;
-			_validators.liveWarning = liveWarning;
-		}
+	const _validators = {error, warning};
 
-		Object.keys(_validators).forEach(type => {
-			const validator = _validators[type];
-			promises.push(getPromiseForValidator(type, validator));
-		});
+	Object.keys(_validators).forEach(type => {
+		const validator = _validators[type];
+		promises.push(getPromiseForValidator(type, validator));
+	});
 
-		return Promise.all(promises).then((res) => {
-			if (settings.ignoreWarnings && res.length > 0 && Object.keys(res[0]).length > 0) {
-				liveWarning && promises.push(getPromiseForValidator("liveWarning", liveWarning));
-				warning && promises.push(getPromiseForValidator("warning", warning));
-			}
-
-			return Promise.all(promises).then((res) => {
-				const messages = res.reduce((arr, {type, err}) => {
-					arr = arr.concat(getMessages(err, type));
-					return arr;
-				}, []);
-				return Promise.resolve(toErrorSchema(messages));
-			});
-		});
-	}
-
-	return errors;
+	return Promise.all(promises).then((res) => {
+		const messages = res.reduce((arr, {type, err}) => {
+			arr = arr.concat(getMessages(err, type));
+			return arr;
+		}, []);
+		return Promise.resolve(toErrorSchema(messages));
+	});
 };
 
-export function transformErrors(translations, skip) {
-	return (errors) => {
-		return skip ? [] : errors.map(error => {
-			if (error.name === "type") {
-				error.message = translations.TypeError + translations[error.params.type] + ".";
-			} else if (error.name === "required") {
-				error.message = translations.FieldIsRequired + ".";
-			}
-			return error;
-		});
-	};
+export function transformErrors(translations, errors) {
+	return errors.map(error => {
+		if (error.name === "type") {
+			error.message = translations.TypeError + translations[error.params.type] + ".";
+		} else if (error.name === "required") {
+			error.message = translations.FieldIsRequired + ".";
+		}
+		return error;
+	});
 }
 
 function getMessages(result, type) {
@@ -75,8 +58,8 @@ function getMessages(result, type) {
 }
 
 
-// these are taken from react-jsonschema-form to convert error messages to wanted form
-// see https://github.com/mozilla-services/react-jsonschema-form/blob/master/src/validate.js
+// these are taken from @rjsf/core to convert error messages to wanted form
+// see https://github.com/mozilla-services/@rjsf/core/blob/master/src/validate.js
 function toErrorSchema(errors) {
 	// Transforms a jsonschema validation errors list:
 	// [

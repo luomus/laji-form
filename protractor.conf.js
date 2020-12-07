@@ -3,7 +3,7 @@
 const [width, height] = [800, 1000];
 const common = {
 	shardTestFiles: true,
-	maxInstances: 4
+	maxInstances: process.env.THREADS ? parseInt(process.env.THREADS) :  4
 };
 const chrome = {
 	...common,
@@ -39,13 +39,15 @@ if (process.env.HEADLESS && process.env.HEADLESS !== "true") multiCapabilities.f
 
 exports.config = {
 	seleniumAddress: "http://localhost:4444/wd/hub",
-	specs: ["test/*-spec.js"],
+	specs: ["test/*-spec.ts"],
 	multiCapabilities,
 	SELENIUM_PROMISE_MANAGER: false,
 	onPrepare: async () => {
+		require("ts-node").register({
+			project: require("path").join(__dirname, "./tsconfig.json")
+		});
+
 		browser.waitForAngularEnabled(false);
-		require("babel-register");
-		require("babel-polyfill");
 
 		var env = jasmine.getEnv();
 		env.clearReporters();
@@ -55,9 +57,10 @@ exports.config = {
 		}));
 
 		// Set manually since Firefox cli size options don't work.
-		await browser.driver.manage().window().setSize(width, height);
+		//await browser.driver.manage().window().setRect({width, height});
 	},
 	plugins: [{
-		package: "protractor-console-plugin"
+		package: "protractor-console-plugin",
+		exclude: [/Uncaught \(in promise\)/]
 	}]
 };

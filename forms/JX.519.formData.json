@@ -1,73 +1,77 @@
 {
-  "gatheringEvent": {
-    "legPublic": true,
-    "leg": [
-      "MA.308"
-    ]
-  },
-  "editors": [
-    "MA.308"
-  ],
-  "secureLevel": "MX.secureLevelNone",
-  "keywords": [],
-  "gatherings": [
-    {
-      "geometry": {
-        "type": "GeometryCollection",
-        "geometries": [
-          {
-            "type": "Point",
-            "coordinates": [
-              24.110223,
-              49.458848
-            ]
-          }
-        ]
-      },
-      "country": "Ukraine",
-      "administrativeProvince": "Lviv Oblast",
-      "biologicalProvince": "",
-      "municipality": "Mykolaivs'kyi district",
-      "images": [],
-      "habitat": [],
-      "taxonCensus": [],
-      "units": [
+    "@context": "http://schema.laji.fi/context/document.jsonld",
+    "@type": "MY.document",
+    "collectionID": "HR.1747",
+    "creator": "MA.308",
+    "dateCreated": "2019-10-07T09:54:06+03:00",
+    "dateEdited": "2019-10-07T09:54:06+03:00",
+    "editor": "MA.308",
+    "formID": "JX.519",
+    "gatheringEvent": {
+        "@type": "MZ.gatheringEvent",
+        "dateBegin": "2019-10-07",
+        "id": "JX.163606#1",
+        "leg": [
+            "MA.308"
+        ],
+        "legPublic": true
+    },
+    "gatherings": [
         {
-          "taxonConfidence": "MY.taxonConfidenceSure",
-          "recordBasis": "MY.recordBasisHumanObservationPhoto",
-          "checklistID": "",
-          "informalTaxonGroups": [
-            "MVL.145",
-            "MVL.1"
-          ],
-          "images": [
-            "MM.93028"
-          ],
-		  "sex": "MY.sexM",
-          "preservation": [],
-          "birdBehavior": [],
-          "movingStatus": [],
-          "identifications": [
-            {
-              "identificationBasis": [],
-              "taxon": "varpunen"
-            }
-          ],
-          "unitFact": {
-            "autocompleteSelectedTaxonID": "MX.36573"
-          },
-          "unitGathering": {
+            "@type": "MY.gathering",
+            "biologicalProvince": "Pohjois-Savo",
+            "country": "Suomi",
             "geometry": {
-              "type": "Point",
-              "coordinates": [
-                24.10955899999999,
-                49.459027
-              ]
-            }
-          }
+                "geometries": [
+                    {
+                        "coordinates": [
+                            27.665099,
+                            63.275408
+                        ],
+                        "type": "Point"
+                    }
+                ],
+                "type": "GeometryCollection"
+            },
+            "id": "JX.163606#2",
+            "municipality": "Lapinlahti",
+            "units": [
+                {
+                    "@type": "MY.unit",
+                    "audio": [
+                        "MM.97760"
+                    ],
+                    "checklistID": "",
+                    "id": "JX.163606#4",
+                    "identifications": [
+                        {
+                            "@type": "MY.identification",
+                            "id": "JX.163606#5",
+                            "taxon": "kettu"
+                        }
+                    ],
+                    "images": [
+                        "MM.96975"
+                    ],
+                    "informalTaxonGroups": [
+                        "MVL.2"
+                    ],
+                    "recordBasis": "MY.recordBasisHumanObservationPhoto",
+                    "taxonConfidence": "MY.taxonConfidenceSure",
+                    "unitFact": {
+                        "autocompleteSelectedTaxonID": "MX.46587"
+                    },
+                    "unitGathering": {
+                        "@type": "MZ.unitGathering",
+                        "geometry": {},
+                        "id": "JX.163606#3"
+                    }
+                }
+            ]
         }
-      ],
-      "eventTime": {}
-    }
-  ]
+    ],
+    "id": "JX.163606",
+    "publicityRestrictions": "MZ.publicityRestrictionsPublic",
+    "secureLevel": "MX.secureLevelNone",
+    "sourceID": "KE.389"
 }

@@ -1,18 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../utils";
 import { Panel, ListGroup, ListGroupItem, Modal, Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
-import { Button, DeleteButton } from "../components";
-import Spinner from "react-spinner";
+import { Button } from "../components";
+import * as Spinner from "react-spinner";
 import { isObject } from "laji-map/lib/utils";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
-export default class AnnotationField extends Component {
+export default class AnnotationField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -44,7 +43,7 @@ export default class AnnotationField extends Component {
 			tooltip: this.props.formContext.translations.ShowAnnotations,
 			tooltipPlacement: "left",
 			fn: this.onClick,
-			bsStyle: annotations && annotations.length ? "primary": "default"
+			variant: annotations && annotations.length ? "primary": "default"
 		};
 	}
 
@@ -65,7 +64,9 @@ export default class AnnotationField extends Component {
 	render() {
 		const {adminOnly, container, add, filter, uiSchema: annotationUiSchema, buttonsPath = "/", formId} = getUiOptions(this.props.uiSchema);
 		const innerUiSchema = getInnerUiSchema(this.props.uiSchema);
-		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin || !this.props.formData.id
+		let uiSchema = adminOnly && !this.props.formContext.uiSchemaContext.isAdmin
+			|| !this.props.formContext.uiSchemaContext.isEdit
+			|| !this.props.formData.id
 			? innerUiSchema
 			: injectButtons(innerUiSchema, [this.getButton()], buttonsPath);
 
@@ -113,7 +114,7 @@ export default class AnnotationField extends Component {
 
 new Context("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
 
-class AnnotationBox extends Component {
+class AnnotationBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {annotations: props.annotations || []};
@@ -125,7 +126,7 @@ class AnnotationBox extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		new ApiClient().fetchCached(`/forms/${this.props.formId}`, {lang: this.props.lang, format: "schema"})
+		this.props.formContext.apiClient.fetchCached(`/forms/${this.props.formId}`, {lang: this.props.lang, format: "schema"})
 			.then(metadataForm => {
 				if (!this.mounted) return;
 				const {filter: _filter} = this.props;
@@ -147,20 +148,24 @@ class AnnotationBox extends Component {
 
 	onAnnotationSubmit = ({formData}) => {
 		const {type} = this.getAddOptions();
-		new ApiClient().fetchRaw("/annotations", undefined, {
+		const context = new Context(this.props.formContext.contextId);
+		context.pushBlockingLoader();
+		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
 			method: "POST",
-			body: JSON.stringify({...formData, targetID: this.props.id, rootID: new Context(this.props.formContext.contextId).formData.id, type})
+			body: JSON.stringify({...formData, targetID: this.props.id, rootID: context.formData.id, type, byRole: "MMAN.formAdmin"})
 		}).then(response => {
 			if (response.status >= 400) {
 				throw new Error("Request failed");
 			}
 			return response.json();
 		}).then(annotation => {
+			context.popBlockingLoader();
 			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
-			const annotations = [...this.state.annotations, annotation];
+			const annotations = [annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
 		}).catch(() => {
+			context.popBlockingLoader();
 			this.setState({fail: true});
 		});
 	}
@@ -220,8 +225,8 @@ class AnnotationBox extends Component {
 			submitOnChange = _submitOnChange;
 			addFormData = this.state.addFormData || (
 				formData
-				? getDefaultFormState(addSchema, formData)
-				: undefined
+					? getDefaultFormState(addSchema, formData)
+					: undefined
 			);
 		}
 
@@ -237,6 +242,8 @@ class AnnotationBox extends Component {
 				renderSubmit={renderSubmit}
 				formData={addFormData}
 				lang={lang}
+				apiClient={this.props.formContext.apiClient.apiClient}
+				uiSchemaContext={this.props.formContext.uiSchemaContext}
 			>
 				{<div>
 					{this.state.fail !== undefined && 
@@ -259,12 +266,13 @@ class AnnotationBox extends Component {
 			"ui:shortcuts": {
 				...((metadataForm.uiSchema || {})["ui:shorcuts"] || {}),
 				...(mainContext.shortcuts || {})
-			}
+			},
+			"ui:showShortcutsButton": false
 		};
 	}
 
 	onDelete = (id) => () => {
-		new ApiClient().fetchRaw(`/annotations/${id}`, undefined, {
+		this.props.formContext.apiClient.fetchRaw(`/annotations/${id}`, undefined, {
 			method: "DELETE"
 		}).then(() => {
 			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
@@ -277,9 +285,9 @@ class AnnotationBox extends Component {
 	}
 
 	render() {
-		const {formContext: {translations, lang, uiSchemaContext: {creator}}} = this.props;
+		const {formContext: {translations, lang, apiClient}} = this.props;
 		const {metadataForm = {}, annotations = []} = this.state;
-		const _uiSchema = this.getUiSchema();
+		const _uiSchema = {...this.getUiSchema(), "ui:readonly": true};
 
 		return (
 			<Panel header={<strong>{translations.Comments}</strong>}>
@@ -294,8 +302,9 @@ class AnnotationBox extends Component {
 									lang={lang}
 									formData={annotation}
 									renderSubmit={false}
+									apiClient={apiClient.apiClient}
+									uiSchemaContext={this.props.formContext.uiSchemaContext}
 								/>
-								{annotation.annotationByPerson === creator ? <DeleteButton onClick={this.onDelete(annotation.id)} translations={translations} corner={true}/> : null}
 							</div>
 						</ListGroupItem>
 					) : <Spinner />}

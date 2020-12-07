@@ -1,7 +1,7 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { immutableDelete, parseJSONPointer } from  "../../utils";
-import { toIdSchema } from  "react-jsonschema-form/lib/utils";
+import { toIdSchema } from  "@rjsf/core/dist/cjs/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -21,7 +21,7 @@ const combinedPropType = PropTypes.shape({
 });
 
 @VirtualSchemaField
-export default class CombinedValueDisplayField extends Component {
+export default class CombinedValueDisplayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -51,10 +51,10 @@ export default class CombinedValueDisplayField extends Component {
 
 			schema = {...schema, properties: {...schema.properties, [name || ""]: {title: title || "", type: "string" }}};
 			idSchema = toIdSchema(
-                schema,
-                idSchema.$id,
-                props.registry.definitions
-            );
+				schema,
+				idSchema.$id,
+				props.registry.definitions
+			);
 
 			let value = undefined;
 

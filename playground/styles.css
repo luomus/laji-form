@@ -120,7 +120,7 @@ body .laji-form {
 	border-radius: 2px;
 	line-height: 12.5px;
 }
-.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper, .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
+.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper:not(.laji-form-enum-range), .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
 	height: 25px !important;
 }
 .laji-form .form-control-feedback {
@@ -185,6 +185,10 @@ min-height: 20px;
 	font-size: 15px;
 	margin-bottom: 5px;
 	margin-top: 5px;
+}
+.laji-form legend.no-line-break {
+	white-space: nowrap;
+	overflow: hidden;
 }
 .laji-form legend.lg {
 	font-size: 20px;
@@ -299,7 +303,7 @@ min-height: 20px;
 	padding: 0;
 	text-align: initial;
 }
-.laji-form .laji-form-images .btn-danger {
+.laji-form .laji-form-medias .btn-danger {
 	width: auto;
 	height: auto;
 	line-height: 5px;
@@ -307,7 +311,7 @@ min-height: 20px;
 	padding: 5px;
 	margin: 2px;
 }
-.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button:not(.delete-corner) {
+.laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button:not(.button-corner) {
 	width: 25px;
 	height: 25px;
 	font-size: 11px;
@@ -361,13 +365,13 @@ min-height: 20px;
 .laji-form button .react-spinner .react-spinner_bar {
 	background-color: white !important;
 }
-.laji-form.image-modal-content > .react-spinner {
+.laji-form.media-modal-content > .react-spinner {
 	left: 50%;
 	top: 50%;
 	height: 100px;
 	width: 100px;
 }
-.laji-form.image-modal .image-modal-content {
+.laji-form.media-modal .media-modal-content {
 	min-height: 700px;
 }
 
@@ -446,20 +450,30 @@ min-height: 20px;
 .laji-form .laji-form-map-navi {
 	margin-bottom: 5px;
 }
-.laji-form .laji-form-images {
+.laji-form .laji-form-medias {
 	margin-top: 10px;
-	overflow: auto;
 }
-.laji-form .laji-form-images > div {
+.laji-form .laji-form-medias > .media-container, .laji-form .laji-form-medias > .laji-form-drop-zone {
 	margin-right: 7px;
 	margin-bottom: 7px;
 	width: 120px;
 	height: 120px;
 	float: left;
 }
-.laji-form .laji-form-images img, .laji-form .image-loading {
+.laji-form .laji-form-medias a > img, .laji-form .audios-container a {
+	cursor: pointer;
+}
+.laji-form .laji-form-medias img, .laji-form .media-loading {
 	width: inherit;
 	height: inherit;
+}
+.laji-form .laji-form-medias .media-loading img {
+	opacity: 0.5;
+}
+
+.laji-form .audios-container > .media-container, .laji-form .audios-container > .laji-form-drop-zone {
+	width: 90px;
+	height: 105px;
 }
 
 .laji-form .taxon-img {
@@ -482,13 +496,14 @@ min-height: 20px;
 }
 
 .laji-form .laji-form-drop-zone {
+	cursor: pointer;
 	border: 2px dashed #cacaca;
 }
 .laji-form  .laji-form-drop-zone:hover:not(.disabled), .laji-form .laji-form-drop-zone.dragging:not(.disabled)  {
 	background-color: #d8fbc6;
 	border-color: #a7d490;
 }
-.laji-form .laji-form-images a:hover, .laji-form .laji-form-images a:active {
+.laji-form .laji-form-medias a:hover, .laji-form .laji-form-medias a:active {
 	text-decoration: none;
 	color: #337ab7;
 }
@@ -499,13 +514,13 @@ min-height: 20px;
 	cursor: not-allowed;
 }
 
-.laji-form .laji-form-images a {
+.laji-form .laji-form-medias a {
 	text-align: center;
 	vertical-align: middle;
 	width: 100%;
 	height: 100%;
 }
-.laji-form .laji-form-images .glyphicon {
+.laji-form .laji-form-medias .media-container > a > div > .glyphicon, .laji-form .laji-form-medias .laji-form-drop-zone .glyphicon {
 	font-size: 78px;
 	color: #dedede;
 	display: table-cell;
@@ -514,26 +529,55 @@ min-height: 20px;
 	padding-left: 16px;
 	padding-top: 16px;
 }
-.laji-form .darker .laji-form-images .glyphicon {
+.laji-form .audios-container .laji-form-drop-zone .glyphicon {
+	font-size: 60px;
+	padding-left: 12px;
+	padding-top: 19px;
+}
+.laji-form .audios-container .media-container > a > div > .glyphicon {
+	padding-left: 2px;
+	padding-top: 0px;
+	color: #868686;
+}
+.laji-form .audios-container .media-container > a > div > .glyphicon-pause {
+	padding-left: 6px;
+}
+.laji-form .audio-container {
+	border: 2px solid #cacaca;
+	border-radius: 2px;
+	background: white;
+}
+.laji-form .audio-container.loading {
+	height: 105.5px;
+	width: 90px;
+}
+.laji-form .darker .laji-form-medias .glyphicon {
 	color: #cacaca;
 }
+.laji-form .audio-metadata-button {
+    width: 100%;
+    height: 20px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-radius: 0px !important;
+}
 
-.laji-form.image-modal {
+.laji-form.media-modal {
 	width: 90vmin;
 }
 
-.laji-form.image-modal img {
+.laji-form.media-modal img {
 	width: 100%;
 }
 
-.laji-form .img-container {
+.laji-form .media-container {
 	position: relative;
 }
-.laji-form .img-container .react-spinner {
+.laji-form .media-container .react-spinner {
 	top: 50%;
 	left: 50%;
 }
-.laji-form .delete-corner {
+.laji-form .button-corner {
 	border-radius: 7px !important;
 	padding: 4px 2px !important;
 	top: -9px;
@@ -671,9 +715,17 @@ min-height: 20px;
 	width: 100%;
 }
 
+.laji-form .gray, .laji-form .background {
+	border: 1px solid #e3e3e3;
+}
 .laji-form .gray {
 	background-color: #f5f5f5;
-	border: 1px solid #e3e3e3;
+}
+.laji-form .background {
+	background-color: #f6f8f8;
+}
+.laji-form .nonbordered {
+	border: none;
 }
 .laji-form .darker {
 	background-color: #e2e2e2;
@@ -777,6 +829,10 @@ min-height: 20px;
 	box-shadow: 13px 18px 43px -18px rgba(0,0,0,0.75);
 	max-height: 90%;
 	overflow: auto;
+}
+.laji-form .laji-form-failed-jobs-list {
+	left: initial !important;
+	right: 5px;
 }
 .laji-form .laji-form-error-list {
 	top: 5px;
@@ -916,11 +972,11 @@ min-height: 20px;
 	padding: 0px !important;
 	border: 0px !important;
 }
-.laji-form .single-active-array-table td > img, .laji-form .single-active-array-table td > .image-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
+.laji-form .single-active-array-table td img, .laji-form .single-active-array-table td > .media-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
 	height: 15px;
 	width: 15px;
 }
-.laji-form .single-active-array-table .image-loading {
+.laji-form .single-active-array-table .media-loading {
 	border: none;
 }
 .laji-form .single-active-array-table-array .react-spinner {
@@ -937,29 +993,28 @@ min-height: 20px;
 }
 
 .laji-form .highlight-error-fire {
-    -webkit-animation: shake .5s linear 1;
+    animation: shake .5s linear 1;
 }
 
-/* also need keyframes and -moz-keyframes */
- @-webkit-keyframes shake {
-    8%, 41% {
-        -webkit-transform: translateX(-10px);
-    }
-    25%, 58% {
-        -webkit-transform: translateX(10px);
-    }
-    75% {
-        -webkit-transform: translateX(-5px);
-    }
-    92% {
-        -webkit-transform: translateX(5px);
-    }
-    0%, 100% {
-        -webkit-transform: translateX(0);
-    }
-    50% {
-        -webkit-transform: translateX(10px);
-    }
+@keyframes shake {
+	8%, 41% {
+		transform: translateX(-10px);
+	}
+	25%, 58% {
+		transform: translateX(10px);
+	}
+	75% {
+		transform: translateX(-5px);
+	}
+	92% {
+		transform: translateX(5px);
+	}
+	0%, 100% {
+		transform: translateX(0);
+	}
+	50% {
+		transform: translateX(10px);
+	}
 }
 
 /* Custom bootstrap grid class */
@@ -1107,7 +1162,7 @@ min-height: 20px;
 .laji-form #named-place-chooser-select {
 	margin-bottom: 5px;
 }
-.laji-form.map-dialog .react-spinner {
+.laji-form.map-dialog .modal-body > div > .react-spinner {
 	left: 50%;
 	top: 50%;
 	z-index: 1000;
@@ -1354,13 +1409,22 @@ min-height: 20px;
 .laji-form .darker-bottom-border {
 	border-bottom: 1px solid #d2d2d2;
 }
-.laji-form .location-chooser-errors .tooltip-inner {
+.location-chooser-errors .tooltip-inner {
 	background: #bd362f;
 }
-.laji-form .location-chooser-errors .tooltip-arrow {
+.location-chooser-errors.tooltip.left .tooltip-arrow {
 	border-left-color: #bd362f !important;
 }
-.laji-form .location-chooser-errors ul {
+.location-chooser-errors.tooltip.right .tooltip-arrow {
+	border-right-color: #bd362f !important;
+}
+.location-chooser-errors.tooltip.bottom .tooltip-arrow {
+	border-bottom-color: #bd362f !important;
+}
+.location-chooser-errors.tooltip.top .tooltip-arrow {
+	border-top-color: #bd362f !important;
+}
+.location-chooser-errors ul {
 	list-style: none;
 	padding: 0;
 }
@@ -1371,13 +1435,13 @@ min-height: 20px;
 	background: black;
 	position: absolute;
 	top: 0;
-	z-index: 1;
+	z-index: 1000;
 	opacity: 0.5;
 }
 .laji-form .blocker-content {
 	opacity: 1;
 	background-color: transparent;
-	z-index: 1;
+	z-index: 1000;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -1417,10 +1481,10 @@ min-height: 20px;
 	margin-top: -5px;
 }
 
-.laji-form.image-add-modal button {
+.laji-form.media-add-modal button {
 	margin-bottom: 12px;
 }
-.laji-form.image-add-modal .modal-body > *:last-child {
+.laji-form.media-add-modal .modal-body > *:last-child {
 	margin-bottom: inherit;
 }
 
@@ -1632,3 +1696,109 @@ min-height: 20px;
 .glyphicon-bookmark:before{content:"\1f516";}
 .glyphicon-fire:before{content:"\1f525";}
 .glyphicon-wrench:before{content:"\1f527";}
+
+.laji-form .running-jobs {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, 0);
+	z-index: 100009000;
+	color: white;
+	font-weight: bold;
+}
+.laji-form .running-jobs .progress {
+	margin-top: 5px;
+}
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+	from {
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes rotating {
+	from {
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	to {
+		-ms-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+.rotating {
+	-webkit-animation: rotating 2s linear infinite;
+	-moz-animation: rotating 2s linear infinite;
+	-ms-animation: rotating 2s linear infinite;
+	-o-animation: rotating 2s linear infinite;
+	animation: rotating 2s linear infinite;
+}
+
+/* Hide text input arrows */
+/* Chrome, Safari, Edge, Opera */
+.laji-form input::-webkit-outer-spin-button,
+.laji-form input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+/* Firefox */
+.laji-form input[type=number] {
+	-moz-appearance:textfield;
+}
+
+.laji-form .horizontally-centered {
+	display: block !important;
+	margin: auto;
+	text-align: center;
+}
+
+.laji-form .row-height {
+	height: 25px;
+	line-height: 25px;
+}
+
+.laji-form legend.hidden-title-text span {
+	visibility: hidden;
+	white-space: nowrap;
+}
+
+.laji-form .not-strong {
+	font-weight: normal;
+}
+
+.laji-form .invisible {
+	visibility: hidden;
+}
+
+.laji-form .checkbox-row > .form-group {
+	display: inline-block;
+	margin-right: 30px;
+}
+.tooltip.lg .tooltip-inner {
+	font-size: 14px;
+	max-width: 400px;
+}
+.text-left {
+	text-align: left;
+}
+
+.laji-form .input-highlight {
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,1);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,1);
+}
+
+.laji-form .tristate-buttons .btn-default.active {
+	background-color: #337ab7;
+	color: #fff;
+}

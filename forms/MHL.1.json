@@ -6,6 +6,7 @@
     "collectionID": "HR.61",
     "description": "T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Muiden linjojen kuin vakiolinjojen tulokset ilmoitetaan toistaiseksi tuttuun tapaan Excel-lomakkeella. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a><ol><li>Ilmoita lomakkeella laskennan ja reitin perustiedot sek\u00e4 havaitut linnut biotoopeittain. Saat lis\u00e4ohjeita ?-kuvakkeista kenttien vieress\u00e4.</li><li>Lomakkeella voit siirty\u00e4 kent\u00e4st\u00e4 toiseen joko hiiren avulla tai pikan\u00e4pp\u00e4imill\u00e4 (tab = seuraavaan kentt\u00e4\u00e4n, Alt + nuoli yl\u00f6s = edelliselle havaintoriville, Alt + nuoli alas = seuraavalle havaintoriville).</li><li>Kirjaa havaitut linnut biotoopeittain. Voit valita biotooppip\u00e4tk\u00e4t joko kartalta klikkaamalla tai liikkua biotooppip\u00e4tk\u00e4st\u00e4 toiseen nuolin\u00e4pp\u00e4imill\u00e4 havaintojensy\u00f6t\u00f6n yl\u00e4puolella. Kirjaa muuttuneet biotoopit \u201dp\u00e4\u00e4saran biotooppi\u201d -kentt\u00e4\u00e4n.</li><li>Tee mahdolliset muutokset biotooppip\u00e4tkien pituuteen tai reitin kulkuun kartan ty\u00f6kaluja k\u00e4ytt\u00e4en. Voit muokata linjan pistett\u00e4 ensin tuplaklikkaamalla ja sitten raahaamalla. Pisteen voi poistaa klikkaamalla sit\u00e4 hiiren oikealla n\u00e4pp\u00e4imell\u00e4. Jos teit virheen kartan muokkauksessa, k\u00e4yt\u00e4 \u201dKumoa\u201d-ty\u00f6kalua kartan oikeasta reunasta. Seuraa kartalla kursorin viereen tulevia ohjetekstej\u00e4 ja katso perusteellisempaa ohjetta Linjalaskentojen etusivun k\u00e4ytt\u00f6ohjeesta.</li><li>Havaintoja voit sy\u00f6tt\u00e4\u00e4 joko ns. pikasy\u00f6tt\u00f6tilassa tai erillisten kenttien avulla. Pikasy\u00f6tt\u00f6tilaan ja siit\u00e4 pois siirryt\u00e4\u00e4n havaintojensy\u00f6t\u00f6n oikean reunan nuolikuvakkeesta. K\u00e4yt\u00f6ss\u00e4 ovat 3+3 lyhenteet, tieteelliset ja suomenkieliset nimet sek\u00e4 pikasy\u00f6tt\u00f6tilassa lis\u00e4ksi yleisimpien lajien 2-kirjaimiset lyhenteet (linkki 2-kirjaimisiin lyhenteisiin: <a target=\"_blank\" rel=\"noreferrer noopener\" href=\"https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet\">https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet</a>). Voit k\u00e4ytt\u00e4\u00e4 pieni\u00e4 tai isoja kirjaimia ja k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. Katso ohjetta \u201dHavainnot\u201d-kent\u00e4n alla.</li><li>Kun olet sy\u00f6tt\u00e4nyt havainnot, ja haluat tallentaa ja l\u00e4hett\u00e4\u00e4 tiedot eteenp\u00e4in Linnustonseurannalle, paina: \u201dTallenna julkisena\u201d.</li><li>Tallennuksen j\u00e4lkeen tulee n\u00e4kyviin lista mahdollisista virheist\u00e4 ja varoituksista. Korjaa virheet ja tallenna uudelleen.</li><li>Tallennuksen j\u00e4lkeen n\u00e4et koosteen tallentamastasi havaintoer\u00e4st\u00e4, esimerkiksi havaituista lajeista ja parim\u00e4\u00e4rist\u00e4, p\u00e4\u00e4sarkaprosentista, kokonaislajim\u00e4\u00e4r\u00e4st\u00e4, etenemisnopeudesta jne.</li><li>P\u00e4\u00e4set tarvittaessa muokkaamaan tallennettua havaintoer\u00e4\u00e4 \u201dOmat havaintoer\u00e4ni\u201d \u2013kohdasta. Kunkin havaintoer\u00e4n vasemmassa laidassa on valittavana \u201dN\u00e4yt\u00e4 havaintoer\u00e4\u201d ja \u201dSiirry muokkaussivulle\u201d -kuvakkeet.</li></ol>",
     "excludeFromCopy": [
+        "$.gatheringEvent.dateBegin",
         "$.gatherings[*].units"
     ],
     "features": [
@@ -16,15 +17,21 @@
         "MHL.featureAddingNamedPlacesNotAllowed",
         "MHL.featureEditingNamedPlacesNotAllowed",
         "MHL.featureCopyLatestDocumentToNamedPlace",
-        "MHL.featureReserve"
+        "MHL.featureReserve",
+        "MHL.featureFilterNamedPlacesByTags",
+        "MHL.featureAdminLockable"
     ],
     "id": "MHL.1",
     "language": "fi",
     "logo": "https://cdn.laji.fi/images/logos/linjalaskentalomake.PNG",
     "name": "Linjalaskenta",
     "namedPlaceOptions": {
-        "description": "<p>T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. T\u00e4\u00e4ll\u00e4 voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\" rel=\"noopener noreferref\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisi\u00e4 reittien tietoja ja varaustilannetta.</li><li>Tehd\u00e4 varauksen tulevalle kaudelle ja vapauttaa tekem\u00e4si varauksen.<br>(Huom! kev\u00e4\u00e4ll\u00e4 2018 on k\u00e4yt\u00f6ss\u00e4 vanha varaussivu: <a href=\"http://koivu.luomus.fi/seurannat/linjalaskenta/vakiolinjat.php\" target=\"_blank\" rel=\"noopener noreferref\">http://koivu.luomus.fi/seurannat/linjalaskenta/vakiolinjat.php</a> )</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen valitse oikeasta reunasta \u201dKatso ja tulosta kartta ja maastolomake\u201d.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirty\u00e4 ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen klikkaa \u201dilmoita uusi laskenta t\u00e4lle reitille\u201d.</ol><p>Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ota yhteytt\u00e4 <a target=\"_blank\" href=\"mailto:linnustonseuranta@luomus.fi\">linnustonseuranta@luomus.fi</a></p>",
+        "description": "<p>T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. T\u00e4\u00e4ll\u00e4 voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\" rel=\"noopener noreferref\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisi\u00e4 reittien tietoja ja varaustilannetta.</li><li>Tehd\u00e4 varauksen tulevalle kaudelle ja vapauttaa tekem\u00e4si varauksen.</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen valitse oikeasta reunasta \u201dKatso ja tulosta kartta ja maastolomake\u201d. Lomakkeita ei kannata tulostaa ennen linnustonseurannan lupaa, koska reittiin on voinut tulla hyv\u00e4ksym\u00e4tt\u00f6mi\u00e4 reittimuutoksia.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirty\u00e4 ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen klikkaa \u201dilmoita uusi laskenta t\u00e4lle reitille\u201d.</ol><p>Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ota yhteytt\u00e4 <a target=\"_blank\" href=\"mailto:linnustonseuranta@luomus.fi\">linnustonseuranta@luomus.fi</a></p>",
         "formNavLabel": "Reitit ja ilmoittaminen",
+        "infoFields": [
+            "name",
+            "notes"
+        ],
         "listLabel": "Linjaluettelo",
         "printLabel": "Katso ja tulosta kartta ja maastolomake",
         "reservationUntil": "${year}-12-31",
@@ -74,6 +81,7 @@
                         "type": "boolean"
                     },
                     "dateBegin": {
+                        "excludeFromCopy": true,
                         "title": "Laskentap\u00e4iv\u00e4",
                         "type": "string"
                     },
@@ -631,7 +639,7 @@
                             "ui:help": "Havainnosta tulkittu parim\u00e4\u00e4r\u00e4"
                         },
                         "shortHandText": {
-                            "ui:belowHelp": "<div> <strong>Kirjoita pikakirjoitukseen LAJI (a) (Lukum\u00e4\u00e4r\u00e4) Koodi (A/P)</strong> <p> <table class=\"table table-condensed\"> <thead> <tr> <th>Koodi</th><th>Havainnon laatu</th><th>Ilmoitettava lukum\u00e4\u00e4r\u00e4</th> </tr> </thead> <tbody> <tr> <td>x</td><td>Laulava</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>v</td><td>Muuten \u00e4\u00e4ntelev\u00e4</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>o</td><td>N\u00e4k\u00f6havainto</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>k</td><td>Koiras</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>n</td><td>Naaras</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>y</td><td>Ylilent\u00e4v\u00e4</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>a luku o</td><Td>Parvi</Td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>a luku y</td><td>Lentoparvi</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>pari</td><td>Pari</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>poikue</td><td>Poikue</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>pes\u00e4</td><td>Pes\u00e4</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> </tbody> </table> </p> <p> <table class=\"table table-condensed\"> <tbody> <tr> <th>LAJI</th><td>Lajin kaksi- tai kuusikirjaiminen koodi. Pakollinen.</td> </tr> <tr> <th>a</th><td>Jos kyseess\u00e4 on parvihavainto, lukum\u00e4\u00e4r\u00e4n eteen kirjoitetaan a. Muuten a j\u00e4tet\u00e4\u00e4n kirjoittamatta. </td></tr> <tr> <th>Lukum\u00e4\u00e4r\u00e4</th><td>Yksil\u00f6m\u00e4\u00e4r\u00e4 tai koodeille \"pari\", \"poikue\", \"pes\u00e4\" parim\u00e4\u00e4r\u00e4. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, lukum\u00e4\u00e4r\u00e4ksi tulee 1. </td></tr> <tr> <th>Koodi</th><td>Luettelo koodeista on yll\u00e4. Pakollinen. </td></tr> <tr> <th>A/P</th><td>A = Apusarka, P = P\u00e4\u00e4sarka. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, saraksi tulee A. </td></tr> </tbody> </table> </p> <p> Voit k\u00e4ytt\u00e4\u00e4 suuria tai pieni\u00e4 kirjaimia. Voit k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. </p> <p>Koodit koiras, naaras, pari, poikue ja pes\u00e4: ei kirjata onko n\u00e4hty tai kuultu</p> <p> Esimerkkej\u00e4: <i>TTX, RRvp, pt2xp, ec2y, CSa6y, CORNIX O P, cornixop, TM2pariP, PD3k</i> </p> <p>Vinkki: Jos havaintoa ei hyv\u00e4ksyt\u00e4 pikasy\u00f6tt\u00f6kent\u00e4ss\u00e4, kokeile sulkea pikasy\u00f6tt\u00f6 ja valita erillisist\u00e4 kentist\u00e4.<p> </div>",
+                            "ui:belowHelp": "<div> <strong>Kirjoita pikakirjoitukseen LAJI (a) (Lukum\u00e4\u00e4r\u00e4) Koodi (A/P)</strong> <p> <table class=\"table table-condensed\"> <thead> <tr> <th>Koodi</th><th>Havainnon laatu</th><th>Ilmoitettava lukum\u00e4\u00e4r\u00e4</th> </tr> </thead> <tbody> <tr> <td>x</td><td>Laulava</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>v</td><td>Muuten \u00e4\u00e4ntelev\u00e4</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>o</td><td>N\u00e4k\u00f6havainto</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>k</td><td>Koiras</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>n</td><td>Naaras</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>y</td><td>Ylilent\u00e4v\u00e4</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>a luku o</td><Td>Parvi</Td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>a luku y</td><td>Lentoparvi</td><td>Yksil\u00f6m\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>pari</td><td>Pari</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>poikue</td><td>Poikue</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> <tr> <td>pes\u00e4</td><td>Pes\u00e4</td><td>Parim\u00e4\u00e4r\u00e4</td> </tr> </tbody> </table> </p> <p> <table class=\"table table-condensed\"> <tbody> <tr> <th>LAJI</th><td>Lajin kaksi- tai kuusikirjaiminen koodi. Pakollinen.</td> </tr> <tr> <th>a</th><td>Jos kyseess\u00e4 on parvihavainto, lukum\u00e4\u00e4r\u00e4n eteen kirjoitetaan a. Muuten a j\u00e4tet\u00e4\u00e4n kirjoittamatta. </td></tr> <tr> <th>Lukum\u00e4\u00e4r\u00e4</th><td>Yksil\u00f6m\u00e4\u00e4r\u00e4 tai koodeille \"pari\", \"poikue\", \"pes\u00e4\" parim\u00e4\u00e4r\u00e4. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, lukum\u00e4\u00e4r\u00e4ksi tulee 1. </td></tr> <tr> <th>Koodi</th><td>Luettelo koodeista on yll\u00e4. Pakollinen. </td></tr> <tr> <th>A/P</th><td>A = Apusarka, P = P\u00e4\u00e4sarka. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, saraksi tulee A. </td></tr> </tbody> </table> </p> <p> Voit k\u00e4ytt\u00e4\u00e4 suuria tai pieni\u00e4 kirjaimia. Voit k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. </p> <p>Koodit koiras, naaras, pari, poikue ja pes\u00e4: ei kirjata onko n\u00e4hty tai kuultu</p> <p> Esimerkkej\u00e4: <i>TTX, RRvp, pt2xp, ec2y, CSa6y, CORNIX O P, cornixop, TM2pariP, PD3k</i> </p> <p>Vinkki: Jos havaintoa ei hyv\u00e4ksyt\u00e4 pikasy\u00f6tt\u00f6kent\u00e4ss\u00e4, kokeile sulkea pikasy\u00f6tt\u00f6 ja valita erillisist\u00e4 kentist\u00e4.<p> <p><strong>HUOM!</strong> ilmoita parvet aina parvihavaintoina esim. a2o ja havaitut parit koodilla pari. Pikasy\u00f6t\u00f6ss\u00e4 2o tarkoittaa kahta erillist\u00e4 n\u00e4k\u00f6havaintoa, jotka tulkitaan kahdeksi pariksi.</p> </div>",
                             "ui:help": "Sy\u00f6t\u00e4 havainto pikasy\u00f6tt\u00f6koodein, oikealla puolella olevat sarakkeet t\u00e4yttyv\u00e4t automaattisesti",
                             "ui:readonly": true
                         },
@@ -714,7 +722,7 @@
                                 "broodSize": 1,
                                 "identifications_0_taxon": 2,
                                 "individualCount": 1,
-                                "likelyMigrant": 2,
+                                "likelyMigrant": 4,
                                 "notes": 2,
                                 "pairCount": 1,
                                 "shortHandText": 1,
@@ -725,7 +733,7 @@
                                 "broodSize": 1,
                                 "identifications_0_taxon": 2,
                                 "individualCount": 1,
-                                "likelyMigrant": 2,
+                                "likelyMigrant": 4,
                                 "notes": 2,
                                 "pairCount": 1,
                                 "shortHandText": 1,
@@ -736,7 +744,7 @@
                                 "broodSize": 2,
                                 "identifications_0_taxon": 4,
                                 "individualCount": 3,
-                                "likelyMigrant": 4,
+                                "likelyMigrant": 8,
                                 "notes": 4,
                                 "pairCount": 3,
                                 "shortHandText": 4,
@@ -818,7 +826,6 @@
                             "fields": [
                                 "unitFact_autocompleteSelectedTaxonID",
                                 "shortHandText",
-                                "unitGathering_taxonID",
                                 "identifications_0_taxon",
                                 "unitFact_lineTransectObsType",
                                 "unitFact_lineTransectRouteFieldType",
@@ -843,11 +850,6 @@
                             },
                             "lineTransectRouteFieldType": {
                                 "ui:help": "A = apusarka, P = p\u00e4\u00e4sarka. Jos j\u00e4tet\u00e4\u00e4n kirjoittamatta, havainto tulkitaan apusaralle."
-                            }
-                        },
-                        "unitGathering": {
-                            "geometry": {
-                                "ui:field": "HiddenField"
                             }
                         }
                     },
@@ -892,7 +894,9 @@
             },
             "ui:help": "Valitse seuraava/edellinen biotooppip\u00e4tk\u00e4 joko sivulla olevista nuolista tai kartasta klikkaamalla",
             "ui:options": {
+                "affixed": true,
                 "canAdd": false,
+                "headerClassName": "darker-bottom-border",
                 "headerFormatters": [
                     "lineTransect"
                 ],
@@ -1263,6 +1267,24 @@
         "gatherings": {
             "items": {
                 "properties": {
+                    "gatheringFact": {
+                        "properties": {
+                            "lineTransectSegmentCounted": {
+                                "unitCount": {
+                                    "message": "Ei l\u00f6ytynyt yht\u00e4\u00e4n ilmoitettua havaintoa.",
+                                    "min": 1,
+                                    "onlyWhenValue": true,
+                                    "unitsField": "../units"
+                                },
+                                "unitCount_1": {
+                                    "max": 0,
+                                    "message": "Havaintoja ilmoitettu, vaikka biotooppia ei ole laskettu.",
+                                    "onlyWhenValue": false,
+                                    "unitsField": "../units"
+                                }
+                            }
+                        }
+                    },
                     "habitatClassification": {
                         "presence": {
                             "message": "P\u00e4\u00e4saran biotooppi puuttuu"
@@ -1272,7 +1294,8 @@
                                 "invalidA": "A pit\u00e4isi olla v\u00e4lill\u00e4 1-6. Nyt se oli '%{value}'.",
                                 "invalidBiotope": "Biotoopin t\u00e4ytyy olla joko K,M,S,L,J,P,H,R,N,V,A,T tai X, mutta se oli '%{value}'",
                                 "invalidFocus": "Toisen kirjaimen t\u00e4ytyy olla yksi arvojoukosta %{key}, mutta se oli %{value}",
-                                "invalidK": "K pit\u00e4isi olla v\u00e4lill\u00e4 1-35. Nyt se oli '%{value}'.",
+                                "invalidK": "K pit\u00e4isi olla v\u00e4lill\u00e4 1-7. Nyt se oli '%{value}'.",
+                                "invalidPK": "Kun on kyse puista, niin K pit\u00e4isi olla v\u00e4lill\u00e4 2-35. Nyt se oli '%{value}'.",
                                 "invalidSize": "V\u00e4\u00e4r\u00e4 kokoluokka annettiin. Kokoluokan pit\u00e4isi olla %{key}, mutta se oli %{value}",
                                 "invalidX": "V\u00e4\u00e4r\u00e4 MUU. Pit\u00e4isi olla vain tarkentava kirjain tai X, eik\u00e4 mit\u00e4\u00e4n muuta.",
                                 "notString": "%{key} ei ole tyypilt\u00e4\u00e4n teksti\u00e4",
@@ -1287,6 +1310,19 @@
                     "units": {
                         "items": {
                             "properties": {
+                                "identifications": {
+                                    "items": {
+                                        "properties": {
+                                            "taxon": {
+                                                "crossCheck": {
+                                                    "check": "../unitFact/autocompleteSelectedTaxonID",
+                                                    "message": "Ei tunnettu",
+                                                    "requireCheck": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
                                 "individualCount": {
                                     "numericality": {
                                         "lessThanOrEqualTo": 50,

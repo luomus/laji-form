@@ -1,10 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import merge from "deepmerge";
-import equals from "deep-equal";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import * as merge from "deepmerge";
+import * as equals from "deep-equal";
 import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, Dropdown } from "react-bootstrap";
-import Spinner from "react-spinner";
-import ApiClient from "../../ApiClient";
+import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
 import Context from "../../Context";
@@ -14,7 +13,7 @@ import { computeUiSchema } from "./ConditionalUiSchemaField";
 const scopeFieldSettings = {
 	taxonGroups: {
 		translate: (props, taxonGroup) => {
-			return new ApiClient().fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
+			return props.formContext.apiClient.fetchCached("/informal-taxon-groups/" + taxonGroup).then((response) => {
 				return response.name;
 			}).catch(() => {
 				return "";
@@ -56,7 +55,7 @@ const scopeFieldSettings = {
  * Field scope values accept asterisk (*) and plus (+) as field scope selector.
  */
 @BaseComponent
-export default class ScopeField extends Component {
+export default class ScopeField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -116,11 +115,14 @@ export default class ScopeField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (!this.state.additionalsGroupsTranslations || prevProps.formContext.lang !== this.props.formContext.lang ||
-			getUiOptions(prevProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator) {
+		if (this.state.additionalsOpen
+			&& (
+				!this.state.additionalsGroupsTranslations || prevProps.formContext.lang !== this.props.formContext.lang ||
+				getUiOptions(prevProps.uiSchema).additionalsGroupsTranslator !== getUiOptions(this.props.uiSchema).additionalsGroupsTranslator
+			)) {
 			this.translateAdditionalsGroups(this.props);
 		}
-		if (!equals(prevState.schema.properties, this.state.schema.properties)) {
+		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
 			const context = new Context(this.props.formContext.contextId);
 			syncScroll(this.props.formContext);
 			context.sendCustomEvent(this.props.idSchema.$id, "resize");
@@ -181,15 +183,20 @@ export default class ScopeField extends Component {
 	getSchemasAndAdditionals = (props, state) => {
 		let {schema, uiSchema, formData} = props;
 		let additionalFields = (state && state.additionalFields) ? {...state.additionalFields} : {};
+		Object.keys(additionalFields).forEach(key => {
+			if (!props.schema.properties[key]) {
+				delete additionalFields[key];
+			}
+		});
 		let defaultFields = (state && state.defaultFields) ? {...state.defaultFields} : {};
 
 		const options = getUiOptions(uiSchema);
-		let {fields = [], definitions, glyphFields = [], geometryField = "unitGathering_geometry", taxonField} = options;
+		let {fields, definitions, glyphFields = [], geometryField = "unitGathering_geometry", taxonField} = options;
 		let generatedUiSchema = getInnerUiSchema(uiSchema);
 
 		let fieldsToShow = {};
 
-		fields.forEach(field => {
+		(fields || []).forEach(field => {
 			fieldsToShow[field] = schema.properties[field];
 		});
 
@@ -250,13 +257,12 @@ export default class ScopeField extends Component {
 			let scopes = fieldScope.fieldScopes;
 
 			if (scopes) Object.keys(scopes).forEach(fieldSelector => {
-				fieldsToShow[fieldSelector] = schema.properties[fieldSelector];
 				let fieldSelectorValues = formData[fieldSelector];
 				if (!fieldSelectorValues || Array.isArray(fieldSelectorValues) && !fieldSelectorValues.length) {
 					fieldSelectorValues = that.getAdditionalPersistenceValue(props);
 				}
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
-				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
+				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => _fieldSelectorValue !== "undefined" && hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
 				}
 				if (scopes[fieldSelector]["*"]) {
@@ -270,7 +276,7 @@ export default class ScopeField extends Component {
 			});
 		}
 
-		function findScopedFields(fieldScope = {}, _fields = []) {
+		function findScopedFields(fieldScope = {}, _fields = {}) {
 			const {fields =[], additionalFields = [], fieldScopes = {}} = fieldScope;
 			[...fields, ...additionalFields].forEach(f => {
 				_fields[f] = true;
@@ -279,8 +285,8 @@ export default class ScopeField extends Component {
 			return _fields;
 		}
 
-		// If no root fields defined, show all fields that aren't in any scopes` fields or additional fields.
-		if (fields.length === 0) {
+		// If no root fields defined, show all fields that aren't in any scopes' fields or additional fields.
+		if (!fields) {
 			const scopedFields = findScopedFields(options);
 			glyphFields.forEach(({show, open}) => {
 				if (open === false) {
@@ -307,24 +313,19 @@ export default class ScopeField extends Component {
 
 		if (formData) {
 			Object.keys(formData).forEach((property) => {
-				if (!propertyHasData(property, formData) ||
-				    (formData.hasOwnProperty(property) &&
-				     schema.properties.hasOwnProperty(property) &&
-				     formData[property] === schema.properties[property].default)) return;
-				if (!fieldsToShow[property] && props.schema.properties[property] && additionalFields[property] !== false) {
+				if (!schema.properties[property]) return;
+				const isDefault = isDefaultData(formData[property], schema.properties[property], this.props.registry.definitions);
+				if (!isDefault) {
 					fieldsToShow[property] = props.schema.properties[property];
 				}
 			});
 		}
 
-		schema = {...schema, properties: fieldsToShow};
-
-		if (generatedUiSchema["ui:order"]) {
-			generatedUiSchema["ui:order"] = generatedUiSchema["ui:order"].filter(field => schema.properties[field] || field === "*");
-			if (!generatedUiSchema["ui:order"].includes("*")) {
-				generatedUiSchema["ui:order"] = [...generatedUiSchema["ui:order"], "*"];
+		Object.keys(schema.properties).forEach(prop => {
+			if (!fieldsToShow[prop]) {
+				generatedUiSchema[prop] = {"ui:field": "HiddenField"};
 			}
-		}
+		});
 
 		if (hasSetLocation) {
 			console.warn("ScopeField's glyphField fn 'setLocation' is deprecated and will be removed in the future. The functionality is separated to a new component function 'LocationChooserField', use it instead.");
@@ -350,7 +351,8 @@ export default class ScopeField extends Component {
 			schema: schema,
 			uiSchema: generatedUiSchema,
 			additionalFields,
-			defaultFields
+			defaultFields,
+			fieldsToShow
 		};
 	}
 
@@ -371,8 +373,8 @@ export default class ScopeField extends Component {
 
 		let additionalProperties = {};
 		Object.keys(this.props.schema.properties).forEach(property => {
-			if (!this.state.schema.properties[property] ||
-				(this.state.schema.properties[property] && this.state.additionalFields[property]))
+			if (!this.state.fieldsToShow[property] ||
+				(this.state.fieldsToShow[property] && this.state.additionalFields[property]))
 				additionalProperties[property] = this.props.schema.properties[property];
 		});
 
@@ -385,24 +387,25 @@ export default class ScopeField extends Component {
 		];
 	}
 
+	onSelect = () => { 
+		this.preventCloseDropdown = true;
+	}
+
+	onToggle = (isOpen) => {
+		if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
+		this.preventCloseDropdown = false;
+	}
+
+
 	renderFieldsDropdown(additionalProperties) {
-		const onSelect = () => { 
-			this.preventCloseDropdown = true;
-		};
-
-		const onToggle = (isOpen) => {
-			if (!this.preventCloseDropdown) this.onToggleAdditionals(isOpen);
-			this.preventCloseDropdown = false;
-		};
-
 		return (
 			<div key="scope-additionals-dropdown">
 				<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
 				          variant="primary"
 				          pullRight
 				          open={this.state.additionalsOpen}
-				          onSelect={onSelect}
-				          onToggle={onToggle}>
+				          onSelect={this.onSelect}
+				          onToggle={this.onToggle}>
 					{this.renderFieldsButton("toggle")}
 					<Collapse in={this.state.additionalsOpen} bsRole="menu">
 						<Dropdown.Menu>
@@ -422,7 +425,7 @@ export default class ScopeField extends Component {
 		const options = getUiOptions(this.props.uiSchema);
 		const {additionalsGroupingPath} = options;
 
-		let groupTranslations = this.state.additionalsGroupsTranslations || {};
+		let groupTranslations = this.state.additionalsGroupsTranslations;
 
 		const groups = additionalsGroupingPath ? parseJSONPointer(options, additionalsGroupingPath) : {};
 
@@ -431,43 +434,17 @@ export default class ScopeField extends Component {
 		if (additionalsPersistenceValue) groupNames = groupNames.sort((a, b) => additionalsPersistenceValue.indexOf(b) - additionalsPersistenceValue.indexOf(a));
 
 		groupNames.forEach(groupName => {
-			let group = groups[groupName] || {};
-			let groupFields = {};
-			const {fields = [], additionalFields = []} = group;
-			const additionalFieldsDict = dictionarify(additionalFields);
-			let combinedFields = Object.keys({...dictionarify(fields), ...additionalFieldsDict});
-			combinedFields.forEach(field => {
-				if (additionalProperties[field]) {
-					groupFields[field] = additionalProperties[field];
-				} else if (additionalFieldsDict[field]) {
-					groupFields[field] = this.props.schema.properties[field];
-				}
-			});
-			let groupsList = this.additionalPropertiesToList(groupFields, ListGroupItem);
-			if (groupsList.length) {
-				const someActive = Object.keys(groupFields).some(this.propertyIsIncluded);
-
-				const onListGroupClick = () => {
-					this.toggleAdditionalProperty(Object.keys(groupFields)
-					    .filter(field => {return this.propertyIsIncluded(field) === someActive;}));
-				};
-
-				const listGroup = [
-					(groupTranslations[groupName] !== undefined ? (
-						<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>
-							<strong>{groupTranslations[groupName]}</strong>
-						</ListGroupItem>
-					) : <Spinner key={groupName + "-list"}/>),
-					...groupsList
-				];
-				list.push(
-					<div key={groupName} className="scope-field-modal-item">
-						<ListGroup>{
-							listGroup	
-						}</ListGroup>
-					</div>
-				);
-			}
+			list.push(<_ListGroup
+				key={groupName}
+				group={groups[groupName]}
+				groupName={groupName}
+				groupTranslations={groupTranslations}
+				additionalProperties={additionalProperties}
+				additionalPropertiesToList={this.additionalPropertiesToList}
+				propertyIsIncluded={this.propertyIsIncluded}
+				schema={this.props.schema}
+				toggleAdditionalProperty={this.toggleAdditionalProperty}
+			/>);
 		});
 
 		if (this.state.additionalsOpen) this.modal = (
@@ -500,34 +477,24 @@ export default class ScopeField extends Component {
 
 	renderGlyphFields = () => {
 		const {glyphFields} = getUiOptions(this.props.uiSchema);
-		const {idSchema} = this.props;
 
 		return glyphFields ?
-			glyphFields.filter(settings => !settings.fn || settings.fn !== "setLocation").map(settings => {
-				const {glyph, label, show} = settings;
-				if (show) {
-					const property = show;
-					const isIncluded = this.propertyIsIncluded(property);
-					const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
-
-					const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
-					const onButtonClick = () => this.toggleAdditionalProperty(property);
-					return (
-						<OverlayTrigger key={property} overlay={tooltip} placement="left">
-							<GlyphButton glyph={glyph}
-													 disabled={hasData}
-													 variant={isIncluded ? "primary" : "default"}
-													 onClick={onButtonClick}
-							/>
-						</OverlayTrigger>
-					);
-				}
-			}) : null;
+			glyphFields.filter(settings => !settings.fn || settings.fn !== "setLocation").map((settings, i) => 
+				<GlyphField key={i}
+				            settings={settings}
+				            idSchema={this.props.idSchema}
+				            formData={this.props.formData}
+				            schema={this.props.schema}
+				            registry={this.props.registry}
+				            isIncluded={this.propertyIsIncluded(settings.show)}
+				            toggleAdditionalProperty={this.toggleAdditionalProperty}
+				/>
+			) : null;
 	}
 
 	propertyIsIncluded = (property) => {
 		const {additionalFields} = this.state;
-		const isIncluded = additionalFields[property] === true || this.state.schema.properties[property];
+		const isIncluded = additionalFields[property] === true || this.state.fieldsToShow[property];
 		return !!isIncluded;
 	}
 
@@ -542,9 +509,9 @@ export default class ScopeField extends Component {
 			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
 			let contextEntry = this._context || {};
 			if (additionalsPersistenceField) {
-				let additionalsKeys = ((this.props.schema.properties[additionalsPersistenceField].type === "array") ?
-						additionalsPersistenceVal :
-						[additionalsPersistenceVal]);
+				let additionalsKeys = this.props.schema.properties[additionalsPersistenceField].type === "array"
+					? additionalsPersistenceVal
+					: [additionalsPersistenceVal];
 				if (additionalsKeys.length === 0) additionalsKeys = ["undefined"];
 				additionalsKeys.forEach(persistenceKey => {
 					contextEntry[persistenceKey] = additionalFields;
@@ -557,20 +524,24 @@ export default class ScopeField extends Component {
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});
 	}
 
-
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};
 		return Object.keys(properties)
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
-				const onClick = () => this.toggleAdditionalProperty(property);
+				if (!this.propertyTogglers) {
+					this.propertyTogglers = {};
+				}
+				if (!this.propertyTogglers[property]) {
+					this.propertyTogglers[property] = () => this.toggleAdditionalProperty(property);
+				}
 				return (
 					<ElemType
 						key={property}
 						disabled={hasData}
 						active={isIncluded}
-						onClick={onClick}>
+						onClick={this.propertyTogglers[property]}>
 						{titles[property] || properties[property].title || property}
 					</ElemType>
 				);
@@ -607,6 +578,73 @@ export default class ScopeField extends Component {
 			});
 		});
 	}
+}
+
+const getGroupFields = (group, additionalProperties, schema) => {
+	const {fields = [], additionalFields = []} = group;
+	const additionalFieldsDict = dictionarify(additionalFields);
+	let combinedFields = Object.keys({...dictionarify(fields), ...additionalFieldsDict});
+	let groupFields = {};
+	combinedFields.forEach(field => {
+		if (additionalProperties[field]) {
+			groupFields[field] = additionalProperties[field];
+		} else if (additionalFieldsDict[field]) {
+			groupFields[field] = schema.properties[field];
+		}
+	});
+	return groupFields;
+};
+
+const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations = {}, additionalProperties, groupName, additionalPropertiesToList, propertyIsIncluded, schema, toggleAdditionalProperty}) {
+	const groupFields = React.useMemo(() => getGroupFields(group, additionalProperties, schema), [group, additionalProperties, schema]);
+	let groupsList = additionalPropertiesToList(groupFields, ListGroupItem);
+
+	const onListGroupClick = React.useCallback(() => {
+		toggleAdditionalProperty(Object.keys(groupFields)
+			.filter(field => {return propertyIsIncluded(field) === someActive;}));
+	}, [toggleAdditionalProperty, groupFields, propertyIsIncluded, someActive]);
+
+	if (!groupsList.length) {
+		return null;
+	}
+
+	const someActive = Object.keys(groupFields).some(propertyIsIncluded);
+
+	const listGroup = [
+		(groupTranslations[groupName] !== undefined ? (
+			<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>
+				<strong>{groupTranslations[groupName]}</strong>
+			</ListGroupItem>
+		) : <Spinner key={groupName + "-list"}/>),
+		...groupsList
+	];
+	return (
+		<div key={groupName} className="scope-field-modal-item">
+			<ListGroup>{listGroup}</ListGroup>
+		</div>
+	);
+});
+
+function GlyphField({settings, idSchema, formData, schema, registry, isIncluded, toggleAdditionalProperty}) {
+	const {glyph, label, show} = settings;
+	const property = show;
+	const onButtonClick = React.useCallback(() => toggleAdditionalProperty(property), [property, toggleAdditionalProperty]);
+
+	if (!show) {
+		return null;
+	}
+	const hasData = propertyHasData(property, formData) && (!formData || !isDefaultData(formData[property], schema.properties[property], registry.definitions));
+
+	const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
+	return (
+		<OverlayTrigger key={property} overlay={tooltip} placement="left">
+			<GlyphButton glyph={glyph}
+			             disabled={hasData}
+			             variant={isIncluded ? "primary" : "default"}
+			             onClick={onButtonClick}
+			/>
+		</OverlayTrigger>
+	);
 }
 
 new Context("SCHEMA_FIELD_WRAPPERS").ScopeField = true;

@@ -79,7 +79,7 @@ Styles can be found at  ```dist/styles.css```.
 
 # Development #
 
-Run `yarn install` to install the dependencies and `yarn start` to start the app.
+Run `npm ci` to install the dependencies and `npm start` to start the app.
 
 Before running, you'll need to configure your personal apitest.laji.fi access token. Get the key to your email:
 
@@ -135,13 +135,14 @@ The playground server and the Selenium server must be running before running the
 webdriver-manager start
 ```
 
-Then run the tests with `yarn run test`.
+Then run the tests with `npm test`.
 
 ### Test parameters ###
 
-Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome yarn test`
+Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome npm test`
 
 Option         | Default | Description
 ---------------|---------|-----------------------------------------------------------------------------------------------
 TEST_BROWSER   | -       | `chrome` or `firefox`. Tests are run for both by default.
 HEADLESS       | `true`  | Run the tests in a visible browser window if `true`.
+THREADS        | 4       | How many browser instances to use for parallel testing.

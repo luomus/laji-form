@@ -1,11 +1,11 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
-import deepEquals from "deep-equal";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
+import { formDataEquals, assignUUID, getUUID } from "../../utils";
 
 @VirtualSchemaField
-export default class AutoArrayField extends Component {
+export default class AutoArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -15,26 +15,33 @@ export default class AutoArrayField extends Component {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	static getName() {return "AutoArrayField";}
 
 	getStateFromProps(props) {
-		const {formData, schema, uiSchema, registry} = props;
+		const {formData = [], schema, uiSchema, registry} = props;
 
 		const state = {formData};
 
-		const emptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
-		if (formData && (formData.length === 0 || !deepEquals(formData[formData.length - 1], emptyItem))) {
+		const newEmptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+		const emptyItem = this.emptyItem
+			&& formDataEquals(newEmptyItem, this.emptyItem, props.formContext, props.idSchema.$id)
+			&& formData.every(item => getUUID(item) !== getUUID(this.emptyItem))
+			? this.emptyItem
+			: assignUUID(newEmptyItem);
+		this.emptyItem = emptyItem;
+		if (formData && (formData.length === 0 || !formDataEquals(formData[formData.length - 1], emptyItem, props.formContext, props.idSchema.$id))) {
 			state.formData = [...formData, emptyItem];
 		}
 		state.uiSchema = {
-			...uiSchema, 
+			...uiSchema,
 			"ui:options": {
 				canAdd: false,
-				...(uiSchema["ui:options"] || {}), 
-				nonOrderables: [state.formData.length - 1], nonRemovables: [state.formData.length - 1]
+				...(uiSchema["ui:options"] || {}),
+				nonOrderables: [state.formData.length - 1],
+				nonRemovables: [state.formData.length - 1]
 			}
 		};
 
@@ -43,7 +50,7 @@ export default class AutoArrayField extends Component {
 
 	onChange(formData) {
 		const emptyItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
-		if (formData && formData.length !== 0 && deepEquals(formData[formData.length - 1], emptyItem)) {
+		if (formData && formData.length !== 0 && formDataEquals(formData[formData.length - 1], emptyItem, this.props.formContext, this.props.idSchema.$id)) {
 			formData = formData.slice(0, formData.length - 1);
 		}
 		this.props.onChange(formData);

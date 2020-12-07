@@ -1,58 +1,99 @@
-import React, { Component } from "react";
-import ArrayField from "react-jsonschema-form/lib/components/fields/ArrayField";
-import { getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import update from "immutability-helper";
-import merge from "deepmerge";
-import { getUiOptions } from "../../utils";
+import * as React from "react";
+import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
+import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
+import * as merge from "deepmerge";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
+import Context from "../../Context";
 
+// Doesn't work with arrays properly since uses JSON Pointers but not JSON path.
+// e.g. "copy all array item values expect these" is impossible.
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
-	const nestedFilters = filter;
 
-	const {schema, registry} = that.props;
+	const {schema, registry, formContext} = that.props;
 	const defaultItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+
+	copyItem = filterItemIdsDeeply(copyItem, formContext.contextId, that.props.idSchema.$id);
 
 	const source = type === "blacklist" ? defaultItem : copyItem;
 
-	const filtered = nestedFilters.reduce((target, filter) => {
-		const splitted = filter.includes("/") ? filter.substring(1).split("/") : [filter];
-		const splittedWithoutLast = splitted.slice(0);
-		const last = splittedWithoutLast.pop();
-
-		let hasValue = false;
-		let nestedPointer = source;
-		for (let path of splitted) {
-			if (nestedPointer && path in nestedPointer) {
-				nestedPointer = nestedPointer[path];
-				hasValue = true;
-			} else {
-				hasValue = false;
-				break;
-			}
+	const filtered = filter.sort().reverse().reduce((target, f) => {
+		let sourceValue;
+		try {
+			sourceValue = parseJSONPointer(source, f);
+		} catch (e) {
+			const schema = schemaJSONPointer(schema.items, f);
+			sourceValue = getDefaultFormState(schema, undefined, registry.definitions);
 		}
-
-		if (!hasValue) return target;
-
-		let pointer = undefined;
-		let value = source;
-		const updateObject = splittedWithoutLast.reduce((updateObject, path) => {
-			updateObject[path] = {};
-			pointer = updateObject[path];
-			value = value[path];
-			return pointer;
-		}, {});
-
-		updateObject[last] = {$set: value[last]};
-
-		return update(target, updateObject);
+		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
 
 	return filtered;
 };
 
+export function onArrayFieldChange(formData, props) {
+	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
+	return addLajiFormIds(formData, tmpIdTree, false)[0];
+}
+
+export class ArrayFieldPatched extends ArrayField {
+	constructor(...params) {
+		super(...params);
+		const {_getNewFormDataRow} = this;
+		this._getNewFormDataRow = () => {
+			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
+			const [item] = addLajiFormIds(_getNewFormDataRow.call(this), tmpIdTree, false);
+			return item;
+		};
+
+		const {onDropIndexClick} = this;
+		this.onDropIndexClick = (index) => (event) => {
+			const item = this.props.formData[index];
+			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${index}`);
+			const oldIds = getAllLajiFormIdsDeeply(item, tmpIdTree);
+
+			Object.keys(oldIds).forEach((id) => {
+				return new Context(this.props.formContext.contextId).removeSubmitHook(id);
+			}, []);
+			onDropIndexClick.call(this, index)(event);
+		};
+	}
+
+	renderArrayFieldItem(props) {
+		if (this.props.idSchema) {
+			const idSchema = this.getIdSchema(this.props, props.index);
+			return super.renderArrayFieldItem({...props, itemIdSchema: idSchema});
+		}
+		return super.renderArrayFieldItem(props);
+	}
+
+	getIdSchema(props, _index) {
+		const {idSchema, uiSchema} = props;
+		const {idxOffsets = {}} = getUiOptions(uiSchema);
+		const index = (idxOffsets[_index] || 0) + _index;
+
+		const root = idSchema.$id;
+		const reduced = (idSchema, root) => Object.keys(idSchema).reduce((idSchema, prop) => {
+			if (prop === "$id") {
+				return {
+					...idSchema,
+					"$id": idSchema.$id.replace(root, `${root}_${index}`)
+				};
+			}
+			return {...idSchema, [prop]: reduced(idSchema[prop], root)};
+		}, idSchema);
+		return reduced(idSchema, root);
+	}
+}
+
 @BaseComponent
-export default class _ArrayField extends Component {
+export default class _ArrayField extends React.Component {
+
+	onChange = (formData) => {
+		this.props.onChange(onArrayFieldChange(formData, this.props));
+	}
+
 	render() {
 		const {props} = this;
 		let {schema} = props;
@@ -60,19 +101,30 @@ export default class _ArrayField extends Component {
 			schema = {...schema, uniqueItems: false};
 		}
 
-		return <ArrayField
+		// MultiArrayField needs to intercept default ArrayField internals, the instance is passed in formContext.
+		const {ArrayField: _ArrayField} = props.formContext;
+		const Component = _ArrayField || ArrayFieldPatched;
+
+		// Reset formContext.ArrayField
+		const formContext = _ArrayField ? {...props.formContext, ArrayField: undefined} : props.formContext;
+		const registry = _ArrayField ? {...props.registry, formContext} : props.registry;
+
+		return <Component
 			{...props}
+			formContext={formContext}
+			registry={registry}
 			schema={schema}
 			uiSchema={{
 				...props.uiSchema, 
 				"ui:options": {
 					orderable: false, 
 					...props.uiSchema["ui:options"], 
-					buttonDefinitions: getUiOptions(props.uiSchema).buttonDefinitions ?
-						merge(this.buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions) :
-						this.buttonDefinitions
+					buttonDefinitions: getUiOptions(props.uiSchema).buttonDefinitions
+						? merge(this.buttonDefinitions, getUiOptions(props.uiSchema).buttonDefinitions)
+						: this.buttonDefinitions
 				}
 			}}
+			onChange={this.onChange}
 		/>;
 	}
 
@@ -81,7 +133,7 @@ export default class _ArrayField extends Component {
 			glyph: "duplicate",
 			fn: () => (...params) => {
 				beforeAdd(this.props);
-				this.props.onChange([
+				this.onChange([
 					...this.props.formData,
 					copyItemFunction(this, this.props.formData[this.props.formData.length  - 1])(...params)
 				]);
@@ -95,14 +147,15 @@ export default class _ArrayField extends Component {
 		addPredefined: {
 			fn: () => (onClickProps, {default: _default}) => {
 				beforeAdd(this.props);
-				this.props.onChange([
-					...this.props.formData,
+				this.onChange([
+					...(this.props.formData || []),
 					getDefaultFormState(this.props.schema.items, _default, this.props.registry.definitions)
 				]);
 			},
 			rules: {
 				canAdd: true
 			},
+			changesFormData: true
 		}
 	}
 }

@@ -19,6 +19,11 @@
 		en: "Yesterday",
 		sv: "Igår"
 	},
+	dateLocale: {
+		fi: "DD.MM.YYYY",
+		en: "DD/MM/YYYY",
+		sv: "DD.MM.YYYY"
+	},
 	datePlaceholderDay: {
 		fi: "pp.kk.vvvv",
 		en: "dd/mm/yyyy",
@@ -659,4 +664,139 @@
 		en: "Choose this location",
 		sv: "Välj den här platsen"
 	},
+	failedBackgroundJobs: {
+		fi: "Jokin meni pieleen, tarkista alla olevat tiedot",
+		en: "Something went wrong, please check the details below",
+		sv: "Något gick fel, kolla detaljerna nedan"
+	},
+	dismiss: {
+		fi: "Kuittaa",
+		en: "Dismiss",
+		sv: "Avfärda"
+	},
+	geocodingTimeout: {
+		fi: "Paikkatietojen haussa kesti liian kauan",
+		en: "Geocoding timed out",
+		sv: "Geokodning avbröts"
+	},
+	requestFailed: {
+		fi: "Pyyntö epäonnistui",
+		en: "Request failed",
+		sv: "Begäran misslyckades"
+	},
+	pendingRunningJobs: {
+		fi: "Odotetaan taustaprosesseja",
+		en: "Waiting for background jobs",
+		sv: "väntar på bakgrundsjobb"
+	},
+	retry: {
+		fi: "Koita uudestaan",
+		en: "Rety",
+		sv: "Försök igen"
+	},
+	section: {
+		fi: "lohko",
+		en: "section",
+		sv: "sektion"
+	},
+	sum: {
+		fi: "Summa",
+		en: "Sum",
+		sv: "Summa"
+	},
+	addSection: {
+		fi: "Lisää lohko",
+		en: "add a section",
+		sv: "Lägg till ett sektion"
+	},
+	addNewSection: {
+		fi: "Lisää uusi lohko",
+		en: "add a new section",
+		sv: "Lägg till ett nytt sektion"
+	},
+	number: {
+		fi: "Numero",
+		en: "Number",
+		sv: "Siffra"
+	},
+	enterNewSectionNumber: {
+		fi: "Anna uuden lohkon numero",
+		en: "Enter new section's number",
+		sv: "Ange det nya avsnittets nummer"
+	},
+	takeNewRecording: {
+		fi: "Äänitä uusi",
+		en: "Record a new recording",
+		sv: "Spela in nytt"
+	},
+	selectRecording: {
+		fi: "Valitse äänite",
+		en: "Select recording",
+		sv: "Välj en inspelning"
+	},
+	noRecording: {
+		fi: "Ei äänitettä",
+		en: "No recording",
+		sv: "Ingen inspelning"
+	},
+	edit: {
+		fi: "Muokkaa",
+		en: "Edit",
+		sv: "Redigera"
+	},
+	download: {
+		fi: "Lataa",
+		en: "Download",
+		sv: "Ladda ner"
+	},
+	nestObservation: {
+		fi: "Pesähavainto",
+		en: "Nest observation",
+		sv: "Nest observation"
+	},
+	traceObservation: {
+		fi: "Jälkihavainto",
+		en: "Trace observation",
+		sv: "Spår observation"
+	},
+	observation: {
+		fi: "Havainto",
+		en: "Observation",
+		sv: "Observation"
+	},
+	somethingWentWrong: {
+		fi: "Jokin meni pieleen",
+		en: "Something went wrong",
+		sv: "Något gick fel"
+	},
+	navigateSectionDown: {
+		fi: "Liiku matriisissa alas",
+		en: "Navigate down in matrix",
+		sv: "Navigera ner i matris"
+	},
+	navigateSectionUp: {
+		fi: "Liiku matriisissa ylös",
+		en: "Navigate up in matrix",
+		sv: "Navigera upp i matris"
+	},
+	navigateSectionLeft: {
+		fi: "Liiku matriisissa vasemmalle",
+		en: "Navigate left in matrix",
+		sv: "Navigera vänster i matris"
+	},
+	navigateSectionRight: {
+		fi: "Liiku matriisissa oikealle",
+		en: "Navigate right in matrix",
+		sv: "Navigera höger nästa fält"
+	},
+	instructions: {
+		fi: "Ohjeet",
+		en: "Instructions",
+		sv: "Instruktioner"
+	},
+	placeRemovalFailed: {
+		fi: "Paikan poisto epäonnistui",
+		en: "Removing place failed",
+		sv: "Ta bort platsen misslyckades"
+	}
 };

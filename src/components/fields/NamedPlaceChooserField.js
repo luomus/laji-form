@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import * as PropTypes from "prop-types";
+import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { Modal, Alert } from "react-bootstrap";
-import { Button } from "../components";
-import Spinner from "react-spinner";
-import ApiClient from "../../ApiClient";
+import { Button, DeleteButton } from "../components";
+import * as Spinner from "react-spinner";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -15,22 +14,24 @@ import SelectWidget from "../widgets/SelectWidget";
 
 const PLACES_FETCH_FAIL = "PLACES_FETCH_FAIL";
 const PLACE_USE_FAIL = "PLACE_USE_FAIL";
+const PLACE_DELETE_FAIL = "PLACE_DELETE_FAIL";
 
 /**
  * Compatible only with gatherings array and gathering object.
  */
 @BaseComponent
-export default class NamedPlaceChooserField extends Component {
+export default class NamedPlaceChooserField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object", "array"])
 		}).isRequired,
-		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 	}
 
 	constructor(props) {
 		super(props);
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
+		this.removeIds = {};
 	}
 
 	getStateFromProps(props) {
@@ -69,7 +70,10 @@ export default class NamedPlaceChooserField extends Component {
 				}
 			});
 			gathering.namedPlaceID = place.id;
-			return gathering;
+			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
+
+			const [withLajiFormIds] = addLajiFormIds(gathering, tmpIdTree, false);
+			return withLajiFormIds;
 		};
 
 		try {
@@ -83,7 +87,7 @@ export default class NamedPlaceChooserField extends Component {
 				];
 				this.setState({show: false});
 				targetId = this.props.idSchema.$id;
-				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "activeIdx", this.props.formData.length);
+				new Context(this.props.formContext.contextId).sendCustomEvent(targetId, "activeIdx", (this.props.formData || []).length);
 			} else { // gathering object
 				gathering = getGathering(this.props.schema);
 				gathering.namedPlaceID = place.id;
@@ -102,15 +106,30 @@ export default class NamedPlaceChooserField extends Component {
 		}
 	}
 
+	onPlaceDeleted = (place, success) => {
+		this.apiClient.fetchRaw(`/named-places/${place.id}`, undefined, {method: "DELETE"}).then(response => {
+			if (response.status === 204) {
+				// It takes a while for API to remove the place, so we remove it locally and then invalidate again after some time.
+				this.removeIds[place.id] = true;
+				this.apiClient.invalidateCachePath("/named-places");
+				this.getContext().setTimeout(() => this.apiClient.invalidateCachePath("/named-places"), 2000);
+				success();
+			}
+		}).catch(() => {
+			this.setState({failed: PLACE_DELETE_FAIL});
+			this.props.formContext.notifier.error(this.props.formContext.translations.PlaceRemovalFailed);
+		});
+	}
+
 	onButtonClick = () => () => {
 		this.setState({show: true});
 	}
 
 	updatePlaces = () => {
 		this.buttonDefinition = undefined;
-		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 10000}).then(response => {
 			if (!this.mounted) return;
-			const state = {places: response.results.sort((a, b) => {
+			const state = {places: response.results.filter(p => !this.removeIds[p.id]).sort((a, b) => {
 				if (a.name < b.name) return -1;
 				if (a.name > b.name) return 1;
 				return 0;
@@ -151,23 +170,25 @@ export default class NamedPlaceChooserField extends Component {
 		this.apiClient.removeOnCachePathInvalidation("/named-places", this.updatePlaces);
 	}
 
+	onHide = () => this.setState({show: false});
+
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {translations} = formContext;
 		const {failed} = this.state;
-		const onHide = () => this.setState({show: false});
 		return (
 			<React.Fragment>
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />
 				{
 					this.state.show ? (
-						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={onHide}>
+						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={this.onHide}>
 							<Modal.Header closeButton={true}>
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
 							<Modal.Body>
-								{failed && <Alert variant="danger">{translations.NamedPlacesUseFail}</Alert>}
-								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} />
+								{failed === PLACE_USE_FAIL && <Alert variant="danger">{translations.NamedPlacesUseFail}</Alert>}
+								{failed === PLACES_FETCH_FAIL && <Alert variant="danger">{translations.NamedPlacesFetchFail}</Alert>}
+								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} onDeleted={this.onPlaceDeleted} />
 							</Modal.Body>
 						</Modal>
 					) : null
@@ -178,7 +199,7 @@ export default class NamedPlaceChooserField extends Component {
 	}
 }
 
-class NamedPlaceChooser extends Component {
+class NamedPlaceChooser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -186,6 +207,18 @@ class NamedPlaceChooser extends Component {
 
 	onPlaceSelected = (place) => {
 		this.props.onSelected(place);
+	}
+
+	onPlaceDeleted = (place) => {
+		const onDelete = () => {
+			if (this.popupContainerElem && this.popupElem) {
+				this.popupContainerElem.appendChild(findDOMNode(this.popupElem));
+			}
+			this.mapElem.map.map.closePopup();
+			this.setState({deleting: false, popupIdx: undefined});
+		};
+		this.setState({deleting: true});
+		this.props.onDeleted(place, onDelete);
 	}
 
 	onSelectChange = (idx) => {
@@ -261,6 +294,10 @@ class NamedPlaceChooser extends Component {
 		return {color, fillColor: color};
 	}
 
+	setPopupContainerRef = (elem) => {
+		this.popupContainerElem = elem;
+	}
+
 	render() {
 		const {places, failed, formContext: {translations}} = this.props;
 		
@@ -332,22 +369,27 @@ class NamedPlaceChooser extends Component {
 						bodyAsDialogRoot={false}
 					/>
 					{(!places) ? <Spinner /> : null}
-					<div style={{display: "none"}}>
+					<div style={{display: "none"}} ref={this.setPopupContainerRef}>
 						<Popup ref={getPopupRef} 
 							place={(places || [])[this.state.popupIdx]} 
 							onPlaceSelected={this.onPlaceSelected}
+							onPlaceDeleted={this.onPlaceDeleted}
+							deleting={this.state.deleting}
 							contextId={this.props.formContext.contextId}
 							translations={translations} />
 					</div>
-			</div>
+				</div>
 			);
 		}
 	}
 }
 
-class Popup extends Component {
+class Popup extends React.Component {
 	_onPlaceSelected = () => {
 		this.props.onPlaceSelected(this.props.place);
+	}
+	_onPlaceDeleted = () => {
+		this.props.onPlaceDeleted(this.props.place);
 	}
 
 	componentDidUpdate() {
@@ -361,13 +403,12 @@ class Popup extends Component {
 	}
 
 	render() {
-		const {place, translations} = this.props;
+		const {place, translations, deleting} = this.props;
 
 		return place ? (
 			<div>
 				<table className="named-place-popup">
-					<tbody>
-					{
+					<tbody>{
 						[
 							["Name", "name"], 
 							["Notes", "notes"]
@@ -380,11 +421,19 @@ class Popup extends Component {
 							);
 							return fieldset;
 						}, [])
-					}
-				</tbody>
+					}</tbody>
 				</table>
-				<Button ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
-		</div>
+				<Button block ref={this.getButtonRef} onClick={this._onPlaceSelected}>{translations.UseThisPlace}</Button>
+				<DeleteButton block
+				              onClick={this._onPlaceDeleted}
+				              disabled={deleting}
+				              glyphButton={false}
+				              confirm={true}
+				              confirmStyle={"browser"}
+				              translations={translations}>
+					{translations.Remove} {deleting && <Spinner />}
+				</DeleteButton>
+			</div>
 		) : <Spinner />;
 	}
 }

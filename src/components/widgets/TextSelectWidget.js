@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import update from "immutability-helper";
 import { Checkbox } from "react-bootstrap";
 import BaseInput from "./BaseInput";
 
-class TextSelectWidget extends Component {
+class TextSelectWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			type: PropTypes.string
+			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
 	}
@@ -73,9 +73,9 @@ class TextSelectWidget extends Component {
 				{enums.map((label, i) => {
 					return (
 						<Checkbox key={i}
-											title={label}
-											checked={selectedCheckboxes.has(label)}
-											onChange={this.onCheckBoxChange(label)}>{label}</Checkbox>
+						          title={label}
+						          checked={selectedCheckboxes.has(label)}
+						          onChange={this.onCheckBoxChange(label)}>{label}</Checkbox>
 					);
 				})}
 				{freeTextField ?
@@ -85,7 +85,7 @@ class TextSelectWidget extends Component {
 						value={otherValue}
 						onChange={this.onInputChange}
 						disabled={!selectedCheckboxes.has(freeTextField)} />
-				: null}
+					: null}
 			</div>
 		);
 	}
@@ -109,7 +109,7 @@ class TextSelectWidget extends Component {
 	};
 
 	onChange = (textValue) => {
-		let newValue = [...this.state.selectedCheckboxes];
+		let newValue = [...Array.from(this.state.selectedCheckboxes)];
 		if (this.state.selectedCheckboxes.has(this.state.freeTextField)) {
 			if (textValue && textValue.length > 0) {
 				newValue = update(newValue, {$push: [textValue]});

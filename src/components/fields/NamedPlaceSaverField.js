@@ -1,13 +1,12 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode }  from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Panel, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import BaseComponent from "../BaseComponent";
-import Spinner from "react-spinner";
+import * as Spinner from "react-spinner";
 import { parseGeometries } from "./MapArrayField";
 
 const SAVE = "SAVE", FETCH = "FETCH";
@@ -16,12 +15,12 @@ const SAVE = "SAVE", FETCH = "FETCH";
  * Compatible only with gathering field.
  */
 @BaseComponent
-export default class NamedPlaceSaverField extends Component {
+export default class NamedPlaceSaverField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	getStateFromProps(props) {
@@ -46,7 +45,7 @@ export default class NamedPlaceSaverField extends Component {
 			fn: this.onButtonClick,
 			glyph: "floppy-disk",
 			position: "top",
-			disabled: !parseGeometries(props.formData.geometry).length
+			disabled: !parseGeometries((props.formData || {}).geometry).length
 		};
 	}
 
@@ -56,7 +55,7 @@ export default class NamedPlaceSaverField extends Component {
 
 	onSave = (place) => {
 		this.setState({show: false}, () => {
-			this.props.onChange({...this.props.formData, namedPlaceID: place.id});
+			this.props.onChange({...(this.props.formData || {}), namedPlaceID: place.id});
 		});
 	}
 
@@ -64,28 +63,31 @@ export default class NamedPlaceSaverField extends Component {
 		if (prevState.show !== this.state.show) this.setState(this.getStateFromProps(this.props));
 	}
 
+	onHide = () => this.setState({show: false});
+
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {uiSchema} = this.state;
-		const onHide = () => this.setState({show: false});
 		return (
 			<div>
 				<SchemaField  {...this.props} uiSchema={uiSchema} />
-				{this.state && this.state.show ? (
-				<Modal dialogClassName="laji-form" show={true} onHide={onHide}>
-					<Modal.Header>
-						<Modal.Title>{formContext.translations.NamedPlaces}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData} />
-					</Modal.Body>
-				</Modal>) : null}
+				{this.state && this.state.show
+					? (
+						<Modal dialogClassName="laji-form" show={true} onHide={this.onHide}>
+							<Modal.Header>
+								<Modal.Title>{formContext.translations.NamedPlaces}</Modal.Title>
+							</Modal.Header>
+							<Modal.Body>
+								<PlaceSaverDialog formContext={formContext} onSave={this.onSave} gathering={this.props.formData || {}} />
+							</Modal.Body>
+						</Modal>
+					) : null}
 			</div>
 		);
 	}
 }
 
-class PlaceSaverDialog extends Component {
+class PlaceSaverDialog extends React.Component {
 	constructor(props) {
 		super(props);
 		const {namedPlaceID, locality = ""} = props.gathering;
@@ -93,7 +95,7 @@ class PlaceSaverDialog extends Component {
 		if (namedPlaceID) {
 			this.state = {value: "", loading: true};
 		}
-		this.apiClient = new ApiClient();
+		this.apiClient = props.formContext.apiClient;
 	}
 
 	componentWillUnmount() {
@@ -103,7 +105,7 @@ class PlaceSaverDialog extends Component {
 	componentDidMount() {
 		this.mounted = true;
 
-		this.apiClient.fetch("/named-places", {includePublic: false}).then(response => {
+		this.apiClient.fetchCached("/named-places", {includePublic: false, pageSize: 1000}).then(response => {
 			if (!this.mounted) return;
 			const state = {
 				places: response.results,
@@ -172,7 +174,7 @@ class PlaceSaverDialog extends Component {
 
 	onSaveNew = (e) => {
 		e.preventDefault();
-		const {namedPlaceID, ...gathering} = this.getGathering(); //eslint-disable-line no-unused-vars
+		const {namedPlaceID, ...gathering} = this.getGathering(); //eslint-disable-line @typescript-eslint/no-unused-vars
 		this.onSave({
 			name: this.state.value,
 			prepopulatedDocument: {gatherings: [gathering]}
@@ -239,22 +241,22 @@ class PlaceSaverDialog extends Component {
 						<FormControl type="text" value={value} onChange={this.onInputChange} autoFocus onFocus={this.onFocus} disabled={loading} ref={this.setInputRef}/>
 						{" "}
 						{!existingPlaces.length ? 
-								getButton(this.onSaveNew, `${translations.Save} ${translations.new}`) : null}
+							getButton(this.onSaveNew, `${translations.Save} ${translations.new}`) : null}
 						{" "}
 						{this.props.gathering.namedPlaceID ? 
-								getButton(this.onOverwriteCurrent, translations.SaveCurrentOverwrite) : null}
+							getButton(this.onOverwriteCurrent, translations.SaveCurrentOverwrite) : null}
 						{existingPlaces.length === 1 && !this.props.gathering.namedPlaceID ? 
-								getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
+							getButton(this.onOverwriteExisting, translations.SaveExistingOverwrite) : null}
 					</FormGroup>
 					{loading ? <div className="float-right"><Spinner /></div> : null}
 				</Form>
 				{!this.props.gathering.namedPlaceID && existingPlaces.length ?
-					<Alert variant="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple} ${translations.or} ${translations.saveCurrentOverwrite}.` : ""}`}</Alert>
+					<Alert variant="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple}.` : ""}`}</Alert>
 					: null}
 				{existingPlaces.length > 1 ? (
 					<FormGroup>
 						<Panel header={translations.ClickPlaceToOverwrite}>
-							<ListGroup fill>
+							<ListGroup fill={"fill"}>
 								{existingPlaces.map(place =>
 									<ListGroupItem header={place.name} key={place.id} onClick={loading ? undefined : this.onOverwriteSelected(place)} disabled={loading}>
 										{place.notes}

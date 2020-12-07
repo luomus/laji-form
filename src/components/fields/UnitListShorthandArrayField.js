@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { getDefaultFormState } from "react-jsonschema-form/lib/utils";
+import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
 import { Button } from "../components";
 import { Modal } from "react-bootstrap";
-import ApiClient from "../../ApiClient";
 import Context from "../../Context";
 import { TagInputComponent } from "./TagArrayField";
 
@@ -14,7 +13,7 @@ import { TagInputComponent } from "./TagArrayField";
  * Compatible only with unit array.
  */
 @BaseComponent
-export default class UnitListShorthandArrayField extends Component {
+export default class UnitListShorthandArrayField extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
@@ -67,10 +66,10 @@ export default class UnitListShorthandArrayField extends Component {
 		const value = this.state.value + (isEmptyString(this.tagRef.state.value) ? "" : `,${this.tagRef.state.value}`);
 
 		this.onHide();
-		const {translations, contextId, notifier} = this.props.formContext;
+		const {translations, contextId, notifier, apiClient} = this.props.formContext;
 		const context = new Context(contextId);
 		context.pushBlockingLoader();
-		new ApiClient().fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
+		apiClient.fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
 			units = units.map(unit => {
 				unit = getDefaultFormState(this.props.schema.items, unit, this.props.registry.definitions);
 				unit = bringRemoteFormData(unit, this.props.formContext);

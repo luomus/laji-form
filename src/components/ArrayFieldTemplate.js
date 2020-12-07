@@ -1,30 +1,38 @@
-import React, { Component } from "react";
-import { Button, DeleteButton, Label } from "./components";
-import merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined } from "../utils";
+import * as React from "react";
+import { Button, DeleteButton, Help } from "./components";
+import * as merge from "deepmerge";
+import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
 import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll } from "../utils";
+import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setImmediate(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {
 	if (!canAdd(props)) return;
-	const idx = (props.startIdx  || getUiOptions(props.uiSchema).startIdx || 0) + (props.items || props.formData).length;
-	const idToFocus =  `${props.idSchema.$id}_${idx}`;
-	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`} = getUiOptions(props.uiSchema || {});
-	new Context(props.formContext.contextId).idToFocus = idToFocus;
-	new Context(props.formContext.contextId).idToScroll = idToScrollAfterAdd;
+	const {contextId} = props.formContext;
+	const startIdx = props.startIdx  || getUiOptions(props.uiSchema).startIdx;
+	let {idToScrollAfterAdd = `${props.idSchema.$id}-add`, idxOffsets, totalOffset} = getUiOptions(props.uiSchema || {});
+	let idx = (props.items || props.formData || []).length;
+	const offset = startIdx !== undefined
+		? startIdx
+		: idxOffsets
+			? getIdxWithOffset(idx, idxOffsets, totalOffset) - idx
+			: 0;
+	idx = offset + idx;
+	let idToFocus = `${props.idSchema.$id}_${idx}`;
+	new Context(contextId).idToFocus = idToFocus;
+	new Context(contextId).idToScroll = idToScrollAfterAdd;
 }
 
 const buttonDefinitions = {
@@ -68,15 +76,20 @@ export function getButton(button, props = {}) {
 
 	if (!button) return;
 
-	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, bsStyle = "primary", tooltip, tooltipPlacement, changesFormData, key, disabled, ...options} = button;
 	const id = button.id || (props.idSchema || {}).$id;
+	const buttonId = `${id}-${button.fnName}${button.key ? `-${button.key}` : ""}`;
+	return <_Button key={buttonId} buttonId={buttonId} button={button} props={props}/>;
+}
+
+function _Button({button, props, getProps, buttonId}) {
+	let {fn, fnName, glyph, label, className, callforward, beforeFn, callback, render, variant = "primary", tooltip, tooltipPlacement, tooltipClass, changesFormData, disabled, help, ...options} = button;
 
 	label = label !== undefined
 		?  (glyph ? ` ${label}` : label)
 		: "";
 
-	const onClick = e => {
-		const onClickProps = button.getProps ? button.getProps() : props;
+	const onClick = React.useCallback(e => {
+		const onClickProps = getProps ? getProps() : props;
 		let _fn = () => fn(e)(onClickProps, options);
 		const __fn = () => {
 			beforeFn && beforeFn(onClickProps, options);
@@ -89,13 +102,13 @@ export function getButton(button, props = {}) {
 		} else {
 			__fn();
 		}
-	};
+	}, [props, getProps, options, callforward, beforeFn, callback, fn]);
 
-	const buttonId = `${id}-${fnName}${key ? `-${key}` : ""}`;
 	return render ? render(onClick, button) : (
-		<Button key={buttonId} id={buttonId} className={className} onClick={onClick} variant={bsStyle} tooltip={tooltip} tooltipPlacement={tooltipPlacement} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))}>
+		<Button id={buttonId} className={className} onClick={onClick} variant={variant} tooltip={tooltip || help} tooltipPlacement={tooltipPlacement} tooltipClass={tooltipClass} disabled={disabled  || ((fnName ===  "add" || changesFormData) && (props.disabled || props.readonly))} style={button.style}>
 			{glyph && <i className={`glyphicon glyphicon-${glyph}`}/>}
 			<strong>{glyph ? ` ${label}` : label}</strong>
+			{help && <Help /> }
 		</Button>
 	);
 }
@@ -133,7 +146,7 @@ function getButtonsElem(buttonElems = [], props = {}) {
 export function getButtonsForPosition(props, buttonDescriptions = [], position, defaultPosition = "bottom") {
 	buttonDescriptions = buttonDescriptions.filter(button => button.position === position || (!button.position && position === defaultPosition));
 	return (buttonDescriptions && buttonDescriptions.length) ?
-		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)) :
+		buttonDescriptions.map(buttonDescription => getButton(buttonDescription, props)).filter(button => button) :
 		null;
 }
 
@@ -142,91 +155,134 @@ export function handlesArrayKeys(ComposedComponent) {
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
-			(super.addKeyHandlers || this.addKeyHandlers).call(this);
-			(super.addChildKeyHandlers ||  this.addChildKeyHandlers).call(this);
-			(super.addCustomEventListeners || this.addCustomEventListeners).call(this);
+			this.addKeyHandlers(this.props);
+			this.addChildKeyHandlers(this.props);
+			this.addCustomEventListeners(this.props);
 			if (super.componentDidMount) super.componentDidMount();
 		}
 
 		componentDidUpdate(prevProps, prevState) {
-			(super.addChildKeyHandlers || this.addChildKeyHandlers).call(this);
+			this.removeKeyHandlers(prevProps);
+			this.addKeyHandlers(this.props);
+			this.removeChildKeyHandlers(prevProps);
+			this.addChildKeyHandlers(this.props);
+			this.removeCustomEventListeners(prevProps);
+			this.addCustomEventListeners(this.props);
 			if (super.componentDidUpdate) super.componentDidUpdate(prevProps, prevState);
+		}
+
+		componentWillUnmount() {
+			this.removeKeyHandlers(this.props);
+			this.removeChildKeyHandlers(this.props);
+			this.removeCustomEventListeners(this.props);
+			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
 		addKeyHandlers() {
 			const context = new Context(this.props.formContext.contextId);
+			const [keys, options] = (super.getKeyHandlers || this.getKeyHandlers).call(this, this.props);
+			this.arrayKeyFunctions = keys;
+			context.addKeyHandler(this.props.idSchema.$id, keys, options);
+		}
 
-			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
-			context.addKeyHandler(this.props.idSchema.$id, arrayKeyFunctions, {
+		removeKeyHandlers(props) {
+			const context = new Context(props.formContext.contextId);
+			context.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
+		}
+
+		getKeyHandlers(props) {
+			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(props.uiSchema);
+			return [_arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions}, {
 				getProps: () => this.props
+			}];
+		}
+
+		addChildKeyHandlers(props) {
+			const context = new Context(props.formContext.contextId);
+			this.childKeyHandlers = (super.getChildKeyHandlers || this.getChildKeyHandlers).call(this, props);
+			this.childKeyHandlers.forEach(handler => {
+				context.addKeyHandler(...handler);
 			});
 		}
 
-		addChildKeyHandlers() {
-			const context = new Context(this.props.formContext.contextId);
+		removeChildKeyHandlers(props) {
+			const context = new Context(props.formContext.contextId);
+			this.childKeyHandlers.forEach(handler => {
+				context.removeKeyHandler(...handler);
+			});
+		}
 
-			if (!this.childKeyHandlers) this.childKeyHandlers = [];
-			else this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
-			this.props.items.forEach((item, i) => {
-				const id = `${this.props.idSchema.$id}_${i}`;
-				this.childKeyHandlers.push({id, keyFunction: arrayItemKeyFunctions});
-				context.addKeyHandler(id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
+		getChildKeyHandlers(props) {
+
+			return props.items.map((item, i) => {
+				const id = `${props.idSchema.$id}_${i}`;
+				return [id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
 					return this.deleteButtonRefs[i];
-				}});
+				}}];
 			});
 		}
 
-		addCustomEventListeners() {
+		onFocus = target => {
 			const context = new Context(this.props.formContext.contextId);
-			context.addCustomEventListener(this.props.idSchema.$id, "focus", target => {
-				if (target === "last") {
-					context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
-					context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
-				} else {
-					console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
-				}
-			});
-			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "copy", (options = {}) => {
-				const {type = "blacklist", filter = []} = options;
-				const {buttonDefinitions = {}} = getUiOptions(this.props.uiSchema);
-				const {copy} = buttonDefinitions;
-				if (copy) {
-					copy.fn()(this.props, {type, filter});
-					if (copy.callback) {
-						copy.callback();
-					}
-				}
-			});
-		}
-
-		componentWillUnmount() {
-			const context = new Context(this.props.formContext.contextId);
-
-			context.removeCustomEventListener(this.props.idSchema.$id, "focus");
-			context.removeKeyHandler(this.props.idSchema.$id, arrayKeyFunctions);
-			if (this.childKeyHandlers) {
-				this.childKeyHandlers.forEach(({id, keyFunction}) => context.removeKeyHandler(id, keyFunction));
+			if (target === "last") {
+				context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
+				context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
+			} else {
+				console.warn(`custom event "focus" has only "last" implemented. Target value was: ${target}`);
 			}
-			if (super.componentWillUnmount) super.componentWillUnmount();
 		}
 
+		onCopy = (options = {}) => {
+			const {type = "blacklist", filter = []} = options;
+			const {buttonDefinitions = {}} = getUiOptions(this.props.uiSchema);
+			const {copy} = buttonDefinitions;
+			if (copy) {
+				copy.fn()(this.props, {type, filter});
+				if (copy.callback) {
+					copy.callback();
+				}
+			}
+		}
+
+		getCustomEventListeners() {
+			return [
+				["focus", this.onFocus],
+				["copy", this.onCopy]
+			];
+		}
+
+		addCustomEventListeners(props) {
+			const context = new Context(props.formContext.contextId);
+			const customEventListeners = (super.getCustomEventListeners || this.getCustomEventListeners).call(this, props);
+			this.customEventListeners = customEventListeners;
+			customEventListeners.forEach(params => context.addCustomEventListener(props.idSchema.$id, ...params));
+		}
+
+		removeCustomEventListeners(props) {
+			const context = new Context(props.formContext.contextId);
+			this.customEventListeners.forEach(params => context.removeCustomEventListener(props.idSchema.$id, ...params));
+		}
 	};
 }
 
-const SortableList = SortableContainer(({items, itemProps, nonOrderables}) => (
+const SortableList = SortableContainer(({items, itemProps, nonOrderables, formData}) => (
 	<div>
-		{items.map((item, i) => 
-			<SortableItem key={i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />
+		{items.map((item, i) => {
+			return <SortableItem key={isObject(formData[i]) ? getUUID(formData[i]) : i} index={i} item={item} disabled={(!itemProps[i].hasMoveDown && !itemProps[i].hasMoveUp) || nonOrderables.includes(i)} />;
+		}
 		)}
 	</div>)
 );
 
 const SortableItem = SortableElement(({item}) => item);
 
-@handlesArrayKeys
-export default class ArrayFieldTemplate extends Component {
+export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 	onSort = ({oldIndex, newIndex}) => {
 		this.props.items[oldIndex].onReorderClick(oldIndex, newIndex)();
+	}
+	onFocuses = []
+	getOnFocus = (i) => () => {
+		new Context(this.props.formContext.contextId)[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
 	render() {
@@ -244,6 +300,7 @@ export default class ArrayFieldTemplate extends Component {
 			buttons = []
 		} = getUiOptions(props.uiSchema);
 		const {readonly, disabled} = this.props;
+		const {Label} = this.props.formContext;
 		const Title = renderTitleAsLabel ? Label :  props.TitleField;
 		const Description = props.DescriptionField;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
@@ -255,22 +312,28 @@ export default class ArrayFieldTemplate extends Component {
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
 
+
 		const items = props.items.map((item, i) => {
-			const deleteButton = (
-				<DeleteButton id={`${props.idSchema.$id}_${i}`}
-										  disabled={disabled || readonly}
-				              ref={getRefFor(i)}
-				              onClick={onDelete(item, props)}
-				              className="laji-form-field-template-buttons"
-				              confirm={confirmDelete}
-				              corner={deleteCorner}
-				              tooltip={deleteHelp}
-				              translations={props.formContext.translations}/>
+			const getDeleteButton = () => (
+				<div className="laji-form-field-template-buttons">
+					<DeleteButton id={`${props.idSchema.$id}_${i}`}
+					              disabled={disabled || readonly}
+					              ref={getRefFor(i)}
+					              onClick={onDelete(item, props)}
+					              confirm={confirmDelete}
+					              corner={deleteCorner}
+					              tooltip={deleteHelp}
+					              translations={props.formContext.translations}/>
+				</div>
 			);
+			if (!this.onFocuses[i]) {
+				this.onFocuses[i] = this.getOnFocus(i);
+			}
+
 			return (
-				<div key={item.index} className="laji-form-field-template-item keep-vertical field-array-row">
+				<div key={getUUID(props.formData[i]) || item.key} className="laji-form-field-template-item keep-vertical field-array-row" onFocus={this.onFocuses[i]}>
 					<div className="laji-form-field-template-schema">{item.children}</div>
-					{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
+					{item.hasRemove && !nonRemovables.includes(item.index) && removable && getDeleteButton()}
 				</div>
 			);
 		});
@@ -283,12 +346,13 @@ export default class ArrayFieldTemplate extends Component {
 				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
-					orderable ? 
-						<SortableList helperClass="laji-form reorder-active" 
-						              distance={5} 
-						              items={items} 
-						              onSortEnd={this.onSort} 
-						              itemProps={props.items} 
+					orderable ?
+						<SortableList helperClass="laji-form reorder-active"
+						              distance={5}
+						              items={items}
+						              formData={props.formData}
+						              onSortEnd={this.onSort}
+						              itemProps={props.items}
 						              nonOrderables={nonOrderables} /> :
 						items
 				}
@@ -297,6 +361,8 @@ export default class ArrayFieldTemplate extends Component {
 		);
 	}
 }
+
+export default handlesArrayKeys(ArrayFieldTemplateWithoutKeyHandling);
 
 export const arrayKeyFunctions = {
 	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
@@ -326,7 +392,7 @@ export const arrayKeyFunctions = {
 		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
-		const focusedIdx = activeItemQuery ? +activeItemQuery[0].replace(/^.*_(\d+)$/, "$1") : undefined;
+		const focusedIdx = activeItemQuery ? getIdxWithoutOffset(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getUiOptions(getProps().uiSchema).idxOffsets) : undefined;
 		const lastId = nearestSchemaElemId.substring(`${getProps().idSchema.$id}_${focusedIdx}`.length + 1, nearestSchemaElemId.length);
 		const focusedProp = isNaN(lastId) ? lastId : undefined;
 
@@ -362,7 +428,10 @@ export const arrayKeyFunctions = {
 			onAdd(e, props);
 		}
 
-		if (!props.disabled && !props.readonly &&  canAdd(props)) {
+		if (!props.disabled && !props.readonly && canAdd(props) && getUiOptions(props.uiSchema).canAddByKey !== false) {
+			if (e.target) {
+				e.target.blur();
+			}
 			if (insertCallforward) {
 				e.persist();
 				beforeAdd(props);
@@ -375,6 +444,7 @@ export const arrayKeyFunctions = {
 			}
 			return true;
 		}
+		return false;
 	}
 };
 
@@ -397,7 +467,7 @@ export const arrayItemKeyFunctions = {
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
 		const elem = getSchemaElementById(contextId, `${idSchema.$id}_${idx}`);
 		const prevElem = elem ? getNextInput(getFormRef(), getTabbableFields(elem)[0], !!"reverse") : null;
-		
+
 		deleteButton.onClick(e, (deleted) => {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;

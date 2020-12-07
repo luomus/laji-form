@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Row , Col} from "react-bootstrap";
-import { Label, Affix } from "../components";
+import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
-export default class ExtraLabelRowField extends Component {
+export default class ExtraLabelRowField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
 				labels: PropTypes.arrayOf(PropTypes.object).isRequired,
-				lg: PropTypes.integer,
-				md: PropTypes.integer,
-				sm: PropTypes.integer,
-				xs: PropTypes.integer,
+				lg: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+				md: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+				sm: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+				xs: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 				hiddenXs: PropTypes.boolean
 			})
 		}).isRequired,
@@ -79,6 +79,7 @@ export default class ExtraLabelRowField extends Component {
 	getColContent = (label, i) => {
 		const cols = this.getCols(label.size);
 
+		const {Label} = this.props.formContext;
 		return (
 			<Col {...cols} key={i}>
 				<Label label={label.label} id={this.props.idSchema.$id} help={label.help}/>

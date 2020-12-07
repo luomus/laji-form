@@ -1,8 +1,8 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { toIdSchema, getDefaultFormState } from  "react-jsonschema-form/lib/utils";
-import { immutableDelete, getUiOptions, updateSafelyWithJSONPath, parseJSONPointer, checkJSONPointer, isEmptyString, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
+import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
+import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -108,7 +108,7 @@ import VirtualSchemaField from "../VirtualSchemaField";
  *
  */
 @VirtualSchemaField
-export default class NestField extends Component {
+export default class NestField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -121,12 +121,11 @@ export default class NestField extends Component {
 					}
 				}
 			}),
-			uiSchema: PropTypes.object
 		}).isRequired,
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
-		formData: PropTypes.object.isRequired
+		formData: PropTypes.object
 	}
 
 	static getName() {return "NestField";}
@@ -134,7 +133,7 @@ export default class NestField extends Component {
 	getStateFromProps(props) {
 		const options = this.getUiOptions();
 
-		let {schema, uiSchema, idSchema, errorSchema, formData, registry} = props;
+		let {schema, uiSchema, idSchema, errorSchema, formData = {}, registry} = props;
 
 		const {nests, buttonsNest} = options;
 		const buttons = getUiOptions(uiSchema).buttons;
@@ -238,13 +237,13 @@ export default class NestField extends Component {
 		return {schema, uiSchema, idSchema, errorSchema, formData};
 	}
 
-	onChange(formData) {
+	onChange(formData = {}) {
 		const {nests} = this.getUiOptions();
 
 		Object.keys(nests).reverse().forEach(nestName => {
 			if (formData[nestName]) {
 				Object.keys(formData[nestName]).forEach(prop => {
-					if (formData[nestName].hasOwnProperty(prop)) formData = {...formData, [prop]: formData[nestName][prop]};
+					if (prop in formData[nestName]) formData = {...formData, [prop]: formData[nestName][prop]};
 				});
 				formData = immutableDelete(formData, nestName);
 			}
@@ -262,6 +261,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		if (prop in _uiSchema) _uiSchema[prop] = uiSchema[prop];
 		return _uiSchema;
 	}, {});
+	const newIdSchema = {$id: idSchema.$id};
 	const fieldsDictionarified = {};
 
 	// For keeping field names compatible with idSchema.
@@ -272,7 +272,8 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 			[schema.properties, newSchema.properties, schemaJSONPointer(schema.properties, fieldName)],
 			[uiSchema, newUiSchema, uiSchemaJSONPointer(schema.properties, fieldName)],
 			[errorSchema, newErrorSchema, fieldName],
-			[formData, newFormData, fieldName]
+			[formData, newFormData, fieldName],
+			[idSchema, newIdSchema, fieldName]
 		].forEach(([originalPropContainer, newPropContainer, _fieldName]) => {
 			if (_fieldName !== undefined && checkJSONPointer(originalPropContainer, _fieldName)) {
 				newPropContainer[flattenPointerName(fieldName)] = parseJSONPointer(originalPropContainer, _fieldName);
@@ -285,15 +286,9 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 	if (uiSchema["ui:order"]) newUiSchema["ui:order"] = uiSchema["ui:order"].filter(ord => fieldsDictionarified[ord] || ord === "*");
 	if (schema.required) newSchema.required = schema.required.filter(req => fieldsDictionarified[req]);
 
-	const newIdSchema = toIdSchema(
-		newSchema,
-		idSchema.$id,
-		definitions
-	);
-
 	const newOnChange = formData => {
 		let newFormData = fields.reduce((_formData, field) => {
-			_formData = updateSafelyWithJSONPath(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
+			_formData = updateSafelyWithJSONPointer(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
 				const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
 				return getDefaultFormState(_schema, undefined, definitions);
 			});

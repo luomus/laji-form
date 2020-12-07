@@ -1,11 +1,10 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
-import ReactAutosuggest from "react-autosuggest";
-import ApiClient from "../../ApiClient";
-import { Popover, InputGroup, Tooltip, Modal } from "react-bootstrap";
-import Spinner from "react-spinner";
-import { isEmptyString, focusNextInput, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
+import * as PropTypes from "prop-types";
+import * as ReactAutosuggest from "react-autosuggest";
+import { Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
+import * as Spinner from "react-spinner";
+import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
 import { Glyphicon, FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -16,10 +15,10 @@ function renderFlag(suggestion) {
 		: null;
 }
 
-export default class _AutosuggestWidget extends Component {
+export default class _AutosuggestWidget extends React.Component {
 	static propTypes = {
 		schema: PropTypes.shape({
-			type: PropTypes.string
+			type: PropTypes.oneOf(["string"])
 		}).isRequired,
 		value: PropTypes.string
 	}
@@ -41,7 +40,7 @@ export default class _AutosuggestWidget extends Component {
 		return <Autosuggest {...this.props} />;
 	}
 
-	formatValue(value, options) {
+	formatValue(value, options, parentProps) {
 		if (options) {
 			let component = undefined;
 			switch (options.autosuggestField) {
@@ -59,13 +58,13 @@ export default class _AutosuggestWidget extends Component {
 				component = RangeAutosuggestWidget;
 			}
 			if (component) {
-				return <SimpleValueRenderer component={component} value={value} />;
+				return <SimpleValueRenderer component={component} value={value} formContext={parentProps.formContext} />;
 			}
 		}
 	}
 }
 
-class SimpleValueRenderer extends Component {
+class SimpleValueRenderer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {value: this.props.value, loading: true};
@@ -91,7 +90,11 @@ function TaxonAutosuggest(ComposedComponent) {
 			super(props);
 			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 			this.isValueSuggested = this.isValueSuggested.bind(this);
-			if (super.renderSuggestion) this.renderSuggestion = super.renderSuggestion.bind(this);
+			if (super.renderSuggestion) {
+				this.renderSuggestion = super.renderSuggestion.bind(this);
+			} else {
+				this.renderSuggestion = this.renderSuggestion.bind(this);
+			}
 		}
 
 		componentDidMount() {
@@ -115,7 +118,7 @@ function TaxonAutosuggest(ComposedComponent) {
 
 		getSuggestionFromValue(value) {
 			if (this.isValueSuggested(value)) {
-				return new ApiClient().fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
+				return this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({vernacularName, scientificName}) => {
 					if (vernacularName !== undefined) {
 						return {value: vernacularName, key: value};
 					}
@@ -148,32 +151,46 @@ function TaxonAutosuggest(ComposedComponent) {
 		renderSuggested = (input, suggestion) => {
 			const {taxonCardPlacement: placement = "top" } = getUiOptions(this.props);
 			return (
-			<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
-				{input}
-			</TaxonCardOverlay>
+				<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
+					{input}
+				</TaxonCardOverlay>
 			);
 		}
 
 		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
 
 		renderSuggestion(suggestion) {
-			return <span className="simple-option">{suggestion.value}{renderFlag(suggestion)}</span>;
+			const renderedSuggestion = "autocompleteDisplayName" in suggestion
+				&& <span dangerouslySetInnerHTML={{__html: suggestion.autocompleteDisplayName}} />
+				|| <React.Fragment>{suggestion.value}{renderFlag(suggestion)}</React.Fragment>;
+			return <span className="simple-option">{renderedSuggestion}</span>;
 		}
 
 		parseChooseImages = (chooseImages) => {
-			return chooseImages.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj)
+			return chooseImages.map(taxonIDOrObj => typeof taxonIDOrObj === "string" ? {id: taxonIDOrObj} : taxonIDOrObj);
 		}
 
 		renderChooseImages = () => {
-			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages
+			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
+			const {orWriteSpeciesNameLabel} = getUiOptions(this.props);
+			const {or} = this.props.formContext.translations;
 			return (
-				<React.Fragment>
-					<div className="laji-form-images">
-							{this.parseChooseImages(chooseImages)
-									.map(taxonIDObj => <TaxonImgChooser id={taxonIDObj.id} key={taxonIDObj.id} url={taxonIDObj.url} onSelect={this.onTaxonImgSelected} formContext={this.props.formContext}/>)}
-					</div>
-					<label>{this.props.formContext.translations.orWriteSpeciesName}</label>
-				</React.Fragment>
+				<Row>
+					<Col xs={12}>
+						<div className="laji-form-medias">
+							{this.parseChooseImages(chooseImages).map(taxonIDObj =>
+								<TaxonImgChooser id={taxonIDObj.id}
+								                 key={taxonIDObj.id}
+								                 url={taxonIDObj.url}
+								                 onSelect={this.onTaxonImgSelected}
+								                 formContext={this.props.formContext}/>
+							)}
+						</div>
+					</Col>
+					<Col xs={12}>
+						<label>{or} {orWriteSpeciesNameLabel || this.props.formContext.translations.orWriteSpeciesName}</label>
+					</Col>
+				</Row>
 			);
 		}
 
@@ -214,7 +231,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				}
 			};
 
-			if (propsOptions.chooseImages) {
+			if (propsOptions.chooseImages && !(props.value && props.formContext.uiSchemaContext.isEdit)) {
 				_options.renderExtra = this.renderChooseImages;
 			}
 
@@ -224,10 +241,10 @@ function TaxonAutosuggest(ComposedComponent) {
 }
 
 @TaxonAutosuggest
-class TaxonAutosuggestWidget extends Component {}
+class TaxonAutosuggestWidget extends React.Component {}
 
 @TaxonAutosuggest
-class UnitAutosuggestWidget extends Component {
+class UnitAutosuggestWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -245,7 +262,7 @@ class UnitAutosuggestWidget extends Component {
 	}
 }
 
-class FriendsAutosuggestWidget extends Component {
+class FriendsAutosuggestWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -253,13 +270,15 @@ class FriendsAutosuggestWidget extends Component {
 	}
 
 	getSuggestionFromValue(value) {
+		const {showID} = getUiOptions(this.props);
+		const {isAdmin} = this.props.formContext.uiSchemaContext;
 		if (this.isValueSuggested(value)) {
-			return new ApiClient().fetchCached(`/person/by-id/${value}`).then(({fullName, group}) => {
+			return this.props.formContext.apiClient.fetchCached(`/person/by-id/${value}`).then(({fullName, group, id}) => {
 				if (fullName) {
+					const addGroup = str => group ? `${str} (${group})` : str;
+					const addID = str => isAdmin && showID ? `${str} (${id})` : str;
 					return {
-						value: group
-							? `${fullName} (${group})`
-							: fullName,
+						value: addID(addGroup(fullName)),
 						key: value
 					};
 				}
@@ -303,20 +322,21 @@ class FriendsAutosuggestWidget extends Component {
 			renderUnsuggested: this.renderUnsuggested,
 			renderSuccessGlyph: this.renderSuccessGlyph,
 			findExactMatch: this.findExactMatch,
+			controlledValue: true
 		};
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
-class RangeAutosuggestWidget extends Component {
+class RangeAutosuggestWidget extends React.Component {
 	render() {
 		const {options: propsOptions, ...propsWithoutOptions} = this.props;
 		return <Autosuggest highlightFirstSuggestion={true} {...propsWithoutOptions} {...propsOptions} />;
 	}
 }
 
-export class Autosuggest extends Component {
+export class Autosuggest extends React.Component {
 	static propTypes = {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
@@ -351,7 +371,7 @@ export class Autosuggest extends Component {
 			suggestion: isSuggested ? {} : undefined,
 		};
 		this.state = {...this.state, ...this.getStateFromProps(props)};
-		this.apiClient = new ApiClient();
+		this.apiClient = this.props.formContext.apiClient;
 	}
 
 	getStateFromProps(props) {
@@ -416,7 +436,11 @@ export class Autosuggest extends Component {
 	}
 
 	getSuggestionValue = (suggestion) => {
-		return suggestion.value;
+		const {getSuggestionValue} = this.props;
+		const def = suggestion.value;
+		return getSuggestionValue
+			? getSuggestionValue(suggestion, def)
+			: def;
 	}
 
 	renderSuggestion = (suggestion) => {
@@ -433,7 +457,7 @@ export class Autosuggest extends Component {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
 		const afterStateChange = () => {
 			onSuggestionSelected ?
-				onSuggestionSelected(suggestion) :
+				onSuggestionSelected(suggestion, this.mounted) :
 				onChange(suggestion[suggestionReceive || "key"]);
 		};
 		const state = {suggestion, value: this.getSuggestionValue(suggestion)};
@@ -464,10 +488,17 @@ export class Autosuggest extends Component {
 		const {suggestion} = data;
 		e.preventDefault();
 		if ("id" in this.props) {
-			// Try focusing next and rely on the blur method to select the suggestion. If didn't focus next, select the suggestion.
-			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.id))) {
+			new Context(this.props.formContext.contextId).formInstance.onKeyDown(e);
+			this.selectSuggestion(suggestion);
+			// If event triggered for LajiForm didn't cause a navigation and thus blur, select the suggestion.
+			if (document.activeElement === findDOMNode(this.inputElem)) {
 				this.selectSuggestion(suggestion);
 			}
+			setTimeout(() => {
+				if (this.mounted && document.activeElement !== findDOMNode(this.inputElem)) {
+					this.onBlur();
+				}
+			});
 		}
 	}
 
@@ -520,13 +551,13 @@ export class Autosuggest extends Component {
 		const request = () => {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
-			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", ...query}).then(suggestions => {
+			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}
-				this.mounted ?
-					this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions)) :
-					this.afterBlurAndFetch(suggestions);
+				this.mounted
+					? this.setState({isLoading: false, suggestions}, () => this.afterBlurAndFetch(suggestions))
+					: this.afterBlurAndFetch(suggestions);
 			}).catch(() => {
 				this.mounted
 					? this.setState({isLoading: false}, this.afterBlurAndFetch)
@@ -551,7 +582,13 @@ export class Autosuggest extends Component {
 		triggerParentComponent("onFocus", e, this.props.inputProps);
 	}
 
-	onBlur = (e, {highlightedSuggestion}) => {
+	onBlur = (e,  data) => {
+		if (!data) {
+			this.setState({focused: false});
+			triggerParentComponent("onBlur", e, this.props.inputProps);
+			return;
+		}
+		const {highlightedSuggestion} = data;
 		this.highlightedSuggestionOnBlur = highlightedSuggestion;
 		this._valueForBlurAndFetch = this.state.value;
 		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
@@ -559,10 +596,6 @@ export class Autosuggest extends Component {
 	}
 
 	onKeyDown = (e) => {
-		if (e.key === "Enter") {
-			findDOMNode(this.inputElem).blur();
-		}
-
 		triggerParentComponent("onKeyDown", e, this.props.inputProps);
 	}
 
@@ -612,7 +645,7 @@ export class Autosuggest extends Component {
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(parsedValue);
 		} else if (!allowNonsuggestedValue) {
-			this.setState({value: ""});
+			this.setState({value: ""}, () => this.props.onChange(""));
 		}
 
 		callback && callback();
@@ -620,6 +653,11 @@ export class Autosuggest extends Component {
 
 	setRef = (ref) => {
 		this.reactAutosuggestRef = ref;
+		// Monkey patch to prevent suggestion mouse hover to interfere with keyboard suggestion navigation [#175274678]
+		if (ref) {
+			ref.onSuggestionMouseEnter = () => {};
+			ref.onSuggestionMouseLeave = () => {};
+		}
 	}
 
 	render() {
@@ -659,7 +697,7 @@ export class Autosuggest extends Component {
 		return (
 			<React.Fragment>
 				{renderExtra && renderExtra()}
-				<div className="autosuggest-wrapper">
+				<div className={`autosuggest-wrapper${props.wrapperClassName ? ` ${props.wrapperClassName}` : ""}`}>
 					<ReactAutosuggest
 						ref={this.setRef}
 						id={`${this.props.id}-autosuggest`}
@@ -678,7 +716,7 @@ export class Autosuggest extends Component {
 						theme={cssClasses}
 					/>
 				</div>
-		</React.Fragment>
+			</React.Fragment>
 		);
 	}
 
@@ -698,7 +736,7 @@ export class Autosuggest extends Component {
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
-		setImmediate(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
+		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
 	}
 
 	setInputRef = (elem) => {
@@ -711,8 +749,7 @@ export class Autosuggest extends Component {
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
-		let isSuggested = this.isValueSuggested(value);
-		if (isSuggested) isSuggested = isSuggested && !!suggestion;
+		const isSuggested = !!suggestion && this.isValueSuggested(value);
 
 		if (!isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";
@@ -753,10 +790,10 @@ export class Autosuggest extends Component {
 
 		const addon = informalTaxonGroups && renderInformalTaxonGroupSelector
 			? <InformalTaxonGroupsAddon taxonGroupID={taxonGroupID} 
-																	onClear={this.onInformalTaxonGroupSelected} 
-																	open={this.state.informalTaxonGroupsOpen}
-																	onOpen={this.onInformalTaxonGroupsOpened} 
-																	formContext={this.props.formContext} /> 
+				                          onClear={this.onInformalTaxonGroupSelected} 
+				                          open={this.state.informalTaxonGroupsOpen}
+				                          onOpen={this.onInformalTaxonGroupsOpened} 
+				                          formContext={this.props.formContext} /> 
 			: null;
 
 		const getTogglerTooltip = () => {
@@ -777,7 +814,7 @@ export class Autosuggest extends Component {
 				<TooltipComponent tooltip={getTogglerTooltip()} >
 					<InputGroup.Append className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
 						<Glyphicon glyph="flash"/>
-				</InputGroup.Append>
+					</InputGroup.Append>
 				</TooltipComponent>
 			) : null;
 
@@ -806,7 +843,7 @@ export class Autosuggest extends Component {
 			component = (
 				<div>
 					{component}
-					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} translations={translations} lang={lang} />}
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} formContext={this.props.formContext} lang={lang} />}
 				</div>
 			);
 		}
@@ -814,7 +851,7 @@ export class Autosuggest extends Component {
 	}
 }
 
-class TaxonCardOverlay extends Component {
+class TaxonCardOverlay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {converted: false};
@@ -837,16 +874,16 @@ class TaxonCardOverlay extends Component {
 		if ( isEmptyString(value)) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
-			new ApiClient().fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
+			this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
 				if (!this.mounted) return;
 				this.setState({value, taxonRank, informalTaxonGroups, taxon: {scientificName, vernacularName, cursiveName, finnish}});
 
-				getInformalGroups().then(({informalTaxonGroupsById}) => {
+				getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 					if (!this.mounted) return;
 					this.setState({informalTaxonGroupsById});
 				});
 			});
-			new ApiClient().fetchCached(`/taxa/${value}/parents`).then(parents => {
+			this.props.formContext.apiClient.fetchCached(`/taxa/${value}/parents`).then(parents => {
 				if (!this.mounted) return;
 				const state = {order: undefined, family: undefined};
 				for (let parent of parents) {
@@ -863,7 +900,7 @@ class TaxonCardOverlay extends Component {
 				}
 				this.setState({...state, higherThanOrder: !state.order && !state.family});
 			});
-			new ApiClient().fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
+			this.props.formContext.apiClient.fetchCached("/metadata/ranges/MX.taxonRankEnum").then(taxonRanks => {
 				if (!this.mounted) return;
 				this.setState({taxonRanks: dictionarify(taxonRanks, function getKey(rank) {return rank.id;}, function getValue(rank) {return rank.value;})});
 			});
@@ -925,14 +962,14 @@ class TaxonCardOverlay extends Component {
 			<OverlayTrigger hoverable={true}
 			                placement={placement}
 			                _context={new Context(this.props.formContext.contextId)}
-											overlay={popover}>
+			                overlay={popover}>
 				{children}
 			</OverlayTrigger>
 		);
 	}
 }
 
-class InformalTaxonGroupsAddon extends Component {
+class InformalTaxonGroupsAddon extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -940,7 +977,7 @@ class InformalTaxonGroupsAddon extends Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		getInformalGroups().then(({informalTaxonGroupsById}) => {
+		getInformalGroups(this.props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
 			if (!this.mounted) return;
 			this.setState({informalTaxonGroupsById});
 		});
@@ -982,7 +1019,7 @@ class InformalTaxonGroupsAddon extends Component {
 	}
 }
 
-class TaxonImgChooser extends Component {
+class TaxonImgChooser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -990,7 +1027,7 @@ class TaxonImgChooser extends Component {
 
 	componentDidMount(){
 		this.mounted = true;
-		new ApiClient().fetchCached(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
+		this.props.formContext.apiClient.fetchCached(`/taxa/${this.props.id}`, {includeMedia: true}).then(taxon => {
 			if (!this.mounted) return;
 
 			if (taxon.multimedia && taxon.multimedia.length) {
@@ -1028,15 +1065,15 @@ class TaxonImgChooser extends Component {
 
 		const {translations} = this.props.formContext;
 		return (
-			<React.Fragment>
-				<div className="taxon-img img-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
-						{!taxon && <div className="image-loading"><Spinner /></div>}
-						<span>
-							{taxon && taxon.vernacularName || ""}
-						</span>
+			<div className="laji-form-medias">
+				<div className="taxon-img media-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>
+					{!taxon && <div className="media-loading"><Spinner /></div>}
+					<span>
+						{taxon && taxon.vernacularName || ""}
+					</span>
 				</div>
-					{modal && 
-						<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideModal}>
+				{modal && 
+						<Modal dialogClassName="laji-form media-modal" show={true} onHide={this.hideModal}>
 							<Modal.Body>
 								<img src={this.state.large} />
 								<div>
@@ -1046,8 +1083,8 @@ class TaxonImgChooser extends Component {
 								</div>
 							</Modal.Body>
 						</Modal>
-					}
-			</React.Fragment>
+				}
+			</div>
 		);
 	}
 }
@@ -1058,10 +1095,10 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 		: (scientificName || "");
 	return (
 		<React.Fragment>
-				{`${vernacularName}${vernacularName ? " " : ""}`}
-				{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-					{renderFlag({payload: {finnish}})}
-			</React.Fragment>
+			{`${vernacularName}${vernacularName ? " " : ""}`}
+			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
+			{renderFlag({payload: {finnish}})}
+		</React.Fragment>
 	);
 };
 

@@ -1,27 +1,27 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { Label } from "../components";
 import Context from "../../Context";
-import deepEquals from "deep-equal";
+import * as deepEquals from "deep-equal";
 
 @BaseComponent
-export default class TagArrayField extends Component {
+export default class TagArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
-			"ui:option": PropTypes.shape({
+			"ui:options": PropTypes.shape({
 				separatorKeys: PropTypes.arrayOf(PropTypes.string)
 			})
 		}),
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
 		}).isRequired,
-		formData: PropTypes.array.isRequired
+		formData: PropTypes.array
 	}
 
 	render() {
+		const {Label} = this.props.formContext;
 		return (
 			<React.Fragment>
 				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />
@@ -31,7 +31,7 @@ export default class TagArrayField extends Component {
 	}
 }
 
-export class TagInputComponent extends Component {
+export class TagInputComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -54,7 +54,7 @@ export class TagInputComponent extends Component {
 	onKeyDown = (e) => {
 		const {value} = this.state;
 		const {tags = []} = this.props;
-		const {separatorKeys = ["Enter"]} = getUiOptions(this.props.uiSchema);
+		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(this.props.uiSchema);
 		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
 			this.props.onChange([...tags, value], "enter");
 			e.stopPropagation();

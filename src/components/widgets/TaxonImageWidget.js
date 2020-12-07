@@ -1,8 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 
-export default class TaxonImageWidget extends Component {
+export default class TaxonImageWidget extends React.Component {
+	static propTypes = {
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["string"])
+		}).isRequired,
+		value: PropTypes.string
+	}
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		const {uiSchema} = getUiOptions(this.props);
@@ -12,14 +18,13 @@ export default class TaxonImageWidget extends Component {
 
 		return (
 			<React.Fragment>
-					{["MX.45", "MX.255"].map(taxonID => <div key={taxonID} style={{height: 100, width:100}} onClick={this.onTaxonImageClick(taxonID)} />)}
-					{schemaField}
+				{["MX.45", "MX.255"].map(taxonID => <div key={taxonID} style={{height: 100, width:100}} onClick={this.onTaxonImageClick(taxonID)} />)}
+				{schemaField}
 			</React.Fragment>
 		);
 	}
 
 	onTaxonImageClick = (taxonID) => () => {
-		console.log(taxonID);
 		this.props.onChange(taxonID);
 	}
 }

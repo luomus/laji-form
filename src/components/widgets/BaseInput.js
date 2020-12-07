@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import BaseInput from "react-jsonschema-form/lib/components/widgets/BaseInput";
+import * as React from "react";
+import BaseInput from "@rjsf/core/dist/cjs/components/widgets/BaseInput";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 
-export default class _BaseInput extends Component {
+export default class _BaseInput extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -23,12 +23,12 @@ export default class _BaseInput extends Component {
 		const type = this.props.schema.type;
 		// Accept only integers
 		if (type === "integer") {
-			value = value ? value.replace(/[^0-9\-]/g, "") : value;
+			value = value ? value.replace(/[^0-9-]/g, "") : value;
 			value = value ? value.replace(/(.+)-/g, "$1") : value;
 		}
 		// Accept integers or floats
 		if (type === "number") {
-			value = value ? value.replace(/[^0-9.\-]/g, "") : value;
+			value = value ? value.replace(/[^0-9.-]/g, "") : value;
 			value = value ? value.replace(/(\..*)\./g, "$1") : value;
 			value = value ? value.replace(/(.+)-/g, "$1") : value;
 		}
@@ -61,9 +61,12 @@ export default class _BaseInput extends Component {
 
 	render() {
 		const {
-			formatValue, // eslint-disable-line no-unused-vars
+			formatValue, // eslint-disable-line @typescript-eslint/no-unused-vars
 			...props
 		} = this.props;
-		return <BaseInput {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} />;
+		const options = props.schema.type === "number" || props.schema.type === "integer"
+			? {...props.options, inputType: "text"}
+			: props.options;
+		return <BaseInput {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur}  options={options} />;
 	}
 }
