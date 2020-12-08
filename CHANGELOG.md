@@ -1,3 +1,6 @@
+## 6.1.0
+* Add `tag` option to `PlainTextWidget`
+
 ## 6.0.0
 * Exclude TypeScript declarations in `lib`
 * Export tests to npm package
