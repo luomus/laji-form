@@ -50,17 +50,21 @@ export default class SingleActiveArrayField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		const {formData, uiSchema, schema} = props;
 		this.deleteButtonRefs = {};
 		this.deleteButtonRefSetters = {};
-		const options = getUiOptions(uiSchema);
-		const formDataLength = (formData || []).length;
 		this.state = {
-			activeIdx: (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx,
+			activeIdx: this.getInitialActiveIdx(props),
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
 		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
+	}
+
+	getInitialActiveIdx = (props) => {
+		const {formData, uiSchema, schema} = props;
+		const formDataLength = (formData || []).length;
+		const options = getUiOptions(uiSchema);
+		return (formDataLength === 1 || formDataLength === 0 && schema.minItems) ? 0 : options.initialActiveIdx;
 	}
 
 	componentDidMount() {
@@ -132,6 +136,10 @@ export default class SingleActiveArrayField extends React.Component {
 		if ("activeIdx" in options) state.activeIdx = options.activeIdx;
 		else if ((props.formData || []).length === 1 && (this.props.formData || []).length === 0) {
 			state.activeIdx = 0;
+		}
+
+		if (!state.activeIdx && this.props && props.idSchema.$id !== this.props.idSchema.$id) {
+			state.activeIdx = this.getInitialActiveIdx(props);
 		}
 
 		return state;

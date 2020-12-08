@@ -17,7 +17,15 @@ export default class SingleItemArrayField extends React.Component {
 	static getName() {return "SingleItemArrayField";}
 
 	getStateFromProps(props) {
-		const {activeIdx = 0} = getUiOptions(props.uiSchema);
+		const activeIdx = this.getActiveIdx(props);
+		if (typeof activeIdx !== "number" || isNaN(activeIdx)) {
+		 return {
+				...props,
+				uiSchema: {
+					"ui:field": "HiddenField"
+				}
+			};
+		}
 		let uiSchema = {
 			"ui:title": getTitle(props, activeIdx),
 			"ui:help": props.uiSchema["ui:help"],
@@ -45,7 +53,6 @@ export default class SingleItemArrayField extends React.Component {
 					getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id),
 					false
 				)[0],
-			//schema: {title: props.schema.title, ...props.schema.items},
 			schema: props.schema.items,
 			uiSchema,
 			idSchema: ArrayFieldPatched.prototype.getIdSchema.call(this, props, activeIdx),
@@ -54,8 +61,15 @@ export default class SingleItemArrayField extends React.Component {
 		};
 	}
 
+	getActiveIdx = (props) => {
+		const options = getUiOptions(props.uiSchema);
+		return "activeIdx" in options
+			? options.activeIdx
+			: 0;
+	}
+
 	onChange(formData) {
-		const {activeIdx = 0} = this.getUiOptions();
+		const activeIdx = this.getActiveIdx(this.props);
 		const copy = (this.props.formData || []).slice();
 		copy[activeIdx] = formData;
 		this.props.onChange(copy);

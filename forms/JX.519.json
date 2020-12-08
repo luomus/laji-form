@@ -265,11 +265,6 @@
         }
     },
     "id": "JX.519",
-    "instructions": {
-        "en": "https://laji.fi/about/1107",
-        "fi": "https://laji.fi/about/1107",
-        "sv": "https://laji.fi/about/1107"
-    },
     "language": "fi",
     "name": "Retkilomake",
     "options": {
@@ -278,7 +273,8 @@
             "en": "https://laji.fi/about/1107",
             "fi": "https://laji.fi/about/1107",
             "sv": "https://laji.fi/about/1107"
-        }
+        },
+        "simple": true
     },
     "schema": {
         "properties": {
@@ -580,6 +576,7 @@
                             "type": "integer"
                         },
                         "observationMinutes": {
+                            "exclusiveMinimum": 0,
                             "title": "Havainnointiminuutit",
                             "type": "integer"
                         },
@@ -739,6 +736,7 @@
                                         "type": "array"
                                     },
                                     "areaInSquareMeters": {
+                                        "minimum": 0,
                                         "title": "Esiintym\u00e4n koko (m\u00b2)",
                                         "type": "integer"
                                     },
@@ -943,6 +941,7 @@
                                         "type": "string"
                                     },
                                     "femaleIndividualCount": {
+                                        "minimum": 0,
                                         "title": "Naaraiden yksil\u00f6m\u00e4\u00e4r\u00e4",
                                         "type": "integer"
                                     },
@@ -1088,6 +1087,7 @@
                                         "type": "string"
                                     },
                                     "maleIndividualCount": {
+                                        "minimum": 0,
                                         "title": "Koiraiden yksil\u00f6m\u00e4\u00e4r\u00e4",
                                         "type": "integer"
                                     },
@@ -1139,20 +1139,6 @@
                                         },
                                         "title": "Linnun tila",
                                         "type": "array"
-                                    },
-                                    "nativeStatus": {
-                                        "enum": [
-                                            "",
-                                            "MY.native",
-                                            "MY.nonNative"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "luonnonvarainen",
-                                            "ei-luonnonvarainen"
-                                        ],
-                                        "title": "Luonnonvaraisuus",
-                                        "type": "string"
                                     },
                                     "notes": {
                                         "title": "Lis\u00e4tiedot",
@@ -1618,6 +1604,22 @@
                                         },
                                         "required": [],
                                         "type": "object"
+                                    },
+                                    "wild": {
+                                        "enum": [
+                                            "",
+                                            "MY.wildWild",
+                                            "MY.wildUnknown",
+                                            "MY.wildNonWild"
+                                        ],
+                                        "enumNames": [
+                                            "",
+                                            "Luonnonvaraiset",
+                                            "Ei merkint\u00e4\u00e4",
+                                            "Ei luonnonvaraiset"
+                                        ],
+                                        "title": "Luonnonvaraisuus",
+                                        "type": "string"
                                     }
                                 },
                                 "required": [],
@@ -1637,7 +1639,6 @@
                     "required": [],
                     "type": "object"
                 },
-                "title": "Paikka",
                 "type": "array"
             },
             "keywords": {
@@ -2131,7 +2132,7 @@
                                             "breeding",
                                             "atlasCode",
                                             "twitched",
-                                            "nativeStatus",
+                                            "wild",
                                             "identifications_0_det",
                                             "identifications_0_detDate",
                                             "identifications_0_identificationBasis",
@@ -2223,7 +2224,7 @@
                                                     "breeding",
                                                     "maleIndividualCount",
                                                     "femaleIndividualCount",
-                                                    "nativeStatus",
+                                                    "wild",
                                                     "checklistID",
                                                     "keywords",
                                                     "additionalIDs"
@@ -2382,7 +2383,7 @@
                                                 "defaultFields": [
                                                     "plantLifeStage",
                                                     "plantStatusCode",
-                                                    "nativeStatus"
+                                                    "wild"
                                                 ]
                                             }
                                         }
@@ -2422,6 +2423,13 @@
                                 "ui:field": "LocationChooserField",
                                 "ui:options": {
                                     "geometryField": "unitGathering_geometry",
+                                    "mapOptions": {
+                                        "circle": true,
+                                        "polygon": true,
+                                        "polyline": true,
+                                        "rectangle": true
+                                    },
+                                    "maxShapes": -1,
                                     "taxonField": "identifications_0_taxon"
                                 }
                             }
@@ -2490,7 +2498,7 @@
                             "breeding",
                             "maleIndividualCount",
                             "femaleIndividualCount",
-                            "nativeStatus",
+                            "wild",
                             "checklistID",
                             "atlasCode",
                             "twitched",
@@ -2559,7 +2567,7 @@
                                     "breeding",
                                     "atlasCode",
                                     "twitched",
-                                    "nativeStatus",
+                                    "wild",
                                     "identifications_0_det",
                                     "identifications_0_detDate",
                                     "identifications_0_identificationBasis",
@@ -2603,9 +2611,9 @@
                 "belowUiSchemaRoot": {
                     "ui:field": "SingleItemArrayField",
                     "ui:options": {
-                        "titleClassName": "lg",
-                        "titleFormat": "Paikan %{idx} havainnot"
-                    }
+                        "titleClassName": "lg"
+                    },
+                    "ui:title": "Paikan %{idx} havainnot"
                 },
                 "buttons": [
                     {
@@ -2635,9 +2643,9 @@
                                 "field": "localityDescription"
                             }
                         ],
-                        "renderer": "accordion",
-                        "titleFormat": "%{Title} %{idx}"
-                    }
+                        "renderer": "accordion"
+                    },
+                    "ui:title": "Paikka %{idx}"
                 },
                 "mapOptions": {
                     "controls": {

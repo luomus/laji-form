@@ -223,6 +223,7 @@ describe("Trip report (JX.519)", () => {
 			await $("#root_gatherings_1-delete-confirm-yes").click();
 
 			expect(await lajiFormLocate("gatherings.1").isPresent()).toBe(false);
+			expect(await form.$locateAddition("gatherings.1", "header").isPresent()).toBe(false);
 		});
 
 	});
