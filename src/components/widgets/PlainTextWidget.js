@@ -4,7 +4,7 @@ import { getUiOptions, formatValue } from "../../utils";
 
 function PlainTextWidget(props) {
 	const {id, value} = props;
-	const {strong, "ui:widget": formatterWidget, "ui:options": formatterOptions, centered} = getUiOptions(props);
+	const {strong, "ui:widget": formatterWidget, "ui:options": formatterOptions, centered, tag} = getUiOptions(props);
 
 	const formattedValue = formatValue({
 		...props,
@@ -12,11 +12,12 @@ function PlainTextWidget(props) {
 		schema: props.schema,
 		formData: props.value
 	});
+	const Tag = tag || "span";
 	return (
-		<span className={`plainText${centered ? " horizontally-centered row-height": ""}`}>
+		<Tag className={`plainText${centered ? " horizontally-centered row-height": ""}`}>
 			{strong ? <strong>{formattedValue}</strong> : formattedValue}
 			<input type="hidden" id={id} value={typeof value === "undefined" ? "" : value} />
-		</span>
+		</Tag>
 	);
 }
 
