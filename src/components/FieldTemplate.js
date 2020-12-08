@@ -66,7 +66,6 @@ export default class FieldTemplate extends React.Component {
 		const {
 			id,
 			classNames,
-			label,
 			children,
 			rawErrors,
 			rawHelp,
@@ -78,6 +77,12 @@ export default class FieldTemplate extends React.Component {
 			uiSchema,
 			formContext
 		} = this.props;
+
+		const label = "ui:title" in uiSchema
+			? uiSchema["ui:title"]
+			: "title" in schema
+				? schema.title
+				: undefined;
 
 		if (hidden || uiSchema["ui:field"] === "HiddenField" || uiSchema["ui:widget"] === "HiddenWidget") {
 			return children;
