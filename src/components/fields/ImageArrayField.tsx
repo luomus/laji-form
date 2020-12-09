@@ -258,7 +258,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const {dragging} = this.state;
 
-			return null;
 			return (
 				<Row>
 					<Col xs={12}>
