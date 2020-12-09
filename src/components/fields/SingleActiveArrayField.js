@@ -104,6 +104,11 @@ export default class SingleActiveArrayField extends React.Component {
 				focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
 			});
 		}
+
+		if (prevProps.idSchema.$id !== this.props.idSchema.$id) {
+			new Context(prevProps.formContext.contextId).removeCustomEventListener(prevProps.idSchema.$id, "activeIdx", this.onActiveChange);
+			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+		}
 	}
 
 	shouldComponentUpdate(prevProps, prevState) {
@@ -690,6 +695,11 @@ class TableArrayFieldTemplate extends React.Component {
 			}
 			if (tHeadHeight) this.prevTHeadHeight = tHeadHeight;
 			this._prevCheckedLength = this.props.items.length;
+		}
+
+		if (this.props.idSchema.$id !== prevProps.idSchema.$id) {
+			new Context(prevProps.formContext.contextId).removeCustomEventListener(prevProps.idSchema.$id, "resize", this.onResize);
+			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
 		}
 	}
 
