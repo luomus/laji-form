@@ -700,6 +700,7 @@ class TableArrayFieldTemplate extends React.Component {
 		if (this.props.idSchema.$id !== prevProps.idSchema.$id) {
 			new Context(prevProps.formContext.contextId).removeCustomEventListener(prevProps.idSchema.$id, "resize", this.onResize);
 			new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this.onResize);
+			this.updateLayout();
 		}
 	}
 
