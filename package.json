@@ -25,7 +25,7 @@
     "luomus"
   ],
   "author": "Olli Raitio <olli.raitio@helsinki.fi>",
-  "repository": "https://bitbucket.org/luomus/laji-form.js.git",
+  "repository": "https://github.com/luomus/laji-form.git",
   "license": "MIT",
   "dependencies": {
     "@rjsf/core": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#602ef4ceab632efa5124699115188b8fddabd0a3",
