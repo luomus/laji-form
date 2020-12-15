@@ -134,7 +134,8 @@ export default class UiFieldMapperArrayField extends React.Component {
 				errorSchema[idx] = this.functionOutputProps[idx].errorSchema;
 				return errorSchema;
 			}, {})),
-			formContext: templateOutput.formContext
+			formContext: templateOutput.formContext,
+			registry: {...props.registry, formContext: templateOutput.formContext}
 		};
 
 		return state;

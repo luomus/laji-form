@@ -208,7 +208,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			const enteredUnitTaxon = await form.$locate("gatherings.0.units.0").$$("td").first().getText();
 
-			expect(await enteredUnitTaxon).not.toBe("kettu");
+			expect(await enteredUnitTaxon).toBe("kettukolibrit");
 
 			await removeUnit(0, 0);
 			await removeUnit(0, 0);
