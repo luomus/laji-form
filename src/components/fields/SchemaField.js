@@ -63,16 +63,12 @@ export default class _SchemaField extends React.Component {
 		let _props = {...props, uiSchema: _uiSchema, formContext: props.registry.formContext};
 		let [uiFn, ...restUiFns] = functions;
 
-		if (
-			uiFn["ui:field"] !== "ContextInjectionField" &&
-			uiFn["ui:field"] !== "InjectField" &&
-			getUiOptions(uiFn).injections
-		) {
-			const {injections} = uiFn["ui:options"];
+		const {"ui:injections": injections} = uiFn;
+		if (injections) {
 			const injectedUiSchema = getInjectedUiSchema(uiFn, injections, props.registry.formContext.uiSchemaContext);
 			uiFn = {
 				...injectedUiSchema,
-				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+				"ui:injections": undefined
 			};
 		}
 
@@ -126,18 +122,12 @@ export default class _SchemaField extends React.Component {
 			schema = {...schema, title: options.label};
 		}
 
-		if (
-			uiSchema["ui:field"] &&
-			uiSchema["ui:field"] !== "ContextInjectionField" &&
-			uiSchema["ui:field"] !== "InjectField" &&
-			uiSchema["ui:options"] &&
-			uiSchema["ui:options"].injections
-		) {
-			const {injections} = uiSchema["ui:options"];
+		const {"ui:injections": injections} = uiSchema;
+		if (injections) {
 			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.registry.formContext.uiSchemaContext);
 			uiSchema = {
 				...injectedUiSchema,
-				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+				"ui:injections": undefined
 			};
 		}
 

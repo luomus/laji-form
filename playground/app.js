@@ -155,7 +155,8 @@ if (test !== true) {
 			isAdmin: query.isAdmin,
 			isEdit: query.isEdit,
 			municipalityEnum:  require("./municipalityEnum.json"),
-			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json")
+			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json"),
+			birdAssociationAreaEnum:  require("./birdAssociationAreaEnum.json")
 		},
 		onSubmit,
 		onError: log("errors"),
