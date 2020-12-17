@@ -39,8 +39,8 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
 		let $addUnit: ElementFinder;
 
-		const moveMouseAway = () => browser.actions()
-			.mouseMove(form.$locate("gatherings.0.units.0.identifications.0.taxon").getWebElement(), {x: -100, y: -100})
+		const moveMouseAway = (locator: string) => browser.actions()
+			.mouseMove(form.$locate(locator).getWebElement(), {x: -100, y: -100})
 			.perform();
 
 		beforeAll(async () => {
@@ -49,7 +49,9 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		});
 
 		beforeEach(async () => {
-			await moveMouseAway();
+			if (await form.$locate("gatherings.0.units.0.identifications.0.taxon").isPresent()) {
+				await moveMouseAway("gatherings.0.units.0.identifications.0.taxon");
+			}
 		});
 
 		it("clicking any match selects it", async () => {
@@ -178,64 +180,83 @@ describe("Trip report (JX.519) autosuggestions", () => {
 			}
 		});
 
-		it("shows power user for taxon field", async () => {
-			await taxonAutosuggest.$input.click();
+		describe("power user", () => {
+			it("is shown power taxon field", async () => {
+				await taxonAutosuggest.$input.click();
 
-			expect(await taxonAutosuggest.$powerUserButton.isDisplayed()).toBe(true);
-		});
+				expect(await taxonAutosuggest.$powerUserButton.isDisplayed()).toBe(true);
+			});
 
-		it("clicking power user button toggles power user mode on/off", async () => {
-			await taxonAutosuggest.$powerUserButton.click();
+			it("click toggles power user mode on/off", async () => {
+				await taxonAutosuggest.$powerUserButton.click();
 
-			expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(true);
+				expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(true);
 
-			await taxonAutosuggest.$powerUserButton.click();
+				await taxonAutosuggest.$powerUserButton.click();
 
-			expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
-		});
-
-
-		it("clicking any match after waiting for suggestion list works with power user mode", async () => {
-			await taxonAutosuggest.$input.click();
-			await taxonAutosuggest.$powerUserButton.click();
-
-			await taxonAutosuggest.$input.sendKeys("kettu");
-			await taxonAutosuggest.waitForSuggestionsToLoad();
-			await taxonAutosuggest.$$suggestions.last().click();
-			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "auto added unit didn't appear");
-
-			expect(await form.$locate("gatherings.0.units.0").getTagName()).toBe("tr");
-
-			const enteredUnitTaxon = await form.$locate("gatherings.0.units.0").$$("td").first().getText();
-
-			expect(await enteredUnitTaxon).toBe("kettukolibrit");
-
-			await removeUnit(0, 0);
-			await removeUnit(0, 0);
-			await $addUnit.click();
-			await taxonAutosuggest.$input.click();
-			await taxonAutosuggest.$powerUserButton.click();
-		});
+				expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
+			});
 
 
-		it("entering exact match when power user mode is on adds new unit automatically", async () => {
-			await taxonAutosuggest.$input.click();
-			await taxonAutosuggest.$powerUserButton.click();
-			await taxonAutosuggest.$input.sendKeys("susi");
-			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
-			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "New unit didn't show up");
+			it("clicking any match after waiting for suggestion list works", async () => {
+				await taxonAutosuggest.$input.click();
+				await taxonAutosuggest.$powerUserButton.click();
 
-			expect(await form.$locate("gatherings.0.units.0").getTagName()).toBe("tr");
-			expect(await form.$locate("gatherings.0.units.1").getTagName()).toBe("div");
+				await taxonAutosuggest.$input.sendKeys("kettu");
+				await taxonAutosuggest.waitForSuggestionsToLoad();
+				await taxonAutosuggest.$$suggestions.last().click();
+				await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "auto added unit didn't appear");
 
-			await removeUnit(0, 1);
+				expect(await form.$locate("gatherings.0.units.0").getTagName()).toBe("tr", "entered unit wasn't deactivated");
 
-			await taxonAutosuggest.$input.click();
-			await taxonAutosuggest.$powerUserButton.click();
+				const enteredUnitTaxon = await form.$locate("gatherings.0.units.0").$$("td").first().getText();
 
-			expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
-			await removeUnit(0, 0);
-			await $addUnit.click();
+				expect(await enteredUnitTaxon).toBe("kettukolibrit");
+
+			});
+
+			it("entering second unit auto adds", async () => {
+				const _taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.1.identifications.0.taxon");
+				await _taxonAutosuggest.$input.sendKeys("kettu");
+				await _taxonAutosuggest.waitForSuggestionsToLoad();
+				await _taxonAutosuggest.$$suggestions.last().click();
+				await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.2")), 5000, "auto added unit didn't appear");
+
+				expect(await form.$locate("gatherings.0.units.1").getTagName()).toBe("tr", "entered unit wasn't deactivated");
+
+				const enteredUnitTaxon = await form.$locate("gatherings.0.units.1").$$("td").first().getText();
+
+				expect(await enteredUnitTaxon).toBe("kettukolibrit");
+
+				await removeUnit(0, 0);
+				await removeUnit(0, 0);
+				await removeUnit(0, 0);
+				await $addUnit.click();
+				await taxonAutosuggest.$input.click();
+				await taxonAutosuggest.$powerUserButton.click();
+			});
+
+
+			it("entering exact match adds new unit automatically", async () => {
+				await taxonAutosuggest.$input.click();
+				await taxonAutosuggest.$powerUserButton.click();
+				await taxonAutosuggest.$input.sendKeys("susi");
+				await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
+				await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "New unit didn't show up");
+
+				expect(await form.$locate("gatherings.0.units.0").getTagName()).toBe("tr");
+				expect(await form.$locate("gatherings.0.units.1").getTagName()).toBe("div");
+
+				await removeUnit(0, 1);
+
+				await taxonAutosuggest.$input.click();
+				await taxonAutosuggest.$powerUserButton.click();
+
+				expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
+				await removeUnit(0, 0);
+				await $addUnit.click();
+			});
+
 		});
 
 		it("works when autocomplete response has autocompleteSelectedName", async() => {
