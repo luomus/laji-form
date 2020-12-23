@@ -120,7 +120,8 @@ describe("Line transect (MHL.1)", () => {
 	it("next gathering is focused after keyboard navigation", async () => {
 		await browser.driver.switchTo().activeElement().sendKeys(protractor.Key.chord(protractor.Key.ALT, protractor.Key.RIGHT));
 
-		expect(await getFocusedId()).toBe(await await $shortHandForIdx(1, 0).getAttribute("id"));
+		await browser.sleep(200);
+		expect(await getFocusedId()).toBe(await $shortHandForIdx(1, 0).getAttribute("id"));
 	});
 
 	it("when prev focused taxon autocomplete finishes, data isn't in FlatField format", async () => {
