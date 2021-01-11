@@ -1,10 +1,9 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import * as ReactAutosuggest from "react-autosuggest";
 import { Glyphicon, Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
 import * as Spinner from "react-spinner";
-import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions } from "../../utils";
+import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -67,19 +66,19 @@ export default class _AutosuggestWidget extends React.Component {
 class SimpleValueRenderer extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {value: this.props.value, loading: true};
+		this.state = {inputValue: this.props.value, loading: true};
 	}
 	componentDidMount() {
 		const {getSuggestionFromValue, isValueSuggested} = this.props.component.prototype;
 		if (getSuggestionFromValue && isValueSuggested) {
 			this.isValueSuggested = isValueSuggested.bind(this);
 			getSuggestionFromValue.call(this, this.props.value).then((suggestion) => {
-				this.setState({value: suggestion.value, loading: false});
+				this.setState({inputValue: suggestion.value, loading: false});
 			}).catch(() => this.setState({loading: false}));
 		}
 	}
 	render() {
-		return this.state.loading ? <Spinner /> : <span>{this.state.value}</span>;
+		return this.state.loading ? <Spinner /> : <span>{this.state.inputValue}</span>;
 	}
 
 }
@@ -135,8 +134,8 @@ function TaxonAutosuggest(ComposedComponent) {
 			return !isEmptyString(value) && !!value.match(/MX\.\d+/);
 		}
 
-		parseValue(value) {
-			return value.replace(/ sp(\.|p)?\.?$/, "");
+		parseInputValue(inputValue) {
+			return inputValue.replace(/ sp(\.|p)?\.?$/, "");
 		}
 
 		renderUnsuggested = (props) => (input) => {
@@ -218,7 +217,7 @@ function TaxonAutosuggest(ComposedComponent) {
 				renderUnsuggested: this.renderUnsuggested(props),
 				renderSuccessGlyph: this.renderSuccessGlyph,
 				renderSuggestion: this.renderSuggestion,
-				parseValue: this.parseValue
+				parseInputValue: this.parseInputValue
 			};
 			const _options = {
 				...options,
@@ -292,17 +291,17 @@ class FriendsAutosuggestWidget extends React.Component {
 		return !isEmptyString(value) && value.match(/MA\.\d+/);
 	}
 
-	renderUnsuggested = (input) => {
+	renderUnsuggested = (inputValue) => {
 		const tooltip = (
 			<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
 		);
 		return (
-			<OverlayTrigger overlay={tooltip} placement="top">{input}</OverlayTrigger>
+			<OverlayTrigger overlay={tooltip} placement="top">{inputValue}</OverlayTrigger>
 		);
 	}
 
-	findExactMatch = (suggestions, value) => {
-		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.trim().toLowerCase()));
+	findExactMatch = (suggestions, inputValue) => {
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
 	}
 
 	renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}}
@@ -341,7 +340,7 @@ export class Autosuggest extends React.Component {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
 		onSuggestionSelected: PropTypes.func,
-		onConfirmUnsuggested: PropTypes.func,
+		onUnsuggestedSelected: PropTypes.func,
 		onInputChange: PropTypes.func,
 		uiSchema: PropTypes.object,
 		informalTaxonGroups: PropTypes.string,
@@ -350,10 +349,10 @@ export class Autosuggest extends React.Component {
 
 	static defaultProps = {
 		allowNonsuggestedValue: true,
+		suggestionReceive: "key"
 	}
 
-	isValueSuggested = (value, props) => {
-		if (!props) props = this.props;
+	isValueSuggested = (props) => {
 		const {isValueSuggested, suggestionReceive, onSuggestionSelected} = props;
 		if (!onSuggestionSelected && suggestionReceive !== "key") return undefined;
 		return isValueSuggested ? isValueSuggested(props.value) : undefined;
@@ -361,38 +360,16 @@ export class Autosuggest extends React.Component {
 
 	constructor(props) {
 		super(props);
-		const isSuggested = this.isValueSuggested(props.value, props);
+		const isSuggested = this.isValueSuggested(props);
 		this.state = {
 			isLoading: false,
 			suggestions: [],
 			unsuggested: false,
 			focused: false,
-			value: props.value !== undefined ? props.value : "",
+			inputValue: props.value !== undefined ? props.value : "",
 			suggestion: isSuggested ? {} : undefined,
 		};
-		this.state = {...this.state, ...this.getStateFromProps(props)};
 		this.apiClient = this.props.formContext.apiClient;
-	}
-
-	getStateFromProps(props) {
-		const {value, suggestionReceive = "key"} = props;
-		const {suggestion} = this.state;
-		if (this.state.value !== value || (suggestion && suggestion[suggestionReceive] !== value && this.mounted)) {
-			if (this.mounted && this.state.value !== value) {
-				this.setState({value}, () => {
-					this.triggerConvert(props);
-				});
-			} else {
-				this.triggerConvert(props);
-			}
-		} else if (!suggestion) {
-			return {value: props.value};
-		}
-	}
-
-	componentWillReceiveProps(props) {
-		const state = this.getStateFromProps(props);
-		state && this.setState(state);
 	}
 
 	componentDidMount() {
@@ -420,7 +397,7 @@ export class Autosuggest extends React.Component {
 		const {value, getSuggestionFromValue} = props;
 		if (isEmptyString(value) || !getSuggestionFromValue) {
 			if (this.state.suggestion && Object.keys(this.state.suggestion).length > 0) {
-				this.setState({suggestion: undefined, value});
+				this.setState({suggestion: undefined, inputValue: value});
 			}
 			return;
 		}
@@ -428,29 +405,17 @@ export class Autosuggest extends React.Component {
 		this.setState({isLoading: true});
 		getSuggestionFromValue(value).then(suggestion => {
 			if (!this.mounted) return;
-			this.setState({suggestion, value: this.getSuggestionValue(suggestion), isLoading: false});
+			this.setState({suggestion, inputValue: suggestion.value, isLoading: false});
 		}).catch(() => {
 			if (!this.mounted) return;
 			this.setState({isLoading: false});
 		});
 	}
 
-	getSuggestionValue = (suggestion) => {
-		const {getSuggestionValue} = this.props;
-		const def = suggestion.value;
-		return getSuggestionValue
-			? getSuggestionValue(suggestion, def)
-			: def;
-	}
-
 	renderSuggestion = (suggestion) => {
 		let {renderSuggestion} = this.props;
 		if (!renderSuggestion) renderSuggestion = suggestion => suggestion.value;
-		return (<span className="simple-option">{renderSuggestion(suggestion)}</span>);
-	}
-
-	onSuggestionsClearRequested = () => {
-		this.clearRequested = true;
+		return (<span>{renderSuggestion(suggestion)}</span>);
 	}
 
 	selectSuggestion = (suggestion) => {
@@ -458,56 +423,45 @@ export class Autosuggest extends React.Component {
 		const afterStateChange = () => {
 			onSuggestionSelected ?
 				onSuggestionSelected(suggestion, this.mounted) :
-				onChange(suggestion[suggestionReceive || "key"]);
+				onChange(suggestion[suggestionReceive]);
 		};
-		const state = {suggestion, value: this.getSuggestionValue(suggestion)};
-		if (this.clearRequested) state.suggestions = [];
-		this.mounted ? 
-			this.setState(state, afterStateChange) :
-			afterStateChange();
+		const state = {suggestion, inputValue: suggestion.value};
+		this.mounted
+			? this.setState(state, afterStateChange)
+			: afterStateChange();
 	}
 
 	selectUnsuggested = (value) => {
 		if (isEmptyString(value) && isEmptyString(this.props.value)) return;
 
-		const {onConfirmUnsuggested, onChange} = this.props;
+		const {onUnsuggestedSelected, onChange} = this.props;
 
-		const state = {value, suggestion: undefined};
-		if (this.clearRequested) state.suggestions = [];
-		this.setState(state, () => {
-			onConfirmUnsuggested ?
-				onConfirmUnsuggested(value) :
+		const afterStateChange = () => {
+			onUnsuggestedSelected ?
+				onUnsuggestedSelected(value) :
 				onChange(value);
-		});
-	}
-
-	onSuggestionSelected = (e, data) => {
-		// Input onBlur/onFocus isn't called without this hack.
-		this.reactAutosuggestRef.justSelectedSuggestion = false;
-
-		const {suggestion} = data;
-		e.preventDefault();
-		if ("id" in this.props) {
-			new Context(this.props.formContext.contextId).formInstance.onKeyDown(e);
-			this.selectSuggestion(suggestion);
-			// If event triggered for LajiForm didn't cause a navigation and thus blur, select the suggestion.
-			if (document.activeElement === findDOMNode(this.inputElem)) {
-				this.selectSuggestion(suggestion);
-			}
-			setTimeout(() => {
-				if (this.mounted && document.activeElement !== findDOMNode(this.inputElem)) {
-					this.onBlur();
-				}
-			});
 		}
+
+		const state = {inputValue: value, suggestion: undefined};
+		this.mounted
+			? this.setState(state, afterStateChange)
+			: afterStateChange();
 	}
 
-	findExactMatch = (suggestions, value = "") => {
+	onSuggestionSelected = (suggestion) => {
+		this.selectSuggestion(suggestion);
+	}
+
+	onUnsuggestedSelected = (inputValue) => {
+		this.selectUnsuggested(inputValue);
+	}
+
+	findExactMatch = (suggestions, inputValue = "") => {
 		if (!Array.isArray(suggestions)) suggestions = [suggestions];
 		const {findExactMatch} = this.props;
 		return findExactMatch
-			? findExactMatch(suggestions, value)
-			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === value.trim().toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
+			? findExactMatch(suggestions, inputValue)
+			: suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase() && (!suggestion.payload || !suggestion.payload.isNonMatching)));
 	}
 
 	findTheOnlyOneMatch = (suggestions) => {
@@ -526,19 +480,19 @@ export class Autosuggest extends React.Component {
 		}
 	}
 
-	onInputChange = (e, autosuggestEvent) => {
-		const {newValue: value} = autosuggestEvent;
-		this.setState({value}, () => {
-			if (this.props.inputProps && this.props.inputProps.onChange) {
-				e.persist();
-				this.props.inputProps.onChange(e, autosuggestEvent);
-			}
-		});
+	onInputChange = (e, reason, callback) => {
+		let {value} = e.target;
+
+		if (this.props.inputProps && this.props.inputProps.onChange) {
+			e.persist && e.persist();
+			value = this.props.inputProps.onChange(e, reason, callback);
+		} 
+		this.setState({inputValue: value}, callback);
 	}
 
 	onSuggestionsFetchRequested = ({value}, debounce = true) => {
 		if (value === undefined || value === null) value = "";
-		value = this.props.parseValue ? this.props.parseValue(value) : value;
+		value = this.props.parseInputValue ? this.props.parseInputValue(value) : value;
 		if (value.length < (this.props.minFetchLength !== undefined ? this.props.minFetchLength : 2)) {
 			this.setState({suggestions: []});
 			return;
@@ -577,97 +531,60 @@ export class Autosuggest extends React.Component {
 	}
 
 	onFocus = (e) => {
-		this.setState({focused: true}, () => this.onSuggestionsFetchRequested({value: this.state.value}));
-
+		this.setState({focused: true});
 		triggerParentComponent("onFocus", e, this.props.inputProps);
 	}
 
-	onBlur = (e,  data) => {
-		if (!data) {
-			this.setState({focused: false});
+	onBlur = (e) => {
+		this.setState({focused: false}, () => {
+			this._valueForBlurAndFetch = this.state.inputValue;
+			this.afterBlurAndFetch(this.state.suggestions);
 			triggerParentComponent("onBlur", e, this.props.inputProps);
-			return;
-		}
-		const {highlightedSuggestion} = data;
-		this.highlightedSuggestionOnBlur = highlightedSuggestion;
-		this._valueForBlurAndFetch = this.state.value;
-		this.setState({focused: false}, () => this.afterBlurAndFetch(this.state.suggestions));
-		triggerParentComponent("onBlur", e, this.props.inputProps);
-	}
-
-	onKeyDown = (e) => {
-		triggerParentComponent("onKeyDown", e, this.props.inputProps);
-	}
-
-
-	// This is used, because the default behavior doesn't render the suggestions when focusing
-	// a suggestion component that wants to render the suggestion when the input is empty.
-	renderSuggestionsContainer = ({containerProps, children}) => {
-		if (!this.state.focused) {
-			return null;
-		}
-
-		return (
-			<div {...containerProps}>
-				{children}
-			</div>
-		);
+		});
 	}
 
 	afterBlurAndFetch = (suggestions, callback) => {
-		const {value = ""} = this.state;
-		const parsedValue = this.props.parseValue ? this.props.parseValue(value) : value;
-		if (this._valueForBlurAndFetch === undefined) {
-			this._valueForBlurAndFetch = "";
-		}
+		const {inputValue = ""} = this.state;
+		const {_valueForBlurAndFetch = ""} = this;
 		if (this.mounted
-			&& (this.state.focused || this.state.isLoading)
-			|| (this.props.controlledValue && this._valueForBlurAndFetch !== value)
+			&& (this.state.focused || this._valueForBlurAndFetch === undefined || this.state.isLoading)
+			|| (this.props.controlledValue && _valueForBlurAndFetch !== this.state.inputValue)
 		) {
 			return;
 		}
+		const parsedInputValue = this.props.parseInputValue ? this.props.parseInputValue(inputValue) : inputValue;
 
 		const {selectOnlyOne, selectOnlyNonMatchingBeforeUnsuggested = true, informalTaxonGroups, informalTaxonGroupsValue, allowNonsuggestedValue} = this.props;
 
-		const exactMatch = this.findExactMatch(suggestions, parsedValue);
+		const exactMatch = this.findExactMatch(suggestions, parsedInputValue);
 		const onlyOneMatch = selectOnlyOne ? this.findTheOnlyOneMatch(suggestions) : undefined;
 		const nonMatching = selectOnlyNonMatchingBeforeUnsuggested ? this.findNonMatching(suggestions) : undefined;
-		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === value && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
+		const valueDidntChangeAndHasInformalTaxonGroup = this.props.value === inputValue && informalTaxonGroups && informalTaxonGroupsValue && informalTaxonGroupsValue.length;
 
 		if (this.highlightedSuggestionOnBlur) {
 			this.selectSuggestion(this.highlightedSuggestionOnBlur);
 		} else if (onlyOneMatch) {
 			this.selectSuggestion(onlyOneMatch);
 		}	else if (exactMatch) {
-			this.selectSuggestion({...exactMatch, value});
+			this.selectSuggestion({...exactMatch, value: inputValue});
 		}	else if (nonMatching && !valueDidntChangeAndHasInformalTaxonGroup) {
 			this.selectSuggestion(nonMatching);
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
-			this.selectUnsuggested(parsedValue);
+			this.selectUnsuggested(parsedInputValue);
 		} else if (!allowNonsuggestedValue) {
-			this.setState({value: ""}, () => this.props.onChange(""));
+			this.setState({inputValue: ""}, () => this.props.onChange(""));
 		}
 
 		callback && callback();
 	}
 
-	setRef = (ref) => {
-		this.reactAutosuggestRef = ref;
-		// Monkey patch to prevent suggestion mouse hover to interfere with keyboard suggestion navigation [#175274678]
-		if (ref) {
-			ref.onSuggestionMouseEnter = () => {};
-			ref.onSuggestionMouseLeave = () => {};
-		}
-	}
-
 	render() {
 		const {props} = this;
-		let {suggestions, value} = this.state;
-		if (value === undefined) value = "";
+		let {suggestions, inputValue = ""} = this.state;
 
 		const inputProps = {
 			id: this.props.id,
-			value,
+			value: inputValue,
 			readonly: props.readonly,
 			disabled: props.disabled,
 			placeholder: props.placeholder,
@@ -675,10 +592,7 @@ export class Autosuggest extends React.Component {
 			onChange: this.onInputChange,
 			onBlur: this.onBlur,
 			onFocus: this.onFocus,
-			onKeyDown: this.onKeyDown
 		};
-
-		if (inputProps.value === undefined || inputProps.value === null) inputProps.value = "";
 
 		let cssClasses = {
 			suggestionsContainer: "rw-popup-container rw-popup-animation-box",
@@ -697,23 +611,21 @@ export class Autosuggest extends React.Component {
 		return (
 			<React.Fragment>
 				{renderExtra && renderExtra()}
-				<div className={`autosuggest-wrapper${props.wrapperClassName ? ` ${props.wrapperClassName}` : ""}`}>
+				<div className={classNames("autosuggest-wrapper", props.wrapperClassName)}>
 					<ReactAutosuggest
 						ref={this.setRef}
 						id={`${this.props.id}-autosuggest`}
 						inputProps={inputProps}
 						renderInputComponent={this.renderInput}
 						suggestions={suggestions}
-						getSuggestionValue={this.getSuggestionValue}
 						renderSuggestion={this.renderSuggestion}
-						renderSuggestionsContainer={this.renderSuggestionsContainer}
 						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
 						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 						onSuggestionSelected={this.onSuggestionSelected}
-						focusInputOnSuggestionClick={false}
+						onUnsuggestedSelected={this.onUnsuggestedSelected}
 						highlightFirstSuggestion={highlightFirstSuggestion}
-						alwaysRenderSuggestions={true}
 						theme={cssClasses}
+						formContext={this.props.formContext}
 					/>
 				</div>
 			</React.Fragment>
@@ -725,7 +637,8 @@ export class Autosuggest extends React.Component {
 	}
 
 	onInformalTaxonGroupSelected = (id) => {
-		this.setState({informalTaxonGroupsOpen: false, focused: false});
+		//this.setState({informalTaxonGroupsOpen: false, focused: false});
+		this.setState({informalTaxonGroupsOpen: false});
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
 	}
 
@@ -749,7 +662,7 @@ export class Autosuggest extends React.Component {
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
-		const isSuggested = !!suggestion && this.isValueSuggested(value);
+		const isSuggested = !!suggestion && this.isValueSuggested(this.props);
 
 		if (!isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";
@@ -818,7 +731,7 @@ export class Autosuggest extends React.Component {
 				</TooltipComponent>
 			) : null;
 
-		const inputValue = isEmptyString(this.state.value) ? "" : this.state.value;
+		const {inputValue = ""} = this.state;
 		const input = (
 			<FetcherInput 
 				value={inputValue}
@@ -1102,3 +1015,162 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 	);
 };
 
+class ReactAutosuggest extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			inputValue: props.inputProps.value
+		};
+	}
+
+	componentWillReceiveProps(props) {
+		if ("value" in props.inputProps) {
+			this.setState({inputValue: props.inputProps.value});
+		}
+	}
+
+	render() {
+		return (
+			<React.Fragment>
+				{this.renderInput()}
+				{this.renderSuggestions()}
+			</React.Fragment>
+		);
+	}
+
+	onInputFocus = (e) => {
+		this.setState({focused: true, hideSuggestions: false});
+		this.requestFetch(this.state.inputValue);
+		this.props.inputProps && this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
+	}
+
+	onInputTryBlur = (e) => {
+		if (this.suggestionMouseDownFlag) {
+			return;
+		}
+		this.onBlur(e);
+	}
+
+	onBlur(e) {
+		this.setState({focused: false, focusedIdx: undefined});
+		this.props.inputProps && this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
+	}
+
+	onInputKeyDown = (e) => {
+		let state, suggestion;
+		switch (e.key) {
+		case "ArrowDown":
+			e.preventDefault();
+			if (this.state.focusedIdx >= (this.props.suggestions || []).length - 1) {
+				break;
+			}
+			state = {
+				focusedIdx: typeof this.state.focusedIdx === "number"
+					? this.state.focusedIdx + 1
+					: (this.props.suggestions || []).length
+						? 0
+						: undefined
+			};
+			if (state.focusedIdx !== undefined) {
+				state.inputValue = this.props.suggestions[state.focusedIdx].value;
+			}
+			this.setState(state);
+			break;
+		case "ArrowUp":
+			e.preventDefault();
+			state = {focusedIdx: this.state.focusedIdx > 0 ? this.state.focusedIdx - 1 : undefined};
+			if (state.focusedIdx !== undefined) {
+				state.inputValue = this.props.suggestions[state.focusedIdx].value;
+			}
+			this.setState(state);
+			break;
+		case "Enter":
+			e.preventDefault();
+			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
+			suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
+			break;
+		}
+		this.props.inputProps && this.props.inputProps.onKeyDown && this.props.inputProps.onKeyDown(e);
+	}
+
+	onInputChange = (e) => {
+		this._onInputChange(e.target.value, "keystroke");
+	}
+
+	_onInputChange = (value, reason) => {
+		const callback = reason === "click"
+			? () => {}
+			: () => this.requestFetch(this.state.inputValue);
+		this.props.inputProps && this.props.inputProps.onChange
+			? this.props.inputProps.onChange({target: {value}}, reason, callback)
+			: this.setState({inputValue: value}, callback);
+	}
+
+	renderInput() {
+		const {inputProps, renderInputComponent = this.renderDefaultInputComponent} = this.props;
+		return renderInputComponent({
+			...inputProps,
+			value: this.state.inputValue,
+			onChange: this.onInputChange,
+			onFocus: this.onInputFocus,
+			onBlur: this.onInputTryBlur,
+			onKeyDown: this.onInputKeyDown
+		});
+	}
+
+	renderDefaultInputComponent(props) {
+		return <input {...props} />;
+	}
+
+	renderSuggestions() {
+		if (!this.state.focused || this.state.hideSuggestions || !(this.props.suggestions || []).length) {
+			return null;
+		}
+		const {suggestion, suggestionsList, suggestionsContainer, suggestionsContainerOpen, suggestionHighlighted} = this.props.theme || {};
+		return (
+			<div className={classNames(suggestionsContainer, suggestionsContainerOpen)}>
+				<ul className={suggestionsList}>
+					{this.props.suggestions.map((s, i) =>
+						<li key={i}
+						    className={classNames(suggestion, this.state.focusedIdx === i && suggestionHighlighted)}
+						    onMouseDown={this.onSuggestionMouseDown}
+						    onMouseUp={this.onSuggestionMouseUp}
+						    data-idx={i}
+						>{this.props.renderSuggestion(s)}</li>
+					)}
+				</ul>
+			</div>
+		);
+	}
+
+	onSuggestionMouseDown = () => {
+		this.suggestionMouseDownFlag = true;
+	}
+
+	onSuggestionMouseUp = (e) => {
+		this.suggestionMouseDownFlag = false;
+		const suggestion = this.getSuggestionFromClick(e);
+		this.setState({inputValue: suggestion.value}, () => {
+			this._onInputChange(suggestion.value, "click");
+			this.onBlur();
+		});
+	}
+
+	getSuggestionFromClick = ({target}) => {
+		let idx;
+		while (typeof idx !== "string") {
+			idx = target.getAttribute("data-idx");
+			target = target.parentElement;
+		}
+		return this.props.suggestions[idx];
+	}
+
+	onSuggestionSelected(suggestion) {
+		this.setState({inputValue: suggestion.value, hideSuggestions: true});
+		this.props.onSuggestionSelected && this.props.onSuggestionSelected(suggestion);
+	}
+
+	requestFetch(value) {
+		this.props.onSuggestionsFetchRequested({value});
+	}
+}

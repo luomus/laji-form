@@ -12,9 +12,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	});
 
 	describe("taxon census", () => {
-
-		pending("Known bug");
-
 		let censusAutosuggest: TaxonAutosuggestWidgetPOI;
 		beforeAll(async () => {
 			const scopeField = form.getScopeField("gatherings.0");
@@ -28,9 +25,10 @@ describe("Trip report (JX.519) autosuggestions", () => {
 			await censusAutosuggest.$input.sendKeys("aves");
 			await censusAutosuggest.waitForSuggestionsToLoad();
 			await censusAutosuggest.$$suggestions.first().click();
+			await censusAutosuggest.waitForGlyph();
 
-			expect(await censusAutosuggest.isSuggested()).toBe(true);
-			expect(await censusAutosuggest.$input.getAttribute("value")).toBe("Aves");
+			expect(await censusAutosuggest.isSuggested()).toBe(true, "wasn't displayed as suggested");
+			expect(await censusAutosuggest.$input.getAttribute("value")).toBe("Aves", "Input value wasn't the clicked value");
 		});
 	});
 
