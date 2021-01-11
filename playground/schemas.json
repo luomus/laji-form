@@ -2867,95 +2867,102 @@
   ]
 }, 
 "settings": {
-	"#root_gatherings$MapArrayField/mapOptions/tileLayerName": "ortokuva",
-	"#root_gatherings$MapArrayField/mapOptions/overlayNames": ["ykjGrid"],
-	"#root_gatherings$MapArrayField/mapOptions/tileLayers": {
-		"layers": {
-			"taustakartta": {
-				"opacity": 0,
-				"visible": false
-			},
-			"maastokartta": {
-				"opacity": 0,
-				"visible": false
-			},
-			"ortokuva": {
-				"opacity": 1,
-				"visible": true
-			},
-			"laser": {
-				"opacity": 1,
-				"visible": true
-			},
-			"ykjGrid": {
-				"opacity": 1,
-				"visible": false
-			},
-			"ykjGridLabels": {
-				"opacity": 1,
-				"visible": false
-			},
-			"openStreetMap": {
-				"opacity": 0,
-				"visible": false
-			},
-			"googleSatellite": {
-				"opacity": 0,
-				"visible": false
-			},
-			"geobiologicalProvinces": {
-				"opacity": 1,
-				"visible": false
-			},
-			"geobiologicalProvinceBorders": {
-				"opacity": 1,
-				"visible": false
-			},
-			"municipalities": {
-				"opacity": 1,
-				"visible": false
-			},
-			"forestVegetationZones": {
-				"opacity": 1,
-				"visible": false
-			},
-			"mireVegetationZones": {
-				"opacity": 1,
-				"visible": false
-			},
-			"threatenedSpeciesEvaluationZones": {
-				"opacity": 1,
-				"visible": false
-			},
-			"biodiversityForestZones": {
-				"opacity": 1,
-				"visible": false
-			}
-		},
-		"active": "finnish"
-	},
-	"%additionalFields/scopeField_gathering_unit_informalTaxonGroups": {
-		"MVL.1": {
-			"images": true,
-			"birdPlumage": false,
-			"birdAge": false,
-			"movingStatus": false,
-			"movingDirection": false,
-			"atlasCode": false,
-			"twitched": false,
-			"distance": false,
-			"sex": false,
-			"breeding": false,
-			"unitGathering_substrate": true
-		}
-	},
-	"%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": false,
-	"defaultImageMetadata": {
-		"intellectualRights": "MZ.intellectualRightsCC-BY-SA-4.0",
-		"capturerVerbatim": [
-			"Olli Raitio"
-	],
-	"intellectualOwner": "Olli Raitio"
-	}
+  "#root_gatherings$MapArrayField/mapOptions/tileLayerName": "ortokuva",
+  "#root_gatherings$MapArrayField/mapOptions/overlayNames": [
+    "ykjGrid"
+  ],
+  "#root_gatherings$MapArrayField/mapOptions/tileLayers": {
+    "layers": {
+      "taustakartta": {
+        "opacity": 0,
+        "visible": false
+      },
+      "maastokartta": {
+        "opacity": 0,
+        "visible": false
+      },
+      "ortokuva": {
+        "opacity": 1,
+        "visible": true
+      },
+      "laser": {
+        "opacity": 1,
+        "visible": true
+      },
+      "ykjGrid": {
+        "opacity": 1,
+        "visible": false
+      },
+      "ykjGridLabels": {
+        "opacity": 1,
+        "visible": false
+      },
+      "openStreetMap": {
+        "opacity": 0,
+        "visible": false
+      },
+      "googleSatellite": {
+        "opacity": 0,
+        "visible": false
+      },
+      "geobiologicalProvinces": {
+        "opacity": 1,
+        "visible": false
+      },
+      "geobiologicalProvinceBorders": {
+        "opacity": 1,
+        "visible": false
+      },
+      "municipalities": {
+        "opacity": 1,
+        "visible": false
+      },
+      "forestVegetationZones": {
+        "opacity": 1,
+        "visible": false
+      },
+      "mireVegetationZones": {
+        "opacity": 1,
+        "visible": false
+      },
+      "threatenedSpeciesEvaluationZones": {
+        "opacity": 1,
+        "visible": false
+      },
+      "biodiversityForestZones": {
+        "opacity": 1,
+        "visible": false
+      }
+    },
+    "active": "finnish"
+  },
+  "%additionalFields/scopeField_gathering_unit_informalTaxonGroups": {
+    "MVL.1": {
+      "images": true,
+      "birdPlumage": false,
+      "birdAge": false,
+      "movingStatus": false,
+      "movingDirection": false,
+      "atlasCode": false,
+      "twitched": false,
+      "distance": false,
+      "sex": false,
+      "breeding": false,
+      "unitGathering_substrate": true
+    },
+    "MVL.2": {
+      "images": true,
+      "substrateSpecies": true,
+      "movingStatus": true
+    }
+  },
+  "%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": false,
+  "defaultImageMetadata": {
+    "intellectualRights": "MZ.intellectualRightsCC-BY-SA-4.0",
+    "capturerVerbatim": [
+      "Olli Raitio"
+    ],
+    "intellectualOwner": "Olli Raitio"
+  }
 }
 }

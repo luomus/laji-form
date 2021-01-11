@@ -266,6 +266,7 @@ class FriendsAutosuggestWidget extends React.Component {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 		this.isValueSuggested = this.isValueSuggested.bind(this);
+		this.getInputValueFromSuggestion = this.getInputValueFromSuggestion.bind(this);
 	}
 
 	getSuggestionFromValue(value) {
@@ -285,6 +286,19 @@ class FriendsAutosuggestWidget extends React.Component {
 		} else {
 			return Promise.reject();
 		}
+	}
+
+	getInputValueFromSuggestion(suggestion) {
+		const {showID} = getUiOptions(this.props);
+		const {isAdmin} = this.props.formContext.uiSchemaContext;
+		console.log(suggestion);
+		return this.props.formContext.apiClient.fetchCached(`/person/by-id/${suggestion.key}`).then(({fullName, group, id}) => {
+			if (fullName) {
+				const addGroup = str => group ? `${str} (${group})` : str;
+				const addID = str => isAdmin && showID ? `${str} (${id})` : str;
+				return addID(addGroup(fullName));
+			}
+		});
 	}
 
 	isValueSuggested(value) {
@@ -318,6 +332,7 @@ class FriendsAutosuggestWidget extends React.Component {
 			},
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			isValueSuggested: this.isValueSuggested,
+			getInputValueFromSuggestion: this.getInputValueFromSuggestion,
 			renderUnsuggested: this.renderUnsuggested,
 			renderSuccessGlyph: this.renderSuccessGlyph,
 			findExactMatch: this.findExactMatch,
@@ -500,6 +515,7 @@ export class Autosuggest extends React.Component {
 
 		const {autosuggestField, query = {}} = this.props;
 
+		console.log(autosuggestField);
 		this.setState({isLoading: true});
 
 		const request = () => {
@@ -624,6 +640,7 @@ export class Autosuggest extends React.Component {
 						onSuggestionSelected={this.onSuggestionSelected}
 						onUnsuggestedSelected={this.onUnsuggestedSelected}
 						highlightFirstSuggestion={highlightFirstSuggestion}
+						getInputValueFromSuggestion={props.getInputValueFromSuggestion}
 						theme={cssClasses}
 						formContext={this.props.formContext}
 					/>
@@ -637,7 +654,6 @@ export class Autosuggest extends React.Component {
 	}
 
 	onInformalTaxonGroupSelected = (id) => {
-		//this.setState({informalTaxonGroupsOpen: false, focused: false});
 		this.setState({informalTaxonGroupsOpen: false});
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
 	}
@@ -1097,13 +1113,24 @@ class ReactAutosuggest extends React.Component {
 		this._onInputChange(e.target.value, "keystroke");
 	}
 
-	_onInputChange = (value, reason) => {
+	_onInputChange = (value, reason, suggestion) => {
 		const callback = reason === "click"
 			? () => {}
 			: () => this.requestFetch(this.state.inputValue);
-		this.props.inputProps && this.props.inputProps.onChange
+
+		const _callback = value => this.props.inputProps && this.props.inputProps.onChange
 			? this.props.inputProps.onChange({target: {value}}, reason, callback)
 			: this.setState({inputValue: value}, callback);
+
+		if (suggestion && this.props.getInputValueFromSuggestion) {
+			this.props.getInputValueFromSuggestion(suggestion).then(fromSuggestion => {
+				_callback(fromSuggestion);
+			});
+		} else {
+			_callback(value);
+		}
+
+
 	}
 
 	renderInput() {
@@ -1151,7 +1178,7 @@ class ReactAutosuggest extends React.Component {
 		this.suggestionMouseDownFlag = false;
 		const suggestion = this.getSuggestionFromClick(e);
 		this.setState({inputValue: suggestion.value}, () => {
-			this._onInputChange(suggestion.value, "click");
+			this._onInputChange(suggestion.value, "click", suggestion);
 			this.onBlur();
 		});
 	}
