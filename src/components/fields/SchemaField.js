@@ -21,7 +21,7 @@ export default class _SchemaField extends React.Component {
 	updateVirtualInstance = (props, initial) => {
 		const virtualizedProps = ["ui:functions", "ui:childFunctions", "ui:annotations"];
 		if ([props, this.props].some(_props => _props.uiSchema && virtualizedProps.some(prop => _props.uiSchema[prop])) &&
-		    (initial || !deepEquals([this.props, props]))) {
+		    (initial || !deepEquals(this.props, props))) {
 			this.functionOutputProps = this.applyFunction(props);
 		}
 	}
