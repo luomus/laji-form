@@ -60,7 +60,7 @@ export default class _SchemaField extends React.Component {
 
 		if (!functions.length) return props;
 
-		let _props = {...props, uiSchema: _uiSchema, formContext: props.registry.formContext};
+		let _props = {...props, uiSchema: _uiSchema};
 		let [uiFn, ...restUiFns] = functions;
 
 		const {"ui:injections": injections} = uiFn;
@@ -111,7 +111,8 @@ export default class _SchemaField extends React.Component {
 
 	render() {
 		const props = this.functionOutputProps || this.props;
-		let {schema, uiSchema = {}, registry} = props;
+		let {schema, uiSchema = {}, formContext, registry, ..._props} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {formContext: _formContext} = registry;
 
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
 			schema = {...schema, uniqueItems: false};
@@ -124,20 +125,32 @@ export default class _SchemaField extends React.Component {
 
 		const {"ui:injections": injections} = uiSchema;
 		if (injections) {
-			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.registry.formContext.uiSchemaContext);
+			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, _formContext.uiSchemaContext);
 			uiSchema = {
 				...injectedUiSchema,
 				"ui:injections": undefined
 			};
 		}
 
-		// Reset ArrayFieldTemplate
+		// Reset ArrayFieldTemplate.
 		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
 			registry = {...registry, ArrayFieldTemplate};
 		}
 
+		// Remove unnecessary formDataTransformers in order to prevent unnecessary rendering.
+		if (_formContext && _formContext.formDataTransformers && _formContext.formDataTransformers.length) {
+			const removeIdxs = /\d+_?/g;
+			const idWithoutIdxs = this.props.idSchema.$id.replace(removeIdxs, "");
+			const filtered = _formContext.formDataTransformers.filter(({targets}) => 
+				targets.some(target => target.replace(removeIdxs, "").startsWith(idWithoutIdxs))
+			);
+			if (filtered.length !== _formContext.formDataTransformers.length) {
+				registry = {...registry, formContext: {..._formContext, formDataTransformers: filtered}};
+			}
+		}
+
 		return <SchemaField
-			{...props}
+			{..._props}
 			registry={registry}
 			schema={schema}
 			uiSchema={uiSchema}

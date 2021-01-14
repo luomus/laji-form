@@ -25,14 +25,11 @@ export default class ExtraLabelRowField extends React.Component {
 	};
 
 	getStateFromProps(props) {
-		const propsWithInnerUiSchema = {
-			...props,
+		return {
 			schema: {...props.schema, title: ""},
 			uiSchema: getInnerUiSchema(props.uiSchema),
 			options: getUiOptions(props.uiSchema)
 		};
-
-		return {...propsWithInnerUiSchema};
 	}
 
 	setContainerRef = (elem) => {

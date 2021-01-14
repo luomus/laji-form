@@ -146,8 +146,10 @@ export default class FlatField extends React.Component {
 			...props.formContext, 
 			formDataTransformers: [
 				...formDataTransformers, 
-				{"ui:field": "FlatField", props: origProps}
-			]};
+				{"ui:field": "FlatField", props: origProps, targets: fields.map(field => `${props.idSchema.$id}_${field}`)}
+			]
+		};
+		state.registry = {...props.registry, formContext: state.formContext};
 
 		return state;
 	}
