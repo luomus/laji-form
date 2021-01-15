@@ -287,6 +287,14 @@ class FriendsAutosuggestWidget extends React.Component {
 		}
 	}
 
+	prepareSuggestion = (suggestion) => {
+		const {isAdmin} = this.props.formContext.uiSchemaContext;
+		const {showID} = getUiOptions(this.props);
+		return isAdmin && showID
+			? {...suggestion, value: `${suggestion.value} (${suggestion.key})`}
+			: suggestion;
+	}
+
 	isValueSuggested(value) {
 		return !isEmptyString(value) && value.match(/MA\.\d+/);
 	}
@@ -321,7 +329,7 @@ class FriendsAutosuggestWidget extends React.Component {
 			renderUnsuggested: this.renderUnsuggested,
 			renderSuccessGlyph: this.renderSuccessGlyph,
 			findExactMatch: this.findExactMatch,
-			controlledValue: true
+			prepareSuggestion: this.prepareSuggestion
 		};
 
 		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
@@ -506,6 +514,9 @@ export class Autosuggest extends React.Component {
 			let timestamp = Date.now();
 			this.promiseTimestamp = timestamp;
 			this.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, includePayload: true, matchType: "exact,partial", includeHidden: false, ...query}).then(suggestions => {
+				if (this.props.prepareSuggestion) {
+					suggestions = suggestions.map(s => this.props.prepareSuggestion(s));
+				}
 				if (timestamp !== this.promiseTimestamp) {
 					return;
 				}
