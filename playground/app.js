@@ -140,11 +140,11 @@ if (test !== true) {
 			: schemas.settings,
 		formData: query.localFormData
 			? require(`../forms/${localFormData === true ? id : localFormData}.formData.json`)
-			: data.prepopulatedDocument
+			: data.options && data.options.prepopulatedDocument
 				? {
-					...data.prepopulatedDocument,
+					...data.options.prepopulatedDocument,
 					gatheringEvent: {
-						...(data.prepopulatedDocument.gatheringEvent || {}),
+						...(data.options.prepopulatedDocument.gatheringEvent || {}),
 						...ownerFilledFormData.gatheringEvent
 					}
 				}

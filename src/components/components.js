@@ -5,7 +5,7 @@ import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover,
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import * as Spinner from "react-spinner";
-import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId } from "../utils";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
 
 export class Button extends React.Component {
@@ -570,32 +570,25 @@ export class TooltipComponent extends React.Component {
 	}
 }
 
-export class FetcherInput extends React.Component {
-	setRef = (elem) => {
-		if (this.props.getRef) this.props.getRef(elem);
-	}
+export const FetcherInput = React.forwardRef((props, ref) => {
+	const {loading, validationState, glyph, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+	const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
+	const _className = classNames("fetcher-input", extra && "input-group", "has-feedback", validationState && `has-${validationState}`, className);
+	return (
+		<div className={_className} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+			{extra}
+			<Input {...inputProps} ref={ref} />
+			{glyph && <FormControl.Feedback>{glyph}</FormControl.Feedback>}
+			{loading && <Spinner />}
+			{appendExtra}
+		</div>
+	);
+});
 
-	render() {
-		const {loading, validationState, glyph, getRef, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
-		const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
-		return (
-			<div className={`fetcher-input ${extra ? " input-group" : ""} has-feedback${validationState ? ` has-${validationState}` : ""} ${className}`} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
-				{extra}
-				<Input {...inputProps} ref={this.setRef} />
-				{glyph ? <FormControl.Feedback>{glyph}</FormControl.Feedback> : null}
-				{loading ? <Spinner /> : null }
-				{appendExtra}
-			</div>
-		);
-	}
-}
-
-class FetcherInputDefaultInput extends React.Component {
-	render() {
-		const {readonly, ...inputProps} = this.props;
-		return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={this.ref} />;
-	}
-}
+const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
+	const {readonly, ...inputProps} = props;
+	return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={ref} />;
+});
 
 // Bootstrap OverlayTrigger that is hoverable if hoverable === true
 export class OverlayTrigger extends React.Component {

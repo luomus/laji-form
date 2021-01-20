@@ -624,7 +624,6 @@ export class Autosuggest extends React.Component {
 				{renderExtra && renderExtra()}
 				<div className={classNames("autosuggest-wrapper", props.wrapperClassName)}>
 					<ReactAutosuggest
-						ref={this.setRef}
 						id={`${this.props.id}-autosuggest`}
 						inputProps={inputProps}
 						renderInputComponent={this.renderInput}
@@ -661,10 +660,6 @@ export class Autosuggest extends React.Component {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
 		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
-	}
-
-	setInputRef = (elem) => {
-		this.inputElem = elem;
 	}
 
 	renderInput = (inputProps) => {
@@ -751,7 +746,6 @@ export class Autosuggest extends React.Component {
 				validationState={validationState} 
 				extra={addon}
 				appendExtra={toggler}
-				getRef={this.setInputRef}
 				className={toggler && this.state.focused ? "has-toggler" : undefined}
 				{...inputProps} 
 			/>
@@ -1042,10 +1036,10 @@ class ReactAutosuggest extends React.Component {
 
 	render() {
 		return (
-			<React.Fragment>
+			<div onFocus={this.onContainerFocus} onBlur={this.onContainerBlur}>
 				{this.renderInput()}
 				{this.renderSuggestions()}
-			</React.Fragment>
+			</div>
 		);
 	}
 
@@ -1063,12 +1057,16 @@ class ReactAutosuggest extends React.Component {
 	}
 
 	onBlur(e) {
+		const suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
+		suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
 		this.setState({focused: false, focusedIdx: undefined});
 		this.props.inputProps && this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
 	}
 
 	onInputKeyDown = (e) => {
 		let state, suggestion;
+		const context = new Context(this.props.formContext.contextId);
+		const {shortcuts = {}} = context;
 		switch (e.key) {
 		case "ArrowDown":
 			e.preventDefault();
@@ -1098,7 +1096,13 @@ class ReactAutosuggest extends React.Component {
 		case "Enter":
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
-			suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
+			if (shortcuts.Enter) {
+				context.setTimeout(() => {
+					suggestion && this.onSuggestionSelected(suggestion);
+				}, 0);
+			} else {
+				this.inputElem.blur();
+			}
 			break;
 		}
 		this.props.inputProps && this.props.inputProps.onKeyDown && this.props.inputProps.onKeyDown(e);
@@ -1117,6 +1121,10 @@ class ReactAutosuggest extends React.Component {
 			: this.setState({inputValue: value}, callback);
 	}
 
+	setInputRef = (elem) => {
+		this.inputElem = elem;
+	}
+
 	renderInput() {
 		const {inputProps, renderInputComponent = this.renderDefaultInputComponent} = this.props;
 		return renderInputComponent({
@@ -1125,7 +1133,8 @@ class ReactAutosuggest extends React.Component {
 			onChange: this.onInputChange,
 			onFocus: this.onInputFocus,
 			onBlur: this.onInputTryBlur,
-			onKeyDown: this.onInputKeyDown
+			onKeyDown: this.onInputKeyDown,
+			ref: this.setInputRef
 		});
 	}
 
