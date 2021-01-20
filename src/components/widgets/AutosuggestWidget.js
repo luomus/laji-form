@@ -1,5 +1,4 @@
 import * as React from "react";
-import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { Glyphicon, Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
 import * as Spinner from "react-spinner";
@@ -448,7 +447,7 @@ export class Autosuggest extends React.Component {
 			onUnsuggestedSelected ?
 				onUnsuggestedSelected(value) :
 				onChange(value);
-		}
+		};
 
 		const state = {inputValue: value, suggestion: undefined};
 		this.mounted
@@ -636,10 +635,15 @@ export class Autosuggest extends React.Component {
 						highlightFirstSuggestion={highlightFirstSuggestion}
 						theme={cssClasses}
 						formContext={this.props.formContext}
+						ref={this.setRef}
 					/>
 				</div>
 			</React.Fragment>
 		);
+	}
+
+	setRef = (elem) => {
+		this.autosuggestRef = elem;
 	}
 
 	onInformalTaxonGroupsOpened = (open) => {
@@ -647,7 +651,6 @@ export class Autosuggest extends React.Component {
 	}
 
 	onInformalTaxonGroupSelected = (id) => {
-		//this.setState({informalTaxonGroupsOpen: false, focused: false});
 		this.setState({informalTaxonGroupsOpen: false});
 		this.props.onInformalTaxonGroupSelected && this.props.onInformalTaxonGroupSelected(id);
 	}

@@ -95,7 +95,6 @@ export class TagInputComponent extends React.Component {
 	}
 
 	onInputChange = (e) => {
-		console.log("TagInputComponent onInputChange", e, e.target.value);
 		const {onInputChange} = this.props;
 		onInputChange && e.persist();
 		const {target: {value}} = e;
