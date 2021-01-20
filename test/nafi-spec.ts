@@ -1,5 +1,5 @@
-import { Form, createForm } from "./test-utils";
-import { browser, protractor } from "protractor";
+import { Form, createForm, TaxonAutosuggestWidgetPOI } from "./test-utils";
+import { protractor } from "protractor";
 
 const taxonAutocompleteResponse = [{
 	"key": "MX.46587",
@@ -27,7 +27,7 @@ const taxonAutocompleteResponse = [{
 describe("NAFI (MHL.6)", () => {
 
 	let form: Form;
-
+	let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
 
 	beforeAll(async () => {
 		form = await createForm({id: "MHL.6"});
@@ -40,60 +40,53 @@ describe("NAFI (MHL.6)", () => {
 	});
 
 	describe("selecting species name with mouse", () => {
-		const unitLocator = "gatherings.0.units.121.identifications.0.taxon";
 
-		it("selects scientific name", async () => {
+		beforeAll(async () => {
+			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.121.identifications.0.taxon");
+		});
+
+		it("selects suggestion value", async () => {
 			const autocompleteMock = await form.setMockResponse("/autocomplete/taxon", false);
-			const $unitInput = await form.$getInputWidget(unitLocator);
-			await $unitInput.sendKeys("kettu");
+			await taxonAutosuggest.$input.sendKeys("kettu");
 			await autocompleteMock.resolve(taxonAutocompleteResponse);
-			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate(unitLocator).$(".rw-list")), 5000, "Suggestion list timeout");
-			const $$taxonSuggestions = form.$locate(unitLocator).$$(".rw-list-option");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$$suggestions.first().click();
 
-			await $$taxonSuggestions.first().click();
-
-			expect(await $unitInput.getAttribute("value")).toBe("Vulpes vulpes");
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 
 			await autocompleteMock.remove();
 		});
 
 		it("and is marked as suggested", async () => {
-			const $unit = form.$locate(unitLocator);
-
-			expect(await $unit.$(".glyphicon-ok").isDisplayed()).toBe(true);
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 		});
 
 		it("and closes suggestion list", async () => {
-			const $unit = form.$locate(unitLocator);
-
-			expect(await $unit.$(".rw-list").isPresent()).toBe(false);
+			expect(await taxonAutosuggest.$suggestionsContainer.isPresent()).toBe(false);
 		});
 	});
 
 	describe("selecting species name with keyboard navigation", () => {
-		const unitLocator = "gatherings.0.units.122.identifications.0.taxon";
+		beforeAll(async () => {
+			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.122.identifications.0.taxon");
+		});
 
 		it("works", async () => {
 			await form.$locateButton("gatherings.0.units", "add").click();
-			const $unit = await form.$getInputWidget(unitLocator);
-			await $unit.sendKeys("kettu");
-			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate(unitLocator).$(".rw-list")), 5000, "Suggestion list timeout");
-			await $unit.sendKeys(protractor.Key.DOWN);
-			await $unit.sendKeys(protractor.Key.ENTER);
+			await taxonAutosuggest.$input.sendKeys("kettu");
+			await taxonAutosuggest.waitForSuggestionsToLoad();
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.DOWN);
+			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
 
-			expect(await $unit.getAttribute("value")).toBe("Vulpes vulpes");
+			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
 		});
 
 		it("and is marked as suggested", async () => {
-			const $unit = form.$locate(unitLocator);
-
-			expect(await $unit.$(".glyphicon-ok").isDisplayed()).toBe(true);
+			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 		});
 
 		it("and closes suggestion list", async () => {
-			const $unit = form.$locate(unitLocator);
-
-			expect(await $unit.$(".rw-list").isPresent()).toBe(false);
+			expect(await taxonAutosuggest.$suggestionsContainer.isPresent()).toBe(false);
 		});
 	});
 });

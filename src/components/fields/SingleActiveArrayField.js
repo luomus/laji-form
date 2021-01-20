@@ -292,6 +292,11 @@ export default class SingleActiveArrayField extends React.Component {
 					this.state.activeIdx :
 					formData.length - 1;
 				beforeAdd(this.props);
+				console.log("copy fn",[
+					...formData.slice(0, idx + 1),
+					copyItemFunction(this, formData[idx])(...params),
+					...formData.slice(idx + 1)
+				]);
 				this.props.onChange([
 					...formData.slice(0, idx + 1),
 					copyItemFunction(this, formData[idx])(...params),
@@ -302,6 +307,7 @@ export default class SingleActiveArrayField extends React.Component {
 				const idx = this.state.activeIdx !== undefined ?
 					this.state.activeIdx :
 					(this.props.formData || []).length - 1;
+				console.log("CALLBACK", idx + 1);
 				this.onActiveChange(idx + 1);
 			},
 			rules: {

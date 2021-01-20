@@ -2,10 +2,12 @@
     "attributes": {
         "id": "MHL.6"
     },
-    "category": "MHL.categorySurvey",
+    "category": "MHL.categoryCitizenScience",
     "collectionID": "HR.175",
     "description": "Valtakunnallinen p\u00e4iv\u00e4perhosseuranta (NAFI) ilmoituslomake.<br><p>T\u00e4m\u00e4 lomake korvaa vanhan Hatikan lomakkeen vuonna 2018.</p><b>Pakollisina tietoina t\u00e4yt\u00e4:</b> <ol><li>Seurantakohteen sijainti, joko YKJ-koordinaattina (10x10km tai tarkempi) tai rajaamalla alue kartalta. Kunta ja eli\u00f6maakunta eiv\u00e4t ole pakollisia</li> <li>Ilmoitettavan seurantajakson alku- ja loppup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4, voit ilmoittaa kauden havainnot useammassa jaksossa esim. viikoittain tai kuukausittain</li> <li>Havaintop\u00e4ivien m\u00e4\u00e4r\u00e4</li> <li>Valmiiseen lajilistaan havaitsemiesi p\u00e4iv\u00e4perhoslajien yksil\u00f6m\u00e4\u00e4r\u00e4\u00e4 vastaava kokonaisluku</li><ol>",
-    "excludeFromCopy": [],
+    "excludeFromCopy": [
+        "$.gatherings[*].units[*].images"
+    ],
     "extra": {
         "habitat": {
             "altParent": {
@@ -259,15 +261,16 @@
             }
         }
     },
-    "features": [
-        "MHL.featurePrepopulateWithInformalTaxonGroups",
-        "MHL.featureAdminister"
-    ],
     "id": "MHL.6",
     "language": "fi",
     "logo": "https://cdn.laji.fi/images/nafi_150x141.png",
     "name": "Nafi",
     "options": {
+        "about": {
+            "fi": "2668"
+        },
+        "allowTemplate": true,
+        "hasAdmins": true,
         "ownSubmissionsActions": [
             "edit",
             "view",
@@ -282,1228 +285,1230 @@
             "locality",
             "observer",
             "id"
-        ]
-    },
-    "prepopulateWithInformalTaxonGroups": [
-        "MVL.181"
-    ],
-    "prepopulatedDocument": {
-        "gatherings": [
-            {
-                "units": [
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Parnassius apollo",
-                                "taxonID": "MX.60724",
-                                "taxonVerbatim": "isoapollo"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Parnassius mnemosyne",
-                                "taxonID": "MX.60725",
-                                "taxonVerbatim": "pikkuapollo"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Iphiclides podalirius",
-                                "taxonID": "MX.60728",
-                                "taxonVerbatim": "purjeperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Papilio machaon",
-                                "taxonID": "MX.60730",
-                                "taxonVerbatim": "ritariperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pyrgus andromedae",
-                                "taxonID": "MX.60738",
-                                "taxonVerbatim": "tunturikirjosiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pyrgus centaureae",
-                                "taxonID": "MX.60739",
-                                "taxonVerbatim": "suokirjosiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pyrgus malvae",
-                                "taxonID": "MX.60735",
-                                "taxonVerbatim": "mansikkakirjosiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pyrgus alveus",
-                                "taxonID": "MX.60736",
-                                "taxonVerbatim": "tummakirjosiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Heteropterus morpheus",
-                                "taxonID": "MX.60742",
-                                "taxonVerbatim": "hein\u00e4hiipij\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Carterocephalus palaemon",
-                                "taxonID": "MX.60744",
-                                "taxonVerbatim": "keltat\u00e4pl\u00e4hiipij\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Carterocephalus silvicola",
-                                "taxonID": "MX.60745",
-                                "taxonVerbatim": "mustat\u00e4pl\u00e4hiipij\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Thymelicus lineola",
-                                "taxonID": "MX.60749",
-                                "taxonVerbatim": "lauhahiipij\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Hesperia comma",
-                                "taxonID": "MX.60751",
-                                "taxonVerbatim": "valkot\u00e4pl\u00e4paksup\u00e4\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Ochlodes sylvanus",
-                                "taxonID": "MX.60755",
-                                "taxonVerbatim": "piippopaksup\u00e4\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Leptidea sinapis",
-                                "taxonID": "MX.60763",
-                                "taxonVerbatim": "virnaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Leptidea juvernica",
-                                "taxonID": "MX.60761",
-                                "taxonVerbatim": "peltovirnaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Anthocharis cardamines",
-                                "taxonID": "MX.60767",
-                                "taxonVerbatim": "auroraperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Euchloe ausonia",
-                                "taxonID": "MX.60769",
-                                "taxonVerbatim": "aroauroraperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Aporia crataegi",
-                                "taxonID": "MX.60772",
-                                "taxonVerbatim": "pihlajaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pieris brassicae",
-                                "taxonID": "MX.60775",
-                                "taxonVerbatim": "kaaliperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pieris rapae",
-                                "taxonID": "MX.60777",
-                                "taxonVerbatim": "naurisperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pieris napi",
-                                "taxonID": "MX.60778",
-                                "taxonVerbatim": "lanttuperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pontia callidice",
-                                "taxonID": "MX.60780",
-                                "taxonVerbatim": "vuorisinappiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pontia edusa",
-                                "taxonID": "MX.60781",
-                                "taxonVerbatim": "sinappiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pontia chloridice",
-                                "taxonID": "MX.60782",
-                                "taxonVerbatim": "arosinappiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Colias hyale",
-                                "taxonID": "MX.60785",
-                                "taxonVerbatim": "vaaleakeltaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Colias hecla",
-                                "taxonID": "MX.60786",
-                                "taxonVerbatim": "lapinkeltaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Colias tyche",
-                                "taxonID": "MX.60788",
-                                "taxonVerbatim": "tunturikeltaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Colias palaeno",
-                                "taxonID": "MX.60791",
-                                "taxonVerbatim": "suokeltaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Colias crocea",
-                                "taxonID": "MX.60792",
-                                "taxonVerbatim": "etel\u00e4nkeltaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Gonepteryx rhamni",
-                                "taxonID": "MX.60794",
-                                "taxonVerbatim": "sitruunaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria eunomia",
-                                "taxonID": "MX.60887",
-                                "taxonVerbatim": "r\u00e4mehopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria euphrosyne",
-                                "taxonID": "MX.60889",
-                                "taxonVerbatim": "pursuhopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria titania",
-                                "taxonID": "MX.60891",
-                                "taxonVerbatim": "lehtohopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria selene",
-                                "taxonID": "MX.60890",
-                                "taxonVerbatim": "niittyhopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria chariclea",
-                                "taxonID": "MX.60892",
-                                "taxonVerbatim": "tundrahopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria freija",
-                                "taxonID": "MX.60893",
-                                "taxonVerbatim": "muurainhopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria polaris",
-                                "taxonID": "MX.60894",
-                                "taxonVerbatim": "pohjanhopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria thore",
-                                "taxonID": "MX.60895",
-                                "taxonVerbatim": "purohopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria frigga",
-                                "taxonID": "MX.60898",
-                                "taxonVerbatim": "rahkahopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria improba",
-                                "taxonID": "MX.60899",
-                                "taxonVerbatim": "k\u00e4\u00e4pi\u00f6hopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria napaea",
-                                "taxonID": "MX.60902",
-                                "taxonVerbatim": "tunturihopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Boloria aquilonaris",
-                                "taxonID": "MX.60904",
-                                "taxonVerbatim": "suohopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Issoria lathonia",
-                                "taxonID": "MX.60882",
-                                "taxonVerbatim": "helmihopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Brenthis ino",
-                                "taxonID": "MX.60884",
-                                "taxonVerbatim": "angervohopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Argynnis paphia",
-                                "taxonID": "MX.60876",
-                                "taxonVerbatim": "keisarinviitta"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Argynnis laodice",
-                                "taxonID": "MX.60880",
-                                "taxonVerbatim": "etel\u00e4nhopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Speyeria aglaja",
-                                "taxonID": "MX.60877",
-                                "taxonVerbatim": "orvokkihopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Fabriciana niobe",
-                                "taxonID": "MX.60879",
-                                "taxonVerbatim": "rinnehopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Fabriciana adippe",
-                                "taxonID": "MX.60878",
-                                "taxonVerbatim": "ketohopeat\u00e4pl\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Araschnia levana",
-                                "taxonID": "MX.60908",
-                                "taxonVerbatim": "karttaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Vanessa atalanta",
-                                "taxonID": "MX.60910",
-                                "taxonVerbatim": "amiraali"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Vanessa cardui",
-                                "taxonID": "MX.60911",
-                                "taxonVerbatim": "ohdakeperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Aglais io",
-                                "taxonID": "MX.60914",
-                                "taxonVerbatim": "neitoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Aglais urticae",
-                                "taxonID": "MX.60916",
-                                "taxonVerbatim": "nokkosperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Nymphalis antiopa",
-                                "taxonID": "MX.60920",
-                                "taxonVerbatim": "suruvaippa"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Nymphalis polychloros",
-                                "taxonID": "MX.60918",
-                                "taxonVerbatim": "kirsikkaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Nymphalis xanthomelas",
-                                "taxonID": "MX.60919",
-                                "taxonVerbatim": "isonokkosperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Nymphalis vaualbum",
-                                "taxonID": "MX.60922",
-                                "taxonVerbatim": "valkot\u00e4pl\u00e4nokkosperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Polygonia c-album",
-                                "taxonID": "MX.60925",
-                                "taxonVerbatim": "herukkaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Euphydryas iduna",
-                                "taxonID": "MX.60930",
-                                "taxonVerbatim": "lapinverkkoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Euphydryas maturna",
-                                "taxonID": "MX.60931",
-                                "taxonVerbatim": "kirjoverkkoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Euphydryas aurinia",
-                                "taxonID": "MX.60934",
-                                "taxonVerbatim": "keltaverkkoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Melitaea cinxia",
-                                "taxonID": "MX.60937",
-                                "taxonVerbatim": "t\u00e4pl\u00e4verkkoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Melitaea diamina",
-                                "taxonID": "MX.60938",
-                                "taxonVerbatim": "tummaverkkoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Melitaea athalia",
-                                "taxonID": "MX.60939",
-                                "taxonVerbatim": "ratamoverkkoperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Limenitis populi",
-                                "taxonID": "MX.60944",
-                                "taxonVerbatim": "haapaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Limenitis camilla",
-                                "taxonID": "MX.60945",
-                                "taxonVerbatim": "kuusamaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Apatura ilia",
-                                "taxonID": "MX.60949",
-                                "taxonVerbatim": "pikkuh\u00e4iveperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Apatura iris",
-                                "taxonID": "MX.60948",
-                                "taxonVerbatim": "h\u00e4iveperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Pararge aegeria",
-                                "taxonID": "MX.60953",
-                                "taxonVerbatim": "t\u00e4pl\u00e4papurikko"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lasiommata megera",
-                                "taxonID": "MX.60956",
-                                "taxonVerbatim": "ruostepapurikko"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lasiommata petropolitana",
-                                "taxonID": "MX.60958",
-                                "taxonVerbatim": "mets\u00e4papurikko"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lasiommata maera",
-                                "taxonID": "MX.60957",
-                                "taxonVerbatim": "tummapapurikko"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lopinga achine",
-                                "taxonID": "MX.60960",
-                                "taxonVerbatim": "kirjopapurikko"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Coenonympha tullia",
-                                "taxonID": "MX.60963",
-                                "taxonVerbatim": "saraikkoniittyperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Coenonympha glycerion",
-                                "taxonID": "MX.60965",
-                                "taxonVerbatim": "id\u00e4nniittyperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Coenonympha hero",
-                                "taxonID": "MX.60967",
-                                "taxonVerbatim": "ruskoniittyperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Coenonympha pamphilus",
-                                "taxonID": "MX.60968",
-                                "taxonVerbatim": "keltaniittyperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Aphantopus hyperantus",
-                                "taxonID": "MX.60970",
-                                "taxonVerbatim": "tesmaperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Maniola jurtina",
-                                "taxonID": "MX.60974",
-                                "taxonVerbatim": "tummah\u00e4r\u00e4nsilm\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Hyponephele lycaon",
-                                "taxonID": "MX.60976",
-                                "taxonVerbatim": "id\u00e4nh\u00e4r\u00e4nsilm\u00e4"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Erebia ligea",
-                                "taxonID": "MX.60979",
-                                "taxonVerbatim": "mets\u00e4nokiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Erebia euryale",
-                                "taxonID": "MX.60980",
-                                "taxonVerbatim": "id\u00e4nnokiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Erebia embla",
-                                "taxonID": "MX.60982",
-                                "taxonVerbatim": "suonokiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Erebia disa",
-                                "taxonID": "MX.60983",
-                                "taxonVerbatim": "kairanokiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Erebia medusa",
-                                "taxonID": "MX.60984",
-                                "taxonVerbatim": "ruijannokiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Erebia pandrose",
-                                "taxonID": "MX.60986",
-                                "taxonVerbatim": "lapinnokiperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Hipparchia semele",
-                                "taxonID": "MX.60993",
-                                "taxonVerbatim": "hietahein\u00e4perhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Oeneis norna",
-                                "taxonID": "MX.60995",
-                                "taxonVerbatim": "sarakylm\u00e4nperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Oeneis bore",
-                                "taxonID": "MX.60996",
-                                "taxonVerbatim": "paljakkakylm\u00e4nperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Oeneis jutta",
-                                "taxonID": "MX.60997",
-                                "taxonVerbatim": "r\u00e4mekylm\u00e4nperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Cupido minimus",
-                                "taxonID": "MX.60825",
-                                "taxonVerbatim": "pikkusinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Cupido argiades",
-                                "taxonID": "MX.60827",
-                                "taxonVerbatim": "kannussinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Cupido alcetas",
-                                "taxonID": "MX.60828",
-                                "taxonVerbatim": "luhtasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Celastrina argiolus",
-                                "taxonID": "MX.60830",
-                                "taxonVerbatim": "paatsamasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Scolitantides vicrama",
-                                "taxonID": "MX.60833",
-                                "taxonVerbatim": "harjusinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Scolitantides orion",
-                                "taxonID": "MX.60836",
-                                "taxonVerbatim": "kalliosinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Glaucopsyche alexis",
-                                "taxonID": "MX.60838",
-                                "taxonVerbatim": "virnasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Phengaris arion",
-                                "taxonID": "MX.60841",
-                                "taxonVerbatim": "muurahaissinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Plebejus argus",
-                                "taxonID": "MX.60854",
-                                "taxonVerbatim": "kangassinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Plebejus idas",
-                                "taxonID": "MX.60855",
-                                "taxonVerbatim": "ketosinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Aricia artaxerxes",
-                                "taxonID": "MX.60859",
-                                "taxonVerbatim": "lehtosinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Aricia nicias",
-                                "taxonID": "MX.60862",
-                                "taxonVerbatim": "huhtasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Eumedonia eumedon",
-                                "taxonID": "MX.60863",
-                                "taxonVerbatim": "ruskosinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Cyaniris semiargus",
-                                "taxonID": "MX.60865",
-                                "taxonVerbatim": "niittysinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Agriades optilete",
-                                "taxonID": "MX.60858",
-                                "taxonVerbatim": "juolukkasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Agriades aquilo",
-                                "taxonID": "MX.60856",
-                                "taxonVerbatim": "tundrasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Polyommatus amandus",
-                                "taxonID": "MX.60866",
-                                "taxonVerbatim": "hopeasinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Polyommatus icarus",
-                                "taxonID": "MX.60867",
-                                "taxonVerbatim": "hohtosinisiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lycaena phlaeas",
-                                "taxonID": "MX.60816",
-                                "taxonVerbatim": "pikkukultasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lycaena helle",
-                                "taxonID": "MX.60817",
-                                "taxonVerbatim": "luhtakultasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lycaena dispar",
-                                "taxonID": "MX.60818",
-                                "taxonVerbatim": "isokultasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lycaena virgaureae",
-                                "taxonID": "MX.60819",
-                                "taxonVerbatim": "loistokultasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lycaena tityrus",
-                                "taxonID": "MX.60820",
-                                "taxonVerbatim": "tummakultasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Lycaena hippothoe",
-                                "taxonID": "MX.60821",
-                                "taxonVerbatim": "ketokultasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Callophrys rubi",
-                                "taxonID": "MX.60811",
-                                "taxonVerbatim": "kangasperhonen"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Satyrium w-album",
-                                "taxonID": "MX.60808",
-                                "taxonVerbatim": "jalavanopsasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Satyrium pruni",
-                                "taxonID": "MX.60809",
-                                "taxonVerbatim": "tuominopsasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Thecla betulae",
-                                "taxonID": "MX.60799",
-                                "taxonVerbatim": "ruostenopsasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    },
-                    {
-                        "identifications": [
-                            {
-                                "taxon": "Favonius quercus",
-                                "taxonID": "MX.60803",
-                                "taxonVerbatim": "tamminopsasiipi"
-                            }
-                        ],
-                        "recordBasis": "MY.recordBasisHumanObservation"
-                    }
-                ]
-            }
-        ]
+        ],
+        "prepopulateWithInformalTaxonGroups": [
+            "MVL.181"
+        ],
+        "prepopulatedDocument": {
+            "gatherings": [
+                {
+                    "units": [
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Parnassius apollo",
+                                    "taxonID": "MX.60724",
+                                    "taxonVerbatim": "isoapollo"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Parnassius mnemosyne",
+                                    "taxonID": "MX.60725",
+                                    "taxonVerbatim": "pikkuapollo"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Iphiclides podalirius",
+                                    "taxonID": "MX.60728",
+                                    "taxonVerbatim": "purjeperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Papilio machaon",
+                                    "taxonID": "MX.60730",
+                                    "taxonVerbatim": "ritariperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pyrgus andromedae",
+                                    "taxonID": "MX.60738",
+                                    "taxonVerbatim": "tunturikirjosiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pyrgus centaureae",
+                                    "taxonID": "MX.60739",
+                                    "taxonVerbatim": "suokirjosiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pyrgus malvae",
+                                    "taxonID": "MX.60735",
+                                    "taxonVerbatim": "mansikkakirjosiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pyrgus alveus",
+                                    "taxonID": "MX.60736",
+                                    "taxonVerbatim": "tummakirjosiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Heteropterus morpheus",
+                                    "taxonID": "MX.60742",
+                                    "taxonVerbatim": "hein\u00e4hiipij\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Carterocephalus palaemon",
+                                    "taxonID": "MX.60744",
+                                    "taxonVerbatim": "keltat\u00e4pl\u00e4hiipij\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Carterocephalus silvicola",
+                                    "taxonID": "MX.60745",
+                                    "taxonVerbatim": "mustat\u00e4pl\u00e4hiipij\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Thymelicus lineola",
+                                    "taxonID": "MX.60749",
+                                    "taxonVerbatim": "lauhahiipij\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Hesperia comma",
+                                    "taxonID": "MX.60751",
+                                    "taxonVerbatim": "valkot\u00e4pl\u00e4paksup\u00e4\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Ochlodes sylvanus",
+                                    "taxonID": "MX.60755",
+                                    "taxonVerbatim": "piippopaksup\u00e4\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Leptidea sinapis",
+                                    "taxonID": "MX.60763",
+                                    "taxonVerbatim": "virnaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Leptidea juvernica",
+                                    "taxonID": "MX.60761",
+                                    "taxonVerbatim": "peltovirnaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Anthocharis cardamines",
+                                    "taxonID": "MX.60767",
+                                    "taxonVerbatim": "auroraperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Euchloe ausonia",
+                                    "taxonID": "MX.60769",
+                                    "taxonVerbatim": "aroauroraperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Aporia crataegi",
+                                    "taxonID": "MX.60772",
+                                    "taxonVerbatim": "pihlajaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pieris brassicae",
+                                    "taxonID": "MX.60775",
+                                    "taxonVerbatim": "kaaliperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pieris rapae",
+                                    "taxonID": "MX.60777",
+                                    "taxonVerbatim": "naurisperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pieris napi",
+                                    "taxonID": "MX.60778",
+                                    "taxonVerbatim": "lanttuperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pontia callidice",
+                                    "taxonID": "MX.60780",
+                                    "taxonVerbatim": "vuorisinappiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pontia edusa",
+                                    "taxonID": "MX.60781",
+                                    "taxonVerbatim": "sinappiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pontia chloridice",
+                                    "taxonID": "MX.60782",
+                                    "taxonVerbatim": "arosinappiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Colias hyale",
+                                    "taxonID": "MX.60785",
+                                    "taxonVerbatim": "vaaleakeltaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Colias hecla",
+                                    "taxonID": "MX.60786",
+                                    "taxonVerbatim": "lapinkeltaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Colias tyche",
+                                    "taxonID": "MX.60788",
+                                    "taxonVerbatim": "tunturikeltaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Colias palaeno",
+                                    "taxonID": "MX.60791",
+                                    "taxonVerbatim": "suokeltaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Colias crocea",
+                                    "taxonID": "MX.60792",
+                                    "taxonVerbatim": "etel\u00e4nkeltaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Gonepteryx rhamni",
+                                    "taxonID": "MX.60794",
+                                    "taxonVerbatim": "sitruunaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria eunomia",
+                                    "taxonID": "MX.60887",
+                                    "taxonVerbatim": "r\u00e4mehopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria euphrosyne",
+                                    "taxonID": "MX.60889",
+                                    "taxonVerbatim": "pursuhopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria titania",
+                                    "taxonID": "MX.60891",
+                                    "taxonVerbatim": "lehtohopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria selene",
+                                    "taxonID": "MX.60890",
+                                    "taxonVerbatim": "niittyhopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria chariclea",
+                                    "taxonID": "MX.60892",
+                                    "taxonVerbatim": "tundrahopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria freija",
+                                    "taxonID": "MX.60893",
+                                    "taxonVerbatim": "muurainhopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria polaris",
+                                    "taxonID": "MX.60894",
+                                    "taxonVerbatim": "pohjanhopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria thore",
+                                    "taxonID": "MX.60895",
+                                    "taxonVerbatim": "purohopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria frigga",
+                                    "taxonID": "MX.60898",
+                                    "taxonVerbatim": "rahkahopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria improba",
+                                    "taxonID": "MX.60899",
+                                    "taxonVerbatim": "k\u00e4\u00e4pi\u00f6hopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria napaea",
+                                    "taxonID": "MX.60902",
+                                    "taxonVerbatim": "tunturihopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Boloria aquilonaris",
+                                    "taxonID": "MX.60904",
+                                    "taxonVerbatim": "suohopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Issoria lathonia",
+                                    "taxonID": "MX.60882",
+                                    "taxonVerbatim": "helmihopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Brenthis ino",
+                                    "taxonID": "MX.60884",
+                                    "taxonVerbatim": "angervohopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Argynnis paphia",
+                                    "taxonID": "MX.60876",
+                                    "taxonVerbatim": "keisarinviitta"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Argynnis laodice",
+                                    "taxonID": "MX.60880",
+                                    "taxonVerbatim": "etel\u00e4nhopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Speyeria aglaja",
+                                    "taxonID": "MX.60877",
+                                    "taxonVerbatim": "orvokkihopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Fabriciana niobe",
+                                    "taxonID": "MX.60879",
+                                    "taxonVerbatim": "rinnehopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Fabriciana adippe",
+                                    "taxonID": "MX.60878",
+                                    "taxonVerbatim": "ketohopeat\u00e4pl\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Araschnia levana",
+                                    "taxonID": "MX.60908",
+                                    "taxonVerbatim": "karttaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Vanessa atalanta",
+                                    "taxonID": "MX.60910",
+                                    "taxonVerbatim": "amiraali"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Vanessa cardui",
+                                    "taxonID": "MX.60911",
+                                    "taxonVerbatim": "ohdakeperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Aglais io",
+                                    "taxonID": "MX.60914",
+                                    "taxonVerbatim": "neitoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Aglais urticae",
+                                    "taxonID": "MX.60916",
+                                    "taxonVerbatim": "nokkosperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Nymphalis antiopa",
+                                    "taxonID": "MX.60920",
+                                    "taxonVerbatim": "suruvaippa"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Nymphalis polychloros",
+                                    "taxonID": "MX.60918",
+                                    "taxonVerbatim": "kirsikkaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Nymphalis xanthomelas",
+                                    "taxonID": "MX.60919",
+                                    "taxonVerbatim": "isonokkosperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Nymphalis vaualbum",
+                                    "taxonID": "MX.60922",
+                                    "taxonVerbatim": "valkot\u00e4pl\u00e4nokkosperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Polygonia c-album",
+                                    "taxonID": "MX.60925",
+                                    "taxonVerbatim": "herukkaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Euphydryas iduna",
+                                    "taxonID": "MX.60930",
+                                    "taxonVerbatim": "lapinverkkoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Euphydryas maturna",
+                                    "taxonID": "MX.60931",
+                                    "taxonVerbatim": "kirjoverkkoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Euphydryas aurinia",
+                                    "taxonID": "MX.60934",
+                                    "taxonVerbatim": "keltaverkkoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Melitaea cinxia",
+                                    "taxonID": "MX.60937",
+                                    "taxonVerbatim": "t\u00e4pl\u00e4verkkoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Melitaea diamina",
+                                    "taxonID": "MX.60938",
+                                    "taxonVerbatim": "tummaverkkoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Melitaea athalia",
+                                    "taxonID": "MX.60939",
+                                    "taxonVerbatim": "ratamoverkkoperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Limenitis populi",
+                                    "taxonID": "MX.60944",
+                                    "taxonVerbatim": "haapaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Limenitis camilla",
+                                    "taxonID": "MX.60945",
+                                    "taxonVerbatim": "kuusamaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Apatura ilia",
+                                    "taxonID": "MX.60949",
+                                    "taxonVerbatim": "pikkuh\u00e4iveperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Apatura iris",
+                                    "taxonID": "MX.60948",
+                                    "taxonVerbatim": "h\u00e4iveperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Pararge aegeria",
+                                    "taxonID": "MX.60953",
+                                    "taxonVerbatim": "t\u00e4pl\u00e4papurikko"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lasiommata megera",
+                                    "taxonID": "MX.60956",
+                                    "taxonVerbatim": "ruostepapurikko"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lasiommata petropolitana",
+                                    "taxonID": "MX.60958",
+                                    "taxonVerbatim": "mets\u00e4papurikko"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lasiommata maera",
+                                    "taxonID": "MX.60957",
+                                    "taxonVerbatim": "tummapapurikko"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lopinga achine",
+                                    "taxonID": "MX.60960",
+                                    "taxonVerbatim": "kirjopapurikko"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Coenonympha tullia",
+                                    "taxonID": "MX.60963",
+                                    "taxonVerbatim": "saraikkoniittyperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Coenonympha glycerion",
+                                    "taxonID": "MX.60965",
+                                    "taxonVerbatim": "id\u00e4nniittyperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Coenonympha hero",
+                                    "taxonID": "MX.60967",
+                                    "taxonVerbatim": "ruskoniittyperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Coenonympha pamphilus",
+                                    "taxonID": "MX.60968",
+                                    "taxonVerbatim": "keltaniittyperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Aphantopus hyperantus",
+                                    "taxonID": "MX.60970",
+                                    "taxonVerbatim": "tesmaperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Maniola jurtina",
+                                    "taxonID": "MX.60974",
+                                    "taxonVerbatim": "tummah\u00e4r\u00e4nsilm\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Hyponephele lycaon",
+                                    "taxonID": "MX.60976",
+                                    "taxonVerbatim": "id\u00e4nh\u00e4r\u00e4nsilm\u00e4"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Erebia ligea",
+                                    "taxonID": "MX.60979",
+                                    "taxonVerbatim": "mets\u00e4nokiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Erebia euryale",
+                                    "taxonID": "MX.60980",
+                                    "taxonVerbatim": "id\u00e4nnokiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Erebia embla",
+                                    "taxonID": "MX.60982",
+                                    "taxonVerbatim": "suonokiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Erebia disa",
+                                    "taxonID": "MX.60983",
+                                    "taxonVerbatim": "kairanokiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Erebia medusa",
+                                    "taxonID": "MX.60984",
+                                    "taxonVerbatim": "ruijannokiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Erebia pandrose",
+                                    "taxonID": "MX.60986",
+                                    "taxonVerbatim": "lapinnokiperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Hipparchia semele",
+                                    "taxonID": "MX.60993",
+                                    "taxonVerbatim": "hietahein\u00e4perhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Oeneis norna",
+                                    "taxonID": "MX.60995",
+                                    "taxonVerbatim": "sarakylm\u00e4nperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Oeneis bore",
+                                    "taxonID": "MX.60996",
+                                    "taxonVerbatim": "paljakkakylm\u00e4nperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Oeneis jutta",
+                                    "taxonID": "MX.60997",
+                                    "taxonVerbatim": "r\u00e4mekylm\u00e4nperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Cupido minimus",
+                                    "taxonID": "MX.60825",
+                                    "taxonVerbatim": "pikkusinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Cupido argiades",
+                                    "taxonID": "MX.60827",
+                                    "taxonVerbatim": "kannussinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Cupido alcetas",
+                                    "taxonID": "MX.60828",
+                                    "taxonVerbatim": "luhtasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Celastrina argiolus",
+                                    "taxonID": "MX.60830",
+                                    "taxonVerbatim": "paatsamasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Scolitantides vicrama",
+                                    "taxonID": "MX.60833",
+                                    "taxonVerbatim": "harjusinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Scolitantides orion",
+                                    "taxonID": "MX.60836",
+                                    "taxonVerbatim": "kalliosinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Glaucopsyche alexis",
+                                    "taxonID": "MX.60838",
+                                    "taxonVerbatim": "virnasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Phengaris arion",
+                                    "taxonID": "MX.60841",
+                                    "taxonVerbatim": "muurahaissinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Plebejus argus",
+                                    "taxonID": "MX.60854",
+                                    "taxonVerbatim": "kangassinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Plebejus idas",
+                                    "taxonID": "MX.60855",
+                                    "taxonVerbatim": "ketosinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Aricia artaxerxes",
+                                    "taxonID": "MX.60859",
+                                    "taxonVerbatim": "lehtosinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Aricia nicias",
+                                    "taxonID": "MX.60862",
+                                    "taxonVerbatim": "huhtasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Eumedonia eumedon",
+                                    "taxonID": "MX.60863",
+                                    "taxonVerbatim": "ruskosinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Cyaniris semiargus",
+                                    "taxonID": "MX.60865",
+                                    "taxonVerbatim": "niittysinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Agriades optilete",
+                                    "taxonID": "MX.60858",
+                                    "taxonVerbatim": "juolukkasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Agriades aquilo",
+                                    "taxonID": "MX.60856",
+                                    "taxonVerbatim": "tundrasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Polyommatus amandus",
+                                    "taxonID": "MX.60866",
+                                    "taxonVerbatim": "hopeasinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Polyommatus icarus",
+                                    "taxonID": "MX.60867",
+                                    "taxonVerbatim": "hohtosinisiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lycaena phlaeas",
+                                    "taxonID": "MX.60816",
+                                    "taxonVerbatim": "pikkukultasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lycaena helle",
+                                    "taxonID": "MX.60817",
+                                    "taxonVerbatim": "luhtakultasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lycaena dispar",
+                                    "taxonID": "MX.60818",
+                                    "taxonVerbatim": "isokultasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lycaena virgaureae",
+                                    "taxonID": "MX.60819",
+                                    "taxonVerbatim": "loistokultasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lycaena tityrus",
+                                    "taxonID": "MX.60820",
+                                    "taxonVerbatim": "tummakultasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Lycaena hippothoe",
+                                    "taxonID": "MX.60821",
+                                    "taxonVerbatim": "ketokultasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Callophrys rubi",
+                                    "taxonID": "MX.60811",
+                                    "taxonVerbatim": "kangasperhonen"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Satyrium w-album",
+                                    "taxonID": "MX.60808",
+                                    "taxonVerbatim": "jalavanopsasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Satyrium pruni",
+                                    "taxonID": "MX.60809",
+                                    "taxonVerbatim": "tuominopsasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Thecla betulae",
+                                    "taxonID": "MX.60799",
+                                    "taxonVerbatim": "ruostenopsasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        },
+                        {
+                            "identifications": [
+                                {
+                                    "taxon": "Favonius quercus",
+                                    "taxonID": "MX.60803",
+                                    "taxonVerbatim": "tamminopsasiipi"
+                                }
+                            ],
+                            "recordBasis": "MY.recordBasisHumanObservation"
+                        }
+                    ]
+                }
+            ]
+        },
+        "resultServiceType": "MHL.resultServiceTypeNafi",
+        "warnEditingOldDocument": true
     },
     "schema": {
         "properties": {
@@ -1844,6 +1849,14 @@
                                         },
                                         "type": "array"
                                     },
+                                    "images": {
+                                        "excludeFromCopy": true,
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Kuvat",
+                                        "type": "array"
+                                    },
                                     "notes": {
                                         "title": "Lis\u00e4tiedot",
                                         "type": "string"
@@ -1896,15 +1909,15 @@
                 ],
                 "enumNames": [
                     "",
-                    "MX.secureLevelNone",
-                    "MX.secureLevelKM1",
-                    "MX.secureLevelKM5",
-                    "MX.secureLevelKM10",
-                    "MX.secureLevelKM25",
-                    "MX.secureLevelKM50",
-                    "MX.secureLevelKM100",
-                    "MX.secureLevelHighest",
-                    "MX.secureLevelNoShow"
+                    "Ei karkeistettu",
+                    "1 km",
+                    "5 km",
+                    "10 km",
+                    "25 km",
+                    "50 km",
+                    "100 km",
+                    "T\u00e4yssalaus",
+                    "Ei n\u00e4ytet\u00e4 ollenkaan - k\u00e4ytet\u00e4\u00e4n l\u00e4hinn\u00e4 spammin est\u00e4miseksi"
                 ],
                 "title": "Havainnon tarkat paikkatiedot ovat julkisia",
                 "type": "string"
@@ -1917,6 +1930,7 @@
         "type": "object"
     },
     "shortDescription": "Ilmoita havaitsemasi p\u00e4iv\u00e4perhoset valmiiseen lajilistapohjaan P\u00e4iv\u00e4perhosseurannan teemasivun lomakkeella.",
+    "shortTitle": "NAFI",
     "title": "Valtakunnallinen p\u00e4iv\u00e4perhosseuranta (NAFI)",
     "uiSchema": {
         "editors": {
@@ -2221,6 +2235,15 @@
                                     }
                                 }
                             },
+                            "images": {
+                                "ui:field": "ImageArrayField",
+                                "ui:options": {
+                                    "capturerVerbatimPath": "/gatheringEvent/leg",
+                                    "sideEffects": {
+                                        "/../recordBasis": "MY.recordBasisHumanObservationPhoto"
+                                    }
+                                }
+                            },
                             "notes": {
                                 "ui:placeholder": "lis\u00e4tiedot"
                             },
@@ -2251,6 +2274,14 @@
                                         "unitType",
                                         "recordBasis"
                                     ],
+                                    "glyphFields": [
+                                        {
+                                            "glyph": "camera",
+                                            "label": "Lis\u00e4\u00e4 valokuva",
+                                            "open": false,
+                                            "show": "images"
+                                        }
+                                    ],
                                     "includeAdditionalFieldsChooserButton": false
                                 },
                                 "uiSchema": {
@@ -2264,7 +2295,7 @@
                                                 "removable": true,
                                                 "suggestionInputField": "identifications_0_taxon",
                                                 "suggestionReceivers": {
-                                                    "identifications_0_taxon": "/payload/scientificName",
+                                                    "identifications_0_taxon": "autocompleteSelectedName || value",
                                                     "identifications_0_taxonID": "key",
                                                     "identifications_0_taxonVerbatim": "value",
                                                     "unitType": "$taxonGroup"
