@@ -46,7 +46,6 @@
     "moment": "*",
     "prop-types": "^15.5.8",
     "react": "~16.8.6",
-    "react-autosuggest": "^9.3.2",
     "react-bootstrap": "git+https://git@github.com/olzraiti/react-bootstrap.git#927b8f7a33ba1262b8a59cf236f612f5b5e2130c",
     "react-bootstrap-switch": "^15.0.4",
     "react-dom": "~16.8.6",
