@@ -1,5 +1,5 @@
 ## 7.1.0
-* Add `mediaMetadata` prop, which replaces `defaultImageMetadata` in settings
+* Add `mediaMetadata` prop, which replaces `defaultImageMetadata` in settings (breaking change! Accidentally released as feature release)
 
 ## 7.0.0
 * Globally interpreted `[test].injections` moved to `ui:injections`
