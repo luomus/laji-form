@@ -165,6 +165,7 @@ export interface LajiFormProps {
 	validators?: any;
 	warnings?: any;
 	onSettingsChange?: (settings: any, global: boolean) => void;
+	mediaMetadata: MediaMetadata
 }
 
 export interface LajiFormState {
@@ -175,6 +176,12 @@ export interface LajiFormState {
 	extraErrors?: any;
 	error?: boolean;
 	runningSubmitHooks?: boolean;
+}
+
+export interface MediaMetadata {
+	capturerVerbatim: string;
+	intellectualOwner: string;
+	intellectualRights: string;
 }
 
 export interface FormContext {
@@ -193,8 +200,9 @@ export interface FormContext {
 	notifier: Notifier;
 	apiClient: ApiClient;
 	Label: React.Component;
-	formDataTransformers?: any[]
-	_parentLajiFormId?: number
+	formDataTransformers?: any[];
+	_parentLajiFormId?: number;
+	mediaMetadata?: MediaMetadata;
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -588,7 +596,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
 				apiClient: this.apiClient,
-				Label: (props.fields || {}).Label || Label
+				Label: (props.fields || {}).Label || Label,
+				mediaMetadata: props.mediaMetadata
 			}
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
@@ -1020,7 +1029,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	onKeyDown = (e: KeyboardEvent) => {
-		if ("keyTimeouts" in this._context && this._context.keyTimeouts) {
+		if (this._context.keyTimeouts) {
 			this._context.keyTimeouts.forEach(timeout => clearTimeout(timeout));
 		}
 		this._context.keyTimeouts = [];
@@ -1039,7 +1048,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			.map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
 
-		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
+		const handled = order.some(id => this._context.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
 
 		const activeElement = document.activeElement;
 		if (!handled && e.key === "Enter" && (!activeElement || (activeElement.tagName.toLowerCase() !== "textarea" && !activeElement.className.includes("laji-map-input")))) {

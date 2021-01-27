@@ -2949,13 +2949,6 @@
 			"unitGathering_substrate": true
 		}
 	},
-	"%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": false,
-	"defaultImageMetadata": {
-		"intellectualRights": "MZ.intellectualRightsCC-BY-SA-4.0",
-		"capturerVerbatim": [
-			"Olli Raitio"
-	],
-	"intellectualOwner": "Olli Raitio"
-	}
+	"%toggled/AUTOSUGGEST_FIELD_TOGGLE_PERSISTENCE_unit": false
 }
 }

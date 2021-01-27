@@ -165,6 +165,11 @@ if (test !== true) {
 		googleApiKey: properties.googleApiKey,
 		notifier,
 		optimizeOnChange: true,
+		mediaMetadata: {
+			intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0",
+			capturerVerbatim: "Test",
+			intellectualOwner: "Test"
+		}
 	}));
 }
 
