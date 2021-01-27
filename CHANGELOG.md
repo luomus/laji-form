@@ -1,5 +1,8 @@
+## 7.1.0
+* Add `mediaMetadata` prop, which replaces `defaultImageMetadata` in settings
+
 ## 7.0.0
-* Globally interpreted `["ui:options"].injections` moved to `ui:injections`
+* Globally interpreted `[test].injections` moved to `ui:injections`
 
 ## 6.1.0
 * Add `tag` option to `PlainTextWidget`
