@@ -666,14 +666,14 @@ export class Autosuggest extends React.Component {
 	}
 
 	renderInput = (inputProps) => {
-		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle} = this.props;
+		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, displayValidationState = true} = this.props;
 		let validationState = null;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 
 		const isSuggested = !!suggestion && this.isValueSuggested(this.props);
 
-		if (!isEmptyString(value) && isSuggested !== undefined) {
+		if (displayValidationState && !isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";
 		}
 
@@ -691,6 +691,10 @@ export class Autosuggest extends React.Component {
 		};
 
 		const getGlyph = (state) => {
+			if (!displayValidationState) {
+				return null;
+			}
+
 			const glyph = getGlyphNameFromState(state);
 
 			return glyph ? (
@@ -755,10 +759,12 @@ export class Autosuggest extends React.Component {
 		);
 
 		let component = input;
-		if (value && isSuggested && renderSuggested) {
-			component = renderSuggested(input, suggestion);
-		} else if (value && isSuggested === false && renderUnsuggested) {
-			component = renderUnsuggested(input);
+		if (displayValidationState) {
+			if (value && isSuggested && renderSuggested) {
+				component = renderSuggested(input, suggestion);
+			} else if (value && isSuggested === false && renderUnsuggested) {
+				component = renderUnsuggested(input);
+			}
 		}
 		if (informalTaxonGroups) {
 			component = (
