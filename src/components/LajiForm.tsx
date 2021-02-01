@@ -819,12 +819,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		);
 	}
 
-	validateAndSubmit = (warnings = true) => {
+	validateAndSubmit = (warnings = true, onlySchema = false) => {
 		const {formData} = this.state;
-		const {onSubmit, onValidationError} = this.props;
-		return this.validate(warnings, true).then((valid) => {
+		const {onValidationError, onSubmit} = this.props;
+		return this.validate(warnings, true, onlySchema).then((valid) => {
 			if (formData !== this.state.formData) {
-				this.validateAndSubmit(warnings);
+				this.validateAndSubmit(warnings, onlySchema);
 			} else if (valid) {
 				onSubmit && onSubmit({formData: this.removeLajiFormIds(formData)});
 			} else {
@@ -834,38 +834,54 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	}
 
-	validate = (warnings = true, nonlive = true) => {
+	validate = (warnings = true, nonlive = true, onlySchema = false) => {
 		this.validating = true;
+
+		let live = true;
+		if (onlySchema) {
+			warnings = false;
+			nonlive = false;
+			live = false;
+		}
+
+		const block = nonlive || onlySchema;
+		
 		const {formData} = this.state;
 		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
 		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
-		const liveValidations = {errors: liveErrorValidators} as {errors: any, warnings: any};
+		let liveValidations = {errors: liveErrorValidators} as {errors: any, warnings: any};
 		const validations = {} as {errors: any, warnings: any};
-		if (nonlive) {
+		if (!onlySchema && nonlive) {
 			validations.errors = errorValidators;
 		}
-		if (warnings) {
+		if (!onlySchema && warnings) {
 			liveValidations.warnings = liveWarningValidators;
 			if (nonlive) {
 				validations.warnings = warningValidators;
 			}
 		}
-		const schemaErrors = nonlive
+		if (!live) {
+			liveValidations = {} as {errors: any, warnings: any};
+		}
+		const schemaErrors = nonlive || onlySchema
 			? validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
 			: {};
-		nonlive && this.pushBlockingLoader();
+		block && this.pushBlockingLoader();
 		return new Promise(resolve =>
 			Promise.all([validate(validations, formData), validate(liveValidations, formData)]).then(([_validations, _liveValidations]) => {
-				if (nonlive) {
+				if (nonlive || onlySchema) {
 					this.cachedNonliveValidations = merge(schemaErrors, _validations);
-					nonlive && this.popBlockingLoader();
+					block && this.popBlockingLoader();
 				}
-				const merged = merge(_liveValidations, !nonlive ? (this.cachedNonliveValidations || {}) : merge(_validations, schemaErrors)) as any;
+				const merged = merge(_liveValidations, !nonlive
+					? (this.cachedNonliveValidations || {})
+					: merge(_validations, schemaErrors)
+				) as any;
 				this.validating = false;
 				resolve(!Object.keys(merged).length);
 				!equals(this.state.extraErrors, merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
 			}).catch((e) => {
-				nonlive && this.popBlockingLoader();
+				block && this.popBlockingLoader();
 
 				throw e;
 			})
@@ -888,7 +904,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 	}
 
-	onSubmit = (): false | undefined => {
+	onSubmit = (onlySchemaValidations?: "onlySchemaValidations"): false | undefined => {
+		const _onlySchemaValidations = onlySchemaValidations === "onlySchemaValidations";
+
 		const {uiSchema} = this.props;
 		if (uiSchema["ui:disabled"] || uiSchema["ui:readonly"]) {
 			return false;
@@ -906,7 +924,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		})).then(() => {
 			this.popBlockingLoader();
 			this.setState({runningSubmitHooks: false});
-			this.validateAndSubmit();
+			this.validateAndSubmit(!_onlySchemaValidations, _onlySchemaValidations);
 		}).catch(() => {
 			this.setState({runningSubmitHooks: false});
 			this.popBlockingLoader();
@@ -939,6 +957,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	submit = () => {
 		this.onSubmit();
+	}
+
+	submitOnlySchemaValidations = () => {
+		this.onSubmit("onlySchemaValidations");
 	}
 
 	getShorcutButtonTooltip = () => {

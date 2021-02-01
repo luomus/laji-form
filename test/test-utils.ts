@@ -89,6 +89,9 @@ export class Form {
 		await this.e("submit()");
 	}
 
+	async submitOnlySchemaValidations() {
+		await this.e("submitOnlySchemaValidations()");
+	}
 
 	waitUntilBlockingLoaderHides(timeout?: number) {
 		return waitUntilBlockingLoaderHides(timeout);

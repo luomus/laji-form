@@ -25,6 +25,10 @@ export default class LajiFormWrapper {
 		this.lajiForm.submit();
 	}
 
+	submitOnlySchemaValidations = () => {
+		this.lajiForm.submitOnlySchemaValidations();
+	}
+
 	setState = (state: LajiFormProps) => {
 		this.app?.setState(state);
 	}
