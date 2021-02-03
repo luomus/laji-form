@@ -84,17 +84,9 @@ export class TagInputComponent extends React.Component {
 	}
 
 	onBlur = (e) => {
-		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(this.props.uiSchema);
-
 		this.setState({focused: false});
 		triggerParentComponent("onBlur", e, this.props);
-		
-		if (separatorKeys.some(v => this.state.value.includes(v))) {
-			this.state.value = this.state.value.split(new RegExp(separatorKeys.join('|'), 'g')).map(val => val.trim());
-			this.props.onChange([...(this.props.tags || []), ...this.state.value], "blur");
-			e.stopPropagation();
-			e.preventDefault();
-		} else if (!isEmptyString(this.state.value) && !separatorKeys.some(v => this.state.value.includes(v))) {
+		if (!isEmptyString(this.state.value)) {
 			this.props.onChange([...(this.props.tags || []), this.state.value], "blur");
 		}
 	}
