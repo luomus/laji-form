@@ -55,14 +55,8 @@ export class TagInputComponent extends React.Component {
 		const {value} = this.state;
 		const {tags = []} = this.props;
 		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(this.props.uiSchema);
-
-		if (separatorKeys.includes(e.key) && !isEmptyString(value) && !separatorKeys.some(v => value.includes(v))) {
+		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
 			this.props.onChange([...tags, value], "enter");
-			e.stopPropagation();
-			e.preventDefault();
-		} else if (!isEmptyString(value) && separatorKeys.some(v => value.includes(v))) {
-			value = value.split(new RegExp(separatorKeys.join('|'), 'g')).map(val => val.trim());
-			this.props.onChange([...tags, ...value], "enter");
 			e.stopPropagation();
 			e.preventDefault();
 		} else if (e.key === "Backspace" && isEmptyString(value) && tags.length) {
@@ -89,6 +83,7 @@ export class TagInputComponent extends React.Component {
 		if (!isEmptyString(this.state.value)) {
 			this.props.onChange([...(this.props.tags || []), this.state.value], "blur");
 		}
+
 	}
 
 	setInputRef = (ref) => {
