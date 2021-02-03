@@ -278,6 +278,10 @@ export default class AutosuggestField extends React.Component {
 
 	isValueSuggested = () => {
 		const {formData, uiSchema} = this.props;
+		const {suggestionValueField} = this.getActiveOptions(getUiOptions(uiSchema));
+		if (suggestionValueField) {
+			return !!parseJSONPointer(formData, suggestionValueField, !!"safe");
+		}
 		for (let fieldName in this.getActiveOptions(getUiOptions(uiSchema)).suggestionReceivers) {
 			if (!formData || !parseJSONPointer(formData, fieldName, !!"safe")) {
 				return false;
