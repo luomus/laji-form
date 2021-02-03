@@ -51,10 +51,15 @@ export class TagInputComponent extends React.Component {
 		return {value};
 	}
 
+	getSeparatorKeys = (uiSchema) => {
+		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(uiSchema);
+		return separatorKeys;
+	}
+
 	onKeyDown = (e) => {
 		const {value} = this.state;
 		const {tags = []} = this.props;
-		const {separatorKeys = ["Enter", ",", ";"]} = getUiOptions(this.props.uiSchema);
+		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
 		if (separatorKeys.includes(e.key) && !isEmptyString(value)) {
 			this.props.onChange([...tags, value], "enter");
 			e.stopPropagation();
@@ -99,10 +104,10 @@ export class TagInputComponent extends React.Component {
 		onInputChange && e.persist();
 		const {target: {value}} = e;
 
-		const {separatorKeys = []} = getUiOptions(this.props.uiSchema);
-		const splitted = separatorKeys.reduce((splitted, separator) => {
-			return splitted.reduce((splitted, i) => i.split(separator), splitted);
-		}, [value]);
+		const separatorKeys = this.getSeparatorKeys(this.props.uiSchema);
+		const splitted = separatorKeys.reduce((splitted, separator) => 
+			splitted.reduce((_splitted, i) => ([..._splitted, ...i.split(separator)]), []),
+		[value]);
 		this.setState({value}, () => {
 			onInputChange && this.props.onInputChange(e);
 			if (splitted.length > 1) {
