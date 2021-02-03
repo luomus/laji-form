@@ -6,7 +6,7 @@ const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/Descript
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
-import LajiForm, { MediaMetadata } from "../LajiForm";
+import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
 const BaseComponent = require("../BaseComponent").default;
 const Spinner = require("react-spinner");
