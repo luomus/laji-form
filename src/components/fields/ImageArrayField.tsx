@@ -7,7 +7,7 @@ import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } fro
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer } from "../../utils";
 const BaseComponent = require("../BaseComponent").default;
 const Spinner = require("react-spinner");
 import exif from "exif-js";
@@ -556,13 +556,15 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					}
 					return path.replace(/^(.*)\/\.\.(.*)/, `$1${containerPath}$2`);
 				};
-				formData = Object.keys(sideEffects).reduce((formData, field) =>
-					updateFormDataWithJSONPointer({schema, registry: this.props.registry, formData},
-						sideEffects[field],
-						parseRelativePaths(field, containerPath)
-					),
-				formData
-				);
+				formData = Object.keys(sideEffects).reduce((formData, field) => {
+					const jsonPointer =  parseRelativePaths(field, containerPath);
+					return !isDefaultData(parseJSONPointer(formData, jsonPointer), parseSchemaFromFormDataPointer(schema, jsonPointer))
+						? formData
+						: updateFormDataWithJSONPointer({schema, registry: this.props.registry, formData},
+							sideEffects[field],
+							parseRelativePaths(field, containerPath)
+						);
+				}, formData);
 			}
 			if (formData !== lajiFormFormData) {
 				lajiFormInstance.onChange({formData});
