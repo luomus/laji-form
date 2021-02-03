@@ -122,20 +122,15 @@ http://localhost:8083?id=MHL.1&localFormData=true Line transect form with local 
 
 ## Tests ##
 
-Install protractor with: 
+You need to update the webdriver before testing: 
 
 ```
-npm i -g protractor
 webdriver-manager update
 ```
 
-The playground server and the Selenium server must be running before running the tests. Start the Selenium server with:
+The playground server must be running before running the tests.
 
-```
-webdriver-manager start
-```
-
-Then run the tests with `npm test`.
+Run the tests with `npm test`.
 
 ### Test parameters ###
 

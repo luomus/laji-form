@@ -27,12 +27,13 @@ const _testWidget = (form: Form) => async (path: string, type?: string) => {
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(widget.$$("li").first()), 300, "enum list didn't appear on widget click");
 		$secondOption = widget.$$("li").get(1);
 		$otherOptionThanActive = (await $secondOption.getAttribute("class")).includes("rw-state-selected")
-			? widget.$$("li").get(0)
+			? widget.$$("li").first()
 			: $secondOption;
 		await $otherOptionThanActive.click();
 		break;
 	case "date":
 		widget = form.getDateWidget(path).$input;
+		await widget.click();
 		await widget.sendKeys("1.1.2019");
 		await widget.sendKeys(protractor.Key.TAB);
 		break;
@@ -483,9 +484,9 @@ describe("Trip report (JX.519)", () => {
 		it("adding image in background", async () => {
 			await $unitAdd.click();
 			const {resolve, remove} = await form.mockImageUpload("gatherings.0.units.1");
-			await form.$locate("gatherings.0.units.0").click();
+			await form.$locate("gatherings.0.units.0").$$("td").first().click();
 			await resolve();
-			await form.$locate("gatherings.0.units.1").click();
+			await form.$locate("gatherings.0.units.1").$$("td").first().click();
 
 			expect(await form.getImageArrayField("gatherings.0.units.1").$$imgs.count()).toBe(1);
 			await remove();
@@ -495,7 +496,7 @@ describe("Trip report (JX.519)", () => {
 		it("removing unit with image loading", async () => {
 			await $unitAdd.click();
 			const {resolve, remove} = await form.mockImageUpload("gatherings.0.units.1");
-			await form.$locate("gatherings.0.units.0").click();
+			await form.$locate("gatherings.0.units.0").$$("td").first().click();
 			await removeUnit(0, 1);
 			await resolve();
 			await remove();

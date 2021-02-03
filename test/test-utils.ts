@@ -89,6 +89,9 @@ export class Form {
 		await this.e("submit()");
 	}
 
+	async submitOnlySchemaValidations() {
+		await this.e("submitOnlySchemaValidations()");
+	}
 
 	waitUntilBlockingLoaderHides(timeout?: number) {
 		return waitUntilBlockingLoaderHides(timeout);
@@ -308,32 +311,6 @@ export async function removeUnit(gatheringIdx: number, unitIdx: number) {
 	return $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
 }
 
-const _mockGeo = (lat: number, lon: number) => `window.navigator.geolocation.getCurrentPosition =
-	function (success, error) {
-		success({
-			coords : {
-				latitude: ${lat},
-				longitude: ${lon}
-			}
-		})
-	}
-`;
-
-export const mockGeo = (lat: number, lon: number) => browser.executeScript(_mockGeo(lat, lon));
-
-const _mockGeoError = (code?: string) => `window.navigator.geolocation.getCurrentPosition =
-	function (success, error) {
-		error({
-			code: ${code},
-			PERMISSION_DENIED: 1,
-			POSITION_UNAVAILABLE: 2,
-			TIMEOUT: 3
-		});
-	}
-`;
-
-export const mockGeoError = (code?: string) => browser.executeScript(_mockGeoError(code));
-
 export async function getWidget(str: string): Promise<ElementFinder> {
 	const $afterLabel = $(`${lajiFormLocator(str)} > div > div`);
 	if (await $afterLabel.isPresent()) {
@@ -351,8 +328,12 @@ export async function getWidget(str: string): Promise<ElementFinder> {
 }
 
 export const updateValue = async ($input: ElementFinder, value: string, blur = true): Promise<void> => {
-	const current = await $input.getAttribute("value");
-	await $input.sendKeys("\b".repeat((current || "").length) + value);
+	const current = await $input.getAttribute("value") || "";
+	await $input.click();
+	for (let i = 0; i < current.length; i++) {
+		await $input.sendKeys(protractor.Key.BACK_SPACE);
+	}
+	await $input.sendKeys(value);
 	if (blur) {
 		return $input.sendKeys(protractor.Key.TAB);
 	}

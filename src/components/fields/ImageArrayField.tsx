@@ -6,11 +6,10 @@ const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/Descript
 import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
-import LajiForm from "../LajiForm";
+import LajiForm, { MediaMetadata } from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName } from "../../utils";
 const BaseComponent = require("../BaseComponent").default;
 const Spinner = require("react-spinner");
-const equals = require("deep-equal");
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import * as moment from "moment";
@@ -34,6 +33,12 @@ interface ProcessedFile {
 
 interface ImageArrayFieldState extends MediaArrayState {
 	modalMediaSrc: string;
+}
+
+interface MediaMetadataSchema {
+	capturerVerbatim?: string[],
+	intellectualOwner?: string,
+	intellectualRights?: string
 }
 
 @MediaArrayField
@@ -196,25 +201,10 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		componentDidMount() {
 			this.mounted = true;
-			const settings = this.props.formContext.settings || {};
-			if (settings && settings.defaultImageMetadata) {
-				this._context.defaultMetadata = settings.defaultImageMetadata;
-			}
-			this.mainContext.addSettingSaver("defaultImageMetadata", () => {
-				return this._context.defaultMetadata;
-			}, !!"global");
-		}
-
-		onSettingsChange = (defaultMetadata: any) => {
-			if (!equals(this._context.defaultMetadata, defaultMetadata)) {
-				this._context.defaultMetadata = defaultMetadata;
-				this.mainContext.onSettingsChange(!!"global");
-			}
 		}
 
 		componentWillUnmount() {
 			this.mounted = false;
-			this.mainContext.removeSettingSaver("defaultMetadata", !!"global");
 		}
 
 		componentDidUpdate(prevProps: FieldProps, prevState: MediaArrayState) {
@@ -271,7 +261,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								          onDragEnter={this.onDragEnter}
 								          onDragLeave={this.onDragLeave}
 								          onDrop={this.onDrop}
-								          disabled={readonly || disabled} >
+										  disabled={readonly || disabled}
+									  >
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
 										const onClick = addModal ? this.defaultOnClick : _onClick;
@@ -696,7 +687,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 			}).then(response => {
 				if (!response) return;
-				return this.getDefaultMetadataPromise().then(defaultMetadata => {
+				return this.getMetadataPromise().then(mediaMetadata => {
 					return Promise.all(response.map((item: any) => {
 						return this.apiClient.fetchRaw(`/${this.ENDPOINT}/${item.id}`, undefined, {
 							method: "POST",
@@ -704,7 +695,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								"accept": "application/json",
 								"content-type": "application/json"
 							},
-							body: JSON.stringify(defaultMetadata)
+							body: JSON.stringify(mediaMetadata)
 						}).then(response => {
 							if (response.status < 400) {
 								return response.json();
@@ -773,41 +764,29 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				} else {
 					notify();
 				}
-				this.onSettingsChange({
-					intellectualRights: formData.intellectualRights,
-					capturerVerbatim: formData.capturerVerbatim,
-					intellectualOwner: formData.intellectualOwner
-				});
 			}).catch(() => {
 				this.mainContext.popBlockingLoader();
 				this.mounted && this.setState({metadataSaveSuccess: false});
 			});
 		}
 
-		getDefaultMetadataPromise = () => {
-			let defaultMetadata = this._context.defaultMetadata || {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
+		getMetadataPromise = (): Promise<MediaMetadataSchema> => {
+			let mediaMetadata : any =
+				this.props.formContext.mediaMetadata
+				|| {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
 			const MACode = this.props.formContext.uiSchemaContext.creator;
 
-			return !defaultMetadata.capturerVerbatim && MACode !== undefined ?
-				this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName}) => {
-					const name = fullName || MACode;
-					defaultMetadata = {
-						...defaultMetadata,
-						capturerVerbatim: Array.isArray(name) ? name : [name],
-						intellectualOwner: name
-					};
-					this.onSettingsChange(defaultMetadata);
-					return defaultMetadata;
-				}).catch(() => {
-					return new Promise(resolve => {
-						this.onSettingsChange(defaultMetadata);
-						resolve(defaultMetadata);
-					});
-				}) :
-				new Promise(resolve => {
-					this.onSettingsChange(defaultMetadata);
-					resolve(defaultMetadata);
-				});
+			return ("capturerVerbatim" in mediaMetadata)
+				? Promise.resolve({...mediaMetadata, capturerVerbatim: [mediaMetadata.capturerVerbatim]})
+				: MACode
+					? this.apiClient.fetchCached(`/person/by-id/${MACode}`).then(({fullName = MACode}) => (
+						{
+							capturerVerbatim: Array.isArray(fullName) ? fullName : [fullName],
+							...mediaMetadata,
+							intellectualOwner: fullName
+						}
+					)).catch(() => Promise.resolve(mediaMetadata))
+					: mediaMetadata;
 		}
 
 		getMaxFileSizeAsString = () => {

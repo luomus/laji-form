@@ -22,41 +22,31 @@
         "$.gatherings[*].gatheringFact.sunniness",
         "$.gatherings[*].units"
     ],
-    "features": [
-        "MHL.featureNamedPlace",
-        "MHL.featureAdminister",
-        "MHL.featureRestrictAccess",
-        "MHL.featureCopyLatestDocumentToNamedPlace",
-        "MHL.featureEmptyOnNoCount"
-    ],
     "id": "MHL.59",
-    "instructions": {
-        "en": "https://laji.fi/about/3572",
-        "fi": "https://laji.fi/about/3572",
-        "sv": "https://laji.fi/about/3572"
-    },
     "language": "fi",
-    "logo": "http://cms.laji.fi/wp-content/uploads/2020/05/paivaperhosseuranta-syke-vihko-logo.jpg",
+    "logo": "https://cms.laji.fi/wp-content/uploads/2020/05/paivaperhosseuranta-syke-vihko-logo.jpg",
     "name": "SYKE p\u00e4iv\u00e4perhoset",
-    "namedPlaceOptions": {
-        "headerFields": [
-            "name"
-        ],
-        "infoFields": [
-            "municipality",
-            "locality"
-        ]
-    },
-    "prepopulatedDocument": {
-        "gatherings": [
-            {
-                "section": 1,
-                "units": []
-            },
-            {
-                "units": []
-            }
-        ]
+    "options": {
+        "emptyOnNoCount": true,
+        "hasAdmins": true,
+        "instructions": {
+            "en": "https://laji.fi/about/3572",
+            "fi": "https://laji.fi/about/3572",
+            "sv": "https://laji.fi/about/3572"
+        },
+        "namedPlaceOptions": {
+            "copyLatestDocumentToNamedPlace": true,
+            "headerFields": [
+                "name"
+            ],
+            "infoFields": [
+                "municipality",
+                "locality"
+            ]
+        },
+        "restrictAccess": "MHL.restrictAccessStrict",
+        "useNamedPlaces": true,
+        "warnEditingOldDocument": true
     },
     "schema": {
         "properties": {
@@ -93,15 +83,15 @@
                         "enumNames": [
                             "",
                             "Ei tietoa",
-                            "T\u00e4ysin pilvet\u00f6nt\u00e4",
-                            "Noin 1/8 taivaasta pilvien peitossa",
-                            "Noin nelj\u00e4nnes taivaasta pilvess\u00e4",
-                            "Noin 3/8 taivaasta pilvess\u00e4",
-                            "Puolet taivaasta pilvess\u00e4",
-                            "Noin 5/8 taivaasta pilvess\u00e4",
-                            "Noin \u00be taivaasta pilvess\u00e4",
-                            "Taivas l\u00e4hes pilvess\u00e4 (7/8)",
-                            "T\u00e4ysin pilvist\u00e4"
+                            "0 -T\u00e4ysin pilvet\u00f6nt\u00e4",
+                            "1 - Noin 1/8 taivaasta pilvien peitossa",
+                            "2 - Noin \u00bc taivaasta pilvess\u00e4",
+                            "3 - Noin 3/8 taivaasta pilvess\u00e4",
+                            "4 - Puolet taivaasta pilvess\u00e4",
+                            "5 - Noin 5/8 taivaasta pilvess\u00e4",
+                            "6 - Noin \u00be taivaasta pilvess\u00e4",
+                            "7 - Taivas l\u00e4hes pilvess\u00e4 (7/8)",
+                            "8 - T\u00e4ysin pilvist\u00e4"
                         ],
                         "excludeFromCopy": true,
                         "title": "Pilvisyys lopetettaessa",
@@ -124,15 +114,15 @@
                         "enumNames": [
                             "",
                             "Ei tietoa",
-                            "T\u00e4ysin pilvet\u00f6nt\u00e4",
-                            "Noin 1/8 taivaasta pilvien peitossa",
-                            "Noin nelj\u00e4nnes taivaasta pilvess\u00e4",
-                            "Noin 3/8 taivaasta pilvess\u00e4",
-                            "Puolet taivaasta pilvess\u00e4",
-                            "Noin 5/8 taivaasta pilvess\u00e4",
-                            "Noin \u00be taivaasta pilvess\u00e4",
-                            "Taivas l\u00e4hes pilvess\u00e4 (7/8)",
-                            "T\u00e4ysin pilvist\u00e4"
+                            "0 -T\u00e4ysin pilvet\u00f6nt\u00e4",
+                            "1 - Noin 1/8 taivaasta pilvien peitossa",
+                            "2 - Noin \u00bc taivaasta pilvess\u00e4",
+                            "3 - Noin 3/8 taivaasta pilvess\u00e4",
+                            "4 - Puolet taivaasta pilvess\u00e4",
+                            "5 - Noin 5/8 taivaasta pilvess\u00e4",
+                            "6 - Noin \u00be taivaasta pilvess\u00e4",
+                            "7 - Taivas l\u00e4hes pilvess\u00e4 (7/8)",
+                            "8 - T\u00e4ysin pilvist\u00e4"
                         ],
                         "excludeFromCopy": true,
                         "title": "Pilvisyys alkaessa",
@@ -254,6 +244,7 @@
                             "properties": {
                                 "sunniness": {
                                     "excludeFromCopy": true,
+                                    "minimum": 0,
                                     "title": "Aurinkoisuus %",
                                     "type": "integer"
                                 },
@@ -289,6 +280,7 @@
                             "type": "object"
                         },
                         "section": {
+                            "minimum": 0,
                             "title": "Lohko",
                             "type": "integer"
                         },
@@ -316,6 +308,7 @@
                                         "type": "array"
                                     },
                                     "individualCount": {
+                                        "minimum": 0,
                                         "title": "Yksil\u00f6m\u00e4\u00e4r\u00e4",
                                         "type": "integer"
                                     },
@@ -347,6 +340,7 @@
         ],
         "type": "object"
     },
+    "shortTitle": "SYKE P\u00e4iv\u00e4perhoset",
     "supportedLanguage": [
         "fi"
     ],
@@ -439,6 +433,9 @@
             "ui:functions": [
                 {
                     "ui:field": "FakePropertyField",
+                    "ui:injections": {
+                        "/ui:options/fields/geometry/formData": "/placeholderGeometry"
+                    },
                     "ui:options": {
                         "fields": {
                             "geometry": {
@@ -452,9 +449,6 @@
                                     "ui:readonly": true
                                 }
                             }
-                        },
-                        "injections": {
-                            "/ui:options/fields/geometry/formData": "/placeholderGeometry"
                         }
                     }
                 },
@@ -1337,8 +1331,6 @@
                                                                     "MX.62342",
                                                                     "MX.62341",
                                                                     "MX.62331",
-                                                                    "MX.62333",
-                                                                    "MX.62335",
                                                                     "MX.62328",
                                                                     "MX.62322",
                                                                     "MX.62324",
@@ -1348,6 +1340,8 @@
                                                                     "MX.62321",
                                                                     "MX.62326",
                                                                     "MX.62327",
+                                                                    "MX.62333",
+                                                                    "MX.62335",
                                                                     "MX.62488",
                                                                     "MX.62487",
                                                                     "MX.62442",
@@ -2005,8 +1999,9 @@
                                 "arrayPath": "#/gatherings/0/units",
                                 "key": "/identifications/0/taxonID",
                                 "message": {
-                                    "isDuplicate": "Taksoni %{value} on ilmoitettu moneen kertaan."
+                                    "isDuplicate": " {value} on ilmoitettu moneen kertaan."
                                 },
+                                "messageKey": "/identifications/0/taxonVerbatim",
                                 "secondaryKey": "/unitFact/autocompleteSelectedTaxonID"
                             }
                         }

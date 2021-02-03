@@ -21,7 +21,7 @@ export default class _SchemaField extends React.Component {
 	updateVirtualInstance = (props, initial) => {
 		const virtualizedProps = ["ui:functions", "ui:childFunctions", "ui:annotations"];
 		if ([props, this.props].some(_props => _props.uiSchema && virtualizedProps.some(prop => _props.uiSchema[prop])) &&
-		    (initial || !deepEquals([this.props, props]))) {
+		    (initial || !deepEquals(this.props, props))) {
 			this.functionOutputProps = this.applyFunction(props);
 		}
 	}
@@ -60,19 +60,15 @@ export default class _SchemaField extends React.Component {
 
 		if (!functions.length) return props;
 
-		let _props = {...props, uiSchema: _uiSchema, formContext: props.registry.formContext};
+		let _props = {...props, uiSchema: _uiSchema};
 		let [uiFn, ...restUiFns] = functions;
 
-		if (
-			uiFn["ui:field"] !== "ContextInjectionField" &&
-			uiFn["ui:field"] !== "InjectField" &&
-			getUiOptions(uiFn).injections
-		) {
-			const {injections} = uiFn["ui:options"];
+		const {"ui:injections": injections} = uiFn;
+		if (injections) {
 			const injectedUiSchema = getInjectedUiSchema(uiFn, injections, props.registry.formContext.uiSchemaContext);
 			uiFn = {
 				...injectedUiSchema,
-				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+				"ui:injections": undefined
 			};
 		}
 
@@ -115,7 +111,8 @@ export default class _SchemaField extends React.Component {
 
 	render() {
 		const props = this.functionOutputProps || this.props;
-		let {schema, uiSchema = {}, registry} = props;
+		let {schema, uiSchema = {}, formContext, registry, ..._props} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {formContext: _formContext} = registry;
 
 		if (schema.uniqueItems && schema.items.enum && !isMultiSelect(schema, uiSchema) && schema.uniqueItems) {
 			schema = {...schema, uniqueItems: false};
@@ -126,28 +123,34 @@ export default class _SchemaField extends React.Component {
 			schema = {...schema, title: options.label};
 		}
 
-		if (
-			uiSchema["ui:field"] &&
-			uiSchema["ui:field"] !== "ContextInjectionField" &&
-			uiSchema["ui:field"] !== "InjectField" &&
-			uiSchema["ui:options"] &&
-			uiSchema["ui:options"].injections
-		) {
-			const {injections} = uiSchema["ui:options"];
-			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, props.registry.formContext.uiSchemaContext);
+		const {"ui:injections": injections} = uiSchema;
+		if (injections) {
+			const injectedUiSchema = getInjectedUiSchema(uiSchema, injections, _formContext.uiSchemaContext);
 			uiSchema = {
 				...injectedUiSchema,
-				"ui:options": {...injectedUiSchema["ui:options"], injections: undefined}
+				"ui:injections": undefined
 			};
 		}
 
-		// Reset ArrayFieldTemplate
+		// Reset ArrayFieldTemplate.
 		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
 			registry = {...registry, ArrayFieldTemplate};
 		}
 
+		// Remove unnecessary formDataTransformers in order to prevent unnecessary rendering.
+		if (_formContext && _formContext.formDataTransformers && _formContext.formDataTransformers.length) {
+			const removeIdxs = /\d+_?/g;
+			const idWithoutIdxs = this.props.idSchema.$id.replace(removeIdxs, "");
+			const filtered = _formContext.formDataTransformers.filter(({targets}) => 
+				targets.some(target => target.replace(removeIdxs, "").startsWith(idWithoutIdxs))
+			);
+			if (filtered.length !== _formContext.formDataTransformers.length) {
+				registry = {...registry, formContext: {..._formContext, formDataTransformers: filtered}};
+			}
+		}
+
 		return <SchemaField
-			{...props}
+			{..._props}
 			registry={registry}
 			schema={schema}
 			uiSchema={uiSchema}

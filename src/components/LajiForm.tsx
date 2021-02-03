@@ -165,6 +165,7 @@ export interface LajiFormProps {
 	validators?: any;
 	warnings?: any;
 	onSettingsChange?: (settings: any, global: boolean) => void;
+	mediaMetadata: MediaMetadata
 }
 
 export interface LajiFormState {
@@ -175,6 +176,12 @@ export interface LajiFormState {
 	extraErrors?: any;
 	error?: boolean;
 	runningSubmitHooks?: boolean;
+}
+
+export interface MediaMetadata {
+	capturerVerbatim: string;
+	intellectualOwner: string;
+	intellectualRights: string;
 }
 
 export interface FormContext {
@@ -193,8 +200,9 @@ export interface FormContext {
 	notifier: Notifier;
 	apiClient: ApiClient;
 	Label: React.Component;
-	formDataTransformers?: any[]
-	_parentLajiFormId?: number
+	formDataTransformers?: any[];
+	_parentLajiFormId?: number;
+	mediaMetadata?: MediaMetadata;
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -588,7 +596,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
 				apiClient: this.apiClient,
-				Label: (props.fields || {}).Label || Label
+				Label: (props.fields || {}).Label || Label,
+				mediaMetadata: props.mediaMetadata
 			}
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
@@ -810,12 +819,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		);
 	}
 
-	validateAndSubmit = (warnings = true) => {
+	validateAndSubmit = (warnings = true, onlySchema = false) => {
 		const {formData} = this.state;
-		const {onSubmit, onValidationError} = this.props;
-		return this.validate(warnings, true).then((valid) => {
+		const {onValidationError, onSubmit} = this.props;
+		return this.validate(warnings, true, onlySchema).then((valid) => {
 			if (formData !== this.state.formData) {
-				this.validateAndSubmit(warnings);
+				this.validateAndSubmit(warnings, onlySchema);
 			} else if (valid) {
 				onSubmit && onSubmit({formData: this.removeLajiFormIds(formData)});
 			} else {
@@ -825,38 +834,54 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	}
 
-	validate = (warnings = true, nonlive = true) => {
+	validate = (warnings = true, nonlive = true, onlySchema = false) => {
 		this.validating = true;
+
+		let live = true;
+		if (onlySchema) {
+			warnings = false;
+			nonlive = false;
+			live = false;
+		}
+
+		const block = nonlive || onlySchema;
+		
 		const {formData} = this.state;
 		const {live: liveErrorValidators, rest: errorValidators} = splitLive(this.props.validators, this.props.schema.properties);
 		const {live: liveWarningValidators, rest: warningValidators} = splitLive(this.props.warnings, this.props.schema.properties);
-		const liveValidations = {errors: liveErrorValidators} as {errors: any, warnings: any};
+		let liveValidations = {errors: liveErrorValidators} as {errors: any, warnings: any};
 		const validations = {} as {errors: any, warnings: any};
-		if (nonlive) {
+		if (!onlySchema && nonlive) {
 			validations.errors = errorValidators;
 		}
-		if (warnings) {
+		if (!onlySchema && warnings) {
 			liveValidations.warnings = liveWarningValidators;
 			if (nonlive) {
 				validations.warnings = warningValidators;
 			}
 		}
-		const schemaErrors = nonlive
+		if (!live) {
+			liveValidations = {} as {errors: any, warnings: any};
+		}
+		const schemaErrors = nonlive || onlySchema
 			? validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
 			: {};
-		nonlive && this.pushBlockingLoader();
+		block && this.pushBlockingLoader();
 		return new Promise(resolve =>
 			Promise.all([validate(validations, formData), validate(liveValidations, formData)]).then(([_validations, _liveValidations]) => {
-				if (nonlive) {
+				if (nonlive || onlySchema) {
 					this.cachedNonliveValidations = merge(schemaErrors, _validations);
-					nonlive && this.popBlockingLoader();
+					block && this.popBlockingLoader();
 				}
-				const merged = merge(_liveValidations, !nonlive ? (this.cachedNonliveValidations || {}) : merge(_validations, schemaErrors)) as any;
+				const merged = merge(_liveValidations, !nonlive
+					? (this.cachedNonliveValidations || {})
+					: merge(_validations, schemaErrors)
+				) as any;
 				this.validating = false;
 				resolve(!Object.keys(merged).length);
 				!equals(this.state.extraErrors, merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
 			}).catch((e) => {
-				nonlive && this.popBlockingLoader();
+				block && this.popBlockingLoader();
 
 				throw e;
 			})
@@ -879,7 +904,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 	}
 
-	onSubmit = (): false | undefined => {
+	onSubmit = (onlySchemaValidations?: "onlySchemaValidations"): false | undefined => {
+		const _onlySchemaValidations = onlySchemaValidations === "onlySchemaValidations";
+
 		const {uiSchema} = this.props;
 		if (uiSchema["ui:disabled"] || uiSchema["ui:readonly"]) {
 			return false;
@@ -897,7 +924,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		})).then(() => {
 			this.popBlockingLoader();
 			this.setState({runningSubmitHooks: false});
-			this.validateAndSubmit();
+			this.validateAndSubmit(!_onlySchemaValidations, _onlySchemaValidations);
 		}).catch(() => {
 			this.setState({runningSubmitHooks: false});
 			this.popBlockingLoader();
@@ -930,6 +957,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	submit = () => {
 		this.onSubmit();
+	}
+
+	submitOnlySchemaValidations = () => {
+		this.onSubmit("onlySchemaValidations");
 	}
 
 	getShorcutButtonTooltip = () => {
@@ -1020,7 +1051,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	onKeyDown = (e: KeyboardEvent) => {
-		if ("keyTimeouts" in this._context && this._context.keyTimeouts) {
+		if (this._context.keyTimeouts) {
 			this._context.keyTimeouts.forEach(timeout => clearTimeout(timeout));
 		}
 		this._context.keyTimeouts = [];
@@ -1039,7 +1070,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			.map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
 
-		const handled = order.some(id => this._context.keyHandleListeners[id] && this._context.keyHandleListeners[id].some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
+		const handled = order.some(id => this._context.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
 
 		const activeElement = document.activeElement;
 		if (!handled && e.key === "Enter" && (!activeElement || (activeElement.tagName.toLowerCase() !== "textarea" && !activeElement.className.includes("laji-map-input")))) {

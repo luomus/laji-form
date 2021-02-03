@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "6.1.2",
+  "version": "7.2.0",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/app.js",
   "types": "lib/app.d.ts",
@@ -12,12 +12,14 @@
     "build:dist": "rimraf dist && NODE_ENV=production webpack --config webpack.config.dist.js && rimraf dist/styles.js",
     "build:tests": "rimraf test-export && NODE_ENV=production tsc -p tsconfig.test.json",
     "build": "npm run build:lib && npm run build:dist && npm run build:tests",
-    "preversion": "npm run lint && npm test",
+    "preversion": "npm run lint && npm run test:multi",
     "version": "bin/update-changelog.sh",
     "postversion": "npm run build && npm publish && git push",
     "lint": "eslint -c .eslintrc.prod.json src playground",
-    "test": "HOST=127.0.0.1 PORT=8083 TEST_BROWSER=chrome protractor protractor.conf.js",
-    "test:debug": "HOST=127.0.0.1 PORT=8083 TEST_BROWSER=chrome HEADLESS=false node --inspect-brk node_modules/protractor/bin/protractor protractor.conf.js"
+    "test": "HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
+    "test:multi": "TEST_BROWSER=multi HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
+    "test:ffox": "TEST_BROWSER=firefox HOST=127.0.0.1 PORT=8083 protractor protractor.conf.js",
+    "test:debug": "HOST=127.0.0.1 PORT=8083 HEADLESS=false node --inspect-brk node_modules/protractor/bin/protractor protractor.conf.js"
   },
   "keywords": [
     "react-jsonschema-form",
@@ -25,7 +27,7 @@
     "luomus"
   ],
   "author": "Olli Raitio <olli.raitio@helsinki.fi>",
-  "repository": "https://bitbucket.org/luomus/laji-form.js.git",
+  "repository": "https://github.com/luomus/laji-form.git",
   "license": "MIT",
   "dependencies": {
     "@rjsf/core": "git+https://git@github.com/olzraiti/react-jsonschema-form.git#602ef4ceab632efa5124699115188b8fddabd0a3",
@@ -44,7 +46,6 @@
     "moment": "*",
     "prop-types": "^15.5.8",
     "react": "~16.8.6",
-    "react-autosuggest": "^9.3.2",
     "react-bootstrap": "git+https://git@github.com/olzraiti/react-bootstrap.git#927b8f7a33ba1262b8a59cf236f612f5b5e2130c",
     "react-bootstrap-switch": "^15.0.4",
     "react-dom": "~16.8.6",
@@ -70,7 +71,6 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "file-loader": "^6.0.0",
-    "jasmine-spec-reporter": "^4.2.1",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.10.0",
     "notus": "^0.3.2",

@@ -29,7 +29,8 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
 
-	return filtered;
+	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
+	return addLajiFormIds(filtered, tmpIdTree, false)[0];
 };
 
 export function onArrayFieldChange(formData, props) {

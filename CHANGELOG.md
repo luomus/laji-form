@@ -1,3 +1,12 @@
+## 7.2.0
+* Add `submitOnlySchemaValidations`
+
+## 7.1.0
+* Add `mediaMetadata` prop, which replaces `defaultImageMetadata` in settings (breaking change! Accidentally released as feature release)
+
+## 7.0.0
+* Globally interpreted `[test].injections` moved to `ui:injections`
+
 ## 6.1.0
 * Add `tag` option to `PlainTextWidget`
 
@@ -23,7 +32,6 @@
 
 ## 5.4.0
 * remove `getTaxonAutocompleteHTMLString` method from ApiClient
-
 
 ## 5.3.0
 * add `getTaxonAutocompleteHTMLString` method for ApiClient

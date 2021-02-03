@@ -1181,3 +1181,5 @@ export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: stri
 		return _title;
 	}, title);
 }
+
+export const classNames = (...cs: any[]) => cs.filter(s => typeof s === "string").join(" ");

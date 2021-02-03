@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import BaseComponent from "../BaseComponent";
-import { getUiOptions, focusNextInput } from "../../utils";
+import { getUiOptions } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
 import Context from "../../Context";
@@ -69,22 +69,17 @@ export default class EnumRangeArrayField extends React.Component {
 		);
 	}
 
-	onInputChange = (e, autosuggestEvent) => {
-		const {newValue: value} = autosuggestEvent;
-
-		if (autosuggestEvent.method !== "click") {
-			this.setState({value});
-		} else {
-			this.setState({value: ""});
-			if (!focusNextInput(this.props.formContext.getFormRef(), document.getElementById(this.props.idSchema.$id))) {
-				const tagComponent = this.autosuggestRef.inputElem;
-				const tagComponentElem = findDOMNode(tagComponent);
-				const input = tagComponentElem.querySelector("input");
-				if (input) {
-					input.focus();
-				}
+	onInputChange = ({target: {value}}, reason, callback) => {
+		this.setState({value: value}, callback);
+		if (reason === "click") {
+			const tagComponent = this.autosuggestRef.autosuggestRef.inputElem;
+			const tagComponentElem = findDOMNode(tagComponent);
+			const input = tagComponentElem.querySelector("input");
+			if (input) {
+				input.focus();
 			}
 		}
+		return value;
 	}
 
 	onSuggestionSelected = (suggestion) => {
@@ -93,7 +88,7 @@ export default class EnumRangeArrayField extends React.Component {
 		});
 	}
 
-	onConfirmUnsuggested = (value) => {
+	onUnsuggestedSelected = (value) => {
 		this.setState({value: ""}, () => {
 			this.onChange([...(this.props.formData || []), value], "unsuggested selected");
 		});
@@ -120,7 +115,7 @@ class EnumRangeInputInjection extends React.Component {
 	}
 
 	onInputChange = e => {
-		this.props.onChange(e, {newValue: e.target.value});
+		this.props.onChange(e);
 	}
 
 	onChange = (tags, reason) => {

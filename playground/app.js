@@ -140,11 +140,11 @@ if (test !== true) {
 			: schemas.settings,
 		formData: query.localFormData
 			? require(`../forms/${localFormData === true ? id : localFormData}.formData.json`)
-			: data.prepopulatedDocument
+			: data.options && data.options.prepopulatedDocument
 				? {
-					...data.prepopulatedDocument,
+					...data.options.prepopulatedDocument,
 					gatheringEvent: {
-						...(data.prepopulatedDocument.gatheringEvent || {}),
+						...(data.options.prepopulatedDocument.gatheringEvent || {}),
 						...ownerFilledFormData.gatheringEvent
 					}
 				}
@@ -155,7 +155,8 @@ if (test !== true) {
 			isAdmin: query.isAdmin,
 			isEdit: query.isEdit,
 			municipalityEnum:  require("./municipalityEnum.json"),
-			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json")
+			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json"),
+			birdAssociationAreaEnum:  require("./birdAssociationAreaEnum.json")
 		},
 		onSubmit,
 		onError: log("errors"),
@@ -164,6 +165,11 @@ if (test !== true) {
 		googleApiKey: properties.googleApiKey,
 		notifier,
 		optimizeOnChange: true,
+		mediaMetadata: {
+			intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0",
+			capturerVerbatim: "Test",
+			intellectualOwner: "Test"
+		}
 	}));
 }
 

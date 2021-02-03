@@ -1,5 +1,6 @@
 import { Form, createForm, updateValue, waitUntilBlockingLoaderHides } from "./test-utils";
 const properties = require("../properties.json");
+import { browser } from "protractor";
 
 describe("Validations", () => {
 
@@ -60,6 +61,7 @@ describe("Validations", () => {
 
 		expect(await form.errors.$$all.count()).toBe(0);
 
+
 		await form.submit();
 
 		expect(await form.errors.$$all.count()).toBe(1);
@@ -90,6 +92,7 @@ describe("Validations", () => {
 			const warnings = getCustom();
 			await form.setState({ schema, formData, warnings });
 			await form.submit();
+			await waitUntilBlockingLoaderHides();
 			await form.$acknowledgeWarnings.click();
 
 			expect(await form.getSubmittedData()).toEqual(formData);
@@ -142,6 +145,7 @@ describe("Validations", () => {
 		await form.setState({ schema, formData, validators, warnings });
 		await updateValue(form.$getInputWidget("a"), "");
 		await form.submit();
+		await waitUntilBlockingLoaderHides();
 
 		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
 		expect(await form.errors.$$all.get(0).getText()).toBe(message);
@@ -164,6 +168,7 @@ describe("Validations", () => {
 		await form.setState({ schema, formData, validators, warnings });
 		await updateValue(form.$getInputWidget("a"), "");
 		await form.submit();
+		await waitUntilBlockingLoaderHides();
 
 		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
 		expect(await form.errors.$$all.get(0).getText()).toBe(message);
@@ -389,4 +394,34 @@ describe("Validations", () => {
 		await remove();
 	});
 
+	describe("Custom validation bypass", () => {
+		it("skips custom errors and warnings", async () => {
+			const validators = getCustom(message);
+			await form.setState({ schema, formData, validators, warnings: validators });
+			await form.submitOnlySchemaValidations();
+			await form.waitUntilBlockingLoaderHides();
+
+			expect(await form.errors.$$all.count()).toBe(0);
+			expect(await form.warnings.$$all.count()).toBe(0);
+		});
+
+		it("skips live errors and live warnings", async () => {
+			const validators = getCustom(message, "live");
+			await form.setState({ schema, formData, validators, warnings: validators });
+			await form.submitOnlySchemaValidations();
+			await form.waitUntilBlockingLoaderHides();
+
+			expect(await form.errors.$$all.count()).toBe(0);
+			expect(await form.warnings.$$all.count()).toBe(0);
+		});
+
+		it("runs schema validations", async () => {
+			form = await createForm();
+			await form.setState({ schema: {...schema, required: ["a"]}, formData });
+			await form.submitOnlySchemaValidations();
+			await form.waitUntilBlockingLoaderHides();
+
+			expect(await form.errors.$$all.count()).toBe(1);
+		});
+	});
 });
