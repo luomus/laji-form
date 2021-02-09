@@ -765,7 +765,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					<div>
 						{this.props.children}
 						{(!this.props.children && this.props.renderSubmit !== false) ? (
-							<Button id="submit" type="submit" disabled={readonly || disabled}>
+							<Button id="submit" onClick={this.submit} disabled={readonly || disabled}>
 								{this.props.submitText || translations.Submit}
 							</Button>
 						) : null}
