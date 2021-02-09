@@ -43,7 +43,7 @@ export default class TextareaWidget extends React.Component {
 	keyFunctions = {
 		textareaRowInsert: () => {
 			if (!this.props.disabled && !this.props.readonly) {
-				this.props.onChange((this.props.value !== undefined ? this.props.value : "") + "\n");
+				this.onChange(this.state.value + "\n");
 				return true;
 			}
 			return false;
@@ -72,7 +72,7 @@ export default class TextareaWidget extends React.Component {
 		this.props.onBlur && this.props.onBlur(e);
 	}
 
-	onChange = ({target: {value}}) => {
+	onChange = (value) => {
 		this.setState({value}, () => {
 			if (!this.focused) {
 				this.props.onChange(value);
@@ -83,6 +83,10 @@ export default class TextareaWidget extends React.Component {
 				}, 1000);
 			}
 		});
+	}
+
+	_onChange = ({target: {value}}) => {
+		this.onChange(value);
 	}
 
 	render() {
@@ -107,7 +111,7 @@ export default class TextareaWidget extends React.Component {
 			rows={options.rows}
 			onFocus={this.onFocus}
 			onBlur={this.onBlur}
-			onChange={this.onChange}
+			onChange={this._onChange}
 		/>;
 
 		return this.state.keyCombo ? (
