@@ -177,7 +177,7 @@ export default class MultiArrayField extends React.Component {
 		if (lengthChange && context.nonGroupedMap) {
 			const changes = {};
 			const changeFrom = {};
-			for (let i = offset + Object.keys(this.groupedItems[idx]).length; i < this.props.formData.length; i++) {
+			for (let i = offset + Object.keys(this.groupedItems[idx]).length; i < (this.props.formData || []).length; i++) {
 				if (context.nonGroupedMap[i]) {
 					changes[i + lengthChange] = context.nonGroupedMap[i];
 					changeFrom[i] = true;
@@ -223,7 +223,7 @@ const getArrayKeyFunctions = (that) => {
 			}
 			const itemIdx = inputElem.id.replace(props.idSchema.$id, "").replace(/^_?([0-9]+).*$/, "$1");
 			const {startIdx} = getUiOptions(props.uiSchema);
-			if (itemIdx < startIdx || itemIdx >= startIdx + props.formData.length) {
+			if (itemIdx < startIdx || itemIdx >= startIdx + (props.formData || []).length) {
 				return false;
 			}
 			return _arrayKeyFunctions.insert(e, _props);
