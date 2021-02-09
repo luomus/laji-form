@@ -1070,12 +1070,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			.map(({id}) => getKeyHandlerTargetId(id, this._context));
 		order = [...targets, ...order];
 
-		const handled = order.some(id => this._context.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
-
-		const activeElement = document.activeElement;
-		if (!handled && e.key === "Enter" && (!activeElement || (activeElement.tagName.toLowerCase() !== "textarea" && !activeElement.className.includes("laji-map-input")))) {
-			e.preventDefault();
-		}
+		order.some(id => this._context.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
 	}
 
 	pushBlockingLoader = () => {
