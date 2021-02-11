@@ -582,7 +582,7 @@ export class Autosuggest extends React.Component {
 		} else if (!valueDidntChangeAndHasInformalTaxonGroup && allowNonsuggestedValue) {
 			this.selectUnsuggested(parsedInputValue);
 		} else if (!allowNonsuggestedValue) {
-			this.setState({inputValue: ""}, () => this.props.onChange(""));
+			this.setState({inputValue: ""}, () => this.props.onChange && this.props.onChange(""));
 		}
 
 		callback && callback();

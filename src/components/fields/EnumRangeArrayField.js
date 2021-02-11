@@ -58,19 +58,20 @@ export default class EnumRangeArrayField extends React.Component {
 				tags: this.props.formData,
 				id: this.props.idSchema.$id
 			},
+			allowNonsuggestedValue: false
 		};
 
 		const {Label} = this.props.formContext;
 		return (
 			<React.Fragment>
 				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />
-				<Autosuggest {...this.props} {...autosuggestOptions} ref={this.setRef} />
+				<Autosuggest {...this.props} onChange={undefined} {...autosuggestOptions} ref={this.setRef} />
 			</React.Fragment>
 		);
 	}
 
 	onInputChange = ({target: {value}}, reason, callback) => {
-		this.setState({value: value}, callback);
+		this.setState({value}, callback);
 		if (reason === "click") {
 			const tagComponent = this.autosuggestRef.autosuggestRef.inputElem;
 			const tagComponentElem = findDOMNode(tagComponent);
