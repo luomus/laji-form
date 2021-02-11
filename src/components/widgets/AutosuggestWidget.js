@@ -1024,7 +1024,7 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 		<React.Fragment>
 			{`${vernacularName}${vernacularName ? " " : ""}`}
 			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-			{renderFlag({payload: {finnish}}, ' ')}
+			{renderFlag({payload: {finnish}}, " ")}
 		</React.Fragment>
 	);
 };
