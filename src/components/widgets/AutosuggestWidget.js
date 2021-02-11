@@ -7,9 +7,9 @@ import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../compo
 import Context from "../../Context";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
-function renderFlag(suggestion) {
+function renderFlag(suggestion, prepend) {
 	return (suggestion && suggestion.payload || {}).finnish
-		? <img src={`${new Context().staticImgPath}/finnish-flag.png`} />
+		? <React.Fragment>{prepend || null}<img src={`${new Context().staticImgPath}/finnish-flag.png`} /></React.Fragment>
 		: null;
 }
 
@@ -866,7 +866,7 @@ class TaxonCardOverlay extends React.Component {
 					<div>
 						<OverlayTrigger overlay={tooltipElem}>
 							<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-								{taxon.vernacularName && <React.Fragment><TaxonName {...taxon} /><br /></React.Fragment>}
+								<TaxonName {...taxon} /><br />
 							</a>
 						</OverlayTrigger>
 						<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
@@ -1024,7 +1024,7 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 		<React.Fragment>
 			{`${vernacularName}${vernacularName ? " " : ""}`}
 			{cursiveName ? <i>{_scientificName}</i> : _scientificName}
-			{renderFlag({payload: {finnish}})}
+			{renderFlag({payload: {finnish}}, ' ')}
 		</React.Fragment>
 	);
 };
