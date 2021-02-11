@@ -54,9 +54,9 @@ export default class LajiFormWrapper {
 
 	invalidateSize = () => {
 		const lajiForm = (this.app as any).refs.lajiform;
-		const {resize} = lajiForm.customEventListeners;
+		const {resize = {}} = lajiForm?.customEventListeners || {};
 
-		Object.keys(resize || {}).sort().reverse().forEach(id => {
+		Object.keys(resize).sort().reverse().forEach(id => {
 			lajiForm._context.sendCustomEvent(id, "resize", undefined, undefined, {bubble: false});
 		});
 	}
