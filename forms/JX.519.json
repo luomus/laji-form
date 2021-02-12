@@ -2593,7 +2593,8 @@
                         "idToScrollAfterAdd": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
                         "normalRenderingTreshold": "sm",
                         "renderer": "table",
-                        "tableActiveItemClassNames": "panel panel-body gray"
+                        "tableActiveItemClassNames": "panel panel-body gray",
+                        "activeHeightOffset": -6
                     },
                     "ui:title": ""
                 }
