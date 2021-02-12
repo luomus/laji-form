@@ -522,7 +522,7 @@
 	finland: {
 		fi: "Suomi",
 		en: "Finland",
-		sv: "Finska"
+		sv: "Finland"
 	},
 	unitAutosuggestFieldTogglePlaceholder: {
 		fi: "(määrä) LAJI (koir. yksilöm.) (naar. yksilöm.)",
