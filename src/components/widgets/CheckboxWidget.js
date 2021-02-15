@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { isNullOrUndefined, isEmptyString, getUiOptions } from "../../utils";
+import { isNullOrUndefined, isEmptyString, getUiOptions, classNames } from "../../utils";
 import Switch from "react-bootstrap-switch";
 import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import Context from "../../Context";
@@ -104,12 +104,14 @@ export default class CheckboxWidget extends React.Component {
 		// "undefined" for silencing ToggleButton warning.
 		const _value = value === undefined ? "undefined" : value;
 
+		const ToggleButtonWithPrimaryStyle = (props) => <ToggleButton {...props} className={classNames(_value === props.value && "btn-primary")} />;
+
 		const checkbox = allowUndefined || value === undefined ? (
-			<ButtonToolbar className="tristate-buttons">
+			<ButtonToolbar>
 				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButton disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButton>
-					<ToggleButton disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButton>
-					{(showUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
+					<ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButtonWithPrimaryStyle>
+					<ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButtonWithPrimaryStyle>
+					{(showUndefined ? <ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButtonWithPrimaryStyle> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		) : (
