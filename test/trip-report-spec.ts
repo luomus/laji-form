@@ -18,8 +18,8 @@ const _testWidget = (form: Form) => async (path: string, type?: string) => {
 	let $secondOption, $otherOptionThanActive;
 	switch (type) {
 	case "checkbox":
-		widget = form.$getCheckboxWidget(path);
-		await widget.click();
+		widget = form.getBooleanWidget(path);
+		await widget.$nonactive.click();
 		break;
 	case "enum":
 		widget = form.$getEnumWidget(path);

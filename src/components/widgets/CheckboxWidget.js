@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { isNullOrUndefined, isEmptyString, getUiOptions, classNames } from "../../utils";
-import Switch from "react-bootstrap-switch";
+import { isEmptyString, getUiOptions, classNames } from "../../utils";
 import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import Context from "../../Context";
 
@@ -102,31 +101,22 @@ export default class CheckboxWidget extends React.Component {
 		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
 
 		// "undefined" for silencing ToggleButton warning.
-		const _value = value === undefined ? "undefined" : value;
+		const _value = value === undefined
+			? "undefined"
+			: invert
+				? !value
+				: value;
 
 		const ToggleButtonWithPrimaryStyle = (props) => <ToggleButton {...props} className={classNames(_value === props.value && "btn-primary")} />;
 
-		const checkbox = allowUndefined || value === undefined ? (
+		const checkbox = (
 			<ButtonToolbar>
 				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
 					<ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButtonWithPrimaryStyle>
 					<ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButtonWithPrimaryStyle>
-					{(showUndefined ? <ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButtonWithPrimaryStyle> : null)}
+					{(allowUndefined && showUndefined ? <ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButtonWithPrimaryStyle> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
-		) : (
-			<div onClick={this.onClick} onKeyDown={this.onKeyDown} className="checkbox-container">
-				<Switch
-					value={allowUndefined && isNullOrUndefined(value) ? null : invert ? !value : value}
-					defaultValue={allowUndefined ? null : false}
-					disabled={disabled}
-					readonly={readonly}
-					onText={trueLabel}
-					offText={falseLabel}
-					bsSize="mini"
-					tristate={allowUndefined}
-				/>
-			</div>
 		);
 
 		const {Label} = this.props.formContext;
