@@ -71,6 +71,8 @@ const NoLineBreakTitle = (props) => {
 	return <TitleField {...props} className="no-line-break" />;
 };
 
+const invisibleStyle = {visibility: "hidden"};
+
 @VirtualSchemaField
 export default class SectionArrayField extends React.Component {
 	static propTypes = {
@@ -130,6 +132,19 @@ export default class SectionArrayField extends React.Component {
 }
 
 const Section = ({children, style, ...rest}) => <div style={style || {flexGrow: 1, width: 0, flexBasis: 0, minWidth: 1}} {...rest}>{children}</div>;
+const emptyObj = {};
+const doNothing = () => { };
+const SectionContent = ({
+	delete: _delete = <DeleteButton style={invisibleStyle} className="horizontally-centered" translations={emptyObj} onClick={doNothing}/>,
+	sectionLabel = <label style={invisibleStyle}>{"hidden"}</label>,
+	content
+}) => (
+	<React.Fragment>
+		{_delete}
+		{sectionLabel}
+		{content}
+	</React.Fragment>
+);
 
 @handlesArrayKeys
 class SectionArrayFieldTemplate extends React.Component {
@@ -207,23 +222,19 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
 
-		return (
-			<React.Fragment>
-				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
-				<label style={{visibility: "hidden"}}>{"hidden"}</label>
-				<SchemaField
-					{...this.props}
-					schema={_schema}
-					uiSchema={__uiSchema}
-					formData={_formData}
-					idSchema={idSchema}
-					onChange={this.onRowDefinerChange}
-					registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
-					formContext={formContext}
-					errorSchema={this.props.formContext.errorSchema[0] || {}}
-				/>
-			</React.Fragment>
+		const content = (
+			<SchemaField
+				{...this.props}
+				schema={_schema}
+				uiSchema={__uiSchema}
+				formData={_formData}
+				idSchema={idSchema}
+				onChange={this.onRowDefinerChange}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
+				formContext={formContext}
+				errorSchema={this.props.formContext.errorSchema[0] || {}} />
 		);
+		return <SectionContent content={content} />;
 	}
 
 	getContainerElem = () => this.ref.current
@@ -235,20 +246,22 @@ class SectionArrayFieldTemplate extends React.Component {
 				return null;
 			}
 			const {children, hasRemove, index, disabled, readonly, onDropIndexClick} = this.props.items[idx];
+			const del = hasRemove && (
+				<DeleteButton
+					id={`${this.props.idSchema.$id}_${index}`}
+					disabled={disabled || readonly}
+					translations={this.props.formContext.translations}
+					onClick={onDropIndexClick(index)}
+					className="horizontally-centered" />
+			);
+			const sectionLabel = (
+				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+					<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{parseJSONPointer(this.props.formData[index], sectionField)}</label>
+				</Affix>
+			);
 			return (
 				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "darker nonbordered"} id={`${this.props.idSchema.$id}_${idx}-section`}>
-					{hasRemove && (
-						<DeleteButton
-							id={`${this.props.idSchema.$id}_${index}`}
-							disabled={disabled || readonly}
-							translations={this.props.formContext.translations}
-							onClick={onDropIndexClick(index)}
-							className="horizontally-centered" />
-					)}
-					<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-						<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{parseJSONPointer(this.props.formData[index], sectionField)}</label>
-					</Affix>
-					{children}
+					<SectionContent delete={del} sectionLabel={sectionLabel} content={children} />
 				</Section>
 			);
 		});
@@ -271,10 +284,15 @@ class SectionArrayFieldTemplate extends React.Component {
 			containerPointer,
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id)
 		};
-		return (
+		const add = (
 			<React.Fragment>
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-					<Button id={`${this.props.idSchema.$id}-add`} onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}} ref={this.addButtonRef}><Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}</Button>
+					<Button id={`${this.props.idSchema.$id}-add`}
+					        onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}}
+					        ref={this.addButtonRef}
+					>
+						<Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}
+					</Button>
 				</Affix>
 				{(this.state || {}).showAddSection &&
 						<Overlay show={true} placement="left" rootClose={true} onHide={this.hideAddSection} target={this.getAddButtonElem}>
@@ -283,18 +301,20 @@ class SectionArrayFieldTemplate extends React.Component {
 							</Popover>
 						</Overlay>
 				}
-				<label style={{visibility: "hidden"}}>{"hidden"}</label>
-				<SchemaField
-					{...this.props}
-					schema={_schema}
-					uiSchema={__uiSchema}
-					formData={_formData}
-					onChange={this.onRowDefinerChange}
-					registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
-					formContext={formContext}
-				/>
 			</React.Fragment>
 		);
+		const delButtons = (
+			<SchemaField
+				{...this.props}
+				schema={_schema}
+				uiSchema={__uiSchema}
+				formData={_formData}
+				onChange={this.onRowDefinerChange}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
+				formContext={formContext}
+			/>
+		);
+		return <SectionContent delete={add} content={delButtons} />;
 	}
 
 	getAddButtonElem = () => {
@@ -436,27 +456,25 @@ class SectionArrayFieldTemplate extends React.Component {
 			rowDefinerField,
 		};
 
-		return (
-			<React.Fragment>
-				<DeleteButton style={{visibility: "hidden"}} className="horizontally-centered" translations={this.props.formContext.translations} onClick={this.doNothing}/>
-				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-					<label className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</label>
-				</Affix>
-				<SchemaField
-					{...this.props}
-					schema={_schema}
-					uiSchema={__uiSchema}
-					formData={_formData}
-					onChange={this.onRowDefinerChange}
-					registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
-					formContext={formContext}
-				/>
-			</React.Fragment>
+		const sumLabel = (
+			<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+				<label className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</label>
+			</Affix>
 		);
+		const content = (
+			<SchemaField
+				{...this.props}
+				schema={_schema}
+				uiSchema={__uiSchema}
+				formData={_formData}
+				onChange={this.onRowDefinerChange}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
+				formContext={formContext}
+			/>
+		);
+		return <SectionContent sectionLabel={sumLabel} content={content} />;
 	}
 
-	doNothing = () => {
-	}
 
 	onRowDefinerChange = formData => {
 		const {rowDefinerField, rowDefinerFields} = getOptions(getUiOptions(this.props.uiSchema));
