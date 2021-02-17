@@ -1598,10 +1598,15 @@ min-height: 20px;
 .laji-form .rw-popup-container {
 	right: initial;
 }
- .laji-form .rw-popup {
+.laji-form .rw-popup {
 	right: initial;
 	min-width: 100%;
 }
 .laji-form .rw-list-option {
 	white-space: nowrap;
+}
+
+.laji-form-fill {
+	display: block;
+	margin: auto;
 }

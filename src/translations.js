@@ -694,10 +694,20 @@
 		en: "Rety",
 		sv: "Försök igen"
 	},
+	section: {
+		fi: "Lohko",
+		en: "Section",
+		sv: "Sektion"
+	},
 	sum: {
 		fi: "Summa",
 		en: "Sum",
 		sv: "Summa"
+	},
+	sectionSum: {
+		fi: "Lohkon summa",
+		en: "Section's sum",
+		sv: "Sektions sum"
 	},
 	addSection: {
 		fi: "Lisää lohko",

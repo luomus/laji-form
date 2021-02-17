@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, classNames } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -134,16 +134,19 @@ export default class SectionArrayField extends React.Component {
 const Section = ({children, style, ...rest}) => <div style={style || {flexGrow: 1, width: 0, flexBasis: 0, minWidth: 1}} {...rest}>{children}</div>;
 const emptyObj = {};
 const doNothing = () => { };
+const columnStyle = {display: "flex", flexDirection: "column"};
 const SectionContent = ({
 	delete: _delete = <DeleteButton style={invisibleStyle} className="horizontally-centered" translations={emptyObj} onClick={doNothing}/>,
-	sectionLabel = <label style={invisibleStyle}>{"hidden"}</label>,
+	sectionSum = <strong style={invisibleStyle}>{"hidden"}</strong>,
+	sectionLabel = <strong style={invisibleStyle}>{"hidden"}</strong>,
 	content
 }) => (
-	<React.Fragment>
+	<div style={columnStyle}>
 		{_delete}
+		{sectionSum}
 		{sectionLabel}
 		{content}
-	</React.Fragment>
+	</div>
 );
 
 @handlesArrayKeys
@@ -222,6 +225,12 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
 
+		const sectionLabel = (
+			<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+				<strong className="background nonbordered laji-form-fill">{this.props.formContext.translations.Section}</strong>
+			</Affix>
+		);
+		const sectionSum = <strong>{this.props.formContext.translations.SectionSum}</strong>;
 		const content = (
 			<SchemaField
 				{...this.props}
@@ -234,13 +243,13 @@ class SectionArrayFieldTemplate extends React.Component {
 				formContext={formContext}
 				errorSchema={this.props.formContext.errorSchema[0] || {}} />
 		);
-		return <SectionContent content={content} />;
+		return <SectionContent content={content}  sectionLabel={sectionLabel} sectionSum={sectionSum} />;
 	}
 
 	getContainerElem = () => this.ref.current
 
 	renderSections() {
-		const {sectionField} = getOptions(getUiOptions(this.props.uiSchema));
+		const {sectionField, rowValueField} = getOptions(getUiOptions(this.props.uiSchema));
 		return (this.props.formData || []).map((item, idx) => {
 			if (!this.props.items[idx]) {
 				return null;
@@ -256,12 +265,17 @@ class SectionArrayFieldTemplate extends React.Component {
 			);
 			const sectionLabel = (
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-					<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{parseJSONPointer(this.props.formData[index], sectionField)}</label>
+					<strong className={classNames("horizontally-centered nonbordered", index % 2 ? "background" : " darker")}>{parseJSONPointer(this.props.formData[index], sectionField)}</strong>
 				</Affix>
+			);
+			const [arr, field] = rowValueField.split("/%{row}");
+			const sum = parseJSONPointer(item, arr).reduce((sum, item) => sum + (parseJSONPointer(item, field) || 0), 0);
+			const sectionSum = (
+				<strong className="horizontally-centered text-muted">{sum}</strong>
 			);
 			return (
 				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "darker nonbordered"} id={`${this.props.idSchema.$id}_${idx}-section`}>
-					<SectionContent delete={del} sectionLabel={sectionLabel} content={children} />
+					<SectionContent delete={del} sectionLabel={sectionLabel} sectionSum={sectionSum} content={children} />
 				</Section>
 			);
 		});
@@ -289,8 +303,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
 					<Button id={`${this.props.idSchema.$id}-add`}
 					        onClick={this.showAddSection} style={{whiteSpace: "nowrap", padding: "3.5px 12px"}}
-					        ref={this.addButtonRef}
-					>
+					        ref={this.addButtonRef}>
 						<Glyphicon glyph="plus"/> {this.props.formContext.translations.AddSection}
 					</Button>
 				</Affix>
@@ -458,7 +471,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		const sumLabel = (
 			<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-				<label className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</label>
+				<strong className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</strong>
 			</Affix>
 		);
 		const content = (
