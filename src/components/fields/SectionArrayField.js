@@ -246,7 +246,7 @@ class SectionArrayFieldTemplate extends React.Component {
 							className="horizontally-centered" />
 					)}
 					<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-						<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{this.props.formContext.translations.Section} {parseJSONPointer(this.props.formData[index], sectionField)}</label>
+						<label className={`horizontally-centered nonbordered ${index % 2 ? "background" : " darker"}`}>{parseJSONPointer(this.props.formData[index], sectionField)}</label>
 					</Affix>
 					{children}
 				</Section>

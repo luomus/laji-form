@@ -694,11 +694,6 @@
 		en: "Rety",
 		sv: "Försök igen"
 	},
-	section: {
-		fi: "lohko",
-		en: "section",
-		sv: "sektion"
-	},
 	sum: {
 		fi: "Summa",
 		en: "Sum",
