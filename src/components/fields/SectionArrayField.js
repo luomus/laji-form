@@ -269,7 +269,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				</Affix>
 			);
 			const [arr, field] = rowValueField.split("/%{row}");
-			const sum = parseJSONPointer(item, arr).reduce((sum, item) => sum + (parseJSONPointer(item, field) || 0), 0);
+			const sum = (parseJSONPointer(item, arr) || []).reduce((sum, item) => sum + (parseJSONPointer(item, field) || 0), 0);
 			const sectionSum = (
 				<strong className="horizontally-centered text-muted">{sum}</strong>
 			);
