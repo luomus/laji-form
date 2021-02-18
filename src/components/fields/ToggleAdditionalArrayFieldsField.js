@@ -77,12 +77,18 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 		const { SchemaField } = this.props.registry.fields;
 
 		let shouldShow = this.state.visible;
-		const {additionalFields, toggleLabel, toggleClassName, toggleHelp} = getUiOptions(this.props.uiSchema);
+		const {additionalFields = [], toggleLabel, toggleClassName, toggleHelp} = getUiOptions(this.props.uiSchema);
 		let _uiSchema = this.state.uiSchema;
-
+		Object.values(this.props.errorSchema || {}).forEach(error => {
+			additionalFields.forEach(field => {
+				if (parseJSONPointer(error, field)) {
+					shouldShow = true;
+				}
+			});
+		});
 
 		if (!shouldShow) {
-			(additionalFields || []).forEach(field => {
+			additionalFields.forEach(field => {
 				_uiSchema = updateSafelyWithJSONPointer(_uiSchema, {"ui:field": "HiddenField"}, "items/" + field);
 			});
 		}
