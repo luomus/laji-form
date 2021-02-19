@@ -2,9 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
-import { Accordion, Panel, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
-import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
-import * as PanelBody from "react-bootstrap/lib/PanelBody";
+import { Accordion, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
@@ -485,6 +483,8 @@ class AccordionArrayFieldTemplate extends React.Component {
 			return header;
 		};
 
+		const {Panel} = this.props.formContext.theme;
+
 		return (
 			<div className="laji-form-single-active-array no-transition">
 				<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="top" />
@@ -494,16 +494,13 @@ class AccordionArrayFieldTemplate extends React.Component {
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
 						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
-									 eventKey={idx}
-									 bsStyle={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
-							<PanelHeading>
-								{getHeader(item, idx)}
-							</PanelHeading>
+						       header={getHeader(item, idx)}
+									 role={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
 							{idx === activeIdx ? (
-								<PanelBody>
+								<React.Fragment>
 									{item.children}
 									{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
-								</PanelBody>
+								</React.Fragment>
 							) : null}
 						</Panel>
 					))}
@@ -572,19 +569,16 @@ class PagerArrayFieldTemplate extends React.Component {
 			);
 		}
 
+		const {Panel} = this.props.formContext.theme;
+
 		return (
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
 				<div className="laji-form-field-template-item">
 					<div className="laji-form-field-template-schema">
-						<Panel className="laji-form-panel">
-							<PanelHeading>
-								{header}
-							</PanelHeading>
-							<PanelBody>
-								<div key={activeIdx}>
-									{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
-								</div>
-							</PanelBody>
+						<Panel className="laji-form-panel" header={header}>
+							<div key={activeIdx}>
+								{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+							</div>
 						</Panel>
 						{getButtonElems(buttons, arrayTemplateFieldProps)}
 					</div>

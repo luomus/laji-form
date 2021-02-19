@@ -1,9 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
-import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
-import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
+import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -502,25 +500,23 @@ export class ErrorPanel extends React.Component {
 
 		if (errors.length === 0) return null;
 
+		const {Panel} = this.props.theme;
+		const header = (
+			 <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
+				 <div className="panel-title">
+					 {title}
+					 <span className="pull-right">
+						 <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
+						 {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
+					 </span>
+				 </div>
+			 </div>
+		);
 		return (
-			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle}
-				   className={classNames}>
-				<PanelHeading>
-					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
-						   <div className="panel-title">
-							   {title}
-							   <span className="pull-right">
-								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
-								   {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
-							   </span>
-						   </div>
-					   </div>
-				</PanelHeading>
-				<PanelCollapse>
-					<ListGroup>
-						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
-					</ListGroup>
-				</PanelCollapse>
+			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames} header={header}>
+				<ListGroup>
+					{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
+				</ListGroup>
 			</Panel>
 		);
 	}
@@ -744,6 +740,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 					poppedToggle={this.poppedToggle}
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
+				  theme={this.props.formContext.theme}
 				/>
 				<div className="panel-footer">
 					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>

@@ -7,9 +7,7 @@ import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
-import { Row, Col, Panel, Popover, ButtonToolbar, Modal } from "react-bootstrap";
-import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
-import * as PanelBody from "react-bootstrap/lib/PanelBody";
+import { Row, Col, Popover, ButtonToolbar, Modal } from "react-bootstrap";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -1873,12 +1871,14 @@ export class MapComponent extends React.Component {
 
 	render() {
 		const {panel, onFocusGrab, onFocusRelease, onOptionsChanged, ...mapOptions} = this.props; // eslint-disable-line
+		const {theme} = this.props.formContext;
 
 		const controlledPanel = panel ?
 			<MapPanel id={panel.id}
 			          bsStyle={panel.bsStyle || undefined}
 			          buttonBsStyle={panel.buttonBsStyle}
 			          header={panel.header}
+			          theme={theme}
 			          text={panel.panelTextContent} />
 			: null;
 
@@ -1892,6 +1892,7 @@ export class MapComponent extends React.Component {
 					          onClick={this.state.panelButtonOnClick}
 					          buttonText={this.state.panelButtonContent}
 					          buttonBsStyle={this.state.panelButtonBsStyle}
+					          theme={theme}
 					/>
 				}
 				{this.state.showHelp &&
@@ -2086,20 +2087,14 @@ export class Map extends React.Component {
 
 class MapPanel extends React.Component {
 	render() {
+		const {Panel} = this.props.theme;
 		return (
-			<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
-				{this.props.header ? (
-					<PanelHeading>
-						{this.props.header}
-					</PanelHeading>
-				) : null}
-				<PanelBody>
-					{this.props.text}
-					{this.props.buttonText ?
-						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
-						null
-					}
-				</PanelBody>
+			<Panel role={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id} header={this.props.header}>
+				{this.props.text}
+				{this.props.buttonText ?
+					<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+					null
+				}
 			</Panel>
 		);
 	}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Panel, Row, Col } from "react-bootstrap";
+import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import * as Spinner from "react-spinner";
@@ -240,6 +240,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 	Item = (id) => {
 		const {path} = this.state;
 		const {rootOnly, grid, activeId} = this.props;
+		const {Panel} = this.props.formContext.theme;
 		return !rootOnly ? (
 			<ListGroupItem key={id} className={path.length > 1 ? "not-root" : ""}>
 				{path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
@@ -248,7 +249,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 			</ListGroupItem>
 		) : (
 			<Col key={id} {...grid}>
-				<Panel header={this.getLabel(id)} onClick={this.onSelected(id)} bsStyle={id === activeId ? "primary" : undefined}>
+				<Panel onClick={this.onSelected(id)} bsStyle={id === activeId ? "primary" : undefined} header={this.getLabel(id)}>
 					<div className={`informal-group-image ${id}`} />
 				</Panel>
 			</Col>

@@ -4,14 +4,14 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { Panel, Table, ProgressBar } from "react-bootstrap";
-import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
+import { Table, ProgressBar } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
 const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import * as merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
+import { Theme } from "../themes/theme";
 
 import Form, { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
@@ -165,7 +165,8 @@ export interface LajiFormProps {
 	validators?: any;
 	warnings?: any;
 	onSettingsChange?: (settings: any, global: boolean) => void;
-	mediaMetadata: MediaMetadata
+	mediaMetadata: MediaMetadata,
+	theme: Theme
 }
 
 export interface LajiFormState {
@@ -301,6 +302,7 @@ interface GlobalContext {
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
 	translations = this.constructTranslations();
 	bgJobRef = React.createRef<FailedBackgroundJobsPanel>();
+	shortcutHelpRef = React.createRef<any>();
 	apiClient: ApiClient;
 	_id: number;
 	_context: RootContext;
@@ -367,7 +369,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	keyCombo: string;
 	defaultNotifier: Notifier;
 	validating = false;
-	shortcutHelpRef: Panel;
 	cachedNonliveValidations: any;
 	helpVisible: boolean;
 	helpTimeout: number;
@@ -596,7 +597,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				notifier: props.notifier || this.getDefaultNotifier(),
 				apiClient: this.apiClient,
 				Label: (props.fields || {}).Label || Label,
-				mediaMetadata: props.mediaMetadata
+				mediaMetadata: props.mediaMetadata,
+				theme: props.theme
 			}
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
@@ -710,8 +712,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this.formRef = form;
 	}
 
-	getPanelRef = (elem: Panel) => {this.shortcutHelpRef = elem;}
-
 	getFormRef = () => this.formRef
 
 	getFields = (_fields?: {[name: string]: Field}) => ({...fields, ...(_fields || {})})
@@ -727,6 +727,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
+		const {Panel} = this.props.theme;
+
+		const panelHeader = (
+			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
+		);
 		return (
 			<div className="laji-form">
 				{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
@@ -772,14 +777,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				</Form>
 				{shortcuts &&
 					<Panel
-						ref={this.getPanelRef}
+						ref={this.shortcutHelpRef}
 						className="shortcut-help laji-form-popped z-depth-3 hidden"
 						style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-						bsStyle="info"
+						role="info"
+						header={panelHeader}
+						useBody={false}
 					>
-						<PanelHeading>
-							<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
-						</PanelHeading>
 						<Table>
 							<tbody className="well">{
 								Object.keys(shortcuts).map((keyCombo, idx) => {
@@ -975,7 +979,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	showHelp = () => {
-		const node = findDOMNode(this.shortcutHelpRef) as Element;
+		const node = findDOMNode(this.shortcutHelpRef.current) as Element;
 		if (!this.helpVisible) {
 			if (node) node.className = node.className.replace(" hidden", "");
 			this.helpVisible = true;
@@ -983,7 +987,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	dismissHelp = (e: Event | React.SyntheticEvent) => {
-		const node = findDOMNode(this.shortcutHelpRef) as Element;
+		const node = findDOMNode(this.shortcutHelpRef.current) as Element;
 		e.preventDefault();
 		e.stopPropagation();
 		if (this.helpVisible && node) {

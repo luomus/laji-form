@@ -5,6 +5,7 @@ import ApiClientImplementation from "./ApiClientImplementation";
 import _notus from "notus";
 import queryString from "querystring";
 import { isObject } from "../src/utils";
+import bs3 from "../src/themes/bs3";
 
 import "../src/styles";
 import "./styles-dev.css";
@@ -169,7 +170,8 @@ if (test !== true) {
 			intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0",
 			capturerVerbatim: "Test",
 			intellectualOwner: "Test"
-		}
+		},
+		theme: bs3
 	}));
 }
 

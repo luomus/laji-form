@@ -3,8 +3,7 @@ import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
-import { Row, Col, Panel, Modal } from "react-bootstrap";
-import * as PanelBody from "react-bootstrap/lib/PanelBody";
+import { Row, Col, Modal } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 
@@ -35,16 +34,15 @@ export default class LocalityField extends React.Component {
 		if (typeof radius === "number") {
 			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
 		}
+		const {Panel} = this.props.formContext.theme;
 		return (
 			<Row>
 				<Col xs={12}>
 					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
-						<PanelBody>
-							{values.map((v, i) => (
-								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
-							))}
-							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
-						</PanelBody>
+						{values.map((v, i) => (
+							<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
+						))}
+						<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
 					</Panel>
 				</Col>
 				{this.state.modal && this.renderModal()}
