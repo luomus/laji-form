@@ -171,7 +171,6 @@ if (test !== true) {
 			capturerVerbatim: "Test",
 			intellectualOwner: "Test"
 		},
-		theme: bs3
 	}));
 }
 
@@ -181,6 +180,7 @@ promise = promise.then(data => ({
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
 	lang,
+	theme: bs3
 }));
 
 const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {
