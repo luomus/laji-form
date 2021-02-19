@@ -4,7 +4,6 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { ProgressBar } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
 const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
@@ -814,6 +813,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
 		if (!this.state.runningSubmitHooks) return null;
 
+		const { ProgressBar } = this.props.theme;
 		return (
 			<div className="running-jobs">
 				{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})

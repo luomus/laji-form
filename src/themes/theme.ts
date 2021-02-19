@@ -28,8 +28,13 @@ export interface TableProps extends HasMaybeChildren {
 	className?: string;
 }
 
+export interface ProgressBarProps {
+	now: number;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: (props: TableProps) => JSX.Element;
+	ProgressBar: (props: ProgressBarProps) => JSX.Element;
 }
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Panel, Table } from "react-bootstrap";
+import { Panel, Table, ProgressBar } from "react-bootstrap";
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import * as PanelBody from "react-bootstrap/lib/PanelBody";
@@ -18,6 +18,7 @@ const theme: Theme = {
 				) : children}
 		</Panel>
 	),
-	Table: props => <Table {...props} />
+	Table: props => <Table {...props} />,
+	ProgressBar: props => <ProgressBar {...props} />,
 };
 export default theme;
