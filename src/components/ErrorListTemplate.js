@@ -80,14 +80,15 @@ export default class ErrorListTemplate extends React.Component {
 				            errors={errors}
 				            title={translations.Errors}
 				            clickHandler={clickHandler}
-				            showToggle={true}
 				            theme={this.props.formContext.theme}
+				            showToggle={true}
 				            poppedToggle={this.poppedToggle}/>
 				<ErrorPanel classNames="warning-panel"
 				            ref="warningPanel"
 				            errors={warnings}
 				            title={translations.Warnings}
 				            clickHandler={clickHandler}
+				            theme={this.props.formContext.theme}
 				            showToggle={errors.length === 0}
 				            poppedToggle={this.poppedToggle}/>
 				<div className="panel-footer">
