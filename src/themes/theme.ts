@@ -21,7 +21,15 @@ interface HasMaybeRef {
 	ref?: React.Ref<any>;
 }
 
+export interface TableProps extends HasMaybeChildren {
+	hover?: boolean;
+	bordered?: boolean;
+	condensed?: boolean;
+	className?: string;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
+	Table: (props: TableProps) => JSX.Element;
 }
 

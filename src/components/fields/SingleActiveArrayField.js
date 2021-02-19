@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
-import { Accordion, OverlayTrigger, Tooltip, Pager, Table, Row, Col } from "react-bootstrap";
+import { Accordion, OverlayTrigger, Tooltip, Pager, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
@@ -866,6 +866,8 @@ class TableArrayFieldTemplate extends React.Component {
 		const onMouseLeave = (idx) => that.props.idSchema.$id.match(/units$/)
 			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx})
 			: undefined;
+
+		const {Table} = this.props.formContext.theme;
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">

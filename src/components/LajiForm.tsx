@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { Table, ProgressBar } from "react-bootstrap";
+import { ProgressBar } from "react-bootstrap";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
 const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
@@ -727,7 +727,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel} = this.props.theme;
+		const {Panel, Table} = this.props.theme;
 
 		const panelHeader = (
 			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>

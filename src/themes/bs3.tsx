@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Panel } from "react-bootstrap";
+import { Panel, Table } from "react-bootstrap";
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import * as PanelBody from "react-bootstrap/lib/PanelBody";
@@ -17,6 +17,7 @@ const theme: Theme = {
 					</PanelBody>
 				) : children}
 		</Panel>
-	)
+	),
+	Table: props => <Table {...props} />
 };
 export default theme;
