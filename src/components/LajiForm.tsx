@@ -510,7 +510,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			}
 		};
 
-
 		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string, hook: () => void, description?: string) => {
 			lajiFormId = `${lajiFormId}`;
 			let promise: Promise<any>;
@@ -544,7 +543,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			return _hook;
 		};
 		this._context.removeSubmitHook = (lajiFormId: string, hook: SubmitHook["hook"]) => {
-			return new Promise(resolve => {
+			return new Promise<void>(resolve => {
 				lajiFormId = `${lajiFormId}`;
 				const newHooks = (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId));
 				newHooks.length !== (this.state.submitHooks || []).length ? this.setState({submitHooks: newHooks}, resolve) : resolve();
