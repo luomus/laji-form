@@ -5,6 +5,7 @@ import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Modal, Alert, ListGroup, ListGroupItem, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import * as Spinner from "react-spinner";
 import { parseGeometries } from "./MapArrayField";
@@ -88,6 +89,8 @@ export default class NamedPlaceSaverField extends React.Component {
 }
 
 class PlaceSaverDialog extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		const {namedPlaceID, locality = ""} = props.gathering;
@@ -221,7 +224,7 @@ class PlaceSaverDialog extends React.Component {
 
 	render() {
 		const {value, placeNamesToPlaces = {}, loading} = this.state;
-		const {translations, theme} = this.props.formContext;
+		const {translations} = this.props.formContext;
 		const existingPlaces = (placeNamesToPlaces[value] || []).filter(place => {
 			return (place.owners || []).includes(this.props.formContext.uiSchemaContext.creator);
 		});
@@ -230,7 +233,7 @@ class PlaceSaverDialog extends React.Component {
 			return <Button bsSize="small" onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
 		};
 
-		const {Panel} = theme;
+		const {Panel} = this.context.theme;
 		return this.state.failed ? (
 			<Alert bsStyle="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
 		): (

@@ -10,6 +10,7 @@ import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../componen
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
 
@@ -427,6 +428,7 @@ const AccordionButtonsWrapper = ({props, position}) => {
 
 @handlesButtonsAndFocus
 class AccordionArrayFieldTemplate extends React.Component {
+	static contextType = ReactContext;
 
 	setContainerRef = (elem) => {
 		this.containerRef = elem;
@@ -483,7 +485,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 			return header;
 		};
 
-		const {Panel} = this.props.formContext.theme;
+		const {Panel} = this.context.theme;
 
 		return (
 			<div className="laji-form-single-active-array no-transition">
@@ -495,7 +497,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
 						       header={getHeader(item, idx)}
-									 role={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
+									 themeRole={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
 							{idx === activeIdx ? (
 								<React.Fragment>
 									{item.children}
@@ -515,6 +517,8 @@ class AccordionArrayFieldTemplate extends React.Component {
 
 @handlesButtonsAndFocus
 class PagerArrayFieldTemplate extends React.Component {
+
+	static contextType = ReactContext;
 
 	setContainerRef = (elem) => {
 		this.containerRef = elem;
@@ -569,7 +573,7 @@ class PagerArrayFieldTemplate extends React.Component {
 			);
 		}
 
-		const {Panel} = this.props.formContext.theme;
+		const {Panel} = this.context.theme;
 
 		return (
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
@@ -637,6 +641,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 
 @handlesButtonsAndFocus
 class TableArrayFieldTemplate extends React.Component {
+	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
@@ -867,7 +872,7 @@ class TableArrayFieldTemplate extends React.Component {
 			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx})
 			: undefined;
 
-		const {Table} = this.props.formContext.theme;
+		const {Table} = this.context.theme;
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">

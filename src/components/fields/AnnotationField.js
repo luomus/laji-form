@@ -43,7 +43,7 @@ export default class AnnotationField extends React.Component {
 			tooltip: this.props.formContext.translations.ShowAnnotations,
 			tooltipPlacement: "left",
 			fn: this.onClick,
-			bsStyle: annotations && annotations.length ? "primary": "default"
+			themeRole: annotations && annotations.length ? "primary": "default"
 		};
 	}
 

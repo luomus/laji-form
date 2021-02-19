@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Button as _Button, Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
+import ReactContext from "../ReactContext";
 
 export class Button extends React.Component {
+	static contextType = ReactContext;
 	render() {
 		const {
 			tooltip,
@@ -15,10 +17,11 @@ export class Button extends React.Component {
 			tooltipClass,
 			..._props
 		} = this.props;
+		const {Button: _Button} = this.context.theme;
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-					bsStyle="primary"
+					themeRole="primary"
 					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
@@ -110,7 +113,7 @@ export class DeleteButton extends React.Component {
 			<React.Fragment>
 				<Button {...maybeProps}
 				        disabled={disabled || readonly}
-				        bsStyle="danger"
+				        themeRole="danger"
 				        className={buttonClassName}
 				        style={this.props.style}
 				        ref="del"
@@ -144,10 +147,10 @@ export class DeleteButton extends React.Component {
 				<Popover id={`${this.props.id}-button-confirm`}>
 					<span>{translations.ConfirmRemove}</span>
 					<ButtonGroup>
-						<Button bsStyle="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
+						<Button themeRole="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
 							{translations.Remove}
 						</Button>
-						<Button bsStyle="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+						<Button themeRole="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
 							{translations.Cancel}
 						</Button>
 					</ButtonGroup>
@@ -485,6 +488,8 @@ export function Label({label, help, children, id, required, _context, helpHovera
 }
 
 export class ErrorPanel extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {expanded: true};
@@ -500,14 +505,14 @@ export class ErrorPanel extends React.Component {
 
 		if (errors.length === 0) return null;
 
-		const {Panel} = this.props.theme;
+		const {Panel} = this.context.theme;
 		const header = (
 			 <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 				 <div className="panel-title">
 					 {title}
 					 <span className="pull-right">
-						 <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
-						 {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
+						 <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} themeRole="link" />
+						 {showToggle ? <GlyphButton glyph="new-window" themeRole="link" onClick={poppedToggle} /> : null}
 					 </span>
 				 </div>
 			 </div>
@@ -740,7 +745,6 @@ export class FailedBackgroundJobsPanel extends React.Component {
 					poppedToggle={this.poppedToggle}
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
-				  theme={this.props.formContext.theme}
 				/>
 				<div className="panel-footer">
 					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>

@@ -11,6 +11,7 @@ const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import * as merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
 import { Theme } from "../themes/theme";
+import Context from "../ReactContext";
 
 import Form, { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
@@ -18,7 +19,7 @@ import FieldTemplate from "./FieldTemplate";
 import ErrorListTemplate from "./ErrorListTemplate";
 
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
-import Context from "../Context";
+import InstanceContext from "../Context";
 import translations from "../translations.js";
 
 const fields = importLocalComponents("fields", [
@@ -299,6 +300,8 @@ interface GlobalContext {
 }
 
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
+	static contextType = Context;
+
 	translations = this.constructTranslations();
 	bgJobRef = React.createRef<FailedBackgroundJobsPanel>();
 	shortcutHelpRef = React.createRef<any>();
@@ -399,7 +402,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		initializeValidation(this.apiClient);
 		this._id = getNewId();
 
-		this._context = new Context(this._id) as RootContext;
+		this._context = new InstanceContext(this._id) as RootContext;
 		this._context.formInstance = this;
 		this._context.formData = props.formData;
 
@@ -567,7 +570,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	getStateFromProps(props: LajiFormProps) {
-		if (props.staticImgPath) (new Context() as GlobalContext).staticImgPath = props.staticImgPath;
+		if (props.staticImgPath) (new InstanceContext() as GlobalContext).staticImgPath = props.staticImgPath;
 		const translations = this.translations[props.lang as Lang];
 		if (!this.tmpIdTree || props.schema !== this.props.schema) {
 			this.setTmpIdTree(props.schema);
@@ -597,7 +600,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				apiClient: this.apiClient,
 				Label: (props.fields || {}).Label || Label,
 				mediaMetadata: props.mediaMetadata,
-				theme: props.theme
 			}
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
@@ -726,84 +728,86 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel, Table} = this.props.theme;
+		const {Panel, Table} = this.props.theme || this.context.theme;
 
 		const panelHeader = (
 			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
 		);
 		return (
-			<div className="laji-form">
-				{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
-					<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
-						<Button bsStyle={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
-					</TooltipComponent>
-				)}
-				<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
-				                           schema={this.props.schema}
-				                           uiSchema={this.props.uiSchema}
-				                           context={this._context}
-				                           formContext={this.state.formContext}
-				                           errorClickHandler={this.errorClickHandler}
-				                           tmpIdTree={this.tmpIdTree}
-				                           ref={this.bgJobRef}
-				/>
-				<Form
-					{...this.props as any}
-					formData={this.state.formData}
-					ref={this.getRef}
-					onChange={this.onChange}
-					onSubmit={this.onSubmit}
-					fields={this.getFields(this.props.fields)}
-					widgets={this.getWidgets(this.props.widgets)}
-					FieldTemplate={FieldTemplate}
-					ArrayFieldTemplate={ArrayFieldTemplate}
-					ErrorList={ErrorListTemplate}
-					formContext={this.state.formContext}
-					noValidate={true}
-					extraErrors={this.state.extraErrors}
-					noHtml5Validate={true}
-					liveValidate={true}
-					autoComplete="off"
-				>
-					<div>
-						{this.props.children}
-						{(!this.props.children && this.props.renderSubmit !== false) ? (
-							<Button id="submit" onClick={this.submit} disabled={readonly || disabled}>
-								{this.props.submitText || translations.Submit}
-							</Button>
-						) : null}
-					</div>
-				</Form>
-				{shortcuts &&
-					<Panel
-						ref={this.shortcutHelpRef}
-						className="shortcut-help laji-form-popped z-depth-3 hidden"
-						style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-						role="info"
-						header={panelHeader}
-						useBody={false}
+			<Context.Provider value={this.props.theme ? {theme: this.props.theme} : this.context}>
+				<div className="laji-form">
+					{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
+						<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
+							<Button themeRole={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
+						</TooltipComponent>
+					)}
+					<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
+											   schema={this.props.schema}
+											   uiSchema={this.props.uiSchema}
+											   context={this._context}
+											   formContext={this.state.formContext}
+											   errorClickHandler={this.errorClickHandler}
+											   tmpIdTree={this.tmpIdTree}
+											   ref={this.bgJobRef}
+					/>
+					<Form
+						{...this.props as any}
+						formData={this.state.formData}
+						ref={this.getRef}
+						onChange={this.onChange}
+						onSubmit={this.onSubmit}
+						fields={this.getFields(this.props.fields)}
+						widgets={this.getWidgets(this.props.widgets)}
+						FieldTemplate={FieldTemplate}
+						ArrayFieldTemplate={ArrayFieldTemplate}
+						ErrorList={ErrorListTemplate}
+						formContext={this.state.formContext}
+						noValidate={true}
+						extraErrors={this.state.extraErrors}
+						noHtml5Validate={true}
+						liveValidate={true}
+						autoComplete="off"
 					>
-						<Table>
-							<tbody className="well">{
-								Object.keys(shortcuts).map((keyCombo, idx) => {
-									const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
-									if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn) || fn === "navigateSection" && rest.goOverRow) return;
-									let translation = "";
-									if (translation) translation = label;
-									else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")] as string;
-									if  (targetLabel) translation = `${translation} ${targetLabel}`;
-									return (
-										<tr key={idx}>
-											<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
-										</tr>
-									);
-								})
-							}</tbody>
-						</Table>
-					</Panel>
-				}
-				{this.renderSubmitHooks()}
-			</div>
+						<div>
+							{this.props.children}
+							{(!this.props.children && this.props.renderSubmit !== false) ? (
+								<Button id="submit" onClick={this.submit} disabled={readonly || disabled}>
+									{this.props.submitText || translations.Submit}
+								</Button>
+							) : null}
+						</div>
+					</Form>
+					{shortcuts &&
+						<Panel
+							ref={this.shortcutHelpRef}
+							className="shortcut-help laji-form-popped z-depth-3 hidden"
+							style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
+							themeRole="info"
+							header={panelHeader}
+							useBody={false}
+						>
+							<Table>
+								<tbody className="well">{
+									Object.keys(shortcuts).map((keyCombo, idx) => {
+										const {fn, targetLabel, label, ...rest} = shortcuts[keyCombo];
+										if (["help", "textareaRowInsert", "autosuggestToggle"].includes(fn) || fn === "navigateSection" && rest.goOverRow) return;
+										let translation = "";
+										if (translation) translation = label;
+										else translation = translations[[fn, ...Object.keys(rest)].map(capitalizeFirstLetter).join("")] as string;
+										if  (targetLabel) translation = `${translation} ${targetLabel}`;
+										return (
+											<tr key={idx}>
+												<td>{stringifyKeyCombo(keyCombo)}</td><td>{translation}</td>
+											</tr>
+										);
+									})
+								}</tbody>
+							</Table>
+						</Panel>
+					}
+					{this.renderSubmitHooks()}
+				</div>
+			</Context.Provider>
 		);
 	}
 
@@ -813,7 +817,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
 		if (!this.state.runningSubmitHooks) return null;
 
-		const { ProgressBar } = this.props.theme;
+		const { ProgressBar } = this.props.theme || this.context.theme;
 		return (
 			<div className="running-jobs">
 				{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})

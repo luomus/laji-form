@@ -517,7 +517,7 @@ class LocationButton extends React.Component {
 		const button = <LocationButtonComp
 			key={`${that.props.idSchema.$id}-location`}
 			id={`${that.props.idSchema.$id}-location`}
-			bsStyle={bsStyle}
+			themeRole={bsStyle}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
 			glyph={glyph}

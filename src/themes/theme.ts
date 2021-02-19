@@ -1,10 +1,12 @@
 import * as React from "react";
 
+type Role = "primary" | "secondary" | "danger" | "warning" | "info" | "link" | string;
+
 export interface PanelProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef {
 	id?: string;
 	className?: string;
 	style?: React.CSSProperties;
-	role?: "info" | string;
+	themeRole?: Role;
 	collapsible?: "true";
 	expanded?: boolean;
 	onToggle?: () => void;
@@ -32,9 +34,14 @@ export interface ProgressBarProps {
 	now: number;
 }
 
+export interface ButtonProps extends JSX.IntrinsicAttributes {
+	themeRole?: Role;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: (props: TableProps) => JSX.Element;
 	ProgressBar: (props: ProgressBarProps) => JSX.Element;
+	Button: (props: ButtonProps) => JSX.Element | null;
 }
 

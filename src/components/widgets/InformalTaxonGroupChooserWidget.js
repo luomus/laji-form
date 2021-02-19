@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import * as Spinner from "react-spinner";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions } from "../../utils";
@@ -147,6 +148,8 @@ export function getInformalGroups(apiClient) {
 }
 
 export class InformalTaxonGroupChooser extends React.Component {
+	static contextType = ReactContext;
+
 	static propTypes = {
 		onSelected: PropTypes.func.isRequired,
 		formContext: PropTypes.object.isRequired
@@ -240,7 +243,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 	Item = (id) => {
 		const {path} = this.state;
 		const {rootOnly, grid, activeId} = this.props;
-		const {Panel} = this.props.formContext.theme;
+		const {Panel} = this.context.theme;
 		return !rootOnly ? (
 			<ListGroupItem key={id} className={path.length > 1 ? "not-root" : ""}>
 				{path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}
