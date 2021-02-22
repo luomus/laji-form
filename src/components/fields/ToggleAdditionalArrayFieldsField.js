@@ -101,7 +101,7 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 						{...this.props}
 						id={this.props.idSchema.$id + "_toggle"}
 						schema={{type: "boolean"}}
-						value={shouldShow}
+						value={this.state.visible}
 						onChange={this.toggleVisibility}
 						label={toggleLabel || ""}
 						options={{allowUndefined: false, help: toggleHelp}}
