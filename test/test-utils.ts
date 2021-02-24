@@ -33,6 +33,15 @@ export interface DateWidgetPO {
 	}
 }
 
+export interface BooleanWidgetPO {
+	$container: ElementFinder;
+	$true: ElementFinder;
+	$false: ElementFinder;
+	$undefined: ElementFinder;
+	$active: ElementFinder;
+	$nonactive: ElementFinder;
+}
+
 interface FormProps {
 	schema?: JSONSchema7;
 	uiSchema?: any;
@@ -193,9 +202,22 @@ export class Form {
 		};
 	}
 
-	$getCheckboxWidget(str: string): ElementFinder {
-		 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
-		return this.$locate(str).$(".checkbox-container");
+	getBooleanWidget(str: string): BooleanWidgetPO {
+		const $container = this.$locate(str).$(".btn-toolbar");
+		return {
+			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
+			$container,
+			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
+			$true: $container.$$(".btn").get(0), // eslint-disable-line  protractor/use-first-last
+			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
+			$false: $container.$$(".btn").get(1),
+			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
+			$undefined: this.$locate(str).$$(".btn").get(2),
+			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
+			$active: $container.$(".btn.active"),
+			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
+			$nonactive: $container.$$(".btn").filter(async ($btn) => !(await $btn.getAttribute("class")).includes("active")).first()
+		};
 	}
 
 	$getInputWidget(str: string): ElementFinder {
@@ -309,22 +331,6 @@ export async function putForeignMarkerToMap() {
 export async function removeUnit(gatheringIdx: number, unitIdx: number) {
 	await $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete`).click();
 	return $(`#root_gatherings_${gatheringIdx}_units_${unitIdx}-delete-confirm-yes`).click();
-}
-
-export async function getWidget(str: string): Promise<ElementFinder> {
-	const $afterLabel = $(`${lajiFormLocator(str)} > div > div`);
-	if (await $afterLabel.isPresent()) {
-		 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
-		return $afterLabel;
-	}
-	const $afterLabelNotSoDeep = $(`${lajiFormLocator(str)} > div`);
-	if (await $afterLabelNotSoDeep.isPresent()) {
-		// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
-		return $afterLabelNotSoDeep;
-	}
-	const $insideLabel = $(`${lajiFormLocator(str)} > div > label > div`);
-	// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
-	return $insideLabel;
 }
 
 export const updateValue = async ($input: ElementFinder, value: string, blur = true): Promise<void> => {

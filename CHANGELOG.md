@@ -1,3 +1,10 @@
+## 8.1.0
+* Replace boolean switches with radio buttons
+
+## 8.0.0
+* Buttons don't use `primary` bs role by default & not strong text
+* add `activeHeightOffset` to `SingleActiveArrayField` table
+
 ## 7.2.0
 * Add `submitOnlySchemaValidations`
 

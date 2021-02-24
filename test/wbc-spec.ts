@@ -15,8 +15,8 @@ describe("WBC (MHL.3)", () => {
 	});
 
 	it("taxon census has correct values when yes is selected", async () => {
-		const widget = await form.$getCheckboxWidget("gatherings.0.taxonCensus");
-		await widget.click();
+		const widget = await form.getBooleanWidget("gatherings.0.taxonCensus");
+		await widget.$true.click();
 
 		const formData = await form.getChangedData();
 
@@ -26,8 +26,8 @@ describe("WBC (MHL.3)", () => {
 	});
 
 	it("taxon census has correct values when no is selected", async () => {
-		const widget = await form.$getCheckboxWidget("gatherings.0.taxonCensus");
-		await widget.click();
+		const widget = await form.getBooleanWidget("gatherings.0.taxonCensus");
+		await widget.$false.click();
 
 		const formData = await form.getChangedData();
 

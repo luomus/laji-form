@@ -20,7 +20,6 @@ export class Button extends React.Component {
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-					bsStyle="primary"
 					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
@@ -450,7 +449,7 @@ export class Stretch extends React.Component {
 }
 
 export function Help({help, id}) {
-	const helpGlyph = <span className="label-info laji-form-help-glyph"><strong>?</strong></span>;
+	const helpGlyph = <span className="label-info laji-form-help-glyph">?</span>;
 
 	return help ? (
 		<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>

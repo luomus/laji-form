@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "7.2.6",
+  "version": "8.1.0",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/app.js",
   "types": "lib/app.d.ts",
@@ -47,7 +47,6 @@
     "prop-types": "^15.5.8",
     "react": "~16.8.6",
     "react-bootstrap": "git+https://git@github.com/olzraiti/react-bootstrap.git#927b8f7a33ba1262b8a59cf236f612f5b5e2130c",
-    "react-bootstrap-switch": "^15.0.4",
     "react-dom": "~16.8.6",
     "react-dropzone": "^10.1.4",
     "react-inlinesvg": "^0.6.0",

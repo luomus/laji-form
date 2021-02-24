@@ -779,6 +779,7 @@ class TableArrayFieldTemplate extends React.Component {
 	getStyles = () => {
 		const that = this.props.formContext.this;
 		const {activeIdx} = that.state;
+		const { activeHeightOffset = 0 } = getUiOptions(this.props.uiSchema);
 		const rowElem = this.itemElems[activeIdx];
 		if (!rowElem || !this.activeElem) return;
 		return {
@@ -788,7 +789,7 @@ class TableArrayFieldTemplate extends React.Component {
 				width: "100%"
 			} : {},
 			activeTrStyle: activeIdx !== undefined ? {
-				height: this.activeElem.offsetHeight
+				height: this.activeElem.offsetHeight + activeHeightOffset
 			} : {}
 		};
 	}
