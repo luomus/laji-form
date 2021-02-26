@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Help } from "../components";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Tooltip } from "react-bootstrap";
 import { isEmptyString, parseJSONPointer } from "../../utils";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 
 const TitleField = ({title, className, buttons, help, id, formData, titleFormatters = [], style}) => {
 	const renderedFormatters = titleFormatters.map((titleFormatter) => {
@@ -30,11 +31,14 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 	);
 
 	return (
-		<Legend>
-			<OverlayTrigger placement="right" overlay={tooltipElem}>
-				{titleContent}
-			</OverlayTrigger>
-		</Legend>
+		<ReactContext.Consumer>{({theme: {OverlayTrigger}}) => 
+			<Legend>
+				<OverlayTrigger placement="right" overlay={tooltipElem}>
+					{titleContent}
+				</OverlayTrigger>
+			</Legend>
+		}
+		</ReactContext.Consumer>
 	);
 };
 

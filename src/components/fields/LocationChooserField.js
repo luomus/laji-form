@@ -2,13 +2,14 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { Modal, Tooltip, Popover, Overlay } from "react-bootstrap";
+import { Modal, Tooltip } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
 import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import ReactContext from "../../ReactContext";
 
 @BaseComponent
 export default class LocationChooserField extends React.Component {
@@ -52,6 +53,7 @@ export default class LocationChooserField extends React.Component {
 }
 
 class LocationButton extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -526,6 +528,7 @@ class LocationButton extends React.Component {
 			ref={this.setButtonRef}
 		/>;
 
+		const {Overlay, Popover} = this.context.theme;
 		if (hasErrors) {
 			return (
 				<React.Fragment>

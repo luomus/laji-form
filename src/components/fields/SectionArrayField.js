@@ -6,8 +6,9 @@ import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
-import { Overlay, Popover, Glyphicon, Row, Col } from "react-bootstrap";
+import { Glyphicon, Row, Col } from "react-bootstrap";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
 
 const getOptions = (options) => {
@@ -151,6 +152,7 @@ const SectionContent = ({
 
 @handlesArrayKeys
 class SectionArrayFieldTemplate extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.addButtonRef = React.createRef();
@@ -298,6 +300,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			containerPointer,
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id)
 		};
+		const {Overlay, Popover} = this.context.theme;
 		const add = (
 			<React.Fragment>
 				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>

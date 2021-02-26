@@ -2,13 +2,14 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import * as equals from "deep-equal";
-import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, MenuItem, Tooltip, Collapse, } from "react-bootstrap";
 import * as Dropdown from "react-bootstrap/lib/Dropdown";
 import * as DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
 
@@ -58,6 +59,7 @@ const scopeFieldSettings = {
  */
 @BaseComponent
 export default class ScopeField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -470,6 +472,7 @@ export default class ScopeField extends React.Component {
 			</Tooltip>
 		);
 
+		const {OverlayTrigger} = this.context.theme;
 		return (
 			<OverlayTrigger key={`${this.props.idSchema.$id}-scope`} overlay={tooltip} placement="left" bsRole={bsRole} >
 				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} id={`${this.props.idSchema.$id}-additionals`}/>
@@ -639,13 +642,15 @@ function GlyphField({settings, idSchema, formData, schema, registry, isIncluded,
 
 	const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
 	return (
-		<OverlayTrigger key={property} overlay={tooltip} placement="left">
-			<GlyphButton glyph={glyph}
-			             disabled={hasData}
-			             themeRole={isIncluded ? "primary" : "default"}
-			             onClick={onButtonClick}
-			/>
-		</OverlayTrigger>
+		<ReactContext.Consumer>{
+			({theme: {OverlayTrigger}}) =>
+				<OverlayTrigger key={property} overlay={tooltip} placement="left">
+					<GlyphButton glyph={glyph}
+					             disabled={hasData}
+					             themeRole={isIncluded ? "primary" : "default"}
+					             onClick={onButtonClick} />
+				</OverlayTrigger>
+		}</ReactContext.Consumer>
 	);
 }
 

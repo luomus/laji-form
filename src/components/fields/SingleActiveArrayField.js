@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
-import { Accordion, OverlayTrigger, Tooltip, Pager, Row, Col } from "react-bootstrap";
+import { Accordion, Tooltip, Pager, Row, Col } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
@@ -1067,6 +1067,7 @@ const headerFormatters = {
 };
 
 class AccordionHeader extends React.Component {
+	static contextType = ReactContext;
 	onHeaderClick = () => {
 		const {that, idx, canHaveUndefinedIdx = true} = this.props;
 		const formatters = this.getFormatters();
@@ -1151,6 +1152,7 @@ class AccordionHeader extends React.Component {
 			</div>
 		);
 
+		const {OverlayTrigger} = this.context.theme;
 		return hasData(popupData) ? (
 			<OverlayTrigger placement="left"
 			                overlay={<Tooltip id={"nav-tooltip-" + idx}><Popup data={popupData} /></Tooltip>}>

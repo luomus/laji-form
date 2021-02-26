@@ -6,4 +6,3 @@ export interface ContextProps {
 }
 const Context = React.createContext<Partial<ContextProps>> ({});
 export default Context;
-

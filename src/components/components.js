@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Overlay, OverlayTrigger as _OverlayTrigger, Popover, Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -29,6 +29,7 @@ export class Button extends React.Component {
 }
 
 export class DeleteButton extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		confirm: PropTypes.bool,
 		onClick: PropTypes.func.isRequired,
@@ -140,6 +141,7 @@ export class DeleteButton extends React.Component {
 
 	renderConfirmPopup() {
 		const {translations, confirmPlacement = "left"} = this.props;
+		const {Overlay, Popover} = this.context.theme;
 		return (
 			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
 							 target={this.getOverlayTarget}>
@@ -545,6 +547,7 @@ function NullTooltip() {
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export class TooltipComponent extends React.Component {
+	static contextType = ReactContext;
 	setOverlayRef = (elem) => {
 		this.overlayElem = elem;
 	}
@@ -554,12 +557,13 @@ export class TooltipComponent extends React.Component {
 	render() {
 		const {tooltip, children, id, placement, trigger, className} = this.props;
 
+		const {OverlayTrigger} = this.context.theme;
 		const overlay = (
-			<_OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
+			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
 			}>
 				{children}
-			</_OverlayTrigger>
+			</OverlayTrigger>
 		);
 
 		return (trigger === "hover") ? (
@@ -590,8 +594,9 @@ const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
 	return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={ref} />;
 });
 
-// Bootstrap OverlayTrigger that is hoverable if hoverable === true
+// OverlayTrigger that is hoverable if hoverable === true
 export class OverlayTrigger extends React.Component {
+	static contextType = ReactContext;
 	
 	setOverlayTriggerRef = elem => {
 		this.overlayTriggerRef = elem;
@@ -634,24 +639,25 @@ export class OverlayTrigger extends React.Component {
 			...props
 		} = this.props;
 
+		const {OverlayTrigger} = this.context.theme;
 		if (!this.props.hoverable) return (
-			<_OverlayTrigger {...props} overlay={overlay}>
+			<OverlayTrigger {...props} overlay={overlay}>
 				{children}
-			</_OverlayTrigger>
+			</OverlayTrigger>
 		);
 
-		const _overlay = React.cloneElement(overlay, {onMouseOver: this.overlayMouseOver, onMouseOut: this.overlayMouseOut});
+		let _overlay = React.cloneElement(overlay, {onMouseOver: this.overlayMouseOver, onMouseOut: this.overlayMouseOut});
 
 		return (
 			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>
-				<_OverlayTrigger {...props}
+				<OverlayTrigger {...props}
 				                delay={1}
 				                trigger={[]} 
 				                placement={this.props.placement || "top"}
 				                ref={this.setOverlayTriggerRef}
 				                overlay={_overlay}>
 					{children}
-				</_OverlayTrigger>
+				</OverlayTrigger>
 			</div>
 		);
 	}

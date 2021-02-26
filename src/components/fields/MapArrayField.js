@@ -7,7 +7,7 @@ import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
-import { Row, Col, Popover, ButtonToolbar, Modal } from "react-bootstrap";
+import { Row, Col, ButtonToolbar, Modal } from "react-bootstrap";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -1129,6 +1129,7 @@ class LolifeMapArrayField extends React.Component {
 function _MapArrayField(ComposedComponent) {
 @BaseComponent
 class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
@@ -1577,6 +1578,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			</Stretch>
 		);
 		const {TitleField} = this.props.registry.fields;
+		const {Popover} = this.context.theme;
 
 		return (
 			<React.Fragment>

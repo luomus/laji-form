@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Glyphicon, Popover, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
+import { Glyphicon, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
 function renderFlag(suggestion, prepend) {
@@ -779,6 +780,7 @@ export class Autosuggest extends React.Component {
 }
 
 class TaxonCardOverlay extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {converted: false};
@@ -860,15 +862,18 @@ class TaxonCardOverlay extends React.Component {
 
 		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
 
+		const {Popover} = this.context.theme;
 		const popover = (
 			<Popover id={`${id}-popover`}>
 				<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
 					<div>
-						<OverlayTrigger overlay={tooltipElem}>
-							<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-								<TaxonName {...taxon} /><br />
-							</a>
-						</OverlayTrigger>
+						<ReactContext.Provider value={this.context}>
+							<OverlayTrigger overlay={tooltipElem}>
+								<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
+									<TaxonName {...taxon} /><br />
+								</a>
+							</OverlayTrigger>
+						</ReactContext.Provider>
 						<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
 						{!higherThanOrder ? (
 							<React.Fragment>

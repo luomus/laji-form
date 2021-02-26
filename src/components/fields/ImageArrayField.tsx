@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
-import { Modal, Row, Col, Glyphicon, Tooltip, OverlayTrigger, Alert, Pager } from "react-bootstrap";
+import { Modal, Row, Col, Glyphicon, Tooltip, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -15,6 +15,7 @@ import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import * as moment from "moment";
 import { FieldProps, RootContext } from "../LajiForm";
 import ApiClient from "../../ApiClient";
+import ReactContext from "../../ReactContext";
 
 function toDecimal(number: any) {
 	if (!number) return undefined;
@@ -88,6 +89,7 @@ interface MediaArrayState {
 
 type Constructor<LFC> = new(...args: any[]) => LFC;
 export function MediaArrayField<LFC extends Constructor<React.Component<FieldProps, MediaArrayState>>>(ComposedComponent: LFC) {
+
 	@BaseComponent
 	class MediaArrayField extends ComposedComponent {
 		ALLOWED_FILE_TYPES: string[];
@@ -102,6 +104,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		CONTAINER_CLASS: string;
 		METADATA_FORM_ID: string;
 
+		static contextType = ReactContext;
 		static propTypes = {
 			uiSchema: PropTypes.shape({
 				"ui:options": PropTypes.shape({
@@ -248,6 +251,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const {dragging} = this.state;
 
+			const {OverlayTrigger} = this.context.theme;
 			return (
 				<Row>
 					<Col xs={12}>
