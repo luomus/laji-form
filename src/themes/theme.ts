@@ -57,6 +57,10 @@ export interface PopoverProps extends JSX.IntrinsicAttributes, HasMaybeChildren 
 	title?: string;
 }
 
+export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	id?: string;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: (props: TableProps) => JSX.Element;
@@ -65,5 +69,6 @@ export interface Theme {
 	Overlay: (props: OverlayProps) => JSX.Element;
 	OverlayTrigger: (props: OverlayTriggerProps) => JSX.Element | null;
 	Popover: (props: PopoverProps) => JSX.Element;
+	Tooltip: (props: TooltipProps) => JSX.Element;
 }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Glyphicon, InputGroup, Tooltip, Modal, Row, Col } from "react-bootstrap";
+import { Glyphicon, InputGroup, Modal, Row, Col } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
@@ -85,6 +85,8 @@ class SimpleValueRenderer extends React.Component {
 
 function TaxonAutosuggest(ComposedComponent) {
 	return class TaxonAutosuggestWidget extends ComposedComponent {
+		static contextType = ReactContext;
+
 		constructor(props) {
 			super(props);
 			this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -139,6 +141,7 @@ function TaxonAutosuggest(ComposedComponent) {
 		}
 
 		renderUnsuggested = (props) => (input) => {
+			const {Tooltip} = this.context.theme;
 			const tooltip = (
 				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
 			);
@@ -262,6 +265,7 @@ class UnitAutosuggestWidget extends React.Component {
 }
 
 class FriendsAutosuggestWidget extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -300,6 +304,7 @@ class FriendsAutosuggestWidget extends React.Component {
 	}
 
 	renderUnsuggested = (inputValue) => {
+		const {Tooltip} = this.context.theme;
 		const tooltip = (
 			<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
 		);
@@ -849,6 +854,7 @@ class TaxonCardOverlay extends React.Component {
 			informalTaxonGroups = []
 		} = this.state;
 
+		const {Popover, Tooltip} = this.context.theme;
 		const tooltipElem = (
 			<Tooltip id={`${id}-popover-tooltip`}>
 				{formContext.translations.OpenSpeciedCard}
@@ -862,7 +868,6 @@ class TaxonCardOverlay extends React.Component {
 
 		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
 
-		const {Popover} = this.context.theme;
 		const popover = (
 			<Popover id={`${id}-popover`}>
 				<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>

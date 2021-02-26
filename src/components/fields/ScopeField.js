@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import * as equals from "deep-equal";
-import { ListGroup, ListGroupItem, Modal, MenuItem, Tooltip, Collapse, } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Modal, MenuItem, Collapse } from "react-bootstrap";
 import * as Dropdown from "react-bootstrap/lib/Dropdown";
 import * as DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import * as Spinner from "react-spinner";
@@ -466,13 +466,13 @@ export default class ScopeField extends React.Component {
 	}
 
 	renderFieldsButton = (bsRole) => {
+		const {OverlayTrigger, Tooltip} = this.context.theme;
 		const tooltip = (
 			<Tooltip id={`${this.props.idSchema.$id}-additionals-tooltip`}>
 				{this.props.formContext.translations.SelectMoreFields}
 			</Tooltip>
 		);
 
-		const {OverlayTrigger} = this.context.theme;
 		return (
 			<OverlayTrigger key={`${this.props.idSchema.$id}-scope`} overlay={tooltip} placement="left" bsRole={bsRole} >
 				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} id={`${this.props.idSchema.$id}-additionals`}/>
@@ -640,7 +640,11 @@ function GlyphField({settings, idSchema, formData, schema, registry, isIncluded,
 	}
 	const hasData = propertyHasData(property, formData) && (!formData || !isDefaultData(formData[property], schema.properties[property], registry.definitions));
 
-	const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
+	const tooltip = (
+		<ReactContext.Consumer>{
+			({theme: {Tooltip}}) => <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>
+		}</ReactContext.Consumer>
+	);
 	return (
 		<ReactContext.Consumer>{
 			({theme: {OverlayTrigger}}) =>

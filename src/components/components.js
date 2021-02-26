@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Tooltip, ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -455,21 +455,27 @@ export function Help({help, id}) {
 	const helpGlyph = <span className="label-info laji-form-help-glyph">?</span>;
 
 	return help ? (
-		<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
-			{helpGlyph}
-		</OverlayTrigger>
+		<ReactContext.Consumer>{({theme: {Tooltip}}) => 
+			<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
+				{helpGlyph}
+			</OverlayTrigger>
+		}</ReactContext.Consumer>
 	) : helpGlyph;
 }
 
 export function Label({label, help, children, id, required, _context, helpHoverable, helpPlacement}) {
 	const showHelp = label && help;
 
-	const tooltipElem = <Tooltip id={id + "-tooltip"}>{help ? (
-		<span>
-			<strong dangerouslySetInnerHTML={{__html: label}} /><br />
-			<span dangerouslySetInnerHTML={{__html: help}} />
-		</span>
-	): label}</Tooltip>;
+	const tooltipElem = (
+		<ReactContext.Consumer>{({theme: {Tooltip}}) => (
+			<Tooltip id={id + "-tooltip"}>{help ? (
+				<span>
+					<strong dangerouslySetInnerHTML={{__html: label}} /><br />
+					<span dangerouslySetInnerHTML={{__html: help}} />
+				</span>
+			): label}</Tooltip>
+		)}</ReactContext.Consumer>
+	);
 
 	const labelElem = (
 		<label htmlFor={id}>
@@ -557,7 +563,7 @@ export class TooltipComponent extends React.Component {
 	render() {
 		const {tooltip, children, id, placement, trigger, className} = this.props;
 
-		const {OverlayTrigger} = this.context.theme;
+		const {OverlayTrigger, Tooltip} = this.context.theme;
 		const overlay = (
 			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />

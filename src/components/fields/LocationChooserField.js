@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { Modal, Tooltip } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
@@ -528,7 +528,7 @@ class LocationButton extends React.Component {
 			ref={this.setButtonRef}
 		/>;
 
-		const {Overlay, Popover} = this.context.theme;
+		const {Overlay, Popover, Tooltip} = this.context.theme;
 		if (hasErrors) {
 			return (
 				<React.Fragment>

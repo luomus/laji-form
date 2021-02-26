@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Help } from "../components";
-import { Tooltip } from "react-bootstrap";
 import { isEmptyString, parseJSONPointer } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -22,12 +21,14 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 	if (!help) return <Legend>{titleContent}</Legend>;
 
 	const tooltipElem = (
-		<Tooltip id={id + "-tooltip"}>
-			<span>
-				<strong dangerouslySetInnerHTML={{__html: title}} /><br />
-				<span dangerouslySetInnerHTML={{__html: help}} />
-			</span>
-		</Tooltip>
+		<ReactContext.Consumer>{({theme: {Tooltip}}) => 
+			<Tooltip id={id + "-tooltip"}>
+				<span>
+					<strong dangerouslySetInnerHTML={{__html: title}} /><br />
+					<span dangerouslySetInnerHTML={{__html: help}} />
+				</span>
+			</Tooltip>
+		}</ReactContext.Consumer>
 	);
 
 	return (
