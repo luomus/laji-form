@@ -21,6 +21,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		});
 
 		it("selects on click", async () => {
+			await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locateButton("gatherings.0.taxonCensus", "add")), 1000, "taxon census didn't show up");
 			await form.$locateButton("gatherings.0.taxonCensus", "add").click();
 			await censusAutosuggest.$input.sendKeys("aves");
 			await censusAutosuggest.waitForSuggestionsToLoad();
