@@ -15,6 +15,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		let censusAutosuggest: TaxonAutosuggestWidgetPOI;
 		beforeAll(async () => {
 			const scopeField = form.getScopeField("gatherings.0");
+			await browser.wait(protractor.ExpectedConditions.visibilityOf(scopeField.$button), 1000, "gatherings additionals button didn't show up");
 			await scopeField.$button.click();
 			await scopeField.$$listItems.last().click();
 			censusAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.taxonCensus.0.censusTaxonID");
