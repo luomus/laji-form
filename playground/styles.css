@@ -1592,6 +1592,7 @@ min-height: 20px;
 /* Select widget options to be single line & use all width needed. */
 .laji-form .rw-popup-container {
 	right: initial;
+	min-width: 100%;
 }
 .laji-form .rw-popup {
 	right: initial;
