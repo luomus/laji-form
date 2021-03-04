@@ -131,9 +131,11 @@ export default class GeocoderField extends React.Component {
 			key: loading,
 			render: onClick => (
 				<Button key="geolocate" onClick={onClick} disabled={loading || props.disabled || props.readonly || !this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)} className="geocoder-btn">
-					{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
-					{" "}
-					{props.formContext.translations.Geolocate}
+					<strong>
+						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
+						{" "}
+						{props.formContext.translations.Geolocate}
+					</strong>
 				</Button>
 			)
 		};
