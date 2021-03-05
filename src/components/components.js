@@ -21,7 +21,7 @@ export class Button extends React.Component {
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-					bsStyle="primary"
+					themeRole="primary"
 					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
