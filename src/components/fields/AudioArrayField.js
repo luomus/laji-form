@@ -29,7 +29,7 @@ export default class AudioArrayField extends React.Component {
 				apiClient={this.props.formContext.apiClient}
 				translations={this.props.formContext.translations}
 			/>
-			<GlyphButton className="audio-metadata-button" bsStyle="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
+			<GlyphButton className="audio-metadata-button" themeRole="info" glyph="pencil" onClick={this.openModalFor(idx)}>{" "}{this.props.formContext.translations.Edit}</GlyphButton>
 		</div>
 	)
 	renderLoadingMedia = () => null
