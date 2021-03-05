@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Modal, Button, ListGroup, ListGroupItem, ButtonGroup, Breadcrumb, Row, Col } from "react-bootstrap";
+import { Modal, Button, ListGroup, ListGroupItem, Breadcrumb, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -221,6 +221,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 	getButtonGroup = (id) => {
 		const {translations} = this.props.formContext;
 		const {informalTaxonGroupsById} = this.state;
+		const {ButtonGroup} = this.context.theme;
 		return (
 			<ButtonGroup>
 				{informalTaxonGroupsById[id].hasSubGroup && <Button key="subgroups" onClick={this.onSubgroupSelected(id)}>{translations.ShowSubgroups}</Button>}

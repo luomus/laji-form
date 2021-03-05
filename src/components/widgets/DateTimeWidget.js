@@ -5,14 +5,16 @@ import * as DateTimePicker from "react-widgets/lib/DateTimePicker";
 import * as moment from "moment";
 import * as momentLocalizer from "react-widgets/lib/localizers/moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
-import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions, isDescendant } from "../../utils";
+import { Button } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
+import ReactContext from "../../ReactContext";
 
 const DATE_TIME_SEPARATOR = ", ";
 
 @BaseComponent
 export default class DateTimeWidget extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema:  PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -182,6 +184,7 @@ export default class DateTimeWidget extends React.Component {
 		/>);
 
 		const {showButtons} = options;
+		const {ButtonGroup} = this.context.theme;
 
 		return showButtons ? (
 			<div className="date-widget" ref={this.setContainerRef}>

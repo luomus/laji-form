@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { ButtonGroup, Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -142,7 +142,7 @@ export class DeleteButton extends React.Component {
 
 	renderConfirmPopup() {
 		const {translations, confirmPlacement = "left"} = this.props;
-		const {Overlay, Popover} = this.context.theme;
+		const {Overlay, Popover, ButtonGroup} = this.context.theme;
 		return (
 			<Overlay show={true} placement={confirmPlacement} rootClose={true} onHide={this.onHideConfirm}
 							 target={this.getOverlayTarget}>
