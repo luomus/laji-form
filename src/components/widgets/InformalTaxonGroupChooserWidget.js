@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Modal, Button, ListGroup, ListGroupItem, Breadcrumb, Row, Col } from "react-bootstrap";
+import { Modal, ListGroup, ListGroupItem, Breadcrumb, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -10,6 +10,7 @@ import { getUiOptions } from "../../utils";
 
 @BaseComponent
 export default class InformalTaxonGroupChooserWidget extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -90,6 +91,8 @@ export default class InformalTaxonGroupChooserWidget extends React.Component {
 				grid={grid}
 			/>
 		);
+
+		const {Button} = this.context.theme;
 
 		if (button) {
 			const title = !this.props.value 
@@ -221,7 +224,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 	getButtonGroup = (id) => {
 		const {translations} = this.props.formContext;
 		const {informalTaxonGroupsById} = this.state;
-		const {ButtonGroup} = this.context.theme;
+		const {Button, ButtonGroup} = this.context.theme;
 		return (
 			<ButtonGroup>
 				{informalTaxonGroupsById[id].hasSubGroup && <Button key="subgroups" onClick={this.onSubgroupSelected(id)}>{translations.ShowSubgroups}</Button>}

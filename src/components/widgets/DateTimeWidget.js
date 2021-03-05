@@ -6,7 +6,6 @@ import * as moment from "moment";
 import * as momentLocalizer from "react-widgets/lib/localizers/moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { getUiOptions, isDescendant } from "../../utils";
-import { Button } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
@@ -184,7 +183,7 @@ export default class DateTimeWidget extends React.Component {
 		/>);
 
 		const {showButtons} = options;
-		const {ButtonGroup} = this.context.theme;
+		const {Button, ButtonGroup} = this.context.theme;
 
 		return showButtons ? (
 			<div className="date-widget" ref={this.setContainerRef}>
