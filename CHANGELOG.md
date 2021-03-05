@@ -1,3 +1,6 @@
+## 9.0.0
+* Revert "Buttons don't use `primary` bs role by default & not strong text"
+
 ## 8.1.0
 * Replace boolean switches with radio buttons
 

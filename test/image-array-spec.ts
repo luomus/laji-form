@@ -1,5 +1,5 @@
 import { Form, createForm, mockImageMetadata, ImageArrayFieldPOI } from "./test-utils";
-import { $$, browser } from "protractor";
+import { $$, browser, protractor } from "protractor";
 const properties = require("../properties.json");
 
 describe("Image array", () => {
@@ -50,7 +50,7 @@ describe("Image array", () => {
 			const {resolve, remove} = await form.setMockResponse("/images/mock", false);
 			await imgArrayField.$$imgInteractives.first().click();
 			await resolve(mockImageMetadata);
-			await browser.sleep(1000);
+			await browser.wait(protractor.ExpectedConditions.visibilityOf(imgArrayField.$modal), 5000, "metadata modal didn't show up");
 
 			expect(await imgArrayField.$modal.isDisplayed()).toBe(true);
 			await remove();
