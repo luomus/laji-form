@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../utils";
-import { ListGroup, ListGroupItem, Modal, Alert } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
 import { isObject } from "laji-map/lib/utils";
@@ -12,6 +13,7 @@ import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 @BaseComponent
 export default class AnnotationField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -71,6 +73,7 @@ export default class AnnotationField extends React.Component {
 			: injectButtons(innerUiSchema, [this.getButton()], buttonsPath);
 
 		let Container = undefined;
+		const {Modal} = this.context.theme;
 
 		switch (container) {
 		case "modal":

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Theme, PanelProps, ButtonProps, OverlayTriggerProps } from "./theme";
+import { Theme, PanelProps, ButtonProps, OverlayTriggerProps, Modal } from "./theme";
 
 const Stub = ({children}: {children: React.ReactNode}) => {
 	console.error("You should define a theme prop for LajiForm. Using stub theme, the form will render but many components won't work as expected and will result in many React warnings.");
@@ -7,6 +7,12 @@ const Stub = ({children}: {children: React.ReactNode}) => {
 };
 
 const DivStub = React.forwardRef<HTMLDivElement, any>((props: any, ref) => <Stub><div {...props} ref={ref} /></Stub>);
+
+const Modal: Modal = DivStub as unknown as Modal;
+Modal.Body = DivStub;
+Modal.Header = DivStub;
+Modal.Footer = DivStub;
+Modal.Title = DivStub;
 
 const theme: Theme = {
 	Panel: React.forwardRef<HTMLDivElement, PanelProps>(({children, header}, ref) =>
@@ -25,6 +31,7 @@ const theme: Theme = {
 	OverlayTrigger: React.forwardRef<HTMLDivElement, OverlayTriggerProps>((props, ref) => <Stub><div {...props} ref={ref} /></Stub>),
 	Popover: ({title, ...props}) => <Stub><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
 	Tooltip: DivStub,
-	Glyphicon: DivStub
+	Glyphicon: DivStub,
+	Modal
 };
 export default theme;

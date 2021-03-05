@@ -4,8 +4,8 @@ import BaseComponent from "../BaseComponent";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
 import { Button } from "../components";
-import { Modal } from "react-bootstrap";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { TagInputComponent } from "./TagArrayField";
 
 
@@ -14,6 +14,7 @@ import { TagInputComponent } from "./TagArrayField";
  */
 @BaseComponent
 export default class UnitListShorthandArrayField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
@@ -101,6 +102,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 
 	render() {
 		const {SchemaField} = this.props.registry.fields;
+		const {Modal} = this.context.theme;
 
 		return (
 			<React.Fragment>

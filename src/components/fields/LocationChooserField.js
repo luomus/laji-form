@@ -2,7 +2,6 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { Modal } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
@@ -576,6 +575,7 @@ class LocationButton extends React.Component {
 
 		const {translations} = that.props.formContext;
 
+		const {Modal} = this.context.theme;
 		return (
 			<React.Fragment>
 				{this.renderButton()}

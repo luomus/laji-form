@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -176,7 +176,9 @@ export function AddButton({onClick}) {
 }
 
 export class Alert extends React.Component {
+	static contextType = ReactContext;
 	render() {
+		const {Modal} = this.context.theme;
 		return (
 			<Modal show={true} enforceFocus={true} onKeyDown={this.onKeyDown}>
 				<Modal.Body>

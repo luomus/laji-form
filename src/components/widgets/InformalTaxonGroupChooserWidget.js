@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Modal, ListGroup, ListGroupItem, Breadcrumb, Row, Col } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Breadcrumb, Row, Col } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -205,6 +205,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 	Container = ({children}) => {
 		const {modal, onHide} = this.props;
 		const {translations} = this.props.formContext;
+		const {Modal} = this.context.theme;
 		return modal ? (
 			<Modal show={true} onHide={onHide} dialogClassName="laji-form informal-taxon-group-chooser">
 				<Modal.Header closeButton={true}>

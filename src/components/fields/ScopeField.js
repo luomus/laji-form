@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import * as equals from "deep-equal";
-import { ListGroup, ListGroupItem, Modal, MenuItem, Collapse } from "react-bootstrap";
+import { ListGroup, ListGroupItem, MenuItem, Collapse } from "react-bootstrap";
 import * as Dropdown from "react-bootstrap/lib/Dropdown";
 import * as DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import * as Spinner from "react-spinner";
@@ -451,6 +451,7 @@ export default class ScopeField extends React.Component {
 			/>);
 		});
 
+		const {Modal} = this.context.theme;
 		if (this.state.additionalsOpen) this.modal = (
 			<Modal key="fields-modal" show={true} onHide={this.onToggleAdditionals} dialogClassName="laji-form scope-field-modal">
 				<Modal.Header closeButton={true}>

@@ -3,10 +3,11 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { Modal, Alert } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
 import { NORMAL_COLOR, ACTIVE_COLOR } from "laji-map/lib/globals";
@@ -21,6 +22,7 @@ const PLACE_DELETE_FAIL = "PLACE_DELETE_FAIL";
  */
 @BaseComponent
 export default class NamedPlaceChooserField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object", "array"])
@@ -176,6 +178,7 @@ export default class NamedPlaceChooserField extends React.Component {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {translations} = formContext;
 		const {failed} = this.state;
+		const {Modal} = this.context.theme;
 		return (
 			<React.Fragment>
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />

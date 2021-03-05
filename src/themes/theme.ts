@@ -77,6 +77,25 @@ export interface GlyphiconProps extends JSX.IntrinsicAttributes, HasMaybeStyle, 
 	glyph: Glyph | string;
 }
 
+export interface ModalProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	show?: boolean
+	enforceFocus?: boolean;
+	keyboard?: boolean;
+	onKeyDown?: (e: React.KeyboardEvent) => void;
+	dialogClassName?: string;
+	onHide?: Function; // eslint-disable-line @typescript-eslint/ban-types
+}
+export interface ModalHeader extends React.HTMLProps<any> {
+	closeButton?: boolean;
+}
+
+export interface Modal extends React.HTMLProps<ModalProps> {
+    Body: React.ElementType;
+    Header: React.ElementType<ModalHeader>;
+    Title: React.ElementType;
+    Footer: React.ElementType;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: React.ElementType<TableProps>;
@@ -88,4 +107,5 @@ export interface Theme {
 	Popover: React.ElementType<PopoverProps>;
 	Tooltip: React.ElementType<TooltipProps>;
 	Glyphicon: React.ElementType<GlyphiconProps>;
+	Modal: Modal;
 }

@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode }  from "react-dom";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
-import { Modal, Alert, ListGroup, ListGroupItem, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Alert, ListGroup, ListGroupItem, Form, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -17,6 +17,7 @@ const SAVE = "SAVE", FETCH = "FETCH";
  */
 @BaseComponent
 export default class NamedPlaceSaverField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
@@ -69,6 +70,7 @@ export default class NamedPlaceSaverField extends React.Component {
 	render() {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {uiSchema} = this.state;
+		const {Modal} = this.context.theme;
 		return (
 			<div>
 				<SchemaField  {...this.props} uiSchema={uiSchema} />

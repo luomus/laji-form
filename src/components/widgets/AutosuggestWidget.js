@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { InputGroup, Modal, Row, Col } from "react-bootstrap";
+import { InputGroup, Row, Col } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
@@ -970,6 +970,7 @@ class InformalTaxonGroupsAddon extends React.Component {
 }
 
 class TaxonImgChooser extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -1014,6 +1015,7 @@ class TaxonImgChooser extends React.Component {
 		const {thumbnail, taxon, modal} = this.state;
 
 		const {translations} = this.props.formContext;
+		const {Modal} = this.context.theme;
 		return (
 			<div className="laji-form-medias">
 				<div className="taxon-img media-container interactive" style={{backgroundImage: `url(${thumbnail})`}} onClick={this.showModal} tabIndex={0}>

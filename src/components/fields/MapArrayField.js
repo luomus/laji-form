@@ -7,7 +7,7 @@ import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
-import { Row, Col, ButtonToolbar, Modal } from "react-bootstrap";
+import { Row, Col, ButtonToolbar } from "react-bootstrap";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -1876,6 +1876,7 @@ export class MapComponent extends React.Component {
 
 	render() {
 		const {panel, onFocusGrab, onFocusRelease, onOptionsChanged, ...mapOptions} = this.props; // eslint-disable-line
+		const {Modal} = this.context.theme;
 
 		const controlledPanel = panel ?
 			<MapPanel id={panel.id}

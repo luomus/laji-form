@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
-import { Row, Col, Modal } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 import ReactContext from "../../ReactContext";
@@ -66,6 +66,7 @@ export default class LocalityField extends React.Component {
 
 	renderModal = () => {
 		const {onChange, ...props} = this.props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {Modal} = this.context.theme;
 		return (
 			<Modal dialogClassName="laji-form image-modal" show={true} onHide={this.hideEditor}>
 				<Modal.Header closeButton={true}>
