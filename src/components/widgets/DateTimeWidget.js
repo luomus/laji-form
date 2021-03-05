@@ -10,6 +10,7 @@ import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
 const DATE_TIME_SEPARATOR = ", ";
+export const YEAR_MATCH = /^\d{4}$/;
 
 @BaseComponent
 export default class DateTimeWidget extends React.Component {
@@ -19,6 +20,7 @@ export default class DateTimeWidget extends React.Component {
 			"ui:options": PropTypes.shape({
 				showButtons: PropTypes.bool,
 				showTimeList: PropTypes.bool,
+				allowOnlyYear: PropTypes.bool
 			})
 		}),
 		schema: PropTypes.shape({
@@ -57,6 +59,7 @@ export default class DateTimeWidget extends React.Component {
 		const {lang} = props.formContext;
 		let localeFormats = moment().locale(lang === "sv" ? "fi" : lang)._locale._longDateFormat;
 		const {translations} = props.formContext;
+		const {allowOnlyYear} = getUiOptions(props);
 
 		let dateFormat = "";
 		let timeFormat = "";
@@ -71,16 +74,15 @@ export default class DateTimeWidget extends React.Component {
 			timeFormat = localeFormats.LT;
 		}
 
-		let inputFormat = dateFormat;
 		const format = `${dateFormat}${dateFormat ? DATE_TIME_SEPARATOR : ""}${timeFormat}`;
+		const splitted = props.value && props.value.split("T");
+		const hasTime = props.value && splitted.length > 1 && splitted[1] !== "";
 
-		if (props.value) {
-			const splitted = props.value.split("T");
-			const hasTime = splitted.length > 1 && splitted[1] !== "";
-			if (hasTime) {
-				inputFormat = format;
-			}
-		}
+		let inputFormat = allowOnlyYear && props.value && props.value.match(YEAR_MATCH)
+			? "YYYY"
+			: hasTime
+				? format
+				: dateFormat;
 
 		const state = {
 			dateFormat,
@@ -99,16 +101,18 @@ export default class DateTimeWidget extends React.Component {
 
 	parse = (value) => {
 		if (!value) return undefined;
+		const {allowOnlyYear} = getUiOptions(this.props);
 		const hasTime = value.includes(DATE_TIME_SEPARATOR) || this.state.time && !this.state.calendar;
+		const onlyYear = allowOnlyYear && this.state.calendar && value.match(YEAR_MATCH);
 		let momentValue = moment(value, this.state.format);
-		let isoValue = undefined;
-		if (hasTime) {
-			isoValue = momentValue.toISOString();
-		} else {
-			isoValue = momentValue.format("YYYY-MM-DD");
-		}
+		const isoValue = onlyYear
+			? value
+			: hasTime
+				? momentValue.toISOString()
+				: momentValue.format("YYYY-MM-DD");
 		this.timeWritten = hasTime;
-		return moment(isoValue).toDate();
+		this.onlyYearWritten = onlyYear;
+		return onlyYear ? isoValue : moment(isoValue).toDate();
 	}
 
 	onChange = (value) => {
@@ -137,7 +141,9 @@ export default class DateTimeWidget extends React.Component {
 	onDateTimePickerChange = (value) => {
 		const momentValue = moment(value);
 		let formattedValue = momentValue.format("YYYY-MM-DDTHH:mm");
-		if (value !== null && !momentValue.isValid()) {
+		if (this.onlyYearWritten) {
+			formattedValue = value;
+		} else if (value !== null && !momentValue.isValid()) {
 			formattedValue = this.props.value;
 		} else if ((!this.toggle && !this.timeWritten) ||
 			(this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
@@ -146,6 +152,7 @@ export default class DateTimeWidget extends React.Component {
 		this.onChange(!value ? undefined : formattedValue);
 		this.toggle = undefined;
 		this.timeWritten = false;
+		this.onlyYearWritten = false;
 	}
 
 	render() {

@@ -1,3 +1,6 @@
+## 9.0.1
+* Add `allowOnlyYear` option for `DateTimeWidget` & `DateWidget`
+
 ## 9.0.0
 * Revert "Buttons don't use `primary` bs role by default & not strong text"
 
