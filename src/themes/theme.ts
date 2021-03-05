@@ -19,7 +19,7 @@ interface HasMaybeChildren {
 }
 
 interface HasMaybeRef {
-	ref?: React.Ref<any>;
+	ref?: React.Ref<any> | React.LegacyRef<any>;
 }
 
 interface HasMaybeStyle {
@@ -37,7 +37,7 @@ export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, H
 }
 
 export interface ProgressBarProps extends JSX.IntrinsicAttributes {
-	now: number;
+	now?: number;
 }
 
 export interface ButtonProps extends JSX.IntrinsicAttributes {
@@ -49,21 +49,22 @@ export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChild
 
 export interface OverlayProps extends JSX.IntrinsicAttributes {
 	show?: boolean;
-	placement?: "top" | "bottom" | "left" | "right";
+	placement?: "top" | "bottom" | "left" | "right" | string;
 	rootClose?: boolean;
-	onHide?: () => void;
-	target?: React.ReactInstance;
+	onHide?: Function; // eslint-disable-line @typescript-eslint/ban-types
+	target?: Function // eslint-disable-line @typescript-eslint/ban-types
+		| React.ReactInstance;
 	container?: React.Component;
 }
 
 export interface OverlayTriggerProps extends HasMaybeRef, OverlayProps {
 	overlay: any;
-	key: string | number | undefined;
+	key?: string | number | undefined;
 }
 
 export interface PopoverProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 	id?: string;
-	title?: string;
+	title?: React.ReactNode;
 }
 
 export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
@@ -73,19 +74,18 @@ export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren 
 type Glyph = "ok" | "refresh" | "warning-sign" | "plus" | "camera" | "headphones" | "user" | "flash" | "menu-hamburger";
 
 export interface GlyphiconProps extends JSX.IntrinsicAttributes, HasMaybeStyle, HasMaybeClassName {
-	glyph: Glyph;
+	glyph: Glyph | string;
 }
 
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
-	Table: (props: TableProps) => JSX.Element;
-	ProgressBar: (props: ProgressBarProps) => JSX.Element;
-	Button: (props: ButtonProps) => JSX.Element | null;
-	ButtonGroup: (props: ButtonGroupProps) => JSX.Element;
-	Overlay: (props: OverlayProps) => JSX.Element;
-	OverlayTrigger: (props: OverlayTriggerProps) => JSX.Element | null;
-	Popover: (props: PopoverProps) => JSX.Element;
-	Tooltip: (props: TooltipProps) => JSX.Element;
-	Glyphicon: (props: GlyphiconProps) => JSX.Element;
+	Table: React.ElementType<TableProps>;
+	ProgressBar: React.ElementType<ProgressBarProps>;
+	Button: React.ElementType<ButtonProps>;
+	ButtonGroup: React.ElementType<ButtonGroupProps>;
+	Overlay: React.ElementType<OverlayProps>;
+	OverlayTrigger: React.ElementType<OverlayTriggerProps>;
+	Popover: React.ElementType<PopoverProps>;
+	Tooltip: React.ElementType<TooltipProps>;
+	Glyphicon: React.ElementType<GlyphiconProps>;
 }
-

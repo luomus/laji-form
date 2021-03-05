@@ -6,6 +6,8 @@ const Stub = ({children}: {children: React.ReactNode}) => {
 	return <React.Fragment>{children}</React.Fragment>;
 };
 
+const DivStub = React.forwardRef<HTMLDivElement, any>((props: any, ref) => <Stub><div {...props} ref={ref} /></Stub>);
+
 const theme: Theme = {
 	Panel: React.forwardRef<HTMLDivElement, PanelProps>(({children, header}, ref) =>
 		<Stub>
@@ -15,14 +17,14 @@ const theme: Theme = {
 			</div>
 		</Stub>
 	),
-	Table: props => <Stub><div {...props} /></Stub>,
-	ProgressBar: props => <Stub><div {...props} /></Stub>,
+	Table: DivStub,
+	ProgressBar: DivStub,
 	Button: React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => <Stub><button {...props} ref={ref}/></Stub>),
-	ButtonGroup: props => <div {...props}/>,
-	Overlay: props => <div {...props} />,
+	ButtonGroup: DivStub,
+	Overlay: DivStub,
 	OverlayTrigger: React.forwardRef<HTMLDivElement, OverlayTriggerProps>((props, ref) => <Stub><div {...props} ref={ref} /></Stub>),
-	Popover: props => <Stub><div {...props} /></Stub>,
-	Tooltip: props => <Stub><div {...props} /></Stub>,
-	Glyphicon: props => <Stub><div {...props} /></Stub>
+	Popover: ({title, ...props}) => <Stub><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
+	Tooltip: DivStub,
+	Glyphicon: DivStub
 };
 export default theme;
