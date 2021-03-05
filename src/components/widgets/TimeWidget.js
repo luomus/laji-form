@@ -4,18 +4,21 @@ import * as moment from "moment";
 import DateTimeWidget from "./DateTimeWidget";
 import { isEmptyString } from "../../utils";
 
-const onChange = onChange => value => {
-	onChange(isEmptyString(value) ? undefined : (moment(value).format("HH:mm")));
+const TimeWidget = (props) => {
+	const {onChange} = props;
+	const _onChange = React.useCallback(
+		(value) => onChange(isEmptyString(value) ? undefined : (moment(value).format("HH:mm"))),
+		[onChange]
+	);
+	return (
+		<DateTimeWidget
+			{...props}
+			onChange={_onChange}
+			calendar={false}
+			value={props.value ? (moment().format("YYYY-MM-DD") + `T${props.value}`) : null}
+		/>
+	);
 };
-
-const TimeWidget = (props) => (
-	<DateTimeWidget
-		{...props}
-		onChange={onChange(props.onChange)}
-		calendar={false}
-		value={props.value ? (moment().format("YYYY-MM-DD") + `T${props.value}`) : null}
-	/>
-);
 TimeWidget.propTypes = {
 	schema: PropTypes.shape({
 		type: PropTypes.oneOf(["string"])

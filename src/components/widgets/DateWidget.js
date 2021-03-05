@@ -1,20 +1,32 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as moment from "moment";
-import DateTimeWidget from "./DateTimeWidget";
-import { isEmptyString } from "../../utils";
+import DateTimeWidget, { YEAR_MATCH } from "./DateTimeWidget";
+import { isEmptyString, getUiOptions } from "../../utils";
 
-const onChange = onChange => value => {
-	onChange(isEmptyString(value) ? undefined : (moment(value).format("YYYY-MM-DD")));
-};
-const DateWidget = (props) => (
-	<DateTimeWidget
-		{...props}
-		onChange={onChange(props.onChange)}
-		time={false}
-		value={props.value ? moment(props.value).format("YYYY-MM-DD") : null}
-	/>
+const format = (allowOnlyYear, value) => moment(value).format(
+	allowOnlyYear && value.match(YEAR_MATCH)
+		? "YYYY"
+		: "YYYY-MM-DD"
 );
+
+const DateWidget = (props) => {
+	const {onChange} = props;
+	const {allowOnlyYear} = getUiOptions(props);
+	const _onChange = React.useCallback(
+		(value) => onChange(isEmptyString(value) ? undefined : format(allowOnlyYear, value)),
+		[allowOnlyYear, onChange]
+	);
+	return (
+		<DateTimeWidget
+			{...props}
+			onChange={_onChange}
+			time={false}
+			value={props.value ? format(allowOnlyYear, props.value) : null}
+		/>
+	);
+};
+
 DateWidget.propTypes = {
 	uiSchema: PropTypes.shape({
 		"ui:options": PropTypes.shape({
