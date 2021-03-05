@@ -2,9 +2,8 @@ import * as React from "react";
 
 type Role = "primary" | "secondary" | "danger" | "warning" | "info" | "link" | string;
 
-export interface PanelProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef {
+export interface PanelProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef, HasMaybeClassName {
 	id?: string;
-	className?: string;
 	style?: React.CSSProperties;
 	themeRole?: Role;
 	collapsible?: "true";
@@ -23,11 +22,18 @@ interface HasMaybeRef {
 	ref?: React.Ref<any>;
 }
 
-export interface TableProps extends JSX.IntrinsicAttributes , HasMaybeChildren {
+interface HasMaybeStyle {
+	style?: React.CSSProperties;
+}
+
+interface HasMaybeClassName {
+	className?: string;
+}
+
+export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
 	hover?: boolean;
 	bordered?: boolean;
 	condensed?: boolean;
-	className?: string;
 }
 
 export interface ProgressBarProps extends JSX.IntrinsicAttributes {
@@ -64,6 +70,12 @@ export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren 
 	id?: string;
 }
 
+type Glyph = "ok" | "refresh" | "warning-sign" | "plus" | "camera" | "headphones" | "user" | "flash" | "menu-hamburger";
+
+export interface GlyphiconProps extends JSX.IntrinsicAttributes, HasMaybeStyle, HasMaybeClassName {
+	glyph: Glyph;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: (props: TableProps) => JSX.Element;
@@ -74,5 +86,6 @@ export interface Theme {
 	OverlayTrigger: (props: OverlayTriggerProps) => JSX.Element | null;
 	Popover: (props: PopoverProps) => JSX.Element;
 	Tooltip: (props: TooltipProps) => JSX.Element;
+	Glyphicon: (props: GlyphiconProps) => JSX.Element;
 }
 

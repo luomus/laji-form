@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Panel, Table, ProgressBar, Button, ButtonGroup, Overlay, OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
+import { Panel, Table, ProgressBar, Button, ButtonGroup, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon } from "react-bootstrap";
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import * as PanelBody from "react-bootstrap/lib/PanelBody";
@@ -26,5 +26,6 @@ const theme: Theme = {
 	OverlayTrigger: React.forwardRef<OverlayTrigger, OverlayTriggerProps>((props, ref) => <OverlayTrigger {...props} ref={ref} />),
 	Popover: props => <Popover {...props} />,
 	Tooltip: props => <Tooltip {...props} />,
+	Glyphicon: (props) => <Glyphicon {...props} />
 };
 export default theme;

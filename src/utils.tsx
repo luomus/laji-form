@@ -1,8 +1,8 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 const { isSelect, isMultiSelect: _isMultiSelect, getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
-import { Glyphicon }  from "react-bootstrap";
 import Context from "./Context";
+import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
@@ -609,7 +609,11 @@ const tableFormatters: {[formatter: string]: (item: any, formatted: React.ReactI
 	unknownTaxon: (item: any, formatted: React.ReactInstance, options: any, parentProps: any = {}) => 
 		(isEmptyString(item) || (parentProps.formData || {})[options.idField])
 			? formatted
-			: <span>{formatted} <Glyphicon glyph="warning-sign" bsClass="glyphicon glyphicon-warning-sign text-warning" /></span>
+			: (
+				<ReactContext.Consumer>{({theme: {Glyphicon}}) =>
+					<span>{formatted} <span className="text-warning"><Glyphicon glyph="warning-sign"/></span></span>
+				}</ReactContext.Consumer>
+			)
 };
 
 export function formatValue(props: FieldProps, _formatter?: any, parentProps?: any) {

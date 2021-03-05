@@ -1,10 +1,12 @@
 import * as React from "react";
 import { Button, ErrorPanel } from "./components";
-import { Glyphicon } from "react-bootstrap";
 import { parseJSONPointer, formatErrorMessage } from "../utils";
 import Context from "../Context";
+import ReactContext from "../ReactContext";
 
 export default class ErrorListTemplate extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {popped: false, poppedTouched: false};
@@ -71,6 +73,7 @@ export default class ErrorListTemplate extends React.Component {
 			return {errors, warnings};
 		}
 
+		const {Glyphicon} = this.context.theme;
 		const {errors, warnings} = walkErrors("", "root", errorSchema);
 		return (
 			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
@@ -80,7 +83,6 @@ export default class ErrorListTemplate extends React.Component {
 				            errors={errors}
 				            title={translations.Errors}
 				            clickHandler={clickHandler}
-				            theme={this.props.formContext.theme}
 				            showToggle={true}
 				            poppedToggle={this.poppedToggle}/>
 				<ErrorPanel classNames="warning-panel"
@@ -88,7 +90,6 @@ export default class ErrorListTemplate extends React.Component {
 				            errors={warnings}
 				            title={translations.Warnings}
 				            clickHandler={clickHandler}
-				            theme={this.props.formContext.theme}
 				            showToggle={errors.length === 0}
 				            poppedToggle={this.poppedToggle}/>
 				<div className="panel-footer">

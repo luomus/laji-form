@@ -2,13 +2,14 @@ import * as React from "react";
 const { useState, useEffect } = React;
 import { MediaArrayField } from "./ImageArrayField";
 import * as Spinner from "react-spinner";
-import { Glyphicon } from "react-bootstrap";
 import { GlyphButton } from "../components";
+import ReactContext from "../../ReactContext";
 
 const FILE_TYPES = ["audio/mp3", "audio/mpeg", "audio/x-wav", "audio/wav", "audio/wave", "audio/vnd.wave"];
 
 @MediaArrayField
 export default class AudioArrayField extends React.Component {
+	static contextType = ReactContext;
 	ALLOWED_FILE_TYPES = FILE_TYPES;
 	ACCEPT_FILE_TYPES = ["audio/*"];
 	MAX_FILE_SIZE = 20000000;
@@ -40,7 +41,8 @@ export default class AudioArrayField extends React.Component {
 			<LajiAudio id={this.props.formData[idx]} style={{width: "100%"}} apiClient={this.props.formContext.apiClient} downloadLinks={true} translations={this.props.formContext.translations} />
 		</div>
 	)
-	formatValue(value) {
+	formatValue = (value) => {
+		const {Glyphicon} = this.context.theme;
 		return  (value || []).map((id, idx) => <Glyphicon key={idx} glyph="headphones" />);
 	}
 }
@@ -69,7 +71,7 @@ const AudioButton = React.forwardRef((props, ref) => {
 		<React.Fragment>
 			{!loaded 
 				? <div className="media-loading"><Spinner /></div>
-				: <Glyphicon glyph={playing ? "pause" :"play"} onClick={playing ? stop : play} ref={ref} tabIndex={0} onKeyDown={onKeyDown}/>
+				: <ReactContext.Consumer>{({theme: {Glyphicon}}) => <Glyphicon glyph={playing ? "pause" :"play"} onClick={playing ? stop : play} ref={ref} tabIndex={0} onKeyDown={onKeyDown}/>}</ReactContext.Consumer>
 			}
 			<LajiAudio style={{display: "none"}} ref={audioRef} id={props.id} onLoaded={setLoaded} onStop={stop} apiClient={props.apiClient} translations={props.translations}/>
 		</React.Fragment>

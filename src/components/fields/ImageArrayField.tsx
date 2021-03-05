@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
-import { Modal, Row, Col, Glyphicon, Alert, Pager } from "react-bootstrap";
+import { Modal, Row, Col, Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -240,7 +240,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const title = (schema.title === undefined) ? name : schema.title;
 			const TitleField = this.props.registry.fields.TitleField as any;
 
-			const {OverlayTrigger, Tooltip} = this.context.theme;
+			const {OverlayTrigger, Tooltip, Glyphicon} = this.context.theme;
 
 			const tooltip = (
 				<Tooltip id={`${this.props.idSchema.$id}-drop-zone-tooltip`}>

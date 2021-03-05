@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Glyphicon, Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Modal, Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -197,12 +197,14 @@ export class Alert extends React.Component {
 export const GlyphButton = (props) => {
 	const {glyph, ...buttonProps} = props;
 	return (
-		<Button {...buttonProps} 
-		        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
-			      tooltipPlacement={props.tooltipPlacement || "left"}>
-			<Glyphicon glyph={glyph} />
-			{props.children}
-		</Button>
+		<ReactContext.Consumer>{({theme: {Glyphicon}}) =>
+			<Button {...buttonProps} 
+			        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
+			        tooltipPlacement={props.tooltipPlacement || "left"}>
+				<Glyphicon glyph={glyph} />
+				{props.children}
+			</Button>
+		}</ReactContext.Consumer>
 	);
 };
 
@@ -701,6 +703,7 @@ export class Fullscreen extends React.Component {
 }
 
 export class FailedBackgroundJobsPanel extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {popped: true};
@@ -727,6 +730,8 @@ export class FailedBackgroundJobsPanel extends React.Component {
 		const {jobs = [], schema, uiSchema = {}, formContext: {translations}} = this.props;
 
 		if (!jobs.length) return null;
+
+		const {Glyphicon} = this.context.theme;
 
 		const errors = jobs.reduce((_errors, error) => {
 			const {lajiFormId, relativePointer, e, running} = error;

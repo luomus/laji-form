@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Glyphicon, InputGroup, Modal, Row, Col } from "react-bootstrap";
+import { InputGroup, Modal, Row, Col } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
@@ -159,7 +159,10 @@ function TaxonAutosuggest(ComposedComponent) {
 			);
 		}
 
-		renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>
+		renderSuccessGlyph = () => {
+			const {Glyphicon} = this.context.theme;
+			return <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>;
+		}
 
 		renderSuggestion(suggestion) {
 			const renderedSuggestion = "autocompleteDisplayName" in suggestion
@@ -317,9 +320,14 @@ class FriendsAutosuggestWidget extends React.Component {
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
 	}
 
-	renderSuccessGlyph = () => <Glyphicon style={{pointerEvents: "none"}}
-															           glyph="user"
-															           className="form-control-feedback"/>
+	renderSuccessGlyph = () => {
+		const {Glyphicon} = this.context.theme;
+		return (
+			<Glyphicon style={{pointerEvents: "none"}}
+			           glyph="user"
+			           className="form-control-feedback"/>
+		);
+	}
 
 	render() {
 		const {options: propsOptions, ...propsWithoutOptions} = this.props;
@@ -349,6 +357,7 @@ class RangeAutosuggestWidget extends React.Component {
 }
 
 export class Autosuggest extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
@@ -676,6 +685,7 @@ export class Autosuggest extends React.Component {
 		let validationState = null;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
+		const {Glyphicon} = this.context.theme;
 
 		const isSuggested = !!suggestion && this.isValueSuggested(this.props);
 
@@ -907,6 +917,8 @@ class TaxonCardOverlay extends React.Component {
 }
 
 class InformalTaxonGroupsAddon extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -940,6 +952,7 @@ class InformalTaxonGroupsAddon extends React.Component {
 		if (informalTaxonGroupsById[taxonGroupID] && informalTaxonGroupsById[taxonGroupID].parent) {
 			imageID = informalTaxonGroupsById[taxonGroupID].parent.id;
 		}
+		const {Glyphicon} = this.context.theme;
 		return taxonGroupID ?
 			<span><div className={`informal-group-image ${imageID}`}/><button className="close" onClick={this.onClear}>×</button></span> :
 			<Glyphicon glyph="menu-hamburger" />;
