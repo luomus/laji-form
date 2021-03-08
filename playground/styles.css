@@ -716,7 +716,7 @@ min-height: 20px;
 	width: 100%;
 }
 
-.laji-form .gray, .laji-form .background {
+.laji-form .gray {
 	border: 1px solid #e3e3e3;
 }
 .laji-form .gray {
@@ -1551,8 +1551,10 @@ min-height: 20px;
 
 .laji-form .horizontally-centered {
 	display: block !important;
-	margin: auto;
 	text-align: center;
+}
+.laji-form .horizontally-centered:not(legend) {
+	margin: auto;
 }
 
 .laji-form .row-height {

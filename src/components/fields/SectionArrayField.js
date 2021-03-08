@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, classNames } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -138,7 +138,7 @@ const columnStyle = {display: "flex", flexDirection: "column"};
 const SectionContent = ({
 	delete: _delete = <DeleteButton style={invisibleStyle} className="horizontally-centered" translations={emptyObj} onClick={doNothing}/>,
 	sectionSum = <strong style={invisibleStyle}>{"hidden"}</strong>,
-	sectionLabel = <strong style={invisibleStyle}>{"hidden"}</strong>,
+	sectionLabel = <legend style={invisibleStyle}>{"hidden"}</legend>,
 	content
 }) => (
 	<div style={columnStyle}>
@@ -226,8 +226,8 @@ class SectionArrayFieldTemplate extends React.Component {
 		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
 
 		const sectionLabel = (
-			<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-				<strong className="background nonbordered laji-form-fill">{this.props.formContext.translations.Section}</strong>
+			<Affix className="background" getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+				<legend>{this.props.formContext.translations.Section}</legend>
 			</Affix>
 		);
 		const sectionSum = <strong>{this.props.formContext.translations.SectionSum}</strong>;
@@ -264,8 +264,8 @@ class SectionArrayFieldTemplate extends React.Component {
 					className="horizontally-centered" />
 			);
 			const sectionLabel = (
-				<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-					<strong className={classNames("horizontally-centered nonbordered", index % 2 ? "background" : " darker")}>{parseJSONPointer(this.props.formData[index], sectionField)}</strong>
+				<Affix className={index % 2 ? "background" : " darker"} getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
+					<legend className="horizontally-centered">{parseJSONPointer(this.props.formData[index], sectionField)}</legend>
 				</Affix>
 			);
 			const [arr, field] = rowValueField.split("/%{row}");
@@ -274,7 +274,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				<strong className="horizontally-centered text-muted">{sum}</strong>
 			);
 			return (
-				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "darker nonbordered"} id={`${this.props.idSchema.$id}_${idx}-section`}>
+				<Section onFocus={this.getOnFocus(idx)} key={getUUID(item)} className={index % 2 ? undefined : "darker"} id={`${this.props.idSchema.$id}_${idx}-section`}>
 					<SectionContent delete={del} sectionLabel={sectionLabel} sectionSum={sectionSum} content={children} />
 				</Section>
 			);
@@ -471,7 +471,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		const sumLabel = (
 			<Affix getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
-				<strong className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</strong>
+				<legend className="bg-info horizontally-centered">{this.props.formContext.translations.Sum}</legend>
 			</Affix>
 		);
 		const content = (
