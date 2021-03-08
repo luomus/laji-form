@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as DateTimePicker from "react-widgets/lib/DateTimePicker";
 import * as moment from "moment";
-import * as momentLocalizer from "react-widgets/lib/localizers/moment";
+import * as momentLocalizer from "react-widgets-moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getUiOptions, isDescendant } from "../../utils";
@@ -170,7 +170,7 @@ export default class DateTimeWidget extends React.Component {
 
 		const datePicker = (<DateTimePicker
 			ref={this.setRef}
-			calendar={this.state.calendar}
+			date={this.state.calendar}
 			time={this.state.time && showTimeList}
 			format={this.state.inputFormat}
 			timeFormat={this.state.timeFormat}
