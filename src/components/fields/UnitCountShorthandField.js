@@ -10,7 +10,6 @@ import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
 import { FormGroup, HelpBlock } from "react-bootstrap";
 import * as merge from "deepmerge";
-import Context from "../../Context";
 
 @VirtualSchemaField
 export default class UnitCountShorthandField extends React.Component {
@@ -57,6 +56,9 @@ export default class UnitCountShorthandField extends React.Component {
 		let formData = this.props.formData;
 		const {shorthandField, pairCountField} = getUiOptions(this.props.uiSchema);
 
+		let timestamp = Date.now();
+		this.promiseTimestamp = timestamp;
+
 		return new Promise((resolve) => {
 			if (!value || !taxonId) {
 				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
@@ -65,18 +67,20 @@ export default class UnitCountShorthandField extends React.Component {
 				return;
 			}
 
-			const context = new Context(this.props.formContext.contextId);
-			context.pushBlockingLoader();
 			apiClient.fetchCached("/autocomplete/pairCount", {q: value, taxonID: taxonId}).then(suggestion => {
+				if (timestamp !== this.promiseTimestamp) {
+					return;
+				}
 				formData = updateSafelyWithJSONPointer(formData, suggestion.key, shorthandField);
 				formData = updateSafelyWithJSONPointer(formData, suggestion.value, pairCountField);
 				this.props.onChange(formData);
-				new Context(this.props.formContext.contextId).popBlockingLoader();
 				resolve({success: suggestion.key ? true : undefined, value: suggestion.key});
 			}).catch(() => {
+				if (timestamp !== this.promiseTimestamp) {
+					return;
+				}
 				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
 				this.props.onChange(formData);
-				new Context(this.props.formContext.contextId).popBlockingLoader();
 				resolve({success: false, value: value});
 			});
 		});
