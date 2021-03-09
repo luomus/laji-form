@@ -138,7 +138,8 @@ export default function BaseComponent(ComposedComponent) {
 		addSubmitHook(hook) {
 			const id = this.getUUID(this.props.formData) || this.props.formContext._parentLajiFormId || "root";
 			const lajiFormInstance = new Context(this.props.formContext.contextId).formInstance;
-			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+			const idSchemaId = this.props.idSchema ? this.props.idSchema.$id : this.props.id;
+			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, idSchemaId, id);
 			return new Context(this.props.formContext.contextId).addSubmitHook(id, relativePointer, hook);
 		}
 	};
