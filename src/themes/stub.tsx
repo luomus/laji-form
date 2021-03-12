@@ -39,6 +39,7 @@ const theme: Theme = {
 	Row: DivStub,
 	Col: DivStub,
 	FormGroup: DivStub,
-	InputGroup
+	InputGroup,
+	FormControl: (props) => <input {...props} />
 };
 export default theme;

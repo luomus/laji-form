@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Panel, Table, ProgressBar, Button, ButtonGroup, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup } from "react-bootstrap";
+import { Panel, Table, ProgressBar, Button, ButtonGroup, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl } from "react-bootstrap";
 import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
 import * as PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import * as PanelBody from "react-bootstrap/lib/PanelBody";
@@ -31,6 +31,7 @@ const theme: Theme = {
 	Row,
 	Col,
 	FormGroup,
-	InputGroup
+	InputGroup,
+	FormControl
 };
 export default theme;

@@ -104,8 +104,10 @@ export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeChildren, Has
 	xsOffset?: number;
 }
 
+export type ValidationState = "success" | "warning" | "error"; 
+
 export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassName {
-	validationState?: "success" | "warning" | "error" | null;
+	validationState?: ValidationState | null;
 	onMouseOver?: React.MouseEventHandler<any>;
 	onMouseOut?: React.MouseEventHandler<any>;
 }
@@ -113,10 +115,17 @@ export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassNa
 export interface InputGroup extends React.HTMLProps<any> {
 	Addon: React.ElementType<InputGroupAddon>;
 }
+
 export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
 	tabIndex?: number;
 	onClick?: React.MouseEventHandler<any>;
 	onMouseDown?: React.MouseEventHandler<any>;
+}
+
+export interface FormControlProps extends React.HTMLProps<any> {
+	type?: HTMLInputElement["type"];
+	readOnly?: boolean;
+	validationState?: ValidationState;
 }
 
 export interface Theme {
@@ -135,4 +144,5 @@ export interface Theme {
 	Col: React.ElementType<ColProps>;
 	FormGroup: React.ElementType<FormGroupProps>
 	InputGroup: InputGroup;
+	FormControl: React.ElementType<FormControlProps>
 }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -626,7 +626,11 @@ export const FetcherInput = React.forwardRef((props, ref) => {
 
 const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
 	const {readonly, ...inputProps} = props;
-	return <FormControl type="text" {...inputProps} readOnly={readonly} ref={ref} />;
+	return (
+		<ReactContext.Consumer>{({theme: {FormControl}}) =>
+			<FormControl type="text" {...inputProps} readOnly={readonly} ref={ref} />
+		}</ReactContext.Consumer>
+	);
 });
 
 // OverlayTrigger that is hoverable if hoverable === true
