@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
 import BaseComponent from "../BaseComponent";
@@ -39,7 +38,7 @@ export default class SeparatedDateTimeWidget extends React.Component {
 
 	render() {
 		const hasDate = !!this.state.date;
-		const {Row, Col} = this.context.theme;
+		const {Row, Col, FormGroup} = this.context.theme;
 		return (
 			<Row>
 				<Col lg={hasDate ? 6 : 12}>

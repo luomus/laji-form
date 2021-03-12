@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { InputGroup } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
@@ -686,7 +685,7 @@ export class Autosuggest extends React.Component {
 		let validationState = null;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
-		const {Glyphicon} = this.context.theme;
+		const {Glyphicon, InputGroup} = this.context.theme;
 
 		const isSuggested = !!suggestion && this.isValueSuggested(this.props);
 
@@ -960,6 +959,7 @@ class InformalTaxonGroupsAddon extends React.Component {
 	}
 
 	render() {
+		const {InputGroup} = this.context.theme;
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
 				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} tabIndex={0}>

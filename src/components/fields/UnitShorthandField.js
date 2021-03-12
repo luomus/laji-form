@@ -4,8 +4,9 @@ import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { FetcherInput } from "../components";
-import { FormGroup, HelpBlock } from "react-bootstrap";
+import { HelpBlock } from "react-bootstrap";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { getButton } from "../ArrayFieldTemplate";
 
@@ -147,6 +148,7 @@ export default class UnitShorthandField extends React.Component {
 
 @BaseComponent
 class CodeReader extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {value: ""};
@@ -235,6 +237,7 @@ class CodeReader extends React.Component {
 			</div>
 		);
 
+		const {FormGroup} = this.context.theme;
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				{inputElem}

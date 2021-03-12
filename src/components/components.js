@@ -592,21 +592,41 @@ export class TooltipComponent extends React.Component {
 export const FetcherInput = React.forwardRef((props, ref) => {
 	const {loading, validationState, glyph, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 	const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
-	const _className = classNames("fetcher-input", extra && "input-group", "has-feedback", validationState && `has-${validationState}`, className);
-	return (
-		<div className={_className} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+	const inputContent = (
+		<React.Fragment>
 			{extra}
 			<Input {...inputProps} ref={ref} />
-			{glyph && <FormControl.Feedback>{glyph}</FormControl.Feedback>}
+			{glyph}
 			{loading && <Spinner />}
 			{appendExtra}
-		</div>
+		</React.Fragment>
+	);
+	const content = extra || appendExtra
+		? (
+			<ReactContext.Consumer>{({theme: {InputGroup}}) => 
+				<InputGroup>
+					{inputContent}
+				</InputGroup>
+			}</ReactContext.Consumer>
+		)
+		: (
+			<React.Fragment>
+				{inputContent}
+			</React.Fragment>
+		);
+
+	return (
+		<ReactContext.Consumer>{({theme: {FormGroup}}) => 
+			<FormGroup onMouseOver={onMouseOver} onMouseOut={onMouseOut} validationState={validationState} className={classNames(className, "fetcher-input")}>
+				{content}
+			</FormGroup>
+		}</ReactContext.Consumer>
 	);
 });
 
 const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
 	const {readonly, ...inputProps} = props;
-	return <input className="form-control" type="text" {...inputProps} readOnly={readonly} ref={ref} />;
+	return <FormControl type="text" {...inputProps} readOnly={readonly} ref={ref} />;
 });
 
 // OverlayTrigger that is hoverable if hoverable === true

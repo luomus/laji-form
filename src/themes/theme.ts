@@ -104,6 +104,21 @@ export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeChildren, Has
 	xsOffset?: number;
 }
 
+export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassName {
+	validationState?: "success" | "warning" | "error" | null;
+	onMouseOver?: React.MouseEventHandler<any>;
+	onMouseOut?: React.MouseEventHandler<any>;
+}
+
+export interface InputGroup extends React.HTMLProps<any> {
+	Addon: React.ElementType<InputGroupAddon>;
+}
+export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
+	tabIndex?: number;
+	onClick?: React.MouseEventHandler<any>;
+	onMouseDown?: React.MouseEventHandler<any>;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: React.ElementType<TableProps>;
@@ -118,4 +133,6 @@ export interface Theme {
 	Modal: Modal;
 	Row: React.ElementType<any>;
 	Col: React.ElementType<ColProps>;
+	FormGroup: React.ElementType<FormGroupProps>
+	InputGroup: InputGroup;
 }

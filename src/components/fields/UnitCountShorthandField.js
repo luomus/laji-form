@@ -8,8 +8,9 @@ import {
 import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
-import { FormGroup, HelpBlock } from "react-bootstrap";
+import { HelpBlock } from "react-bootstrap";
 import * as merge from "deepmerge";
+import ReactContext from "../../ReactContext";
 
 @VirtualSchemaField
 export default class UnitCountShorthandField extends React.Component {
@@ -89,6 +90,7 @@ export default class UnitCountShorthandField extends React.Component {
 
 @BaseComponent
 class CodeReader extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		options: PropTypes.shape({
 			parseCode: PropTypes.func.isRequired,
@@ -140,6 +142,7 @@ class CodeReader extends React.Component {
 			/>
 		);
 
+		const {FormGroup} = this.context.theme;
 		return (
 			<FormGroup validationState={this.state.success === false ? "error" : undefined}>
 				{inputElem}
