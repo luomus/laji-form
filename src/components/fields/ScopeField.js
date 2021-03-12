@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import * as equals from "deep-equal";
-import { ListGroup, ListGroupItem, MenuItem, Collapse } from "react-bootstrap";
+import { MenuItem, Collapse } from "react-bootstrap";
 import * as Dropdown from "react-bootstrap/lib/Dropdown";
 import * as DropdownMenu from "react-bootstrap/lib/DropdownMenu";
 import * as Spinner from "react-spinner";
@@ -603,6 +603,7 @@ const getGroupFields = (group, additionalProperties, schema) => {
 
 const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations = {}, additionalProperties, groupName, additionalPropertiesToList, propertyIsIncluded, schema, toggleAdditionalProperty}) {
 	const groupFields = React.useMemo(() => getGroupFields(group, additionalProperties, schema), [group, additionalProperties, schema]);
+	const {ListGroupItem, ListGroup} = React.useContext(ReactContext).theme;
 	let groupsList = additionalPropertiesToList(groupFields, ListGroupItem);
 
 	const onListGroupClick = React.useCallback(() => {

@@ -40,6 +40,8 @@ const theme: Theme = {
 	Col: DivStub,
 	FormGroup: DivStub,
 	InputGroup,
-	FormControl: (props) => <input {...props} />
+	FormControl: (props) => <input {...props} />,
+	ListGroup: DivStub,
+	ListGroupItem: DivStub
 };
 export default theme;

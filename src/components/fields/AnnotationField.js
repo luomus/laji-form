@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../utils";
-import { ListGroup, ListGroupItem, Alert } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
@@ -118,6 +118,7 @@ export default class AnnotationField extends React.Component {
 new Context("SCHEMA_FIELD_WRAPPERS").AnnotationField = true;
 
 class AnnotationBox extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {annotations: props.annotations || []};
@@ -288,11 +289,11 @@ class AnnotationBox extends React.Component {
 	}
 
 	render() {
-		const {formContext: {translations, lang, apiClient, theme}} = this.props;
+		const {formContext: {translations, lang, apiClient}} = this.props;
 		const {metadataForm = {}, annotations = []} = this.state;
 		const _uiSchema = {...this.getUiSchema(), "ui:readonly": true};
 
-		const {Panel} = theme;
+		const {Panel, ListGroup, ListGroupItem} = this.context.theme;
 		return (
 			<Panel header={<strong>{translations.Comments}</strong>}>
 				{this.renderAdd()}

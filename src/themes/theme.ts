@@ -128,6 +128,17 @@ export interface FormControlProps extends React.HTMLProps<any> {
 	validationState?: ValidationState;
 }
 
+export interface ListGroupProps extends JSX.IntrinsicAttributes {
+	fill?: boolean;
+}
+
+export interface ListGroupItemProps extends JSX.IntrinsicAttributes, HasMaybeClassName {
+	onClick?: React.MouseEventHandler<any>;
+	disabled?: boolean;
+	header?: React.ReactNode;
+	active?: boolean;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: React.ElementType<TableProps>;
@@ -140,9 +151,11 @@ export interface Theme {
 	Tooltip: React.ElementType<TooltipProps>;
 	Glyphicon: React.ElementType<GlyphiconProps>;
 	Modal: Modal;
-	Row: React.ElementType<any>;
+	Row: React.ElementType<JSX.IntrinsicAttributes>;
 	Col: React.ElementType<ColProps>;
 	FormGroup: React.ElementType<FormGroupProps>
 	InputGroup: InputGroup;
-	FormControl: React.ElementType<FormControlProps>
+	FormControl: React.ElementType<FormControlProps>;
+	ListGroup: React.ElementType<ListGroupProps>;
+	ListGroupItem: React.ElementType<ListGroupItemProps>;
 }

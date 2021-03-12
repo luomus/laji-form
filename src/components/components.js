@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -521,7 +520,7 @@ export class ErrorPanel extends React.Component {
 
 		if (errors.length === 0) return null;
 
-		const {Panel} = this.context.theme;
+		const {Panel, ListGroup} = this.context.theme;
 		const header = (
 			 <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 				 <div className="panel-title">
