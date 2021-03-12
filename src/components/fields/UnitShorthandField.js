@@ -6,7 +6,6 @@ import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { FetcherInput } from "../components";
-import { HelpBlock } from "react-bootstrap";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { getButton } from "../ArrayFieldTemplate";
 
@@ -237,7 +236,7 @@ class CodeReader extends React.Component {
 			</div>
 		);
 
-		const {FormGroup} = this.context.theme;
+		const {FormGroup, HelpBlock} = this.context.theme;
 		return (
 			<FormGroup validationState={this.state.failed ? "error" : undefined}>
 				{inputElem}

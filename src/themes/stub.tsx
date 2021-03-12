@@ -47,6 +47,7 @@ const theme: Theme = {
 	FormControl: (props) => <input {...props} />,
 	ListGroup: DivStub,
 	ListGroupItem: DivStub,
-	Breadcrumb: Breadcrumb
+	Breadcrumb: Breadcrumb,
+	HelpBlock: DivStub
 };
 export default theme;

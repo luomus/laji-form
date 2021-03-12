@@ -170,4 +170,5 @@ export interface Theme {
 	ListGroup: React.ElementType<ListGroupProps>;
 	ListGroupItem: React.ElementType<ListGroupItemProps>;
 	Breadcrumb: Breadcrumb;
+	HelpBlock: React.ElementType<JSX.IntrinsicAttributes>;
 }

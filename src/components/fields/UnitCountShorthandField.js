@@ -8,7 +8,6 @@ import {
 import VirtualSchemaField from "../VirtualSchemaField";
 import BaseComponent from "../BaseComponent";
 import {FetcherInput} from "../components";
-import { HelpBlock } from "react-bootstrap";
 import * as merge from "deepmerge";
 import ReactContext from "../../ReactContext";
 
@@ -142,7 +141,7 @@ class CodeReader extends React.Component {
 			/>
 		);
 
-		const {FormGroup} = this.context.theme;
+		const {FormGroup, HelpBlock} = this.context.theme;
 		return (
 			<FormGroup validationState={this.state.success === false ? "error" : undefined}>
 				{inputElem}
