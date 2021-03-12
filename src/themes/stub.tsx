@@ -48,6 +48,7 @@ const theme: Theme = {
 	ListGroup: DivStub,
 	ListGroupItem: DivStub,
 	Breadcrumb: Breadcrumb,
-	HelpBlock: DivStub
+	HelpBlock: DivStub,
+	MenuItem: DivStub
 };
 export default theme;

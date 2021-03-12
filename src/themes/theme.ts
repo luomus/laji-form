@@ -149,6 +149,13 @@ export interface BreadcrumbItem extends JSX.IntrinsicAttributes {
 	key?: string | undefined | null | number;
 }
 
+export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	onClick?: React.MouseEventHandler<any>
+	active?: boolean;
+	disabled?: boolean;
+}
+
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: React.ElementType<TableProps>;
@@ -171,4 +178,5 @@ export interface Theme {
 	ListGroupItem: React.ElementType<ListGroupItemProps>;
 	Breadcrumb: Breadcrumb;
 	HelpBlock: React.ElementType<JSX.IntrinsicAttributes>;
+	MenuItem: React.ElementType<MenuItemProps>
 }
