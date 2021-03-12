@@ -1,10 +1,12 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, classNames } from "../../utils";
-import { ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 
 export default class CheckboxWidget extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -108,6 +110,8 @@ export default class CheckboxWidget extends React.Component {
 				: value;
 
 		const ToggleButtonWithPrimaryStyle = (props) => <ToggleButton {...props} className={classNames(_value === props.value && "btn-primary")} />;
+
+		const {ButtonToolbar} = this.context.theme;
 
 		const checkbox = (
 			<ButtonToolbar>

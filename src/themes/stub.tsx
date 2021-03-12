@@ -33,6 +33,7 @@ const theme: Theme = {
 	ProgressBar: DivStub,
 	Button: React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => <Stub><button {...props} ref={ref}/></Stub>),
 	ButtonGroup: DivStub,
+	ButtonToolbar: DivStub,
 	Overlay: DivStub,
 	OverlayTrigger: React.forwardRef<HTMLDivElement, OverlayTriggerProps>((props, ref) => <Stub><div {...props} ref={ref} /></Stub>),
 	Popover: ({title, ...props}) => <Stub><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars

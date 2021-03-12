@@ -7,7 +7,6 @@ import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
-import { ButtonToolbar } from "react-bootstrap";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -1578,7 +1577,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			</Stretch>
 		);
 		const {TitleField} = this.props.registry.fields;
-		const {Popover, Row, Col} = this.context.theme;
+		const {Popover, Row, Col, ButtonToolbar} = this.context.theme;
 
 		return (
 			<React.Fragment>

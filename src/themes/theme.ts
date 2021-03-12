@@ -46,6 +46,8 @@ export interface ButtonProps extends JSX.IntrinsicAttributes {
 
 export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 }
+export interface ButtonToolbarProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
+}
 
 export interface OverlayProps extends JSX.IntrinsicAttributes {
 	show?: boolean;
@@ -153,6 +155,7 @@ export interface Theme {
 	ProgressBar: React.ElementType<ProgressBarProps>;
 	Button: React.ElementType<ButtonProps>;
 	ButtonGroup: React.ElementType<ButtonGroupProps>;
+	ButtonToolbar: React.ElementType<ButtonToolbarProps>;
 	Overlay: React.ElementType<OverlayProps>;
 	OverlayTrigger: React.ElementType<OverlayTriggerProps>;
 	Popover: React.ElementType<PopoverProps>;

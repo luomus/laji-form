@@ -1,7 +1,6 @@
 import * as React from "react";
 import ObjectField from "@rjsf/core/dist/cjs/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
-import { ButtonToolbar } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
 import ReactContext from "../../ReactContext";
@@ -18,6 +17,7 @@ export default (props) => {
 function ObjectFieldTemplate(props) {
 	const { TitleField, DescriptionField } = props;
 
+	const {ButtonToolbar} = React.useContext(ReactContext).theme;
 	let buttons = getGlyphButtons(props);
 	const [topButtons, bottomButtons, leftButtons, rightButtons] = ["top", "bottom", "left", "right"].map(pos => {
 		const buttons = getButtonsForPosition(props, getUiOptions(props.uiSchema).buttons, pos, "no default");
@@ -75,6 +75,7 @@ function ObjectFieldTemplate(props) {
 function GridTemplate(props) {
 	const {schema, uiSchema, idSchema, properties, TitleField} = props;
 	const gridOptions = props.uiSchema["ui:grid"] || {};
+	const {ButtonToolbar, Row, Col} = React.useContext(ReactContext).theme;
 
 	const rows = [];
 	const lastRow = [];
@@ -94,13 +95,11 @@ function GridTemplate(props) {
 			rows[i] = [];
 			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
 			rows[i].push(
-				<ReactContext.Consumer>{({theme: {Col}}) =>
-					<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
-						<Label id={idSchema.$id + "_row_" + i}
-									 label={rowTitles[i].title}
-									 help={rowTitles[i].help}/>
-					</Col>
-				}</ReactContext.Consumer>
+				<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
+					<Label id={idSchema.$id + "_row_" + i}
+								 label={rowTitles[i].title}
+								 help={rowTitles[i].help}/>
+				</Col>
 			);
 		}
 	};
@@ -131,11 +130,9 @@ function GridTemplate(props) {
 		}, {});
 
 		if (!isHidden(uiSchema, propertyName)) getRow(propertyName, colsToRows, rows).push(
-			<ReactContext.Consumer key={propertyName}>{({theme: {Col}}) =>
-				<Col {...cols} className={classNames[propertyName]}>
-					{propertiesByName[propertyName].content}
-				</Col>
-			}</ReactContext.Consumer>
+			<Col {...cols} className={classNames[propertyName]} key={propertyName}>
+				{propertiesByName[propertyName].content}
+			</Col>
 		);
 	});
 
@@ -172,11 +169,9 @@ function GridTemplate(props) {
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>
-					<ReactContext.Consumer key={i}>{({theme: {Row}}) =>
-						<Row>
-							{row}
-						</Row>
-					}</ReactContext.Consumer>
+					<Row key={i}>
+						{row}
+					</Row>
 				)}
 				{rightButtons && <div className="pull-right">{rightButtons}</div>}
 				{bottomButtons}

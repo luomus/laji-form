@@ -2,8 +2,8 @@ import * as React from "react";
 import { Button, DeleteButton, Help } from "./components";
 import * as merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
-import { ButtonToolbar } from "react-bootstrap";
 import Context from "../Context";
+import ReactContext from "../ReactContext";
 import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../utils";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
@@ -137,9 +137,11 @@ function getButtonsElem(buttonElems = [], props = {}) {
 	}
 
 	return (
-		<ButtonToolbar className={getUiOptions(props.uiSchema)["ui:buttonsDesktopLayout"] ? "desktop-layout" : undefined} key="buttons">
-			{buttonElems}
-		</ButtonToolbar>
+		<ReactContext.Consumer>{({theme: {ButtonToolbar}}) =>
+			<ButtonToolbar className={getUiOptions(props.uiSchema)["ui:buttonsDesktopLayout"] ? "desktop-layout" : undefined} key="buttons">
+				{buttonElems}
+			</ButtonToolbar>
+		}</ReactContext.Consumer>
 	);
 }
 
