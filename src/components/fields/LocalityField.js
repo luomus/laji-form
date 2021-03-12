@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
-import { Row, Col } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 import ReactContext from "../../ReactContext";
@@ -36,7 +35,7 @@ export default class LocalityField extends React.Component {
 		if (typeof radius === "number") {
 			values.push(`(${this.props.formContext.translations.accuracy}: ${parseInt(radius)}m)`);
 		}
-		const {Panel} = this.context.theme;
+		const {Panel, Row, Col} = this.context.theme;
 		return (
 			<Row>
 				<Col xs={12}>

@@ -32,6 +32,8 @@ const theme: Theme = {
 	Popover: ({title, ...props}) => <Stub><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
 	Tooltip: DivStub,
 	Glyphicon: DivStub,
-	Modal
+	Modal,
+	Row: DivStub,
+	Col: DivStub,
 };
 export default theme;

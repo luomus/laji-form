@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Row, Col, Collapse } from "react-bootstrap";
+import { Collapse } from "react-bootstrap";
 import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
+import ReactContext from "../../ReactContext";
 
 @BaseComponent
 export default class InitiallyHiddenField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -36,6 +38,7 @@ export default class InitiallyHiddenField extends React.Component {
 	render() {
 		let shouldShow = this.state.visible;
 		const SchemaField = this.props.registry.fields.SchemaField;
+		const {Row, Col} = this.context.theme;
 		return (
 			<div>
 				<Collapse in={!shouldShow}>

@@ -96,6 +96,14 @@ export interface Modal extends React.HTMLProps<ModalProps> {
     Footer: React.ElementType;
 }
 
+export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
+	xs?: number;
+	sm?: number;
+	md?: number;
+	lg?: number;
+	xsOffset?: number;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: React.ElementType<TableProps>;
@@ -108,4 +116,6 @@ export interface Theme {
 	Tooltip: React.ElementType<TooltipProps>;
 	Glyphicon: React.ElementType<GlyphiconProps>;
 	Modal: Modal;
+	Row: React.ElementType<any>;
+	Col: React.ElementType<ColProps>;
 }

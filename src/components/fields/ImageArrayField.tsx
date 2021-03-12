@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
-import { Row, Col, Alert, Pager } from "react-bootstrap";
+import { Alert, Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -253,6 +253,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const {dragging} = this.state;
 
+			const {Row, Col} = this.context.theme;
 			return (
 				<Row>
 					<Col xs={12}>

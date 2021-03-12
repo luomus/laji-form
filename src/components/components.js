@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
-import { Row, Col, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
@@ -172,7 +172,7 @@ export class DeleteButton extends React.Component {
 }
 
 export function AddButton({onClick}) {
-	return (<Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>);
+	return <ReactContext.Consumer>{({theme: {Row, Col}}) => <Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>}</ReactContext.Consumer>;
 }
 
 export class Alert extends React.Component {

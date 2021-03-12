@@ -1,12 +1,13 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema } from "../../utils";
-import { Row , Col} from "react-bootstrap";
 import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
+import ReactContext from "../../ReactContext";
 
 @BaseComponent
 export default class ExtraLabelRowField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -51,6 +52,7 @@ export default class ExtraLabelRowField extends React.Component {
 
 		const title = this.props.schema.title !== undefined ? this.props.schema.title : this.props.name;
 
+		const {Row} = this.context.theme;
 		let labelRow = <Row className={"laji-form-label-row" + (hiddenXs ? " hidden-xs" : "")  + (affixed ? " affixed-labels" : "")}>{cols}</Row>;
 
 		if (affixed) {
@@ -77,6 +79,7 @@ export default class ExtraLabelRowField extends React.Component {
 		const cols = this.getCols(label.size);
 
 		const {Label} = this.props.formContext;
+		const {Col} = this.context.theme;
 		return (
 			<Col {...cols} key={i}>
 				<Label label={label.label} id={this.props.idSchema.$id} help={label.help}/>

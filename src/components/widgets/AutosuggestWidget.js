@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { InputGroup, Row, Col } from "react-bootstrap";
+import { InputGroup } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
@@ -179,6 +179,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			const chooseImages = this.state && this.state.chooseImages || this.props.options.chooseImages;
 			const {orWriteSpeciesNameLabel} = getUiOptions(this.props);
 			const {or} = this.props.formContext.translations;
+			const {Row, Col} = this.context.theme;
 			return (
 				<Row>
 					<Col xs={12}>

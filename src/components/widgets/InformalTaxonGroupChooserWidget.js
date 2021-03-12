@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { ListGroup, ListGroupItem, Breadcrumb, Row, Col } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Breadcrumb } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -242,13 +242,14 @@ export class InformalTaxonGroupChooser extends React.Component {
 
 	GroupsContainer = ({children}) => {
 		const {rootOnly} = this.props;
+		const {Row} = this.context.theme;
 		return rootOnly ? <Row>{children}</Row> : <ListGroup>{children}</ListGroup>;
 	};
 
 	Item = (id) => {
 		const {path} = this.state;
 		const {rootOnly, grid, activeId} = this.props;
-		const {Panel} = this.context.theme;
+		const {Panel, Col} = this.context.theme;
 		return !rootOnly ? (
 			<ListGroupItem key={id} className={path.length > 1 ? "not-root" : ""}>
 				{path.length === 1 ? <div className={`informal-group-image ${id}`} /> : null}

@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Row, Col, FormGroup } from "react-bootstrap";
+import { FormGroup } from "react-bootstrap";
 import DateWidget from "./DateWidget";
 import TimeWidget from "./TimeWidget";
 import BaseComponent from "../BaseComponent";
+import ReactContext from "../../ReactContext";
 
 @BaseComponent
 export default class SeparatedDateTimeWidget extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -37,6 +39,7 @@ export default class SeparatedDateTimeWidget extends React.Component {
 
 	render() {
 		const hasDate = !!this.state.date;
+		const {Row, Col} = this.context.theme;
 		return (
 			<Row>
 				<Col lg={hasDate ? 6 : 12}>

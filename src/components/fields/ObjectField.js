@@ -1,9 +1,10 @@
 import * as React from "react";
 import ObjectField from "@rjsf/core/dist/cjs/components/fields/ObjectField";
 import { orderProperties, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
-import { Row , Col, ButtonToolbar } from "react-bootstrap";
+import { ButtonToolbar } from "react-bootstrap";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
+import ReactContext from "../../ReactContext";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
@@ -92,11 +93,15 @@ function GridTemplate(props) {
 		for (let i = 0; i < rowTitles.length; i++) {
 			rows[i] = [];
 			const titleCols = getCols(props, {type: "string"}, uiSchema["rowTitle"], "rowTitle");
-			rows[i].push(<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
-				<Label id={idSchema.$id + "_row_" + i}
-				       label={rowTitles[i].title}
-				       help={rowTitles[i].help}/>
-			</Col>);
+			rows[i].push(
+				<ReactContext.Consumer>{({theme: {Col}}) =>
+					<Col {...titleCols} key={"title_" + i} className={classNames["rowTitle"]}>
+						<Label id={idSchema.$id + "_row_" + i}
+									 label={rowTitles[i].title}
+									 help={rowTitles[i].help}/>
+					</Col>
+				}</ReactContext.Consumer>
+			);
 		}
 	};
 
@@ -126,9 +131,11 @@ function GridTemplate(props) {
 		}, {});
 
 		if (!isHidden(uiSchema, propertyName)) getRow(propertyName, colsToRows, rows).push(
-			<Col key={propertyName} {...cols} className={classNames[propertyName]}>
-				{propertiesByName[propertyName].content}
-			</Col>
+			<ReactContext.Consumer key={propertyName}>{({theme: {Col}}) =>
+				<Col {...cols} className={classNames[propertyName]}>
+					{propertiesByName[propertyName].content}
+				</Col>
+			}</ReactContext.Consumer>
 		);
 	});
 
@@ -165,9 +172,11 @@ function GridTemplate(props) {
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>
-					<Row key={i}>
-						{row}
-					</Row>
+					<ReactContext.Consumer key={i}>{({theme: {Row}}) =>
+						<Row>
+							{row}
+						</Row>
+					}</ReactContext.Consumer>
 				)}
 				{rightButtons && <div className="pull-right">{rightButtons}</div>}
 				{bottomButtons}

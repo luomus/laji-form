@@ -2,12 +2,13 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
-import { Row, Col } from "react-bootstrap";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
+import ReactContext from "../../ReactContext";
 
 @BaseComponent
 export default class SplitField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -31,6 +32,7 @@ export default class SplitField extends React.Component {
 	render() {
 		const { TitleField, DescriptionField } = this.props.registry.fields;
 		const {"ui:title": _title} = this.props.uiSchema;
+		const {Row, Col} = this.context.theme;
 		return (
 			<div>
 				<TitleField 

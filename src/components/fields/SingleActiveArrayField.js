@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
-import { Accordion, Pager, Row, Col } from "react-bootstrap";
+import { Accordion, Pager } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
@@ -417,13 +417,14 @@ const AccordionButtonsWrapper = ({props, position}) => {
 	}, {});
 
 	return (
-		<Row className="laji-form-accordion-buttons">
-			{buttons.map((button, idx) => 
-				<Col {...cols} key={idx}>{button}</Col>
-			)}
-		</Row>
+		<ReactContext.Consumer>{({theme: {Row, Col}}) =>
+			<Row className="laji-form-accordion-buttons">
+				{buttons.map((button, idx) =>
+					<Col {...cols} key={idx}>{button}</Col>
+				)}
+			</Row>
+		}</ReactContext.Consumer>
 	);
-
 };
 
 @handlesButtonsAndFocus

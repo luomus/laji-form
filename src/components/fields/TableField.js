@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema, isHidden } from "../../utils";
-import { Row, Col } from "react-bootstrap";
 import { DeleteButton } from "../components";
 import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
+import ReactContext from "../../ReactContext";
 
 const specialRules = {
 	legEditors: {
@@ -26,6 +26,7 @@ const specialRulesPropTypes = PropTypes.oneOf(["legEditors"]);
 
 @BaseComponent
 export default class TableField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -127,11 +128,13 @@ export default class TableField extends React.Component {
 
 @handlesArrayKeys
 class TableArrayFieldTemplate extends React.Component {
+	static contextType = ReactContext;
 	render() {
 		const {props} = this;
 		const {schema, uiSchema, formContext: {cols, wrapperCols, schemaPropsArray}, idSchema, readonly, disabled} = props;
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const {Label} = this.props.formContext;
+		const {Row, Col} = this.context.theme;
 		const labels =schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)).map(propName => {
 			const propUiSchema = uiSchema && uiSchema.items && uiSchema.items[propName] || {};
 			return (

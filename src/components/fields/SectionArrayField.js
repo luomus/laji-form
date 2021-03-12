@@ -6,7 +6,6 @@ import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
-import { Row, Col } from "react-bootstrap";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
@@ -352,6 +351,7 @@ class SectionArrayFieldTemplate extends React.Component {
 	getAddSectionPopup = () => {
 		const {translations} = this.props.formContext;
 		const {newSection = ""} = this.state;
+		const {Row, Col} = this.context.theme;
 		return (
 			<div className="laji-form">
 				<div><strong>{translations.AddNewSection}</strong></div>
