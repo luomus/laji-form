@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Theme, PanelProps, ButtonProps, OverlayTriggerProps, Modal, InputGroup } from "./theme";
+import { Theme, PanelProps, ButtonProps, OverlayTriggerProps, Modal, InputGroup, Breadcrumb } from "./theme";
 
 const Stub = ({children}: {children: React.ReactNode}) => {
 	console.error("You should define a theme prop for LajiForm. Using stub theme, the form will render but many components won't work as expected and will result in many React warnings.");
@@ -16,6 +16,9 @@ Modal.Title = DivStub;
 
 const InputGroup: InputGroup = DivStub as unknown as InputGroup;
 InputGroup.Addon = DivStub;
+
+const Breadcrumb: Breadcrumb = DivStub as unknown as Breadcrumb;
+Breadcrumb.Item = DivStub;
 
 const theme: Theme = {
 	Panel: React.forwardRef<HTMLDivElement, PanelProps>(({children, header}, ref) =>
@@ -42,6 +45,7 @@ const theme: Theme = {
 	InputGroup,
 	FormControl: (props) => <input {...props} />,
 	ListGroup: DivStub,
-	ListGroupItem: DivStub
+	ListGroupItem: DivStub,
+	Breadcrumb: Breadcrumb
 };
 export default theme;

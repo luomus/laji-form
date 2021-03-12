@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Breadcrumb } from "react-bootstrap";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -271,9 +270,9 @@ export class InformalTaxonGroupChooser extends React.Component {
 		const {rootOnly} = this.props;
 		const {translations} = this.props.formContext;
 
-
 		const {Container, GroupsContainer, Item} = this;
 
+		const {Breadcrumb} = this.context.theme;
 		return (
 			<Container>
 				{!rootOnly && (

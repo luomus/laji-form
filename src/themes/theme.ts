@@ -139,6 +139,14 @@ export interface ListGroupItemProps extends JSX.IntrinsicAttributes, HasMaybeCla
 	active?: boolean;
 }
 
+export interface Breadcrumb extends React.HTMLProps<any> {
+	Item: React.ElementType<BreadcrumbItem>;
+}
+
+export interface BreadcrumbItem extends JSX.IntrinsicAttributes {
+	key?: string | undefined | null | number;
+}
+
 export interface Theme {
 	Panel: (props: PanelProps) => JSX.Element | null;
 	Table: React.ElementType<TableProps>;
@@ -158,4 +166,5 @@ export interface Theme {
 	FormControl: React.ElementType<FormControlProps>;
 	ListGroup: React.ElementType<ListGroupProps>;
 	ListGroupItem: React.ElementType<ListGroupItemProps>;
+	Breadcrumb: Breadcrumb;
 }
