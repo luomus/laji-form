@@ -775,7 +775,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		getMetadataPromise = (): Promise<MediaMetadataSchema> => {
 			let mediaMetadata : any =
 				this.props.formContext.mediaMetadata
-				|| {intellectualRights: "MZ.intellectualRightsCC-BY-SA-4.0"};
+				|| {intellectualRights: "MZ.intellectualRightsARR"};
 			const MACode = this.props.formContext.uiSchemaContext.creator;
 
 			return ("capturerVerbatim" in mediaMetadata)
