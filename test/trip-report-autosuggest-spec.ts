@@ -1,4 +1,4 @@
-import { Form, createForm, putForeignMarkerToMap, removeUnit, TaxonAutosuggestWidgetPOI } from "./test-utils";
+import { Form, createForm, putForeignMarkerToMap, removeUnit, TaxonAutosuggestWidgetPOI, getFocusedId } from "./test-utils";
 import { protractor, browser, ElementFinder } from "protractor";
 
 describe("Trip report (JX.519) autosuggestions", () => {
@@ -37,6 +37,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	describe("unit taxon", () => {
 
 		let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
+		let $countInput: ElementFinder;
 		let $addUnit: ElementFinder;
 
 		const moveMouseAway = (locator: string) => browser.actions()
@@ -45,6 +46,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 		beforeAll(async () => {
 			taxonAutosuggest = form.getTaxonAutosuggestWidget("gatherings.0.units.0.identifications.0.taxon");
+			$countInput = form.$locate("gatherings.0.units.0.count").$("input");
 			$addUnit = form.$locateButton("gatherings.0.units", "add");
 		});
 
@@ -100,6 +102,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -112,6 +115,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -125,6 +129,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
+			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -137,6 +142,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
+			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -149,6 +155,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -161,6 +168,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
+			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -174,6 +182,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				expect(await taxonAutosuggest.isSuggested()).toBe(true);
 				expect(await taxonAutosuggest.$input.getAttribute("value")).toBe(`parus ${suffix}`);
+				expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
 
 				await removeUnit(0, 0);
 				await $addUnit.click();

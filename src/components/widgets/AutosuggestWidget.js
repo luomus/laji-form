@@ -605,11 +605,11 @@ export class Autosuggest extends React.Component {
 		};
 
 		let cssClasses = {
-			suggestionsContainer: "rw-popup-container rw-popup-animation-box",
+			suggestionsContainer: "rw-popup-container rw-popup-transition",
 			suggestionsContainerOpen: "rw-popup",
 			suggestionsList: "rw-list",
 			suggestion: "rw-list-option",
-			suggestionHighlighted: "rw-list-option rw-state-focus"
+			suggestionHighlighted: "rw-list-option rw-state-focus rw-state-selected"
 		};
 
 		const highlightFirstSuggestion = "highlightFirstSuggestion" in this.props
@@ -1158,7 +1158,7 @@ class ReactAutosuggest extends React.Component {
 		const {suggestion, suggestionsList, suggestionsContainer, suggestionsContainerOpen, suggestionHighlighted} = this.props.theme || {};
 		return (
 			<div className={classNames(suggestionsContainer, suggestionsContainerOpen)}>
-				<ul className={suggestionsList}>
+				<ul className={suggestionsList} tabIndex={-1}>
 					{this.props.suggestions.map((s, i) =>
 						<li key={i}
 						    className={classNames(suggestion, this.state.focusedIdx === i && suggestionHighlighted)}
