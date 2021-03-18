@@ -691,7 +691,7 @@
 	},
 	retry: {
 		fi: "Koita uudestaan",
-		en: "Rety",
+		en: "Retry",
 		sv: "Försök igen"
 	},
 	section: {
