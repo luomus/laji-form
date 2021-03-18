@@ -697,16 +697,12 @@
                                         "enum": [
                                             "MY.taxonCensusTypeCounted",
                                             "MY.taxonCensusTypeEstimated",
-                                            "MY.taxonCensusTypeNotCounted",
-                                            "MY.taxonCensusTypeUHEXCounted",
-                                            "MY.taxonCensusTypeUHEXNotCounted"
+                                            "MY.taxonCensusTypeNotCounted"
                                         ],
                                         "enumNames": [
                                             "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista",
                                             "M\u00e4\u00e4ritetty kaikki lajit, yksil\u00f6m\u00e4\u00e4r\u00e4 on arvio",
-                                            "M\u00e4\u00e4ritetty kaikki lajit, yksil\u00f6m\u00e4\u00e4r\u00e4\u00e4 ei arvioitu",
-                                            "Vain uhanalaiset (UHEX) lajit laskettu",
-                                            "M\u00e4\u00e4ritetty UHEX-lajit, yksil\u00f6m\u00e4\u00e4r\u00e4\u00e4 ei arvioitu"
+                                            "M\u00e4\u00e4ritetty kaikki lajit, yksil\u00f6m\u00e4\u00e4r\u00e4\u00e4 ei arvioitu"
                                         ],
                                         "title": "Laskennan kattavuus",
                                         "type": "string"
@@ -1081,7 +1077,7 @@
                                             "kuoriutunut muna",
                                             "kuoriutunut kotelo",
                                             "\u00e4k\u00e4m\u00e4",
-                                            "J\u00e4ljet (sy\u00f6m\u00e4j\u00e4ljet tms.)"
+                                            "j\u00e4ljet (sy\u00f6m\u00e4j\u00e4ljet tms.)"
                                         ],
                                         "title": "Elinvaihe",
                                         "type": "string"
@@ -2034,6 +2030,9 @@
                         "identifications": {
                             "items": {
                                 "detDate": {
+                                    "ui:options": {
+                                        "allowOnlyYear": true
+                                    },
                                     "ui:widget": "DateWidget"
                                 }
                             }
@@ -2551,6 +2550,7 @@
                         }
                     ],
                     "ui:options": {
+                        "activeHeightOffset": -6,
                         "buttons": [
                             {
                                 "fn": "add",
@@ -2593,8 +2593,7 @@
                         "idToScrollAfterAdd": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units-add",
                         "normalRenderingTreshold": "sm",
                         "renderer": "table",
-                        "tableActiveItemClassNames": "panel panel-body gray",
-                        "activeHeightOffset": -6
+                        "tableActiveItemClassNames": "panel panel-body gray"
                     },
                     "ui:title": ""
                 }
