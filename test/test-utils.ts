@@ -30,6 +30,16 @@ export interface DateWidgetPO {
 	buttons: {
 		$today: ElementFinder;
 		$yesterday: ElementFinder;
+		$date: ElementFinder;
+		$time: ElementFinder;
+	}
+	calendar: {
+		$today: ElementFinder;
+		waitAnimation: () => Promise<void>;
+	},
+	clock: {
+		"$01:00": ElementFinder;
+		waitAnimation: () => Promise<void>;
 	}
 }
 
@@ -243,7 +253,17 @@ export class Form {
 			$input: $widget.$("input") as ElementFinder,
 			buttons: {
 				$today: $widget.$(".today") as ElementFinder,
-				$yesterday: $widget.$("yesterday") as ElementFinder,
+				$yesterday: $widget.$(".yesterday") as ElementFinder,
+				$date: $widget.$(".rw-i-calendar") as ElementFinder,
+				$time: $widget.$(".rw-i-clock-o") as ElementFinder
+			},
+			calendar: {
+				$today: $widget.$(".rw-calendar-footer button") as ElementFinder,
+				waitAnimation: () => browser.wait(EC.visibilityOf($widget.$(".rw-calendar-footer button")), 1000, "Calendar didn't show") as Promise<void>
+			},
+			clock: {
+				"$01:00": $widget.$$(".rw-list li").get(2) as ElementFinder,
+				waitAnimation: () => browser.wait(EC.visibilityOf($widget.$(".rw-list")), 1000, "Clock didn't show") as Promise<void>
 			}
 		};
 	}
@@ -271,8 +291,8 @@ export class Form {
 			$$suggestions = form.$locate(lajiFormLocator).$$(".rw-list-option");
 			waitForSuggestionsToLoad = () => browser.wait(EC.visibilityOf(this.$suggestionsContainer), 5000, "Suggestion list timeout") as Promise<void>;
 			waitForGlyph = () => browser.wait(EC.visibilityOf(form.$locate(lajiFormLocator).$(".glyphicon.form-control-feedback")), 5000, "Glyph didn't load") as Promise<void>;
-			isSuggested = () => presentAndDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-ok") as ElementFinder);
-			isNonsuggested = () => presentAndDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-warning-sign") as ElementFinder);
+			isSuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-ok") as ElementFinder);
+			isNonsuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-warning-sign") as ElementFinder);
 			$powerUserButton = $(".power-user-addon") as ElementFinder;
 			powerUserButtonIsActive = async () => (await this.$powerUserButton.getAttribute("class")).includes("active");
 		}
@@ -284,7 +304,7 @@ export class Form {
 	})
 }
 
-const presentAndDisplayed = async ($elem: ElementFinder) => (await $elem.isPresent()) && (await $elem.isDisplayed());
+export const isDisplayed = async ($elem: ElementFinder) => (await $elem.isPresent()) && (await $elem.isDisplayed());
 
 export interface ImageArrayFieldPOI {
 	$container: ElementFinder;
@@ -336,10 +356,10 @@ export async function removeUnit(gatheringIdx: number, unitIdx: number) {
 export const updateValue = async ($input: ElementFinder, value: string, blur = true): Promise<void> => {
 	const current = await $input.getAttribute("value") || "";
 	await $input.click();
-	for (let i = 0; i < current.length; i++) {
-		await $input.sendKeys(protractor.Key.BACK_SPACE);
-	}
-	await $input.sendKeys(value);
+	await $input.sendKeys(
+		...Array(current.length).fill(protractor.Key.BACK_SPACE),
+		value
+	);
 	if (blur) {
 		return $input.sendKeys(protractor.Key.TAB);
 	}

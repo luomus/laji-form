@@ -149,15 +149,6 @@ if (test !== true) {
 					}
 				}
 				: ownerFilledFormData,
-		uiSchemaContext: {
-			...(data.uiSchemaContext || {}),
-			creator: properties.userId,
-			isAdmin: query.isAdmin,
-			isEdit: query.isEdit,
-			municipalityEnum:  require("./municipalityEnum.json"),
-			biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json"),
-			birdAssociationAreaEnum:  require("./birdAssociationAreaEnum.json")
-		},
 		onSubmit,
 		onError: log("errors"),
 		renderSubmit: true,
@@ -179,6 +170,15 @@ promise = promise.then(data => ({
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
 	lang,
+	uiSchemaContext: {
+		...(data.uiSchemaContext || {}),
+		creator: properties.userId,
+		isAdmin: query.isAdmin,
+		isEdit: query.isEdit,
+		municipalityEnum:  require("./municipalityEnum.json"),
+		biogeographicalProvinceEnum:  require("./biogeographicalProvinceEnum.json"),
+		birdAssociationAreaEnum:  require("./birdAssociationAreaEnum.json")
+	}
 }));
 
 const notifier = [["warning", "warning"], ["success", "success"], ["info", undefined], ["error", "failure"]].reduce((notifier, [method, notusType]) => {

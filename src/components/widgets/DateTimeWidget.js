@@ -104,11 +104,16 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	parse = (value) => {
-		if (!value) return undefined;
+		if (!value) value = "";
 		const {allowOnlyYear} = getUiOptions(this.props);
 		const hasTime = value.includes(DATE_TIME_SEPARATOR) || this.state.time && !this.state.calendar;
 		const onlyYear = allowOnlyYear && this.state.calendar && value.match(YEAR_MATCH);
-		let momentValue = moment(value, this.state.format);
+		let momentValue = moment(value, onlyYear ? "YYYY" : this.state.format);
+
+		if (!momentValue.isValid()) {
+			return "";
+		}
+
 		const isoValue = onlyYear
 			? value
 			: hasTime
@@ -225,7 +230,7 @@ export default class DateTimeWidget extends React.Component {
 
 	formatValue(value, options, props) {
 		if (!value) return value;
-		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, calendar: true, time: true, value});
+		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, date: true, time: true, value});
 		return dateLocalizer.format(value, format, props.formContext.lang);
 	}
 }
