@@ -1,4 +1,5 @@
 import * as React from "react";
+import RJSF from "@rjsf/core";
 import { Theme, Panel, ButtonProps, OverlayTriggerProps, Modal, InputGroup, Breadcrumb, Pager, Dropdown, CheckboxProps } from "./theme";
 
 const Stub = ({children}: {children: React.ReactNode}) => {
@@ -32,6 +33,7 @@ const Dropdown: Dropdown = DivStub as unknown as Dropdown;
 Dropdown.Menu = DivStub;
 
 const theme: Theme = {
+	RJSF,
 	Panel,
 	Table: DivStub,
 	ProgressBar: DivStub,

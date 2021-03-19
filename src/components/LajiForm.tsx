@@ -728,7 +728,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel: _Panel, Table} = this.props.theme || this.context.theme;
+		const {RJSF, Panel: _Panel, Table} = this.props.theme || this.context.theme;
 		const Panel = _Panel as any;
 
 		const panelHeader = (
@@ -751,7 +751,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 											   tmpIdTree={this.tmpIdTree}
 											   ref={this.bgJobRef}
 					/>
-					<Form
+					<RJSF
 						{...this.props as any}
 						formData={this.state.formData}
 						ref={this.getRef}
@@ -777,7 +777,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 								</Button>
 							) : null}
 						</div>
-					</Form>
+					</RJSF>
 					{shortcuts &&
 						<Panel ref={this.shortcutHelpRef}
 						       className="shortcut-help laji-form-popped z-depth-3 hidden"

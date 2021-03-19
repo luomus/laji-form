@@ -1,4 +1,5 @@
 import * as React from "react";
+import RJSF from "@rjsf/core";
 import {Panel as _Panel, Table, ProgressBar, Button, ButtonGroup, ButtonToolbar, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl, ListGroup, ListGroupItem, Breadcrumb, HelpBlock, MenuItem, Alert, Pager, Accordion, Collapse as _Collapse, Dropdown, Form, ControlLabel, Checkbox, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { Theme, PanelProps, ButtonProps, Panel as PanelI } from "./theme";
 
@@ -11,6 +12,7 @@ __Panel.Collapse = _Panel.Collapse;
 const Collapse = _Collapse as any;
 
 const theme: Theme = {
+	RJSF,
 	Panel: __Panel,
 	Table,
 	ProgressBar,
