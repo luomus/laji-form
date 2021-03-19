@@ -54,5 +54,6 @@ const theme: Theme = {
 	Alert: DivStub,
 	Pager,
 	Accordion: DivStub,
+	Collapse: DivStub,
 };
 export default theme;

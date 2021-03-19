@@ -180,6 +180,11 @@ export interface AccordionProps extends JSX.IntrinsicAttributes {
 	id?: string
 }
 
+export interface CollapseProps extends JSX.IntrinsicAttributes {
+	in?: boolean;
+	themeRole?: "menu";
+}
+
 export interface Theme {
 	Panel: Panel;
 	Table: React.ElementType<TableProps>;
@@ -206,4 +211,5 @@ export interface Theme {
 	Alert: React.ElementType<AlertProps>;
 	Pager: Pager;
 	Accordion: React.ElementType<AccordionProps>;
+	Collapse: React.ElementType<CollapseProps>;
 }

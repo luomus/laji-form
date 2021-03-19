@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Collapse } from "react-bootstrap";
 import { getInnerUiSchema } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
@@ -38,7 +37,7 @@ export default class InitiallyHiddenField extends React.Component {
 	render() {
 		let shouldShow = this.state.visible;
 		const SchemaField = this.props.registry.fields.SchemaField;
-		const {Row, Col} = this.context.theme;
+		const {Row, Col, Collapse} = this.context.theme;
 		return (
 			<div>
 				<Collapse in={!shouldShow}>
