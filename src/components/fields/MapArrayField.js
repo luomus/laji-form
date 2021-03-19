@@ -8,8 +8,6 @@ import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Row, Col, Panel, Popover, ButtonToolbar, Modal } from "react-bootstrap";
-import * as PanelHeading from "react-bootstrap/lib/PanelHeading";
-import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
 import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
@@ -2089,17 +2087,17 @@ class MapPanel extends React.Component {
 		return (
 			<Panel bsStyle={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
 				{this.props.header ? (
-					<PanelHeading>
+					<Panel.Heading>
 						{this.props.header}
-					</PanelHeading>
+					</Panel.Heading>
 				) : null}
-				<PanelBody>
+				<Panel.Body>
 					{this.props.text}
 					{this.props.buttonText ?
 						<Button bsStyle={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 						null
 					}
-				</PanelBody>
+				</Panel.Body>
 			</Panel>
 		);
 	}

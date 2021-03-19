@@ -2,9 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import * as equals from "deep-equal";
-import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, } from "react-bootstrap";
-import * as Dropdown from "react-bootstrap/lib/Dropdown";
-import * as DropdownMenu from "react-bootstrap/lib/DropdownMenu";
+import { ListGroup, ListGroupItem, Modal, MenuItem, OverlayTrigger, Tooltip, Collapse, Dropdown } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
@@ -410,9 +408,9 @@ export default class ScopeField extends React.Component {
 				          onToggle={this.onToggle}>
 					{this.renderFieldsButton("toggle")}
 					<Collapse in={this.state.additionalsOpen} bsRole="menu">
-						<DropdownMenu>
+						<Dropdown.Menu>
 							{this.additionalPropertiesToList(additionalProperties, MenuItem)}
-						</DropdownMenu>
+						</Dropdown.Menu>
 					</Collapse>
 				</Dropdown>
 			</div>

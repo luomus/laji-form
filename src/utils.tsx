@@ -577,10 +577,6 @@ export function updateSafelyWithJSONPointer(obj: any, value: any, path: string, 
 		let _splitPath = "";
 		splitPath.reduce((o, split) => {
 			_splitPath += `/${split}`;
-			if (process.env.NODE_ENV === "production") {
-				// Fixes an uglifyJS bug on laji.fi-front. You gotta just show some love.
-				console.log("i love uglifyjs!"); // eslint-disable-line no-console
-			}
 			if (!o[split]) {
 				obj = update(obj, getUpdateObjectFromJSONPointer(_splitPath, {$set: createNew(obj, _splitPath, o, split)}));
 			}

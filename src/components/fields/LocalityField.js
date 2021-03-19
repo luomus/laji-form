@@ -4,7 +4,6 @@ import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { Button, GlyphButton } from "../components";
 import { Row, Col, Panel, Modal } from "react-bootstrap";
-import * as PanelBody from "react-bootstrap/lib/PanelBody";
 import LajiForm from "../LajiForm";
 import { getCenterAndRadiusFromGeometry } from "./MapField";
 
@@ -39,12 +38,12 @@ export default class LocalityField extends React.Component {
 			<Row>
 				<Col xs={12}>
 					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
-						<PanelBody>
+						<Panel.Body>
 							{values.map((v, i) => (
 								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
 							))}
 							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
-						</PanelBody>
+						</Panel.Body>
 					</Panel>
 				</Col>
 				{this.state.modal && this.renderModal()}
