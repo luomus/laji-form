@@ -2,7 +2,6 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { Alert } from "react-bootstrap";
 import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
@@ -575,7 +574,7 @@ class LocationButton extends React.Component {
 
 		const {translations} = that.props.formContext;
 
-		const {Modal} = this.context.theme;
+		const {Modal, Alert} = this.context.theme;
 		return (
 			<React.Fragment>
 				{this.renderButton()}
@@ -585,7 +584,7 @@ class LocationButton extends React.Component {
 								<Modal.Title>{title || translations.SetLocationToUnit(that.props.formData[taxonField])}</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
-								{shapeAlert && <Alert bsStyle="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}
+								{shapeAlert && <Alert themeRole="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}
 								<Map {...this.state.modalMap} singleton={true} formContext={that.props.formContext} ref={this.setMapRef} bodyAsDialogRoot={false} />
 							</Modal.Body>
 						</Modal>

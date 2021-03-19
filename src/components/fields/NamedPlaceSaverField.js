@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode }  from "react-dom";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
-import { Alert, Form, ControlLabel } from "react-bootstrap";
+import { Form, ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -235,9 +235,9 @@ class PlaceSaverDialog extends React.Component {
 			return <Button bsSize="small" onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
 		};
 
-		const {Panel, FormGroup, FormControl, ListGroup, ListGroupItem} = this.context.theme;
+		const {Panel, FormGroup, FormControl, ListGroup, ListGroupItem, Alert} = this.context.theme;
 		return this.state.failed ? (
-			<Alert bsStyle="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
+			<Alert themeRole="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
 		): (
 			<div className="place-saver-dialog">
 				<Form inline onSubmit={this.onSubmit}>
@@ -257,7 +257,7 @@ class PlaceSaverDialog extends React.Component {
 					{loading ? <div className="pull-right"><Spinner /></div> : null}
 				</Form>
 				{!this.props.gathering.namedPlaceID && existingPlaces.length ?
-					<Alert bsStyle="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple}.` : ""}`}</Alert>
+					<Alert themeRole="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple}.` : ""}`}</Alert>
 					: null}
 				{existingPlaces.length > 1 ? (
 					<FormGroup>

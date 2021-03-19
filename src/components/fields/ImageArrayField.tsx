@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
-import { Alert, Pager } from "react-bootstrap";
+import { Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -374,7 +374,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const {metadataModal = true} = getUiOptions(this.props.uiSchema);
 
-			const {Modal} = this.context.theme;
+			const {Modal, Alert} = this.context.theme;
 
 			return typeof metadataModalOpen === "number" ?
 				<Modal dialogClassName="laji-form media-modal" show={true}
@@ -403,7 +403,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 										uiSchemaContext={this.props.formContext.uiSchemaContext}
 										showShortcutButton={false}>
 										{(metadataSaveSuccess !== undefined) ? (
-											<Alert bsStyle={metadataSaveSuccess ? "success" : "danger"}>
+											<Alert themeRole={metadataSaveSuccess ? "success" : "danger"}>
 												{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
 											</Alert>
 										) : null

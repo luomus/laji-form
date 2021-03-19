@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, filter, injectButtons } from "../../utils";
-import { Alert } from "react-bootstrap";
 import LajiForm from "../LajiForm";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
@@ -293,7 +292,7 @@ class AnnotationBox extends React.Component {
 		const {metadataForm = {}, annotations = []} = this.state;
 		const _uiSchema = {...this.getUiSchema(), "ui:readonly": true};
 
-		const {Panel, ListGroup, ListGroupItem} = this.context.theme;
+		const {Panel, ListGroup, ListGroupItem, Alert} = this.context.theme;
 		return (
 			<Panel>
 				<Panel.Heading><strong>{translations.Comments}</strong></Panel.Heading>
@@ -317,7 +316,7 @@ class AnnotationBox extends React.Component {
 						) : <Spinner />}
 					</ListGroup>
 					{this.state.deleteFail &&
-						<Alert bsStyle={"danger"}>
+						<Alert themeRole={"danger"}>
 							{translations["DeleteFail"]}
 						</Alert>
 					}

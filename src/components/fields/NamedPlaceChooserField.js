@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { Alert } from "react-bootstrap";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
 import Context from "../../Context";
@@ -178,7 +177,7 @@ export default class NamedPlaceChooserField extends React.Component {
 		const {registry: {fields: {SchemaField}}, formContext} = this.props;
 		const {translations} = formContext;
 		const {failed} = this.state;
-		const {Modal} = this.context.theme;
+		const {Modal, Alert} = this.context.theme;
 		return (
 			<React.Fragment>
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />
@@ -189,8 +188,8 @@ export default class NamedPlaceChooserField extends React.Component {
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
 							<Modal.Body>
-								{failed === PLACE_USE_FAIL && <Alert bsStyle="danger">{translations.NamedPlacesUseFail}</Alert>}
-								{failed === PLACES_FETCH_FAIL && <Alert bsStyle="danger">{translations.NamedPlacesFetchFail}</Alert>}
+								{failed === PLACE_USE_FAIL && <Alert themeRole="danger">{translations.NamedPlacesUseFail}</Alert>}
+								{failed === PLACES_FETCH_FAIL && <Alert themeRole="danger">{translations.NamedPlacesFetchFail}</Alert>}
 								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} onDeleted={this.onPlaceDeleted} />
 							</Modal.Body>
 						</Modal>

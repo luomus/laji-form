@@ -1,6 +1,7 @@
 import * as React from "react";
 
-type Role = "primary" | "secondary" | "danger" | "warning" | "info" | "link" | string;
+type Role = "primary" | "secondary" | "danger" | "warning" | "info" | string;
+type ButtonRole = Role | "link";
 
 interface HasMaybeChildren {
 	children?: React.ReactNode;
@@ -43,7 +44,7 @@ export interface ProgressBarProps extends JSX.IntrinsicAttributes {
 }
 
 export interface ButtonProps extends JSX.IntrinsicAttributes {
-	themeRole?: Role;
+	themeRole?: ButtonRole;
 }
 
 export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
@@ -157,6 +158,10 @@ export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren
 	disabled?: boolean;
 }
 
+export interface AlertProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	themeRole: Role;
+}
+
 
 export interface Theme {
 	Panel: Panel;
@@ -180,5 +185,6 @@ export interface Theme {
 	ListGroupItem: React.ElementType<ListGroupItemProps>;
 	Breadcrumb: Breadcrumb;
 	HelpBlock: React.ElementType<JSX.IntrinsicAttributes>;
-	MenuItem: React.ElementType<MenuItemProps>
+	MenuItem: React.ElementType<MenuItemProps>;
+	Alert: React.ElementType<AlertProps>;
 }

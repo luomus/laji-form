@@ -1,6 +1,6 @@
 import * as React from "react";
-import {Panel as _Panel, Table, ProgressBar, Button, ButtonGroup, ButtonToolbar, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl, ListGroup, ListGroupItem, Breadcrumb, HelpBlock, MenuItem } from "react-bootstrap";
-import { Theme, PanelProps, ButtonProps, Panel as PanelI } from "./theme";
+import {Panel as _Panel, Table, ProgressBar, Button, ButtonGroup, ButtonToolbar, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl, ListGroup, ListGroupItem, Breadcrumb, HelpBlock, MenuItem, Alert } from "react-bootstrap";
+import { Theme, PanelProps, ButtonProps, Panel as PanelI, AlertProps } from "./theme";
 
 const Panel = React.forwardRef<_Panel, PanelProps>(({themeRole, ...props}, ref) => <_Panel {...props} bsStyle={themeRole} ref={ref}/>);
 const __Panel: PanelI = (Panel as unknown as PanelI);
@@ -30,6 +30,7 @@ const theme: Theme = {
 	ListGroupItem,
 	Breadcrumb,
 	HelpBlock,
-	MenuItem
+	MenuItem,
+	Alert: ({themeRole, ...props}) => <Alert {...props} bsStyle={themeRole}/>
 };
 export default theme;
