@@ -153,13 +153,25 @@ export interface BreadcrumbItem extends JSX.IntrinsicAttributes {
 }
 
 export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
-	onClick?: React.MouseEventHandler<any>
+	onClick?: React.MouseEventHandler<any>;
 	active?: boolean;
 	disabled?: boolean;
 }
 
 export interface AlertProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 	themeRole: Role;
+}
+
+export interface PagerItemProps {
+	previous?: boolean;
+	next?: boolean;
+	onClick?: React.MouseEventHandler<any>;
+	disabled?: boolean;
+	href?: string;
+}
+
+export interface Pager extends React.HTMLProps<any> {
+    Item: React.ElementType<PagerItemProps>;
 }
 
 
@@ -187,4 +199,5 @@ export interface Theme {
 	HelpBlock: React.ElementType<JSX.IntrinsicAttributes>;
 	MenuItem: React.ElementType<MenuItemProps>;
 	Alert: React.ElementType<AlertProps>;
+	Pager: Pager;
 }

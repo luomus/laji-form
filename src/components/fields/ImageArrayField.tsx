@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
 const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
-import { Pager } from "react-bootstrap";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -374,7 +373,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const {metadataModal = true} = getUiOptions(this.props.uiSchema);
 
-			const {Modal, Alert} = this.context.theme;
+			const {Modal, Alert, Pager} = this.context.theme;
 
 			return typeof metadataModalOpen === "number" ?
 				<Modal dialogClassName="laji-form media-modal" show={true}

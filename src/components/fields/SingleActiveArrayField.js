@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
-import { Accordion, Pager } from "react-bootstrap";
+import { Accordion } from "react-bootstrap";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
@@ -541,6 +541,8 @@ class PagerArrayFieldTemplate extends React.Component {
 		const {translations} = that.props.formContext;
 		const {buttons, affixed, headerClassName, confirmDelete} = getUiOptions(arrayTemplateFieldProps.uiSchema);
 		const activeIdx = that.state.activeIdx;
+
+		const {Pager} = this.context.theme;
 
 		let header = (
 			<div className={`laji-form-panel-header laji-form-accordion-header${headerClassName ? ` ${headerClassName}` : ""}`} ref={this.setHeaderRef}>
