@@ -9,7 +9,7 @@ __Panel.Heading = _Panel.Heading;
 __Panel.Collapse = _Panel.Collapse;
 
 const theme: Theme = {
-	Panel: _Panel,
+	Panel: __Panel,
 	Table,
 	ProgressBar,
 	Button: React.forwardRef<Button, ButtonProps>(({themeRole, ...props}, ref) => <Button {...props} bsStyle={themeRole} ref={ref}/>),
