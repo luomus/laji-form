@@ -201,6 +201,11 @@ export interface Dropdown extends React.HTMLProps<JSX.IntrinsicAttributes> {
     Menu: React.ElementType<DropdownMenuProps>;
 }
 
+export interface FormProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	inline?: boolean;
+	onSubmit?: React.EventHandler<any>;
+}
+
 export interface Theme {
 	Panel: Panel;
 	Table: React.ElementType<TableProps>;
@@ -229,4 +234,5 @@ export interface Theme {
 	Accordion: React.ElementType<AccordionProps>;
 	Collapse: React.ElementType<CollapseProps>;
 	Dropdown: Dropdown;
+	Form: React.ElementType<FormProps>;
 }

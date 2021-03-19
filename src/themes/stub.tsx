@@ -58,6 +58,7 @@ const theme: Theme = {
 	Pager,
 	Accordion: DivStub,
 	Collapse: DivStub,
-	Dropdown
+	Dropdown,
+	Form: DivStub,
 };
 export default theme;
