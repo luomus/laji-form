@@ -2,10 +2,11 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import update from "immutability-helper";
-import { Checkbox } from "react-bootstrap";
 import BaseInput from "./BaseInput";
+import ReactContext from "../../ReactContext";
 
 class TextSelectWidget extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["string"])
@@ -67,6 +68,8 @@ class TextSelectWidget extends React.Component {
 		if (freeTextField) {
 			enums = update(enums, {$push: [freeTextField]});
 		}
+
+		const {Checkbox} = this.context.theme;
 
 		return (
 			<div className="laji-text-select">

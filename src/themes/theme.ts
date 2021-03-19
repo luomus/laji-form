@@ -209,6 +209,12 @@ export interface FormProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 export interface ControlLabelProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 }
 
+export interface CheckboxProps extends JSX.IntrinsicAttributes {
+	title?: string;
+	checked?: boolean;
+	onChange?: React.EventHandler<any>;
+}
+
 export interface Theme {
 	Panel: Panel;
 	Table: React.ElementType<TableProps>;
@@ -239,4 +245,5 @@ export interface Theme {
 	Dropdown: Dropdown;
 	Form: React.ElementType<FormProps>;
 	ControlLabel: React.ElementType<ControlLabelProps>;
+	Checkbox: React.ElementType<CheckboxProps>;
 }
