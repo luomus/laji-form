@@ -2,7 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import * as equals from "deep-equal";
-import { Dropdown } from "react-bootstrap";
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
@@ -400,11 +399,10 @@ export default class ScopeField extends React.Component {
 
 
 	renderFieldsDropdown(additionalProperties) {
-		const {MenuItem, Collapse} = this.context.theme;
+		const {MenuItem, Collapse, Dropdown} = this.context.theme;
 		return (
 			<div key="scope-additionals-dropdown">
 				<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
-				          bsStyle="primary"
 				          pullRight
 				          open={this.state.additionalsOpen}
 				          onSelect={this.onSelect}

@@ -170,7 +170,7 @@ export interface PagerItemProps {
 	href?: string;
 }
 
-export interface Pager extends React.HTMLProps<any> {
+export interface Pager extends React.HTMLProps<JSX.IntrinsicAttributes> {
     Item: React.ElementType<PagerItemProps>;
 }
 
@@ -183,6 +183,22 @@ export interface AccordionProps extends JSX.IntrinsicAttributes {
 export interface CollapseProps extends JSX.IntrinsicAttributes {
 	in?: boolean;
 	themeRole?: "menu";
+}
+
+export interface DropdownProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	themeRole?: Role;
+	id?: string;
+	pullRight?: boolean;
+	open?: boolean;
+	onSelect: React.EventHandler<any>;
+	onToggle: React.EventHandler<any>;
+}
+
+export interface DropdownMenuProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+}
+
+export interface Dropdown extends React.HTMLProps<JSX.IntrinsicAttributes> {
+    Menu: React.ElementType<DropdownMenuProps>;
 }
 
 export interface Theme {
@@ -212,4 +228,5 @@ export interface Theme {
 	Pager: Pager;
 	Accordion: React.ElementType<AccordionProps>;
 	Collapse: React.ElementType<CollapseProps>;
+	Dropdown: Dropdown;
 }
