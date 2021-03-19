@@ -722,7 +722,6 @@ export class Autosuggest extends React.Component {
 			) : null;
 		};
 
-		// react-bootstrap components can't be used here because they require using form-group which breaks layout.
 		let glyph = undefined;
 
 		if (!this.state.focused && !this.state.isLoading && (!onToggle || !this.state.focused)) {
