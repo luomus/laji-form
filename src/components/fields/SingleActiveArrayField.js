@@ -409,6 +409,7 @@ const ButtonsWrapper = ({props}) => {
 
 const AccordionButtonsWrapper = ({props, position}) => {
 	const buttons = getButtonsForPosition(props, getButtons(getUiOptions(props.uiSchema).buttons, props), position);
+	const {Row, Col} = React.useContext(ReactContext).theme;
 	if (!buttons) return null;
 
 	const cols = Object.keys(getBootstrapCols()).reduce((cols, colType) => {
@@ -417,13 +418,11 @@ const AccordionButtonsWrapper = ({props, position}) => {
 	}, {});
 
 	return (
-		<ReactContext.Consumer>{({theme: {Row, Col}}) =>
-			<Row className="laji-form-accordion-buttons">
-				{buttons.map((button, idx) =>
-					<Col {...cols} key={idx}>{button}</Col>
-				)}
-			</Row>
-		}</ReactContext.Consumer>
+		<Row className="laji-form-accordion-buttons">
+			{buttons.map((button, idx) =>
+				<Col {...cols} key={idx}>{button}</Col>
+			)}
+		</Row>
 	);
 };
 

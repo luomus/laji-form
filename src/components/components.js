@@ -171,7 +171,8 @@ export class DeleteButton extends React.Component {
 }
 
 export function AddButton({onClick}) {
-	return <ReactContext.Consumer>{({theme: {Row, Col}}) => <Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>}</ReactContext.Consumer>;
+	const {Row, Col} = React.useContext(ReactContext).theme;
+	return  <Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>;
 }
 
 export class Alert extends React.Component {
@@ -197,15 +198,14 @@ export class Alert extends React.Component {
 
 export const GlyphButton = (props) => {
 	const {glyph, ...buttonProps} = props;
+	const {Glyphicon} = React.useContext(ReactContext).theme;
 	return (
-		<ReactContext.Consumer>{({theme: {Glyphicon}}) =>
-			<Button {...buttonProps} 
-			        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
-			        tooltipPlacement={props.tooltipPlacement || "left"}>
-				<Glyphicon glyph={glyph} />
-				{props.children}
-			</Button>
-		}</ReactContext.Consumer>
+		<Button {...buttonProps} 
+						className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
+						tooltipPlacement={props.tooltipPlacement || "left"}>
+			<Glyphicon glyph={glyph} />
+			{props.children}
+		</Button>
 	);
 };
 
@@ -457,13 +457,12 @@ export class Stretch extends React.Component {
 
 export function Help({help, id}) {
 	const helpGlyph = <span className="label-info laji-form-help-glyph">?</span>;
+	const {Tooltip} = React.useContext(ReactContext).theme;
 
 	return help ? (
-		<ReactContext.Consumer>{({theme: {Tooltip}}) => 
-			<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
-				{helpGlyph}
-			</OverlayTrigger>
-		}</ReactContext.Consumer>
+		<OverlayTrigger placement="right" overlay={<Tooltip id={id}><span dangerouslySetInnerHTML={{__html: help}} /></Tooltip> }>
+			{helpGlyph}
+		</OverlayTrigger>
 	) : helpGlyph;
 }
 
@@ -605,13 +604,13 @@ export const FetcherInput = React.forwardRef((props, ref) => {
 			{appendExtra}
 		</React.Fragment>
 	);
+	const {InputGroup, FormGroup} = React.useContext(ReactContext).theme;
+
 	const content = extra || appendExtra
 		? (
-			<ReactContext.Consumer>{({theme: {InputGroup}}) => 
-				<InputGroup>
-					{inputContent}
-				</InputGroup>
-			}</ReactContext.Consumer>
+			<InputGroup>
+				{inputContent}
+			</InputGroup>
 		)
 		: (
 			<React.Fragment>
@@ -620,21 +619,16 @@ export const FetcherInput = React.forwardRef((props, ref) => {
 		);
 
 	return (
-		<ReactContext.Consumer>{({theme: {FormGroup}}) => 
-			<FormGroup onMouseOver={onMouseOver} onMouseOut={onMouseOut} validationState={validationState} className={classNames(className, "fetcher-input")}>
-				{content}
-			</FormGroup>
-		}</ReactContext.Consumer>
+		<FormGroup onMouseOver={onMouseOver} onMouseOut={onMouseOut} validationState={validationState} className={classNames(className, "fetcher-input")}>
+			{content}
+		</FormGroup>
 	);
 });
 
 const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
 	const {readonly, ...inputProps} = props;
-	return (
-		<ReactContext.Consumer>{({theme: {FormControl}}) =>
-			<FormControl type="text" {...inputProps} readOnly={readonly} ref={ref} />
-		}</ReactContext.Consumer>
-	);
+	const {FormControl} = React.useContext(ReactContext).theme;
+	return <FormControl type="text" {...inputProps} readOnly={readonly} ref={ref} />;
 });
 
 // OverlayTrigger that is hoverable if hoverable === true

@@ -67,11 +67,12 @@ const AudioButton = React.forwardRef((props, ref) => {
 			e.stopPropagation();
 		}
 	}, [playing, stop, play]);
+	const {Glyphicon} = React.useContext(ReactContext).theme;
 	return (
 		<React.Fragment>
 			{!loaded 
 				? <div className="media-loading"><Spinner /></div>
-				: <ReactContext.Consumer>{({theme: {Glyphicon}}) => <Glyphicon glyph={playing ? "pause" :"play"} onClick={playing ? stop : play} ref={ref} tabIndex={0} onKeyDown={onKeyDown}/>}</ReactContext.Consumer>
+				: <Glyphicon glyph={playing ? "pause" :"play"} onClick={playing ? stop : play} ref={ref} tabIndex={0} onKeyDown={onKeyDown}/>
 			}
 			<LajiAudio style={{display: "none"}} ref={audioRef} id={props.id} onLoaded={setLoaded} onStop={stop} apiClient={props.apiClient} translations={props.translations}/>
 		</React.Fragment>

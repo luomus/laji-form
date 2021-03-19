@@ -637,27 +637,22 @@ function GlyphField({settings, idSchema, formData, schema, registry, isIncluded,
 	const {glyph, label, show} = settings;
 	const property = show;
 	const onButtonClick = React.useCallback(() => toggleAdditionalProperty(property), [property, toggleAdditionalProperty]);
+	const {Tooltip, OverlayTrigger} = React.useContext(ReactContext).theme;
 
 	if (!show) {
 		return null;
 	}
 	const hasData = propertyHasData(property, formData) && (!formData || !isDefaultData(formData[property], schema.properties[property], registry.definitions));
 
-	const tooltip = (
-		<ReactContext.Consumer>{
-			({theme: {Tooltip}}) => <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>
-		}</ReactContext.Consumer>
-	);
+	const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
+	
 	return (
-		<ReactContext.Consumer>{
-			({theme: {OverlayTrigger}}) =>
-				<OverlayTrigger key={property} overlay={tooltip} placement="left">
-					<GlyphButton glyph={glyph}
-					             disabled={hasData}
-					             themeRole={isIncluded ? "primary" : "default"}
-					             onClick={onButtonClick} />
-				</OverlayTrigger>
-		}</ReactContext.Consumer>
+		<OverlayTrigger key={property} overlay={tooltip} placement="left">
+			<GlyphButton glyph={glyph}
+									 disabled={hasData}
+									 themeRole={isIncluded ? "primary" : "default"}
+									 onClick={onButtonClick} />
+		</OverlayTrigger>
 	);
 }
 

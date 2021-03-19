@@ -10,6 +10,8 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 		return _titleFormatters[renderer]({...titleFormatter, formData});
 	}).filter(i => i);
 
+	const {Tooltip, OverlayTrigger} = React.useContext(ReactContext).theme;
+
 	if (renderedFormatters.length === 0 && isEmptyString(title)) return null;
 
 	const helpComponent = help ? <Help /> : null;
@@ -20,26 +22,22 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	if (!help) return <Legend>{titleContent}</Legend>;
 
+
 	const tooltipElem = (
-		<ReactContext.Consumer>{({theme: {Tooltip}}) => 
-			<Tooltip id={id + "-tooltip"}>
-				<span>
-					<strong dangerouslySetInnerHTML={{__html: title}} /><br />
-					<span dangerouslySetInnerHTML={{__html: help}} />
-				</span>
-			</Tooltip>
-		}</ReactContext.Consumer>
+		<Tooltip id={id + "-tooltip"}>
+			<span>
+				<strong dangerouslySetInnerHTML={{__html: title}} /><br />
+				<span dangerouslySetInnerHTML={{__html: help}} />
+			</span>
+		</Tooltip>
 	);
 
 	return (
-		<ReactContext.Consumer>{({theme: {OverlayTrigger}}) => 
-			<Legend>
-				<OverlayTrigger placement="right" overlay={tooltipElem}>
-					{titleContent}
-				</OverlayTrigger>
-			</Legend>
-		}
-		</ReactContext.Consumer>
+		<Legend>
+			<OverlayTrigger placement="right" overlay={tooltipElem}>
+				{titleContent}
+			</OverlayTrigger>
+		</Legend>
 	);
 };
 
