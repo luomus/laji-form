@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as DateTimePicker from "react-widgets/lib/DateTimePicker";
 import * as moment from "moment";
-import * as momentLocalizer from "react-widgets/lib/localizers/moment";
+import * as momentLocalizer from "react-widgets-moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
 import { getUiOptions, isDescendant } from "../../utils";
 import BaseComponent from "../BaseComponent";
@@ -93,18 +93,28 @@ export default class DateTimeWidget extends React.Component {
 		};
 
 		["value", "disabled", "time", "calendar"].forEach(prop => {
-			if (prop in props) state[prop] = props[prop];
+			if (prop in props) {
+				state[prop] = props[prop];
+				if (prop === "calendar") {
+					state["date"] = props[prop];
+				}
+			}
 		});
 
 		return state;
 	}
 
 	parse = (value) => {
-		if (!value) return undefined;
+		if (!value) value = "";
 		const {allowOnlyYear} = getUiOptions(this.props);
 		const hasTime = value.includes(DATE_TIME_SEPARATOR) || this.state.time && !this.state.calendar;
 		const onlyYear = allowOnlyYear && this.state.calendar && value.match(YEAR_MATCH);
-		let momentValue = moment(value, this.state.format);
+		let momentValue = moment(value, onlyYear ? "YYYY" : this.state.format);
+
+		if (!momentValue.isValid()) {
+			return "";
+		}
+
 		const isoValue = onlyYear
 			? value
 			: hasTime
@@ -120,12 +130,13 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	onToggle = p => {
-		if (p !== false) this.toggle = p; //"time" or "calendar"
+		if (p !== false) this.toggle = p; //"time" or "date"
 	}
 
 	setRef = (elem) => {
 		this.dateTimePickerRef = elem;
-	};
+	}
+
 	setContainerRef = (elem) => {
 		this.containerRef = elem;
 	}
@@ -146,7 +157,7 @@ export default class DateTimeWidget extends React.Component {
 		} else if (value !== null && !momentValue.isValid()) {
 			formattedValue = this.props.value;
 		} else if ((!this.toggle && !this.timeWritten) ||
-			(this.toggle === "calendar" && (!this.props.value || !this.props.value.includes("T")))) {
+			(this.toggle === "date" && (!this.props.value || !this.props.value.includes("T")))) {
 			formattedValue = momentValue.format("YYYY-MM-DD");
 		}
 		this.onChange(!value ? undefined : formattedValue);
@@ -171,7 +182,7 @@ export default class DateTimeWidget extends React.Component {
 
 		const datePicker = (<DateTimePicker
 			ref={this.setRef}
-			calendar={this.state.calendar}
+			date={this.state.calendar}
 			time={this.state.time && showTimeList}
 			format={this.state.inputFormat}
 			timeFormat={this.state.timeFormat}
@@ -221,7 +232,7 @@ export default class DateTimeWidget extends React.Component {
 
 	formatValue(value, options, props) {
 		if (!value) return value;
-		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, calendar: true, time: true, value});
+		const {inputFormat: format} = DateTimeWidget.prototype.getStateFromProps({...props, date: true, time: true, value});
 		return dateLocalizer.format(value, format, props.formContext.lang);
 	}
 }

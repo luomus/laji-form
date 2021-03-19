@@ -496,8 +496,11 @@ class AccordionArrayFieldTemplate extends React.Component {
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
 						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
+									 eventKey={idx}
 									 themeRole={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
-							<Panel.Heading>{getHeader(item, idx)}</Panel.Heading>
+							<Panel.Heading>
+								{getHeader(item, idx)}
+							</Panel.Heading>
 							<Panel.Body>
 								{idx === activeIdx ? (
 									<React.Fragment>
@@ -582,7 +585,9 @@ class PagerArrayFieldTemplate extends React.Component {
 				<div className="laji-form-field-template-item">
 					<div className="laji-form-field-template-schema">
 						<Panel className="laji-form-panel">
-							<Panel.Heading>{header}</Panel.Heading>
+							<Panel.Heading>
+								{header}
+							</Panel.Heading>
 							<Panel.Body>
 								<div key={activeIdx}>
 									{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}

@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { findDOMNode } from "react-dom";
 import * as Combobox from "react-widgets/lib/Combobox";
 import * as Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
@@ -96,9 +95,7 @@ class SelectWidget extends React.Component {
 		!this.props.disabled && !this.props.readonly && this.setState({open: true});
 	}
 
-	onFocus = () => this.setState({open: true}, () => {
-		findDOMNode(this.comboRef.refs.inner.refs.input).select();
-	})
+	onFocus = () => this.setState({open: true})
 
 	onBlur = () => {
 		if (typeof this.state.value !== "object") {
@@ -118,15 +115,11 @@ class SelectWidget extends React.Component {
 		this.setState({open: false});
 	};
 
-	setRef = elem => this.comboRef = elem;
+	setRef = elem => {
+		this.comboRef = elem;
+	}
 
 	getEnum = val => isEmptyString(val) ? undefined : val;
-
-	onMultiSelectKeyDown = e => {
-		if (e.key === "Enter" && this.comboRef.refs.inner.props.open) {
-			e.stopPropagation();
-		}
-	}
 
 	render() {
 		const {
@@ -151,14 +144,16 @@ class SelectWidget extends React.Component {
 				open: formContext.translations.Open,
 				emptyList: formContext.translations.NoResults,
 				emptyFilter: formContext.translations.NoResults
-			}
+			},
+			open: this.state.open,
+			onFocus: this.onFocus,
+			onToggle: this.onToggle
 		};
 
 		const selectComponent = multiple ? (
 			<Multiselect 
 				{...commonOptions}
 				onChange={this.multiSelectOnChange}
-				onKeyDown={this.onMultiSelectKeyDown}
 				ref={this.setRef}
 			/>
 		) : (
@@ -166,10 +161,7 @@ class SelectWidget extends React.Component {
 				{...commonOptions}
 				onChange={this.selectOnChange}
 				ref={this.setRef}
-				open={this.state.open}
-				onToggle={this.onToggle}
 				onClick={this.onClick}
-				onFocus={this.onFocus}
 				onBlur={this.onBlur}
 				onSelect={this.onSelect}
 			/>

@@ -59,7 +59,7 @@ export default class UnitCountShorthandField extends React.Component {
 		let timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			if (!value || !taxonId) {
 				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
 				this.props.onChange(formData);
@@ -69,6 +69,7 @@ export default class UnitCountShorthandField extends React.Component {
 
 			apiClient.fetchCached("/autocomplete/pairCount", {q: value, taxonID: taxonId}).then(suggestion => {
 				if (timestamp !== this.promiseTimestamp) {
+					reject();
 					return;
 				}
 				formData = updateSafelyWithJSONPointer(formData, suggestion.key, shorthandField);
@@ -77,6 +78,7 @@ export default class UnitCountShorthandField extends React.Component {
 				resolve({success: suggestion.key ? true : undefined, value: suggestion.key});
 			}).catch(() => {
 				if (timestamp !== this.promiseTimestamp) {
+					reject();
 					return;
 				}
 				formData = updateSafelyWithJSONPointer(formData, undefined, pairCountField);
@@ -168,8 +170,10 @@ class CodeReader extends React.Component {
 
 		if (!(value === this.state.value && taxonID === this.state.taxonID)) {
 			this.setState({value, taxonID, loading: true, success: undefined});
-			parseCode(value, taxonID).then((result) => {
-				this.setState({loading: false, success: result.success, value: result.value});
+			this.addSubmitHook(() => {
+				return parseCode(value, taxonID).then((result) => {
+					this.setState({loading: false, success: result.success, value: result.value});
+				});
 			});
 		}
 	}

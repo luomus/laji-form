@@ -520,21 +520,20 @@ export class ErrorPanel extends React.Component {
 		if (errors.length === 0) return null;
 
 		const {Panel, ListGroup} = this.context.theme;
-		const header = (
-			 <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
-				 <div className="panel-title">
-					 {title}
-					 <span className="pull-right">
-						 <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} themeRole="link" />
-						 {showToggle ? <GlyphButton glyph="new-window" themeRole="link" onClick={poppedToggle} /> : null}
-					 </span>
-				 </div>
-			 </div>
-		);
 
 		return (
-			<Panel expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames}>
-				<Panel.Heading>{header}</Panel.Heading>
+			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames}>
+				<Panel.Heading>
+					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
+						   <div className="panel-title">
+							   {title}
+							   <span className="pull-right">
+								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
+								   {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
+							   </span>
+						   </div>
+					   </div>
+				</Panel.Heading>
 				<Panel.Collapse>
 					<ListGroup>
 						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}

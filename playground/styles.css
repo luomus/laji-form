@@ -120,7 +120,7 @@ body .laji-form {
 	border-radius: 2px;
 	line-height: 12.5px;
 }
-.laji-form .form-control:not(textarea), .laji-form .rw-combobox, .laji-form .autosuggest-wrapper:not(.laji-form-enum-range), .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
+.laji-form .form-control:not(textarea), .laji-form .rw-widget-picker.rw-widget-container, .laji-form .rw-combobox > .rw-widget-container, .laji-form .autosuggest-wrapper:not(.laji-form-enum-range), .laji-form .rw-datetimepicker, .laji-form .tristate-buttons .btn {
 	height: 25px !important;
 }
 .laji-form .form-control-feedback {
@@ -146,13 +146,14 @@ body .laji-form {
     height: 23px;
 }
 
-.rw-multiselect-taglist li {
+.laji-form .rw-multiselect-taglist li {
 	height: 20px;
+	line-height: 20px;
 	font-size: 11px;
-	padding: 2px;
 	color: white;
 	background-color: #286090;
 	font-weight: bold;
+	margin-top: 0px;
 }
 
 .laji-form .rw-list-option.rw-state-focus:not(.rw-state-selected) {
@@ -715,7 +716,7 @@ min-height: 20px;
 	width: 100%;
 }
 
-.laji-form .gray, .laji-form .background {
+.laji-form .gray {
 	border: 1px solid #e3e3e3;
 }
 .laji-form .gray {
@@ -1550,8 +1551,10 @@ min-height: 20px;
 
 .laji-form .horizontally-centered {
 	display: block !important;
-	margin: auto;
 	text-align: center;
+}
+.laji-form .horizontally-centered:not(legend) {
+	margin: auto;
 }
 
 .laji-form .row-height {

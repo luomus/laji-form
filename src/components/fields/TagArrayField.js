@@ -123,7 +123,7 @@ export class TagInputComponent extends React.Component {
 
 		const inputProps = {
 			type: "text" ,
-			className: "rw-input",
+			className: "rw-input-reset",
 			ref: this.setInputRef,
 			value: value,
 			onChange: this.onInputChange,
@@ -137,10 +137,10 @@ export class TagInputComponent extends React.Component {
 		return (
 			<div className={`rw-multiselect rw-widget${this.state.focused ? " rw-state-focus" : ""}${readonly || disabled ? " rw-state-disabled" : ""}`}
 				onClick={this.onClick}>
-				<div className="rw-multiselect-wrapper">
+				<div className="rw-widget-input rw-widget-picked rw-widget-container">
 					<ul className="rw-multiselect-taglist">
 						{tags.map((item, idx) => 
-							<li key={idx}>
+							<li key={idx} className="rw-multiselect-tag">
 								{item}
 								<span className="rw-tag-btn" onClick={this.onRemove(idx)}>×</span>
 							</li>
