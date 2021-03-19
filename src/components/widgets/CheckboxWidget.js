@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, classNames } from "../../utils";
-import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
@@ -109,9 +108,9 @@ export default class CheckboxWidget extends React.Component {
 				? !value
 				: value;
 
-		const ToggleButtonWithPrimaryStyle = (props) => <ToggleButton {...props} className={classNames(_value === props.value && "btn-primary")} />;
+		const {ButtonToolbar, ToggleButton, ToggleButtonGroup} = this.context.theme;
 
-		const {ButtonToolbar} = this.context.theme;
+		const ToggleButtonWithPrimaryStyle = (props) => <ToggleButton {...props} className={classNames(_value === props.value && "btn-primary")} />;
 
 		const checkbox = (
 			<ButtonToolbar>

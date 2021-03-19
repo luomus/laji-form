@@ -61,6 +61,8 @@ const theme: Theme = {
 	Dropdown,
 	Form: DivStub,
 	ControlLabel: DivStub,
-	Checkbox: (props: CheckboxProps) => <input type="checkbox" {...props} />
+	Checkbox: (props: CheckboxProps) => <input type="checkbox" {...props} />,
+	ToggleButton: DivStub,
+	ToggleButtonGroup: DivStub
 };
 export default theme;

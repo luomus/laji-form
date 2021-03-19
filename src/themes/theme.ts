@@ -215,6 +215,18 @@ export interface CheckboxProps extends JSX.IntrinsicAttributes {
 	onChange?: React.EventHandler<any>;
 }
 
+export interface ToggleButtonProps extends JSX.IntrinsicAttributes, HasMaybeClassName, HasMaybeChildren {
+	disabled?: boolean;
+	value?: any;
+}
+
+export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+	type: "radio" | "checkbox";
+	name?: string;
+	defaultValue?: boolean;
+	onChange?: React.EventHandler<any>;
+}
+
 export interface Theme {
 	Panel: Panel;
 	Table: React.ElementType<TableProps>;
@@ -246,4 +258,6 @@ export interface Theme {
 	Form: React.ElementType<FormProps>;
 	ControlLabel: React.ElementType<ControlLabelProps>;
 	Checkbox: React.ElementType<CheckboxProps>;
+	ToggleButton: React.ElementType<ToggleButtonProps>;
+	ToggleButtonGroup: React.ElementType<ToggleButtonGroupProps>;
 }
