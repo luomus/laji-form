@@ -206,6 +206,9 @@ export interface FormProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 	onSubmit?: React.EventHandler<any>;
 }
 
+export interface ControlLabelProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+}
+
 export interface Theme {
 	Panel: Panel;
 	Table: React.ElementType<TableProps>;
@@ -235,4 +238,5 @@ export interface Theme {
 	Collapse: React.ElementType<CollapseProps>;
 	Dropdown: Dropdown;
 	Form: React.ElementType<FormProps>;
+	ControlLabel: React.ElementType<ControlLabelProps>;
 }

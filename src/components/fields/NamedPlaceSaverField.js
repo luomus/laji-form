@@ -2,7 +2,6 @@ import * as React from "react";
 import { findDOMNode }  from "react-dom";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
-import { ControlLabel } from "react-bootstrap";
 import { Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -235,7 +234,7 @@ class PlaceSaverDialog extends React.Component {
 			return <Button bsSize="small" onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
 		};
 
-		const {Panel, FormGroup, FormControl, ListGroup, ListGroupItem, Alert, Form} = this.context.theme;
+		const {Panel, FormGroup, FormControl, ListGroup, ListGroupItem, Alert, Form, ControlLabel} = this.context.theme;
 		return this.state.failed ? (
 			<Alert themeRole="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
 		): (

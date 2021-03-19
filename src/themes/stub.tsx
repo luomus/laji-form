@@ -60,5 +60,6 @@ const theme: Theme = {
 	Collapse: DivStub,
 	Dropdown,
 	Form: DivStub,
+	ControlLabel: DivStub,
 };
 export default theme;
