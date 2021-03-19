@@ -52,6 +52,7 @@ const theme: Theme = {
 	HelpBlock: DivStub,
 	MenuItem: DivStub,
 	Alert: DivStub,
-	Pager
+	Pager,
+	Accordion: DivStub,
 };
 export default theme;

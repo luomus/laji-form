@@ -174,6 +174,11 @@ export interface Pager extends React.HTMLProps<any> {
     Item: React.ElementType<PagerItemProps>;
 }
 
+export interface AccordionProps extends JSX.IntrinsicAttributes {
+	onSelect?: React.EventHandler<any>;
+	activeKey?: number;
+	id?: string
+}
 
 export interface Theme {
 	Panel: Panel;
@@ -200,4 +205,5 @@ export interface Theme {
 	MenuItem: React.ElementType<MenuItemProps>;
 	Alert: React.ElementType<AlertProps>;
 	Pager: Pager;
+	Accordion: React.ElementType<AccordionProps>;
 }

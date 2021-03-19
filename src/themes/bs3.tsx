@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Panel as _Panel, Table, ProgressBar, Button, ButtonGroup, ButtonToolbar, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl, ListGroup, ListGroupItem, Breadcrumb, HelpBlock, MenuItem, Alert, Pager } from "react-bootstrap";
+import {Panel as _Panel, Table, ProgressBar, Button, ButtonGroup, ButtonToolbar, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl, ListGroup, ListGroupItem, Breadcrumb, HelpBlock, MenuItem, Alert, Pager, Accordion } from "react-bootstrap";
 import { Theme, PanelProps, ButtonProps, Panel as PanelI } from "./theme";
 
 const Panel = React.forwardRef<_Panel, PanelProps>(({themeRole, ...props}, ref) => <_Panel {...props} bsStyle={themeRole} ref={ref}/>);
@@ -32,6 +32,7 @@ const theme: Theme = {
 	HelpBlock,
 	MenuItem,
 	Alert: ({themeRole, ...props}) => <Alert {...props} bsStyle={themeRole}/>,
-	Pager
+	Pager,
+	Accordion
 };
 export default theme;
