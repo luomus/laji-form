@@ -552,6 +552,7 @@ function ErrorPanelError({label, error, id, getId, extra = null, disabled, click
 		clickHandler(id || (getId ? getId() : undefined));
 	}, [clickHandler, id, getId]);
 
+	const {ListGroupItem} = React.useContext(ReactContext).theme;
 	return (
 		<ListGroupItem onClick={_clickHandler} disabled={disabled}>
 			{label ? <b>{label}:</b> : null} {message} {extra}
