@@ -497,14 +497,16 @@ class AccordionArrayFieldTemplate extends React.Component {
 									 ref={idx === activeIdx ? this.setContainerRef : undefined}
 						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
-						       header={getHeader(item, idx)}
 									 themeRole={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
-							{idx === activeIdx ? (
-								<React.Fragment>
-									{item.children}
-									{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
-								</React.Fragment>
-							) : null}
+							<Panel.Heading>{getHeader(item, idx)}</Panel.Heading>
+							<Panel.Body>
+								{idx === activeIdx ? (
+									<React.Fragment>
+										{item.children}
+										{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+									</React.Fragment>
+								) : null}
+							</Panel.Body>
 						</Panel>
 					))}
 					<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="bottom"/>
@@ -580,10 +582,13 @@ class PagerArrayFieldTemplate extends React.Component {
 			<div className="laji-form-single-active-array" ref={this.setContainerRef}>
 				<div className="laji-form-field-template-item">
 					<div className="laji-form-field-template-schema">
-						<Panel className="laji-form-panel" header={header}>
-							<div key={activeIdx}>
-								{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
-							</div>
+						<Panel className="laji-form-panel">
+							<Panel.Heading>{header}</Panel.Heading>
+							<Panel.Body>
+								<div key={activeIdx}>
+									{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
+								</div>
+							</Panel.Body>
 						</Panel>
 						{getButtonElems(buttons, arrayTemplateFieldProps)}
 					</div>

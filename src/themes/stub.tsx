@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Theme, PanelProps, ButtonProps, OverlayTriggerProps, Modal, InputGroup, Breadcrumb } from "./theme";
+import { Theme, Panel, ButtonProps, OverlayTriggerProps, Modal, InputGroup, Breadcrumb } from "./theme";
 
 const Stub = ({children}: {children: React.ReactNode}) => {
 	console.error("You should define a theme prop for LajiForm. Using stub theme, the form will render but many components won't work as expected and will result in many React warnings.");
@@ -7,6 +7,11 @@ const Stub = ({children}: {children: React.ReactNode}) => {
 };
 
 const DivStub = React.forwardRef<HTMLDivElement, any>((props: any, ref) => <Stub><div {...props} ref={ref} /></Stub>);
+
+const Panel: Panel = DivStub as unknown as Panel;
+Panel.Body = DivStub;
+Panel.Heading = DivStub;
+Panel.Collapse = DivStub;
 
 const Modal: Modal = DivStub as unknown as Modal;
 Modal.Body = DivStub;
@@ -21,14 +26,7 @@ const Breadcrumb: Breadcrumb = DivStub as unknown as Breadcrumb;
 Breadcrumb.Item = DivStub;
 
 const theme: Theme = {
-	Panel: React.forwardRef<HTMLDivElement, PanelProps>(({children, header}, ref) =>
-		<Stub>
-			<div ref={ref}>
-				{header && <div>{header}</div>}
-				{children}
-			</div>
-		</Stub>
-	),
+	Panel,
 	Table: DivStub,
 	ProgressBar: DivStub,
 	Button: React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => <Stub><button {...props} ref={ref}/></Stub>),

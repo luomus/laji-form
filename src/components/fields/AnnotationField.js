@@ -295,30 +295,33 @@ class AnnotationBox extends React.Component {
 
 		const {Panel, ListGroup, ListGroupItem} = this.context.theme;
 		return (
-			<Panel header={<strong>{translations.Comments}</strong>}>
-				{this.renderAdd()}
-				<ListGroup>
-					{this.state.metadataForm ? annotations.slice(0).reverse().map((annotation, idx) => 
-						<ListGroupItem key={idx} className={`annotation-list${idx % 2 === 0 ? "" : "-odd"}`}>
-							<div>
-								<LajiForm
-									{...metadataForm}
-									uiSchema={_uiSchema}
-									lang={lang}
-									formData={annotation}
-									renderSubmit={false}
-									apiClient={apiClient.apiClient}
-									uiSchemaContext={this.props.formContext.uiSchemaContext}
-								/>
-							</div>
-						</ListGroupItem>
-					) : <Spinner />}
-				</ListGroup>
-				{this.state.deleteFail &&
-					<Alert bsStyle={"danger"}>
-						{translations["DeleteFail"]}
-					</Alert>
-				}
+			<Panel>
+				<Panel.Heading><strong>{translations.Comments}</strong></Panel.Heading>
+				<Panel.Body>
+					{this.renderAdd()}
+					<ListGroup>
+						{this.state.metadataForm ? annotations.slice(0).reverse().map((annotation, idx) => 
+							<ListGroupItem key={idx} className={`annotation-list${idx % 2 === 0 ? "" : "-odd"}`}>
+								<div>
+									<LajiForm
+										{...metadataForm}
+										uiSchema={_uiSchema}
+										lang={lang}
+										formData={annotation}
+										renderSubmit={false}
+										apiClient={apiClient.apiClient}
+										uiSchemaContext={this.props.formContext.uiSchemaContext}
+									/>
+								</div>
+							</ListGroupItem>
+						) : <Spinner />}
+					</ListGroup>
+					{this.state.deleteFail &&
+						<Alert bsStyle={"danger"}>
+							{translations["DeleteFail"]}
+						</Alert>
+					}
+				</Panel.Body>
 			</Panel>
 		);
 	}

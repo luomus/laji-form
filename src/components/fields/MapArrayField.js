@@ -2093,12 +2093,15 @@ class MapPanel extends React.Component {
 	render() {
 		const {Panel} = this.context.theme;
 		return (
-			<Panel themeRole={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id} header={this.props.header}>
-				{this.props.text}
-				{this.props.buttonText ?
-					<Button themeRole={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
-					null
-				}
+			<Panel themeRole={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
+				<Panel.Heading>{this.props.header}</Panel.Heading>
+				<Panel.Body>
+					{this.props.text}
+					{this.props.buttonText ?
+						<Button themeRole={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+						null
+					}
+				</Panel.Body>
 			</Panel>
 		);
 	}

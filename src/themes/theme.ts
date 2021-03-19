@@ -2,18 +2,6 @@ import * as React from "react";
 
 type Role = "primary" | "secondary" | "danger" | "warning" | "info" | "link" | string;
 
-export interface PanelProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef, HasMaybeClassName {
-	id?: string;
-	style?: React.CSSProperties;
-	themeRole?: Role;
-	collapsible?: "true";
-	expanded?: boolean;
-	onToggle?: () => void;
-	eventKey?: number;
-	header?: React.ReactNode;
-	useBody?: boolean;
-}
-
 interface HasMaybeChildren {
 	children?: React.ReactNode;
 }
@@ -28,6 +16,20 @@ interface HasMaybeStyle {
 
 interface HasMaybeClassName {
 	className?: string;
+}
+
+export interface PanelProps {
+	expanded?: boolean;
+	onToggle?: () => void;
+	onClick?: () => void;
+	eventKey?: number;
+	themeRole?: Role;
+}
+
+export interface Panel extends React.HTMLProps<PanelProps> {
+    Body: React.ElementType;
+    Heading: React.ElementType;
+    Collapse: React.ElementType;
 }
 
 export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -79,7 +81,7 @@ export interface GlyphiconProps extends JSX.IntrinsicAttributes, HasMaybeStyle, 
 	glyph: Glyph | string;
 }
 
-export interface ModalProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+export interface ModalProps {
 	show?: boolean
 	enforceFocus?: boolean;
 	keyboard?: boolean;
@@ -157,7 +159,7 @@ export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren
 
 
 export interface Theme {
-	Panel: (props: PanelProps) => JSX.Element | null;
+	Panel: Panel;
 	Table: React.ElementType<TableProps>;
 	ProgressBar: React.ElementType<ProgressBarProps>;
 	Button: React.ElementType<ButtonProps>;

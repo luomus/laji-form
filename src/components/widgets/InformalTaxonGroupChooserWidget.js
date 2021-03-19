@@ -258,8 +258,11 @@ export class InformalTaxonGroupChooser extends React.Component {
 			</ListGroupItem>
 		) : (
 			<Col key={id} {...grid}>
-				<Panel onClick={this.onSelected(id)} bsStyle={id === activeId ? "primary" : undefined} header={this.getLabel(id)}>
-					<div className={`informal-group-image ${id}`} />
+				<Panel onClick={this.onSelected(id)} themeRole={id === activeId ? "primary" : undefined}>
+					<Panel.Heading>{this.getLabel(id)}</Panel.Heading>
+					<Panel.Body>
+						<div className={`informal-group-image ${id}`} />
+					</Panel.Body>
 				</Panel>
 			</Col>
 		);

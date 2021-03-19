@@ -261,7 +261,8 @@ class PlaceSaverDialog extends React.Component {
 					: null}
 				{existingPlaces.length > 1 ? (
 					<FormGroup>
-						<Panel header={translations.ClickPlaceToOverwrite} useBody={false}>
+						<Panel>
+							<Panel.Heading>{translations.ClickPlaceToOverwrite}</Panel.Heading>
 							<ListGroup fill={"fill"}>
 								{existingPlaces.map(place =>
 									<ListGroupItem header={place.name} key={place.id} onClick={loading ? undefined : this.onOverwriteSelected(place)} disabled={loading}>

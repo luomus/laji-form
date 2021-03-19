@@ -40,10 +40,12 @@ export default class LocalityField extends React.Component {
 			<Row>
 				<Col xs={12}>
 					<Panel className={getUiOptions(this.props.uiSchema).panelClassName}>
-						{values.map((v, i) => (
-							<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
-						))}
-						<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
+						<Panel.Body>
+							{values.map((v, i) => (
+								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
+							))}
+							<GlyphButton onClick={this.showEditor} glyph="pencil" bsStyle="default" className="pull-right"/>
+						</Panel.Body>
 					</Panel>
 				</Col>
 				{this.state.modal && this.renderModal()}

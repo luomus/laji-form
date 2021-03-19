@@ -728,7 +728,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel, Table} = this.props.theme || this.context.theme;
+		const {Panel: _Panel, Table} = this.props.theme || this.context.theme;
+		const Panel = _Panel as any;
 
 		const panelHeader = (
 			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
@@ -778,14 +779,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						</div>
 					</Form>
 					{shortcuts &&
-						<Panel
-							ref={this.shortcutHelpRef}
-							className="shortcut-help laji-form-popped z-depth-3 hidden"
-							style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-							themeRole="info"
-							header={panelHeader}
-							useBody={false}
-						>
+						<Panel ref={this.shortcutHelpRef}
+						       className="shortcut-help laji-form-popped z-depth-3 hidden"
+						       style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
+						       themeRole="info">
+							<Panel.Heading>{panelHeader}</Panel.Heading>
 							<Table>
 								<tbody className="well">{
 									Object.keys(shortcuts).map((keyCombo, idx) => {

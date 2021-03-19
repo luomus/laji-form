@@ -532,11 +532,15 @@ export class ErrorPanel extends React.Component {
 				 </div>
 			 </div>
 		);
+
 		return (
-			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames} header={header}>
-				<ListGroup>
-					{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
-				</ListGroup>
+			<Panel expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames}>
+				<Panel.Heading>{header}</Panel.Heading>
+				<Panel.Collapse>
+					<ListGroup>
+						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
+					</ListGroup>
+				</Panel.Collapse>
 			</Panel>
 		);
 	}
