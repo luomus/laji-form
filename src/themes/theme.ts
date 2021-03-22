@@ -1,17 +1,4 @@
 import * as React from "react";
-import RJSF from "@rjsf/core";
-
-//interface RJSF {
-//        validate: (
-//            formData: any,
-//            schema?: any,
-//            additionalMetaSchemas?: any,
-//            customFormats?: any,
-//        ) => { errors: any[]; errorSchema: any };
-//        onChange: (formData: any, newErrorSchema: any) => void;
-//        onBlur: (id: string, value: boolean | number | string | null) => void;
-//        submit: () => void;
-//}
 
 type Role = "primary" | "secondary" | "danger" | "warning" | "info" | string;
 type ButtonRole = Role | "link";
@@ -241,7 +228,6 @@ export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMayb
 }
 
 export interface Theme {
-	RJSF: typeof RJSF;
 	Panel: Panel;
 	Table: React.ElementType<TableProps>;
 	ProgressBar: React.ElementType<ProgressBarProps>;
