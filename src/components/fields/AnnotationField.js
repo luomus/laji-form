@@ -198,6 +198,7 @@ class AnnotationBox extends React.Component {
 		const {formContext, add} = this.props;
 		const {lang, translations} = formContext;
 		const {metadataForm} = this.state;
+		const {Alert} = this.context.theme;
 
 		if (!metadataForm) {
 			return null;
@@ -250,7 +251,7 @@ class AnnotationBox extends React.Component {
 			>
 				{<div>
 					{this.state.fail !== undefined && 
-							<Alert bsStyle={this.state.fail ? "danger" : "success"}>
+							<Alert themeRole={this.state.fail ? "danger" : "success"}>
 								{translations[this.state.fail ? "SaveFail" : "SaveSuccess"]}
 							</Alert>
 					}

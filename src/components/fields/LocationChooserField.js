@@ -508,7 +508,7 @@ class LocationButton extends React.Component {
 		const geometryField = this.getGeometryField();
 		const hasErrors = parseJSONPointer(filteredErrors(that.props.errorSchema), geometryField);
 
-		const bsStyle = hasErrors
+		const themeRole = hasErrors
 			? "danger"
 			: hasCoordinates
 				? "primary"
@@ -517,7 +517,7 @@ class LocationButton extends React.Component {
 		const button = <LocationButtonComp
 			key={`${that.props.idSchema.$id}-location`}
 			id={`${that.props.idSchema.$id}-location`}
-			themeRole={bsStyle}
+			themeRole={themeRole}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
 			glyph={glyph}

@@ -528,8 +528,8 @@ export class ErrorPanel extends React.Component {
 						   <div className="panel-title">
 							   {title}
 							   <span className="pull-right">
-								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} bsStyle="link" />
-								   {showToggle ? <GlyphButton glyph="new-window" bsStyle="link" onClick={poppedToggle} /> : null}
+								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} themeRole="link" />
+								   {showToggle ? <GlyphButton glyph="new-window" themeRole="link" onClick={poppedToggle} /> : null}
 							   </span>
 						   </div>
 					   </div>

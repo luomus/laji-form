@@ -202,6 +202,7 @@ export default class NamedPlaceChooserField extends React.Component {
 }
 
 class NamedPlaceChooser extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -317,8 +318,9 @@ class NamedPlaceChooser extends React.Component {
 			callback(findDOMNode(that.popupElem));
 		}
 
+		const {Alert} = this.context.theme;
 		if (failed) {
-			return <Alert bsStyle="danger">{`${translations.NamedPlacesFetchFail} ${translations.TryAgainLater}`}</Alert>;
+			return <Alert themeRole="danger">{`${translations.NamedPlacesFetchFail} ${translations.TryAgainLater}`}</Alert>;
 		} else {
 			const enums = (places || []).map((place, idx) => {
 				return {value: idx, label: place.name};

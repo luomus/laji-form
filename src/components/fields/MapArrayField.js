@@ -1538,7 +1538,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			panel: errors && errors.length && showErrors ? {
 				header: this.props.formContext.translations.Error,
 				panelTextContent: <div>{errors}</div>,
-				bsStyle: "danger",
+				themeRole: "danger",
 				id: `laji-form-error-container-${wholeErrorId}`
 			} : null,
 			draw: false,
@@ -1879,8 +1879,8 @@ export class MapComponent extends React.Component {
 
 		const controlledPanel = panel ?
 			<MapPanel id={panel.id}
-			          bsStyle={panel.bsStyle || undefined}
-			          buttonBsStyle={panel.buttonBsStyle}
+			          themeRole={panel.themeRole || undefined}
+			          buttonThemeRole={panel.buttonThemeRole}
 			          header={panel.header}
 			          text={panel.panelTextContent} />
 			: null;
@@ -1894,7 +1894,7 @@ export class MapComponent extends React.Component {
 					          text={this.state.panelTextContent}
 					          onClick={this.state.panelButtonOnClick}
 					          buttonText={this.state.panelButtonContent}
-					          buttonBsStyle={this.state.panelButtonBsStyle}
+					          buttonThemeRole={this.state.panelButtonBsStyle}
 					/>
 				}
 				{this.state.showHelp &&
@@ -2093,7 +2093,7 @@ class MapPanel extends React.Component {
 	render() {
 		const {Panel} = this.context.theme;
 		return (
-			<Panel themeRole={this.props.bsStyle || undefined} className="laji-form-popped" id={this.props.id}>
+			<Panel themeRole={this.props.themeRole || undefined} className="laji-form-popped" id={this.props.id}>
 				{this.props.header ? (
 					<Panel.Heading>
 						{this.props.header}
@@ -2102,7 +2102,7 @@ class MapPanel extends React.Component {
 				<Panel.Body>
 					{this.props.text}
 					{this.props.buttonText ?
-						<Button themeRole={this.props.buttonBsStyle || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
+						<Button themeRole={this.props.buttonThemeRole || "default"} onClick={this.props.onClick}>{this.props.buttonText}</Button> :
 						null
 					}
 				</Panel.Body>
