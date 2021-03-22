@@ -500,14 +500,12 @@ class AccordionArrayFieldTemplate extends React.Component {
 							<Panel.Heading>
 								{getHeader(item, idx)}
 							</Panel.Heading>
-							<Panel.Body>
-								{idx === activeIdx ? (
-									<React.Fragment>
-										{item.children}
-										{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
-									</React.Fragment>
-								) : null}
-							</Panel.Body>
+							{idx === activeIdx ? (
+								<Panel.Body>
+									{item.children}
+									{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+								</Panel.Body>
+							) : null}
 						</Panel>
 					))}
 					<AccordionButtonsWrapper props={arrayFieldTemplateProps} position="bottom"/>
