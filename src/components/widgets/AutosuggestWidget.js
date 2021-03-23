@@ -1,4 +1,5 @@
 import * as React from "react";
+import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
@@ -1156,7 +1157,7 @@ class ReactAutosuggest extends React.Component {
 	}
 
 	setInputRef = (elem) => {
-		this.inputElem = elem;
+		this.inputElem = findDOMNode(elem);
 	}
 
 	renderInput() {
