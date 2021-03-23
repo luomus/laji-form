@@ -121,7 +121,7 @@ class CodeReader extends React.Component {
 	}
 
 	render() {
-		let validationState = "default";
+		let validationState = null;
 		if (this.state.success === false) {
 			validationState = "error";
 		} else if (this.state.success) {
