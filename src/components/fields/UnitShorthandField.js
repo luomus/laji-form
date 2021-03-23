@@ -201,7 +201,7 @@ class CodeReader extends React.Component {
 	render() {
 		const {translations, readonly, disabled} = this.props;
 
-		let validationState = "default";
+		let validationState = null;
 		if (this.state.failed === true) validationState = "warning";
 		else if (!isEmptyString(this.props.value) && this.props.value === this.state.value) validationState = "success";
 
