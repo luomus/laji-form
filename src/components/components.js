@@ -466,39 +466,35 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export class Label extends React.Component {
-	static contextType = ReactContext;
+export function Label({label, help, children, id, required, _context, helpHoverable, helpPlacement}) {
+	const showHelp = label && help;
 
-	render() {
-		const {label, help, children, id, required, _context, helpHoverable, helpPlacement} = this.props;
-		const showHelp = label && help;
-
-		const {Tooltip} = this.context.theme;
-		const tooltipElem = (
+	const tooltipElem = (
+		<ReactContext.Consumer>{({theme: {Tooltip}}) => (
 			<Tooltip id={id + "-tooltip"}>{help ? (
 				<span>
 					<strong dangerouslySetInnerHTML={{__html: label}} /><br />
 					<span dangerouslySetInnerHTML={{__html: help}} />
 				</span>
 			): label}</Tooltip>
-		);
+		)}</ReactContext.Consumer>
+	);
 
-		const labelElem = (
-			<label htmlFor={id}>
-				<div>
-					<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
-					{showHelp ? <Help /> : null}
-				</div>
-				{children}
-			</label>
-		);
+	const labelElem = (
+		<label htmlFor={id}>
+			<div>
+				<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
+				{showHelp ? <Help /> : null}
+			</div>
+			{children}
+		</label>
+	);
 
-		return (label || help) ? (
-			<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
-				{labelElem}
-			</OverlayTrigger>
-		) : labelElem;
-	}
+	return (label || help) ? (
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
+			{labelElem}
+		</OverlayTrigger>
+	) : labelElem;
 }
 
 export class ErrorPanel extends React.Component {
