@@ -402,8 +402,8 @@ export default class ScopeField extends React.Component {
 		const {MenuItem, Glyphicon, Dropdown} = this.context.theme;
 		return (
 			<div key="scope-additionals-dropdown">
-				<Dropdown pullRight id={this.props.idSchema.$id + "-scope-field-dropdown"} open={this.state.additionalsOpen} onToggle={this.onToggle}>
-					<Dropdown.Toggle noCaret variant="primary" id={`${this.props.idSchema.$id}-additionals`}>
+				<Dropdown pullRight id={this.props.idSchema.$id + "-additionals"} open={this.state.additionalsOpen} onToggle={this.onToggle}>
+					<Dropdown.Toggle noCaret variant="primary">
 						<Glyphicon glyph="cog" />
 					</Dropdown.Toggle>
 					<Dropdown.Menu onSelect={this.onSelect}>
