@@ -468,16 +468,15 @@ export function Help({help, id}) {
 
 export function Label({label, help, children, id, required, _context, helpHoverable, helpPlacement}) {
 	const showHelp = label && help;
+	const {Tooltip, OverlayTrigger} = React.useContext(ReactContext).theme;
 
 	const tooltipElem = (
-		<ReactContext.Consumer>{({theme: {Tooltip}}) => (
-			<Tooltip id={id + "-tooltip"}>{help ? (
-				<span>
-					<strong dangerouslySetInnerHTML={{__html: label}} /><br />
-					<span dangerouslySetInnerHTML={{__html: help}} />
-				</span>
-			): label}</Tooltip>
-		)}</ReactContext.Consumer>
+		<Tooltip id={id + "-tooltip"}>{help ? (
+			<span>
+				<strong dangerouslySetInnerHTML={{__html: label}} /><br />
+				<span dangerouslySetInnerHTML={{__html: help}} />
+			</span>
+		): label}</Tooltip>
 	);
 
 	const labelElem = (
