@@ -82,7 +82,7 @@ export class Form {
 			await emptyForm();
 		}
 		await this.setState(this.props);
-		this.contextId = await this.e("app.refs.lajiform._id") as number;
+		this.contextId = await this.e("lajiForm._id") as number;
 	}
 
 	e(path: string) {
@@ -96,7 +96,7 @@ export class Form {
 	}
 
 	getState() {
-		return this.e("app.refs.lajiform.state") as Promise<any>;
+		return this.e("lajiForm.state") as Promise<any>;
 	}
 
 	async submit() {
@@ -125,7 +125,7 @@ export class Form {
 	}
 
 	getPropsData() {
-		return this.e("app.refs.lajiform.props.formData") as Promise<any>;
+		return this.e("lajiForm.props.formData") as Promise<any>;
 	}
 
 	$locate(path: string) {

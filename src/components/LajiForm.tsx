@@ -381,7 +381,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 
 	static propTypes = {
-		lang: PropTypes.oneOf(["fi", "en", "sv"]),
 		uiSchemaContext: PropTypes.object,
 		settings: PropTypes.object,
 		validators: PropTypes.object,
@@ -389,7 +388,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	static defaultProps = {
-		lang: "en",
+		lang: "en" as Lang,
 		schema: {},
 		uiSchema: {}
 	}

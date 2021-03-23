@@ -2,23 +2,23 @@ import LajiForm, { LajiFormProps } from "./components/LajiForm";
 import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-class LajiFormApp extends React.Component<LajiFormProps, LajiFormProps> {
-	render() {
-		return <LajiForm {...{...this.props, ...(this.state || {})} as LajiFormProps} ref="lajiform" />;
-	}
-}
+type LajiFormWrapperProps = LajiFormProps & {rootElem: HTMLDivElement};
 
 export default class LajiFormWrapper {
-	props: any;
-	app: LajiFormApp;
+	props: LajiFormProps;
+	state: LajiFormProps;
 	rootElem: HTMLDivElement;
 	lajiForm: LajiForm;
 
-	constructor(props: any) {
+	constructor(props: LajiFormWrapperProps) {
+		const {rootElem, ..._props} = props;
 		this.props = props;
-		this.rootElem = props.rootElem;
-		this.app = render(<LajiFormApp {...props} />, this.rootElem) as unknown as LajiFormApp;
-		this.lajiForm = this.app.refs.lajiform as unknown as LajiForm;
+		this.rootElem = rootElem;
+		this.lajiForm = render(
+			React.createElement(LajiForm, _props, null),
+			this.rootElem
+		);
+		this.state = {} as LajiFormProps;
 	}
 
 	submit = () => {
@@ -30,7 +30,11 @@ export default class LajiFormWrapper {
 	}
 
 	setState = (state: LajiFormProps) => {
-		this.app?.setState(state);
+		this.state = {...this.state, ...state};
+		this.lajiForm = render(
+			React.createElement(LajiForm, {...this.props, ...this.state}, null),
+			this.rootElem
+		);
 	}
 
 	pushBlockingLoader = () => {
@@ -53,11 +57,10 @@ export default class LajiFormWrapper {
 	unmount = this.destroy
 
 	invalidateSize = () => {
-		const lajiForm = (this.app as any).refs.lajiform;
-		const {resize = {}} = lajiForm?.customEventListeners || {};
+		const {resize = {}} = this.lajiForm?.customEventListeners || {};
 
 		Object.keys(resize).sort().reverse().forEach(id => {
-			lajiForm._context.sendCustomEvent(id, "resize", undefined, undefined, {bubble: false});
+			this.lajiForm._context.sendCustomEvent(id, "resize", undefined, undefined, {bubble: false});
 		});
 	}
 }
