@@ -399,20 +399,16 @@ export default class ScopeField extends React.Component {
 
 
 	renderFieldsDropdown(additionalProperties) {
-		const {MenuItem, Collapse, Dropdown} = this.context.theme;
+		const {MenuItem, Glyphicon, Dropdown} = this.context.theme;
 		return (
 			<div key="scope-additionals-dropdown">
-				<Dropdown id={this.props.idSchema.$id + "-scope-field-dropdown"}
-				          pullRight
-				          open={this.state.additionalsOpen}
-				          onSelect={this.onSelect}
-				          onToggle={this.onToggle}>
-					{this.renderFieldsButton("toggle")}
-					<Collapse in={this.state.additionalsOpen} bsRole="menu">
-						<Dropdown.Menu>
-							{this.additionalPropertiesToList(additionalProperties, MenuItem)}
-						</Dropdown.Menu>
-					</Collapse>
+				<Dropdown pullRight id={this.props.idSchema.$id + "-scope-field-dropdown"} open={this.state.additionalsOpen} onToggle={this.onToggle}>
+					<Dropdown.Toggle noCaret variant="primary" id={`${this.props.idSchema.$id}-additionals`}>
+						<Glyphicon glyph="cog" />
+					</Dropdown.Toggle>
+					<Dropdown.Menu onSelect={this.onSelect}>
+						{this.additionalPropertiesToList(additionalProperties, MenuItem)}
+					</Dropdown.Menu>
 				</Dropdown>
 			</div>
 		);

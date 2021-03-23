@@ -182,24 +182,30 @@ export interface AccordionProps extends JSX.IntrinsicAttributes {
 
 export interface CollapseProps extends JSX.IntrinsicAttributes {
 	in?: boolean;
-	variant?: "menu";
 }
 
 export interface DropdownProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
-	variant?: Variant;
-	id?: string;
+	id: string;
 	pullRight?: boolean;
 	open?: boolean;
 	onSelect: React.EventHandler<any>;
 	onToggle: React.EventHandler<any>;
 }
 
-export interface DropdownMenuProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+export interface DropdownMenuProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef {
 }
 
-export interface Dropdown extends React.HTMLProps<JSX.IntrinsicAttributes> {
-    Menu: React.ElementType<DropdownMenuProps>;
+export type Dropdown = React.ElementType<DropdownProps> & {
+	Menu: React.ElementType<DropdownMenuProps>;
+	Toggle: React.ElementType<DropdownToggleProps>;
 }
+
+export interface DropdownToggleProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef {
+	id?: string;
+	noCaret?: boolean;
+	variant?: Variant;
+}
+
 
 export interface FormProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 	inline?: boolean;
