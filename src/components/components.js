@@ -201,8 +201,8 @@ export const GlyphButton = (props) => {
 	const {Glyphicon} = React.useContext(ReactContext).theme;
 	return (
 		<Button {...buttonProps} 
-						className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
-						tooltipPlacement={props.tooltipPlacement || "left"}>
+		        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
+		        tooltipPlacement={props.tooltipPlacement || "left"}>
 			<Glyphicon glyph={glyph} />
 			{props.children}
 		</Button>
