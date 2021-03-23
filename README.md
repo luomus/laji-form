@@ -8,6 +8,12 @@ LajiForm is a dynamic form built on React. It can be used as a standalone librar
 npm install laji-form --save
 ```
 
+If you are going to use the bootstrap 3 theme, you need to install also `react-bootstrap`:
+
+```
+npm install react-bootstrap@0.33.1 --save
+```
+
 # Usage as a library #
 
 LajiForm passes all its properties to react-jsonschema-form. Read the documentation for react-jsonschema-form.
@@ -59,6 +65,18 @@ Pass the implementation to LajiForm like so:
 ```
 <LajiForm apiClient={new ApiClientImplementation()} ... />
 ```
+
+## Themes ##
+
+LajiForm provides bootstrap 3 theme. To use it, you need to install `react-bootstrap@0.33.1` and provide the built-in bootstrap 3 theme it as a prop:
+
+```
+import bs3 from "laji-form/lib/themes/bs3";
+
+<LajiForm theme={bs3} ... />
+```
+
+You can also use a custom theme and provide it the same way. There is a theme interface `themes/theme.ts` which the theme must implement.
 
 ## Notifications ##
 

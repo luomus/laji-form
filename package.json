@@ -86,6 +86,6 @@
   },
   "optionalDependencies": {
     "@types/react-bootstrap": "^0.32.22",
-    "react-bootstrap": "git+https://git@github.com/olzraiti/react-bootstrap.git#927b8f7a33ba1262b8a59cf236f612f5b5e2130c"
+    "react-bootstrap": "^0.33.1"
   }
 }
