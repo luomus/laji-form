@@ -496,7 +496,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 						       id={`${this.props.idSchema.$id}_${getIdxWithOffset(idx, getUiOptions(that.props.uiSchema).idxOffsets)}-panel`}
 						       className="laji-form-panel laji-form-clickable-panel"
 									 eventKey={idx}
-									 themeRole={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
+									 variant={filteredErrors(that.props.errorSchema)[idx] ? "danger" : "default"}>
 							<Panel.Heading>
 								{getHeader(item, idx)}
 							</Panel.Heading>

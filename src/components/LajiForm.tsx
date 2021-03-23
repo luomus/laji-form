@@ -739,7 +739,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				<div className="laji-form">
 					{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
 						<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
-							<Button themeRole={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
+							<Button variant={undefined} onClick={this.toggleHelp}>{translations.Shortcuts}</Button>
 						</TooltipComponent>
 					)}
 					<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
@@ -782,7 +782,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						<Panel ref={this.shortcutHelpRef}
 						       className="shortcut-help laji-form-popped z-depth-3 hidden"
 						       style={{top: (this.props.topOffset || 0) + 5, bottom: (this.props.bottomOffset || 0) + 5}}
-						       themeRole="info">
+						       variant="info">
 							<Panel.Heading>{panelHeader}</Panel.Heading>
 							<Table>
 								<tbody className="well">{

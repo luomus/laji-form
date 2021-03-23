@@ -402,7 +402,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 										uiSchemaContext={this.props.formContext.uiSchemaContext}
 										showShortcutButton={false}>
 										{(metadataSaveSuccess !== undefined) ? (
-											<Alert themeRole={metadataSaveSuccess ? "success" : "danger"}>
+											<Alert variant={metadataSaveSuccess ? "success" : "danger"}>
 												{translations[metadataSaveSuccess ? "SaveSuccess" : "SaveFail"]}
 											</Alert>
 										) : null

@@ -20,7 +20,7 @@ export class Button extends React.Component {
 		return (
 			<TooltipComponent tooltip={tooltip} placement={tooltipPlacement} trigger={tooltipTrigger} className={tooltipClass}>
 				<_Button
-					themeRole="primary"
+					variant="primary"
 					{..._props}
 				>{_props.children}</_Button>
 			</TooltipComponent>
@@ -113,7 +113,7 @@ export class DeleteButton extends React.Component {
 			<React.Fragment>
 				<Button {...maybeProps}
 				        disabled={disabled || readonly}
-				        themeRole="danger"
+				        variant="danger"
 				        className={buttonClassName}
 				        style={this.props.style}
 				        ref="del"
@@ -148,10 +148,10 @@ export class DeleteButton extends React.Component {
 				<Popover id={`${this.props.id}-button-confirm`}>
 					<span>{translations.ConfirmRemove}</span>
 					<ButtonGroup>
-						<Button themeRole="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
+						<Button variant="danger" onClick={this.onConfirmedClick} ref={this.setConfirmAutofocus} id={`${this.props.id}-delete-confirm-yes`}>
 							{translations.Remove}
 						</Button>
-						<Button themeRole="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
+						<Button variant="default" onClick={this.onHideConfirm} id={`${this.props.id}-delete-confirm-no`}>
 							{translations.Cancel}
 						</Button>
 					</ButtonGroup>
@@ -528,8 +528,8 @@ export class ErrorPanel extends React.Component {
 						   <div className="panel-title">
 							   {title}
 							   <span className="pull-right">
-								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} themeRole="link" />
-								   {showToggle ? <GlyphButton glyph="new-window" themeRole="link" onClick={poppedToggle} /> : null}
+								   <GlyphButton glyph={this.state.expanded ? "chevron-up" : "chevron-down"} variant="link" />
+								   {showToggle ? <GlyphButton glyph="new-window" variant="link" onClick={poppedToggle} /> : null}
 							   </span>
 						   </div>
 					   </div>

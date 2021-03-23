@@ -361,7 +361,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				</Row>
 				<div>{translations.EnterNewSectionNumber}</div>
 				<Button disabled={!this.sectorIsValid(newSection)} onClick={this.addSection}>{translations.Add}</Button>
-				<Button onClick={this.hideAddSection} themeRole="default">{translations.Cancel}</Button>
+				<Button onClick={this.hideAddSection} variant="default">{translations.Cancel}</Button>
 			</div>
 		);
 	}

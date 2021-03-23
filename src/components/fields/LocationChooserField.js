@@ -508,7 +508,7 @@ class LocationButton extends React.Component {
 		const geometryField = this.getGeometryField();
 		const hasErrors = parseJSONPointer(filteredErrors(that.props.errorSchema), geometryField);
 
-		const themeRole = hasErrors
+		const variant = hasErrors
 			? "danger"
 			: hasCoordinates
 				? "primary"
@@ -517,7 +517,7 @@ class LocationButton extends React.Component {
 		const button = <LocationButtonComp
 			key={`${that.props.idSchema.$id}-location`}
 			id={`${that.props.idSchema.$id}-location`}
-			themeRole={themeRole}
+			variant={variant}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
 			glyph={glyph}
@@ -584,7 +584,7 @@ class LocationButton extends React.Component {
 								<Modal.Title>{title || translations.SetLocationToUnit(that.props.formData[taxonField])}</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
-								{shapeAlert && <Alert themeRole="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}
+								{shapeAlert && <Alert variant="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}
 								<Map {...this.state.modalMap} singleton={true} formContext={that.props.formContext} ref={this.setMapRef} bodyAsDialogRoot={false} />
 							</Modal.Body>
 						</Modal>

@@ -1,7 +1,7 @@
 import * as React from "react";
 
-type Role = "primary" | "secondary" | "danger" | "warning" | "info" | string;
-type ButtonRole = Role | "link";
+type Variant = "primary" | "secondary" | "danger" | "warning" | "info" | string;
+type ButtonVariant = Variant | "link";
 
 interface HasMaybeChildren {
 	children?: React.ReactNode;
@@ -24,7 +24,7 @@ export interface PanelProps {
 	onToggle?: () => void;
 	onClick?: () => void;
 	eventKey?: number;
-	themeRole?: Role;
+	variant?: Variant;
 }
 
 export interface Panel extends React.HTMLProps<PanelProps> {
@@ -44,7 +44,7 @@ export interface ProgressBarProps extends JSX.IntrinsicAttributes {
 }
 
 export interface ButtonProps extends JSX.IntrinsicAttributes {
-	themeRole?: ButtonRole;
+	variant?: ButtonVariant;
 }
 
 export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
@@ -159,7 +159,7 @@ export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren
 }
 
 export interface AlertProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
-	themeRole: Role;
+	variant: Variant;
 }
 
 export interface PagerItemProps {
@@ -182,11 +182,11 @@ export interface AccordionProps extends JSX.IntrinsicAttributes {
 
 export interface CollapseProps extends JSX.IntrinsicAttributes {
 	in?: boolean;
-	themeRole?: "menu";
+	variant?: "menu";
 }
 
 export interface DropdownProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
-	themeRole?: Role;
+	variant?: Variant;
 	id?: string;
 	pullRight?: boolean;
 	open?: boolean;

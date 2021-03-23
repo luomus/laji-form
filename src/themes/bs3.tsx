@@ -2,7 +2,7 @@ import * as React from "react";
 import {Panel as _Panel, Table, ProgressBar, Button, ButtonGroup, ButtonToolbar, Overlay, OverlayTrigger, Popover, Tooltip, Glyphicon, Modal, Row, Col, FormGroup, InputGroup, FormControl, ListGroup, ListGroupItem, Breadcrumb, HelpBlock, MenuItem, Alert, Pager, Accordion, Collapse as _Collapse, Dropdown, Form, ControlLabel, Checkbox, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { Theme, PanelProps, ButtonProps, Panel as PanelI } from "./theme";
 
-const Panel = React.forwardRef<_Panel, PanelProps>(({themeRole, ...props}, ref) => <_Panel {...props} bsStyle={themeRole} ref={ref}/>);
+const Panel = React.forwardRef<_Panel, PanelProps>(({variant, ...props}, ref) => <_Panel {...props} bsStyle={variant} ref={ref}/>);
 const __Panel: PanelI = (Panel as unknown as PanelI);
 __Panel.Body = _Panel.Body;
 __Panel.Heading = _Panel.Heading;
@@ -14,7 +14,7 @@ const theme: Theme = {
 	Panel: __Panel,
 	Table,
 	ProgressBar,
-	Button: React.forwardRef<Button, ButtonProps>(({themeRole, ...props}, ref) => <Button {...props} bsStyle={themeRole} ref={ref}/>),
+	Button: React.forwardRef<Button, ButtonProps>(({variant, ...props}, ref) => <Button {...props} bsStyle={variant} ref={ref}/>),
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay,
@@ -33,10 +33,11 @@ const theme: Theme = {
 	Breadcrumb,
 	HelpBlock,
 	MenuItem,
-	Alert: ({themeRole, ...props}) => <Alert {...props} bsStyle={themeRole}/>,
+	Alert: ({variant, ...props}) => <Alert {...props} bsStyle={variant}/>,
 	Pager,
 	Accordion,
-	Collapse: ({themeRole, ...props}) => <Collapse {...props} bsRole={themeRole}/>,
+	//Collapse: ({variant, ...props}) => <Collapse {...props} bsRole={variant}/>,
+	Collapse,
 	Dropdown,
 	Form,
 	ControlLabel,

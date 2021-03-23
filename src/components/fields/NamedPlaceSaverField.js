@@ -236,7 +236,7 @@ class PlaceSaverDialog extends React.Component {
 
 		const {Panel, FormGroup, FormControl, ListGroup, ListGroupItem, Alert, Form, ControlLabel} = this.context.theme;
 		return this.state.failed ? (
-			<Alert themeRole="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
+			<Alert variant="danger">{`${translations[`NamedPlaces${this.state.failed === FETCH ? "Fetch" : "Save"}Fail`]} ${translations.TryAgainLater}`}</Alert> 
 		): (
 			<div className="place-saver-dialog">
 				<Form inline onSubmit={this.onSubmit}>
@@ -256,7 +256,7 @@ class PlaceSaverDialog extends React.Component {
 					{loading ? <div className="pull-right"><Spinner /></div> : null}
 				</Form>
 				{!this.props.gathering.namedPlaceID && existingPlaces.length ?
-					<Alert themeRole="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple}.` : ""}`}</Alert>
+					<Alert variant="warning">{`${translations.Warning}: ${translations.UsedNamedPlaceName}.${existingPlaces.length > 1 ? ` ${translations.UsedNamedPlaceNameMultiple}.` : ""}`}</Alert>
 					: null}
 				{existingPlaces.length > 1 ? (
 					<FormGroup>

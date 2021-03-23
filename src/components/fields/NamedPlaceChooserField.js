@@ -188,8 +188,8 @@ export default class NamedPlaceChooserField extends React.Component {
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
 							<Modal.Body>
-								{failed === PLACE_USE_FAIL && <Alert themeRole="danger">{translations.NamedPlacesUseFail}</Alert>}
-								{failed === PLACES_FETCH_FAIL && <Alert themeRole="danger">{translations.NamedPlacesFetchFail}</Alert>}
+								{failed === PLACE_USE_FAIL && <Alert variant="danger">{translations.NamedPlacesUseFail}</Alert>}
+								{failed === PLACES_FETCH_FAIL && <Alert variant="danger">{translations.NamedPlacesFetchFail}</Alert>}
 								<NamedPlaceChooser places={this.state.places} failed={failed === PLACES_FETCH_FAIL ? true : false} formContext={formContext} onSelected={this.onPlaceSelected} onDeleted={this.onPlaceDeleted} />
 							</Modal.Body>
 						</Modal>
@@ -320,7 +320,7 @@ class NamedPlaceChooser extends React.Component {
 
 		const {Alert} = this.context.theme;
 		if (failed) {
-			return <Alert themeRole="danger">{`${translations.NamedPlacesFetchFail} ${translations.TryAgainLater}`}</Alert>;
+			return <Alert variant="danger">{`${translations.NamedPlacesFetchFail} ${translations.TryAgainLater}`}</Alert>;
 		} else {
 			const enums = (places || []).map((place, idx) => {
 				return {value: idx, label: place.name};

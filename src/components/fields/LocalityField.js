@@ -44,7 +44,7 @@ export default class LocalityField extends React.Component {
 							{values.map((v, i) => (
 								<span key={i}>{v}{i < values.length - 1 ? ", " : ""}</span>
 							))}
-							<GlyphButton onClick={this.showEditor} glyph="pencil" themeRole="default" className="pull-right"/>
+							<GlyphButton onClick={this.showEditor} glyph="pencil" variant="default" className="pull-right"/>
 						</Panel.Body>
 					</Panel>
 				</Col>

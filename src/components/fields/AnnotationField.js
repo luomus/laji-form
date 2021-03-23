@@ -44,7 +44,7 @@ export default class AnnotationField extends React.Component {
 			tooltip: this.props.formContext.translations.ShowAnnotations,
 			tooltipPlacement: "left",
 			fn: this.onClick,
-			themeRole: annotations && annotations.length ? "primary": "default"
+			variant: annotations && annotations.length ? "primary": "default"
 		};
 	}
 
@@ -251,7 +251,7 @@ class AnnotationBox extends React.Component {
 			>
 				{<div>
 					{this.state.fail !== undefined && 
-							<Alert themeRole={this.state.fail ? "danger" : "success"}>
+							<Alert variant={this.state.fail ? "danger" : "success"}>
 								{translations[this.state.fail ? "SaveFail" : "SaveSuccess"]}
 							</Alert>
 					}
@@ -317,7 +317,7 @@ class AnnotationBox extends React.Component {
 						) : <Spinner />}
 					</ListGroup>
 					{this.state.deleteFail &&
-						<Alert themeRole={"danger"}>
+						<Alert variant={"danger"}>
 							{translations["DeleteFail"]}
 						</Alert>
 					}
