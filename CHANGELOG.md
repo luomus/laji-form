@@ -1,3 +1,9 @@
+## 11.0.0
+* TS declarations files included in `lib`
+
+** BREAKING CHANGES: **
+* `lib/app` moved to `lib/index`
+
 ## 10.0.0
 * Style framework agnostic, bootstrap 3 dependency is optional. More in README.
 * Improved app wrapper
