@@ -2,8 +2,8 @@
   "name": "laji-form",
   "version": "10.0.2",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
-  "main": "lib/app.js",
-  "types": "lib/app.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
     "start": "webpack-dev-server --content-base playground playground/app.js --inline --host 0.0.0.0 --port 8083",

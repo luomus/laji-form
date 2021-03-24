@@ -6,7 +6,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
 	mode: "production",
 	entry: {
-		"laji-form": "./src/app",
+		"laji-form": "./src/index",
 		styles: "./src/styles"
 	},
 	output: {

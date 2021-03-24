@@ -1,4 +1,4 @@
-import LajiForm from "../src/app";
+import LajiForm from "../src/index";
 import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";

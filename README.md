@@ -50,7 +50,7 @@ render(<LajiForm
 
 ## API Client ##
 
-In addition to properties you would pass to <Form />, you must pass an api client implementation, if you need to use fields that use lajitest.api.fi. The api client implementation must have ```fetch()``` -method, which **returns a Promise**.
+In addition to properties you would pass to &lt;Form /&gt;, you must pass an api client implementation, if you need to use fields that use lajitest.api.fi. The api client implementation must have ```fetch()``` -method, which **returns a Promise**.
 
 ```fetch(path, query, options)``` parameters are as follows:
 
