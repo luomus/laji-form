@@ -29,7 +29,7 @@ const theme: Theme = {
 	Popover,
 	Tooltip,
 	Glyphicon,
-	Modal,
+	Modal: Modal as any,
 	Row,
 	Col,
 	FormGroup,

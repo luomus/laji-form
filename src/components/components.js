@@ -175,27 +175,6 @@ export function AddButton({onClick}) {
 	return  <Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>;
 }
 
-export class Alert extends React.Component {
-	static contextType = ReactContext;
-	render() {
-		const {Modal} = this.context.theme;
-		return (
-			<Modal show={true} enforceFocus={true} onKeyDown={this.onKeyDown}>
-				<Modal.Body>
-					{this.props.children}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button onClick={this.props.onOk}>Ok</Button>
-				</Modal.Footer>
-			</Modal>
-		);
-	}
-
-	onKeyDown = (e) => {
-		if (e.key === "Enter" || e.key === "Escape") this.props.onOk();
-	}
-}
-
 export const GlyphButton = (props) => {
 	const {glyph, ...buttonProps} = props;
 	const {Glyphicon} = React.useContext(ReactContext).theme;

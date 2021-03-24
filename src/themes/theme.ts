@@ -27,7 +27,7 @@ export interface PanelProps {
 	variant?: Variant;
 }
 
-export interface Panel extends React.HTMLProps<PanelProps> {
+export type Panel = React.ElementType<PanelProps> & {
     Body: React.ElementType;
     Heading: React.ElementType;
     Collapse: React.ElementType;
@@ -88,13 +88,14 @@ export interface ModalProps {
 	keyboard?: boolean;
 	onKeyDown?: (e: React.KeyboardEvent) => void;
 	dialogClassName?: string;
-	onHide?: Function; // eslint-disable-line @typescript-eslint/ban-types
+	onHide: () => void;
 }
+
 export interface ModalHeader extends React.HTMLProps<any> {
 	closeButton?: boolean;
 }
 
-export interface Modal extends React.HTMLProps<ModalProps> {
+export type Modal = React.ElementType<ModalProps> & {
     Body: React.ElementType;
     Header: React.ElementType<ModalHeader>;
     Title: React.ElementType;
@@ -117,7 +118,7 @@ export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassNa
 	onMouseOut?: React.MouseEventHandler<any>;
 }
 
-export interface InputGroup extends React.HTMLProps<any> {
+export type InputGroup = React.ElementType<any> & {
 	Addon: React.ElementType<InputGroupAddon>;
 }
 
@@ -144,7 +145,7 @@ export interface ListGroupItemProps extends JSX.IntrinsicAttributes, HasMaybeCla
 	active?: boolean;
 }
 
-export interface Breadcrumb extends React.HTMLProps<any> {
+export type Breadcrumb = React.ElementType<any> & {
 	Item: React.ElementType<BreadcrumbItem>;
 }
 
@@ -170,7 +171,7 @@ export interface PagerItemProps {
 	href?: string;
 }
 
-export interface Pager extends React.HTMLProps<JSX.IntrinsicAttributes> {
+export type Pager = React.ElementType<JSX.IntrinsicAttributes> & {
     Item: React.ElementType<PagerItemProps>;
 }
 
