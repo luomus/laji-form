@@ -1,5 +1,8 @@
 import * as React from "react";
 import _Panel from "react-bootstrap/lib/Panel";
+import PanelBody from "react-bootstrap/lib/PanelBody";
+import PanelHeading from "react-bootstrap/lib/PanelHeading";
+import PanelCollapse from "react-bootstrap/lib/PanelCollapse";
 import Table from "react-bootstrap/lib/Table";
 import ProgressBar from "react-bootstrap/lib/ProgressBar";
 import Button from "react-bootstrap/lib/Button";
@@ -35,9 +38,9 @@ import { Theme, PanelProps, ButtonProps, Panel as PanelI, Dropdown as DropdownI,
 
 const Panel = React.forwardRef<_Panel, PanelProps>(({variant, ...props}, ref) => <_Panel {...props} bsStyle={variant} ref={ref}/>);
 const __Panel: PanelI = (Panel as unknown as PanelI);
-__Panel.Body = _Panel.Body;
-__Panel.Heading = _Panel.Heading;
-__Panel.Collapse = _Panel.Collapse;
+__Panel.Body = PanelBody;
+__Panel.Heading = PanelHeading;
+__Panel.Collapse = PanelCollapse;
 
 // Wrapper needed or webpack will hang.
 const _Dropdown: Omit<DropdownI, "Menu" | "Toggle"> = (props: DropdownProps) => <Dropdown {...props} />;
