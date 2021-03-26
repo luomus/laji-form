@@ -1,13 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
+//import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import ReactContext from "../../ReactContext";
+import { FieldProps } from "../LajiForm";
 
 @BaseComponent
-export default class SplitField extends React.Component {
+export default class SplitField extends React.Component<FieldProps> {
 	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -16,10 +17,10 @@ export default class SplitField extends React.Component {
 					fields: PropTypes.arrayOf(PropTypes.string).isRequired,
 					uiSchema: PropTypes.object,
 					name: PropTypes.string,
-					lg: PropTypes.integer,
-					md: PropTypes.integer,
-					sm: PropTypes.integer,
-					xs: PropTypes.integer
+					lg: PropTypes.number,
+					md: PropTypes.number,
+					sm: PropTypes.number,
+					xs: PropTypes.number
 				})).isRequired
 			}).isRequired
 		}),
@@ -30,7 +31,9 @@ export default class SplitField extends React.Component {
 	}
 
 	render() {
-		const { TitleField, DescriptionField } = this.props.registry.fields;
+		const { _TitleField, _DescriptionField } = this.props.registry.fields;
+		const TitleField = _TitleField as any; // TODO TS fix after TitleField removal
+		const DescriptionField = _DescriptionField as any; // TODO TS fix after DescriptionField removal
 		const {"ui:title": _title} = this.props.uiSchema;
 		const {Row, Col} = this.context.theme;
 		return (
@@ -49,7 +52,7 @@ export default class SplitField extends React.Component {
 					formContext={this.props.formContext}
 				/>
 				<Row>
-					{getUiOptions(this.props.uiSchema).splits.map((split, i) =>
+					{getUiOptions(this.props.uiSchema).splits.map((split: any, i: number) =>
 						<Col md={split.md} lg={split.lg} xs={split.xs} sm={split.sm} key={i}>
 							{this.renderSplitField(split)}
 						</Col>
@@ -59,18 +62,21 @@ export default class SplitField extends React.Component {
 		);
 	}
 
-	renderSplitField = ({fields}) => {
+	renderSplitField = ({fields}: any) => {
+		const {SchemaField} = this.props.registry.fields;
+		// TODO TS fix typing after NestField ts conversion.
+		const _props: FieldProps = getPropsForFields(this.props, fields) as FieldProps;
 		return (
 			<SchemaField
 				{...this.props}
-				{...getPropsForFields(this.props, fields)}
+				{..._props}
 			  onChange={this.onChange(fields)}
 				name=""
 			/>
 		);
 	}
 
-	onChange = (fields) => (formData) => {
+	onChange = (fields: string[]) => (formData: any) => {
 		this.props.onChange(fields.reduce((updatedFormData, field) => {
 			return {...updatedFormData, [field]: formData[field]};
 		}, this.props.formData));

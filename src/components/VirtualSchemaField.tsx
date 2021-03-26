@@ -1,6 +1,6 @@
 import * as React from "react";
 import { getInnerUiSchema, getUiOptions, getReactComponentName } from "../utils";
-const BaseComponent = require("./BaseComponent").default;
+import BaseComponent from "./BaseComponent";
 import Context from "../Context";
 import { FieldProps } from "./LajiForm";
 

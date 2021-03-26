@@ -13,7 +13,7 @@ import { JSONSchema7 } from "json-schema";
 import { Theme } from "../themes/theme";
 import Context from "../ReactContext";
 
-import Form, { FieldProps as RJSFFieldProps, Field, Widget } from "@rjsf/core";
+import Form, { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget } from "@rjsf/core";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 import FieldTemplate from "./FieldTemplate";
 import ErrorListTemplate from "./ErrorListTemplate";
@@ -211,11 +211,11 @@ export type Lang = "fi" | "en" | "sv";
 type FocusHandler = () => Promise<void> | void;
 type CustomEventListener = (data?: any, callback?: () => void) => boolean | void;
 
-interface SubmitHook {
+export interface SubmitHook {
 	hook: () => void;
 	promise: Promise<any>;
 	lajiFormId: string;
-	relativePointer: string;
+	relativePointer: string | undefined;
 	running: boolean;
 	description?: string;
 	failed?: boolean;
@@ -228,6 +228,16 @@ interface ShortcutKey {
 }
 
 export interface FieldProps extends RJSFFieldProps {
+	formContext: FormContext;
+	registry: {
+            fields: { [name: string]: Field }; 
+            widgets: { [name: string]: Widget };
+            definitions: { [name: string]: any };
+            formContext: FormContext;
+	}
+}
+
+export interface WidgetProps extends RJSFWidgetProps {
 	formContext: FormContext;
 	registry: {
             fields: { [name: string]: Field }; 
@@ -284,7 +294,7 @@ export interface RootContext {
 	sendCustomEvent: (id: string, eventName: string, data?: any, callback?: () => void, options?: {bubble?: boolean}) => void;
 	addGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
-	addSubmitHook: (lajiFormId: string, relativePointer: string, hook: () => void, description?: string) => void;
+	addSubmitHook: (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => void;
 	removeSubmitHook: (lajiFormId: string, hook: SubmitHook["hook"]) => void;
 	removeAllSubmitHook: () => void;
 	singletonMap: any;
@@ -512,7 +522,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			}
 		};
 
-		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string, hook: () => void, description?: string) => {
+		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => {
 			lajiFormId = `${lajiFormId}`;
 			let promise: Promise<any>;
 			const _hook = (): Promise<any> => {

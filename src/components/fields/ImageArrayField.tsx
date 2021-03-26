@@ -7,7 +7,7 @@ import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
 import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer } from "../../utils";
-const BaseComponent = require("../BaseComponent").default;
+import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
