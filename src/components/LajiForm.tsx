@@ -22,7 +22,7 @@ import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
 import translations from "../translations.js";
 
-const fields = importLocalComponents("fields", [
+const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
 	"TitleField",
 	"ArrayField",
@@ -89,7 +89,7 @@ const fields = importLocalComponents("fields", [
 	{"AccordionArrayField": "SingleActiveArrayField"} // Alias for backward compatibility.
 ]);
 
-const widgets = importLocalComponents("widgets", [
+const widgets = importLocalComponents<Widget>("widgets", [
 	"BaseInput",
 	"CheckboxWidget",
 	"SelectWidget",
@@ -111,7 +111,7 @@ const widgets = importLocalComponents("widgets", [
 	"NumberWidget"
 ]);
 
-function importLocalComponents(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: React.Component} {
+function importLocalComponents<T>(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: T} {
 	return fieldNames.reduce((fields, field) => {
 		if (typeof field === "string") {
 			fields[field] = require(`./${dir}/${field}`).default;
