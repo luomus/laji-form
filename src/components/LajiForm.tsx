@@ -165,8 +165,8 @@ export interface LajiFormProps {
 	validators?: any;
 	warnings?: any;
 	onSettingsChange?: (settings: any, global: boolean) => void;
-	mediaMetadata: MediaMetadata,
-	theme: Theme
+	mediaMetadata?: MediaMetadata;
+	theme?: Theme;
 }
 
 export interface LajiFormState {
