@@ -1,4 +1,5 @@
 import LajiForm from "../src/index";
+import * as lajiFormUtils from "../src/utils";
 import schemas from "./schemas.json";
 import properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation";
@@ -190,7 +191,10 @@ const notifier = [["warning", "warning"], ["success", "success"], ["info", undef
 
 promise.then(data => {
 	const lajiForm = new LajiForm(data);
-	if (process.env.NODE_ENV !== "production") window.lajiForm = lajiForm;
+	if (process.env.NODE_ENV !== "production") {
+		window.lajiForm = lajiForm;
+		window.lajiFormUtils = lajiFormUtils;
+	}
 });
 
 function onSubmit({formData}) {
