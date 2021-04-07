@@ -360,7 +360,7 @@ min-height: 20px;
 	margin-left: 2px;
 	margin-bottom: 1px;
 }
-.laji-form button .react-spinner .react-spinner_bar {
+.laji-form button.btn-primary .react-spinner .react-spinner_bar {
 	background-color: white !important;
 }
 .laji-form.media-modal-content > .react-spinner {

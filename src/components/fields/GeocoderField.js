@@ -16,7 +16,6 @@ const cache = {};
 
 @BaseComponent
 export default class GeocoderField extends React.Component {
-	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
