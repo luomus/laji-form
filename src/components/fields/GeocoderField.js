@@ -6,6 +6,7 @@ import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFo
 import BaseComponent from "../BaseComponent";
 import * as fetch from "isomorphic-fetch";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "laji-map/lib/globals";
@@ -15,6 +16,7 @@ const cache = {};
 
 @BaseComponent
 export default class GeocoderField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -131,11 +133,9 @@ export default class GeocoderField extends React.Component {
 			key: loading,
 			render: onClick => (
 				<Button key="geolocate" onClick={onClick} disabled={loading || props.disabled || props.readonly || !this.state.timeout && (loading === false || !geometry || !geometry.geometries || geometry.geometries.length === 0)} className="geocoder-btn">
-					<strong>
-						{loading ? <Spinner /> : <i className="glyphicon glyphicon-globe"/>}
-						{" "}
-						{props.formContext.translations.Geolocate}
-					</strong>
+					{loading ? <Spinner /> : <ReactContext.Consumer>{({theme: {Glyphicon}}) => <Glyphicon glyph="globe"/>}</ReactContext.Consumer>}
+					{" "}
+					{props.formContext.translations.Geolocate}
 				</Button>
 			)
 		};
