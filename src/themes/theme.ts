@@ -50,6 +50,7 @@ export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, 
 	onClick?: React.MouseEventHandler<any>;
 	block?: boolean;
 	id?: string;
+	small?: boolean;
 }
 
 export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {

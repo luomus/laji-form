@@ -52,7 +52,7 @@ const theme: Theme = {
 	Panel: __Panel,
 	Table,
 	ProgressBar,
-	Button: React.forwardRef<Button, ButtonProps>(({variant, ...props}, ref) => <Button {...props} bsStyle={variant} ref={ref}/>),
+	Button: React.forwardRef<Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} bsStyle={variant} bsSize={small ? "small" : undefined} ref={ref}/>),
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay,

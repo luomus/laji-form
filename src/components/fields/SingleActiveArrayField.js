@@ -503,7 +503,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 							{idx === activeIdx ? (
 								<Panel.Body>
 									{item.children}
-									{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right"><Glyphicon glyph="chevron-up" /> {translations.Close}</Button> : null}
+									{closeButton ? <Button onClick={this.onSelect} small className="pull-right"><Glyphicon glyph="chevron-up" /> {translations.Close}</Button> : null}
 								</Panel.Body>
 							) : null}
 						</Panel>
