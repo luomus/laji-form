@@ -642,7 +642,7 @@ function GlyphField({settings, idSchema, formData, schema, registry, isIncluded,
 		<OverlayTrigger key={property} overlay={tooltip} placement="left">
 			<GlyphButton glyph={glyph}
 									 disabled={hasData}
-									 variant={isIncluded ? "primary" : "default"}
+									 active={isIncluded}
 									 onClick={onButtonClick} />
 		</OverlayTrigger>
 	);
