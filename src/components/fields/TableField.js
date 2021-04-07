@@ -152,7 +152,7 @@ class TableArrayFieldTemplate extends React.Component {
 		});
 
 		const options = getUiOptions(props.uiSchema);
-		const {confirmDelete, deleteCorner, removable = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp} = options;
+		const {confirmDelete, deleteCorner, removable = true, nonRemovables = [], buttons, "ui:deleteHelp": deleteHelp, deleteLabel} = options;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const getRefFor = i => elem => {this.deleteButtonRefs[i] = elem;};
@@ -171,6 +171,7 @@ class TableArrayFieldTemplate extends React.Component {
 						              disabled={readonly || disabled}
 						              onClick={onDelete(item, props)}
 						              confirm={confirmDelete}
+						              label={deleteLabel}
 						              corner={deleteCorner}
 						              tooltip={deleteHelp}
 						              translations={props.formContext.translations}/>
