@@ -231,7 +231,7 @@ class PlaceSaverDialog extends React.Component {
 		});
 
 		const getButton = (onClick, text) => {
-			return <Button bsSize="small" onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
+			return <Button small onClick={onClick} disabled={loading || isEmptyString(value)}>{text}</Button>;
 		};
 
 		const {Panel, FormGroup, FormControl, ListGroup, ListGroupItem, Alert, Form, ControlLabel} = this.context.theme;

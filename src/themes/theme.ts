@@ -45,6 +45,7 @@ export interface ProgressBarProps extends JSX.IntrinsicAttributes {
 
 export interface ButtonProps extends JSX.IntrinsicAttributes {
 	variant?: ButtonVariant;
+	small?: boolean;
 }
 
 export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
