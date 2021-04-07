@@ -147,13 +147,10 @@ body .laji-form {
 }
 
 .laji-form .rw-multiselect-taglist li {
-	height: 20px;
-	line-height: 20px;
+	height: 18px;
+	line-height: 18px;
 	font-size: 11px;
-	color: white;
-	background-color: #286090;
-	font-weight: bold;
-	margin-top: 0px;
+	margin-top: 1px;
 }
 
 .laji-form .rw-list-option.rw-state-focus:not(.rw-state-selected) {
