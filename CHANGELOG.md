@@ -1,3 +1,7 @@
+## 12.0.0
+** BREAKING CHANGES: **
+* Buttons don't use `primary` variant by default & not strong text.
+
 ## 11.0.0
 * TS declarations files included in `lib`
 
