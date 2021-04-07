@@ -484,7 +484,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 			return header;
 		};
 
-		const {Panel, Accordion} = this.context.theme;
+		const {Panel, Accordion, Glyphicon} = this.context.theme;
 
 		return (
 			<div className="laji-form-single-active-array no-transition">
@@ -503,7 +503,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 							{idx === activeIdx ? (
 								<Panel.Body>
 									{item.children}
-									{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right">{translations.Close}</Button> : null}
+									{closeButton ? <Button onClick={this.onSelect} bsSize="small" className="pull-right"><Glyphicon glyph="chevron-up" /> {translations.Close}</Button> : null}
 								</Panel.Body>
 							) : null}
 						</Panel>
