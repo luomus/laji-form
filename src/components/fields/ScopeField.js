@@ -469,7 +469,7 @@ export default class ScopeField extends React.Component {
 
 		return (
 			<OverlayTrigger key={`${this.props.idSchema.$id}-scope`} overlay={tooltip} placement="left" bsRole={bsRole} >
-				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} id={`${this.props.idSchema.$id}-additionals`}/>
+				<GlyphButton glyph="cog" onClick={this.onToggleAdditionals} id={`${this.props.idSchema.$id}-additionals`} variant="primary" />
 			</OverlayTrigger>
 		);
 	}
