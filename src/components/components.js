@@ -99,13 +99,12 @@ export class DeleteButton extends React.Component {
 
 	render() {
 		const {props} = this;
-		const {corner, tooltip, disabled, readonly, glyphButton = true} = props;
+		const {corner, tooltip, disabled, readonly, glyphButton = true, ...maybeProps} = props;
 		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
 			buttonClassName = `${buttonClassName} ${props.className}`;
 		}
-		const maybeProps = {};
 		if (props.id !== undefined) {
 			maybeProps.id = `${props.id}-delete`;
 		}
