@@ -143,7 +143,8 @@ export default class NamedPlaceChooserField extends React.Component {
 					glyph: "map-marker",
 					label: this.props.formContext.translations.ChooseFromNamedPlace,
 					id: this.props.idSchema.$id,
-					changesFormData: true
+					changesFormData: true,
+					variant: "primary"
 				};
 				if (this.isGatheringsArray()) {
 					this.buttonDefinition.rules = {canAdd: true};

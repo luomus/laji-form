@@ -98,7 +98,7 @@ export class DeleteButton extends React.Component {
 
 	render() {
 		const {props} = this;
-		const {corner, tooltip, disabled, readonly, glyphButton = true, ...maybeProps} = props;
+		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, onClick, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
@@ -116,7 +116,7 @@ export class DeleteButton extends React.Component {
 				        style={this.props.style}
 				        ref="del"
 				        onKeyDown={this.onButtonKeyDown}
-				        onClick={this.onClick}>{this.props.children || "✖"}</Button>
+				        onClick={this.onClick}>{this.props.children} {"✖"}</Button>
 				{this.renderConfirm()}
 			</React.Fragment>
 		);
@@ -173,18 +173,19 @@ export function AddButton({onClick}) {
 	return  <Row><Col xs={2}><Button onClick={onClick}>➕</Button></Col></Row>;
 }
 
-export const GlyphButton = (props) => {
+export const GlyphButton = React.forwardRef((props, ref) => {
 	const {glyph, ...buttonProps} = props;
 	const {Glyphicon} = React.useContext(ReactContext).theme;
 	return (
 		<Button {...buttonProps} 
+		        ref={ref}
 		        className={`glyph-button${props.className ? ` ${props.className}` : ""}`} 
 		        tooltipPlacement={props.tooltipPlacement || "left"}>
 			<Glyphicon glyph={glyph} />
 			{props.children}
 		</Button>
 	);
-};
+});
 
 const TOP = "TOP", AFFIXED = "AFFIXED", BOTTOM = "BOTTOM";
 export class Affix extends React.Component {
