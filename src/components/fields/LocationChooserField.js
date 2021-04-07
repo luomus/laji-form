@@ -510,14 +510,13 @@ class LocationButton extends React.Component {
 
 		const variant = hasErrors
 			? "danger"
-			: hasCoordinates
-				? "primary"
-				: "default"; 
+			: undefined;
 
-		const button = <LocationButtonComp
+		const button = <GlyphButton
 			key={`${that.props.idSchema.$id}-location`}
 			id={`${that.props.idSchema.$id}-location`}
 			variant={variant}
+			active={hasCoordinates}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
 			glyph={glyph}
@@ -590,14 +589,6 @@ class LocationButton extends React.Component {
 						</Modal>
 				}
 			</React.Fragment>
-		);
-	}
-}
-
-class LocationButtonComp extends React.Component {
-	render() {
-		return (
-			<GlyphButton {...this.props} />
 		);
 	}
 }
