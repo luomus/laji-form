@@ -86,7 +86,7 @@ export default class UnitShorthandField extends React.Component {
 			fn: this.onToggleButtonClick,
 			tooltip: this.props.formContext.translations[this.state.showSchema ? "OpenShorthand" :  "CloseShorthand"],
 			tooltipPlacement: "left",
-			variant: this.state.showSchema ? "default" : "primary"
+			active: !this.state.showSchema
 		};
 	}
 
