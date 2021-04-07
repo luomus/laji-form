@@ -110,14 +110,12 @@ export default class CheckboxWidget extends React.Component {
 
 		const {ButtonToolbar, ToggleButton, ToggleButtonGroup} = this.context.theme;
 
-		const ToggleButtonWithPrimaryStyle = (props) => <ToggleButton {...props} className={classNames(_value === props.value && "btn-primary")} />;
-
 		const checkbox = (
 			<ButtonToolbar>
 				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButtonWithPrimaryStyle>
-					<ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButtonWithPrimaryStyle>
-					{(allowUndefined && showUndefined ? <ToggleButtonWithPrimaryStyle disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButtonWithPrimaryStyle> : null)}
+					<ToggleButton disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButton>
+					{(allowUndefined && showUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		);
