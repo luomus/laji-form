@@ -43,8 +43,13 @@ export interface ProgressBarProps extends JSX.IntrinsicAttributes {
 	now?: number;
 }
 
-export interface ButtonProps extends JSX.IntrinsicAttributes {
+export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName, HasMaybeRef {
 	variant?: ButtonVariant;
+	active?: boolean;
+	disabled?: boolean;
+	onClick?: React.MouseEventHandler<any>;
+	block?: boolean;
+	id?: string;
 }
 
 export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
