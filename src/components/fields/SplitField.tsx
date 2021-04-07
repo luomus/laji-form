@@ -31,7 +31,7 @@ export default class SplitField extends React.Component<FieldProps> {
 	}
 
 	render() {
-		const { _TitleField, _DescriptionField } = this.props.registry.fields;
+		const { TitleField: _TitleField, DescriptionField: _DescriptionField } = this.props.registry.fields;
 		const TitleField = _TitleField as any; // TODO TS fix after TitleField removal
 		const DescriptionField = _DescriptionField as any; // TODO TS fix after DescriptionField removal
 		const {"ui:title": _title} = this.props.uiSchema;
