@@ -48,8 +48,8 @@ export default class NamedPlaceChooserField extends React.Component {
 				"ui:options": {
 					...options,
 					buttons: [
-						...(options.buttons || []),
-						this.buttonDefinition
+						this.buttonDefinition,
+						...(options.buttons || [])
 					]
 				}
 			};

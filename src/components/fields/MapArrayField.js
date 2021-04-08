@@ -1472,17 +1472,17 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		if (addButtonPath) console.warn("addButtonPath option for MapArrayField is deprecated - use buttonsPath instead!");
 		let _buttonsPath = buttonsPath || addButtonPath;
 
-		const appendAddButton = (buttons) => {
+		const prependAddButton = (buttons) => {
 			const addButton = buttons.find(({fn}) => fn === "add");
 			return [
+				...buttons.filter(button => button !== addButton),
 				{
 					...(addButton || {}),
 					fn: this.customAdd,
 					fnName: "add",
 					glyph: "plus",
 					id: this.props.idSchema.$id
-				},
-				...buttons.filter(button => button !== addButton),
+				}
 			];
 		};
 
@@ -1490,11 +1490,11 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		let renderButtonsBelow = false;
 		if (((this.props.formData || []).length === 0 || activeIdx !== undefined) && options.buttons) {
 			if (_buttonsPath) {
-				buttons = appendAddButton(options.buttons);
+				buttons = prependAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
 				inlineUiSchema["ui:options"].renderAdd = false;
 			} else if (options.renderButtonsBelow) {
-				buttons = appendAddButton(options.buttons);
+				buttons = prependAddButton(options.buttons);
 				inlineUiSchema["ui:options"].renderAdd = false;
 				renderButtonsBelow = true;
 			}
