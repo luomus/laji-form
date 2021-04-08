@@ -302,8 +302,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					              translations={this.props.formContext.translations}
 					              onClick={this.onMediaRmClick(i)}
 					              disabled={disabled || readonly}
-					              id={`${this.props.idSchema.$id}_${i}`}
-					>✖</DeleteButton>
+					              id={`${this.props.idSchema.$id}_${i}`} />
 				</div>
 			));
 		}
