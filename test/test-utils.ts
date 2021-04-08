@@ -202,7 +202,7 @@ export class Form {
 		return {
 			resolve: async () => {
 				await resolve(imageResponse);
-				await browser.sleep(200);
+				await browser.sleep(300);
 				await mdResolve(mdResponse);
 			},
 			remove: async () => {
