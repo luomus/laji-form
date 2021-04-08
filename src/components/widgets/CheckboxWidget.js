@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, classNames } from "../../utils";
+import { isEmptyString, getUiOptions } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
