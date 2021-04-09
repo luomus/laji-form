@@ -83,7 +83,7 @@ export default class FieldTemplate extends React.Component {
 			? uiSchema["ui:title"]
 			: "title" in schema
 				? schema.title
-				: undefined;
+				: _label;
 
 		if (hidden || uiSchema["ui:field"] === "HiddenField" || uiSchema["ui:widget"] === "HiddenWidget") {
 			return children;
