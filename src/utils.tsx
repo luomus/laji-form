@@ -1163,11 +1163,11 @@ export function toJSONPointer(s: string) {
 }
 
 export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: string}, idx?: number) {
-	const title = ("ui:title" in (props.uiSchema || {})
-		? props.uiSchema["ui:title" ]
-		: props.schema?.title
-	);
-	if (!title || !title.includes("%{")) {
+	let title = props.uiSchema?.["ui:title" ]
+		?? props.schema?.title
+		?? props.name;
+
+	if (!title?.includes("%{")) {
 		return title;
 	}
 

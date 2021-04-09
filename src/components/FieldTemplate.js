@@ -1,7 +1,7 @@
 import * as React from "react";
 import Context from "../Context";
 import { Help, TooltipComponent } from "./components";
-import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll } from "../utils";
+import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll, classNames } from "../utils";
 
 export default class FieldTemplate extends React.Component {
 
@@ -65,7 +65,7 @@ export default class FieldTemplate extends React.Component {
 	render() {
 		const {
 			id,
-			classNames,
+			classNames: _classNames,
 			children,
 			rawErrors,
 			rawHelp,
@@ -75,7 +75,8 @@ export default class FieldTemplate extends React.Component {
 			displayLabel,
 			schema,
 			uiSchema,
-			formContext
+			formContext,
+			label: _label
 		} = this.props;
 
 		const label = "ui:title" in uiSchema
@@ -102,11 +103,11 @@ export default class FieldTemplate extends React.Component {
 			}
 			return arr;
 		}, []);
-		const warningClassName = (warnings.length > 0 && errors.length === 0) ? " laji-form-warning-container" : "";
+		const warningClassName = (warnings.length > 0 && errors.length === 0) && "laji-form-warning-container";
 
 		const {Label, errorsAsPopup} = this.props.formContext;
 		const component = (errorsComponent) => (
-			<div className={classNames + warningClassName} id={htmlId}>
+			<div className={classNames(_classNames, warningClassName)} id={htmlId}>
 				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} _context={new Context(formContext.contextId)} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
@@ -128,7 +129,7 @@ export default class FieldTemplate extends React.Component {
 		const errorsComponent = (
 			<React.Fragment>
 				{errors.length > 0 ?
-					<ul id={`laji-form-error-container-${id}`} className= "laji-form-error-container">
+					<ul id={`laji-form-error-container-${id}`} className="laji-form-error-container">
 						{errors.map((error, i) => (
 							<li key={i}>{error}</li>
 						))}
