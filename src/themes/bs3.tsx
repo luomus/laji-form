@@ -40,7 +40,7 @@ __Panel.Heading = _Panel.Heading;
 __Panel.Collapse = _Panel.Collapse;
 
 // Wrapper needed or webpack will hang.
-const _Dropdown: Omit<DropdownI, "Menu" | "Toggle"> = (props: DropdownProps) => <Dropdown {...props} />;
+const _Dropdown = (props: DropdownProps) => <Dropdown {...props} />;
 const __Dropdown = _Dropdown as DropdownI;
 __Dropdown.Menu = React.forwardRef((props: DropdownMenuProps, ref) => <Dropdown.Menu {...props} ref={ref} />);
 (__Dropdown.Menu as any).defaultProps = {bsRole: "menu"};
@@ -60,7 +60,7 @@ const theme: Theme = {
 	Popover,
 	Tooltip,
 	Glyphicon,
-	Modal: Modal as any,
+	Modal,
 	Row,
 	Col,
 	FormGroup,
