@@ -98,7 +98,7 @@ export class DeleteButton extends React.Component {
 
 	render() {
 		const {props} = this;
-		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, onClick, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, onClick, confirmPlacement, confirmStyle, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
