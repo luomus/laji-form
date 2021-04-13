@@ -27,10 +27,10 @@ export interface PanelProps {
 	variant?: Variant;
 }
 
-export type Panel = React.ElementType<PanelProps> & {
-    Body: React.ElementType;
-    Heading: React.ElementType;
-    Collapse: React.ElementType;
+export type Panel = React.ComponentType<PanelProps> & {
+    Body: React.ComponentType;
+    Heading: React.ComponentType;
+    Collapse: React.ComponentType;
 }
 
 export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -53,8 +53,8 @@ export interface ButtonProps extends JSX.IntrinsicAttributes, HasMaybeChildren, 
 	small?: boolean;
 }
 
-export interface ButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
-}
+export type ButtonGroupProps = JSX.IntrinsicAttributes & HasMaybeChildren;
+
 export interface ButtonToolbarProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
 }
 
@@ -92,20 +92,21 @@ export interface ModalProps {
 	show?: boolean
 	enforceFocus?: boolean;
 	keyboard?: boolean;
-	onKeyDown?: (e: React.KeyboardEvent) => void;
+	onKeyDown?: (e: React.KeyboardEvent<any>) => void;
 	dialogClassName?: string;
-	onHide: () => void;
+	onHide: Function // eslint-disable-line @typescript-eslint/ban-types
+		| (() => void);
 }
 
 export interface ModalHeader extends React.HTMLProps<any> {
 	closeButton?: boolean;
 }
 
-export type Modal = React.ElementType<ModalProps> & {
-    Body: React.ElementType;
-    Header: React.ElementType<ModalHeader>;
-    Title: React.ElementType;
-    Footer: React.ElementType;
+export type Modal = React.ComponentType<ModalProps> & {
+    Body: React.ComponentType;
+    Header: React.ComponentType<ModalHeader>;
+    Title: React.ComponentType;
+    Footer: React.ComponentType;
 }
 
 export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -124,8 +125,8 @@ export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassNa
 	onMouseOut?: React.MouseEventHandler<any>;
 }
 
-export type InputGroup = React.ElementType<any> & {
-	Addon: React.ElementType<InputGroupAddon>;
+export type InputGroup = React.ComponentType<any> & {
+	Addon: React.ComponentType<InputGroupAddon>;
 }
 
 export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -151,8 +152,8 @@ export interface ListGroupItemProps extends JSX.IntrinsicAttributes, HasMaybeCla
 	active?: boolean;
 }
 
-export type Breadcrumb = React.ElementType<any> & {
-	Item: React.ElementType<BreadcrumbItem>;
+export type Breadcrumb = React.ComponentType<any> & {
+	Item: React.ComponentType<BreadcrumbItem>;
 }
 
 export interface BreadcrumbItem extends JSX.IntrinsicAttributes {
@@ -177,8 +178,8 @@ export interface PagerItemProps {
 	href?: string;
 }
 
-export type Pager = React.ElementType<JSX.IntrinsicAttributes> & {
-    Item: React.ElementType<PagerItemProps>;
+export type Pager = React.ComponentType<JSX.IntrinsicAttributes> & {
+    Item: React.ComponentType<PagerItemProps>;
 }
 
 export interface AccordionProps extends JSX.IntrinsicAttributes {
@@ -199,12 +200,11 @@ export interface DropdownProps extends JSX.IntrinsicAttributes, HasMaybeChildren
 	onToggle: React.EventHandler<any>;
 }
 
-export interface DropdownMenuProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef {
-}
+export type DropdownMenuProps = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeRef;
 
-export type Dropdown = React.ElementType<DropdownProps> & {
-	Menu: React.ElementType<DropdownMenuProps>;
-	Toggle: React.ElementType<DropdownToggleProps>;
+export type Dropdown = React.ComponentType<DropdownProps> & {
+	Menu: React.ComponentType<DropdownMenuProps>;
+	Toggle: React.ComponentType<DropdownToggleProps>;
 }
 
 export interface DropdownToggleProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeRef {
@@ -213,14 +213,12 @@ export interface DropdownToggleProps extends JSX.IntrinsicAttributes, HasMaybeCh
 	variant?: Variant;
 }
 
-
 export interface FormProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
 	inline?: boolean;
 	onSubmit?: React.EventHandler<any>;
 }
 
-export interface ControlLabelProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
-}
+export type ControlLabelProps = JSX.IntrinsicAttributes & HasMaybeChildren;
 
 export interface CheckboxProps extends JSX.IntrinsicAttributes {
 	title?: string;
@@ -242,35 +240,35 @@ export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMayb
 
 export interface Theme {
 	Panel: Panel;
-	Table: React.ElementType<TableProps>;
-	ProgressBar: React.ElementType<ProgressBarProps>;
-	Button: React.ElementType<ButtonProps>;
-	ButtonGroup: React.ElementType<ButtonGroupProps>;
-	ButtonToolbar: React.ElementType<ButtonToolbarProps>;
-	Overlay: React.ElementType<OverlayProps>;
-	OverlayTrigger: React.ElementType<OverlayTriggerProps>;
-	Popover: React.ElementType<PopoverProps>;
-	Tooltip: React.ElementType<TooltipProps>;
-	Glyphicon: React.ElementType<GlyphiconProps>;
+	Table: React.ComponentType<TableProps>;
+	ProgressBar: React.ComponentType<ProgressBarProps>;
+	Button: React.ComponentType<ButtonProps>;
+	ButtonGroup: React.ComponentType<ButtonGroupProps>;
+	ButtonToolbar: React.ComponentType<ButtonToolbarProps>;
+	Overlay: React.ComponentType<OverlayProps>;
+	OverlayTrigger: React.ComponentType<OverlayTriggerProps>;
+	Popover: React.ComponentType<PopoverProps>;
+	Tooltip: React.ComponentType<TooltipProps>;
+	Glyphicon: React.ComponentType<GlyphiconProps>;
 	Modal: Modal;
-	Row: React.ElementType<JSX.IntrinsicAttributes>;
-	Col: React.ElementType<ColProps>;
-	FormGroup: React.ElementType<FormGroupProps>
+	Row: React.ComponentType<JSX.IntrinsicAttributes>;
+	Col: React.ComponentType<ColProps>;
+	FormGroup: React.ComponentType<FormGroupProps>
 	InputGroup: InputGroup;
-	FormControl: React.ElementType<FormControlProps>;
-	ListGroup: React.ElementType<ListGroupProps>;
-	ListGroupItem: React.ElementType<ListGroupItemProps>;
+	FormControl: React.ComponentType<FormControlProps>;
+	ListGroup: React.ComponentType<ListGroupProps>;
+	ListGroupItem: React.ComponentType<ListGroupItemProps>;
 	Breadcrumb: Breadcrumb;
-	HelpBlock: React.ElementType<JSX.IntrinsicAttributes>;
-	MenuItem: React.ElementType<MenuItemProps>;
-	Alert: React.ElementType<AlertProps>;
+	HelpBlock: React.ComponentType<JSX.IntrinsicAttributes>;
+	MenuItem: React.ComponentType<MenuItemProps>;
+	Alert: React.ComponentType<AlertProps>;
 	Pager: Pager;
-	Accordion: React.ElementType<AccordionProps>;
-	Collapse: React.ElementType<CollapseProps>;
+	Accordion: React.ComponentType<AccordionProps>;
+	Collapse: React.ComponentType<CollapseProps>;
 	Dropdown: Dropdown;
-	Form: React.ElementType<FormProps>;
-	ControlLabel: React.ElementType<ControlLabelProps>;
-	Checkbox: React.ElementType<CheckboxProps>;
-	ToggleButton: React.ElementType<ToggleButtonProps>;
-	ToggleButtonGroup: React.ElementType<ToggleButtonGroupProps>;
+	Form: React.ComponentType<FormProps>;
+	ControlLabel: React.ComponentType<ControlLabelProps>;
+	Checkbox: React.ComponentType<CheckboxProps>;
+	ToggleButton: React.ComponentType<ToggleButtonProps>;
+	ToggleButtonGroup: React.ComponentType<ToggleButtonGroupProps>;
 }

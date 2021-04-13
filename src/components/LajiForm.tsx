@@ -737,8 +737,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel: _Panel, Table} = this.props.theme || this.context.theme;
-		const Panel = _Panel as any;
+		const {Panel, Table} = this.props.theme || this.context.theme;
 
 		const panelHeader = (
 			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>

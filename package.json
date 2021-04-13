@@ -41,7 +41,7 @@
     "immutability-helper": "^2.1.2",
     "isomorphic-fetch": "^3.0.0",
     "laji-map": "^3.3.8",
-    "laji-validate": "0.0.103",
+    "laji-validate": "0.0.105",
     "moment": "*",
     "prop-types": "^15.5.8",
     "react": "~16.8.6",
