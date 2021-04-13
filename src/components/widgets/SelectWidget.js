@@ -29,8 +29,13 @@ class SelectWidget extends React.Component {
 		this.setState(this.getStateFromProps(props));
 	}
 
+	getEnumOptions(props) {
+		return getUiOptions(props.uiSchema).enumOptions || props.options.enumOptions;
+	}
+
 	getStateFromProps(props) {
-		let {options: {enumOptions}, multiple, value} = props;
+		let {multiple, value} = props;
+		let enumOptions = this.getEnumOptions(props);
 
 		if (multiple && enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {
 			enumOptions = enumOptions.slice(1);
@@ -62,7 +67,7 @@ class SelectWidget extends React.Component {
 		}
 
 		if (enumOptions.every(({value: _value}) => value !== _value)) {
-			const _enum = this.props.options.enumOptions.find(({value: _value}) => value === _value);
+			const _enum = this.getEnumOptions(props).find(({value: _value}) => value === _value);
 			if (_enum) {
 				enumOptions.push(_enum);
 			}
