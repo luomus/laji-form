@@ -33,8 +33,7 @@ export class DeleteButton extends React.Component {
 		confirm: PropTypes.bool,
 		onClick: PropTypes.func.isRequired,
 		translations: PropTypes.object.isRequired,
-		confirmStyle: PropTypes.oneOf(["popup", "browser"]),
-		label: PropTypes.string
+		confirmStyle: PropTypes.oneOf(["popup", "browser"])
 	}
 
 	constructor(props) {
@@ -99,7 +98,7 @@ export class DeleteButton extends React.Component {
 
 	render() {
 		const {props} = this;
-		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, onClick, label, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, onClick, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {
@@ -117,7 +116,7 @@ export class DeleteButton extends React.Component {
 				        style={this.props.style}
 				        ref="del"
 				        onKeyDown={this.onButtonKeyDown}
-				        onClick={this.onClick}>{label} {this.props.children} {"✖"}</Button>
+				        onClick={this.onClick}>{this.props.children} {"✖"}</Button>
 				{this.renderConfirm()}
 			</React.Fragment>
 		);

@@ -310,10 +310,10 @@ min-height: 20px;
 	margin: 2px;
 }
 .laji-form .glyph-button, .laji-form .laji-form-field-template-buttons button:not(.button-corner) {
-	min-width: 25px;
+	width: 25px;
 	height: 25px;
 	font-size: 11px;
-	padding: 3px 3px;
+	padding: 3px 1px;
 	margin-bottom: 1px;
 	margin-left: 1px;
 }
