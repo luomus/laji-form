@@ -1606,3 +1606,7 @@ min-height: 20px;
 	display: block;
 	margin: auto;
 }
+
+.laji-form .laji-form-hide-btn-label {
+	color: white;
+}

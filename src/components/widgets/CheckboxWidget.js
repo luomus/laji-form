@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions } from "../../utils";
+import { isEmptyString, getUiOptions, classNames } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
@@ -110,12 +110,16 @@ export default class CheckboxWidget extends React.Component {
 
 		const {ButtonToolbar, ToggleButton, ToggleButtonGroup} = this.context.theme;
 
+		const displayUndefined = (allowUndefined && showUndefined);
+		const toggleMode = !displayUndefined
+			&& (trueLabel === Yes && falseLabel === No);
+
 		const checkbox = (
 			<ButtonToolbar>
-				<ToggleButtonGroup type="radio" defaultValue={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButton disabled={disabled || readonly} value={true}>{trueLabel}</ToggleButton>
-					<ToggleButton disabled={disabled || readonly} value={false}>{falseLabel}</ToggleButton>
-					{(allowUndefined && showUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
+				<ToggleButtonGroup type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
+					<ToggleButton disabled={disabled || readonly} value={true} onClick={!displayUndefined ? this.toggle : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label")}>{trueLabel}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={false} onClick={!displayUndefined ? this.toggle : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")}>{falseLabel}</ToggleButton>
+					{(displayUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		);
@@ -126,6 +130,12 @@ export default class CheckboxWidget extends React.Component {
 				{checkbox}
 			</Label>
 		);
+	}
+
+	toggle = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		this.props.onChange(!this.props.value);
 	}
 
 	formatValue(value, options, props) {
