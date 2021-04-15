@@ -1,3 +1,6 @@
+## 12.0.4
+* Checkbox widget hides label of nonactive button if has no custom labels. If a button for undefined isn't shown, click either button toggles the value.
+
 ## 12.0.0
 ** BREAKING CHANGES: **
 * Buttons don't use `primary` variant by default & not strong text.
