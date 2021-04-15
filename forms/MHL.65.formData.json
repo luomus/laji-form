@@ -6,6 +6,9 @@
   },
   "gatherings": [
     {
+		"gatheringFact": {
+			"observedAreaHectates": 34
+		},
       "geometry": {
         "type": "Point",
         "coordinates":

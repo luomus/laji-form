@@ -117,8 +117,8 @@ export default class CheckboxWidget extends React.Component {
 		const checkbox = (
 			<ButtonToolbar>
 				<ToggleButtonGroup type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButton disabled={disabled || readonly} value={true} onClick={!displayUndefined ? this.toggle : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label")}>{trueLabel}</ToggleButton>
-					<ToggleButton disabled={disabled || readonly} value={false} onClick={!displayUndefined ? this.toggle : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")}>{falseLabel}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={true} onClick={!displayUndefined && _value === true ? this.toFalse : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label")}>{trueLabel}</ToggleButton>
+					<ToggleButton disabled={disabled || readonly} value={false} onClick={!displayUndefined && _value === false ? this.toTrue : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")}>{falseLabel}</ToggleButton>
 					{(displayUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
@@ -132,10 +132,18 @@ export default class CheckboxWidget extends React.Component {
 		);
 	}
 
-	toggle = (e) => {
+	toggleTo = (e, value) => {
 		e.preventDefault();
 		e.stopPropagation();
-		this.props.onChange(!this.props.value);
+		this.props.onChange(value);
+	}
+
+	toTrue = (e) => {
+		this.toggleTo(e, true);
+	}
+
+	toFalse = (e) => {
+		this.toggleTo(e, false);
 	}
 
 	formatValue(value, options, props) {
