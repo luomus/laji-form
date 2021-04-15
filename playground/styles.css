@@ -1607,6 +1607,6 @@ min-height: 20px;
 	margin: auto;
 }
 
-.laji-form .laji-form-hide-btn-label {
+.laji-form .laji-form-hide-btn-label, .laji-form .btn.btn-default.laji-form-hide-btn-label {
 	color: white;
 }
