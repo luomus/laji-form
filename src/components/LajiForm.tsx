@@ -259,8 +259,8 @@ export type KeyFunctions = {[fnName: string]: (e: KeyboardEvent, options: any) =
 
 type KeyHandleListener = (e: KeyboardEvent) => boolean | undefined;
 
-type NotifyMessager = (msg: string) => void;
-interface Notifier {
+export type NotifyMessager = (msg: string) => void;
+export interface Notifier {
 	success: NotifyMessager;
 	info: NotifyMessager;
 	warning: NotifyMessager;
