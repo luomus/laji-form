@@ -52,7 +52,7 @@ export default class UnitShorthandField extends React.Component {
 		return {showSchema};
 	}
 
-	componentWillReceiveProps = (props) => {
+	UNSAFE_componentWillReceiveProps = (props) => {
 		this.setState(this.getStateFromProps(props));
 	}
 

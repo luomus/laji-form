@@ -848,7 +848,7 @@ class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
 		this.mounted = false;
 	}
 
-	componentWillReceiveProps(props: ThumbnailProps) {
+	UNSAFE_componentWillReceiveProps(props: ThumbnailProps) {
 		this.updateURL(props);
 	}
 

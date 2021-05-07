@@ -14,7 +14,7 @@ export default class _SchemaField extends React.Component {
 		this.state = {showAnnotations: false};
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.updateVirtualInstance(props);
 	}
 

@@ -38,7 +38,7 @@ export default class FieldTemplate extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		if (getUiOptions(props.uiSchema).reserveId !== false && this.props.id !== props.id) {
 			this.props.formContext.releaseId(this.props.id, this.receiveId);
 			const id = props.formContext.reserveId(props.id, this.receiveId);

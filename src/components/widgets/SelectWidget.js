@@ -25,7 +25,7 @@ class SelectWidget extends React.Component {
 		this._context.removeFocusHandler(this.props.id, this.onFocus);
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
 	}
 

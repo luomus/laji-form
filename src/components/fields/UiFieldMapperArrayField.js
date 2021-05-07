@@ -38,7 +38,7 @@ export default class UiFieldMapperArrayField extends React.Component {
 		this.updateChildProps(props);
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.updateChildProps(props);
 		this.setState(this.getStateFromProps(props));
 	}

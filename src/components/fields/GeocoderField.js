@@ -47,7 +47,7 @@ export default class GeocoderField extends React.Component {
 		this.state = this.getStateFromProps(props, loading);
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		const geometryUpdated = equals(this.getGeometry(props), this.getGeometry(this.props)) ? false : undefined;
 		this.setState(this.getStateFromProps(props, geometryUpdated));
 	}

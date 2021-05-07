@@ -29,7 +29,7 @@ export default class EnumRangeArrayField extends React.Component {
 		this.state = {value: ""};
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		if (!deepEquals(props.formData, this.props.formData)) {
 			new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize");
 		}

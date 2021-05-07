@@ -810,7 +810,7 @@ class TaxonCardOverlay extends React.Component {
 		this.mounted = false;
 	}
 
-	componentWillReceiveProps({value}) {
+	UNSAFE_componentWillReceiveProps({value}) {
 		this.fetch(value);
 	}
 
@@ -1063,7 +1063,7 @@ class ReactAutosuggest extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		if ("value" in props.inputProps) {
 			this.setState({inputValue: props.inputProps.value});
 		}

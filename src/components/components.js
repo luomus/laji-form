@@ -329,7 +329,7 @@ export class Stretch extends React.Component {
 		this.state = {};
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		if (props.mounted && !this.initialized) {
 			const state = this.getState();
 			this.update(state);

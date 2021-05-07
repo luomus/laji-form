@@ -9,7 +9,7 @@ export default class _BaseInput extends React.Component {
 		this.state = this.getStateFromProps(props);
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
 	}
 

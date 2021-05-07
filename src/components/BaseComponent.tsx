@@ -7,7 +7,7 @@ type Constructor<T> = new(...args: any[]) => T;
 
 interface LajiFormComponentForBaseComponent<P, S> extends React.Component<P, S> {
 	getStateFromProps?(props: P): S;
-	componentWillReceiveProps?(props: Readonly<P>, nextContext?: any): void;
+	UNSAFE_componentWillReceiveProps?(props: Readonly<P>, nextContext?: any): void;
 	onChange?(formData: any): void;
 }
 
@@ -67,9 +67,9 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			}
 		}
 
-		componentWillReceiveProps(props: Readonly<P>, nextContext: any) {
-			if (super.componentWillReceiveProps) {
-				super.componentWillReceiveProps(props, nextContext);
+		UNSAFE_componentWillReceiveProps(props: Readonly<P>, nextContext: any) {
+			if (super.UNSAFE_componentWillReceiveProps) {
+				super.UNSAFE_componentWillReceiveProps(props, nextContext);
 			} else if (this.getStateFromProps) {
 				const state = this.getStateFromProps(props);
 				if (state) this.setState(state);

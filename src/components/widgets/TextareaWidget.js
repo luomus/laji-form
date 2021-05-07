@@ -32,7 +32,7 @@ export default class TextareaWidget extends React.Component {
 		});
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
 	}
 

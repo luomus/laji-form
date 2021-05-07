@@ -80,7 +80,7 @@ export default class SingleActiveArrayField extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.prevActiveIdx = this.state.activeIdx;
 		this.setState(this.getStateFromProps(props));
 		this.updatePopups(props);
@@ -1029,7 +1029,7 @@ const headerFormatters = {
 				this.mounted = false;
 			}
 
-			componentWillReceiveProps(props) {
+			UNSAFE_componentWillReceiveProps(props) {
 				this.fetch(props);
 			}
 

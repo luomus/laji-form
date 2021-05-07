@@ -20,7 +20,7 @@ class TextSelectWidget extends React.Component {
 		this.state = this.getInitialState(props);
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.setState(this.getStateFromProps(props));
 	}
 

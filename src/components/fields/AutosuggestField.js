@@ -69,7 +69,7 @@ export default class AutosuggestField extends React.Component {
 
 	static getName() {return "AutosuggestField";}
 
-	componentWillReceiveProps = (props) => {
+	UNSAFE_componentWillReceiveProps = (props) => {
 		this.setState(this.getStateFromProps(props));
 		if (this.onNextTick) {
 			this.onNextTick();

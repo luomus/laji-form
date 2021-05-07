@@ -28,10 +28,10 @@ export default class InformalTaxonGroupChooserWidget extends React.Component {
 			if (!this.mounted) return;
 			this.setState(state);
 		});
-		this.componentWillReceiveProps(this.props);
+		this.UNSAFE_componentWillReceiveProps(this.props);
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		if (props.value !== this.state.informalTaxonGroup) {
 			if (!props.value) this.setState({name: undefined});
 			getInformalGroups(props.formContext.apiClient).then(({informalTaxonGroupsById}) => {
@@ -170,7 +170,7 @@ export class InformalTaxonGroupChooser extends React.Component {
 		});
 	}
 
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		if (this.props.lang === props.lang) return;
 
 		getInformalGroups(this.props.formContext.apiClient).then(state => {
