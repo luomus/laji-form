@@ -274,6 +274,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 										return (
 											<div className={`laji-form-drop-zone${dragging ? " dragging" : ""}${readonly || disabled ? " disabled" : ""}`}
 												onClick={onClick}
+												role="button"
 												{...rootProps}>
 												<input {...getInputProps()} />
 												<Glyphicon glyph={this.GLYPH} />
