@@ -652,6 +652,8 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 class TableArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
 
+	mouseCache = {enter: {}, leave: {}};
+
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -875,12 +877,15 @@ class TableArrayFieldTemplate extends React.Component {
 
 		const title = getTitle(this.props, that.state.activeIdx);
 
-		const onMouseEnter = (idx) => that.props.idSchema.$id.match(/units$/)
-			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "startHighlight", {idx})
-			: undefined;
-		const onMouseLeave = (idx) => that.props.idSchema.$id.match(/units$/)
-			? () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, "endHighlight", {idx})
-			: undefined;
+		const mouseHandler = (cacheKey, eventName) => (idx)  => {
+			if (that.props.idSchema.$id.match(/units$/)) {
+				this.mouseCache[cacheKey][idx] =
+					() => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, eventName, {idx});
+				return this.mouseCache[cacheKey][idx];
+			}
+		};
+		const onMouseEnter = mouseHandler("enter", "startHighlight");
+		const onMouseLeave = mouseHandler("leave", "endHighlight");
 
 		const {Table} = this.context.theme;
 
