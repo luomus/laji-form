@@ -14,6 +14,8 @@ body .laji-form {
 
 .laji-form:focus, .laji-form *:focus {
 	outline: none;
+	-webkit-box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
+	box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
 }
 
 .laji-form .has-error .form-control {
