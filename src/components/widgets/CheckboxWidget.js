@@ -131,7 +131,7 @@ export default class CheckboxWidget extends React.Component {
 			&& (trueLabel === Yes && falseLabel === No);
 
 		const checkbox = (
-			<ButtonToolbar>
+			<ButtonToolbar className={classNames(toggleMode && "desktop-layout")}>
 				<ToggleButtonGroup type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
 					<ToggleButton disabled={disabled || readonly} value={true} onClick={toggleMode && _value === true ? this.toFalse : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label")}>{trueLabel}</ToggleButton>
 					<ToggleButton disabled={disabled || readonly} value={false} onClick={toggleMode && _value === false ? this.toTrue : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")}>{falseLabel}</ToggleButton>
