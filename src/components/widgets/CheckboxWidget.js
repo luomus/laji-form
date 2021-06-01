@@ -25,7 +25,7 @@ export default class CheckboxWidget extends React.Component {
 
 	getNextVal = () => {
 		const {value} = this.props;
-		const {allowUndefined = true} = getUiOptions(this.props);
+		const {allowUndefined} = this.getOptions(this.props);
 		let nextVal = true;
 		if (value === true) nextVal = false;
 		else if (allowUndefined && value === false) nextVal = undefined;
@@ -70,8 +70,24 @@ export default class CheckboxWidget extends React.Component {
 	onButtonGroupChange = (value) => {
 		if (value === "undefined") {
 			value = undefined;
+		} else if (this.getOptions(this.props).invert) {
+			value = !value;
 		}
 		this.props.onChange(value);
+	}
+
+	getOptions = (props) => {
+		const {Yes, No, Unknown} = props.registry.formContext.translations;
+		return {
+			allowUndefined: true,
+			showUndefined: true,
+			invert: false,
+			trueLabel: Yes,
+			falseLabel: No,
+			unknownLabel: Unknown,
+			required: this.props.required,
+			...getUiOptions(props)
+		};
 	}
 
 	render() {
@@ -83,17 +99,17 @@ export default class CheckboxWidget extends React.Component {
 			label
 		} = this.props;
 
-		const {Yes, No, Unknown} = registry.formContext.translations;
+		const {Yes, No} = registry.formContext.translations;
 
-		const options = getUiOptions(this.props);
+		const options = this.getOptions(this.props);
 		const {
-			allowUndefined = true,
-			showUndefined = true,
-			invert = false,
-			trueLabel = Yes,
-			falseLabel = No,
-			unknownLabel = Unknown,
-			required = this.props.required,
+			allowUndefined,
+			showUndefined,
+			invert,
+			trueLabel,
+			falseLabel,
+			unknownLabel,
+			required,
 			help,
 			helpHoverable,
 			helpPlacement,
