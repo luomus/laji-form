@@ -652,7 +652,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 class TableArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
 
-	mouseCache = {enter: {}, leave: {}};
+	mouseCache = {enter: {}, leave: {}, keydown: {}};
 
 	constructor(props) {
 		super(props);
@@ -796,7 +796,8 @@ class TableArrayFieldTemplate extends React.Component {
 			activeStyle: activeIdx !== undefined ? {
 				position: "absolute",
 				top: rowElem.offsetTop,
-				width: "100%"
+				width: "100%",
+				right: 0
 			} : {},
 			activeTrStyle: activeIdx !== undefined ? {
 				height: this.activeElem.offsetHeight + activeHeightOffset
@@ -877,15 +878,22 @@ class TableArrayFieldTemplate extends React.Component {
 
 		const title = getTitle(this.props, that.state.activeIdx);
 
-		const mouseHandler = (cacheKey, eventName) => (idx)  => {
+		const cachedMouseHandler = (cacheKey, handler) => (idx)  => {
 			if (that.props.idSchema.$id.match(/units$/)) {
-				this.mouseCache[cacheKey][idx] =
-					() => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, eventName, {idx});
+				this.mouseCache[cacheKey][idx] = handler(idx);
 				return this.mouseCache[cacheKey][idx];
 			}
 		};
-		const onMouseEnter = mouseHandler("enter", "startHighlight");
-		const onMouseLeave = mouseHandler("leave", "endHighlight");
+		const mouseHandler = (eventName) => (idx) => () => new Context(that.props.formContext.contextId).sendCustomEvent(that.props.idSchema.$id, eventName, {idx});
+		const onMouseEnter = cachedMouseHandler("enter", mouseHandler("startHighlight"));
+		const onMouseLeave = cachedMouseHandler("leave", mouseHandler("endHighlight"));
+		const onKeyDown = cachedMouseHandler("keydown", (idx) => (e) => {
+			if (idx !== this.state.activeIdx && (e.key === " " || e.key === "Enter")) {
+				changeActive(idx)();
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		});
 
 		const {Table} = this.context.theme;
 
@@ -900,6 +908,7 @@ class TableArrayFieldTemplate extends React.Component {
 								<thead ref={this.setTHeadRef}>
 									<tr className="darker">
 										{cols.map(col => <th key={col}>{schema.items.properties[col].title}</th>)}
+										<th key="_activeContent" className="single-active-array-table-content-col" />
 										<th key="_delete" className="single-active-array-table-delete" />
 									</tr>
 								</thead>
@@ -913,32 +922,37 @@ class TableArrayFieldTemplate extends React.Component {
 										<tr key={idx} 
 										    onClick={changeActive(idx)}
 										    className={className}
-										    tabIndex={0}
+										    tabIndex={idx === activeIdx ? undefined : 0}
 										    id={idx !== activeIdx ? `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${idx}` : undefined}
 										    ref={setItemRef(idx)}
 										    style={idx === activeIdx ? this.state.activeTrStyle : undefined}
 										    onMouseEnter={onMouseEnter(idx)}
 										    onMouseLeave={onMouseLeave(idx)}
+										    onKeyDown={onKeyDown(idx)}
 										>
-											{[
-												...cols.map(col => {
-													return (
-														<td key={col}>
-															{formatValue(
-																{
-																	...that.props,
-																	schema: schema.items.properties[col],
-																	uiSchema: (uiSchema.items || {})[col],
-																	formData: formData[idx][col]
-																},
-																formatters[col],
-																{formData: formData[idx]}
-															)}
-														</td>
-													);
-												}),
-												idx !== activeIdx && <td key="delete" className="delete-button-container">{getDeleteButtonFor(idx, item)}</td>
-											]}
+											{cols.map(col => 
+												<td key={col}>
+													{formatValue(
+														{
+															...that.props,
+															schema: schema.items.properties[col],
+															uiSchema: (uiSchema.items || {})[col],
+															formData: formData[idx][col]
+														},
+														formatters[col],
+														{formData: formData[idx]}
+													)}
+												</td>
+											)}
+											{(activeIdx !== undefined && items[activeIdx] && idx === activeIdx) ? (
+												<td key={getUUID(formData[activeIdx]) || activeIdx} className="single-active-array-table-content-col">
+													<div className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} ref={this.setActiveRef}>
+														<div className="laji-form-field-template-schema">{items[activeIdx].children}</div>
+														<div className="laji-form-field-template-buttons"></div>
+													</div>
+												</td>
+											) : <td className="single-active-array-table-content-col" />}
+											<td key="delete" className="delete-button-container">{getDeleteButtonFor(idx, item)}</td>
 										</tr>
 									];
 								})}
@@ -947,12 +961,6 @@ class TableArrayFieldTemplate extends React.Component {
 					</div>
 					<div className="laji-form-field-template-buttons" />
 				</div>
-				{activeIdx !== undefined && items[activeIdx] ? (
-					<div key={getUUID(formData[activeIdx]) || activeIdx} ref={this.setActiveRef} className="laji-form-field-template-item keep-vertical" style={this.state.activeStyle} >
-						<div className="laji-form-field-template-schema">{items[activeIdx].children}</div>
-						<div className="laji-form-field-template-buttons">{getDeleteButtonFor(activeIdx, items[activeIdx])}</div>
-					</div>
-				): null}
 				<ButtonsWrapper props={this.props} />
 			</div>
 		);

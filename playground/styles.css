@@ -983,6 +983,15 @@ min-height: 20px;
 	float: left;
 	top: 8px !important;
 }
+.laji-form th.single-active-array-table-content-col {
+	padding: 0px;
+	width: 1px;
+	border: none;
+}
+.laji-form td.single-active-array-table-content-col {
+	padding: 0px;
+	width: 0px;
+}
 
 .laji-form .single-active-array-table .react-spinner {
     height: 18px;
