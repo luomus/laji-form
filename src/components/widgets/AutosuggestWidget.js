@@ -562,7 +562,6 @@ export class Autosuggest extends React.Component {
 	}
 
 	onBlur = (e) => {
-		console.log("blur", e, findDOMNode(this.autosuggestRef));
 		this.setState({focused: false}, () => {
 			this._valueForBlurAndFetch = this.state.inputValue;
 			this.afterBlurAndFetch(this.state.suggestions);
