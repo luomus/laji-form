@@ -196,16 +196,16 @@ export function isMultiSelect(schema: any, uiSchema?: UiSchema) {
 	);
 }
 
-const SWITCH_CLASS = "bootstrap-switch";
+const SWITCH_CLASS = "laji-form-checkbox-widget-tab-target";
 
 const inputTypes = ["input", "select", "textarea"];
 let tabbableSelectors = inputTypes.slice(0);
-tabbableSelectors.push(`.${SWITCH_CLASS}:not(.${SWITCH_CLASS}-disabled)`);
+tabbableSelectors.push(`.${SWITCH_CLASS}`);
 tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`; });
 
 export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLElement[] {
-	const fieldsNodeList = elem.querySelectorAll(tabbableSelectors.join(", "));
-	let fields = Array.from(fieldsNodeList);
+	const fieldsNodeList = elem.querySelectorAll<HTMLElement>(tabbableSelectors.join(", "));
+	let fields = Array.from(fieldsNodeList).filter(node => node.tabIndex !== -1);
 
 	if (reverse) fields = fields.reverse();
 	return fields as HTMLElement[];

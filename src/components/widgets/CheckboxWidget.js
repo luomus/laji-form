@@ -1,8 +1,18 @@
 import * as React from "react";
+import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, classNames } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
+
+const spaceKey = (fn) => (e) => {
+	if (e.key !== " ") {
+		return;
+	}
+	e.preventDefault();
+	e.stopPropagation();
+	fn(e);
+}
 
 export default class CheckboxWidget extends React.Component {
 	static contextType = ReactContext;
@@ -23,57 +33,47 @@ export default class CheckboxWidget extends React.Component {
 		value: PropTypes.bool
 	}
 
-	getNextVal = () => {
-		const {value} = this.props;
-		const {allowUndefined} = this.getOptions(this.props);
-		let nextVal = true;
-		if (value === true) nextVal = false;
-		else if (allowUndefined && value === false) nextVal = undefined;
-		return nextVal;
+	constructor(props) {
+		super(props);
+		this.trueRef = React.createRef();
+		this.falseRef = React.createRef();
+		this.undefinedRef = React.createRef();
 	}
 
-	onKeyDown = (e) => {
-		const {
-			disabled,
-			onChange,
-			readonly
-		} = this.props;
+	componentDidMount() {
+		this.rmInputTabIndices();
+	}
 
-		if (!disabled  && !readonly && e.key === " " && ["shift", "alt", "ctrl"].every(special => !e[`${special}Key`])) {
-			e.preventDefault();
-			onChange(this.getNextVal());
+	componentDidUpdate() {
+		this.rmInputTabIndices();
+	}
+
+	rmInputTabIndices = () => {
+		[this.trueRef, this.falseRef, this.undefinedRef].forEach(node => {
+			const domNode = findDOMNode(node.current);
+			if (!domNode) {
+				return;
+			}
+			const input = domNode.getElementsByTagName("input")[0];
+			if (!input) {
+				return;
+			}
+			input.setAttribute("tabindex", -1);
+		});
+	}
+
+	onChange = (value) => {
+		if (value !== undefined && this.getOptions(this.props).invert) {
+			value = !value;
 		}
-	}
-
-	onClick = (e) => {
-		const {
-			disabled,
-			onChange,
-			readonly
-		} = this.props;
-
-		e.preventDefault();
-		if (disabled || readonly) return;
-		onChange(this.getNextVal());
-	}
-
-	onSelectChange = (value) => {
-		const _value =
-			value === "true"
-				? true
-				: value === "false"
-					? false
-					: undefined;
-		this.props.onChange(_value);
+		this.props.onChange(value);
 	}
 
 	onButtonGroupChange = (value) => {
 		if (value === "undefined") {
 			value = undefined;
-		} else if (this.getOptions(this.props).invert) {
-			value = !value;
 		}
-		this.props.onChange(value);
+		this.onChange(value);
 	}
 
 	getOptions = (props) => {
@@ -94,12 +94,9 @@ export default class CheckboxWidget extends React.Component {
 		const {
 			value,
 			disabled,
-			registry,
 			readonly,
 			label
 		} = this.props;
-
-		const {Yes, No} = registry.formContext.translations;
 
 		const options = this.getOptions(this.props);
 		const {
@@ -127,15 +124,21 @@ export default class CheckboxWidget extends React.Component {
 		const {ButtonToolbar, ToggleButton, ToggleButtonGroup} = this.context.theme;
 
 		const displayUndefined = (allowUndefined && showUndefined);
-		const toggleMode = !displayUndefined
-			&& (trueLabel === Yes && falseLabel === No);
+		const toggleMode = this.getToggleMode(this.props);
+
+		const commonProps = {
+			disabled: disabled || readonly,
+			tabIndex: toggleMode ? undefined : 0
+		};
+
+		const tabTargetClass = "laji-form-checkbox-widget-tab-target";
 
 		const checkbox = (
 			<ButtonToolbar className={classNames(toggleMode && "desktop-layout")}>
-				<ToggleButtonGroup type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange}>
-					<ToggleButton disabled={disabled || readonly} value={true} onClick={toggleMode && _value === true ? this.toFalse : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label")}>{trueLabel}</ToggleButton>
-					<ToggleButton disabled={disabled || readonly} value={false} onClick={toggleMode && _value === false ? this.toTrue : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")}>{falseLabel}</ToggleButton>
-					{(displayUndefined ? <ToggleButton disabled={disabled || readonly} value={"undefined"}>{unknownLabel}</ToggleButton> : null)}
+				<ToggleButtonGroup type="radio" value={[_value]} tabIndex={toggleMode ? 0 : undefined} name={this.props.id} onChange={this.onButtonGroupChange} onKeyDown={this.onGroupKeyDown} className={classNames(toggleMode && tabTargetClass)}>
+					<ToggleButton ref={this.trueRef} value={true} onClick={toggleMode ? this.toggle : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label", !toggleMode && tabTargetClass)} onKeyDown={this.onTrueKeyDown} {...commonProps}>{trueLabel}</ToggleButton>
+					<ToggleButton ref={this.falseRef} value={false} onClick={toggleMode ? this.toggle : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")} onKeyDown={this.onFalseKeyDown} {...commonProps}>{falseLabel}</ToggleButton>
+					{(displayUndefined ? <ToggleButton ref={this.undefinedRef} value={"undefined"} {...commonProps} onKeyDown={this.onUndefinedKeyDown}>{unknownLabel}</ToggleButton> : null)}
 				</ToggleButtonGroup>
 			</ButtonToolbar>
 		);
@@ -148,18 +151,35 @@ export default class CheckboxWidget extends React.Component {
 		);
 	}
 
+	getToggleMode = (props) => {
+		const {allowUndefined, showUndefined, falseLabel, trueLabel} = this.getOptions(props);
+		const displayUndefined = (allowUndefined && showUndefined);
+		const {Yes, No} = props.registry.formContext.translations;
+		return !displayUndefined && (trueLabel === Yes && falseLabel === No);
+	}
+
+	onGroupKeyDown = spaceKey((e) => {
+		this.getToggleMode(this.props) && this.toggle(e);
+	})
+
+	onTrueKeyDown = spaceKey(() => {
+		this.onChange(true);
+	})
+
+	onFalseKeyDown = spaceKey(() => {
+		this.onChange(false);
+	})
+
+	onUndefinedKeyDown = spaceKey(() => {
+		this.onChange(undefined);
+	})
+
 	toggleTo = (e, value) => {
-		e.preventDefault();
-		e.stopPropagation();
 		this.props.onChange(value);
 	}
 
-	toTrue = (e) => {
-		this.toggleTo(e, true);
-	}
-
-	toFalse = (e) => {
-		this.toggleTo(e, false);
+	toggle = (e) => {
+		this.toggleTo(e, !this.props.value);
 	}
 
 	formatValue(value, options, props) {
