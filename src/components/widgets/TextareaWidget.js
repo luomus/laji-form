@@ -20,14 +20,14 @@ export default class TextareaWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
+		this.textareaRef = React.createRef();
 
 		this._context = new Context(props.formContext.contextId);
 		const {shortcuts} = this._context;
 		Object.keys(shortcuts || {}).some(keyCombo => {
-			if (shortcuts[keyCombo].fn == "textareaRowInsert") {
-				// Direct mutation should be ok in constructor.
-				this.state.keyCombo = keyCombo; // eslint-disable-line react/no-direct-mutation-state
-				return true;
+			if (keyCombo === "Enter") {
+			//	// Direct mutation should be ok in constructor.
+				this.state.enterReserved = true; // eslint-disable-line react/no-direct-mutation-state
 			}
 		});
 	}
@@ -38,24 +38,6 @@ export default class TextareaWidget extends React.Component {
 
 	getStateFromProps = (props) => {
 		return {value: props.value};
-	}
-
-	keyFunctions = {
-		textareaRowInsert: () => {
-			if (!this.props.disabled && !this.props.readonly) {
-				this.onChange(this.state.value + "\n");
-				return true;
-			}
-			return false;
-		}
-	}
-
-	componentDidMount() {
-		this._context.addKeyHandler(this.props.id, this.keyFunctions);
-	}
-
-	componentWillUnmount() {
-		this._context.removeKeyHandler(this.props.id, this.keyFunctions);
 	}
 
 	onFocus = (e) => {
@@ -89,6 +71,16 @@ export default class TextareaWidget extends React.Component {
 		this.onChange(value);
 	}
 
+	onKeyDown = (e) => {
+		const inputAllowed = !this.props.disabled && !this.props.readonly;
+		const isCtrlEnter = e.ctrlKey && e.key === "Enter";
+		if (this.state.enterReserved && inputAllowed && isCtrlEnter) {
+			this.onChange(this.state.value + "\n");
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
+
 	render() {
 		const {
 			id, options, placeholder, disabled, readonly, autofocus
@@ -112,10 +104,11 @@ export default class TextareaWidget extends React.Component {
 			onFocus={this.onFocus}
 			onBlur={this.onBlur}
 			onChange={this._onChange}
+			onKeyDown={this.onKeyDown}
 		/>;
 
-		return this.state.keyCombo ? (
-			<TooltipComponent tooltip={`${stringifyKeyCombo(this.state.keyCombo)} ${this.props.formContext.translations.textareaHint}`} placement="bottom">
+		return this.state.enterReserved ? (
+			<TooltipComponent tooltip={`${stringifyKeyCombo("ctrl+Enter")} ${this.props.formContext.translations.textareaHint}`} placement="bottom">
 				{textarea}
 			</TooltipComponent>
 		) : textarea;
