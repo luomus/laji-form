@@ -1,18 +1,9 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, classNames } from "../../utils";
+import { isEmptyString, getUiOptions, classNames, keyboardClick } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
-
-const spaceKey = (fn) => (e) => {
-	if (e.key !== " ") {
-		return;
-	}
-	e.preventDefault();
-	e.stopPropagation();
-	fn(e);
-}
 
 export default class CheckboxWidget extends React.Component {
 	static contextType = ReactContext;
@@ -158,21 +149,21 @@ export default class CheckboxWidget extends React.Component {
 		return !displayUndefined && (trueLabel === Yes && falseLabel === No);
 	}
 
-	onGroupKeyDown = spaceKey((e) => {
+	onGroupKeyDown = keyboardClick((e) => {
 		this.getToggleMode(this.props) && this.toggle(e);
-	})
+	}, this.props.formContext)
 
-	onTrueKeyDown = spaceKey(() => {
+	onTrueKeyDown = keyboardClick(() => {
 		this.onChange(true);
-	})
+	}, this.props.formContext)
 
-	onFalseKeyDown = spaceKey(() => {
+	onFalseKeyDown = keyboardClick(() => {
 		this.onChange(false);
-	})
+	}, this.props.formContext)
 
-	onUndefinedKeyDown = spaceKey(() => {
+	onUndefinedKeyDown = keyboardClick(() => {
 		this.onChange(undefined);
-	})
+	}, this.props.formContext)
 
 	toggleTo = (e, value) => {
 		this.props.onChange(value);

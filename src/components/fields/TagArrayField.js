@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, triggerParentComponent } from "../../utils";
+import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import * as deepEquals from "deep-equal";
@@ -142,7 +142,7 @@ export class TagInputComponent extends React.Component {
 						{tags.map((item, idx) => 
 							<li key={idx} className="rw-multiselect-tag">
 								{item}
-								<span className="rw-tag-btn" onClick={this.onRemove(idx)}>×</span>
+								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={keyboardClick(this.onRemove(idx), this.props.formContext)}>×</span>
 							</li>
 						)}
 					</ul>

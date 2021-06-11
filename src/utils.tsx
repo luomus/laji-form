@@ -199,12 +199,14 @@ export function isMultiSelect(schema: any, uiSchema?: UiSchema) {
 const SWITCH_CLASS = "laji-form-checkbox-widget-tab-target";
 
 const inputTypes = ["input", "select", "textarea"];
-let tabbableSelectors = inputTypes.slice(0);
-tabbableSelectors.push(`.${SWITCH_CLASS}`);
-tabbableSelectors = tabbableSelectors.map(type => { return `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`; });
+const tabbableSelectors = [
+	...inputTypes, 
+	`.${SWITCH_CLASS}`
+].map(type => `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`);
+const tabbableSelectorsQuery = tabbableSelectors.join(", ");
 
 export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLElement[] {
-	const fieldsNodeList = elem.querySelectorAll<HTMLElement>(tabbableSelectors.join(", "));
+	const fieldsNodeList = elem.querySelectorAll<HTMLElement>(tabbableSelectorsQuery);
 	let fields = Array.from(fieldsNodeList).filter(node => node.tabIndex !== -1);
 
 	if (reverse) fields = fields.reverse();
@@ -1189,3 +1191,17 @@ export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: stri
 }
 
 export const classNames = (...cs: any[]) => cs.filter(s => typeof s === "string").join(" ");
+
+export const keyboardClick = (fn: (e: KeyboardEvent) => void, formContext: FormContext) => (e: KeyboardEvent) => {
+	let keys = [" ", "Enter"];
+	if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
+		const {shortcuts} = new Context(formContext.contextId) as RootContext;
+		keys = keys.filter(k => !shortcuts[k]);
+	}
+	if (keys.every(k => e.key !== k)) {
+		return;
+	}
+	e.preventDefault();
+	e.stopPropagation();
+	fn(e);
+};
