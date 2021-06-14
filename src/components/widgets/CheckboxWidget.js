@@ -171,6 +171,10 @@ export default class CheckboxWidget extends React.Component {
 	}
 
 	toggle = (e) => {
+		const nodes = [this.trueRef, this.falseRef].map(r => findDOMNode(r.current));
+		if (!nodes.includes(e.target)) {
+			return;
+		}
 		this.toggleTo(e, !this.props.value);
 	}
 
