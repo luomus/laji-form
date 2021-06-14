@@ -6,7 +6,7 @@ const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/Descript
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import exif from "exif-js";
@@ -144,6 +144,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		mounted: boolean;
 		fetching: any;
 
+		addMediaRef = React.createRef<HTMLInputElement>();
+
 		constructor(...args: any[]) {
 			super(...args);
 			const [props] = args;
@@ -267,16 +269,19 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								          onDragLeave={this.onDragLeave}
 								          onDrop={this.onDrop}
 										  disabled={readonly || disabled}
+										  noKeyboard={true}
 									  >
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
 										const onClick = addModal ? this.defaultOnClick : _onClick;
 										return (
-											<div className={`laji-form-drop-zone${dragging ? " dragging" : ""}${readonly || disabled ? " disabled" : ""}`}
+											<div className={classNames("laji-form-drop-zone", dragging && "dragging", (readonly || disabled) && " disabled")}
 												onClick={onClick}
 												role="button"
-												{...rootProps}>
-												<input {...getInputProps()} />
+												tabIndex={0}
+												{...rootProps}
+												onKeyDown={this.onKeyDown} >
+												<input {...getInputProps()} ref={this.addMediaRef} />
 												<Glyphicon glyph={this.GLYPH} />
 											</div>
 										);
@@ -290,6 +295,11 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				</Row>
 			);
 		}
+
+		onKeyDown = keyboardClick(() => {
+			const {addModal} = getUiOptions(this.props.uiSchema);
+			addModal ? this.defaultOnClick() : this.addMediaRef.current?.click();
+		}, this.props.formContext)
 
 		renderMedias = () => {
 			const {disabled, readonly} = this.props;

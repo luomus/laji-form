@@ -197,11 +197,13 @@ export function isMultiSelect(schema: any, uiSchema?: UiSchema) {
 }
 
 const SWITCH_CLASS = "laji-form-checkbox-widget-tab-target";
+const IMG_ADD_CLASS = "laji-form-drop-zone";
 
 const inputTypes = ["input", "select", "textarea"];
 const tabbableSelectors = [
 	...inputTypes, 
-	`.${SWITCH_CLASS}`
+	`.${SWITCH_CLASS}`,
+	`.${IMG_ADD_CLASS}`
 ].map(type => `${type}:not([type="hidden"]):not(:disabled):not([readonly]):not([type="file"]):not(.leaflet-control-layers-selector):not(.laji-map-input)`);
 const tabbableSelectorsQuery = tabbableSelectors.join(", ");
 
@@ -218,8 +220,10 @@ export function getSchemaElementById(contextId: number, id: string) {
 }
 
 export function isTabbableInput(elem: HTMLElement) {
-	return (elem.id.match(/^_laji-form_/) || inputTypes.includes(elem.tagName.toLowerCase()) ||
-	elem.className.includes(SWITCH_CLASS));
+	return elem.id.match(/^_laji-form_/)
+	|| inputTypes.includes(elem.tagName.toLowerCase())
+	|| elem.className.includes(SWITCH_CLASS)
+	|| elem.className.includes(IMG_ADD_CLASS);
 }
 
 export function canFocusNextInput(root: React.ReactInstance, inputElem: HTMLElement) {
@@ -1192,16 +1196,18 @@ export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: stri
 
 export const classNames = (...cs: any[]) => cs.filter(s => typeof s === "string").join(" ");
 
-export const keyboardClick = (fn: (e: KeyboardEvent) => void, formContext: FormContext) => (e: KeyboardEvent) => {
-	let keys = [" ", "Enter"];
-	if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
-		const {shortcuts} = new Context(formContext.contextId) as RootContext;
-		keys = keys.filter(k => !shortcuts[k]);
-	}
-	if (keys.every(k => e.key !== k)) {
-		return;
-	}
-	e.preventDefault();
-	e.stopPropagation();
-	fn(e);
-};
+export function keyboardClick(fn: (e: KeyboardEvent | React.KeyboardEvent) => void, formContext: FormContext): (e: (KeyboardEvent | React.KeyboardEvent)) => void {
+	return (e: KeyboardEvent | React.KeyboardEvent) => {
+		let keys = [" ", "Enter"];
+		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
+			const {shortcuts} = new Context(formContext.contextId) as RootContext;
+			keys = keys.filter(k => !shortcuts[k]);
+		}
+		if (keys.every(k => e.key !== k)) {
+			return;
+		}
+		e.preventDefault();
+		e.stopPropagation();
+		fn(e);
+	};
+}
