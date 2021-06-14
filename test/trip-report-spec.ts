@@ -394,19 +394,6 @@ describe("Trip report (JX.519)", () => {
 			expect(await firstFill).not.toBe(secondFill);
 		});
 
-		it("hovering location button changes gathering map unit color", async () => {
-			// We check style instead of fill, since the fill attribute doesn't update.
-			const unitFill = await $$gatheringMarkerPaths.last().getAttribute("style");
-
-			await browser.actions()
-				.mouseMove($getLocationButtonFor(0, 0).getWebElement())
-				.perform();
-
-			const unitFillAfterLocationHover = await $$gatheringMarkerPaths.last().getAttribute("style");
-
-			expect(await unitFill).not.toBe(unitFillAfterLocationHover);
-		});
-
 		it("hovering unit table row changes gathering map unit color", async () => {
 			await $unitAdd.click();
 
