@@ -37,10 +37,6 @@ class SelectWidget extends React.Component {
 		let {multiple, value} = props;
 		let enumOptions = this.getEnumOptions(props);
 
-		if (multiple && enumOptions && enumOptions[0] && isEmptyString(enumOptions[0].label)) {
-			enumOptions = enumOptions.slice(1);
-		}
-
 		function sort(enumOptions, order) {
 			if (!Array.isArray(order)) return enumOptions;
 
@@ -88,6 +84,11 @@ class SelectWidget extends React.Component {
 	}
 
 	multiSelectOnChange = (values) => {
+		const lengthBeforeFiltering = values.length;
+		values = values.filter(v => v.value !== "");
+		if (this.props.value.length === lengthBeforeFiltering) {
+			return;
+		}
 		this.props.onChange(values.map(({value}) => this.getEnum(value)));
 		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.id, "resize");
 	}
