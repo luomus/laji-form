@@ -144,7 +144,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		mounted: boolean;
 		fetching: any;
 
-		addMediaRef = React.createRef<HTMLInputElement>();
+		addMediaContainerRef = React.createRef<HTMLInputElement>();
 
 		constructor(...args: any[]) {
 			super(...args);
@@ -280,8 +280,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 												role="button"
 												tabIndex={0}
 												{...rootProps}
-												onKeyDown={this.onKeyDown} >
-												<input {...getInputProps()} ref={this.addMediaRef} />
+												onKeyDown={this.onKeyDown}
+											    ref={this.addMediaContainerRef} >
+												<input {...getInputProps()} />
 												<Glyphicon glyph={this.GLYPH} />
 											</div>
 										);
@@ -297,8 +298,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		onKeyDown = keyboardClick(() => {
+			const input = this.addMediaContainerRef.current?.querySelector("input");
 			const {addModal} = getUiOptions(this.props.uiSchema);
-			addModal ? this.defaultOnClick() : this.addMediaRef.current?.click();
+			addModal ? this.defaultOnClick() : input?.click();
 		}, this.props.formContext)
 
 		renderMedias = () => {
