@@ -982,7 +982,7 @@ min-height: 20px;
 	padding: 0px !important;
 	border: 0px !important;
 }
-.laji-form .single-active-array-table td img, .laji-form .single-active-array-table td > .media-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
+.laji-form .single-active-array-table td > img, .laji-form .single-active-array-table td > .media-loading, .laji-form .single-active-array-table td > .single-active-array-table-array > span {
 	height: 15px;
 	width: 15px;
 }
