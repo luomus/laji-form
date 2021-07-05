@@ -1,6 +1,5 @@
 import { Form, createForm, updateValue, DateWidgetPO, isDisplayed } from "./test-utils";
-import { element, by, $ } from "protractor";
-import * as moment from "moment";
+import moment from "moment";
 
 describe("Date & time widgets", () => {
 	let form: Form;

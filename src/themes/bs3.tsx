@@ -1,37 +1,37 @@
 import * as React from "react";
-import * as _Panel from "react-bootstrap/lib/Panel";
-import * as Table from "react-bootstrap/lib/Table";
-import * as ProgressBar from "react-bootstrap/lib/ProgressBar";
-import * as Button from "react-bootstrap/lib/Button";
-import * as ButtonGroup from "react-bootstrap/lib/ButtonGroup";
-import * as ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
-import * as Overlay from "react-bootstrap/lib/Overlay";
-import * as OverlayTrigger from "react-bootstrap/lib/OverlayTrigger";
-import * as Popover from "react-bootstrap/lib/Popover";
-import * as Tooltip from "react-bootstrap/lib/Tooltip";
-import * as Glyphicon from "react-bootstrap/lib/Glyphicon";
-import * as Modal from "react-bootstrap/lib/Modal";
-import * as Row from "react-bootstrap/lib/Row";
-import * as Col from "react-bootstrap/lib/Col";
-import * as FormGroup from "react-bootstrap/lib/FormGroup";
-import * as InputGroup from "react-bootstrap/lib/InputGroup";
-import * as FormControl from "react-bootstrap/lib/FormControl";
-import * as ListGroup from "react-bootstrap/lib/ListGroup";
-import * as ListGroupItem from "react-bootstrap/lib/ListGroupItem";
-import * as Breadcrumb from "react-bootstrap/lib/Breadcrumb";
-import * as HelpBlock from "react-bootstrap/lib/HelpBlock";
-import * as MenuItem from "react-bootstrap/lib/MenuItem";
-import * as Alert from "react-bootstrap/lib/Alert";
-import * as Pager from "react-bootstrap/lib/Pager";
-import * as Accordion from "react-bootstrap/lib/Accordion";
-import * as Collapse from "react-bootstrap/lib/Collapse";
-import * as Dropdown from "react-bootstrap/lib/Dropdown";
-import * as Form from "react-bootstrap/lib/Form";
-import * as ControlLabel from "react-bootstrap/lib/ControlLabel";
-import * as Checkbox from "react-bootstrap/lib/Checkbox";
-import * as ToggleButton from "react-bootstrap/lib/ToggleButton";
-import * as ToggleButtonGroup from "react-bootstrap/lib/ToggleButtonGroup";
-import { Theme, PanelProps, ButtonProps, Panel as PanelI, Dropdown as DropdownI, DropdownProps, DropdownMenuProps, DropdownToggleProps } from "./theme";
+import _Panel from "react-bootstrap/lib/Panel";
+import Table from "react-bootstrap/lib/Table";
+import ProgressBar from "react-bootstrap/lib/ProgressBar";
+import Button from "react-bootstrap/lib/Button";
+import ButtonGroup from "react-bootstrap/lib/ButtonGroup";
+import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
+import Overlay from "react-bootstrap/lib/Overlay";
+import OverlayTrigger from "react-bootstrap/lib/OverlayTrigger";
+import Popover from "react-bootstrap/lib/Popover";
+import Tooltip from "react-bootstrap/lib/Tooltip";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
+import Modal from "react-bootstrap/lib/Modal";
+import Row from "react-bootstrap/lib/Row";
+import Col from "react-bootstrap/lib/Col";
+import FormGroup from "react-bootstrap/lib/FormGroup";
+import InputGroup from "react-bootstrap/lib/InputGroup";
+import FormControl from "react-bootstrap/lib/FormControl";
+import ListGroup from "react-bootstrap/lib/ListGroup";
+import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
+import Breadcrumb from "react-bootstrap/lib/Breadcrumb";
+import HelpBlock from "react-bootstrap/lib/HelpBlock";
+import MenuItem from "react-bootstrap/lib/MenuItem";
+import Alert from "react-bootstrap/lib/Alert";
+import Pager from "react-bootstrap/lib/Pager";
+import Accordion from "react-bootstrap/lib/Accordion";
+import Collapse from "react-bootstrap/lib/Collapse";
+import Dropdown from "react-bootstrap/lib/Dropdown";
+import Form from "react-bootstrap/lib/Form";
+import ControlLabel from "react-bootstrap/lib/ControlLabel";
+import Checkbox from "react-bootstrap/lib/Checkbox";
+import ToggleButton from "react-bootstrap/lib/ToggleButton";
+import ToggleButtonGroup from "react-bootstrap/lib/ToggleButtonGroup";
+import { Theme, PanelProps, ButtonProps, Panel as PanelI, Dropdown as DropdownI, DropdownProps, DropdownMenuProps, DropdownToggleProps, Breadcrumb as BreadcrumbI } from "./theme";
 
 const Panel = React.forwardRef<_Panel, PanelProps>(({variant, ...props}, ref) => <_Panel {...props} bsStyle={variant} ref={ref}/>);
 const __Panel: PanelI = (Panel as unknown as PanelI);
@@ -47,6 +47,8 @@ __Dropdown.Menu = React.forwardRef((props: DropdownMenuProps, ref) => <Dropdown.
 __Dropdown.Toggle = React.forwardRef(({variant, ...props}: DropdownToggleProps, ref) => <Dropdown.Toggle bsStyle={variant} {...props} ref={ref}/>);
 __Dropdown.Toggle.defaultProps = {bsRole: "toggle"} as any;
 
+const _Breadcrumb: BreadcrumbI = Breadcrumb as unknown as BreadcrumbI;
+_Breadcrumb.Item = Breadcrumb.Item as any;
 
 const theme: Theme = {
 	Panel: __Panel,
@@ -68,7 +70,7 @@ const theme: Theme = {
 	FormControl,
 	ListGroup,
 	ListGroupItem,
-	Breadcrumb,
+	Breadcrumb: _Breadcrumb,
 	HelpBlock,
 	MenuItem,
 	Alert: ({variant, ...props}) => <Alert {...props} bsStyle={variant}/>,

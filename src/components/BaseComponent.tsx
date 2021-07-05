@@ -104,7 +104,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			});
 		}
 
-		componentDidUpdate(prevProps: P, prevState: S) {
+		componentDidUpdate(prevProps: Readonly<P>, prevState: S) {
 			if (super.componentDidUpdate) {
 				super.componentDidUpdate(prevProps, prevState);
 			}

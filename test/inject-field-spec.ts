@@ -1,6 +1,6 @@
 import { Form, createForm, lajiFormLocator, updateValue, maybeJSONPointerToLocator  } from "./test-utils";
 import { $ } from "protractor";
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
 
 describe("InjectField", () => {

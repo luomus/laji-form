@@ -228,7 +228,7 @@ export function isTabbableInput(elem: HTMLElement) {
 
 export function canFocusNextInput(root: React.ReactInstance, inputElem: HTMLElement) {
 	const node = findDOMNode(root) as HTMLElement;
-	return (node?.querySelectorAll && isTabbableInput(inputElem));
+	return ((node as any)?.querySelectorAll && isTabbableInput(inputElem));
 }
 
 export function findNearestParentSchemaElem(elem: HTMLElement | null | undefined): HTMLElement | null | undefined {

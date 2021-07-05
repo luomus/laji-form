@@ -8,7 +8,7 @@ import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findN
 const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
-import * as merge from "deepmerge";
+import merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
 import { Theme } from "../themes/theme";
 import Context from "../ReactContext";
