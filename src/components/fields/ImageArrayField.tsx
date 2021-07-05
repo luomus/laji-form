@@ -11,7 +11,7 @@ import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
-import * as moment from "moment";
+import moment from "moment";
 import { FieldProps, RootContext } from "../LajiForm";
 import ApiClient from "../../ApiClient";
 import ReactContext from "../../ReactContext";

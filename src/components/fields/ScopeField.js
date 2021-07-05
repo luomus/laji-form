@@ -599,6 +599,8 @@ const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations
 	const {ListGroupItem, ListGroup} = React.useContext(ReactContext).theme;
 	let groupsList = additionalPropertiesToList(groupFields, ListGroupItem);
 
+	const someActive = Object.keys(groupFields).some(propertyIsIncluded);
+
 	const onListGroupClick = React.useCallback(() => {
 		toggleAdditionalProperty(Object.keys(groupFields)
 			.filter(field => {return propertyIsIncluded(field) === someActive;}));
@@ -607,8 +609,6 @@ const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations
 	if (!groupsList.length) {
 		return null;
 	}
-
-	const someActive = Object.keys(groupFields).some(propertyIsIncluded);
 
 	const listGroup = [
 		(groupTranslations[groupName] !== undefined ? (

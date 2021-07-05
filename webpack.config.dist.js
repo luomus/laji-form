@@ -6,17 +6,17 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
 	mode: "production",
 	entry: {
-		"laji-form": "./src/index",
-		styles: "./src/styles"
+		"laji-form": path.join(path.resolve(), "src", "index"),
+		styles: path.join(path.resolve(), "src", "styles")
 	},
 	output: {
-		path: path.join(__dirname, "dist"),
+		path: path.join(path.resolve(), "dist"),
 		filename: "[name].js",
 		libraryTarget: "umd"
 	},
 	plugins: [
 		new MiniCssExtractPlugin({filename: "[name].css"}),
-		new CopyPlugin({patterns: [{from: "src/img/*.png", to: "images/", flatten: true}]}),
+		new CopyPlugin({patterns: [{from: "src/img/*.png", to: "images/[name][ext]"}]}),
 		new webpack.IgnorePlugin(/^(buffertools)$/), // unwanted "deeper" dependency
 		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"production\""})
 	],
@@ -24,16 +24,11 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(j|t)sx?$/,
-				loader: "awesome-typescript-loader?module=es6",
+				use: [{
+					loader: "ts-loader"
+				}],
 				include: [
-					path.join(__dirname, "src"),
-				]
-			},
-			{
-				test: /\.json$/,
-				loader: "json-loader",
-				include: [
-					path.join(__dirname, "node_modules", "ajv", "libs", "refs", "json-schema-draft-07.json"),
+					path.join(path.resolve(), "src"),
 				]
 			},
 			{
@@ -43,16 +38,12 @@ module.exports = {
 					"css-loader"
 				],
 				exclude: [
-					path.join(__dirname, "playground", "styles-dev.css")
+					path.join(path.resolve(), "playground", "styles-dev.css")
 				]
 			},
 			{
-				test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-				loader: "url-loader?mimetype=application/font-woff"
-			},
-			{
-				test: /\.(ttf|eot|svg|png|jpg|gif)(\?v=[0-9].[0-9].[0-9])?$/,
-				loader: "file-loader?name=images/[name].[ext]"
+				test: /\.(jpg|gif|ttf|eot|svg|woff2?)$/,
+				type: "asset/inline"
 			},
 		],
 		noParse: [
