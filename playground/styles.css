@@ -1377,7 +1377,7 @@ min-height: 20px;
 .laji-form .unit-shorthand {
 	margin-top: 5px;
 }
-.laji-form .fetcher-input.has-toggler .react-spinner {
+.laji-form .fetcher-input.has-toggler .react-spinner, .laji-form .has-toggler .form-control-feedback {
 	margin-right: 25px;
 }
 

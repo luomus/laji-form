@@ -751,7 +751,7 @@ export class Autosuggest extends React.Component {
 			return tooltip;
 		};
 
-		const toggler = onToggle && this.state.focused
+		const toggler = onToggle
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} >
 					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
@@ -769,7 +769,7 @@ export class Autosuggest extends React.Component {
 				validationState={validationState} 
 				extra={addon}
 				appendExtra={toggler}
-				className={toggler && this.state.focused ? "has-toggler" : undefined}
+				className={toggler ? "has-toggler" : undefined}
 				{...inputProps} 
 			/>
 		);
