@@ -1063,6 +1063,7 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 class ReactAutosuggest extends React.Component {
 	constructor(props) {
 		super(props);
+		this.listRef = React.createRef();
 		this.state = {
 			inputValue: props.inputProps.value
 		};
@@ -1097,10 +1098,17 @@ class ReactAutosuggest extends React.Component {
 	}
 
 	onBlur(e) {
+		if (e.relatedTarget === findDOMNode(this.listRef.current)) {
+			return;
+		}
 		const suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 		suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
 		this.setState({focused: false, focusedIdx: undefined, touched: false});
 		this.props.inputProps && this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
+	}
+
+	onListBlur = (e) => {
+		this.onBlur(e);
 	}
 
 	onInputKeyDown = (e) => {
@@ -1196,7 +1204,7 @@ class ReactAutosuggest extends React.Component {
 		const {suggestion, suggestionsList, suggestionsContainer, suggestionsContainerOpen, suggestionHighlighted} = this.props.theme || {};
 		return (
 			<div className={classNames(suggestionsContainer, suggestionsContainerOpen)}>
-				<ul className={suggestionsList} tabIndex={-1}>
+				<ul className={suggestionsList} tabIndex={-1} ref={this.listRef} onBlur={this.onListBlur}>
 					{this.props.suggestions.map((s, i) =>
 						<li key={i}
 						    className={classNames(suggestion, this.state.focusedIdx === i && suggestionHighlighted)}
@@ -1219,7 +1227,7 @@ class ReactAutosuggest extends React.Component {
 		const suggestion = this.getSuggestionFromClick(e);
 		this.setState({inputValue: suggestion.value}, () => {
 			this._onInputChange(suggestion.value, "click");
-			this.onBlur();
+			this.onBlur(e);
 		});
 	}
 
