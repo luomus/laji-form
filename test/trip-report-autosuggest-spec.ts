@@ -191,8 +191,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 		describe("power user", () => {
 			it("is shown power taxon field", async () => {
-				await taxonAutosuggest.$input.click();
-
 				expect(await taxonAutosuggest.$powerUserButton.isDisplayed()).toBe(true);
 			});
 
@@ -208,7 +206,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 
 			it("clicking any match after waiting for suggestion list works", async () => {
-				await taxonAutosuggest.$input.click();
 				await taxonAutosuggest.$powerUserButton.click();
 
 				await taxonAutosuggest.$input.sendKeys("kettu");
@@ -241,14 +238,13 @@ describe("Trip report (JX.519) autosuggestions", () => {
 				await removeUnit(0, 0);
 				await removeUnit(0, 0);
 				await $addUnit.click();
-				await taxonAutosuggest.$input.click();
 				await taxonAutosuggest.$powerUserButton.click();
 			});
 
 
 			it("entering exact match adds new unit automatically", async () => {
-				await taxonAutosuggest.$input.click();
 				await taxonAutosuggest.$powerUserButton.click();
+				await taxonAutosuggest.$input.click(); // Move mouse away from power user button so that no tooltips obscuring
 				await taxonAutosuggest.$input.sendKeys("susi");
 				await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
 				await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "New unit didn't show up");
@@ -258,7 +254,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				await removeUnit(0, 1);
 
-				await taxonAutosuggest.$input.click();
 				await taxonAutosuggest.$powerUserButton.click();
 
 				expect(await taxonAutosuggest.powerUserButtonIsActive()).toBe(false);
