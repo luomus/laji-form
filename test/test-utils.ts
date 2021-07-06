@@ -12,7 +12,8 @@ export const navigateToForm = async (formID: string, params = "") => browser.get
 export const lajiFormLocator = getLocatorForContextId(0);
 export const lajiFormLocate = (str: string) => $(lajiFormLocator(str));
 
-export const getFocusedId = () => browser.driver.switchTo().activeElement().getAttribute("id");
+export const getFocusedElement = () => browser.driver.switchTo().activeElement();
+export const getFocusedId = () => getFocusedElement().getAttribute("id");
 
 export declare class ElementFinder extends _ElementFinder {
 	    then: (fn: (value: any) => any, errorFn?: (error: any) => any) => Promise<any>;

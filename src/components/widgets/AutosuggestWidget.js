@@ -6,7 +6,7 @@ import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParen
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
-import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
+import { getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
 function renderFlag(suggestion, prepend) {
 	return (suggestion && suggestion.payload || {}).finnish
@@ -140,25 +140,6 @@ function TaxonAutosuggest(ComposedComponent) {
 			return inputValue.replace(/ sp(\.|p)?\.?$/, "");
 		}
 
-		renderUnsuggested = (props) => (input) => {
-			const {Tooltip} = this.context.theme;
-			const tooltip = (
-				<Tooltip id={`${props.id}-tooltip`}>{props.formContext.translations.UnknownSpeciesName}</Tooltip>
-			);
-			return (
-				<OverlayTrigger overlay={tooltip} placement="top">{input}</OverlayTrigger>
-			);
-		}
-
-		renderSuggested = (input, suggestion) => {
-			const {taxonCardPlacement: placement = "top" } = getUiOptions(this.props);
-			return (
-				<TaxonCardOverlay value={suggestion.key} formContext={this.props.formContext} id={this.props.id} trigger="hover" placement={placement}>
-					{input}
-				</TaxonCardOverlay>
-			);
-		}
-
 		renderSuccessGlyph = () => {
 			const {Glyphicon} = this.context.theme;
 			return <Glyphicon style={{pointerEvents: "none"}} glyph="ok" className="form-control-feedback"/>;
@@ -220,8 +201,7 @@ function TaxonAutosuggest(ComposedComponent) {
 			const options = {
 				getSuggestionFromValue: this.getSuggestionFromValue,
 				isValueSuggested: this.isValueSuggested,
-				renderSuggested: this.renderSuggested,
-				renderUnsuggested: this.renderUnsuggested(props),
+				Wrapper: TaxonWrapper,
 				renderSuccessGlyph: this.renderSuccessGlyph,
 				renderSuggestion: this.renderSuggestion,
 				parseInputValue: this.parseInputValue
@@ -307,16 +287,6 @@ class FriendsAutosuggestWidget extends React.Component {
 		return !isEmptyString(value) && value.match(/MA\.\d+/);
 	}
 
-	renderUnsuggested = (inputValue) => {
-		const {Tooltip} = this.context.theme;
-		const tooltip = (
-			<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
-		);
-		return (
-			<OverlayTrigger overlay={tooltip} placement="top">{inputValue}</OverlayTrigger>
-		);
-	}
-
 	findExactMatch = (suggestions, inputValue) => {
 		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
 	}
@@ -340,7 +310,7 @@ class FriendsAutosuggestWidget extends React.Component {
 			},
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			isValueSuggested: this.isValueSuggested,
-			renderUnsuggested: this.renderUnsuggested,
+			Wrapper: FriendsWrapper,
 			renderSuccessGlyph: this.renderSuccessGlyph,
 			findExactMatch: this.findExactMatch,
 			prepareSuggestion: this.prepareSuggestion
@@ -689,9 +659,9 @@ export class Autosuggest extends React.Component {
 	}
 
 	renderInput = (inputProps) => {
-		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, displayValidationState = true} = this.props;
+		let {value, renderSuccessGlyph, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, displayValidationState = true, Wrapper} = this.props;
 		let validationState = null;
-		const {translations, lang} = this.props.formContext;
+		const {translations} = this.props.formContext;
 		const {suggestion} = this.state;
 		const {Glyphicon, InputGroup} = this.context.theme;
 
@@ -783,28 +753,25 @@ export class Autosuggest extends React.Component {
 				{...inputProps} 
 			/>
 		);
-
 		let component = input;
-		if (displayValidationState) {
-			if (value && isSuggested && renderSuggested) {
-				component = renderSuggested(input, suggestion);
-			} else if (value && isSuggested === false && renderUnsuggested) {
-				component = renderUnsuggested(input);
-			}
-		}
-		if (informalTaxonGroups) {
+		if (displayValidationState && Wrapper) {
 			component = (
-				<div>
+				<Wrapper isSuggested={isSuggested}
+			           suggestion={suggestion}
+			           options={getUiOptions(this.props)}
+			           id={this.props.id}
+			           value={suggestion && suggestion.key}
+			           inputValue={value}
+			           formContext={this.props.formContext}>
 					{component}
-					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} formContext={this.props.formContext} lang={lang} />}
-				</div>
+				</Wrapper>
 			);
 		}
 		return component;
 	}
 }
 
-class TaxonCardOverlay extends React.Component {
+class TaxonWrapper extends React.Component {
 	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
@@ -825,7 +792,7 @@ class TaxonCardOverlay extends React.Component {
 	}
 
 	fetch(value) {
-		if ( isEmptyString(value)) { 
+		if (!value) { 
 			this.setState({scientificName: "", cursiveName: false});
 		} else {
 			this.props.formContext.apiClient.fetchCached(`/taxa/${value}`).then(({scientificName, cursiveName, vernacularName, taxonRank, informalTaxonGroups, finnish}) => {
@@ -862,7 +829,7 @@ class TaxonCardOverlay extends React.Component {
 	}
 
 	render() {
-		const {id, formContext, value, children, placement} = this.props;
+		const {id, formContext, value, children, placement, inputValue, isSuggested} = this.props;
 		const {
 			taxon = {},
 			taxonRanks,
@@ -875,6 +842,16 @@ class TaxonCardOverlay extends React.Component {
 		} = this.state;
 
 		const {Popover, Tooltip} = this.context.theme;
+
+		//if (inputValue && isSuggested === false) {
+		//	const tooltip = (
+		//		<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
+		//	);
+		//	return (
+		//		<OverlayTrigger overlay={tooltip} placement="top">{children}</OverlayTrigger>
+		//	);
+		//}
+
 		const tooltipElem = (
 			<Tooltip id={`${id}-popover-tooltip`}>
 				{formContext.translations.OpenSpeciedCard}
@@ -888,32 +865,34 @@ class TaxonCardOverlay extends React.Component {
 
 		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
 
-		const popover = (
-			<Popover id={`${id}-popover`}>
-				<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
-					<div>
-						<ReactContext.Provider value={this.context}>
-							<OverlayTrigger overlay={tooltipElem}>
-								<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-									<TaxonName {...taxon} /><br />
-								</a>
-							</OverlayTrigger>
-						</ReactContext.Provider>
-						<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
-						{!higherThanOrder ? (
-							<React.Fragment>
-								<strong>{formContext.translations.taxonGroups}:</strong>
-								<ul>
-									{order && <li><TaxonName {...order} /></li>}
-									{family && <li><TaxonName {...family} /></li>}
-								</ul>
-							</React.Fragment>
-						) : <React.Fragment><br /><br /></React.Fragment>}
+		const popover = inputValue && isSuggested === false
+			? <Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
+			: (
+				<Popover id={`${id}-popover`}>
+					<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
+						<div>
+							<ReactContext.Provider value={this.context}>
+								<OverlayTrigger overlay={tooltipElem}>
+									<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
+										<TaxonName {...taxon} /><br />
+									</a>
+								</OverlayTrigger>
+							</ReactContext.Provider>
+							<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
+							{!higherThanOrder ? (
+								<React.Fragment>
+									<strong>{formContext.translations.taxonGroups}:</strong>
+									<ul>
+										{order && <li><TaxonName {...order} /></li>}
+										{family && <li><TaxonName {...family} /></li>}
+									</ul>
+								</React.Fragment>
+							) : <React.Fragment><br /><br /></React.Fragment>}
+						</div>
+						{loading && <Spinner />}
 					</div>
-					{loading && <Spinner />}
-				</div>
-			</Popover>
-		);
+				</Popover>
+			);
 
 		return (
 			<OverlayTrigger hoverable={true}
@@ -1254,3 +1233,16 @@ class ReactAutosuggest extends React.Component {
 		this.props.onSuggestionsFetchRequested({value});
 	}
 }
+
+const FriendsWrapper = ({formContext, children, id, inputValue, isSuggested}) => {
+	const {Tooltip} = React.useContext(ReactContext).theme;
+	if (!inputValue || isSuggested) {
+		return children;
+	}
+	const tooltip = (
+		<Tooltip id={`${id}-tooltip`}>{formContext.translations.UnknownName}</Tooltip>
+	);
+	return (
+		<OverlayTrigger overlay={tooltip} placement="top">{children}</OverlayTrigger>
+	);
+};

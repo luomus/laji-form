@@ -1,4 +1,4 @@
-import { Form, createForm, putForeignMarkerToMap, removeUnit, TaxonAutosuggestWidgetPOI, getFocusedId } from "./test-utils";
+import { Form, createForm, putForeignMarkerToMap, removeUnit, TaxonAutosuggestWidgetPOI, getFocusedId, getFocusedElement } from "./test-utils";
 import { protractor, browser, ElementFinder } from "protractor";
 
 describe("Trip report (JX.519) autosuggestions", () => {
@@ -102,7 +102,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -115,7 +115,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -129,7 +129,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
-			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -142,7 +142,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
-			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -155,7 +155,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -168,7 +168,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 			await removeUnit(0, 0);
 			await $addUnit.click();
@@ -182,7 +182,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				expect(await taxonAutosuggest.isSuggested()).toBe(true);
 				expect(await taxonAutosuggest.$input.getAttribute("value")).toBe(`parus ${suffix}`);
-				expect(await getFocusedId()).toBe(await $countInput.getAttribute("id"), "next field wasn't focused");
+				expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
 
 				await removeUnit(0, 0);
 				await $addUnit.click();
