@@ -3,6 +3,7 @@ node_modules
 *.log
 lib*
 dist
+build
 test-export
 properties.json
 diff
