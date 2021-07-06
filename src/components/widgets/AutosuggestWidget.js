@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
-import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
+import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -681,6 +681,8 @@ export class Autosuggest extends React.Component {
 		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
 	}
 
+	onToggleByKeyboard = keyboardClick(this.onToggle)
+
 	isSuggested = () => {
 		const {suggestion} = this.state;
 		return !!suggestion && this.isValueSuggested(this.props);
@@ -759,7 +761,10 @@ export class Autosuggest extends React.Component {
 		const toggler = onToggle
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()}>
-					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
+					<InputGroup.Addon className={classNames("autosuggest-input-addon", "power-user-addon", this.props.toggled && "active")}
+					                  onMouseDown={this.onToggle}
+					                  onKeyDown={this.onToggleByKeyboard}
+					                  tabIndex={0}>
 						<Glyphicon glyph="flash" />
 					</InputGroup.Addon>
 				</TooltipComponent>
