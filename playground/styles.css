@@ -363,7 +363,7 @@ min-height: 20px;
 	position: relative;
 }
 
-.laji-form button .react-spinner {
+.laji-form button:not(.list-group-item) .react-spinner {
 	position: relative !important;
 	float: left !important;
 	height: 7px;
@@ -387,10 +387,7 @@ min-height: 20px;
 
 .laji-form .scope-field-modal-item .react-spinner {
 	left: 50%;
-	width: 25px;
-	top: 20px;
-	float: none;
-	position: relative;
+	width: 20px;
 }
 .laji-form .scope-field-modal-item .list-group-item {
 	line-height: 0px;

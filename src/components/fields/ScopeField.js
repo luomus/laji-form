@@ -611,11 +611,11 @@ const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations
 	}
 
 	const listGroup = [
-		(groupTranslations[groupName] !== undefined ? (
-			<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>
-				<strong>{groupTranslations[groupName]}</strong>
-			</ListGroupItem>
-		) : <Spinner key={groupName + "-list"}/>),
+		<ListGroupItem key={groupName + "-list"} active={someActive} onClick={onListGroupClick}>{
+			groupTranslations[groupName] !== undefined
+				? <strong>{groupTranslations[groupName]}</strong>
+				: <Spinner key={groupName + "-list"}/>
+		}</ListGroupItem>,
 		...groupsList
 	];
 	return (
