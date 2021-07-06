@@ -387,7 +387,6 @@ export class Autosuggest extends React.Component {
 		this.state = {
 			isLoading: false,
 			suggestions: [],
-			unsuggested: false,
 			focused: false,
 			inputValue: props.value !== undefined ? props.value : "",
 			suggestion: isSuggested ? {} : undefined,
@@ -649,6 +648,7 @@ export class Autosuggest extends React.Component {
 						onSuggestionSelected={this.onSuggestionSelected}
 						onUnsuggestedSelected={this.onUnsuggestedSelected}
 						highlightFirstSuggestion={highlightFirstSuggestion}
+						suggestionsOpenOnFocus={!this.isSuggested()}
 						theme={cssClasses}
 						formContext={this.props.formContext}
 						ref={this.setRef}
@@ -681,6 +681,11 @@ export class Autosuggest extends React.Component {
 		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
 	}
 
+	isSuggested = () => {
+		const {suggestion} = this.state;
+		return !!suggestion && this.isValueSuggested(this.props);
+	}
+
 	renderInput = (inputProps) => {
 		let {value, renderSuccessGlyph, renderSuggested, renderUnsuggested, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, displayValidationState = true} = this.props;
 		let validationState = null;
@@ -688,7 +693,7 @@ export class Autosuggest extends React.Component {
 		const {suggestion} = this.state;
 		const {Glyphicon, InputGroup} = this.context.theme;
 
-		const isSuggested = !!suggestion && this.isValueSuggested(this.props);
+		const isSuggested = this.isSuggested();
 
 		if (displayValidationState && !isEmptyString(value) && isSuggested !== undefined) {
 			validationState = isSuggested ? "success" : "warning";
@@ -753,9 +758,9 @@ export class Autosuggest extends React.Component {
 
 		const toggler = onToggle
 			? (
-				<TooltipComponent tooltip={getTogglerTooltip()} >
+				<TooltipComponent tooltip={getTogglerTooltip()}>
 					<InputGroup.Addon className={`autosuggest-input-addon power-user-addon${this.props.toggled ? " active" : ""}`} onMouseDown={this.onToggle}>
-						<Glyphicon glyph="flash"/>
+						<Glyphicon glyph="flash" />
 					</InputGroup.Addon>
 				</TooltipComponent>
 			) : null;
@@ -1094,7 +1099,7 @@ class ReactAutosuggest extends React.Component {
 	onBlur(e) {
 		const suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 		suggestion && this.onSuggestionSelected(this.props.suggestions[this.state.focusedIdx]);
-		this.setState({focused: false, focusedIdx: undefined});
+		this.setState({focused: false, focusedIdx: undefined, touched: false});
 		this.props.inputProps && this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
 	}
 
@@ -1113,7 +1118,8 @@ class ReactAutosuggest extends React.Component {
 					? this.state.focusedIdx + 1
 					: (this.props.suggestions || []).length
 						? 0
-						: undefined
+						: undefined,
+				touched: true
 			};
 			if (state.focusedIdx !== undefined) {
 				state.inputValue = this.props.suggestions[state.focusedIdx].value;
@@ -1122,7 +1128,7 @@ class ReactAutosuggest extends React.Component {
 			break;
 		case "ArrowUp":
 			e.preventDefault();
-			state = {focusedIdx: this.state.focusedIdx > 0 ? this.state.focusedIdx - 1 : undefined};
+			state = {focusedIdx: this.state.focusedIdx > 0 ? this.state.focusedIdx - 1 : undefined, touched: true};
 			if (state.focusedIdx !== undefined) {
 				state.inputValue = this.props.suggestions[state.focusedIdx].value;
 			}
@@ -1139,6 +1145,8 @@ class ReactAutosuggest extends React.Component {
 				this.inputElem.blur();
 			}
 			break;
+		default:
+			this.setState({touched: true});
 		}
 		this.props.inputProps && this.props.inputProps.onKeyDown && this.props.inputProps.onKeyDown(e);
 	}
@@ -1178,7 +1186,11 @@ class ReactAutosuggest extends React.Component {
 	}
 
 	renderSuggestions() {
-		if (!this.state.focused || this.state.hideSuggestions || !(this.props.suggestions || []).length) {
+		if ((!this.props.suggestionsOpenOnFocus && !this.state.touched)
+			|| !this.state.focused
+			|| this.state.hideSuggestions
+			|| !(this.props.suggestions || []).length
+		) {
 			return null;
 		}
 		const {suggestion, suggestionsList, suggestionsContainer, suggestionsContainerOpen, suggestionHighlighted} = this.props.theme || {};
