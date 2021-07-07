@@ -6,7 +6,7 @@ import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParen
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
-import { getInformalGroups } from "./InformalTaxonGroupChooserWidget";
+import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
 
 function renderFlag(suggestion, prepend) {
 	return (suggestion && suggestion.payload || {}).finnish
@@ -661,7 +661,7 @@ export class Autosuggest extends React.Component {
 	renderInput = (inputProps) => {
 		let {value, renderSuccessGlyph, informalTaxonGroups, renderInformalTaxonGroupSelector = true, taxonGroupID, onToggle, displayValidationState = true, Wrapper} = this.props;
 		let validationState = null;
-		const {translations} = this.props.formContext;
+		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
 		const {Glyphicon, InputGroup} = this.context.theme;
 
@@ -765,6 +765,14 @@ export class Autosuggest extends React.Component {
 			           formContext={this.props.formContext}>
 					{component}
 				</Wrapper>
+			);
+		}
+		if (informalTaxonGroups) {
+			component = (
+				<React.Fragment>
+					{component}
+					{this.state.informalTaxonGroupsOpen && <InformalTaxonGroupChooser modal={true} onHide={this.onInformalTaxonGroupHide} onSelected={this.onInformalTaxonGroupSelected} formContext={this.props.formContext} lang={lang} />}
+				</React.Fragment>
 			);
 		}
 		return component;
@@ -934,6 +942,8 @@ class InformalTaxonGroupsAddon extends React.Component {
 		if (this.props.onOpen) this.props.onOpen(!this.props.open);
 	}
 
+	onKeyDown = keyboardClick(this.toggle)
+
 	renderGlyph = () => {
 		const {taxonGroupID} = this.props;
 		let imageID = taxonGroupID;
@@ -951,7 +961,7 @@ class InformalTaxonGroupsAddon extends React.Component {
 		const {InputGroup} = this.context.theme;
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} tabIndex={0}>
+				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} onKeyDown={this.onKeyDown} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>
