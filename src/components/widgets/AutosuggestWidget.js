@@ -734,7 +734,8 @@ export class Autosuggest extends React.Component {
 					<InputGroup.Addon className={classNames("autosuggest-input-addon", "power-user-addon", this.props.toggled && "active")}
 					                  onMouseDown={this.onToggle}
 					                  onKeyDown={this.onToggleByKeyboard}
-					                  tabIndex={0}>
+					                  tabIndex={0}
+					                  role="button">
 						<Glyphicon glyph="flash" />
 					</InputGroup.Addon>
 				</TooltipComponent>
@@ -961,7 +962,7 @@ class InformalTaxonGroupsAddon extends React.Component {
 		const {InputGroup} = this.context.theme;
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} onKeyDown={this.onKeyDown} tabIndex={0}>
+				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" role="button" onClick={this.toggle} onKeyDown={this.onKeyDown} tabIndex={0}>
 					{this.renderGlyph()}
 				</InputGroup.Addon>
 			</TooltipComponent>
