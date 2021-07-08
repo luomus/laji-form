@@ -852,15 +852,6 @@ class TaxonWrapper extends React.Component {
 
 		const {Popover, Tooltip} = this.context.theme;
 
-		//if (inputValue && isSuggested === false) {
-		//	const tooltip = (
-		//		<Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
-		//	);
-		//	return (
-		//		<OverlayTrigger overlay={tooltip} placement="top">{children}</OverlayTrigger>
-		//	);
-		//}
-
 		const tooltipElem = (
 			<Tooltip id={`${id}-popover-tooltip`}>
 				{formContext.translations.OpenSpeciedCard}
@@ -874,34 +865,36 @@ class TaxonWrapper extends React.Component {
 
 		const loading = !taxonRank || !(order || family || higherThanOrder) || !taxonRanks;
 
-		const popover = inputValue && isSuggested === false
-			? <Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
-			: (
-				<Popover id={`${id}-popover`}>
-					<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
-						<div>
-							<ReactContext.Provider value={this.context}>
-								<OverlayTrigger overlay={tooltipElem}>
-									<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
-										<TaxonName {...taxon} /><br />
-									</a>
-								</OverlayTrigger>
-							</ReactContext.Provider>
-							<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
-							{!higherThanOrder ? (
-								<React.Fragment>
-									<strong>{formContext.translations.taxonGroups}:</strong>
-									<ul>
-										{order && <li><TaxonName {...order} /></li>}
-										{family && <li><TaxonName {...family} /></li>}
-									</ul>
-								</React.Fragment>
-							) : <React.Fragment><br /><br /></React.Fragment>}
+		const popover = isEmptyString(inputValue)
+			? <React.Fragment />
+			: inputValue && isSuggested === false
+				? <Tooltip id={`${this.props.id}-tooltip`}>{this.props.formContext.translations.UnknownName}</Tooltip>
+				: (
+					<Popover id={`${id}-popover`}>
+						<div className={`laji-form taxon-popover informal-group-image ${imageID}`}>
+							<div>
+								<ReactContext.Provider value={this.context}>
+									<OverlayTrigger overlay={tooltipElem}>
+										<a href={`http://tun.fi/${value}`} target="_blank" rel="noopener noreferrer">
+											<TaxonName {...taxon} /><br />
+										</a>
+									</OverlayTrigger>
+								</ReactContext.Provider>
+								<strong>{formContext.translations.taxonomicRank}:</strong> {taxonRanks && taxonRank ? taxonRanks[taxonRank] : ""}<br />
+								{!higherThanOrder ? (
+									<React.Fragment>
+										<strong>{formContext.translations.taxonGroups}:</strong>
+										<ul>
+											{order && <li><TaxonName {...order} /></li>}
+											{family && <li><TaxonName {...family} /></li>}
+										</ul>
+									</React.Fragment>
+								) : <React.Fragment><br /><br /></React.Fragment>}
+							</div>
+							{loading && <Spinner />}
 						</div>
-						{loading && <Spinner />}
-					</div>
-				</Popover>
-			);
+					</Popover>
+				);
 
 		return (
 			<OverlayTrigger hoverable={true}
