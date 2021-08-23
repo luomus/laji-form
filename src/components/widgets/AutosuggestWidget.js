@@ -1141,6 +1141,12 @@ class ReactAutosuggest extends React.Component {
 				this.inputElem.blur();
 			}
 			break;
+		case "Control":
+		case "Meta":
+		case "Alt":
+		case "Shift":
+		case "CapsLock":
+			break;
 		default:
 			this.setState({touched: true});
 		}
