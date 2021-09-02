@@ -1086,7 +1086,7 @@ class ReactAutosuggest extends React.Component {
 	}
 
 	onBlur(e) {
-		if (e.relatedTarget === findDOMNode(this.listRef.current)) {
+		if (e.relatedTarget && e.relatedTarget === findDOMNode(this.listRef.current)) {
 			return;
 		}
 		const suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
