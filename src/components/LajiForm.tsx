@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate } from "../utils";
 const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
@@ -20,7 +20,7 @@ import ErrorListTemplate from "./ErrorListTemplate";
 
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
-import translations from "../translations.js";
+import translations from "../translations.json";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -267,8 +267,7 @@ export interface Notifier {
 	error: NotifyMessager;
 }
 
-export type TranslateFn = (...args: any[]) => string;
-export type ByLang = {[key: string]: string | TranslateFn};
+export type ByLang = {[key: string]: string};
 export type Translations = Record<Lang, ByLang>;
 
 export interface RootContext {
@@ -979,7 +978,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	getShorcutButtonTooltip = () => {
 		const {translations} = this.state.formContext;
 		if (this.keyCombo) {
-			return (translations.ShortcutHelp as TranslateFn)(stringifyKeyCombo(this.keyCombo));
+			return translate(translations, "ShortcutHelp", {key: stringifyKeyCombo(this.keyCombo)});
 		}
 		return undefined;
 	}

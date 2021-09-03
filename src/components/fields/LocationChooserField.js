@@ -580,7 +580,7 @@ class LocationButton extends React.Component {
 				{this.state.modalMap &&
 						<Modal key="map-modal" show={true} dialogClassName="laji-form map-dialog" onHide={this.onHide} keyboard={false} onKeyDown={this.onModalMapKeyDown}>
 							<Modal.Header closeButton={true}>
-								<Modal.Title>{title || translations.SetLocationToUnit(that.props.formData[taxonField])}</Modal.Title>
+								<Modal.Title>{title || `${translations.SetLocationToUnit}${that.props.formData[taxonField] ? ` (${that.props.formData[taxonField]})` : ""}`}</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
 								{shapeAlert && <Alert variant="danger">{translations[shapeAlert.label] + shapeAlert.max}</Alert>}

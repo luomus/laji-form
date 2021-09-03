@@ -8,7 +8,7 @@ import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
 import Form, { UiSchema } from "@rjsf/core";
 import { JSONSchema7 } from "json-schema";
-import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps } from "./components/LajiForm";
+import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
 
 export const isObject = _isObject;
 
@@ -1131,18 +1131,13 @@ export function filteredErrors(errorSchema: any) {
 		return _errorSchema;
 	}, {});
 }
-export function constructTranslations(translations: any) {
+export function constructTranslations(translations: {[word: string]: {[lang: string]: string}}) {
 	let dictionaries: Translations = {fi: {}, en: {}, sv: {}};
 	for (let word in translations) {
 		for (let lang in translations[word]) {
 			const translation = translations[word][lang];
-			if (typeof translation === "string") {
-				dictionaries[lang as Lang][word] = decapitalizeFirstLetter(translation);
-				dictionaries[lang as Lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
-			} else { // is a function
-				dictionaries[lang as Lang][word] = (s) => decapitalizeFirstLetter(translation(s));
-				dictionaries[lang as Lang][capitalizeFirstLetter(word)] = (s) => capitalizeFirstLetter(translation(s));
-			}
+			dictionaries[lang as Lang][word] = decapitalizeFirstLetter(translation);
+			dictionaries[lang as Lang][capitalizeFirstLetter(word)] = capitalizeFirstLetter(translation);
 		}
 	}
 	return dictionaries;
@@ -1210,4 +1205,11 @@ export function keyboardClick(fn: (e: KeyboardEvent | React.KeyboardEvent) => vo
 		e.stopPropagation();
 		fn(e);
 	};
+}
+
+export function translate(translations: ByLang, key: string, params?: {[key: string]: string | undefined}) {
+	return Object.keys(params || {}).reduce(
+		(translated, param) => translated.replace(new RegExp(`%{${param}}`, "g"), params?.[param] || ""),
+		translations[key]
+	);
 }
