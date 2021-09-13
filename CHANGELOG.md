@@ -2,20 +2,20 @@
 * Checkbox widget hides label of nonactive button if has no custom labels. If a button for undefined isn't shown, click either button toggles the value.
 
 ## 12.0.0
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * Buttons don't use `primary` variant by default & not strong text.
 
 ## 11.0.0
 * TS declarations files included in `lib`
 
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * `lib/app` moved to `lib/index`
 
 ## 10.0.0
 * Style framework agnostic, bootstrap 3 dependency is optional. More in README.
 * Improved app wrapper
 
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * `react-bootstrap@0.33.1` must be installed separately
 * LajiForm component can't be accessed anymore through `LajiForm.app.refs.lajiform`. Use `LajiForm.lajiForm` instead.
 
@@ -23,7 +23,7 @@
 * Add `allowOnlyYear` option for `DateTimeWidget` & `DateWidget`
 
 ## 9.0.0
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * Revert "Buttons don't use `primary` bs role by default & not strong text"
 
 ## 8.1.0
@@ -32,7 +32,7 @@
 ## 8.0.0
 * add `activeHeightOffset` to `SingleActiveArrayField` table
 
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * Buttons don't use `primary` bs role by default & not strong text
 
 ## 7.2.0
@@ -51,7 +51,7 @@
 * Exclude TypeScript declarations in `lib`
 * Export tests to npm package
 
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * Doesn't include typescript declarations anymore
 
 ## 5.8.0
@@ -86,7 +86,7 @@
 * Add `onValidationError` prop
 
 ## 5.0.0
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * Remove `ConditionalAdditionalItemsArrayField` (can be implemented with `MultiArrayField`).
 * Remove `SingleActiveArrayField` `split` renderer (can be implemented with `MultiArrayField`).
 
@@ -124,14 +124,14 @@
 * InjectField works with proper JSON pointers
 
 ## 4.0.0
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * `src/validation.js` default export function doesn't take in `liveErrors` or `liveWarnings` parameters any more
 
 ## 3.0.1
 * add deprecation warning about utils `getUpdateObjectFromJSONPath` and `updateSafelyWithJSONPath` (renamed to 'JSONPointer')
 
 ## 3.0.0
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * `validate()` signature has changed
 * `onSubmit()` signature has changed, uses `formData` from `state`
 * `submit()` signature has changed
@@ -157,7 +157,7 @@
 * don't `src` in npm package
 
 ## 2.0.0
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 * Remove `TemplateArrayField`
 
 ## 1.2.6
