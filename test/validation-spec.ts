@@ -80,9 +80,7 @@ describe("Validations", () => {
 
 		it("prevent submit", async () => {
 			const warnings = getCustom();
-			debugger;
 			await form.setState({ schema, formData, warnings });
-			debugger;
 			await form.submit();
 
 			expect(await form.getSubmittedData()).not.toEqual(formData);

@@ -5,9 +5,8 @@ lib*
 dist
 build
 test-export
-properties.json
+*.json
 diff
-react-jsonschema-form-copys
 .vim*
 *.swp
 .tern-project

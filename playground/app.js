@@ -1,10 +1,10 @@
 import LajiForm from "../src/index.ts";
 import * as lajiFormUtils from "../src/utils.tsx";
-import schemas from "./schemas.json";
-import properties from "../properties.json";
+import * as schemas from "./schemas.json";
+import * as properties from "../properties.json";
 import ApiClientImplementation from "./ApiClientImplementation.js";
-import _notus from "notus";
-import queryString from "querystring";
+import * as _notus from "notus";
+import * as queryString from "querystring";
 import { isObject } from "../src/utils.tsx";
 import bs3 from "../src/themes/bs3";
 

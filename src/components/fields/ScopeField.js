@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
-import * as equals from "deep-equal";
+const equals = require("deep-equal");
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";

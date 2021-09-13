@@ -5,7 +5,7 @@ import { MapComponent } from "./MapArrayField";
 import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import * as equals from "deep-equal";
+const equals = require("deep-equal");
 import Context from "../../Context";
 import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";

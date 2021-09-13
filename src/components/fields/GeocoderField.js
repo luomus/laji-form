@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import * as equals from "deep-equal";
+const equals = require("deep-equal");
 import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import * as fetch from "isomorphic-fetch";

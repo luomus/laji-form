@@ -6,7 +6,7 @@ import { getUiOptions } from "../../utils";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
 import { TagInputComponent } from "./TagArrayField";
 import Context from "../../Context";
-import * as deepEquals from "deep-equal";
+const equals = require("deep-equal");
 
 @BaseComponent
 export default class EnumRangeArrayField extends React.Component {
@@ -30,7 +30,7 @@ export default class EnumRangeArrayField extends React.Component {
 	}
 
 	UNSAFE_componentWillReceiveProps(props) {
-		if (!deepEquals(props.formData, this.props.formData)) {
+		if (!equals(props.formData, this.props.formData)) {
 			new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize");
 		}
 	}

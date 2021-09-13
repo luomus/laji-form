@@ -66,7 +66,8 @@
 		"react/no-string-refs": "off",
 		"protractor/no-browser-sleep": "off",
 		"protractor/no-repetitive-selectors": "off",
-		"protractor/no-repetitive-locators": "off"
+		"protractor/no-repetitive-locators": "off",
+		"react/no-string-refs": "off"
     },
     "plugins": [
         "react",

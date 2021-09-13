@@ -44,7 +44,7 @@ exports.config = {
 	SELENIUM_PROMISE_MANAGER: false,
 	onPrepare: async () => {
 		require("ts-node").register({
-			project: require("path").join(__dirname, "./tsconfig.test-run.json")
+			project: require("path").join(__dirname, "./tsconfig.json")
 		});
 
 		browser.waitForAngularEnabled(false);

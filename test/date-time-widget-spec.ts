@@ -1,5 +1,5 @@
 import { Form, createForm, updateValue, DateWidgetPO, isDisplayed } from "./test-utils";
-import moment from "moment";
+import * as moment from "moment";
 
 describe("Date & time widgets", () => {
 	let form: Form;

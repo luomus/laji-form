@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import update from "immutability-helper";
-import * as deepEquals from "deep-equal";
+const equals = require("deep-equal");
 import * as merge from "deepmerge";
 import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
@@ -1825,7 +1825,7 @@ export class MapComponent extends React.Component {
 		this._callback = undefined;
 
 		if  (this.props.onOptionsChanged && ["tileLayers", "locate"].some(name => 
-			!deepEquals(...[this.state, prevState].map(state => state.mapOptions[name])) 
+			!equals(...[this.state, prevState].map(state => state.mapOptions[name])) 
 		)) {
 			this.props.onOptionsChanged(this.state.mapOptions);
 		}
@@ -2030,7 +2030,7 @@ export class Map extends React.Component {
 		Object.keys(mapOptions).forEach(key => {
 			switch (key) {
 			case "draw": // More optimal way of updating draw data than setting the draw option
-				if (!deepEquals(mapOptions.draw, prevMapOptions.draw)) {
+				if (!equals(mapOptions.draw, prevMapOptions.draw)) {
 					this.map.updateDrawData(mapOptions.draw);
 				}
 				break;
@@ -2040,7 +2040,7 @@ export class Map extends React.Component {
 				}
 				break;
 			default:
-				if (!deepEquals(mapOptions[key], prevMapOptions[key])) {
+				if (!equals(mapOptions[key], prevMapOptions[key])) {
 					this.map.setOption(key, mapOptions[key]);
 					if (this.props.singleton && mapOptions.zoomToData && key === "data") {
 						this.map.zoomToData(mapOptions.zoomToData);

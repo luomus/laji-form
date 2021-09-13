@@ -8,7 +8,7 @@ import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findN
 const equals = require("deep-equal");
 const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
-import merge from "deepmerge";
+import * as merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
 import { Theme } from "../themes/theme";
 import Context from "../ReactContext";
@@ -20,7 +20,7 @@ import ErrorListTemplate from "./ErrorListTemplate";
 
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
-import translations from "../translations.json";
+import * as translations from "../translations.json";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",

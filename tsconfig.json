@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"outDir": "./build",
-		"module": "es6",
+		"module": "commonjs",
 		"target": "es6",
 		"lib": [
 			"dom",
@@ -16,7 +16,6 @@
 		"noImplicitAny": true,
 		"strictNullChecks": true,
 		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"resolveJsonModule": true
 	},

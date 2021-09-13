@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-import * as deepEquals from "deep-equal";
+const equals = require("deep-equal");
 
 @BaseComponent
 export default class TagArrayField extends React.Component {
@@ -42,7 +42,7 @@ export class TagInputComponent extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (!deepEquals(prevProps.formData, this.props.formData)) {
+		if (!equals(prevProps.formData, this.props.formData)) {
 			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}
