@@ -1,6 +1,3 @@
-//import path from "path";
-//import webpack from "webpack";
-//import CopyWebpackPlugin from "copy-webpack-plugin";
 const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -16,15 +13,16 @@ module.exports = {
 		filename: "main.js"
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
 		new webpack.DefinePlugin({"process.env.NODE_ENV": "\"development\""}),
 		new CopyWebpackPlugin({patterns: [{from: path.join(path.resolve(), "src", "img"), to: "."}]})
 	],
 	devServer: {
-		contentBase: path.join(path.resolve(), "playground"),
+		static: {
+			directory: path.join(path.resolve(), "playground"),
+		},
 		host: "0.0.0.0",
 		port: 8083,
-		inline: true
+		hot: true
 	},
 	module: {
 		rules: [
