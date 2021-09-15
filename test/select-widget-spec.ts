@@ -46,13 +46,25 @@ describe("SelectWidget", () => {
 		expect (await form.getChangedData()).toBe("c");
 	});
 
-	// Doesn't work properly, since value is changed on blur instead of enter
-	//it("value can be selected with keyboard", async () => {
-	//	await form.$getEnumWidget("").click();
-	//	await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$(".rw-popup-container")), 1000, "select list timeout");
-	//	await browser.actions().sendKeys(protractor.Key.DOWN).perform();
-	//	await browser.actions().sendKeys(protractor.Key.ENTER).perform();
-	//	expect (await form.$getEnumWidget("").$("input").getAttribute("value")).toBe(enums.a);
-	//	expect (await form.getChangedData()).toBe("a");
-	//});
+	it("selecting value and then empty value without blurring in between keeps empty value", async () => {
+		await form.$getEnumWidget("").click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$$(".rw-list-option").first()), 1000, "select list timeout");
+		await form.$getEnumWidget("").$$(".rw-list-option").last().click();
+
+		await form.$getEnumWidget("").click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$$(".rw-list-option").first()), 1000, "select list timeout");
+		await form.$getEnumWidget("").$$(".rw-list-option").first().click();
+
+		expect (await form.getChangedData()).toBe(null);
+	});
+
+	it("value can be selected with keyboard", async () => {
+		await form.$getEnumWidget("").click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$(".rw-popup-container")), 1000, "select list timeout");
+		const $input = form.$getEnumWidget("").$("input");
+		await $input.sendKeys(protractor.Key.DOWN);
+		await $input.sendKeys(protractor.Key.ENTER);
+		expect (await $input.getAttribute("value")).toBe(enums.a);
+		expect (await form.getChangedData()).toBe("a");
+	});
 });

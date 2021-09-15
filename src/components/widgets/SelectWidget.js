@@ -94,7 +94,7 @@ class SelectWidget extends React.Component {
 	}
 
 	selectOnChange = (item) => {
-		this.setState({value: item});
+		this.props.onChange(this.getEnum(item.value));
 	}
 
 	onClick = () => {
@@ -102,14 +102,6 @@ class SelectWidget extends React.Component {
 	}
 
 	onFocus = () => this.setState({open: true})
-
-	onBlur = () => {
-		if (typeof this.state.value !== "object") {
-			this.setState({value: this.state.valsToItems[this.props.value]});
-		} else {
-			this.props.onChange(this.getEnum(this.state.value.value));
-		}
-	}
 
 	onSelect = (item) => {
 		this.state.open && this._context.setImmediate(() => this.mounted && this.setState({open: false, value: item.value}));
@@ -168,7 +160,6 @@ class SelectWidget extends React.Component {
 				onChange={this.selectOnChange}
 				ref={this.setRef}
 				onClick={this.onClick}
-				onBlur={this.onBlur}
 				onSelect={this.onSelect}
 			/>
 		);
