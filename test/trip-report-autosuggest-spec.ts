@@ -37,7 +37,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	describe("unit taxon", () => {
 
 		let taxonAutosuggest: TaxonAutosuggestWidgetPOI;
-		let $countInput: ElementFinder;
 		let $addUnit: ElementFinder;
 
 		const moveMouseAway = (locator: string) => browser.actions()
@@ -230,7 +229,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				const enteredUnitTaxon = await form.$locate("gatherings.0.units.0").$$("td").first().getText();
 
-				expect(await enteredUnitTaxon).toBe("kettukolibrit");
+				expect(enteredUnitTaxon).toBe("kettukolibrit");
 
 			});
 
@@ -245,7 +244,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				const enteredUnitTaxon = await form.$locate("gatherings.0.units.1").$$("td").first().getText();
 
-				expect(await enteredUnitTaxon).toBe("kettukolibrit");
+				expect(enteredUnitTaxon).toBe("kettukolibrit");
 
 				await removeUnit(0, 0);
 				await removeUnit(0, 0);
@@ -277,13 +276,9 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		});
 
 		it("works when autocomplete response has autocompleteSelectedName", async() => {
-			if (process.env.HEADLESS !== "false") {
-				console.log("Fails when headless (idk go figure, something to do with mocking?)");
-				return;
-			}
 			const mock = await form.setMockResponse("/autocomplete/taxon");
 			await taxonAutosuggest.$input.sendKeys("kuusi");
-			const autocompleteSelectedName = "metsäkuusi";
+			const autocompleteSelectedName = "foobar";
 			await mock.resolve([{
 				"key": "MX.37812",
 				"value": "kuusi",
@@ -307,10 +302,14 @@ describe("Trip report (JX.519) autosuggestions", () => {
 					"vernacularName": "metsäkuusi"
 				}
 			}]);
+
+			// idk why needed...
+			await browser.sleep(100);
 			await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
 			await mock.remove();
 
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe(autocompleteSelectedName);
+			expect((await form.getChangedData()).gatherings[0].units[0].identifications[0].taxon).toBe(autocompleteSelectedName);
 		});
 	});
 });

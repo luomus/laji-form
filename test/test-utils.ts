@@ -20,9 +20,9 @@ export declare class ElementFinder extends _ElementFinder {
 }
 
 export interface Mock {
-	resolve: (response?: any, raw?: boolean) => void;
-	reject: (response?: any, raw?: boolean) => void;
-	remove: () => void;
+	resolve: (response?: any, raw?: boolean) => Promise<void>;
+	reject: (response?: any, raw?: boolean) => Promise<void>;
+	remove: () => Promise<void>;
 }
 
 export interface DateWidgetPO {
@@ -145,7 +145,7 @@ export class Form {
 
 	async setMockResponse(path: string, query?: any): Promise<Mock> {
 		await browser.executeScript(`return window.setMockResponse(${JSON.stringify(path)}, ${JSON.stringify(query)})`);
-		const mock = (method: "resolve" | "reject" | "remove", response?: any, raw?: boolean) => browser.executeScript(`return ${this.getMockStr(path, query)}.${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`);
+		const mock = (method: "resolve" | "reject" | "remove", response?: any, raw?: boolean) => browser.executeScript(`return ${this.getMockStr(path, query)}.${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`) as Promise<void>;
 		return {
 			resolve: (response?: any, raw?: boolean) => mock("resolve", response, raw),
 			reject: (response?: any, raw?: boolean) => mock("reject", response, raw),

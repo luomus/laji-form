@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
-import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
+import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick, parseJSONPointer } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -397,11 +397,19 @@ export class Autosuggest extends React.Component {
 		this.setState({isLoading: true});
 		getSuggestionFromValue(value).then(suggestion => {
 			if (!this.mounted) return;
-			this.setState({suggestion, inputValue: suggestion.value, isLoading: false});
+			this.setState({suggestion, inputValue: this.getSuggestionValue(suggestion), isLoading: false});
 		}).catch(() => {
 			if (!this.mounted) return;
 			this.setState({isLoading: false});
 		});
+	}
+
+	getSuggestionValue = (suggestion) => {
+		const {getSuggestionValue} = this.props;
+		const def = suggestion.value;
+		return getSuggestionValue
+			? getSuggestionValue(suggestion, def)
+			: def;
 	}
 
 	renderSuggestion = (suggestion) => {
@@ -417,7 +425,7 @@ export class Autosuggest extends React.Component {
 				onSuggestionSelected(suggestion, this.mounted) :
 				onChange(suggestion[suggestionReceive]);
 		};
-		const state = {suggestion, inputValue: suggestion.value};
+		const state = {suggestion, inputValue: this.getSuggestionValue(suggestion)};
 		this.mounted
 			? this.setState(state, afterStateChange)
 			: afterStateChange();

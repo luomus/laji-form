@@ -116,6 +116,7 @@ export default class AutosuggestField extends React.Component {
 			isValueSuggested: this.isValueSuggested,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			onInformalTaxonGroupSelected: informalTaxonGroups ? this.onInformalTaxonGroupSelected : undefined,
+			getSuggestionValue: this.getSuggestionValue,
 			informalTaxonGroupsValue: props.formData[informalTaxonGroups],
 			taxonGroupID,
 			placeholder: toggled 
@@ -190,6 +191,13 @@ export default class AutosuggestField extends React.Component {
 			}
 		}
 		return fieldVal;
+	}
+
+	getSuggestionValue = (suggestion, def) => {
+		const {suggestionValueParse} = this.getActiveOptions(getUiOptions(this.props.uiSchema));
+		return suggestionValueParse
+			? this.getSuggestionReceiverValue(suggestion, suggestionValueParse)
+			: def;
 	}
 
 	onSuggestionSelected = (suggestion, mounted) => {
