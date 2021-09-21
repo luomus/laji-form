@@ -14,7 +14,10 @@ export default class ContextInjectionField extends React.Component {
 			}).isRequired,
 			uiSchema: PropTypes.object
 		}).isRequired,
-		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+		formData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array", "object", "string", "integer", "number", "boolean"])
+		}).isRequired,
 	}
 
 	static getName() {return  "ContextInjectionField";}

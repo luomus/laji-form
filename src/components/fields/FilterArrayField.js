@@ -1,9 +1,23 @@
 import * as React from "react";
+import * as PropTypes from "prop-types";
 import { checkArrayRules, getUiOptions, getInnerUiSchema } from "../../utils";
+import { rulesPropType } from "./ConditionalUiSchemaField";
 import BaseComponent from "../BaseComponent";
 
 @BaseComponent
 export default class FilterArrayField extends React.Component {
+	static propTypes = {
+		uiSchema: PropTypes.shape({
+			"ui:options": PropTypes.shape({
+				rules: rulesPropType,
+				cache: PropTypes.boolean
+			})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array"])
+		}).isRequired,
+		formData: PropTypes.array
+	}
 	getStateFromProps(props) {
 		if (props.schema.items.type !== "object") {
 			throw new Error("Can't use FilterArrayField if items aren't objects");

@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
-import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick, parseJSONPointer } from "../../utils";
+import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";

@@ -20,11 +20,13 @@ export const operationPropType = PropTypes.shape({
 	uiSchema: PropTypes.object.isRequired,
 });
 
+export const rulesPropType = PropTypes.oneOfType([
+	rulePropType,
+	PropTypes.arrayOf(rulePropType)
+]);
+
 const casePropType = PropTypes.shape({
-	rules: PropTypes.oneOfType([
-		rulePropType,
-		PropTypes.arrayOf(rulePropType)
-	]),
+	rules: rulesPropType,
 	operations: PropTypes.oneOfType([
 		operationPropType,
 		PropTypes.arrayOf(operationPropType)
@@ -69,7 +71,10 @@ export default class ConditionalUiSchemaField extends React.Component {
 				]),
 				cache: PropTypes.boolean
 			})
-		})
+		}),
+		schema: PropTypes.shape({
+			type: PropTypes.oneOf(["array", "object", "string", "integer", "number", "boolean"])
+		}).isRequired,
 	}
 
 	static getName() {return "ConditionalUiSchemaField";}

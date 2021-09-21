@@ -15,6 +15,9 @@ HiddenWidget.propTypes = {
 		PropTypes.number,
 		PropTypes.bool,
 	]),
+	schema: PropTypes.shape({
+		type: PropTypes.oneOf(["string", "number", "boolean", "integer"])
+	}).isRequired
 };
 
 export default HiddenWidget;
