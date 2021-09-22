@@ -158,6 +158,7 @@ export type Breadcrumb = React.ComponentType<any> & {
 
 export interface BreadcrumbItem extends JSX.IntrinsicAttributes {
 	key?: string | undefined | null | number;
+	onClick: React.MouseEventHandler<any>;
 }
 
 export interface MenuItemProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
