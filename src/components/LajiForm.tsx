@@ -167,6 +167,7 @@ export interface LajiFormProps {
 	onSettingsChange?: (settings: any, global: boolean) => void;
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
+	children?: React.ReactNode;
 }
 
 export interface LajiFormState {
