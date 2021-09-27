@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
+import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick, getTitle } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 const equals = require("deep-equal");
@@ -21,12 +21,13 @@ export default class TagArrayField extends React.Component {
 	}
 
 	render() {
-		const {Label} = this.props.formContext;
+		const {FieldTemplate} = this.props.registry;
+		const {uiSchema} = this.props;
+
 		return (
-			<React.Fragment>
-				<Label label={this.props.schema.title} id={this.props.idSchema.$id} />
+			<FieldTemplate {...this.props} forceDisplayLabel={true} rawHelp={uiSchema["ui:help"]} description={uiSchema["ui:description"]}>
 				<TagInputComponent {...this.props} id={this.props.idSchema.$id} tags={this.props.formData} />
-			</React.Fragment>
+			</FieldTemplate>
 		);
 	}
 }
