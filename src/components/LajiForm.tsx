@@ -10,7 +10,7 @@ const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
 const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
 import * as merge from "deepmerge";
 import { JSONSchema7 } from "json-schema";
-import { Theme } from "../themes/theme";
+import { HasMaybeChildren, Theme } from "../themes/theme";
 import Context from "../ReactContext";
 
 import Form, { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget } from "@rjsf/core";
@@ -135,7 +135,7 @@ function getNewId() {
 	return _id;
 }
 
-export interface LajiFormProps {
+export interface LajiFormProps  extends HasMaybeChildren {
 	apiClient?: ApiClientImplementation;
 	lang?: Lang;
 	formData?: any;
@@ -167,7 +167,6 @@ export interface LajiFormProps {
 	onSettingsChange?: (settings: any, global: boolean) => void;
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
-	children?: React.ReactNode;
 }
 
 export interface LajiFormState {
