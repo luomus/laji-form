@@ -351,6 +351,8 @@ export class Autosuggest extends React.Component {
 		return isValueSuggested ? isValueSuggested(props.value) : undefined;
 	}
 
+	wrapperRef = React.createRef();
+
 	constructor(props) {
 		super(props);
 		const isSuggested = this.isValueSuggested(props);
@@ -543,6 +545,12 @@ export class Autosuggest extends React.Component {
 			this._valueForBlurAndFetch = this.state.inputValue;
 			this.afterBlurAndFetch(this.state.suggestions);
 			triggerParentComponent("onBlur", e, this.props.inputProps);
+			const overlay = this.wrapperRef.current;
+			if (overlay && overlay.overlayTriggerRef && overlay.overlayTriggerRef.hide) {
+				setTimeout(() => {
+					overlay.overlayTriggerRef.hide();
+				}, 1);
+			}
 		});
 	}
 
@@ -771,6 +779,7 @@ export class Autosuggest extends React.Component {
 			           id={this.props.id}
 			           value={suggestion && suggestion.key}
 			           inputValue={value}
+				         ref={this.wrapperRef}
 			           formContext={this.props.formContext}>
 					{component}
 				</Wrapper>
@@ -788,7 +797,7 @@ export class Autosuggest extends React.Component {
 	}
 }
 
-class TaxonWrapper extends React.Component {
+class _TaxonWrapper extends React.Component {
 	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
@@ -908,12 +917,15 @@ class TaxonWrapper extends React.Component {
 			<OverlayTrigger hoverable={true}
 			                placement={placement}
 			                _context={new Context(this.props.formContext.contextId)}
-			                overlay={popover}>
+			                overlay={popover}
+			                ref={this.props.overlayRef}>
 				{children}
 			</OverlayTrigger>
 		);
 	}
 }
+
+const TaxonWrapper = React.forwardRef((props, ref) => <_TaxonWrapper {...props} overlayRef={ref} />);
 
 class InformalTaxonGroupsAddon extends React.Component {
 	static contextType = ReactContext;
@@ -1252,7 +1264,7 @@ class ReactAutosuggest extends React.Component {
 	}
 }
 
-const FriendsWrapper = ({formContext, children, id, inputValue, isSuggested}) => {
+const FriendsWrapper = React.forwardRef(({formContext, children, id, inputValue, isSuggested}, ref) => {
 	const {Tooltip} = React.useContext(ReactContext).theme;
 	if (!inputValue || isSuggested) {
 		return children;
@@ -1261,6 +1273,6 @@ const FriendsWrapper = ({formContext, children, id, inputValue, isSuggested}) =>
 		<Tooltip id={`${id}-tooltip`}>{formContext.translations.UnknownName}</Tooltip>
 	);
 	return (
-		<OverlayTrigger overlay={tooltip} placement="top">{children}</OverlayTrigger>
+		<OverlayTrigger overlay={tooltip} placement="top" ref={ref}>{children}</OverlayTrigger>
 	);
-};
+});
