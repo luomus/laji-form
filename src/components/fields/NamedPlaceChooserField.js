@@ -226,6 +226,9 @@ class NamedPlaceChooser extends React.Component {
 	}
 
 	onSelectChange = (idx) => {
+		if (idx === undefined) {
+			return;
+		}
 		const {map} = this.mapElem;
 		const layers = this.idxToLayer[idx];
 		const [layer] = layers;
