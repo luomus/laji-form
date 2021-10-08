@@ -548,7 +548,7 @@ export class Autosuggest extends React.Component {
 			const overlay = this.wrapperRef.current;
 			if (overlay && overlay.overlayTriggerRef && overlay.overlayTriggerRef.hide) {
 				setTimeout(() => {
-					overlay.overlayTriggerRef.hide();
+					overlay && overlay.overlayTriggerRef && overlay.overlayTriggerRef.hide();
 				}, 1);
 			}
 		});
