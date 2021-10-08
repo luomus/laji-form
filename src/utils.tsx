@@ -554,6 +554,9 @@ export function updateSafelyWithJSONPath(obj: any, value: any, path: string, imm
 	return updateSafelyWithJSONPointer(obj, value, path, immutably, createNew);
 }
 export function updateSafelyWithJSONPointer(obj: any, value: any, path: string, immutably = true, createNew: (obj: any, split: string, o?: any, _split?: string) => any = () => ({})) {
+	if (path === "/") {
+		return value;
+	}
 	if (!immutably) {
 		const splitted = path.split("/").filter(s => !isEmptyString(s));
 		splitted.reduce((o, split, i) => {
