@@ -221,15 +221,15 @@ export class Form {
 		};
 	}
 
-	$getInputWidget(str: string): ElementFinder {
+	$getInputWidget(str: string) {
 		return this.$locate(str).$("input");
 	}
 
-	$getTextareaWidget(str: string): ElementFinder {
+	$getTextareaWidget(str: string) {
 		return this.$locate(str).$("textarea");
 	}
 
-	$getEnumWidget(str: string): ElementFinder {
+	$getEnumWidget(str: string) {
 		return this.$locate(str).$(".rw-combobox");
 	}
 
@@ -237,19 +237,19 @@ export class Form {
 		const $widget = this.$locate(str).$(".date-widget");
 		return {
 			$container: $widget,
-			$input: $widget.$("input") as ElementFinder,
+			$input: $widget.$("input"),
 			buttons: {
-				$today: $widget.$(".today") as ElementFinder,
-				$yesterday: $widget.$(".yesterday") as ElementFinder,
-				$date: $widget.$(".rw-i-calendar") as ElementFinder,
-				$time: $widget.$(".rw-i-clock-o") as ElementFinder
+				$today: $widget.$(".today"),
+				$yesterday: $widget.$(".yesterday"),
+				$date: $widget.$(".rw-i-calendar"),
+				$time: $widget.$(".rw-i-clock-o")
 			},
 			calendar: {
-				$today: $widget.$(".rw-calendar-footer button") as ElementFinder,
+				$today: $widget.$(".rw-calendar-footer button"),
 				waitAnimation: () => browser.wait(EC.visibilityOf($widget.$(".rw-calendar-footer button")), 1000, "Calendar didn't show") as Promise<void>
 			},
 			clock: {
-				"$01:00": $widget.$$(".rw-list li").get(2) as ElementFinder,
+				"$01:00": $widget.$$(".rw-list li").get(2),
 				waitAnimation: () => browser.wait(EC.visibilityOf($widget.$(".rw-list")), 1000, "Clock didn't show") as Promise<void>
 			}
 		};
@@ -260,33 +260,33 @@ export class Form {
 	}
 
 	_getImageArrayField = (form: Form) => (lajiFormLocator: string): ImageArrayFieldPOI => new class ImageArrayFieldPO implements ImageArrayFieldPOI {
-		$container = form.$locate(lajiFormLocator).$(".laji-form-medias") as ElementFinder;
+		$container = form.$locate(lajiFormLocator).$(".laji-form-medias");
 		$$imgs = form.$locate(lajiFormLocator).$$(".media-container");
 		$$imgInteractives = this.$$imgs.$$(".media-container a");
 		$$imgRemoves = this.$$imgs.$$(".button-corner");
-		$imgRemoveConfirmButton = (id: string) => form.$locateAddition(id, "delete-confirm-yes") as ElementFinder;
-		$dropzone = form.$locate(lajiFormLocator).$(".laji-form-drop-zone") as ElementFinder;
-		$modal = $(".laji-form.media-modal") as ElementFinder;
-		$modalClose = this.$modal.$(".close") as ElementFinder;
+		$imgRemoveConfirmButton = (id: string) => form.$locateAddition(id, "delete-confirm-yes");
+		$dropzone = form.$locate(lajiFormLocator).$(".laji-form-drop-zone");
+		$modal = $(".laji-form.media-modal");
+		$modalClose = this.$modal.$(".close");
 	}
 	getImageArrayField = this._getImageArrayField(this);
 	
 	_getTaxonAutosuggestWidget = (form: Form) => (lajiFormLocator: string): TaxonAutosuggestWidgetPOI =>
 		new class TaxonAutosuggestWidgetPO implements TaxonAutosuggestWidgetPOI {
-			$input = form.$locate(lajiFormLocator).$("input") as ElementFinder;
-			$suggestionsContainer = form.$locate(lajiFormLocator).$(".rw-list") as ElementFinder;
+			$input = form.$locate(lajiFormLocator).$("input");
+			$suggestionsContainer = form.$locate(lajiFormLocator).$(".rw-list");
 			$$suggestions = form.$locate(lajiFormLocator).$$(".rw-list-option");
 			waitForSuggestionsToLoad = () => browser.wait(EC.visibilityOf(this.$suggestionsContainer), 5000, "Suggestion list timeout") as Promise<void>;
 			waitForGlyph = () => browser.wait(EC.visibilityOf(form.$locate(lajiFormLocator).$(".glyphicon.form-control-feedback")), 5000, "Glyph didn't load") as Promise<void>;
-			isSuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-ok") as ElementFinder);
-			isNonsuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-warning-sign") as ElementFinder);
-			$powerUserButton = $(".power-user-addon") as ElementFinder;
+			isSuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-ok"));
+			isNonsuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-warning-sign"));
+			$powerUserButton = $(".power-user-addon");
 			powerUserButtonIsActive = async () => (await this.$powerUserButton.getAttribute("class")).includes("active");
 		}
 	getTaxonAutosuggestWidget = this._getTaxonAutosuggestWidget(this);
 
 	getScopeField = (lajiFormLocator: string) => ({
-		$button: this.$locateButton(lajiFormLocator, "additionals") as ElementFinder,
+		$button: this.$locateButton(lajiFormLocator, "additionals"),
 		$$listItems: this.$locate(lajiFormLocator).$$(".dropdown.open li a")
 	})
 }
