@@ -1,4 +1,4 @@
-import { browser, $, $$, protractor, ElementFinder as _ElementFinder, ElementArrayFinder } from "protractor";
+import { browser, $, $$, protractor, ElementFinder, ElementArrayFinder } from "protractor";
 import * as path from "path";
 import { JSONSchema7 } from "json-schema";
 const { HOST, PORT } = process.env;
@@ -14,10 +14,6 @@ export const lajiFormLocate = (str: string) => $(lajiFormLocator(str));
 
 export const getFocusedElement = () => browser.driver.switchTo().activeElement();
 export const getFocusedId = () => getFocusedElement().getAttribute("id");
-
-export declare class ElementFinder extends _ElementFinder {
-	    then: (fn: (value: any) => any, errorFn?: (error: any) => any) => Promise<any>;
-}
 
 export interface Mock {
 	resolve: (response?: any, raw?: boolean) => Promise<void>;
@@ -216,40 +212,30 @@ export class Form {
 	getBooleanWidget(str: string): BooleanWidgetPO {
 		const $container = this.$locate(str).$(".btn-toolbar");
 		return {
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$container,
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$true: $container.$$(".btn").get(0), // eslint-disable-line  protractor/use-first-last
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$false: $container.$$(".btn").get(1),
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$undefined: this.$locate(str).$$(".btn").get(2),
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$active: $container.$(".btn.active"),
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$nonactive: $container.$$(".btn").filter(async ($btn) => !(await $btn.getAttribute("class")).includes("active")).first()
 		};
 	}
 
 	$getInputWidget(str: string): ElementFinder {
-		 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 		return this.$locate(str).$("input");
 	}
 
 	$getTextareaWidget(str: string): ElementFinder {
-		 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 		return this.$locate(str).$("textarea");
 	}
 
 	$getEnumWidget(str: string): ElementFinder {
-		 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 		return this.$locate(str).$(".rw-combobox");
 	}
 
 	getDateWidget(str: string): DateWidgetPO {
 		const $widget = this.$locate(str).$(".date-widget");
 		return {
-			// @ts-expect-error https://github.com/microsoft/TypeScript/issues/41159
 			$container: $widget,
 			$input: $widget.$("input") as ElementFinder,
 			buttons: {

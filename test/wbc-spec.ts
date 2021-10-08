@@ -15,7 +15,7 @@ describe("WBC (MHL.3)", () => {
 	});
 
 	it("taxon census has correct values when yes is selected", async () => {
-		const widget = await form.getBooleanWidget("gatherings.0.taxonCensus");
+		const widget = form.getBooleanWidget("gatherings.0.taxonCensus");
 		await widget.$true.click();
 
 		const formData = await form.getChangedData();
@@ -26,7 +26,7 @@ describe("WBC (MHL.3)", () => {
 	});
 
 	it("taxon census has correct values when no is selected", async () => {
-		const widget = await form.getBooleanWidget("gatherings.0.taxonCensus");
+		const widget = form.getBooleanWidget("gatherings.0.taxonCensus");
 		await widget.$false.click();
 
 		const formData = await form.getChangedData();
@@ -72,7 +72,7 @@ describe("WBC (MHL.3)", () => {
 	});
 
 	it("added existing user ID is shown", async () => {
-		const $input = await form.$getInputWidget("gatheringEvent.1.leg");
+		const $input = form.$getInputWidget("gatheringEvent.1.leg");
 
 		expect(await $input.getAttribute("value")).toMatch(/Unit.+ \(MA\.\d+\)/);
 	});
