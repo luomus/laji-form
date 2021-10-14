@@ -1,4 +1,4 @@
-import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId } from "./test-utils";
+import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId, isDisplayed } from "./test-utils";
 import { protractor, browser, $, $$, by, element, ElementFinder } from "protractor";
 const { googleApiKey } = require("../properties.json");
 
@@ -72,11 +72,6 @@ describe("Trip report (JX.519)", () => {
 				await testWidget("secureLevel", "checkbox");
 			});
 
-			//TODO TableField messes up ids!
-			//it("contains gatheringEvent.observer.0", () => {
-			//	expect(lajiFormLocate("gatheringEvent.leg.0").isDisplayed()).toBe(true);
-			//});
-
 			it("gatheringEvent.legPublic which is editable", async () => {
 				await testWidget("gatheringEvent.legPublic", "checkbox");
 			});
@@ -92,6 +87,28 @@ describe("Trip report (JX.519)", () => {
 			it("keywords which is editable", async () => {
 				expect(await $gatheringEvent.element(lajiFormLocate("keywords").locator()).isDisplayed()).toBe(true);
 				await testWidget("keywords");
+			});
+
+
+			// TODO TableField messes up ids!
+			describe("observers", () => {
+				it("displayed", async () => {
+					expect(await isDisplayed(form.$locate("gatheringEvent.0.leg"))).toBe(true);
+				});
+
+				it("can be added", async () => {
+					await form.$locateButton("gatheringEvent", "add").click();
+
+					expect(await isDisplayed(form.$locate("gatheringEvent.1.leg"))).toBe(true);
+				});
+
+				it("deleting first shows only the remaining empty", async () => {
+					// Should be 1st delete button (row 0 is labels)
+					await $$(".table-field .row").get(1).$("button").click(); // eslint-disable-line protractor/use-first-last
+
+					expect(await isDisplayed(form.$locate("gatheringEvent.1.leg"))).toBe(false);
+					expect(await form.$getInputWidget("gatheringEvent.0.leg").getAttribute("value")).toBe("");
+				});
 			});
 		});
 	});

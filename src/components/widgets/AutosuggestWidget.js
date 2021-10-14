@@ -377,6 +377,16 @@ export class Autosuggest extends React.Component {
 		new Context(this.props.formContext.contextId).removeKeyHandler(this.props.id, this.keyFunctions);
 	}
 
+	componentDidUpdate(prevProps) {
+		if (!this.props.controlledValue && this.state.suggestion && this.props && prevProps.value !== this.props.value && this.props.value !== this.state.suggestionForValue) {
+			this.props.getSuggestionFromValue(this.props.value).then(suggestion => {
+				this.setState({inputValue: this.getSuggestionValue(suggestion), suggestion});
+			}, () => {
+				this.setState({inputValue: "", suggestion: undefined});
+			});
+		}
+	}
+
 	keyFunctions = {
 		autosuggestToggle: () => {
 			if (this.props.onToggle) {
@@ -391,7 +401,7 @@ export class Autosuggest extends React.Component {
 		const {value, getSuggestionFromValue} = props;
 		if (isEmptyString(value) || !getSuggestionFromValue) {
 			if (this.state.suggestion && Object.keys(this.state.suggestion).length > 0) {
-				this.setState({suggestion: undefined, inputValue: value});
+				this.setState({suggestion: undefined, inputValue: value, suggestionForValue: value});
 			}
 			return;
 		}
@@ -399,7 +409,7 @@ export class Autosuggest extends React.Component {
 		this.setState({isLoading: true});
 		getSuggestionFromValue(value).then(suggestion => {
 			if (!this.mounted) return;
-			this.setState({suggestion, inputValue: this.getSuggestionValue(suggestion), isLoading: false});
+			this.setState({suggestion, inputValue: this.getSuggestionValue(suggestion), isLoading: false, suggestionForValue: value});
 		}).catch(() => {
 			if (!this.mounted) return;
 			this.setState({isLoading: false});
@@ -423,9 +433,15 @@ export class Autosuggest extends React.Component {
 	selectSuggestion = (suggestion) => {
 		const {onSuggestionSelected, onChange, suggestionReceive} = this.props;
 		const afterStateChange = () => {
-			onSuggestionSelected ?
-				onSuggestionSelected(suggestion, this.mounted) :
-				onChange(suggestion[suggestionReceive]);
+			if (onSuggestionSelected) {
+				onSuggestionSelected(suggestion, this.mounted);
+			} else {
+				if (this.mounted) {
+					this.setState({suggestionForValue: suggestion[suggestionReceive]}, () => onChange(suggestion[suggestionReceive]));
+				} else {
+					onChange(suggestion[suggestionReceive]);
+				}
+			}
 		};
 		const state = {suggestion, inputValue: this.getSuggestionValue(suggestion)};
 		this.mounted
@@ -444,7 +460,7 @@ export class Autosuggest extends React.Component {
 				onChange(value);
 		};
 
-		const state = {inputValue: value, suggestion: undefined};
+		const state = {inputValue: value, suggestion: undefined, suggestionForValue: value};
 		this.mounted
 			? this.setState(state, afterStateChange)
 			: afterStateChange();
