@@ -725,6 +725,7 @@ export class Autosuggest extends React.Component {
 
 			return glyph ? (
 				<Glyphicon
+					key={glyph}
 					style={{pointerEvents: "none"}}
 					glyph={glyph}
 					className="form-control-feedback"
@@ -740,10 +741,12 @@ export class Autosuggest extends React.Component {
 		}
 
 		const addon = informalTaxonGroups && renderInformalTaxonGroupSelector
-			? <InformalTaxonGroupsAddon taxonGroupID={taxonGroupID} 
+			? <InformalTaxonGroupsAddon key="informal"
+					                        taxonGroupID={taxonGroupID} 
 				                          onClear={this.onInformalTaxonGroupSelected} 
 				                          open={this.state.informalTaxonGroupsOpen}
 				                          onOpen={this.onInformalTaxonGroupsOpened} 
+			                            onToggle={onToggle}
 				                          formContext={this.props.formContext} /> 
 			: null;
 
@@ -762,7 +765,7 @@ export class Autosuggest extends React.Component {
 
 		const toggler = onToggle
 			? (
-				<TooltipComponent tooltip={getTogglerTooltip()}>
+				<TooltipComponent tooltip={getTogglerTooltip()} key="toggler">
 					<InputGroup.Addon className={classNames("autosuggest-input-addon", "power-user-addon", this.props.toggled && "active")}
 					                  onMouseDown={this.onToggle}
 					                  onKeyDown={this.onToggleByKeyboard}
@@ -780,9 +783,8 @@ export class Autosuggest extends React.Component {
 				glyph={glyph} 
 				loading={this.state.isLoading} 
 				validationState={validationState} 
-				extra={addon}
-				appendExtra={toggler}
-				className={toggler ? "has-toggler" : undefined}
+				extra={[addon, toggler]}
+				 className={toggler ? "has-toggler" : undefined}
 				{...inputProps} 
 			/>
 		);

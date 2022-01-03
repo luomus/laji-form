@@ -565,20 +565,20 @@ export class TooltipComponent extends React.Component {
 }
 
 export const FetcherInput = React.forwardRef((props, ref) => {
-	const {loading, validationState, glyph, extra, appendExtra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+	const {loading, validationState, glyph, extra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 	const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
+	const _extra = (!Array.isArray(extra)) ? [extra] : extra;
 	const inputContent = (
 		<React.Fragment>
-			{extra}
+			{..._extra}
 			<Input {...inputProps} ref={ref} />
 			{glyph}
 			{loading && <Spinner />}
-			{appendExtra}
 		</React.Fragment>
 	);
 	const {InputGroup, FormGroup} = React.useContext(ReactContext).theme;
 
-	const content = extra || appendExtra
+	const content = extra
 		? (
 			<InputGroup>
 				{inputContent}
