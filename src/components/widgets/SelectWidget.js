@@ -109,6 +109,15 @@ class SelectWidget extends React.Component {
 		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}
 
+	onKeyDown = (e) => {
+		if (e.key !== "Tab") {
+			return;
+		}
+
+		const item = this.comboRef.state.focusedItem;
+		item && this.comboRef.handleSelect(item, e);
+	}
+
 	onToggle = () => {
 		this.setState({open: false});
 	};
@@ -145,7 +154,8 @@ class SelectWidget extends React.Component {
 			},
 			open: this.state.open,
 			onFocus: this.onFocus,
-			onToggle: this.onToggle
+			onToggle: this.onToggle,
+			onKeyDown: this.onKeyDown
 		};
 
 		const selectComponent = multiple ? (

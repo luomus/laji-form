@@ -58,7 +58,7 @@ describe("SelectWidget", () => {
 		expect (await form.getChangedData()).toBe(null);
 	});
 
-	it("value can be selected with keyboard", async () => {
+	it("value can be selected with enter", async () => {
 		await form.$getEnumWidget("").click();
 		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$(".rw-popup-container")), 1000, "select list timeout");
 		const $input = form.$getEnumWidget("").$("input");
@@ -66,5 +66,15 @@ describe("SelectWidget", () => {
 		await $input.sendKeys(protractor.Key.ENTER);
 		expect (await $input.getAttribute("value")).toBe(enums.a);
 		expect (await form.getChangedData()).toBe("a");
+	});
+
+	it("value can be selected with tab", async () => {
+		await form.$getEnumWidget("").click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$getEnumWidget("").$(".rw-popup-container")), 1000, "select list timeout");
+		const $input = form.$getEnumWidget("").$("input");
+		await $input.sendKeys(protractor.Key.DOWN);
+		await $input.sendKeys(protractor.Key.TAB);
+		expect (await $input.getAttribute("value")).toBe(enums.b);
+		expect (await form.getChangedData()).toBe("b");
 	});
 });
