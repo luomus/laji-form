@@ -100,7 +100,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+			expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 			await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 			await browser.sleep(100);
@@ -115,7 +115,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+			expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 			await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 			await browser.sleep(100);
@@ -131,7 +131,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
-			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+			expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 			await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 			await browser.sleep(100);
@@ -146,7 +146,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isNonsuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kett");
-			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+			expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 			await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 			await browser.sleep(100);
@@ -161,7 +161,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+			expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 			await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 			await browser.sleep(100);
@@ -176,7 +176,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			expect(await taxonAutosuggest.isSuggested()).toBe(true);
 			expect(await taxonAutosuggest.$input.getAttribute("value")).toBe("kettu");
-			expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+			expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 			await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 			await browser.sleep(100);
@@ -192,7 +192,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				expect(await taxonAutosuggest.isSuggested()).toBe(true);
 				expect(await taxonAutosuggest.$input.getAttribute("value")).toBe(`parus ${suffix}`);
-				expect(await getFocusedElement().getAttribute("class")).toBe(await taxonAutosuggest.$powerUserButton.getAttribute("class"), "next elem wasn't focused");
+				expect(await getFocusedElement().getAttribute("id")).not.toBe(await taxonAutosuggest.$input.getAttribute("id"), "next elem wasn't focused");
 
 				await getFocusedElement().sendKeys(protractor.Key.TAB); // Tab to get rid of toggler tooltip obscuring elements
 				await browser.sleep(100);
@@ -256,7 +256,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 			it("entering exact match adds new unit automatically", async () => {
 				await taxonAutosuggest.$powerUserButton.click();
-				await taxonAutosuggest.$input.click(); // Move mouse away from power user button so that no tooltips obscuring
 				await taxonAutosuggest.$input.sendKeys("susi");
 				await taxonAutosuggest.$input.sendKeys(protractor.Key.ENTER);
 				await browser.wait(protractor.ExpectedConditions.visibilityOf(form.$locate("gatherings.0.units.1")), 5000, "New unit didn't show up");
