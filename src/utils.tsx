@@ -687,12 +687,22 @@ export const formatErrorMessage = (msg: string) => msg.replace(/^\[.*\]/, "");
 export function checkRules(rules: any[], props: FieldProps, cache?: {[key: string]: any}, prop: keyof FieldProps = "formData"): boolean | {passes: boolean, cache: {[key: string]: any}} {
 	const passes = (Array.isArray(rules) ? rules : [rules]).every((rule, idx) => {
 		let passes;
+
+		// BW compatibility for old string  rule
 		if (rule === "isAdmin") {
-			passes = props.formContext.uiSchemaContext.isAdmin;
+			rule = {rule: "isAdmin"};
 		} else if (rule === "isEdit") {
-			passes = props.formContext.uiSchemaContext.isEdit;
+			rule = {rule: "isEdit"};
+		}
+
+		const {field, regexp, valueIn, valueIncludes, valueLengthLessThan, rule: _rule} = rule;
+		if (_rule) {
+			if (_rule === "isAdmin") {
+				passes = props.formContext.uiSchemaContext.isAdmin;
+			} else if (_rule === "isEdit") {
+				passes = props.formContext.uiSchemaContext.isEdit;
+			}
 		} else {
-			const {field, regexp, valueIn, valueIncludes, valueLengthLessThan} = rule;
 			let value = parseJSONPointer(props[prop] || {}, field);
 			if (value === undefined) value = "";
 			if (regexp) {

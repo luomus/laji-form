@@ -29,15 +29,22 @@ export default class MultiArrayField extends React.Component {
 
 	render() {
 		const {props} = this;
-		let {groups, cache = true, arrayMerge, persistenceKey, renderNonGrouped = false, nonGroupedOperations} = getUiOptions(this.props.uiSchema);
+		let {groups, cache = true, arrayMerge, persistByParent, persistenceKey, renderNonGrouped = false, nonGroupedOperations} = getUiOptions(this.props.uiSchema);
 		if (groups.length && !this.cache) {
 			this.cache = Array(groups.length).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
+		}
+		if (groups.length) {
 			this.arrayKeyFunctions = Array(groups.length + 1).fill(undefined).map((_, idx) => getArrayKeyFunctions(this, idx));
 		}
 
 		if (groups.length && !this.groupItemIds) {
 			const getGroupItemIds = () => Array(groups.length + 1).fill(undefined).map(_ => ({})); // eslint-disable-line @typescript-eslint/no-unused-vars
-			if (typeof persistenceKey === "string") {
+			if (persistByParent) {
+				const parentId = this.props.formContext._parentLajiFormId;
+				const context = new Context(`${parentId}_MULTI`);
+				this.groupItemIds = context.groupItemIds || getGroupItemIds();
+				context.groupItemIds = this.groupItemIds;
+			} else if (typeof persistenceKey === "string") {
 				const context = new Context(`${persistenceKey}_MULTI`);
 				this.groupItemIds = context.groupItemIds || getGroupItemIds();
 				context.groupItemIds = this.groupItemIds;
@@ -145,7 +152,6 @@ export default class MultiArrayField extends React.Component {
 					errorSchema[key - offset] = {...props.errorSchema[key]};
 				}
 			}
-
 
 			const {SchemaField} = this.props.registry.fields;
 			return (
