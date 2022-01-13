@@ -98,9 +98,7 @@ export default class SingleActiveArrayField extends React.Component {
 				: !affixed && (renderer === "accordion" || renderer === "pager")
 					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
 					: `${this.props.idSchema.$id}-add`;
-			setTimeout(() => {
-				focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
-			});
+			focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
 		}
 
 		if (prevProps.idSchema.$id !== this.props.idSchema.$id) {
