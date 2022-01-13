@@ -3,26 +3,6 @@ body .laji-form {
 	position: relative;
 }
 
-.laji-form .form-control:focus:not([readonly]), .laji-form .rw-state-focus:not(.rw-btn):not(.rw-list-option), .laji-form .bootstrap-switch-focused:not(.bootstrap-switch-disabled) {
-	-webkit-box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
-	box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
-}
-.laji-form .form-control[readonly], .laji-form .bootstrap-switch-disabled {
-	-webkit-box-shadow: none;
-	box-shadow: none;
-}
-
-.laji-form *:focus {
-	outline: none;
-	-webkit-box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
-	box-shadow: 0 0 1pt 1.5pt rgb(94, 158, 214);
-}
-
-.laji-form .laji-map .leaflet-marker-pane *:focus {
-	-webkit-box-shadow: none;
-	box-shadow: none;
-}
-
 .laji-form .rw-widget-input input, .laji-form .rw-widget-picker input  {
 	-webkit-box-shadow: none;
 	box-shadow: none;
