@@ -1,3 +1,9 @@
+## 12.1.0
+* MultiArrayField can persist by parent id
+* ConditionalUiSchemaField rules "isEdit" and "isAdmin" can be given as {"rule": "isEdit"}, so that it can leverage e.g. {"complement": true}
+* SelectWidget selects focused with tab
+* AutosuggestWidget toggler moved to left side of input
+
 ## 12.0.4
 * Checkbox widget hides label of nonactive button if has no custom labels. If a button for undefined isn't shown, click either button toggles the value.
 
