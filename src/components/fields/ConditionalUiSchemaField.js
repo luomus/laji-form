@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
 import * as deepmerge from "deepmerge";
-import { checkRules } from "../../utils";
+import { checkRules, updateSafelyWithJSONPointer } from "../../utils";
 
 export const rulePropType = PropTypes.oneOfType([
 	PropTypes.shape({
@@ -123,6 +123,9 @@ export const computeUiSchema = (uiSchema, operations, arrayMerge = "replace") =>
 			break;
 		case "wrap":
 			uiSchema = {...op.uiSchema, uiSchema};
+			break;
+		case "jsonPointer":
+			uiSchema = updateSafelyWithJSONPointer(uiSchema, op.value, op.pointer);
 			break;
 		case "replace":
 		default:
