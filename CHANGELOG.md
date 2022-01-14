@@ -1,3 +1,6 @@
+## 12.2.0
+* Add `jsonPointer` operator to `computeUiSchema` (used by e.g. `MultiArrayField`, `ConditionalUiSchemaField`)
+
 ## 12.1.0
 * MultiArrayField can persist by parent id
 * ConditionalUiSchemaField rules "isEdit" and "isAdmin" can be given as {"rule": "isEdit"}, so that it can leverage e.g. {"complement": true}
