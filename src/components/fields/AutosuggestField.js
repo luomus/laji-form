@@ -90,12 +90,16 @@ export default class AutosuggestField extends React.Component {
 			toggled = context[this.getTogglePersistenceContextKey(props)];
 		}
 
+		const {toggleable} = uiOptions;
+
 		toggled = (toggled !== undefined)
 			? toggled
 			: this.state
-				?  this.state.toggled
+				? this.state.toggled
 				: togglePersistenceKey
-					? context[this.getTogglePersistenceContextKey(props)]
+					? context[this.getTogglePersistenceContextKey(props)] !== undefined
+						? context[this.getTogglePersistenceContextKey(props)]
+						: (toggleable && toggleable.toggled || false)
 					: false;
 
 		const taxonGroupID = !informalTaxonGroups 
@@ -105,6 +109,7 @@ export default class AutosuggestField extends React.Component {
 				: formData[informalTaxonGroups] 
 					? formData[informalTaxonGroups][0] 
 					: undefined;
+
 
 		let options = {
 			...uiOptions,
@@ -120,14 +125,16 @@ export default class AutosuggestField extends React.Component {
 			informalTaxonGroupsValue: props.formData[informalTaxonGroups],
 			taxonGroupID,
 			placeholder: toggled 
-				? this.props.formContext.translations.UnitAutosuggestFieldTogglePlaceholder 
+				? typeof toggleable.placeholder === "string"
+					? toggleable.placeholder
+					: this.props.formContext.translations.UnitAutosuggestFieldTogglePlaceholder
 				: uiOptions["ui:placeholder"],
 			controlledValue: suggestionReceivers
 				&& suggestionReceivers[suggestionInputField]
 				&& suggestionReceivers[suggestionInputField] !== "key"
 		};
 
-		if (uiOptions.toggleable) {
+		if (toggleable) {
 			options.toggled = toggled;
 			options.onToggle = this.onToggleChange;
 

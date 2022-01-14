@@ -1183,6 +1183,10 @@ min-height: 20px;
 .laji-form .autosuggest-input-addon.input-group-addon.active {
 	color: #63a2c7;
 }
+.laji-form .autosuggest-input-addon:not(.active) .informal-group-image {
+	filter: saturate(0);
+}
+
 .autosuggest-input-addon.input-group-addon:focus, .autosuggest-input-addon.input-group-addon:hover {
 	background-color: white;
 	background: #ddd;

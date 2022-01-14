@@ -751,7 +751,14 @@ export class Autosuggest extends React.Component {
 			: null;
 
 		const getTogglerTooltip = () => {
-			let tooltip = `${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`;
+			const {toggleable} = getUiOptions(this.props.uiSchema);
+			let tooltip = typeof toggleable.tooltip === "string"
+				? toggleable.tooltip
+				: `${translations[this.props.toggled ? "StopShorthand" :  "StartShorthand"]}. ${translations.ShorthandHelp}`;
+
+			if (tooltip === "") {
+				return tooltip;
+			}
 
 			const {shortcuts = []} = new Context(this.props.formContext.contextId);
 			Object.keys(shortcuts).some(keyCombo => {
@@ -763,6 +770,14 @@ export class Autosuggest extends React.Component {
 			return tooltip;
 		};
 
+		const getToggleGlyph = () => {
+			const {toggleable} = getUiOptions(this.props.uiSchema);
+			if (toggleable && toggleable.glyphClass) {
+				return <span><div className={toggleable.glyphClass}/></span>;
+			}
+			return <Glyphicon glyph="flash" />;
+		};
+
 		const toggler = onToggle
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} key="toggler">
@@ -771,7 +786,7 @@ export class Autosuggest extends React.Component {
 					                  onKeyDown={this.onToggleByKeyboard}
 					                  tabIndex={0}
 					                  role="button">
-						<Glyphicon glyph="flash" />
+						{getToggleGlyph()}
 					</InputGroup.Addon>
 				</TooltipComponent>
 			) : null;
