@@ -1,3 +1,6 @@
+## 12.3.0
+* Parameterize `AutosuggestField` `toggleable` default `toggle` status, `tooltip` and `placeholder`
+
 ## 12.2.0
 * Add `jsonPointer` operator to `computeUiSchema` (used by e.g. `MultiArrayField`, `ConditionalUiSchemaField`)
 
