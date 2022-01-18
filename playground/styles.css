@@ -1174,38 +1174,30 @@ min-height: 20px;
 	margin-top: 5px;
 }
 
-.laji-form .autosuggest-input-addon.input-group-addon {
-	padding: 0px 3px;
-	background: #eee;
-	color: #555;
-	cursor: pointer;
+.laji-form .input-group .input-group-btn .informal-taxon-group-chooser-addon.btn {
+	width: 35px;
 }
-.laji-form .autosuggest-input-addon.input-group-addon.active {
-	color: #63a2c7;
-}
-.laji-form .autosuggest-input-addon:not(.active) .informal-group-image {
-	filter: saturate(0);
-}
-
-.autosuggest-input-addon.input-group-addon:focus, .autosuggest-input-addon.input-group-addon:hover {
-	background-color: white;
-	background: #ddd;
-}
-.laji-form .autosuggest-input-addon.input-group-addon .close {
+.laji-form .informal-taxon-group-chooser-addon .close {
 	float: none;
 	font-size: 14px;
 	margin-left: 2px;
 }
-.laji-form .autosuggest-input-addon.input-group-addon > span {
+.laji-form .informal-taxon-group-chooser-addon > div {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
 }
-.laji-form .autosuggest-input-addon.input-group-addon > .glyphicon {
+.laji-form .informal-taxon-group-chooser-addon > .glyphicon {
 	margin-top: -2px;
 	margin-left: 2px;
+}
+
+.input-group .input-group-btn .btn {
+	height: 25px;
+	width: 25px;
+	padding: 2px;
 }
 
 .laji-form .informal-group-image, .laji-form.informal-group-image  {
@@ -1614,6 +1606,11 @@ min-height: 20px;
 
 .laji-form .laji-form-hide-btn-label, .laji-form .btn.btn-default.laji-form-hide-btn-label {
 	color: white;
+}
+
+.laji-form .informal-group-image {
+	filter: saturate(0);
+	display: block;
 }
 
 .laji-form .informal-group-image.MVL\.26, .laji-form.informal-group-image.MVL\.26 {

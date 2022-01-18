@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
 import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
-import { FetcherInput, TooltipComponent, OverlayTrigger, Button } from "../components";
+import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGroupChooserWidget";
@@ -695,7 +695,7 @@ export class Autosuggest extends React.Component {
 		let validationState = null;
 		const {translations, lang} = this.props.formContext;
 		const {suggestion} = this.state;
-		const {Glyphicon, InputGroup} = this.context.theme;
+		const {Glyphicon} = this.context.theme;
 
 		const isSuggested = this.isSuggested();
 
@@ -772,22 +772,27 @@ export class Autosuggest extends React.Component {
 
 		const getToggleGlyph = () => {
 			const {toggleable} = getUiOptions(this.props.uiSchema);
+			const props = {
+				className: classNames("autosuggest-input-addon", "power-user-addon", this.props.toggled && "active"),
+				onMouseDown: this.onToggle,
+				onKeyDown: this.onToggleByKeyboard
+			};
+
 			if (toggleable && toggleable.glyphClass) {
-				return <span><div className={toggleable.glyphClass}/></span>;
+				return (
+					<Button {...props}>
+						<span className={toggleable.glyphClass} />
+					</Button>
+				);
 			}
-			return <Glyphicon glyph="flash" />;
+
+			return <GlyphButton glyph="flash" {...props} />;
 		};
 
 		const toggler = onToggle
 			? (
 				<TooltipComponent tooltip={getTogglerTooltip()} key="toggler">
-					<InputGroup.Addon className={classNames("autosuggest-input-addon", "power-user-addon", this.props.toggled && "active")}
-					                  onMouseDown={this.onToggle}
-					                  onKeyDown={this.onToggleByKeyboard}
-					                  tabIndex={0}
-					                  role="button">
-						{getToggleGlyph()}
-					</InputGroup.Addon>
+					{getToggleGlyph()}
 				</TooltipComponent>
 			) : null;
 
@@ -998,19 +1003,23 @@ class InformalTaxonGroupsAddon extends React.Component {
 		if (informalTaxonGroupsById[taxonGroupID] && informalTaxonGroupsById[taxonGroupID].parent) {
 			imageID = informalTaxonGroupsById[taxonGroupID].parent.id;
 		}
-		const {Glyphicon} = this.context.theme;
-		return taxonGroupID ?
-			<span><div className={`informal-group-image ${imageID}`}/><button className="close" onClick={this.onClear}>×</button></span> :
-			<Glyphicon glyph="menu-hamburger" />;
+		return taxonGroupID
+			? (
+				<span className="btn btn-default informal-taxon-group-chooser-addon active">
+					<div>
+						<div className={`informal-group-image ${imageID}`}/>
+						<button className="close" onClick={this.onClear}>×</button>
+					</div>
+				</span>
+			) : (
+				<GlyphButton glyph="menu-hamburger" className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} onKeyDown={this.onKeyDown} />
+			);
 	}
 
 	render() {
-		const {InputGroup} = this.context.theme;
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
-				<InputGroup.Addon className="autosuggest-input-addon informal-taxon-group-chooser" role="button" onClick={this.toggle} onKeyDown={this.onKeyDown} tabIndex={0}>
-					{this.renderGlyph()}
-				</InputGroup.Addon>
+				{this.renderGlyph()}
 			</TooltipComponent>
 		);
 	}
