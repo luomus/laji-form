@@ -1174,6 +1174,13 @@ min-height: 20px;
 	margin-top: 5px;
 }
 
+.laji-form .autosuggest-input-addon.active {
+        color: #2980b9;
+}
+.laji-form .autosuggest-input-addon.active .informal-group-image, .laji-form .informal-taxon-group-chooser-addon.active .informal-group-image  {
+        filter: none;
+}
+
 .laji-form .input-group .input-group-btn .informal-taxon-group-chooser-addon.btn {
 	width: 35px;
 }
