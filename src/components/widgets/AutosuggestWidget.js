@@ -1003,16 +1003,20 @@ class InformalTaxonGroupsAddon extends React.Component {
 		if (informalTaxonGroupsById[taxonGroupID] && informalTaxonGroupsById[taxonGroupID].parent) {
 			imageID = informalTaxonGroupsById[taxonGroupID].parent.id;
 		}
+		const buttonProps = {
+			onClick: this.toggle,
+			onKeyDown: this.onKeyDown
+		};
 		return taxonGroupID
 			? (
 				<span className="btn btn-default informal-taxon-group-chooser-addon active">
 					<div>
-						<div className={`informal-group-image ${imageID}`}/>
+						<span {...buttonProps} className={`informal-group-image ${imageID}`} />
 						<button className="close" onClick={this.onClear}>×</button>
 					</div>
 				</span>
 			) : (
-				<GlyphButton glyph="menu-hamburger" className="autosuggest-input-addon informal-taxon-group-chooser" onClick={this.toggle} onKeyDown={this.onKeyDown} />
+				<GlyphButton {...buttonProps} glyph="menu-hamburger" className="autosuggest-input-addon informal-taxon-group-chooser"/>
 			);
 	}
 
