@@ -110,7 +110,7 @@ export default class FieldTemplate extends React.Component {
 		const {Label, errorsAsPopup} = this.props.formContext;
 		const component = (errorsComponent) => (
 			<div className={classNames(_classNames, warningClassName)} id={htmlId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} _context={new Context(formContext.contextId)} /> : null}
+				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} contextId={formContext.contextId} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}

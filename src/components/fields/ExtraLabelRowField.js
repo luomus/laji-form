@@ -68,7 +68,11 @@ export default class ExtraLabelRowField extends React.Component {
 
 		return (
 			<div ref={this.setContainerRef}>
-				{title ? <TitleField title={title} className={titleClassName} help={this.props.uiSchema["ui:help"]} id={this.props.idSchema.$id}/> : null}
+				{title
+					? (
+						<TitleField title={title} className={titleClassName} help={this.props.uiSchema["ui:help"]} id={this.props.idSchema.$id} />
+					) : null
+				}
 				{labelRow}
 				<SchemaField {...this.props} {...this.state}/>
 			</div>

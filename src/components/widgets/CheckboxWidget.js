@@ -2,7 +2,6 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, classNames, keyboardClick } from "../../utils";
-import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
 export default class CheckboxWidget extends React.Component {
@@ -138,7 +137,7 @@ export default class CheckboxWidget extends React.Component {
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : (
-			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement} _context={new Context(this.props.formContext.contextId)}>
+			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement} contextId={this.props.formContext.contextId}>
 				{checkbox}
 			</Label>
 		);

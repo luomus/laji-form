@@ -44,7 +44,9 @@ function ObjectFieldTemplate(props) {
 						required={props.required || props.uiSchema["ui:required"]}
 						className={getUiOptions(props.uiSchema).titleClassName}
 						help={props.uiSchema["ui:help"]}
+						helpHoverable={props.uiSchema["ui:helpHoverable"]}
 						buttons={buttons}
+						contextId={props.formContext.contextId}
 					/>}
 				{topButtons}
 				{props.description &&

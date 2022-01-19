@@ -954,7 +954,7 @@ class _TaxonWrapper extends React.Component {
 		return (
 			<OverlayTrigger hoverable={true}
 			                placement={placement}
-			                _context={new Context(this.props.formContext.contextId)}
+			                contextId={this.props.formContext.contextId}
 			                overlay={popover}
 			                ref={this.props.overlayRef}>
 				{children}

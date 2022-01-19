@@ -1,16 +1,16 @@
 import * as React from "react";
-import { Help } from "../components";
+import { Help, OverlayTrigger } from "../components";
 import { isEmptyString, parseJSONPointer } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
-const TitleField = ({title, className, buttons, help, id, formData, titleFormatters = [], style}) => {
+const TitleField = ({title, className, buttons, help, helpHoverable, id, formData, titleFormatters = [], style, contextId}) => {
 	const renderedFormatters = titleFormatters.map((titleFormatter) => {
 		const {renderer} = titleFormatter;
 		return _titleFormatters[renderer]({...titleFormatter, formData});
 	}).filter(i => i);
 
-	const {Tooltip, OverlayTrigger} = React.useContext(ReactContext).theme;
+	const {Tooltip} = React.useContext(ReactContext).theme;
 
 	if (renderedFormatters.length === 0 && isEmptyString(title)) return null;
 
@@ -34,7 +34,7 @@ const TitleField = ({title, className, buttons, help, id, formData, titleFormatt
 
 	return (
 		<Legend>
-			<OverlayTrigger placement="right" overlay={tooltipElem}>
+			<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} contextId={contextId}>
 				{titleContent}
 			</OverlayTrigger>
 		</Legend>

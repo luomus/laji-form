@@ -638,7 +638,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={activeIdx}>
-				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} help={arrayTemplateFieldProps.uiSchema["ui:help"]}/>
+				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} help={arrayTemplateFieldProps.uiSchema["ui:help"]} />
 				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
@@ -820,7 +820,7 @@ class TableArrayFieldTemplate extends React.Component {
 		const {schema, uiSchema = {}, formData = [], items, TitleField, DescriptionField, disabled, readonly} = this.props;
 		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(uiSchema);
 		const {Label} = this.props.formContext;
-		const Title = renderTitleAsLabel ? Label :  TitleField;
+		const Title = renderTitleAsLabel ? Label : TitleField;
 		const foundProps = {};
 		const shownColumnsDict = dictionarify(shownColumns);
 		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");

@@ -444,7 +444,7 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id, required, _context, helpHoverable, helpPlacement}) {
+export function Label({label, help, children, id, required, contextId, helpHoverable, helpPlacement}) {
 	const showHelp = label && help;
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
@@ -468,7 +468,7 @@ export function Label({label, help, children, id, required, _context, helpHovera
 	);
 
 	return (label || help) ? (
-		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} _context={_context}>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} contextId={contextId}>
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;
@@ -621,7 +621,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.props._context.setTimeout(() => {
+		this.overlayTimeout = new Context(this.props.contextId).setTimeout(() => {
 			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
 		}, 200);
 	};
@@ -635,7 +635,8 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.props._context.setTimeout(() => {
+		const _context = new Context(this.props.contextId);
+		this.overlayTimeout = _context.setTimeout(() => {
 			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
 		}, 200);
 	}
@@ -644,7 +645,7 @@ export class OverlayTrigger extends React.Component {
 		const {
 			children,
 			overlay,
-			_context, //eslint-disable-line @typescript-eslint/no-unused-vars
+			contextId, //eslint-disable-line @typescript-eslint/no-unused-vars
 			...props
 		} = this.props;
 
