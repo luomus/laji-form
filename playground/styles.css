@@ -1175,7 +1175,7 @@ min-height: 20px;
 }
 
 .laji-form .autosuggest-input-addon.active {
-        color: #2980b9;
+        color: #2980b9 !important;
 }
 .laji-form .autosuggest-input-addon.active .informal-group-image, .laji-form .informal-taxon-group-chooser-addon.active .informal-group-image  {
         filter: none;
