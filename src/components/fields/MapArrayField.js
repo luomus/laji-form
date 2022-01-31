@@ -30,7 +30,6 @@ export function parseGeometries(geometry) {
 		}, []);
 }
 
-
 export default class MapArrayField extends React.Component {
 	static propTypes = {
 		uiSchema: PropTypes.shape({
@@ -1488,7 +1487,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 
 		let buttons = undefined;
 		let renderButtonsBelow = false;
-		if (((this.props.formData || []).length === 0 || activeIdx !== undefined) && options.buttons) {
+		if ((mapOptions.emptyMode || activeIdx !== undefined) && options.buttons) {
 			if (_buttonsPath) {
 				buttons = prependAddButton(options.buttons);
 				belowUiSchema = injectButtons(belowUiSchema, buttons, _buttonsPath);
@@ -1497,6 +1496,8 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 				buttons = prependAddButton(options.buttons);
 				inlineUiSchema["ui:options"].renderAdd = false;
 				renderButtonsBelow = true;
+			} else {
+				buttons = options.buttons;
 			}
 		} 
 
@@ -1509,7 +1510,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 
 		buttons = buttons && (!_buttonsPath || mapOptions.emptyMode)
 			? buttons.map(button => getButton(button, {
-				canAdd: mapOptions.emptyMode ? button.fnName === "addNamedPlace" : true,
+				canAdd: mapOptions.emptyMode ? (button.fn !== "add" && button.fnName !== "add") : true,
 				uiSchema: this.props.uiSchema,
 				idSchema: this.props.idSchema,
 				formData: this.props.formData,
