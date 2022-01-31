@@ -5,7 +5,7 @@ import * as DateTimePicker from "react-widgets/lib/DateTimePicker";
 import * as moment from "moment";
 import * as momentLocalizer from "react-widgets-moment";
 import { date as dateLocalizer } from "react-widgets/lib/util/localizers";
-import { getUiOptions, isDescendant } from "../../utils";
+import { getUiOptions, isDescendant, parseJSONPointer } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
@@ -18,7 +18,16 @@ export default class DateTimeWidget extends React.Component {
 	static propTypes = {
 		uiSchema:  PropTypes.shape({
 			"ui:options": PropTypes.shape({
-				showButtons: PropTypes.bool,
+				showButtons: PropTypes.oneOfType([
+					PropTypes.bool,
+					PropTypes.shape({
+						today: PropTypes.bool,
+						yesterday: PropTypes.bool,
+						same: PropTypes.shape({
+							path: PropTypes.string
+						}),
+					})
+				]),
 				showTimeList: PropTypes.bool,
 				allowOnlyYear: PropTypes.bool
 			})
@@ -201,7 +210,7 @@ export default class DateTimeWidget extends React.Component {
 		/>);
 
 		const {showButtons} = options;
-		const {Button, ButtonGroup} = this.context.theme;
+		const {ButtonGroup} = this.context.theme;
 
 		return showButtons ? (
 			<div className="date-widget" ref={this.setContainerRef}>
@@ -209,11 +218,44 @@ export default class DateTimeWidget extends React.Component {
 					{datePicker}
 				</div>
 				<ButtonGroup>
-					<Button className="today" onClick={this.setToday} disabled={readonly || disabled}>{translations.Today}</Button>
-					<Button className="yesterday" onClick={this.setYesterday} disabled={readonly || disabled}>{translations.Yesterday}</Button>
+					{this.renderButtons(showButtons)}
 				</ButtonGroup>
 			</div>
 		) : <div className="date-widget">{datePicker}</div>;
+	}
+
+	renderButtons(showButtons) {
+		const {readonly, disabled} = this.props;
+		const {translations} = this.props.formContext;
+		const buttonDefinitions = {
+			today: {
+				className: "today",
+				label: translations.Today,
+				onClick: this.setToday
+			},
+			yesterday: {
+				className: "yesterday",
+				label: translations.Yesterday,
+				onClick: this.setYesterday
+			},
+			same: {
+				className: "same",
+				label: translations.Same,
+				onClick: this.setSameAsToday
+			}
+		};
+
+		const options = showButtons === true
+			? {today: true, yesterday: true}
+			: showButtons;
+
+		const {Button} = this.context.theme;
+		return Object.keys(options)
+			.filter(name => options[name])
+			.map(name => buttonDefinitions[name])
+			.map(({className, onClick, label}) => (
+				<Button key={className} className={className} onClick={onClick} disabled={readonly || disabled}>{label}</Button>
+			));
 	}
 
 	getDateWithCurrentTime = (date) => {
@@ -228,6 +270,16 @@ export default class DateTimeWidget extends React.Component {
 
 	setYesterday = () => {
 		this.onChange(this.getDateWithCurrentTime(moment().subtract(1, "d").format("YYYY-MM-DD")));
+	}
+
+	setSameAsToday = () => {
+		const {formData} = this.getContext();
+		const sameOptions = getUiOptions(this.props).showButtons.same || {};
+		const {path = "/gatheringEvent/dateBegin"} = sameOptions;
+		const today = parseJSONPointer(formData, path, !!"safely");
+		if (today) {
+			this.onChange(today);
+		}
 	}
 
 	formatValue(value, options, props) {

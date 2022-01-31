@@ -803,5 +803,10 @@
 		"fi": "Paikan poisto epäonnistui",
 		"en": "Removing place failed",
 		"sv": "Ta bort platsen misslyckades"
+	},
+	"same": {
+		"fi": "Sama",
+		"en": "Same",
+		"sv": "Samma"
 	}
 }

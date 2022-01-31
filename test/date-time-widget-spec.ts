@@ -134,6 +134,40 @@ describe("Date & time widgets", () => {
 				expect(await form.getChangedData()).toBe(year);
 			});
 		});
+
+		describe("same button", () => {
+			let startWidget: DateWidgetPO;
+			let endWidget: DateWidgetPO;
+
+			beforeAll(async () => {
+				await form.setState({
+					schema: {type: "object", properties: {start: {type: "string"}, end: {type: "string"}}},
+					uiSchema: {
+						start: {...uiSchema, "ui:options": {showButtons: true}},
+						end: {...uiSchema, "ui:options": {showButtons: {same: {path: "/start"}}}}
+					},
+					formData: {}
+				});
+				startWidget = form.getDateWidget("start");
+				endWidget = form.getDateWidget("end");
+			});
+
+			it("not displayed by if showButtons true", async () => {
+				expect(await isDisplayed(startWidget.buttons.$same)).toBe(false);
+			});
+
+			it("displayed if showButtons has {same: true}", async () => {
+				expect(await isDisplayed(endWidget.buttons.$same)).toBe(true);
+			});
+
+			it("click works", async () => {
+				await updateValue(startWidget.$input, "2.4.2012");
+				await endWidget.buttons.$same.click();
+
+				expect(await endWidget.$input.getAttribute("value")).toBe("02.04.2012");
+				expect((await form.getChangedData()).end).toBe("2012-04-02");
+			});
+		});
 	});
 
 	describe("DateWidget", () => {

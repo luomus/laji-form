@@ -27,6 +27,7 @@ export interface DateWidgetPO {
 	buttons: {
 		$today: ElementFinder;
 		$yesterday: ElementFinder;
+		$same: ElementFinder;
 		$date: ElementFinder;
 		$time: ElementFinder;
 	}
@@ -241,6 +242,7 @@ export class Form {
 			buttons: {
 				$today: $widget.$(".today"),
 				$yesterday: $widget.$(".yesterday"),
+				$same: $widget.$(".same"),
 				$date: $widget.$(".rw-i-calendar"),
 				$time: $widget.$(".rw-i-clock-o")
 			},
