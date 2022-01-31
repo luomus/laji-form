@@ -16,6 +16,15 @@ export default class SingleItemArrayField extends React.Component {
 
 	static getName() {return "SingleItemArrayField";}
 
+	constructor(props) {
+		super(props);
+		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(props);
+	}
+
+	componentDidUpdate() {
+		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(this.props);
+	}
+
 	getStateFromProps(props) {
 		const activeIdx = this.getActiveIdx(props);
 		if (typeof activeIdx !== "number" || isNaN(activeIdx)) {
