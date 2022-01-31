@@ -1,3 +1,6 @@
+## 12.4.0
+* Add `showButtons.same` option for `DateTimeWidget`
+
 ## 12.3.0
 * Parameterize `AutosuggestField` `toggleable` default `toggle` status, `tooltip` and `placeholder`
 
