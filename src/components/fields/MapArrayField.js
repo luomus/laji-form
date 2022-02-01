@@ -1912,6 +1912,7 @@ export class MapComponent extends React.Component {
 				     ref="map"
 				     showHelp={this.showHelp}
 				     hideHelp={this.hideHelp}
+				     contextId={this.props.formContext.contextId}
 				     {...{...mapOptions, ...this.state.mapOptions}}
 				/>
 			</div>
@@ -2018,6 +2019,10 @@ export class Map extends React.Component {
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;
 		mapOptions.rootElem = this.refs.map;
+		const lajiGeoServerAddress = this.props.contextId !== undefined && new Context(this.props.contextId).lajiGeoServerAddress;
+		if (lajiGeoServerAddress) {
+			mapOptions.lajiGeoServerAddress = lajiGeoServerAddress;
+		}
 		return mapOptions;
 	}
 

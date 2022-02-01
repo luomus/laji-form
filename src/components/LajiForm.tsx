@@ -167,6 +167,7 @@ export interface LajiFormProps  extends HasMaybeChildren {
 	onSettingsChange?: (settings: any, global: boolean) => void;
 	mediaMetadata?: MediaMetadata;
 	theme?: Theme;
+	lajiGeoServerAddress?: string;
 }
 
 export interface LajiFormState {
@@ -413,6 +414,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._context = new InstanceContext(this._id) as RootContext;
 		this._context.formInstance = this;
 		this._context.formData = props.formData;
+		if (props.lajiGeoServerAddress) {
+			this._context.lajiGeoServerAddress = props.lajiGeoServerAddress;
+		}
 
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;

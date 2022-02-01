@@ -163,6 +163,7 @@ if (test !== true) {
 			capturerVerbatim: "Test",
 			intellectualOwner: "Test"
 		},
+		lajiGeoServerAddress: "https://geoserver-dev.laji.fi"
 	}));
 }
 
