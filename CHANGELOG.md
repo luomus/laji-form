@@ -1,3 +1,6 @@
+## 12.5.0
+* add `lajiGeoServerAddress` option
+
 ## 12.4.0
 * Add `showButtons.same` option for `DateTimeWidget`
 
