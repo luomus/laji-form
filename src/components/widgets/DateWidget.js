@@ -30,7 +30,20 @@ const DateWidget = (props) => {
 DateWidget.propTypes = {
 	uiSchema: PropTypes.shape({
 		"ui:options": PropTypes.shape({
-			showButtons: PropTypes.bool
+			showButtons: PropTypes.oneOfType([
+				PropTypes.bool,
+				PropTypes.shape({
+					today: PropTypes.bool,
+					yesterday: PropTypes.bool,
+					same: PropTypes.oneOfType([
+						PropTypes.bool,
+						PropTypes.shape({
+							path: PropTypes.string
+						})
+					])
+				})
+			]),
+			allowOnlyYear: PropTypes.bool
 		})
 	}),
 	schema: PropTypes.shape({

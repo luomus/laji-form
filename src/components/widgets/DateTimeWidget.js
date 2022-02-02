@@ -23,9 +23,12 @@ export default class DateTimeWidget extends React.Component {
 					PropTypes.shape({
 						today: PropTypes.bool,
 						yesterday: PropTypes.bool,
-						same: PropTypes.shape({
-							path: PropTypes.string
-						}),
+						same: PropTypes.oneOfType([
+							PropTypes.bool,
+							PropTypes.shape({
+								path: PropTypes.string
+							})
+						])
 					})
 				]),
 				showTimeList: PropTypes.bool,
