@@ -9,6 +9,7 @@ import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
+import { orderProperties } from "@rjsf/core/dist/cjs/utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -525,7 +526,7 @@ export default class ScopeField extends React.Component {
 
 	additionalPropertiesToList = (properties, ElemType) => {
 		const titles = getUiOptions(this.props.uiSchema).titles || {};
-		return Object.keys(properties)
+		return orderProperties(Object.keys(properties), this.props.uiSchema["ui:order"])
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
 				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
