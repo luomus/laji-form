@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema, isHidden } from "../../utils";
+import { orderProperties } from "@rjsf/core/dist/cjs/utils";
 import { DeleteButton } from "../components";
 import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
@@ -135,7 +136,10 @@ class TableArrayFieldTemplate extends React.Component {
 		const schemaProps = schema.additionalItems ? schema.additionalItems.properties : schema.items.properties;
 		const {Label} = this.props.formContext;
 		const {Row, Col} = this.context.theme;
-		const labels =schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)).map(propName => {
+		const labels = orderProperties(
+			schemaPropsArray.filter(col => !isHidden(uiSchema.items, col)),
+			(uiSchema.items || {})["ui:order"]
+		).map(propName => {
 			const propUiSchema = uiSchema && uiSchema.items && uiSchema.items[propName] || {};
 			return (
 				<Col {...cols} key={propName + "-label"}>
