@@ -1,5 +1,4 @@
 import * as React from "react";
-import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Combobox from "react-widgets/lib/Combobox";
 import * as Multiselect from "react-widgets/lib/Multiselect";
@@ -98,11 +97,6 @@ class SelectWidget extends React.Component {
 		this.props.onChange(this.getEnum(item.value));
 	}
 
-	onBlur = () => {
-		const node = findDOMNode(this.comboRef.inputRef);
-		node && node.setSelectionRange(0, 0);
-	}
-
 	onClick = () => {
 		!this.props.disabled && !this.props.readonly && this.setState({open: true});
 	}
@@ -177,7 +171,6 @@ class SelectWidget extends React.Component {
 				ref={this.setRef}
 				onClick={this.onClick}
 				onSelect={this.onSelect}
-				onBlur={this.onBlur}
 			/>
 		);
 
