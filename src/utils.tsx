@@ -155,7 +155,7 @@ export function isEmptyString(val: any) {
 export function parseJSONPointer(object: any, jsonPointer: string, safeMode?: true | "createParents", strictEmptyPath?: boolean): any;
 export function parseJSONPointer(object: any, jsonPointer: string, safeMode?: false, strictEmptyPath?: boolean): any | undefined;
 export function parseJSONPointer(object: any, jsonPointer: string, safeMode?: boolean | "createParents", strictEmptyPath = false): any | undefined {
-	if (jsonPointer === "") {
+	if (jsonPointer === "" || jsonPointer === "/") {
 		return object;
 	}
 
