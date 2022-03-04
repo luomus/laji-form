@@ -96,7 +96,7 @@ export default class ErrorListTemplate extends React.Component {
 					<div>
 						{errors.length > 0
 							? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
-							: <Button onClick={this.submitWithWarnings} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
+							: <Button onClick={this.submitWithWarnings} variant={"success"} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
 						}
 					</div>
 				</div>
