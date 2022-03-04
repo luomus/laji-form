@@ -66,7 +66,7 @@ export default class NamedPlaceChooserField extends React.Component {
 			let gathering = getDefaultFormState(schema, undefined, this.props.registry.definitions);
 			const placeGathering = place.prepopulatedDocument.gatherings[0];
 			whitelist.forEach(prop => {
-				if (prop in placeGathering) {
+				if (prop in placeGathering && prop in schema.properties) {
 					gathering[prop] = placeGathering[prop];
 				}
 			});
