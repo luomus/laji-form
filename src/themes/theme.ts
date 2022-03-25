@@ -1,7 +1,7 @@
 import * as React from "react";
 
-type Variant = "primary" | "secondary" | "danger" | "warning" | "info" | string;
-type ButtonVariant = Variant | "link";
+export type Variant = "primary" | "secondary" | "danger" | "warning" | "info" | string;
+export type ButtonVariant = Variant | "link";
 
 export interface HasMaybeChildren {
 	children?: React.ReactNode;

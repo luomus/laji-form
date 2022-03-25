@@ -37,7 +37,11 @@ export default class ApiClient {
 	 * @returns a Promise.
 	 */
 	fetchRaw(path: string, query?: Query, options?: any) {
-		return this.apiClient.fetch(path, {lang: this.lang, ...(query || {})}, options).catch(() => {
+		const _query = {lang: this.lang, ...(query || {})};
+		if (!_query.lang) {
+			delete (_query as any).lang;
+		}
+		return this.apiClient.fetch(path, _query, options).catch(() => {
 			throw new Error(this.translations[this.lang].RequestFailed as string);
 		});
 	}
