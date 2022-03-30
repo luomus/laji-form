@@ -1659,3 +1659,7 @@ min-height: 20px;
 .laji-form .informal-group-image.MVL\.28, .laji-form.informal-group-image.MVL\.29 {
 	background-image: url(https://cdn.laji.fi/images/informalGroups/MVL.28.svg);
 }
+
+.laji-form legend.has-help div {
+	display: initial;
+}

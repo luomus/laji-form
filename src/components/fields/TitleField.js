@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Help, OverlayTrigger } from "../components";
-import { isEmptyString, parseJSONPointer } from "../../utils";
+import { isEmptyString, parseJSONPointer, classNames } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
@@ -12,32 +12,39 @@ const TitleField = ({title, className, buttons, help, helpHoverable, id, formDat
 
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
-	if (renderedFormatters.length === 0 && isEmptyString(title)) return null;
+	if (renderedFormatters.length === 0 && isEmptyString(title)) {
+		return null;
+	}
 
 	const helpComponent = help ? <Help /> : null;
 
-	const titleContent = <span><span>{renderedFormatters}</span> <span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent} {buttons}</span>;
-
-	const Legend = ({children, ...props}) => <legend className={className} style={style} {...props}>{children}</legend>;
-
-	if (!help) return <Legend>{titleContent}</Legend>;
-
-
-	const tooltipElem = (
-		<Tooltip id={id + "-tooltip"}>
-			<span>
-				<strong dangerouslySetInnerHTML={{__html: title}} /><br />
-				<span dangerouslySetInnerHTML={{__html: help}} />
-			</span>
-		</Tooltip>
+	let titleTextContent = (
+		<React.Fragment>
+			<span dangerouslySetInnerHTML={{__html: title}} /> {helpComponent}
+		</React.Fragment>
 	);
 
-	return (
-		<Legend>
+	if (help) {
+		const tooltipElem = (
+			<Tooltip id={id + "-tooltip"}>
+				<span>
+					<strong dangerouslySetInnerHTML={{__html: title}} /><br />
+					<span dangerouslySetInnerHTML={{__html: help}} />
+				</span>
+			</Tooltip>
+		);
+
+		titleTextContent = (
 			<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} contextId={contextId}>
-				{titleContent}
+				{titleTextContent}
 			</OverlayTrigger>
-		</Legend>
+		);
+	}
+
+	return (
+		<legend className={classNames(className, help && "has-help")} style={style}>
+			<span><span>{renderedFormatters}</span> {titleTextContent} {buttons}</span>
+		</legend>
 	);
 };
 
