@@ -39,7 +39,7 @@
     "exif-js": "^2.3.0",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
-    "laji-map": "^3.14.9",
+    "laji-map": "^3.16.0",
     "laji-validate": "0.0.113",
     "moment": "^2.29.1",
     "prop-types": "^15.5.8",
