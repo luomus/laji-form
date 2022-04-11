@@ -808,5 +808,10 @@
 		"fi": "Sama",
 		"en": "Same",
 		"sv": "Samma"
+	},
+	"howManyPhotos": {
+		"fi": "kuvaa",
+		"en": "photos",
+		"sv": "foton"
 	}
 }

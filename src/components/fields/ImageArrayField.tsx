@@ -61,14 +61,10 @@ export default class ImageArrayField extends React.Component<FieldProps, ImageAr
 	renderModalMedia = () => <img src={this.state.modalMediaSrc} />
 
 	formatValue(value: string[], options: any, props: FieldProps, parentProps: FieldProps) {
-		const imgs = value && value.length ? value.map((id, idx) => <Thumbnail key={idx} id={id} apiClient={props.formContext.apiClient} />) : [];
-		const parentFormData = (parentProps ||{}).formData || {};
-		const lajiFormId = getUUID(parentFormData || {});
-		const {tmpMedias = {}} = new Context("IMAGE_ARRAY_FIELD") as any;
-		if (lajiFormId && tmpMedias[lajiFormId]) {
-			return [...imgs, ...Object.keys(tmpMedias[lajiFormId]).map(id => <Thumbnail key={id} dataURL={tmpMedias[lajiFormId][id]} apiClient={props.formContext.apiClient}/>)];
-		}
-		return imgs;
+		const {translations} = props.formContext;
+		return value && value.length
+			? `${value.length} ${translations.HowManyPhotos}`
+			: null;
 	}
 }
 
