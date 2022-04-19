@@ -80,6 +80,7 @@ body .laji-form {
 .laji-form .autosuggest-wrapper .rw-list-option img {
 	border: 1px solid;
 	float: right;
+	margin-top: 4px;
 }
 
 .laji-form .map-array-directionless-enter {

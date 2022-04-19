@@ -10,7 +10,7 @@ import { InformalTaxonGroupChooser, getInformalGroups } from "./InformalTaxonGro
 
 function renderFlag(suggestion, prepend) {
 	return (suggestion && suggestion.payload || {}).finnish
-		? <React.Fragment>{prepend || null}<img src={`${new Context().staticImgPath}/finnish-flag.png`} /></React.Fragment>
+		? <React.Fragment>{prepend || null}<img src="https://cdn.laji.fi/images/icons/flag_fi_small.png" width="16"/></React.Fragment>
 		: null;
 }
 

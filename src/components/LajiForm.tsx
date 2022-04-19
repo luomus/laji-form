@@ -143,7 +143,6 @@ export interface LajiFormProps  extends HasMaybeChildren {
 	uiSchema?: any;
 	topOffset?: number;
 	bottomOffset?: number;
-	staticImgPath?: string;
 	formContext?: any;
 	uiSchemaContext?: any;
 	settings?: any;
@@ -303,10 +302,6 @@ export interface RootContext {
 	errorList: ErrorListTemplate
 	keyTimeouts: number[];
 	[prop: string]: any;
-}
-
-interface GlobalContext {
-	staticImgPath: string;
 }
 
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
@@ -582,7 +577,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	getStateFromProps(props: LajiFormProps) {
-		if (props.staticImgPath) (new InstanceContext() as GlobalContext).staticImgPath = props.staticImgPath;
 		const translations = this.translations[props.lang as Lang];
 		if (!this.tmpIdTree || props.schema !== this.props.schema) {
 			this.setTmpIdTree(props.schema);

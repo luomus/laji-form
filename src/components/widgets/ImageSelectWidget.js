@@ -19,7 +19,6 @@ export default class ImageSelectWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this._context = new Context("IMAGES");
-		this.staticImgPath = new Context().staticImgPath;
 	}
 
 	render() {
@@ -41,8 +40,8 @@ export default class ImageSelectWidget extends React.Component {
 		let path = this._context[enumName] || {};
 
 		try {
-			path.svg = `${this.staticImgPath}/${imgName}.svg`;
-			path.png = `${this.staticImgPath}/${imgName}.png`;
+			path.svg = `https://cdn.laji.fi/images/${imgName}.svg`;
+			path.png = `https://cdn.laji.fi/images/${imgName}.png`;
 		} finally {
 			this._context[enumName] = path;
 			return <span className="select-icon"><Isvg key={enumName} src={path.svg} cacheGetRequests={true}><img src={path.png} /></Isvg></span>;
