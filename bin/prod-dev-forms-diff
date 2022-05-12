@@ -32,4 +32,4 @@ else
 	read -s test_pass
 fi
 
-diff <(curl -L -s --user $user:$pass https://form.laji.fi/lajiform/"$form" | jq . --sort-keys) <(curl -L -s --user $test_user:$test_pass https://formtest.laji.fi/lajiform/"$form" | jq . --sort-keys)
+diff <(curl -L -s --user $user:$pass https://form.laji.fi/lajiform/"$form"\?expand=false | jq . --sort-keys) <(curl -L -s --user $test_user:$test_pass https://formtest.laji.fi/lajiform/"$form"\?expand=false | jq . --sort-keys)
