@@ -335,14 +335,14 @@
 		"sv": "varningar"
 	},
 	"revalidate": {
-		"fi": "Päivitä virheet",
-		"en": "Refresh the errors",
-		"sv": "Uppdatera felen"
+		"fi": "Tarkista tiedot uudelleen",
+		"en": "Validate the data again",
+		"sv": "Validera data igen"
 	},
 	"submitWithWarnings": {
 		"fi": "Tallenna varoituksista huolimatta",
 		"en": "Acknowledge warnings and save",
-		"sv": "bekräfta varningar och spara"
+		"sv": "Bekräfta varningar och spara"
 	},
 	"chooseFromNamedPlace": {
 		"fi": "Käytä omaa paikkaa",
