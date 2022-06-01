@@ -172,6 +172,7 @@ class TableArrayFieldTemplate extends React.Component {
 				{props.items.map((item, i) => {
 					const deleteButton = (
 						<DeleteButton ref={getRefFor(i)}
+						              id={`${props.idSchema.$id}_${i}`}
 						              disabled={readonly || disabled}
 						              onClick={onDelete(item, props)}
 						              confirm={confirmDelete}
