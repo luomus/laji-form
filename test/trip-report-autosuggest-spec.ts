@@ -10,6 +10,28 @@ describe("Trip report (JX.519) autosuggestions", () => {
 		await putForeignMarkerToMap();
 	});
 
+
+	describe("observers", () => {
+		it("when two unknown and 1st is removed, the autosuggest input value updated to the value of the 1st", async () => {
+			 // TableField has problems, so ids here are erratic but correct
+			const $deleteObserver = form.$locateButton("gatheringEvent.0", "delete");
+			const $addObserver = form.$locateButton("gatheringEvent", "add");
+			const observer1$ = form.$getInputWidget("gatheringEvent.0.leg");
+			const observer2$ = form.$getInputWidget("gatheringEvent.1.leg");
+
+			await $deleteObserver.click();
+			await $addObserver.click();
+			await $addObserver.click();
+
+			await observer1$.sendKeys("matti");
+			await observer2$.sendKeys("teppo");
+
+			await $deleteObserver.click();
+
+			expect(await observer1$.getAttribute("value")).toBe("teppo");
+		});
+	});
+
 	describe("taxon census", () => {
 		let censusAutosuggest: TaxonAutosuggestWidgetPOI;
 		beforeAll(async () => {

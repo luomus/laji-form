@@ -181,7 +181,7 @@ class TableArrayFieldTemplate extends React.Component {
 						              translations={props.formContext.translations}/>
 					);
 					return (
-						<Row key={getUUID(props.formData[item.index]) || item.index}>
+						<Row key={getUUID(props.formData[item.index]) || item.key}>
 							<Col {...wrapperCols}>
 								<div className="laji-form-field-template-item keep-vertical">
 									<div className="laji-form-field-template-schema">{item.children}</div>

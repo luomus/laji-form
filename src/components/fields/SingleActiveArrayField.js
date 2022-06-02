@@ -864,7 +864,7 @@ class TableArrayFieldTemplate extends React.Component {
 			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
 										       disabled={disabled || readonly}
 			                     ref={this.getDeleteButtonRef(idx)}
-			                     key={getUUID(this.props.formData[item.index]) || item.index}
+			                     key={getUUID(this.props.formData[item.index]) || item.key}
 			                     confirm={confirmDelete}
 			                     translations={this.props.formContext.translations}
 			                     onClick={that.onDelete(idx, item)} />;
@@ -917,7 +917,7 @@ class TableArrayFieldTemplate extends React.Component {
 									let className = "";
 									if (filteredErrors(errorSchema)[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
-										<tr key={getUUID(this.props.formData[item.index]) || item.index}
+										<tr key={getUUID(this.props.formData[item.index]) || item.key}
 										    onClick={changeActive(idx)}
 										    className={className}
 										    tabIndex={idx === activeIdx ? undefined : 0}
