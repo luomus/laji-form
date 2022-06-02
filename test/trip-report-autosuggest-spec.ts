@@ -8,7 +8,6 @@ describe("Trip report (JX.519) autosuggestions", () => {
 	beforeAll(async () => {
 		form = await createForm({id: "JX.519"});
 		await putForeignMarkerToMap();
-		await form.waitUntilBlockingLoaderHides(6000);
 	});
 
 	describe("taxon census", () => {

@@ -586,7 +586,7 @@ class PagerArrayFieldTemplate extends React.Component {
 								{header}
 							</Panel.Heading>
 							<Panel.Body>
-								<div key={activeIdx}>
+								<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
 									{activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? arrayTemplateFieldProps.items[activeIdx].children : null}
 								</div>
 							</Panel.Body>
@@ -637,7 +637,7 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 		const title = getTitle(this.props, activeIdx);
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
-			<div key={activeIdx}>
+			<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
 				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} help={arrayTemplateFieldProps.uiSchema["ui:help"]} />
 				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
 				{arrayTemplateFieldProps.items[activeIdx].children} 
@@ -864,7 +864,7 @@ class TableArrayFieldTemplate extends React.Component {
 			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
 										       disabled={disabled || readonly}
 			                     ref={this.getDeleteButtonRef(idx)}
-			                     key={idx}
+			                     key={getUUID(this.props.formData[item.index]) || item.index}
 			                     confirm={confirmDelete}
 			                     translations={this.props.formContext.translations}
 			                     onClick={that.onDelete(idx, item)} />;
@@ -917,7 +917,7 @@ class TableArrayFieldTemplate extends React.Component {
 									let className = "";
 									if (filteredErrors(errorSchema)[idx]) className = className ? `${className} bg-danger` : "bg-danger";
 									return [
-										<tr key={idx} 
+										<tr key={getUUID(this.props.formData[item.index]) || item.index}
 										    onClick={changeActive(idx)}
 										    className={className}
 										    tabIndex={idx === activeIdx ? undefined : 0}

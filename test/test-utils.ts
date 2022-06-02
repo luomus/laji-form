@@ -150,10 +150,10 @@ export class Form {
 		};
 	}
 
-	async createMockResponseQueue(path: string, query: any) {
+	async createMockResponseQueue(path: string, query?: any) {
 		await browser.executeScript(`return window.createMockResponseQueue(${JSON.stringify(path)}, ${JSON.stringify(query)})`);
 		const queueStr = `window.mockQueues[window.getMockQueryKey(${JSON.stringify(path)}, ${JSON.stringify(query)})]`;
-		const mock = (method: "resolve" | "reject" | "remove", response: any, raw: boolean, pointer: number) => {
+		const mock = (method: "resolve" | "reject" | "remove", response: any, raw: boolean | undefined, pointer: number) => {
 			return browser.executeScript(`return ${this.getMockStr(path, query)}[${pointer}].${method}(${JSON.stringify(response)}, ${JSON.stringify(raw)})`);
 		};
 		let pointer = 0;
@@ -163,13 +163,11 @@ export class Form {
 				const _pointer = pointer;
 				pointer = pointer + 1;
 				return {
-					resolve: (response: any, raw: boolean) => mock("resolve", response, raw, _pointer),
-					reject: (response: any, raw: boolean) => mock("reject", response, raw, _pointer),
+					resolve: (response: any, raw?: boolean) => mock("resolve", response, raw, _pointer),
+					reject: (response: any, raw?: boolean) => mock("reject", response, raw, _pointer),
 				};
 			},
-			remove: () => {
-				browser.executeScript(`return ${queueStr}.remove()`);
-			}
+			remove: () => browser.executeScript(`return ${queueStr}.remove()`)
 		};
 	}
 

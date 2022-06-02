@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateTailUiSchema, isHidden } from "../../utils";
+import { getUiOptions, updateTailUiSchema, isHidden, getUUID } from "../../utils";
 import { orderProperties } from "@rjsf/core/dist/cjs/utils";
 import { DeleteButton } from "../components";
 import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
@@ -181,9 +181,9 @@ class TableArrayFieldTemplate extends React.Component {
 						              translations={props.formContext.translations}/>
 					);
 					return (
-						<Row key={item.index} >
+						<Row key={getUUID(props.formData[item.index]) || item.index}>
 							<Col {...wrapperCols}>
-								<div key={item.index} className="laji-form-field-template-item keep-vertical">
+								<div className="laji-form-field-template-item keep-vertical">
 									<div className="laji-form-field-template-schema">{item.children}</div>
 									{item.hasRemove && !nonRemovables.includes(item.index) && removable && deleteButton}
 								</div>
