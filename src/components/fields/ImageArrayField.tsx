@@ -6,7 +6,7 @@ const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/Descript
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, getUUID, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, keyboardClick } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import exif from "exif-js";
@@ -60,7 +60,7 @@ export default class ImageArrayField extends React.Component<FieldProps, ImageAr
 	onMediaClick = (i: number) => (this as any).openModalFor(i)
 	renderModalMedia = () => <img src={this.state.modalMediaSrc} />
 
-	formatValue(value: string[], options: any, props: FieldProps, parentProps: FieldProps) {
+	formatValue(value: string[], options: any, props: FieldProps) {
 		const {translations} = props.formContext;
 		return value && value.length
 			? `${value.length} ${translations.HowManyPhotos}`
