@@ -250,7 +250,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				const enteredUnitTaxon = await form.$locate("gatherings.0.units.0").$$("td").first().getText();
 
-				expect(enteredUnitTaxon).toBe("kettukolibrit");
+				expect(enteredUnitTaxon).toBe("ravunsyöjäkettu");
 
 			});
 
@@ -265,7 +265,7 @@ describe("Trip report (JX.519) autosuggestions", () => {
 
 				const enteredUnitTaxon = await form.$locate("gatherings.0.units.1").$$("td").first().getText();
 
-				expect(enteredUnitTaxon).toBe("kettukolibrit");
+				expect(enteredUnitTaxon).toBe("ravunsyöjäkettu");
 
 				await removeUnit(0, 0);
 				await removeUnit(0, 0);
