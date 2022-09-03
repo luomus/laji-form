@@ -102,6 +102,8 @@ export default class TableField extends React.Component {
 			}
 		}
 
+		_uiSchema["ui:ArrayFieldTemplate"] = TableArrayFieldTemplate;
+
 		const _formContext = {
 			...formContext,
 			cols,
@@ -118,7 +120,6 @@ export default class TableField extends React.Component {
 				uiSchema={_uiSchema}
 				registry={{
 					...this.props.registry,
-					ArrayFieldTemplate: TableArrayFieldTemplate,
 					formContext: _formContext
 				}}
 				formContext={_formContext}

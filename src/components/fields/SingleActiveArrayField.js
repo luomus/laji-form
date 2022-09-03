@@ -207,13 +207,14 @@ export default class SingleActiveArrayField extends React.Component {
 			};
 		}
 
+		uiSchema["ui:ArrayFieldTemplate"] = ArrayFieldTemplate;
+
 		return (
 			<ArrayField
 				{...this.props}
 				formContext={formContext}
 				registry={{
 					...this.props.registry,
-					ArrayFieldTemplate,
 					formContext
 				}}
 				uiSchema={uiSchema}
