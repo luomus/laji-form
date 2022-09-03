@@ -1,9 +1,9 @@
 import * as React from "react";
-import Context from "../Context";
-import { Help, TooltipComponent } from "./components";
-import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll, classNames } from "../utils";
+import Context from "../../Context";
+import { Help, TooltipComponent } from "../components";
+import { isMultiSelect, getUiOptions, formatErrorMessage, focusAndScroll, classNames } from "../../utils";
 
-export default class FieldTemplate extends React.Component {
+export default class FieldTemplateTemplate extends React.Component {
 
 	constructor(props) {
 		super(props);
