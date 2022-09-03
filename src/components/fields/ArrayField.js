@@ -1,7 +1,6 @@
 import * as React from "react";
-import { getDefaultFormState } from  "@rjsf/utils";
 import * as merge from "deepmerge";
-import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import Context from "../../Context";
@@ -152,7 +151,7 @@ export default class _ArrayField extends React.Component {
 				beforeAdd(this.props);
 				this.onChange([
 					...(this.props.formData || []),
-					getDefaultFormState(this.props.schema.items, _default, this.props.registry.definitions)
+					getDefaultFormState(this.props.schema.items, _default)
 				]);
 			},
 			rules: {

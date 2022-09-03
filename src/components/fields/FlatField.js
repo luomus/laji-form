@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState } from  "@rjsf/utils";
-import { immutableDelete } from "../../utils";
+import { immutableDelete, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 function getPropName(field, innerField, isArray) {
@@ -88,9 +87,9 @@ export default class FlatField extends React.Component {
 				let innerData = state.formData[field];
 
 				if (!innerData && state.schema.properties[field].type === "object") {
-					innerData = getDefaultFormState(state.schema.properties[field], undefined, props.registry);
+					innerData = getDefaultFormState(state.schema.properties[field]);
 				} else if (!innerData && state.schema.properties[field].type === "array") {
-					innerData = [getDefaultFormState(state.schema.properties[field].items, undefined, props.registry)];
+					innerData = [getDefaultFormState(state.schema.properties[field].items)];
 				}
 
 				if (Array.isArray(innerData)) {

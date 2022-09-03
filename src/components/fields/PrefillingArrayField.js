@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getDefaultFormState } from  "@rjsf/utils";
+import { getDefaultFormState } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 @VirtualSchemaField
@@ -57,7 +57,7 @@ export default class PrefillingArrayField extends React.Component {
 		const prefiller = formData.prefiller;
 		return (formData.rest && formData.rest.length
 			? formData.rest
-			: [getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)]
+			: [getDefaultFormState(this.props.schema.items)]
 		).map(item => {
 			return {
 				...item,

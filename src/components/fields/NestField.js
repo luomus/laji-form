@@ -147,7 +147,7 @@ export default class NestField extends React.Component {
 
 		Object.keys(nests).forEach((wrapperFieldName) => {
 			const nest = nests[wrapperFieldName];
-			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, registry}, nests[wrapperFieldName].fields, nest.title);
+			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData}, nests[wrapperFieldName].fields, nest.title);
 			nestedPropsMap[wrapperFieldName] = nestedProps;
 
 			schema = {...schema, properties: {...schema.properties, [wrapperFieldName]: nestedProps.schema}};
@@ -252,7 +252,7 @@ export default class NestField extends React.Component {
 	}
 }
 
-export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {rootSchema}}, fields, title) {
+export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange}, fields, title) {
 	const newSchema = {type: "object", properties: {}, title};
 	const newErrorSchema = {};
 	const newFormData = {};
@@ -291,7 +291,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		let newFormData = fields.reduce((_formData, field) => {
 			_formData = updateSafelyWithJSONPointer(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
 				const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
-				return getDefaultFormState(_schema, undefined, rootSchema);
+				return getDefaultFormState(_schema);
 			});
 			_formData = immutableDelete(_formData, flattenPointerName(field));
 			return _formData;

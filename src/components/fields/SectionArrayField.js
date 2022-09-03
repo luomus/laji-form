@@ -1,11 +1,10 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import { getDefaultFormState } from "@rjsf/utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
@@ -402,7 +401,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					field.replace(/%{row}/g, idx)
 				);
 			}, result);
-		}, getDefaultFormState(schema.items, undefined, registry));
+		}, getDefaultFormState(schema.items));
 		const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);

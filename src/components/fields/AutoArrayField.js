@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getDefaultFormState } from  "@rjsf/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { formDataEquals, assignUUID, getUUID } from "../../utils";
+import { formDataEquals, assignUUID, getUUID, getDefaultFormState } from "../../utils";
 
 @VirtualSchemaField
 export default class AutoArrayField extends React.Component {
@@ -21,11 +20,11 @@ export default class AutoArrayField extends React.Component {
 	static getName() {return "AutoArrayField";}
 
 	getStateFromProps(props) {
-		const {formData = [], schema, uiSchema, registry} = props;
+		const {formData = [], schema, uiSchema} = props;
 
 		const state = {formData};
 
-		const newEmptyItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+		const newEmptyItem = getDefaultFormState(schema.items);
 		const emptyItem = this.emptyItem
 			&& formDataEquals(newEmptyItem, this.emptyItem, props.formContext, props.idSchema.$id)
 			&& formData.every(item => getUUID(item) !== getUUID(this.emptyItem))
@@ -49,7 +48,7 @@ export default class AutoArrayField extends React.Component {
 	}
 
 	onChange(formData) {
-		const emptyItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+		const emptyItem = getDefaultFormState(this.props.schema.items);
 		if (formData && formData.length !== 0 && formDataEquals(formData[formData.length - 1], emptyItem, this.props.formContext, this.props.idSchema.$id)) {
 			formData = formData.slice(0, formData.length - 1);
 		}

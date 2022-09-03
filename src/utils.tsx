@@ -19,18 +19,18 @@ export function isHidden(uiSchema: UiSchema, property: string) {
 	return !uiSchema || uiSchema["ui:widget"] == "HiddenWidget" || uiSchema["ui:field"] == "HiddenField";
 }
 
-export function isDefaultData(formData: any, schema: any, definitions = {}): boolean {
+export function isDefaultData(formData: any, schema: any): boolean {
 	switch (schema.type) {
 	case "object":
-		return Object.keys(schema.properties).every(field => isDefaultData(formData[field], schema.properties[field], definitions));
+		return Object.keys(schema.properties).every(field => isDefaultData(formData[field], schema.properties[field]));
 	case "array":
-		return (Array.isArray(formData) || formData === undefined) && (formData || []).every((item: any) => isDefaultData(item, schema.items, definitions));
+		return (Array.isArray(formData) || formData === undefined) && (formData || []).every((item: any) => isDefaultData(item, schema.items));
 	default:
-		return formData === getDefaultFormState(schema, undefined, definitions);
+		return formData === getDefaultFormState(schema);
 	}
 }
 
-export function getDefaultFormState<T>(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) {
+export function getDefaultFormState<T>(schema: RJSFSchema, formData?: T, rootSchema?: RJSFSchema) {
 	return _getDefaultFormState(rjsfValidator, schema, formData, rootSchema);
 }
 

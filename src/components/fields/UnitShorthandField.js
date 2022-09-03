@@ -100,7 +100,7 @@ export default class UnitShorthandField extends React.Component {
 			}
 			this.setState({showSchema: true});
 		};
-		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}, this.props.registry.definitions));
+		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}));
 	}
 
 	render() {

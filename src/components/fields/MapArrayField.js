@@ -8,8 +8,7 @@ import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
-import { getDefaultFormState } from "@rjsf/utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
@@ -125,7 +124,7 @@ class DefaultMapArrayField extends React.Component {
 		if (!geometryField) {
 			return;
 		}
-		let formData = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+		let formData = getDefaultFormState(this.props.schema.items);
 		const geometries = events.filter(e => e.type === "create").map(e => e.feature.geometry);
 
 		let splittedPath = geometryField.split("/").filter(s => !isEmptyString(s));
@@ -143,7 +142,7 @@ class DefaultMapArrayField extends React.Component {
 						type: "GeometryCollection",
 						geometries
 					}
-					: getDefaultFormState(_schema, undefined, this.props.registry.definitions)
+					: getDefaultFormState(_schema)
 				}
 			));
 		}, formData);
@@ -181,7 +180,7 @@ class DefaultMapArrayField extends React.Component {
 
 	onChange(events) {
 		let formData = this.props.formData ||
-			[getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)];
+			[getDefaultFormState(this.props.schema.items)];
 		let addOrDelete = false;
 		events.forEach(e => {
 			switch (e.type) {
@@ -511,9 +510,7 @@ class UnitsMapArrayField extends React.Component {
 						unitGathering: {
 							geometry: {
 								$set: getDefaultFormState(
-									this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry,
-									undefined,
-									this.props.registry.definitions
+									this.props.schema.items.properties.units.items.properties.unitGathering.properties.geometry
 								)
 							}
 						}
@@ -662,7 +659,7 @@ class LineTransectMapArrayField extends React.Component {
 			case "insert": {
 				formDataChanged = true;
 				addOrDelete = true;
-				const newItem = getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions);
+				const newItem = getDefaultFormState(this.props.schema.items);
 				newItem[geometryField] = e.geometry;
 				formData = update(formData, {
 					$splice: [[e.idx, 0, newItem]]
@@ -1350,7 +1347,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	
 	customAdd = () => () => {
 		const nextActive = this.props.formData.length;
-		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)], this.props));
+		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props));
 		this.setState({activeIdx: nextActive});
 	}
 
@@ -1403,9 +1400,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 					`${this.props.idSchema.$id}_${activeIdx}`
 				),
 				formData: (this.props.formData || [])[activeIdx],
-				errorSchema: this.props.errorSchema[activeIdx] || {},
-				registry: this.props.registry,
-				formContext: this.props.formContext
+				errorSchema: this.props.errorSchema[activeIdx] || {}
 			};
 		};
 
@@ -1417,7 +1412,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 				this.onChangeFor[key] = formData => {
 					this.props.onChange(formData.map((item, idx) => {
 						return {
-							...(this.props.formData[idx] || getDefaultFormState(this.props.schema.items, undefined, this.props.registry.definitions)), 
+							...(this.props.formData[idx] || getDefaultFormState(this.props.schema.items)), 
 							...item
 						};
 					}));
