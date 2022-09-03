@@ -1,6 +1,6 @@
 import * as React from "react";
-import { orderProperties, isMultiSelect } from "@rjsf/utils";
-import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
+import { orderProperties } from "@rjsf/utils";
+import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID, isMultiSelect } from "../../utils";
 import { getButton, getButtonsForPosition } from "../templates/ArrayFieldTemplate";
 import ReactContext from "../../ReactContext";
 import { getDefaultRegistry } from "@rjsf/core";

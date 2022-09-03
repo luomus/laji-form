@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { isMultiSelect } from "@rjsf/utils";
-import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState } from "../../utils";
+import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState, isMultiSelect } from "../../utils";
 import { ArrayFieldPatched } from "./ArrayField";
 
 @VirtualSchemaField
@@ -44,7 +43,7 @@ export default class SingleItemArrayField extends React.Component {
 				...getUiOptions(props.uiSchema.items),
 			}
 		};
-		if (isMultiSelect(props.schema, props.registry.definitions)) {
+		if (isMultiSelect(props.schema, uiSchema)) {
 			uiSchema = {
 				...uiSchema,
 				"ui:options": {
