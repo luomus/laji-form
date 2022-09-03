@@ -3,7 +3,7 @@ import { getDefaultFormState } from  "@rjsf/utils";
 import * as merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { beforeAdd } from "../ArrayFieldTemplate";
+import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import Context from "../../Context";
 import { getDefaultRegistry } from "@rjsf/core";
 

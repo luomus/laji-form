@@ -6,7 +6,7 @@ import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBoot
 	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
-import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../ArrayFieldTemplate";
+import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../templates/ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";

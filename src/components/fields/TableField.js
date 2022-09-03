@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema, isHidden, getUUID } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton } from "../components";
-import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
+import { getButtonElems, handlesArrayKeys, onDelete } from "../templates/ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 

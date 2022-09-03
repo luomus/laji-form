@@ -14,7 +14,7 @@ import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
-import { getButton } from "../ArrayFieldTemplate";
+import { getButton } from "../templates/ArrayFieldTemplate";
 import { onArrayFieldChange } from "./ArrayField";
 
 export function parseGeometries(geometry) {

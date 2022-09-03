@@ -7,9 +7,11 @@
         "$.gatheringEvent.dateBegin",
         "$.gatheringEvent.dateEnd",
         "$.gatherings[*].dateBegin",
+        "$.gatherings[*].dateEnd",
         "$.gatherings[*].images",
         "$.gatherings[*].weather",
-        "$.gatherings[*].units"
+        "$.gatherings[*].units",
+        "$.gatherings[*].units[*].unitGathering.dateEnd"
     ],
     "extra": {
         "habitat": {
@@ -269,6 +271,7 @@
     "name": "Retkilomake",
     "options": {
         "allowExcel": true,
+        "allowTemplate": true,
         "instructions": {
             "en": "https://laji.fi/about/1107",
             "fi": "https://laji.fi/about/1107",
@@ -343,6 +346,7 @@
                             "type": "string"
                         },
                         "dateEnd": {
+                            "excludeFromCopy": true,
                             "title": "Loppu",
                             "type": "string"
                         },
@@ -628,6 +632,7 @@
                                 "MY.samplingMethodAquaticEmergenceTrap",
                                 "MY.samplingMethodWaterBucket",
                                 "MY.samplingMethodTrampling",
+                                "MY.samplingMethodWaterSieve",
                                 "MY.samplingMethodOther"
                             ],
                             "enumNames": [
@@ -677,6 +682,7 @@
                                 "Vesihy\u00f6nteisten kuoriutumispyydys",
                                 "Vesi\u00e4mp\u00e4ri",
                                 "Polkeminen",
+                                "Vesisiivil\u00e4",
                                 "Muu"
                             ],
                             "title": "Keruumenetelm\u00e4",
@@ -745,47 +751,47 @@
                                             "MY.atlasCodeEnum4",
                                             "MY.atlasCodeEnum5",
                                             "MY.atlasCodeEnum6",
-                                            "MY.atlasCodeEnum7",
-                                            "MY.atlasCodeEnum8",
                                             "MY.atlasCodeEnum61",
                                             "MY.atlasCodeEnum62",
                                             "MY.atlasCodeEnum63",
                                             "MY.atlasCodeEnum64",
                                             "MY.atlasCodeEnum65",
                                             "MY.atlasCodeEnum66",
+                                            "MY.atlasCodeEnum7",
                                             "MY.atlasCodeEnum71",
                                             "MY.atlasCodeEnum72",
                                             "MY.atlasCodeEnum73",
                                             "MY.atlasCodeEnum74",
                                             "MY.atlasCodeEnum75",
+                                            "MY.atlasCodeEnum8",
                                             "MY.atlasCodeEnum81",
                                             "MY.atlasCodeEnum82"
                                         ],
                                         "enumNames": [
                                             "",
-                                            "1 Ep\u00e4todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu laji paikallisena pesim\u00e4aikaan, mutta l\u00e4hes varmasti se ei pesi ruudussa",
-                                            "2 Mahdollinen pesint\u00e4; Havaittu yksitt\u00e4inen lintu kerran (esim. laulava tai soidin\u00e4\u00e4ntelev\u00e4 koiras) lajille sopivassa pesim\u00e4ymp\u00e4rist\u00f6ss\u00e4, ja lajin pesint\u00e4 ruudussa on mahdollista",
-                                            "3 Mahdollinen pesint\u00e4; Havaittu pari kerran sopivassa pesim\u00e4ymp\u00e4rist\u00f6ss\u00e4, ja lajin pesint\u00e4 ruudussa on mahdollista",
-                                            "4 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu laulava, soidinmenoja esitt\u00e4v\u00e4 tai muuten samalla paikalla (eli pysyv\u00e4ll\u00e4 reviirill\u00e4) oleskeleva koiras eri p\u00e4ivin\u00e4",
-                                            "5 Todenn\u00e4k\u00f6inen pesint\u00e4;  Havaittu samalla paikalla oleskeleva naaras tai pari eri p\u00e4ivin\u00e4",
-                                            "6 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu lintu tai pari",
-                                            "7 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4",
-                                            "8 Varma pesint\u00e4; Havaittu suora todiste pesinn\u00e4st\u00e4",
-                                            "61 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu lintu tai pari k\u00e4ym\u00e4ss\u00e4 useasti todenn\u00e4k\u00f6isell\u00e4 pes\u00e4paikalla",
-                                            "62 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu lintu tai pari rakentamassa pes\u00e4\u00e4",
-                                            "63 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu lintu tai pari varoittelemassa",
-                                            "64 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu lintu tai pari n\u00e4yttelem\u00e4ss\u00e4 siipirikkoa",
-                                            "65 Todenn\u00e4k\u00f6inen pesint\u00e4; Havaittu lintu tai pari hy\u00f6kk\u00e4ilem\u00e4ss\u00e4",
+                                            "1 Ep\u00e4todenn\u00e4k\u00f6inen pesint\u00e4: havaittu lajin yksil\u00f6, havainto ei viittaa pesint\u00e4\u00e4n.",
+                                            "2 Mahdollinen pesint\u00e4: yksitt\u00e4inen lintu kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4.",
+                                            "3 Mahdollinen pesint\u00e4: pari kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4.",
+                                            "4 Todenn\u00e4k\u00f6inen pesint\u00e4: koiras reviirill\u00e4 (esim. laulaa) eri p\u00e4ivin\u00e4.",
+                                            "5 Todenn\u00e4k\u00f6inen pesint\u00e4: naaras tai pari reviirill\u00e4 eri p\u00e4ivin\u00e4.",
+                                            "6 Todenn\u00e4k\u00f6inen pesint\u00e4: linnun tai parin havainto viittaa vahvasti pesint\u00e4\u00e4n.",
+                                            "61 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari k\u00e4y usein todenn\u00e4k\u00f6isell\u00e4 pes\u00e4paikalla.",
+                                            "62 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari rakentaa pes\u00e4\u00e4 tai vie pes\u00e4materiaalia.",
+                                            "63 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari varoittelee ehk\u00e4 pes\u00e4st\u00e4 tai poikueesta.",
+                                            "64 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari houkuttelee pois ehk\u00e4 pes\u00e4lt\u00e4 / poikueelta.",
+                                            "65 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari hy\u00f6kk\u00e4ilee, l\u00e4hell\u00e4 ehk\u00e4 pes\u00e4 / poikue.",
                                             "66 Todenn\u00e4k\u00f6inen pesint\u00e4; N\u00e4hty pes\u00e4, jossa samanvuotista rakennusmateriaalia tai ravintoj\u00e4tett\u00e4; ei kuitenkaan varmaa todistetta munista tai poikasista",
-                                            "71 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: n\u00e4hty pes\u00e4, jossa on pesitty samana vuonna, koska siin\u00e4 munia tai niiden kuoria, j\u00e4tteit\u00e4 poikasista, sulkatuppien \"hilsett\u00e4\", tms.",
-                                            "72 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: havaittu linnun menev\u00e4n pes\u00e4\u00e4n tai l\u00e4htev\u00e4n pes\u00e4st\u00e4 tavalla, joka selv\u00e4sti viittaa pesimiseen",
-                                            "73 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: havaittu juuri lentokykyiset poikaset tai untuvikot, jotka voidaan katsoa syntyneiksi ruudun alueella",
-                                            "74 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: havaittu emo kantamassa ruokaa poikasille tai poikasten ulosteita; pes\u00e4n voidaan katsoa olevan ruudun alueella",
+                                            "7 Varma pesint\u00e4: havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4.",
+                                            "71 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 saman vuoden munia, kuoria, j\u00e4\u00e4nteit\u00e4. Voi olla ep\u00e4onnistunut.",
+                                            "72 Varma pesint\u00e4: k\u00e4y pes\u00e4ll\u00e4 pesint\u00e4\u00e4n viittaavasti. Munia / poikasia ei havaita (kolo tms.).",
+                                            "73 Varma pesint\u00e4: juuri lentokykyiset poikaset tai untuvikot oletettavasti ruudulta.",
+                                            "74 Varma pesint\u00e4: emo kantaa ruokaa tai poikasten ulosteita, pesint\u00e4 oletettavasti ruudulla.",
                                             "75 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: n\u00e4hty pes\u00e4ss\u00e4 hautova emo",
-                                            "81 Varma pesint\u00e4; Havaittu suora todiste pesinn\u00e4st\u00e4: kuultu poikasten \u00e4\u00e4ntelev\u00e4n pes\u00e4ss\u00e4",
-                                            "82 Varma pesint\u00e4; Havaittu suora todiste pesinn\u00e4st\u00e4: n\u00e4hty pes\u00e4, jossa munia tai poikasia"
+                                            "8 Varma pesint\u00e4: havaittu suora todiste varmasta pesinn\u00e4st\u00e4.",
+                                            "81 Varma pesint\u00e4: kuultu poikasten \u00e4\u00e4ntely\u00e4 pes\u00e4ss\u00e4 (kolo / pes\u00e4 korkealla).",
+                                            "82 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 munia tai poikasia."
                                         ],
-                                        "title": "Pesimisvarmuusindeksi",
+                                        "title": "Pesim\u00e4varmuusindeksi",
                                         "type": "string"
                                     },
                                     "audio": {
@@ -1007,6 +1013,7 @@
                                             "type": "object"
                                         },
                                         "minItems": 1,
+                                        "title": "",
                                         "type": "array"
                                     },
                                     "images": {
@@ -1062,7 +1069,7 @@
                                             "kotelo",
                                             "nuori",
                                             "nymfi",
-                                            "esiaikuinen",
+                                            "subimago",
                                             "keskenkasvuinen",
                                             "aikuinen",
                                             "fertiili",
@@ -1179,7 +1186,7 @@
                                     "plantStatusCode": {
                                         "enum": [
                                             "",
-                                            "MY.MY.plantStatusCodeL",
+                                            "MY.plantStatusCodeL",
                                             "MY.plantStatusCodeA",
                                             "MY.plantStatusCodeAV",
                                             "MY.plantStatusCodeAOV",
@@ -1341,7 +1348,9 @@
                                             "MY.recordBasisHumanObservationHandled",
                                             "MY.recordBasisHumanObservationPhoto",
                                             "MY.recordBasisHumanObservationAudio",
-                                            "MY.recordBasisHumanObservationIndirect"
+                                            "MY.recordBasisHumanObservationIndirect",
+                                            "MY.recordBasisMachineObservationVideo",
+                                            "MY.recordBasisMachineObservationAudio"
                                         ],
                                         "enumNames": [
                                             "",
@@ -1350,7 +1359,9 @@
                                             "K\u00e4sitelty (otettu kiinni, ei n\u00e4ytett\u00e4)",
                                             "Valokuvattu",
                                             "\u00c4\u00e4nitetty",
-                                            "Ep\u00e4suora havainto (j\u00e4ljet, ulosteet, yms)"
+                                            "Ep\u00e4suora havainto (j\u00e4ljet, ulosteet, yms)",
+                                            "Laitteen tekem\u00e4 videotallenne",
+                                            "Laitteen tekem\u00e4 \u00e4\u00e4nitallenne"
                                         ],
                                         "title": "Havainnointitapa",
                                         "type": "string"
@@ -1403,6 +1414,7 @@
                                             "MY.samplingMethodAquaticEmergenceTrap",
                                             "MY.samplingMethodWaterBucket",
                                             "MY.samplingMethodTrampling",
+                                            "MY.samplingMethodWaterSieve",
                                             "MY.samplingMethodOther"
                                         ],
                                         "enumNames": [
@@ -1452,6 +1464,7 @@
                                             "Vesihy\u00f6nteisten kuoriutumispyydys",
                                             "Vesi\u00e4mp\u00e4ri",
                                             "Polkeminen",
+                                            "Vesisiivil\u00e4",
                                             "Muu"
                                         ],
                                         "title": "Keruumenetelm\u00e4",
@@ -1568,6 +1581,7 @@
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
                                     },
                                     "unitGathering": {
@@ -1577,6 +1591,7 @@
                                                 "type": "string"
                                             },
                                             "dateEnd": {
+                                                "excludeFromCopy": true,
                                                 "title": "Loppu",
                                                 "type": "string"
                                             },
@@ -1599,6 +1614,7 @@
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
                                     },
                                     "wild": {
@@ -1635,6 +1651,7 @@
                     "required": [],
                     "type": "object"
                 },
+                "title": "",
                 "type": "array"
             },
             "keywords": {
@@ -1658,7 +1675,9 @@
                 "type": "string"
             }
         },
-        "required": [],
+        "required": [
+            "gatherings"
+        ],
         "type": "object"
     },
     "shortDescription": "Kirjaa maastoretken kaikki havainto- ja/tai kokoelman\u00e4ytetiedot. Havaintoja voi kirjata my\u00f6s usealta paikalta.",
@@ -1780,6 +1799,12 @@
                                                 }
                                             ],
                                             "ui:options": {
+                                                "buttons": [
+                                                    {
+                                                        "fn": "add",
+                                                        "label": "Lis\u00e4\u00e4 havainnoija"
+                                                    }
+                                                ],
                                                 "specialRules": "legEditors",
                                                 "ui:buttonsDesktopLayout": true
                                             }
@@ -2554,7 +2579,8 @@
                         "buttons": [
                             {
                                 "fn": "add",
-                                "label": "Lis\u00e4\u00e4 havainto"
+                                "label": "Lis\u00e4\u00e4 havainto",
+                                "variant": "primary"
                             },
                             {
                                 "filter": [
@@ -2692,7 +2718,8 @@
             ]
         },
         "keywords": {
-            "ui:field": "TagArrayField"
+            "ui:field": "TagArrayField",
+            "ui:help": "Voit antaa havaintoer\u00e4lle omia avainsanoja, jotka helpottavat havaintojen etsimist\u00e4 ja tilastointia. Esim. \"peltoreitti\" tai \"takamets\u00e4\"."
         },
         "secureLevel": {
             "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km\u00b2 karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
@@ -3111,6 +3138,10 @@
                         "check": "dateEnd",
                         "message": "Alku on pakollinen jos loppu on ilmoitettu."
                     },
+                    "date": {
+                        "earliest": "1000-01-01",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                    },
                     "datetime": {
                         "latest": "now",
                         "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
@@ -3124,6 +3155,10 @@
                     "compareDate": {
                         "isAfter": "dateBegin",
                         "message": "Aikav\u00e4lin alun %{value} pit\u00e4\u00e4 olla ennen loppua %{key}"
+                    },
+                    "date": {
+                        "earliest": "1000-01-01",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                     },
                     "datetime": {
                         "latest": "now",
@@ -3146,6 +3181,10 @@
                             "check": "dateEnd",
                             "message": "Alku on pakollinen jos loppu on ilmoitettu."
                         },
+                        "date": {
+                            "earliest": "1000-01-01",
+                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                        },
                         "datetime": {
                             "latest": "now",
                             "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
@@ -3157,6 +3196,10 @@
                             "isAfter": "dateBegin",
                             "message": "Aikav\u00e4lin alun %{value} pit\u00e4\u00e4 olla ennen loppua %{key}"
                         },
+                        "date": {
+                            "earliest": "1000-01-01",
+                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                        },
                         "datetime": {
                             "latest": "now",
                             "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
@@ -3165,18 +3208,18 @@
                     },
                     "geometry": {
                         "geometry": {
-                            "boundingBoxMaxHectares": 1000000,
+                            "boundingBoxMaxHectares": 5000000,
                             "includeGatheringUnits": true,
                             "maximumSize": 10,
                             "message": {
                                 "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
-                                "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
+                                "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle."
                             },
                             "requireShape": true
                         }
@@ -3191,6 +3234,10 @@
                                                 "check": "dateEnd",
                                                 "message": "Alku on pakollinen jos loppu on ilmoitettu."
                                             },
+                                            "date": {
+                                                "earliest": "1000-01-01",
+                                                "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                                            },
                                             "datetime": {
                                                 "latest": "now",
                                                 "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
@@ -3202,10 +3249,30 @@
                                                 "isAfter": "dateBegin",
                                                 "message": "Aikav\u00e4lin alun %{value} pit\u00e4\u00e4 olla ennen loppua %{key}"
                                             },
+                                            "date": {
+                                                "earliest": "1000-01-01",
+                                                "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                                            },
                                             "datetime": {
                                                 "latest": "now",
                                                 "notValid": "Virheellinen aika formaatti. Kirjoita aika formaatissa 'YYYY-MM-DD' tai 'YYYY-MM-DDTHH:MM'.",
                                                 "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                                            }
+                                        },
+                                        "geometry": {
+                                            "geometry": {
+                                                "boundingBoxMaxHectares": 5000000,
+                                                "maximumSize": 10,
+                                                "message": {
+                                                    "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
+                                                    "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                                    "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                                    "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                                    "missingGeometries": "T\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                                    "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle.",
+                                                    "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi alue, reitti tai piste piirrettyn\u00e4 kartalle."
+                                                }
                                             }
                                         }
                                     }

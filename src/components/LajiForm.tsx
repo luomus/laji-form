@@ -15,7 +15,6 @@ import Context from "../ReactContext";
 
 import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, RJSFSchema, TemplatesType } from "@rjsf/utils";
-import ArrayFieldTemplate from "./ArrayFieldTemplate";
 import ErrorListTemplate from "./ErrorListTemplate";
 
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
@@ -113,7 +112,8 @@ const templates = importLocalComponents<TemplatesType>("templates", [
 	"BaseInputTemplate",
 	"DescriptionField",
 	{"DescriptionFieldTemplate": "DescriptionField"},
-	"FieldTemplate"
+	"FieldTemplate",
+	"ArrayFieldTemplate"
 ])
 
 function importLocalComponents<T>(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: T} {
@@ -764,7 +764,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						fields={this.getFields(this.props.fields)}
 						widgets={this.getWidgets(this.props.widgets)}
 						templates={this.getTemplates(this.props.templates)}
-						ArrayFieldTemplate={ArrayFieldTemplate}
 						ErrorList={ErrorListTemplate}
 						formContext={this.state.formContext}
 						noValidate={true}

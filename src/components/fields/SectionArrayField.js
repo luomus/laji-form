@@ -8,7 +8,7 @@ import { DeleteButton, Button, Affix } from "../components";
 import { getDefaultFormState } from "@rjsf/utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
-import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
+import { handlesArrayKeys, arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
 const getOptions = (options) => {
 	const {
