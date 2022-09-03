@@ -59,7 +59,7 @@ export default class FlatField extends React.Component {
 
 				state.idSchema = {
 					...state.idSchema,
-					[field]: this.props.registry.toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`)
+					[field]: this.props.registry.schemaUtils.toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`)
 				};
 				let innerId = state.idSchema[field][innerField].$id;
 				if (isArray) {
