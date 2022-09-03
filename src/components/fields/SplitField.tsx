@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-//import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";

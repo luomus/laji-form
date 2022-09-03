@@ -5,7 +5,7 @@ import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSc
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState, toIdSchema } from "@rjsf/utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";

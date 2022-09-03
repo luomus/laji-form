@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty,  getDefaultFormState  } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";

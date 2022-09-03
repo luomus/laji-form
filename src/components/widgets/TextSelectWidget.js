@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import update from "immutability-helper";
-import BaseInput from "./BaseInput";
+import BaseInputTemplate from "../templates/BaseInputTemplate";
 import ReactContext from "../../ReactContext";
 
 class TextSelectWidget extends React.Component {
@@ -82,7 +82,7 @@ class TextSelectWidget extends React.Component {
 					);
 				})}
 				{freeTextField ?
-					<BaseInput
+					<BaseInputTemplate
 						{...this.props}
 						id={this.props.id + "_input"}
 						value={otherValue}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getDefaultFormState, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState, isMultiSelect } from "@rjsf/utils";
 import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
 import { ArrayFieldPatched } from "./ArrayField";
 

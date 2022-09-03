@@ -10,7 +10,7 @@ import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "laji-map/lib/globals";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from "@rjsf/utils";
 
 const cache = {};
 

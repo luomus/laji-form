@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from "@rjsf/utils";
 import Context from "../../Context";
 import * as merge from "deepmerge";
 

@@ -1,9 +1,9 @@
 import * as React from "react";
-import BaseInput from "@rjsf/core/dist/cjs/components/widgets/BaseInput";
+import { getDefaultRegistry } from "@rjsf/core";
 import Context from "../../Context";
 import { getUiOptions } from "../../utils";
 
-export default class _BaseInput extends React.Component {
+export default class _BaseInputTemplate extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -67,6 +67,7 @@ export default class _BaseInput extends React.Component {
 		const options = props.schema.type === "number" || props.schema.type === "integer"
 			? {...props.options, inputType: "text"}
 			: props.options;
-		return <BaseInput {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur}  options={options} />;
+		const {BaseInputTemplate} = getDefaultRegistry().templates;
+		return <BaseInputTemplate {...props} {...this.state} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur}  options={options} />;
 	}
 }

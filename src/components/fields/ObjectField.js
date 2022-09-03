@@ -1,9 +1,9 @@
 import * as React from "react";
-import ObjectField from "@rjsf/core/dist/cjs/components/fields/ObjectField";
-import { orderProperties, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
+import { orderProperties, isMultiSelect } from "@rjsf/utils";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID } from "../../utils";
 import { getButton, getButtonsForPosition } from "../ArrayFieldTemplate";
 import ReactContext from "../../ReactContext";
+import { getDefaultRegistry } from "@rjsf/core";
 
 export default (props) => {
 	const Template = props.uiSchema["ui:grid"] ? GridTemplate : ObjectFieldTemplate;
@@ -11,6 +11,8 @@ export default (props) => {
 	const formContext = id
 		? {...props.formContext, _parentLajiFormId: id}
 		: props.formContext;
+
+	const {ObjectField} = getDefaultRegistry().fields;
 	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template, formContext}} formContext={formContext} />;
 };
 

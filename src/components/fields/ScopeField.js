@@ -9,7 +9,7 @@ import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
-import { orderProperties } from "@rjsf/core/dist/cjs/utils";
+import { orderProperties } from "@rjsf/utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {

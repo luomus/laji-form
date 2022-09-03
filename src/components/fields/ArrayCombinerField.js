@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from  "@rjsf/utils";
 import { immutableDelete } from "../../utils";
 import * as merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";

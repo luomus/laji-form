@@ -2,7 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 import Context from "../../Context";
-const DescriptionField = require("@rjsf/core/dist/cjs/components/fields/DescriptionField");
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -251,11 +250,12 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const {dragging} = this.state;
 
 			const {Row, Col} = this.context.theme;
+			const {DescriptionFieldTemplate} = this.props.registry.templates;
 			return (
 				<Row>
 					<Col xs={12}>
 						<TitleField title={title} className={titleClassName} help={uiSchema["ui:help"]} id={idSchema.$id} />
-						{description !== undefined ? <DescriptionField description={description} /> : null}
+						{description !== undefined ? <DescriptionFieldTemplate description={description} id={idSchema.$id} registry={this.props.registry} /> : null}
 						<div className={`laji-form-medias ${this.CONTAINER_CLASS}`}>
 							{this.renderMedias()}
 							{this.renderLoadingMedias()}

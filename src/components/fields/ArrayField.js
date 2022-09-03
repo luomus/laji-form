@@ -1,11 +1,11 @@
 import * as React from "react";
-import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
-import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from  "@rjsf/utils";
 import * as merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../ArrayFieldTemplate";
 import Context from "../../Context";
+import { getDefaultRegistry } from "@rjsf/core";
 
 // Doesn't work with arrays properly since uses JSON Pointers but not JSON path.
 // e.g. "copy all array item values expect these" is impossible.
@@ -37,6 +37,8 @@ export function onArrayFieldChange(formData, props) {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
 	return addLajiFormIds(formData, tmpIdTree, false)[0];
 }
+
+const {ArrayField} = getDefaultRegistry().fields;
 
 export class ArrayFieldPatched extends ArrayField {
 	constructor(...params) {

@@ -1,14 +1,15 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
-const { isSelect, isMultiSelect: _isMultiSelect, getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
+import { isSelect as _isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState as _getDefaultFormState } from "@rjsf/utils";
 import Context from "./Context";
 import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
-import Form, { UiSchema } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import Form from "@rjsf/core";
+import { UiSchema, RJSFSchema } from "@rjsf/utils";
 import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
+import rjsfValidator from "@rjsf/validator-ajv6";
 
 export const isObject = _isObject;
 
@@ -27,6 +28,10 @@ export function isDefaultData(formData: any, schema: any, definitions = {}): boo
 	default:
 		return formData === getDefaultFormState(schema, undefined, definitions);
 	}
+}
+
+export function getDefaultFormState<T>(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) {
+	return _getDefaultFormState(rjsfValidator, schema, formData, rootSchema);
 }
 
 /**
@@ -188,12 +193,16 @@ export function getReactComponentName(WrappedComponent: React.ComponentClass) {
 }
 
 export function isMultiSelect(schema: any, uiSchema?: UiSchema) {
-	return _isMultiSelect(schema) && !(
+	return _isMultiSelect(rjsfValidator, schema) && !(
 		schema.type === "array" &&
 		uiSchema &&
 		uiSchema.items &&
 		uiSchema.items["ui:field"]
 	);
+}
+
+export function isSelect(schema: RJSFSchema) {
+	return _isSelect(rjsfValidator, schema);
 }
 
 const SWITCH_CLASS = "laji-form-checkbox-widget-tab-target";
@@ -818,7 +827,7 @@ export function triggerParentComponent(eventName: string, e: React.SyntheticEven
 	}
 }
 
-export function parseSchemaFromFormDataPointer(schema: JSONSchema7, pointer: string) {
+export function parseSchemaFromFormDataPointer(schema: RJSFSchema, pointer: string) {
 	const splits = pointer.split("/").filter(s => !isEmptyString(s));
 	const value = splits.reduce((o, s)=> {
 		if (!isNaN(parseInt(s))) {
@@ -861,7 +870,7 @@ export const JSONPointerToId = (fieldName: string) => fieldName[0] === "/" ? fie
 
 export const idSchemaIdToJSONPointer = (id: string) => id.replace(/root_|_/g, "/");
 
-export function schemaJSONPointer(schema: JSONSchema7, JSONPointer: string) {
+export function schemaJSONPointer(schema: RJSFSchema, JSONPointer: string) {
 	if (JSONPointer[0] !== "/") {
 		JSONPointer = `/${JSONPointer}`;
 	}
@@ -882,7 +891,7 @@ export function schemaJSONPointer(schema: JSONSchema7, JSONPointer: string) {
 	}, "");
 }
 
-export function uiSchemaJSONPointer(schema: JSONSchema7, JSONPointer: string) {
+export function uiSchemaJSONPointer(schema: RJSFSchema, JSONPointer: string) {
 	if (JSONPointer[0] !== "/") return JSONPointer;
 
 	let schemaPointer: any = schema;
@@ -914,7 +923,7 @@ export function updateFormDataWithJSONPointer(schemaProps: Pick<FieldProps, "for
 			throw new Error(`Bad JSON Schema pointer '${schemaPointer}!`);
 		}
 		const _schema = parseJSONPointer(schemaProps.schema, schemaPointer);
-		let _default = getDefaultFormState(_schema, undefined, schemaProps.registry.definitions);
+		let _default = getDefaultFormState(_schema, undefined, schemaProps.registry.rootSchema);
 		if (!_default && _schema.type === "array") {
 			return [];
 		}
@@ -947,7 +956,7 @@ export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: st
 export const formDataIsEmpty = (props: FieldProps) => {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
 	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
-	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.definitions));
+	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
 };
 
 export const formDataEquals = (f1: any, f2: any, formContext: FormContext, id: string) => {
@@ -970,7 +979,7 @@ export const assignUUID = (item: any, immutably = false) => {
 	return item;
 };
 
-export function createTmpIdTree(schema: JSONSchema7) {
+export function createTmpIdTree(schema: RJSFSchema) {
 	function walk(_schema: any) {
 		if (_schema.properties) {
 			const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
@@ -1176,7 +1185,7 @@ export function toJSONPointer(s: string) {
 		: s;
 }
 
-export function getTitle(props: {schema: JSONSchema7, uiSchema: any, name?: string}, idx?: number) {
+export function getTitle(props: {schema: RJSFSchema, uiSchema: any, name?: string}, idx?: number) {
 	let title = props.uiSchema?.["ui:title" ]
 		?? props.schema?.title
 		?? props.name;

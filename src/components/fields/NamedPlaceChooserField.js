@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from "@rjsf/utils";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
 import Context from "../../Context";

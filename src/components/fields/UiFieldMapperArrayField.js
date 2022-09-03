@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
+import { deepEquals } from  "@rjsf/utils";
 import { getUiOptions } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState, toIdSchema } from  "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState, toIdSchema } from  "@rjsf/utils";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 

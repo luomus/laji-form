@@ -6,7 +6,7 @@ import { GlyphButton, OverlayTrigger } from "../components";
 import Context from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID } from "../../utils";
 import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getDefaultFormState } from "@rjsf/utils";
 import ReactContext from "../../ReactContext";
 
 @BaseComponent

@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData, getDefaultFormState } from "../../utils";
 import { Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
