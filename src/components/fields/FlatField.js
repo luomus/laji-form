@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState, toIdSchema } from  "@rjsf/utils";
+import { getDefaultFormState } from  "@rjsf/utils";
 import { immutableDelete } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -60,7 +60,7 @@ export default class FlatField extends React.Component {
 
 				state.idSchema = {
 					...state.idSchema,
-					[field]: toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`, props.registry.definitions)
+					[field]: this.props.registry.toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`)
 				};
 				let innerId = state.idSchema[field][innerField].$id;
 				if (isArray) {

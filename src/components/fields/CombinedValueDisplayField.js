@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { immutableDelete, parseJSONPointer } from  "../../utils";
-import { toIdSchema } from  "@rjsf/utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -50,10 +49,10 @@ export default class CombinedValueDisplayField extends React.Component {
 			const {name, title, combineType, firstField, secondField} = options;
 
 			schema = {...schema, properties: {...schema.properties, [name || ""]: {title: title || "", type: "string" }}};
-			idSchema = toIdSchema(
+
+			idSchema = this.props.registry.toIdSchema(
 				schema,
-				idSchema.$id,
-				props.registry.definitions
+				idSchema.$id
 			);
 
 			let value = undefined;

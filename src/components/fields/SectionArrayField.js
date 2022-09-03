@@ -5,7 +5,7 @@ import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSc
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleField from "./TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import { getDefaultFormState, toIdSchema } from "@rjsf/utils";
+import { getDefaultFormState } from "@rjsf/utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
@@ -224,7 +224,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id),
 		};
 
-		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
+		const idSchema = this.props.registry.schemaUtils.toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`);
 
 		const sectionLabel = (
 			<Affix className="background" getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>

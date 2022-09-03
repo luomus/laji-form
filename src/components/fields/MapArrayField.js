@@ -9,7 +9,7 @@ import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, focusAndScroll, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem } from "../../utils";
-import { getDefaultFormState, toIdSchema } from "@rjsf/utils";
+import { getDefaultFormState } from "@rjsf/utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
@@ -1398,10 +1398,9 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 			return {
 				schema: schema.items,
 				uiSchema: uiSchema.items || {},
-				idSchema: toIdSchema(
+				idSchema: this.props.registry.schemaUtils.toIdSchema(
 					schema.items,
-					`${this.props.idSchema.$id}_${activeIdx}`,
-					this.props.registry.definitions
+					`${this.props.idSchema.$id}_${activeIdx}`
 				),
 				formData: (this.props.formData || [])[activeIdx],
 				errorSchema: this.props.errorSchema[activeIdx] || {},

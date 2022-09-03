@@ -73,7 +73,6 @@ const fields = importLocalComponents<Field>("fields", [
 	"DataLeakerField",
 	"LocalityField",
 	"ImageDisplayField",
-	"DescriptionField",
 	"FakePropertyField",
 	"SectionArrayField",
 	"MultiArrayField",
