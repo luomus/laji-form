@@ -12,8 +12,13 @@ export default (props) => {
 		? {...props.formContext, _parentLajiFormId: id}
 		: props.formContext;
 
+	const uiSchema = {
+		...props.uiSchema,
+		"ui:ObjectFieldTemplate": Template
+	};
+
 	const {ObjectField} = getDefaultRegistry().fields;
-	return <ObjectField {...props} registry={{...props.registry, ObjectFieldTemplate: Template, formContext}} formContext={formContext} />;
+	return <ObjectField {...props} uiSchema={uiSchema} registry={{...props.registry, formContext}} formContext={formContext} />;
 };
 
 function ObjectFieldTemplate(props) {
