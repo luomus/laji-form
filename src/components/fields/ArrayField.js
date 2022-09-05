@@ -11,7 +11,7 @@ import { getDefaultRegistry } from "@rjsf/core";
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 
 	const {schema, registry, formContext} = that.props;
-	const defaultItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+	const defaultItem = getDefaultFormState(schema.items, undefined);
 
 	copyItem = filterItemIdsDeeply(copyItem, formContext.contextId, that.props.idSchema.$id);
 
@@ -23,7 +23,7 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 			sourceValue = parseJSONPointer(source, f);
 		} catch (e) {
 			const schema = schemaJSONPointer(schema.items, f);
-			sourceValue = getDefaultFormState(schema, undefined, registry.definitions);
+			sourceValue = getDefaultFormState(schema, undefined);
 		}
 		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
