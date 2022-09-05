@@ -14,7 +14,7 @@ import Context from "../ReactContext";
 
 import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, RJSFSchema, TemplatesType } from "@rjsf/utils";
-import ErrorListTemplate from "./ErrorListTemplate";
+import ErrorListTemplate from "./templates/ErrorListTemplate";
 
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
@@ -112,8 +112,9 @@ const templates = importLocalComponents<TemplatesType>("templates", [
 	{"TitleFieldTemplate": "TitleField"},
 	{"DescriptionFieldTemplate": "DescriptionField"},
 	"FieldTemplate",
-	"ArrayFieldTemplate"
-])
+	"ArrayFieldTemplate",
+	"ErrorListTemplate"
+]);
 
 function importLocalComponents<T>(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: T} {
 	return fieldNames.reduce((fields, field) => {
@@ -763,14 +764,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						fields={this.getFields(this.props.fields)}
 						widgets={this.getWidgets(this.props.widgets)}
 						templates={this.getTemplates(this.props.templates)}
-						ErrorList={ErrorListTemplate}
 						formContext={this.state.formContext}
+						validator={rjsfValidator}
 						noValidate={true}
 						extraErrors={this.state.extraErrors}
 						noHtml5Validate={true}
 						liveValidate={true}
 						autoComplete="off"
-						validator={rjsfValidator}
 					>
 						<div>
 							{this.props.children}
