@@ -41,7 +41,7 @@ function ObjectFieldTemplate(props) {
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
 	buttons = <div className={buttonsClassName}>{buttons}</div>;
-	const titleUiSchema = {...(props.uiSchema || {}), "ui:renderedButtons": buttons};
+	const titleUiSchema = {...(props.uiSchema || {}), "_ui:renderedButtons": buttons};
 
 	return (
 		<div className={containerClassName}>
