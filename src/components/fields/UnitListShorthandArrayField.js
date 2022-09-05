@@ -77,7 +77,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			});
 			const formData = this.props.formData;
 			const last = formData[formData.length - 1];
-			if (isDefaultData(last, this.props.schema.items, this.props.registry.definitions)) {
+			if (isDefaultData(last, this.props.schema.items)) {
 				formData.pop();
 			}
 			this.props.onChange([...formData, ...units]);
