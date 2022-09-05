@@ -10,6 +10,7 @@ import Context from "../../Context";
 import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
+import { getTemplate } from "@rjsf/utils";
 
 export function findSingleGeometry(geoJSON) {
 	if (!geoJSON) return undefined;
@@ -143,7 +144,7 @@ export default class MapField extends React.Component {
 	}
 
 	render() {
-		const {TitleField} = this.props.registry.fields;
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const {uiSchema, formData} = this.props;
 		const {height = 400, emptyHelp, mapOptions = {}, mobileEditor: _mobileEditor, data} = getUiOptions(uiSchema);
 		const isEmpty = !formData || !formData.geometries || !formData.geometries.length;
@@ -205,7 +206,7 @@ export default class MapField extends React.Component {
 
 		return (
 			<div>
-				<TitleField title={this.props.schema.title} />
+				<TitleFieldTemplate title={this.props.schema.title} />
 				<Affix {...{topOffset, bottomOffset}}>
 					<div style={{height}}>
 						<MapComponent

@@ -6,9 +6,8 @@ import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState } from "../utils";
 const equals = require("deep-equal");
-import RJSFValidator from "@rjsf/validator-ajv6";
-const { validateFormData } = RJSFValidator;
 import rjsfValidator from "@rjsf/validator-ajv6";
+const { validateFormData } = rjsfValidator;
 import * as merge from "deepmerge";
 import { HasMaybeChildren, Theme } from "../themes/theme";
 import Context from "../ReactContext";
@@ -23,7 +22,6 @@ import * as translations from "../translations.json";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
-	"TitleField",
 	"ArrayField",
 	"ObjectField",
 	"NestField",
@@ -111,6 +109,7 @@ const widgets = importLocalComponents<Widget>("widgets", [
 const templates = importLocalComponents<TemplatesType>("templates", [
 	"BaseInputTemplate",
 	"DescriptionField",
+	{"TitleFieldTemplate": "TitleField"},
 	{"DescriptionFieldTemplate": "DescriptionField"},
 	"FieldTemplate",
 	"ArrayFieldTemplate"

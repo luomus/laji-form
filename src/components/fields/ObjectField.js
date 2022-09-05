@@ -1,5 +1,5 @@
 import * as React from "react";
-import { orderProperties } from "@rjsf/utils";
+import { orderProperties, getTemplate } from "@rjsf/utils";
 import { getUiOptions, getNestedUiFieldsList, isHidden, isEmptyString, isObject, getUUID, isMultiSelect } from "../../utils";
 import { getButton, getButtonsForPosition } from "../templates/ArrayFieldTemplate";
 import ReactContext from "../../ReactContext";
@@ -17,7 +17,8 @@ export default (props) => {
 };
 
 function ObjectFieldTemplate(props) {
-	const { TitleField, DescriptionField } = props;
+	const TitleFieldTemplate = getTemplate("TitleFieldTemplate", props.registry, getUiOptions(props.uiSchema));
+	const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", props.registry, getUiOptions(props.uiSchema));
 
 	const {ButtonToolbar} = React.useContext(ReactContext).theme;
 	let buttons = getGlyphButtons(props);
@@ -35,27 +36,25 @@ function ObjectFieldTemplate(props) {
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
 	buttons = <div className={buttonsClassName}>{buttons}</div>;
+	const titleUiSchema = {...(props.uiSchema || {}), "ui:renderedButtons": buttons};
 
 	return (
 		<div className={containerClassName}>
 			<fieldset className={schemaClassName}>
 				{props.title &&
-					<TitleField
+					<TitleFieldTemplate
 						id={`${props.idSchema.$id}__title`}
 						title={props.title}
 						required={props.required || props.uiSchema["ui:required"]}
-						className={getUiOptions(props.uiSchema).titleClassName}
-						help={props.uiSchema["ui:help"]}
-						helpHoverable={props.uiSchema["ui:helpHoverable"]}
-						buttons={buttons}
-						contextId={props.formContext.contextId}
+						uiSchema={titleUiSchema}
+						registry={props.registry}
 					/>}
 				{topButtons}
 				{props.description &&
-					<DescriptionField
+					<DescriptionFieldTemplate
 						id={`${props.idSchema.$id}__description`}
 						description={props.description}
-						formContext={props.formContext}
+						registry={props.registry}
 					/>
 				}
 				{leftButtons && (
@@ -77,7 +76,8 @@ function ObjectFieldTemplate(props) {
 }
 
 function GridTemplate(props) {
-	const {schema, uiSchema, idSchema, properties, TitleField} = props;
+	const {schema, uiSchema, idSchema, properties} = props;
+	const TitleFieldTemplate = getTemplate("TitleFieldTemplate", props.registry, getUiOptions(props.uiSchema));
 	const gridOptions = props.uiSchema["ui:grid"] || {};
 	const {ButtonToolbar, Row, Col} = React.useContext(ReactContext).theme;
 
@@ -160,16 +160,16 @@ function GridTemplate(props) {
 	const {containerClassName, schemaClassName, buttonsClassName} = getClassNames(props, buttons);
 
 	buttons = <div className={buttonsClassName}>{buttons}</div>;
+	const titleUiSchema = {...uiSchema, "ui:renderedButtons": buttons};
 
 	return (
 		<div className={containerClassName}>
 			<fieldset className={schemaClassName}>
 				{!isEmptyString(fieldTitle) ?
-					<TitleField title={fieldTitle}
-					            schema={schema}
-					            buttons={buttons}
-					            help={uiSchema["ui:help"]}
-					            id={idSchema.$id} /> : null}
+					<TitleFieldTemplate title={fieldTitle}
+					                    schema={schema}
+					                    uiSchema={titleUiSchema}
+					                    id={idSchema.$id} /> : null}
 				{topButtons}
 				{leftButtons && <div className="pull-left">{leftButtons}</div>}
 				{rows.map((row, i) =>

@@ -14,6 +14,7 @@ import moment from "moment";
 import { FieldProps, RootContext } from "../LajiForm";
 import ApiClient from "../../ApiClient";
 import ReactContext from "../../ReactContext";
+import { getTemplate } from "@rjsf/utils";
 
 function toDecimal(number: any) {
 	if (!number) return undefined;
@@ -232,9 +233,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const {schema, uiSchema, idSchema, name, formContext, readonly, disabled} = this.props;
 			const {translations} = formContext;
 
-			const {description, titleClassName, addModal} = getUiOptions(uiSchema);
+			const {description, addModal} = getUiOptions(uiSchema);
 			const title = (schema.title === undefined) ? name : schema.title;
-			const TitleField = this.props.registry.fields.TitleField as any;
+			const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 
 			const {OverlayTrigger, Tooltip, Glyphicon} = this.context.theme;
 
@@ -254,7 +255,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			return (
 				<Row>
 					<Col xs={12}>
-						<TitleField title={title} className={titleClassName} help={uiSchema["ui:help"]} id={idSchema.$id} />
+						<TitleFieldTemplate title={title} uiSchema={uiSchema} id={idSchema.$id} registry={this.props.registry} />
 						{description !== undefined ? <DescriptionFieldTemplate description={description} id={idSchema.$id} registry={this.props.registry} /> : null}
 						<div className={`laji-form-medias ${this.CONTAINER_CLASS}`}>
 							{this.renderMedias()}

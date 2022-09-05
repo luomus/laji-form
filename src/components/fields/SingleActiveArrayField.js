@@ -12,6 +12,7 @@ import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
+import { getTemplate } from "@rjsf/utils";
 
 const popupMappers = {
 	units: (schema, units, options) => {
@@ -631,16 +632,24 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
-		const {TitleField, DescriptionField} =  arrayTemplateFieldProps;
+		const {DescriptionField} =  arrayTemplateFieldProps;
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const {Label} = this.props.formContext;
-		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label : TitleField;
-		const {titleFormatters} = getUiOptions(that.props.uiSchema);
+		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label : TitleFieldTemplate;
 		const title = getTitle(this.props, activeIdx);
+
+		const titleUiSchema = {
+			...arrayTemplateFieldProps.uiSchema,
+			"ui:options": {
+				...getUiOptions(arrayTemplateFieldProps.uiSchema),
+				titleFormatters: that.props.uiSchema,
+			}
+		};
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
-				<Title title={title} label={title} className={getUiOptions(arrayTemplateFieldProps.uiSchema).titleClassName} titleFormatters={titleFormatters} formData={that.props.formData} help={arrayTemplateFieldProps.uiSchema["ui:help"]} />
-				<DescriptionField description={this.props.uiSchema["ui:description"]}/>
+				<Title title={title} label={title} uiSchema={titleUiSchema} formData={that.props.formData} />
+				<DescriptionField description={this.props.uiSchema["ui:description"]} />
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
 			: null;
@@ -818,10 +827,12 @@ class TableArrayFieldTemplate extends React.Component {
 			return <_ArrayFieldTemplate {...this.props} />;
 		}
 
-		const {schema, uiSchema = {}, formData = [], items, TitleField, DescriptionField, disabled, readonly} = this.props;
+		const {schema, uiSchema = {}, formData = [], items, disabled, readonly} = this.props;
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(uiSchema));
+		const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(uiSchema));
 		const {renderTitleAsLabel, formatters = {}, shownColumns = []} = getUiOptions(uiSchema);
 		const {Label} = this.props.formContext;
-		const Title = renderTitleAsLabel ? Label : TitleField;
+		const Title = renderTitleAsLabel ? Label : TitleFieldTemplate;
 		const foundProps = {};
 		const shownColumnsDict = dictionarify(shownColumns);
 		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");
@@ -859,7 +870,7 @@ class TableArrayFieldTemplate extends React.Component {
 			idx !== that.state.activeIdx && that.onActiveChange(idx, undefined, this.updateLayout);
 		};
 
-		const {confirmDelete, titleClassName, titleFormatters} = getUiOptions(uiSchema);
+		const {confirmDelete} = getUiOptions(uiSchema);
 
 		const getDeleteButtonFor = (idx, item) => {
 			return <DeleteButton id={`${that.props.idSchema.$id}_${idx}`} 
@@ -898,8 +909,8 @@ class TableArrayFieldTemplate extends React.Component {
 
 		return (
 			<div style={{position: "relative"}} className="single-active-array-table-container">
-				<Title title={title} label={title} className={titleClassName} titleFormatters={titleFormatters} formData={formData} />
-				<DescriptionField description={uiSchema["ui:description"]}/>
+				<Title title={title} label={title} uiSchema={uiSchema} formData={formData} />
+				<DescriptionFieldTemplate description={uiSchema["ui:description"]}/>
 				<div className="laji-form-field-template-item">
 					<div className="table-responsive laji-form-field-template-schema">
 						<Table hover={true} bordered={true} condensed={true} className="single-active-array-table">

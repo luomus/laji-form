@@ -4,6 +4,7 @@ import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
+import { getTemplate } from "@rjsf/core";
 
 @BaseComponent
 export default class ExtraLabelRowField extends React.Component {
@@ -42,7 +43,8 @@ export default class ExtraLabelRowField extends React.Component {
 	}
 
 	render() {
-		const {SchemaField, TitleField} = this.props.registry.fields;
+		const {SchemaField} = this.props.registry.fields;
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const {labels, titleClassName, hiddenXs, affixed} = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
@@ -70,7 +72,7 @@ export default class ExtraLabelRowField extends React.Component {
 			<div ref={this.setContainerRef}>
 				{title
 					? (
-						<TitleField title={title} className={titleClassName} help={this.props.uiSchema["ui:help"]} id={this.props.idSchema.$id} />
+						<TitleFieldTemplate title={title} uiSchema={this.props.uiSchema} id={this.props.idSchema.$id} />
 					) : null
 				}
 				{labelRow}

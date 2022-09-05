@@ -15,6 +15,7 @@ import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import { getButton } from "../templates/ArrayFieldTemplate";
 import { onArrayFieldChange } from "./ArrayField";
+import { getTemplate } from "@rjsf/utils";
 
 export function parseGeometries(geometry) {
 	return ((geometry && geometry.type === "GeometryCollection") ? geometry.geometries : [geometry])
@@ -1571,7 +1572,8 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 				{map}
 			</Stretch>
 		);
-		const {TitleField} = this.props.registry.fields;
+
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const {Popover, Row, Col, ButtonToolbar} = this.context.theme;
 
 		return (
@@ -1611,7 +1613,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 				</Row>
 				{renderButtonsBelow && !mapOptions.emptyMode && buttons.length ? (
 					<Row className="map-array-field-below-buttons">
-						<TitleField title={getUiOptions(uiSchema).buttonsTitle} />
+						<TitleFieldTemplate title={getUiOptions(uiSchema).buttonsTitle} />
 						<ButtonToolbar>{buttons}</ButtonToolbar>
 					</Row>
 				): null}

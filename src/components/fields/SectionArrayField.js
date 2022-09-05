@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
-import TitleField from "./TitleField";
+import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -63,11 +63,13 @@ const walkFieldTemplate = (schema, uiSchema = {}, template) => {
 };
 
 const InvisibleTitle = (props) => {
-	return <TitleField {...props} className="hidden-title-text" />;
+	const uiSchema = {...(props.uiSchema || {}), "ui:options": {...getUiOptions(props.uiSchema), titleClassName: "hidden-title-text"}};
+	return <TitleFieldTemplate {...props} uiSchema={uiSchema} />;
 };
 
 const NoLineBreakTitle = (props) => {
-	return <TitleField {...props} className="no-line-break" />;
+	const uiSchema = {...(props.uiSchema || {}), "ui:options": {...getUiOptions(props.uiSchema), titleClassName: "no-line-break"}};
+	return <TitleFieldTemplate {...props} uiSchema={uiSchema} />;
 };
 
 const invisibleStyle = {visibility: "hidden"};
@@ -125,7 +127,7 @@ export default class SectionArrayField extends React.Component {
 		return {
 			uiSchema: _uiSchema,
 			formContext,
-			registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}
+			registry: {...registry, formContext, templates: {...registry.templates, TitleField: InvisibleTitle}}
 		};
 	}
 }
@@ -239,7 +241,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				formData={_formData}
 				idSchema={idSchema}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
+				registry={{...registry, formContext, templates: {...registry.templates, TitleField: NoLineBreakTitle}}}
 				formContext={formContext}
 				errorSchema={this.props.formContext.errorSchema[0] || {}} />
 		);
@@ -324,7 +326,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				uiSchema={__uiSchema}
 				formData={_formData}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleFieldTemplate: InvisibleTitle}}}
 				formContext={formContext}
 			/>
 		);
@@ -483,7 +485,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				uiSchema={__uiSchema}
 				formData={_formData}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleFieldTemplate: InvisibleTitle}}}
 				formContext={formContext}
 			/>
 		);
