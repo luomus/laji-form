@@ -7,7 +7,6 @@ import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./co
 import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
-const { validateFormData } = rjsfValidator;
 import * as merge from "deepmerge";
 import { HasMaybeChildren, Theme } from "../themes/theme";
 import Context from "../ReactContext";
@@ -872,7 +871,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			liveValidations = {} as {errors: any, warnings: any};
 		}
 		const schemaErrors = nonlive || onlySchema
-			? validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
+			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
 			: {};
 		block && this.pushBlockingLoader();
 		return new Promise(resolve =>
