@@ -127,7 +127,7 @@ export default class SectionArrayField extends React.Component {
 		return {
 			uiSchema: _uiSchema,
 			formContext,
-			registry: {...registry, formContext, templates: {...registry.templates, TitleField: InvisibleTitle}}
+			registry: {...registry, formContext, templates: {...registry.templates, TitleFieldTemplate: InvisibleTitle}}
 		};
 	}
 }
@@ -241,7 +241,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				formData={_formData}
 				idSchema={idSchema}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, templates: {...registry.templates, TitleField: NoLineBreakTitle}}}
+				registry={{...registry, formContext, templates: {...registry.templates, TitleFieldTemplate: NoLineBreakTitle}}}
 				formContext={formContext}
 				errorSchema={this.props.formContext.errorSchema[0] || {}} />
 		);
