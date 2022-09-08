@@ -4,7 +4,7 @@ import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
-import { getTemplate } from "@rjsf/core";
+import { getTemplate } from "@rjsf/utils";
 
 @BaseComponent
 export default class ExtraLabelRowField extends React.Component {
