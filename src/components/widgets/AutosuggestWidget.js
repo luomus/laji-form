@@ -544,7 +544,6 @@ export class Autosuggest extends React.Component {
 			clearTimeout(this.timeout);
 		}
 		if (debounce) {
-			console.log("UGH", this.context);
 			this.timeout = this.context.setTimeout(request, 100);
 		} else {
 			request();
@@ -1201,7 +1200,6 @@ class ReactAutosuggest extends React.Component {
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 			if (shortcuts.Enter) {
-				console.log("HAA", this.context);
 				this.context.setTimeout(() => {
 					suggestion && this.onSuggestionSelected(suggestion);
 				}, 0);
