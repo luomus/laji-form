@@ -1,9 +1,12 @@
 import * as React from "react";
 import { getDefaultRegistry } from "@rjsf/core";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
 
 export default class _BaseInputTemplate extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -38,7 +41,7 @@ export default class _BaseInputTemplate extends React.Component {
 				this.props.onChange(value);
 			} else {
 				if (this.timeout) clearTimeout(this.timeout);
-				this.timeout = new Context(this.props.formContext.contextId).setTimeout(() => {
+				this.timeout = this.context.setTimeout(() => {
 					this.props.onChange(value);
 				}, 1000);
 			}

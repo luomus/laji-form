@@ -632,8 +632,8 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 		const that = this.props.formContext.this;
 		const	arrayTemplateFieldProps = this.props;
 		const activeIdx = that.state.activeIdx;
-		const {DescriptionField} =  arrayTemplateFieldProps;
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
+		const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const {Label} = this.props.formContext;
 		const Title = getUiOptions(that.props.uiSchema).renderTitleAsLabel ? Label : TitleFieldTemplate;
 		const title = getTitle(this.props, activeIdx);
@@ -642,14 +642,14 @@ class UncontrolledArrayFieldTemplate extends React.Component {
 			...arrayTemplateFieldProps.uiSchema,
 			"ui:options": {
 				...getUiOptions(arrayTemplateFieldProps.uiSchema),
-				titleFormatters: that.props.uiSchema,
+				titleFormatters: that.props.uiSchema.titleFormatters,
 			}
 		};
 
 		return activeIdx !== undefined && arrayTemplateFieldProps.items && arrayTemplateFieldProps.items[activeIdx] ? 
 			<div key={getUUID(this.props.formData[activeIdx]) || activeIdx}>
 				<Title title={title} label={title} uiSchema={titleUiSchema} formData={that.props.formData} />
-				<DescriptionField description={this.props.uiSchema["ui:description"]} />
+				<DescriptionFieldTemplate description={this.props.uiSchema["ui:description"]} />
 				{arrayTemplateFieldProps.items[activeIdx].children} 
 			</div>
 			: null;

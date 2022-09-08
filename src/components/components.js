@@ -621,7 +621,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = new Context(this.props.contextId).setTimeout(() => {
+		this.overlayTimeout = this.context.setTimeout(() => {
 			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
 		}, 200);
 	};
@@ -635,8 +635,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		const _context = new Context(this.props.contextId);
-		this.overlayTimeout = _context.setTimeout(() => {
+		this.overlayTimeout = this.context.setTimeout(() => {
 			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
 		}, 200);
 	}
