@@ -113,7 +113,8 @@ const templates = importLocalComponents<TemplatesType>("templates", [
 	{"DescriptionFieldTemplate": "DescriptionField"},
 	"FieldTemplate",
 	"ArrayFieldTemplate",
-	"ErrorListTemplate"
+	"ErrorListTemplate",
+	"ObjectFieldTemplate"
 ]);
 
 function importLocalComponents<T>(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: T} {
