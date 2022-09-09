@@ -19,7 +19,7 @@ interface HasMaybeClassName {
 	className?: string;
 }
 
-export interface PanelProps {
+export interface PanelProps extends HasMaybeRef, HasMaybeClassName, HasMaybeStyle {
 	expanded?: boolean;
 	onToggle?: () => void;
 	onClick?: () => void;

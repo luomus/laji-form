@@ -723,7 +723,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})})
 	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
 
-	getContext = (props: LajiFormProps): ContextProps => {
+	getContext = (props: LajiFormProps, context: ContextProps): ContextProps => {
 		const nextKey = (["theme", "lang"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
@@ -733,7 +733,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		} else {
 			this.contextMemoizeKey = nextKey;
 			this.memoizedContext = {
-				theme: props.theme || StubTheme,
+				theme: props.theme || context?.theme || StubTheme,
 				lang: props.lang || "en",
 				setTimeout: this.setTimeout,
 			};
@@ -751,13 +751,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel, Table} = this.props.theme || this.context.theme;
+		const {Panel, Table} = this.getContext(this.props, this.context).theme;
 
 		const panelHeader = (
 			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
 		);
 		return (
-			<Context.Provider value={this.getContext(this.props)}>
+			<Context.Provider value={this.getContext(this.props, this.context)}>
 				<div className="laji-form">
 					{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
 						<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
@@ -836,7 +836,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
 		if (!this.state.runningSubmitHooks) return null;
 
-		const { ProgressBar } = this.props.theme || this.context.theme;
+		const { ProgressBar } = this.getContext(this.props, this.context).theme;
 		return (
 			<div className="running-jobs">
 				{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
