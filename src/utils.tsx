@@ -654,7 +654,7 @@ export function formatValue(props: FieldProps, _formatter?: any, parentProps?: a
 	} else if (isEmptyString(formData)) {
 		formatted = "";
 	} else if (isMultiSelect(schema)) {
-		formatted = formData.map((_val: any) => (schema as any).items.enumNames[(schema as any).items.enum.indexOf(_val)]).join(", ");
+		formatted = formData.map((_val: any) => (schema as any).items.oneOf.find((one: any) => one.const === _val).title).join(", ");
 	} else if (schema.type === "object") {
 		const keys = Object.keys(formData);
 		return keys.map((_col, i) => {
@@ -670,7 +670,7 @@ export function formatValue(props: FieldProps, _formatter?: any, parentProps?: a
 			return arrayJoiner(child, i, formData.length, "; ");
 		})}</span>;
 	} else if (isSelect(schema)) {
-		formatted = isEmptyString(formData) ? formData : (schema as any).enumNames[(schema.enum as any).indexOf(formData)];
+		formatted = isEmptyString(formData) ? formData : (schema as any).oneOf.find((one: any) => one.const === formData).title;
 	} else if (schema.type === "boolean") {
 		formatted = props.formContext.translations[formData ? "yes" : "no"];
 	}

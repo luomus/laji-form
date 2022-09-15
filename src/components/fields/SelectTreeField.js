@@ -34,8 +34,8 @@ export default class SelectTreeField extends React.Component {
 		let idSchema = {$id: props.idSchema.$id};
 
 		let dictionarifiedEnums = {};
-		props.schema.enum.forEach((e, i) => {
-			dictionarifiedEnums[e] = props.schema.enumNames[i];
+		props.schema.oneOf.forEach((e, i) => {
+			dictionarifiedEnums[e.const] = e.title;
 		});
 
 		let {tree, labels} = getUiOptions(props.uiSchema);
@@ -59,14 +59,13 @@ export default class SelectTreeField extends React.Component {
 
 		let properties = {};
 		function addSelect(depth, key, childrenKeys) {
-			let select = {"type": "string", "enum": [""], enumNames: [""]};
+			let select = {"type": "string", oneOf: [{const: "", title: ""}]};
 
 			let order = orderMap[key];
 			if (order) childrenKeys.sort((a, b) => {return order.indexOf(a) - order.indexOf(b);});
 
 			childrenKeys.forEach(key => {
-				select.enum.push(key);
-				select.enumNames.push(dictionarifiedEnums[key]);
+				select.oneOf.push({const: key, title: dictionarifiedEnums[key]});
 			});
 			if (labels && labels[depth]) {
 				select.title = labels[depth];

@@ -1,62 +1,114 @@
-{
-    "enum": [
-        "ML.1088",
-        "ML.1089",
-        "ML.1090",
-        "ML.1091",
-        "ML.1092",
-        "ML.1093",
-        "ML.1094",
-        "ML.1095",
-        "ML.1096",
-        "ML.1097",
-        "ML.1098",
-        "ML.1099",
-        "ML.1101",
-        "ML.1102",
-        "ML.1103",
-        "ML.1104",
-        "ML.1105",
-        "ML.1106",
-        "ML.1107",
-        "ML.1108",
-        "ML.1109",
-        "ML.1110",
-        "ML.1111",
-        "ML.1112",
-        "ML.1113",
-        "ML.1114",
-        "ML.1116",
-        "ML.1127"
-    ],
-    "enumNames": [
-        "\u00c5lands F\u00e5gelskyddsf\u00f6rening r.f.",
-        "Turun Lintutieteellinen Yhdistys r.y.",
-        "Porin Lintutieteellinen Yhdistys r.y.",
-        "Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.",
-        "Keski- ja Pohjois-Uudenmaan Lintuharrastajat - Apus r.y.",
-        "Porvoon Seudun Lintuyhdistys r.y.",
-        "Kymenlaakson Lintutieteellinen Yhdistys r.y.",
-        "Etel\u00e4-Karjalan Lintutieteellinen Yhdistys r.y.",
-        "Lounais-H\u00e4meen Lintuharrastajat r.y.",
-        "Kanta-H\u00e4meen Lintutieteellinen Yhdistys r.y.",
-        "P\u00e4ij\u00e4t-H\u00e4meen Lintutieteellinen Yhdistys r.y.",
-        "Pirkanmaan Lintutieteellinen Yhdistys r.y.",
-        "Etel\u00e4-Savon Lintuharrastajat - Oriolus r.y.",
-        "Pohjois-Savon Lintuyhdistys - Kuikka r.y.",
-        "Pohjois-Karjalan Lintutieteellinen Yhdistys r.y.",
-        "Keski-Suomen Lintutieteellinen Yhdistys r.y.",
-        "Suomensel\u00e4n Lintutieteellinen Yhdistys r.y.",
-        "Suupohjan Lintutietieteellinen Yhdistys r.y.",
-        "Merenkurkun Lintutieteellinen Yhdistys r.y.",
-        "Keski-Pohjanmaan Lintutieteellinen Yhdistys r.y.",
-        "Pohjois-Pohjanmaan Lintutieteellinen Yhdistys r.y.",
-        "Kainuun Lintutieteellinen Yhdistys r.y.",
-        "Kemi-Tornion Lintuharrastajat - Xenus r.y.",
-        "Lapin Lintutieteellinen Yhdistys r.y.",
-        "Kuusamon lintukerho",
-        "Lohjan Lintutieteellinen Yhdistys - Hakki r.y.",
-        "Rauman Seudun Lintuharrastajat r.y.",
-        "Suomen ulkopuoliset alueet"
-    ]
-}
+[
+  {
+    "const": "ML.1088",
+    "title": "Ålands Fågelskyddsförening r.f."
+  },
+  {
+    "const": "ML.1089",
+    "title": "Turun Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1090",
+    "title": "Porin Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1091",
+    "title": "Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y."
+  },
+  {
+    "const": "ML.1092",
+    "title": "Keski- ja Pohjois-Uudenmaan Lintuharrastajat - Apus r.y."
+  },
+  {
+    "const": "ML.1093",
+    "title": "Porvoon Seudun Lintuyhdistys r.y."
+  },
+  {
+    "const": "ML.1094",
+    "title": "Kymenlaakson Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1095",
+    "title": "Etelä-Karjalan Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1096",
+    "title": "Lounais-Hämeen Lintuharrastajat r.y."
+  },
+  {
+    "const": "ML.1097",
+    "title": "Kanta-Hämeen Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1098",
+    "title": "Päijät-Hämeen Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1099",
+    "title": "Pirkanmaan Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1101",
+    "title": "Etelä-Savon Lintuharrastajat - Oriolus r.y."
+  },
+  {
+    "const": "ML.1102",
+    "title": "Pohjois-Savon Lintuyhdistys - Kuikka r.y."
+  },
+  {
+    "const": "ML.1103",
+    "title": "Pohjois-Karjalan Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1104",
+    "title": "Keski-Suomen Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1105",
+    "title": "Suomenselän Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1106",
+    "title": "Suupohjan Lintutietieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1107",
+    "title": "Merenkurkun Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1108",
+    "title": "Keski-Pohjanmaan Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1109",
+    "title": "Pohjois-Pohjanmaan Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1110",
+    "title": "Kainuun Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1111",
+    "title": "Kemi-Tornion Lintuharrastajat - Xenus r.y."
+  },
+  {
+    "const": "ML.1112",
+    "title": "Lapin Lintutieteellinen Yhdistys r.y."
+  },
+  {
+    "const": "ML.1113",
+    "title": "Kuusamon lintukerho"
+  },
+  {
+    "const": "ML.1114",
+    "title": "Lohjan Lintutieteellinen Yhdistys - Hakki r.y."
+  },
+  {
+    "const": "ML.1116",
+    "title": "Rauman Seudun Lintuharrastajat r.y."
+  },
+  {
+    "const": "ML.1127",
+    "title": "Suomen ulkopuoliset alueet"
+  }
+]
