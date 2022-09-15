@@ -4,7 +4,7 @@
     },
     "category": "MHL.categorySurvey",
     "collectionID": "HR.3431",
-    "description": "<p></p> T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan talvilintulaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Lis\u00e4tietoa, laskentaohjeita ja tuloksia talvilintulaskennasta l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a href='https://www.luomus.fi/fi/talvilintulaskennat' target='_blank'>https://www.luomus.fi/fi/talvilintulaskennat</a>",
+    "description": "",
     "excludeFromCopy": [
         "$.editors",
         "$.gatheringEvent.leg",
@@ -25,7 +25,7 @@
     "id": "MHL.59",
     "language": "fi",
     "logo": "https://cms.laji.fi/wp-content/uploads/2020/05/paivaperhosseuranta-syke-vihko-logo.jpg",
-    "name": "SYKE p\u00e4iv\u00e4perhoset",
+    "name": "Maatalousymp\u00e4rist\u00f6n p\u00e4iv\u00e4perhosseuranta",
     "options": {
         "emptyOnNoCount": true,
         "hasAdmins": true,
@@ -45,13 +45,13 @@
             ]
         },
         "restrictAccess": "MHL.restrictAccessStrict",
+        "resultServiceType": "MHL.resultServiceTypeSykeInsectProjects",
         "useNamedPlaces": true,
         "warnEditingOldDocument": true
     },
     "schema": {
         "properties": {
             "editors": {
-                "excludeFromCopy": true,
                 "items": {
                     "type": "string"
                 },
@@ -62,130 +62,196 @@
                 "properties": {
                     "acknowledgeNoUnitsInCensus": {
                         "default": false,
-                        "excludeFromCopy": true,
                         "title": "Laskennassa ei havaittu lainkaan perhosia",
                         "type": "boolean"
                     },
                     "cloudCoverEnd": {
-                        "enum": [
-                            "",
-                            "MY.cloudCoverOktaEnumUnknown",
-                            "MY.cloudCoverOktaEnum0",
-                            "MY.cloudCoverOktaEnum1",
-                            "MY.cloudCoverOktaEnum2",
-                            "MY.cloudCoverOktaEnum3",
-                            "MY.cloudCoverOktaEnum4",
-                            "MY.cloudCoverOktaEnum5",
-                            "MY.cloudCoverOktaEnum6",
-                            "MY.cloudCoverOktaEnum7",
-                            "MY.cloudCoverOktaEnum8"
+                        "oneOf": [
+                            {
+                                "const": "",
+                                "title": ""
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnumUnknown",
+                                "title": "Ei tietoa"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum0",
+                                "title": "0 -T\u00e4ysin pilvet\u00f6nt\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum1",
+                                "title": "1 - Noin 1/8 taivaasta pilvien peitossa"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum2",
+                                "title": "2 - Noin \u00bc taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum3",
+                                "title": "3 - Noin 3/8 taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum4",
+                                "title": "4 - Puolet taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum5",
+                                "title": "5 - Noin 5/8 taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum6",
+                                "title": "6 - Noin \u00be taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum7",
+                                "title": "7 - Taivas l\u00e4hes pilvess\u00e4 (7/8)"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum8",
+                                "title": "8 - T\u00e4ysin pilvist\u00e4"
+                            }
                         ],
-                        "enumNames": [
-                            "",
-                            "Ei tietoa",
-                            "0 -T\u00e4ysin pilvet\u00f6nt\u00e4",
-                            "1 - Noin 1/8 taivaasta pilvien peitossa",
-                            "2 - Noin \u00bc taivaasta pilvess\u00e4",
-                            "3 - Noin 3/8 taivaasta pilvess\u00e4",
-                            "4 - Puolet taivaasta pilvess\u00e4",
-                            "5 - Noin 5/8 taivaasta pilvess\u00e4",
-                            "6 - Noin \u00be taivaasta pilvess\u00e4",
-                            "7 - Taivas l\u00e4hes pilvess\u00e4 (7/8)",
-                            "8 - T\u00e4ysin pilvist\u00e4"
-                        ],
-                        "excludeFromCopy": true,
                         "title": "Pilvisyys lopetettaessa",
                         "type": "string"
                     },
                     "cloudCoverStart": {
-                        "enum": [
-                            "",
-                            "MY.cloudCoverOktaEnumUnknown",
-                            "MY.cloudCoverOktaEnum0",
-                            "MY.cloudCoverOktaEnum1",
-                            "MY.cloudCoverOktaEnum2",
-                            "MY.cloudCoverOktaEnum3",
-                            "MY.cloudCoverOktaEnum4",
-                            "MY.cloudCoverOktaEnum5",
-                            "MY.cloudCoverOktaEnum6",
-                            "MY.cloudCoverOktaEnum7",
-                            "MY.cloudCoverOktaEnum8"
+                        "oneOf": [
+                            {
+                                "const": "",
+                                "title": ""
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnumUnknown",
+                                "title": "Ei tietoa"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum0",
+                                "title": "0 -T\u00e4ysin pilvet\u00f6nt\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum1",
+                                "title": "1 - Noin 1/8 taivaasta pilvien peitossa"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum2",
+                                "title": "2 - Noin \u00bc taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum3",
+                                "title": "3 - Noin 3/8 taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum4",
+                                "title": "4 - Puolet taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum5",
+                                "title": "5 - Noin 5/8 taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum6",
+                                "title": "6 - Noin \u00be taivaasta pilvess\u00e4"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum7",
+                                "title": "7 - Taivas l\u00e4hes pilvess\u00e4 (7/8)"
+                            },
+                            {
+                                "const": "MY.cloudCoverOktaEnum8",
+                                "title": "8 - T\u00e4ysin pilvist\u00e4"
+                            }
                         ],
-                        "enumNames": [
-                            "",
-                            "Ei tietoa",
-                            "0 -T\u00e4ysin pilvet\u00f6nt\u00e4",
-                            "1 - Noin 1/8 taivaasta pilvien peitossa",
-                            "2 - Noin \u00bc taivaasta pilvess\u00e4",
-                            "3 - Noin 3/8 taivaasta pilvess\u00e4",
-                            "4 - Puolet taivaasta pilvess\u00e4",
-                            "5 - Noin 5/8 taivaasta pilvess\u00e4",
-                            "6 - Noin \u00be taivaasta pilvess\u00e4",
-                            "7 - Taivas l\u00e4hes pilvess\u00e4 (7/8)",
-                            "8 - T\u00e4ysin pilvist\u00e4"
-                        ],
-                        "excludeFromCopy": true,
                         "title": "Pilvisyys alkaessa",
                         "type": "string"
                     },
                     "dateBegin": {
-                        "excludeFromCopy": true,
                         "title": "Laskentap\u00e4iv\u00e4",
                         "type": "string"
                     },
                     "gatheringFact": {
                         "properties": {
                             "sykeButterFlyCensusWindEnd": {
-                                "enum": [
-                                    "",
-                                    "MY.sykeButterFlyCensusWindEnumUnknown",
-                                    "MY.sykeButterFlyCensusWindEnum0",
-                                    "MY.sykeButterFlyCensusWindEnum1",
-                                    "MY.sykeButterFlyCensusWindEnum2",
-                                    "MY.sykeButterFlyCensusWindEnum3",
-                                    "MY.sykeButterFlyCensusWindEnum4",
-                                    "MY.sykeButterFlyCensusWindEnum5",
-                                    "MY.sykeButterFlyCensusWindEnum6"
+                                "oneOf": [
+                                    {
+                                        "const": "",
+                                        "title": ""
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnumUnknown",
+                                        "title": "Ei tietoa"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum0",
+                                        "title": "0 - Tyynt\u00e4, savu nousee pystysuoraan"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum1",
+                                        "title": "1 - Hiukan savun ajautumista sivusuunnassa"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum2",
+                                        "title": "2 - Tuuli tuntuu kasvoilla, lehdet havisevat"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum3",
+                                        "title": "3 - Lehdet ja oksat pieness\u00e4 liikkeess\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum4",
+                                        "title": "4 - P\u00f6ly nousee maasta, pienet oksat heiluvat"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum5",
+                                        "title": "5 - Pienehk\u00f6t lehtipuut heiluvat"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum6",
+                                        "title": "6 - Suuret oksat heiluvat, tuuli suhisee"
+                                    }
                                 ],
-                                "enumNames": [
-                                    "",
-                                    "Ei tietoa",
-                                    "0 - Tyynt\u00e4, savu nousee pystysuoraan",
-                                    "1 - Hiukan savun ajautumista sivusuunnassa",
-                                    "2 - Tuuli tuntuu kasvoilla, lehdet havisevat",
-                                    "3 - Lehdet ja oksat pieness\u00e4 liikkeess\u00e4",
-                                    "4 - P\u00f6ly nousee maasta, pienet oksat heiluvat",
-                                    "5 - Pienehk\u00f6t lehtipuut heiluvat",
-                                    "6 - Suuret oksat heiluvat, tuuli suhisee"
-                                ],
-                                "excludeFromCopy": true,
                                 "title": "Tuulisuus lopetettaessa",
                                 "type": "string"
                             },
                             "sykeButterFlyCensusWindStart": {
-                                "enum": [
-                                    "",
-                                    "MY.sykeButterFlyCensusWindEnumUnknown",
-                                    "MY.sykeButterFlyCensusWindEnum0",
-                                    "MY.sykeButterFlyCensusWindEnum1",
-                                    "MY.sykeButterFlyCensusWindEnum2",
-                                    "MY.sykeButterFlyCensusWindEnum3",
-                                    "MY.sykeButterFlyCensusWindEnum4",
-                                    "MY.sykeButterFlyCensusWindEnum5",
-                                    "MY.sykeButterFlyCensusWindEnum6"
+                                "oneOf": [
+                                    {
+                                        "const": "",
+                                        "title": ""
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnumUnknown",
+                                        "title": "Ei tietoa"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum0",
+                                        "title": "0 - Tyynt\u00e4, savu nousee pystysuoraan"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum1",
+                                        "title": "1 - Hiukan savun ajautumista sivusuunnassa"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum2",
+                                        "title": "2 - Tuuli tuntuu kasvoilla, lehdet havisevat"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum3",
+                                        "title": "3 - Lehdet ja oksat pieness\u00e4 liikkeess\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum4",
+                                        "title": "4 - P\u00f6ly nousee maasta, pienet oksat heiluvat"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum5",
+                                        "title": "5 - Pienehk\u00f6t lehtipuut heiluvat"
+                                    },
+                                    {
+                                        "const": "MY.sykeButterFlyCensusWindEnum6",
+                                        "title": "6 - Suuret oksat heiluvat, tuuli suhisee"
+                                    }
                                 ],
-                                "enumNames": [
-                                    "",
-                                    "Ei tietoa",
-                                    "0 - Tyynt\u00e4, savu nousee pystysuoraan",
-                                    "1 - Hiukan savun ajautumista sivusuunnassa",
-                                    "2 - Tuuli tuntuu kasvoilla, lehdet havisevat",
-                                    "3 - Lehdet ja oksat pieness\u00e4 liikkeess\u00e4",
-                                    "4 - P\u00f6ly nousee maasta, pienet oksat heiluvat",
-                                    "5 - Pienehk\u00f6t lehtipuut heiluvat",
-                                    "6 - Suuret oksat heiluvat, tuuli suhisee"
-                                ],
-                                "excludeFromCopy": true,
                                 "title": "Tuulisuus alkaessa",
                                 "type": "string"
                             }
@@ -194,8 +260,12 @@
                         "title": "",
                         "type": "object"
                     },
+                    "geometry": {
+                        "properties": {},
+                        "title": "Koordinaatit",
+                        "type": "object"
+                    },
                     "leg": {
-                        "excludeFromCopy": true,
                         "items": {
                             "type": "string"
                         },
@@ -208,22 +278,18 @@
                         "type": "boolean"
                     },
                     "temperatureEnd": {
-                        "excludeFromCopy": true,
                         "title": "L\u00e4mp\u00f6 lopetettaessa / \u00b0C",
                         "type": "number"
                     },
                     "temperatureStart": {
-                        "excludeFromCopy": true,
                         "title": "L\u00e4mp\u00f6 alkaessa / \u00b0C",
                         "type": "number"
                     },
                     "timeEnd": {
-                        "excludeFromCopy": true,
                         "title": "Lopetusaika",
                         "type": "string"
                     },
                     "timeStart": {
-                        "excludeFromCopy": true,
                         "title": "Aloitusaika",
                         "type": "string"
                     }
@@ -243,40 +309,55 @@
                         "gatheringFact": {
                             "properties": {
                                 "sunniness": {
-                                    "excludeFromCopy": true,
                                     "minimum": 0,
                                     "title": "Aurinkoisuus %",
                                     "type": "integer"
                                 },
                                 "sykeButterFlyCensusWind": {
-                                    "enum": [
-                                        "",
-                                        "MY.sykeButterFlyCensusWindEnumUnknown",
-                                        "MY.sykeButterFlyCensusWindEnum0",
-                                        "MY.sykeButterFlyCensusWindEnum1",
-                                        "MY.sykeButterFlyCensusWindEnum2",
-                                        "MY.sykeButterFlyCensusWindEnum3",
-                                        "MY.sykeButterFlyCensusWindEnum4",
-                                        "MY.sykeButterFlyCensusWindEnum5",
-                                        "MY.sykeButterFlyCensusWindEnum6"
+                                    "oneOf": [
+                                        {
+                                            "const": "",
+                                            "title": ""
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnumUnknown",
+                                            "title": "Ei tietoa"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum0",
+                                            "title": "0 - Tyynt\u00e4, savu nousee pystysuoraan"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum1",
+                                            "title": "1 - Hiukan savun ajautumista sivusuunnassa"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum2",
+                                            "title": "2 - Tuuli tuntuu kasvoilla, lehdet havisevat"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum3",
+                                            "title": "3 - Lehdet ja oksat pieness\u00e4 liikkeess\u00e4"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum4",
+                                            "title": "4 - P\u00f6ly nousee maasta, pienet oksat heiluvat"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum5",
+                                            "title": "5 - Pienehk\u00f6t lehtipuut heiluvat"
+                                        },
+                                        {
+                                            "const": "MY.sykeButterFlyCensusWindEnum6",
+                                            "title": "6 - Suuret oksat heiluvat, tuuli suhisee"
+                                        }
                                     ],
-                                    "enumNames": [
-                                        "",
-                                        "Ei tietoa",
-                                        "0 - Tyynt\u00e4, savu nousee pystysuoraan",
-                                        "1 - Hiukan savun ajautumista sivusuunnassa",
-                                        "2 - Tuuli tuntuu kasvoilla, lehdet havisevat",
-                                        "3 - Lehdet ja oksat pieness\u00e4 liikkeess\u00e4",
-                                        "4 - P\u00f6ly nousee maasta, pienet oksat heiluvat",
-                                        "5 - Pienehk\u00f6t lehtipuut heiluvat",
-                                        "6 - Suuret oksat heiluvat, tuuli suhisee"
-                                    ],
-                                    "excludeFromCopy": true,
                                     "title": "Tuulisuus",
                                     "type": "string"
                                 }
                             },
                             "required": [],
+                            "title": "",
                             "type": "object"
                         },
                         "section": {
@@ -285,7 +366,6 @@
                             "type": "integer"
                         },
                         "units": {
-                            "excludeFromCopy": true,
                             "items": {
                                 "properties": {
                                     "identifications": {
@@ -305,16 +385,13 @@
                                             ],
                                             "type": "object"
                                         },
+                                        "title": "",
                                         "type": "array"
                                     },
                                     "individualCount": {
                                         "minimum": 0,
                                         "title": "Yksil\u00f6m\u00e4\u00e4r\u00e4",
                                         "type": "integer"
-                                    },
-                                    "notes": {
-                                        "title": "Lis\u00e4tiedot",
-                                        "type": "string"
                                     }
                                 },
                                 "required": [],
@@ -327,6 +404,7 @@
                     "required": [],
                     "type": "object"
                 },
+                "title": "",
                 "type": "array"
             },
             "namedPlaceID": {
@@ -340,7 +418,7 @@
         ],
         "type": "object"
     },
-    "shortTitle": "SYKE P\u00e4iv\u00e4perhoset",
+    "shortTitle": "Maatalousymp\u00e4rist\u00f6n p\u00e4iv\u00e4perhosseuranta",
     "supportedLanguage": [
         "fi"
     ],
@@ -635,11 +713,15 @@
                                     "ui:field": "HiddenField"
                                 }
                             },
-                            "ui:field": "SingleItemArrayField"
+                            "ui:field": "SingleItemArrayField",
+                            "ui:title": ""
                         },
                         "ui:field": "AutosuggestField",
                         "ui:options": {
                             "autosuggestField": "taxon",
+                            "query": {
+                                "taxonSet": "MX.taxonSetSykeButterflyCensusPapilionoidea,MX.taxonSetSykeButterflyCensusOther"
+                            },
                             "suggestionInputField": "/identifications/0/taxonVerbatim",
                             "suggestionReceivers": {
                                 "/identifications/0/taxonID": "key",
@@ -667,11 +749,6 @@
                                             ]
                                         },
                                         "units": {
-                                            "items": {
-                                                "notes": {
-                                                    "ui:field": "HiddenField"
-                                                }
-                                            },
                                             "ui:field": "MultiArrayField",
                                             "ui:options": {
                                                 "groups": [
@@ -746,6 +823,7 @@
                                                                     "MX.60877",
                                                                     "MX.60879",
                                                                     "MX.60878",
+                                                                    "MX.5073946",
                                                                     "MX.60908",
                                                                     "MX.60910",
                                                                     "MX.60911",
@@ -793,7 +871,6 @@
                                                                     "MX.60827",
                                                                     "MX.60828",
                                                                     "MX.60830",
-                                                                    "MX.60833",
                                                                     "MX.60836",
                                                                     "MX.60838",
                                                                     "MX.60841",
@@ -808,6 +885,7 @@
                                                                     "MX.60856",
                                                                     "MX.60866",
                                                                     "MX.60867",
+                                                                    "MX.60833",
                                                                     "MX.60816",
                                                                     "MX.60817",
                                                                     "MX.60818",
@@ -873,6 +951,7 @@
                                                                     "MX.61770",
                                                                     "MX.61768",
                                                                     "MX.61774",
+                                                                    "MX.61777",
                                                                     "MX.61716",
                                                                     "MX.61717",
                                                                     "MX.61715",
@@ -901,9 +980,7 @@
                                                                     "MX.61747",
                                                                     "MX.61748",
                                                                     "MX.61752",
-                                                                    "MX.61777",
                                                                     "MX.61808",
-                                                                    "MX.61811",
                                                                     "MX.61830",
                                                                     "MX.61813",
                                                                     "MX.61815",
@@ -917,17 +994,8 @@
                                                                     "MX.61823",
                                                                     "MX.61821",
                                                                     "MX.61822",
-                                                                    "MX.61834",
-                                                                    "MX.61833",
                                                                     "MX.61846",
                                                                     "MX.61844",
-                                                                    "MX.61837",
-                                                                    "MX.61838",
-                                                                    "MX.61836",
-                                                                    "MX.61842",
-                                                                    "MX.61841",
-                                                                    "MX.61840",
-                                                                    "MX.61839",
                                                                     "MX.61849",
                                                                     "MX.61851",
                                                                     "MX.61919",
@@ -940,7 +1008,6 @@
                                                                     "MX.61909",
                                                                     "MX.61907",
                                                                     "MX.61910",
-                                                                    "MX.61927",
                                                                     "MX.61930",
                                                                     "MX.61931",
                                                                     "MX.61933",
@@ -994,10 +1061,6 @@
                                                                     "MX.61941",
                                                                     "MX.61944",
                                                                     "MX.61943",
-                                                                    "MX.61946",
-                                                                    "MX.61969",
-                                                                    "MX.61970",
-                                                                    "MX.61971",
                                                                     "MX.61949",
                                                                     "MX.61951",
                                                                     "MX.61952",
@@ -1086,6 +1149,21 @@
                                                                     "MX.61800",
                                                                     "MX.61804",
                                                                     "MX.61805",
+                                                                    "MX.61969",
+                                                                    "MX.61970",
+                                                                    "MX.61971",
+                                                                    "MX.61946",
+                                                                    "MX.61927",
+                                                                    "MX.61834",
+                                                                    "MX.61833",
+                                                                    "MX.61837",
+                                                                    "MX.61838",
+                                                                    "MX.61836",
+                                                                    "MX.61842",
+                                                                    "MX.61841",
+                                                                    "MX.61840",
+                                                                    "MX.61839",
+                                                                    "MX.61811",
                                                                     "MX.61499",
                                                                     "MX.61500",
                                                                     "MX.61533",
@@ -1106,15 +1184,6 @@
                                                                     "MX.61560",
                                                                     "MX.61559",
                                                                     "MX.61566",
-                                                                    "MX.61606",
-                                                                    "MX.61612",
-                                                                    "MX.61611",
-                                                                    "MX.61610",
-                                                                    "MX.61614",
-                                                                    "MX.61615",
-                                                                    "MX.61619",
-                                                                    "MX.61620",
-                                                                    "MX.61617",
                                                                     "MX.61571",
                                                                     "MX.61572",
                                                                     "MX.61574",
@@ -1126,13 +1195,21 @@
                                                                     "MX.61586",
                                                                     "MX.61589",
                                                                     "MX.61590",
+                                                                    "MX.61603",
                                                                     "MX.61592",
                                                                     "MX.61597",
                                                                     "MX.61599",
                                                                     "MX.61601",
-                                                                    "MX.61603",
+                                                                    "MX.61606",
+                                                                    "MX.61612",
+                                                                    "MX.61611",
+                                                                    "MX.61610",
+                                                                    "MX.61614",
+                                                                    "MX.61615",
+                                                                    "MX.61617",
+                                                                    "MX.61619",
+                                                                    "MX.61620",
                                                                     "MX.61622",
-                                                                    "MX.61632",
                                                                     "MX.61653",
                                                                     "MX.61654",
                                                                     "MX.61646",
@@ -1140,8 +1217,6 @@
                                                                     "MX.61638",
                                                                     "MX.61650",
                                                                     "MX.61708",
-                                                                    "MX.61710",
-                                                                    "MX.61635",
                                                                     "MX.61699",
                                                                     "MX.4984494",
                                                                     "MX.61700",
@@ -1150,10 +1225,8 @@
                                                                     "MX.61640",
                                                                     "MX.61642",
                                                                     "MX.61644",
-                                                                    "MX.61696",
                                                                     "MX.61704",
                                                                     "MX.61706",
-                                                                    "MX.61664",
                                                                     "MX.61667",
                                                                     "MX.61528",
                                                                     "MX.204862",
@@ -1169,9 +1242,14 @@
                                                                     "MX.61676",
                                                                     "MX.61680",
                                                                     "MX.61683",
+                                                                    "MX.61678",
                                                                     "MX.61686",
                                                                     "MX.61690",
-                                                                    "MX.61678",
+                                                                    "MX.61664",
+                                                                    "MX.61696",
+                                                                    "MX.61635",
+                                                                    "MX.61710",
+                                                                    "MX.61632",
                                                                     "MX.61504",
                                                                     "MX.61507",
                                                                     "MX.61511",
@@ -1393,9 +1471,9 @@
                                                                     "MX.62507",
                                                                     "MX.62508",
                                                                     "MX.62509",
-                                                                    "MX.62434",
                                                                     "MX.62436",
                                                                     "MX.62437",
+                                                                    "MX.62434",
                                                                     "MX.62468",
                                                                     "MX.62479",
                                                                     "MX.62625",
@@ -1791,9 +1869,6 @@
                                 },
                                 "units": {
                                     "items": {
-                                        "notes": {
-                                            "ui:field": "HiddenField"
-                                        },
                                         "ui:grid": {
                                             "lg": {
                                                 "*": 2,
@@ -1809,15 +1884,9 @@
                                             },
                                             "xs": 12
                                         },
-                                        "ui:options": {
-                                            "query": {
-                                                "taxonSet": "MX.taxonSetSykeButterflyCensusPapilionoidea,MX.taxonSetSykeButterflyCensusOther"
-                                            }
-                                        },
                                         "ui:order": [
                                             "identifications",
-                                            "individualCount",
-                                            "notes"
+                                            "individualCount"
                                         ]
                                     },
                                     "ui:title": "Lohkojen ulkopuoliset havainnot"
@@ -1962,6 +2031,26 @@
                     "date": {
                         "latest": "now",
                         "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                    },
+                    "datetime": {
+                        "earliest": "1000-01-01",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                    }
+                },
+                "geometry": {
+                    "geometry": {
+                        "boundingBoxMaxHectares": 5000000,
+                        "maximumSize": 10,
+                        "message": {
+                            "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
+                            "invalidCoordinates": "Ep\u00e4kelpo kuvio",
+                            "invalidGeometries": "Ep\u00e4kelpo kuvio",
+                            "invalidRadius": "Ep\u00e4kelpo kuvio",
+                            "missingGeometries": "T\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                            "missingType": "Ep\u00e4kelpo kuvio",
+                            "noOverlap": "Ep\u00e4kelpo kuvio",
+                            "notGeometry": "Ep\u00e4kelpo kuvio"
+                        }
                     }
                 },
                 "leg": {

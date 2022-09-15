@@ -2,7 +2,7 @@
     "attributes": {
         "id": "JX.652"
     },
-    "category": "MHL.categoryTaxonomicGroup",
+    "category": "MHL.categoryCitizenScience",
     "collectionID": "HR.2129",
     "description": "<strong>Sieniatlas</strong> kokoaa sienilajihavaintoja yhteen paikkaan. Sieniatlaslomakkeen avulla ker\u00e4t\u00e4\u00e4n tietoa sienilajien levinneisyydest\u00e4 ja elinymp\u00e4rist\u00f6vaatimuksista. Haluamme innostaa kaikkia sienist\u00e4 kiinnostuneita kansalaisia ilmoittamaan havaintonsa sienituntemuksen kasvattamiseksi.<br><br>Havaintolomake on muokattu vain sienihavaintojen tallentamista varten. Sieniatlaslomakkeen kautta tallennetut havainnot tallentuvat Suomen Lajitietokeskuksen tietoj\u00e4rjestelm\u00e4\u00e4n!<br><br>Sieniatlas on kansalaistiedehanke, jota koordinoivat Jyv\u00e4skyl\u00e4n yliopiston tiedemuseo, Luonnontieteellinen keskusmuseo LUOMUS, Oulun yliopiston kasvimuseo, Turun kasvimuseo ja Suomen sieniseurat.<br><br>Lis\u00e4\u00e4 tietoa hankkeesta ja mm. lomakkeen t\u00e4ytt\u00e4misest\u00e4 saat <a href=\"http://sieniatlas.fi\" rel=\"nofollow\" target=\"_blank\">Sieniatlas.fi</a>-sivustolta.",
     "excludeFromCopy": [],
@@ -263,6 +263,8 @@
                 "MY.substrateCompost": [],
                 "MY.substrateDeadAnimal": [],
                 "MY.substrateDeadFungus": [],
+                "MY.substrateDeadLeaf": [],
+                "MY.substrateDeadNeedle": [],
                 "MY.substrateDeadShoot": [],
                 "MY.substrateDeadWood": [],
                 "MY.substrateDeadWoodBark": [
@@ -405,6 +407,9 @@
     "language": "fi",
     "logo": "https://cdn.laji.fi/images/logos/AtlasLogoConica_small.jpg",
     "name": "sieniatlas",
+    "options": {
+        "allowExcel": true
+    },
     "schema": {
         "properties": {
             "editors": {
@@ -471,185 +476,359 @@
                         },
                         "habitat": {
                             "items": {
-                                "enum": [
-                                    "",
-                                    "MY.habitatEnumValue1",
-                                    "MY.habitatEnumValue2",
-                                    "MY.habitatEnumValue3",
-                                    "MY.habitatEnumValue4",
-                                    "MY.habitatEnumValue5",
-                                    "MY.habitatEnumValue6",
-                                    "MY.habitatEnumValue7",
-                                    "MY.habitatEnumValue8",
-                                    "MY.habitatEnumValue9",
-                                    "MY.habitatEnumValue10",
-                                    "MY.habitatEnumValue11",
-                                    "MY.habitatEnumValue12",
-                                    "MY.habitatEnumValue13",
-                                    "MY.habitatEnumValue14",
-                                    "MY.habitatEnumValue15",
-                                    "MY.habitatEnumValue16",
-                                    "MY.habitatEnumValue17",
-                                    "MY.habitatEnumValue18",
-                                    "MY.habitatEnumValue19",
-                                    "MY.habitatEnumValue20",
-                                    "MY.habitatEnumValue21",
-                                    "MY.habitatEnumValue22",
-                                    "MY.habitatEnumValue23",
-                                    "MY.habitatEnumValue24",
-                                    "MY.habitatEnumValue25",
-                                    "MY.habitatEnumValue26",
-                                    "MY.habitatEnumValue27",
-                                    "MY.habitatEnumValue28",
-                                    "MY.habitatEnumValue29",
-                                    "MY.habitatEnumValue30",
-                                    "MY.habitatEnumValue31",
-                                    "MY.habitatEnumValue32",
-                                    "MY.habitatEnumValue33",
-                                    "MY.habitatEnumValue34",
-                                    "MY.habitatEnumValue35",
-                                    "MY.habitatEnumValue36",
-                                    "MY.habitatEnumValue87",
-                                    "MY.habitatEnumValue37",
-                                    "MY.habitatEnumValue38",
-                                    "MY.habitatEnumValue39",
-                                    "MY.habitatEnumValue40",
-                                    "MY.habitatEnumValue41",
-                                    "MY.habitatEnumValue42",
-                                    "MY.habitatEnumValue43",
-                                    "MY.habitatEnumValue44",
-                                    "MY.habitatEnumValue45",
-                                    "MY.habitatEnumValue46",
-                                    "MY.habitatEnumValue47",
-                                    "MY.habitatEnumValue48",
-                                    "MY.habitatEnumValue49",
-                                    "MY.habitatEnumValue50",
-                                    "MY.habitatEnumValue51",
-                                    "MY.habitatEnumValue52",
-                                    "MY.habitatEnumValue53",
-                                    "MY.habitatEnumValue54",
-                                    "MY.habitatEnumValue55",
-                                    "MY.habitatEnumValue56",
-                                    "MY.habitatEnumValue57",
-                                    "MY.habitatEnumValue58",
-                                    "MY.habitatEnumValue59",
-                                    "MY.habitatEnumValue60",
-                                    "MY.habitatEnumValue61",
-                                    "MY.habitatEnumValue62",
-                                    "MY.habitatEnumValue63",
-                                    "MY.habitatEnumValue64",
-                                    "MY.habitatEnumValue65",
-                                    "MY.habitatEnumValue66",
-                                    "MY.habitatEnumValue67",
-                                    "MY.habitatEnumValue68",
-                                    "MY.habitatEnumValue69",
-                                    "MY.habitatEnumValue70",
-                                    "MY.habitatEnumValue71",
-                                    "MY.habitatEnumValue72",
-                                    "MY.habitatEnumValue73",
-                                    "MY.habitatEnumValue74",
-                                    "MY.habitatEnumValue75",
-                                    "MY.habitatEnumValue76",
-                                    "MY.habitatEnumValue77",
-                                    "MY.habitatEnumValue78",
-                                    "MY.habitatEnumValue79",
-                                    "MY.habitatEnumValue80",
-                                    "MY.habitatEnumValue81",
-                                    "MY.habitatEnumValue82",
-                                    "MY.habitatEnumValue83",
-                                    "MY.habitatEnumValue84",
-                                    "MY.habitatEnumValue85",
-                                    "MY.habitatEnumValue86"
-                                ],
-                                "enumNames": [
-                                    "",
-                                    "Mets\u00e4t",
-                                    "Kangasmets\u00e4t",
-                                    "Tuore kangas",
-                                    "Lehtomainen kangas",
-                                    "Kuivahko kangas",
-                                    "Karukkokangas",
-                                    "Lehdot",
-                                    "Kuiva lehto",
-                                    "Tuore lehto",
-                                    "Kostea lehto",
-                                    "Jalopuulehto",
-                                    "Tunturikoivulehto",
-                                    "Tunturikoivikko, ei lehto",
-                                    "Suot",
-                                    "Avosuot",
-                                    "Letto",
-                                    "Neva",
-                                    "Avoluhta",
-                                    "Puustoiset suot",
-                                    "R\u00e4me",
-                                    "Korpi",
-                                    "Pensaikkoluhta",
-                                    "Mets\u00e4luhta",
-                                    "Vedet",
-                                    "L\u00e4hteikk\u00f6",
-                                    "Puro tai noro (kausikuiva)",
-                                    "Rannat",
-                                    "Tulvamets\u00e4 ja mets\u00e4luhta",
-                                    "Rantapensaikko",
-                                    "Luhtaranta",
-                                    "Niittyranta",
-                                    "Ruovikko",
-                                    "Sora-, somerikko- tai kivikkoranta",
-                                    "Hietikkoranta",
-                                    "Avoin tulvaranta",
-                                    "Kalliot ja kivikot",
-                                    "Karut tai keskiravinteinen kalliot (\"tavalliset kalliot\")",
-                                    "J\u00e4k\u00e4l\u00e4kallio tai -kivikko",
-                                    "Varpu-hein\u00e4kallio tai -kivikko",
-                                    "Niukkapuustoinen kallio tai kivikko",
-                                    "Kalliomets\u00e4",
-                                    "Kalkkikallio tai -louhos, my\u00f6s paljas kalkkimaa",
-                                    "Serpentiinikallio tai -maa",
-                                    "Kallioketo",
-                                    "Tunturipaljakat",
-                                    "Tunturikangas",
-                                    "Tunturiniitty",
-                                    "Lumenviipym\u00e4",
-                                    "Tunturikangaspensaikko",
-                                    "Paljakan l\u00e4hteikk\u00f6 tai tihkupinta",
-                                    "Paljakan kallio tai kivikko",
-                                    "Paljakan suo",
-                                    "Paljakan j\u00e4rvi tai lampi (sis. ranta)",
-                                    "Paljakan virtavesi (sis. ranta)",
-                                    "Jyrk\u00e4nne tai pahta",
-                                    "Perinneymp\u00e4rist\u00f6t tai muut ihmisen muuttamat ymp\u00e4rist\u00f6t",
-                                    "Perinneymp\u00e4rist\u00f6t",
-                                    "Kuiva niitty tai keto",
-                                    "Nummi",
-                                    "Tuore niitty",
-                                    "Hakamaa, lehdesniitty tai mets\u00e4laidun",
-                                    "Kostea niitty (muu kuin rantaniitty)",
-                                    "Suoniitty",
-                                    "Kallioketo",
-                                    "Oja tai muu kaivanto  (sis. ojanpientareet, mets\u00e4ojat)",
-                                    "Tienvieri (piennar, luiska) ja -pohja",
-                                    "Viljelymaat",
-                                    "Pelto",
-                                    "Kylv\u00f6nurmi",
-                                    "Puu- tai pensasviljelm\u00e4",
-                                    "Hyl\u00e4tty pelto",
-                                    "Puistot, pihamaat, puutarhat",
-                                    "Puisto",
-                                    "Kartanopuisto",
-                                    "Hautausmaa",
-                                    "Pihamaa",
-                                    "Puutarha",
-                                    "Avoin nurmialue",
-                                    "Pensaikko",
-                                    "Uuselinymp\u00e4rist\u00f6t",
-                                    "Tienvieri (piennar, luiska) ja -pohja",
-                                    "Maankaatopaikka",
-                                    "T\u00e4ytt\u00f6maa-alue",
-                                    "Hiekka- tai sorakuoppa",
-                                    "Turpeennostoalue",
-                                    "Louhos- tai kaivosalue",
-                                    "Joutomaa (sis. satamat, ratapihat)"
+                                "oneOf": [
+                                    {
+                                        "const": "",
+                                        "title": ""
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue1",
+                                        "title": "Mets\u00e4t"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue2",
+                                        "title": "Kangasmets\u00e4t"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue3",
+                                        "title": "Tuore kangas"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue4",
+                                        "title": "Lehtomainen kangas"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue5",
+                                        "title": "Kuivahko kangas"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue6",
+                                        "title": "Karukkokangas"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue7",
+                                        "title": "Lehdot"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue8",
+                                        "title": "Kuiva lehto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue9",
+                                        "title": "Tuore lehto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue10",
+                                        "title": "Kostea lehto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue11",
+                                        "title": "Jalopuulehto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue12",
+                                        "title": "Tunturikoivulehto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue13",
+                                        "title": "Tunturikoivikko, ei lehto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue14",
+                                        "title": "Suot"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue15",
+                                        "title": "Avosuot"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue16",
+                                        "title": "Letto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue17",
+                                        "title": "Neva"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue18",
+                                        "title": "Avoluhta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue19",
+                                        "title": "Puustoiset suot"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue20",
+                                        "title": "R\u00e4me"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue21",
+                                        "title": "Korpi"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue22",
+                                        "title": "Pensaikkoluhta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue23",
+                                        "title": "Mets\u00e4luhta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue24",
+                                        "title": "Vedet"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue25",
+                                        "title": "L\u00e4hteikk\u00f6"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue26",
+                                        "title": "Puro tai noro (kausikuiva)"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue27",
+                                        "title": "Rannat"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue28",
+                                        "title": "Tulvamets\u00e4 ja mets\u00e4luhta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue29",
+                                        "title": "Rantapensaikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue30",
+                                        "title": "Luhtaranta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue31",
+                                        "title": "Niittyranta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue32",
+                                        "title": "Ruovikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue33",
+                                        "title": "Sora-, somerikko- tai kivikkoranta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue34",
+                                        "title": "Hietikkoranta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue35",
+                                        "title": "Avoin tulvaranta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue36",
+                                        "title": "Kalliot ja kivikot"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue87",
+                                        "title": "Karut tai keskiravinteinen kalliot (\"tavalliset kalliot\")"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue37",
+                                        "title": "J\u00e4k\u00e4l\u00e4kallio tai -kivikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue38",
+                                        "title": "Varpu-hein\u00e4kallio tai -kivikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue39",
+                                        "title": "Niukkapuustoinen kallio tai kivikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue40",
+                                        "title": "Kalliomets\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue41",
+                                        "title": "Kalkkikallio tai -louhos, my\u00f6s paljas kalkkimaa"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue42",
+                                        "title": "Serpentiinikallio tai -maa"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue43",
+                                        "title": "Kallioketo"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue44",
+                                        "title": "Tunturipaljakat"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue45",
+                                        "title": "Tunturikangas"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue46",
+                                        "title": "Tunturiniitty"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue47",
+                                        "title": "Lumenviipym\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue48",
+                                        "title": "Tunturikangaspensaikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue49",
+                                        "title": "Paljakan l\u00e4hteikk\u00f6 tai tihkupinta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue50",
+                                        "title": "Paljakan kallio tai kivikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue51",
+                                        "title": "Paljakan suo"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue52",
+                                        "title": "Paljakan j\u00e4rvi tai lampi (sis. ranta)"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue53",
+                                        "title": "Paljakan virtavesi (sis. ranta)"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue54",
+                                        "title": "Jyrk\u00e4nne tai pahta"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue55",
+                                        "title": "Perinneymp\u00e4rist\u00f6t tai muut ihmisen muuttamat ymp\u00e4rist\u00f6t"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue56",
+                                        "title": "Perinneymp\u00e4rist\u00f6t"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue57",
+                                        "title": "Kuiva niitty tai keto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue58",
+                                        "title": "Nummi"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue59",
+                                        "title": "Tuore niitty"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue60",
+                                        "title": "Hakamaa, lehdesniitty tai mets\u00e4laidun"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue61",
+                                        "title": "Kostea niitty (muu kuin rantaniitty)"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue62",
+                                        "title": "Suoniitty"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue63",
+                                        "title": "Kallioketo"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue64",
+                                        "title": "Oja tai muu kaivanto  (sis. ojanpientareet, mets\u00e4ojat)"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue65",
+                                        "title": "Tienvieri (piennar, luiska) ja -pohja"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue66",
+                                        "title": "Viljelymaat"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue67",
+                                        "title": "Pelto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue68",
+                                        "title": "Kylv\u00f6nurmi"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue69",
+                                        "title": "Puu- tai pensasviljelm\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue70",
+                                        "title": "Hyl\u00e4tty pelto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue71",
+                                        "title": "Puistot, pihamaat, puutarhat"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue72",
+                                        "title": "Puisto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue73",
+                                        "title": "Kartanopuisto"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue74",
+                                        "title": "Hautausmaa"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue75",
+                                        "title": "Pihamaa"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue76",
+                                        "title": "Puutarha"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue77",
+                                        "title": "Avoin nurmialue"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue78",
+                                        "title": "Pensaikko"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue79",
+                                        "title": "Uuselinymp\u00e4rist\u00f6t"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue80",
+                                        "title": "Tienvieri (piennar, luiska) ja -pohja"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue81",
+                                        "title": "Maankaatopaikka"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue82",
+                                        "title": "T\u00e4ytt\u00f6maa-alue"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue83",
+                                        "title": "Hiekka- tai sorakuoppa"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue84",
+                                        "title": "Turpeennostoalue"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue85",
+                                        "title": "Louhos- tai kaivosalue"
+                                    },
+                                    {
+                                        "const": "MY.habitatEnumValue86",
+                                        "title": "Joutomaa (sis. satamat, ratapihat)"
+                                    }
                                 ],
                                 "type": "string"
                             },
@@ -659,55 +838,99 @@
                         },
                         "habitatAttributes": {
                             "items": {
-                                "enum": [
-                                    "",
-                                    "MY.habitatAttributesEnumValue1",
-                                    "MY.habitatAttributesEnumValue2",
-                                    "MY.habitatAttributesEnumValue3",
-                                    "MY.habitatAttributesEnumValue4",
-                                    "MY.habitatAttributesEnumValue5",
-                                    "MY.habitatAttributesEnumValue6",
-                                    "MY.habitatAttributesEnumValue7",
-                                    "MY.habitatAttributesEnumValue8",
-                                    "MY.habitatAttributesEnumValue9",
-                                    "MY.habitatAttributesEnumValue10",
-                                    "MY.habitatAttributesEnumValue11",
-                                    "MY.habitatAttributesEnumValue12",
-                                    "MY.habitatAttributesEnumValue13",
-                                    "MY.habitatAttributesEnumValue14",
-                                    "MY.habitatAttributesEnumValue15",
-                                    "MY.habitatAttributesEnumValue16",
-                                    "MY.habitatAttributesEnumValue17",
-                                    "MY.habitatAttributesEnumValue18",
-                                    "MY.habitatAttributesEnumValue19",
-                                    "MY.habitatAttributesEnumValue20",
-                                    "MY.habitatAttributesEnumValue21",
-                                    "MY.habitatAttributesEnumValue22"
-                                ],
-                                "enumNames": [
-                                    "",
-                                    "nuori mets\u00e4 / -puusto",
-                                    "keski-ik\u00e4inen mets\u00e4 /-puusto",
-                                    "vanha mets\u00e4 / -puusto",
-                                    "luonnontilaisen kaltainen",
-                                    "mets\u00e4paloalue",
-                                    "luontaisen sukkession alkuvaihe",
-                                    "jalopuuesiintym\u00e4",
-                                    "harjumets\u00e4 / hiekkapohjainen dyynimets\u00e4",
-                                    "hakkuualue (avohakkuu-siemenpuu)",
-                                    "Metsitetty pelto tai niitty",
-                                    "niukkarvainteinen / karu",
-                                    "keski-/runsasravinteinen",
-                                    "kalkkivaikutteinen",
-                                    "ultraem\u00e4ksinen",
-                                    "alunamaa",
-                                    "varjoisa",
-                                    "paahteinen",
-                                    "laidunnettu",
-                                    "puro tai noro",
-                                    "tihkupinta",
-                                    "avo-ojainen",
-                                    "salaojitettu"
+                                "oneOf": [
+                                    {
+                                        "const": "",
+                                        "title": ""
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue1",
+                                        "title": "nuori mets\u00e4 / -puusto"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue2",
+                                        "title": "keski-ik\u00e4inen mets\u00e4 /-puusto"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue3",
+                                        "title": "vanha mets\u00e4 / -puusto"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue4",
+                                        "title": "luonnontilaisen kaltainen"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue5",
+                                        "title": "mets\u00e4paloalue"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue6",
+                                        "title": "luontaisen sukkession alkuvaihe"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue7",
+                                        "title": "jalopuuesiintym\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue8",
+                                        "title": "harjumets\u00e4 / hiekkapohjainen dyynimets\u00e4"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue9",
+                                        "title": "hakkuualue (avohakkuu-siemenpuu)"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue10",
+                                        "title": "Metsitetty pelto tai niitty"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue11",
+                                        "title": "niukkarvainteinen / karu"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue12",
+                                        "title": "keski-/runsasravinteinen"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue13",
+                                        "title": "kalkkivaikutteinen"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue14",
+                                        "title": "ultraem\u00e4ksinen"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue15",
+                                        "title": "alunamaa"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue16",
+                                        "title": "varjoisa"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue17",
+                                        "title": "paahteinen"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue18",
+                                        "title": "laidunnettu"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue19",
+                                        "title": "puro tai noro"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue20",
+                                        "title": "tihkupinta"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue21",
+                                        "title": "avo-ojainen"
+                                    },
+                                    {
+                                        "const": "MY.habitatAttributesEnumValue22",
+                                        "title": "salaojitettu"
+                                    }
                                 ],
                                 "type": "string"
                             },
@@ -739,45 +962,83 @@
                             "type": "string"
                         },
                         "predominantTree": {
-                            "enum": [
-                                "",
-                                "MX.37819",
-                                "MX.37812",
-                                "MX.37992",
-                                "MX.38004",
-                                "MX.38590",
-                                "MX.38686",
-                                "MX.38563",
-                                "MX.38527",
-                                "MX.41344",
-                                "MX.38016",
-                                "MX.39331",
-                                "MX.37990",
-                                "MX.38008",
-                                "MX.38010",
-                                "MX.37975",
-                                "MX.37976",
-                                "MX.39122"
-                            ],
-                            "enumNames": [
-                                "",
-                                "M\u00e4nty",
-                                "Kuusi",
-                                "Koivut",
-                                "Vaivaiskoivu",
-                                "Haapa",
-                                "Mets\u00e4lehmus",
-                                "Raita",
-                                "Pajut",
-                                "Puistolehmus",
-                                "P\u00e4hkin\u00e4pensas",
-                                "Saarni",
-                                "Tammi",
-                                "Tervalepp\u00e4",
-                                "Harmaalepp\u00e4",
-                                "Vuorijalava",
-                                "Kyn\u00e4jalava",
-                                "Vaahtera"
+                            "oneOf": [
+                                {
+                                    "const": "",
+                                    "title": ""
+                                },
+                                {
+                                    "const": "MX.37819",
+                                    "title": "mets\u00e4m\u00e4nty"
+                                },
+                                {
+                                    "const": "MX.37812",
+                                    "title": "mets\u00e4kuusi"
+                                },
+                                {
+                                    "const": "MX.37992",
+                                    "title": "koivut"
+                                },
+                                {
+                                    "const": "MX.38004",
+                                    "title": "vaivaiskoivu"
+                                },
+                                {
+                                    "const": "MX.38590",
+                                    "title": "mets\u00e4haapa"
+                                },
+                                {
+                                    "const": "MX.38686",
+                                    "title": "mets\u00e4lehmus"
+                                },
+                                {
+                                    "const": "MX.38563",
+                                    "title": "raita"
+                                },
+                                {
+                                    "const": "MX.38527",
+                                    "title": "pajut"
+                                },
+                                {
+                                    "const": "MX.41344",
+                                    "title": "puistolehmus"
+                                },
+                                {
+                                    "const": "MX.38016",
+                                    "title": "p\u00e4hkin\u00e4pensas"
+                                },
+                                {
+                                    "const": "MX.39331",
+                                    "title": "saarni"
+                                },
+                                {
+                                    "const": "MX.37990",
+                                    "title": "mets\u00e4tammi"
+                                },
+                                {
+                                    "const": "MX.38008",
+                                    "title": "tervalepp\u00e4"
+                                },
+                                {
+                                    "const": "MX.38010",
+                                    "title": "harmaalepp\u00e4"
+                                },
+                                {
+                                    "const": "MX.37975",
+                                    "title": "vuorijalava"
+                                },
+                                {
+                                    "const": "MX.37976",
+                                    "title": "kyn\u00e4jalava"
+                                },
+                                {
+                                    "const": "MX.39122",
+                                    "title": "mets\u00e4vaahtera"
+                                },
+                                {
+                                    "const": "MX.37815",
+                                    "title": "lehtikuuset"
+                                }
                             ],
                             "title": "Valtapuulaji",
                             "type": "string"
@@ -785,6 +1046,13 @@
                         "units": {
                             "items": {
                                 "properties": {
+                                    "additionalIDs": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Muut tunnisteet",
+                                        "type": "array"
+                                    },
                                     "count": {
                                         "title": "M\u00e4\u00e4r\u00e4",
                                         "type": "string"
@@ -806,35 +1074,59 @@
                                                 },
                                                 "identificationBasis": {
                                                     "items": {
-                                                        "enum": [
-                                                            "",
-                                                            "MY.identificationBasisSeen",
-                                                            "MY.identificationBasisHeard",
-                                                            "MY.identificationBasisHandled",
-                                                            "MY.identificationBasisMedia",
-                                                            "MY.identificationBasisFreshSpecimen",
-                                                            "MY.identificationBasisPreservedSpecimen",
-                                                            "MY.identificationBasisMicroscope",
-                                                            "MY.identificationBasisSpores",
-                                                            "MY.identificationBasisChemical",
-                                                            "MY.identificationBasisGenitals",
-                                                            "MY.identificationBasisGenitalPreparate",
-                                                            "MY.identificationBasisDNA"
-                                                        ],
-                                                        "enumNames": [
-                                                            "",
-                                                            "N\u00e4k\u00f6havainto",
-                                                            "Kuulohavainto",
-                                                            "K\u00e4sitelty",
-                                                            "Valokuva tai muu media",
-                                                            "Tuoren\u00e4yte",
-                                                            "S\u00e4il\u00f6tty / kuivattu n\u00e4yte",
-                                                            "Mikroskopointi",
-                                                            "Iti\u00f6t",
-                                                            "Kemiallinen",
-                                                            "Genitaali",
-                                                            "Genitaalipreparaatti",
-                                                            "DNA-m\u00e4\u00e4ritys"
+                                                        "oneOf": [
+                                                            {
+                                                                "const": "",
+                                                                "title": ""
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisSeen",
+                                                                "title": "N\u00e4k\u00f6havainto"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisHeard",
+                                                                "title": "Kuulohavainto"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisHandled",
+                                                                "title": "K\u00e4sitelty"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisMedia",
+                                                                "title": "Valokuva tai muu media"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisFreshSpecimen",
+                                                                "title": "Tuoren\u00e4yte"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisPreservedSpecimen",
+                                                                "title": "S\u00e4il\u00f6tty / kuivattu n\u00e4yte"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisMicroscope",
+                                                                "title": "Mikroskopointi"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisSpores",
+                                                                "title": "Iti\u00f6t"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisChemical",
+                                                                "title": "Kemiallinen"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisGenitals",
+                                                                "title": "Genitaali"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisGenitalPreparate",
+                                                                "title": "Genitaalipreparaatti"
+                                                            },
+                                                            {
+                                                                "const": "MY.identificationBasisDNA",
+                                                                "title": "DNA-m\u00e4\u00e4ritys"
+                                                            }
                                                         ],
                                                         "type": "string"
                                                     },
@@ -851,6 +1143,7 @@
                                             "type": "object"
                                         },
                                         "minItems": 1,
+                                        "title": "",
                                         "type": "array"
                                     },
                                     "images": {
@@ -867,207 +1160,360 @@
                                         "title": "Muotoryhm\u00e4t",
                                         "type": "array"
                                     },
-                                    "nativeStatus": {
-                                        "enum": [
-                                            "",
-                                            "MY.native",
-                                            "MY.nonNative"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "luonnonvarainen",
-                                            "ei-luonnonvarainen"
-                                        ],
-                                        "title": "Luonnonvaraisuus",
-                                        "type": "string"
+                                    "keywords": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "title": "Avainsanat",
+                                        "type": "array"
                                     },
                                     "notes": {
                                         "title": "Muut lis\u00e4tiedot",
                                         "type": "string"
                                     },
                                     "plantLifeStage": {
-                                        "enum": [
-                                            "",
-                                            "MY.plantLifeStageSterile",
-                                            "MY.plantLifeStageFertile",
-                                            "MY.plantLifeStageSeed",
-                                            "MY.plantLifeStageSprout",
-                                            "MY.plantLifeStageBud",
-                                            "MY.plantLifeStageFlower",
-                                            "MY.plantLifeStageWitheredFlower",
-                                            "MY.plantLifeStageRipeningFruit",
-                                            "MY.plantLifeStageRipeFruit",
-                                            "MY.plantLifeStageDeadSprout",
-                                            "MY.plantLifeStageSubterranean",
-                                            "MY.plantLifeStageLivingPlant",
-                                            "MY.plantLifeStageDeadPlant"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "steriili",
-                                            "fertiili",
-                                            "siemen / iti\u00f6 / hedelm\u00e4",
-                                            "verso",
-                                            "nuppu",
-                                            "kukka",
-                                            "kuihtunut kukka",
-                                            "kypsyvi\u00e4 siemeni\u00e4 / hedelmi\u00e4 / iti\u00f6it\u00e4",
-                                            "kypsi\u00e4 siemeni\u00e4 / hedelmi\u00e4 / iti\u00f6it\u00e4",
-                                            "kuollut verso",
-                                            "mukula / sipuli / juuri",
-                                            "el\u00e4v\u00e4",
-                                            "kuollut"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageSterile",
+                                                "title": "steriili"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageFertile",
+                                                "title": "fertiili"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageSeed",
+                                                "title": "siemen / iti\u00f6 / hedelm\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageSprout",
+                                                "title": "verso"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageBud",
+                                                "title": "nuppu"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageFlower",
+                                                "title": "kukka"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageWitheredFlower",
+                                                "title": "kuihtunut kukka"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageRipeningFruit",
+                                                "title": "kypsyvi\u00e4 siemeni\u00e4 / hedelmi\u00e4 / iti\u00f6it\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageRipeFruit",
+                                                "title": "kypsi\u00e4 siemeni\u00e4 / hedelmi\u00e4 / iti\u00f6it\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageDeadSprout",
+                                                "title": "kuollut verso"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageSubterranean",
+                                                "title": "mukula / sipuli / juuri"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageLivingPlant",
+                                                "title": "el\u00e4v\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.plantLifeStageDeadPlant",
+                                                "title": "kuollut"
+                                            }
                                         ],
                                         "title": "Kasvin elinvaihe",
                                         "type": "string"
                                     },
                                     "plantStatusCode": {
-                                        "enum": [
-                                            "",
-                                            "MY.MY.plantStatusCodeL",
-                                            "MY.plantStatusCodeA",
-                                            "MY.plantStatusCodeAV",
-                                            "MY.plantStatusCodeAOV",
-                                            "MY.plantStatusCodeAN",
-                                            "MY.plantStatusCodeANV",
-                                            "MY.plantStatusCodeANS",
-                                            "MY.plantStatusCodeT",
-                                            "MY.plantStatusCodeTV",
-                                            "MY.plantStatusCodeTOV",
-                                            "MY.plantStatusCodeTNV",
-                                            "MY.plantStatusCodeTNS",
-                                            "MY.plantStatusCodeV",
-                                            "MY.plantStatusCodeOV",
-                                            "MY.plantStatusCodeN",
-                                            "MY.plantStatusCodeNV",
-                                            "MY.plantStatusCodeNS",
-                                            "MY.plantStatusCodeE",
-                                            "MY.plantStatusCodeTE",
-                                            "MY.plantStatusCodeTVE",
-                                            "MY.plantStatusCodeTOVE",
-                                            "MY.plantStatusCodeTNVE",
-                                            "MY.plantStatusCodeTNSE",
-                                            "MY.plantStatusCodeTN",
-                                            "MY.plantStatusCodeTNE",
-                                            "MY.plantStatusCodeR",
-                                            "MY.plantStatusCodeC",
-                                            "MY.plantStatusCodeH",
-                                            "MY.plantStatusCodeG",
-                                            "MY.plantStatusCodeF"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "L - luonnonvarainen; ei arviota alkuper\u00e4isyydest\u00e4, tuloajasta tai vakinaisuudesta",
-                                            "A - alkuper\u00e4inen, vanha tai uusi, ei arviota vakinaisuudesta",
-                                            "AV - alkuper\u00e4inen, ei arviota tuloajasta, vakinainen",
-                                            "AOV - alkuper\u00e4inen, vanhaa perua, vakinainen",
-                                            "AN - alkuper\u00e4inen, uutta perua, ei arviota vakinaisuudesta",
-                                            "ANV - alkuper\u00e4inen, uutta perua, vakinainen",
-                                            "ANS - alkuper\u00e4inen, uutta perua, satunnainen",
-                                            "T - tulokas, ei arviota tuloajasta eik\u00e4 vakinaisuudesta",
-                                            "TV - tulokas, ei arviota tuloajasta, vakinainen",
-                                            "TOV - muinaistulokas, vakinainen",
-                                            "TNV - uustulokas, vakinainen",
-                                            "TNS - uustulokas, satunnainen",
-                                            "V - ei arviota alkuper\u00e4isyydest\u00e4 eik\u00e4 tuloajasta, vakinainen",
-                                            "OV - ei arviota alkuper\u00e4isyydest\u00e4, vanhaa perua, vakinainen",
-                                            "N - ei arviota alkuper\u00e4isyydest\u00e4, uutta perua, ei arviota vakinaisuudesta",
-                                            "NV - ei arviota alkuper\u00e4isyydest\u00e4, uutta perua, vakinainen",
-                                            "NS - ei arviota alkuper\u00e4isyydest\u00e4, uutta perua, satunnainen",
-                                            "E - viljelykarkulainen",
-                                            "TE - tulokas, viljelykarkulainen",
-                                            "TVE - tulokas, vakiintunut, viljelykarkulainen",
-                                            "TOVE - muinaistulokas, vakiintunut, viljelykarkulainen",
-                                            "TNVE - uustulokas, vakiintunut, viljelykarkulainen",
-                                            "TNSE - uustulokas, satunnainen, viljelykarkulainen",
-                                            "TN - tulokas, uusi, ei arviota vakinaisuudesta",
-                                            "TNE - tulokas, uusi, ei arviota vakinaisuudesta, viljelykarkulanen",
-                                            "R - viljelyj\u00e4\u00e4nne",
-                                            "C - viljelykasvi",
-                                            "H - puutarhan sis\u00e4karkulainen (/hort)",
-                                            "G - kasvihuonekasvi (tai muu sis\u00e4kasvi), oli sitten viljelty tai villi",
-                                            "F - subfossiili, fossiili"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeL",
+                                                "title": "L - luonnonvarainen; ei arviota alkuper\u00e4isyydest\u00e4, tuloajasta tai vakinaisuudesta"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeA",
+                                                "title": "A - alkuper\u00e4inen, vanha tai uusi, ei arviota vakinaisuudesta"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeAV",
+                                                "title": "AV - alkuper\u00e4inen, ei arviota tuloajasta, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeAOV",
+                                                "title": "AOV - alkuper\u00e4inen, vanhaa perua, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeAN",
+                                                "title": "AN - alkuper\u00e4inen, uutta perua, ei arviota vakinaisuudesta"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeANV",
+                                                "title": "ANV - alkuper\u00e4inen, uutta perua, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeANS",
+                                                "title": "ANS - alkuper\u00e4inen, uutta perua, satunnainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeT",
+                                                "title": "T - tulokas, ei arviota tuloajasta eik\u00e4 vakinaisuudesta"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTV",
+                                                "title": "TV - tulokas, ei arviota tuloajasta, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTOV",
+                                                "title": "TOV - muinaistulokas, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTNV",
+                                                "title": "TNV - uustulokas, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTNS",
+                                                "title": "TNS - uustulokas, satunnainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeV",
+                                                "title": "V - ei arviota alkuper\u00e4isyydest\u00e4 eik\u00e4 tuloajasta, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeOV",
+                                                "title": "OV - ei arviota alkuper\u00e4isyydest\u00e4, vanhaa perua, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeN",
+                                                "title": "N - ei arviota alkuper\u00e4isyydest\u00e4, uutta perua, ei arviota vakinaisuudesta"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeNV",
+                                                "title": "NV - ei arviota alkuper\u00e4isyydest\u00e4, uutta perua, vakinainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeNS",
+                                                "title": "NS - ei arviota alkuper\u00e4isyydest\u00e4, uutta perua, satunnainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeE",
+                                                "title": "E - viljelykarkulainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTE",
+                                                "title": "TE - tulokas, viljelykarkulainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTVE",
+                                                "title": "TVE - tulokas, vakiintunut, viljelykarkulainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTOVE",
+                                                "title": "TOVE - muinaistulokas, vakiintunut, viljelykarkulainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTNVE",
+                                                "title": "TNVE - uustulokas, vakiintunut, viljelykarkulainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTNSE",
+                                                "title": "TNSE - uustulokas, satunnainen, viljelykarkulainen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTN",
+                                                "title": "TN - tulokas, uusi, ei arviota vakinaisuudesta"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeTNE",
+                                                "title": "TNE - tulokas, uusi, ei arviota vakinaisuudesta, viljelykarkulanen"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeR",
+                                                "title": "R - viljelyj\u00e4\u00e4nne"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeC",
+                                                "title": "C - viljelykasvi"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeH",
+                                                "title": "H - puutarhan sis\u00e4karkulainen (/hort)"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeG",
+                                                "title": "G - kasvihuonekasvi (tai muu sis\u00e4kasvi), oli sitten viljelty tai villi"
+                                            },
+                                            {
+                                                "const": "MY.plantStatusCodeF",
+                                                "title": "F - subfossiili, fossiili"
+                                            }
                                         ],
                                         "title": "Kasvin statuskoodi",
                                         "type": "string"
                                     },
                                     "preservation": {
                                         "items": {
-                                            "enum": [
-                                                "",
-                                                "MY.preservationPressed",
-                                                "MY.preservationDry",
-                                                "MY.preservationCriticalPointDrying",
-                                                "MY.preservationPinned",
-                                                "MY.preservationGlued",
-                                                "MY.preservationLiquid",
-                                                "MY.preservationEthanol",
-                                                "MY.preservationEthanolPure",
-                                                "MY.preservationEthanol70",
-                                                "MY.preservationEthanol80",
-                                                "MY.preservationEthanol80Pure",
-                                                "MY.preservationEthanol96",
-                                                "MY.preservationEthanolDenatured",
-                                                "MY.preservationEthanolFormalin",
-                                                "MY.preservationEthanolExFormalin",
-                                                "MY.preservationFormalin",
-                                                "MY.preservationBouinSolution",
-                                                "MY.preservationPampelsFluid",
-                                                "MY.preservationEulan",
-                                                "MY.preservationGlycerol",
-                                                "MY.preservationParaffin",
-                                                "MY.preservationMercuricChloride",
-                                                "MY.preservationCryopreserved",
-                                                "MY.preservationFrozen",
-                                                "MY.preservationFrozenMinus80C",
-                                                "MY.preservationFreezeDried",
-                                                "MY.preservationGoldPlated",
-                                                "MY.preservationActiveCulture",
-                                                "MY.preservationLiving",
-                                                "MY.preservationSlide",
-                                                "MY.preservationSlideCanadaBalsam",
-                                                "MY.preservationSlideEuparal",
-                                                "MY.preservationSlidePolyviol",
-                                                "MY.preservationStuffed",
-                                                "MY.preservationCast"
-                                            ],
-                                            "enumNames": [
-                                                "",
-                                                "Kuivattu ja pr\u00e4ss\u00e4tty",
-                                                "Kuivan\u00e4yte",
-                                                "Kriittisen pisteen kuivaus",
-                                                "Neulattu",
-                                                "Liimattu",
-                                                "Nesten\u00e4yte",
-                                                "Etanoli (tuntematon %)",
-                                                "Etanoli (tuntematon %) puhdas",
-                                                "Etanoli 70 %",
-                                                "Etanoli 80 %",
-                                                "Etanoli 80 % puhdas",
-                                                "Etanoli 96 %",
-                                                "Denaturoitu etanoli",
-                                                "Etanoli ja formaliini",
-                                                "Etanoli, aiemmin formaliini",
-                                                "Formaliini",
-                                                "Bouin'n liuos",
-                                                "Pampelin neste",
-                                                "Eulan",
-                                                "Glyseroli",
-                                                "Parafiini",
-                                                "Sublimaatti",
-                                                "Kylm\u00e4s\u00e4ilytetty",
-                                                "J\u00e4\u00e4dytetty",
-                                                "Pakastettu -80 \u00b0C",
-                                                "Kylm\u00e4kuivattu",
-                                                "Kullattu",
-                                                "Viljem\u00e4",
-                                                "El\u00e4v\u00e4",
-                                                "Objektilasi",
-                                                "Objektilasi, kanadabalsami",
-                                                "Objektilasi, Euparal",
-                                                "Objektilasi, Polyviol",
-                                                "T\u00e4ytetty",
-                                                "Valos"
+                                            "oneOf": [
+                                                {
+                                                    "const": "",
+                                                    "title": ""
+                                                },
+                                                {
+                                                    "const": "MY.preservationPressed",
+                                                    "title": "Kuivattu ja pr\u00e4ss\u00e4tty"
+                                                },
+                                                {
+                                                    "const": "MY.preservationDry",
+                                                    "title": "Kuivan\u00e4yte"
+                                                },
+                                                {
+                                                    "const": "MY.preservationCriticalPointDrying",
+                                                    "title": "Kriittisen pisteen kuivaus"
+                                                },
+                                                {
+                                                    "const": "MY.preservationPinned",
+                                                    "title": "Neulattu"
+                                                },
+                                                {
+                                                    "const": "MY.preservationGlued",
+                                                    "title": "Liimattu"
+                                                },
+                                                {
+                                                    "const": "MY.preservationLiquid",
+                                                    "title": "Neste (m\u00e4\u00e4rittelem\u00e4t\u00f6n)"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanol",
+                                                    "title": "Etanoli (tuntematon %)"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanolPure",
+                                                    "title": "Etanoli (tuntematon %) puhdas"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanol70",
+                                                    "title": "Etanoli 70 %"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanol80",
+                                                    "title": "Etanoli 80 %"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanol80Pure",
+                                                    "title": "Etanoli 80 % puhdas"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanol96",
+                                                    "title": "Etanoli 96 %"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanolDenatured",
+                                                    "title": "Denaturoitu etanoli"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanolFormalin",
+                                                    "title": "Etanoli ja formaliini"
+                                                },
+                                                {
+                                                    "const": "MY.preservationEthanolExFormalin",
+                                                    "title": "Etanoli, aiemmin formaliini"
+                                                },
+                                                {
+                                                    "const": "MY.preservationFormalin",
+                                                    "title": "Formaliini"
+                                                },
+                                                {
+                                                    "const": "MY.preservationBouinSolution",
+                                                    "title": "Bouin'n liuos"
+                                                },
+                                                {
+                                                    "const": "MY.preservationPampelsFluid",
+                                                    "title": "Pampelin neste"
+                                                },
+                                                {
+                                                    "const": "MY.preservationGlycerol",
+                                                    "title": "Glyseroli"
+                                                },
+                                                {
+                                                    "const": "MY.preservationParaffin",
+                                                    "title": "Parafiini"
+                                                },
+                                                {
+                                                    "const": "MY.preservationMercuricChloride",
+                                                    "title": "Sublimaatti"
+                                                },
+                                                {
+                                                    "const": "MY.preservationCryopreserved",
+                                                    "title": "Kylm\u00e4s\u00e4ilytetty"
+                                                },
+                                                {
+                                                    "const": "MY.preservationFrozen",
+                                                    "title": "J\u00e4\u00e4dytetty"
+                                                },
+                                                {
+                                                    "const": "MY.preservationFrozenMinus80C",
+                                                    "title": "Pakastettu -80 \u00b0C"
+                                                },
+                                                {
+                                                    "const": "MY.preservationFreezeDried",
+                                                    "title": "Kylm\u00e4kuivattu"
+                                                },
+                                                {
+                                                    "const": "MY.preservationGoldPlated",
+                                                    "title": "Kullattu"
+                                                },
+                                                {
+                                                    "const": "MY.preservationActiveCulture",
+                                                    "title": "Viljem\u00e4"
+                                                },
+                                                {
+                                                    "const": "MY.preservationLiving",
+                                                    "title": "El\u00e4v\u00e4"
+                                                },
+                                                {
+                                                    "const": "MY.preservationSlide",
+                                                    "title": "Objektilasi"
+                                                },
+                                                {
+                                                    "const": "MY.preservationSlideCanadaBalsam",
+                                                    "title": "Objektilasi, kanadabalsami"
+                                                },
+                                                {
+                                                    "const": "MY.preservationSlideEuparal",
+                                                    "title": "Objektilasi, Euparal"
+                                                },
+                                                {
+                                                    "const": "MY.preservationSlidePolyviol",
+                                                    "title": "Objektilasi, Polyviol"
+                                                },
+                                                {
+                                                    "const": "MY.preservationStuffed",
+                                                    "title": "T\u00e4ytetty"
+                                                },
+                                                {
+                                                    "const": "MY.preservationCast",
+                                                    "title": "Valos"
+                                                },
+                                                {
+                                                    "const": "MY.preservationPlastinated",
+                                                    "title": "Plastinoitu"
+                                                },
+                                                {
+                                                    "const": "MY.preservationFrozenMinus80CAndEthanolMinus20C",
+                                                    "title": "Pakastettu -80 \u00b0C ja etanoli -20 \u00b0C (duplikaatti)"
+                                                }
                                             ],
                                             "type": "string"
                                         },
@@ -1077,129 +1523,255 @@
                                     },
                                     "recordBasis": {
                                         "default": "MY.recordBasisHumanObservation",
-                                        "enum": [
-                                            "",
-                                            "MY.recordBasisPreservedSpecimen",
-                                            "MY.recordBasisHumanObservation",
-                                            "MY.recordBasisHumanObservationHandled",
-                                            "MY.recordBasisHumanObservationPhoto"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "N\u00e4yte",
-                                            "Havaittu",
-                                            "K\u00e4sitelty (otettu kiinni, ei n\u00e4ytett\u00e4)",
-                                            "Valokuvattu"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.recordBasisPreservedSpecimen",
+                                                "title": "N\u00e4yte"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservation",
+                                                "title": "Havaittu"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationHandled",
+                                                "title": "K\u00e4sitelty (otettu kiinni, ei n\u00e4ytett\u00e4)"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationPhoto",
+                                                "title": "Valokuvattu"
+                                            }
                                         ],
                                         "title": "Havainnointitapa",
                                         "type": "string"
                                     },
                                     "samplingMethod": {
-                                        "enum": [
-                                            "",
-                                            "MY.samplingMethodLight",
-                                            "MY.samplingMethodLightTrap",
-                                            "MY.samplingMethodTrap",
-                                            "MY.samplingMethodMalaise",
-                                            "MY.samplingMethodPitfall",
-                                            "MY.samplingMethodWindowtrap",
-                                            "MY.samplingMethodYellowWindowTrap",
-                                            "MY.samplingMethodPantrap",
-                                            "MY.samplingMethodYellowpan",
-                                            "MY.samplingMethodYellowtrap",
-                                            "MY.samplingMethodFeromonetrap",
-                                            "MY.samplingMethodBaittrap",
-                                            "MY.samplingMethodBait",
-                                            "MY.samplingMethodNet",
-                                            "MY.samplingMethodSweeping",
-                                            "MY.samplingMethodCarnet",
-                                            "MY.samplingMethodMistnet",
-                                            "MY.samplingMethodBoard",
-                                            "MY.samplingMethodReared",
-                                            "MY.samplingMethodExovo",
-                                            "MY.samplingMethodElarva",
-                                            "MY.samplingMethodEpupa",
-                                            "MY.samplingMethodEclectortrap",
-                                            "MY.samplingMethodHand",
-                                            "MY.samplingMethodSifting",
-                                            "MY.samplingMethodSoilsample",
-                                            "MY.samplingMethodDropping",
-                                            "MY.samplingMethodWashing",
-                                            "MY.samplingMethodDigging",
-                                            "MY.samplingMethodDiving",
-                                            "MY.samplingMethodDrag",
-                                            "MY.samplingMethodTriangleDrag",
-                                            "MY.samplingMethodFishNet",
-                                            "MY.samplingMethodElectrofishing",
-                                            "MY.samplingMethodAngleFishing",
-                                            "MY.samplingMethodFishTrap",
-                                            "MY.samplingMethodSeine",
-                                            "MY.samplingMethodTrawling",
-                                            "MY.samplingMethodBeamTrawl",
-                                            "MY.samplingMethodOther"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "Valo",
-                                            "Valopyydys",
-                                            "Pyydys (m\u00e4\u00e4rittelem\u00e4t\u00f6n)",
-                                            "Malaise-pyydys",
-                                            "Kuoppapyydys",
-                                            "Ikkunapyydys",
-                                            "Keltaikkunapyydys",
-                                            "Maljapyydys",
-                                            "Keltamalja",
-                                            "Liimapyydys",
-                                            "Feromonipyydys",
-                                            "Sy\u00f6ttipyydys",
-                                            "Sy\u00f6tti (ilman pyydyst\u00e4)",
-                                            "Haavi",
-                                            "Ly\u00f6ntihaavi",
-                                            "Autohaavi",
-                                            "Lintuverkko",
-                                            "Lautapyydys",
-                                            "Kasvatettu",
-                                            "Kasvatettu munasta",
-                                            "Kasvatettu toukasta",
-                                            "Kasvatettu kotelosta",
-                                            "Kuoriutumispyydys, eklektori",
-                                            "K\u00e4sinker\u00e4ys",
-                                            "Seulos",
-                                            "Maaper\u00e4n\u00e4yte",
-                                            "Ravistelu/pudottelu",
-                                            "Maaston peseminen",
-                                            "Kaivaminen",
-                                            "Sukeltaminen",
-                                            "Hara",
-                                            "Kolmiohara",
-                                            "Kalaverkko",
-                                            "S\u00e4hk\u00f6kalastus",
-                                            "Onkiminen",
-                                            "Katiska tai rys\u00e4",
-                                            "Nuotta",
-                                            "Troolaus",
-                                            "Puomitrooli",
-                                            "Muu"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodLight",
+                                                "title": "Valo"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodLightTrap",
+                                                "title": "Valopyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodTrap",
+                                                "title": "Pyydys (m\u00e4\u00e4rittelem\u00e4t\u00f6n)"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodMalaise",
+                                                "title": "Malaise-pyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodPitfall",
+                                                "title": "Kuoppapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodWindowtrap",
+                                                "title": "Ikkunapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodYellowWindowTrap",
+                                                "title": "Keltaikkunapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodPantrap",
+                                                "title": "Maljapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodYellowpan",
+                                                "title": "Keltamalja"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodYellowtrap",
+                                                "title": "Liimapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodFeromonetrap",
+                                                "title": "Feromonipyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodBaittrap",
+                                                "title": "Sy\u00f6ttipyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodBait",
+                                                "title": "Sy\u00f6tti (ilman pyydyst\u00e4)"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodNet",
+                                                "title": "Haavi"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodSweeping",
+                                                "title": "Ly\u00f6ntihaavi"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodCarnet",
+                                                "title": "Autohaavi"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodMistnet",
+                                                "title": "Lintuverkko"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodBoard",
+                                                "title": "Lautapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodReared",
+                                                "title": "Kasvatettu"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodExovo",
+                                                "title": "Kasvatettu munasta"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodElarva",
+                                                "title": "Kasvatettu toukasta"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodEpupa",
+                                                "title": "Kasvatettu kotelosta"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodEclectortrap",
+                                                "title": "Kuoriutumispyydys, eklektori"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodHand",
+                                                "title": "K\u00e4sinker\u00e4ys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodSifting",
+                                                "title": "Seulos"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodSoilsample",
+                                                "title": "Maaper\u00e4n\u00e4yte"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodDropping",
+                                                "title": "Ravistelu/pudottelu"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodWashing",
+                                                "title": "Maaston peseminen"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodDigging",
+                                                "title": "Kaivaminen"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodDiving",
+                                                "title": "Sukeltaminen"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodDrag",
+                                                "title": "Hara"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodTriangleDrag",
+                                                "title": "Kolmiohara"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodFishNet",
+                                                "title": "Kalaverkko"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodElectrofishing",
+                                                "title": "S\u00e4hk\u00f6kalastus"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodAngleFishing",
+                                                "title": "Onkiminen"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodFishTrap",
+                                                "title": "Katiska tai rys\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodSeine",
+                                                "title": "Nuotta"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodTrawling",
+                                                "title": "Troolaus"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodBeamTrawl",
+                                                "title": "Puomitrooli"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodDungTrap",
+                                                "title": "Lantapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodTrunkWindowTrap",
+                                                "title": "Runkoikkunapyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodDiverInsectTrap",
+                                                "title": "Sukeltajahy\u00f6nteispyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodAquaticEmergenceTrap",
+                                                "title": "Vesihy\u00f6nteisten kuoriutumispyydys"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodWaterBucket",
+                                                "title": "Vesi\u00e4mp\u00e4ri"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodTrampling",
+                                                "title": "Polkeminen"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodWaterSieve",
+                                                "title": "Vesisiivil\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.samplingMethodOther",
+                                                "title": "Muu"
+                                            }
                                         ],
                                         "title": "Keruumenetelm\u00e4",
                                         "type": "string"
                                     },
                                     "smell": {
-                                        "enum": [
-                                            "",
-                                            "MY.smellNotSmelled",
-                                            "MY.smellNoSmelled",
-                                            "MY.smellWeak",
-                                            "MY.smellModerate",
-                                            "MY.smellStrong"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "Ei haistettu",
-                                            "Ei hajua",
-                                            "Heikko",
-                                            "Kohtalainen",
-                                            "Vahva"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.smellNotSmelled",
+                                                "title": "Ei haistettu"
+                                            },
+                                            {
+                                                "const": "MY.smellNoSmelled",
+                                                "title": "Ei hajua"
+                                            },
+                                            {
+                                                "const": "MY.smellWeak",
+                                                "title": "Heikko"
+                                            },
+                                            {
+                                                "const": "MY.smellModerate",
+                                                "title": "Kohtalainen"
+                                            },
+                                            {
+                                                "const": "MY.smellStrong",
+                                                "title": "Vahva"
+                                            }
                                         ],
                                         "title": "Haju",
                                         "type": "string"
@@ -1209,139 +1781,265 @@
                                         "type": "string"
                                     },
                                     "substrateClassification": {
-                                        "enum": [
-                                            "",
-                                            "MY.substrateGround",
-                                            "MY.substrateGroundLowShrubs",
-                                            "MY.substrateGroundLichens",
-                                            "MY.substrateGroundHerbs",
-                                            "MY.substrateGroundMosses",
-                                            "MY.substrateGroundSphagnum",
-                                            "MY.substrateGroundGrassy",
-                                            "MY.substrateGroundNeedleLitter",
-                                            "MY.substrateGroundLeafLitter",
-                                            "MY.substrateGroundMixedLitter",
-                                            "MY.substrateGroundSandySoil",
-                                            "MY.substrateGroundGravelSoil",
-                                            "MY.substrateGroundClayeySoil",
-                                            "MY.substrateGroundHeathHumus",
-                                            "MY.substrateGroundMull",
-                                            "MY.substrateGroundPeat",
-                                            "MY.substrateGroundBurnedSoil",
-                                            "MY.substrateLivingTree",
-                                            "MY.substrateLivingTreeTrunk",
-                                            "MY.substrateLivingTreeBase",
-                                            "MY.substrateLivingTreeRoots",
-                                            "MY.substrateLivingTreeBranch",
-                                            "MY.substrateLivingTreeDeadBranch",
-                                            "MY.substrateLivingTreeDeadLimb",
-                                            "MY.substrateLivingTreeLeaf",
-                                            "MY.substrateLivingTreeNeedle",
-                                            "MY.substrateDeadWood",
-                                            "MY.substrateDeadWoodStandingTreeTrunk",
-                                            "MY.substrateDeadWoodStandingTreeBranch",
-                                            "MY.substrateDeadWoodStandingTreeBase",
-                                            "MY.substrateDeadWoodFallenTreeTrunk",
-                                            "MY.substrateDeadWoodFallenTreeBranch",
-                                            "MY.substrateDeadWoodUpturnedRoots",
-                                            "MY.substrateDeadWoodDeadRoots",
-                                            "MY.substrateDeadWoodStump",
-                                            "MY.substrateDeadWoodFallenBranch",
-                                            "MY.substrateDeadWoodCone",
-                                            "MY.substrateDeadWoodTwigs",
-                                            "MY.substrateDeadWoodBark",
-                                            "MY.substrateDeadWoodSawdust",
-                                            "MY.substrateDeadWoodPieceOfWood",
-                                            "MY.substrateDeadWoodLoggingResidue",
-                                            "MY.substrateDeadWoodLog",
-                                            "MY.substrateDeadWoodDriftwood",
-                                            "MY.substrateDeadWoodConstructionWood",
-                                            "MY.substrateDung",
-                                            "MY.substrateCompost",
-                                            "MY.substrateLivingShoot",
-                                            "MY.substrateDeadShoot",
-                                            "MY.substrateLivingFungus",
-                                            "MY.substrateDeadFungus",
-                                            "MY.substrateLivingAnimal",
-                                            "MY.substrateDeadAnimal",
-                                            "MY.substrateRockSurface"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "maassa",
-                                            "varvikossa",
-                                            "j\u00e4k\u00e4lik\u00f6ss\u00e4",
-                                            "ruohostossa",
-                                            "sammalikossa",
-                                            "rahkasammalikossa",
-                                            "nurmikolla",
-                                            "neulaskarikkeessa",
-                                            "lehtikarikkeessa",
-                                            "sekakarikkeessa",
-                                            "hiekkamaassa",
-                                            "soramaa/kivimaa",
-                                            "savimaassa",
-                                            "kangashumuksessa",
-                                            "mullassa",
-                                            "turpeella",
-                                            "hiiltyneess\u00e4 maassa",
-                                            "el\u00e4v\u00e4ll\u00e4 puulla",
-                                            "rungolla",
-                                            "rungon tyvell\u00e4",
-                                            "juurissa",
-                                            "oksalla",
-                                            "kuolleella oksalla",
-                                            "kuolleessa haarassa",
-                                            "lehdell\u00e4",
-                                            "neulasella",
-                                            "kuolleella puulla",
-                                            "pystypuun rungolla",
-                                            "pystypuun oksalla",
-                                            "pystypuun tyvell\u00e4",
-                                            "maapuun rungolla",
-                                            "maapuun oksalla",
-                                            "maapuun juurakossa",
-                                            "kuolleen puun juuressa",
-                                            "kannolla",
-                                            "maaoksalla",
-                                            "maak\u00e4vyll\u00e4",
-                                            "risuilla/tikuilla",
-                                            "kuorikkeella",
-                                            "purulla",
-                                            "puun/rungonpalalla",
-                                            "hakkuut\u00e4hteell\u00e4",
-                                            "tukilla/p\u00f6llill\u00e4",
-                                            "ajopuulla",
-                                            "rakennuspuulla/rakenteissa",
-                                            "lannalla",
-                                            "kompostissa",
-                                            "el\u00e4v\u00e4n kasvin versolla",
-                                            "kuolleella versolla/korrella",
-                                            "el\u00e4v\u00e4ll\u00e4 sienell\u00e4",
-                                            "kuolleella sienell\u00e4",
-                                            "el\u00e4v\u00e4ll\u00e4 el\u00e4imell\u00e4",
-                                            "kuolleella el\u00e4imell\u00e4",
-                                            "kivipinnalla"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.substrateGround",
+                                                "title": "maassa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundLowShrubs",
+                                                "title": "varvikossa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundLichens",
+                                                "title": "j\u00e4k\u00e4lik\u00f6ss\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundHerbs",
+                                                "title": "ruohostossa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundMosses",
+                                                "title": "sammalikossa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundSphagnum",
+                                                "title": "rahkasammalikossa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundGrassy",
+                                                "title": "nurmikolla"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundNeedleLitter",
+                                                "title": "neulaskarikkeessa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundLeafLitter",
+                                                "title": "lehtikarikkeessa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundMixedLitter",
+                                                "title": "sekakarikkeessa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundSandySoil",
+                                                "title": "hiekkamaassa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundGravelSoil",
+                                                "title": "soramaa/kivimaa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundClayeySoil",
+                                                "title": "savimaassa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundHeathHumus",
+                                                "title": "kangashumuksessa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundMull",
+                                                "title": "mullassa"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundPeat",
+                                                "title": "turpeella"
+                                            },
+                                            {
+                                                "const": "MY.substrateGroundBurnedSoil",
+                                                "title": "hiiltyneess\u00e4 maassa"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTree",
+                                                "title": "el\u00e4v\u00e4ll\u00e4 puulla"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeTrunk",
+                                                "title": "rungolla"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeBase",
+                                                "title": "rungon tyvell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeRoots",
+                                                "title": "juurissa"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeBranch",
+                                                "title": "oksalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeDeadBranch",
+                                                "title": "kuolleella oksalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeDeadLimb",
+                                                "title": "kuolleessa haarassa"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeLeaf",
+                                                "title": "lehdell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingTreeNeedle",
+                                                "title": "neulasella"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWood",
+                                                "title": "kuolleella puulla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodStandingTreeTrunk",
+                                                "title": "pystypuun rungolla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodStandingTreeBranch",
+                                                "title": "pystypuun oksalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodStandingTreeBase",
+                                                "title": "pystypuun tyvell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodFallenTreeTrunk",
+                                                "title": "maapuun rungolla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodFallenTreeBranch",
+                                                "title": "maapuun oksalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodUpturnedRoots",
+                                                "title": "maapuun juurakossa"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodDeadRoots",
+                                                "title": "kuolleen puun juuressa"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodStump",
+                                                "title": "kannolla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodFallenBranch",
+                                                "title": "maaoksalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodCone",
+                                                "title": "maak\u00e4vyll\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodTwigs",
+                                                "title": "risuilla/tikuilla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodBark",
+                                                "title": "kuorikkeella"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodSawdust",
+                                                "title": "purulla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodPieceOfWood",
+                                                "title": "puun/rungonpalalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodLoggingResidue",
+                                                "title": "hakkuut\u00e4hteell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodLog",
+                                                "title": "tukilla/p\u00f6llill\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodDriftwood",
+                                                "title": "ajopuulla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadWoodConstructionWood",
+                                                "title": "rakennuspuulla/rakenteissa"
+                                            },
+                                            {
+                                                "const": "MY.substrateDung",
+                                                "title": "lannalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateCompost",
+                                                "title": "kompostissa"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingShoot",
+                                                "title": "el\u00e4v\u00e4n kasvin versolla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadShoot",
+                                                "title": "kuolleella versolla/korrella"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingFungus",
+                                                "title": "el\u00e4v\u00e4ll\u00e4 sienell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadFungus",
+                                                "title": "kuolleella sienell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateLivingAnimal",
+                                                "title": "el\u00e4v\u00e4ll\u00e4 el\u00e4imell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadAnimal",
+                                                "title": "kuolleella el\u00e4imell\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.substrateRockSurface",
+                                                "title": "kivipinnalla"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadNeedle",
+                                                "title": "kuolleessa/ylivuotisessa neulasessa"
+                                            },
+                                            {
+                                                "const": "MY.substrateDeadLeaf",
+                                                "title": "kuolleessa/ylivuotisessa lehdess\u00e4"
+                                            }
                                         ],
                                         "title": "Kasvualusta",
                                         "type": "string"
                                     },
                                     "substrateDecayStage": {
-                                        "enum": [
-                                            "",
-                                            "MY.substrateDecayStageEnum1",
-                                            "MY.substrateDecayStageEnum2",
-                                            "MY.substrateDecayStageEnum3",
-                                            "MY.substrateDecayStageEnum4",
-                                            "MY.substrateDecayStageEnum5"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "Lahoaste 1",
-                                            "Lahoaste 2",
-                                            "Lahoaste 3",
-                                            "Lahoaste 4",
-                                            "Lahoaste 5"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.substrateDecayStageEnum1",
+                                                "title": "Lahoaste 1"
+                                            },
+                                            {
+                                                "const": "MY.substrateDecayStageEnum2",
+                                                "title": "Lahoaste 2"
+                                            },
+                                            {
+                                                "const": "MY.substrateDecayStageEnum3",
+                                                "title": "Lahoaste 3"
+                                            },
+                                            {
+                                                "const": "MY.substrateDecayStageEnum4",
+                                                "title": "Lahoaste 4"
+                                            },
+                                            {
+                                                "const": "MY.substrateDecayStageEnum5",
+                                                "title": "Lahoaste 5"
+                                            }
                                         ],
                                         "title": "Kasvualustapuun lahoaste",
                                         "type": "string"
@@ -1356,23 +2054,35 @@
                                     },
                                     "substrateTreeClassification": {
                                         "items": {
-                                            "enum": [
-                                                "",
-                                                "MY.substrateTreeClassificationEnum1",
-                                                "MY.substrateTreeClassificationEnum2",
-                                                "MY.substrateTreeClassificationEnum3",
-                                                "MY.substrateTreeClassificationEnum4",
-                                                "MY.substrateTreeClassificationEnum5",
-                                                "MY.substrateTreeClassificationEnum6"
-                                            ],
-                                            "enumNames": [
-                                                "",
-                                                "kelo",
-                                                "hiiltynyt",
-                                                "sammaloitunut",
-                                                "kuorellinen",
-                                                "osittain kuoreton",
-                                                "kuoreton"
+                                            "oneOf": [
+                                                {
+                                                    "const": "",
+                                                    "title": ""
+                                                },
+                                                {
+                                                    "const": "MY.substrateTreeClassificationEnum1",
+                                                    "title": "kelo"
+                                                },
+                                                {
+                                                    "const": "MY.substrateTreeClassificationEnum2",
+                                                    "title": "hiiltynyt"
+                                                },
+                                                {
+                                                    "const": "MY.substrateTreeClassificationEnum3",
+                                                    "title": "sammaloitunut"
+                                                },
+                                                {
+                                                    "const": "MY.substrateTreeClassificationEnum4",
+                                                    "title": "kuorellinen"
+                                                },
+                                                {
+                                                    "const": "MY.substrateTreeClassificationEnum5",
+                                                    "title": "osittain kuoreton"
+                                                },
+                                                {
+                                                    "const": "MY.substrateTreeClassificationEnum6",
+                                                    "title": "kuoreton"
+                                                }
                                             ],
                                             "type": "string"
                                         },
@@ -1381,21 +2091,31 @@
                                         "uniqueItems": true
                                     },
                                     "taste": {
-                                        "enum": [
-                                            "",
-                                            "MY.tasteNotTasted",
-                                            "MY.tasteNoTaste",
-                                            "MY.tasteWeak",
-                                            "MY.tasteModerate",
-                                            "MY.tasteStrong"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "Ei maistettu",
-                                            "Ei makua",
-                                            "Mieto",
-                                            "Kohtalainen",
-                                            "Voimakas"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.tasteNotTasted",
+                                                "title": "Ei maistettu"
+                                            },
+                                            {
+                                                "const": "MY.tasteNoTaste",
+                                                "title": "Ei makua"
+                                            },
+                                            {
+                                                "const": "MY.tasteWeak",
+                                                "title": "Mieto"
+                                            },
+                                            {
+                                                "const": "MY.tasteModerate",
+                                                "title": "Kohtalainen"
+                                            },
+                                            {
+                                                "const": "MY.tasteStrong",
+                                                "title": "Voimakas"
+                                            }
                                         ],
                                         "title": "Maku",
                                         "type": "string"
@@ -1406,17 +2126,23 @@
                                     },
                                     "taxonConfidence": {
                                         "default": "MY.taxonConfidenceSure",
-                                        "enum": [
-                                            "",
-                                            "MY.taxonConfidenceSure",
-                                            "MY.taxonConfidenceUnsure",
-                                            "MY.taxonConfidenceSubspeciesUnsure"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "varma",
-                                            "ep\u00e4varma",
-                                            "alalaji ep\u00e4varma"
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.taxonConfidenceSure",
+                                                "title": "Varma"
+                                            },
+                                            {
+                                                "const": "MY.taxonConfidenceUnsure",
+                                                "title": "Ep\u00e4varma"
+                                            },
+                                            {
+                                                "const": "MY.taxonConfidenceSubspeciesUnsure",
+                                                "title": "Alalaji ep\u00e4varma"
+                                            }
                                         ],
                                         "title": "M\u00e4\u00e4rityksen varmuus",
                                         "type": "string"
@@ -1429,6 +2155,7 @@
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
                                     },
                                     "unitGathering": {
@@ -1456,7 +2183,30 @@
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
+                                    },
+                                    "wild": {
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.wildWild",
+                                                "title": "Luonnonvaraiset"
+                                            },
+                                            {
+                                                "const": "MY.wildUnknown",
+                                                "title": "Ei merkint\u00e4\u00e4"
+                                            },
+                                            {
+                                                "const": "MY.wildNonWild",
+                                                "title": "Ei luonnonvaraiset"
+                                            }
+                                        ],
+                                        "title": "Luonnonvaraisuus",
+                                        "type": "string"
                                     }
                                 },
                                 "required": [],
@@ -1471,29 +2221,39 @@
                     "required": [],
                     "type": "object"
                 },
-                "title": "Paikka",
+                "title": "",
                 "type": "array"
             },
             "secureLevel": {
                 "default": "MX.secureLevelNone",
-                "enum": [
-                    "MX.secureLevelNone",
-                    "MX.secureLevelKM10"
-                ],
-                "enumNames": [
-                    "Ei karkeistettu",
-                    "10 km"
+                "oneOf": [
+                    {
+                        "const": "MX.secureLevelNone",
+                        "title": "Ei karkeistettu"
+                    },
+                    {
+                        "const": "MX.secureLevelKM10",
+                        "title": "10 km"
+                    }
                 ],
                 "title": "Havainnon tarkat paikkatiedot ovat julkisia",
                 "type": "string"
             }
         },
-        "required": [],
+        "required": [
+            "gatherings"
+        ],
         "type": "object"
     },
     "shortDescription": "Ilmoita sienihavaintosi ja tallentamasi n\u00e4ytteet.",
     "title": "Sieniatlaslomake",
     "uiSchema": {
+        "editors": {
+            "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
+            "ui:options": {
+                "allowUndefined": false
+            }
+        },
         "gatheringEvent": {
             "classNames": "well well-sm",
             "dateBegin": {
@@ -1504,12 +2264,6 @@
             },
             "dateEnd": {
                 "ui:widget": "DateTimeWidget"
-            },
-            "editors": {
-                "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
-                "ui:options": {
-                    "allowUndefined": false
-                }
             },
             "leg": {
                 "ui:help": "@legHelp",
@@ -1536,8 +2290,7 @@
                             "dateEnd"
                         ],
                         "rootUiSchema": {
-                            "ui:field": "GridLayoutField",
-                            "ui:options": {
+                            "ui:grid": {
                                 "lg": {
                                     "dateBegin": 3,
                                     "dateEnd": 2
@@ -1576,7 +2329,7 @@
                                                     "ui:field": "ContextInjectionField",
                                                     "ui:options": {
                                                         "injections": {
-                                                            "/ui:options/rules/0/regexp": "/creator"
+                                                            "/ui:options/rules/0/regexp": "^%{/creator}$"
                                                         }
                                                     }
                                                 },
@@ -1611,6 +2364,13 @@
                                                 }
                                             ],
                                             "ui:options": {
+                                                "buttons": [
+                                                    {
+                                                        "fn": "add",
+                                                        "label": "Lis\u00e4\u00e4 havainnoija"
+                                                    }
+                                                ],
+                                                "deleteLabel": "Poista havainnoitsija",
                                                 "specialRules": "legEditors",
                                                 "ui:buttonsDesktopLayout": true
                                             }
@@ -1622,11 +2382,10 @@
                                             "_legEditor"
                                         ],
                                         "rootUiSchema": {
-                                            "ui:field": "GridLayoutField",
-                                            "ui:options": {
-                                                "lg": 3,
-                                                "md": 3,
-                                                "sm": 6,
+                                            "ui:grid": {
+                                                "lg": 6,
+                                                "md": 6,
+                                                "sm": 9,
                                                 "xs": 12
                                             }
                                         },
@@ -1787,6 +2546,9 @@
                 ],
                 "units": {
                     "items": {
+                        "additionalIDs": {
+                            "ui:field": "TagArrayField"
+                        },
                         "classNames": "well well-sm",
                         "hostID": {
                             "ui:options": {
@@ -1824,11 +2586,17 @@
                         "images": {
                             "ui:field": "ImageArrayField",
                             "ui:options": {
-                                "capturerVerbatimPath": "/gatheringEvent/leg"
+                                "capturerVerbatimPath": "/gatheringEvent/leg",
+                                "sideEffects": {
+                                    "/../recordBasis": "MY.recordBasisHumanObservationPhoto"
+                                }
                             }
                         },
                         "informalTaxonGroups": {
                             "ui:field": "HiddenField"
+                        },
+                        "keywords": {
+                            "ui:field": "TagArrayField"
                         },
                         "recordBasis": {
                             "ui:options": {
@@ -1893,7 +2661,7 @@
                                     }
                                 },
                                 "query": {
-                                    "informalTaxonGroup": "MVL.233"
+                                    "informalTaxonGroup": "MVL.233,MVL.321"
                                 },
                                 "suggestionInputField": "identifications_0_taxon",
                                 "suggestionReceivers": {
@@ -1923,7 +2691,8 @@
                                             "unitGathering_habitatDescription",
                                             "preservation",
                                             "samplingMethod",
-                                            "count"
+                                            "additionalIDs",
+                                            "keywords"
                                         ],
                                         "title": "Kaikki"
                                     },
@@ -1931,8 +2700,6 @@
                                         "additionalFields": [
                                             "substrateTreeClassification",
                                             "substrateDecayStage",
-                                            "substrateNotes",
-                                            "substrateSpecies",
                                             "smell",
                                             "smellNotes",
                                             "taste",
@@ -1952,7 +2719,8 @@
                                 "count",
                                 "recordBasis",
                                 "substrateNotes",
-                                "substrateClassification"
+                                "substrateClassification",
+                                "substrateSpecies"
                             ],
                             "glyphFields": [
                                 {
@@ -1981,20 +2749,16 @@
                             "ui:options": {
                                 "lg": {
                                     "*": "2",
-                                    "count": 2,
-                                    "identifications_0_identificationBasis": 2,
-                                    "identifications_0_taxon": 2,
-                                    "informalTaxonGroups": 2,
-                                    "notes": 2,
-                                    "recordBasis": 2,
+                                    "notes": 4,
+                                    "substrateNotes": 4,
                                     "substrateTreeClassification": 4,
-                                    "taxonConfidence": 2,
                                     "unitGathering_dateBegin": 3,
                                     "unitGathering_dateEnd": 3
                                 },
                                 "md": {
                                     "*": "3",
-                                    "notes": 2,
+                                    "notes": 6,
+                                    "substrateNotes": 6,
                                     "substrateTreeClassification": 4,
                                     "unitGathering_dateBegin": "6",
                                     "unitGathering_dateEnd": "6"
@@ -2013,6 +2777,8 @@
                                 "sm": {
                                     "*": "4",
                                     "identifications_0_identificationBasis": "8",
+                                    "notes": 8,
+                                    "substrateNotes": 8,
                                     "substrateTreeClassification": 8,
                                     "unitGathering_dateBegin": "6",
                                     "unitGathering_dateEnd": "6"
@@ -2052,7 +2818,8 @@
                         "buttons": [
                             {
                                 "fn": "add",
-                                "label": "Lis\u00e4\u00e4 havainto"
+                                "label": "Lis\u00e4\u00e4 havainto",
+                                "variant": "primary"
                             },
                             {
                                 "filter": [
@@ -2061,7 +2828,7 @@
                                     "taxonConfidence",
                                     "preservation",
                                     "plantLifeStage",
-                                    "nativeStatus",
+                                    "wild",
                                     "identifications_0_det",
                                     "identifications_0_detDate",
                                     "identifications_0_identificationBasis",
@@ -2072,7 +2839,9 @@
                                     "unitGathering_dateEnd",
                                     "substrateNotes",
                                     "substrateSpecies",
-                                    "hostID"
+                                    "hostID",
+                                    "additionalIDs",
+                                    "keywords"
                                 ],
                                 "fn": "copy",
                                 "label": "Kopioi havainto",
@@ -2100,9 +2869,9 @@
                 "belowUiSchemaRoot": {
                     "ui:field": "SingleItemArrayField",
                     "ui:options": {
-                        "titleClassName": "lg",
-                        "titleFormat": "Paikan %{idx} havainnot"
-                    }
+                        "titleClassName": "lg"
+                    },
+                    "ui:title": "Paikan %{idx} havainnot"
                 },
                 "buttons": [
                     {
@@ -2115,7 +2884,7 @@
                 "geometryField": "geometry",
                 "geometryMapper": "units",
                 "inlineUiSchemaRoot": {
-                    "ui:field": "AccordionArrayField",
+                    "ui:field": "SingleActiveArrayField",
                     "ui:options": {
                         "confirmDelete": true,
                         "headerFormatters": [
@@ -2131,8 +2900,10 @@
                                 "field": "localityDescription"
                             }
                         ],
+                        "renderer": "accordion",
                         "titleFormat": "%{Title} %{idx}"
-                    }
+                    },
+                    "ui:title": "Paikka %{idx}"
                 },
                 "mapOptions": {
                     "controls": {
@@ -2152,10 +2923,10 @@
                 "minHeight": 435,
                 "popupFields": [
                     {
-                        "mapper": "taxon"
+                        "field": "/units/[idx]/identifications/0/taxon"
                     },
                     {
-                        "field": "notes"
+                        "field": "/units/[idx]/notes"
                     }
                 ],
                 "propsToPassToInlineSchema": [
@@ -2168,7 +2939,8 @@
             "ui:settings": [
                 "/mapOptions/tileLayerName",
                 "/mapOptions/overlayNames",
-                "/mapOptions/tileLayerOpacity"
+                "/mapOptions/tileLayerOpacity",
+                "/mapOptions/tileLayers"
             ]
         },
         "secureLevel": {
@@ -2574,6 +3346,8 @@
                     "MY.substrateCompost": {},
                     "MY.substrateDeadAnimal": {},
                     "MY.substrateDeadFungus": {},
+                    "MY.substrateDeadLeaf": {},
+                    "MY.substrateDeadNeedle": {},
                     "MY.substrateDeadShoot": {},
                     "MY.substrateDeadWood": {
                         "children": {
@@ -2695,7 +3469,9 @@
                     "MY.substrateDeadFungus",
                     "MY.substrateLivingAnimal",
                     "MY.substrateDeadAnimal",
-                    "MY.substrateRockSurface"
+                    "MY.substrateRockSurface",
+                    "MY.substrateDeadNeedle",
+                    "MY.substrateDeadLeaf"
                 ]
             }
         }
@@ -2712,8 +3488,10 @@
                         "message": "Alku on pakollinen jos loppu on ilmoitettu."
                     },
                     "datetime": {
+                        "earliest": "1000-01-01",
                         "latest": "now",
-                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                     },
                     "presence": {
                         "allowEmpty": false,
@@ -2726,8 +3504,10 @@
                         "message": "Aikav\u00e4lin alun %{value} pit\u00e4\u00e4 olla ennen loppua %{key}"
                     },
                     "datetime": {
+                        "earliest": "1000-01-01",
                         "latest": "now",
-                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                     }
                 },
                 "leg": {
@@ -2747,8 +3527,10 @@
                             "message": "Alku on pakollinen jos loppu on ilmoitettu."
                         },
                         "datetime": {
+                            "earliest": "1000-01-01",
                             "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                         }
                     },
                     "dateEnd": {
@@ -2757,18 +3539,26 @@
                             "message": "Aikav\u00e4lin alun %{value} pit\u00e4\u00e4 olla ennen loppua %{key}"
                         },
                         "datetime": {
+                            "earliest": "1000-01-01",
                             "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                         }
                     },
                     "geometry": {
                         "geometry": {
-                            "boundingBoxMaxHectares": 1000000,
+                            "boundingBoxMaxHectares": 5000000,
                             "includeGatheringUnits": true,
                             "maximumSize": 10,
                             "message": {
                                 "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
-                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
+                                "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
                             },
                             "requireShape": true
                         }
@@ -2776,12 +3566,6 @@
                     "units": {
                         "items": {
                             "properties": {
-                                "identifications": {
-                                    "presence": {
-                                        "allowEmpty": false,
-                                        "message": "@taxonValidation"
-                                    }
-                                },
                                 "unitGathering": {
                                     "properties": {
                                         "dateBegin": {
@@ -2790,8 +3574,10 @@
                                                 "message": "Alku on pakollinen jos loppu on ilmoitettu."
                                             },
                                             "datetime": {
+                                                "earliest": "1000-01-01",
                                                 "latest": "now",
-                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                                                "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                                             }
                                         },
                                         "dateEnd": {
@@ -2800,8 +3586,26 @@
                                                 "message": "Aikav\u00e4lin alun %{value} pit\u00e4\u00e4 olla ennen loppua %{key}"
                                             },
                                             "datetime": {
+                                                "earliest": "1000-01-01",
                                                 "latest": "now",
-                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                                                "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
+                                            }
+                                        },
+                                        "geometry": {
+                                            "geometry": {
+                                                "boundingBoxMaxHectares": 5000000,
+                                                "maximumSize": 10,
+                                                "message": {
+                                                    "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
+                                                    "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "missingGeometries": "T\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                                    "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
+                                                }
                                             }
                                         }
                                     }

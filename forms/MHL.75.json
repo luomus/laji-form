@@ -1,118 +1,92 @@
 {
+    "attributes": {
+        "id": "MHL.75"
+    },
+    "category": "MHL.categoryBirdMonitoringSchemes",
+    "collectionID": "HR.157",
+    "description": "T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan maalintujen pistelaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Lis\u00e4tietoa, laskentaohjeita ja tuloksia l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a  rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a>",
+    "excludeFromCopy": [
+        "$.gatheringEvent.dateBegin",
+        "$.gatheringEvent.timeStart",
+        "$.gatheringEvent.timeEnd",
+        "$.gatheringEvent.censusHinderedByEnviromentalFactors",
+        "$.gatheringEvent.taxonCensus",
+        "$.gatherings[*].units"
+    ],
+    "id": "MHL.75",
+    "language": "fi",
+    "logo": "https://cdn.laji.fi/images/logos/pistelaskenta.jpg",
+    "name": "Pistelaskenta",
+    "options": {
+        "adminLockable": true,
+        "cancelLabel": "Poistu tallentamatta",
+        "draftLabel": "Tallenna julkaisematta",
+        "hasAdmins": true,
+        "instructions": {
+            "en": "https://laji.fi/en/theme/pistelaskenta",
+            "fi": "https://laji.fi/theme/pistelaskenta",
+            "sv": "https://laji.fi/sv/theme/pistelaskenta"
+        },
+        "namedPlaceOptions": {
+            "chooseDescription": "Aloita valitsemalla reitti alta. Uuden reitin perustaminen: Ole ensin yhteydess\u00e4 Linnustonseurantaan <a href='mailto:linnustonseuranta@luomus.fi'>linnustonseuranta@luomus.fi</a>",
+            "copyLatestDocumentToNamedPlace": true,
+            "infoFields": [
+                "name",
+                "notes"
+            ],
+            "listColumns": [
+                "$.alternativeIDs[0]",
+                "$.name",
+                "$.prepopulatedDocument.gatheringEvent.dateBegin"
+            ],
+            "startWithMap": true,
+            "useAcceptedDocument": true,
+            "useLabel": "Ilmoita uusi laskenta t\u00e4lt\u00e4 reitilt\u00e4"
+        },
+        "periods": [
+            "04-15/07-15"
+        ],
+        "saveLabel": "Tallenna havainnot",
+        "useNamedPlaces": true,
+        "viewerType": "MHL.viewerTypeBirdPointCount",
+        "warnEditingOldDocument": true
+    },
     "schema": {
-        "type": "object",
         "properties": {
             "editors": {
-                "type": "array",
                 "items": {
                     "type": "string"
                 },
-                "title": "Muokkausoikeus"
-            },
-            "notes": {
-                "type": "string",
-                "title": "Huomautukset"
+                "title": "Muokkausoikeus",
+                "type": "array"
             },
             "gatheringEvent": {
-                "type": "object",
                 "properties": {
+                    "censusHinderedByEnviromentalFactors": {
+                        "title": "S\u00e4\u00e4olot (tms) haittasivat",
+                        "type": "boolean"
+                    },
+                    "dateBegin": {
+                        "title": "Laskentap\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
+                        "type": "string"
+                    },
                     "leg": {
-                        "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "title": "Laskijat"
+                        "title": "Laskijat",
+                        "type": "array"
                     },
                     "legPublic": {
-                        "type": "boolean",
+                        "default": true,
                         "title": "Laskijan nimi n\u00e4kyy tuloksissa julkisena",
-                        "default": true
-                    },
-                    "dateBegin": {
-                        "type": "string",
-                        "title": "Laskentap\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
-                        "excludeFromCopy": true
-                    },
-                    "timeStart": {
-                        "type": "string",
-                        "title": "Aloitusaika",
-                        "excludeFromCopy": true
-                    },
-                    "timeEnd": {
-                        "type": "string",
-                        "title": "Lopetusaika",
-                        "excludeFromCopy": true
+                        "type": "boolean"
                     },
                     "namedPlaceNotes": {
-                        "type": "string",
-                        "title": "Reitin kuvaus"
-                    },
-                    "censusHinderedByEnviromentalFactors": {
-                        "type": "boolean",
-                        "title": "S\u00e4\u00e4olot (tms) haittasivat",
-                        "excludeFromCopy": true
+                        "title": "Reitin kuvaus",
+                        "type": "string"
                     },
                     "taxonCensus": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "censusTaxonID": {
-                                    "type": "string",
-                                    "title": "Laskettu taksoni"
-                                },
-                                "censusTaxonSetID": {
-                                    "type": "string",
-                                    "enum": [
-                                        "",
-                                        "MX.taxonSetSykeButterflyCensusPapilionoidea",
-                                        "MX.taxonSetSykeButterflyCensusOther",
-                                        "MX.taxonSetWaterbirdWaterbirds",
-                                        "MX.taxonSetWaterbirdWaders",
-                                        "MX.taxonSetWaterbirdGulls",
-                                        "MX.taxonSetWaterbirdPasserines",
-                                        "MX.taxonSetWaterbirdAmphibia",
-                                        "MX.taxonSetSykeBumblebee",
-                                        "MVL.1201",
-                                        "MX.taxonSetSykeBumblebeeOther",
-                                        "MX.taxonSetBirdAtlasCommon"
-                                    ],
-                                    "enumNames": [
-                                        "",
-                                        "SYKEn p\u00e4iv\u00e4perhosseuranta: P\u00e4iv\u00e4perhoset",
-                                        "SYKEn p\u00e4iv\u00e4perhosseuranta: Muut suurperhoset",
-                                        "Vesilintulaskenta: Vesilinnut",
-                                        "Vesilintulaskenta: Kahlaajalinnut",
-                                        "Vesilintulaskenta: Lokkilinnut",
-                                        "Vesilintulaskenta: Varpuslinnut",
-                                        "Vesilintulaskenta: Sammakkoel\u00e4imet",
-                                        "SYKEn kimalaisseuranta",
-                                        "Kev\u00e4tseurantalajit",
-                                        "Syken kimalaistutkimus: Ylemm\u00e4t taksonit",
-                                        "Lintuatlas: yleiset linnut"
-                                    ],
-                                    "title": "Laskettu taksonijoukko"
-                                },
-                                "taxonCensusType": {
-                                    "type": "string",
-                                    "enum": [
-                                        "MY.taxonCensusTypeCounted",
-                                        "MY.taxonCensusTypeNotCounted"
-                                    ],
-                                    "enumNames": [
-                                        "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista",
-                                        "M\u00e4\u00e4ritetty kaikki lajit, yksil\u00f6m\u00e4\u00e4r\u00e4\u00e4 ei arvioitu"
-                                    ],
-                                    "title": "Laskennan kattavuus",
-                                    "default": ""
-                                }
-                            },
-                            "required": [
-                                "taxonCensusType"
-                            ]
-                        },
-                        "excludeFromCopy": true,
-                        "title": "",
                         "default": [
                             {
                                 "censusTaxonID": "MX.37612",
@@ -126,273 +100,944 @@
                                 "censusTaxonSetID": "MX.taxonSetWaterbirdGulls",
                                 "taxonCensusType": "MY.taxonCensusTypeNotCounted"
                             }
-                        ]
+                        ],
+                        "items": {
+                            "properties": {
+                                "censusTaxonID": {
+                                    "title": "Laskettu taksoni",
+                                    "type": "string"
+                                },
+                                "censusTaxonSetID": {
+                                    "oneOf": [
+                                        {
+                                            "const": "",
+                                            "title": ""
+                                        },
+                                        {
+                                            "const": "MX.taxonSetSykeButterflyCensusPapilionoidea",
+                                            "title": "SYKEn p\u00e4iv\u00e4perhosseuranta: P\u00e4iv\u00e4perhoset"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetSykeButterflyCensusOther",
+                                            "title": "SYKEn p\u00e4iv\u00e4perhosseuranta: Muut suurperhoset"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetWaterbirdWaterbirds",
+                                            "title": "Vesilintulaskenta: Vesilinnut"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetWaterbirdWaders",
+                                            "title": "Vesilintulaskenta: Kahlaajalinnut"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetWaterbirdGulls",
+                                            "title": "Vesilintulaskenta: Lokkilinnut"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetWaterbirdPasserines",
+                                            "title": "Vesilintulaskenta: Varpuslinnut"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetWaterbirdAmphibia",
+                                            "title": "Vesilintulaskenta: Sammakkoel\u00e4imet"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetSykeBumblebee",
+                                            "title": "SYKEn kimalaisseuranta"
+                                        },
+                                        {
+                                            "const": "MVL.1201",
+                                            "title": "Kev\u00e4tseurantalajit"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetSykeBumblebeeOther",
+                                            "title": "Syken kimalaistutkimus: Ylemm\u00e4t taksonit"
+                                        },
+                                        {
+                                            "const": "MX.taxonSetBirdAtlasCommon",
+                                            "title": "Lintuatlas: yleiset linnut"
+                                        }
+                                    ],
+                                    "title": "Laskettu taksonijoukko",
+                                    "type": "string"
+                                },
+                                "taxonCensusType": {
+                                    "default": "",
+                                    "oneOf": [
+                                        {
+                                            "const": "MY.taxonCensusTypeCounted",
+                                            "title": "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista"
+                                        },
+                                        {
+                                            "const": "MY.taxonCensusTypeNotCounted",
+                                            "title": "M\u00e4\u00e4ritetty kaikki lajit, yksil\u00f6m\u00e4\u00e4r\u00e4\u00e4 ei arvioitu"
+                                        }
+                                    ],
+                                    "title": "Laskennan kattavuus",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "taxonCensusType"
+                            ],
+                            "type": "object"
+                        },
+                        "title": "",
+                        "type": "array"
+                    },
+                    "timeEnd": {
+                        "title": "Lopetusaika",
+                        "type": "string"
+                    },
+                    "timeStart": {
+                        "title": "Aloitusaika",
+                        "type": "string"
                     }
                 },
                 "required": [
                     "censusHinderedByEnviromentalFactors"
                 ],
-                "title": ""
+                "title": "",
+                "type": "object"
             },
             "gatherings": {
-                "type": "array",
                 "items": {
-                    "type": "object",
                     "properties": {
-                        "geometry": {
-                            "type": "object",
-                            "properties": {},
-                            "title": "Koordinaatit"
-                        },
-                        "notes": {
-                            "type": "string",
-                            "title": "Huomautukset"
-                        },
                         "gatheringFact": {
-                            "type": "object",
                             "properties": {
                                 "pointCountHabitat": {
-                                    "type": "string",
-                                    "enum": [
-                                        "",
-                                        "MY.pointCountHabitat0",
-                                        "MY.pointCountHabitat1",
-                                        "MY.pointCountHabitat2",
-                                        "MY.pointCountHabitat3",
-                                        "MY.pointCountHabitat4",
-                                        "MY.pointCountHabitat5",
-                                        "MY.pointCountHabitat6",
-                                        "MY.pointCountHabitat7",
-                                        "MY.pointCountHabitat8",
-                                        "MY.pointCountHabitat9",
-                                        "MY.pointCountHabitat10",
-                                        "MY.pointCountHabitat11",
-                                        "MY.pointCountHabitat12",
-                                        "MY.pointCountHabitat13",
-                                        "MY.pointCountHabitat14",
-                                        "MY.pointCountHabitat15",
-                                        "MY.pointCountHabitat16",
-                                        "MY.pointCountHabitat17"
+                                    "oneOf": [
+                                        {
+                                            "const": "",
+                                            "title": ""
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat0",
+                                            "title": "Tuntematon (0)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat1",
+                                            "title": "Kuusimets\u00e4 (1)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat2",
+                                            "title": "M\u00e4ntymets\u00e4 (2)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat3",
+                                            "title": "Lehtimets\u00e4 (3)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat4",
+                                            "title": "Sekamets\u00e4 (4)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat5",
+                                            "title": "Lehtipensaikko (5)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat6",
+                                            "title": "Havupuutaimikko (6)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat7",
+                                            "title": "Hakkuuaukea (7)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat8",
+                                            "title": "R\u00e4me (8)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat9",
+                                            "title": "Avosuo (9)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat10",
+                                            "title": "Rantaniitty (10)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat11",
+                                            "title": "Pelto (11)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat12",
+                                            "title": "Maaseutuasutus (12)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat13",
+                                            "title": "Puisto (13)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat14",
+                                            "title": "Kaupunkiasutus (14)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat15",
+                                            "title": "Tunturikoivikko (15)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat16",
+                                            "title": "Tunturipaljakka (16)"
+                                        },
+                                        {
+                                            "const": "MY.pointCountHabitat17",
+                                            "title": "Muu (17)"
+                                        }
                                     ],
-                                    "enumNames": [
-                                        "",
-                                        "Tuntematon (0)",
-                                        "Kuusimets\u00e4 (1)",
-                                        "M\u00e4ntymets\u00e4 (2)",
-                                        "Lehtimets\u00e4 (3)",
-                                        "Sekamets\u00e4 (4)",
-                                        "Lehtipensaikko (5)",
-                                        "Havupuutaimikko (6)",
-                                        "Hakkuuaukea (7)",
-                                        "R\u00e4me (8)",
-                                        "Avosuo (9)",
-                                        "Rantaniitty (10)",
-                                        "Pelto (11)",
-                                        "Maaseutuasutus (12)",
-                                        "Puisto (13)",
-                                        "Kaupunkiasutus (14)",
-                                        "Tunturikoivikko (15)",
-                                        "Tunturipaljakka (16)",
-                                        "Muu (17)"
-                                    ],
-                                    "title": "Biotooppi"
+                                    "title": "Biotooppi",
+                                    "type": "string"
                                 }
                             },
                             "required": [
                                 "pointCountHabitat"
                             ],
-                            "title": ""
+                            "title": "",
+                            "type": "object"
+                        },
+                        "geometry": {
+                            "properties": {},
+                            "title": "Koordinaatit",
+                            "type": "object"
+                        },
+                        "notes": {
+                            "title": "Huomautukset",
+                            "type": "string"
                         },
                         "units": {
-                            "type": "array",
                             "items": {
-                                "type": "object",
                                 "properties": {
-                                    "recordBasis": {
-                                        "type": "string",
-                                        "enum": [
-                                            "",
-                                            "MY.recordBasisPreservedSpecimen",
-                                            "MY.recordBasisHumanObservation",
-                                            "MY.recordBasisHumanObservationSeen",
-                                            "MY.recordBasisHumanObservationHeard",
-                                            "MY.recordBasisHumanObservationHandled",
-                                            "MY.recordBasisHumanObservationPhoto",
-                                            "MY.recordBasisHumanObservationAudio",
-                                            "MY.recordBasisHumanObservationVideo",
-                                            "MY.recordBasisHumanObservationIndirect",
-                                            "MY.recordBasisMachineObservation",
-                                            "MY.recordBasisMachineObservationVideo",
-                                            "MY.recordBasisMachineObservationAudio",
-                                            "MY.recordBasisMachineObservationGeologger",
-                                            "MY.recordBasisMachineObservationSatelliteTransmitter",
-                                            "MY.recordBasisFossilSpecimen",
-                                            "MY.recordBasisSubfossilSpecimen",
-                                            "MY.recordBasisLivingSpecimen",
-                                            "MY.recordBasisMicrobialSpecimen",
-                                            "MY.recordBasisLiterature",
-                                            "MY.recordBasisMaterialSample",
-                                            "MY.recordBasisSubfossilSpecimenAmberInclusion"
+                                    "atlasCode": {
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum1",
+                                                "title": "1 Ep\u00e4todenn\u00e4k\u00f6inen pesint\u00e4: havaittu lajin yksil\u00f6, havainto ei viittaa pesint\u00e4\u00e4n."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum2",
+                                                "title": "2 Mahdollinen pesint\u00e4: yksitt\u00e4inen lintu kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum3",
+                                                "title": "3 Mahdollinen pesint\u00e4: pari kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum4",
+                                                "title": "4 Todenn\u00e4k\u00f6inen pesint\u00e4: koiras reviirill\u00e4 (esim. laulaa) eri p\u00e4ivin\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum5",
+                                                "title": "5 Todenn\u00e4k\u00f6inen pesint\u00e4: naaras tai pari reviirill\u00e4 eri p\u00e4ivin\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum6",
+                                                "title": "6 Todenn\u00e4k\u00f6inen pesint\u00e4: linnun tai parin havainto viittaa vahvasti pesint\u00e4\u00e4n."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum61",
+                                                "title": "61 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari k\u00e4y usein todenn\u00e4k\u00f6isell\u00e4 pes\u00e4paikalla."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum62",
+                                                "title": "62 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari rakentaa pes\u00e4\u00e4 tai vie pes\u00e4materiaalia."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum63",
+                                                "title": "63 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari varoittelee ehk\u00e4 pes\u00e4st\u00e4 tai poikueesta."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum64",
+                                                "title": "64 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari houkuttelee pois ehk\u00e4 pes\u00e4lt\u00e4 / poikueelta."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum65",
+                                                "title": "65 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari hy\u00f6kk\u00e4ilee, l\u00e4hell\u00e4 ehk\u00e4 pes\u00e4 / poikue."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum66",
+                                                "title": "66 Todenn\u00e4k\u00f6inen pesint\u00e4; N\u00e4hty pes\u00e4, jossa samanvuotista rakennusmateriaalia tai ravintoj\u00e4tett\u00e4; ei kuitenkaan varmaa todistetta munista tai poikasista"
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum7",
+                                                "title": "7 Varma pesint\u00e4: havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum71",
+                                                "title": "71 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 saman vuoden munia, kuoria, j\u00e4\u00e4nteit\u00e4. Voi olla ep\u00e4onnistunut."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum72",
+                                                "title": "72 Varma pesint\u00e4: k\u00e4y pes\u00e4ll\u00e4 pesint\u00e4\u00e4n viittaavasti. Munia / poikasia ei havaita (kolo tms.)."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum73",
+                                                "title": "73 Varma pesint\u00e4: juuri lentokykyiset poikaset tai untuvikot oletettavasti ruudulta."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum74",
+                                                "title": "74 Varma pesint\u00e4: emo kantaa ruokaa tai poikasten ulosteita, pesint\u00e4 oletettavasti ruudulla."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum75",
+                                                "title": "75 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: n\u00e4hty pes\u00e4ss\u00e4 hautova emo"
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum8",
+                                                "title": "8 Varma pesint\u00e4: havaittu suora todiste varmasta pesinn\u00e4st\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum81",
+                                                "title": "81 Varma pesint\u00e4: kuultu poikasten \u00e4\u00e4ntely\u00e4 pes\u00e4ss\u00e4 (kolo / pes\u00e4 korkealla)."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum82",
+                                                "title": "82 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 munia tai poikasia."
+                                            }
                                         ],
-                                        "enumNames": [
-                                            "",
-                                            "N\u00e4yte",
-                                            "Havaittu",
-                                            "N\u00e4hty",
-                                            "Kuultu",
-                                            "K\u00e4sitelty (otettu kiinni, ei n\u00e4ytett\u00e4)",
-                                            "Valokuvattu",
-                                            "\u00c4\u00e4nitetty",
-                                            "Videoitu",
-                                            "Ep\u00e4suora havainto (j\u00e4ljet, ulosteet, yms)",
-                                            "Laitteen tekem\u00e4 havainto",
-                                            "Laitteen tekem\u00e4 videotallenne",
-                                            "Laitteen tekem\u00e4 \u00e4\u00e4nitallenne",
-                                            "Geopaikannin",
-                                            "Satelliittipaikannus",
-                                            "Fossiili",
-                                            "Subfossiili",
-                                            "El\u00e4v\u00e4 n\u00e4yte",
-                                            "Mikrobin\u00e4yte",
-                                            "Kirjallisuustieto",
-                                            "Materiaalin\u00e4yte",
-                                            "Meripihkafossiili"
-                                        ],
-                                        "title": "Havainnointitapa",
-                                        "default": "MY.recordBasisHumanObservation"
+                                        "title": "Pesim\u00e4varmuusindeksi",
+                                        "type": "string"
                                     },
                                     "identifications": {
-                                        "type": "array",
                                         "items": {
-                                            "type": "object",
                                             "properties": {
                                                 "taxonID": {
-                                                    "type": "string",
-                                                    "title": "Taksonin vaihtoehtoisia tunnisteita"
+                                                    "title": "Taksonin vaihtoehtoisia tunnisteita",
+                                                    "type": "string"
                                                 },
                                                 "taxonVerbatim": {
-                                                    "type": "string",
-                                                    "title": "Laji"
+                                                    "title": "Laji",
+                                                    "type": "string"
                                                 }
                                             },
-                                            "required": []
+                                            "required": [],
+                                            "type": "object"
                                         },
-                                        "minItems": 1,
                                         "maxItems": 1,
-                                        "title": ""
+                                        "minItems": 1,
+                                        "title": "",
+                                        "type": "array"
+                                    },
+                                    "recordBasis": {
+                                        "default": "MY.recordBasisHumanObservation",
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.recordBasisPreservedSpecimen",
+                                                "title": "N\u00e4yte"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservation",
+                                                "title": "Havaittu"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationSeen",
+                                                "title": "N\u00e4hty"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationHeard",
+                                                "title": "Kuultu"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationHandled",
+                                                "title": "K\u00e4sitelty (otettu kiinni, ei n\u00e4ytett\u00e4)"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationPhoto",
+                                                "title": "Valokuvattu"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationAudio",
+                                                "title": "\u00c4\u00e4nitetty"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationVideo",
+                                                "title": "Videoitu"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisHumanObservationIndirect",
+                                                "title": "Ep\u00e4suora havainto (j\u00e4ljet, ulosteet, yms)"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMachineObservation",
+                                                "title": "Laitteen tekem\u00e4 havainto"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMachineObservationVideo",
+                                                "title": "Laitteen tekem\u00e4 videotallenne"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMachineObservationAudio",
+                                                "title": "Laitteen tekem\u00e4 \u00e4\u00e4nitallenne"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMachineObservationGeologger",
+                                                "title": "Geopaikannin"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMachineObservationSatelliteTransmitter",
+                                                "title": "Satelliittipaikannus"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisFossilSpecimen",
+                                                "title": "Fossiili"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisSubfossilSpecimen",
+                                                "title": "Subfossiili"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisLivingSpecimen",
+                                                "title": "El\u00e4v\u00e4 n\u00e4yte"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMicrobialSpecimen",
+                                                "title": "Mikrobin\u00e4yte"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisLiterature",
+                                                "title": "Kirjallisuustieto"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisMaterialSample",
+                                                "title": "Materiaalin\u00e4yte"
+                                            },
+                                            {
+                                                "const": "MY.recordBasisSubfossilSpecimenAmberInclusion",
+                                                "title": "Meripihkafossiili"
+                                            }
+                                        ],
+                                        "title": "Havainnointitapa",
+                                        "type": "string"
                                     },
                                     "unitFact": {
-                                        "type": "object",
                                         "properties": {
                                             "pairCountInner": {
-                                                "type": "integer",
                                                 "minimum": 0,
-                                                "title": "Pari sis\u00e4ll\u00e4"
+                                                "title": "Pari sis\u00e4ll\u00e4",
+                                                "type": "integer"
                                             },
                                             "pairCountOuter": {
-                                                "type": "integer",
                                                 "minimum": 0,
-                                                "title": "Pari ulkona"
+                                                "title": "Pari ulkona",
+                                                "type": "integer"
                                             },
                                             "pointCountFlock": {
-                                                "type": "string",
-                                                "title": "Parvien koot"
+                                                "title": "Parvien koot",
+                                                "type": "string"
                                             }
                                         },
                                         "required": [],
-                                        "title": ""
-                                    },
-                                    "atlasCode": {
-                                        "type": "string",
-                                        "enum": [
-                                            "",
-                                            "MY.atlasCodeEnum1",
-                                            "MY.atlasCodeEnum2",
-                                            "MY.atlasCodeEnum3",
-                                            "MY.atlasCodeEnum4",
-                                            "MY.atlasCodeEnum5",
-                                            "MY.atlasCodeEnum6",
-                                            "MY.atlasCodeEnum61",
-                                            "MY.atlasCodeEnum62",
-                                            "MY.atlasCodeEnum63",
-                                            "MY.atlasCodeEnum64",
-                                            "MY.atlasCodeEnum65",
-                                            "MY.atlasCodeEnum66",
-                                            "MY.atlasCodeEnum7",
-                                            "MY.atlasCodeEnum71",
-                                            "MY.atlasCodeEnum72",
-                                            "MY.atlasCodeEnum73",
-                                            "MY.atlasCodeEnum74",
-                                            "MY.atlasCodeEnum75",
-                                            "MY.atlasCodeEnum8",
-                                            "MY.atlasCodeEnum81",
-                                            "MY.atlasCodeEnum82"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "1 Ep\u00e4todenn\u00e4k\u00f6inen pesint\u00e4: havaittu lajin yksil\u00f6, havainto ei viittaa pesint\u00e4\u00e4n.",
-                                            "2 Mahdollinen pesint\u00e4: yksitt\u00e4inen lintu kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4.",
-                                            "3 Mahdollinen pesint\u00e4: pari kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4.",
-                                            "4 Todenn\u00e4k\u00f6inen pesint\u00e4: koiras reviirill\u00e4 (esim. laulaa) eri p\u00e4ivin\u00e4.",
-                                            "5 Todenn\u00e4k\u00f6inen pesint\u00e4: naaras tai pari reviirill\u00e4 eri p\u00e4ivin\u00e4.",
-                                            "6 Todenn\u00e4k\u00f6inen pesint\u00e4: linnun tai parin havainto viittaa vahvasti pesint\u00e4\u00e4n.",
-                                            "61 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari k\u00e4y usein todenn\u00e4k\u00f6isell\u00e4 pes\u00e4paikalla.",
-                                            "62 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari rakentaa pes\u00e4\u00e4 tai vie pes\u00e4materiaalia.",
-                                            "63 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari varoittelee ehk\u00e4 pes\u00e4st\u00e4 tai poikueesta.",
-                                            "64 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari houkuttelee pois ehk\u00e4 pes\u00e4lt\u00e4 / poikueelta.",
-                                            "65 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari hy\u00f6kk\u00e4ilee, l\u00e4hell\u00e4 ehk\u00e4 pes\u00e4 / poikue.",
-                                            "66 Todenn\u00e4k\u00f6inen pesint\u00e4; N\u00e4hty pes\u00e4, jossa samanvuotista rakennusmateriaalia tai ravintoj\u00e4tett\u00e4; ei kuitenkaan varmaa todistetta munista tai poikasista",
-                                            "7 Varma pesint\u00e4: havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4.",
-                                            "71 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 saman vuoden munia, kuoria, j\u00e4\u00e4nteit\u00e4. Voi olla ep\u00e4onnistunut.",
-                                            "72 Varma pesint\u00e4: k\u00e4y pes\u00e4ll\u00e4 pesint\u00e4\u00e4n viittaavasti. Munia / poikasia ei havaita (kolo tms.).",
-                                            "73 Varma pesint\u00e4: juuri lentokykyiset poikaset tai untuvikot oletettavasti ruudulta.",
-                                            "74 Varma pesint\u00e4: emo kantaa ruokaa tai poikasten ulosteita, pesint\u00e4 oletettavasti ruudulla.",
-                                            "75 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: n\u00e4hty pes\u00e4ss\u00e4 hautova emo",
-                                            "8 Varma pesint\u00e4: havaittu suora todiste varmasta pesinn\u00e4st\u00e4.",
-                                            "81 Varma pesint\u00e4: kuultu poikasten \u00e4\u00e4ntely\u00e4 pes\u00e4ss\u00e4 (kolo / pes\u00e4 korkealla).",
-                                            "82 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 munia tai poikasia."
-                                        ],
-                                        "title": "Pesim\u00e4varmuusindeksi"
+                                        "title": "",
+                                        "type": "object"
                                     }
                                 },
-                                "required": []
+                                "required": [],
+                                "type": "object"
                             },
-                            "excludeFromCopy": true,
-                            "uniqueItems": false,
-                            "title": "Havainnot"
+                            "title": "Havainnot",
+                            "type": "array",
+                            "uniqueItems": false
                         }
                     },
-                    "required": []
+                    "required": [],
+                    "type": "object"
                 },
-                "title": ""
+                "title": "",
+                "type": "array"
+            },
+            "notes": {
+                "title": "Huomautukset",
+                "type": "string"
             }
         },
         "required": [
             "gatherings"
-        ]
+        ],
+        "type": "object"
     },
+    "supportedLanguage": [
+        "fi"
+    ],
+    "title": "Pistelaskenta",
     "uiSchema": {
-        "ui:shortcuts": {
-            "alt": {
-                "fn": "help",
-                "delay": 1
+        "editors": {
+            "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
+            "ui:options": {
+                "allowUndefined": false
+            }
+        },
+        "gatheringEvent": {
+            "censusHinderedByEnvironmentalFactors": {
+                "ui:help": "Valitse <i>Kyll\u00e4</i>, jos s\u00e4\u00e4 jollain tavoin haittasi laskentaa. Kirjoita huomautuksiin miten s\u00e4\u00e4 haittasi"
             },
+            "classNames": "well well-sm",
+            "dateBegin": {
+                "ui:help": "Kirjoita laskentap\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 tai valitse p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 kalenterista tai pikavalikolla",
+                "ui:options": {
+                    "showButtons": true
+                },
+                "ui:widget": "DateWidget"
+            },
+            "leg": {
+                "ui:help": "Laskijan nimi, muodossa: etunimi sukunimi",
+                "ui:options": {
+                    "allowNonsuggestedValue": true,
+                    "autosuggestField": "friends",
+                    "preventTypingPattern": "^MA\\.\\d+$",
+                    "suggestionReceive": "key"
+                },
+                "ui:widget": "AutosuggestWidget"
+            },
+            "legPublic": {
+                "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4.",
+                "ui:options": {
+                    "allowUndefined": false
+                }
+            },
+            "namedPlaceNotes": {
+                "ui:help": "Kirjaa t\u00e4h\u00e4n pysyvi\u00e4 reittiin liittyvi\u00e4 seikkoja",
+                "ui:options": {
+                    "rows": 3
+                },
+                "ui:widget": "textarea"
+            },
+            "notes": {
+                "ui:options": {
+                    "rows": 2
+                },
+                "ui:widget": "textarea"
+            },
+            "taxonCensus": {
+                "ui:field": "MultiAnyToBooleanField",
+                "ui:options": {
+                    "groups": [
+                        {
+                            "allowUndefined": false,
+                            "falseValue": {
+                                "censusTaxonID": "MX.37612",
+                                "taxonCensusType": "MY.taxonCensusTypeNotCounted"
+                            },
+                            "label": "Kaikki havaitut nis\u00e4kk\u00e4\u00e4t kirjattu",
+                            "trueValue": {
+                                "censusTaxonID": "MX.37612",
+                                "taxonCensusType": "MY.taxonCensusTypeCounted"
+                            },
+                            "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n nis\u00e4k\u00e4st\u00e4, mutta kiinnitit n\u00e4iden havainnointiin kuitenkin huomiota"
+                        },
+                        {
+                            "allowUndefined": false,
+                            "falseValue": {
+                                "censusTaxonSetID": "MX.taxonSetWaterbirdWaterbirds",
+                                "taxonCensusType": "MY.taxonCensusTypeNotCounted"
+                            },
+                            "label": "Kaikki havaitut vesilinnut kirjattu",
+                            "trueValue": {
+                                "censusTaxonSetID": "MX.taxonSetWaterbirdWaterbirds",
+                                "taxonCensusType": "MY.taxonCensusTypeCounted"
+                            },
+                            "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n vesilintua, mutta kiinnitit n\u00e4iden havainnointiin kuitenkin huomiota"
+                        },
+                        {
+                            "allowUndefined": false,
+                            "falseValue": {
+                                "censusTaxonSetID": "MX.taxonSetWaterbirdGulls",
+                                "taxonCensusType": "MY.taxonCensusTypeNotCounted"
+                            },
+                            "label": "Kaikki havaitut lokkilinnut kirjattu",
+                            "trueValue": {
+                                "censusTaxonSetID": "MX.taxonSetWaterbirdGulls",
+                                "taxonCensusType": "MY.taxonCensusTypeCounted"
+                            },
+                            "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n lokkilintua, mutta kiinnitit n\u00e4iden havainnointiin kuitenkin huomiota"
+                        }
+                    ]
+                }
+            },
+            "timeEnd": {
+                "ui:options": {
+                    "showTimeList": false
+                },
+                "ui:widget": "TimeWidget"
+            },
+            "timeStart": {
+                "ui:help": "Kirjoita laskennan aloituksen ja lopetuksen kellonajat",
+                "ui:options": {
+                    "showTimeList": false
+                },
+                "ui:widget": "TimeWidget"
+            },
+            "ui:field": "NestField",
+            "ui:options": {
+                "nests": {
+                    "eventTime": {
+                        "fields": [
+                            "dateBegin",
+                            "timeStart",
+                            "timeEnd"
+                        ],
+                        "rootUiSchema": {
+                            "ui:grid": {
+                                "lg": {
+                                    "dateBegin": 3,
+                                    "timeEnd": 2,
+                                    "timeStart": 2
+                                },
+                                "md": {
+                                    "dateBegin": 4,
+                                    "timeEnd": 2,
+                                    "timeStart": 2
+                                },
+                                "rows": [
+                                    [
+                                        "dateBegin",
+                                        "timeStart",
+                                        "timeEnd"
+                                    ]
+                                ],
+                                "sm": {
+                                    "dateBegin": 5,
+                                    "timeEnd": 3,
+                                    "timeStart": 3
+                                },
+                                "xs": 12
+                            }
+                        },
+                        "title": ""
+                    },
+                    "legEditor": {
+                        "fields": [
+                            "leg",
+                            "editors"
+                        ],
+                        "rootUiSchema": {
+                            "ui:field": "NestField",
+                            "ui:options": {
+                                "nests": {
+                                    "_legEditor": {
+                                        "fields": [
+                                            "leg",
+                                            "editors"
+                                        ],
+                                        "rootUiSchema": {
+                                            "items": {
+                                                "ui:field": "DependentDisableField",
+                                                "ui:functions": {
+                                                    "ui:field": "ContextInjectionField",
+                                                    "ui:options": {
+                                                        "injections": {
+                                                            "/ui:options/rules/0/regexp": "^%{/creator}$"
+                                                        }
+                                                    }
+                                                },
+                                                "ui:options": {
+                                                    "rules": [
+                                                        {
+                                                            "disableDefiner": "leg",
+                                                            "disableField": "editors",
+                                                            "disabledValueToDisplay": true,
+                                                            "inlineHelp": "Sinulla t\u00e4ytyy olla muokkausoikeus.",
+                                                            "regexp": "creator is injected here"
+                                                        },
+                                                        {
+                                                            "disableDefiner": "leg",
+                                                            "disableField": "editors",
+                                                            "regexp": "^((?!(MA\\.\\d)).)*$"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "ui:field": "TableField",
+                                            "ui:functions": [
+                                                {
+                                                    "ui:field": "DependentBooleanField",
+                                                    "ui:options": {
+                                                        "booleanDefiner": "leg",
+                                                        "booleanField": "editors"
+                                                    }
+                                                },
+                                                {
+                                                    "ui:field": "ArrayCombinerField"
+                                                }
+                                            ],
+                                            "ui:options": {
+                                                "buttons": [
+                                                    {
+                                                        "fn": "add",
+                                                        "label": "Lis\u00e4\u00e4 laskija"
+                                                    }
+                                                ],
+                                                "specialRules": "legEditors",
+                                                "ui:buttonsDesktopLayout": true,
+                                                "ui:deleteHelp": "Poista laskijan nimi"
+                                            }
+                                        },
+                                        "title": ""
+                                    },
+                                    "legEditorSizeFixer": {
+                                        "fields": [
+                                            "_legEditor"
+                                        ],
+                                        "rootUiSchema": {
+                                            "ui:grid": {
+                                                "lg": 6,
+                                                "md": 6,
+                                                "sm": 9,
+                                                "xs": 12
+                                            }
+                                        },
+                                        "title": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ui:order": [
+                "*",
+                "legPublic",
+                "eventTime",
+                "censusHinderedByEnviromentalFactors",
+                "taxonCensus",
+                "namedPlaceNotes",
+                "notes"
+            ]
+        },
+        "gatherings": {
+            "items": {
+                "gatheringFact": {
+                    "pointCountHabitat": {
+                        "ui:help": "Valitse valikosta pisteen 50 metrin s\u00e4teen sis\u00e4ll\u00e4 olevaa ymp\u00e4rist\u00f6\u00e4 parhaiten kuvaava biotooppi"
+                    }
+                },
+                "geometry": {
+                    "ui:field": "HiddenField"
+                },
+                "notes": {
+                    "ui:help": "Kirjoita t\u00e4h\u00e4n biotoopin muutoksen syy tai muita pisteeseen liittyvi\u00e4 huomioita"
+                },
+                "ui:grid": {
+                    "lg": {
+                        "gatheringFact": 6,
+                        "notes": 6,
+                        "units": 12
+                    },
+                    "md": {
+                        "gatheringFact": 6,
+                        "notes": 6,
+                        "units": 12
+                    },
+                    "sm": {
+                        "gatheringFact": 6,
+                        "notes": 6,
+                        "units": 12
+                    },
+                    "xs": {
+                        "gatheringFact": 12,
+                        "notes": 12,
+                        "units": 12
+                    }
+                },
+                "ui:order": [
+                    "*",
+                    "gatheringFact",
+                    "notes",
+                    "units"
+                ],
+                "units": {
+                    "items": {
+                        "identifications": {
+                            "items": {
+                                "taxonID": {
+                                    "ui:widget": "HiddenWidget"
+                                },
+                                "taxonVerbatim": {
+                                    "ui:help": "<p>Lis\u00e4\u00e4 pisteen parihavainnot laji kerrallaan. Kirjaa kaikki yhden lajin havainnot samalta pisteelt\u00e4 yhdelle riville. Voit ilmoittaa havaintoja nis\u00e4kk\u00e4ist\u00e4 sek\u00e4 vesi- ja lokkilinnuista vain, jotka olet aikaisemmin valinnut kirjanneesi kaikki havainnot n\u00e4ist\u00e4 lajiryhmist\u00e4.  </p> <p>Kirjoita vasemmanpuolimmaiseen sarakkeeseen lajin nimi. J\u00e4rjestelm\u00e4ss\u00e4 on automaattinen nimentunnistin eli jos esimerkiksi aloitat kirjoittamaan \u201dherne\u2026\u201d, niin j\u00e4rjestelm\u00e4 tarjoaa hernekerttu-vaihtoehtoa. Valitse oikea laji. Mik\u00e4li lajinimisarakkeessa on oikeassa reunassa kolmio, j\u00e4rjestelm\u00e4 ei ole tunnistanut lajinime\u00e4 ja havaintoer\u00e4\u00e4 ei voi tallentaa. Vastaavasti vihre\u00e4 V-merkki tarkoittaa, ett\u00e4 lajinimi on tunnistettu j\u00e4rjestelm\u00e4n puolesta.</p>"
+                                }
+                            }
+                        },
+                        "recordBasis": {
+                            "ui:widget": "HiddenWidget"
+                        },
+                        "ui:field": "AutosuggestField",
+                        "ui:grid": {
+                            "lg": 3,
+                            "md": 3,
+                            "sm": 4,
+                            "xs": 12
+                        },
+                        "ui:options": {
+                            "allowNonsuggestedValue": false,
+                            "autosuggestField": "taxon",
+                            "query": {
+                                "informalTaxonGroup": "MVL.1,MVL.2",
+                                "onlyFinnish": true
+                            },
+                            "suggestionInputField": "identifications_0_taxonVerbatim",
+                            "suggestionReceivers": {
+                                "identifications_0_taxonID": "key",
+                                "identifications_0_taxonVerbatim": "value"
+                            },
+                            "suggestionValueField": "identifications_0_taxonID"
+                        },
+                        "ui:order": [
+                            "identifications",
+                            "*",
+                            "atlasCode"
+                        ],
+                        "unitFact": {
+                            "pairCountInner": {
+                                "ui:help": "Merkitse 50 m s\u00e4teen sis\u00e4puolella havaittu parim\u00e4\u00e4r\u00e4 lajille"
+                            },
+                            "pairCountOuter": {
+                                "ui:help": "Merkitse 50 m s\u00e4teen ulkopuolella ja ylilent\u00e4vin\u00e4 havaittu parim\u00e4\u00e4r\u00e4 lajille"
+                            },
+                            "pointCountFlock": {
+                                "ui:help": "Parvissa havaittujen yksil\u00f6iden m\u00e4\u00e4r\u00e4t. Erottele parvet toisistaan pilkulla, esimerkiksi 9,15,3. Merkitse pesiviksi pareiksi tulkittujen parvien parim\u00e4\u00e4r\u00e4t my\u00f6s Pari sis\u00e4ll\u00e4 tai Pari ulkona -kentt\u00e4\u00e4n.",
+                                "ui:helpPlacement": "left"
+                            }
+                        }
+                    },
+                    "ui:childFunctions": {
+                        "ui:field": "FlatField",
+                        "ui:options": {
+                            "fields": [
+                                "identifications",
+                                "unitFact"
+                            ]
+                        }
+                    },
+                    "ui:field": "TableField"
+                }
+            },
+            "ui:field": "SingleActiveArrayField",
+            "ui:functions": {
+                "ui:field": "MapArrayField",
+                "ui:options": {
+                    "activeIdx": 0,
+                    "geometryField": "geometry",
+                    "help": "<p>Karttaty\u00f6kalusta l\u00f6ytyy useita toimintoja. Vasemmasta yl\u00e4kulmasta kolmen p\u00e4\u00e4llekk\u00e4isen arkin symbolin kohdalta voit valita erilaisia karttapohjia. Oletuksena on mm. karttapaikasta tuttu maastokartta. Ortokuva \u2013vaihtoehto antaa ilmakuvan kohteesta. Karttapohjavalikon alapuolella olevalla \u201dSuurennuslasi\u201d \u2013ty\u00f6kalulla voit etsi\u00e4 kohdetta t\u00e4m\u00e4n nimen perusteella. Plus- ja miinus-merkeill\u00e4 voit l\u00e4hent\u00e4\u00e4 tai loitontaa karttakuvaa (zoomaus sis\u00e4\u00e4n tai ulos).  </p> <p>Kartan oikeasta yl\u00e4kulmasta l\u00f6yd\u00e4t kolme erilaista piirtoty\u00f6kalua. N\u00e4ill\u00e4 voit piirt\u00e4\u00e4 kartalle i) laskentapisteen, ii) lis\u00e4t\u00e4 laskentapisteen koordinaattien perusteella tai iii) tyhjent\u00e4\u00e4 kartan merkinn\u00f6ist\u00e4.  </p> <p>\u201dLis\u00e4\u00e4 nasta\u201d -ty\u00f6kalulla voit lis\u00e4t\u00e4 laskentapisteen kartalle. Voit my\u00f6s siirt\u00e4\u00e4 karttapistett\u00e4 klikkaamalla sit\u00e4 hiirell\u00e4 kahdesti tai painamalla sit\u00e4 hiiren vasemmalla n\u00e4pp\u00e4imell\u00e4 ja valitse \u201dMuokkaa kuvio\u201d, jolloin sen ymp\u00e4rille muodostuu katkoviivakehikko. T\u00e4ll\u00f6in voit siirt\u00e4\u00e4 pisteen haluamaasi paikkaan valitsemalla kohde hiirell\u00e4 ja pit\u00e4m\u00e4ll\u00e4 hiiren n\u00e4pp\u00e4in pohjassa siihen asti, kun olet siirt\u00e4nyt kohteen haluamaasi paikkaan.  </p> <p>\u201dTyhjenn\u00e4 kartta\u201d \u2013ty\u00f6kalu on k\u00e4tev\u00e4 tapa poistaa kartan aikaisemmat merkinn\u00e4t esimerkiksi havainnointiruutu, jos pistereitin aikaisemmat laskentapaikat eiv\u00e4t ole olleet j\u00e4rjestelm\u00e4ss\u00e4.</p>",
+                    "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
+                    "idToScrollAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}__header",
+                    "mapOptions": {
+                        "controls": {
+                            "draw": {
+                                "clear": true,
+                                "redo": false,
+                                "undo": false
+                            },
+                            "location": false
+                        },
+                        "draw": {
+                            "circle": false,
+                            "marker": true,
+                            "polygon": false,
+                            "polyline": false,
+                            "rectangle": false,
+                            "single": true
+                        },
+                        "tileLayerName": "maastokartta",
+                        "tileLayerOpacity": 0.5
+                    },
+                    "mapSizes": {
+                        "lg": 4,
+                        "md": 4,
+                        "sm": 6,
+                        "xs": 6
+                    },
+                    "minHeight": 500
+                },
+                "ui:settings": [
+                    "/mapOptions/tileLayerName",
+                    "/mapOptions/overlayNames",
+                    "/mapOptions/tileLayerOpacity",
+                    "/mapOptions/tileLayers"
+                ]
+            },
+            "ui:options": {
+                "affixed": true,
+                "canAdd": false,
+                "headerClassName": "darker-bottom-border",
+                "removable": false,
+                "renderer": "accordion"
+            },
+            "ui:title": "Piste %{idx}"
+        },
+        "notes": {
+            "ui:help": "T\u00e4h\u00e4n voit lis\u00e4t\u00e4 huomautuksia kyseisest\u00e4 laskentakerrasta, esimerkiksi s\u00e4\u00e4st\u00e4",
+            "ui:options": {
+                "rows": 3
+            },
+            "ui:widget": "textarea"
+        },
+        "ui:annotations": {
+            "add": {
+                "type": "MAN.typeOpinion"
+            },
+            "adminOnly": true,
+            "buttonsPath": "/gatheringEvent",
+            "container": "modal",
+            "formId": "MHL.21"
+        },
+        "ui:field": "InjectField",
+        "ui:options": {
+            "injections": {
+                "fields": [
+                    "editors",
+                    "notes"
+                ],
+                "target": "gatheringEvent"
+            }
+        },
+        "ui:order": [
+            "*",
+            "gatheringEvent",
+            "gatherings"
+        ],
+        "ui:shortcuts": {
             "Enter": {
                 "fn": "navigate"
             },
-            "shift+Enter": {
-                "fn": "navigate",
-                "reverse": true
-            },
-            "ctrl+Enter": {
-                "fn": "textareaRowInsert"
+            "alt": {
+                "delay": 1,
+                "fn": "help"
             },
             "alt+ ": {
                 "fn": "navigate"
             },
-            "alt+shift+ ": {
-                "fn": "navigate",
-                "reverse": true
+            "alt+ArrowDown": {
+                "fn": "navigateArray",
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havaintoon"
+            },
+            "alt+ArrowLeft": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+ArrowRight": {
+                "fn": "navigateArray",
+                "target": "root_gatherings",
+                "targetLabel": "v\u00e4liin"
+            },
+            "alt+ArrowUp": {
+                "fn": "navigateArray",
+                "reverse": true,
+                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+                "targetLabel": "havaintoon"
+            },
+            "alt+Delete": {
+                "fn": "delete"
+            },
+            "alt+Insert": {
+                "fn": "insert"
             },
             "alt+PageDown": {
                 "fn": "navigateArray",
@@ -405,33 +1050,17 @@
                 "target": "root_gatherings",
                 "targetLabel": "v\u00e4liin"
             },
-            "alt+ArrowRight": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "v\u00e4liin"
-            },
-            "alt+ArrowLeft": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "v\u00e4liin"
-            },
-            "alt+ArrowUp": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+ArrowDown": {
-                "fn": "navigateArray",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
+            "alt+d": {
+                "fn": "delete"
             },
             "alt+h": {
                 "fn": "navigateArray",
                 "reverse": true,
                 "target": "root_gatherings",
                 "targetLabel": "v\u00e4liin"
+            },
+            "alt+i": {
+                "fn": "insert"
             },
             "alt+j": {
                 "fn": "navigateArray",
@@ -449,6 +1078,10 @@
                 "target": "root_gatherings",
                 "targetLabel": "v\u00e4liin"
             },
+            "alt+m": {
+                "fn": "splitLineTransectByMeters",
+                "target": "root_gatherings"
+            },
             "alt+n": {
                 "fn": "navigateArray"
             },
@@ -456,515 +1089,23 @@
                 "fn": "navigateArray",
                 "reverse": true
             },
-            "alt+Insert": {
-                "fn": "insert"
-            },
-            "alt+i": {
-                "fn": "insert"
-            },
-            "alt+Delete": {
-                "fn": "delete"
-            },
-            "alt+d": {
-                "fn": "delete"
+            "alt+shift+ ": {
+                "fn": "navigate",
+                "reverse": true
             },
             "alt+u": {
                 "fn": "insert",
                 "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
                 "targetLabel": "havainto"
             },
-            "alt+m": {
-                "fn": "splitLineTransectByMeters",
-                "target": "root_gatherings"
-            }
-        },
-        "ui:order": [
-            "*",
-            "gatheringEvent",
-            "gatherings"
-        ],
-        "ui:field": "InjectField",
-        "ui:options": {
-            "injections": {
-                "fields": [
-                    "editors",
-                    "notes"
-                ],
-                "target": "gatheringEvent"
-            }
-        },
-        "ui:annotations": {
-            "formId": "MHL.21",
-            "container": "modal",
-            "adminOnly": true,
-            "add": {
-                "type": "MAN.typeOpinion"
+            "ctrl+Enter": {
+                "fn": "textareaRowInsert"
             },
-            "buttonsPath": "/gatheringEvent"
-        },
-        "gatheringEvent": {
-            "ui:field": "NestField",
-            "classNames": "well well-sm",
-            "ui:order": [
-                "*",
-                "legPublic",
-                "eventTime",
-                "censusHinderedByEnviromentalFactors",
-                "taxonCensus",
-                "namedPlaceNotes",
-                "notes"
-            ],
-            "ui:options": {
-                "nests": {
-                    "legEditor": {
-                        "fields": [
-                            "leg",
-                            "editors"
-                        ],
-                        "rootUiSchema": {
-                            "ui:field": "NestField",
-                            "ui:options": {
-                                "nests": {
-                                    "_legEditor": {
-                                        "fields": [
-                                            "leg",
-                                            "editors"
-                                        ],
-                                        "title": "",
-                                        "rootUiSchema": {
-                                            "ui:functions": [
-                                                {
-                                                    "ui:field": "DependentBooleanField",
-                                                    "ui:options": {
-                                                        "booleanField": "editors",
-                                                        "booleanDefiner": "leg"
-                                                    }
-                                                },
-                                                {
-                                                    "ui:field": "ArrayCombinerField"
-                                                }
-                                            ],
-                                            "ui:field": "TableField",
-                                            "ui:options": {
-                                                "specialRules": "legEditors",
-                                                "ui:buttonsDesktopLayout": true,
-                                                "ui:deleteHelp": "Poista laskijan nimi",
-                                                "buttons": [
-                                                    {
-                                                        "fn": "add",
-                                                        "label": "Lis\u00e4\u00e4 laskija"
-                                                    }
-                                                ]
-                                            },
-                                            "items": {
-                                                "ui:functions": {
-                                                    "ui:field": "ContextInjectionField",
-                                                    "ui:options": {
-                                                        "injections": {
-                                                            "/ui:options/rules/0/regexp": "^%{/creator}$"
-                                                        }
-                                                    }
-                                                },
-                                                "ui:field": "DependentDisableField",
-                                                "ui:options": {
-                                                    "rules": [
-                                                        {
-                                                            "disableDefiner": "leg",
-                                                            "disableField": "editors",
-                                                            "regexp": "creator is injected here",
-                                                            "inlineHelp": "Sinulla t\u00e4ytyy olla muokkausoikeus.",
-                                                            "disabledValueToDisplay": true
-                                                        },
-                                                        {
-                                                            "disableDefiner": "leg",
-                                                            "disableField": "editors",
-                                                            "regexp": "^((?!(MA\\.\\d)).)*$"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "legEditorSizeFixer": {
-                                        "fields": [
-                                            "_legEditor"
-                                        ],
-                                        "title": "",
-                                        "rootUiSchema": {
-                                            "ui:grid": {
-                                                "lg": 6,
-                                                "md": 6,
-                                                "sm": 9,
-                                                "xs": 12
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "eventTime": {
-                        "fields": [
-                            "dateBegin",
-                            "timeStart",
-                            "timeEnd"
-                        ],
-                        "title": "",
-                        "rootUiSchema": {
-                            "ui:grid": {
-                                "rows": [
-                                    [
-                                        "dateBegin",
-                                        "timeStart",
-                                        "timeEnd"
-                                    ]
-                                ],
-                                "lg": {
-                                    "dateBegin": 3,
-                                    "timeStart": 2,
-                                    "timeEnd": 2
-                                },
-                                "md": {
-                                    "dateBegin": 4,
-                                    "timeStart": 2,
-                                    "timeEnd": 2
-                                },
-                                "sm": {
-                                    "dateBegin": 5,
-                                    "timeStart": 3,
-                                    "timeEnd": 3
-                                },
-                                "xs": 12
-                            }
-                        }
-                    }
-                }
-            },
-            "namedPlaceNotes": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 3
-                },
-                "ui:help": "Kirjaa t\u00e4h\u00e4n pysyvi\u00e4 reittiin liittyvi\u00e4 seikkoja"
-            },
-            "dateBegin": {
-                "ui:widget": "DateWidget",
-                "ui:options": {
-                    "showButtons": true
-                },
-                "ui:help": "Kirjoita laskentap\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 tai valitse p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 kalenterista tai pikavalikolla"
-            },
-            "timeStart": {
-                "ui:widget": "TimeWidget",
-                "ui:options": {
-                    "showTimeList": false
-                },
-                "ui:help": "Kirjoita laskennan aloituksen ja lopetuksen kellonajat"
-            },
-            "timeEnd": {
-                "ui:widget": "TimeWidget",
-                "ui:options": {
-                    "showTimeList": false
-                }
-            },
-            "leg": {
-                "ui:widget": "AutosuggestWidget",
-                "ui:help": "Laskijan nimi, muodossa: etunimi sukunimi",
-                "ui:options": {
-                    "autosuggestField": "friends",
-                    "allowNonsuggestedValue": true,
-                    "suggestionReceive": "key",
-                    "preventTypingPattern": "^MA\\.\\d+$"
-                }
-            },
-            "legPublic": {
-                "ui:options": {
-                    "allowUndefined": false
-                },
-                "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4."
-            },
-            "notes": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 2
-                }
-            },
-            "taxonCensus": {
-                "ui:field": "MultiAnyToBooleanField",
-                "ui:options": {
-                    "groups": [
-                        {
-                            "label": "Kaikki havaitut nis\u00e4kk\u00e4\u00e4t kirjattu",
-                            "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n nis\u00e4k\u00e4st\u00e4, mutta kiinnitit n\u00e4iden havainnointiin kuitenkin huomiota",
-                            "trueValue": {
-                                "censusTaxonID": "MX.37612",
-                                "taxonCensusType": "MY.taxonCensusTypeCounted"
-                            },
-                            "falseValue": {
-                                "censusTaxonID": "MX.37612",
-                                "taxonCensusType": "MY.taxonCensusTypeNotCounted"
-                            },
-                            "allowUndefined": false
-                        },
-                        {
-                            "label": "Kaikki havaitut vesilinnut kirjattu",
-                            "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n vesilintua, mutta kiinnitit n\u00e4iden havainnointiin kuitenkin huomiota",
-                            "trueValue": {
-                                "censusTaxonSetID": "MX.taxonSetWaterbirdWaterbirds",
-                                "taxonCensusType": "MY.taxonCensusTypeCounted"
-                            },
-                            "falseValue": {
-                                "censusTaxonSetID": "MX.taxonSetWaterbirdWaterbirds",
-                                "taxonCensusType": "MY.taxonCensusTypeNotCounted"
-                            },
-                            "allowUndefined": false
-                        },
-                        {
-                            "label": "Kaikki havaitut lokkilinnut kirjattu",
-                            "ui:help": "Valitse <i>Kyll\u00e4</i>, vaikka et olisi havainnut yht\u00e4\u00e4n lokkilintua, mutta kiinnitit n\u00e4iden havainnointiin kuitenkin huomiota",
-                            "trueValue": {
-                                "censusTaxonSetID": "MX.taxonSetWaterbirdGulls",
-                                "taxonCensusType": "MY.taxonCensusTypeCounted"
-                            },
-                            "falseValue": {
-                                "censusTaxonSetID": "MX.taxonSetWaterbirdGulls",
-                                "taxonCensusType": "MY.taxonCensusTypeNotCounted"
-                            },
-                            "allowUndefined": false
-                        }
-                    ]
-                }
-            },
-            "censusHinderedByEnvironmentalFactors": {
-                "ui:help": "Valitse <i>Kyll\u00e4</i>, jos s\u00e4\u00e4 jollain tavoin haittasi laskentaa. Kirjoita huomautuksiin miten s\u00e4\u00e4 haittasi"
-            }
-        },
-        "notes": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            },
-            "ui:help": "T\u00e4h\u00e4n voit lis\u00e4t\u00e4 huomautuksia kyseisest\u00e4 laskentakerrasta, esimerkiksi s\u00e4\u00e4st\u00e4"
-        },
-        "editors": {
-            "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
-            "ui:options": {
-                "allowUndefined": false
-            }
-        },
-        "gatherings": {
-            "ui:functions": {
-                "ui:field": "MapArrayField",
-                "ui:settings": [
-                    "/mapOptions/tileLayerName",
-                    "/mapOptions/overlayNames",
-                    "/mapOptions/tileLayerOpacity",
-                    "/mapOptions/tileLayers"
-                ],
-                "ui:options": {
-                    "geometryField": "geometry",
-                    "mapSizes": {
-                        "lg": 4,
-                        "md": 4,
-                        "sm": 6,
-                        "xs": 6
-                    },
-                    "mapOptions": {
-                        "tileLayerName": "maastokartta",
-                        "controls": {
-                            "location": false,
-                            "draw": {
-                                "clear": true,
-                                "undo": false,
-                                "redo": false
-                            }
-                        },
-                        "tileLayerOpacity": 0.5,
-                        "draw": {
-                            "marker": true,
-                            "polygon": false,
-                            "circle": false,
-                            "polyline": false,
-                            "rectangle": false,
-                            "single": true
-                        }
-                    },
-                    "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
-                    "idToScrollAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}__header",
-                    "activeIdx": 0,
-                    "minHeight": 500,
-                    "help": "<p>Karttaty\u00f6kalusta l\u00f6ytyy useita toimintoja. Vasemmasta yl\u00e4kulmasta kolmen p\u00e4\u00e4llekk\u00e4isen arkin symbolin kohdalta voit valita erilaisia karttapohjia. Oletuksena on mm. karttapaikasta tuttu maastokartta. Ortokuva \u2013vaihtoehto antaa ilmakuvan kohteesta. Karttapohjavalikon alapuolella olevalla \u201dSuurennuslasi\u201d \u2013ty\u00f6kalulla voit etsi\u00e4 kohdetta t\u00e4m\u00e4n nimen perusteella. Plus- ja miinus-merkeill\u00e4 voit l\u00e4hent\u00e4\u00e4 tai loitontaa karttakuvaa (zoomaus sis\u00e4\u00e4n tai ulos).  </p> <p>Kartan oikeasta yl\u00e4kulmasta l\u00f6yd\u00e4t kolme erilaista piirtoty\u00f6kalua. N\u00e4ill\u00e4 voit piirt\u00e4\u00e4 kartalle i) laskentapisteen, ii) lis\u00e4t\u00e4 laskentapisteen koordinaattien perusteella tai iii) tyhjent\u00e4\u00e4 kartan merkinn\u00f6ist\u00e4.  </p> <p>\u201dLis\u00e4\u00e4 nasta\u201d -ty\u00f6kalulla voit lis\u00e4t\u00e4 laskentapisteen kartalle. Voit my\u00f6s siirt\u00e4\u00e4 karttapistett\u00e4 klikkaamalla sit\u00e4 hiirell\u00e4 kahdesti tai painamalla sit\u00e4 hiiren vasemmalla n\u00e4pp\u00e4imell\u00e4 ja valitse \u201dMuokkaa kuvio\u201d, jolloin sen ymp\u00e4rille muodostuu katkoviivakehikko. T\u00e4ll\u00f6in voit siirt\u00e4\u00e4 pisteen haluamaasi paikkaan valitsemalla kohde hiirell\u00e4 ja pit\u00e4m\u00e4ll\u00e4 hiiren n\u00e4pp\u00e4in pohjassa siihen asti, kun olet siirt\u00e4nyt kohteen haluamaasi paikkaan.  </p> <p>\u201dTyhjenn\u00e4 kartta\u201d \u2013ty\u00f6kalu on k\u00e4tev\u00e4 tapa poistaa kartan aikaisemmat merkinn\u00e4t esimerkiksi havainnointiruutu, jos pistereitin aikaisemmat laskentapaikat eiv\u00e4t ole olleet j\u00e4rjestelm\u00e4ss\u00e4.</p>"
-                }
-            },
-            "ui:field": "SingleActiveArrayField",
-            "ui:title": "Piste %{idx}",
-            "ui:options": {
-                "renderer": "accordion",
-                "affixed": true,
-                "headerClassName": "darker-bottom-border",
-                "canAdd": false,
-                "removable": false
-            },
-            "items": {
-                "ui:order": [
-                    "*",
-                    "gatheringFact",
-                    "notes",
-                    "units"
-                ],
-                "geometry": {
-                    "ui:field": "HiddenField"
-                },
-                "notes": {
-                    "ui:help": "Kirjoita t\u00e4h\u00e4n biotoopin muutoksen syy tai muita pisteeseen liittyvi\u00e4 huomioita"
-                },
-                "gatheringFact": {
-                    "pointCountHabitat": {
-                        "ui:help": "Valitse valikosta pisteen 50 metrin s\u00e4teen sis\u00e4ll\u00e4 olevaa ymp\u00e4rist\u00f6\u00e4 parhaiten kuvaava biotooppi"
-                    }
-                },
-                "ui:grid": {
-                    "lg": {
-                        "notes": 6,
-                        "gatheringFact": 6,
-                        "units": 12
-                    },
-                    "md": {
-                        "notes": 6,
-                        "gatheringFact": 6,
-                        "units": 12
-                    },
-                    "sm": {
-                        "notes": 6,
-                        "gatheringFact": 6,
-                        "units": 12
-                    },
-                    "xs": {
-                        "notes": 12,
-                        "gatheringFact": 12,
-                        "units": 12
-                    }
-                },
-                "units": {
-                    "ui:childFunctions": {
-                        "ui:field": "FlatField",
-                        "ui:options": {
-                            "fields": [
-                                "identifications",
-                                "unitFact"
-                            ]
-                        }
-                    },
-                    "ui:field": "TableField",
-                    "items": {
-                        "ui:field": "AutosuggestField",
-                        "ui:options": {
-                            "autosuggestField": "taxon",
-                            "allowNonsuggestedValue": false,
-                            "suggestionInputField": "identifications_0_taxonVerbatim",
-                            "suggestionValueField": "identifications_0_taxonID",
-                            "suggestionReceivers": {
-                                "identifications_0_taxonVerbatim": "value",
-                                "identifications_0_taxonID": "key"
-                            },
-                            "query": {
-                                "informalTaxonGroup": "MVL.1,MVL.2",
-                                "onlyFinnish": true
-                            }
-                        },
-                        "ui:grid": {
-                            "lg": 3,
-                            "md": 3,
-                            "sm": 4,
-                            "xs": 12
-                        },
-                        "identifications": {
-                            "items": {
-                                "taxonID": {
-                                    "ui:widget": "HiddenWidget"
-                                },
-                                "taxonVerbatim": {
-                                    "ui:help": "<p>Lis\u00e4\u00e4 pisteen parihavainnot laji kerrallaan. Kirjaa kaikki yhden lajin havainnot samalta pisteelt\u00e4 yhdelle riville. Voit ilmoittaa havaintoja nis\u00e4kk\u00e4ist\u00e4 sek\u00e4 vesi- ja lokkilinnuista vain, jotka olet aikaisemmin valinnut kirjanneesi kaikki havainnot n\u00e4ist\u00e4 lajiryhmist\u00e4.  </p> <p>Kirjoita vasemmanpuolimmaiseen sarakkeeseen lajin nimi. J\u00e4rjestelm\u00e4ss\u00e4 on automaattinen nimentunnistin eli jos esimerkiksi aloitat kirjoittamaan \u201dherne\u2026\u201d, niin j\u00e4rjestelm\u00e4 tarjoaa hernekerttu-vaihtoehtoa. Valitse oikea laji. Mik\u00e4li lajinimisarakkeessa on oikeassa reunassa kolmio, j\u00e4rjestelm\u00e4 ei ole tunnistanut lajinime\u00e4 ja havaintoer\u00e4\u00e4 ei voi tallentaa. Vastaavasti vihre\u00e4 V-merkki tarkoittaa, ett\u00e4 lajinimi on tunnistettu j\u00e4rjestelm\u00e4n puolesta.</p>"
-                                }
-                            }
-                        },
-                        "recordBasis": {
-                            "ui:widget": "HiddenWidget"
-                        },
-                        "unitFact": {
-                            "pairCountInner": {
-                                "ui:help": "Merkitse 50 m s\u00e4teen sis\u00e4puolella havaittu parim\u00e4\u00e4r\u00e4 lajille"
-                            },
-                            "pairCountOuter": {
-                                "ui:help": "Merkitse 50 m s\u00e4teen ulkopuolella ja ylilent\u00e4vin\u00e4 havaittu parim\u00e4\u00e4r\u00e4 lajille"
-                            },
-                            "pointCountFlock": {
-                                "ui:help": "Parvissa havaittujen yksil\u00f6iden m\u00e4\u00e4r\u00e4t. Erottele parvet toisistaan pilkulla, esimerkiksi 9,15,3. Merkitse pesiviksi pareiksi tulkittujen parvien parim\u00e4\u00e4r\u00e4t my\u00f6s Pari sis\u00e4ll\u00e4 tai Pari ulkona -kentt\u00e4\u00e4n.",
-                                "ui:helpPlacement": "left"
-                            }
-                        },
-                        "ui:order": [
-                            "identifications",
-                            "*",
-                            "atlasCode"
-                        ]
-                    }
-                }
+            "shift+Enter": {
+                "fn": "navigate",
+                "reverse": true
             }
         }
-    },
-    "excludeFromCopy": [
-        "$.gatheringEvent.dateBegin",
-        "$.gatheringEvent.timeStart",
-        "$.gatheringEvent.timeEnd",
-        "$.gatheringEvent.censusHinderedByEnviromentalFactors",
-        "$.gatheringEvent.taxonCensus",
-        "$.gatherings[*].units"
-    ],
-    "id": "MHL.75",
-    "name": "Pistelaskenta",
-    "category": "MHL.categoryBirdMonitoringSchemes",
-    "supportedLanguage": [
-        "fi"
-    ],
-    "language": "fi",
-    "title": "Pistelaskenta",
-    "collectionID": "HR.157",
-    "description": "T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan maalintujen pistelaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Lis\u00e4tietoa, laskentaohjeita ja tuloksia l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a  rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a>",
-    "logo": "https://cdn.laji.fi/images/logos/pistelaskenta.jpg",
-    "options": {
-        "periods": [
-            "04-15/07-15"
-        ],
-        "instructions": {
-            "fi": "https://laji.fi/theme/pistelaskenta",
-            "en": "https://laji.fi/en/theme/pistelaskenta",
-            "sv": "https://laji.fi/sv/theme/pistelaskenta"
-        },
-        "viewerType": "MHL.viewerTypeBirdPointCount",
-        "namedPlaceOptions": {
-            "useLabel": "Ilmoita uusi laskenta t\u00e4lt\u00e4 reitilt\u00e4",
-            "infoFields": [
-                "name",
-                "notes"
-            ],
-            "startWithMap": true,
-            "useAcceptedDocument": true,
-            "listColumns": [
-                "$.alternativeIDs[0]",
-                "$.name",
-                "$.prepopulatedDocument.gatheringEvent.dateBegin"
-            ],
-            "chooseDescription": "Aloita valitsemalla reitti alta. Uuden reitin perustaminen: Ole ensin yhteydess\u00e4 Linnustonseurantaan <a href='mailto:linnustonseuranta@luomus.fi'>linnustonseuranta@luomus.fi</a>",
-            "copyLatestDocumentToNamedPlace": true
-        },
-        "saveLabel": "Tallenna havainnot",
-        "cancelLabel": "Poistu tallentamatta",
-        "draftLabel": "Tallenna julkaisematta",
-        "useNamedPlaces": true,
-        "hasAdmins": true,
-        "adminLockable": true,
-        "warnEditingOldDocument": true
     },
     "validators": {
         "gatheringEvent": {
@@ -972,40 +1113,37 @@
                 "allowEmpty": false
             },
             "properties": {
-                "leg": {
-                    "presence": {
-                        "message": "V\u00e4hint\u00e4\u00e4n yksi havainnoija t\u00e4ytyy ilmoittaa."
-                    },
-                    "length": {
-                        "minimum": 1,
-                        "message": "V\u00e4hint\u00e4\u00e4n yksi laskija t\u00e4ytyy ilmoittaa"
-                    }
-                },
                 "dateBegin": {
                     "datetime": {
+                        "earliest": "1000-01-01",
                         "latest": "now",
                         "notValid": "@dateInvalid",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}",
                         "tooLate": "@dateInTheFutureValidation"
+                    },
+                    "monthDayRange": {
+                        "dateOnly": true,
+                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on laskentajaksojen ulkopuolella.",
+                        "ranges": [
+                            {
+                                "earliestDay": 15,
+                                "earliestMonth": 4,
+                                "latestDay": 15,
+                                "latestMonth": 7
+                            }
+                        ]
                     },
                     "presence": {
                         "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on pakollinen"
-                    },
-                    "monthDayRange": {
-                        "ranges": [
-                            {
-                                "earliestMonth": 4,
-                                "earliestDay": 15,
-                                "latestMonth": 7,
-                                "latestDay": 15
-                            }
-                        ],
-                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on laskentajaksojen ulkopuolella.",
-                        "dateOnly": true
                     }
                 },
-                "timeStart": {
+                "leg": {
+                    "length": {
+                        "message": "V\u00e4hint\u00e4\u00e4n yksi laskija t\u00e4ytyy ilmoittaa",
+                        "minimum": 1
+                    },
                     "presence": {
-                        "message": "Aloitusaika pit\u00e4\u00e4 ilmoittaa"
+                        "message": "V\u00e4hint\u00e4\u00e4n yksi havainnoija t\u00e4ytyy ilmoittaa."
                     }
                 },
                 "timeEnd": {
@@ -1016,53 +1154,54 @@
                     "presence": {
                         "message": "Lopetusaika pit\u00e4\u00e4 ilmoittaa"
                     }
+                },
+                "timeStart": {
+                    "presence": {
+                        "message": "Aloitusaika pit\u00e4\u00e4 ilmoittaa"
+                    }
                 }
             }
         },
         "gatherings": {
-            "presence": {
-                "message": "V\u00e4hint\u00e4\u00e4n yksi paikka t\u00e4ytyy ilmoittaa.",
-                "allowEmpty": false
-            },
             "items": {
                 "properties": {
                     "geometry": {
                         "geometry": {
-                            "requireShape": true,
-                            "maximumSize": 10,
+                            "boundingBoxMaxHectares": 5000000,
                             "includeGatheringUnits": true,
+                            "maximumSize": 10,
                             "message": {
-                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
                                 "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
-                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
                                 "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
                                 "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
+                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
+                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
                             },
-                            "boundingBoxMaxHectares": 5000000
+                            "requireShape": true
                         }
                     },
                     "notes": {
                         "crossCheck": {
                             "check": "/gatheringFact/pointCountHabitat",
+                            "message": "Kirjoita Biotooppi \u201dMuu\u201d Huomautuksiin.",
                             "mustHaveValue": true,
                             "onlyWhenCheckIn": [
                                 "MY.pointCountHabitat17"
-                            ],
-                            "message": "Kirjoita Biotooppi \u201dMuu\u201d Huomautuksiin."
+                            ]
                         }
                     },
                     "units": {
                         "items": {
                             "duplicateCheck": {
-                                "key": "/identifications/0/taxonID",
-                                "messageKey": "/identifications/0/taxonVerbatim",
                                 "arrayPath": "../units",
+                                "key": "/identifications/0/taxonID",
                                 "message": {
                                     "isDuplicate": "%{value} on ilmoitettu monta kertaa"
-                                }
+                                },
+                                "messageKey": "/identifications/0/taxonVerbatim"
                             },
                             "properties": {
                                 "unitFact": {
@@ -1077,8 +1216,8 @@
                                         },
                                         "pointCountFlock": {
                                             "format": {
-                                                "pattern": "^([0-9]*)?(,[0-9]+)*$",
-                                                "message": " Ilmoita parvien koot pilkulla erotettuna"
+                                                "message": " Ilmoita parvien koot pilkulla erotettuna",
+                                                "pattern": "^([0-9]*)?(,[0-9]+)*$"
                                             }
                                         }
                                     }
@@ -1087,6 +1226,10 @@
                         }
                     }
                 }
+            },
+            "presence": {
+                "allowEmpty": false,
+                "message": "V\u00e4hint\u00e4\u00e4n yksi paikka t\u00e4ytyy ilmoittaa."
             }
         }
     },
@@ -1094,32 +1237,32 @@
         "gatheringEvent": {
             "properties": {
                 "dateBegin": {
-                    "remote": {
-                        "validator": "noExistingGatheringsInNamedPlace",
-                        "message": "Kyseiselle laskentajaksolle on jo tehty laskenta valitulta reitilt\u00e4."
-                    },
                     "monthDayRange": {
+                        "dateOnly": true,
+                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on laskentajaksojen ulkopuolella.",
                         "ranges": [
                             {
-                                "earliestMonth": 5,
                                 "earliestDay": 20,
-                                "latestMonth": 6,
-                                "latestDay": 20
+                                "earliestMonth": 5,
+                                "latestDay": 20,
+                                "latestMonth": 6
                             }
-                        ],
-                        "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on laskentajaksojen ulkopuolella.",
-                        "dateOnly": true
+                        ]
+                    },
+                    "remote": {
+                        "message": "Kyseiselle laskentajaksolle on jo tehty laskenta valitulta reitilt\u00e4.",
+                        "validator": "noExistingGatheringsInNamedPlace"
                     }
                 },
                 "timeEnd": {
                     "timeDifference": {
                         "compareTo": "timeStart",
                         "maxDifference": 360,
-                        "minDifference": 150,
                         "message": {
-                            "tooSmall": "Oletko varma, ett\u00e4 laskennan kesto on n\u00e4in lyhyt?",
-                            "tooBig": "Oletko varma, ett\u00e4 laskennan kesto on n\u00e4in pitk\u00e4?"
-                        }
+                            "tooBig": "Oletko varma, ett\u00e4 laskennan kesto on n\u00e4in pitk\u00e4?",
+                            "tooSmall": "Oletko varma, ett\u00e4 laskennan kesto on n\u00e4in lyhyt?"
+                        },
+                        "minDifference": 150
                     }
                 }
             }
@@ -1139,8 +1282,5 @@
                 }
             }
         }
-    },
-    "attributes": {
-        "id": "MHL.75"
     }
 }

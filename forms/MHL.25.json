@@ -1,27 +1,28 @@
 {
-    "actions": {
-        "cancel": "",
-        "save": "",
-        "temp": ""
-    },
     "attributes": {
         "id": "MHL.25"
     },
-    "category": "MHL.categoryGeneric",
+    "category": "MHL.categoryCitizenScience",
     "collectionID": "HR.2629",
     "description": "<p>Naturan eli\u00f6kokoelmakilpailun Laji.fi-sarja on yl\u00e4koulun ja toisen asteen opiskelijoille tarkoitettu kilpailu. Kilpailuun voi osallistua tekem\u00e4ll\u00e4 havaintoja Laji.fi-tietokantaan. Osallistumalla kilpailuun t\u00e4ll\u00e4 lomakkeella lajihavaintosi tulevat tieteen k\u00e4ytt\u00f6\u00f6n.</p>\n\n\n<p>Kilpailun Laji.fi-sarjassa tulee t\u00e4ytt\u00e4\u00e4 v\u00e4hint\u00e4\u00e4n 20 lajin havainnot tietokantaan. Kilpailuaika on 1.5.\u201330.10.2018. Teemana ovat kylien ja kaupunkien lajit, joten keskity kokoelmassasi niiden havainnointiin.</p>\n\n\n<p>Lue tarkat s\u00e4\u00e4nn\u00f6t, ohjeet ja kilpailun tiedot Natura-lehden sivuilta: <a href=\"http://www.naturalehti.fi/kokoelmakilpailu\" rel=\"nofollow\" target=\"_blank\">www.naturalehti.fi/kokoelmakilpailu</a></p>\n\n\n<p>Ohje lomakkeen t\u00e4ytt\u00e4miseen: <a href=\"http://cms.laji.fi/wp-content/uploads/2018/05/Kokoelmakilpailu_ohjeet_2018.pdf\" rel=\"nofollow\" target=\"_blank\">http://cms.laji.fi/wp-content/uploads/2018/05/Kokoelmakilpailu_ohjeet_2018.pdf</a></p><p>Huomioithan, ett\u00e4 lajeista pit\u00e4\u00e4 k\u00e4ytt\u00e4\u00e4 niiden kokonaista suomenkielist\u00e4 nime\u00e4, esim. joillain puilla on pidempi nimi: pihlaja = kotipihlaja, m\u00e4nty = mets\u00e4m\u00e4nty. Nimet voit tarkistaa Pinkan avulla:<p><a href=\"http://pinkka.helsinki.fi/pinkat/#/pinkkas/59\" rel=\"nofollow\" target=\"_blank\">http://pinkka.helsinki.fi/pinkat/#/pinkkas/59</a>. Voit hy\u00f6dynt\u00e4\u00e4 my\u00f6s muita Pinkkoja kuin kokoelmakilpailun Pinkkaa.</p>\n\n\n<p>Kilpailuun osallistujat t\u00e4ytt\u00e4v\u00e4t varsinaisen kilpailuty\u00f6n palauttamisen lis\u00e4ksi itsearviointilomakkeen. Huolellisesti tehty itsearviointi on yksi arviointikriteeri. Yl\u00e4koulun ja toisen asteen lomakkeella kysyt\u00e4\u00e4n lis\u00e4ksi osallistujien kokemuksia kokoelman ker\u00e4\u00e4misest\u00e4. Vastauksia k\u00e4ytet\u00e4\u00e4n nimett\u00f6m\u00e4sti tutkimusk\u00e4yt\u00f6ss\u00e4 vain, jos osallistuja antaa siihen luvan.</p>\n\n\n<p>Itsearviointilomakkeen l\u00f6yd\u00e4t t\u00e4\u00e4lt\u00e4: Yl\u00e4koulu ja toinen aste: <a href=\"https://elomake.helsinki.fi/lomakkeet/89201/lomake.html\" rel=\"nofollow\" target=\"_blank\">https://elomake.helsinki.fi/lomakkeet/89201/lomake.html</a></p>\n\n\n<p>Kilpailun j\u00e4rjest\u00e4v\u00e4n\u00e4 tahona on Biologian ja maantieteen opettajien liitto Ry yhteisty\u00f6ss\u00e4 Suomen Lajitietokeskuksen ja Pinkka-oppimisymp\u00e4rist\u00f6n kanssa. Lis\u00e4ksi mukana on Helsingin yliopiston kasvatustieteellisess\u00e4 tiedekunnassa meneill\u00e4\u00e4n oleva KOPPI-hanke, joka tutkii eli\u00f6kokoelman k\u00e4ytt\u00f6\u00e4 opetuksessa.</p>\n\n",
     "excludeFromCopy": [
-        "$.gatherings[*].units"
+        "$.gatherings[*].dateBegin",
+        "$.gatherings[*].units",
+        "$.gatherings[*].units[*].unitGathering.dateBegin"
     ],
     "id": "MHL.25",
-    "instructions": {
-        "en": "https://laji.fi/about/1107",
-        "fi": "https://laji.fi/about/1107",
-        "sv": "https://laji.fi/about/1107"
-    },
     "language": "fi",
     "logo": "https://cdn.laji.fi/images/logos/Kokoelmakilpailu-logo-PIENI.png",
     "name": "Kokoelmakilpailulomake",
+    "options": {
+        "allowTemplate": true,
+        "instructions": {
+            "en": "https://laji.fi/about/1107",
+            "fi": "https://laji.fi/about/1107",
+            "sv": "https://laji.fi/about/1107"
+        },
+        "simple": true
+    },
     "schema": {
         "properties": {
             "editors": {
@@ -71,7 +72,6 @@
                             "type": "string"
                         },
                         "units": {
-                            "excludeFromCopy": true,
                             "items": {
                                 "properties": {
                                     "count": {
@@ -90,6 +90,7 @@
                                             "type": "object"
                                         },
                                         "minItems": 1,
+                                        "title": "",
                                         "type": "array"
                                     },
                                     "images": {
@@ -118,6 +119,7 @@
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
                                     },
                                     "unitGathering": {
@@ -128,6 +130,7 @@
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
                                     }
                                 },
@@ -143,24 +146,28 @@
                     "required": [],
                     "type": "object"
                 },
-                "title": "Havainto",
+                "title": "",
                 "type": "array"
             },
             "secureLevel": {
                 "default": "MX.secureLevelNone",
-                "enum": [
-                    "MX.secureLevelNone",
-                    "MX.secureLevelKM10"
-                ],
-                "enumNames": [
-                    "Ei karkeistettu",
-                    "10 km"
+                "oneOf": [
+                    {
+                        "const": "MX.secureLevelNone",
+                        "title": "Ei karkeistettu"
+                    },
+                    {
+                        "const": "MX.secureLevelKM10",
+                        "title": "10 km"
+                    }
                 ],
                 "title": "Havainnon tarkat paikkatiedot ovat julkisia",
                 "type": "string"
             }
         },
-        "required": [],
+        "required": [
+            "gatherings"
+        ],
         "type": "object"
     },
     "shortDescription": "Koululaisten kokoelmakilpailulomake",
@@ -249,6 +256,12 @@
                                                 }
                                             ],
                                             "ui:options": {
+                                                "buttons": [
+                                                    {
+                                                        "fn": "add",
+                                                        "label": "Lis\u00e4\u00e4 havainnoija"
+                                                    }
+                                                ],
                                                 "specialRules": "legEditors",
                                                 "ui:buttonsDesktopLayout": true
                                             }
@@ -351,27 +364,27 @@
                             }
                         }
                     },
-					{
-						"ui:field": "UiFieldApplierField",
-						"ui:options": {
-							"field": "units",
-							"functions": [
-								{
-									"ui:field": "SingleItemArrayField"
-								},
-								{
-									"ui:field": "FlatField",
-									"ui:options": {
-										"fields": [
-											"identifications",
-											"unitGathering",
-											"unitFact"
-										]
-									}
-								}
-							]
-						}
-					},
+                    {
+                        "ui:field": "UiFieldApplierField",
+                        "ui:options": {
+                            "field": "units",
+                            "functions": [
+                                {
+                                    "ui:field": "SingleItemArrayField"
+                                },
+                                {
+                                    "ui:field": "FlatField",
+                                    "ui:options": {
+                                        "fields": [
+                                            "identifications",
+                                            "unitGathering",
+                                            "unitFact"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     {
                         "ui:field": "InjectField",
                         "ui:options": {
@@ -505,9 +518,9 @@
                 "headerFormatters": [
                     "/units/0/identifications/0/taxon",
                     "namedPlace"
-                ],
-                "titleFormat": "%{Title} %{idx}"
-            }
+                ]
+            },
+            "ui:title": "Havainto %{idx}"
         },
         "secureLevel": {
             "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km\u00b2 karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
@@ -664,8 +677,10 @@
                 "properties": {
                     "dateBegin": {
                         "datetime": {
+                            "earliest": "1000-01-01",
                             "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                         },
                         "presence": {
                             "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 t\u00e4ytyy ilmoittaa"
@@ -673,7 +688,7 @@
                     },
                     "geometry": {
                         "geometry": {
-                            "boundingBoxMaxHectares": 1000000,
+                            "boundingBoxMaxHectares": 5000000,
                             "includeGatheringUnits": true,
                             "maximumSize": 10,
                             "message": {
@@ -710,8 +725,10 @@
                                     "properties": {
                                         "dateBegin": {
                                             "datetime": {
+                                                "earliest": "1000-01-01",
                                                 "latest": "now",
-                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
+                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
+                                                "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                                             }
                                         }
                                     }

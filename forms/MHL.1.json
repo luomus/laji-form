@@ -7,54 +7,70 @@
     "description": "T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. Muiden linjojen kuin vakiolinjojen tulokset ilmoitetaan toistaiseksi tuttuun tapaan Excel-lomakkeella. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a><ol><li>Ilmoita lomakkeella laskennan ja reitin perustiedot sek\u00e4 havaitut linnut biotoopeittain. Saat lis\u00e4ohjeita ?-kuvakkeista kenttien vieress\u00e4.</li><li>Lomakkeella voit siirty\u00e4 kent\u00e4st\u00e4 toiseen joko hiiren avulla tai pikan\u00e4pp\u00e4imill\u00e4 (tab = seuraavaan kentt\u00e4\u00e4n, Alt + nuoli yl\u00f6s = edelliselle havaintoriville, Alt + nuoli alas = seuraavalle havaintoriville).</li><li>Kirjaa havaitut linnut biotoopeittain. Voit valita biotooppip\u00e4tk\u00e4t joko kartalta klikkaamalla tai liikkua biotooppip\u00e4tk\u00e4st\u00e4 toiseen nuolin\u00e4pp\u00e4imill\u00e4 havaintojensy\u00f6t\u00f6n yl\u00e4puolella. Kirjaa muuttuneet biotoopit \u201dp\u00e4\u00e4saran biotooppi\u201d -kentt\u00e4\u00e4n.</li><li>Tee mahdolliset muutokset biotooppip\u00e4tkien pituuteen tai reitin kulkuun kartan ty\u00f6kaluja k\u00e4ytt\u00e4en. Voit muokata linjan pistett\u00e4 ensin tuplaklikkaamalla ja sitten raahaamalla. Pisteen voi poistaa klikkaamalla sit\u00e4 hiiren oikealla n\u00e4pp\u00e4imell\u00e4. Jos teit virheen kartan muokkauksessa, k\u00e4yt\u00e4 \u201dKumoa\u201d-ty\u00f6kalua kartan oikeasta reunasta. Seuraa kartalla kursorin viereen tulevia ohjetekstej\u00e4 ja katso perusteellisempaa ohjetta Linjalaskentojen etusivun k\u00e4ytt\u00f6ohjeesta.</li><li>Havaintoja voit sy\u00f6tt\u00e4\u00e4 joko ns. pikasy\u00f6tt\u00f6tilassa tai erillisten kenttien avulla. Pikasy\u00f6tt\u00f6tilaan ja siit\u00e4 pois siirryt\u00e4\u00e4n havaintojensy\u00f6t\u00f6n oikean reunan nuolikuvakkeesta. K\u00e4yt\u00f6ss\u00e4 ovat 3+3 lyhenteet, tieteelliset ja suomenkieliset nimet sek\u00e4 pikasy\u00f6tt\u00f6tilassa lis\u00e4ksi yleisimpien lajien 2-kirjaimiset lyhenteet (linkki 2-kirjaimisiin lyhenteisiin: <a target=\"_blank\" rel=\"noreferrer noopener\" href=\"https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet\">https://www.luomus.fi/fi/linjalaskennassa-sallitut-kaksikirjaimiset-lajilyhenteet</a>). Voit k\u00e4ytt\u00e4\u00e4 pieni\u00e4 tai isoja kirjaimia ja k\u00e4ytt\u00e4\u00e4 v\u00e4lily\u00f6ntej\u00e4 tai kirjoittaa kaiken yhteen. Katso ohjetta \u201dHavainnot\u201d-kent\u00e4n alla.</li><li>Kun olet sy\u00f6tt\u00e4nyt havainnot, ja haluat tallentaa ja l\u00e4hett\u00e4\u00e4 tiedot eteenp\u00e4in Linnustonseurannalle, paina: \u201dTallenna julkisena\u201d.</li><li>Tallennuksen j\u00e4lkeen tulee n\u00e4kyviin lista mahdollisista virheist\u00e4 ja varoituksista. Korjaa virheet ja tallenna uudelleen.</li><li>Tallennuksen j\u00e4lkeen n\u00e4et koosteen tallentamastasi havaintoer\u00e4st\u00e4, esimerkiksi havaituista lajeista ja parim\u00e4\u00e4rist\u00e4, p\u00e4\u00e4sarkaprosentista, kokonaislajim\u00e4\u00e4r\u00e4st\u00e4, etenemisnopeudesta jne.</li><li>P\u00e4\u00e4set tarvittaessa muokkaamaan tallennettua havaintoer\u00e4\u00e4 \u201dOmat havaintoer\u00e4ni\u201d \u2013kohdasta. Kunkin havaintoer\u00e4n vasemmassa laidassa on valittavana \u201dN\u00e4yt\u00e4 havaintoer\u00e4\u201d ja \u201dSiirry muokkaussivulle\u201d -kuvakkeet.</li></ol>",
     "excludeFromCopy": [
         "$.gatheringEvent.dateBegin",
-        "$.gatherings[*].units"
-    ],
-    "features": [
-        "MHL.featureNamedPlace",
-        "MHL.featureAddingNamedPlacesNotAllowed",
-        "MHL.featureRestrictAccess",
-        "MHL.featureAdminister",
-        "MHL.featureAddingNamedPlacesNotAllowed",
-        "MHL.featureEditingNamedPlacesNotAllowed",
-        "MHL.featureCopyLatestDocumentToNamedPlace",
-        "MHL.featureReserve",
-        "MHL.featureFilterNamedPlacesByTags",
-        "MHL.featureAdminLockable"
+        "$.gatheringEvent.timeStart",
+        "$.gatheringEvent.timeEnd",
+        "$.gatheringEvent.notes",
+        "$.gatheringEvent.gpsUsed",
+        "$.gatheringEvent.breaksDuringCensusInMinutes",
+        "$.gatheringEvent.censusPrematurelyAborted",
+        "$.gatheringEvent.censusHinderedByEnviromentalFactors",
+        "$.gatheringEvent.taxonCensus",
+        "$.gatherings[*].timeStart",
+        "$.gatherings[*].units",
+        "$.gatherings[*].taxonCensus"
     ],
     "id": "MHL.1",
     "language": "fi",
     "logo": "https://cdn.laji.fi/images/logos/linjalaskentalomake.PNG",
     "name": "Linjalaskenta",
-    "namedPlaceOptions": {
-        "description": "<p>T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. T\u00e4\u00e4ll\u00e4 voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\" rel=\"noopener noreferref\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisi\u00e4 reittien tietoja ja varaustilannetta.</li><li>Tehd\u00e4 varauksen tulevalle kaudelle ja vapauttaa tekem\u00e4si varauksen.</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen valitse oikeasta reunasta \u201dKatso ja tulosta kartta ja maastolomake\u201d. Lomakkeita ei kannata tulostaa ennen linnustonseurannan lupaa, koska reittiin on voinut tulla hyv\u00e4ksym\u00e4tt\u00f6mi\u00e4 reittimuutoksia.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirty\u00e4 ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen klikkaa \u201dilmoita uusi laskenta t\u00e4lle reitille\u201d.</ol><p>Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ota yhteytt\u00e4 <a target=\"_blank\" href=\"mailto:linnustonseuranta@luomus.fi\">linnustonseuranta@luomus.fi</a></p>",
-        "formNavLabel": "Reitit ja ilmoittaminen",
-        "infoFields": [
-            "name",
-            "notes"
-        ],
-        "listLabel": "Linjaluettelo",
-        "printLabel": "Katso ja tulosta kartta ja maastolomake",
-        "reservationUntil": "${year}-12-31",
-        "showLegendList": true,
-        "startWithMap": true,
-        "useLabel": "Ilmoita uusi laskenta t\u00e4lle reitille"
-    },
     "options": {
-        "messages": {
-            "success": "Linjalaskennan havaintosi on nyt tallennettu. Kiitos osallistumisestasi! Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ole yhteydess\u00e4 linnustonseuranta@luomus.fi"
+        "about": {
+            "en": "2844",
+            "fi": "2844",
+            "sv": "2844"
         },
-        "namedPlaceList": [
-            "$.alternativeIDs[0]",
-            "$.name",
-            "$._status",
-            "$.prepopulatedDocument.gatheringEvent.dateBegin"
+        "adminLockable": true,
+        "forms": [
+            "MHL.27",
+            "MHL.28"
         ],
+        "hasAdmins": true,
+        "namedPlaceOptions": {
+            "chooseDescription": "<p>T\u00e4m\u00e4 on Luonnontieteellisen keskusmuseon Linnustonseurannan vakiolinjalaskentojen havaintojen ilmoitusj\u00e4rjestelm\u00e4. T\u00e4\u00e4ll\u00e4 voit tarkastella linjojen sijaintia ja tietoja, varata vakiolinjan, ilmoittaa laskennan havainnot ja tarkastella linjalaskentojen tuloksia. Lis\u00e4tietoa laskennoista ja laskentaohjeita l\u00f6yd\u00e4t Linnustonseurannan sivuilta: <a href=\"https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta\" target=\"_blank\" rel=\"noopener noreferref\">https://www.luomus.fi/fi/pesimalintujen-linja-pistelaskenta</a></p><p>Valitsemalla alla luettelosta tai kartalta vakiolinjan, voit:</p><ol><li>Tarkastella yleisi\u00e4 reittien tietoja ja varaustilannetta.</li><li>Tehd\u00e4 varauksen tulevalle kaudelle ja vapauttaa tekem\u00e4si varauksen.</li><li>Katsoa ja tulostaa vakiolinjan kartan ja maastolomakkeen. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen valitse oikeasta reunasta \u201dKatso ja tulosta kartta ja maastolomake\u201d. Lomakkeita ei kannata tulostaa ennen linnustonseurannan lupaa, koska reittiin on voinut tulla hyv\u00e4ksym\u00e4tt\u00f6mi\u00e4 reittimuutoksia.</li><li>Tarkastella tunnuksellasi valitulta vakiolinjalta ilmoitettuja tuloksia.</li><li>Siirty\u00e4 ilmoittamaan havaintoja vakiolinjalta, jonka olet varannut. Valitse vakiolinja, mink\u00e4 j\u00e4lkeen klikkaa \u201dilmoita uusi laskenta t\u00e4lle reitille\u201d.</ol><p>Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ota yhteytt\u00e4 <a target=\"_blank\" href=\"mailto:linnustonseuranta@luomus.fi\">linnustonseuranta@luomus.fi</a></p>",
+            "copyLatestDocumentToNamedPlace": true,
+            "filterByTags": true,
+            "infoFields": [
+                "name",
+                "notes"
+            ],
+            "listColumns": [
+                "$.alternativeIDs[0]",
+                "$.name",
+                "$._status",
+                "$.prepopulatedDocument.gatheringEvent.dateBegin"
+            ],
+            "listColumnsMultisort": true,
+            "listLabel": "Linjaluettelo",
+            "printLabel": "Katso ja tulosta kartta ja maastolomake",
+            "reservationUntil": "${year}-12-31",
+            "showLegendList": true,
+            "startWithMap": true,
+            "useAcceptedDocument": true,
+            "useLabel": "Ilmoita uusi laskenta t\u00e4lle reitille"
+        },
+        "printType": "MHL.printTypeLineTransect",
+        "restrictAccess": "MHL.restrictAccessLoose",
+        "resultServiceType": "MHL.resultServiceTypeLineTransect",
+        "saveSuccessMessage": "Linjalaskennan havaintosi on nyt tallennettu. Kiitos osallistumisestasi! Jos sinulla on kysytt\u00e4v\u00e4\u00e4, ole yhteydess\u00e4 linnustonseuranta@luomus.fi",
         "season": {
             "end": "${year}-07-12",
             "start": "${year}-05-01"
-        }
+        },
+        "sidebarFormLabel": "Vakiolinjat ja ilmoittaminen",
+        "useNamedPlaces": true,
+        "viewerType": "MHL.viewerTypeLineTransect",
+        "warnEditingOldDocument": true
     },
-    "printType": "MHL.printTypeLineTransect",
     "schema": {
         "properties": {
             "editors": {
@@ -67,6 +83,7 @@
             "gatheringEvent": {
                 "properties": {
                     "breaksDuringCensusInMinutes": {
+                        "minimum": 0,
                         "title": "Pidettyjen taukojen m\u00e4\u00e4r\u00e4 minuutteina",
                         "type": "integer"
                     },
@@ -81,7 +98,6 @@
                         "type": "boolean"
                     },
                     "dateBegin": {
-                        "excludeFromCopy": true,
                         "title": "Laskentap\u00e4iv\u00e4",
                         "type": "string"
                     },
@@ -110,6 +126,10 @@
                         "title": "Lis\u00e4tiedot laskennasta (esimerkiksi muutokset reittiin, huomiot s\u00e4\u00e4tilasta jne.)",
                         "type": "string"
                     },
+                    "startDistanceFromNECorner": {
+                        "title": "L\u00e4ht\u00f6pisteen et\u00e4isyys reitin koillisnurkasta (m)",
+                        "type": "string"
+                    },
                     "taxonCensus": {
                         "default": [
                             {
@@ -125,18 +145,17 @@
                                 },
                                 "taxonCensusType": {
                                     "default": "",
-                                    "enum": [
-                                        "MY.taxonCensusTypeCounted"
-                                    ],
-                                    "enumNames": [
-                                        "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista"
+                                    "oneOf": [
+                                        {
+                                            "const": "MY.taxonCensusTypeCounted",
+                                            "title": "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista"
+                                        }
                                     ],
                                     "title": "Laskennan kattavuus",
                                     "type": "string"
                                 }
                             },
                             "required": [
-                                "censusTaxonID",
                                 "taxonCensusType"
                             ],
                             "type": "object"
@@ -166,6 +185,16 @@
                                     "default": true,
                                     "title": "Biotooppi laskettu",
                                     "type": "boolean"
+                                },
+                                "lineTransectSegmentMetersEnd": {
+                                    "minimum": 0,
+                                    "title": "Biotoopin loppu metreiss\u00e4 linjan alusta",
+                                    "type": "integer"
+                                },
+                                "lineTransectSegmentMetersStart": {
+                                    "minimum": 0,
+                                    "title": "Biotoopin alku metreiss\u00e4 linjan alusta",
+                                    "type": "integer"
                                 }
                             },
                             "required": [],
@@ -181,15 +210,142 @@
                             "title": "P\u00e4\u00e4saran biotooppi",
                             "type": "string"
                         },
+                        "taxonCensus": {
+                            "default": [
+                                {
+                                    "censusTaxonID": "MX.37580",
+                                    "taxonCensusType": "MY.taxonCensusTypeCounted"
+                                }
+                            ],
+                            "items": {
+                                "properties": {
+                                    "censusTaxonID": {
+                                        "title": "Laskettu taksoni",
+                                        "type": "string"
+                                    },
+                                    "taxonCensusType": {
+                                        "default": "",
+                                        "oneOf": [
+                                            {
+                                                "const": "MY.taxonCensusTypeCounted",
+                                                "title": "M\u00e4\u00e4ritetty ja laskettu yksil\u00f6t kaikista lajeista"
+                                            }
+                                        ],
+                                        "title": "Laskennan kattavuus",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "taxonCensusType"
+                                ],
+                                "type": "object"
+                            },
+                            "title": "Kaikki havaitut nis\u00e4kk\u00e4\u00e4t kirjattu",
+                            "type": "array"
+                        },
                         "timeStart": {
                             "title": "Kellonaika",
                             "type": "string"
                         },
                         "units": {
-                            "excludeFromCopy": true,
                             "items": {
                                 "properties": {
+                                    "atlasCode": {
+                                        "oneOf": [
+                                            {
+                                                "const": "",
+                                                "title": ""
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum1",
+                                                "title": "1 Ep\u00e4todenn\u00e4k\u00f6inen pesint\u00e4: havaittu lajin yksil\u00f6, havainto ei viittaa pesint\u00e4\u00e4n."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum2",
+                                                "title": "2 Mahdollinen pesint\u00e4: yksitt\u00e4inen lintu kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum3",
+                                                "title": "3 Mahdollinen pesint\u00e4: pari kerran, on sopivaa pesim\u00e4ymp\u00e4rist\u00f6\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum4",
+                                                "title": "4 Todenn\u00e4k\u00f6inen pesint\u00e4: koiras reviirill\u00e4 (esim. laulaa) eri p\u00e4ivin\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum5",
+                                                "title": "5 Todenn\u00e4k\u00f6inen pesint\u00e4: naaras tai pari reviirill\u00e4 eri p\u00e4ivin\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum6",
+                                                "title": "6 Todenn\u00e4k\u00f6inen pesint\u00e4: linnun tai parin havainto viittaa vahvasti pesint\u00e4\u00e4n."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum61",
+                                                "title": "61 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari k\u00e4y usein todenn\u00e4k\u00f6isell\u00e4 pes\u00e4paikalla."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum62",
+                                                "title": "62 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari rakentaa pes\u00e4\u00e4 tai vie pes\u00e4materiaalia."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum63",
+                                                "title": "63 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari varoittelee ehk\u00e4 pes\u00e4st\u00e4 tai poikueesta."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum64",
+                                                "title": "64 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari houkuttelee pois ehk\u00e4 pes\u00e4lt\u00e4 / poikueelta."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum65",
+                                                "title": "65 Todenn\u00e4k\u00f6inen pesint\u00e4: lintu tai pari hy\u00f6kk\u00e4ilee, l\u00e4hell\u00e4 ehk\u00e4 pes\u00e4 / poikue."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum66",
+                                                "title": "66 Todenn\u00e4k\u00f6inen pesint\u00e4; N\u00e4hty pes\u00e4, jossa samanvuotista rakennusmateriaalia tai ravintoj\u00e4tett\u00e4; ei kuitenkaan varmaa todistetta munista tai poikasista"
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum7",
+                                                "title": "7 Varma pesint\u00e4: havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum71",
+                                                "title": "71 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 saman vuoden munia, kuoria, j\u00e4\u00e4nteit\u00e4. Voi olla ep\u00e4onnistunut."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum72",
+                                                "title": "72 Varma pesint\u00e4: k\u00e4y pes\u00e4ll\u00e4 pesint\u00e4\u00e4n viittaavasti. Munia / poikasia ei havaita (kolo tms.)."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum73",
+                                                "title": "73 Varma pesint\u00e4: juuri lentokykyiset poikaset tai untuvikot oletettavasti ruudulta."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum74",
+                                                "title": "74 Varma pesint\u00e4: emo kantaa ruokaa tai poikasten ulosteita, pesint\u00e4 oletettavasti ruudulla."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum75",
+                                                "title": "75 Varma pesint\u00e4; Havaittu ep\u00e4suora todiste varmasta pesinn\u00e4st\u00e4: n\u00e4hty pes\u00e4ss\u00e4 hautova emo"
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum8",
+                                                "title": "8 Varma pesint\u00e4: havaittu suora todiste varmasta pesinn\u00e4st\u00e4."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum81",
+                                                "title": "81 Varma pesint\u00e4: kuultu poikasten \u00e4\u00e4ntely\u00e4 pes\u00e4ss\u00e4 (kolo / pes\u00e4 korkealla)."
+                                            },
+                                            {
+                                                "const": "MY.atlasCodeEnum82",
+                                                "title": "82 Varma pesint\u00e4: n\u00e4hty pes\u00e4ss\u00e4 munia tai poikasia."
+                                            }
+                                        ],
+                                        "title": "Pesim\u00e4varmuusindeksi",
+                                        "type": "string"
+                                    },
                                     "broodSize": {
+                                        "exclusiveMinimum": 0,
                                         "title": "Pesyekoko",
                                         "type": "integer"
                                     },
@@ -205,9 +361,11 @@
                                             "type": "object"
                                         },
                                         "minItems": 1,
+                                        "title": "",
                                         "type": "array"
                                     },
                                     "individualCount": {
+                                        "minimum": 0,
                                         "title": "Yksil\u00f6m\u00e4\u00e4r\u00e4",
                                         "type": "integer"
                                     },
@@ -228,6 +386,7 @@
                                     },
                                     "pairCount": {
                                         "default": 1,
+                                        "minimum": 0,
                                         "title": "Parim\u00e4\u00e4r\u00e4",
                                         "type": "integer"
                                     },
@@ -242,55 +401,84 @@
                                                 "type": "string"
                                             },
                                             "lineTransectObsType": {
-                                                "enum": [
-                                                    "",
-                                                    "MY.lineTransectObsTypeSong",
-                                                    "MY.lineTransectObsTypeOtherSound",
-                                                    "MY.lineTransectObsTypeSeen",
-                                                    "MY.lineTransectObsTypeSeenMale",
-                                                    "MY.lineTransectObsTypeSeenFemale",
-                                                    "MY.lineTransectObsTypeFlyingOverhead",
-                                                    "MY.lineTransectObsTypeFlock",
-                                                    "MY.lineTransectObsTypeFlockFlyingOverhead",
-                                                    "MY.lineTransectObsTypeSeenPair",
-                                                    "MY.lineTransectObsTypeSeenBrood",
-                                                    "MY.lineTransectObsTypeSeenNest",
-                                                    "MY.lineTransectObsTypeUnknown"
-                                                ],
-                                                "enumNames": [
-                                                    "",
-                                                    "Laulava",
-                                                    "Muuten \u00e4\u00e4ntelev\u00e4",
-                                                    "N\u00e4k\u00f6havainto",
-                                                    "Koiras",
-                                                    "Naaras",
-                                                    "Ylilent\u00e4v\u00e4",
-                                                    "Parvi",
-                                                    "Lentoparvi",
-                                                    "Pari",
-                                                    "Poikue",
-                                                    "Pes\u00e4",
-                                                    "Tuntematon"
+                                                "oneOf": [
+                                                    {
+                                                        "const": "",
+                                                        "title": ""
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSong",
+                                                        "title": "Laulava"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeOtherSound",
+                                                        "title": "Muuten \u00e4\u00e4ntelev\u00e4"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSeen",
+                                                        "title": "N\u00e4k\u00f6havainto"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSeenMale",
+                                                        "title": "Koiras"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSeenFemale",
+                                                        "title": "Naaras"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeFlyingOverhead",
+                                                        "title": "Ylilent\u00e4v\u00e4"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeFlock",
+                                                        "title": "Parvi"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeFlockFlyingOverhead",
+                                                        "title": "Lentoparvi"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSeenPair",
+                                                        "title": "Pari"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSeenBrood",
+                                                        "title": "Poikue"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeSeenNest",
+                                                        "title": "Pes\u00e4"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectObsTypeUnknown",
+                                                        "title": "Tuntematon"
+                                                    }
                                                 ],
                                                 "title": "Havainnon laatu",
                                                 "type": "string"
                                             },
                                             "lineTransectRouteFieldType": {
-                                                "enum": [
-                                                    "",
-                                                    "MY.lineTransectRouteFieldTypeInner",
-                                                    "MY.lineTransectRouteFieldTypeOuter"
-                                                ],
-                                                "enumNames": [
-                                                    "",
-                                                    "P - P\u00e4\u00e4sarka",
-                                                    "A - Apusarka"
+                                                "oneOf": [
+                                                    {
+                                                        "const": "",
+                                                        "title": ""
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectRouteFieldTypeInner",
+                                                        "title": "P - P\u00e4\u00e4sarka"
+                                                    },
+                                                    {
+                                                        "const": "MY.lineTransectRouteFieldTypeOuter",
+                                                        "title": "A - Apusarka"
+                                                    }
                                                 ],
                                                 "title": "Sarka",
                                                 "type": "string"
                                             }
                                         },
                                         "required": [],
+                                        "title": "",
                                         "type": "object"
                                     }
                                 },
@@ -308,9 +496,12 @@
                 "type": "array"
             }
         },
-        "required": [],
+        "required": [
+            "gatherings"
+        ],
         "type": "object"
     },
+    "shortTitle": "Linjalaskenta",
     "title": "Maalintujen linjalaskennat",
     "uiSchema": {
         "editors": {
@@ -376,6 +567,9 @@
                     "rows": 2
                 },
                 "ui:widget": "textarea"
+            },
+            "startDistanceFromNECorner": {
+                "ui:field": "HiddenField"
             },
             "taxonCensus": {
                 "ui:field": "AnyToBooleanField",
@@ -471,7 +665,7 @@
                                                     "ui:field": "ContextInjectionField",
                                                     "ui:options": {
                                                         "injections": {
-                                                            "/ui:options/rules/0/regexp": "/creator"
+                                                            "/ui:options/rules/0/regexp": "^%{/creator}$"
                                                         }
                                                     }
                                                 },
@@ -506,6 +700,12 @@
                                                 }
                                             ],
                                             "ui:options": {
+                                                "buttons": [
+                                                    {
+                                                        "fn": "add",
+                                                        "label": "Lis\u00e4\u00e4 laskija"
+                                                    }
+                                                ],
                                                 "specialRules": "legEditors",
                                                 "ui:buttonsDesktopLayout": true,
                                                 "ui:deleteHelp": "Poista laskijan nimi"
@@ -554,6 +754,12 @@
                         "ui:options": {
                             "allowUndefined": false
                         }
+                    },
+                    "lineTransectSegmentMetersEnd": {
+                        "ui:field": "HiddenField"
+                    },
+                    "lineTransectSegmentMetersStart": {
+                        "ui:field": "HiddenField"
                     }
                 },
                 "geometry": {
@@ -563,6 +769,9 @@
                     "ui:help": "<u>Biotoopin koodi</u> on kolmiosainen. Alun <b>ISO</b> kirjain kertoo biotoopin ja seuraava numero tai <b>ISO</b> kirjain tarkentaa sit\u00e4. Niiden per\u00e4\u00e4n merkit\u00e4\u00e4n mets\u00e4isill\u00e4 biotoopeilla puuston keskikorkeus ja aukeilla biotoopeilla aukean kokoluokka. <a href=\"https://www.luomus.fi/sites/default/files/files/linjalomake-e.pdf\" target=\"_blank\" rel=\"noreferrer\">Tarkemmat ohjeet</a>",
                     "ui:helpHoverable": true,
                     "ui:widget": "UpperCaseWidget"
+                },
+                "taxonCensus": {
+                    "ui:field": "HiddenField"
                 },
                 "timeStart": {
                     "ui:help": "Biotooppip\u00e4tk\u00e4n aloitusaika. Raportoidaan noin 500 m v\u00e4lein. Laita 500m (maastolomakkeen sivun vaihto) v\u00e4liaika l\u00e4himp\u00e4\u00e4n biotoopin aloitukseen. Jos biotooppip\u00e4tk\u00e4n alkua ei satu l\u00e4helle 500m vaihtumista, arvioi tarvittaessa ero.",
@@ -645,15 +854,7 @@
                         },
                         "ui:annotations": {
                             "add": {
-                                "formData": {
-                                    "annotationClass": "MAN.annotationClassReliable"
-                                },
-                                "type": "MAN.typeOpinion",
-                                "uiSchema": {
-                                    "annotationClass": {
-                                        "ui:title": "Havainnon luotettavuus"
-                                    }
-                                }
+                                "type": "MAN.typeOpinion"
                             },
                             "adminOnly": true,
                             "container": "modal",
@@ -719,6 +920,7 @@
                         ],
                         "ui:grid": {
                             "lg": {
+                                "atlasCode": 2,
                                 "broodSize": 1,
                                 "identifications_0_taxon": 2,
                                 "individualCount": 1,
@@ -730,6 +932,7 @@
                                 "unitFact_lineTransectRouteFieldType": 2
                             },
                             "md": {
+                                "atlasCode": 2,
                                 "broodSize": 1,
                                 "identifications_0_taxon": 2,
                                 "individualCount": 1,
@@ -741,6 +944,7 @@
                                 "unitFact_lineTransectRouteFieldType": 2
                             },
                             "sm": {
+                                "atlasCode": 2,
                                 "broodSize": 2,
                                 "identifications_0_taxon": 4,
                                 "individualCount": 3,
@@ -754,6 +958,7 @@
                             "xs": 12
                         },
                         "ui:options": {
+                            "additionalsPersistenceKey": "unit",
                             "fieldScopes": {
                                 "informalTaxonGroups": {
                                     "*": {
@@ -829,7 +1034,8 @@
                                 "identifications_0_taxon",
                                 "unitFact_lineTransectObsType",
                                 "unitFact_lineTransectRouteFieldType",
-                                "pairCount"
+                                "pairCount",
+                                "atlasCode"
                             ],
                             "includeAdditionalFieldsChooserButton": true
                         },
@@ -840,6 +1046,7 @@
                             "unitFact_lineTransectRouteFieldType",
                             "individualCount",
                             "pairCount",
+                            "atlasCode",
                             "broodSize",
                             "notes",
                             "*"
@@ -871,7 +1078,6 @@
                     "geometryField": "geometry",
                     "geometryMapper": "lineTransect",
                     "idToFocusAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units_0",
-                    "idToScrollAfterNavigate": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}__header",
                     "mapOptions": {
                         "controls": {
                             "location": false
@@ -889,7 +1095,8 @@
                 "ui:settings": [
                     "/mapOptions/tileLayerName",
                     "/mapOptions/overlayNames",
-                    "/mapOptions/tileLayerOpacity"
+                    "/mapOptions/tileLayerOpacity",
+                    "/mapOptions/tileLayers"
                 ]
             },
             "ui:help": "Valitse seuraava/edellinen biotooppip\u00e4tk\u00e4 joko sivulla olevista nuolista tai kartasta klikkaamalla",
@@ -900,33 +1107,14 @@
                 "headerFormatters": [
                     "lineTransect"
                 ],
+                "removable": false,
                 "renderer": "pager"
             },
             "ui:title": "Biotooppip\u00e4tk\u00e4"
         },
         "ui:annotations": {
             "add": {
-                "filter": {
-                    "filter": [
-                        "opinion"
-                    ],
-                    "filterType": "blacklist"
-                },
-                "formData": {
-                    "annotationClass": "MAN.annotationClassReliable"
-                },
-                "type": "MAN.typeOpinion",
-                "uiSchema": {
-                    "annotationClass": {
-                        "ui:options": {
-                            "allowUndefined": false,
-                            "falseValue": "MAN.annotationClassUnreliable",
-                            "label": "Arvioni laskennan luotettavuudesta",
-                            "trueValue": "MAN.annotationClassReliable"
-                        },
-                        "ui:widget": "AnyToBooleanWidget"
-                    }
-                }
+                "type": "MAN.typeOpinion"
             },
             "adminOnly": true,
             "buttonsPath": "/gatheringEvent",
@@ -1065,6 +1253,10 @@
                         "latest": "now",
                         "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian vanha",
                         "tooLate": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa"
+                    },
+                    "datetime": {
+                        "earliest": "1000-01-01",
+                        "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
                     },
                     "monthDay": {
                         "earliestDay": 1,
@@ -1205,7 +1397,6 @@
             }
         }
     },
-    "viewerType": "MHL.viewerTypeLineTransect",
     "warnings": {
         "gatheringEvent": {
             "properties": {
