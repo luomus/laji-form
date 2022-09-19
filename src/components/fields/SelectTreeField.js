@@ -34,7 +34,7 @@ export default class SelectTreeField extends React.Component {
 		let idSchema = {$id: props.idSchema.$id};
 
 		let dictionarifiedEnums = {};
-		props.schema.oneOf.forEach((e, i) => {
+		props.schema.oneOf.forEach(e => {
 			dictionarifiedEnums[e.const] = e.title;
 		});
 
