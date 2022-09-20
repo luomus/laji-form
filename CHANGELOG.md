@@ -1,3 +1,7 @@
+## 13.0.0
+### BREAKING CHANGES:
+* Support for JSON Schema `enum` & `enumNames` properties dropped since they aren't JSON Schema. Instead, enums should be in format `{const: string, title: string}[]`.
+
 ## 12.5.0
 * add `lajiGeoServerAddress` option
 
