@@ -540,12 +540,11 @@ export class Autosuggest extends React.Component {
 			});
 		};
 
-		const context = new Context(this.props.formContext.contextId);
 		if (this.timeout) {
 			clearTimeout(this.timeout);
 		}
 		if (debounce) {
-			this.timeout = context.setTimeout(request, 100);
+			this.timeout = this.context.setTimeout(request, 100);
 		} else {
 			request();
 		}
@@ -1115,6 +1114,7 @@ const TaxonName = ({scientificName, vernacularName = "", cursiveName, finnish}) 
 };
 
 class ReactAutosuggest extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.listRef = React.createRef();
@@ -1200,7 +1200,7 @@ class ReactAutosuggest extends React.Component {
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 			if (shortcuts.Enter) {
-				context.setTimeout(() => {
+				this.context.setTimeout(() => {
 					suggestion && this.onSuggestionSelected(suggestion);
 				}, 0);
 			} else {

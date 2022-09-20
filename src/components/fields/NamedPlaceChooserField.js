@@ -112,7 +112,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				// It takes a while for API to remove the place, so we remove it locally and then invalidate again after some time.
 				this.removeIds[place.id] = true;
 				this.apiClient.invalidateCachePath("/named-places");
-				this.getContext().setTimeout(() => this.apiClient.invalidateCachePath("/named-places"), 2000);
+				setTimeout(() => this.apiClient.invalidateCachePath("/named-places"), 2000);
 				success();
 			}
 		}).catch(() => {

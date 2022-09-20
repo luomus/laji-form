@@ -584,6 +584,7 @@ class UnitsMapArrayField extends React.Component {
 
 @_MapArrayField
 class LineTransectMapArrayField extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.state = {showLTTools: false};
@@ -765,7 +766,7 @@ class LineTransectMapArrayField extends React.Component {
 			setTimeout(() => this.map.zoomToData({paddingInMeters: 200}));
 			return;
 		}
-		this.getContext().setImmediate(() =>{
+		this.context.setTimeout(() => {
 			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100}); // eslint-disable-line no-undef
 		});
 	}
@@ -1126,6 +1127,7 @@ function _MapArrayField(ComposedComponent) {
 @BaseComponent
 class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
@@ -1200,7 +1202,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		if (this.refs.stretch) {
 			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
 			if (resizeTimeout) {
-				this.getContext().setTimeout(this.refs.stretch.update, resizeTimeout);
+				this.context.setTimeout(this.refs.stretch.update, resizeTimeout);
 			} else {
 				this.refs.stretch.update();
 			}

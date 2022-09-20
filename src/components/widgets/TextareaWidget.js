@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { stringifyKeyCombo } from "../../utils";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
 
 export default class TextareaWidget extends React.Component {
@@ -16,6 +17,7 @@ export default class TextareaWidget extends React.Component {
 		}),
 		value: PropTypes.string
 	}
+	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
@@ -60,7 +62,7 @@ export default class TextareaWidget extends React.Component {
 				this.props.onChange(value);
 			} else {
 				if (this.timeout) clearTimeout(this.timeout);
-				this.timeout = new Context(this.props.formContext.contextId).setTimeout(() => {
+				this.timeout = this.context.setTimeout(() => {
 					this.props.onChange(value === "" ? getUiOptions(this.props).emptyValue : value);
 				}, 1000);
 			}

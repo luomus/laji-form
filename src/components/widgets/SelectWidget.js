@@ -4,10 +4,13 @@ import * as Combobox from "react-widgets/lib/Combobox";
 import * as Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 
 import { isEmptyString, getUiOptions, filter } from "../../utils";
 
 class SelectWidget extends React.Component {
+
+	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
@@ -104,7 +107,7 @@ class SelectWidget extends React.Component {
 	onFocus = () => this.setState({open: true})
 
 	onSelect = (item) => {
-		this.state.open && this._context.setImmediate(() => this.mounted && this.setState({open: false, value: item.value}));
+		this.state.open && this.context.setTimeout(() => this.mounted && this.setState({open: false, value: item.value}));
 		const value = this.getEnum(item.value);
 		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}

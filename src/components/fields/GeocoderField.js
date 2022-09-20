@@ -39,6 +39,7 @@ export default class GeocoderField extends React.Component {
 	}
 
 	static getName() {return "GeocoderField";}
+	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
@@ -364,7 +365,7 @@ export default class GeocoderField extends React.Component {
 
 				this.getComponentContext().fetching = true;
 
-				this.getContext().setTimeout(() => {
+				this.context.setTimeout(() => {
 					if (timestamp !== this.promiseTimestamp) return;
 					if (this.getComponentContext().fetching) {
 						fail(this.props.formContext.translations.GeocodingTimeout);

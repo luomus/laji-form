@@ -70,7 +70,7 @@ describe("InjectField", () => {
 
 		it("displays all fields and their ids are kept intact", async () => {
 			for (let locator of ["a", "a.aa", "a.ab", "a.ab", "b", "b.ba"]) {
-				expect(await form.$locate(locator).isDisplayed()).toBe(true);
+				expect(await form.$locate(locator).isPresent()).toBe(true, `${locator} not displayed`);
 			}
 		});
 

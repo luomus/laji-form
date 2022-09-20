@@ -4,7 +4,7 @@ import { getUiOptions, getInnerUiSchema } from "../../utils";
 import { Affix } from "../components";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
-import { getTemplate } from "@rjsf/core";
+import { getTemplate } from "@rjsf/utils";
 
 @BaseComponent
 export default class ExtraLabelRowField extends React.Component {
@@ -45,7 +45,7 @@ export default class ExtraLabelRowField extends React.Component {
 	render() {
 		const {SchemaField} = this.props.registry.fields;
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
-		const {labels, titleClassName, hiddenXs, affixed} = getUiOptions(this.props.uiSchema);
+		const {labels, hiddenXs, affixed} = getUiOptions(this.props.uiSchema);
 		const cols = [];
 
 		labels.forEach((label, i) => {

@@ -9,7 +9,8 @@ const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
 import { HasMaybeChildren, Theme } from "../themes/theme";
-import Context from "../ReactContext";
+import Context, { ContextProps } from "../ReactContext";
+import StubTheme from "../themes/stub";
 
 import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, RJSFSchema, TemplatesType } from "@rjsf/utils";
@@ -112,7 +113,8 @@ const templates = importLocalComponents<TemplatesType>("templates", [
 	{"DescriptionFieldTemplate": "DescriptionField"},
 	"FieldTemplate",
 	"ArrayFieldTemplate",
-	"ErrorListTemplate"
+	"ErrorListTemplate",
+	"ObjectFieldTemplate"
 ]);
 
 function importLocalComponents<T>(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: T} {
@@ -282,7 +284,6 @@ export interface RootContext {
 	onSettingsChange: (global?: boolean) => void;
 	addFocusHandler: (id: string, fn: FocusHandler) => void;
 	removeFocusHandler: (id: string, fn: FocusHandler) => void;
-	setImmediate: (fn: () => void) => void;
 	setTimeout: (fn: () => void, timer: number) => void;
 	addEventListener: (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => void;
 	addCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
@@ -303,6 +304,8 @@ export interface RootContext {
 
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
 	static contextType = Context;
+	contextMemoizeKey: Record<keyof LajiFormProps, any>;
+	memoizedContext: ContextProps;
 
 	translations = this.constructTranslations();
 	bgJobRef = React.createRef<FailedBackgroundJobsPanel>();
@@ -379,7 +382,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	helpStarted: boolean;
 	eventListeners: [typeof document | typeof window, string, (e: Event) => void][] = [];
 	timeouts: number[] = [];
-	immediates: number[] = [];
 
 
 	static propTypes = {
@@ -459,7 +461,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.focusHandlers[id] = this.focusHandlers[id].filter(_fn => fn !== _fn);
 		};
 
-		this._context.setImmediate = this.setImmediate;
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
@@ -722,6 +723,24 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})})
 	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
 
+	getContext = (props: LajiFormProps, context: ContextProps): ContextProps => {
+		const nextKey = (["theme", "lang"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+			key[prop] = props[prop];
+			return key;
+		}, {} as Record<keyof LajiFormProps, any>);
+		if (this.contextMemoizeKey && (Object.keys(this.contextMemoizeKey) as (keyof LajiFormProps)[]).every(k => this.contextMemoizeKey[k] === nextKey[k])) {
+			return this.memoizedContext;
+		} else {
+			this.contextMemoizeKey = nextKey;
+			this.memoizedContext = {
+				theme: props.theme || context?.theme || StubTheme,
+				lang: props.lang || "en",
+				setTimeout: this.setTimeout,
+			};
+			return this.memoizedContext;
+		}
+	}
+
 	render() {
 		if (this.state.error) return null;
 		const {translations} = this.state;
@@ -732,13 +751,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
 
-		const {Panel, Table} = this.props.theme || this.context.theme;
+		const {Panel, Table} = this.getContext(this.props, this.context).theme;
 
 		const panelHeader = (
 			<h3>{translations.Shortcuts}<button type="button" className="close pull-right" onClick={this.dismissHelp}>×</button></h3>
 		);
 		return (
-			<Context.Provider value={this.props.theme ? {theme: this.props.theme} : this.context}>
+			<Context.Provider value={this.getContext(this.props, this.context)}>
 				<div className="laji-form">
 					{showShortcutsButton && this.props.showShortcutButton !== false && shortcuts && (
 						<TooltipComponent tooltip={this.getShorcutButtonTooltip()}>
@@ -817,7 +836,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const  runningAmount = this.state.submitHooks.reduce((count, {running}) => running ? count + 1 : count, 0);
 		if (!this.state.runningSubmitHooks) return null;
 
-		const { ProgressBar } = this.props.theme || this.context.theme;
+		const { ProgressBar } = this.getContext(this.props, this.context).theme;
 		return (
 			<div className="running-jobs">
 				{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
@@ -1095,7 +1114,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			console.warn("laji-form: Blocking loader was popped before pushing!");
 		} else if (this.blockingLoaderCounter === 0) {
 			this.blockingLoaderRef.className = "laji-form blocking-loader leave-start";
-			this.setImmediate(() => {
+			this.setTimeout(() => {
 				if (this.blockingLoaderCounter > 0) {
 					this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 					return;
@@ -1130,7 +1149,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	onSettingsChange = (global = false) => {
 		const settings = this.getSettings(global);
 		if (!equals(this.state.formContext.settings, settings)) {
-			// setImmediate because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
+			// setTimeout because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
 			setTimeout(() => {
 				this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
 			});
@@ -1143,14 +1162,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this.eventListeners.push([target, name ,fn]);
 	}
 
-	setTimeout = (fn: () => void, time: number) => {
+	setTimeout = (fn: () => void, time = 0) => {
 		const timeout = window.setTimeout(fn, time);
 		this.timeouts.push(timeout);
 		return timeout;
-	}
-
-	setImmediate = (fn: () => void) => {
-		this.immediates.push(setTimeout(fn));
 	}
 
 	destroy = () => {
@@ -1159,9 +1174,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		});
 		if (this.timeouts) this.timeouts.forEach((timeout) => {
 			clearTimeout(timeout);
-		});
-		if (this.immediates) this.immediates.forEach((immediate) => {
-			clearTimeout(immediate);
 		});
 		this.eventListeners = [];
 	}

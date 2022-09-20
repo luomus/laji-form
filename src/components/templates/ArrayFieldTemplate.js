@@ -298,13 +298,12 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 			nonRemovables = [],
 			nonOrderables = [],
 			"ui:deleteHelp": deleteHelp,
-			titleFormatters,
 			buttons = []
 		} = getUiOptions(props.uiSchema);
 		const {readonly, disabled} = this.props;
 		const {Label} = this.props.formContext;
 		const Title = renderTitleAsLabel ? Label : getTemplate("TitleFieldTemplate", props.registry, getUiOptions(props.uiSchema));
-		const Description = props.DescriptionField;
+		const Description = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(props.uiSchema));
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 
 		const _buttons = getButtons(buttons, props);
@@ -344,7 +343,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 
 		return (
 			<div className={props.className}>
-				<Title title={title} label={title} help={props.uiSchema["ui:help"]} formatters={titleFormatters} />
+				<Title title={title} label={title} uiSchema={this.props.uiSchema} />
 				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
