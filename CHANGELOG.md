@@ -1,3 +1,7 @@
+## 14.0.0
+### BREAKING CHANGES:
+* `react-jsonschema-form` updated to version `5`. Read more: https://react-jsonschema-form.readthedocs.io/en/latest/5.x%20upgrade%20guide/
+
 ## 13.0.0
 ### BREAKING CHANGES:
 * Support for JSON Schema `enum` & `enumNames` properties dropped since they aren't JSON Schema. Instead, enums should be in format `{const: string, title: string}[]`.
