@@ -152,7 +152,6 @@ export default class _SchemaField extends React.Component {
 		const {SchemaField} = getDefaultRegistry().fields;
 		return <SchemaField
 			{..._props}
-			name={undefined}
 			registry={registry}
 			schema={schema}
 			uiSchema={uiSchema}

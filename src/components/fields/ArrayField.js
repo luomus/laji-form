@@ -63,6 +63,11 @@ export class ArrayFieldPatched extends ArrayField {
 	}
 
 	renderArrayFieldItem(props) {
+		// rjsf@5 started rendering array items with titles as "name-idx" - we don't want that.
+		if (typeof props.name === "string") {
+			props.name = undefined;
+		}
+
 		if (this.props.idSchema) {
 			const idSchema = this.getIdSchema(this.props, props.index);
 			return super.renderArrayFieldItem({...props, itemIdSchema: idSchema});

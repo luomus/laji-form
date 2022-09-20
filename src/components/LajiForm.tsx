@@ -141,7 +141,7 @@ function getNewId() {
 	return _id;
 }
 
-export interface LajiFormProps  extends HasMaybeChildren {
+export interface LajiFormProps extends HasMaybeChildren {
 	apiClient?: ApiClientImplementation;
 	lang?: Lang;
 	formData?: any;
