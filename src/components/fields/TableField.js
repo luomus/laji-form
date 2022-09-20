@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getUiOptions, updateTailUiSchema, isHidden, getUUID } from "../../utils";
-import { orderProperties } from "@rjsf/core/dist/cjs/utils";
+import { orderProperties } from "@rjsf/utils";
 import { DeleteButton } from "../components";
-import { getButtonElems, handlesArrayKeys, onDelete } from "../ArrayFieldTemplate";
+import { getButtonElems, handlesArrayKeys, onDelete } from "../templates/ArrayFieldTemplate";
 import BaseComponent from "../BaseComponent";
 import ReactContext from "../../ReactContext";
 
@@ -102,6 +102,8 @@ export default class TableField extends React.Component {
 			}
 		}
 
+		_uiSchema["ui:ArrayFieldTemplate"] = TableArrayFieldTemplate;
+
 		const _formContext = {
 			...formContext,
 			cols,
@@ -118,7 +120,6 @@ export default class TableField extends React.Component {
 				uiSchema={_uiSchema}
 				registry={{
 					...this.props.registry,
-					ArrayFieldTemplate: TableArrayFieldTemplate,
 					formContext: _formContext
 				}}
 				formContext={_formContext}

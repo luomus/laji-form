@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
-import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer } from  "../../utils";
+import { immutableDelete, getUiOptions, updateSafelyWithJSONPointer, parseJSONPointer, checkJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, getDefaultFormState } from  "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 /**
@@ -148,7 +147,7 @@ export default class NestField extends React.Component {
 
 		Object.keys(nests).forEach((wrapperFieldName) => {
 			const nest = nests[wrapperFieldName];
-			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, registry}, nests[wrapperFieldName].fields, nest.title);
+			const nestedProps = getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData}, nests[wrapperFieldName].fields, nest.title);
 			nestedPropsMap[wrapperFieldName] = nestedProps;
 
 			schema = {...schema, properties: {...schema.properties, [wrapperFieldName]: nestedProps.schema}};
@@ -253,14 +252,16 @@ export default class NestField extends React.Component {
 	}
 }
 
-export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange, registry: {definitions}}, fields, title) {
+export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, formData, onChange}, fields, title) {
 	const newSchema = {type: "object", properties: {}, title};
 	const newErrorSchema = {};
 	const newFormData = {};
-	const newUiSchema = ["classNames"].reduce((_uiSchema, prop) => {
-		if (prop in _uiSchema) _uiSchema[prop] = uiSchema[prop];
-		return _uiSchema;
-	}, {});
+	const newUiSchema = uiSchema
+		? ["classNames"].reduce((_uiSchema, prop) => {
+			if (prop in uiSchema) _uiSchema[prop] = uiSchema[prop];
+			return _uiSchema;
+		}, {})
+		: {};
 	const newIdSchema = {$id: idSchema.$id};
 	const fieldsDictionarified = {};
 
@@ -290,7 +291,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 		let newFormData = fields.reduce((_formData, field) => {
 			_formData = updateSafelyWithJSONPointer(_formData, _formData[flattenPointerName[field]], field, !!"immutably", (__formData, path) => {
 				const _schema = parseJSONPointer(schema, schemaJSONPointer(schema, path));
-				return getDefaultFormState(_schema, undefined, definitions);
+				return getDefaultFormState(_schema);
 			});
 			_formData = immutableDelete(_formData, flattenPointerName(field));
 			return _formData;

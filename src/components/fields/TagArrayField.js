@@ -21,7 +21,7 @@ export default class TagArrayField extends React.Component {
 	}
 
 	render() {
-		const {FieldTemplate} = this.props.registry;
+		const {FieldTemplate} = this.props.registry.templates;
 		const {uiSchema} = this.props;
 
 		return (

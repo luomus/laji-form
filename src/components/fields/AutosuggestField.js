@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, formDataEquals, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
 import * as merge from "deepmerge";
 
@@ -265,7 +264,7 @@ export default class AutosuggestField extends React.Component {
 		let {formData, uiSchema} = this.props;
 		const {suggestionReceivers, suggestionInputField} = this.getActiveOptions(getUiOptions(uiSchema));
 		Object.keys(suggestionReceivers).forEach(fieldName => {
-			const defaultValue = getDefaultFormState(parseJSONPointer(this.props.schema, schemaJSONPointer(this.props.schema, fieldName), undefined, this.props.registry.definitions));
+			const defaultValue = getDefaultFormState(parseJSONPointer(this.props.schema, schemaJSONPointer(this.props.schema, fieldName)));
 			formData = updateFormDataWithJSONPointer({...this.props, formData}, defaultValue, fieldName);
 		});
 		formData = updateFormDataWithJSONPointer({...this.props, formData}, value, suggestionInputField);

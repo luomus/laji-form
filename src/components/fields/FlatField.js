@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import { getDefaultFormState, toIdSchema } from  "@rjsf/core/dist/cjs/utils";
-import { immutableDelete } from "../../utils";
+import { immutableDelete, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 
 function getPropName(field, innerField, isArray) {
@@ -60,7 +59,7 @@ export default class FlatField extends React.Component {
 
 				state.idSchema = {
 					...state.idSchema,
-					[field]: toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`, props.registry.definitions)
+					[field]: this.props.registry.schemaUtils.toIdSchema(state.schema.properties[field], `${state.idSchema.$id}_${field}`)
 				};
 				let innerId = state.idSchema[field][innerField].$id;
 				if (isArray) {
@@ -88,9 +87,9 @@ export default class FlatField extends React.Component {
 				let innerData = state.formData[field];
 
 				if (!innerData && state.schema.properties[field].type === "object") {
-					innerData = getDefaultFormState(state.schema.properties[field], undefined, props.registry);
+					innerData = getDefaultFormState(state.schema.properties[field]);
 				} else if (!innerData && state.schema.properties[field].type === "array") {
-					innerData = [getDefaultFormState(state.schema.properties[field].items, undefined, props.registry)];
+					innerData = [getDefaultFormState(state.schema.properties[field].items)];
 				}
 
 				if (Array.isArray(innerData)) {

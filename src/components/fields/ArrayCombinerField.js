@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
-import { immutableDelete } from "../../utils";
+import { immutableDelete, getDefaultFormState } from "../../utils";
 import * as merge from "deepmerge";
 import VirtualSchemaField from "../VirtualSchemaField";
 
@@ -97,7 +96,7 @@ export default class ArrayCombinerField extends React.Component {
 		formData.forEach((obj) => {
 			Object.keys(itemSchema.properties).forEach((prop) => {
 				if (!(prop in obj)) {
-					obj[prop] = getDefaultFormState(itemSchema.properties[prop], undefined, this.props.registry.definitions);
+					obj[prop] = getDefaultFormState(itemSchema.properties[prop]);
 				}
 			});
 		});

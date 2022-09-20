@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-//import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
 import { getUiOptions } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
 import ReactContext from "../../ReactContext";
 import { FieldProps } from "../LajiForm";
+import { getTemplate } from "@rjsf/utils";
 
 @BaseComponent
 export default class SplitField extends React.Component<FieldProps> {
@@ -31,25 +31,23 @@ export default class SplitField extends React.Component<FieldProps> {
 	}
 
 	render() {
-		const { TitleField: _TitleField, DescriptionField: _DescriptionField } = this.props.registry.fields;
-		const TitleField = _TitleField as any; // TODO TS fix after TitleField removal
-		const DescriptionField = _DescriptionField as any; // TODO TS fix after DescriptionField removal
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
+		const DescriptionFieldTemplate = getTemplate("DescriptionFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		const {"ui:title": _title} = this.props.uiSchema;
 		const {Row, Col} = this.context.theme;
 		return (
 			<div>
-				<TitleField 
+				<TitleFieldTemplate
 					id={`${this.props.idSchema.$id}__title`}
 					title={_title !== undefined ? _title : this.props.title}
 					required={this.props.required || this.props.uiSchema["ui:required"]}
-					formContext={this.props.formContext}
-					className={getUiOptions(this.props.uiSchema).titleClassName}
-					help={this.props.uiSchema["ui:help"]}
+					uiSchema={this.props.uiSchema}
+					registry={this.props.registry}
 				/>
-				<DescriptionField
+				<DescriptionFieldTemplate
 					id={`${this.props.idSchema.$id}__description`}
 					description={this.props.description}
-					formContext={this.props.formContext}
+					registry={this.props.registry}
 				/>
 				<Row>
 					{getUiOptions(this.props.uiSchema).splits.map((split: any, i: number) =>

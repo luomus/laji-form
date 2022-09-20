@@ -9,7 +9,7 @@ import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
-import { orderProperties } from "@rjsf/core/dist/cjs/utils";
+import { orderProperties } from "@rjsf/utils";
 
 const scopeFieldSettings = {
 	taxonGroups: {
@@ -264,14 +264,14 @@ export default class ScopeField extends React.Component {
 					fieldSelectorValues = that.getAdditionalPersistenceValue(props);
 				}
 				if (!Array.isArray(fieldSelectorValues)) fieldSelectorValues = [fieldSelectorValues];
-				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => _fieldSelectorValue !== "undefined" && hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector], props.registry.definitions))) {
+				if (scopes[fieldSelector]["+"] && fieldSelectorValues.length > 0 && fieldSelectorValues.some(_fieldSelectorValue => _fieldSelectorValue !== "undefined" && hasData(_fieldSelectorValue) && !isDefaultData(_fieldSelectorValue, schema.properties[fieldSelector]))) {
 					addFieldSelectorsValues(scopes, fieldSelector, "+");
 				}
 				if (scopes[fieldSelector]["*"]) {
 					addFieldSelectorsValues(scopes, fieldSelector, "*");
 				}
 				fieldSelectorValues.forEach(fieldSelectorValue => {
-					if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector].type === "array" ? schema.properties[fieldSelector].items : schema.properties[fieldSelector], props.registry.definitions)) {
+					if (hasData(fieldSelectorValue) && !isDefaultData(fieldSelectorValue, schema.properties[fieldSelector].type === "array" ? schema.properties[fieldSelector].items : schema.properties[fieldSelector])) {
 						addFieldSelectorsValues(scopes, fieldSelector, fieldSelectorValue);
 					}
 				});
@@ -316,7 +316,7 @@ export default class ScopeField extends React.Component {
 		if (formData) {
 			Object.keys(formData).forEach((property) => {
 				if (!schema.properties[property]) return;
-				const isDefault = isDefaultData(formData[property], schema.properties[property], this.props.registry.definitions);
+				const isDefault = isDefaultData(formData[property], schema.properties[property]);
 				if (!isDefault) {
 					fieldsToShow[property] = props.schema.properties[property];
 				}
@@ -529,7 +529,7 @@ export default class ScopeField extends React.Component {
 		return orderProperties(Object.keys(properties), this.props.uiSchema["ui:order"])
 			.map(property => {
 				const isIncluded = this.propertyIsIncluded(property);
-				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property], this.props.registry.definitions));
+				const hasData = propertyHasData(property, this.props.formData) && (!this.props.formData || !isDefaultData(this.props.formData[property], this.props.schema.properties[property]));
 				if (!this.propertyTogglers) {
 					this.propertyTogglers = {};
 				}
@@ -635,7 +635,7 @@ function GlyphField({settings, idSchema, formData, schema, registry, isIncluded,
 	if (!show) {
 		return null;
 	}
-	const hasData = propertyHasData(property, formData) && (!formData || !isDefaultData(formData[property], schema.properties[property], registry.definitions));
+	const hasData = propertyHasData(property, formData) && (!formData || !isDefaultData(formData[property], schema.properties[property]));
 
 	const tooltip = <Tooltip id={`${idSchema.$id}-${property}-tooltip-${glyph}`}>{label}</Tooltip>;
 	

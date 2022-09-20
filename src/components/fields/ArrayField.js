@@ -1,18 +1,17 @@
 import * as React from "react";
-import ArrayField from "@rjsf/core/dist/cjs/components/fields/ArrayField";
-import { getDefaultFormState } from  "@rjsf/core/dist/cjs/utils";
 import * as merge from "deepmerge";
-import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import { beforeAdd } from "../ArrayFieldTemplate";
+import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import Context from "../../Context";
+import { getDefaultRegistry } from "@rjsf/core";
 
 // Doesn't work with arrays properly since uses JSON Pointers but not JSON path.
 // e.g. "copy all array item values expect these" is impossible.
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 
 	const {schema, registry, formContext} = that.props;
-	const defaultItem = getDefaultFormState(schema.items, undefined, registry.definitions);
+	const defaultItem = getDefaultFormState(schema.items, undefined);
 
 	copyItem = filterItemIdsDeeply(copyItem, formContext.contextId, that.props.idSchema.$id);
 
@@ -24,7 +23,7 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 			sourceValue = parseJSONPointer(source, f);
 		} catch (e) {
 			const schema = schemaJSONPointer(schema.items, f);
-			sourceValue = getDefaultFormState(schema, undefined, registry.definitions);
+			sourceValue = getDefaultFormState(schema, undefined);
 		}
 		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
@@ -37,6 +36,8 @@ export function onArrayFieldChange(formData, props) {
 	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
 	return addLajiFormIds(formData, tmpIdTree, false)[0];
 }
+
+const {ArrayField} = getDefaultRegistry().fields;
 
 export class ArrayFieldPatched extends ArrayField {
 	constructor(...params) {
@@ -150,7 +151,7 @@ export default class _ArrayField extends React.Component {
 				beforeAdd(this.props);
 				this.onChange([
 					...(this.props.formData || []),
-					getDefaultFormState(this.props.schema.items, _default, this.props.registry.definitions)
+					getDefaultFormState(this.props.schema.items, _default)
 				]);
 			},
 			rules: {

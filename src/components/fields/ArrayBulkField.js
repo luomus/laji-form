@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { getUiOptions } from "../../utils";
 import { Button } from "../components";
 import BaseComponent from "../BaseComponent";
+import { getTemplate } from "@rjsf/utils";
 
 @BaseComponent
 export default class ArrayBulkField extends React.Component {
@@ -35,10 +36,10 @@ export default class ArrayBulkField extends React.Component {
 	}
 
 	render() {
-		const {TitleField} = this.props.registry.fields;
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		return (
 			<fieldset>
-				<TitleField title={this.props.schema.title || this.props.name} className={getUiOptions(this.props.uiSchema).titleClassName} />
+				<TitleFieldTemplate title={this.props.schema.title || this.props.name} uiSchema={this.props.uiSchema} />
 				{this.renderItems()}
 				<Button onClick={this.onAddClick}>Lisää havaintorivejä</Button><br/>
 			</fieldset>

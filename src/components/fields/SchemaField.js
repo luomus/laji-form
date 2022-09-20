@@ -3,9 +3,9 @@ import Context from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";
-import { deepEquals } from  "@rjsf/core/dist/cjs/utils";
-import SchemaField from "@rjsf/core/dist/cjs/components/fields/SchemaField";
-import ArrayFieldTemplate from "../ArrayFieldTemplate";
+import { deepEquals } from  "@rjsf/utils";
+import ArrayFieldTemplate from "../templates/ArrayFieldTemplate";
+import { getDefaultRegistry } from "@rjsf/core";
 
 export default class _SchemaField extends React.Component {
 	constructor(props) {
@@ -149,6 +149,7 @@ export default class _SchemaField extends React.Component {
 			}
 		}
 
+		const {SchemaField} = getDefaultRegistry().fields;
 		return <SchemaField
 			{..._props}
 			registry={registry}

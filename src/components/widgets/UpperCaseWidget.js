@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import BaseInput from "./BaseInput";
+import BaseInputTemplate from "../templates/BaseInputTemplate";
 
 export default class UpperCaseWidget extends React.Component {
 	static propTypes = {
@@ -11,7 +11,7 @@ export default class UpperCaseWidget extends React.Component {
 	}
 
 	render() {
-		return <BaseInput {...this.props} formatValue={this.formatValue} />;
+		return <BaseInputTemplate {...this.props} formatValue={this.formatValue} />;
 	}
 
 	formatValue = (value) => typeof value === "string" ? value.toUpperCase() : value;

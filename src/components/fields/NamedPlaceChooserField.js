@@ -1,8 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState } from "../../utils";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
 import Context from "../../Context";
@@ -63,7 +62,7 @@ export default class NamedPlaceChooserField extends React.Component {
 	onPlaceSelected = (place) => {
 		const getGathering = (schema) => {
 			const whitelist = ["geometry", "country", "administrativeProvince", "biologicalProvince", "municipality", "locality", "localityDescription", "habitat", "habitatDescription"];
-			let gathering = getDefaultFormState(schema, undefined, this.props.registry.definitions);
+			let gathering = getDefaultFormState(schema);
 			const placeGathering = place.prepopulatedDocument.gatherings[0];
 			whitelist.forEach(prop => {
 				if (prop in placeGathering && prop in schema.properties) {

@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Button, DeleteButton, Help } from "./components";
+import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined, isObject } from "../utils";
-import Context from "../Context";
-import ReactContext from "../ReactContext";
-import { findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../utils";
+import { getUiOptions, isNullOrUndefined, isObject, findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
+import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import { getTemplate } from "@rjsf/utils";
 
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
@@ -303,7 +303,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 		} = getUiOptions(props.uiSchema);
 		const {readonly, disabled} = this.props;
 		const {Label} = this.props.formContext;
-		const Title = renderTitleAsLabel ? Label :  props.TitleField;
+		const Title = renderTitleAsLabel ? Label : getTemplate("TitleFieldTemplate", props.registry, getUiOptions(props.uiSchema));
 		const Description = props.DescriptionField;
 		if (!this.deleteButtonRefs) this.deleteButtonRefs = [];
 

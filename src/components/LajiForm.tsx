@@ -4,19 +4,16 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate } from "../utils";
+import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState } from "../utils";
 const equals = require("deep-equal");
-const validateFormData = require("@rjsf/core/dist/cjs/validate").default;
-const { getDefaultFormState } = require("@rjsf/core/dist/cjs/utils");
+import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
-import { JSONSchema7 } from "json-schema";
 import { HasMaybeChildren, Theme } from "../themes/theme";
 import Context from "../ReactContext";
 
-import Form, { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget } from "@rjsf/core";
-import ArrayFieldTemplate from "./ArrayFieldTemplate";
-import FieldTemplate from "./FieldTemplate";
-import ErrorListTemplate from "./ErrorListTemplate";
+import Form from "@rjsf/core";
+import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, RJSFSchema, TemplatesType } from "@rjsf/utils";
+import ErrorListTemplate from "./templates/ErrorListTemplate";
 
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
@@ -24,7 +21,6 @@ import * as translations from "../translations.json";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
-	"TitleField",
 	"ArrayField",
 	"ObjectField",
 	"NestField",
@@ -72,7 +68,6 @@ const fields = importLocalComponents<Field>("fields", [
 	"DataLeakerField",
 	"LocalityField",
 	"ImageDisplayField",
-	"DescriptionField",
 	"FakePropertyField",
 	"SectionArrayField",
 	"MultiArrayField",
@@ -90,7 +85,6 @@ const fields = importLocalComponents<Field>("fields", [
 ]);
 
 const widgets = importLocalComponents<Widget>("widgets", [
-	"BaseInput",
 	"CheckboxWidget",
 	"SelectWidget",
 	"TextareaWidget",
@@ -109,6 +103,16 @@ const widgets = importLocalComponents<Widget>("widgets", [
 	"TaxonImageWidget",
 	"UpperCaseWidget",
 	"NumberWidget"
+]);
+
+const templates = importLocalComponents<TemplatesType>("templates", [
+	"BaseInputTemplate",
+	"DescriptionField",
+	{"TitleFieldTemplate": "TitleField"},
+	{"DescriptionFieldTemplate": "DescriptionField"},
+	"FieldTemplate",
+	"ArrayFieldTemplate",
+	"ErrorListTemplate"
 ]);
 
 function importLocalComponents<T>(dir: string, fieldNames: (string | {[alias: string]: string})[]): {[name: string]: T} {
@@ -151,6 +155,7 @@ export interface LajiFormProps  extends HasMaybeChildren {
 	notifier?: Notifier;
 	fields?: {[name: string]: Field};
 	widgets?: {[name: string]: Widget};
+	templates?: {[name: string]: TemplatesType};
 	autoFocus?: boolean
 	componentDidMount?: () => void;
 	onError?: (e: Error, i: React.ErrorInfo) => void;
@@ -227,24 +232,16 @@ interface ShortcutKey {
 	[param: string]: any;
 }
 
-export interface FieldProps extends RJSFFieldProps {
+export interface FieldProps extends RJSFFieldProps<any, FormContext> {
+	uiSchema: any;
+	errorSchema: any;
 	formContext: FormContext;
-	registry: {
-            fields: { [name: string]: Field }; 
-            widgets: { [name: string]: Widget };
-            definitions: { [name: string]: any };
-            formContext: FormContext;
-	}
 }
 
-export interface WidgetProps extends RJSFWidgetProps {
+export interface WidgetProps extends RJSFWidgetProps<any, FormContext> {
+	uiSchema: any;
+	errorSchema: any;
 	formContext: FormContext;
-	registry: {
-            fields: { [name: string]: Field }; 
-            widgets: { [name: string]: Widget };
-            definitions: { [name: string]: any };
-            formContext: FormContext;
-	}
 }
 
 type ShortcutKeys = Record<string, ShortcutKey>;
@@ -609,7 +606,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			}
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
-			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, undefined));
+			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema));
 			this._context.formData = state.formData;
 		} else if (this.state) {
 			state.formData = (this.formRef as any)?.state.formData;
@@ -692,7 +689,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		return this.defaultNotifier;
 	}
 
-	setTmpIdTree = (schema: JSONSchema7) => {
+	setTmpIdTree = (schema: RJSFSchema) => {
 		this.tmpIdTree = createTmpIdTree(schema);
 	}
 
@@ -723,6 +720,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	getFields = (_fields?: {[name: string]: Field}) => ({...fields, ...(_fields || {})})
 	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})})
+	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
 
 	render() {
 		if (this.state.error) return null;
@@ -764,10 +762,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						onSubmit={this.onSubmit}
 						fields={this.getFields(this.props.fields)}
 						widgets={this.getWidgets(this.props.widgets)}
-						FieldTemplate={FieldTemplate}
-						ArrayFieldTemplate={ArrayFieldTemplate}
-						ErrorList={ErrorListTemplate}
+						templates={this.getTemplates(this.props.templates)}
 						formContext={this.state.formContext}
+						validator={rjsfValidator}
 						noValidate={true}
 						extraErrors={this.state.extraErrors}
 						noHtml5Validate={true}
@@ -874,7 +871,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			liveValidations = {} as {errors: any, warnings: any};
 		}
 		const schemaErrors = nonlive || onlySchema
-			? validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
+			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
 			: {};
 		block && this.pushBlockingLoader();
 		return new Promise(resolve =>

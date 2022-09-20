@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
 const equals = require("deep-equal");
-import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import * as fetch from "isomorphic-fetch";
 import Context from "../../Context";
@@ -10,7 +10,6 @@ import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
 import { FINLAND_BOUNDS } from "laji-map/lib/globals";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
 
 const cache = {};
 
@@ -330,7 +329,7 @@ export default class GeocoderField extends React.Component {
 									}
 								});
 							} else {
-								changes[field] = getDefaultFormState(this.props.schema.properties[field], undefined, this.props.registry.definitions);
+								changes[field] = getDefaultFormState(this.props.schema.properties[field]);
 							}
 						});
 						if (country && this.props.schema.properties.country && fieldByKeys.country) changes.country = country;

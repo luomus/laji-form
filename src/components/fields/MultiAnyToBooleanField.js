@@ -3,6 +3,7 @@ import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
 import { getUiOptions, formDataEquals } from "../../utils";
 import AnyToBoolean from "./AnyToBooleanField";
+import { getTemplate } from "@rjsf/utils";
 
 @BaseComponent
 export default class MultiAnyToBooleanField extends React.Component {
@@ -74,12 +75,11 @@ export default class MultiAnyToBooleanField extends React.Component {
 	}
 
 	render() {
-		const {TitleField} = this.props.registry.fields;
+		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		let {groups} = getUiOptions(this.props.uiSchema) || [];
-		const {"ui:help": help} = this.props.uiSchema;
 		return (
 			<React.Fragment>
-				<TitleField title={this.props.schema.title} help={help} />
+				<TitleFieldTemplate title={this.props.schema.title} uiSchema={this.props.uiSchema} />
 				<div className={"checkbox-row"}>
 					{groups.map((group, idx) => {
 						const {"ui:help": help, "ui:helpHoverable": helpHoverable, helpPlacement, ..._group} = group;

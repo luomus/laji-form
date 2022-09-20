@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData, getDefaultFormState } from "../../utils";
 import { Button } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -72,13 +71,13 @@ export default class UnitListShorthandArrayField extends React.Component {
 		context.pushBlockingLoader();
 		apiClient.fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
 			units = units.map(unit => {
-				unit = getDefaultFormState(this.props.schema.items, unit, this.props.registry.definitions);
+				unit = getDefaultFormState(this.props.schema.items, unit);
 				unit = bringRemoteFormData(unit, this.props.formContext);
 				return unit;
 			});
 			const formData = this.props.formData;
 			const last = formData[formData.length - 1];
-			if (isDefaultData(last, this.props.schema.items, this.props.registry.definitions)) {
+			if (isDefaultData(last, this.props.schema.items)) {
 				formData.pop();
 			}
 			this.props.onChange([...formData, ...units]);

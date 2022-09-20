@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getDefaultFormState, isMultiSelect } from "@rjsf/core/dist/cjs/utils";
-import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds } from "../../utils";
+import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState, isMultiSelect } from "../../utils";
 import { ArrayFieldPatched } from "./ArrayField";
 
 @VirtualSchemaField
@@ -44,7 +43,7 @@ export default class SingleItemArrayField extends React.Component {
 				...getUiOptions(props.uiSchema.items),
 			}
 		};
-		if (isMultiSelect(props.schema, props.registry.definitions)) {
+		if (isMultiSelect(props.schema, uiSchema)) {
 			uiSchema = {
 				...uiSchema,
 				"ui:options": {
@@ -58,7 +57,7 @@ export default class SingleItemArrayField extends React.Component {
 			formData: props.formData && props.formData.length && activeIdx in props.formData
 				? props.formData[activeIdx]
 				: addLajiFormIds(
-					getDefaultFormState(props.schema.items, undefined, props.registry.definitions),
+					getDefaultFormState(props.schema.items),
 					getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id),
 					false
 				)[0],

@@ -4,7 +4,7 @@ import { rulesPropType, operationPropType, computeUiSchema } from "./Conditional
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-import { arrayKeyFunctions } from "../ArrayFieldTemplate";
+import { arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
 @BaseComponent
 export default class MultiArrayField extends React.Component {

@@ -1,14 +1,13 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
-import TitleField from "./TitleField";
+import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import { getDefaultFormState, toIdSchema } from "@rjsf/core/dist/cjs/utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
-import { handlesArrayKeys, arrayKeyFunctions } from "../ArrayFieldTemplate";
+import { handlesArrayKeys, arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
 const getOptions = (options) => {
 	const {
@@ -64,11 +63,13 @@ const walkFieldTemplate = (schema, uiSchema = {}, template) => {
 };
 
 const InvisibleTitle = (props) => {
-	return <TitleField {...props} className="hidden-title-text" />;
+	const uiSchema = {...(props.uiSchema || {}), "ui:options": {...getUiOptions(props.uiSchema), titleClassName: "hidden-title-text"}};
+	return <TitleFieldTemplate {...props} uiSchema={uiSchema} />;
 };
 
 const NoLineBreakTitle = (props) => {
-	return <TitleField {...props} className="no-line-break" />;
+	const uiSchema = {...(props.uiSchema || {}), "ui:options": {...getUiOptions(props.uiSchema), titleClassName: "no-line-break"}};
+	return <TitleFieldTemplate {...props} uiSchema={uiSchema} />;
 };
 
 const invisibleStyle = {visibility: "hidden"};
@@ -126,7 +127,7 @@ export default class SectionArrayField extends React.Component {
 		return {
 			uiSchema: _uiSchema,
 			formContext,
-			registry: {...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}
+			registry: {...registry, formContext, templates: {...registry.templates, TitleField: InvisibleTitle}}
 		};
 	}
 }
@@ -224,7 +225,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			sectionPointer: idSchemaIdToJSONPointer(this.props.idSchema.$id),
 		};
 
-		const idSchema = toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`, this.props.registry.definitions);
+		const idSchema = this.props.registry.schemaUtils.toIdSchema(this.props.schema.items, `${this.props.idSchema.$id}_0`);
 
 		const sectionLabel = (
 			<Affix className="background" getContainer={this.getContainerElem} topOffset={this.props.formContext.topOffset} bottomOffset={this.props.formContext.bottomOffset}>
@@ -240,7 +241,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				formData={_formData}
 				idSchema={idSchema}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, fields: {...registry.fields, TitleField: NoLineBreakTitle}}}
+				registry={{...registry, formContext, templates: {...registry.templates, TitleField: NoLineBreakTitle}}}
 				formContext={formContext}
 				errorSchema={this.props.formContext.errorSchema[0] || {}} />
 		);
@@ -325,7 +326,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				uiSchema={__uiSchema}
 				formData={_formData}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleFieldTemplate: InvisibleTitle}}}
 				formContext={formContext}
 			/>
 		);
@@ -402,7 +403,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					field.replace(/%{row}/g, idx)
 				);
 			}, result);
-		}, getDefaultFormState(schema.items, undefined, registry));
+		}, getDefaultFormState(schema.items));
 		const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);
@@ -484,7 +485,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				uiSchema={__uiSchema}
 				formData={_formData}
 				onChange={this.onRowDefinerChange}
-				registry={{...registry, formContext, fields: {...registry.fields, TitleField: InvisibleTitle}}}
+				registry={{...registry, formContext, fields: {...registry.fields, TitleFieldTemplate: InvisibleTitle}}}
 				formContext={formContext}
 			/>
 		);

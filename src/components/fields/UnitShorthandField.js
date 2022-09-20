@@ -1,13 +1,12 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getDefaultFormState } from "@rjsf/core/dist/cjs/utils";
-import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty } from "../../utils";
+import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, focusById, bringRemoteFormData, formDataIsEmpty,  getDefaultFormState  } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { FetcherInput } from "../components";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
-import { getButton } from "../ArrayFieldTemplate";
+import { getButton } from "../templates/ArrayFieldTemplate";
 
 const LINE_TRANSECT_IDS = ["MHL.1", "MHL.27", "MHL.28"];
 
@@ -101,7 +100,7 @@ export default class UnitShorthandField extends React.Component {
 			}
 			this.setState({showSchema: true});
 		};
-		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}, this.props.registry.definitions));
+		this.props.onChange(getDefaultFormState(this.props.schema, {...this.props.formData, ...formData}));
 	}
 
 	render() {
