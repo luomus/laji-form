@@ -132,11 +132,6 @@ export default class _SchemaField extends React.Component {
 			};
 		}
 
-		// Reset ArrayFieldTemplate.
-		if (registry.ArrayFieldTemplate !== ArrayFieldTemplate) {
-			registry = {...registry, ArrayFieldTemplate};
-		}
-
 		// Remove unnecessary formDataTransformers in order to prevent unnecessary rendering.
 		if (_formContext && _formContext.formDataTransformers && _formContext.formDataTransformers.length) {
 			const removeIdxs = /\d+_?/g;

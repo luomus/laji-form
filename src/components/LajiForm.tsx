@@ -22,6 +22,7 @@ import * as translations from "../translations.json";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
+	{"ArraySchemaField": "SchemaField"},
 	"ArrayField",
 	"ObjectField",
 	"NestField",
@@ -141,7 +142,7 @@ function getNewId() {
 	return _id;
 }
 
-export interface LajiFormProps extends HasMaybeChildren {
+export interface LajiFormProps  extends HasMaybeChildren {
 	apiClient?: ApiClientImplementation;
 	lang?: Lang;
 	formData?: any;
