@@ -317,8 +317,8 @@ export default class GeocoderField extends React.Component {
 										})].enum;
 
 										// Find enum value from key (eg. municipalityName --> municipalityId).
-										const _enum = this.props.formContext.uiSchemaContext[enumField];
-										const enumValue = _enum.find(item => item.title === value);
+										const _enum = this.props.formContext.uiSchemaContext[enumField].oneOf;
+										const enumValue = _enum.find(item => item.title === value).const;
 
 										// Push enum value to changes.
 										if (enumValue !== undefined) {
