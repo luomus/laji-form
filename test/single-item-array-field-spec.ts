@@ -97,7 +97,7 @@ describe("SingleItemArrayField", () => {
 		});
 
 		it("is rendered as select", async () => {
-			expect(await form.$getEnumWidget("").isDisplayed()).toBe(true);
+			expect(await form.$getEnumWidget("").$container.isDisplayed()).toBe(true);
 		});
 
 		it("renders title as label", async () => {
