@@ -1,4 +1,4 @@
-import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId, isDisplayed } from "./test-utils";
+import { Form, createForm, lajiFormLocate, waitUntilBlockingLoaderHides, putForeignMarkerToMap, removeUnit, getFocusedId, isDisplayed, Mock, NamedPlaceChooserPO } from "./test-utils";
 import { protractor, browser, $, $$, by, element, ElementFinder } from "protractor";
 const { googleApiKey } = require("../properties.json");
 
@@ -23,11 +23,11 @@ const _testWidget = (form: Form) => async (path: string, type?: string) => {
 		break;
 	case "enum":
 		widget = form.$getEnumWidget(path);
-		await widget.click();
-		await browser.wait(protractor.ExpectedConditions.visibilityOf(widget.$$("li").first()), 300, "enum list didn't appear on widget click");
-		$secondOption = widget.$$("li").get(1);
+		await widget.$container.click();
+		await browser.wait(protractor.ExpectedConditions.visibilityOf(widget.$$enums.first()), 300, "enum list didn't appear on widget click");
+		$secondOption = widget.$$enums.get(1);
 		$otherOptionThanActive = (await $secondOption.getAttribute("class")).includes("rw-state-selected")
-			? widget.$$("li").first()
+			? widget.$$enums.first()
 			: $secondOption;
 		await $otherOptionThanActive.click();
 		break;
@@ -46,13 +46,18 @@ const _testWidget = (form: Form) => async (path: string, type?: string) => {
 	expect(beforeChange).not.toEqual(parsePointer(await form.getChangedData(), path));
 };
 
+
+
 describe("Trip report (JX.519)", () => {
 
 	let form: Form;
 	let testWidget: (path: string, type?: string) => Promise<void>;
+	let npMock: Mock;
+
 	beforeAll(async () => {
 		form = await createForm({id: "JX.519"});
 		testWidget = _testWidget(form);
+		npMock =  await form.setMockResponse("/named-places");
 	});
 
 	const $gatheringsMap = lajiFormLocate("gatherings").$(".laji-map");
@@ -244,6 +249,72 @@ describe("Trip report (JX.519)", () => {
 			expect(await form.$locateAddition("gatherings.1", "header").isPresent()).toBe(false);
 		});
 
+		describe("named place button", () => {
+			let $addNPButton: ElementFinder;
+			const npChooser = new NamedPlaceChooserPO();
+			const npList = npChooser.select;
+			let testingInsaneReason = "";
+
+			beforeAll(async () => {
+				$addNPButton = form.$locateButton("gatherings", "addNamedPlace");
+				if (!await isDisplayed($addNPButton)) {
+					testingInsaneReason = "Using place failed. Maybe you don't have named places or your user token in properties.json is expired?";
+				}
+			});
+
+			it("click displays list", async () => {
+				if (testingInsaneReason) {
+					return pending(testingInsaneReason);
+				}
+				await $addNPButton.click();
+
+				await browser.wait(protractor.ExpectedConditions.visibilityOf(npList.$container), 500, "NP modal didn't show up");
+
+				expect(await isDisplayed(npList.$container)).toBe(true);
+			});
+
+			it("selecting from list displays map popup", async () => {
+				if (testingInsaneReason) {
+					return pending(testingInsaneReason);
+				}
+				await npList.openEnums();
+				await npList.$$enums.first().click();
+			});
+
+			it("map popup select btn click closes chooser modal", async () => {
+				if (testingInsaneReason) {
+					return pending(testingInsaneReason);
+				}
+				await npChooser.mapPopup.$useBtn.click();
+			});
+
+			it("np chooser modal closes after np selected or shows alert", async () => {
+				if (testingInsaneReason) {
+					return pending(testingInsaneReason);
+				}
+				if (await isDisplayed(npChooser.$alert)) {
+					testingInsaneReason = "Using place failed. Have you configured your user token to properties.json?";
+				}
+				if (testingInsaneReason) {
+					await npChooser.$close.click();
+					return pending(testingInsaneReason);
+				}
+
+				await browser.wait(protractor.ExpectedConditions.invisibilityOf(npList.$container), 500, "NP modal didn't close");
+
+				expect(await isDisplayed(npList.$container)).toBe(false);
+			});
+
+			it("new gathering is added", async () => {
+				if (testingInsaneReason) {
+					return pending(testingInsaneReason);
+				}
+
+				expect(await isDisplayed(form.$locate("gatherings.1"))).toBe(true);
+				await form.$locateButton("gatherings.1", "delete").click();
+				await form.$locateButton("gatherings.1", "delete-confirm-yes").click();
+			});
+		});
 	});
 
 	describe("units", () => {

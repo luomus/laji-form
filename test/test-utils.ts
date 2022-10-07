@@ -50,6 +50,27 @@ export interface BooleanWidgetPO {
 	$nonactive: ElementFinder;
 }
 
+export interface EnumWidgetPOI {
+	$container: ElementFinder;
+	openEnums: () => Promise<void>;
+	$enumContainer: ElementFinder;
+	$$enums: ElementArrayFinder;
+	$input: ElementFinder;
+}
+
+
+function getEnumWidgetForContainer($container: ElementFinder): EnumWidgetPOI {
+	return {
+		$container,
+		openEnums: async () => {
+			await $container.click();
+			await browser.wait(protractor.ExpectedConditions.visibilityOf($container.$$(".rw-list-option").first()), 300, "select list timeout");
+		},
+		$enumContainer: $container.$(".rw-popup-container"),
+		$$enums: $container.$$(".rw-list-option"),
+		$input: $container.$("input")	}
+}
+
 interface FormProps {
 	schema?: JSONSchema7;
 	uiSchema?: any;
@@ -69,7 +90,7 @@ export class Form {
 		this.props = params;
 	}
 
-	async initialize() {
+	async initialize(beforeInit?: (form: Form) => Promise<void>) {
 		const query = (params: any) => Object.keys(params).reduce((q, key) =>
 			`${q}&${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
 		, "");
@@ -79,6 +100,7 @@ export class Form {
 		} else {
 			await emptyForm();
 		}
+		beforeInit && await beforeInit(this);
 		await this.setState(this.props);
 		this.contextId = await this.e("lajiForm._id") as number;
 	}
@@ -228,8 +250,9 @@ export class Form {
 		return this.$locate(str).$("textarea");
 	}
 
-	$getEnumWidget(str: string) {
-		return this.$locate(str).$(".rw-combobox");
+	$getEnumWidget(str: string): EnumWidgetPOI {
+		const $container = this.$locate(str).$(".rw-combobox");
+		return getEnumWidgetForContainer($container);
 	}
 
 	getDateWidget(str: string): DateWidgetPO {
@@ -316,14 +339,26 @@ export interface TaxonAutosuggestWidgetPOI {
 	powerUserButtonIsActive: () => Promise<boolean>;
 }
 
-export async function createForm(props?: FormProps): Promise<Form> {
+const $mapPopupContainer = $(".named-place-popup");
+const $namedPlaceChooserModal = $(".named-place-chooser-modal");
+export class NamedPlaceChooserPO {
+	select = getEnumWidgetForContainer($("#named-place-chooser-select"));
+	mapPopup = {
+		$container: $mapPopupContainer,
+		$useBtn: $mapPopupContainer.$(".btn-default")
+	};
+	$alert = $namedPlaceChooserModal.$(".alert");
+	$close = $namedPlaceChooserModal.$(".close");
+}
+
+export async function createForm(props?: FormProps, beforeInit?: (form: Form) => Promise<void>): Promise<Form> {
 	const form = new Form(props);
-	await form.initialize();
+	await form.initialize(beforeInit);
 	return form;
 }
 
 export function waitUntilBlockingLoaderHides(timeout?: number) {
-	return browser.wait(protractor.ExpectedConditions.invisibilityOf($(".laji-form.blocking-loader")), timeout || 20000, "Geocoding timeout");
+	return browser.wait(protractor.ExpectedConditions.invisibilityOf($(".laji-form.blocking-loader")), timeout || 20000, "Blocking loader timeout");
 }
 
 export async function putForeignMarkerToMap() {
