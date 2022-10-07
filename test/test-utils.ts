@@ -3,7 +3,7 @@ import * as path from "path";
 import { JSONSchema7 } from "json-schema";
 const { HOST, PORT } = process.env;
 
-const EC = protractor.ExpectedConditions;
+export const EC = protractor.ExpectedConditions;
 
 export const getLocatorForContextId = (contextId: number) => (path: string) => `#_laji-form_${contextId}_root${typeof path === "string" && path.length ? `_${path.replace(/\./g, "_")}` : ""}`;
 
@@ -68,7 +68,8 @@ function getEnumWidgetForContainer($container: ElementFinder): EnumWidgetPOI {
 		},
 		$enumContainer: $container.$(".rw-popup-container"),
 		$$enums: $container.$$(".rw-list-option"),
-		$input: $container.$("input")	}
+		$input: $container.$("input")
+	};
 }
 
 interface FormProps {
@@ -312,6 +313,14 @@ export class Form {
 		$button: this.$locateButton(lajiFormLocator, "additionals"),
 		$$listItems: this.$locate(lajiFormLocator).$$(".dropdown.open li a")
 	})
+
+	getUnitListShorthandArrayField = (lajiFormLocator: string): UnitListShorthandArrayFieldPOI => ({
+		$button: this.$locateButton(lajiFormLocator, "addUnitList"),
+		modal: {
+			$input: $(".unit-list-shorthand-modal input"),
+			$addButton: $(".unit-list-shorthand-modal button")
+		}
+	})
 }
 
 export const isDisplayed = async ($elem: ElementFinder) => (await $elem.isPresent()) && (await $elem.isDisplayed());
@@ -337,6 +346,14 @@ export interface TaxonAutosuggestWidgetPOI {
 	isNonsuggested: () => Promise<boolean>;
 	$powerUserButton: ElementFinder;
 	powerUserButtonIsActive: () => Promise<boolean>;
+}
+
+export interface UnitListShorthandArrayFieldPOI {
+	$button: ElementFinder;
+	modal: {
+		$input: ElementFinder;
+		$addButton: ElementFinder;
+	}
 }
 
 const $mapPopupContainer = $(".named-place-popup");
