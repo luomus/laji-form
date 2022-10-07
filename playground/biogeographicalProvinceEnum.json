@@ -1,86 +1,88 @@
-[
-  {
-    "const": "ML.251",
-    "title": "Ahvenanmaa"
-  },
-  {
-    "const": "ML.252",
-    "title": "Varsinais-Suomi"
-  },
-  {
-    "const": "ML.253",
-    "title": "Uusimaa"
-  },
-  {
-    "const": "ML.254",
-    "title": "Etelä-Karjala"
-  },
-  {
-    "const": "ML.255",
-    "title": "Satakunta"
-  },
-  {
-    "const": "ML.256",
-    "title": "Etelä-Häme"
-  },
-  {
-    "const": "ML.257",
-    "title": "Etelä-Savo"
-  },
-  {
-    "const": "ML.258",
-    "title": "Laatokan Karjala"
-  },
-  {
-    "const": "ML.259",
-    "title": "Etelä-Pohjanmaa"
-  },
-  {
-    "const": "ML.260",
-    "title": "Pohjois-Häme"
-  },
-  {
-    "const": "ML.261",
-    "title": "Pohjois-Savo"
-  },
-  {
-    "const": "ML.262",
-    "title": "Pohjois-Karjala"
-  },
-  {
-    "const": "ML.263",
-    "title": "Keski-Pohjanmaa"
-  },
-  {
-    "const": "ML.264",
-    "title": "Kainuu"
-  },
-  {
-    "const": "ML.265",
-    "title": "Oulun Pohjanmaa"
-  },
-  {
-    "const": "ML.266",
-    "title": "Perä-Pohjanmaa"
-  },
-  {
-    "const": "ML.267",
-    "title": "Koillismaa"
-  },
-  {
-    "const": "ML.268",
-    "title": "Kittilän Lappi"
-  },
-  {
-    "const": "ML.269",
-    "title": "Sompion Lappi"
-  },
-  {
-    "const": "ML.270",
-    "title": "Enontekiön Lappi"
-  },
-  {
-    "const": "ML.271",
-    "title": "Inarin Lappi"
-  }
+{
+	"oneOf": [
+	{
+		"const": "ML.251",
+		"title": "Ahvenanmaa"
+	},
+	{
+		"const": "ML.252",
+		"title": "Varsinais-Suomi"
+	},
+	{
+		"const": "ML.253",
+		"title": "Uusimaa"
+	},
+	{
+		"const": "ML.254",
+		"title": "Etelä-Karjala"
+	},
+	{
+		"const": "ML.255",
+		"title": "Satakunta"
+	},
+	{
+		"const": "ML.256",
+		"title": "Etelä-Häme"
+	},
+	{
+		"const": "ML.257",
+		"title": "Etelä-Savo"
+	},
+	{
+		"const": "ML.258",
+		"title": "Laatokan Karjala"
+	},
+	{
+		"const": "ML.259",
+		"title": "Etelä-Pohjanmaa"
+	},
+	{
+		"const": "ML.260",
+		"title": "Pohjois-Häme"
+	},
+	{
+		"const": "ML.261",
+		"title": "Pohjois-Savo"
+	},
+	{
+		"const": "ML.262",
+		"title": "Pohjois-Karjala"
+	},
+	{
+		"const": "ML.263",
+		"title": "Keski-Pohjanmaa"
+	},
+	{
+		"const": "ML.264",
+		"title": "Kainuu"
+	},
+	{
+		"const": "ML.265",
+		"title": "Oulun Pohjanmaa"
+	},
+	{
+		"const": "ML.266",
+		"title": "Perä-Pohjanmaa"
+	},
+	{
+		"const": "ML.267",
+		"title": "Koillismaa"
+	},
+	{
+		"const": "ML.268",
+		"title": "Kittilän Lappi"
+	},
+	{
+		"const": "ML.269",
+		"title": "Sompion Lappi"
+	},
+	{
+		"const": "ML.270",
+		"title": "Enontekiön Lappi"
+	},
+	{
+		"const": "ML.271",
+		"title": "Inarin Lappi"
+	}
 ]
+}

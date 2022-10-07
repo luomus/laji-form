@@ -8,7 +8,7 @@ export default function DescriptonField(props) {
 	if (!description) {
 		return null;
 	}
-	const {contextId, lang} = (props.registry || {}.formContext || {});
+	const {contextId, lang} = ((props.registry || {}).formContext || {});
 	const replacePatterns = description.match(/%{.*?}/g) || [];
 	const _description = replacePatterns.reduce((desc, replacePattern) => {
 		replacePattern = replacePattern.replace(/%|{|}/g, "");
