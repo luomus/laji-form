@@ -82,7 +82,7 @@ export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren 
 	id?: string;
 }
 
-type Glyph = "ok" | "refresh" | "warning-sign" | "plus" | "camera" | "headphones" | "user" | "flash" | "menu-hamburger";
+export type Glyph = "ok" | "refresh" | "warning-sign" | "plus" | "camera" | "headphones" | "user" | "flash" | "menu-hamburger"|"chevron-up"|"chevron-down"|"new-window";
 
 export interface GlyphiconProps extends JSX.IntrinsicAttributes, HasMaybeStyle, HasMaybeClassName {
 	glyph: Glyph | string;
