@@ -31,7 +31,18 @@ import * as ControlLabel from "react-bootstrap/lib/ControlLabel";
 import * as Checkbox from "react-bootstrap/lib/Checkbox";
 import * as ToggleButton from "react-bootstrap/lib/ToggleButton";
 import * as ToggleButtonGroup from "react-bootstrap/lib/ToggleButtonGroup";
-import { Theme, PanelProps, ButtonProps, Panel as PanelI, Dropdown as DropdownI, DropdownProps, DropdownMenuProps, DropdownToggleProps, Breadcrumb as BreadcrumbI } from "./theme";
+import {
+	Theme,
+	PanelProps,
+	ButtonProps,
+	Panel as PanelI,
+	Dropdown as DropdownI,
+	DropdownProps,
+	DropdownMenuProps,
+	DropdownToggleProps,
+	Breadcrumb as BreadcrumbI,
+	OverlayTriggerProps
+} from "./theme";
 
 const Panel = React.forwardRef<_Panel, PanelProps>(({variant, ...props}, ref) => <_Panel {...props} bsStyle={variant} ref={ref}/>);
 const __Panel: PanelI = (Panel as unknown as PanelI);
@@ -58,7 +69,7 @@ const theme: Theme = {
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay,
-	OverlayTrigger,
+	OverlayTrigger: React.forwardRef<OverlayTrigger, OverlayTriggerProps>(({show, ...props}, ref) => <OverlayTrigger {...props} ref={ref} />),
 	Popover,
 	Tooltip,
 	Glyphicon,

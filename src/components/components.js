@@ -5,6 +5,7 @@ import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
 import ReactContext from "../ReactContext";
+import {forwardRef} from "react";
 
 export class Button extends React.Component {
 	static contextType = ReactContext;
@@ -531,18 +532,25 @@ function ErrorPanelError({label, error, id, getId, extra = null, disabled, click
 	);
 }
 
-function NullTooltip() {
-	return <div />;
-}
+const NullTooltip = forwardRef((props, ref) => {
+	return <div {...props} ref={ref} />;
+});
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export class TooltipComponent extends React.Component {
 	static contextType = ReactContext;
-	setOverlayRef = (elem) => {
-		this.overlayElem = elem;
+
+	constructor(props) {
+		super(props);
+		this.state = {show: false};
 	}
-	onMouseOver = () => this.overlayElem.show();
-	onMouseOut = () => this.overlayElem.hide();
+
+	setOverlayRef = (elem) => {
+		this.overlayRef = elem;
+	};
+
+	onMouseOver = () => { this.setState({show: true}); this.overlayRef?.show(); }
+	onMouseOut = () => { this.setState({show: false}); this.overlayRef?.hide(); }
 
 	render() {
 		const {tooltip, children, id, placement, trigger, className} = this.props;
@@ -551,7 +559,7 @@ export class TooltipComponent extends React.Component {
 		const overlay = (
 			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
-			}>
+			} show={trigger === "hover" ? this.state.show : null}>
 				{children}
 			</OverlayTrigger>
 		);

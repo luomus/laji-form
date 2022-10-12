@@ -42,6 +42,7 @@ import {
 	GlyphiconProps,
 	Glyph
 } from "./theme";
+import ReactContext from "../ReactContext";
 
 library.add(faCheck);
 library.add(faRefresh);
@@ -125,7 +126,7 @@ const theme: Theme = {
 	// Overlay,
 	// OverlayTrigger,
 	Overlay: (props) => <Overlay {...props as any}/>,
-	OverlayTrigger: (props) => <OverlayTrigger {...props as any}/>,
+	OverlayTrigger: React.forwardRef<typeof OverlayTrigger, OverlayTriggerProps>((props, ref) => <OverlayTrigger {...props as any}/>),
 	Popover: ({title, ...props}) => <Stub componentName={"Popover"}><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
 	Tooltip,
 	Glyphicon,
