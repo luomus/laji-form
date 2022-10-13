@@ -10,11 +10,21 @@ import ButtonToolbar from "react-bootstrap-2/ButtonToolbar";
 import Overlay from "react-bootstrap-2/Overlay";
 import OverlayTrigger from "react-bootstrap-2/OverlayTrigger";
 import Tooltip from "react-bootstrap-2/Tooltip";
+import Modal from "react-bootstrap-2/Modal";
+import Row from "react-bootstrap-2/Row";
+import Col from "react-bootstrap-2/Col";
+import FormGroup from "react-bootstrap-2/FormGroup";
+import InputGroup from "react-bootstrap-2/InputGroup";
 import FormControl from "react-bootstrap-2/FormControl";
 import ListGroup from "react-bootstrap-2/ListGroup";
 import ListGroupItem from "react-bootstrap-2/ListGroupItem";
-import Row from "react-bootstrap-2/Row";
-import Col from "react-bootstrap-2/Col";
+import Breadcrumb from "react-bootstrap-2/Breadcrumb";
+import Alert from "react-bootstrap-2/Alert";
+import Accordion from "react-bootstrap-2/Accordion";
+import Dropdown from "react-bootstrap-2/Dropdown";
+import Form from "react-bootstrap-2/Form";
+import ToggleButton from "react-bootstrap-2/ToggleButton";
+import ToggleButtonGroup from "react-bootstrap-2/ToggleButtonGroup";
 import { ButtonVariant } from "react-bootstrap-2/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp, library } from "@fortawesome/fontawesome-svg-core";
@@ -38,9 +48,9 @@ import {
 	OverlayTriggerProps,
 	Modal as ModalI,
 	InputGroup as InputGroupI,
-	Breadcrumb,
+	Breadcrumb as BreadcrumbI,
 	Pager,
-	Dropdown,
+	Dropdown as DropdownI,
 	CheckboxProps,
 	PanelProps,
 	Panel as PanelI,
@@ -116,22 +126,22 @@ const Glyphicon: React.ComponentType<GlyphiconProps> = ({glyph, ...props}) => {
 	return <FontAwesomeIcon icon={icon} {...props}/>;
 };
 
-const Modal: ModalI = DivStubFunc("Modal") as unknown as ModalI;
-Modal.Body = DivStubFunc("ModalBody");
-Modal.Header = DivStubFunc("ModalHeader");
-Modal.Footer = DivStubFunc("ModalFooter");
-Modal.Title = DivStubFunc("ModalTitle");
+const _Modal: ModalI = DivStubFunc("Modal") as unknown as ModalI;
+_Modal.Body = DivStubFunc("ModalBody");
+_Modal.Header = DivStubFunc("ModalHeader");
+_Modal.Footer = DivStubFunc("ModalFooter");
+_Modal.Title = DivStubFunc("ModalTitle");
 
-const InputGroup: InputGroupI = DivStubFunc("InputGroup") as unknown as InputGroupI;
-InputGroup.Addon = DivStubFunc("InputGroupAddon");
+const _InputGroup: InputGroupI = DivStubFunc("InputGroup") as unknown as InputGroupI;
+_InputGroup.Addon = DivStubFunc("InputGroupAddon");
 
-const Breadcrumb: Breadcrumb = DivStubFunc("Breadcrumb") as unknown as Breadcrumb;
-Breadcrumb.Item = DivStubFunc("BreadcrumbItem");
+const _Breadcrumb: BreadcrumbI = DivStubFunc("Breadcrumb") as unknown as BreadcrumbI;
+_Breadcrumb.Item = DivStubFunc("BreadcrumbItem");
 
 const Pager: Pager = DivStubFunc("Pager") as unknown as Pager;
 
-const Dropdown: Dropdown = DivStubFunc("Dropdown") as unknown as Dropdown;
-Dropdown.Menu = DivStubFunc("DropdownMenu");
+const _Dropdown: DropdownI = DivStubFunc("Dropdown") as unknown as DropdownI;
+_Dropdown.Menu = DivStubFunc("DropdownMenu");
 
 const theme: Theme = {
 	Panel,
@@ -145,22 +155,22 @@ const theme: Theme = {
 	Popover: ({title, ...props}) => <Stub componentName={"Popover"}><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
 	Tooltip,
 	Glyphicon,
-	Modal, 
+	Modal: _Modal, 
 	Row: (props) => <Row {...props}/>,
 	Col: (props) => <Col {...props}/>,
 	FormGroup: DivStubFunc("FormGroup"), 
-	InputGroup, 
+	InputGroup: _InputGroup, 
 	FormControl: (props) => <FormControl {...props as any} />,
 	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props}/>),
 	ListGroupItem: ({onClick, ...props}) => <ListGroupItem action={!!onClick} onClick={onClick} {...props} />,
-	Breadcrumb,
+	Breadcrumb: _Breadcrumb,
 	HelpBlock: DivStubFunc("HelpBlock"), 
 	MenuItem: DivStubFunc("MenuItem"), 
 	Alert: DivStubFunc("Alert"), 
 	Pager, 
 	Accordion: DivStubFunc("Accordion"), 
 	Collapse: DivStubFunc("Collapse"), 
-	Dropdown, 
+	Dropdown: _Dropdown,
 	Form: DivStubFunc("Form"), 
 	ControlLabel: DivStubFunc("ControlLabel"), 
 	Checkbox: (props: CheckboxProps) => <input type="checkbox" {...props} />, 
