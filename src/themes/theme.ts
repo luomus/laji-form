@@ -127,6 +127,7 @@ export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassNa
 
 export type InputGroup = React.ComponentType<any> & {
 	Addon: React.ComponentType<InputGroupAddon>;
+	Button: React.ComponentType<InputGroupButton>;
 }
 
 export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -134,6 +135,8 @@ export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildr
 	onClick?: React.MouseEventHandler<any>;
 	onMouseDown?: React.MouseEventHandler<any>;
 }
+
+export type InputGroupButton = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeClassName;
 
 export interface FormControlProps extends React.HTMLProps<any> {
 	type?: HTMLInputElement["type"];

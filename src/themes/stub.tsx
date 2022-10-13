@@ -21,6 +21,7 @@ Modal.Title = DivStub;
 
 const InputGroup: InputGroup = DivStub as unknown as InputGroup;
 InputGroup.Addon = DivStub;
+InputGroup.Button = DivStub;
 
 const Breadcrumb: Breadcrumb = DivStub as unknown as Breadcrumb;
 Breadcrumb.Item = DivStub;

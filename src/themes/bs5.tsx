@@ -124,6 +124,7 @@ _Modal.Title = Modal.Title;
 
 const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
 _InputGroup.Addon = InputGroup.Text;
+_InputGroup.Button = (props) => <Button variant={"outline-secondary"} {...props}/>;
 
 const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
 _Dropdown.Menu = Dropdown.Menu;
