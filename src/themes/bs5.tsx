@@ -15,6 +15,7 @@ import ListGroup from "react-bootstrap-2/ListGroup";
 import ListGroupItem from "react-bootstrap-2/ListGroupItem";
 import Row from "react-bootstrap-2/Row";
 import Col from "react-bootstrap-2/Col";
+import { ButtonVariant } from "react-bootstrap-2/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp, library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -45,7 +46,8 @@ import {
 	Panel as PanelI,
 	GlyphiconProps,
 	Glyph,
-	ListGroupProps
+	ListGroupProps,
+	ButtonVariant as ButtonVariantI
 } from "./theme";
 
 library.add(faCheck);
@@ -74,6 +76,13 @@ const iconMapping: Record<Glyph, IconProp> = {
 	"chevron-up": "chevron-up",
 	"chevron-down": "chevron-down",
 	"new-window": "arrow-up-right-from-square"
+};
+
+const mapBtnVariant = (variant?: ButtonVariantI): ButtonVariant => {
+	if (!variant) {
+		variant = "default";
+	}
+	return variant === "default" ? "secondary" : variant;
 };
 
 const Stub = ({componentName, children}: {componentName: string, children: React.ReactNode}) => {
@@ -128,7 +137,7 @@ const theme: Theme = {
 	Panel,
 	Table,
 	ProgressBar,
-	Button: React.forwardRef<typeof Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} variant={variant} size={small ? "sm" : undefined} ref={ref as any}/>),
+	Button: React.forwardRef<typeof Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} variant={mapBtnVariant(variant)} size={small ? "sm" : undefined} ref={ref as any}/>),
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay: (props) => <Overlay {...props as any}/>,

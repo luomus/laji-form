@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export type Variant = "primary" | "secondary" | "danger" | "warning" | "info" | string;
+export type Variant = "default" | "primary" | "success" | "info" | "warning";
 export type ButtonVariant = Variant | "link";
 
 export interface HasMaybeChildren {
