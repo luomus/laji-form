@@ -50,15 +50,16 @@ import {
 	OverlayTriggerProps,
 	Modal as ModalI,
 	InputGroup as InputGroupI,
-	Pager,
 	Dropdown as DropdownI,
-	CheckboxProps,
 	PanelProps,
 	Panel as PanelI,
 	GlyphiconProps,
 	Glyph,
 	ListGroupProps,
-	ButtonVariant as ButtonVariantI
+	ButtonVariant as ButtonVariantI,
+	ColProps,
+	FormControlProps,
+	ToggleButtonGroupProps
 } from "./theme";
 
 library.add(faCheck);
@@ -143,11 +144,11 @@ const theme: Theme = {
 	Glyphicon,
 	Modal: _Modal,
 	Row: (props) => <Row {...props}/>,
-	Col: (props) => <Col {...props}/>,
+	Col: React.forwardRef<typeof Col, ColProps>((props, ref) => <Col {...props} ref={ref}/>),
 	FormGroup,
 	InputGroup: _InputGroup,
-	FormControl: (props) => <FormControl {...props as any} />,
-	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props}/>),
+	FormControl: React.forwardRef<typeof FormControl, FormControlProps>((props, ref) => <FormControl {...props as any} ref={ref} />),
+	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props} ref={ref as any}/>),
 	ListGroupItem: ({onClick, ...props}) => <ListGroupItem action={!!onClick} onClick={onClick} {...props} />,
 	Breadcrumb,
 	HelpBlock: (props) => <Form.Text {...props} />,
@@ -161,6 +162,6 @@ const theme: Theme = {
 	ControlLabel: Form.Label,
 	Checkbox: Form.Check,
 	ToggleButton,
-	ToggleButtonGroup: (props) => <ToggleButtonGroup {...props as any} />
+	ToggleButtonGroup: React.forwardRef<typeof ToggleButtonGroup, ToggleButtonGroupProps>((props, ref) => <ToggleButtonGroup {...props as any} ref={ref} />)
 };
 export default theme;

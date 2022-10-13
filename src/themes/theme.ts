@@ -109,7 +109,7 @@ export type Modal = React.ComponentType<ModalProps> & {
     Footer: React.ComponentType;
 }
 
-export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
+export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren, HasMaybeClassName {
 	xs?: number;
 	sm?: number;
 	md?: number;
@@ -138,13 +138,13 @@ export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildr
 
 export type InputGroupButton = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeClassName;
 
-export interface FormControlProps extends React.HTMLProps<any> {
+export interface FormControlProps extends React.HTMLProps<any>, HasMaybeRef {
 	type?: HTMLInputElement["type"];
 	readOnly?: boolean;
 	validationState?: ValidationState;
 }
 
-export interface ListGroupProps extends JSX.IntrinsicAttributes {
+export interface ListGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef {
 	fill?: boolean;
 }
 
@@ -235,7 +235,7 @@ export interface ToggleButtonProps extends JSX.IntrinsicAttributes, HasMaybeClas
 	value?: any;
 }
 
-export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren {
 	type: "radio" | "checkbox";
 	name?: string;
 	defaultValue?: boolean;
