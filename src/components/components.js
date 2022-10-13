@@ -496,7 +496,7 @@ export class ErrorPanel extends React.Component {
 		const {Panel, ListGroup} = this.context.theme;
 
 		return (
-			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames}>
+			<Panel collapsible="true" onToggle={this.collapseToggle} className={classNames}>
 				<Panel.Heading>
 					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 						   <div className="panel-title">
@@ -508,7 +508,7 @@ export class ErrorPanel extends React.Component {
 						   </div>
 					   </div>
 				</Panel.Heading>
-				<Panel.Collapse>
+				<Panel.Collapse in={this.state.expanded}>
 					<ListGroup>
 						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
 					</ListGroup>
@@ -771,7 +771,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
 				/>
-				<div className="panel-footer">
+				<div className="panel-footer card card-footer">
 					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
 				</div>
 			</div>

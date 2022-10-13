@@ -92,7 +92,7 @@ export default class ErrorListTemplate extends React.Component {
 				            clickHandler={clickHandler}
 				            showToggle={errors.length === 0}
 				            poppedToggle={this.poppedToggle}/>
-				<div className="panel-footer">
+				<div className="panel-footer card card-footer">
 					<div>
 						{errors.length > 0
 							? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>

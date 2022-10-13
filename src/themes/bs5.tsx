@@ -1,6 +1,7 @@
 import * as React from "react";
 import Card from "react-bootstrap-2/Card";
 import CardHeader from "react-bootstrap-2/CardHeader";
+import Collapse from "react-bootstrap-2/Collapse";
 import Table from "react-bootstrap-2/Table";
 import ProgressBar from "react-bootstrap-2/ProgressBar";
 import Button from "react-bootstrap-2/Button";
@@ -9,6 +10,9 @@ import ButtonToolbar from "react-bootstrap-2/ButtonToolbar";
 import Overlay from "react-bootstrap-2/Overlay";
 import OverlayTrigger from "react-bootstrap-2/OverlayTrigger";
 import Tooltip from "react-bootstrap-2/Tooltip";
+import FormControl from "react-bootstrap-2/FormControl";
+import ListGroup from "react-bootstrap-2/ListGroup";
+import ListGroupItem from "react-bootstrap-2/ListGroupItem";
 import Row from "react-bootstrap-2/Row";
 import Col from "react-bootstrap-2/Col";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,9 +44,9 @@ import {
 	PanelProps,
 	Panel as PanelI,
 	GlyphiconProps,
-	Glyph
+	Glyph,
+	ListGroupProps
 } from "./theme";
-import ReactContext from "../ReactContext";
 
 library.add(faCheck);
 library.add(faRefresh);
@@ -83,12 +87,16 @@ const DivStubFunc = (componentName: string) => {
 	));
 };
 
-const _Card = React.forwardRef<typeof Card, PanelProps>(({variant, ...props}, ref) => <Card {...props} bg={variant} ref={ref as any}/>);
+const _Card = React.forwardRef<typeof Card, PanelProps>(({variant, ...props}, ref) => (
+	<Card {...props} bg={variant} ref={ref as any}/>
+));
 const _CardHeader = (props: any) => <CardHeader className={"panel-heading"} {...props}/>;
 let Panel = (_Card as unknown as PanelI);
 Panel.Body = Card.Body;
 Panel.Heading = _CardHeader;
-Panel.Collapse = Card.Body;
+Panel.Collapse = ({children, ...props}) => (
+	<Collapse {...props}><div>{children}</div></Collapse> // animations don't work if children are not wrapped to div
+);
 
 const Glyphicon: React.ComponentType<GlyphiconProps> = ({glyph, ...props}) => {
 	const icon: IconProp = iconMapping[glyph as Glyph];
@@ -123,8 +131,6 @@ const theme: Theme = {
 	Button: React.forwardRef<typeof Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} variant={variant} size={small ? "sm" : undefined} ref={ref as any}/>),
 	ButtonGroup,
 	ButtonToolbar,
-	// Overlay,
-	// OverlayTrigger,
 	Overlay: (props) => <Overlay {...props as any}/>,
 	OverlayTrigger: React.forwardRef<typeof OverlayTrigger, OverlayTriggerProps>((props, ref) => <OverlayTrigger {...props as any}/>),
 	Popover: ({title, ...props}) => <Stub componentName={"Popover"}><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -135,10 +141,10 @@ const theme: Theme = {
 	Col: (props) => <Col {...props}/>,
 	FormGroup: DivStubFunc("FormGroup"), 
 	InputGroup, 
-	FormControl: (props) => <input {...props} />, 
-	ListGroup: DivStubFunc("ListGroup"), 
-	ListGroupItem: DivStubFunc("ListGroupItem"), 
-	Breadcrumb: Breadcrumb, 
+	FormControl: (props) => <FormControl {...props as any} />,
+	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props}/>),
+	ListGroupItem: ({onClick, ...props}) => <ListGroupItem action={!!onClick} onClick={onClick} {...props} />,
+	Breadcrumb,
 	HelpBlock: DivStubFunc("HelpBlock"), 
 	MenuItem: DivStubFunc("MenuItem"), 
 	Alert: DivStubFunc("Alert"), 
