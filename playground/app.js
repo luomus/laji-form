@@ -6,7 +6,6 @@ import ApiClientImplementation from "./ApiClientImplementation.js";
 import * as _notus from "notus";
 import * as queryString from "querystring";
 import { isObject } from "../src/utils.tsx";
-import bs3 from "../src/themes/bs3";
 
 import "../src/styles.js";
 import "./styles-dev.css";
@@ -46,7 +45,20 @@ const apiClient = new ApiClientImplementation(
 	lang
 );
 
-const {mockApi, test, id, local, localFormData, settings, ...lajiFormOptions} = query;
+const {mockApi, test, id, local, localFormData, settings, theme, ...lajiFormOptions} = query;
+
+let themeName = theme;
+if (!themeName) {
+	themeName = "bs3";
+}
+const themePromise = import("../src/themes/" + themeName);
+if (themeName === "bs3" || themeName === "bs5") {
+	const styleUrl = themeName === "bs3" ? "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css";
+	const link = document.createElement( "link" );
+	link.rel  = "stylesheet";
+	link.href = styleUrl;
+	document.head.appendChild(link);
+}
 
 if (mockApi) {
 	const mockResponses = {};
@@ -167,13 +179,13 @@ if (test !== true) {
 	}));
 }
 
-promise = promise.then(data => ({ 
+promise = Promise.all([promise, themePromise]).then(([data, themePackage]) => ({
 	...data,
 	apiClient,
 	rootElem: document.getElementById("app"),
 	staticImgPath: "/build",
 	lang,
-	theme: bs3,
+	theme: themePackage.default,
 	uiSchemaContext: {
 		...(data.uiSchemaContext || {}),
 		creator: properties.userId,
