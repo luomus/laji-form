@@ -9,6 +9,7 @@ import ButtonGroup from "react-bootstrap-2/ButtonGroup";
 import ButtonToolbar from "react-bootstrap-2/ButtonToolbar";
 import Overlay from "react-bootstrap-2/Overlay";
 import OverlayTrigger from "react-bootstrap-2/OverlayTrigger";
+import Popover from "react-bootstrap-2/Popover";
 import Tooltip from "react-bootstrap-2/Tooltip";
 import Modal from "react-bootstrap-2/Modal";
 import Row from "react-bootstrap-2/Row";
@@ -20,6 +21,7 @@ import ListGroup from "react-bootstrap-2/ListGroup";
 import ListGroupItem from "react-bootstrap-2/ListGroupItem";
 import Breadcrumb from "react-bootstrap-2/Breadcrumb";
 import Alert from "react-bootstrap-2/Alert";
+import Pagination from "react-bootstrap-2/Pagination";
 import Accordion from "react-bootstrap-2/Accordion";
 import Dropdown from "react-bootstrap-2/Dropdown";
 import Form from "react-bootstrap-2/Form";
@@ -48,7 +50,6 @@ import {
 	OverlayTriggerProps,
 	Modal as ModalI,
 	InputGroup as InputGroupI,
-	Breadcrumb as BreadcrumbI,
 	Pager,
 	Dropdown as DropdownI,
 	CheckboxProps,
@@ -95,22 +96,11 @@ const mapBtnVariant = (variant?: ButtonVariantI): ButtonVariant => {
 	return variant === "default" ? "secondary" : variant;
 };
 
-const Stub = ({componentName, children}: {componentName: string, children: React.ReactNode}) => {
-	console.error("Bs5 theme missing a component " + componentName);
-	return <React.Fragment>{children}</React.Fragment>;
-};
-
-const DivStubFunc = (componentName: string) => {
-	return React.forwardRef<HTMLDivElement, any>((props: any, ref) => (
-		<Stub componentName={componentName}><div {...props} ref={ref} /></Stub>
-	));
-};
-
 const _Card = React.forwardRef<typeof Card, PanelProps>(({variant, ...props}, ref) => (
 	<Card {...props} bg={variant} ref={ref as any}/>
 ));
 const _CardHeader = (props: any) => <CardHeader className={"panel-heading"} {...props}/>;
-let Panel = (_Card as unknown as PanelI);
+let Panel = _Card as unknown as PanelI;
 Panel.Body = Card.Body;
 Panel.Heading = _CardHeader;
 Panel.Collapse = ({children, ...props}) => (
@@ -126,22 +116,17 @@ const Glyphicon: React.ComponentType<GlyphiconProps> = ({glyph, ...props}) => {
 	return <FontAwesomeIcon icon={icon} {...props}/>;
 };
 
-const _Modal: ModalI = DivStubFunc("Modal") as unknown as ModalI;
-_Modal.Body = DivStubFunc("ModalBody");
-_Modal.Header = DivStubFunc("ModalHeader");
-_Modal.Footer = DivStubFunc("ModalFooter");
-_Modal.Title = DivStubFunc("ModalTitle");
+const _Modal: ModalI = Modal as unknown as ModalI;
+_Modal.Body = Modal.Body;
+_Modal.Header = Modal.Header;
+_Modal.Footer = Modal.Footer;
+_Modal.Title = Modal.Title;
 
-const _InputGroup: InputGroupI = DivStubFunc("InputGroup") as unknown as InputGroupI;
-_InputGroup.Addon = DivStubFunc("InputGroupAddon");
+const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
+_InputGroup.Addon = InputGroup.Text;
 
-const _Breadcrumb: BreadcrumbI = DivStubFunc("Breadcrumb") as unknown as BreadcrumbI;
-_Breadcrumb.Item = DivStubFunc("BreadcrumbItem");
-
-const Pager: Pager = DivStubFunc("Pager") as unknown as Pager;
-
-const _Dropdown: DropdownI = DivStubFunc("Dropdown") as unknown as DropdownI;
-_Dropdown.Menu = DivStubFunc("DropdownMenu");
+const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
+_Dropdown.Menu = Dropdown.Menu;
 
 const theme: Theme = {
 	Panel,
@@ -152,29 +137,29 @@ const theme: Theme = {
 	ButtonToolbar,
 	Overlay: (props) => <Overlay {...props as any}/>,
 	OverlayTrigger: React.forwardRef<typeof OverlayTrigger, OverlayTriggerProps>((props, ref) => <OverlayTrigger {...props as any}/>),
-	Popover: ({title, ...props}) => <Stub componentName={"Popover"}><div {...props} /></Stub>, // eslint-disable-line @typescript-eslint/no-unused-vars
+	Popover,
 	Tooltip,
 	Glyphicon,
-	Modal: _Modal, 
+	Modal: _Modal,
 	Row: (props) => <Row {...props}/>,
 	Col: (props) => <Col {...props}/>,
-	FormGroup: DivStubFunc("FormGroup"), 
-	InputGroup: _InputGroup, 
+	FormGroup,
+	InputGroup: _InputGroup,
 	FormControl: (props) => <FormControl {...props as any} />,
 	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props}/>),
 	ListGroupItem: ({onClick, ...props}) => <ListGroupItem action={!!onClick} onClick={onClick} {...props} />,
-	Breadcrumb: _Breadcrumb,
-	HelpBlock: DivStubFunc("HelpBlock"), 
-	MenuItem: DivStubFunc("MenuItem"), 
-	Alert: DivStubFunc("Alert"), 
-	Pager, 
-	Accordion: DivStubFunc("Accordion"), 
-	Collapse: DivStubFunc("Collapse"), 
+	Breadcrumb,
+	HelpBlock: (props) => <Form.Text {...props} />,
+	MenuItem: Dropdown.Item,
+	Alert: (props) => <Alert {...props as any}/>,
+	Pager: Pagination,
+	Accordion: (props) => <Accordion {...props as any} />,
+	Collapse,
 	Dropdown: _Dropdown,
-	Form: DivStubFunc("Form"), 
-	ControlLabel: DivStubFunc("ControlLabel"), 
-	Checkbox: (props: CheckboxProps) => <input type="checkbox" {...props} />, 
-	ToggleButton: DivStubFunc("ToggleButton"), 
-	ToggleButtonGroup: DivStubFunc("ToggleButtonGroup") 
+	Form,
+	ControlLabel: Form.Label,
+	Checkbox: Form.Check,
+	ToggleButton,
+	ToggleButtonGroup: (props) => <ToggleButtonGroup {...props as any} />
 };
 export default theme;
