@@ -29,21 +29,7 @@ import ToggleButton from "react-bootstrap-2/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap-2/ToggleButtonGroup";
 import { ButtonVariant } from "react-bootstrap-2/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconProp, library } from "@fortawesome/fontawesome-svg-core";
-import {
-	faCheck,
-	faRefresh,
-	faTriangleExclamation,
-	faPlus,
-	faCamera,
-	faHeadphones,
-	faUser,
-	faBolt,
-	faBars,
-	faChevronUp,
-	faChevronDown,
-	faArrowUpRightFromSquare
-} from "@fortawesome/free-solid-svg-icons";
+import { mapping as iconMapping } from "./glyphicon-fa-mapping";
 import {
 	Theme,
 	ButtonProps,
@@ -54,41 +40,12 @@ import {
 	PanelProps,
 	Panel as PanelI,
 	GlyphiconProps,
-	Glyph,
 	ListGroupProps,
 	ButtonVariant as ButtonVariantI,
 	ColProps,
 	FormControlProps,
 	ToggleButtonGroupProps
 } from "./theme";
-
-library.add(faCheck);
-library.add(faRefresh);
-library.add(faTriangleExclamation);
-library.add(faPlus);
-library.add(faCamera);
-library.add(faHeadphones);
-library.add(faUser);
-library.add(faBolt);
-library.add(faBars);
-library.add(faChevronUp);
-library.add(faChevronDown);
-library.add(faArrowUpRightFromSquare);
-
-const iconMapping: Record<Glyph, IconProp> = {
-	"ok": "check",
-	"refresh": "refresh",
-	"warning-sign": "triangle-exclamation",
-	"plus": "plus",
-	"camera": "camera",
-	"headphones": "headphones",
-	"user": "user",
-	"flash": "bolt",
-	"menu-hamburger": "bars",
-	"chevron-up": "chevron-up",
-	"chevron-down": "chevron-down",
-	"new-window": "arrow-up-right-from-square"
-};
 
 const mapBtnVariant = (variant?: ButtonVariantI): ButtonVariant => {
 	if (!variant) {
@@ -108,14 +65,9 @@ Panel.Collapse = ({children, ...props}) => (
 	<Collapse {...props}><div>{children}</div></Collapse> // animations don't work if children are not wrapped to div
 );
 
-const Glyphicon: React.ComponentType<GlyphiconProps> = ({glyph, ...props}) => {
-	const icon: IconProp = iconMapping[glyph as Glyph];
-	if (!icon) {
-		console.log("Bs5 theme missing a glyph " + glyph);
-		return null;
-	}
-	return <FontAwesomeIcon icon={icon} {...props}/>;
-};
+const Glyphicon: React.ComponentType<GlyphiconProps> = ({glyph, ...props}) => (
+	<FontAwesomeIcon icon={iconMapping[glyph]} {...props} />
+);
 
 const _Modal: ModalI = Modal as unknown as ModalI;
 _Modal.Body = Modal.Body;
