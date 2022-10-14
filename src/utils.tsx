@@ -224,10 +224,6 @@ export function getTabbableFields(elem: HTMLElement, reverse?: boolean): HTMLEle
 	return fields as HTMLElement[];
 }
 
-export function getSchemaElementById(contextId: number, id: string) {
-	return document.getElementById(`_laji-form_${contextId}_${id}`);
-}
-
 export function isTabbableInput(elem: HTMLElement) {
 	return elem.id.match(/^_laji-form_/)
 	|| inputTypes.includes(elem.tagName.toLowerCase())
@@ -316,7 +312,6 @@ export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement,
 	return false;
 }
 
-
 export interface ReactUtilsType {
 	focusById: (id: string, focus?: boolean) => boolean;
 	focusAndScroll: (idToFocus?: string, idToScroll?: string, focus?: boolean) => boolean | undefined;
@@ -325,6 +320,7 @@ export interface ReactUtilsType {
 	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
 	formDataIsEmpty: (props: FieldProps) => boolean;
 	formDataEquals: (f1: any, f2: any, id: string) => boolean;
+	getSchemaElementById: (id: string) => HTMLElement | null;
 }
 
 export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
@@ -335,9 +331,17 @@ export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
 	filterItemIdsDeeply: _filterItemIdsDeeply(context),
 	formDataIsEmpty: _formDataIsEmpty(context),
 	formDataEquals: _formDataEquals(context),
+	getSchemaElementById: _getSchemaElementById(context)
 });
 
-export const _focusById = (context: ContextProps) => (id: string, focus = true) => {
+const _getSchemaElementById = ({contextId}: Pick<ContextProps, "contextId">) => (id: string) => {
+	return document.getElementById(`_laji-form_${contextId}_${id}`);
+};
+export const getSchemaElementById = (contextId: number, id: string) => {
+	return _getSchemaElementById({contextId})(id);
+};
+
+const _focusById = (context: ContextProps) => (id: string, focus = true) => {
 	const elem = getSchemaElementById(context.contextId, id);
 
 	if (elem && document.body.contains(elem)) {
@@ -391,7 +395,7 @@ const _focusAndScroll = (context: ContextProps) => (idToFocus?: string, idToScro
 
 export const focusAndScroll = (context: ContextProps, idToFocus?: string, idToScroll?: string, focus?: boolean) => _focusAndScroll(context)(idToFocus, idToScroll, focus);
 
-export const _shouldSyncScroll = (context: ContextProps) => () => {
+const _shouldSyncScroll = (context: ContextProps) => () => {
 	return (new Context(context.contextId) as RootContext).windowScrolled === getWindowScrolled();
 };
 
@@ -436,7 +440,7 @@ const _formDataIsEmpty = (context: ContextProps) => (props: FieldProps) => {
 };
 export const formDataIsEmpty = (props: FieldProps, context: ContextProps) => _formDataIsEmpty(context)(props);
 
-export const _formDataEquals = (context: ContextProps) => (f1: any, f2: any, id: string) => {
+const _formDataEquals = (context: ContextProps) => (f1: any, f2: any, id: string) => {
 	const tmpIdTree = getRelativeTmpIdTree(context.contextId, id);
 	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
 	return deepEquals(_f1, _f2);

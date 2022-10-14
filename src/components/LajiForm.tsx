@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils } from "../utils";
+import { focusNextInput, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
@@ -333,7 +333,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				}, Promise.resolve());
 			});
 		}, Promise.resolve()).then(() => {
-			const container = getSchemaElementById(this._id, id);
+			const container = this.memoizedContext.utils.getSchemaElementById(id);
 			const elem = container || document.querySelector(`#laji-form-error-container-${id}`);
 			const input = document.querySelector(`#${id}`) as HTMLInputElement;
 

@@ -8,7 +8,7 @@ import LajiMap from "laji-map";
 import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Button, Stretch } from "../components";
-import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getSchemaElementById, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
@@ -257,6 +257,8 @@ class DefaultMapArrayField extends React.Component {
 class UnitsMapArrayField extends React.Component {
 	field = "units"
 
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.onMapChangeCreateGathering = DefaultMapArrayField.prototype.onMapChangeCreateGathering.bind(this);
@@ -434,7 +436,7 @@ class UnitsMapArrayField extends React.Component {
 		this.startHighlight(idx);
 
 		const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
-		this.highlightedElem = getSchemaElementById(this.props.formContext.contextId, id);
+		this.highlightedElem = this.context.utils.getSchemaElementById(id);
 
 		if (this.highlightedElem) {
 			this.highlightedElem.className += " map-highlight";
@@ -781,6 +783,7 @@ class LineTransectMapArrayField extends React.Component {
 
 @_MapArrayField
 class LolifeMapArrayField extends React.Component {
+	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.onMouseOver = this.onMouseOver.bind(this);
@@ -1041,7 +1044,7 @@ class LolifeMapArrayField extends React.Component {
 
 	getHighlightElem(idx, unit) {
 		if (unit) {
-			return getSchemaElementById(this.props.formContext.contextId, `${this.props.idSchema.$id}_0_units_${idx}`);
+			return this.context.utils.getSchemaElementById(`${this.props.idSchema.$id}_0_units_${idx}`);
 		} else {
 			return document.getElementById(`${this.props.idSchema.$id}_${idx}-panel`);
 		}
