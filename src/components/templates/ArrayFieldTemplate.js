@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined, isObject, findNearestParentSchemaElemId, focusById, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
+import { getUiOptions, isNullOrUndefined, isObject, findNearestParentSchemaElemId, getSchemaElementById, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, focusAndScroll, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
@@ -154,6 +154,7 @@ export function getButtonsForPosition(props, buttonDescriptions = [], position, 
 
 export function handlesArrayKeys(ComposedComponent) {
 	return class ArrayFieldTemplateField extends ComposedComponent {
+		static contextType = ReactContext;
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
@@ -195,7 +196,8 @@ export function handlesArrayKeys(ComposedComponent) {
 		getKeyHandlers(props) {
 			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(props.uiSchema);
 			return [_arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions}, {
-				getProps: () => this.props
+				getProps: () => this.props,
+				getContext: () => this.context
 			}];
 		}
 
@@ -215,7 +217,6 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		getChildKeyHandlers(props) {
-
 			return props.items.map((item, i) => {
 				const id = `${props.idSchema.$id}_${i}`;
 				return [id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
@@ -366,7 +367,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 export default handlesArrayKeys(ArrayFieldTemplateWithoutKeyHandling);
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
+	navigateArray: function (e, {reverse, getProps, getContext, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
 		function focusIdx(idx, prop) {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);
@@ -381,7 +382,7 @@ export const arrayKeyFunctions = {
 					: getIdToScrollAfterNavigate
 						? getIdToScrollAfterNavigate()
 						: undefined;
-				focusAndScroll(getProps().formContext, _idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
+				getContext().utils.focusAndScroll(_idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
 			}
 			if (focusByIdx) {
 				focusByIdx(idx, prop, callback);
@@ -394,8 +395,8 @@ export const arrayKeyFunctions = {
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
 		const focusedIdx = activeItemQuery ? getIdxWithoutOffset(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getUiOptions(getProps().uiSchema).idxOffsets) : undefined;
-		const lastId = nearestSchemaElemId.substring(`${getProps().idSchema.$id}_${focusedIdx}`.length + 1, nearestSchemaElemId.length);
-		const focusedProp = isNaN(lastId) ? lastId : undefined;
+		const focusedPropMaybe = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_${focusedIdx}_(.+)`))?.[1];
+		const focusedProp = isNaN(focusedPropMaybe) ? focusedPropMaybe : undefined;
 
 		const currentIdx = getCurrentIdx ? getCurrentIdx() : focusedIdx;
 
@@ -450,9 +451,10 @@ export const arrayKeyFunctions = {
 };
 
 export const arrayItemKeyFunctions = {
-	delete: function(e, {getDeleteButton, id, getProps}) {
+	delete: function(e, {getDeleteButton, id, getProps, getContext}) {
 		const {items, idSchema, formContext, readonly, disabled} = getProps();
-		const {getFormRef, contextId} = formContext;
+		const {getFormRef} = formContext;
+		const {contextId} = getContext();
 
 		if (readonly || disabled || !isDescendant(getSchemaElementById(contextId, id), e.target)) {
 			return;
@@ -473,12 +475,12 @@ export const arrayItemKeyFunctions = {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
 				if (idxToFocus >= 0) {
-					focusById(formContext, `${idSchema.$id}_${idxToFocus}`);
+					getContext().utils.focusById(`${idSchema.$id}_${idxToFocus}`);
 				} else if (prevElem) {
 					prevElem.focus();
 				}
 			} else {
-				focusById(formContext, `${activeId}`);
+				getContext().utils.focusById(`${activeId}`);
 			}
 		});
 		return true;

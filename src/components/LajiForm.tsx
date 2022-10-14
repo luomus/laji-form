@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, focusById, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState } from "../utils";
+import { focusNextInput, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, getSchemaElementById, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
@@ -198,7 +198,6 @@ export interface FormContext {
 	lang: Lang;
 	uiSchemaContext: any;
 	settings: any;
-	contextId: number;
 	getFormRef: () => Form<any>
 	topOffset: number;
 	bottomOffset: number;
@@ -212,6 +211,7 @@ export interface FormContext {
 	formDataTransformers?: any[];
 	_parentLajiFormId?: number;
 	mediaMetadata?: MediaMetadata;
+	contextId: number;
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -593,10 +593,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						: props.settings
 				) || {}
 				)),
-				contextId: this._id,
 				getFormRef: this.getFormRef,
 				topOffset: props.topOffset || 0,
 				bottomOffset: props.bottomOffset || 0,
+				contextId: this._id,
 				formID: props.id,
 				googleApiKey: props.googleApiKey,
 				reserveId: this.reserveId,
@@ -621,7 +621,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	componentDidMount() {
 		this.mounted = true;
-		this.props.autoFocus && focusById(this.state.formContext, "root");
+		this.props.autoFocus && this.memoizedContext.utils.focusById("root");
 
 		this.blockingLoaderRef = document.createElement("div");
 		this.blockingLoaderRef.className = "laji-form blocking-loader";
@@ -725,7 +725,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
 
 	getContext = (props: LajiFormProps, context: ContextProps): ContextProps => {
-		const nextKey = (["theme", "lang"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+		const nextKey = (["theme", "lang", "topOffset", "bottomOffset"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
 		}, {} as Record<keyof LajiFormProps, any>);
@@ -737,7 +737,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				theme: props.theme || context?.theme || StubTheme,
 				lang: props.lang || "en",
 				setTimeout: this.setTimeout,
-			};
+				contextId: this._id,
+				topOffset: props.topOffset || 0,
+				bottomOffset: props.bottomOffset || 0,
+			} as unknown as ContextProps;
+			this.memoizedContext.utils = ReactUtils(this.memoizedContext);
 			return this.memoizedContext;
 		}
 	}

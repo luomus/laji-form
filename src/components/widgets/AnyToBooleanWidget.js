@@ -1,18 +1,20 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, formDataEquals, getInnerUiSchema } from "../../utils";
+import { getUiOptions, getInnerUiSchema } from "../../utils";
+import ReactContext from "../../ReactContext";
 
 export const AnyToBoolean = (props) => <_AnyToBoolean {...props} />;
 
 const _AnyToBoolean = (props) => {
+	const context = React.useContext(ReactContext);
 	const {widget} = props;
 	const options = getUiOptions(widget ? props : props.uiSchema);
 	const {trueValue, falseValue, allowUndefined = true} = options;
 	const schema = {...props.schema, type: "boolean", title: allowUndefined ? "" : props.schema.title};
 	const id = widget ? props.id : props.idSchema.$id;
-	const value = formDataEquals(props[widget ? "value": "formData"], trueValue, props.formContext, id)
+	const value = context.utils.formDataEquals(props[widget ? "value": "formData"], trueValue, id)
 		? true
-		: formDataEquals(props[widget ? "value": "formData"], falseValue, props.formContext, id)
+		: context.utils.formDataEquals(props[widget ? "value": "formData"], falseValue, id)
 			? false
 			: undefined;
 

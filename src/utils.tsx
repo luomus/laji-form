@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isSelect as _isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState as _getDefaultFormState } from "@rjsf/utils";
 import Context from "./Context";
-import ReactContext from "./ReactContext";
+import ReactContext, {ContextProps} from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
@@ -316,21 +316,134 @@ export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement,
 	return false;
 }
 
-export function focusById(formContext: FormContext, id: string, focus = true) {
-	const elem = getSchemaElementById(formContext.contextId, id);
+
+export interface ReactUtilsType {
+	focusById: (id: string, focus?: boolean) => boolean;
+	focusAndScroll: (idToFocus?: string, idToScroll?: string, focus?: boolean) => boolean | undefined;
+	shouldSyncScroll: () => boolean;
+	syncScroll: (force: boolean) => void;
+	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
+	formDataIsEmpty: (props: FieldProps) => boolean;
+	formDataEquals: (f1: any, f2: any, id: string) => boolean;
+}
+
+export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
+	focusById: _focusById(context),
+	focusAndScroll: _focusAndScroll(context),
+	shouldSyncScroll: _shouldSyncScroll(context),
+	syncScroll: _syncScroll(context),
+	filterItemIdsDeeply: _filterItemIdsDeeply(context),
+	formDataIsEmpty: _formDataIsEmpty(context),
+	formDataEquals: _formDataEquals(context),
+});
+
+export const _focusById = (context: ContextProps) => (id: string, focus = true) => {
+	const elem = getSchemaElementById(context.contextId, id);
+
 	if (elem && document.body.contains(elem)) {
 		const tabbableFields = getTabbableFields(elem);
 		if (tabbableFields && tabbableFields.length) {
 			focus && tabbableFields[0].focus();
-			scrollIntoViewIfNeeded(elem, formContext.topOffset, formContext.bottomOffset);
-			const _context = new Context(formContext.contextId) as RootContext;
-			_context.lastIdToFocus = id; // Mark for components that manipulate scroll positions
-			_context.windowScrolled = getWindowScrolled();
+			scrollIntoViewIfNeeded(elem, context.topOffset, context.bottomOffset);
+			const rootContext = new Context(context.contextId) as RootContext;
+			rootContext.lastIdToFocus = id; // Mark for components that manipulate scroll positions
+			rootContext.windowScrolled = getWindowScrolled();
 			return true;
 		}
 	}
 	return false;
-}
+};
+
+export const focusById = (context: ContextProps, id: string, focus?: boolean) => _focusById(context)(id, focus);
+
+const _focusAndScroll = (context: ContextProps) => (idToFocus?: string, idToScroll?: string, focus = true) => {
+	const {contextId, topOffset, bottomOffset} = context;
+	const _context = new Context(contextId) as RootContext;
+	if (idToFocus === undefined && idToScroll === undefined) return;
+	if (idToFocus && !context.utils.focusById(getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
+	if (idToScroll) {
+		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
+		const elemToFocus = getSchemaElementById(contextId, getKeyHandlerTargetId(idToFocus, _context));
+		if (!elemToScroll || !elemToFocus) {
+			return end();
+		}
+		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
+		const scrollAmount = wouldScrollTo - getWindowScrolled();
+		const {top} = elemToFocus.getBoundingClientRect();
+		const viewTopDistanceFromTop = top - scrollAmount;
+
+		// Don't scroll if scrolling would hide focused elem top.
+		if (viewTopDistanceFromTop < topOffset) {
+			return end();
+		} else {
+			scrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
+		}
+	}
+	return end();
+
+	function end() {
+		_context.lastIdToScroll = idToScroll;
+		_context.lastIdToFocus = idToFocus;
+		_context.windowScrolled = getWindowScrolled();
+		return true;
+	}
+};
+
+export const focusAndScroll = (context: ContextProps, idToFocus?: string, idToScroll?: string, focus?: boolean) => _focusAndScroll(context)(idToFocus, idToScroll, focus);
+
+export const _shouldSyncScroll = (context: ContextProps) => () => {
+	return (new Context(context.contextId) as RootContext).windowScrolled === getWindowScrolled();
+};
+
+export const shouldSyncScroll = (context: ContextProps) => _shouldSyncScroll(context)();
+
+export const _syncScroll = (context: ContextProps) => (force = false) => {
+	if (force || shouldSyncScroll(context)) {
+		const {lastIdToFocus, lastIdToScroll} = new Context(context.contextId) as RootContext;
+		focusAndScroll(context, lastIdToFocus, lastIdToScroll, false);
+	}
+};
+
+export const syncScroll = (context: ContextProps, force: boolean) => _syncScroll(context)(force);
+
+export const filterLajiFormId = (item: any) => {
+	if (item && item._lajiFormId) {
+		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
+		item = _item;
+	}
+	return item;
+};
+
+export const filterItemId = (item: any) => {
+	if (item && (item._lajiFormId || item.id)) {
+		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
+		item = _item;
+	}
+	return item;
+};
+
+const _filterItemIdsDeeply = (context: ContextProps) => (item: any, idSchemaId: string) => {
+	const tmpIdTree = getRelativeTmpIdTree(context.contextId, idSchemaId);
+	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
+	return _item;
+};
+export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: string) => _filterItemIdsDeeply({contextId} as ContextProps)(item, idSchemaId);
+
+const _formDataIsEmpty = (context: ContextProps) => (props: FieldProps) => {
+	const tmpIdTree = getRelativeTmpIdTree(context.contextId, props.idSchema.$id);
+	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
+	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
+};
+export const formDataIsEmpty = (props: FieldProps, context: ContextProps) => _formDataIsEmpty(context)(props);
+
+export const _formDataEquals = (context: ContextProps) => (f1: any, f2: any, id: string) => {
+	const tmpIdTree = getRelativeTmpIdTree(context.contextId, id);
+	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
+	return deepEquals(_f1, _f2);
+};
+export const formDataEquals = (f1: any, f2: any, context: ContextProps, id: string) => {
+	return _formDataEquals(context)(f1, f2, id);
+};
 
 export function getNestedTailUiSchema(uiSchema: UiSchema) {
 	while (uiSchema && uiSchema.uiSchema) {
@@ -765,50 +878,6 @@ export function checkArrayRules(rules: any[], props: FieldProps, idx: number, ca
 	}
 }
 
-export function focusAndScroll(formContext: FormContext, idToFocus?: string, idToScroll?: string, focus = true) {
-	const {contextId, topOffset, bottomOffset} = formContext;
-	const _context = new Context(contextId) as RootContext;
-	if (idToFocus === undefined && idToScroll === undefined) return;
-	if (idToFocus && !focusById(formContext, getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
-	if (idToScroll) {
-		const elemToScroll = document.getElementById(getKeyHandlerTargetId(idToScroll, _context));
-		const elemToFocus = getSchemaElementById(contextId, getKeyHandlerTargetId(idToFocus, _context));
-		if (!elemToScroll || !elemToFocus) {
-			return end();
-		}
-		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
-		const scrollAmount = wouldScrollTo - getWindowScrolled();
-		const {top} = elemToFocus.getBoundingClientRect();
-		const viewTopDistanceFromTop = top - scrollAmount;
-
-		// Don't scroll if scrolling would hide focused elem top.
-		if (viewTopDistanceFromTop < topOffset) {
-			return end();
-		} else {
-			scrollIntoViewIfNeeded(elemToScroll, topOffset, bottomOffset);
-		}
-	}
-	return end();
-
-	function end() {
-		_context.lastIdToScroll = idToScroll;
-		_context.lastIdToFocus = idToFocus;
-		_context.windowScrolled = getWindowScrolled();
-		return true;
-	}
-}
-
-export function shouldSyncScroll(formContext: FormContext) {
-	return (new Context(formContext.contextId) as RootContext).windowScrolled === getWindowScrolled();
-}
-
-export function syncScroll(formContext: FormContext, force = false) {
-	if (force || shouldSyncScroll(formContext)) {
-		const {lastIdToFocus, lastIdToScroll} = new Context(formContext.contextId) as RootContext;
-		focusAndScroll(formContext, lastIdToFocus, lastIdToScroll, false);
-	}
-}
-
 export function bringRemoteFormData(formData: any, formContext: FormContext) {
 	if (formContext.formDataTransformers) {
 		return formContext.formDataTransformers.reduce((formData, {"ui:field": uiField, props: fieldProps}) => {
@@ -930,40 +999,6 @@ export function updateFormDataWithJSONPointer(schemaProps: Pick<FieldProps, "for
 		return _default;
 	});
 }
-
-export const filterLajiFormId = (item: any) => {
-	if (item && item._lajiFormId) {
-		const {_lajiFormId, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
-		item = _item;
-	}
-	return item;
-};
-
-export const filterItemId = (item: any) => {
-	if (item && (item._lajiFormId || item.id)) {
-		const {_lajiFormId, id, ..._item} = item; // eslint-disable-line @typescript-eslint/no-unused-vars
-		item = _item;
-	}
-	return item;
-};
-
-export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: string) => {
-	const tmpIdTree = getRelativeTmpIdTree(contextId, idSchemaId);
-	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
-	return _item;
-};
-
-export const formDataIsEmpty = (props: FieldProps) => {
-	const tmpIdTree = getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id);
-	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
-	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
-};
-
-export const formDataEquals = (f1: any, f2: any, formContext: FormContext, id: string) => {
-	const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, id);
-	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
-	return deepEquals(_f1, _f2);
-};
 
 let uuid = 0;
 export const assignUUID = (item: any, immutably = false) => {

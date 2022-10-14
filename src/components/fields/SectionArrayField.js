@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, filterItemIdsDeeply, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, focusAndScroll, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -153,6 +153,7 @@ const SectionContent = ({
 @handlesArrayKeys
 class SectionArrayFieldTemplate extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.addButtonRef = React.createRef();
@@ -515,7 +516,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					// we don't define it again, or else it will be rendered again and won't be autofocused properly.
 					const [_rowDefinerItem, _ids] = containerIdx === 0 && getUUID(unit)
 						? addLajiFormIds(unit, tmpIdTree)
-						: addLajiFormIds(filterItemIdsDeeply(unit, this.props.formContext.contextId, this.props.idSchema.$id), tmpIdTree, false);
+						: addLajiFormIds(this.context.utils.filterItemIdsDeeply(unit, this.props.idSchema.$id), tmpIdTree, false);
 					rowDefinerItem  = _rowDefinerItem;
 					ids = {...ids, ..._ids};
 				}
@@ -635,9 +636,9 @@ const _arrayKeyFunctions = options => {
 		insert: (e, props) => {
 			document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
 		},
-		navigateSection: (e, {getProps, left, right, up, goOverRow}) => {
+		navigateSection: (e, {getProps, getContext, left, right, up, goOverRow}) => {
 			const {rowDefinerField, rowValueField} = options;
-			const currentId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+			const currentId = findNearestParentSchemaElemId(getContext().contextId, document.activeElement);
 			const amount = left || up ? -1 : 1;
 			const id = getProps().idSchema.$id;
 			let nextId;
@@ -670,7 +671,7 @@ const _arrayKeyFunctions = options => {
 						}
 					}
 				});
-				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, elem);
+				nextId = findNearestParentSchemaElemId(getContext().contextId, elem);
 			};
 
 			if (left || right) {
@@ -694,7 +695,7 @@ const _arrayKeyFunctions = options => {
 					} else {
 						let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
 						// Horizontal navigation inside non row section field.
-						if (currentId === findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableInSection[tabbableInSection.length - 1])) {
+						if (currentId === findNearestParentSchemaElemId(getContext().contextId, tabbableInSection[tabbableInSection.length - 1])) {
 							nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
 							// Horizontal navigation from non row section to row field.
 						} else {
@@ -732,12 +733,12 @@ const _arrayKeyFunctions = options => {
 					: `${id}-section-definer`;
 				const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
 				const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
-				nextId = findNearestParentSchemaElemId(getProps().formContext.contextId, tabbableOutsideContainer[tabbableIdx + amount]);
+				nextId = findNearestParentSchemaElemId(getContext().contextId, tabbableOutsideContainer[tabbableIdx + amount]);
 				if (nextId === "root") {
 					return true;
 				}
 			}
-			focusAndScroll(getProps().formContext, nextId);
+			getContext().utils.focusAndScroll(nextId);
 		}
 	};
 	keyFunctions.navigate = (e, props) => {

@@ -4,7 +4,7 @@ import * as merge from "deepmerge";
 const equals = require("deep-equal");
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
-import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, syncScroll, dictionarify, isObject } from "../../utils";
+import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, dictionarify, isObject } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
@@ -125,8 +125,8 @@ export default class ScopeField extends React.Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
+			this.context.utils.syncScroll();
 			const context = new Context(this.props.formContext.contextId);
-			syncScroll(this.props.formContext);
 			context.sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
 	}

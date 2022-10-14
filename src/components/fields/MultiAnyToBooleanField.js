@@ -1,12 +1,14 @@
 import * as React from "react";
 import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
-import { getUiOptions, formDataEquals } from "../../utils";
+import { getUiOptions } from "../../utils";
 import AnyToBoolean from "./AnyToBooleanField";
 import { getTemplate } from "@rjsf/utils";
+import ReactContext from "../../ReactContext";
 
 @BaseComponent
 export default class MultiAnyToBooleanField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -28,10 +30,18 @@ export default class MultiAnyToBooleanField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = this.getInitialState(props);
+		this.state = {};
+	}
+
+	componentDidMount() {
+		this.setState(this.getInitialState(this.props));
 	}
 
 	getInitialState(props) {
+		// Context initializes on mount so we can't define the state before that. State is reset at mount.
+		if (!this.context) {
+			return {}
+		}
 		let {groups} = getUiOptions(props.uiSchema) || [];
 		const {formData} = props;
 
@@ -44,11 +54,11 @@ export default class MultiAnyToBooleanField extends React.Component {
 				if (value === undefined) {
 					return;
 				}
-				const trueIndex = trueValues.findIndex(trueValue => formDataEquals(value, trueValue, props.formContext, props.idSchema.$id));
+				const trueIndex = trueValues.findIndex(trueValue => this.context.utils.formDataEquals(value, trueValue, props.idSchema.$id));
 				if (trueIndex !== -1) {
 					groupsFormData[trueIndex] = value;
 				} else {
-					const falseIndex = falseValues.findIndex(falseValue => formDataEquals(value, falseValue, props.formContext, props.idSchema.$id));
+					const falseIndex = falseValues.findIndex(falseValue => this.context.formDataEquals(value, falseValue, props.idSchema.$id));
 					if (falseIndex !== -1) {
 						groupsFormData[falseIndex] = value;
 					}
@@ -75,6 +85,11 @@ export default class MultiAnyToBooleanField extends React.Component {
 	}
 
 	render() {
+		// State initialization is dependent on context which initializes after first render, so we wait for that.
+		if (!this.state.groupsFormData) {
+			return null;
+		}
+
 		const TitleFieldTemplate = getTemplate("TitleFieldTemplate", this.props.registry, getUiOptions(this.props.uiSchema));
 		let {groups} = getUiOptions(this.props.uiSchema) || [];
 		return (

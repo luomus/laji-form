@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
-import { isEmptyString, focusById, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
+import { isEmptyString, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -231,6 +231,8 @@ class TaxonAutosuggestWidget extends React.Component {}
 
 @TaxonAutosuggest
 class UnitAutosuggestWidget extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -250,6 +252,7 @@ class UnitAutosuggestWidget extends React.Component {
 
 class FriendsAutosuggestWidget extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
@@ -329,6 +332,7 @@ class RangeAutosuggestWidget extends React.Component {
 
 export class Autosuggest extends React.Component {
 	static contextType = ReactContext;
+
 	static propTypes = {
 		autosuggestField: PropTypes.string,
 		allowNonsuggestedValue: PropTypes.bool,
@@ -679,7 +683,7 @@ export class Autosuggest extends React.Component {
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
-		setTimeout(() => focusById(this.props.formContext, this.props.id), 1); // Refocus input
+		setTimeout(() => this.context.utils.focusById(this.props.id), 1); // Refocus input
 	}
 
 	onToggleByKeyboard = keyboardClick(this.onToggle)
@@ -836,6 +840,7 @@ export class Autosuggest extends React.Component {
 
 class _TaxonWrapper extends React.Component {
 	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {converted: false};

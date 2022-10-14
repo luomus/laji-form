@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as merge from "deepmerge";
 import { getUiOptions, hasData, getReactComponentName, parseJSONPointer, getBootstrapCols,
-	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, focusAndScroll, syncScroll, shouldSyncScroll, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle } from "../../utils";
+	getNestedTailUiSchema, isHidden, isEmptyString, bsSizeToPixels, pixelsToBsSize, formatValue, dictionarify, getUUID, filteredErrors, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, getIdxWithOffset, isObject, getTitle, ReactUtils } from "../../utils";
 import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../templates/ArrayFieldTemplate";
@@ -34,6 +34,8 @@ const popupMappers = {
 
 @BaseComponent
 export default class SingleActiveArrayField extends React.Component {
+	static contextType = ReactContext;
+
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -53,6 +55,7 @@ export default class SingleActiveArrayField extends React.Component {
 		this.deleteButtonRefSetters = {};
 		this.state = {
 			activeIdx: this.getInitialActiveIdx(props),
+			scrollHeightFixed: 0,
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
@@ -99,7 +102,7 @@ export default class SingleActiveArrayField extends React.Component {
 				: !affixed && (renderer === "accordion" || renderer === "pager")
 					? `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}-header`
 					: `${this.props.idSchema.$id}-add`;
-			focusAndScroll(this.state.formContext || this.props.formContext, idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
+			this.context.utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${getIdxWithOffset(this.state.activeIdx, idxOffsets, totalOffset)}`, idToScroll, focusOnNavigate);
 		}
 
 		if (prevProps.idSchema.$id !== this.props.idSchema.$id) {
@@ -109,8 +112,8 @@ export default class SingleActiveArrayField extends React.Component {
 	}
 
 	shouldComponentUpdate(prevProps, prevState) {
-		if ((this.state.formContext && !prevState.formContext)
-			|| (this.state.formContext && this.state.formContext.topOffset !== prevState.formContext.topOffset)
+		if ((this.state.scrollHeightFixed && !prevState.scrollHeightFixed)
+			|| this.state.scrollHeightFixed && this.state.scrollHeightFixed !== prevState.scrollHeightFixed
 		) {
 			return false;
 		}
@@ -149,14 +152,22 @@ export default class SingleActiveArrayField extends React.Component {
 
 	onHeaderAffixChange = (elem, value) => {
 		if (value) {
-			this.scrollHeightFixed = elem.scrollHeight;
-			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset + elem.scrollHeight}}, () => {
-				syncScroll(this.state.formContext, !!"force");
+			this.setState({scrollHeightFixed: elem.scrollHeight}, () =>  {
+				this.getLocalContext().utils.syncScroll(!!"force");
 			});
 		} else {
-			this.scrollHeightFixed = 0;
-			this.setState({formContext: {...this.props.formContext, topOffset: this.props.formContext.topOffset}});
+			this.setState({scrollHeightFixed: 0});
 		}
+	}
+
+	getLocalContext = () => {
+		if (this.localContextKey === this.state.scrollHeightFixed) {
+			return this.localContext;
+		}
+		this.localContextKey = this.state.scrollHeightFixed;
+		this.localContext = {...this.context, topOffset: this.context.topOffset + this.state.scrollHeightFixed};
+		this.localContext.utils = ReactUtils(this.localContext);
+		return this.localContext;
 	}
 
 	render() {
@@ -179,7 +190,7 @@ export default class SingleActiveArrayField extends React.Component {
 			throw new Error(`Unknown renderer '${renderer}' for SingleActiveArrayField`);
 		}
 
-		const formContext = {...(this.state.formContext || this.props.formContext), this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
+		const formContext = {...this.props.formContext, this: this, prevActiveIdx: this.prevActiveIdx, activeIdx: this.state.activeIdx};
 
 		const {registry: {fields: {ArrayField}}} = this.props;
 
@@ -211,15 +222,17 @@ export default class SingleActiveArrayField extends React.Component {
 		uiSchema["ui:ArrayFieldTemplate"] = ArrayFieldTemplate;
 
 		return (
-			<ArrayField
-				{...this.props}
-				formContext={formContext}
-				registry={{
-					...this.props.registry,
-					formContext
-				}}
-				uiSchema={uiSchema}
-			/>
+			<ReactContext.Provider value={this.getLocalContext()}>
+				<ArrayField
+					{...this.props}
+					formContext={formContext}
+					registry={{
+						...this.props.registry,
+						formContext
+					}}
+					uiSchema={uiSchema}
+				/>
+			</ReactContext.Provider>
 		);
 	}
 
@@ -254,6 +267,9 @@ export default class SingleActiveArrayField extends React.Component {
 	}
 
 	onActiveChange = (idx, prop, callback) => {
+		if (prop === "therings_1_units_0_shortHandText") {
+			throw new Error("LOL");
+		}
 		if (idx !== undefined) {
 			idx = parseInt(idx);
 		}
@@ -327,12 +343,14 @@ function handlesButtonsAndFocus(ComposedComponent) {
 	@handlesArrayKeys
 	class SingleActiveArrayTemplateField extends ComposedComponent {
 		static displayName = getReactComponentName(ComposedComponent);
+		static contextType = ReactContext;
 
 		getKeyHandlers(props) {
 			const {renderer = "accordion"} = getUiOptions(props.uiSchema);
 			const that = props.formContext.this;
 			return [arrayKeyFunctions, {
 				getProps: () => this.props,
+				getContext: () => this.context,
 				insertCallforward: callback => that.onActiveChange((that.props.formData || []).length, undefined, callback),
 				getCurrentIdx: () => that.state.activeIdx,
 				focusByIdx: (idx, prop, callback) => idx === that.state.activeIdx
@@ -390,7 +408,7 @@ function handlesButtonsAndFocus(ComposedComponent) {
 			const handlers = [];
 			if (that.state.activeIdx !== undefined) {
 				const id = `${props.idSchema.$id}_${that.state.activeIdx}`;
-				handlers.push([id, arrayItemKeyFunctions, {id, getProps: () => this.props, getDeleteButton: () => {
+				handlers.push([id, arrayItemKeyFunctions, {id, getProps: () => this.props, getContext: () => this.context, getDeleteButton: () => {
 					return that.deleteButtonRefs[that.state.activeIdx];
 				}}]);
 			}
@@ -473,7 +491,7 @@ class AccordionArrayFieldTemplate extends React.Component {
 				</AccordionHeader>;
 
 			if (affixed && activeIdx === idx) {
-				const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
+				const offset = this.context.topOffset - (that.state.scrollHeightFixed);
 				header = (
 					<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 						{header}
@@ -569,7 +587,7 @@ class PagerArrayFieldTemplate extends React.Component {
 		);
 
 		if (affixed) {
-			const offset = this.props.formContext.topOffset - (that.scrollHeightFixed || 0);
+			const offset = this.context.topOffset - (that.state.scrollHeightFixed);
 			header = (
 				<Affix getContainer={this.getContainerRef} topOffset={offset} onAffixChange={this.onHeaderAffixChange}>
 					{header}
@@ -778,7 +796,7 @@ class TableArrayFieldTemplate extends React.Component {
 	updateLayout = (idx = null, callback) => {
 		requestAnimationFrame(() => {
 			this._lastWidth = window.innerWidth;
-			const scrollBack = shouldSyncScroll(this.props.formContext);
+			const scrollBack = this.context.utils.shouldSyncScroll();
 			const state = this.getStyles();
 			if (!state) {
 				return;
@@ -786,7 +804,7 @@ class TableArrayFieldTemplate extends React.Component {
 			if (idx !== null) state.activeIdx = idx;
 			const _callback = () => {
 				if (scrollBack) {
-					syncScroll(this.props.formContext, !!"force");
+					this.context.utils.syncScroll(!!"force");
 				}
 				if (callback) callback();
 			};

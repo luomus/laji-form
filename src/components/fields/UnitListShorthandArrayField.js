@@ -77,7 +77,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			});
 			const formData = this.props.formData;
 			const last = formData[formData.length - 1];
-			if (last && isDefaultData(last, this.props.schema.items)) {
+			if (isDefaultData(last, this.props.schema.items)) {
 				formData.pop();
 			}
 			this.props.onChange([...formData, ...units]);
@@ -107,7 +107,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			<React.Fragment>
 				<SchemaField {...this.props} uiSchema={this.state.uiSchema} />
 				{this.state.show && (
-					<Modal show={true} onHide={this.onHide} dialogClassName="unit-list-shorthand-modal">
+					<Modal show={true} onHide={this.onHide}>
 						<Modal.Body>
 							<TagInputComponent 
 								tags={isEmptyString(this.state.value) ? [] : this.state.value.split(",").filter(s => !isEmptyString(s))}

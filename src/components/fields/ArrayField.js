@@ -1,19 +1,20 @@
 import * as React from "react";
 import * as merge from "deepmerge";
-import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, filterItemIdsDeeply, getDefaultFormState } from "../../utils";
+import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, getRelativeTmpIdTree, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 import { getDefaultRegistry } from "@rjsf/core";
 
 // Doesn't work with arrays properly since uses JSON Pointers but not JSON path.
 // e.g. "copy all array item values expect these" is impossible.
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 
-	const {schema, registry, formContext} = that.props;
+	const {schema, registry} = that.props;
 	const defaultItem = getDefaultFormState(schema.items, undefined);
 
-	copyItem = filterItemIdsDeeply(copyItem, formContext.contextId, that.props.idSchema.$id);
+	copyItem = that.context.utils.filterItemIdsDeeply(copyItem, that.props.idSchema.$id);
 
 	const source = type === "blacklist" ? defaultItem : copyItem;
 
@@ -96,6 +97,7 @@ export class ArrayFieldPatched extends ArrayField {
 
 @BaseComponent
 export default class _ArrayField extends React.Component {
+	static contextType = ReactContext;
 
 	onChange = (formData) => {
 		this.props.onChange(onArrayFieldChange(formData, this.props));
