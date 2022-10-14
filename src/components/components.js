@@ -542,7 +542,7 @@ export class TooltipComponent extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {show: false};
+		this.state = {show: null};
 	}
 
 	setOverlayRef = (elem) => {
@@ -559,7 +559,7 @@ export class TooltipComponent extends React.Component {
 		const overlay = (
 			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
 				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
-			} show={trigger === "hover" ? this.state.show : null}>
+			} show={this.state.show}>
 				{children}
 			</OverlayTrigger>
 		);
@@ -614,6 +614,11 @@ const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
 // OverlayTrigger that is hoverable if hoverable === true
 export class OverlayTrigger extends React.Component {
 	static contextType = ReactContext;
+
+	constructor(props) {
+		super(props);
+		this.state = {show: false};
+	}
 	
 	setOverlayTriggerRef = elem => {
 		this.overlayTriggerRef = elem;
@@ -621,7 +626,8 @@ export class OverlayTrigger extends React.Component {
 
 	overlayTriggerMouseOver = () => {
 		this.overlayTriggerMouseIn = true;
-		this.overlayTriggerRef.show();
+		this.setState({show: true});
+		this.overlayTriggerRef?.show();
 	};
 
 	overlayTriggerMouseOut = () => {
@@ -630,7 +636,10 @@ export class OverlayTrigger extends React.Component {
 			clearTimeout(this.overlayTimeout);
 		}
 		this.overlayTimeout = this.context.setTimeout(() => {
-			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
+			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
+				this.setState({show: false});
+				this.overlayTriggerRef?.hide();
+			}
 		}, 200);
 	};
 
@@ -644,7 +653,10 @@ export class OverlayTrigger extends React.Component {
 			clearTimeout(this.overlayTimeout);
 		}
 		this.overlayTimeout = this.context.setTimeout(() => {
-			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
+			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn) {
+				this.setState({show: false});
+				this.overlayTriggerRef?.hide();
+			}
 		}, 200);
 	}
 
@@ -667,12 +679,15 @@ export class OverlayTrigger extends React.Component {
 
 		return (
 			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>
-				<OverlayTrigger {...props}
-				                delay={1}
-				                trigger={[]} 
-				                placement={this.props.placement || "top"}
-				                ref={this.setOverlayTriggerRef}
-				                overlay={_overlay}>
+				<OverlayTrigger
+					{...props}
+					delay={1}
+					trigger={[]}
+					placement={this.props.placement || "top"}
+					ref={this.setOverlayTriggerRef}
+					overlay={_overlay}
+					show={this.state.show}
+				>
 					{children}
 				</OverlayTrigger>
 			</div>
