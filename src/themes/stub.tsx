@@ -76,6 +76,6 @@ const theme: Theme = {
 	ControlLabel: DivStub,
 	Checkbox: (props: CheckboxProps) => <input type="checkbox" {...props} />,
 	ToggleButton: DivStub,
-	ToggleButtonGroup: DivStub as any
+	ToggleButtonGroup: React.forwardRef<HTMLInputElement, ToggleButtonGroupProps>(({defaultValue, ...props}, ref) => <input defaultChecked={defaultValue} {...props} ref={ref} />)
 };
 export default theme;
