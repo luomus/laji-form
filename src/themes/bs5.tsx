@@ -28,7 +28,7 @@ import {
 	ToggleButton,
 	ToggleButtonGroup
 } from "react-bootstrap-2";
-import { ButtonVariant } from "react-bootstrap-2/types";
+import { Variant, ButtonVariant } from "react-bootstrap-2/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { mapping as iconMapping } from "./glyphicon-fa-mapping";
 import {
@@ -41,6 +41,7 @@ import {
 	Panel as PanelI,
 	GlyphiconProps,
 	ListGroupProps,
+	Variant as VariantI,
 	ButtonVariant as ButtonVariantI,
 	ColProps,
 	FormControlProps,
@@ -48,18 +49,25 @@ import {
 	OverlayProps,
 	ListGroupItemProps,
 	AlertProps,
-	AccordionProps
+	AccordionProps,
+	DropdownToggleProps
 } from "./theme";
 
-const mapBtnVariant = (variant?: ButtonVariantI): ButtonVariant => {
-	if (!variant) {
-		variant = "default";
+const mapAnyVariant = (variant?: VariantI | ButtonVariantI, defaultVariant: Variant | ButtonVariant = "secondary"): Variant | ButtonVariant => {
+	if (!variant || variant === "default") {
+		return defaultVariant;
 	}
-	return variant === "default" ? "secondary" : variant;
+	return variant;
+};
+const mapVariant = (variant?: VariantI, defaultVariant?: Variant): Variant => {
+	return mapAnyVariant(variant, defaultVariant);
+};
+const mapBtnVariant = (variant?: ButtonVariantI, defaultVariant?: ButtonVariant): ButtonVariant => {
+	return mapAnyVariant(variant, defaultVariant);
 };
 
 const _Card = React.forwardRef<typeof Card, PanelProps>(({variant, ...props}, ref) => (
-	<Card {...props} bg={variant} ref={ref as any} />
+	<Card {...props} bg={mapVariant(variant, "")} ref={ref as any} />
 ));
 let Panel = _Card as unknown as PanelI;
 Panel.Body = Card.Body;
@@ -88,6 +96,9 @@ _InputGroup.Button = React.forwardRef<typeof Button , ButtonProps>((props, ref) 
 
 const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
 _Dropdown.Menu = Dropdown.Menu;
+_Dropdown.Toggle = React.forwardRef<typeof Dropdown.Toggle, DropdownToggleProps>(({variant, ...props}, ref) => (
+	<Dropdown.Toggle variant={mapVariant(variant)} {...props} ref={ref as any} />
+));
 
 const theme: Theme = {
 	Panel,
@@ -112,7 +123,7 @@ const theme: Theme = {
 	Breadcrumb,
 	HelpBlock: React.forwardRef<typeof Form.Text, JSX.IntrinsicAttributes>((props, ref) => <Form.Text {...props as any} ref={ref} />),
 	MenuItem: Dropdown.Item,
-	Alert: React.forwardRef<typeof Alert, AlertProps>((props, ref) => <Alert {...props as any} ref={ref} />),
+	Alert: React.forwardRef<typeof Alert, AlertProps>(({variant, ...props}, ref) => <Alert variant={mapVariant(variant)} {...props as any} ref={ref} />),
 	Pager: Pagination,
 	Accordion: React.forwardRef<typeof Accordion, AccordionProps>((props, ref) => <Accordion {...props as any} ref={ref} />),
 	Collapse,
