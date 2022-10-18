@@ -5,7 +5,6 @@ import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
 import Context from "../Context";
 import ReactContext from "../ReactContext";
-import {forwardRef} from "react";
 
 export class Button extends React.Component {
 	static contextType = ReactContext;
@@ -532,9 +531,9 @@ function ErrorPanelError({label, error, id, getId, extra = null, disabled, click
 	);
 }
 
-const NullTooltip = forwardRef((props, ref) => {
-	return <div {...props} ref={ref} />;
-});
+function NullTooltip() {
+	return <div />;
+}
 
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export class TooltipComponent extends React.Component {
@@ -618,6 +617,12 @@ export class OverlayTrigger extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {show: false};
+	}
+
+	componentWillUnmount() {
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
 	}
 	
 	setOverlayTriggerRef = elem => {
