@@ -54,8 +54,8 @@ if (!themeName) {
 const themePromise = import("../src/themes/" + themeName);
 if (themeName === "bs3" || themeName === "bs5") {
 	const styleUrl = themeName === "bs3" ? "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css";
-	const link = document.createElement( "link" );
-	link.rel  = "stylesheet";
+	const link = document.createElement("link");
+	link.rel = "stylesheet";
 	link.href = styleUrl;
 	document.head.appendChild(link);
 }

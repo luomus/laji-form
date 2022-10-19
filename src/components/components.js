@@ -548,17 +548,31 @@ export class TooltipComponent extends React.Component {
 		this.overlayRef = elem;
 	};
 
-	onMouseOver = () => { this.setState({show: true}); this.overlayRef?.show(); }
-	onMouseOut = () => { this.setState({show: false}); this.overlayRef?.hide(); }
+	onMouseOver = () => {
+		this.setState({show: true});
+		this.overlayRef?.show();
+	}
+
+	onMouseOut = () => {
+		this.setState({show: false});
+		this.overlayRef?.hide();
+	}
 
 	render() {
 		const {tooltip, children, id, placement, trigger, className} = this.props;
 
 		const {OverlayTrigger, Tooltip} = this.context.theme;
 		const overlay = (
-			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
-				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
-			} show={this.state.show}>
+			<OverlayTrigger
+				ref={this.setOverlayRef}
+				show={this.state.show}
+				placement={placement}
+				trigger={trigger === "hover" ? [] : trigger}
+				key={`${id}-overlay`}
+				overlay={
+					(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
+				}
+			>
 				{children}
 			</OverlayTrigger>
 		);

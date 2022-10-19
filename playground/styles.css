@@ -1669,16 +1669,16 @@ min-height: 20px;
 .laji-form .pull-right {
 	float: right !important;
 }
-.laji-form .card {
+.laji-form .laji-form-error-list {
+	background-color: white;
+}
+.laji-form .laji-form-error-list .card {
 	border: none;
 }
 .laji-form .card .card-header .panel-title {
 	line-height: 26px;
 	font-size: 16px;
 	font-weight: 500;
-}
-.laji-form .laji-form-error-list {
-	background-color: white;
 }
 .laji-form .glyph-button > .svg-inline--fa {
 	font-size: initial;

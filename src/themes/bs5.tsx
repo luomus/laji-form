@@ -67,11 +67,11 @@ const mapBtnVariant = (variant?: ButtonVariantI, defaultVariant?: ButtonVariant)
 };
 
 const _Card = React.forwardRef<typeof Card, PanelProps>(({variant, ...props}, ref) => (
-	<Card {...props} bg={mapVariant(variant, "")} ref={ref as any} />
+	<Card {...props as any} bg={mapVariant(variant, "")} ref={ref} />
 ));
 let Panel = _Card as unknown as PanelI;
 Panel.Body = Card.Body;
-Panel.Heading = React.forwardRef<typeof Panel.Heading, any>((props, ref) => (
+Panel.Heading = React.forwardRef<typeof Card.Header, any>((props, ref) => (
 	<Card.Header className={"panel-heading"} {...props} ref={ref} />
 ));
 Panel.Collapse = React.forwardRef<typeof Collapse, any>(({children, ...props}, ref) => (
@@ -79,32 +79,28 @@ Panel.Collapse = React.forwardRef<typeof Collapse, any>(({children, ...props}, r
 ));
 
 const Glyphicon: React.ComponentType<GlyphiconProps> = React.forwardRef<typeof FontAwesomeIcon, GlyphiconProps>(({glyph, ...props}, ref) => (
-	<FontAwesomeIcon icon={iconMapping[glyph]} {...props} ref={ref as any} />
+	<FontAwesomeIcon icon={iconMapping[glyph]} {...props as any} ref={ref} />
 ));
 
 const _Modal: ModalI = Modal as unknown as ModalI;
-_Modal.Body = Modal.Body;
-_Modal.Header = Modal.Header;
-_Modal.Footer = Modal.Footer;
-_Modal.Title = Modal.Title;
 
 const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
 _InputGroup.Addon = InputGroup.Text;
-_InputGroup.Button = React.forwardRef<typeof Button , ButtonProps>((props, ref) => (
-	<Button variant={"outline-secondary"} {...props} ref={ref as any} />
+_InputGroup.Button = React.forwardRef<typeof Button, ButtonProps>((props, ref) => (
+	<Button variant={"outline-secondary"} {...props as any} ref={ref} />
 ));
 
 const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
 _Dropdown.Menu = Dropdown.Menu;
 _Dropdown.Toggle = React.forwardRef<typeof Dropdown.Toggle, DropdownToggleProps>(({variant, ...props}, ref) => (
-	<Dropdown.Toggle variant={mapVariant(variant)} {...props} ref={ref as any} />
+	<Dropdown.Toggle variant={mapVariant(variant)} {...props as any} ref={ref} />
 ));
 
 const theme: Theme = {
 	Panel,
 	Table,
 	ProgressBar,
-	Button: React.forwardRef<typeof Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props} variant={mapBtnVariant(variant)} size={small ? "sm" : undefined} ref={ref as any} />),
+	Button: React.forwardRef<typeof Button, ButtonProps>(({variant, small, ...props}, ref) => <Button {...props as any} variant={mapBtnVariant(variant)} size={small ? "sm" : undefined} ref={ref} />),
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay: React.forwardRef<typeof Overlay, OverlayProps>((props, ref) => <Overlay {...props as any} ref={ref} />),
@@ -118,8 +114,8 @@ const theme: Theme = {
 	FormGroup,
 	InputGroup: _InputGroup,
 	FormControl: React.forwardRef<typeof FormControl, FormControlProps>((props, ref) => <FormControl {...props as any} ref={ref} />),
-	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props} ref={ref as any} />),
-	ListGroupItem: React.forwardRef<typeof ListGroupItem, ListGroupItemProps>(({onClick, ...props}, ref) => <ListGroupItem action={!!onClick} onClick={onClick} {...props} ref={ref as any} />),
+	ListGroup: React.forwardRef<typeof ListGroup, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props as any} ref={ref} />),
+	ListGroupItem: React.forwardRef<typeof ListGroupItem, ListGroupItemProps>(({onClick, ...props}, ref) => <ListGroupItem action={!!onClick} onClick={onClick} {...props as any} ref={ref} />),
 	Breadcrumb,
 	HelpBlock: React.forwardRef<typeof Form.Text, JSX.IntrinsicAttributes>((props, ref) => <Form.Text {...props as any} ref={ref} />),
 	MenuItem: Dropdown.Item,
