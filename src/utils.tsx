@@ -243,11 +243,6 @@ export function findNearestParentSchemaElem(elem: HTMLElement | null | undefined
 	return elem;
 }
 
-export function findNearestParentSchemaElemId(contextId: number, elem: HTMLElement) {
-	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
-	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
-}
-
 export function findNearestParentTabbableElem(elem: HTMLElement): HTMLElement | undefined {
 	while (!isTabbableInput(elem)) {
 		elem = elem.parentNode as HTMLElement;
@@ -313,6 +308,8 @@ export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement,
 }
 
 export interface ReactUtilsType {
+	findNearestParentSchemaElemId: (elem: HTMLElement) => string | undefined;
+	getSchemaElementById: (id: string) => HTMLElement | null;
 	focusById: (id: string, focus?: boolean) => boolean;
 	focusAndScroll: (idToFocus?: string, idToScroll?: string, focus?: boolean) => boolean | undefined;
 	shouldSyncScroll: () => boolean;
@@ -320,10 +317,11 @@ export interface ReactUtilsType {
 	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
 	formDataIsEmpty: (props: FieldProps) => boolean;
 	formDataEquals: (f1: any, f2: any, id: string) => boolean;
-	getSchemaElementById: (id: string) => HTMLElement | null;
 }
 
 export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
+	findNearestParentSchemaElemId: _findNearestParentSchemaElemId(context),
+	getSchemaElementById: _getSchemaElementById(context),
 	focusById: _focusById(context),
 	focusAndScroll: _focusAndScroll(context),
 	shouldSyncScroll: _shouldSyncScroll(context),
@@ -331,8 +329,15 @@ export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
 	filterItemIdsDeeply: _filterItemIdsDeeply(context),
 	formDataIsEmpty: _formDataIsEmpty(context),
 	formDataEquals: _formDataEquals(context),
-	getSchemaElementById: _getSchemaElementById(context)
 });
+
+const _findNearestParentSchemaElemId = ({contextId}: Pick<ContextProps, "contextId">) => (elem: HTMLElement) => {
+	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
+	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
+};
+export const findNearestParentSchemaElemId = (contextId: number, elem: HTMLElement) => {
+	return _findNearestParentSchemaElemId({contextId})(elem);
+};
 
 const _getSchemaElementById = ({contextId}: Pick<ContextProps, "contextId">) => (id: string) => {
 	return document.getElementById(`_laji-form_${contextId}_${id}`);

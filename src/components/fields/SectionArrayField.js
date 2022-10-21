@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, findNearestParentSchemaElemId, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -638,7 +638,7 @@ const _arrayKeyFunctions = options => {
 		},
 		navigateSection: (e, {getProps, getContext, left, right, up, goOverRow}) => {
 			const {rowDefinerField, rowValueField} = options;
-			const currentId = findNearestParentSchemaElemId(getContext().contextId, document.activeElement);
+			const currentId = getContext().utils.findNearestParentSchemaElemId(document.activeElement);
 			const amount = left || up ? -1 : 1;
 			const id = getProps().idSchema.$id;
 			let nextId;
@@ -671,7 +671,7 @@ const _arrayKeyFunctions = options => {
 						}
 					}
 				});
-				nextId = findNearestParentSchemaElemId(getContext().contextId, elem);
+				nextId = getContext().utils.findNearestParentSchemaElemId(elem);
 			};
 
 			if (left || right) {
@@ -695,7 +695,7 @@ const _arrayKeyFunctions = options => {
 					} else {
 						let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
 						// Horizontal navigation inside non row section field.
-						if (currentId === findNearestParentSchemaElemId(getContext().contextId, tabbableInSection[tabbableInSection.length - 1])) {
+						if (currentId === getContext().utils.findNearestParentSchemaElemId(tabbableInSection[tabbableInSection.length - 1])) {
 							nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
 							// Horizontal navigation from non row section to row field.
 						} else {
@@ -733,7 +733,7 @@ const _arrayKeyFunctions = options => {
 					: `${id}-section-definer`;
 				const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
 				const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
-				nextId = findNearestParentSchemaElemId(getContext().contextId, tabbableOutsideContainer[tabbableIdx + amount]);
+				nextId = getContext().utils.findNearestParentSchemaElemId(tabbableOutsideContainer[tabbableIdx + amount]);
 				if (nextId === "root") {
 					return true;
 				}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
-import { getUiOptions, isNullOrUndefined, isObject, findNearestParentSchemaElemId, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
+import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getNextInput, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
@@ -454,7 +454,6 @@ export const arrayItemKeyFunctions = {
 	delete: function(e, {getDeleteButton, id, getProps, getContext}) {
 		const {items, idSchema, formContext, readonly, disabled} = getProps();
 		const {getFormRef} = formContext;
-		const {contextId} = getContext();
 
 		if (readonly || disabled || !isDescendant(getContext().utils.getSchemaElementById(id), e.target)) {
 			return;
@@ -465,7 +464,7 @@ export const arrayItemKeyFunctions = {
 		const deleteButton = getDeleteButton();
 		if (!deleteButton || !deleteButton.onClick) return;
 
-		const activeId = findNearestParentSchemaElemId(contextId, document.activeElement);
+		const activeId = getContext().utils.findNearestParentSchemaElemId(document.activeElement);
 		const idxsMatch = activeId.match(/_\d+/g);
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
 		const elem = getContext().getSchemaElementById(`${idSchema.$id}_${idx}`);

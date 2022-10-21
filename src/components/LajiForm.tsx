@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, handleKeysWith, capitalizeFirstLetter, findNearestParentSchemaElemId, getKeyHandlerTargetId, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils } from "../utils";
+import { focusNextInput, handleKeysWith, capitalizeFirstLetter, getKeyHandlerTargetId, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
@@ -1087,7 +1087,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 		this._context.keyTimeouts = [];
 
-		const currentId = findNearestParentSchemaElemId(this._id, e.target as HTMLElement) || "";
+		const currentId = this.memoizedContext.utils.findNearestParentSchemaElemId(e.target as HTMLElement) || "";
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;
