@@ -78,10 +78,8 @@ const OverlayTrigger = (props: OverlayTriggerProps) => {
 
 	React.useEffect(() => {
 		if (show && !prevShow) {
-			console.log("show");
 			ref.current.show();
 		} else if (!show && prevShow) {
-			console.log("hide");
 			ref.current.hide();
 		}
 	}, [show, prevShow]);
