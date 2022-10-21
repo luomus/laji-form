@@ -5,7 +5,7 @@ import Context from "../../Context";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames, keyboardClick } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import * as exif from "exif-js";
@@ -100,6 +100,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		METADATA_FORM_ID: string;
 
 		static contextType = ReactContext;
+
 		static propTypes = {
 			uiSchema: PropTypes.shape({
 				"ui:options": PropTypes.shape({
@@ -141,6 +142,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		fetching: any;
 
 		addMediaContainerRef = React.createRef<HTMLInputElement>();
+
+		onKeyDown: (e: KeyboardEvent | React.KeyboardEvent<Element>) => void;
 
 		constructor(...args: any[]) {
 			super(...args);
@@ -249,6 +252,13 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			);
 
 			const {dragging} = this.state;
+			if (!this.onKeyDown) { // Context not available before first render, so we initialize the key handler here.
+				this.onKeyDown = this.context.utils.keyboardClick(() => {
+					const input = this.addMediaContainerRef.current?.querySelector("input");
+					const {addModal} = getUiOptions(this.props.uiSchema);
+					addModal ? this.defaultOnClick() : input?.click();
+				})
+			}
 
 			const {Row, Col} = this.context.theme;
 			const {DescriptionFieldTemplate} = this.props.registry.templates;
@@ -265,8 +275,8 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 								          onDragEnter={this.onDragEnter}
 								          onDragLeave={this.onDragLeave}
 								          onDrop={this.onDrop}
-										  disabled={readonly || disabled}
-										  noKeyboard={true}
+								          disabled={readonly || disabled}
+								          noKeyboard={true}
 									  >
 									{({getRootProps, getInputProps}) => {
 										const {onClick: _onClick, ...rootProps} = getRootProps();
@@ -278,7 +288,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 												tabIndex={0}
 												{...rootProps}
 												onKeyDown={this.onKeyDown}
-											    ref={this.addMediaContainerRef} >
+												ref={this.addMediaContainerRef} >
 												<input {...getInputProps()} />
 												<Glyphicon glyph={this.GLYPH} />
 											</div>
@@ -293,12 +303,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				</Row>
 			);
 		}
-
-		onKeyDown = keyboardClick(() => {
-			const input = this.addMediaContainerRef.current?.querySelector("input");
-			const {addModal} = getUiOptions(this.props.uiSchema);
-			addModal ? this.defaultOnClick() : input?.click();
-		}, this.props.formContext)
 
 		renderMedias = () => {
 			const {disabled, readonly} = this.props;

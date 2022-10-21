@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import * as Spinner from "react-spinner";
-import { isEmptyString, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames, keyboardClick } from "../../utils";
+import { isEmptyString, stringifyKeyCombo, dictionarify, triggerParentComponent, getUiOptions, classNames } from "../../utils";
 import { FetcherInput, TooltipComponent, OverlayTrigger, Button, GlyphButton } from "../components";
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
@@ -609,6 +609,11 @@ export class Autosuggest extends React.Component {
 	}
 
 	render() {
+
+		if (!this.onToggleByKeyboard) { // Context not available before first render, so we initialize the key handler here.
+			this.onToggleByKeyboard = this.context.utils.keyboardClick(this.onToggle)
+		}
+
 		const {props} = this;
 		let {suggestions, inputValue = ""} = this.state;
 
@@ -685,8 +690,6 @@ export class Autosuggest extends React.Component {
 		this.props.onToggle(!this.props.toggled);
 		setTimeout(() => this.context.utils.focusById(this.props.id), 1); // Refocus input
 	}
-
-	onToggleByKeyboard = keyboardClick(this.onToggle)
 
 	isSuggested = () => {
 		const {suggestion} = this.state;
@@ -983,6 +986,8 @@ class InformalTaxonGroupsAddon extends React.Component {
 			if (!this.mounted) return;
 			this.setState({informalTaxonGroupsById});
 		});
+
+		this.onKeyDown = this.context.utils.keyboardClick(this.toggle);
 	}
 
 	componentWillUnmount() {
@@ -997,8 +1002,6 @@ class InformalTaxonGroupsAddon extends React.Component {
 	toggle = () => {
 		if (this.props.onOpen) this.props.onOpen(!this.props.open);
 	}
-
-	onKeyDown = keyboardClick(this.toggle)
 
 	renderGlyph = () => {
 		const {taxonGroupID} = this.props;
@@ -1025,6 +1028,9 @@ class InformalTaxonGroupsAddon extends React.Component {
 	}
 
 	render() {
+		if (!this.onKeyDown) { // Context not available before first render, so we initialize the key handler here.
+			this.onKeyDown = this.context.utils.keyboardClick(this.toggle);
+		}
 		return (
 			<TooltipComponent tooltip={this.props.taxonGroupID && this.state.informalTaxonGroupsById ? this.state.informalTaxonGroupsById[this.props.taxonGroupID].name : this.props.formContext.translations.PickInformalTaxonGroup}>
 				{this.renderGlyph()}

@@ -4,10 +4,12 @@ import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
+import ReactContext from "../../ReactContext";
 const equals = require("deep-equal");
 
 @BaseComponent
 export default class TagArrayField extends React.Component {
+	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -33,6 +35,8 @@ export default class TagArrayField extends React.Component {
 }
 
 export class TagInputComponent extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
@@ -143,7 +147,7 @@ export class TagInputComponent extends React.Component {
 						{tags.map((item, idx) => 
 							<li key={idx} className="rw-multiselect-tag">
 								{item}
-								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={keyboardClick(this.onRemove(idx), this.props.formContext)}>×</span>
+								<span className="rw-tag-btn" onClick={this.onRemove(idx)} tabIndex={0} onKeyDown={this.context.utils.keyboardClick(this.onRemove(idx))}>×</span>
 							</li>
 						)}
 					</ul>

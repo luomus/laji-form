@@ -318,6 +318,7 @@ export interface ReactUtilsType {
 	formDataIsEmpty: (props: FieldProps) => boolean;
 	formDataEquals: (f1: any, f2: any, id: string) => boolean;
 	getRelativeTmpIdTree: (id: string) => any;
+	keyboardClick: (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => (e: (KeyboardEvent | React.KeyboardEvent)) => void;
 }
 
 export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
@@ -330,7 +331,8 @@ export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
 	filterItemIdsDeeply: _filterItemIdsDeeply(context),
 	formDataIsEmpty: _formDataIsEmpty(context),
 	formDataEquals: _formDataEquals(context),
-	getRelativeTmpIdTree: _getRelativeTmpIdTree(context)
+	getRelativeTmpIdTree: _getRelativeTmpIdTree(context),
+	keyboardClick: _keyboardClick(context)
 });
 
 const _findNearestParentSchemaElemId = ({contextId}: Pick<ContextProps, "contextId">) => (elem: HTMLElement) => {
@@ -478,6 +480,25 @@ export const getRelativeTmpIdTree = (contextId: number, id: string) => {
 	return _getRelativeTmpIdTree({contextId})(id);
 };
 
+const _keyboardClick = ({contextId}: Pick<ContextProps, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => {
+	return (e: KeyboardEvent | React.KeyboardEvent) => {
+		let keys = [" ", "Enter"];
+		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
+			const {shortcuts} = new Context(contextId) as RootContext;
+			keys = keys.filter(k => !shortcuts[k]);
+		}
+		if (keys.every(k => e.key !== k)) {
+			return;
+		}
+		e.preventDefault();
+		e.stopPropagation();
+		fn(e);
+	};
+};
+
+export const keyboardClick = (fn: (e: KeyboardEvent | React.KeyboardEvent) => void, context: FormContext) => {
+	return _keyboardClick(context)(fn);
+};
 
 export function getNestedTailUiSchema(uiSchema: UiSchema) {
 	while (uiSchema && uiSchema.uiSchema) {
@@ -1262,22 +1283,6 @@ export function getTitle(props: {schema: RJSFSchema, uiSchema: any, name?: strin
 }
 
 export const classNames = (...cs: any[]) => cs.filter(s => typeof s === "string").join(" ");
-
-export function keyboardClick(fn: (e: KeyboardEvent | React.KeyboardEvent) => void, formContext: FormContext): (e: (KeyboardEvent | React.KeyboardEvent)) => void {
-	return (e: KeyboardEvent | React.KeyboardEvent) => {
-		let keys = [" ", "Enter"];
-		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
-			const {shortcuts} = new Context(formContext.contextId) as RootContext;
-			keys = keys.filter(k => !shortcuts[k]);
-		}
-		if (keys.every(k => e.key !== k)) {
-			return;
-		}
-		e.preventDefault();
-		e.stopPropagation();
-		fn(e);
-	};
-}
 
 export function translate(translations: ByLang, key: string, params?: {[key: string]: string | undefined}) {
 	return Object.keys(params || {}).reduce(

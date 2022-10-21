@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { isEmptyString, getUiOptions, classNames, keyboardClick } from "../../utils";
+import { isEmptyString, getUiOptions, classNames } from "../../utils";
 import ReactContext from "../../ReactContext";
 
 export default class CheckboxWidget extends React.Component {
@@ -82,6 +82,24 @@ export default class CheckboxWidget extends React.Component {
 	}
 
 	render() {
+		if (!this.onGroupKeyDown) { // Context not available before first render, so we initialize the key handlers here.
+			this.onGroupKeyDown = this.context.utils.keyboardClick((e) => {
+				this.getToggleMode(this.props) && this.toggle(e);
+			});
+
+			this.onTrueKeyDown = this.context.utils.keyboardClick(() => {
+				this.onChange(true);
+			});
+
+			this.onFalseKeyDown = this.context.utils.keyboardClick(() => {
+				this.onChange(false);
+			});
+
+			this.onUndefinedKeyDown = this.context.utils.keyboardClick(() => {
+				this.onChange(undefined);
+			});
+		}
+
 		const {
 			value,
 			disabled,
@@ -149,22 +167,6 @@ export default class CheckboxWidget extends React.Component {
 		const {Yes, No} = props.registry.formContext.translations;
 		return !displayUndefined && (trueLabel === Yes && falseLabel === No);
 	}
-
-	onGroupKeyDown = keyboardClick((e) => {
-		this.getToggleMode(this.props) && this.toggle(e);
-	}, this.props.formContext)
-
-	onTrueKeyDown = keyboardClick(() => {
-		this.onChange(true);
-	}, this.props.formContext)
-
-	onFalseKeyDown = keyboardClick(() => {
-		this.onChange(false);
-	}, this.props.formContext)
-
-	onUndefinedKeyDown = keyboardClick(() => {
-		this.onChange(undefined);
-	}, this.props.formContext)
 
 	toggle = (e) => {
 		const nodes = [this.trueRef, this.falseRef, this.groupRef].map(r => findDOMNode(r.current));
