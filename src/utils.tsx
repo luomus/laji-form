@@ -317,6 +317,7 @@ export interface ReactUtilsType {
 	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
 	formDataIsEmpty: (props: FieldProps) => boolean;
 	formDataEquals: (f1: any, f2: any, id: string) => boolean;
+	getRelativeTmpIdTree: (id: string) => any;
 }
 
 export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
@@ -329,6 +330,7 @@ export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
 	filterItemIdsDeeply: _filterItemIdsDeeply(context),
 	formDataIsEmpty: _formDataIsEmpty(context),
 	formDataEquals: _formDataEquals(context),
+	getRelativeTmpIdTree: _getRelativeTmpIdTree(context)
 });
 
 const _findNearestParentSchemaElemId = ({contextId}: Pick<ContextProps, "contextId">) => (elem: HTMLElement) => {
@@ -432,27 +434,50 @@ export const filterItemId = (item: any) => {
 };
 
 const _filterItemIdsDeeply = (context: ContextProps) => (item: any, idSchemaId: string) => {
-	const tmpIdTree = getRelativeTmpIdTree(context.contextId, idSchemaId);
+	const tmpIdTree = context.utils.getRelativeTmpIdTree(idSchemaId);
 	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
 	return _item;
 };
 export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: string) => _filterItemIdsDeeply({contextId} as ContextProps)(item, idSchemaId);
 
 const _formDataIsEmpty = (context: ContextProps) => (props: FieldProps) => {
-	const tmpIdTree = getRelativeTmpIdTree(context.contextId, props.idSchema.$id);
+	const tmpIdTree = context.utils.getRelativeTmpIdTree(props.idSchema.$id);
 	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
 	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
 };
 export const formDataIsEmpty = (props: FieldProps, context: ContextProps) => _formDataIsEmpty(context)(props);
 
 const _formDataEquals = (context: ContextProps) => (f1: any, f2: any, id: string) => {
-	const tmpIdTree = getRelativeTmpIdTree(context.contextId, id);
+	const tmpIdTree = context.utils.getRelativeTmpIdTree(id);
 	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
 	return deepEquals(_f1, _f2);
 };
 export const formDataEquals = (f1: any, f2: any, context: ContextProps, id: string) => {
 	return _formDataEquals(context)(f1, f2, id);
 };
+
+const _getRelativeTmpIdTree = ({contextId}: Pick<ContextProps, "contextId">) => (id: string) => {
+	const rootTmpIdTree = (new Context(contextId) as RootContext).formInstance.tmpIdTree;
+
+	let tmpIdTree;
+	if (rootTmpIdTree) {
+		tmpIdTree = rootTmpIdTree;
+		const treePath = id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
+		for (const k of treePath) {
+			if (tmpIdTree[k]) {
+				tmpIdTree = tmpIdTree[k];
+			} else {
+				tmpIdTree = undefined;
+				break;
+			}
+		}
+	}
+	return tmpIdTree;
+};
+export const getRelativeTmpIdTree = (contextId: number, id: string) => {
+	return _getRelativeTmpIdTree({contextId})(id);
+};
+
 
 export function getNestedTailUiSchema(uiSchema: UiSchema) {
 	while (uiSchema && uiSchema.uiSchema) {
@@ -1161,25 +1186,6 @@ export function highlightElem(elem?: Element) {
 	if (!elem) return;
 	if (elem.className.includes(" highlight-error-fire")) elem.className = elem.className.replace(" highlight-error-fire", "");
 	window.setTimeout(() => elem.className = `${elem.className} highlight-error-fire`);
-}
-
-export function getRelativeTmpIdTree(contextId: number, id: string)  {
-	const rootTmpIdTree = (new Context(contextId) as RootContext).formInstance.tmpIdTree;
-
-	let tmpIdTree;
-	if (rootTmpIdTree) {
-		tmpIdTree = rootTmpIdTree;
-		const treePath = id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
-		for (const k of treePath) {
-			if (tmpIdTree[k]) {
-				tmpIdTree = tmpIdTree[k];
-			} else {
-				tmpIdTree = undefined;
-				break;
-			}
-		}
-	}
-	return tmpIdTree;
 }
 
 export function filteredErrors(errorSchema: any) {

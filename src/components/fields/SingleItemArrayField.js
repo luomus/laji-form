@@ -1,11 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import VirtualSchemaField from "../VirtualSchemaField";
-import { getUiOptions, getTitle, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState, isMultiSelect } from "../../utils";
+import { getUiOptions, getTitle, addLajiFormIds, getDefaultFormState, isMultiSelect } from "../../utils";
 import { ArrayFieldPatched } from "./ArrayField";
+import ReactContext from "../../ReactContext";
 
 @VirtualSchemaField
 export default class SingleItemArrayField extends React.Component {
+	static contextType = ReactContext;
+
 	static propTypes = {
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["array"])
@@ -14,6 +17,7 @@ export default class SingleItemArrayField extends React.Component {
 	}
 
 	static getName() {return "SingleItemArrayField";}
+
 
 	constructor(props) {
 		super(props);
@@ -58,7 +62,7 @@ export default class SingleItemArrayField extends React.Component {
 				? props.formData[activeIdx]
 				: addLajiFormIds(
 					getDefaultFormState(props.schema.items),
-					getRelativeTmpIdTree(props.formContext.contextId, props.idSchema.$id),
+					this.context.utils.getRelativeTmpIdTree(props.idSchema.$id),
 					false
 				)[0],
 			schema: props.schema.items,

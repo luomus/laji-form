@@ -77,6 +77,8 @@ export default class MapArrayField extends React.Component {
 
 @_MapArrayField
 class DefaultMapArrayField extends React.Component {
+	static contextType = ReactContext;
+
 	constructor(props) {
 		super(props);
 		this.onMapChangeCreateGathering = this.onMapChangeCreateGathering.bind(this);
@@ -148,7 +150,7 @@ class DefaultMapArrayField extends React.Component {
 			));
 		}, formData);
 
-		this.props.onChange(onArrayFieldChange([formData], this.props));
+		this.props.onChange(onArrayFieldChange([formData], this.props, this.context));
 		this.setState({activeIdx: 0});
 	}
 
@@ -202,7 +204,7 @@ class DefaultMapArrayField extends React.Component {
 				break;
 			}
 		});
-		this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
+		this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props, this.context) : formData);
 	}
 
 	onAdd({feature: {geometry}}, formData) {
@@ -649,7 +651,7 @@ class LineTransectMapArrayField extends React.Component {
 	onLineCreate = ([event]) => {
 		this.props.onChange(onArrayFieldChange(update(this.props.formData, {0: {geometry: {$set:
 			event.feature.geometry
-		}}}), this.props));
+		}}}), this.props, this.context));
 	}
 
 	onChange = (events) => {
@@ -721,7 +723,7 @@ class LineTransectMapArrayField extends React.Component {
 		});
 		const afterState = () => {
 			if (formDataChanged) {
-				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
+				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props, this.context) : formData);
 			}
 			if ("activeIdx" in state) {
 				this.afterActiveChange(state.activeIdx);
@@ -1353,7 +1355,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	
 	customAdd = () => () => {
 		const nextActive = this.props.formData.length;
-		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props));
+		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props, this.context));
 		this.setState({activeIdx: nextActive});
 	}
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, getRelativeTmpIdTree, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -405,7 +405,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				);
 			}, result);
 		}, getDefaultFormState(schema.items));
-		const tmpIdTree = getRelativeTmpIdTree(formContext.contextId, this.props.idSchema.$id);
+		const tmpIdTree = this.context.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);
 		item = updateFormDataWithJSONPointer({schema: schema.items, formData: item, registry}, parseInt(newSection), sectionField);
@@ -503,7 +503,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			return map;
 		}, {});
 
-		const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, `${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
+		const tmpIdTree = this.context.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
 
 		const oldIds = getAllLajiFormIdsDeeply(this.props.formData, tmpIdTree);
 		let ids = {};

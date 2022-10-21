@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, getInnerUiSchema, isEmptyString, getRelativeTmpIdTree, addLajiFormIds, getDefaultFormState } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString, addLajiFormIds, getDefaultFormState } from "../../utils";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
 import Context from "../../Context";
@@ -70,7 +70,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				}
 			});
 			gathering.namedPlaceID = place.id;
-			const tmpIdTree = getRelativeTmpIdTree(this.props.formContext.contextId, this.props.idSchema.$id);
+			const tmpIdTree = this.context.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
 
 			const [withLajiFormIds] = addLajiFormIds(gathering, tmpIdTree, false);
 			return withLajiFormIds;
