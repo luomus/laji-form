@@ -488,7 +488,7 @@ export class ErrorPanel extends React.Component {
 	collapseToggle = () => this.setState({expanded: !this.state.expanded});
 
 	render() {
-		const {errors, title, clickHandler, poppedToggle, showToggle, classNames} = this.props;
+		const {errors, title, clickHandler, poppedToggle, showToggle, classNames, footer} = this.props;
 
 		if (errors.length === 0) return null;
 
@@ -512,6 +512,13 @@ export class ErrorPanel extends React.Component {
 						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
 					</ListGroup>
 				</Panel.Collapse>
+				{footer
+					? (
+						<Panel.Footer>
+							{footer}
+						</Panel.Footer>
+					)
+					: null}
 			</Panel>
 		);
 	}
@@ -769,7 +776,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 
 		if (!jobs.length) return null;
 
-		const {Glyphicon} = this.context.theme;
+		const {Glyphicon, Panel} = this.context.theme;
 
 		const errors = jobs.reduce((_errors, error) => {
 			const {lajiFormId, relativePointer, e, running} = error;
@@ -794,6 +801,10 @@ export class FailedBackgroundJobsPanel extends React.Component {
 
 		if (!errors.length) return null;
 
+		const footer = (
+			<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+		);
+
 		return (
 			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}
 			     style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null} >
@@ -804,10 +815,8 @@ export class FailedBackgroundJobsPanel extends React.Component {
 					poppedToggle={this.poppedToggle}
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
+					footer={footer}
 				/>
-				<div className="panel-footer card card-footer">
-					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
-				</div>
 			</div>
 		);
 	}

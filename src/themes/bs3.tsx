@@ -49,6 +49,7 @@ const __Panel: PanelI = (Panel as unknown as PanelI);
 __Panel.Body = _Panel.Body;
 __Panel.Heading = _Panel.Heading;
 __Panel.Collapse = _Panel.Collapse;
+__Panel.Footer = _Panel.Footer;
 
 // Wrapper needed or webpack will hang.
 const _Dropdown = (props: DropdownProps) => <Dropdown {...props} />;

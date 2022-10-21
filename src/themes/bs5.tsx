@@ -77,6 +77,7 @@ Panel.Heading = React.forwardRef<typeof Card.Header, any>((props, ref) => (
 Panel.Collapse = React.forwardRef<typeof Collapse, any>(({children, ...props}, ref) => (
 	<Collapse {...props} ref={ref}><div>{children}</div></Collapse> // animations don't work if children are not wrapped to div
 ));
+Panel.Footer = Card.Footer;
 
 const Glyphicon: React.ComponentType<GlyphiconProps> = React.forwardRef<SVGSVGElement, GlyphiconProps>(({glyph, ...props}, ref) => (
 	<FontAwesomeIcon icon={iconMapping[glyph]} {...props} ref={ref} />

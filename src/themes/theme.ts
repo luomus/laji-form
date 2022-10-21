@@ -31,6 +31,7 @@ export type Panel = React.ComponentType<PanelProps> & {
     Body: React.ComponentType;
     Heading: React.ComponentType;
     Collapse: React.ComponentType;
+    Footer: React.ComponentType;
 }
 
 export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
