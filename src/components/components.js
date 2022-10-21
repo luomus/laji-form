@@ -551,18 +551,12 @@ export class TooltipComponent extends React.Component {
 		this.state = {show: null};
 	}
 
-	setOverlayRef = (elem) => {
-		this.overlayRef = elem;
-	};
-
 	onMouseOver = () => {
 		this.setState({show: true});
-		this.overlayRef?.show();
 	}
 
 	onMouseOut = () => {
 		this.setState({show: false});
-		this.overlayRef?.hide();
 	}
 
 	render() {
@@ -571,7 +565,6 @@ export class TooltipComponent extends React.Component {
 		const {OverlayTrigger, Tooltip} = this.context.theme;
 		const overlay = (
 			<OverlayTrigger
-				ref={this.setOverlayRef}
 				show={this.state.show}
 				placement={placement}
 				trigger={trigger === "hover" ? [] : trigger}
@@ -645,15 +638,10 @@ export class OverlayTrigger extends React.Component {
 			clearTimeout(this.overlayTimeout);
 		}
 	}
-	
-	setOverlayTriggerRef = elem => {
-		this.overlayTriggerRef = elem;
-	};
 
 	overlayTriggerMouseOver = () => {
 		this.overlayTriggerMouseIn = true;
 		this.setState({show: true});
-		this.overlayTriggerRef?.show();
 	};
 
 	overlayTriggerMouseOut = () => {
@@ -664,7 +652,6 @@ export class OverlayTrigger extends React.Component {
 		this.overlayTimeout = this.context.setTimeout(() => {
 			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
 				this.setState({show: false});
-				this.overlayTriggerRef?.hide();
 			}
 		}, 200);
 	};
@@ -681,7 +668,6 @@ export class OverlayTrigger extends React.Component {
 		this.overlayTimeout = this.context.setTimeout(() => {
 			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn) {
 				this.setState({show: false});
-				this.overlayTriggerRef?.hide();
 			}
 		}, 200);
 	}
@@ -710,7 +696,6 @@ export class OverlayTrigger extends React.Component {
 					delay={1}
 					trigger={[]}
 					placement={this.props.placement || "top"}
-					ref={this.setOverlayTriggerRef}
 					overlay={_overlay}
 					show={this.state.show}
 				>

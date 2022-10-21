@@ -69,7 +69,7 @@ export interface OverlayProps extends JSX.IntrinsicAttributes {
 	container?: React.Component;
 }
 
-export interface OverlayTriggerProps extends HasMaybeRef, OverlayProps {
+export interface OverlayTriggerProps extends OverlayProps {
 	overlay: any;
 	key?: string | number | undefined;
 }

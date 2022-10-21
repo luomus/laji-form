@@ -6,7 +6,7 @@ import * as Button from "react-bootstrap/lib/Button";
 import * as ButtonGroup from "react-bootstrap/lib/ButtonGroup";
 import * as ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 import * as Overlay from "react-bootstrap/lib/Overlay";
-import * as OverlayTrigger from "react-bootstrap/lib/OverlayTrigger";
+import * as _OverlayTrigger from "react-bootstrap/lib/OverlayTrigger";
 import * as Popover from "react-bootstrap/lib/Popover";
 import * as Tooltip from "react-bootstrap/lib/Tooltip";
 import * as Glyphicon from "react-bootstrap/lib/Glyphicon";
@@ -62,6 +62,35 @@ __Dropdown.Toggle.defaultProps = {bsRole: "toggle"} as any;
 const _Breadcrumb: BreadcrumbI = Breadcrumb as unknown as BreadcrumbI;
 _Breadcrumb.Item = Breadcrumb.Item as any;
 
+function usePreviousValue<T>(value: T) {
+	const ref = React.useRef<T>();
+	React.useEffect(() => {
+		ref.current = value;
+	});
+	return ref.current;
+}
+
+const OverlayTrigger = (props: OverlayTriggerProps) => {
+	const {show, ..._props} = props;
+	const prevShow = usePreviousValue(show);
+
+	const ref = React.useRef<any>();
+
+	React.useEffect(() => {
+		if (show && !prevShow) {
+			console.log("show");
+			ref.current.show();
+		} else if (!show && prevShow) {
+			console.log("hide");
+			ref.current.hide();
+		}
+	}, [show, prevShow]);
+
+	return (
+		<_OverlayTrigger {..._props} ref={ref} />
+	);
+};
+
 const theme: Theme = {
 	Panel: __Panel,
 	Table,
@@ -70,7 +99,8 @@ const theme: Theme = {
 	ButtonGroup,
 	ButtonToolbar,
 	Overlay,
-	OverlayTrigger: React.forwardRef<OverlayTrigger, OverlayTriggerProps>(({show, ...props}, ref) => <OverlayTrigger {...props} ref={ref} />),
+	OverlayTrigger,
+	// OverlayTrigger: React.forwardRef<OverlayTrigger, OverlayTriggerProps>(({show, ...props}, ref) => <OverlayTrigger {...props} ref={ref} />),
 	Popover,
 	Tooltip,
 	Glyphicon,
