@@ -183,7 +183,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				<SchemaField  {...this.props} uiSchema={this.state.uiSchema} />
 				{
 					this.state.show ? (
-						<Modal dialogClassName="laji-form map-dialog" show={true} onHide={this.onHide}>
+						<Modal dialogClassName="laji-form map-dialog named-place-chooser-modal" show={true} onHide={this.onHide}>
 							<Modal.Header closeButton={true}>
 								{translations.ChooseNamedPlace}
 							</Modal.Header>
@@ -234,7 +234,7 @@ class NamedPlaceChooser extends React.Component {
 		const bounds = map.getBoundsForLayers(layers);
 		const center = bounds.getCenter();
 		map.fitBounds(bounds, {animate: false});
-		new Context(this.props.formContext.contextId).setImmediate(() => layer.fire("click", {latlng: center}), 10);
+		this.props.formContext.setTimeout(() => layer.fire("click", {latlng: center}), 10);
 	}
 
 	onMapChange = (events) => {
@@ -382,7 +382,7 @@ class NamedPlaceChooser extends React.Component {
 							onPlaceSelected={this.onPlaceSelected}
 							onPlaceDeleted={this.onPlaceDeleted}
 							deleting={this.state.deleting}
-							contextId={this.props.formContext.contextId}
+							formContext={this.props.formContext}
 							translations={translations} />
 					</div>
 				</div>
@@ -413,8 +413,8 @@ class Popup extends React.Component {
 		const {place, translations, deleting} = this.props;
 
 		return place ? (
-			<div>
-				<table className="named-place-popup">
+			<div className="named-place-popup">
+				<table>
 					<tbody>{
 						[
 							["Name", "name"], 
