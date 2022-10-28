@@ -922,7 +922,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				) as any;
 				this.validating = false;
 				resolve(!Object.keys(merged).length);
-				!equals(this.state.extraErrors, merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
+				!equals((this.state.extraErrors || {}), merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
 			}).catch((e) => {
 				block && this.popBlockingLoader();
 
