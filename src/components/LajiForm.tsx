@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, handleKeysWith, capitalizeFirstLetter, getKeyHandlerTargetId, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils } from "../utils";
+import { focusNextInput, handleKeysWith, capitalizeFirstLetter, getKeyHandlerTargetId, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
@@ -179,7 +179,6 @@ export interface LajiFormProps  extends HasMaybeChildren {
 
 export interface LajiFormState {
 	submitHooks?: SubmitHook[];
-	translations: ByLang;
 	formContext: FormContext;
 	formData?: any;
 	extraErrors?: any;
@@ -212,6 +211,9 @@ export interface FormContext {
 	_parentLajiFormId?: number;
 	mediaMetadata?: MediaMetadata;
 	contextId: number;
+	theme: Theme;
+	setTimeout: (fn: () => void, time: number) => void;
+	utils: ReactUtilsType;
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -306,7 +308,9 @@ export interface RootContext {
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
 	static contextType = Context;
 	contextMemoizeKey: Record<keyof LajiFormProps, any>;
+	contextFormMemoizeKey: Record<keyof LajiFormProps, any>;
 	memoizedContext: ContextProps;
+	memoizedFormContext: FormContext;
 
 	translations = this.constructTranslations();
 	bgJobRef = React.createRef<FailedBackgroundJobsPanel>();
@@ -333,7 +337,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				}, Promise.resolve());
 			});
 		}, Promise.resolve()).then(() => {
-			const container = this.memoizedContext.utils.getSchemaElementById(id);
+			const container = this.memoizedFormContext.utils.getSchemaElementById(id);
 			const elem = container || document.querySelector(`#laji-form-error-container-${id}`);
 			const input = document.querySelector(`#${id}`) as HTMLInputElement;
 
@@ -576,15 +580,36 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	getStateFromProps(props: LajiFormProps) {
-		const translations = this.translations[props.lang as Lang];
 		if (!this.tmpIdTree || props.schema !== this.props.schema) {
 			this.setTmpIdTree(props.schema);
 		}
 		const state: LajiFormState = {
-			translations,
-			formContext: {
-				...this.props.formContext,
-				translations,
+			formContext: this.getMemoizedFormContext(props)
+		};
+		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
+			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema));
+			this._context.formData = state.formData;
+		} else if (this.state) {
+			state.formData = (this.formRef as any)?.state.formData;
+		}
+		if (this.state && props.schema !== this.props.schema) {
+			state.extraErrors = {};
+		}
+		return state;
+	}
+
+	getMemoizedFormContext = (props: LajiFormProps): FormContext => {
+		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+			key[prop] = props[prop];
+			return key;
+		}, {} as Record<keyof LajiFormProps, any>);
+		if (this.contextFormMemoizeKey && (Object.keys(this.contextFormMemoizeKey) as (keyof LajiFormProps)[]).every(k => this.contextFormMemoizeKey[k] === nextKey[k])) {
+			return this.memoizedFormContext;
+		} else {
+			this.contextFormMemoizeKey = nextKey;
+			this.memoizedFormContext = {
+				...props.formContext,
+				translations: this.translations[props.lang as Lang],
 				lang: props.lang,
 				uiSchemaContext: props.uiSchemaContext,
 				settings: JSON.parse(JSON.stringify((
@@ -605,23 +630,16 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				apiClient: this.apiClient,
 				Label: (props.fields || {}).Label || Label,
 				mediaMetadata: props.mediaMetadata,
-			}
-		};
-		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
-			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema));
-			this._context.formData = state.formData;
-		} else if (this.state) {
-			state.formData = (this.formRef as any)?.state.formData;
+				setTimeout: this.setTimeout
+			};
+			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
+			return this.memoizedFormContext;
 		}
-		if (this.state && props.schema !== this.props.schema) {
-			state.extraErrors = {};
-		}
-		return state;
 	}
 
 	componentDidMount() {
 		this.mounted = true;
-		this.props.autoFocus && this.memoizedContext.utils.focusById("root");
+		this.props.autoFocus && this.memoizedFormContext.utils.focusById("root");
 
 		this.blockingLoaderRef = document.createElement("div");
 		this.blockingLoaderRef.className = "laji-form blocking-loader";
@@ -725,7 +743,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
 
 	getContext = (props: LajiFormProps, context: ContextProps): ContextProps => {
-		const nextKey = (["theme", "lang", "topOffset", "bottomOffset"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+		const nextKey = (["theme"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
 		}, {} as Record<keyof LajiFormProps, any>);
@@ -735,20 +753,14 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.contextMemoizeKey = nextKey;
 			this.memoizedContext = {
 				theme: props.theme || context?.theme || StubTheme,
-				lang: props.lang || "en",
-				setTimeout: this.setTimeout,
-				contextId: this._id,
-				topOffset: props.topOffset || 0,
-				bottomOffset: props.bottomOffset || 0,
 			} as unknown as ContextProps;
-			this.memoizedContext.utils = ReactUtils(this.memoizedContext);
 			return this.memoizedContext;
 		}
 	}
 
 	render() {
 		if (this.state.error) return null;
-		const {translations} = this.state;
+		const {translations} = this.state.formContext;
 		const {
 			"ui:shortcuts": shortcuts,
 			"ui:showShortcutsButton": showShortcutsButton = true,
@@ -844,7 +856,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const { ProgressBar } = this.getContext(this.props, this.context).theme;
 		return (
 			<div className="running-jobs">
-				{this.state.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
+				{this.state.formContext.translations.PendingRunningJobs}... ({jobsAmount - runningAmount + 1} / {jobsAmount})
 				<ProgressBar now={100 / jobsAmount * (jobsAmount - runningAmount)} />
 			</div>
 		);
@@ -895,7 +907,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			liveValidations = {} as {errors: any, warnings: any};
 		}
 		const schemaErrors = nonlive || onlySchema
-			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.translations, e))).errorSchema
+			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.formContext.translations, e))).errorSchema
 			: {};
 		block && this.pushBlockingLoader();
 		return new Promise(resolve =>
@@ -1087,7 +1099,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 		this._context.keyTimeouts = [];
 
-		const currentId = this.memoizedContext.utils.findNearestParentSchemaElemId(e.target as HTMLElement) || "";
+		const currentId = this.memoizedFormContext.utils.findNearestParentSchemaElemId(e.target as HTMLElement) || "";
 
 		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
 			if (currentId.startsWith(id)) return true;

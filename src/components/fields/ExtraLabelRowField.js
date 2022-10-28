@@ -72,7 +72,7 @@ export default class ExtraLabelRowField extends React.Component {
 			<div ref={this.setContainerRef}>
 				{title
 					? (
-						<TitleFieldTemplate title={title} uiSchema={this.props.uiSchema} id={this.props.idSchema.$id} />
+						<TitleFieldTemplate title={title} uiSchema={this.props.uiSchema} id={this.props.idSchema.$id} registry={this.props.registry} />
 					) : null
 				}
 				{labelRow}
@@ -88,7 +88,7 @@ export default class ExtraLabelRowField extends React.Component {
 		const {Col} = this.context.theme;
 		return (
 			<Col {...cols} key={i}>
-				<Label label={label.label} id={this.props.idSchema.$id} help={label.help}/>
+				<Label label={label.label} id={this.props.idSchema.$id} uiSchema={{"ui:help": label.help}}/>
 			</Col>
 		);
 	};

@@ -143,8 +143,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		addMediaContainerRef = React.createRef<HTMLInputElement>();
 
-		onKeyDown: (e: KeyboardEvent | React.KeyboardEvent<Element>) => void;
-
 		constructor(...args: any[]) {
 			super(...args);
 			const [props] = args;
@@ -252,13 +250,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			);
 
 			const {dragging} = this.state;
-			if (!this.onKeyDown) { // Context not available before first render, so we initialize the key handler here.
-				this.onKeyDown = this.context.utils.keyboardClick(() => {
-					const input = this.addMediaContainerRef.current?.querySelector("input");
-					const {addModal} = getUiOptions(this.props.uiSchema);
-					addModal ? this.defaultOnClick() : input?.click();
-				})
-			}
 
 			const {Row, Col} = this.context.theme;
 			const {DescriptionFieldTemplate} = this.props.registry.templates;
@@ -303,6 +294,12 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				</Row>
 			);
 		}
+
+		onKeyDown = this.props.formContext.utils.keyboardClick(() => {
+			const input = this.addMediaContainerRef.current?.querySelector("input");
+			const {addModal} = getUiOptions(this.props.uiSchema);
+			addModal ? this.defaultOnClick() : input?.click();
+		});
 
 		renderMedias = () => {
 			const {disabled, readonly} = this.props;

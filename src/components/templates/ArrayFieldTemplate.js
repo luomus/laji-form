@@ -154,7 +154,6 @@ export function getButtonsForPosition(props, buttonDescriptions = [], position, 
 
 export function handlesArrayKeys(ComposedComponent) {
 	return class ArrayFieldTemplateField extends ComposedComponent {
-		static contextType = ReactContext;
 		static displayName = getReactComponentName(ComposedComponent);
 
 		componentDidMount() {
@@ -197,7 +196,6 @@ export function handlesArrayKeys(ComposedComponent) {
 			const {arrayKeyFunctions: _arrayKeyFunctions} = getUiOptions(props.uiSchema);
 			return [_arrayKeyFunctions ? {..._arrayKeyFunctions} : {...arrayKeyFunctions}, {
 				getProps: () => this.props,
-				getContext: () => this.context
 			}];
 		}
 
@@ -344,7 +342,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 
 		return (
 			<div className={props.className}>
-				<Title title={title} label={title} uiSchema={this.props.uiSchema} />
+				<Title title={title} label={title} uiSchema={this.props.uiSchema} registry={this.props.registry} />
 				{topButtons}
 				{props.description && <Description description={props.description}/>}
 				{
@@ -367,7 +365,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 export default handlesArrayKeys(ArrayFieldTemplateWithoutKeyHandling);
 
 export const arrayKeyFunctions = {
-	navigateArray: function (e, {reverse, getProps, getContext, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
+	navigateArray: function (e, {reverse, getProps, navigateCallforward, getCurrentIdx, focusByIdx, getIdToScrollAfterNavigate}) {
 		function focusIdx(idx, prop) {
 			function callback() {
 				const options = getUiOptions(getProps().uiSchema);
@@ -382,7 +380,7 @@ export const arrayKeyFunctions = {
 					: getIdToScrollAfterNavigate
 						? getIdToScrollAfterNavigate()
 						: undefined;
-				getContext().utils.focusAndScroll(_idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
+				getProps().formContext.utils.focusAndScroll(_idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate);
 			}
 			if (focusByIdx) {
 				focusByIdx(idx, prop, callback);
@@ -391,7 +389,7 @@ export const arrayKeyFunctions = {
 			}
 		}
 
-		const nearestSchemaElemId = findNearestParentSchemaElemId(getProps().formContext.contextId, document.activeElement);
+		const nearestSchemaElemId = getProps().formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 		// Should contain all nested array item ids. We want the last one, which is focused.
 		const activeItemQuery = nearestSchemaElemId.match(new RegExp(`${getProps().idSchema.$id}_\\d+`, "g"));
 		const focusedIdx = activeItemQuery ? getIdxWithoutOffset(+activeItemQuery[0].replace(/^.*_(\d+)$/, "$1"), getUiOptions(getProps().uiSchema).idxOffsets) : undefined;
@@ -451,11 +449,11 @@ export const arrayKeyFunctions = {
 };
 
 export const arrayItemKeyFunctions = {
-	delete: function(e, {getDeleteButton, id, getProps, getContext}) {
+	delete: function(e, {getDeleteButton, id, getProps}) {
 		const {items, idSchema, formContext, readonly, disabled} = getProps();
 		const {getFormRef} = formContext;
 
-		if (readonly || disabled || !isDescendant(getContext().utils.getSchemaElementById(id), e.target)) {
+		if (readonly || disabled || !isDescendant(getProps().formContext.utils.getSchemaElementById(id), e.target)) {
 			return;
 		}
 
@@ -464,22 +462,22 @@ export const arrayItemKeyFunctions = {
 		const deleteButton = getDeleteButton();
 		if (!deleteButton || !deleteButton.onClick) return;
 
-		const activeId = getContext().utils.findNearestParentSchemaElemId(document.activeElement);
+		const activeId = getProps().formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 		const idxsMatch = activeId.match(/_\d+/g);
 		const idx = +idxsMatch[idxsMatch.length - 1].replace("_", "");
-		const elem = getContext().getSchemaElementById(`${idSchema.$id}_${idx}`);
+		const elem = getProps().formContext.utils.getSchemaElementById(`${idSchema.$id}_${idx}`);
 		const prevElem = elem ? getNextInput(getFormRef(), getTabbableFields(elem)[0], !!"reverse") : null;
 
 		deleteButton.onClick(e, (deleted) => {
 			if (deleted) {
 				const idxToFocus = idx === items.length - 1 ? idx - 1 : idx;
 				if (idxToFocus >= 0) {
-					getContext().utils.focusById(`${idSchema.$id}_${idxToFocus}`);
+					getProps().formContext.utils.focusById(`${idSchema.$id}_${idxToFocus}`);
 				} else if (prevElem) {
 					prevElem.focus();
 				}
 			} else {
-				getContext().utils.focusById(`${activeId}`);
+				getProps().formContext.utils.focusById(`${activeId}`);
 			}
 		});
 		return true;

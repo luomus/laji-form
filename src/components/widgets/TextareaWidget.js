@@ -62,7 +62,7 @@ export default class TextareaWidget extends React.Component {
 				this.props.onChange(value);
 			} else {
 				if (this.timeout) clearTimeout(this.timeout);
-				this.timeout = this.context.setTimeout(() => {
+				this.timeout = this.props.formContext.setTimeout(() => {
 					this.props.onChange(value === "" ? getUiOptions(this.props).emptyValue : value);
 				}, 1000);
 			}

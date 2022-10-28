@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isSelect as _isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState as _getDefaultFormState } from "@rjsf/utils";
 import Context from "./Context";
-import ReactContext, {ContextProps} from "./ReactContext";
+import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
@@ -321,7 +321,7 @@ export interface ReactUtilsType {
 	keyboardClick: (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => (e: (KeyboardEvent | React.KeyboardEvent)) => void;
 }
 
-export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
+export const ReactUtils = (context: FormContext): ReactUtilsType => ({
 	findNearestParentSchemaElemId: _findNearestParentSchemaElemId(context),
 	getSchemaElementById: _getSchemaElementById(context),
 	focusById: _focusById(context),
@@ -335,7 +335,7 @@ export const ReactUtils = (context: ContextProps): ReactUtilsType => ({
 	keyboardClick: _keyboardClick(context)
 });
 
-const _findNearestParentSchemaElemId = ({contextId}: Pick<ContextProps, "contextId">) => (elem: HTMLElement) => {
+const _findNearestParentSchemaElemId = ({contextId}: Pick<FormContext, "contextId">) => (elem: HTMLElement) => {
 	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);
 	return nearestParentSchemaElem ? nearestParentSchemaElem.id.replace(`_laji-form_${contextId}_`, "") : undefined;
 };
@@ -343,14 +343,14 @@ export const findNearestParentSchemaElemId = (contextId: number, elem: HTMLEleme
 	return _findNearestParentSchemaElemId({contextId})(elem);
 };
 
-const _getSchemaElementById = ({contextId}: Pick<ContextProps, "contextId">) => (id: string) => {
+const _getSchemaElementById = ({contextId}: Pick<FormContext, "contextId">) => (id: string) => {
 	return document.getElementById(`_laji-form_${contextId}_${id}`);
 };
 export const getSchemaElementById = (contextId: number, id: string) => {
 	return _getSchemaElementById({contextId})(id);
 };
 
-const _focusById = (context: ContextProps) => (id: string, focus = true) => {
+const _focusById = (context: FormContext) => (id: string, focus = true) => {
 	const elem = getSchemaElementById(context.contextId, id);
 
 	if (elem && document.body.contains(elem)) {
@@ -367,9 +367,9 @@ const _focusById = (context: ContextProps) => (id: string, focus = true) => {
 	return false;
 };
 
-export const focusById = (context: ContextProps, id: string, focus?: boolean) => _focusById(context)(id, focus);
+export const focusById = (context: FormContext, id: string, focus?: boolean) => _focusById(context)(id, focus);
 
-const _focusAndScroll = (context: ContextProps) => (idToFocus?: string, idToScroll?: string, focus = true) => {
+const _focusAndScroll = (context: FormContext) => (idToFocus?: string, idToScroll?: string, focus = true) => {
 	const {contextId, topOffset, bottomOffset} = context;
 	const _context = new Context(contextId) as RootContext;
 	if (idToFocus === undefined && idToScroll === undefined) return;
@@ -402,22 +402,22 @@ const _focusAndScroll = (context: ContextProps) => (idToFocus?: string, idToScro
 	}
 };
 
-export const focusAndScroll = (context: ContextProps, idToFocus?: string, idToScroll?: string, focus?: boolean) => _focusAndScroll(context)(idToFocus, idToScroll, focus);
+export const focusAndScroll = (context: FormContext, idToFocus?: string, idToScroll?: string, focus?: boolean) => _focusAndScroll(context)(idToFocus, idToScroll, focus);
 
-const _shouldSyncScroll = (context: ContextProps) => () => {
+const _shouldSyncScroll = (context: FormContext) => () => {
 	return (new Context(context.contextId) as RootContext).windowScrolled === getWindowScrolled();
 };
 
-export const shouldSyncScroll = (context: ContextProps) => _shouldSyncScroll(context)();
+export const shouldSyncScroll = (context: FormContext) => _shouldSyncScroll(context)();
 
-export const _syncScroll = (context: ContextProps) => (force = false) => {
+export const _syncScroll = (context: FormContext) => (force = false) => {
 	if (force || shouldSyncScroll(context)) {
 		const {lastIdToFocus, lastIdToScroll} = new Context(context.contextId) as RootContext;
 		focusAndScroll(context, lastIdToFocus, lastIdToScroll, false);
 	}
 };
 
-export const syncScroll = (context: ContextProps, force: boolean) => _syncScroll(context)(force);
+export const syncScroll = (context: FormContext, force: boolean) => _syncScroll(context)(force);
 
 export const filterLajiFormId = (item: any) => {
 	if (item && item._lajiFormId) {
@@ -435,30 +435,30 @@ export const filterItemId = (item: any) => {
 	return item;
 };
 
-const _filterItemIdsDeeply = (context: ContextProps) => (item: any, idSchemaId: string) => {
+const _filterItemIdsDeeply = (context: FormContext) => (item: any, idSchemaId: string) => {
 	const tmpIdTree = context.utils.getRelativeTmpIdTree(idSchemaId);
 	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
 	return _item;
 };
-export const filterItemIdsDeeply = (item: any, contextId: number, idSchemaId: string) => _filterItemIdsDeeply({contextId} as ContextProps)(item, idSchemaId);
+export const filterItemIdsDeeply = (item: any, context: FormContext, idSchemaId: string) => _filterItemIdsDeeply(context)(item, idSchemaId);
 
-const _formDataIsEmpty = (context: ContextProps) => (props: FieldProps) => {
+const _formDataIsEmpty = (context: FormContext) => (props: FieldProps) => {
 	const tmpIdTree = context.utils.getRelativeTmpIdTree(props.idSchema.$id);
 	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
 	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
 };
-export const formDataIsEmpty = (props: FieldProps, context: ContextProps) => _formDataIsEmpty(context)(props);
+export const formDataIsEmpty = (props: FieldProps, context: FormContext) => _formDataIsEmpty(context)(props);
 
-const _formDataEquals = (context: ContextProps) => (f1: any, f2: any, id: string) => {
+const _formDataEquals = (context: FormContext) => (f1: any, f2: any, id: string) => {
 	const tmpIdTree = context.utils.getRelativeTmpIdTree(id);
 	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
 	return deepEquals(_f1, _f2);
 };
-export const formDataEquals = (f1: any, f2: any, context: ContextProps, id: string) => {
+export const formDataEquals = (f1: any, f2: any, context: FormContext, id: string) => {
 	return _formDataEquals(context)(f1, f2, id);
 };
 
-const _getRelativeTmpIdTree = ({contextId}: Pick<ContextProps, "contextId">) => (id: string) => {
+const _getRelativeTmpIdTree = ({contextId}: Pick<FormContext, "contextId">) => (id: string) => {
 	const rootTmpIdTree = (new Context(contextId) as RootContext).formInstance.tmpIdTree;
 
 	let tmpIdTree;
@@ -480,7 +480,7 @@ export const getRelativeTmpIdTree = (contextId: number, id: string) => {
 	return _getRelativeTmpIdTree({contextId})(id);
 };
 
-const _keyboardClick = ({contextId}: Pick<ContextProps, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => {
+const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => {
 	return (e: KeyboardEvent | React.KeyboardEvent) => {
 		let keys = [" ", "Enter"];
 		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {

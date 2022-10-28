@@ -444,7 +444,8 @@ export function Help({help, id}) {
 	) : helpGlyph;
 }
 
-export function Label({label, help, children, id, required, contextId, helpHoverable, helpPlacement}) {
+export function Label({label, children, id, required, registry = {}, uiSchema = {}}) {
+	const {"ui:help": help, "ui:helpHoverable": helpHoverable, "ui:helpPlacement": helpPlacement} = uiSchema;
 	const showHelp = label && help;
 	const {Tooltip} = React.useContext(ReactContext).theme;
 
@@ -468,7 +469,7 @@ export function Label({label, help, children, id, required, contextId, helpHover
 	);
 
 	return (label || help) ? (
-		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} contextId={contextId}>
+		<OverlayTrigger placement={helpPlacement || "right"} overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext}>
 			{labelElem}
 		</OverlayTrigger>
 	) : labelElem;
@@ -621,7 +622,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.context.setTimeout(() => {
+		this.overlayTimeout = this.props.formContext.setTimeout(() => {
 			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
 		}, 200);
 	};
@@ -635,7 +636,7 @@ export class OverlayTrigger extends React.Component {
 		if (this.overlayTimeout) {
 			clearTimeout(this.overlayTimeout);
 		}
-		this.overlayTimeout = this.context.setTimeout(() => {
+		this.overlayTimeout = this.props.formContext.setTimeout(() => {
 			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
 		}, 200);
 	}

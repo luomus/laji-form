@@ -558,7 +558,8 @@ class LocationButton extends React.Component {
 				                placement="left"
 				                hoverable={true}
 				                contextId={that.props.formContext.contextId}
-				                onEntered={hasCoordinates ? this.onEntered : undefined}>
+				                onEntered={hasCoordinates ? this.onEntered : undefined}
+				                formContext={this.props.formContext} >
 					{button}
 				</OverlayTrigger>
 			);

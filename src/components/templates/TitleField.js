@@ -4,7 +4,7 @@ import { isEmptyString, parseJSONPointer, classNames, getUiOptions } from "../..
 import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 
-const TitleField = ({title, id, formData, style, uiSchema = {}}) => {
+const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) => {
 	const {
 		"ui:help": help,
 		"ui:helpHoverable": helpHoverable,
@@ -42,7 +42,7 @@ const TitleField = ({title, id, formData, style, uiSchema = {}}) => {
 		);
 
 		titleTextContent = (
-			<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable}>
+			<OverlayTrigger placement="right" overlay={tooltipElem} hoverable={helpHoverable} formContext={registry.formContext}>
 				{titleTextContent}
 			</OverlayTrigger>
 		);

@@ -4,12 +4,10 @@ import { rulesPropType, operationPropType, computeUiSchema } from "./Conditional
 import { checkArrayRules, getInnerUiSchema, getUiOptions, getUUID, updateSafelyWithJSONPointer, findNearestParentTabbableElem } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-import ReactContext from "../../ReactContext";
 import { arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
 @BaseComponent
 export default class MultiArrayField extends React.Component {
-	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -234,7 +232,7 @@ const getArrayKeyFunctions = (that) => {
 			return _arrayKeyFunctions.insert(e, _props);
 		},
 		navigateArray: (e, options) => {
-			const _options = {...options, getProps: () => ({...options.getProps(), formData: that.props.formData}), getContext: () => that.context};
+			const _options = {...options, getProps: () => ({...options.getProps(), formData: that.props.formData})};
 			return _arrayKeyFunctions.navigateArray(e, _options);
 		}
 	};

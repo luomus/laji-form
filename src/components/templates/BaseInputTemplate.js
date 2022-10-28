@@ -41,7 +41,7 @@ export default class _BaseInputTemplate extends React.Component {
 				this.props.onChange(value);
 			} else {
 				if (this.timeout) clearTimeout(this.timeout);
-				this.timeout = this.context.setTimeout(() => {
+				this.timeout = this.props.formContext.setTimeout(() => {
 					this.props.onChange(value);
 				}, 1000);
 			}

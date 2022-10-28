@@ -150,8 +150,7 @@ class TableArrayFieldTemplate extends React.Component {
 						id={idSchema[propName].$id}
 						required={(schema.items.required && schema.items.required.indexOf(propName) > -1)
 						|| propUiSchema["ui:required"]}
-						help={propUiSchema["ui:help"]}
-						helpPlacement={propUiSchema["ui:helpPlacement"]} />
+					  uiSchema={propUiSchema} />
 				</Col>
 			);
 		});

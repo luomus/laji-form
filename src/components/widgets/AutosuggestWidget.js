@@ -231,8 +231,6 @@ class TaxonAutosuggestWidget extends React.Component {}
 
 @TaxonAutosuggest
 class UnitAutosuggestWidget extends React.Component {
-	static contextType = ReactContext;
-
 	constructor(props) {
 		super(props);
 		this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -548,7 +546,7 @@ export class Autosuggest extends React.Component {
 			clearTimeout(this.timeout);
 		}
 		if (debounce) {
-			this.timeout = this.context.setTimeout(request, 100);
+			this.timeout = this.props.formContext.setTimeout(request, 100);
 		} else {
 			request();
 		}
@@ -609,11 +607,6 @@ export class Autosuggest extends React.Component {
 	}
 
 	render() {
-
-		if (!this.onToggleByKeyboard) { // Context not available before first render, so we initialize the key handler here.
-			this.onToggleByKeyboard = this.context.utils.keyboardClick(this.onToggle)
-		}
-
 		const {props} = this;
 		let {suggestions, inputValue = ""} = this.state;
 
@@ -688,7 +681,7 @@ export class Autosuggest extends React.Component {
 	onToggle = () => {
 		if (!this.mounted) return;
 		this.props.onToggle(!this.props.toggled);
-		setTimeout(() => this.context.utils.focusById(this.props.id), 1); // Refocus input
+		setTimeout(() => this.props.formContext.utils.focusById(this.props.id), 1); // Refocus input
 	}
 
 	isSuggested = () => {
@@ -963,7 +956,8 @@ class _TaxonWrapper extends React.Component {
 			                placement={placement}
 			                contextId={this.props.formContext.contextId}
 			                overlay={popover}
-			                ref={this.props.overlayRef}>
+			                ref={this.props.overlayRef}
+			                formContext={this.props.formContext}>
 				{children}
 			</OverlayTrigger>
 		);
@@ -986,8 +980,6 @@ class InformalTaxonGroupsAddon extends React.Component {
 			if (!this.mounted) return;
 			this.setState({informalTaxonGroupsById});
 		});
-
-		this.onKeyDown = this.context.utils.keyboardClick(this.toggle);
 	}
 
 	componentWillUnmount() {
@@ -1002,6 +994,9 @@ class InformalTaxonGroupsAddon extends React.Component {
 	toggle = () => {
 		if (this.props.onOpen) this.props.onOpen(!this.props.open);
 	}
+
+
+	onKeyDown = this.props.formContext.utils.keyboardClick(this.toggle);
 
 	renderGlyph = () => {
 		const {taxonGroupID} = this.props;
@@ -1211,7 +1206,7 @@ class ReactAutosuggest extends React.Component {
 			e.preventDefault();
 			suggestion = (this.props.suggestions || [])[this.state.focusedIdx];
 			if (shortcuts.Enter) {
-				this.context.setTimeout(() => {
+				this.props.formContext.setTimeout(() => {
 					suggestion && this.onSuggestionSelected(suggestion);
 				}, 0);
 			} else {

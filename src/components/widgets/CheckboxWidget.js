@@ -82,24 +82,6 @@ export default class CheckboxWidget extends React.Component {
 	}
 
 	render() {
-		if (!this.onGroupKeyDown) { // Context not available before first render, so we initialize the key handlers here.
-			this.onGroupKeyDown = this.context.utils.keyboardClick((e) => {
-				this.getToggleMode(this.props) && this.toggle(e);
-			});
-
-			this.onTrueKeyDown = this.context.utils.keyboardClick(() => {
-				this.onChange(true);
-			});
-
-			this.onFalseKeyDown = this.context.utils.keyboardClick(() => {
-				this.onChange(false);
-			});
-
-			this.onUndefinedKeyDown = this.context.utils.keyboardClick(() => {
-				this.onChange(undefined);
-			});
-		}
-
 		const {
 			value,
 			disabled,
@@ -116,9 +98,6 @@ export default class CheckboxWidget extends React.Component {
 			falseLabel,
 			unknownLabel,
 			required,
-			help,
-			helpHoverable,
-			helpPlacement,
 			label: uiOptionsLabel
 		} = options;
 		const hasLabel = !isEmptyString(label)  && uiOptionsLabel !== false;
@@ -155,7 +134,7 @@ export default class CheckboxWidget extends React.Component {
 
 		const {Label} = this.props.formContext;
 		return !hasLabel ? checkbox : (
-			<Label label={label} required={required} help={help} helpHoverable={helpHoverable} helpPlacement={helpPlacement} contextId={this.props.formContext.contextId}>
+			<Label label={label} required={required} uiSchema={options} contextId={this.props.formContext.contextId}>
 				{checkbox}
 			</Label>
 		);
@@ -167,6 +146,23 @@ export default class CheckboxWidget extends React.Component {
 		const {Yes, No} = props.registry.formContext.translations;
 		return !displayUndefined && (trueLabel === Yes && falseLabel === No);
 	}
+
+	onGroupKeyDown = this.props.formContext.utils.keyboardClick((e) => {
+		this.getToggleMode(this.props) && this.toggle(e);
+	});
+
+	onTrueKeyDown = this.props.formContext.utils.keyboardClick(() => {
+		this.onChange(true);
+	});
+
+	onFalseKeyDown = this.props.formContext.utils.keyboardClick(() => {
+		this.onChange(false);
+	});
+
+	onUndefinedKeyDown = this.props.formContext.utils.keyboardClick(() => {
+		this.onChange(undefined);
+	});
+
 
 	toggle = (e) => {
 		const nodes = [this.trueRef, this.falseRef, this.groupRef].map(r => findDOMNode(r.current));

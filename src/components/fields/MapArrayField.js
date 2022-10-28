@@ -77,7 +77,6 @@ export default class MapArrayField extends React.Component {
 
 @_MapArrayField
 class DefaultMapArrayField extends React.Component {
-	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
@@ -150,7 +149,7 @@ class DefaultMapArrayField extends React.Component {
 			));
 		}, formData);
 
-		this.props.onChange(onArrayFieldChange([formData], this.props, this.context));
+		this.props.onChange(onArrayFieldChange([formData], this.props));
 		this.setState({activeIdx: 0});
 	}
 
@@ -204,7 +203,7 @@ class DefaultMapArrayField extends React.Component {
 				break;
 			}
 		});
-		this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props, this.context) : formData);
+		this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
 	}
 
 	onAdd({feature: {geometry}}, formData) {
@@ -258,8 +257,6 @@ class DefaultMapArrayField extends React.Component {
 @_MapArrayField
 class UnitsMapArrayField extends React.Component {
 	field = "units"
-
-	static contextType = ReactContext;
 
 	constructor(props) {
 		super(props);
@@ -438,7 +435,7 @@ class UnitsMapArrayField extends React.Component {
 		this.startHighlight(idx);
 
 		const id = `${this.props.idSchema.$id}_${this.state.activeIdx}_units_${idx}`;
-		this.highlightedElem = this.context.utils.getSchemaElementById(id);
+		this.highlightedElem = this.props.formContext.utils.getSchemaElementById(id);
 
 		if (this.highlightedElem) {
 			this.highlightedElem.className += " map-highlight";
@@ -651,7 +648,7 @@ class LineTransectMapArrayField extends React.Component {
 	onLineCreate = ([event]) => {
 		this.props.onChange(onArrayFieldChange(update(this.props.formData, {0: {geometry: {$set:
 			event.feature.geometry
-		}}}), this.props, this.context));
+		}}}), this.props));
 	}
 
 	onChange = (events) => {
@@ -723,7 +720,7 @@ class LineTransectMapArrayField extends React.Component {
 		});
 		const afterState = () => {
 			if (formDataChanged) {
-				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props, this.context) : formData);
+				this.props.onChange(addOrDelete ? onArrayFieldChange(formData, this.props) : formData);
 			}
 			if ("activeIdx" in state) {
 				this.afterActiveChange(state.activeIdx);
@@ -770,7 +767,7 @@ class LineTransectMapArrayField extends React.Component {
 			setTimeout(() => this.map.zoomToData({paddingInMeters: 200}));
 			return;
 		}
-		this.context.setTimeout(() => {
+		this.props.formContext.setTimeout(() => {
 			this.map && this.map.fitBounds(L.featureGroup(this.map._corridorLayers[idx]).getBounds(), {paddingInMeters: 100}); // eslint-disable-line no-undef
 		});
 	}
@@ -785,7 +782,6 @@ class LineTransectMapArrayField extends React.Component {
 
 @_MapArrayField
 class LolifeMapArrayField extends React.Component {
-	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
 		this.onMouseOver = this.onMouseOver.bind(this);
@@ -1046,7 +1042,7 @@ class LolifeMapArrayField extends React.Component {
 
 	getHighlightElem(idx, unit) {
 		if (unit) {
-			return this.context.utils.getSchemaElementById(`${this.props.idSchema.$id}_0_units_${idx}`);
+			return this.props.formContext.utils.getSchemaElementById(`${this.props.idSchema.$id}_0_units_${idx}`);
 		} else {
 			return document.getElementById(`${this.props.idSchema.$id}_${idx}-panel`);
 		}
@@ -1198,7 +1194,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		if (prevState.activeIdx !== this.state.activeIdx) {
 			if (!this.nestedHandledActiveChange && this.state.activeIdx !== undefined) {
 				const {idToFocusAfterNavigate, idToScrollAfterNavigate} = getUiOptions(this.props.uiSchema);
-				this.context.utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
+				this.props.formContext.utils.focusAndScroll(idToFocusAfterNavigate || `${this.props.idSchema.$id}_${this.state.activeIdx}`, idToScrollAfterNavigate);
 			}
 			this.nestedHandledActiveChange = false;
 			this.afterActiveChange(this.state.activeIdx);
@@ -1207,7 +1203,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		if (this.refs.stretch) {
 			const {resizeTimeout} = getUiOptions(this.props.uiSchema);
 			if (resizeTimeout) {
-				this.context.setTimeout(this.refs.stretch.update, resizeTimeout);
+				this.props.formContext.setTimeout(this.refs.stretch.update, resizeTimeout);
 			} else {
 				this.refs.stretch.update();
 			}
@@ -1355,7 +1351,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	
 	customAdd = () => () => {
 		const nextActive = this.props.formData.length;
-		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props, this.context));
+		this.props.onChange(onArrayFieldChange([...this.props.formData, getDefaultFormState(this.props.schema.items)], this.props));
 		this.setState({activeIdx: nextActive});
 	}
 

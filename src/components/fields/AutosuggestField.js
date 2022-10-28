@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
-import ReactContext from "../../ReactContext";
 import * as merge from "deepmerge";
 
 const suggestionParsers = {
@@ -45,7 +44,6 @@ const parseQuery = (query, props, taxonGroups) => {
  */
 @BaseComponent
 export default class AutosuggestField extends React.Component {
-	static contextType = ReactContext;
 	static propTypes = {
 		uiSchema: PropTypes.shape({
 			"ui:options": PropTypes.shape({
@@ -234,7 +232,7 @@ export default class AutosuggestField extends React.Component {
 			}, unit);
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...updateFormDataWithJSONPointer({...this.props, formData}, undefined, suggestionValueField), ...unit};
-			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !this.context.utils.formDataEquals(this.props.formData, formData, this.props.idSchema.$id)) {
+			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !this.props.formContext.utils.formDataEquals(this.props.formData, formData, this.props.idSchema.$id)) {
 				this.onNextTick = () => new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {

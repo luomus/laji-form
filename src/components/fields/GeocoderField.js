@@ -365,7 +365,7 @@ export default class GeocoderField extends React.Component {
 
 				this.getComponentContext().fetching = true;
 
-				this.context.setTimeout(() => {
+				this.props.formContext.setTimeout(() => {
 					if (timestamp !== this.promiseTimestamp) return;
 					if (this.getComponentContext().fetching) {
 						fail(this.props.formContext.translations.GeocodingTimeout);

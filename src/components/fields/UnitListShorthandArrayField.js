@@ -118,6 +118,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 								inputProps={{autoFocus: true}}
 								onKeyDown={this.onKeyDown}
 								ref={this.setTagArrayRef}
+								formContext={this.props.formContext}
 							/>
 							<span className="text-muted"><i>{this.props.formContext.translations.UnitListShorthandHelp}</i></span><br />
 							<Button type="submit" disabled={isEmptyString(this.state.value)} onClick={this.onSubmit}>{this.props.formContext.translations.Add}</Button>

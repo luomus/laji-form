@@ -70,7 +70,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				}
 			});
 			gathering.namedPlaceID = place.id;
-			const tmpIdTree = this.context.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
+			const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
 
 			const [withLajiFormIds] = addLajiFormIds(gathering, tmpIdTree, false);
 			return withLajiFormIds;
@@ -400,7 +400,7 @@ class Popup extends React.Component {
 	}
 
 	componentDidUpdate() {
-		new Context(this.props.contextId).setImmediate(() => {
+		this.props.formContext.setTimeout(() => {
 			if (this.buttonElem) findDOMNode(this.buttonElem).focus();
 		});
 	}

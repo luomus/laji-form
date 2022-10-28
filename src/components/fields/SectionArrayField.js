@@ -405,7 +405,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				);
 			}, result);
 		}, getDefaultFormState(schema.items));
-		const tmpIdTree = this.context.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
+		const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);
 		item = updateFormDataWithJSONPointer({schema: schema.items, formData: item, registry}, parseInt(newSection), sectionField);
@@ -503,7 +503,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			return map;
 		}, {});
 
-		const tmpIdTree = this.context.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
+		const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
 
 		const oldIds = getAllLajiFormIdsDeeply(this.props.formData, tmpIdTree);
 		let ids = {};
@@ -516,7 +516,7 @@ class SectionArrayFieldTemplate extends React.Component {
 					// we don't define it again, or else it will be rendered again and won't be autofocused properly.
 					const [_rowDefinerItem, _ids] = containerIdx === 0 && getUUID(unit)
 						? addLajiFormIds(unit, tmpIdTree)
-						: addLajiFormIds(this.context.utils.filterItemIdsDeeply(unit, this.props.idSchema.$id), tmpIdTree, false);
+						: addLajiFormIds(this.props.formContext.utils.filterItemIdsDeeply(unit, this.props.idSchema.$id), tmpIdTree, false);
 					rowDefinerItem  = _rowDefinerItem;
 					ids = {...ids, ..._ids};
 				}
@@ -636,9 +636,9 @@ const _arrayKeyFunctions = options => {
 		insert: (e, props) => {
 			document.getElementById(`${props.getProps().idSchema.$id}-add`).click();
 		},
-		navigateSection: (e, {getProps, getContext, left, right, up, goOverRow}) => {
+		navigateSection: (e, {getProps, left, right, up, goOverRow}) => {
 			const {rowDefinerField, rowValueField} = options;
-			const currentId = getContext().utils.findNearestParentSchemaElemId(document.activeElement);
+			const currentId = getProps().formContext.utils.findNearestParentSchemaElemId(document.activeElement);
 			const amount = left || up ? -1 : 1;
 			const id = getProps().idSchema.$id;
 			let nextId;
@@ -671,7 +671,7 @@ const _arrayKeyFunctions = options => {
 						}
 					}
 				});
-				nextId = getContext().utils.findNearestParentSchemaElemId(elem);
+				nextId = getProps().formContext.utils.findNearestParentSchemaElemId(elem);
 			};
 
 			if (left || right) {
@@ -695,7 +695,7 @@ const _arrayKeyFunctions = options => {
 					} else {
 						let tabbableInSection = getNonRowSectionFieldsForSectionIdx(getProps().formData.length - 1);
 						// Horizontal navigation inside non row section field.
-						if (currentId === getContext().utils.findNearestParentSchemaElemId(tabbableInSection[tabbableInSection.length - 1])) {
+						if (currentId === getProps().formContext.utils.findNearestParentSchemaElemId(tabbableInSection[tabbableInSection.length - 1])) {
 							nextId = `${id}_0_${JSONPointerToId(rowDefinerField.replace("%{row}", 0))}`;
 							// Horizontal navigation from non row section to row field.
 						} else {
@@ -733,12 +733,12 @@ const _arrayKeyFunctions = options => {
 					: `${id}-section-definer`;
 				const tabbableOutsideContainer = getTabbableFields(document.getElementById(containerId));
 				const tabbableIdx = tabbableOutsideContainer.findIndex(e => e === document.activeElement);
-				nextId = getContext().utils.findNearestParentSchemaElemId(tabbableOutsideContainer[tabbableIdx + amount]);
+				nextId = getProps().formContext.utils.findNearestParentSchemaElemId(tabbableOutsideContainer[tabbableIdx + amount]);
 				if (nextId === "root") {
 					return true;
 				}
 			}
-			getContext().utils.focusAndScroll(nextId);
+			getProps().formContext.utils.focusAndScroll(nextId);
 		}
 	};
 	keyFunctions.navigate = (e, props) => {

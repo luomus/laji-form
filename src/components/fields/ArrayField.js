@@ -11,10 +11,10 @@ import { getDefaultRegistry } from "@rjsf/core";
 // e.g. "copy all array item values expect these" is impossible.
 export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 
-	const {schema, registry} = that.props;
+	const {schema, registry, formContext} = that.props;
 	const defaultItem = getDefaultFormState(schema.items, undefined);
 
-	copyItem = that.context.utils.filterItemIdsDeeply(copyItem, that.props.idSchema.$id);
+	copyItem = formContext.utils.filterItemIdsDeeply(copyItem, that.props.idSchema.$id);
 
 	const source = type === "blacklist" ? defaultItem : copyItem;
 
@@ -29,25 +29,23 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
 
-	const tmpIdTree = that.context.utils.getRelativeTmpIdTree(props.idSchema.$id);
+	const tmpIdTree = that.props.formContext.utils.getRelativeTmpIdTree(props.idSchema.$id);
 	return addLajiFormIds(filtered, tmpIdTree, false)[0];
 };
 
-export function onArrayFieldChange(formData, props, context) {
-	const tmpIdTree = context.utils.getRelativeTmpIdTree(props.idSchema.$id);
+export function onArrayFieldChange(formData, props) {
+	const tmpIdTree = props.formContext.utils.getRelativeTmpIdTree(props.idSchema.$id);
 	return addLajiFormIds(formData, tmpIdTree, false)[0];
 }
 
 const {ArrayField} = getDefaultRegistry().fields;
 
 export class ArrayFieldPatched extends ArrayField {
-	static contextType = ReactContext;
-
 	constructor(...params) {
 		super(...params);
 		const {_getNewFormDataRow} = this;
 		this._getNewFormDataRow = () => {
-			const tmpIdTree = this.context.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
+			const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
 			const [item] = addLajiFormIds(_getNewFormDataRow.call(this), tmpIdTree, false);
 			return item;
 		};
@@ -55,7 +53,7 @@ export class ArrayFieldPatched extends ArrayField {
 		const {onDropIndexClick} = this;
 		this.onDropIndexClick = (index) => (event) => {
 			const item = this.props.formData[index];
-			const tmpIdTree = this.context.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${index}`);
+			const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${index}`);
 			const oldIds = getAllLajiFormIdsDeeply(item, tmpIdTree);
 
 			Object.keys(oldIds).forEach((id) => {
@@ -102,7 +100,7 @@ export default class _ArrayField extends React.Component {
 	static contextType = ReactContext;
 
 	onChange = (formData) => {
-		this.props.onChange(onArrayFieldChange(formData, this.props, this.context));
+		this.props.onChange(onArrayFieldChange(formData, this.props));
 	}
 
 	render() {

@@ -125,7 +125,7 @@ export default class ScopeField extends React.Component {
 			this.translateAdditionalsGroups(this.props);
 		}
 		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
-			this.context.utils.syncScroll();
+			this.props.formContext.utils.syncScroll();
 			const context = new Context(this.props.formContext.contextId);
 			context.sendCustomEvent(this.props.idSchema.$id, "resize");
 		}
@@ -626,7 +626,7 @@ const _ListGroup = React.memo(function _ListGroup({group = {}, groupTranslations
 	);
 });
 
-function GlyphField({settings, idSchema, formData, schema, registry, isIncluded, toggleAdditionalProperty}) {
+function GlyphField({settings, idSchema, formData, schema, isIncluded, toggleAdditionalProperty}) {
 	const {glyph, label, show} = settings;
 	const property = show;
 	const onButtonClick = React.useCallback(() => toggleAdditionalProperty(property), [property, toggleAdditionalProperty]);

@@ -1,12 +1,9 @@
 import * as React from "react";
 import Context from "../../Context";
-import ReactContext from "../../ReactContext";
 import { Help, TooltipComponent } from "../components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, classNames } from "../../utils";
 
 export default class FieldTemplateTemplate extends React.Component {
-	static contextType = ReactContext;
-
 	constructor(props) {
 		super(props);
 		if (getUiOptions(props.uiSchema).reserveId === false) {
@@ -33,7 +30,7 @@ export default class FieldTemplateTemplate extends React.Component {
 		const _context = new Context(contextId);
 		const {idToFocus, idToScroll} = _context;
 		if (this.canFocus() && idToFocus !== undefined && this.state.id === idToFocus) {
-			if (this.context.utils.focusAndScroll(idToFocus, idToScroll)) {
+			if (this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll)) {
 				_context.idToFocus = undefined;
 				_context.idToScroll = undefined;
 			}
@@ -52,7 +49,7 @@ export default class FieldTemplateTemplate extends React.Component {
 		this.setState({id}, () => {
 			const {idToFocus, idToScroll} = new Context(this.props.formContext.contextId);
 			if (this.canFocus() && idToFocus === id) {
-				this.context.utils.focusAndScroll(idToFocus, idToScroll);
+				this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll);
 			}
 		});
 	}
@@ -70,7 +67,6 @@ export default class FieldTemplateTemplate extends React.Component {
 			classNames: _classNames,
 			children,
 			rawErrors,
-			rawHelp,
 			description,
 			hidden,
 			required,
@@ -112,7 +108,7 @@ export default class FieldTemplateTemplate extends React.Component {
 		const {Label, errorsAsPopup} = this.props.formContext;
 		const component = (errorsComponent) => (
 			<div className={classNames(_classNames, warningClassName)} id={htmlId}>
-				{label && _displayLabel ? <Label label={label} help={rawHelp} helpHoverable={uiSchema["ui:helpHoverable"]} helpPlacement={uiSchema["ui:helpPlacement"]} id={id} required={required || uiSchema["ui:required"]} contextId={formContext.contextId} /> : null}
+				{label && _displayLabel ? <Label label={label} uiSchema={uiSchema} id={id} required={required || uiSchema["ui:required"]} registry={this.props.registry} /> : null}
 				{_displayLabel && description ? description : null}
 				<div>
 					{inlineHelp ? <div className="pull-left">{children}</div> : children}

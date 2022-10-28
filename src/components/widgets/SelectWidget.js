@@ -107,7 +107,7 @@ class SelectWidget extends React.Component {
 	onFocus = () => this.setState({open: true})
 
 	onSelect = (item) => {
-		this.state.open && this.context.setTimeout(() => this.mounted && this.setState({open: false, value: item.value}));
+		this.state.open && this.props.formContext.setTimeout(() => this.mounted && this.setState({open: false, value: item.value}));
 		const value = this.getEnum(item.value);
 		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}
