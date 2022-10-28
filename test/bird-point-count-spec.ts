@@ -1,4 +1,4 @@
-import { Form, createForm, putForeignMarkerToMap, isDisplayed } from "./test-utils";
+import { Form, createForm, putForeignMarkerToMap, isDisplayed, updateValue } from "./test-utils";
 import { browser, ElementFinder, protractor } from "protractor";
 
 describe("Bird point count (MHL.75)", () => {
@@ -42,7 +42,7 @@ describe("Bird point count (MHL.75)", () => {
 		const mustarastasMock = await mockQueue.create();
 
 		await $addUnit.click();
-		await taxonAutosuggest1.$input.sendKeys("peippo");
+		await updateValue(taxonAutosuggest1.$input, "peippo");
 
 		await peippoMock.resolve([{
 			key: "MX.36237",
@@ -50,7 +50,7 @@ describe("Bird point count (MHL.75)", () => {
 		}]);
 
 		await $addUnit.click();
-		await taxonAutosuggest2.$input.sendKeys("mustarastas");
+		await updateValue(taxonAutosuggest2.$input, "mustarastas");
 
 		await mustarastasMock.resolve([{
 			key: "MX.33106",
