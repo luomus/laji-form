@@ -215,7 +215,6 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		getChildKeyHandlers(props) {
-
 			return props.items.map((item, i) => {
 				const id = `${props.idSchema.$id}_${i}`;
 				return [id, arrayItemKeyFunctions, {getProps: () => this.props, id, getDeleteButton: () => {
