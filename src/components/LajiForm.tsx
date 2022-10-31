@@ -4,21 +4,20 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, handleKeysWith, capitalizeFirstLetter, getKeyHandlerTargetId, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
+import { focusNextInput, capitalizeFirstLetter, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
 import { HasMaybeChildren, Theme } from "../themes/theme";
 import Context, { ContextProps } from "../ReactContext";
 import StubTheme from "../themes/stub";
-
 import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, RJSFSchema, TemplatesType } from "@rjsf/utils";
 import ErrorListTemplate from "./templates/ErrorListTemplate";
-
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
 import * as translations from "../translations.json";
+import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -214,6 +213,9 @@ export interface FormContext {
 	theme: Theme;
 	setTimeout: (fn: () => void, time: number) => void;
 	utils: ReactUtilsType;
+	services: {
+		keyHandlerService: KeyHandlerService
+	}
 }
 
 export type Lang = "fi" | "en" | "sv";
@@ -231,12 +233,6 @@ export interface SubmitHook {
 	failed?: boolean;
 }
 
-interface ShortcutKey {
-	fn: string;
-	target?: string;
-	[param: string]: any;
-}
-
 export interface FieldProps extends RJSFFieldProps<any, FormContext> {
 	uiSchema: any;
 	errorSchema: any;
@@ -248,18 +244,6 @@ export interface WidgetProps extends RJSFWidgetProps<any, FormContext> {
 	errorSchema: any;
 	formContext: FormContext;
 }
-
-type ShortcutKeys = Record<string, ShortcutKey>;
-
-export interface InternalKeyHandler extends ShortcutKey {
-	conditions: ((e: KeyboardEvent) => boolean)[];
-}
-type InternalKeyHandlers = InternalKeyHandler[];
-type InternalKeyHandlerTargets = {id: string, handler: InternalKeyHandler}[];
-
-export type KeyFunctions = {[fnName: string]: (e: KeyboardEvent, options: any) => boolean | void}
-
-type KeyHandleListener = (e: KeyboardEvent) => boolean | undefined;
 
 export type NotifyMessager = (msg: string) => void;
 export interface Notifier {
@@ -278,10 +262,6 @@ export interface RootContext {
 	blockingLoaderCounter: number;
 	pushBlockingLoader: () => void; 
 	popBlockingLoader: () => void;
-	keyHandleListeners: {[id: string]: KeyHandleListener[]};
-	keyHandleIdFunctions: {id: string, keyFunctions:  KeyFunctions, handleKey: KeyHandleListener}[];
-	addKeyHandler: (id: string, keyFunctions: KeyFunctions, additionalParams?: any) => void;
-	removeKeyHandler: (id: string, keyFunctions: KeyFunctions) => void;
 	addSettingSaver: (key: string, fn: () => void, global?: boolean) => void;
 	removeSettingSaver: (key: string, global?: boolean) => void;
 	onSettingsChange: (global?: boolean) => void;
@@ -292,16 +272,12 @@ export interface RootContext {
 	addCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
 	removeCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
 	sendCustomEvent: (id: string, eventName: string, data?: any, callback?: () => void, options?: {bubble?: boolean}) => void;
-	addGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	addSubmitHook: (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => void;
 	removeSubmitHook: (lajiFormId: string, hook: SubmitHook["hook"]) => void;
 	removeAllSubmitHook: () => void;
 	singletonMap: any;
-	keyHandlers: InternalKeyHandlers;
-	shortcuts: ShortcutKeys;
 	errorList: ErrorListTemplate
-	keyTimeouts: number[];
 	[prop: string]: any;
 }
 
@@ -351,8 +327,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	};
 	focusHandlers: {[id: string]: FocusHandler[]} = {};
 	customEventListeners: {[eventName: string]: {[id: string]: CustomEventListener[]}} = {};
-	_globalEventsRootHandler: {[eventName: string]: React.EventHandler<any>} = {};
-	_globalEventHandlers: {[name: string]: React.EventHandler<any>[]} = {};
 	ids: {[id: string]: ((id: string) => void)[]} = {};
 	// First call returns id, next call (and only the very next) reserves the id until it is released.
 	reserveId = (id: string, sendId: (id: string) => void): string | void => {
@@ -376,8 +350,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	formRef: Form<any>;
 	mounted: boolean;
 	blockingLoaderRef: HTMLDivElement;
-	keyHandlers: InternalKeyHandlers;
-	keyHandlerTargets: InternalKeyHandlerTargets;
 	keyCombo: string;
 	defaultNotifier: Notifier;
 	validating = false;
@@ -387,7 +359,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	helpStarted: boolean;
 	eventListeners: [typeof document | typeof window, string, (e: Event) => void][] = [];
 	timeouts: number[] = [];
-
+	keyHandlerService: KeyHandlerService
 
 	static propTypes = {
 		uiSchemaContext: PropTypes.object,
@@ -420,29 +392,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
-
-		this._context.keyHandleListeners = {};
-		this._context.keyHandleIdFunctions = [];
-		this._context.addKeyHandler = (id: string, keyFunctions: KeyFunctions, additionalParams?: any) => {
-			if (!this._context.keyHandleListeners[id]) this._context.keyHandleListeners[id] = [];
-			const handleKey: KeyHandleListener = (e) => handleKeysWith(this._context, id, keyFunctions, e, additionalParams);
-			this._context.keyHandleIdFunctions.push({id, keyFunctions, handleKey});
-			this._context.keyHandleListeners[id].push(handleKey);
-		};
-
-		this._context.removeKeyHandler = (_id: string, _keyFunctions: {[fnName: string]: () => boolean | void}) => {
-			this._context.keyHandleIdFunctions.forEach((idFunction, i) => {
-				const {id, keyFunctions, handleKey} = idFunction;
-				if (id === _id && _keyFunctions === keyFunctions) {
-					this._context.keyHandleIdFunctions.splice(i, 1);
-					this._context.keyHandleListeners[id] = this._context.keyHandleListeners[id].filter((_handleKey: any) =>
-						_handleKey !== handleKey
-					);
-				}
-			});
-		};
-
-		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
 
 		this._context.addSettingSaver = (key: string, fn: () => void, global = false) => {
 			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
@@ -493,36 +442,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			callback && callback();
 		};
 
-		this._context.addGlobalEventHandler = (name: string, fn: React.EventHandler<any>) => {
-			if (!this._globalEventHandlers[name]) {
-				this._globalEventsRootHandler[name] = e => {
-					if (!e.persist) e.persist = () => {};
-					const origStopPropagation = e.stopPropagation;
-					e.stopPropagation = () => {
-						e._lajiFormStoppedFlag = true;
-						origStopPropagation.call(e);
-					};
-					this._globalEventHandlers[name].some(h => {
-						if (e._lajiFormStoppedFlag) {
-							return true;
-						}
-						h(e);
-						return false;
-					});
-				};
-				document.addEventListener(name, this._globalEventsRootHandler[name]);
-				this._globalEventHandlers[name] = [];
-			}
-			this._globalEventHandlers[name].push(fn);
-		};
-		this._context.removeGlobalEventHandler = (name: string, fn: React.EventHandler<any>) => {
-			this._globalEventHandlers[name] = this._globalEventHandlers[name].filter(_fn => _fn !== fn);
-			if (this._globalEventHandlers[name].length === 0) {
-				delete this._globalEventHandlers[name];
-				document.removeEventListener(name, this._globalEventsRootHandler[name]);
-			}
-		};
-
 		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => {
 			lajiFormId = `${lajiFormId}`;
 			let promise: Promise<any>;
@@ -566,6 +485,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.setState({submitHooks: []});
 		};
 
+		this.getMemoizedFormContext(props); // Initialize form context.
+		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
+
 		this.state = this.getStateFromProps(props);
 	}
 
@@ -598,7 +520,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		return state;
 	}
 
-	getMemoizedFormContext = (props: LajiFormProps): FormContext => {
+	getMemoizedFormContext(props: LajiFormProps): FormContext {
 		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
@@ -630,9 +552,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				apiClient: this.apiClient,
 				Label: (props.fields || {}).Label || Label,
 				mediaMetadata: props.mediaMetadata,
-				setTimeout: this.setTimeout
+				setTimeout: this.setTimeout,
+				services: {}
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
+			this.memoizedFormContext.services.keyHandlerService = new KeyHandlerService(this.memoizedFormContext);
 			return this.memoizedFormContext;
 		}
 	}
@@ -646,8 +570,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (this.blockingLoaderCounter > 0) this.blockingLoaderRef.className = "laji-form blocking-loader entering";
 		document.body.appendChild(this.blockingLoaderRef);
 
-		this._context.addGlobalEventHandler("keydown", this.onKeyDown);
-
+		this.memoizedFormContext.services.keyHandlerService.initialize();
 
 		if (this.props.componentDidMount) this.props.componentDidMount();
 	}
@@ -656,7 +579,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this.mounted = false;
 		if (this._context.singletonMap) this._context.singletonMap.destroy();
 		document.body.removeChild(this.blockingLoaderRef);
-		this._context.removeGlobalEventHandler("keydown", this.onKeyDown);
+		this.memoizedFormContext.services.keyHandlerService.destroy();
 	}
 
 	componentDidCatch(e: Error, i: React.ErrorInfo) {
@@ -673,17 +596,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	resetShortcuts(shortcuts: ShortcutKeys = {}) {
-		this._context.keyHandleListeners = {};
-		this._context.keyHandleIdFunctions = [];
-
-		this.keyHandlers = this.getKeyHandlers(shortcuts);
-		this._context.keyHandlers = this.keyHandlers;
-		this._context.addKeyHandler("root", this.keyFunctions);
-		this.keyHandlerTargets = this.keyHandlers.reduce((targets, handler) => {
-			if (typeof handler.target === "string") targets.push({id: handler.target, handler});
-			return targets;
-		}, [] as InternalKeyHandlerTargets);
-
+		this.memoizedFormContext.services.keyHandlerService.setShortcuts(shortcuts, this.keyFunctions);
 		Object.keys(shortcuts).some(keyCombo => {
 			if (shortcuts[keyCombo].fn == "help") {
 				this.keyCombo = keyCombo;
@@ -691,10 +604,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			}
 			return false;
 		});
-
-		this._context.shortcuts = shortcuts;
 	}
-
 
 	constructTranslations(): Translations {
 		return constructTranslations(translations) as Translations;
@@ -1056,64 +966,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.addEventListener(window, "blur", this.dismissHelp);
 			return false;
 		},
-
 		revalidate: () => {
 			this.submit();
 		}
-	}
-
-	getKeyHandlers = (shortcuts: ShortcutKeys = {}): InternalKeyHandlers => {
-		return Object.keys(shortcuts).reduce((list, keyCombo) => {
-			const shortcut = shortcuts[keyCombo];
-			const specials: any = {
-				alt: false,
-				ctrl: false,
-				shift: false,
-			};
-
-			list.push(keyCombo.split("+").reduce((keyHandler, key) => {
-				if (key in specials) {
-					(specials as any)[key] = true;
-				}
-
-				keyHandler.conditions.push(e =>
-					e.key === key || (key in specials && ((specials[key] && (e as any)[`${key}Key`]) || (!specials[key] && !(e as any)[`${key}Key`])))
-				);
-
-				return keyHandler;
-			}, {...shortcut, conditions: []} as InternalKeyHandler));
-
-			for (let special in specials) {
-				if (!(specials as any)[special]) list[list.length - 1].conditions.push(e => {
-					return !(e as any)[`${special}Key`];
-				});
-			}
-
-			return list;
-		}, [] as InternalKeyHandlers);
-	}
-
-	onKeyDown = (e: KeyboardEvent) => {
-		if (this._context.keyTimeouts) {
-			this._context.keyTimeouts.forEach(timeout => clearTimeout(timeout));
-		}
-		this._context.keyTimeouts = [];
-
-		const currentId = this.memoizedFormContext.utils.findNearestParentSchemaElemId(e.target as HTMLElement) || "";
-
-		let order = Object.keys(this._context.keyHandleListeners).filter(id => {
-			if (currentId.startsWith(id)) return true;
-			return;
-		}).sort((a, b) => {
-			return b.length - a.length;
-		});
-
-		const targets = this.keyHandlerTargets
-			.filter(({handler}) => handler.conditions.every(condition => condition(e)))
-			.map(({id}) => getKeyHandlerTargetId(id, this._context));
-		order = [...targets, ...order];
-
-		order.some(id => this._context.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
 	}
 
 	pushBlockingLoader = () => {
@@ -1121,6 +976,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		if (this.mounted && this.blockingLoaderCounter === 1) {
 			this.blockingLoaderRef.className = "laji-form blocking-loader entering";
+			this.memoizedFormContext.services.keyHandlerService.block();
 		}
 	}
 
@@ -1148,6 +1004,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					}
 				}, 200); // should match css transition time.
 			});
+			this.memoizedFormContext.services.keyHandlerService.unblock();
 		}
 	}
 

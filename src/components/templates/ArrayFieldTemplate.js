@@ -181,15 +181,13 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addKeyHandlers() {
-			const context = new Context(this.props.formContext.contextId);
 			const [keys, options] = (super.getKeyHandlers || this.getKeyHandlers).call(this, this.props);
 			this.arrayKeyFunctions = keys;
-			context.addKeyHandler(this.props.idSchema.$id, keys, options);
+			this.props.formContext.services.keyHandlerService.addKeyHandler(this.props.idSchema.$id, keys, options);
 		}
 
 		removeKeyHandlers(props) {
-			const context = new Context(props.formContext.contextId);
-			context.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
+			this.props.formContext.services.keyHandlerService.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
 		}
 
 		getKeyHandlers(props) {
@@ -200,17 +198,15 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addChildKeyHandlers(props) {
-			const context = new Context(props.formContext.contextId);
 			this.childKeyHandlers = (super.getChildKeyHandlers || this.getChildKeyHandlers).call(this, props);
 			this.childKeyHandlers.forEach(handler => {
-				context.addKeyHandler(...handler);
+				this.props.formContext.services.keyHandlerService.addKeyHandler(...handler);
 			});
 		}
 
-		removeChildKeyHandlers(props) {
-			const context = new Context(props.formContext.contextId);
+		removeChildKeyHandlers() {
 			this.childKeyHandlers.forEach(handler => {
-				context.removeKeyHandler(...handler);
+				this.props.formContext.services.keyHandlerService.removeKeyHandler(...handler);
 			});
 		}
 

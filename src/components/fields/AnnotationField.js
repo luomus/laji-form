@@ -262,13 +262,12 @@ class AnnotationBox extends React.Component {
 
 	getUiSchema = () => {
 		const {uiSchema} = this.props;
-		const mainContext = new Context(this.props.contextId);
 		const {metadataForm = {}} = this.state;
 		return uiSchema || {
 			...metadataForm.uiSchema, 
 			"ui:shortcuts": {
 				...((metadataForm.uiSchema || {})["ui:shorcuts"] || {}),
-				...(mainContext.shortcuts || {})
+				...(this.props.formContext.services.keyHandlerService.shortcuts)
 			},
 			"ui:showShortcutsButton": false
 		};

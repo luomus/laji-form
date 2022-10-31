@@ -376,7 +376,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const uiSchema = isOpen ? {
 				...metadataForm.uiSchema,
-				"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...(this.mainContext.shortcuts || {})},
+				"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...this.props.formContext.services.keyHandlerService.shortcuts},
 				"ui:disabled": this.props.disabled,
 				"ui:readonly": this.props.readonly,
 			} : undefined;

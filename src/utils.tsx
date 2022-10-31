@@ -8,7 +8,7 @@ import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
 import Form from "@rjsf/core";
 import { UiSchema, RJSFSchema } from "@rjsf/utils";
-import { FormContext, RootContext, KeyFunctions, InternalKeyHandler, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
+import { FormContext, RootContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
 import rjsfValidator from "@rjsf/validator-ajv6";
 
 export const isObject = _isObject;
@@ -556,47 +556,6 @@ export function getKeyHandlerTargetId(target = "", context: RootContext, formDat
 		target = target.replace(`%{${path}}`, eval(path));
 	}
 	return target;
-}
-
-export function handleKeysWith(context: RootContext, id: string, keyFunctions: KeyFunctions = {}, e: KeyboardEvent, additionalParams: any = {}) {
-	if (context.blockingLoaderCounter > 0 &&
-			!isDescendant(document.querySelector(".pass-block"), e.target as HTMLElement)) {
-		e.preventDefault();
-		return;
-	}
-
-	if (isDescendant(document.querySelector(".laji-map"), e.target as HTMLElement)) return;
-
-	function handleKey(keyHandler: InternalKeyHandler) {
-		const returnValue = keyFunctions[keyHandler.fn](e, {...keyHandler, ...additionalParams});
-		const eventHandled = returnValue !== undefined ? returnValue : true;
-		if (eventHandled) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		return eventHandled;
-	}
-
-	const highPriorityHandled = context.keyHandlers.some(keyHandler => {
-		let target = getKeyHandlerTargetId(keyHandler.target, context);
-		if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
-			if (!handleKey(keyHandler)) {
-				e.preventDefault();
-				e.stopPropagation();
-			}
-			return true;
-		}
-		return false;
-	});
-
-	if (highPriorityHandled) return highPriorityHandled;
-
-	return context.keyHandlers.some(keyHandler => {
-		if (keyFunctions[keyHandler.fn] && keyHandler.conditions.every(condition => condition(e))) {
-			return handleKey(keyHandler);
-		}
-		return false;
-	});
 }
 
 export function capitalizeFirstLetter(string: string) {

@@ -1146,7 +1146,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	componentDidMount() {
 		if (super.componentDidMount) super.componentDidMount();
 		this.setState({mounted: true});
-		this.getContext().addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+		this.props.formContext.services.keyHandlerService.addKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		this.map = this.refs.map.refs.map.map;
 		this._setActiveEventHandler = idx => {
 			this.setState({activeIdx: idx});
@@ -1179,7 +1179,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 
 	componentWillUnmount() {
 		this.setState({mounted: false});
-		this.getContext().removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
+		this.props.formContext.services.keyHandlerService.removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
 		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
