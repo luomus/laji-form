@@ -306,6 +306,7 @@ export class Form {
 			isNonsuggested = () => isDisplayed(form.$locate(lajiFormLocator).$(".glyphicon-warning-sign"));
 			$powerUserButton = $(".power-user-addon");
 			powerUserButtonIsActive = async () => (await this.$powerUserButton.getAttribute("class")).includes("active");
+			waitForPopoverToHide = () => browser.wait(EC.invisibilityOf(form.$locate(lajiFormLocator).$(".popover-content")), 5000, "Popover didn't hide") as Promise<void>;
 		}
 	getTaxonAutosuggestWidget = this._getTaxonAutosuggestWidget(this);
 
@@ -346,6 +347,7 @@ export interface TaxonAutosuggestWidgetPOI {
 	isNonsuggested: () => Promise<boolean>;
 	$powerUserButton: ElementFinder;
 	powerUserButtonIsActive: () => Promise<boolean>;
+	waitForPopoverToHide: () => Promise<void>;
 }
 
 export interface UnitListShorthandArrayFieldPOI {

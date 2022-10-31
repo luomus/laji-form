@@ -124,7 +124,7 @@ export default class CheckboxWidget extends React.Component {
 
 		const checkbox = (
 			<ButtonToolbar className={classNames(toggleMode && "desktop-layout")}>
-				<ToggleButtonGroup ref={this.groupRef} type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange} onKeyDown={this.onGroupKeyDown} className={classNames(toggleMode && tabTargetClass)}  {...commonProps}>
+				<ToggleButtonGroup ref={this.groupRef} type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange} onKeyDown={this.onGroupKeyDown} className={classNames(toggleMode && tabTargetClass)}  {...commonProps} tabIndex={(toggleMode && !_disabled) ? 0 : undefined} >
 					<ToggleButton ref={this.trueRef} value={true} onClick={toggleMode ? this.toggle : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label", !toggleMode && tabTargetClass)} onKeyDown={this.onTrueKeyDown} {...commonProps}>{trueLabel}</ToggleButton>
 					<ToggleButton ref={this.falseRef} value={false} onClick={toggleMode ? this.toggle : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")} onKeyDown={this.onFalseKeyDown} {...commonProps}>{falseLabel}</ToggleButton>
 					{(displayUndefined ? <ToggleButton ref={this.undefinedRef} value={"undefined"} {...commonProps} onKeyDown={this.onUndefinedKeyDown}>{unknownLabel}</ToggleButton> : null)}

@@ -48,6 +48,7 @@ describe("Bird point count (MHL.75)", () => {
 			key: "MX.36237",
 			value: "peippo",
 		}]);
+		await taxonAutosuggest1.waitForPopoverToHide();
 
 		await $addUnit.click();
 		await updateValue(taxonAutosuggest2.$input, "mustarastas");
@@ -56,6 +57,7 @@ describe("Bird point count (MHL.75)", () => {
 			key: "MX.33106",
 			value: "mustarastas",
 		}]);
+		await taxonAutosuggest2.waitForPopoverToHide();
 
 		await mockQueue.remove();
 
