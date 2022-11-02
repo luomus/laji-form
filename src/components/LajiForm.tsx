@@ -18,6 +18,7 @@ import ApiClient, { ApiClientImplementation } from "../ApiClient";
 import InstanceContext from "../Context";
 import * as translations from "../translations.json";
 import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service";
+import SettingsService, { Settings } from "../services/settings-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -141,7 +142,7 @@ function getNewId() {
 	return _id;
 }
 
-export interface LajiFormProps  extends HasMaybeChildren {
+export interface LajiFormProps extends HasMaybeChildren {
 	apiClient?: ApiClientImplementation;
 	lang?: Lang;
 	formData?: any;
@@ -195,7 +196,6 @@ export interface FormContext {
 	translations: ByLang;
 	lang: Lang;
 	uiSchemaContext: any;
-	settings: any;
 	getFormRef: () => Form<any>
 	topOffset: number;
 	bottomOffset: number;
@@ -214,7 +214,8 @@ export interface FormContext {
 	setTimeout: (fn: () => void, time: number) => void;
 	utils: ReactUtilsType;
 	services: {
-		keyHandlerService: KeyHandlerService
+		keyHandlerService: KeyHandlerService,
+		settingsService: SettingsService
 	}
 }
 
@@ -262,9 +263,6 @@ export interface RootContext {
 	blockingLoaderCounter: number;
 	pushBlockingLoader: () => void; 
 	popBlockingLoader: () => void;
-	addSettingSaver: (key: string, fn: () => void, global?: boolean) => void;
-	removeSettingSaver: (key: string, global?: boolean) => void;
-	onSettingsChange: (global?: boolean) => void;
 	addFocusHandler: (id: string, fn: FocusHandler) => void;
 	removeFocusHandler: (id: string, fn: FocusHandler) => void;
 	setTimeout: (fn: () => void, timer: number) => void;
@@ -296,8 +294,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	_context: RootContext;
 	propagateSubmit = true;
 	blockingLoaderCounter = 0;
-	settingSavers: {[key: string]: () => void} = {};
-	globalSettingSavers: {[key: string]: () => void} = {} as any;
 	errorClickHandler = (id: string) => {
 		const idParts = id.split("_");
 
@@ -392,16 +388,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
-
-		this._context.addSettingSaver = (key: string, fn: () => void, global = false) => {
-			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
-			settingSavers[key] = fn;
-		};
-		this._context.removeSettingSaver = (key: string, global = false) => {
-			const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
-			delete settingSavers[key];
-		};
-		this._context.onSettingsChange = this.onSettingsChange;
 
 		this._context.addFocusHandler = (id: string, fn: FocusHandler) => {
 			if (!this.focusHandlers[id]) this.focusHandlers[id] = [];
@@ -521,7 +507,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	getMemoizedFormContext(props: LajiFormProps): FormContext {
-		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext", "settings"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
 		}, {} as Record<keyof LajiFormProps, any>);
@@ -529,17 +515,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			return this.memoizedFormContext;
 		} else {
 			this.contextFormMemoizeKey = nextKey;
+			const {services} = this.memoizedFormContext || {};
 			this.memoizedFormContext = {
 				...props.formContext,
 				translations: this.translations[props.lang as Lang],
 				lang: props.lang,
 				uiSchemaContext: props.uiSchemaContext,
-				settings: JSON.parse(JSON.stringify((
-					this.state && this.state.formContext
-						? this.state.formContext.settings
-						: props.settings
-				) || {}
-				)),
 				getFormRef: this.getFormRef,
 				topOffset: props.topOffset || 0,
 				bottomOffset: props.bottomOffset || 0,
@@ -556,7 +537,14 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				services: {}
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
-			this.memoizedFormContext.services.keyHandlerService = new KeyHandlerService(this.memoizedFormContext);
+			if (services) {
+				this.memoizedFormContext.services = services;
+				services.keyHandlerService.setFormContext(this.memoizedFormContext);
+				services.settingsService.setSettings(props.settings);
+			} else {
+				this.memoizedFormContext.services.keyHandlerService = new KeyHandlerService(this.memoizedFormContext);
+				this.memoizedFormContext.services.settingsService = new SettingsService(this.onSettingsChange, props.settings);
+			}
 			return this.memoizedFormContext;
 		}
 	}
@@ -1008,27 +996,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 	}
 
-	getSettings = (global = false) => {
-		const settingSavers = global ? this.globalSettingSavers : this.settingSavers;
-		return Object.keys(settingSavers).reduce((settings, key) => {
-			try {
-				return {...settings, [key]: settingSavers[key]()};
-			} catch (e) {
-				// Swallow failing settings parsing.
-			}
-			return settings;
-		}, this.props.settings || {});
+	getSettings(global = false) {
+		return this.memoizedFormContext.services.settingsService.getSettings(global);
 	}
 
-	onSettingsChange = (global = false) => {
-		const settings = this.getSettings(global);
-		if (!equals(this.state.formContext.settings, settings)) {
-			// setTimeout because we wait for a possible formData onChange event to bubble, which would be lost otherwise.
-			setTimeout(() => {
-				this.setState({formContext: {...this.state.formContext, settings: JSON.parse(JSON.stringify(settings))}});
-			});
-			if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
-		}
+	onSettingsChange = (settings: Settings, global = false) => {
+		if (this.props.onSettingsChange) this.props.onSettingsChange(settings, global);
 	}
 
 	addEventListener = (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => {

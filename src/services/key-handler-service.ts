@@ -18,7 +18,19 @@ export interface InternalKeyHandler extends ShortcutKey {
 type InternalKeyHandlers = InternalKeyHandler[];
 type InternalKeyHandlerTargets = {id: string, handler: InternalKeyHandler}[];
 
+/**
+ *
+ * A service for adding key listeners. Key events are handled in a custom event handling system, which allows many useful
+ * features like listening to DOM document root, fine grained control over the order of event bubbling etc and passing any
+ * needed data to the event handler.
+ *
+ * When initialized, it adds a global keydown listener to the document which handles the LajiForm key shortcuts defined in
+ * uiSchema["ui:shortcuts"].
+ *
+ **/
 export default class KeyhandlerService {
+	public shortcuts: ShortcutKeys = {};
+
 	private keyHandlers: InternalKeyHandlers;
 	private keyHandlerTargets: InternalKeyHandlerTargets;
 	private keyHandleListeners: {[id: string]: KeyHandleListener[]} = {};
@@ -27,7 +39,6 @@ export default class KeyhandlerService {
 	private formContext: FormContext;
 	private globalEventsRootHandler: {[eventName: string]: React.EventHandler<any>} = {};
 	private globalEventHandlers: {[name: string]: React.EventHandler<any>[]} = {};
-	public shortcuts: ShortcutKeys = {};
 
 	constructor(formContext: FormContext) {
 		this.formContext = formContext;
@@ -55,7 +66,6 @@ export default class KeyhandlerService {
 		this.keyHandleIdFunctions = [];
 
 		this.keyHandlers = this.getKeyHandlers(shortcuts);
-		this.keyHandlers = this.keyHandlers;
 		this.addKeyHandler("root", keyFunctions);
 		this.keyHandlerTargets = this.keyHandlers.reduce((targets, handler) => {
 			if (typeof handler.target === "string") targets.push({id: handler.target, handler});
@@ -63,6 +73,10 @@ export default class KeyhandlerService {
 		}, [] as InternalKeyHandlerTargets);
 
 		this.shortcuts = shortcuts;
+	}
+
+	setFormContext(formContext: FormContext) {
+		this.formContext = formContext;
 	}
 
 	getKeyHandlers(shortcuts: ShortcutKeys = {}): InternalKeyHandlers {
@@ -139,6 +153,9 @@ export default class KeyhandlerService {
 		order.some(id => this.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
 	}
 
+	/**
+	 * Global event handlers are listened for the whole DOM document. React can't listen to events on document level, hence this is useful.
+	 **/
 	addGlobalEventHandler(name: string, fn: React.EventHandler<any>) {
 		if (!this.globalEventHandlers[name]) {
 			this.globalEventsRootHandler[name] = e => {
