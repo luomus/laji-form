@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, capitalizeFirstLetter, stringifyKeyCombo, scrollIntoViewIfNeeded, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
+import { focusNextInput, capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
@@ -19,6 +19,7 @@ import InstanceContext from "../Context";
 import * as translations from "../translations.json";
 import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service";
 import SettingsService, { Settings } from "../services/settings-service";
+import FocusService from "../services/focus-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -215,13 +216,13 @@ export interface FormContext {
 	utils: ReactUtilsType;
 	services: {
 		keyHandlerService: KeyHandlerService,
-		settingsService: SettingsService
+		settingsService: SettingsService,
+		focusService: FocusService
 	}
 }
 
 export type Lang = "fi" | "en" | "sv";
 
-type FocusHandler = () => Promise<void> | void;
 type CustomEventListener = (data?: any, callback?: () => void) => boolean | void;
 
 export interface SubmitHook {
@@ -263,8 +264,6 @@ export interface RootContext {
 	blockingLoaderCounter: number;
 	pushBlockingLoader: () => void; 
 	popBlockingLoader: () => void;
-	addFocusHandler: (id: string, fn: FocusHandler) => void;
-	removeFocusHandler: (id: string, fn: FocusHandler) => void;
 	setTimeout: (fn: () => void, timer: number) => void;
 	addEventListener: (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => void;
 	addCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
@@ -294,34 +293,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	_context: RootContext;
 	propagateSubmit = true;
 	blockingLoaderCounter = 0;
-	errorClickHandler = (id: string) => {
-		const idParts = id.split("_");
-
-		// Some components focus asynchronously (due to state changes etc), so we reduce
-		// the focus handlers to a promise chain.
-		let _id = "";
-		idParts.reduce((promise, idPart) => {
-			return promise.then(() => {
-				_id = _id ? `${_id}_${idPart}` : idPart;
-				return (this.focusHandlers[_id] || []).reduce((_promise, fn) => {
-					const status = fn(); // Either undefined or a Promise.
-					return status && status.then ? status : Promise.resolve();
-				}, Promise.resolve());
-			});
-		}, Promise.resolve()).then(() => {
-			const container = this.memoizedFormContext.utils.getSchemaElementById(id);
-			const elem = container || document.querySelector(`#laji-form-error-container-${id}`);
-			const input = document.querySelector(`#${id}`) as HTMLInputElement;
-
-			if (elem) scrollIntoViewIfNeeded(elem, this.props.topOffset, this.props.bottomOffset);
-			if (input && input.focus) input.focus();
-
-			if (!elem) return;
-
-			highlightElem(elem);
-		});
-	};
-	focusHandlers: {[id: string]: FocusHandler[]} = {};
 	customEventListeners: {[eventName: string]: {[id: string]: CustomEventListener[]}} = {};
 	ids: {[id: string]: ((id: string) => void)[]} = {};
 	// First call returns id, next call (and only the very next) reserves the id until it is released.
@@ -388,18 +359,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
 		this._context.pushBlockingLoader = this.pushBlockingLoader;
 		this._context.popBlockingLoader = this.popBlockingLoader;
-
-		this._context.addFocusHandler = (id: string, fn: FocusHandler) => {
-			if (!this.focusHandlers[id]) this.focusHandlers[id] = [];
-			this.focusHandlers[id].push(fn);
-		};
-		this._context.removeFocusHandler = (id: string, fn: FocusHandler) => {
-			if (!this.focusHandlers[id]) {
-				console.warn(`laji-form warning: removing focus handler that isn't registered for id ${id}.`);
-				return;
-			}
-			this.focusHandlers[id] = this.focusHandlers[id].filter(_fn => fn !== _fn);
-		};
 
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
@@ -540,10 +499,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			if (services) {
 				this.memoizedFormContext.services = services;
 				services.keyHandlerService.setFormContext(this.memoizedFormContext);
+				services.focusService.setFormContext(this.memoizedFormContext);
 				services.settingsService.setSettings(props.settings);
 			} else {
 				this.memoizedFormContext.services.keyHandlerService = new KeyHandlerService(this.memoizedFormContext);
 				this.memoizedFormContext.services.settingsService = new SettingsService(this.onSettingsChange, props.settings);
+				this.memoizedFormContext.services.focusService = new FocusService(this.memoizedFormContext);
+
 			}
 			return this.memoizedFormContext;
 		}
@@ -684,7 +646,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 											   uiSchema={this.props.uiSchema}
 											   context={this._context}
 											   formContext={this.state.formContext}
-											   errorClickHandler={this.errorClickHandler}
+											   errorClickHandler={this.memoizedFormContext.services.focusService.focus}
 											   tmpIdTree={this.tmpIdTree}
 											   ref={this.bgJobRef}
 					/>

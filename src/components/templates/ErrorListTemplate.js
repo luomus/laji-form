@@ -39,9 +39,8 @@ export default class ErrorListTemplate extends React.Component {
 	render() {
 		const {errorSchema, schema, formContext, uiSchema} = this.props;
 		const {"ui:disabled": disabled, "ui:readonly": readonly} = uiSchema;
-		const {contextId, translations} = formContext;
-		const that = new Context(contextId).formInstance;
-		const clickHandler = that.errorClickHandler;
+		const {translations} = formContext;
+		const clickHandler = formContext.services.focusService.focus;
 
 		function walkErrors(path, id, errorSchema) {
 			const {__errors, ...properties} = errorSchema;

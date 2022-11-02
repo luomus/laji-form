@@ -372,13 +372,13 @@ function handlesButtonsAndFocus(ComposedComponent) {
 		addFocusHandlers() {
 			this.focusHandlers = this.getFocusHandlers(this.props);
 			this.focusHandlers.forEach(handler => {
-				new Context(this.props.formContext.contextId).addFocusHandler(...handler);
+				this.props.formContext.services.focusService.addFocusHandler(...handler);
 			});
 		}
 
 		removeFocusHandlers() {
 			this.focusHandlers.forEach(handler => {
-				new Context(this.props.formContext.contextId).removeFocusHandler(...handler);
+				this.props.formContext.services.focusService.removeFocusHandler(...handler);
 			});
 		}
 

@@ -20,12 +20,12 @@ class SelectWidget extends React.Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		this._context.addFocusHandler(this.props.id, this.onFocus);
+		this.props.formContext.services.focusService.addFocusHandler(this.props.id, this.onFocus);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		this._context.removeFocusHandler(this.props.id, this.onFocus);
+		this.props.formContext.services.focusService.removeFocusHandler(this.props.id, this.onFocus);
 	}
 
 	UNSAFE_componentWillReceiveProps(props) {
