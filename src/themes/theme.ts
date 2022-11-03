@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export type Variant = "primary" | "secondary" | "danger" | "warning" | "info" | string;
+export type Variant = "default" | "primary" | "success" | "info" | "warning" | "danger"| string;
 export type ButtonVariant = Variant | "link";
 
 export interface HasMaybeChildren {
@@ -31,6 +31,7 @@ export type Panel = React.ComponentType<PanelProps> & {
     Body: React.ComponentType;
     Heading: React.ComponentType;
     Collapse: React.ComponentType;
+    Footer: React.ComponentType;
 }
 
 export interface TableProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -68,7 +69,7 @@ export interface OverlayProps extends JSX.IntrinsicAttributes {
 	container?: React.Component;
 }
 
-export interface OverlayTriggerProps extends HasMaybeRef, OverlayProps {
+export interface OverlayTriggerProps extends OverlayProps {
 	overlay: any;
 	key?: string | number | undefined;
 }
@@ -82,7 +83,7 @@ export interface TooltipProps extends JSX.IntrinsicAttributes, HasMaybeChildren 
 	id?: string;
 }
 
-type Glyph = "ok" | "refresh" | "warning-sign" | "plus" | "camera" | "headphones" | "user" | "flash" | "menu-hamburger";
+export type Glyph = "ok" | "refresh" | "warning-sign" | "plus" | "camera" | "headphones" | "user" | "flash" | "menu-hamburger" | "chevron-up" | "chevron-down" | "new-window" | string;
 
 export interface GlyphiconProps extends JSX.IntrinsicAttributes, HasMaybeStyle, HasMaybeClassName {
 	glyph: Glyph | string;
@@ -109,7 +110,7 @@ export type Modal = React.ComponentType<ModalProps> & {
     Footer: React.ComponentType;
 }
 
-export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
+export interface ColProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren, HasMaybeClassName {
 	xs?: number;
 	sm?: number;
 	md?: number;
@@ -127,6 +128,7 @@ export interface FormGroupProps extends JSX.IntrinsicAttributes, HasMaybeClassNa
 
 export type InputGroup = React.ComponentType<any> & {
 	Addon: React.ComponentType<InputGroupAddon>;
+	Button: React.ComponentType<InputGroupButton>;
 }
 
 export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildren, HasMaybeClassName {
@@ -135,13 +137,15 @@ export interface InputGroupAddon extends JSX.IntrinsicAttributes, HasMaybeChildr
 	onMouseDown?: React.MouseEventHandler<any>;
 }
 
-export interface FormControlProps extends React.HTMLProps<any> {
+export type InputGroupButton = JSX.IntrinsicAttributes & HasMaybeChildren & HasMaybeClassName;
+
+export interface FormControlProps extends React.HTMLProps<any>, HasMaybeRef {
 	type?: HTMLInputElement["type"];
 	readOnly?: boolean;
 	validationState?: ValidationState;
 }
 
-export interface ListGroupProps extends JSX.IntrinsicAttributes {
+export interface ListGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef {
 	fill?: boolean;
 }
 
@@ -232,7 +236,7 @@ export interface ToggleButtonProps extends JSX.IntrinsicAttributes, HasMaybeClas
 	value?: any;
 }
 
-export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeChildren {
+export interface ToggleButtonGroupProps extends JSX.IntrinsicAttributes, HasMaybeRef, HasMaybeChildren {
 	type: "radio" | "checkbox";
 	name?: string;
 	defaultValue?: boolean;

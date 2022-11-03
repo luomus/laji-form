@@ -1,5 +1,17 @@
 import * as React from "react";
-import { Theme, Panel, ButtonProps, OverlayTriggerProps, Modal, InputGroup, Breadcrumb, Pager, Dropdown, CheckboxProps } from "./theme";
+import {
+	Theme,
+	Panel,
+	ButtonProps,
+	OverlayTriggerProps,
+	Modal,
+	InputGroup,
+	Breadcrumb,
+	Pager,
+	Dropdown,
+	CheckboxProps,
+	ToggleButtonGroupProps
+} from "./theme";
 
 const Stub = ({children}: {children: React.ReactNode}) => {
 	console.error("You should define a theme prop for LajiForm. Using stub theme, the form will render but many components won't work as expected and will result in many React warnings.");
@@ -21,6 +33,7 @@ Modal.Title = DivStub;
 
 const InputGroup: InputGroup = DivStub as unknown as InputGroup;
 InputGroup.Addon = DivStub;
+InputGroup.Button = DivStub;
 
 const Breadcrumb: Breadcrumb = DivStub as unknown as Breadcrumb;
 Breadcrumb.Item = DivStub;
@@ -63,6 +76,6 @@ const theme: Theme = {
 	ControlLabel: DivStub,
 	Checkbox: (props: CheckboxProps) => <input type="checkbox" {...props} />,
 	ToggleButton: DivStub,
-	ToggleButtonGroup: DivStub
+	ToggleButtonGroup: React.forwardRef<HTMLInputElement, ToggleButtonGroupProps>(({defaultValue, ...props}, ref) => <input defaultChecked={defaultValue} {...props} ref={ref} />)
 };
 export default theme;

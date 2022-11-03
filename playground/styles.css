@@ -1664,3 +1664,22 @@ min-height: 20px;
 .laji-form legend.has-help div {
 	display: initial;
 }
+
+/* Styles related to bs5 theme */
+.laji-form .pull-right {
+	float: right !important;
+}
+.laji-form .laji-form-error-list {
+	background-color: white;
+}
+.laji-form .laji-form-error-list .card {
+	border: none;
+}
+.laji-form .card .card-header .panel-title {
+	line-height: 26px;
+	font-size: 16px;
+	font-weight: 500;
+}
+.laji-form .glyph-button > .svg-inline--fa {
+	font-size: initial;
+}
