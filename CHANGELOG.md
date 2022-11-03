@@ -1,3 +1,6 @@
+## 14.1.0
+* Add bootstrap 5 theme
+
 ## 14.0.0
 ### BREAKING CHANGES:
 * `react-jsonschema-form` updated to version `5`. Read more: https://react-jsonschema-form.readthedocs.io/en/latest/5.x%20upgrade%20guide/
