@@ -27,8 +27,8 @@ import {
 	Form,
 	ToggleButton,
 	ToggleButtonGroup
-} from "react-bootstrap-2";
-import { Variant, ButtonVariant } from "react-bootstrap-2/types";
+} from "react-bootstrap-5";
+import { Variant, ButtonVariant } from "react-bootstrap-5/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { mapping as iconMapping } from "./glyphicon-fa-mapping";
 import {
