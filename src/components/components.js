@@ -483,14 +483,14 @@ export class ErrorPanel extends React.Component {
 	collapseToggle = () => this.setState({expanded: !this.state.expanded});
 
 	render() {
-		const {errors, title, clickHandler, poppedToggle, showToggle, classNames} = this.props;
+		const {errors, title, clickHandler, poppedToggle, showToggle, classNames, footer} = this.props;
 
 		if (errors.length === 0) return null;
 
 		const {Panel, ListGroup} = this.context.theme;
 
 		return (
-			<Panel collapsible="true" expanded={this.state.expanded} onToggle={this.collapseToggle} className={classNames}>
+			<Panel collapsible="true" onToggle={this.collapseToggle} className={classNames}>
 				<Panel.Heading>
 					   <div className="laji-form-clickable-panel-header" onClick={this.collapseToggle}>
 						   <div className="panel-title">
@@ -502,11 +502,18 @@ export class ErrorPanel extends React.Component {
 						   </div>
 					   </div>
 				</Panel.Heading>
-				<Panel.Collapse>
+				<Panel.Collapse in={this.state.expanded}>
 					<ListGroup>
 						{errors.map((props, i) => <ErrorPanelError key={i} clickHandler={clickHandler} {...props} />)}
 					</ListGroup>
 				</Panel.Collapse>
+				{footer
+					? (
+						<Panel.Footer>
+							{footer}
+						</Panel.Footer>
+					)
+					: null}
 			</Panel>
 		);
 	}
@@ -533,20 +540,34 @@ function NullTooltip() {
 // Tooltip component that doesn't show tooltip for empty/undefined tooltip.
 export class TooltipComponent extends React.Component {
 	static contextType = ReactContext;
-	setOverlayRef = (elem) => {
-		this.overlayElem = elem;
+
+	constructor(props) {
+		super(props);
+		this.state = {show: false};
 	}
-	onMouseOver = () => this.overlayElem.show();
-	onMouseOut = () => this.overlayElem.hide();
+
+	onMouseOver = () => {
+		this.setState({show: true});
+	}
+
+	onMouseOut = () => {
+		this.setState({show: false});
+	}
 
 	render() {
 		const {tooltip, children, id, placement, trigger, className} = this.props;
 
 		const {OverlayTrigger, Tooltip} = this.context.theme;
 		const overlay = (
-			<OverlayTrigger ref={this.setOverlayRef} placement={placement} trigger={trigger === "hover" ? [] : trigger} key={`${id}-overlay`} overlay={
-				(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
-			}>
+			<OverlayTrigger
+				show={this.state.show}
+				placement={placement}
+				trigger={trigger === "hover" ? [] : trigger}
+				key={`${id}-overlay`}
+				overlay={
+					(tooltip) ? <Tooltip id={`${id}-tooltip`} className={`${className}`}>{React.isValidElement(tooltip) ? tooltip : <span dangerouslySetInnerHTML={{__html: tooltip}} />}</Tooltip> : <NullTooltip />
+				}
+			>
 				{children}
 			</OverlayTrigger>
 		);
@@ -601,14 +622,21 @@ const FetcherInputDefaultInput = React.forwardRef((props, ref) => {
 // OverlayTrigger that is hoverable if hoverable === true
 export class OverlayTrigger extends React.Component {
 	static contextType = ReactContext;
-	
-	setOverlayTriggerRef = elem => {
-		this.overlayTriggerRef = elem;
-	};
+
+	constructor(props) {
+		super(props);
+		this.state = {show: false};
+	}
+
+	componentWillUnmount() {
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
+	}
 
 	overlayTriggerMouseOver = () => {
 		this.overlayTriggerMouseIn = true;
-		this.overlayTriggerRef.show();
+		this.setState({show: true});
 	};
 
 	overlayTriggerMouseOut = () => {
@@ -617,7 +645,9 @@ export class OverlayTrigger extends React.Component {
 			clearTimeout(this.overlayTimeout);
 		}
 		this.overlayTimeout = this.context.setTimeout(() => {
-			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
+			if (!this.popoverMouseIn && !this.overlayTriggerMouseIn) {
+				this.setState({show: false});
+			}
 		}, 200);
 	};
 
@@ -631,7 +661,9 @@ export class OverlayTrigger extends React.Component {
 			clearTimeout(this.overlayTimeout);
 		}
 		this.overlayTimeout = this.context.setTimeout(() => {
-			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn && this.overlayTriggerRef) this.overlayTriggerRef.hide();
+			if (!this.overlayMouseIn && !this.overlayTriggerMouseIn) {
+				this.setState({show: false});
+			}
 		}, 200);
 	}
 
@@ -654,12 +686,14 @@ export class OverlayTrigger extends React.Component {
 
 		return (
 			<div onMouseOver={this.overlayTriggerMouseOver} onMouseOut={this.overlayTriggerMouseOut}>
-				<OverlayTrigger {...props}
-				                delay={1}
-				                trigger={[]} 
-				                placement={this.props.placement || "top"}
-				                ref={this.setOverlayTriggerRef}
-				                overlay={_overlay}>
+				<OverlayTrigger
+					{...props}
+					delay={1}
+					trigger={[]}
+					placement={this.props.placement || "top"}
+					overlay={_overlay}
+					show={this.state.show}
+				>
 					{children}
 				</OverlayTrigger>
 			</div>
@@ -722,7 +756,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 
 		if (!jobs.length) return null;
 
-		const {Glyphicon} = this.context.theme;
+		const {Glyphicon, Panel} = this.context.theme;
 
 		const errors = jobs.reduce((_errors, error) => {
 			const {lajiFormId, relativePointer, e, running} = error;
@@ -747,6 +781,10 @@ export class FailedBackgroundJobsPanel extends React.Component {
 
 		if (!errors.length) return null;
 
+		const footer = (
+			<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+		);
+
 		return (
 			<div className={`laji-form-error-list laji-form-failed-jobs-list${this.state.popped ? " laji-form-popped" : ""}`}
 			     style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null} >
@@ -757,10 +795,8 @@ export class FailedBackgroundJobsPanel extends React.Component {
 					poppedToggle={this.poppedToggle}
 					clickHandler={this.props.errorClickHandler}
 					classNames="error-panel"
+					footer={footer}
 				/>
-				<div className="panel-footer">
-					<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
-				</div>
 			</div>
 		);
 	}
