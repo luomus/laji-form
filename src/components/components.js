@@ -59,7 +59,6 @@ export class DeleteButton extends React.Component {
 		e.preventDefault();
 		e.stopPropagation();
 		this.setState({show: true}, () => {
-			this._focusConfirm = true;
 			if (this.props.confirmStyle === "browser") {
 				this.browserConfirm();
 			}
@@ -86,19 +85,15 @@ export class DeleteButton extends React.Component {
 	}
 
 	setConfirmAutofocus = (elem) => {
-		if (this._focusConfirm) {
-			setTimeout(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
-				
-				const domElem = findDOMNode(elem);
-				domElem && domElem.focus();
-				this._focusConfirm = undefined;
-			});
-		}
+		setTimeout(() => { // Without setImmediate focusing causes scroll to jump to top of page. Popover isn't positioned correctly probably right away.
+			const domElem = findDOMNode(elem);
+			domElem && domElem.focus();
+		});
 	}
 
 	render() {
 		const {props} = this;
-		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, onClick, confirmPlacement, confirmStyle, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
+		const {corner, tooltip, disabled, readonly, glyphButton = true, confirm, confirmPlacement, confirmStyle, ...maybeProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 		let buttonClassName = glyphButton ? "glyph-button" : "";
 		buttonClassName += corner ? " button-corner" : "";
 		if (props.className) {

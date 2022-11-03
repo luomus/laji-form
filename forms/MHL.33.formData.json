@@ -1,0 +1,91 @@
+{
+  "creator": "MA.308",
+  "gatheringEvent": {
+    "legPublic": false,
+    "leg": [
+      "MA.308"
+    ]
+  },
+  "formID": "MHL.33",
+  "gatherings": [
+    {
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "Point",
+            "coordinates": [
+              23.043974,
+              59.822068
+            ],
+            "radius": 38.929154887951
+          }
+        ]
+      },
+      "municipality": "",
+      "locality": "ranta",
+      "units": [
+        {
+          "identifications": [
+            {
+              "taxonID": "MX.38815",
+              "taxonVerbatim": "kurtturuusu"
+            }
+          ],
+          "unitGathering": {
+            "geometry": {
+              "type": "GeometryCollection",
+              "geometries": [
+                {
+                  "type": "Point",
+                  "coordinates": [
+                    23.044688,
+                    59.821738
+                  ]
+                },
+                {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        23.043243,
+                        59.821621
+                      ],
+                      [
+                        23.043243,
+                        59.821806
+                      ],
+                      [
+                        23.043805,
+                        59.821806
+                      ],
+                      [
+                        23.043805,
+                        59.821621
+                      ],
+                      [
+                        23.043243,
+                        59.821621
+                      ]
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "invasiveControlEffectiveness": "MY.invasiveControlEffectivenessPartial",
+      "invasiveControlAreaNotKnown": false,
+      "invasiveControlMethods": [],
+      "invasiveControlOpen": true,
+      "invasiveControlDangerous": false
+    }
+  ],
+  "namedPlaceID": "MNP.28297",
+  "editors": [
+    "MA.308"
+  ],
+  "secureLevel": "MX.secureLevelNone",
+  "keywords": []
+}

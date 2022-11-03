@@ -127,7 +127,7 @@ export default class CheckboxWidget extends React.Component {
 
 		const checkbox = (
 			<ButtonToolbar className={classNames(toggleMode && "desktop-layout")}>
-				<ToggleButtonGroup ref={this.groupRef} type="radio" value={[_value]} tabIndex={(toggleMode && !disabled) ? 0 : undefined} name={this.props.id} onChange={this.onButtonGroupChange} onKeyDown={this.onGroupKeyDown} className={classNames(toggleMode && tabTargetClass)}>
+				<ToggleButtonGroup ref={this.groupRef} type="radio" value={[_value]} name={this.props.id} onChange={this.onButtonGroupChange} onKeyDown={this.onGroupKeyDown} className={classNames(toggleMode && tabTargetClass)}  {...commonProps} tabIndex={(toggleMode && !_disabled) ? 0 : undefined} >
 					<ToggleButton ref={this.trueRef} value={true} onClick={toggleMode ? this.toggle : undefined} className={classNames(toggleMode && _value === false && "laji-form-hide-btn-label", !toggleMode && tabTargetClass)} onKeyDown={this.onTrueKeyDown} {...commonProps}>{trueLabel}</ToggleButton>
 					<ToggleButton ref={this.falseRef} value={false} onClick={toggleMode ? this.toggle : undefined} className={classNames(toggleMode && _value === true && "laji-form-hide-btn-label")} onKeyDown={this.onFalseKeyDown} {...commonProps}>{falseLabel}</ToggleButton>
 					{(displayUndefined ? <ToggleButton ref={this.undefinedRef} value={"undefined"} {...commonProps} onKeyDown={this.onUndefinedKeyDown}>{unknownLabel}</ToggleButton> : null)}
@@ -155,10 +155,16 @@ export default class CheckboxWidget extends React.Component {
 	}, this.props.formContext)
 
 	onTrueKeyDown = keyboardClick(() => {
+		if (this.props.disabled || this.props.readonly) {
+			return;
+		}
 		this.onChange(true);
 	}, this.props.formContext)
 
 	onFalseKeyDown = keyboardClick(() => {
+		if (this.props.disabled || this.props.readonly) {
+			return;
+		}
 		this.onChange(false);
 	}, this.props.formContext)
 
@@ -167,6 +173,9 @@ export default class CheckboxWidget extends React.Component {
 	}, this.props.formContext)
 
 	toggle = (e) => {
+		if (this.props.disabled || this.props.readonly) {
+			return;
+		}
 		const nodes = [this.trueRef, this.falseRef, this.groupRef].map(r => findDOMNode(r.current));
 		if (!nodes.includes(e.target)) {
 			return;
