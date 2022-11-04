@@ -74,6 +74,11 @@ export default class ErrorListTemplate extends React.Component {
 
 		const {Glyphicon} = this.context.theme;
 		const {errors, warnings} = walkErrors("", "root", errorSchema);
+		const footer = (
+			errors.length > 0
+				? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
+				: <Button onClick={this.submitWithWarnings} variant={"success"} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
+		);
 		return (
 			<div className={`laji-form-error-list${this.state.popped ? " laji-form-popped" : ""}${errors.length === 0 ? " laji-form-warning-list" : ""}`}
 				 style={this.state.popped ? {top: (this.props.formContext.topOffset || 0) + 5} : null}>
@@ -83,22 +88,16 @@ export default class ErrorListTemplate extends React.Component {
 				            title={translations.Errors}
 				            clickHandler={clickHandler}
 				            showToggle={true}
-				            poppedToggle={this.poppedToggle}/>
+				            poppedToggle={this.poppedToggle}
+				            footer={footer} />
 				<ErrorPanel classNames="warning-panel"
 				            ref="warningPanel"
 				            errors={warnings}
 				            title={translations.Warnings}
 				            clickHandler={clickHandler}
 				            showToggle={errors.length === 0}
-				            poppedToggle={this.poppedToggle}/>
-				<div className="panel-footer">
-					<div>
-						{errors.length > 0
-							? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
-							: <Button onClick={this.submitWithWarnings} variant={"success"} disabled={disabled || readonly}>{translations.SubmitWithWarnings}</Button>
-						}
-					</div>
-				</div>
+				            poppedToggle={this.poppedToggle}
+				            footer={footer} />
 			</div>
 		);
 	}

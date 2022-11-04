@@ -68,12 +68,31 @@ Pass the implementation to LajiForm like so:
 
 ## Themes ##
 
+### Bootstrap 3
 LajiForm provides bootstrap 3 theme. To use it, you need to install `react-bootstrap@0.33.1` and provide the built-in bootstrap 3 theme it as a prop:
 
 ```
 import bs3 from "laji-form/lib/themes/bs3";
 
 <LajiForm theme={bs3} ... />
+```
+
+### Bootstrap 5
+
+To use bootstrap 5 theme, you need to install following packages:
+```
+npm install --save react-bootstrap-5@npm:react-bootstrap@2.5.0
+mpn install --save @fortawesome/fontawesome-svg-core@6.2.0
+npm install --save @fortawesome/free-solid-svg-icons@6.2.0
+npm install --save @fortawesome/react-fontawesome@0.2.0
+```
+
+Then it can be used by providing the theme to the form:
+
+```
+import bs5 from "laji-form/lib/themes/bs5";
+
+<LajiForm theme={bs5} ... />
 ```
 
 You can also use a custom theme and provide it the same way. There is a theme interface `themes/theme.ts` which the theme must implement.
