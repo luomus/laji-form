@@ -1685,25 +1685,25 @@ min-height: 20px;
 }
 
 
-.input-group .input-group-text {
+.laji-form .input-group .input-group-text {
 	height: 25px;
 	font-size: 13px;
 	border-radius: 2px;
 }
-.input-group > :not(:last-child) {
+.laji-form .input-group > :not(:last-child) {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
-.input-group > :not(:first-child) {
+.laji-form .input-group > :not(:first-child) {
 	border-top-left-radius: 0 !important;
 	border-bottom-left-radius: 0 !important;
 }
-.input-group .input-group-addon {
+.laji-form .input-group .input-group-addon {
 	padding: 0 !important;
 }
-.input-group.input-group-widget {
+.laji-form .input-group.input-group-widget {
 	width: 100%;
 }
-.input-group.multi-lang-input-group .input-group-text {
+.laji-form .input-group.multi-lang-input-group .input-group-text {
 	width: 40px;
 }
