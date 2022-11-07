@@ -73,7 +73,7 @@ describe("Validations", () => {
 		await form.submit();
 
 		expect(await form.getSubmittedData()).not.toEqual(formData);
-		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.get(0).getText()).toContain(message);
 	});
 
 	describe("warnings", () => {
@@ -84,7 +84,7 @@ describe("Validations", () => {
 			await form.submit();
 
 			expect(await form.getSubmittedData()).not.toEqual(formData);
-			expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+			expect(await form.warnings.$$all.get(0).getText()).toContain(message);
 		});
 	
 		it("can be submitted via warnings-acknowledged-submit button", async() => {
@@ -113,7 +113,7 @@ describe("Validations", () => {
 			await form.setState({ schema, formData, [propName]: validators });
 			await updateValue(form.$getInputWidget("a"), "");
 
-			expect(await (form as any)[type].$$all.get(0).getText()).toBe(message);
+			expect(await (form as any)[type].$$all.get(0).getText()).toContain(message);
 		});
 	});
 
@@ -133,7 +133,7 @@ describe("Validations", () => {
 		await updateValue(form.$getInputWidget("a"), "");
 
 		for (const type of ["errors", "warnings"]) {
-			expect(await (form as any)[type].$$all.get(0).getText()).toBe(message);
+			expect(await (form as any)[type].$$all.get(0).getText()).toContain(message);
 		}
 	});
 
@@ -146,17 +146,17 @@ describe("Validations", () => {
 		await form.submit();
 		await waitUntilBlockingLoaderHides();
 
-		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
-		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		expect(await form.warnings.$$all.get(0).getText()).toContain(message);
+		expect(await form.errors.$$all.get(0).getText()).toContain(message);
 
 		await updateValue(form.$getInputWidget("a"), "bar");
 
-		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+		expect(await form.warnings.$$all.get(0).getText()).toContain(message);
 		expect(await form.errors.$$all.count()).toBe(0);
 		await updateValue(form.$getInputWidget("a"), "");
 
 		for (const type of ["errors", "warnings"]) {
-			expect(await (form as any)[type].$$all.get(0).getText()).toBe(message);
+			expect(await (form as any)[type].$$all.get(0).getText()).toContain(message);
 		}
 	});
 
@@ -169,12 +169,12 @@ describe("Validations", () => {
 		await form.submit();
 		await waitUntilBlockingLoaderHides();
 
-		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
-		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		expect(await form.warnings.$$all.get(0).getText()).toContain(message);
+		expect(await form.errors.$$all.get(0).getText()).toContain(message);
 
 		await updateValue(form.$getInputWidget("a"), "bar");
 
-		expect(await form.warnings.$$all.get(0).getText()).toBe(message);
+		expect(await form.warnings.$$all.get(0).getText()).toContain(message);
 		expect(await form.errors.$$all.count()).toBe(0);
 
 		await updateValue(form.$getInputWidget("a"), "");
@@ -239,7 +239,7 @@ describe("Validations", () => {
 		await resolve({status: 422, json: response}, !!"raw");
 
 		expect(await form.errors.$$all.count()).toBe(1);
-		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.get(0).getText()).toContain(message);
 		await remove();
 	});
 
@@ -289,7 +289,7 @@ describe("Validations", () => {
 		await resolve({status: 422, json: response}, !!"raw");
 
 		expect(await form.errors.$$all.count()).toBe(1);
-		expect(await form.errors.$$all.get(0).getText()).toBe(message);
+		expect(await form.errors.$$all.get(0).getText()).toContain(message);
 
 		await remove();
 	});
@@ -368,7 +368,7 @@ describe("Validations", () => {
 		await waitUntilBlockingLoaderHides();
 
 		expect(await form.errors.$$all.count()).toBe(1);
-		expect(await form.errors.$$all.get(0).getText()).toBe(imageUploaded);
+		expect(await form.errors.$$all.get(0).getText()).toContain(imageUploaded);
 
 		await remove();
 		await imageRemove();
