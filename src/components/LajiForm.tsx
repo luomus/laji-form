@@ -80,6 +80,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"ToggleAdditionalArrayFieldsField",
 	"DefaultValueArrayField",
 	"UiFieldApplierField",
+	"MultiLanguageField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -104,7 +105,8 @@ const widgets = importLocalComponents<Widget>("widgets", [
 	"InformalTaxonGroupChooserWidget",
 	"TaxonImageWidget",
 	"UpperCaseWidget",
-	"NumberWidget"
+	"NumberWidget",
+	"InputGroupWidget"
 ]);
 
 const templates = importLocalComponents<TemplatesType>("templates", [
