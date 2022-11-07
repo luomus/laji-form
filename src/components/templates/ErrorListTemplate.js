@@ -43,19 +43,20 @@ export default class ErrorListTemplate extends React.Component {
 		const that = new Context(contextId).formInstance;
 		const clickHandler = that.errorClickHandler;
 
-		function walkErrors(path, id, errorSchema) {
+		function walkErrors(path, id, errorSchema, propertyName) {
 			const {__errors, ...properties} = errorSchema;
+			const _schema = parseJSONPointer(schema, path);
 			let {errors, warnings} = (__errors || []).reduce(({errors, warnings}, _error) => {
-				const _schema = parseJSONPointer(schema, path);
+				const title = _schema.title || propertyName;
 				if (_error.includes("[warning]")) {
 					warnings.push({
-						label: _schema.title,
+						label: title,
 						error: formatErrorMessage(_error),
 						id: id
 					});
 				} else {
 					errors.push({
-						label: _schema.title,
+						label: title,
 						error: formatErrorMessage(_error),
 						id: id
 					});
@@ -66,7 +67,7 @@ export default class ErrorListTemplate extends React.Component {
 				let _path = path;
 				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
 				else _path = `${_path}/properties/${prop}`;
-				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop]);
+				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop], prop);
 				errors = [...errors, ...childErrors.errors];
 				warnings = [...warnings, ...childErrors.warnings];
 			});
@@ -74,7 +75,7 @@ export default class ErrorListTemplate extends React.Component {
 		}
 
 		const {Glyphicon} = this.context.theme;
-		const {errors, warnings} = walkErrors("", "root", errorSchema);
+		const {errors, warnings} = walkErrors("", "root", errorSchema, "");
 		const footer = (
 			errors.length > 0
 				? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>
