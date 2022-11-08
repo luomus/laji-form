@@ -42,9 +42,15 @@ export default class MultiLanguageField extends React.Component {
 						idSchema={idSchema[_lang]}
 						formData={formData[_lang] || ""}
 						required={uiSchema[_lang]?.["ui:required"] || false}
+						onChange={this.onChange(_lang)}
 					/>
 				)) }
 			</React.Fragment>
 		);
+	}
+
+	onChange = (lang) => (formData) => {
+		const newFormData = {...this.props.formData, [lang]: formData};
+		this.props.onChange(newFormData);
 	}
 }
