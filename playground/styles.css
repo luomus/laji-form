@@ -1683,3 +1683,27 @@ min-height: 20px;
 .laji-form .glyph-button > .svg-inline--fa {
 	font-size: initial;
 }
+
+
+.laji-form .input-group .input-group-text {
+	height: 25px;
+	font-size: 13px;
+	border-radius: 2px;
+}
+.laji-form .input-group > :not(:last-child) {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.laji-form .input-group > :not(:first-child) {
+	border-top-left-radius: 0 !important;
+	border-bottom-left-radius: 0 !important;
+}
+.laji-form .input-group .input-group-addon {
+	padding: 0 !important;
+}
+.laji-form .input-group.input-group-widget {
+	width: 100%;
+}
+.laji-form .input-group.multi-lang-input-group .input-group-text {
+	width: 40px;
+}

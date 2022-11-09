@@ -1,0 +1,143 @@
+{
+  "schema":{
+    "type":"object",
+    "properties":{
+      "owner":{
+        "type":"string",
+        "title":"Tietueen omistaja"
+      },
+      "datasetType":{
+        "type":"string",
+        "oneOf":[
+          {
+            "const":"",
+            "title":""
+          },
+          {
+            "const":"GX.datasetTypeProject",
+            "title":""
+          }
+        ],
+        "title":"Datasetin tyyppi"
+      },
+      "datasetName":{
+        "type":"object",
+        "properties":{
+          "fi":{
+            "type":"string"
+          },
+          "sv":{
+            "type":"string"
+          },
+          "en":{
+            "type":"string"
+          }
+        },
+        "title":"Nimi"
+      },
+      "personsResponsible":{
+        "type":"string",
+        "title":"Vastuuhenkilö(t)"
+      },
+      "description":{
+        "type":"object",
+        "properties":{
+          "fi":{
+            "type":"string"
+          },
+          "sv":{
+            "type":"string"
+          },
+          "en":{
+            "type":"string"
+          }
+        },
+        "title":"Kuvaus"
+      }
+    },
+    "required":[
+      "datasetName",
+      "personsResponsible"
+    ]
+  },
+  "uiSchema":{
+    "owner":{
+      "name":"owner"
+    },
+    "datasetType":{
+      "name":"datasetType"
+    },
+    "datasetName":{
+      "name":"datasetName",
+      "validators":{
+        "properties":{
+          "en":{
+            "presence":{
+              "message":"Required field."
+            }
+          }
+        }
+      },
+      "ui:multiLanguage":true,
+      "en":{
+        "ui:required":true
+      }
+    },
+    "personsResponsible":{
+      "name":"personsResponsible"
+    },
+    "description":{
+      "name":"description",
+      "validators":{
+        "properties":{
+          "en":{
+            "presence":{
+              "message":"Required field."
+            }
+          }
+        }
+      },
+      "ui:multiLanguage":true,
+      "en":{
+        "ui:required":true
+      }
+    }
+  },
+  "excludeFromCopy":[
+
+  ],
+  "name":"Kotka - Dataset",
+  "language":"fi",
+  "title":"Kotka - Dataset",
+  "context":"dataset",
+  "id":"MHL.731",
+  "validators":{
+    "datasetName":{
+      "properties":{
+        "en":{
+          "presence":{
+            "message":"Required field."
+          }
+        }
+      }
+    },
+    "description":{
+      "properties":{
+        "en":{
+          "presence":{
+            "message":"Required field."
+          }
+        }
+      }
+    }
+  },
+  "warnings":{
+
+  },
+  "attributes":{
+    "id":"MHL.731"
+  },
+  "options":{
+
+  }
+}
