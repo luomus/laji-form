@@ -104,7 +104,9 @@ class SelectWidget extends React.Component {
 		!this.props.disabled && !this.props.readonly && this.setState({open: true});
 	}
 
-	onFocus = () => this.setState({open: true})
+	onFocus = () => this.setState({open: true});
+
+	onBlur = () => this.setState({open: false});
 
 	onSelect = (item) => {
 		this.state.open && this.props.formContext.setTimeout(() => this.mounted && this.setState({open: false, value: item.value}));
@@ -112,21 +114,20 @@ class SelectWidget extends React.Component {
 		(!this.state.value || value !== this.state.value.value) && this.props.onChange(value);
 	}
 
+	// Quelch a warning from react-widgets with noop handler.
+	onToggle = () => {}
+
 	onKeyDown = (e) => {
 		if (e.key !== "Tab") {
 			return;
 		}
 
-		const item = this.comboRef.state.focusedItem;
-		item && this.comboRef.handleSelect(item, e);
+		const item = this.elemRef.state.focusedItem;
+		item && this.elemRef.handleSelect(item, e);
 	}
 
-	onToggle = () => {
-		this.setState({open: false});
-	};
-
 	setRef = elem => {
-		this.comboRef = elem;
+		this.elemRef = elem;
 	}
 
 	getEnum = val => isEmptyString(val) ? undefined : val;
@@ -155,9 +156,10 @@ class SelectWidget extends React.Component {
 				emptyList: formContext.translations.NoResults,
 				emptyFilter: formContext.translations.NoResults
 			},
-			open: this.state.open,
 			onFocus: this.onFocus,
+			onBlur: this.onBlur,
 			onToggle: this.onToggle,
+			open: this.state.open,
 			onKeyDown: this.onKeyDown
 		};
 

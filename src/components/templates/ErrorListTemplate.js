@@ -42,19 +42,21 @@ export default class ErrorListTemplate extends React.Component {
 		const {translations} = formContext;
 		const clickHandler = formContext.services.focusService.focus;
 
-		function walkErrors(path, id, errorSchema) {
+		function walkErrors(path, id, errorSchema, uiSchema, defaultTitle) {
 			const {__errors, ...properties} = errorSchema;
+			const _schema = parseJSONPointer(schema, path);
+			const title = _schema.title || defaultTitle;
+
 			let {errors, warnings} = (__errors || []).reduce(({errors, warnings}, _error) => {
-				const _schema = parseJSONPointer(schema, path);
 				if (_error.includes("[warning]")) {
 					warnings.push({
-						label: _schema.title,
+						label: title,
 						error: formatErrorMessage(_error),
 						id: id
 					});
 				} else {
 					errors.push({
-						label: _schema.title,
+						label: title,
 						error: formatErrorMessage(_error),
 						id: id
 					});
@@ -65,7 +67,8 @@ export default class ErrorListTemplate extends React.Component {
 				let _path = path;
 				if (prop.match(/^\d+$/)) _path = `${_path}/items`;
 				else _path = `${_path}/properties/${prop}`;
-				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop]);
+				const _defaultTitle = uiSchema["ui:multiLanguage"] ? `${title} (${prop})` : prop;
+				const childErrors = walkErrors(_path, `${id}_${prop}`, errorSchema[prop], uiSchema[prop] || {}, _defaultTitle);
 				errors = [...errors, ...childErrors.errors];
 				warnings = [...warnings, ...childErrors.warnings];
 			});
@@ -73,7 +76,7 @@ export default class ErrorListTemplate extends React.Component {
 		}
 
 		const {Glyphicon} = this.context.theme;
-		const {errors, warnings} = walkErrors("", "root", errorSchema);
+		const {errors, warnings} = walkErrors("", "root", errorSchema, uiSchema, "");
 		const footer = (
 			errors.length > 0
 				? <Button onClick={this.revalidate}><Glyphicon glyph="refresh"/> {translations.Revalidate}</Button>

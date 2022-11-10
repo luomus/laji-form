@@ -19,7 +19,7 @@ export default class _SchemaField extends React.Component {
 	}
 
 	updateVirtualInstance = (props, initial) => {
-		const virtualizedProps = ["ui:functions", "ui:childFunctions", "ui:annotations"];
+		const virtualizedProps = ["ui:functions", "ui:childFunctions", "ui:annotations", "ui:multiLanguage"];
 		if ([props, this.props].some(_props => _props.uiSchema && virtualizedProps.some(prop => _props.uiSchema[prop])) &&
 		    (initial || !deepEquals(this.props, props))) {
 			this.functionOutputProps = this.applyFunction(props);
@@ -31,6 +31,7 @@ export default class _SchemaField extends React.Component {
 			"ui:functions": functions,
 			"ui:childFunctions": childFunctions,
 			"ui:annotations": annotations,
+			"ui:multiLanguage": multiLanguage,
 			..._uiSchema
 		} = (props.uiSchema || {});
 
@@ -54,6 +55,13 @@ export default class _SchemaField extends React.Component {
 		if (annotations) {
 			functions = [
 				{"ui:field": "AnnotationField", "ui:options": (isObject(annotations) ? annotations : {})},
+				...functions
+			];
+		}
+
+		if (multiLanguage) {
+			functions = [
+				{"ui:field": "MultiLanguageField"},
 				...functions
 			];
 		}

@@ -81,6 +81,7 @@ const fields = importLocalComponents<Field>("fields", [
 	"ToggleAdditionalArrayFieldsField",
 	"DefaultValueArrayField",
 	"UiFieldApplierField",
+	"MultiLanguageField",
 	{"InputTransformerField": "ConditionalOnChangeField"}, // Alias for backward compatibility.
 	{"ConditionalField": "ConditionalUiSchemaField"}, // Alias for backward compatibility.
 	{"UnitRapidField": "UnitShorthandField"}, // Alias for backward compatibility.
@@ -105,7 +106,8 @@ const widgets = importLocalComponents<Widget>("widgets", [
 	"InformalTaxonGroupChooserWidget",
 	"TaxonImageWidget",
 	"UpperCaseWidget",
-	"NumberWidget"
+	"NumberWidget",
+	"InputGroupWidget"
 ]);
 
 const templates = importLocalComponents<TemplatesType>("templates", [
@@ -627,6 +629,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			"ui:readonly": readonly,
 			"ui:disabled": disabled
 		} = this.props.uiSchema;
+		const uiSchema = {
+			...this.props.uiSchema,
+			"ui:submitButtonOptions": {
+				norender: true
+			}
+		};
 
 		const {Panel, Table} = this.getContext(this.props, this.context).theme;
 
@@ -643,7 +651,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					)}
 					<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
 											   schema={this.props.schema}
-											   uiSchema={this.props.uiSchema}
+											   uiSchema={uiSchema}
 											   context={this._context}
 											   formContext={this.state.formContext}
 											   errorClickHandler={this.memoizedFormContext.services.focusService.focus}
@@ -653,6 +661,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					<Form
 						{...this.props as any}
 						formData={this.state.formData}
+						uiSchema={uiSchema}
 						ref={this.getRef}
 						onChange={this.onChange}
 						onSubmit={this.onSubmit}
@@ -667,15 +676,13 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						liveValidate={true}
 						autoComplete="off"
 					>
-						<div>
-							{this.props.children}
-							{(!this.props.children && this.props.renderSubmit !== false) ? (
-								<Button id="submit" onClick={this.submit} disabled={readonly || disabled}>
-									{this.props.submitText || translations.Submit}
-								</Button>
-							) : null}
-						</div>
+						{this.props.children}
 					</Form>
+					{(!this.props.children && this.props.renderSubmit !== false) ? (
+						<Button id="submit" onClick={this.submit} disabled={readonly || disabled}>
+							{this.props.submitText || translations.Submit}
+						</Button>
+					) : null}
 					{shortcuts &&
 						<Panel ref={this.shortcutHelpRef}
 						       className="shortcut-help laji-form-popped z-depth-3 hidden"
