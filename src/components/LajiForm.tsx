@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import validate from "../validation";
 import { transformErrors, initializeValidation } from "../validation";
 import { Button, TooltipComponent, FailedBackgroundJobsPanel, Label } from "./components";
-import { focusNextInput, capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
+import { capitalizeFirstLetter, stringifyKeyCombo, getScrollPositionForScrollIntoViewIfNeeded, getWindowScrolled, addLajiFormIds, highlightElem, constructTranslations, removeLajiFormIds, createTmpIdTree, translate, getDefaultFormState, ReactUtils, ReactUtilsType } from "../utils";
 const equals = require("deep-equal");
 import rjsfValidator from "@rjsf/validator-ajv6";
 import * as merge from "deepmerge";
@@ -199,7 +199,7 @@ export interface FormContext {
 	translations: ByLang;
 	lang: Lang;
 	uiSchemaContext: any;
-	getFormRef: () => Form<any>
+	formRef: React.RefObject<Form>;
 	topOffset: number;
 	bottomOffset: number;
 	formID: string;
@@ -316,7 +316,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 	};
 	tmpIdTree: any;
-	formRef: Form<any>;
+	formRef = React.createRef<Form>();
 	mounted: boolean;
 	blockingLoaderRef: HTMLDivElement;
 	keyCombo: string;
@@ -458,8 +458,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
 			state.formData = this.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema));
 			this._context.formData = state.formData;
-		} else if (this.state) {
-			state.formData = (this.formRef as any)?.state.formData;
+		} else if (this.state && this.formRef.current) {
+			state.formData = this.formRef.current.state.formData;
 		}
 		if (this.state && props.schema !== this.props.schema) {
 			state.extraErrors = {};
@@ -482,7 +482,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				translations: this.translations[props.lang as Lang],
 				lang: props.lang,
 				uiSchemaContext: props.uiSchemaContext,
-				getFormRef: this.getFormRef,
 				topOffset: props.topOffset || 0,
 				bottomOffset: props.bottomOffset || 0,
 				contextId: this._id,
@@ -495,7 +494,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				Label: (props.fields || {}).Label || Label,
 				mediaMetadata: props.mediaMetadata,
 				setTimeout: this.setTimeout,
-				services: {}
+				services: {},
+				formRef: this.formRef
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
 			if (services) {
@@ -594,12 +594,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		});
 	}
 
-	getRef = (form: Form<any>) => {
-		this.formRef = form;
-	}
-
-	getFormRef = () => this.formRef
-
 	getFields = (_fields?: {[name: string]: Field}) => ({...fields, ...(_fields || {})})
 	getWidgets = (_widgets?: {[name: string]: Widget}) => ({...widgets, ...(_widgets || {})})
 	getTemplates = (_templates?: {[name: string]: TemplatesType}) => ({...templates, ...(_templates || {})})
@@ -662,7 +656,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 						{...this.props as any}
 						formData={this.state.formData}
 						uiSchema={uiSchema}
-						ref={this.getRef}
+						ref={this.formRef}
 						onChange={this.onChange}
 						onSubmit={this.onSubmit}
 						fields={this.getFields(this.props.fields)}
@@ -909,7 +903,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	keyFunctions = {
 		navigate: (e: KeyboardEvent, {reverse}: any) => {
-			return focusNextInput(this.formRef, e.target as HTMLElement, reverse);
+			this.memoizedFormContext.services.focusService.focusNextInput(reverse);
 		},
 		help: (e: KeyboardEvent, {delay}: any) => {
 			if (this.helpStarted) return false;

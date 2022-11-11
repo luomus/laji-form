@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, getInnerUiSchema, isEmptyString, focusNextInput } from "../../utils";
+import { getUiOptions, getInnerUiSchema, isEmptyString } from "../../utils";
 import BaseComponent from "../BaseComponent";
 
 /**
@@ -127,7 +127,7 @@ export default class SelectTreeField extends React.Component {
 			e.preventDefault();
 			e.stopPropagation();
 			this.getContext().setImmediate(() => {
-				focusNextInput(this.props.formContext.getFormRef(), document.activeElement, e.shiftKey);
+				this.props.formContext.services.focusService.focusNextInput(e.shiftKey);
 			});
 		}
 	}

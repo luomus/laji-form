@@ -11,6 +11,7 @@ export default class FocusService {
 		this.formContext = formContext;
 
 		this.focus = this.focus.bind(this);
+		this.focusNextInput = this.focusNextInput.bind(this);
 	}
 
 	setFormContext(formContext: FormContext) {
@@ -56,5 +57,13 @@ export default class FocusService {
 
 			highlightElem(elem);
 		});
+	}
+
+	focusNextInput(reverse = false) {
+		if (!this.formContext.formRef.current) {
+			console.warn("Focus service can't  doesn't have ref to the form");
+			return;
+		}
+		this.formContext.utils.focusNextInput(reverse);
 	}
 }

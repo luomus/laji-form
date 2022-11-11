@@ -250,7 +250,42 @@ export function findNearestParentTabbableElem(elem: HTMLElement): HTMLElement | 
 	return elem;
 }
 
-export function getNextInputInInputs(formReactNode: Form<any>, inputElem: HTMLElement | undefined, reverseDirection = false, fields: HTMLElement[]): HTMLElement | undefined {
+export interface ReactUtilsType {
+	findNearestParentSchemaElemId: (elem: HTMLElement) => string | undefined;
+	getSchemaElementById: (id: string) => HTMLElement | null;
+	focusById: (id: string, focus?: boolean) => boolean;
+	focusAndScroll: (idToFocus?: string, idToScroll?: string, focus?: boolean) => boolean | undefined;
+	shouldSyncScroll: () => boolean;
+	syncScroll: (force: boolean) => void;
+	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
+	formDataIsEmpty: (props: FieldProps) => boolean;
+	formDataEquals: (f1: any, f2: any, id: string) => boolean;
+	getRelativeTmpIdTree: (id: string) => any;
+	keyboardClick: (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => (e: (KeyboardEvent | React.KeyboardEvent)) => void;
+	getNextInput: (inputElem: HTMLElement, reverseDirection: boolean) => HTMLElement | undefined;
+	focusNextInput: (reverseDirection: boolean) => void;
+	getNextInputInInputs: (inputElem: HTMLElement | undefined, reverseDirection: boolean, fields: HTMLElement[]) => HTMLElement | undefined
+}
+
+export const ReactUtils = (context: FormContext): ReactUtilsType => ({
+	findNearestParentSchemaElemId: _findNearestParentSchemaElemId(context),
+	getSchemaElementById: _getSchemaElementById(context),
+	focusById: _focusById(context),
+	focusAndScroll: _focusAndScroll(context),
+	shouldSyncScroll: _shouldSyncScroll(context),
+	syncScroll: _syncScroll(context),
+	filterItemIdsDeeply: _filterItemIdsDeeply(context),
+	formDataIsEmpty: _formDataIsEmpty(context),
+	formDataEquals: _formDataEquals(context),
+	getRelativeTmpIdTree: _getRelativeTmpIdTree(context),
+	keyboardClick: _keyboardClick(context),
+	getNextInput: getNextInput(context),
+	focusNextInput: focusNextInput(context),
+	getNextInputInInputs: getNextInputInInputs(context)
+});
+
+export const getNextInputInInputs = (formContext: FormContext) => (inputElem: HTMLElement | undefined, reverseDirection = false, fields: HTMLElement[]): HTMLElement | undefined => {
+	const formReactNode = formContext.formRef.current;
 	const formElem = findDOMNode(formReactNode) as HTMLElement;
 	if (!formElem) {
 		return undefined;
@@ -286,54 +321,31 @@ export function getNextInputInInputs(formReactNode: Form<any>, inputElem: HTMLEl
 	return undefined;
 }
 
-export function getNextInput(formReactNode: Form<any>, inputElem: HTMLElement, reverseDirection = false) {
-	const formElem = findDOMNode(formReactNode) as HTMLElement;
-	const fields = getTabbableFields(formElem);
-	return getNextInputInInputs(formReactNode, inputElem, reverseDirection, fields);
-}
 
-export function focusNextInput(formReactNode: Form<any>, inputElem: HTMLElement, reverseDirection = false) {
+export const getNextInput = (formContext: FormContext) => (inputElem: HTMLElement, reverseDirection = false) => {
+	const formElem = findDOMNode(formContext.formRef.current) as HTMLElement;
+	const fields = getTabbableFields(formElem);
+	return formContext.utils.getNextInputInInputs(inputElem, reverseDirection, fields);
+};
+
+export const focusNextInput = (formContext: FormContext) => (reverseDirection = false) => {
+	const formReactNode = formContext.formRef.current;
+	if (!formReactNode) {
+		throw new Error("focusNextInput() didn't find form ref");
+	}
 	const {uiSchema = {}} = formReactNode.props;
 	if (uiSchema.autoFocus === false) {
 		return false;
 	}
 	const width = pixelsToBsSize(window.outerWidth);
 	if (width === "xs") return false;
-	const field = getNextInput(formReactNode, inputElem, reverseDirection);
+	const field = formContext.utils.getNextInput(document.activeElement as HTMLElement, reverseDirection);
 	if (field) {
 		field.focus();
 		return true;
 	}
 	return false;
 }
-
-export interface ReactUtilsType {
-	findNearestParentSchemaElemId: (elem: HTMLElement) => string | undefined;
-	getSchemaElementById: (id: string) => HTMLElement | null;
-	focusById: (id: string, focus?: boolean) => boolean;
-	focusAndScroll: (idToFocus?: string, idToScroll?: string, focus?: boolean) => boolean | undefined;
-	shouldSyncScroll: () => boolean;
-	syncScroll: (force: boolean) => void;
-	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
-	formDataIsEmpty: (props: FieldProps) => boolean;
-	formDataEquals: (f1: any, f2: any, id: string) => boolean;
-	getRelativeTmpIdTree: (id: string) => any;
-	keyboardClick: (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => (e: (KeyboardEvent | React.KeyboardEvent)) => void;
-}
-
-export const ReactUtils = (context: FormContext): ReactUtilsType => ({
-	findNearestParentSchemaElemId: _findNearestParentSchemaElemId(context),
-	getSchemaElementById: _getSchemaElementById(context),
-	focusById: _focusById(context),
-	focusAndScroll: _focusAndScroll(context),
-	shouldSyncScroll: _shouldSyncScroll(context),
-	syncScroll: _syncScroll(context),
-	filterItemIdsDeeply: _filterItemIdsDeeply(context),
-	formDataIsEmpty: _formDataIsEmpty(context),
-	formDataEquals: _formDataEquals(context),
-	getRelativeTmpIdTree: _getRelativeTmpIdTree(context),
-	keyboardClick: _keyboardClick(context)
-});
 
 const _findNearestParentSchemaElemId = ({contextId}: Pick<FormContext, "contextId">) => (elem: HTMLElement) => {
 	const nearestParentSchemaElem = findNearestParentSchemaElem(elem) || document.getElementById(`_laji-form_${contextId}_root`);

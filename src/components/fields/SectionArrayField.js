@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
-import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, getTabbableFields, JSONPointerToId, getNextInputInInputs, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
+import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, parseJSONPointer, addLajiFormIds, updateFormDataWithJSONPointer, isEmptyString, idSchemaIdToJSONPointer, getUUID, getTabbableFields, JSONPointerToId, getAllLajiFormIdsDeeply, getDefaultFormState } from "../../utils";
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
@@ -754,10 +754,10 @@ const _arrayKeyFunctions = options => {
 			const {rowDefinerField} = options;
 			const firstElem = getTabbableFields(document.getElementById(`${id}_0-section`))[0];
 			if (document.activeElement === firstElem) {
-				const allTabbableFields = getTabbableFields(findDOMNode(getProps().formContext.getFormRef()));
+				const allTabbableFields = getTabbableFields(findDOMNode(getProps().formContext.formRef.current));
 				const matcher = new RegExp(JSONPointerToId(rowDefinerField.replace("%{row}", "\\d+")));
 				const allTabbableFieldsWithoutRowDefinerInputs = allTabbableFields.filter(f => !f.id.match(matcher));
-				const input = getNextInputInInputs(getProps().formContext.getFormRef(), undefined, true, allTabbableFieldsWithoutRowDefinerInputs);
+				const input = getProps().formContext.utils.getNextInputInInputs(undefined, true, allTabbableFieldsWithoutRowDefinerInputs);
 				if (input) {
 					input.focus();
 				}

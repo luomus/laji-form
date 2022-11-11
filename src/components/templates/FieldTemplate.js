@@ -20,7 +20,7 @@ export default class FieldTemplateTemplate extends React.Component {
 
 	canFocus = () => {
 		const {formContext} = this.props;
-		const {uiSchema = {}} = (formContext.getFormRef() || {props: {}}).props;
+		const {uiSchema = {}} = (formContext.formRef.current || {props: {}}).props;
 		return uiSchema.autoFocus !== false;
 	}
 
