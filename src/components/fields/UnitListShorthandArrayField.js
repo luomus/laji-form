@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { getUiOptions, getInnerUiSchema, isEmptyString, bringRemoteFormData, isDefaultData, getDefaultFormState } from "../../utils";
 import { Button } from "../components";
-import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { TagInputComponent } from "./TagArrayField";
 
@@ -66,9 +65,8 @@ export default class UnitListShorthandArrayField extends React.Component {
 		const value = this.state.value + (isEmptyString(this.tagRef.state.value) ? "" : `,${this.tagRef.state.value}`);
 
 		this.onHide();
-		const {translations, contextId, notifier, apiClient} = this.props.formContext;
-		const context = new Context(contextId);
-		context.pushBlockingLoader();
+		const {translations, notifier, apiClient} = this.props.formContext;
+		this.props.formContext.services.blockerService.push();
 		apiClient.fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
 			units = units.map(unit => {
 				unit = getDefaultFormState(this.props.schema.items, unit);
@@ -85,7 +83,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			nonMatchingCount
 				? notifier.warning(`${translations.UnitListShorthandWarning} ${nonMatchingCount}`)
 				: notifier.success(translations.UnitListShorthandSuccess);
-			context.popBlockingLoader();
+			this.props.formContext.services.blockerService.pop();
 		});
 	}
 

@@ -768,7 +768,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		onMediaMetadataUpdate = ({formData}: {formData: any}) => {
-			this.mainContext.pushBlockingLoader();
+			this.props.formContext.services.blockerService.push();
 			this.apiClient.fetch(`/${this.ENDPOINT}/${formData.id}`, undefined, {
 				method: "PUT",
 				headers: {
@@ -777,7 +777,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				},
 				body: JSON.stringify(formData)
 			}).then(() => {
-				this.mainContext.popBlockingLoader();
+				this.props.formContext.services.blockerService.pop();
 				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess as string);
 				if (this.mounted) {
 					this.setState({metadataModalOpen: false}, notify);
@@ -785,7 +785,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					notify();
 				}
 			}).catch(() => {
-				this.mainContext.popBlockingLoader();
+				this.props.formContext.services.blockerService.pop();
 				this.mounted && this.setState({metadataSaveSuccess: false});
 			});
 		}

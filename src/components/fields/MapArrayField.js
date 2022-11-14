@@ -1834,14 +1834,14 @@ export class MapComponent extends React.Component {
 	}
 
 	grabFocus = () => {
-		this.mainContext.pushBlockingLoader();
+		this.props.formContext.services.blockerService.push();
 		this.setState({focusGrabbed: true}, () => {
 			if (this.props.onFocusGrab) this.props.onFocusGrab();
 		});
 	}
 
 	releaseFocus = () => {
-		this.mainContext.popBlockingLoader();
+		this.props.formContext.services.blockerService.push();
 		this.setState({focusGrabbed: false}, () => {
 			if (this.props.onFocusRelease) this.props.onFocusRelease();
 		});

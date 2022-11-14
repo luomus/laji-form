@@ -20,6 +20,7 @@ import * as translations from "../translations.json";
 import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service";
 import SettingsService, { Settings } from "../services/settings-service";
 import FocusService from "../services/focus-service";
+import BlockerService from "../services/blocker-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -214,12 +215,13 @@ export interface FormContext {
 	mediaMetadata?: MediaMetadata;
 	contextId: number;
 	theme: Theme;
-	setTimeout: (fn: () => void, time: number) => void;
+	setTimeout: (fn: () => void, time?: number) => void;
 	utils: ReactUtilsType;
 	services: {
 		keyHandlerService: KeyHandlerService,
 		settingsService: SettingsService,
-		focusService: FocusService
+		focusService: FocusService,
+		blockerService: BlockerService
 	}
 }
 
@@ -263,9 +265,6 @@ export type Translations = Record<Lang, ByLang>;
 export interface RootContext {
 	formInstance: LajiForm;
 	formData: any;
-	blockingLoaderCounter: number;
-	pushBlockingLoader: () => void; 
-	popBlockingLoader: () => void;
 	setTimeout: (fn: () => void, timer: number) => void;
 	addEventListener: (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => void;
 	addCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
@@ -294,7 +293,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	_id: number;
 	_context: RootContext;
 	propagateSubmit = true;
-	blockingLoaderCounter = 0;
 	customEventListeners: {[eventName: string]: {[id: string]: CustomEventListener[]}} = {};
 	ids: {[id: string]: ((id: string) => void)[]} = {};
 	// First call returns id, next call (and only the very next) reserves the id until it is released.
@@ -318,7 +316,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	tmpIdTree: any;
 	formRef = React.createRef<Form>();
 	mounted: boolean;
-	blockingLoaderRef: HTMLDivElement;
 	keyCombo: string;
 	defaultNotifier: Notifier;
 	validating = false;
@@ -357,10 +354,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (props.lajiGeoServerAddress) {
 			this._context.lajiGeoServerAddress = props.lajiGeoServerAddress;
 		}
-
-		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
-		this._context.pushBlockingLoader = this.pushBlockingLoader;
-		this._context.popBlockingLoader = this.popBlockingLoader;
 
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
@@ -507,7 +500,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				this.memoizedFormContext.services.keyHandlerService = new KeyHandlerService(this.memoizedFormContext);
 				this.memoizedFormContext.services.settingsService = new SettingsService(this.onSettingsChange, props.settings);
 				this.memoizedFormContext.services.focusService = new FocusService(this.memoizedFormContext);
-
+				this.memoizedFormContext.services.blockerService = new BlockerService(this.memoizedFormContext);
 			}
 			return this.memoizedFormContext;
 		}
@@ -517,12 +510,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this.mounted = true;
 		this.props.autoFocus && this.memoizedFormContext.utils.focusById("root");
 
-		this.blockingLoaderRef = document.createElement("div");
-		this.blockingLoaderRef.className = "laji-form blocking-loader";
-		if (this.blockingLoaderCounter > 0) this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-		document.body.appendChild(this.blockingLoaderRef);
-
-		this.memoizedFormContext.services.keyHandlerService.initialize();
+		(Object.keys(this.memoizedFormContext.services) as (keyof FormContext["services"])[]).forEach(service => {
+			(this.memoizedFormContext.services[service] as any).initialize?.();
+		});
 
 		if (this.props.componentDidMount) this.props.componentDidMount();
 	}
@@ -530,8 +520,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	componentWillUnmount() {
 		this.mounted = false;
 		if (this._context.singletonMap) this._context.singletonMap.destroy();
-		document.body.removeChild(this.blockingLoaderRef);
-		this.memoizedFormContext.services.keyHandlerService.destroy();
+		(Object.keys(this.memoizedFormContext.services) as (keyof FormContext["services"])[]).forEach(service => {
+			(this.memoizedFormContext.services[service] as any).destroy?.();
+		});
 	}
 
 	componentDidCatch(e: Error, i: React.ErrorInfo) {
@@ -770,12 +761,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const schemaErrors = nonlive || onlySchema
 			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.formContext.translations, e))).errorSchema
 			: {};
-		block && this.pushBlockingLoader();
+		block && this.memoizedFormContext.services.blockerService.push();
 		return new Promise(resolve =>
 			Promise.all([validate(validations, formData), validate(liveValidations, formData)]).then(([_validations, _liveValidations]) => {
 				if (nonlive || onlySchema) {
 					this.cachedNonliveValidations = merge(schemaErrors, _validations);
-					block && this.popBlockingLoader();
+					block && this.memoizedFormContext.services.blockerService.pop();
 				}
 				const merged = merge(_liveValidations, !nonlive
 					? (this.cachedNonliveValidations || {})
@@ -785,7 +776,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				resolve(!Object.keys(merged).length);
 				!equals((this.state.extraErrors || {}), merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
 			}).catch((e) => {
-				block && this.popBlockingLoader();
+				block && this.memoizedFormContext.services.blockerService.pop();
 
 				throw e;
 			})
@@ -816,7 +807,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			return false;
 		}
 
-		this.pushBlockingLoader();
+		this.memoizedFormContext.services.blockerService.push();
 		this.setState({runningSubmitHooks: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
 		Promise.all((this.state.submitHooks || []).map(({promise, hook}) => {
 			const setNotRunning = () => {
@@ -826,12 +817,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			};
 			return promise.then(setNotRunning).catch(setNotRunning);
 		})).then(() => {
-			this.popBlockingLoader();
+			this.memoizedFormContext.services.blockerService.pop();
 			this.setState({runningSubmitHooks: false});
 			this.validateAndSubmit(!_onlySchemaValidations, _onlySchemaValidations);
 		}).catch(() => {
 			this.setState({runningSubmitHooks: false});
-			this.popBlockingLoader();
+			this.memoizedFormContext.services.blockerService.pop();
 			highlightElem(findDOMNode(this.bgJobRef?.current) as Element);
 		});
 		return undefined;
@@ -923,40 +914,11 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	pushBlockingLoader = () => {
-		this.blockingLoaderCounter++;
-		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
-		if (this.mounted && this.blockingLoaderCounter === 1) {
-			this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-			this.memoizedFormContext.services.keyHandlerService.block();
-		}
+		this.memoizedFormContext.services.blockerService.push();
 	}
 
 	popBlockingLoader = () => {
-		this.blockingLoaderCounter--;
-		this._context.blockingLoaderCounter = this.blockingLoaderCounter;
-		if (this.blockingLoaderCounter < 0) {
-			console.warn("laji-form: Blocking loader was popped before pushing!");
-		} else if (this.blockingLoaderCounter === 0) {
-			this.blockingLoaderRef.className = "laji-form blocking-loader leave-start";
-			this.setTimeout(() => {
-				if (this.blockingLoaderCounter > 0) {
-					this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-					return;
-				}
-				if (this.blockingLoaderRef) this.blockingLoaderRef.className = "laji-form blocking-loader leaving";
-				this.setTimeout(() => {
-					if (!this.blockingLoaderRef) {
-						return;
-					}
-					if (this.blockingLoaderCounter > 0) {
-						this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-					} else {
-						this.blockingLoaderRef.className = "laji-form blocking-loader";
-					}
-				}, 200); // should match css transition time.
-			});
-			this.memoizedFormContext.services.keyHandlerService.unblock();
-		}
+		this.memoizedFormContext.services.blockerService.pop();
 	}
 
 	getSettings(global = false) {
