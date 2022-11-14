@@ -1690,6 +1690,10 @@ min-height: 20px;
 	font-size: 13px;
 	border-radius: 2px;
 }
+.laji-form .input-group.input-group-textarea .input-group-text {
+	height: initial;
+	align-items: start;
+}
 .laji-form .input-group > :not(:last-child) {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
