@@ -93,7 +93,7 @@ class SelectWidget extends React.Component {
 			return;
 		}
 		this.props.onChange(values.map(({value}) => this.getEnum(value)));
-		new Context(this.props.formContext.contextId).sendCustomEvent(this.props.id, "resize");
+		this.props.formContext.services.customEventService.send(this.props.id, "resize");
 	}
 
 	selectOnChange = (item) => {

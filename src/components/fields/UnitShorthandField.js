@@ -94,9 +94,9 @@ export default class UnitShorthandField extends React.Component {
 		if   (!autofocus) this.getContext().idToFocus = this.props.idSchema.$id;
 		this.onNextTick = () => {
 			if (autocopy) {
-				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "copy");
+				this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "copy");
 			} else if (autofocus) {
-				new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "focus", "last");
+				this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "focus", "last");
 			}
 			this.setState({showSchema: true});
 		};

@@ -90,11 +90,11 @@ export default class MapField extends React.Component {
 		}
 		this.geocode(this.props);
 
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "locate", this.onLocateEventHandler);
 	}
 
 	componentDidUpdate(prevProps) {

@@ -126,8 +126,7 @@ export default class ScopeField extends React.Component {
 		}
 		if (!equals(prevState.fieldsToShow, this.state.fieldsToShow)) {
 			this.props.formContext.utils.syncScroll();
-			const context = new Context(this.props.formContext.contextId);
-			context.sendCustomEvent(this.props.idSchema.$id, "resize");
+			this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "resize");
 		}
 	}
 

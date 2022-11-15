@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import { isEmptyString, getUiOptions, triggerParentComponent, keyboardClick } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
 const equals = require("deep-equal");
 
 @BaseComponent
@@ -44,7 +43,7 @@ export class TagInputComponent extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (!equals(prevProps.formData, this.props.formData)) {
-			new Context(this.props.formContext.contextId).sendCustomEvent(this.props.idSchema.$id, "resize");
+			this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "resize");
 		}
 	}
 

@@ -10,12 +10,12 @@ import { getTemplate } from "@rjsf/utils";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => props.formContext.services.customEventService.send(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setTimeout(() => new Context(props.formContext.contextId).sendCustomEvent(props.idSchema.$id, "resize"));
+	setTimeout(() => props.formContext.services.customEventService.send(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {
@@ -249,15 +249,15 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addCustomEventListeners(props) {
-			const context = new Context(props.formContext.contextId);
+			const {customEventService} = props.formContext.services;
 			const customEventListeners = (super.getCustomEventListeners || this.getCustomEventListeners).call(this, props);
 			this.customEventListeners = customEventListeners;
-			customEventListeners.forEach(params => context.addCustomEventListener(props.idSchema.$id, ...params));
+			customEventListeners.forEach(params => customEventService.add(props.idSchema.$id, ...params));
 		}
 
 		removeCustomEventListeners(props) {
-			const context = new Context(props.formContext.contextId);
-			this.customEventListeners.forEach(params => context.removeCustomEventListener(props.idSchema.$id, ...params));
+			const {customEventService} = props.formContext.services;
+			this.customEventListeners.forEach(params => customEventService.remove(props.idSchema.$id, ...params));
 		}
 	};
 }

@@ -271,13 +271,13 @@ class UnitsMapArrayField extends React.Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	isGeometryCollection = (idx) => {
@@ -792,13 +792,13 @@ class LolifeMapArrayField extends React.Component {
 	}
 
 	componentDidMount() {
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentWillUnmount() {
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "startHighlight", this.startHighlight);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "endHighlight", this.endHighlight);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "startHighlight", this.startHighlight);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "endHighlight", this.endHighlight);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -1161,11 +1161,10 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 		this._resizeEventHandler = () => {
 			this.refs.stretch.invalidate();
 		};
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-
-		new Context(this.props.formContext.contextId).addCustomEventListener(this.props.idSchema.$id, "resize", this._resizeEventHandler);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 
 		if (this.state.activeIdx !== undefined) {
 			this.afterActiveChange(this.state.activeIdx, !!"initial call");
@@ -1180,10 +1179,10 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 	componentWillUnmount() {
 		this.setState({mounted: false});
 		this.props.formContext.services.keyHandlerService.removeKeyHandler(`${this.props.idSchema.$id}`, this.mapKeyFunctions);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
-		new Context(this.props.formContext.contextId).removeCustomEventListener(this.props.idSchema.$id, "resize", this._resizeEventHandler);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "activeIdx", this._setActiveEventHandler);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "zoomToData", this._zoomToDataEventHandler);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "tileLayers", this._tileLayersEventHandler);
+		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "resize", this._resizeEventHandler);
 	}
 
 	componentDidUpdate(...params) {

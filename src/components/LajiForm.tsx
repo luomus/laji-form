@@ -21,6 +21,7 @@ import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service
 import SettingsService, { Settings } from "../services/settings-service";
 import FocusService from "../services/focus-service";
 import BlockerService from "../services/blocker-service";
+import CustomEventService from "../services/custom-event-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -221,13 +222,12 @@ export interface FormContext {
 		keyHandlerService: KeyHandlerService,
 		settingsService: SettingsService,
 		focusService: FocusService,
-		blockerService: BlockerService
+		blockerService: BlockerService,
+		customEventService: CustomEventService
 	}
 }
 
 export type Lang = "fi" | "en" | "sv";
-
-type CustomEventListener = (data?: any, callback?: () => void) => boolean | void;
 
 export interface SubmitHook {
 	hook: () => void;
@@ -267,9 +267,6 @@ export interface RootContext {
 	formData: any;
 	setTimeout: (fn: () => void, timer: number) => void;
 	addEventListener: (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => void;
-	addCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
-	removeCustomEventListener: (id: string, eventName: string, fn: CustomEventListener) => void;
-	sendCustomEvent: (id: string, eventName: string, data?: any, callback?: () => void, options?: {bubble?: boolean}) => void;
 	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	addSubmitHook: (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => void;
 	removeSubmitHook: (lajiFormId: string, hook: SubmitHook["hook"]) => void;
@@ -281,8 +278,8 @@ export interface RootContext {
 
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
 	static contextType = Context;
-	contextMemoizeKey: Record<keyof LajiFormProps, any>;
-	contextFormMemoizeKey: Record<keyof LajiFormProps, any>;
+	private contextMemoizeKey: Record<keyof LajiFormProps, any>;
+	private contextFormMemoizeKey: Record<keyof LajiFormProps, any>;
 	memoizedContext: ContextProps;
 	memoizedFormContext: FormContext;
 
@@ -293,7 +290,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	_id: number;
 	_context: RootContext;
 	propagateSubmit = true;
-	customEventListeners: {[eventName: string]: {[id: string]: CustomEventListener[]}} = {};
 	ids: {[id: string]: ((id: string) => void)[]} = {};
 	// First call returns id, next call (and only the very next) reserves the id until it is released.
 	reserveId = (id: string, sendId: (id: string) => void): string | void => {
@@ -357,30 +353,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
-
-		this._context.addCustomEventListener = (id: string, eventName: string, fn: CustomEventListener) => {
-			if (!this.customEventListeners[eventName]) this.customEventListeners[eventName] = {};
-			if (!this.customEventListeners[eventName][id]) this.customEventListeners[eventName][id] = [];
-			this.customEventListeners[eventName][id].push(fn);
-			//this.customEventListeners[eventName][id] = [fn, ...this.customEventListeners[eventName][id]];
-		};
-		this._context.removeCustomEventListener = (id: string, eventName: string, fn: CustomEventListener) => {
-			this.customEventListeners[eventName][id] = this.customEventListeners[eventName][id].filter(_fn => _fn !== fn);
-		};
-		this._context.sendCustomEvent = (id: string, eventName: string, data?: any, callback?: () => void, {bubble = true} = {}) => {
-			const ids = Object.keys(this.customEventListeners[eventName] || {}).filter(_id => id.startsWith(_id)).sort().reverse();
-
-			outer: for (let _id of ids) {
-				for (let listener of this.customEventListeners[eventName][_id]) {
-					const result = listener(data, callback);
-					if (!bubble) break outer;
-					if (result === true || result === undefined) {
-						return;
-					}
-				}
-			}
-			callback && callback();
-		};
 
 		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => {
 			lajiFormId = `${lajiFormId}`;
@@ -501,6 +473,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				this.memoizedFormContext.services.settingsService = new SettingsService(this.onSettingsChange, props.settings);
 				this.memoizedFormContext.services.focusService = new FocusService(this.memoizedFormContext);
 				this.memoizedFormContext.services.blockerService = new BlockerService(this.memoizedFormContext);
+				this.memoizedFormContext.services.customEventService = new CustomEventService();
 			}
 			return this.memoizedFormContext;
 		}

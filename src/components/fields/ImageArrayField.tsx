@@ -212,7 +212,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const getCount = (_props: FieldProps, _state: MediaArrayState) => ((_props.formData || []).length + (_state.tmpMedias || []).length);
 
 			if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
-				(new Context(this.props.formContext.contextId) as RootContext).sendCustomEvent(this.props.idSchema.$id, "resize");
+				this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "resize");
 			}
 		}
 
@@ -543,7 +543,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					})
 				);
 			}, Promise.resolve(found)).then((found) => {
-				let {registry, formContext: {contextId}} = this.props;
+				let {registry} = this.props;
 				const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
 				const {schema} = lajiFormInstance.props;
 				let {formData} = lajiFormInstance.state;
@@ -552,7 +552,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 						formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
 					}
 					if (type === "event") {
-						(new Context(contextId) as RootContext).sendCustomEvent(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
+						this.props.formContext.services.customEventService.send(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 					}
 				});
 				return formData;
