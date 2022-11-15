@@ -25,7 +25,7 @@ export default class TextareaWidget extends React.Component {
 		this.textareaRef = React.createRef();
 
 		this._context = new Context(props.formContext.contextId);
-		Object.keys(props.formContext.services.keyHandlerService.shortcuts).some(keyCombo => {
+		Object.keys(props.formContext.services.keyHandler.shortcuts).some(keyCombo => {
 			if (keyCombo === "Enter") {
 			//	// Direct mutation should be ok in constructor.
 				this.state.enterReserved = true; // eslint-disable-line react/no-direct-mutation-state

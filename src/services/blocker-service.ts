@@ -24,7 +24,7 @@ export default class BlockerService {
 		this.blockingLoaderCounter++;
 		if (this.blockingLoaderCounter === 1) {
 			this.blockingLoaderRef.className = "laji-form blocking-loader entering";
-			this.formContext.services.keyHandlerService.block();
+			this.formContext.services.keyHandler.block();
 		}
 	}
 
@@ -51,7 +51,7 @@ export default class BlockerService {
 					}
 				}, 200); // should match css transition time.
 			});
-			this.formContext.services.keyHandlerService.unblock();
+			this.formContext.services.keyHandler.unblock();
 		}
 	}
 }

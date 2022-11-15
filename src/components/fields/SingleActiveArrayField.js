@@ -71,14 +71,14 @@ export default class SingleActiveArrayField extends React.Component {
 		this.mounted = true;
 		this.updatePopups(this.props);
 		if (getUiOptions(this.props.uiSchema).receiveActiveIdxEvents !== false) {
-			this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
 		}
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
 		if (getUiOptions(this.props.uiSchema).receiveActiveIdxEvents !== false) {
-			this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
 		}
 	}
 
@@ -104,8 +104,8 @@ export default class SingleActiveArrayField extends React.Component {
 		}
 
 		if (prevProps.idSchema.$id !== this.props.idSchema.$id) {
-			this.props.formContext.services.customEventService.remove(prevProps.idSchema.$id, "activeIdx", this.onActiveChange);
-			this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.remove(prevProps.idSchema.$id, "activeIdx", this.onActiveChange);
+			this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "activeIdx", this.onActiveChange);
 		}
 	}
 
@@ -372,13 +372,13 @@ function handlesButtonsAndFocus(ComposedComponent) {
 		addFocusHandlers() {
 			this.focusHandlers = this.getFocusHandlers(this.props);
 			this.focusHandlers.forEach(handler => {
-				this.props.formContext.services.focusService.addFocusHandler(...handler);
+				this.props.formContext.services.focus.addFocusHandler(...handler);
 			});
 		}
 
 		removeFocusHandlers() {
 			this.focusHandlers.forEach(handler => {
-				this.props.formContext.services.focusService.removeFocusHandler(...handler);
+				this.props.formContext.services.focus.removeFocusHandler(...handler);
 			});
 		}
 
@@ -682,7 +682,7 @@ class TableArrayFieldTemplate extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "resize", this.onResize);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "resize", this.onResize);
 		this._updateRenderingMode = () => this.updateRenderingMode();
 		window.addEventListener("resize", this._updateRenderingMode);
 		this.updateRenderingMode();
@@ -691,7 +691,7 @@ class TableArrayFieldTemplate extends React.Component {
 
 	componentWillUnmount() {
 		window.removeEventListener("resize", this._updateRenderingMode);
-		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "resize", this.onResize);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "resize", this.onResize);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -901,7 +901,7 @@ class TableArrayFieldTemplate extends React.Component {
 				return this.mouseCache[cacheKey][idx];
 			}
 		};
-		const mouseHandler = (eventName) => (idx) => () => that.props.formContext.services.customEventService.send(that.props.idSchema.$id, eventName, {idx});
+		const mouseHandler = (eventName) => (idx) => () => that.props.formContext.services.customEvents.send(that.props.idSchema.$id, eventName, {idx});
 		const onMouseEnter = cachedMouseHandler("enter", mouseHandler("startHighlight"));
 		const onMouseLeave = cachedMouseHandler("leave", mouseHandler("endHighlight"));
 		const onKeyDown = cachedMouseHandler("keydown", (idx) => (e) => {
@@ -1097,10 +1097,10 @@ const headerFormatters = {
 	},
 	lolife: {
 		onMouseEnter: (that, idx) => {
-			that.props.formContext.services.customEventService.send(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData[idx])});
+			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "startHighlight", {id: getUUID(that.props.formData[idx])});
 		},
 		onMouseLeave: (that, idx) => {
-			that.props.formContext.services.customEventService.send(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
+			that.props.formContext.services.customEvents.send(that.props.idSchema.$id, "endHighlight", {id: getUUID(that.props.formData[idx])});
 		}
 	}
 };

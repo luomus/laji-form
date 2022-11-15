@@ -113,7 +113,7 @@ export default class _SchemaField extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (!deepEquals(prevProps.errorSchema, this.props.errorSchema)) {
-			this.props.registry.formContext.services.customEventService.send(this.props.idSchema.$id, "resize");
+			this.props.registry.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 		}
 	}
 

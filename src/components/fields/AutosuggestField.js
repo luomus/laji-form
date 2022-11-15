@@ -233,7 +233,7 @@ export default class AutosuggestField extends React.Component {
 			formData = handleSuggestionReceivers(formData, {});
 			formData = {...updateFormDataWithJSONPointer({...this.props, formData}, undefined, suggestionValueField), ...unit};
 			if (isEmptyString(parseJSONPointer(this.props.formData, suggestionInputField, !!"safe")) && autocopy && !this.props.formContext.utils.formDataEquals(this.props.formData, formData, this.props.idSchema.$id)) {
-				this.onNextTick = () => this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "copy", autocopy);
+				this.onNextTick = () => this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "copy", autocopy);
 			}
 		} else {
 			formData = handleSuggestionReceivers(formData, suggestion);

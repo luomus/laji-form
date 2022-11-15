@@ -87,7 +87,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				];
 				this.setState({show: false});
 				targetId = this.props.idSchema.$id;
-				this.props.formContext.services.customEventService.send(targetId, "activeIdx", (this.props.formData || []).length);
+				this.props.formContext.services.customEvents.send(targetId, "activeIdx", (this.props.formData || []).length);
 			} else { // gathering object
 				gathering = getGathering(this.props.schema);
 				gathering.namedPlaceID = place.id;
@@ -100,7 +100,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				zoomToData = true;
 			}
 			this.props.onChange(newFormData);
-			if (zoomToData) this.props.formContext.services.customEventService.send(targetId, "zoomToData", undefined);
+			if (zoomToData) this.props.formContext.services.customEvents.send(targetId, "zoomToData", undefined);
 		} catch (e) {
 			this.setState({failed: PLACE_USE_FAIL});
 		}

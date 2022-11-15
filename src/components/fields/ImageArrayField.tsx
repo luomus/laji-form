@@ -212,7 +212,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			const getCount = (_props: FieldProps, _state: MediaArrayState) => ((_props.formData || []).length + (_state.tmpMedias || []).length);
 
 			if (getCount(prevProps, prevState) !== getCount(this.props, this.state)) {
-				this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "resize");
+				this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 			}
 		}
 
@@ -376,7 +376,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const uiSchema = isOpen ? {
 				...metadataForm.uiSchema,
-				"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...this.props.formContext.services.keyHandlerService.shortcuts},
+				"ui:shortcuts": {...(metadataForm.uiSchema["ui:shorcuts"] || {}), ...this.props.formContext.services.keyHandler.shortcuts},
 				"ui:disabled": this.props.disabled,
 				"ui:readonly": this.props.readonly,
 			} : undefined;
@@ -552,7 +552,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 						formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
 					}
 					if (type === "event") {
-						this.props.formContext.services.customEventService.send(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
+						this.props.formContext.services.customEvents.send(`root_${JSONPointerToId(field)}`, eventName, found[parse], undefined, {bubble: false});
 					}
 				});
 				return formData;
@@ -768,7 +768,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		onMediaMetadataUpdate = ({formData}: {formData: any}) => {
-			this.props.formContext.services.blockerService.push();
+			this.props.formContext.services.blocker.push();
 			this.apiClient.fetch(`/${this.ENDPOINT}/${formData.id}`, undefined, {
 				method: "PUT",
 				headers: {
@@ -777,7 +777,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				},
 				body: JSON.stringify(formData)
 			}).then(() => {
-				this.props.formContext.services.blockerService.pop();
+				this.props.formContext.services.blocker.pop();
 				const notify = () => this.props.formContext.notifier.success(this.props.formContext.translations.SaveSuccess as string);
 				if (this.mounted) {
 					this.setState({metadataModalOpen: false}, notify);
@@ -785,7 +785,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					notify();
 				}
 			}).catch(() => {
-				this.props.formContext.services.blockerService.pop();
+				this.props.formContext.services.blocker.pop();
 				this.mounted && this.setState({metadataSaveSuccess: false});
 			});
 		}

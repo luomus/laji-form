@@ -56,11 +56,11 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.formContext.services.focusService.addFocusHandler(this.props.id, this.focus);
+		this.props.formContext.services.focus.addFocusHandler(this.props.id, this.focus);
 	}
 
 	componentWillUnmount() {
-		this.props.formContext.services.focusService.removeFocusHandler(this.props.id, this.focus);
+		this.props.formContext.services.focus.removeFocusHandler(this.props.id, this.focus);
 	}
 
 	focus = () => {

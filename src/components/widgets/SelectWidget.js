@@ -20,12 +20,12 @@ class SelectWidget extends React.Component {
 
 	componentDidMount() {
 		this.mounted = true;
-		this.props.formContext.services.focusService.addFocusHandler(this.props.id, this.onFocus);
+		this.props.formContext.services.focus.addFocusHandler(this.props.id, this.onFocus);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		this.props.formContext.services.focusService.removeFocusHandler(this.props.id, this.onFocus);
+		this.props.formContext.services.focus.removeFocusHandler(this.props.id, this.onFocus);
 	}
 
 	UNSAFE_componentWillReceiveProps(props) {
@@ -93,7 +93,7 @@ class SelectWidget extends React.Component {
 			return;
 		}
 		this.props.onChange(values.map(({value}) => this.getEnum(value)));
-		this.props.formContext.services.customEventService.send(this.props.id, "resize");
+		this.props.formContext.services.customEvents.send(this.props.id, "resize");
 	}
 
 	selectOnChange = (item) => {

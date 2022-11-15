@@ -371,12 +371,12 @@ export class Autosuggest extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.triggerConvert(this.props);
-		this.props.formContext.services.keyHandlerService.addKeyHandler(this.props.id, this.keyFunctions);
+		this.props.formContext.services.keyHandler.addKeyHandler(this.props.id, this.keyFunctions);
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		this.props.formContext.services.keyHandlerService.removeKeyHandler(this.props.id, this.keyFunctions);
+		this.props.formContext.services.keyHandler.removeKeyHandler(this.props.id, this.keyFunctions);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -759,7 +759,7 @@ export class Autosuggest extends React.Component {
 				return tooltip;
 			}
 
-			const {shortcuts} = this.props.formContext.services.keyHandlerService;
+			const {shortcuts} = this.props.formContext.services.keyHandler;
 			Object.keys(shortcuts).some(keyCombo => {
 				if (shortcuts[keyCombo].fn == "autosuggestToggle") {
 					tooltip = `[${stringifyKeyCombo(keyCombo)}]: ${tooltip}`;
@@ -1173,7 +1173,7 @@ class ReactAutosuggest extends React.Component {
 
 	onInputKeyDown = (e) => {
 		let state, suggestion;
-		const {shortcuts} = this.props.formContext.services.keyHandlerService;
+		const {shortcuts} = this.props.formContext.services.keyHandler;
 		switch (e.key) {
 		case "ArrowDown":
 			e.preventDefault();

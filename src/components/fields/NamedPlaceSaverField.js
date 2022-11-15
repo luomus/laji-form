@@ -157,7 +157,7 @@ class PlaceSaverDialog extends React.Component {
 			geometry: place.prepopulatedDocument.gatherings[0].geometry
 		};
 
-		this.props.formContext.services.blockerService.push();
+		this.props.formContext.services.blocker.push();
 		this.apiClient.fetchRaw(`/named-places${place.id ? `/${place.id}` : ""}`, undefined, {
 			method: place.id ? "PUT" : "POST",
 			headers: {
@@ -166,12 +166,12 @@ class PlaceSaverDialog extends React.Component {
 			},
 			body: JSON.stringify(place)
 		}).then(response => {
-			this.props.formContext.services.blockerService.pop();
+			this.props.formContext.services.blocker.pop();
 			this.apiClient.invalidateCachePath("/named-places");
 			return response.json();
 		}).then(this.props.onSave)
 			.catch(() => {
-				this.props.formContext.services.blockerService.pop();
+				this.props.formContext.services.blocker.pop();
 				this.setState({failed: SAVE});
 			});
 	}

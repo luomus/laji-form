@@ -29,7 +29,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			const {uiSchema, formContext} = props;
 
 			if (uiSchema && uiSchema["ui:settings"]) {
-				const {settings} = formContext.services.settingsService;
+				const {settings} = formContext.services.settings;
 				uiSchema["ui:settings"].forEach((key: string) => {
 					if (this.getSettingsKey(props, key) in settings) {
 						if (key.match(rule)) {
@@ -94,7 +94,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			}
 
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach((key: string) => {
-				this.props.formContext.services.settingsService.addSettingSaver(this.getSettingsKey(props, key), () => {
+				this.props.formContext.services.settings.addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
 						return parseSettingSaver(this.getContext(), key.replace(/^%[^/]*/, ""));
 					} else {
@@ -113,7 +113,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 				if (key.match(/^%/)) key = (key.match(/^%([^/]*)/) as string[])[1];
 				return (!deepEquals(...[prevState, this.state].map(state => parseJSONPointer(state, key, !!"safely"))));
 			})) {
-				this.props.formContext.services.settingsService.onSettingsChange();
+				this.props.formContext.services.settings.onSettingsChange();
 			}
 		}
 
@@ -124,7 +124,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 
 		componentWillUnmount() {
 			(this.props.uiSchema?.["ui:settings"] || []).forEach((key: string) => {
-				this.props.formContext.services.settingsService.removeSettingSaver(this.getSettingsKey(this.props, key));
+				this.props.formContext.services.settings.removeSettingSaver(this.getSettingsKey(this.props, key));
 			});
 			if (super.componentWillUnmount) super.componentWillUnmount();
 		}

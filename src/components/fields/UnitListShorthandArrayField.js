@@ -66,7 +66,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 
 		this.onHide();
 		const {translations, notifier, apiClient} = this.props.formContext;
-		this.props.formContext.services.blockerService.push();
+		this.props.formContext.services.blocker.push();
 		apiClient.fetch("/autocomplete/unit", {q: value, list: true, includePayload: true}).then(({payload: {units, nonMatchingCount}}) => {
 			units = units.map(unit => {
 				unit = getDefaultFormState(this.props.schema.items, unit);
@@ -83,7 +83,7 @@ export default class UnitListShorthandArrayField extends React.Component {
 			nonMatchingCount
 				? notifier.warning(`${translations.UnitListShorthandWarning} ${nonMatchingCount}`)
 				: notifier.success(translations.UnitListShorthandSuccess);
-			this.props.formContext.services.blockerService.pop();
+			this.props.formContext.services.blocker.pop();
 		});
 	}
 

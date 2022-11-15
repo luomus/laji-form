@@ -59,13 +59,13 @@ export default class GeocoderField extends React.Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.componentDidUpdate();
-		this.props.formContext.services.customEventService.add(this.props.idSchema.$id, "locate", this.onLocate);
+		this.props.formContext.services.customEvents.add(this.props.idSchema.$id, "locate", this.onLocate);
 		this.getComponentContext().resetRemountedState = (loading) => this.setState(this.getStateFromProps(this.props, loading));
 	}
 
 	componentWillUnmount() {
 		this.mounted = false;
-		this.props.formContext.services.customEventService.remove(this.props.idSchema.$id, "locate", this.onLocate);
+		this.props.formContext.services.customEvents.remove(this.props.idSchema.$id, "locate", this.onLocate);
 		delete this.getComponentContext().resetRemountedState;
 	}
 

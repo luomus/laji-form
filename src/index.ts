@@ -57,10 +57,10 @@ export default class LajiFormWrapper {
 	unmount = this.destroy
 
 	invalidateSize = () => {
-		const {resize = {}} = this.lajiForm?.memoizedFormContext.services.customEventService.eventListeners || {};
+		const {resize = {}} = this.lajiForm?.memoizedFormContext.services.customEvents.eventListeners || {};
 
 		Object.keys(resize).sort().reverse().forEach(id => {
-			this.lajiForm?.memoizedFormContext.services.customEventService.send(id, "resize", undefined, undefined, {bubble: false});
+			this.lajiForm?.memoizedFormContext.services.customEvents.send(id, "resize", undefined, undefined, {bubble: false});
 		});
 	}
 }

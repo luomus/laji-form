@@ -43,7 +43,7 @@ export class TagInputComponent extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (!equals(prevProps.formData, this.props.formData)) {
-			this.props.formContext.services.customEventService.send(this.props.idSchema.$id, "resize");
+			this.props.formContext.services.customEvents.send(this.props.idSchema.$id, "resize");
 		}
 	}
 

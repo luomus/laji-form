@@ -708,14 +708,14 @@ export class Fullscreen extends React.Component {
 
 		if (this.props.onKeyDown) {
 			this._onKeyDown = true;
-			this.props.formContext.services.keyHandlerService.addGlobalEventHandler("keydown", this.props.onKeyDown);
+			this.props.formContext.services.keyHandler.addGlobalEventHandler("keydown", this.props.onKeyDown);
 		}
 	}
 
 	componentWillUnmount() {
 		document.body.style.overflow = this.bodyOverFlow;
 		if (this._onKeyDown) {
-			this.props.formContext.services.keyHandlerService.removeGlobalEventHandler("keydown", this.props.onKeyDown);
+			this.props.formContext.services.keyHandler.removeGlobalEventHandler("keydown", this.props.onKeyDown);
 		}
 	}
 

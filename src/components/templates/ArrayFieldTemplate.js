@@ -10,12 +10,12 @@ import { getTemplate } from "@rjsf/utils";
 function onAdd(e, props) {
 	if (!canAdd(props)) return;
 	props.onAddClick(e);
-	setTimeout(() => props.formContext.services.customEventService.send(props.idSchema.$id, "resize"));
+	setTimeout(() => props.formContext.services.customEvents.send(props.idSchema.$id, "resize"));
 }
 
 export const onDelete = (item, props) => (e) => {
 	item.onDropIndexClick(item.index)(e);
-	setTimeout(() => props.formContext.services.customEventService.send(props.idSchema.$id, "resize"));
+	setTimeout(() => props.formContext.services.customEvents.send(props.idSchema.$id, "resize"));
 };
 
 export function beforeAdd(props) {
@@ -183,11 +183,11 @@ export function handlesArrayKeys(ComposedComponent) {
 		addKeyHandlers() {
 			const [keys, options] = (super.getKeyHandlers || this.getKeyHandlers).call(this, this.props);
 			this.arrayKeyFunctions = keys;
-			this.props.formContext.services.keyHandlerService.addKeyHandler(this.props.idSchema.$id, keys, options);
+			this.props.formContext.services.keyHandler.addKeyHandler(this.props.idSchema.$id, keys, options);
 		}
 
 		removeKeyHandlers(props) {
-			this.props.formContext.services.keyHandlerService.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
+			this.props.formContext.services.keyHandler.removeKeyHandler(props.idSchema.$id, this.arrayKeyFunctions);
 		}
 
 		getKeyHandlers(props) {
@@ -200,13 +200,13 @@ export function handlesArrayKeys(ComposedComponent) {
 		addChildKeyHandlers(props) {
 			this.childKeyHandlers = (super.getChildKeyHandlers || this.getChildKeyHandlers).call(this, props);
 			this.childKeyHandlers.forEach(handler => {
-				this.props.formContext.services.keyHandlerService.addKeyHandler(...handler);
+				this.props.formContext.services.keyHandler.addKeyHandler(...handler);
 			});
 		}
 
 		removeChildKeyHandlers() {
 			this.childKeyHandlers.forEach(handler => {
-				this.props.formContext.services.keyHandlerService.removeKeyHandler(...handler);
+				this.props.formContext.services.keyHandler.removeKeyHandler(...handler);
 			});
 		}
 
@@ -249,15 +249,15 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		addCustomEventListeners(props) {
-			const {customEventService} = props.formContext.services;
+			const {customEvents} = props.formContext.services;
 			const customEventListeners = (super.getCustomEventListeners || this.getCustomEventListeners).call(this, props);
 			this.customEventListeners = customEventListeners;
-			customEventListeners.forEach(params => customEventService.add(props.idSchema.$id, ...params));
+			customEventListeners.forEach(params => customEvents.add(props.idSchema.$id, ...params));
 		}
 
 		removeCustomEventListeners(props) {
-			const {customEventService} = props.formContext.services;
-			this.customEventListeners.forEach(params => customEventService.remove(props.idSchema.$id, ...params));
+			const {customEvents} = props.formContext.services;
+			this.customEventListeners.forEach(params => customEvents.remove(props.idSchema.$id, ...params));
 		}
 	};
 }

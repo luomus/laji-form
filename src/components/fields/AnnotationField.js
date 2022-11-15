@@ -151,7 +151,7 @@ class AnnotationBox extends React.Component {
 	onAnnotationSubmit = ({formData}) => {
 		const {type} = this.getAddOptions();
 		const context = new Context(this.props.formContext.contextId);
-		this.props.formContext.services.blockerService.push();
+		this.props.formContext.services.blocker.push();
 		this.props.formContext.apiClient.fetchRaw("/annotations", undefined, {
 			method: "POST",
 			body: JSON.stringify({...formData, targetID: this.props.id, rootID: context.formData.id, type, byRole: "MMAN.formAdmin"})
@@ -161,13 +161,13 @@ class AnnotationBox extends React.Component {
 			}
 			return response.json();
 		}).then(annotation => {
-			this.props.formContext.services.blockerService.pop();
+			this.props.formContext.services.blocker.pop();
 			const annotationContext = new Context(`${this.props.formContext.contextId}_ANNOTATIONS`);
 			const annotations = [annotation];
 			annotationContext[this.props.id] = annotations;
 			this.setState({annotations: annotations, fail: false});
 		}).catch(() => {
-			this.props.formContext.services.blockerService.pop();
+			this.props.formContext.services.blocker.pop();
 			this.setState({fail: true});
 		});
 	}
@@ -267,7 +267,7 @@ class AnnotationBox extends React.Component {
 			...metadataForm.uiSchema, 
 			"ui:shortcuts": {
 				...((metadataForm.uiSchema || {})["ui:shorcuts"] || {}),
-				...(this.props.formContext.services.keyHandlerService.shortcuts)
+				...(this.props.formContext.services.keyHandler.shortcuts)
 			},
 			"ui:showShortcutsButton": false
 		};

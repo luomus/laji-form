@@ -219,11 +219,11 @@ export interface FormContext {
 	setTimeout: (fn: () => void, time?: number) => void;
 	utils: ReactUtilsType;
 	services: {
-		keyHandlerService: KeyHandlerService,
-		settingsService: SettingsService,
-		focusService: FocusService,
-		blockerService: BlockerService,
-		customEventService: CustomEventService
+		keyHandler: KeyHandlerService,
+		settings: SettingsService,
+		focus: FocusService,
+		blocker: BlockerService,
+		customEvents: CustomEventService
 	}
 }
 
@@ -321,7 +321,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	helpStarted: boolean;
 	eventListeners: [typeof document | typeof window, string, (e: Event) => void][] = [];
 	timeouts: number[] = [];
-	keyHandlerService: KeyHandlerService
 
 	static propTypes = {
 		uiSchemaContext: PropTypes.object,
@@ -465,15 +464,15 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
 			if (services) {
 				this.memoizedFormContext.services = services;
-				services.keyHandlerService.setFormContext(this.memoizedFormContext);
-				services.focusService.setFormContext(this.memoizedFormContext);
-				services.settingsService.setSettings(props.settings);
+				services.keyHandler.setFormContext(this.memoizedFormContext);
+				services.focus.setFormContext(this.memoizedFormContext);
+				services.settings.setSettings(props.settings);
 			} else {
-				this.memoizedFormContext.services.keyHandlerService = new KeyHandlerService(this.memoizedFormContext);
-				this.memoizedFormContext.services.settingsService = new SettingsService(this.onSettingsChange, props.settings);
-				this.memoizedFormContext.services.focusService = new FocusService(this.memoizedFormContext);
-				this.memoizedFormContext.services.blockerService = new BlockerService(this.memoizedFormContext);
-				this.memoizedFormContext.services.customEventService = new CustomEventService();
+				this.memoizedFormContext.services.keyHandler = new KeyHandlerService(this.memoizedFormContext);
+				this.memoizedFormContext.services.settings = new SettingsService(this.onSettingsChange, props.settings);
+				this.memoizedFormContext.services.focus = new FocusService(this.memoizedFormContext);
+				this.memoizedFormContext.services.blocker = new BlockerService(this.memoizedFormContext);
+				this.memoizedFormContext.services.customEvents = new CustomEventService();
 			}
 			return this.memoizedFormContext;
 		}
@@ -512,7 +511,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	resetShortcuts(shortcuts: ShortcutKeys = {}) {
-		this.memoizedFormContext.services.keyHandlerService.setShortcuts(shortcuts, this.keyFunctions);
+		this.memoizedFormContext.services.keyHandler.setShortcuts(shortcuts, this.keyFunctions);
 		Object.keys(shortcuts).some(keyCombo => {
 			if (shortcuts[keyCombo].fn == "help") {
 				this.keyCombo = keyCombo;
@@ -612,7 +611,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 											   uiSchema={uiSchema}
 											   context={this._context}
 											   formContext={this.state.formContext}
-											   errorClickHandler={this.memoizedFormContext.services.focusService.focus}
+											   errorClickHandler={this.memoizedFormContext.services.focus.focus}
 											   tmpIdTree={this.tmpIdTree}
 											   ref={this.bgJobRef}
 					/>
@@ -734,12 +733,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const schemaErrors = nonlive || onlySchema
 			? rjsfValidator.validateFormData(formData, this.props.schema, undefined, ((e: any) => transformErrors(this.state.formContext.translations, e))).errorSchema
 			: {};
-		block && this.memoizedFormContext.services.blockerService.push();
+		block && this.memoizedFormContext.services.blocker.push();
 		return new Promise(resolve =>
 			Promise.all([validate(validations, formData), validate(liveValidations, formData)]).then(([_validations, _liveValidations]) => {
 				if (nonlive || onlySchema) {
 					this.cachedNonliveValidations = merge(schemaErrors, _validations);
-					block && this.memoizedFormContext.services.blockerService.pop();
+					block && this.memoizedFormContext.services.blocker.pop();
 				}
 				const merged = merge(_liveValidations, !nonlive
 					? (this.cachedNonliveValidations || {})
@@ -749,7 +748,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				resolve(!Object.keys(merged).length);
 				!equals((this.state.extraErrors || {}), merged) && this.setState({extraErrors: merged}, this.popErrorListIfNeeded);
 			}).catch((e) => {
-				block && this.memoizedFormContext.services.blockerService.pop();
+				block && this.memoizedFormContext.services.blocker.pop();
 
 				throw e;
 			})
@@ -780,7 +779,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			return false;
 		}
 
-		this.memoizedFormContext.services.blockerService.push();
+		this.memoizedFormContext.services.blocker.push();
 		this.setState({runningSubmitHooks: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
 		Promise.all((this.state.submitHooks || []).map(({promise, hook}) => {
 			const setNotRunning = () => {
@@ -790,12 +789,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			};
 			return promise.then(setNotRunning).catch(setNotRunning);
 		})).then(() => {
-			this.memoizedFormContext.services.blockerService.pop();
+			this.memoizedFormContext.services.blocker.pop();
 			this.setState({runningSubmitHooks: false});
 			this.validateAndSubmit(!_onlySchemaValidations, _onlySchemaValidations);
 		}).catch(() => {
 			this.setState({runningSubmitHooks: false});
-			this.memoizedFormContext.services.blockerService.pop();
+			this.memoizedFormContext.services.blocker.pop();
 			highlightElem(findDOMNode(this.bgJobRef?.current) as Element);
 		});
 		return undefined;
@@ -867,7 +866,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	keyFunctions = {
 		navigate: (e: KeyboardEvent, {reverse}: any) => {
-			this.memoizedFormContext.services.focusService.focusNextInput(reverse);
+			this.memoizedFormContext.services.focus.focusNextInput(reverse);
 		},
 		help: (e: KeyboardEvent, {delay}: any) => {
 			if (this.helpStarted) return false;
@@ -887,15 +886,15 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	pushBlockingLoader = () => {
-		this.memoizedFormContext.services.blockerService.push();
+		this.memoizedFormContext.services.blocker.push();
 	}
 
 	popBlockingLoader = () => {
-		this.memoizedFormContext.services.blockerService.pop();
+		this.memoizedFormContext.services.blocker.pop();
 	}
 
 	getSettings(global = false) {
-		return this.memoizedFormContext.services.settingsService.getSettings(global);
+		return this.memoizedFormContext.services.settings.getSettings(global);
 	}
 
 	onSettingsChange = (settings: Settings, global = false) => {

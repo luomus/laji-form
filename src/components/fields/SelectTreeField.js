@@ -127,7 +127,7 @@ export default class SelectTreeField extends React.Component {
 			e.preventDefault();
 			e.stopPropagation();
 			this.getContext().setImmediate(() => {
-				this.props.formContext.services.focusService.focusNextInput(e.shiftKey);
+				this.props.formContext.services.focus.focusNextInput(e.shiftKey);
 			});
 		}
 	}
