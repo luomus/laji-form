@@ -1685,10 +1685,14 @@ min-height: 20px;
 }
 
 
-.laji-form .input-group .input-group-text {
+.laji-form .input-group .input-group-text, .laji-form .input-group .input-group-button {
 	height: 25px;
-	font-size: 13px;
 	border-radius: 2px;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+.laji-form .input-group .input-group-text {
+	font-size: 13px;
 }
 .laji-form .input-group.input-group-textarea .input-group-text {
 	height: initial;

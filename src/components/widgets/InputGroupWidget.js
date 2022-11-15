@@ -16,7 +16,7 @@ export default class InputGroupWidget extends React.Component {
 			})
 		}),
 		schema: PropTypes.shape({
-			type: PropTypes.oneOf(["string"]),
+			type: PropTypes.oneOf(["string", "number", "integer"]),
 		}).isRequired,
 		value: PropTypes.string,
 		required: PropTypes.bool
