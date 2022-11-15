@@ -265,7 +265,6 @@ export type Translations = Record<Lang, ByLang>;
 export interface RootContext {
 	formInstance: LajiForm;
 	formData: any;
-	setTimeout: (fn: () => void, timer: number) => void;
 	addEventListener: (target: typeof document | typeof window, name: string, fn: (e: Event) => void) => void;
 	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	addSubmitHook: (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => void;
@@ -350,7 +349,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			this._context.lajiGeoServerAddress = props.lajiGeoServerAddress;
 		}
 
-		this._context.setTimeout = this.setTimeout;
 		this._context.addEventListener = this.addEventListener;
 
 		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => {
