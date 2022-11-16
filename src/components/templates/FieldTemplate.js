@@ -10,7 +10,7 @@ export default class FieldTemplateTemplate extends React.Component {
 			this.state = {};
 			return;
 		}
-		const id = this.props.formContext.reserveId(this.props.id, this.receiveId);
+		const id = this.props.formContext.services.DOMIds.reserve(this.props.id, this.receiveId);
 		if (id) {
 			this.state = {id};
 		} else {
@@ -39,8 +39,8 @@ export default class FieldTemplateTemplate extends React.Component {
 
 	UNSAFE_componentWillReceiveProps(props) {
 		if (getUiOptions(props.uiSchema).reserveId !== false && this.props.id !== props.id) {
-			this.props.formContext.releaseId(this.props.id, this.receiveId);
-			const id = props.formContext.reserveId(props.id, this.receiveId);
+			this.props.formContext.services.DOMIds.release(this.props.id, this.receiveId);
+			const id = props.formContext.services.DOMIds.reserve(props.id, this.receiveId);
 			id && this.receiveId(id);
 		}
 	}
@@ -58,7 +58,7 @@ export default class FieldTemplateTemplate extends React.Component {
 		if (getUiOptions(this.props.uiSchema).reserveId === false) {
 			return;
 		}
-		this.props.formContext.releaseId(this.props.id, this.receiveId);
+		this.props.formContext.services.DOMIds.release(this.props.id, this.receiveId);
 	}
 
 	render() {

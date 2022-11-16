@@ -6,7 +6,6 @@ import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
-import Form from "@rjsf/core";
 import { UiSchema, RJSFSchema } from "@rjsf/utils";
 import { FormContext, RootContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
 import rjsfValidator from "@rjsf/validator-ajv6";

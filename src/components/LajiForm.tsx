@@ -23,6 +23,7 @@ import FocusService from "../services/focus-service";
 import BlockerService from "../services/blocker-service";
 import CustomEventService from "../services/custom-event-service";
 import SubmitHookService, { SubmitHook } from "../services/submit-hook-service";
+import DOMIdService from "../services/dom-id-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -207,8 +208,6 @@ export interface FormContext {
 	bottomOffset: number;
 	formID: string;
 	googleApiKey: string;
-	reserveId: (id: string, sendId: (id: string) => void) => string | void;
-	releaseId: (id: string, sendId: (id: string) => void) => void;
 	notifier: Notifier;
 	apiClient: ApiClient;
 	Label: React.Component;
@@ -225,7 +224,8 @@ export interface FormContext {
 		focus: FocusService,
 		blocker: BlockerService,
 		customEvents: CustomEventService,
-		submitHooks: SubmitHookService
+		submitHooks: SubmitHookService,
+		DOMIds: DOMIdService
 	}
 }
 
@@ -277,25 +277,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	_id: number;
 	_context: RootContext;
 	propagateSubmit = true;
-	ids: {[id: string]: ((id: string) => void)[]} = {};
-	// First call returns id, next call (and only the very next) reserves the id until it is released.
-	reserveId = (id: string, sendId: (id: string) => void): string | void => {
-		if (this.ids[id] && this.ids[id].length) {
-			this.ids[id].push(sendId);
-		} else {
-			this.ids[id] = [sendId]; // Just mark that the id is now used. It isn't reserved yet.
-			return id;
-		}
-	};
-	releaseId = (id: string, sendId: (id: string) => void) => {
-		if (this.ids[id]) {
-			const idx = this.ids[id].indexOf(sendId);
-			this.ids[id].splice(idx, 1);
-			if (this.ids[id].length > 0) {
-				this.ids[id][0](id);
-			}
-		}
-	};
 	tmpIdTree: any;
 	formRef = React.createRef<Form>();
 	mounted: boolean;
@@ -392,8 +373,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				contextId: this._id,
 				formID: props.id,
 				googleApiKey: props.googleApiKey,
-				reserveId: this.reserveId,
-				releaseId: this.releaseId,
 				notifier: props.notifier || this.getDefaultNotifier(),
 				apiClient: this.apiClient,
 				Label: (props.fields || {}).Label || Label,
@@ -415,6 +394,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				this.memoizedFormContext.services.blocker = new BlockerService(this.memoizedFormContext);
 				this.memoizedFormContext.services.customEvents = new CustomEventService();
 				this.memoizedFormContext.services.submitHooks = new SubmitHookService(this.onSubmitHooksChange);
+				this.memoizedFormContext.services.DOMIds = new DOMIdService();
 			}
 			return this.memoizedFormContext;
 		}
