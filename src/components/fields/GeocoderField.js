@@ -395,7 +395,7 @@ export default class GeocoderField extends React.Component {
 		};
 
 		if (this.getComponentContext().hook) {
-			mainContext.removeSubmitHook(this.getUUID(), this.getComponentContext().hook).then(doAsync);
+			this.props.formContext.services.submitHooks.remove(this.getUUID(), this.getComponentContext().hook).then(doAsync);
 		} else {
 			doAsync();
 		}

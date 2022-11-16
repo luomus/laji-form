@@ -550,7 +550,7 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		Object.keys(oldIds).forEach(id => {
 			if (!ids[id]) {
-				new Context(this.props.formContext.contextId).removeSubmitHook(id);
+				this.props.formContext.services.submitHooks.remove(id);
 			}
 		});
 	}

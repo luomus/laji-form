@@ -3,7 +3,6 @@ import * as merge from "deepmerge";
 import { getUiOptions, addLajiFormIds, getAllLajiFormIdsDeeply, parseJSONPointer, schemaJSONPointer, updateFormDataWithJSONPointer, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import { beforeAdd } from "../templates/ArrayFieldTemplate";
-import Context from "../../Context";
 import ReactContext from "../../ReactContext";
 import { getDefaultRegistry } from "@rjsf/core";
 
@@ -57,7 +56,7 @@ export class ArrayFieldPatched extends ArrayField {
 			const oldIds = getAllLajiFormIdsDeeply(item, tmpIdTree);
 
 			Object.keys(oldIds).forEach((id) => {
-				return new Context(this.props.formContext.contextId).removeSubmitHook(id);
+				return this.props.formContext.services.submitHooks.remove(id);
 			}, []);
 			onDropIndexClick.call(this, index)(event);
 		};

@@ -22,6 +22,7 @@ import SettingsService, { Settings } from "../services/settings-service";
 import FocusService from "../services/focus-service";
 import BlockerService from "../services/blocker-service";
 import CustomEventService from "../services/custom-event-service";
+import SubmitHookService, { SubmitHook } from "../services/submit-hook-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -223,21 +224,12 @@ export interface FormContext {
 		settings: SettingsService,
 		focus: FocusService,
 		blocker: BlockerService,
-		customEvents: CustomEventService
+		customEvents: CustomEventService,
+		submitHooks: SubmitHookService
 	}
 }
 
 export type Lang = "fi" | "en" | "sv";
-
-export interface SubmitHook {
-	hook: () => void;
-	promise: Promise<any>;
-	lajiFormId: string;
-	relativePointer: string | undefined;
-	running: boolean;
-	description?: string;
-	failed?: boolean;
-}
 
 export interface FieldProps extends RJSFFieldProps<any, FormContext> {
 	uiSchema: any;
@@ -266,11 +258,8 @@ export interface RootContext {
 	formInstance: LajiForm;
 	formData: any;
 	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
-	addSubmitHook: (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => void;
-	removeSubmitHook: (lajiFormId: string, hook: SubmitHook["hook"]) => void;
-	removeAllSubmitHook: () => void;
 	singletonMap: any;
-	errorList: ErrorListTemplate
+	errorList: ErrorListTemplate;
 	[prop: string]: any;
 }
 
@@ -347,49 +336,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if (props.lajiGeoServerAddress) {
 			this._context.lajiGeoServerAddress = props.lajiGeoServerAddress;
 		}
-
-		this._context.addSubmitHook = (lajiFormId: string, relativePointer: string | undefined, hook: () => void, description?: string) => {
-			lajiFormId = `${lajiFormId}`;
-			let promise: Promise<any>;
-			const _hook = (): Promise<any> => {
-				return new Promise((resolve) => {
-					let isRetry = false;
-					const hooks = (this.state.submitHooks || []).map(hookItem => {
-						if (hookItem.hook === _hook) {
-							isRetry = true;
-							return {...hookItem, running: true, promise};
-						}
-						return hookItem;
-					});
-					if (isRetry) {
-						this.setState({submitHooks: hooks});
-					}
-					resolve(hook());
-				}).then(() => {
-					this._context.removeSubmitHook(lajiFormId, _hook);
-				}).catch(e => {
-					this.setState({submitHooks: this.state.submitHooks?.map(hookItem => hookItem.hook === _hook ? {...hookItem, e, running: false, failed: true} : hookItem)});
-				});
-			};
-
-			promise = _hook();
-
-			this.setState({submitHooks: [
-				...(this.state.submitHooks || []),
-				{hook: _hook, promise, lajiFormId, description, relativePointer, running: true}
-			]});
-			return _hook;
-		};
-		this._context.removeSubmitHook = (lajiFormId: string, hook: SubmitHook["hook"]) => {
-			return new Promise<void>(resolve => {
-				lajiFormId = `${lajiFormId}`;
-				const newHooks = (this.state.submitHooks || []).filter(({hook: _hook, lajiFormId: _lajiFormId}) => (hook ? _hook !== hook : lajiFormId !== _lajiFormId));
-				newHooks.length !== (this.state.submitHooks || []).length ? this.setState({submitHooks: newHooks}, resolve) : resolve();
-			});
-		};
-		this._context.removeAllSubmitHook = () => {
-			this.setState({submitHooks: []});
-		};
 
 		this.getMemoizedFormContext(props); // Initialize form context.
 		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
@@ -468,6 +414,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				this.memoizedFormContext.services.focus = new FocusService(this.memoizedFormContext);
 				this.memoizedFormContext.services.blocker = new BlockerService(this.memoizedFormContext);
 				this.memoizedFormContext.services.customEvents = new CustomEventService();
+				this.memoizedFormContext.services.submitHooks = new SubmitHookService(this.onSubmitHooksChange);
 			}
 			return this.memoizedFormContext;
 		}
@@ -503,6 +450,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		if ((prevProps.uiSchema || {})["ui:shortcuts"] !== (this.props.uiSchema || {})["ui:shortcuts"]) {
 			this.resetShortcuts((this.props.uiSchema || {})["ui:shortcuts"]);
 		}
+	}
+
+	onSubmitHooksChange = (submitHooks: SubmitHook[], callback?: () => void) => {
+		this.setState({submitHooks}, callback);
 	}
 
 	resetShortcuts(shortcuts: ShortcutKeys = {}) {
@@ -604,7 +555,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					<FailedBackgroundJobsPanel jobs={this.state.submitHooks}
 											   schema={this.props.schema}
 											   uiSchema={uiSchema}
-											   context={this._context}
 											   formContext={this.state.formContext}
 											   errorClickHandler={this.memoizedFormContext.services.focus.focus}
 											   tmpIdTree={this.tmpIdTree}
@@ -775,15 +725,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 
 		this.memoizedFormContext.services.blocker.push();
-		this.setState({runningSubmitHooks: true, submitHooks: (this.state.submitHooks || []).map(hookItem => ({...hookItem, running: true}))});
-		Promise.all((this.state.submitHooks || []).map(({promise, hook}) => {
-			const setNotRunning = () => {
-				this.setState({submitHooks: (this.state.submitHooks || []).map(hookItem =>
-					({...hookItem, running: hookItem.hook === hook ? false : hookItem.running}))
-				});
-			};
-			return promise.then(setNotRunning).catch(setNotRunning);
-		})).then(() => {
+		this.setState({runningSubmitHooks: true});
+		this.memoizedFormContext.services.submitHooks.checkHooks().then(() => {
 			this.memoizedFormContext.services.blocker.pop();
 			this.setState({runningSubmitHooks: false});
 			this.validateAndSubmit(!_onlySchemaValidations, _onlySchemaValidations);

@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
 import * as Spinner from "react-spinner";
 import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
-import Context from "../Context";
 import ReactContext from "../ReactContext";
 
 export class Button extends React.Component {
@@ -738,7 +737,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 	dismissFailedJob = ({id, hook, running}) => (e) => {
 		e.stopPropagation();
 		if (running) return;
-		this.props.context.removeSubmitHook(id, hook);
+		this.props.formContext.services.submitHooks.remove(id, hook);
 	}
 
 	retryFailedJob = ({hook, running}) => (e) => {
@@ -783,7 +782,7 @@ export class FailedBackgroundJobsPanel extends React.Component {
 		if (!errors.length) return null;
 
 		const footer = (
-			<Button onClick={this.props.context.removeAllSubmitHook}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
+			<Button onClick={this.props.formContext.services.submitHooks.removeAll}><Glyphicon glyph="ok"/> {`${translations.Dismiss} ${translations.all}`}</Button>
 		);
 
 		return (

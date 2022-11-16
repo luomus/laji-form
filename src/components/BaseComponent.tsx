@@ -1,7 +1,8 @@
 const deepEquals = require("deep-equal");
 import { getReactComponentName, parseJSONPointer, getRelativePointer, getUUID as _getUUID } from "../utils";
 import Context from "../Context";
-import { FieldProps, WidgetProps, RootContext, SubmitHook } from "./LajiForm";
+import { FieldProps, WidgetProps, RootContext } from "./LajiForm";
+import { SubmitHook } from "../services/submit-hook-service";
 
 type Constructor<T> = new(...args: any[]) => T;
 
@@ -153,7 +154,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			const lajiFormInstance = this.getContext().formInstance;
 			const idSchemaId = this.getIdSchemaId(this.props);
 			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, idSchemaId, id);
-			return this.getContext().addSubmitHook(id, relativePointer, hook);
+			return this.props.formContext.services.submitHooks.add(id, relativePointer, hook);
 		}
 	} as any;
 }
