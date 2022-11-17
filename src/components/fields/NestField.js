@@ -257,7 +257,7 @@ export function getPropsForFields({schema, uiSchema, idSchema, errorSchema, form
 	const newErrorSchema = {};
 	const newFormData = {};
 	const newUiSchema = uiSchema
-		? ["classNames"].reduce((_uiSchema, prop) => {
+		? ["ui:classNames", "classNames"].reduce((_uiSchema, prop) => {
 			if (prop in uiSchema) _uiSchema[prop] = uiSchema[prop];
 			return _uiSchema;
 		}, {})
