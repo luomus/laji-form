@@ -70,7 +70,7 @@ export default class NamedPlaceChooserField extends React.Component {
 				}
 			});
 			gathering.namedPlaceID = place.id;
-			const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
+			const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.$id);
 
 			const [withLajiFormIds] = addLajiFormIds(gathering, tmpIdTree, false);
 			return withLajiFormIds;

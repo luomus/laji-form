@@ -59,7 +59,7 @@ export default class SingleItemArrayField extends React.Component {
 				? props.formData[activeIdx]
 				: addLajiFormIds(
 					getDefaultFormState(props.schema.items),
-					this.props.formContext.utils.getRelativeTmpIdTree(props.idSchema.$id),
+					this.props.formContext.services.ids.getRelativeTmpIdTree(props.idSchema.$id),
 					false
 				)[0],
 			schema: props.schema.items,

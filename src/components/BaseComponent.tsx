@@ -1,5 +1,5 @@
 const deepEquals = require("deep-equal");
-import { getReactComponentName, parseJSONPointer, getRelativePointer, getUUID as _getUUID } from "../utils";
+import { getReactComponentName, parseJSONPointer, getUUID as _getUUID } from "../utils";
 import Context from "../Context";
 import { FieldProps, WidgetProps, RootContext } from "./LajiForm";
 import { SubmitHook } from "../services/submit-hook-service";
@@ -139,10 +139,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		}
 
 		getUUID() {
-			if (!(this.props as any).formData) {
-				return;
-			}
-			return _getUUID((this.props as any).formData) || this.props.formContext._parentLajiFormId || "root";
+			return _getUUID((this.props as any)?.formData) || this.props.formContext._parentLajiFormId || "root";
 		}
 
 		getIdSchemaId(props: P) {
@@ -150,10 +147,9 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		}
 
 		addSubmitHook(hook: SubmitHook["hook"]) {
-			const id = this.getUUID() || this.props.formContext._parentLajiFormId || "root";
-			const lajiFormInstance = this.getContext().formInstance;
+			const id = this.getUUID();
 			const idSchemaId = this.getIdSchemaId(this.props);
-			const relativePointer = getRelativePointer(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, idSchemaId, id);
+			const relativePointer = this.props.formContext.services.ids.getRelativePointer(idSchemaId, id);
 			return this.props.formContext.services.submitHooks.add(id, relativePointer, hook);
 		}
 	} as any;

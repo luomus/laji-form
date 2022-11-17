@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, capitalizeFirstLetter, getDefaultFormState } from "../../utils";
+import { getUiOptions, isEmptyString, parseJSONPointer, getInnerUiSchema, updateSafelyWithJSONPointer, schemaJSONPointer, uiSchemaJSONPointer, updateFormDataWithJSONPointer, capitalizeFirstLetter, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import Context from "../../Context";
 import * as merge from "deepmerge";
@@ -254,7 +254,7 @@ export default class AutosuggestField extends React.Component {
 				}, formData);
 			}
 			const lajiFormInstance = new Context(formContext.contextId).formInstance;
-			const pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, this.getUUID());
+			const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, this.getUUID());
 			const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...formData};
 			lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
 		}

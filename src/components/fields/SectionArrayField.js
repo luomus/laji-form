@@ -405,7 +405,7 @@ class SectionArrayFieldTemplate extends React.Component {
 				);
 			}, result);
 		}, getDefaultFormState(schema.items));
-		const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
+		const tmpIdTree = formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.$id);
 		const _item = copiedRowDefinerData;
 		let [item] = addLajiFormIds(_item, tmpIdTree, this.props.idSchema.$id);
 		item = updateFormDataWithJSONPointer({schema: schema.items, formData: item, registry}, parseInt(newSection), sectionField);
@@ -503,7 +503,7 @@ class SectionArrayFieldTemplate extends React.Component {
 			return map;
 		}, {});
 
-		const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
+		const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${JSONPointerToId(containerPointer.substr(0, containerPointer.length - 1))}`);
 
 		const oldIds = getAllLajiFormIdsDeeply(this.props.formData, tmpIdTree);
 		let ids = {};

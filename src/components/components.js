@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { findDOMNode, createPortal } from "react-dom";
 import * as Spinner from "react-spinner";
-import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, getJSONPointerFromLajiFormIdAndRelativePointer, JSONPointerToId, classNames } from "../utils";
+import { schemaJSONPointer, uiSchemaJSONPointer, parseJSONPointer, JSONPointerToId, classNames } from "../utils";
 import ReactContext from "../ReactContext";
 
 export class Button extends React.Component {
@@ -756,14 +756,14 @@ export class FailedBackgroundJobsPanel extends React.Component {
 
 		if (!jobs.length) return null;
 
-		const {Glyphicon, Panel} = this.context.theme;
+		const {Glyphicon} = this.context.theme;
 
 		const errors = jobs.reduce((_errors, error) => {
 			const {lajiFormId, relativePointer, e, running} = error;
 			if (!e) {
 				return _errors;
 			}
-			const getJsonPointer = () => getJSONPointerFromLajiFormIdAndRelativePointer(this.props.tmpIdTree, this.props.context.formData, lajiFormId, relativePointer);
+			const getJsonPointer = () => this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndRelativePointer(lajiFormId, relativePointer);
 			const jsonPointer = getJsonPointer();
 			const label = parseJSONPointer(uiSchema, `${uiSchemaJSONPointer(uiSchema, jsonPointer)}/ui:title`, "safely")
 				|| parseJSONPointer(schema, `${schemaJSONPointer(schema, jsonPointer)}/title`, "safely");

@@ -5,7 +5,7 @@ import Context from "../../Context";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
-import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames } from "../../utils";
+import { getUiOptions, isObject, updateSafelyWithJSONPointer, parseJSONPointer, JSONPointerToId, updateFormDataWithJSONPointer, idSchemaIdToJSONPointer, getReactComponentName, isDefaultData, parseSchemaFromFormDataPointer, classNames } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const Spinner = require("react-spinner");
 import * as exif from "exif-js";
@@ -604,7 +604,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					return;
 				}
 
-				let pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+				let pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, id);
 				if (!this.mounted && !pointer) {
 					return;
 				}
@@ -632,7 +632,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 					return;
 				}
 
-				pointer = getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(lajiFormInstance.tmpIdTree, lajiFormInstance.state.formData, this.props.idSchema.$id, id);
+				pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, id);
 				lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
 			});
 

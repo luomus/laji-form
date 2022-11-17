@@ -259,7 +259,6 @@ export interface ReactUtilsType {
 	filterItemIdsDeeply: (item: any, idSchemaId: string) => any;
 	formDataIsEmpty: (props: FieldProps) => boolean;
 	formDataEquals: (f1: any, f2: any, id: string) => boolean;
-	getRelativeTmpIdTree: (id: string) => any;
 	keyboardClick: (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => (e: (KeyboardEvent | React.KeyboardEvent)) => void;
 	getNextInput: (inputElem: HTMLElement, reverseDirection: boolean) => HTMLElement | undefined;
 	focusNextInput: (reverseDirection: boolean) => void;
@@ -276,7 +275,6 @@ export const ReactUtils = (context: FormContext): ReactUtilsType => ({
 	filterItemIdsDeeply: _filterItemIdsDeeply(context),
 	formDataIsEmpty: _formDataIsEmpty(context),
 	formDataEquals: _formDataEquals(context),
-	getRelativeTmpIdTree: _getRelativeTmpIdTree(context),
 	keyboardClick: _keyboardClick(context),
 	getNextInput: getNextInput(context),
 	focusNextInput: focusNextInput(context),
@@ -447,48 +445,26 @@ export const filterItemId = (item: any) => {
 };
 
 const _filterItemIdsDeeply = (context: FormContext) => (item: any, idSchemaId: string) => {
-	const tmpIdTree = context.utils.getRelativeTmpIdTree(idSchemaId);
+	const tmpIdTree = context.services.ids.getRelativeTmpIdTree(idSchemaId);
 	let [_item] = walkFormDataWithIdTree(item, tmpIdTree, filterItemId);
 	return _item;
 };
 export const filterItemIdsDeeply = (item: any, context: FormContext, idSchemaId: string) => _filterItemIdsDeeply(context)(item, idSchemaId);
 
 const _formDataIsEmpty = (context: FormContext) => (props: FieldProps) => {
-	const tmpIdTree = context.utils.getRelativeTmpIdTree(props.idSchema.$id);
+	const tmpIdTree = context.services.ids.getRelativeTmpIdTree(props.idSchema.$id);
 	let [item] = walkFormDataWithIdTree(props.formData, tmpIdTree, filterItemId);
 	return deepEquals(item, getDefaultFormState(props.schema, undefined, props.registry.rootSchema));
 };
 export const formDataIsEmpty = (props: FieldProps, context: FormContext) => _formDataIsEmpty(context)(props);
 
 const _formDataEquals = (context: FormContext) => (f1: any, f2: any, id: string) => {
-	const tmpIdTree = context.utils.getRelativeTmpIdTree(id);
+	const tmpIdTree = context.services.ids.getRelativeTmpIdTree(id);
 	const [_f1, _f2] = [f1, f2].map(i => walkFormDataWithIdTree(i, tmpIdTree, filterItemId)[0]);
 	return deepEquals(_f1, _f2);
 };
 export const formDataEquals = (f1: any, f2: any, context: FormContext, id: string) => {
 	return _formDataEquals(context)(f1, f2, id);
-};
-
-const _getRelativeTmpIdTree = ({contextId}: Pick<FormContext, "contextId">) => (id: string) => {
-	const rootTmpIdTree = (new Context(contextId) as RootContext).formInstance.tmpIdTree;
-
-	let tmpIdTree;
-	if (rootTmpIdTree) {
-		tmpIdTree = rootTmpIdTree;
-		const treePath = id.replace(/root|_[0-9]+|_/g, "_").split("_").filter(i => i);
-		for (const k of treePath) {
-			if (tmpIdTree[k]) {
-				tmpIdTree = tmpIdTree[k];
-			} else {
-				tmpIdTree = undefined;
-				break;
-			}
-		}
-	}
-	return tmpIdTree;
-};
-export const getRelativeTmpIdTree = (contextId: number, id: string) => {
-	return _getRelativeTmpIdTree({contextId})(id);
 };
 
 const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e: KeyboardEvent | React.KeyboardEvent) => void) => {
@@ -1039,31 +1015,6 @@ export const assignUUID = (item: any, immutably = false) => {
 	return item;
 };
 
-export function createTmpIdTree(schema: RJSFSchema) {
-	function walk(_schema: any) {
-		if (_schema.properties) {
-			const _walked = Object.keys(_schema.properties).reduce((paths, key) => {
-				const walked = walk(_schema.properties[key]);
-				if (walked) {
-					(paths as any)[key] = walked;
-				}
-				return paths;
-			}, {});
-			if (Object.keys(_walked).length) return _walked;
-		} else if (_schema.type === "array" && _schema.items.type === "object") {
-			return Object.keys(_schema.items.properties).reduce((paths, key) => {
-				const walked = walk(_schema.items.properties[key]);
-				if (walked) {
-					(paths as any)[key] = walked;
-				}
-				return paths;
-			}, {_hasId: true});
-		}
-		return undefined;
-	}
-	return walk(schema);
-}
-
 export const getUUID = (item: any) => item ? (item.id || item._lajiFormId) : undefined;
 
 function walkFormDataWithIdTree(_formData: any, tree: any, itemOperator?: (item: any) => void): [any, {[id: string]: true}] {
@@ -1143,34 +1094,6 @@ export function findPointerForLajiFormId(tmpIdTree: any = {}, formData: any, laj
 		}
 	}
 	return undefined;
-}
-
-export function getRelativePointer(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
-	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
-	if (!containerPointer) {
-		return;
-	}
-	const indicesCount = containerPointer.match(/\/[0-9]+/g)?.length || 0;
-	const containerPointerWithoutArrayIndices = containerPointer.replace(/[0-9]+/g, "");
-	const thisPointer = idSchemaId.replace("root", "").replace(/_/g, "/");
-	let thisPointerWithoutContainerIndices = thisPointer;
-	for (let i = indicesCount; i > 0; i--) {
-		thisPointerWithoutContainerIndices = thisPointerWithoutContainerIndices.replace(/[0-9]+/, "");
-	}
-	return thisPointerWithoutContainerIndices.replace(containerPointerWithoutArrayIndices, "");
-}
-
-export function getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(tmpIdTree: any, formData: any, idSchemaId: string, lajiFormId: string | number) {
-	const relativePointer = getRelativePointer(tmpIdTree, formData, idSchemaId, lajiFormId);
-	return getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree, formData, lajiFormId, relativePointer);
-}
-
-export function getJSONPointerFromLajiFormIdAndRelativePointer(tmpIdTree: any, formData: any, lajiFormId: string | number, relativePointer?: string) {
-	const containerPointer = findPointerForLajiFormId(tmpIdTree, formData, lajiFormId);
-	if (!containerPointer) {
-		return "";
-	}
-	return containerPointer + relativePointer;
 }
 
 export function highlightElem(elem?: Element) {

@@ -28,12 +28,12 @@ export const copyItemFunction = (that, copyItem) => (props, {type, filter}) => {
 		return updateFormDataWithJSONPointer({schema: schema.items, formData: target, registry}, sourceValue, f);
 	}, type === "blacklist" ? copyItem : defaultItem);
 
-	const tmpIdTree = that.props.formContext.utils.getRelativeTmpIdTree(props.idSchema.$id);
+	const tmpIdTree = that.props.formContext.services.ids.getRelativeTmpIdTree(props.idSchema.$id);
 	return addLajiFormIds(filtered, tmpIdTree, false)[0];
 };
 
 export function onArrayFieldChange(formData, props) {
-	const tmpIdTree = props.formContext.utils.getRelativeTmpIdTree(props.idSchema.$id);
+	const tmpIdTree = props.formContext.services.ids.getRelativeTmpIdTree(props.idSchema.$id);
 	return addLajiFormIds(formData, tmpIdTree, false)[0];
 }
 
@@ -44,7 +44,7 @@ export class ArrayFieldPatched extends ArrayField {
 		super(...params);
 		const {_getNewFormDataRow} = this;
 		this._getNewFormDataRow = () => {
-			const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(this.props.idSchema.$id);
+			const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(this.props.idSchema.$id);
 			const [item] = addLajiFormIds(_getNewFormDataRow.call(this), tmpIdTree, false);
 			return item;
 		};
@@ -52,7 +52,7 @@ export class ArrayFieldPatched extends ArrayField {
 		const {onDropIndexClick} = this;
 		this.onDropIndexClick = (index) => (event) => {
 			const item = this.props.formData[index];
-			const tmpIdTree = this.props.formContext.utils.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${index}`);
+			const tmpIdTree = this.props.formContext.services.ids.getRelativeTmpIdTree(`${this.props.idSchema.$id}_${index}`);
 			const oldIds = getAllLajiFormIdsDeeply(item, tmpIdTree);
 
 			Object.keys(oldIds).forEach((id) => {
