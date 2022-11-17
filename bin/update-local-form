@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e
 id=$1
-[[ -z $id ]] && echo "No form id given" && exit
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+[[ -z $id ]] && echo "No form id given" && exit
+! command -v jq &>/dev/null && echo "jq not installed" && exit
+
 [[ ! -f $DIR/../properties.json ]] && echo "properties.json not configured" && exit
 access_token=$(cat $DIR/../properties.json  | grep accessToken | awk '{print $2}' | sed 's/"\|,//g')
+
 [[ -z $access_token ]] && echo "access token not configured in properties.json" && exit
-curl -s "https://apitest.laji.fi/v0/forms/$id?lang=fi&format=schema&access_token=$access_token" | python -m json.tool > forms/"$1".json 
+
+curl -s "https://apitest.laji.fi/v0/forms/$id?lang=fi&format=schema&access_token=$access_token" | jq . > forms/"$1".json 
 echo Updated local $id

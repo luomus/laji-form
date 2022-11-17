@@ -1,752 +1,756 @@
 {
-    "attributes": {
-        "id": "MHL.25"
-    },
-    "category": "MHL.categoryCitizenScience",
-    "collectionID": "HR.2629",
-    "description": "<p>Naturan eli\u00f6kokoelmakilpailun Laji.fi-sarja on yl\u00e4koulun ja toisen asteen opiskelijoille tarkoitettu kilpailu. Kilpailuun voi osallistua tekem\u00e4ll\u00e4 havaintoja Laji.fi-tietokantaan. Osallistumalla kilpailuun t\u00e4ll\u00e4 lomakkeella lajihavaintosi tulevat tieteen k\u00e4ytt\u00f6\u00f6n.</p>\n\n\n<p>Kilpailun Laji.fi-sarjassa tulee t\u00e4ytt\u00e4\u00e4 v\u00e4hint\u00e4\u00e4n 20 lajin havainnot tietokantaan. Kilpailuaika on 1.5.\u201330.10.2018. Teemana ovat kylien ja kaupunkien lajit, joten keskity kokoelmassasi niiden havainnointiin.</p>\n\n\n<p>Lue tarkat s\u00e4\u00e4nn\u00f6t, ohjeet ja kilpailun tiedot Natura-lehden sivuilta: <a href=\"http://www.naturalehti.fi/kokoelmakilpailu\" rel=\"nofollow\" target=\"_blank\">www.naturalehti.fi/kokoelmakilpailu</a></p>\n\n\n<p>Ohje lomakkeen t\u00e4ytt\u00e4miseen: <a href=\"http://cms.laji.fi/wp-content/uploads/2018/05/Kokoelmakilpailu_ohjeet_2018.pdf\" rel=\"nofollow\" target=\"_blank\">http://cms.laji.fi/wp-content/uploads/2018/05/Kokoelmakilpailu_ohjeet_2018.pdf</a></p><p>Huomioithan, ett\u00e4 lajeista pit\u00e4\u00e4 k\u00e4ytt\u00e4\u00e4 niiden kokonaista suomenkielist\u00e4 nime\u00e4, esim. joillain puilla on pidempi nimi: pihlaja = kotipihlaja, m\u00e4nty = mets\u00e4m\u00e4nty. Nimet voit tarkistaa Pinkan avulla:<p><a href=\"http://pinkka.helsinki.fi/pinkat/#/pinkkas/59\" rel=\"nofollow\" target=\"_blank\">http://pinkka.helsinki.fi/pinkat/#/pinkkas/59</a>. Voit hy\u00f6dynt\u00e4\u00e4 my\u00f6s muita Pinkkoja kuin kokoelmakilpailun Pinkkaa.</p>\n\n\n<p>Kilpailuun osallistujat t\u00e4ytt\u00e4v\u00e4t varsinaisen kilpailuty\u00f6n palauttamisen lis\u00e4ksi itsearviointilomakkeen. Huolellisesti tehty itsearviointi on yksi arviointikriteeri. Yl\u00e4koulun ja toisen asteen lomakkeella kysyt\u00e4\u00e4n lis\u00e4ksi osallistujien kokemuksia kokoelman ker\u00e4\u00e4misest\u00e4. Vastauksia k\u00e4ytet\u00e4\u00e4n nimett\u00f6m\u00e4sti tutkimusk\u00e4yt\u00f6ss\u00e4 vain, jos osallistuja antaa siihen luvan.</p>\n\n\n<p>Itsearviointilomakkeen l\u00f6yd\u00e4t t\u00e4\u00e4lt\u00e4: Yl\u00e4koulu ja toinen aste: <a href=\"https://elomake.helsinki.fi/lomakkeet/89201/lomake.html\" rel=\"nofollow\" target=\"_blank\">https://elomake.helsinki.fi/lomakkeet/89201/lomake.html</a></p>\n\n\n<p>Kilpailun j\u00e4rjest\u00e4v\u00e4n\u00e4 tahona on Biologian ja maantieteen opettajien liitto Ry yhteisty\u00f6ss\u00e4 Suomen Lajitietokeskuksen ja Pinkka-oppimisymp\u00e4rist\u00f6n kanssa. Lis\u00e4ksi mukana on Helsingin yliopiston kasvatustieteellisess\u00e4 tiedekunnassa meneill\u00e4\u00e4n oleva KOPPI-hanke, joka tutkii eli\u00f6kokoelman k\u00e4ytt\u00f6\u00e4 opetuksessa.</p>\n\n",
-    "excludeFromCopy": [
-        "$.gatherings[*].dateBegin",
-        "$.gatherings[*].units",
-        "$.gatherings[*].units[*].unitGathering.dateBegin"
-    ],
-    "id": "MHL.25",
-    "language": "fi",
-    "logo": "https://cdn.laji.fi/images/logos/Kokoelmakilpailu-logo-PIENI.png",
-    "name": "Kokoelmakilpailulomake",
-    "options": {
-        "allowTemplate": true,
-        "instructions": {
-            "en": "https://laji.fi/about/1107",
-            "fi": "https://laji.fi/about/1107",
-            "sv": "https://laji.fi/about/1107"
+  "schema": {
+    "type": "object",
+    "properties": {
+      "editors": {
+        "type": "array",
+        "items": {
+          "type": "string"
         },
-        "simple": true
-    },
-    "schema": {
+        "title": "Muokkausoikeus"
+      },
+      "secureLevel": {
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "MX.secureLevelNone",
+            "title": "Ei karkeistettu"
+          },
+          {
+            "const": "MX.secureLevelKM10",
+            "title": "10 km"
+          }
+        ],
+        "title": "Havainnon tarkat paikkatiedot ovat julkisia",
+        "default": "MX.secureLevelNone"
+      },
+      "gatheringEvent": {
+        "type": "object",
         "properties": {
-            "editors": {
-                "items": {
-                    "type": "string"
-                },
-                "title": "Muokkausoikeus",
-                "type": "array"
+          "leg": {
+            "type": "array",
+            "items": {
+              "type": "string"
             },
-            "gatheringEvent": {
+            "title": "Havainnoijat"
+          },
+          "legPublic": {
+            "type": "boolean",
+            "title": "Havainnoijien nimet ovat julkisia",
+            "default": true
+          }
+        },
+        "required": [],
+        "title": ""
+      },
+      "gatherings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "locality": {
+              "type": "string",
+              "title": "Paikannimet"
+            },
+            "localityDescription": {
+              "type": "string",
+              "title": "Paikan kuvaus"
+            },
+            "dateBegin": {
+              "type": "string",
+              "title": "Päivämäärä"
+            },
+            "units": {
+              "type": "array",
+              "items": {
+                "type": "object",
                 "properties": {
-                    "leg": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "title": "Havainnoijat",
-                        "type": "array"
+                  "informalTaxonGroups": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
                     },
-                    "legPublic": {
-                        "default": true,
-                        "title": "Havainnoijien nimet ovat julkisia",
-                        "type": "boolean"
-                    }
-                },
-                "required": [],
-                "title": "",
-                "type": "object"
-            },
-            "gatherings": {
-                "items": {
-                    "properties": {
-                        "dateBegin": {
-                            "title": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
-                            "type": "string"
-                        },
-                        "geometry": {
-                            "properties": {},
-                            "title": "",
-                            "type": "object"
-                        },
-                        "locality": {
-                            "title": "Paikannimet",
-                            "type": "string"
-                        },
-                        "localityDescription": {
-                            "title": "Paikan kuvaus",
-                            "type": "string"
-                        },
-                        "units": {
-                            "items": {
-                                "properties": {
-                                    "count": {
-                                        "title": "M\u00e4\u00e4r\u00e4",
-                                        "type": "string"
-                                    },
-                                    "identifications": {
-                                        "items": {
-                                            "properties": {
-                                                "taxon": {
-                                                    "title": "Laji",
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [],
-                                            "type": "object"
-                                        },
-                                        "minItems": 1,
-                                        "title": "",
-                                        "type": "array"
-                                    },
-                                    "images": {
-                                        "items": {
-                                            "type": "string"
-                                        },
-                                        "title": "Kuvat",
-                                        "type": "array"
-                                    },
-                                    "informalTaxonGroups": {
-                                        "items": {
-                                            "type": "string"
-                                        },
-                                        "title": "Muotoryhm\u00e4t",
-                                        "type": "array"
-                                    },
-                                    "notes": {
-                                        "title": "Lis\u00e4tiedot",
-                                        "type": "string"
-                                    },
-                                    "unitFact": {
-                                        "properties": {
-                                            "autocompleteSelectedTaxonID": {
-                                                "title": "Taxon ID selected from autocomplete",
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [],
-                                        "title": "",
-                                        "type": "object"
-                                    },
-                                    "unitGathering": {
-                                        "properties": {
-                                            "dateBegin": {
-                                                "title": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [],
-                                        "title": "",
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [],
-                                "type": "object"
-                            },
-                            "minItems": 1,
-                            "title": "Havainnot",
-                            "type": "array",
-                            "uniqueItems": false
+                    "title": "Muotoryhmät"
+                  },
+                  "count": {
+                    "type": "string",
+                    "title": "Määrä"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "title": "Lisätiedot"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "title": "Kuvat"
+                  },
+                  "identifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxon": {
+                          "type": "string",
+                          "title": "Laji"
                         }
+                      },
+                      "required": []
+                    },
+                    "minItems": 1,
+                    "title": ""
+                  },
+                  "unitGathering": {
+                    "type": "object",
+                    "properties": {
+                      "dateBegin": {
+                        "type": "string",
+                        "title": "Päivämäärä"
+                      }
                     },
                     "required": [],
-                    "type": "object"
-                },
-                "title": "",
-                "type": "array"
-            },
-            "secureLevel": {
-                "default": "MX.secureLevelNone",
-                "oneOf": [
-                    {
-                        "const": "MX.secureLevelNone",
-                        "title": "Ei karkeistettu"
+                    "title": ""
+                  },
+                  "unitFact": {
+                    "type": "object",
+                    "properties": {
+                      "autocompleteSelectedTaxonID": {
+                        "type": "string",
+                        "title": "Taxon ID selected from autocomplete"
+                      }
                     },
-                    {
-                        "const": "MX.secureLevelKM10",
-                        "title": "10 km"
-                    }
-                ],
-                "title": "Havainnon tarkat paikkatiedot ovat julkisia",
-                "type": "string"
+                    "required": [],
+                    "title": ""
+                  }
+                },
+                "required": []
+              },
+              "uniqueItems": false,
+              "minItems": 1,
+              "title": "Havainnot"
+            },
+            "geometry": {
+              "type": "object",
+              "properties": {},
+              "title": ""
             }
+          },
+          "required": []
         },
-        "required": [
-            "gatherings"
-        ],
-        "type": "object"
+        "title": ""
+      }
     },
-    "shortDescription": "Koululaisten kokoelmakilpailulomake",
-    "title": "Kokoelmakilpailulomake",
-    "uiSchema": {
-        "editors": {
-            "ui:help": "Jos lis\u00e4\u00e4t t\u00e4lle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa h\u00e4nelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot n\u00e4kyv\u00e4t my\u00f6s heid\u00e4n omina havaintoinaan.",
-            "ui:options": {
-                "allowUndefined": false
-            }
-        },
-        "gatheringEvent": {
-            "classNames": "well well-sm",
-            "leg": {
-                "ui:help": "Voit lis\u00e4t\u00e4 kaverisi k\u00e4ytt\u00e4j\u00e4tunnuksen havainnoijaksi, jolloin havainto n\u00e4kyy my\u00f6s h\u00e4nen omissa havainnoissaan. Automaattinen tekstin t\u00e4ydennys ehdottaa vahvistettujen kavereittesi nimi\u00e4. Voit my\u00f6s lis\u00e4t\u00e4 muita havainnoijia kirjoittamalla heid\u00e4n nimens\u00e4, vaikkeivat he olisi kavereitasi, t\u00e4ll\u00f6in n\u00e4ytet\u00e4\u00e4n punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyll\u00e4\". Voit pyyt\u00e4\u00e4 toista k\u00e4ytt\u00e4j\u00e4\u00e4 kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa k\u00e4ytt\u00e4j\u00e4tunnustasi oikealla yl\u00e4palkissa. Etsi kaverisi nimell\u00e4 hakemalla profiilisivulta ja valitse \"Lis\u00e4\u00e4 kaveriksi\". Sen j\u00e4lkeen kun h\u00e4n on vahvistanut pyynt\u00f6si omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisi\u00e4 havaintoja.",
-                "ui:options": {
-                    "allowNonsuggestedValue": true,
-                    "autosuggestField": "friends",
-                    "preventTypingPattern": "^MA\\.\\d+$",
-                    "suggestionReceive": "key"
-                },
-                "ui:widget": "AutosuggestWidget"
-            },
-            "legPublic": {
-                "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4.",
-                "ui:options": {
-                    "allowUndefined": false
-                }
-            },
-            "ui:field": "NestField",
-            "ui:options": {
-                "nests": {
-                    "legEditor": {
-                        "fields": [
-                            "leg",
-                            "editors"
-                        ],
-                        "rootUiSchema": {
-                            "ui:field": "NestField",
-                            "ui:options": {
-                                "nests": {
-                                    "_legEditor": {
-                                        "fields": [
-                                            "leg",
-                                            "editors"
-                                        ],
-                                        "rootUiSchema": {
-                                            "items": {
-                                                "ui:field": "DependentDisableField",
-                                                "ui:functions": {
-                                                    "ui:field": "ContextInjectionField",
-                                                    "ui:options": {
-                                                        "injections": {
-                                                            "/ui:options/rules/0/regexp": "/^%{creator}$"
-                                                        }
-                                                    }
-                                                },
-                                                "ui:options": {
-                                                    "rules": [
-                                                        {
-                                                            "disableDefiner": "leg",
-                                                            "disableField": "editors",
-                                                            "disabledValueToDisplay": true,
-                                                            "inlineHelp": "Sinulla t\u00e4ytyy olla muokkausoikeus.",
-                                                            "regexp": "creator is injected here"
-                                                        },
-                                                        {
-                                                            "disableDefiner": "leg",
-                                                            "disableField": "editors",
-                                                            "regexp": "^((?!(MA\\.\\d)).)*$"
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            "ui:field": "TableField",
-                                            "ui:functions": [
-                                                {
-                                                    "ui:field": "DependentBooleanField",
-                                                    "ui:options": {
-                                                        "booleanDefiner": "leg",
-                                                        "booleanField": "editors"
-                                                    }
-                                                },
-                                                {
-                                                    "ui:field": "ArrayCombinerField"
-                                                }
-                                            ],
-                                            "ui:options": {
-                                                "buttons": [
-                                                    {
-                                                        "fn": "add",
-                                                        "label": "Lis\u00e4\u00e4 havainnoija"
-                                                    }
-                                                ],
-                                                "specialRules": "legEditors",
-                                                "ui:buttonsDesktopLayout": true
-                                            }
-                                        },
-                                        "title": ""
-                                    },
-                                    "legEditorSizeFixer": {
-                                        "fields": [
-                                            "_legEditor"
-                                        ],
-                                        "rootUiSchema": {
-                                            "ui:grid": {
-                                                "lg": 6,
-                                                "md": 6,
-                                                "sm": 9,
-                                                "xs": 12
-                                            }
-                                        },
-                                        "title": ""
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "ui:order": [
-                "*",
-                "legPublic",
-                "secureLevel"
-            ]
-        },
-        "gatherings": {
-            "items": {
-                "dateBegin": {
-                    "ui:options": {
-                        "showButtons": true,
-                        "showTimeList": false
-                    },
-                    "ui:widget": "DateTimeWidget"
-                },
-                "geometry": {
-                    "ui:field": "MapField",
-                    "ui:options": {
-                        "mapOptions": {
-                            "clickBeforeZoomAndPan": true,
-                            "controls": {
-                                "draw": {
-                                    "circle": false,
-                                    "clear": true,
-                                    "coordinateInput": false,
-                                    "coordinateUpload": false,
-                                    "copy": false,
-                                    "marker": true,
-                                    "polygon": false,
-                                    "polyline": false,
-                                    "rectangle": false,
-                                    "redo": false,
-                                    "reverse": false,
-                                    "undo": false
-                                }
-                            },
-                            "createOnLocate": true,
-                            "singleton": true,
-                            "zoomToData": true
-                        }
-                    }
-                },
-                "ui:functions": [
-                    {
-                        "ui:field": "ConditionalUiSchemaField",
-                        "ui:options": {
-                            "cases": {
-                                "else": {
-                                    "type": "merge",
-                                    "uiSchema": {
-                                        "units": {
-                                            "items": {
-                                                "unitGathering": {
-                                                    "dateBegin": {
-                                                        "ui:widget": "HiddenWidget"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "operations": {
-                                    "type": "merge",
-                                    "uiSchema": {
-                                        "dateBegin": {
-                                            "ui:widget": "HiddenWidget"
-                                        }
-                                    }
-                                },
-                                "rules": {
-                                    "field": "/units/0/unitGathering/dateBegin",
-                                    "regexp": ".+"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "ui:field": "UiFieldApplierField",
-                        "ui:options": {
-                            "field": "units",
-                            "functions": [
-                                {
-                                    "ui:field": "SingleItemArrayField"
-                                },
-                                {
-                                    "ui:field": "FlatField",
-                                    "ui:options": {
-                                        "fields": [
-                                            "identifications",
-                                            "unitGathering",
-                                            "unitFact"
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "ui:field": "InjectField",
-                        "ui:options": {
-                            "injections": {
-                                "fields": [
-                                    "locality",
-                                    "localityDescription",
-                                    "dateBegin"
-                                ],
-                                "target": "units"
-                            }
-                        }
-                    }
-                ],
-                "ui:order": [
-                    "geometry",
-                    "*"
-                ],
-                "units": {
-                    "items": {
-                        "identifications": {
-                            "items": {
-                                "detDate": {
-                                    "ui:widget": "DateWidget"
-                                }
-                            }
-                        },
-                        "images": {
-                            "ui:field": "ImageArrayField",
-                            "ui:options": {
-                                "capturerVerbatimPath": "/gatheringEvent/leg"
-                            }
-                        },
-                        "informalTaxonGroups": {
-                            "ui:field": "HiddenField"
-                        },
-                        "ui:functions": [
-                            {
-                                "ui:field": "AutosuggestField",
-                                "ui:options": {
-                                    "allowNonsuggestedValue": true,
-                                    "autosuggestField": "taxon",
-                                    "inputTransformer": {
-                                        "regexp": "^(.*)\\?$",
-                                        "transformations": {
-                                            "taxonConfidence": "MY.taxonConfidenceUnsure"
-                                        }
-                                    },
-                                    "suggestionInputField": "identifications_0_taxon",
-                                    "suggestionReceivers": {
-                                        "identifications_0_taxon": "value",
-                                        "informalTaxonGroups": "$taxonGroup",
-                                        "unitFact_autocompleteSelectedTaxonID": "key"
-                                    },
-                                    "suggestionValueField": "unitFact_autocompleteSelectedTaxonID"
-                                }
-                            }
-                        ],
-                        "ui:grid": {
-                            "lg": {
-                                "*": 2,
-                                "count": 1,
-                                "dateBegin": 3,
-                                "identifications_0_taxon": 3,
-                                "notes": 2,
-                                "unitGathering_dateBegin": 3
-                            },
-                            "md": {
-                                "*": 2,
-                                "count": 1,
-                                "dateBegin": 3,
-                                "identifications_0_taxon": 3,
-                                "unitGathering_dateBegin": 3
-                            },
-                            "sm": {
-                                "*": 2,
-                                "count": 2,
-                                "dateBegin": 4,
-                                "identifications_0_taxon": 2,
-                                "unitGathering_dateBegin": 4
-                            },
-                            "xs": 12
-                        },
-                        "ui:order": [
-                            "identifications",
-                            "count",
-                            "*",
-                            "images"
-                        ],
-                        "unitFact": {
-                            "autocompleteSelectedTaxonID": {
-                                "ui:widget": "HiddenWidget"
-                            }
-                        },
-                        "unitGathering": {
-                            "dateBegin": {
-                                "ui:options": {
-                                    "showButtons": true,
-                                    "showTimeList": false
-                                },
-                                "ui:widget": "DateTimeWidget"
-                            },
-                            "geometry": {
-                                "ui:field": "HiddenField"
-                            }
-                        }
-                    },
-                    "ui:title": ""
-                }
-            },
-            "ui:field": "AccordionArrayField",
-            "ui:options": {
-                "buttons": [
-                    {
-                        "fn": "add",
-                        "label": "Tee uusi havainto"
-                    },
-                    {
-                        "fn": "add",
-                        "label": "Tee uusi havainto",
-                        "position": "top",
-                        "rules": {
-                            "minLength": 1
-                        }
-                    }
-                ],
-                "closeButton": true,
-                "confirmDelete": true,
-                "focusOnActiveChange": false,
-                "focusOnNavigate": false,
-                "headerFormatters": [
-                    "/units/0/identifications/0/taxon",
-                    "namedPlace"
-                ]
-            },
-            "ui:title": "Havainto %{idx}"
-        },
-        "secureLevel": {
-            "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km\u00b2 karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten k\u00e4ytett\u00e4viss\u00e4. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
-            "ui:options": {
-                "allowUndefined": false,
-                "falseValue": "MX.secureLevelKM10",
-                "trueValue": "MX.secureLevelNone"
-            },
-            "ui:widget": "AnyToBooleanWidget"
-        },
-        "ui:field": "InjectField",
+    "required": [
+      "gatherings"
+    ]
+  },
+  "excludeFromCopy": [
+    "$.gatherings[*].dateBegin",
+    "$.gatherings[*].units",
+    "$.gatherings[*].units[*].unitGathering.dateBegin"
+  ],
+  "id": "MHL.25",
+  "name": "Kokoelmakilpailulomake",
+  "category": "MHL.categoryCitizenScience",
+  "language": "fi",
+  "collectionID": "HR.2629",
+  "title": "Kokoelmakilpailulomake",
+  "description": "<p>Naturan eliökokoelmakilpailun Laji.fi-sarja on yläkoulun ja toisen asteen opiskelijoille tarkoitettu kilpailu. Kilpailuun voi osallistua tekemällä havaintoja Laji.fi-tietokantaan. Osallistumalla kilpailuun tällä lomakkeella lajihavaintosi tulevat tieteen käyttöön.</p>\n\n\n<p>Kilpailun Laji.fi-sarjassa tulee täyttää vähintään 20 lajin havainnot tietokantaan. Kilpailuaika on 1.5.–30.10.2018. Teemana ovat kylien ja kaupunkien lajit, joten keskity kokoelmassasi niiden havainnointiin.</p>\n\n\n<p>Lue tarkat säännöt, ohjeet ja kilpailun tiedot Natura-lehden sivuilta: <a href=\"http://www.naturalehti.fi/kokoelmakilpailu\" rel=\"nofollow\" target=\"_blank\">www.naturalehti.fi/kokoelmakilpailu</a></p>\n\n\n<p>Ohje lomakkeen täyttämiseen: <a href=\"http://cms.laji.fi/wp-content/uploads/2018/05/Kokoelmakilpailu_ohjeet_2018.pdf\" rel=\"nofollow\" target=\"_blank\">http://cms.laji.fi/wp-content/uploads/2018/05/Kokoelmakilpailu_ohjeet_2018.pdf</a></p><p>Huomioithan, että lajeista pitää käyttää niiden kokonaista suomenkielistä nimeä, esim. joillain puilla on pidempi nimi: pihlaja = kotipihlaja, mänty = metsämänty. Nimet voit tarkistaa Pinkan avulla:<p><a href=\"http://pinkka.helsinki.fi/pinkat/#/pinkkas/59\" rel=\"nofollow\" target=\"_blank\">http://pinkka.helsinki.fi/pinkat/#/pinkkas/59</a>. Voit hyödyntää myös muita Pinkkoja kuin kokoelmakilpailun Pinkkaa.</p>\n\n\n<p>Kilpailuun osallistujat täyttävät varsinaisen kilpailutyön palauttamisen lisäksi itsearviointilomakkeen. Huolellisesti tehty itsearviointi on yksi arviointikriteeri. Yläkoulun ja toisen asteen lomakkeella kysytään lisäksi osallistujien kokemuksia kokoelman keräämisestä. Vastauksia käytetään nimettömästi tutkimuskäytössä vain, jos osallistuja antaa siihen luvan.</p>\n\n\n<p>Itsearviointilomakkeen löydät täältä: Yläkoulu ja toinen aste: <a href=\"https://elomake.helsinki.fi/lomakkeet/89201/lomake.html\" rel=\"nofollow\" target=\"_blank\">https://elomake.helsinki.fi/lomakkeet/89201/lomake.html</a></p>\n\n\n<p>Kilpailun järjestävänä tahona on Biologian ja maantieteen opettajien liitto Ry yhteistyössä Suomen Lajitietokeskuksen ja Pinkka-oppimisympäristön kanssa. Lisäksi mukana on Helsingin yliopiston kasvatustieteellisessä tiedekunnassa meneillään oleva KOPPI-hanke, joka tutkii eliökokoelman käyttöä opetuksessa.</p>\n\n",
+  "shortDescription": "Koululaisten kokoelmakilpailulomake",
+  "logo": "https://cdn.laji.fi/images/logos/Kokoelmakilpailu-logo-PIENI.png",
+  "uiSchema": {
+    "editors": {
+      "items": {},
+      "ui:help": "Jos lisäät tälle lomakkeelle uuden havainnoijan, joka on profiilissasi luokiteltu kaveriksesi, voit antaa hänelle oikeuden muokata retkikertomusta. Muokkausoikeuden haltijoille kaikki lomakkeeseen tallennetut havainnot näkyvät myös heidän omina havaintoinaan.",
+      "ui:options": {
+        "allowUndefined": false
+      }
+    },
+    "gatheringEvent": {
+      "leg": {
+        "items": {},
+        "ui:widget": "AutosuggestWidget",
+        "ui:help": "Voit lisätä kaverisi käyttäjätunnuksen havainnoijaksi, jolloin havainto näkyy myös hänen omissa havainnoissaan. Automaattinen tekstin täydennys ehdottaa vahvistettujen kavereittesi nimiä. Voit myös lisätä muita havainnoijia kirjoittamalla heidän nimensä, vaikkeivat he olisi kavereitasi, tällöin näytetään punainen kolmio nimen kohdalla. Voit antaa kavereille oikeuden muokata lomaketta valitsemalla \"Kyllä\". Voit pyytää toista käyttäjää kaveriksesi profiilisivullasi. Profiilisi aukeaa klikkaamalla omaa käyttäjätunnustasi oikealla yläpalkissa. Etsi kaverisi nimellä hakemalla profiilisivulta ja valitse \"Lisää kaveriksi\". Sen jälkeen kun hän on vahvistanut pyyntösi omassa profiilissaan, olette kavereita ja voitte esim. Vihko-palvelussa tallentaa yhteisiä havaintoja.",
         "ui:options": {
-            "injections": {
-                "fields": [
-                    "editors",
-                    "secureLevel"
-                ],
-                "target": "gatheringEvent"
+          "autosuggestField": "friends",
+          "allowNonsuggestedValue": true,
+          "suggestionReceive": "key",
+          "preventTypingPattern": "^MA\\.\\d+$"
+        }
+      },
+      "ui:field": "NestField",
+      "ui:classNames": "well well-sm",
+      "ui:order": [
+        "*",
+        "legPublic",
+        "secureLevel"
+      ],
+      "ui:options": {
+        "nests": {
+          "legEditor": {
+            "fields": [
+              "leg",
+              "editors"
+            ],
+            "rootUiSchema": {
+              "ui:field": "NestField",
+              "ui:options": {
+                "nests": {
+                  "_legEditor": {
+                    "fields": [
+                      "leg",
+                      "editors"
+                    ],
+                    "title": "",
+                    "rootUiSchema": {
+                      "ui:functions": [
+                        {
+                          "ui:field": "DependentBooleanField",
+                          "ui:options": {
+                            "booleanField": "editors",
+                            "booleanDefiner": "leg"
+                          }
+                        },
+                        {
+                          "ui:field": "ArrayCombinerField"
+                        }
+                      ],
+                      "ui:field": "TableField",
+                      "ui:options": {
+                        "specialRules": "legEditors",
+                        "ui:buttonsDesktopLayout": true,
+                        "buttons": [
+                          {
+                            "fn": "add",
+                            "label": "Lisää havainnoija"
+                          }
+                        ]
+                      },
+                      "items": {
+                        "ui:functions": {
+                          "ui:field": "ContextInjectionField",
+                          "ui:options": {
+                            "injections": {
+                              "/ui:options/rules/0/regexp": "/^%{creator}$"
+                            }
+                          }
+                        },
+                        "ui:field": "DependentDisableField",
+                        "ui:options": {
+                          "rules": [
+                            {
+                              "disableDefiner": "leg",
+                              "disableField": "editors",
+                              "regexp": "creator is injected here",
+                              "inlineHelp": "Sinulla täytyy olla muokkausoikeus.",
+                              "disabledValueToDisplay": true
+                            },
+                            {
+                              "disableDefiner": "leg",
+                              "disableField": "editors",
+                              "regexp": "^((?!(MA\\.\\d)).)*$"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "legEditorSizeFixer": {
+                    "fields": [
+                      "_legEditor"
+                    ],
+                    "title": "",
+                    "rootUiSchema": {
+                      "ui:grid": {
+                        "lg": 6,
+                        "md": 6,
+                        "sm": 9,
+                        "xs": 12
+                      }
+                    }
+                  }
+                }
+              }
             }
+          }
+        }
+      },
+      "legPublic": {
+        "ui:options": {
+          "allowUndefined": false
+        },
+        "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
+      }
+    },
+    "gatherings": {
+      "items": {
+        "units": {
+          "items": {
+            "informalTaxonGroups": {
+              "items": {},
+              "ui:field": "HiddenField"
+            },
+            "images": {
+              "items": {},
+              "ui:field": "ImageArrayField",
+              "ui:options": {
+                "capturerVerbatimPath": "/gatheringEvent/leg"
+              }
+            },
+            "identifications": {
+              "items": {
+                "detDate": {
+                  "ui:widget": "DateWidget"
+                }
+              }
+            },
+            "ui:functions": [
+              {
+                "ui:field": "AutosuggestField",
+                "ui:options": {
+                  "autosuggestField": "taxon",
+                  "allowNonsuggestedValue": true,
+                  "suggestionInputField": "identifications_0_taxon",
+                  "suggestionValueField": "unitFact_autocompleteSelectedTaxonID",
+                  "suggestionReceivers": {
+                    "identifications_0_taxon": "value",
+                    "informalTaxonGroups": "$taxonGroup",
+                    "unitFact_autocompleteSelectedTaxonID": "key"
+                  },
+                  "inputTransformer": {
+                    "regexp": "^(.*)\\?$",
+                    "transformations": {
+                      "taxonConfidence": "MY.taxonConfidenceUnsure"
+                    }
+                  }
+                }
+              }
+            ],
+            "ui:order": [
+              "identifications",
+              "count",
+              "*",
+              "images"
+            ],
+            "ui:grid": {
+              "lg": {
+                "identifications_0_taxon": 3,
+                "count": 1,
+                "notes": 2,
+                "unitGathering_dateBegin": 3,
+                "dateBegin": 3,
+                "*": 2
+              },
+              "md": {
+                "identifications_0_taxon": 3,
+                "count": 1,
+                "unitGathering_dateBegin": 3,
+                "dateBegin": 3,
+                "*": 2
+              },
+              "sm": {
+                "identifications_0_taxon": 2,
+                "count": 2,
+                "unitGathering_dateBegin": 4,
+                "dateBegin": 4,
+                "*": 2
+              },
+              "xs": 12
+            },
+            "unitGathering": {
+              "geometry": {
+                "ui:field": "HiddenField"
+              },
+              "dateBegin": {
+                "ui:widget": "DateTimeWidget",
+                "ui:options": {
+                  "showButtons": true,
+                  "showTimeList": false
+                }
+              }
+            },
+            "unitFact": {
+              "autocompleteSelectedTaxonID": {
+                "ui:widget": "HiddenWidget"
+              }
+            }
+          },
+          "ui:title": ""
+        },
+        "dateBegin": {
+          "ui:options": {
+            "showButtons": true,
+            "showTimeList": false
+          },
+          "ui:widget": "DateTimeWidget"
+        },
+        "ui:functions": [
+          {
+            "ui:field": "ConditionalUiSchemaField",
+            "ui:options": {
+              "cases": {
+                "rules": {
+                  "field": "/units/0/unitGathering/dateBegin",
+                  "regexp": ".+"
+                },
+                "operations": {
+                  "type": "merge",
+                  "uiSchema": {
+                    "dateBegin": {
+                      "ui:widget": "HiddenWidget"
+                    }
+                  }
+                },
+                "else": {
+                  "type": "merge",
+                  "uiSchema": {
+                    "units": {
+                      "items": {
+                        "unitGathering": {
+                          "dateBegin": {
+                            "ui:widget": "HiddenWidget"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "ui:field": "UiFieldApplierField",
+            "ui:options": {
+              "field": "units",
+              "functions": [
+                {
+                  "ui:field": "SingleItemArrayField"
+                },
+                {
+                  "ui:field": "FlatField",
+                  "ui:options": {
+                    "fields": [
+                      "identifications",
+                      "unitGathering",
+                      "unitFact"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "ui:field": "InjectField",
+            "ui:options": {
+              "injections": {
+                "fields": [
+                  "locality",
+                  "localityDescription",
+                  "dateBegin"
+                ],
+                "target": "units"
+              }
+            }
+          }
+        ],
+        "geometry": {
+          "ui:field": "MapField",
+          "ui:options": {
+            "mapOptions": {
+              "controls": {
+                "draw": {
+                  "marker": true,
+                  "clear": true,
+                  "circle": false,
+                  "rectangle": false,
+                  "polygon": false,
+                  "polyline": false,
+                  "reverse": false,
+                  "coordinateInput": false,
+                  "coordinateUpload": false,
+                  "copy": false,
+                  "undo": false,
+                  "redo": false
+                }
+              },
+              "zoomToData": true,
+              "createOnLocate": true,
+              "singleton": true,
+              "clickBeforeZoomAndPan": true
+            }
+          }
         },
         "ui:order": [
-            "gatheringEvent",
-            "gatherings"
+          "geometry",
+          "*"
+        ]
+      },
+      "ui:field": "AccordionArrayField",
+      "ui:title": "Havainto %{idx}",
+      "ui:options": {
+        "headerFormatters": [
+          "/units/0/identifications/0/taxon",
+          "namedPlace"
         ],
-        "ui:shortcuts": {
-            "Enter": {
-                "fn": "navigate"
-            },
-            "alt": {
-                "delay": 1,
-                "fn": "help"
-            },
-            "alt+ ": {
-                "fn": "navigate"
-            },
-            "alt+ArrowDown": {
-                "fn": "navigateArray",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+ArrowLeft": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+ArrowRight": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+ArrowUp": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+Delete": {
-                "fn": "delete"
-            },
-            "alt+F5": {
-                "fn": "revalidate"
-            },
-            "alt+Insert": {
-                "fn": "insert"
-            },
-            "alt+PageDown": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+PageUp": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+d": {
-                "fn": "delete"
-            },
-            "alt+g": {
-                "fn": "insert",
-                "target": "root_gatherings",
-                "targetLabel": "paikka"
-            },
-            "alt+h": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+i": {
-                "fn": "insert"
-            },
-            "alt+j": {
-                "fn": "navigateArray",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+k": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+l": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+n": {
-                "fn": "navigateArray"
-            },
-            "alt+p": {
-                "fn": "navigateArray",
-                "reverse": true
-            },
-            "alt+shift+ ": {
-                "fn": "navigate",
-                "reverse": true
-            },
-            "alt+t": {
-                "fn": "autosuggestToggle"
-            },
-            "alt+u": {
-                "fn": "insert",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havainto"
-            },
-            "ctrl+Enter": {
-                "fn": "textareaRowInsert"
-            },
-            "shift+Enter": {
-                "fn": "navigate",
-                "reverse": true
+        "buttons": [
+          {
+            "fn": "add",
+            "label": "Tee uusi havainto"
+          },
+          {
+            "fn": "add",
+            "label": "Tee uusi havainto",
+            "position": "top",
+            "rules": {
+              "minLength": 1
             }
-        }
+          }
+        ],
+        "confirmDelete": true,
+        "focusOnNavigate": false,
+        "focusOnActiveChange": false,
+        "closeButton": true
+      }
     },
-    "validators": {
-        "gatheringEvent": {
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+F5": {
+        "fn": "revalidate"
+      },
+      "Enter": {
+        "fn": "navigate"
+      },
+      "shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "ctrl+Enter": {
+        "fn": "textareaRowInsert"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+u": {
+        "fn": "insert",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havainto"
+      },
+      "alt+g": {
+        "fn": "insert",
+        "target": "root_gatherings",
+        "targetLabel": "paikka"
+      },
+      "alt+t": {
+        "fn": "autosuggestToggle"
+      }
+    },
+    "ui:order": [
+      "gatheringEvent",
+      "gatherings"
+    ],
+    "ui:field": "InjectField",
+    "ui:options": {
+      "injections": {
+        "fields": [
+          "editors",
+          "secureLevel"
+        ],
+        "target": "gatheringEvent"
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    }
+  },
+  "options": {
+    "instructions": {
+      "fi": "https://laji.fi/about/1107",
+      "en": "https://laji.fi/about/1107",
+      "sv": "https://laji.fi/about/1107"
+    },
+    "allowTemplate": true,
+    "simple": true
+  },
+  "validators": {
+    "gatheringEvent": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "properties": {
+        "leg": {
+          "presence": {
+            "message": "Vähintään yksi havainnoija täytyy ilmoittaa."
+          }
+        }
+      }
+    },
+    "gatherings": {
+      "presence": {
+        "message": "Vähintään yksi paikka täytyy ilmoittaa.",
+        "allowEmpty": false
+      },
+      "items": {
+        "properties": {
+          "dateBegin": {
             "presence": {
-                "allowEmpty": false
+              "message": "Päivämäärä täytyy ilmoittaa"
             },
-            "properties": {
-                "leg": {
-                    "presence": {
-                        "message": "V\u00e4hint\u00e4\u00e4n yksi havainnoija t\u00e4ytyy ilmoittaa."
-                    }
-                }
+            "datetime": {
+              "earliest": "1000-01-01",
+              "tooEarly": "Päivämäärä on liian varhainen. Varhaisin mahdollinen on %{date}",
+              "latest": "now",
+              "message": "Päivämäärä ei voi olla tulevaisuudessa."
             }
-        },
-        "gatherings": {
+          },
+          "units": {
+            "presence": {
+              "message": "Vähintään yksi havainto täytyy ilmoittaa.",
+              "allowEmpty": false
+            },
             "items": {
-                "properties": {
-                    "dateBegin": {
-                        "datetime": {
-                            "earliest": "1000-01-01",
-                            "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
-                            "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
-                        },
+              "properties": {
+                "identifications": {
+                  "presence": {
+                    "message": "Laji täytyy ilmoittaa"
+                  },
+                  "items": {
+                    "properties": {
+                      "taxon": {
                         "presence": {
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 t\u00e4ytyy ilmoittaa"
+                          "message": "Laji täytyy ilmoittaa"
                         }
-                    },
-                    "geometry": {
-                        "geometry": {
-                            "boundingBoxMaxHectares": 5000000,
-                            "includeGatheringUnits": true,
-                            "maximumSize": 10,
-                            "message": {
-                                "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
-                                "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
-                            },
-                            "requireShape": true
-                        }
-                    },
-                    "units": {
-                        "items": {
-                            "properties": {
-                                "identifications": {
-                                    "items": {
-                                        "properties": {
-                                            "taxon": {
-                                                "presence": {
-                                                    "message": "Laji t\u00e4ytyy ilmoittaa"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "presence": {
-                                        "message": "Laji t\u00e4ytyy ilmoittaa"
-                                    }
-                                },
-                                "unitGathering": {
-                                    "properties": {
-                                        "dateBegin": {
-                                            "datetime": {
-                                                "earliest": "1000-01-01",
-                                                "latest": "now",
-                                                "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa.",
-                                                "tooEarly": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 on liian varhainen. Varhaisin mahdollinen on %{date}"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "presence": {
-                            "allowEmpty": false,
-                            "message": "V\u00e4hint\u00e4\u00e4n yksi havainto t\u00e4ytyy ilmoittaa."
-                        }
+                      }
                     }
+                  }
+                },
+                "unitGathering": {
+                  "properties": {
+                    "dateBegin": {
+                      "datetime": {
+                        "earliest": "1000-01-01",
+                        "tooEarly": "Päivämäärä on liian varhainen. Varhaisin mahdollinen on %{date}",
+                        "latest": "now",
+                        "message": "Päivämäärä ei voi olla tulevaisuudessa."
+                      }
+                    }
+                  }
                 }
-            },
-            "presence": {
-                "allowEmpty": false,
-                "message": "V\u00e4hint\u00e4\u00e4n yksi paikka t\u00e4ytyy ilmoittaa."
+              }
             }
+          },
+          "geometry": {
+            "geometry": {
+              "maximumSize": 10,
+              "message": {
+                "missingGeometries": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
+                "notGeometry": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "missingType": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidRadius": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidCoordinates": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidGeometries": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "noOverlap": "Paikalla täytyy olla vähintään yksi kuvio."
+              },
+              "boundingBoxMaxHectares": 5000000,
+              "requireShape": true,
+              "includeGatheringUnits": true
+            }
+          }
         }
-    },
-    "warnings": {}
+      }
+    }
+  },
+  "warnings": {},
+  "attributes": {
+    "id": "MHL.25"
+  }
 }
