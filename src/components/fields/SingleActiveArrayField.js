@@ -197,7 +197,7 @@ export default class SingleActiveArrayField extends React.Component {
 		let uiSchema = {
 			...this.props.uiSchema,
 			"ui:field": undefined,
-			classNames: undefined,
+			"ui:classNames": undefined,
 			"ui:options": {
 				...getUiOptions(this.props.uiSchema),
 				buttons,
@@ -212,7 +212,7 @@ export default class SingleActiveArrayField extends React.Component {
 				...uiSchema,
 				items: {
 					...uiSchema.items,
-					classNames: tableActiveItemClassNames
+					"ui:classNames": tableActiveItemClassNames
 				}
 			};
 		}

@@ -1,8 +1,8 @@
-# README #
+# README
 
 LajiForm is a dynamic form built on React. It can be used as a standalone library or as a React component. LajiForm is a wrapper for [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form).
 
-# Installing #
+# Installing
 
 ```
 npm install laji-form --save
@@ -14,11 +14,11 @@ If you are going to use the bootstrap 3 theme, you need to install also `react-b
 npm install react-bootstrap@0.33.1 --save
 ```
 
-# Usage as a library #
+# Usage as a library
 
 LajiForm passes all its properties to react-jsonschema-form. Read the documentation for react-jsonschema-form.
 
-## Usage as a standalone library ##
+## Usage as a standalone library
 
 ```
 import LajiForm from "laji-form";
@@ -34,7 +34,7 @@ You can update the properties with ```setState(props)```. You need to pass only 
 
 You can unmount the component with ```unmount()```.
 
-## Usage as a React component ##
+## Usage as a React component
 
 ```
 import React from "react";
@@ -48,7 +48,7 @@ render(<LajiForm
   document.getElementById("app"));
 ```
 
-## API Client ##
+## API Client
 
 In addition to properties you would pass to &lt;Form /&gt;, you must pass an api client implementation, if you need to use fields that use lajitest.api.fi. The api client implementation must have ```fetch()``` -method, which **returns a Promise**.
 
@@ -66,7 +66,7 @@ Pass the implementation to LajiForm like so:
 <LajiForm apiClient={new ApiClientImplementation()} ... />
 ```
 
-## Themes ##
+## Themes
 
 ### Bootstrap 3
 LajiForm provides bootstrap 3 theme. To use it, you need to install `react-bootstrap@0.33.1` and provide the built-in bootstrap 3 theme it as a prop:
@@ -97,7 +97,7 @@ import bs5 from "laji-form/lib/themes/bs5";
 
 You can also use a custom theme and provide it the same way. There is a theme interface `themes/theme.ts` which the theme must implement.
 
-## Notifications ##
+## Notifications
 
 LajiForm expects a notification implementation as a paratemer `notifier`. The `notifier` object must implement the interface below:
 
@@ -110,11 +110,11 @@ LajiForm expects a notification implementation as a paratemer `notifier`. The `n
 }
 ```
 
-## Styles ##
+## Styles
 
 Styles can be found at  ```dist/styles.css```.
 
-# Development #
+# Development
 
 Run `npm ci` to install the dependencies and `npm start` to start the app.
 
@@ -136,11 +136,11 @@ Then put the API access token you got in your email to ```properties.json```. Pu
 
 Try to keep the code style consistent - ```npm run lint``` should pass without errors.
 
-## Developing different forms ##
+## Developing different forms
 
 Start the server and navigate to the local playground http://localhost:8083?id={form_id}
 
-### Playground query parameters ###
+### Playground query parameters
 
 Option        | Default | Description
 --------------|---------|-----------------------------------------------------------------------------------------------
@@ -151,13 +151,13 @@ settings      | `true`  | Use local settings defined in `playground/schemas`.
 lang          | `fi`    | Language of the form. Doesn't affect local forms.
 readonly      | `false` | Sets the form readonly.
 
-### Examples ###
+### Examples
 
 http://localhost:8083?id=JX.519 Trip report form with empty `formData`.
 
 http://localhost:8083?id=MHL.1&localFormData=true Line transect form with local `formData`.
 
-## Tests ##
+## Tests
 
 You need to update the webdriver before testing: 
 
@@ -169,7 +169,7 @@ The playground server must be running before running the tests.
 
 Run the tests with `npm test`.
 
-### Test parameters ###
+### Test parameters
 
 Parameters are given as envirnment variables, i.e. `TEST_BROWSER=chrome npm test`
 

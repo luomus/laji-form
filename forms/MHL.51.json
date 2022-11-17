@@ -1,585 +1,634 @@
 {
-    "actions": {
-        "cancel": "",
-        "save": "",
-        "temp": ""
-    },
-    "attributes": {
-        "id": "MHL.51"
-    },
-    "category": "MHL.categoryGeneric",
-    "collectionID": "HR.2629",
-    "description": "Kuvaus TODO",
-    "excludeFromCopy": [
-        "$.gatherings[*].units"
-    ],
-    "features": [
-        "MHL.featureMobile"
-    ],
-    "id": "MHL.51",
-    "instructions": {
-        "en": "https://laji.fi/about/1107",
-        "fi": "https://laji.fi/about/1107",
-        "sv": "https://laji.fi/about/1107"
-    },
-    "language": "fi",
-    "name": "Yksinkertainen lomake",
-    "schema": {
+  "schema": {
+    "type": "object",
+    "properties": {
+      "editors": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "title": "Muokkausoikeus"
+      },
+      "secureLevel": {
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "MX.secureLevelNone",
+            "title": "Ei karkeistettu"
+          },
+          {
+            "const": "MX.secureLevelKM10",
+            "title": "10 km"
+          }
+        ],
+        "title": "Havainnon tarkat paikkatiedot ovat julkisia",
+        "default": "MX.secureLevelNone"
+      },
+      "gatheringEvent": {
+        "type": "object",
         "properties": {
-            "editors": {
-                "items": {
-                    "type": "string"
-                },
-                "title": "Muokkausoikeus",
-                "type": "array"
+          "leg": {
+            "type": "array",
+            "items": {
+              "type": "string"
             },
-            "gatheringEvent": {
-                "properties": {
-                    "leg": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "title": "Havainnoijat",
-                        "type": "array"
-                    },
-                    "legPublic": {
-                        "default": true,
-                        "title": "Havainnoijien nimet ovat julkisia",
-                        "type": "boolean"
-                    }
-                },
-                "required": [],
-                "title": "",
-                "type": "object"
-            },
-            "gatherings": {
-                "items": {
-                    "properties": {
-                        "country": {
-                            "title": "Maa",
-                            "type": "string"
-                        },
-                        "dateBegin": {
-                            "title": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
-                            "type": "string"
-                        },
-                        "geometry": {
-                            "properties": {},
-                            "title": "",
-                            "type": "object"
-                        },
-                        "locality": {
-                            "title": "Paikannimet",
-                            "type": "string"
-                        },
-                        "localityDescription": {
-                            "title": "Paikan kuvaus",
-                            "type": "string"
-                        },
-                        "municipality": {
-                            "title": "Kunta",
-                            "type": "string"
-                        },
-                        "units": {
-                            "excludeFromCopy": true,
-                            "items": {
-                                "properties": {
-                                    "areaInSquareMeters": {
-                                        "title": "Kasvuston pinta-ala / m2 (arvio)",
-                                        "type": "integer"
-                                    },
-                                    "count": {
-                                        "title": "M\u00e4\u00e4r\u00e4",
-                                        "type": "string"
-                                    },
-                                    "identifications": {
-                                        "items": {
-                                            "properties": {
-                                                "taxon": {
-                                                    "title": "Laji",
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [],
-                                            "type": "object"
-                                        },
-                                        "minItems": 1,
-                                        "type": "array"
-                                    },
-                                    "images": {
-                                        "items": {
-                                            "type": "string"
-                                        },
-                                        "title": "Kuvat",
-                                        "type": "array"
-                                    },
-                                    "informalTaxonGroups": {
-                                        "items": {
-                                            "type": "string"
-                                        },
-                                        "title": "Muotoryhm\u00e4t",
-                                        "type": "array"
-                                    },
-                                    "notes": {
-                                        "title": "Lis\u00e4tiedot",
-                                        "type": "string"
-                                    },
-                                    "plantLifeStage": {
-                                        "enum": [
-                                            "",
-                                            "MY.plantLifeStageSterile",
-                                            "MY.plantLifeStageFertile",
-                                            "MY.plantLifeStageSeed",
-                                            "MY.plantLifeStageSprout",
-                                            "MY.plantLifeStageBud",
-                                            "MY.plantLifeStageFlower",
-                                            "MY.plantLifeStageWitheredFlower",
-                                            "MY.plantLifeStageRipeningFruit",
-                                            "MY.plantLifeStageRipeFruit",
-                                            "MY.plantLifeStageDeadSprout",
-                                            "MY.plantLifeStageSubterranean",
-                                            "MY.plantLifeStageLivingPlant",
-                                            "MY.plantLifeStageDeadPlant"
-                                        ],
-                                        "enumNames": [
-                                            "",
-                                            "steriili",
-                                            "fertiili",
-                                            "siemen / iti\u00f6 / hedelm\u00e4",
-                                            "verso",
-                                            "nuppu",
-                                            "kukka",
-                                            "kuihtunut kukka",
-                                            "kypsyvi\u00e4 siemeni\u00e4 / hedelmi\u00e4 / iti\u00f6it\u00e4",
-                                            "kypsi\u00e4 siemeni\u00e4 / hedelmi\u00e4 / iti\u00f6it\u00e4",
-                                            "kuollut verso",
-                                            "mukula / sipuli / juuri",
-                                            "el\u00e4v\u00e4",
-                                            "kuollut"
-                                        ],
-                                        "title": "L\u00f6ytyyk\u00f6 kukkivia yksil\u00f6it\u00e4?",
-                                        "type": "string"
-                                    },
-                                    "unitFact": {
-                                        "properties": {
-                                            "autocompleteSelectedTaxonID": {
-                                                "title": "Taxon ID selected from autocomplete",
-                                                "type": "string"
-                                            },
-                                            "runningWaterInVicinity": {
-                                                "title": "Onko kasvusto virtaavan veden vieress\u00e4?",
-                                                "type": "boolean"
-                                            }
-                                        },
-                                        "required": [],
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [],
-                                "type": "object"
-                            },
-                            "minItems": 1,
-                            "title": "",
-                            "type": "array",
-                            "uniqueItems": false
-                        }
-                    },
-                    "required": [],
-                    "type": "object"
-                },
-                "minItems": 1,
-                "title": "",
-                "type": "array"
-            },
-            "secureLevel": {
-                "default": "MX.secureLevelNone",
-                "enum": [
-                    "MX.secureLevelNone",
-                    "MX.secureLevelKM10"
-                ],
-                "enumNames": [
-                    "Ei karkeistettu",
-                    "10 km"
-                ],
-                "title": "Havainnon tarkat paikkatiedot ovat julkisia",
-                "type": "string"
-            }
+            "title": "Havainnoijat"
+          },
+          "legPublic": {
+            "type": "boolean",
+            "title": "Havainnoijien nimet ovat julkisia",
+            "default": true
+          }
         },
         "required": [],
-        "type": "object"
-    },
-    "shortDescription": "",
-    "title": "Mobiililomake",
-    "uiSchema": {
-        "editors": {
-            "ui:field": "HiddenField"
-        },
-        "gatheringEvent": {
-            "ui:field": "HiddenField"
-        },
-        "gatherings": {
-            "items": {
-                "dateBegin": {
-                    "ui:options": {
-                        "showButtons": true,
-                        "showTimeList": false
-                    },
-                    "ui:widget": "DateTimeWidget"
-                },
-                "geometry": {
-                    "ui:field": "MapField",
-                    "ui:options": {
-                        "blockBeforeLocation": true,
-                        "geometryCollection": false,
-                        "mapOptions": {
-                            "clickBeforeZoomAndPan": true,
-                            "zoomToData": true
-                        },
-                        "mobileEditor": true
-                    }
-                },
-                "ui:functions": [
-                    {
-                        "ui:field": "GeocoderField"
-                    },
-                    {
-                        "ui:field": "AutosuggestField",
-                        "ui:options": {
-                            "allowNonsuggestedValue": true,
-                            "autosuggestField": "taxon",
-                            "suggestionInputField": "/units/0/identifications/0/taxon",
-                            "suggestionReceivers": {
-                                "/units/0/identifications/0/taxon": "value",
-                                "/units/0/informalTaxonGroups": "$taxonGroup",
-                                "/units/0/unitFact/autocompleteSelectedTaxonID": "key"
-                            },
-                            "suggestionValueField": "/units/0/unitFact/autocompleteSelectedTaxonID",
-                            "taxonCardPlacement": "bottom"
-                        }
-                    },
-                    {
-                        "ui:field": "FlatField",
-                        "ui:options": {
-                            "fields": [
-                                "units",
-                                "units_0_identifications",
-                                "units_0_unitFact"
-                            ]
-                        }
-                    },
-                    {
-                        "ui:field": "NestField",
-                        "ui:options": {
-                            "nests": {
-                                "localityWrapper": {
-                                    "fields": [
-                                        "country",
-                                        "municipality",
-                                        "locality"
-                                    ],
-                                    "rootUiSchema": {
-                                        "ui:field": "LocalityField",
-                                        "ui:options": {
-                                            "panelClassName": "top-no-border-radius clear-margin-above"
-                                        }
-                                    }
-                                },
-                                "taxonWrapper": {
-                                    "fields": [
-                                        "units_0_identifications_0_taxon"
-                                    ],
-                                    "title": ""
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "ui:field": "DataLeakerField",
-                        "ui:options": {
-                            "props": {
-                                "from": "/formData/geometry/radius",
-                                "target": "/uiSchema/localityWrapper/ui:options/radius"
-                            }
-                        }
-                    },
-                    {
-                        "ui:field": "ScopeField",
-                        "ui:options": {
-                            "fieldScopes": {
-                                "units_0_informalTaxonGroups": {
-                                    "MVL.343": {
-                                        "fields": [
-                                            "units_0_plantLifeStage",
-                                            "units_0_areaInSquareMeters",
-                                            "units_0_unitFact_runningWaterInVicinity"
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ],
-                "ui:order": [
-                    "units_0_images",
-                    "taxonWrapper",
-                    "geometry",
-                    "localityWrapper",
-                    "localityDescription",
-                    "dateBegin",
-                    "units_0_count",
-                    "units_0_areaInSquareMeters",
-                    "units_0_notes",
-                    "units_0_plantLifeStage",
-                    "units_0_unitFact_runningWaterInVicinity",
-                    "*"
-                ],
-                "units": {
-                    "items": {
-                        "images": {
-                            "ui:field": "ImageArrayField",
-                            "ui:options": {
-                                "autoOpenImageAddModal": true,
-                                "autoOpenMetadataModal": false,
-                                "exifParsers": [
-                                    {
-                                        "eventName": "locate",
-                                        "field": "/gatherings/0",
-                                        "parse": "geometry",
-                                        "type": "event"
-                                    },
-                                    {
-                                        "eventName": "locate",
-                                        "field": "/gatherings/0/geometry",
-                                        "parse": "geometry",
-                                        "type": "event"
-                                    },
-                                    {
-                                        "field": "/gatherings/0/dateBegin",
-                                        "parse": "date",
-                                        "type": "mutate"
-                                    }
-                                ],
-                                "imageAddModal": true,
-                                "metadataModal": false
-                            }
-                        },
-                        "informalTaxonGroups": {
-                            "ui:field": "HiddenField"
-                        },
-                        "plantLifeStage": {
-                            "ui:options": {
-                                "falseValue": "MY.plantLifeStageSprout",
-                                "trueValue": "MY.plantLifeStageFlower"
-                            },
-                            "ui:widget": "AnyToBooleanWidget"
-                        },
-                        "unitFact": {
-                            "autocompleteSelectedTaxonID": {
-                                "ui:field": "HiddenField"
-                            }
-                        }
-                    }
-                }
+        "title": ""
+      },
+      "gatherings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "country": {
+              "type": "string",
+              "title": "Maa"
             },
-            "ui:field": "SingleItemArrayField"
-        },
-        "leg": {
-            "ui:field": "HiddenField"
-        },
-        "legPublic": {
-            "ui:field": "HiddenField"
-        },
-        "secureLevel": {
-            "ui:field": "HiddenField"
-        },
-        "ui:shortcuts": {
-            "Enter": {
-                "fn": "navigate"
+            "municipality": {
+              "type": "string",
+              "title": "Kunta"
             },
-            "alt": {
-                "delay": 1,
-                "fn": "help"
+            "locality": {
+              "type": "string",
+              "title": "Paikannimet"
             },
-            "alt+ ": {
-                "fn": "navigate"
+            "localityDescription": {
+              "type": "string",
+              "title": "Paikan kuvaus"
             },
-            "alt+ArrowDown": {
-                "fn": "navigateArray",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
+            "dateBegin": {
+              "type": "string",
+              "title": "Päivämäärä"
             },
-            "alt+ArrowLeft": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+ArrowRight": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+ArrowUp": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+Delete": {
-                "fn": "delete"
-            },
-            "alt+F5": {
-                "fn": "revalidate"
-            },
-            "alt+Insert": {
-                "fn": "insert"
-            },
-            "alt+PageDown": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+PageUp": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+d": {
-                "fn": "delete"
-            },
-            "alt+g": {
-                "fn": "insert",
-                "target": "root_gatherings",
-                "targetLabel": "paikka"
-            },
-            "alt+h": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+i": {
-                "fn": "insert"
-            },
-            "alt+j": {
-                "fn": "navigateArray",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+k": {
-                "fn": "navigateArray",
-                "reverse": true,
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havaintoon"
-            },
-            "alt+l": {
-                "fn": "navigateArray",
-                "target": "root_gatherings",
-                "targetLabel": "paikkaan"
-            },
-            "alt+n": {
-                "fn": "navigateArray"
-            },
-            "alt+p": {
-                "fn": "navigateArray",
-                "reverse": true
-            },
-            "alt+shift+ ": {
-                "fn": "navigate",
-                "reverse": true
-            },
-            "alt+t": {
-                "fn": "autosuggestToggle"
-            },
-            "alt+u": {
-                "fn": "insert",
-                "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
-                "targetLabel": "havainto"
-            },
-            "ctrl+Enter": {
-                "fn": "textareaRowInsert"
-            },
-            "shift+Enter": {
-                "fn": "navigate",
-                "reverse": true
-            }
-        }
-    },
-    "validators": {
-        "gatheringEvent": {
-            "presence": {
-                "allowEmpty": false
-            },
-            "properties": {
-                "leg": {
-                    "presence": {
-                        "message": "V\u00e4hint\u00e4\u00e4n yksi havainnoija t\u00e4ytyy ilmoittaa."
-                    }
-                }
-            }
-        },
-        "gatherings": {
-            "items": {
+            "units": {
+              "type": "array",
+              "items": {
+                "type": "object",
                 "properties": {
-                    "dateBegin": {
-                        "datetime": {
-                            "latest": "now",
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 ei voi olla tulevaisuudessa."
-                        },
-                        "presence": {
-                            "message": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 t\u00e4ytyy ilmoittaa"
-                        }
+                  "informalTaxonGroups": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
                     },
-                    "geometry": {
-                        "geometry": {
-                            "boundingBoxMaxHectares": 1000000,
-                            "includeGatheringUnits": true,
-                            "maximumSize": 10,
-                            "message": {
-                                "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
-                                "invalidCoordinates": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "invalidRadius": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingGeometries": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "missingType": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "noOverlap": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio.",
-                                "notGeometry": "Paikalla t\u00e4ytyy olla v\u00e4hint\u00e4\u00e4n yksi kuvio."
-                            },
-                            "requireShape": true
-                        }
+                    "title": "Muotoryhmät"
+                  },
+                  "count": {
+                    "type": "string",
+                    "title": "Määrä (arviosi lukumäärästä)"
+                  },
+                  "areaInSquareMeters": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Kasvuston pinta-ala / m2 (arvio)"
+                  },
+                  "plantLifeStage": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "const": "",
+                        "title": ""
+                      },
+                      {
+                        "const": "MY.plantLifeStageSterile",
+                        "title": "steriili"
+                      },
+                      {
+                        "const": "MY.plantLifeStageFertile",
+                        "title": "fertiili"
+                      },
+                      {
+                        "const": "MY.plantLifeStageSeed",
+                        "title": "siemen / itiö / hedelmä"
+                      },
+                      {
+                        "const": "MY.plantLifeStageSprout",
+                        "title": "verso"
+                      },
+                      {
+                        "const": "MY.plantLifeStageBud",
+                        "title": "nuppu"
+                      },
+                      {
+                        "const": "MY.plantLifeStageFlower",
+                        "title": "kukka"
+                      },
+                      {
+                        "const": "MY.plantLifeStageWitheredFlower",
+                        "title": "kuihtunut kukka"
+                      },
+                      {
+                        "const": "MY.plantLifeStageRipeningFruit",
+                        "title": "kypsyviä siemeniä / hedelmiä / itiöitä"
+                      },
+                      {
+                        "const": "MY.plantLifeStageRipeFruit",
+                        "title": "kypsiä siemeniä / hedelmiä / itiöitä"
+                      },
+                      {
+                        "const": "MY.plantLifeStageDeadSprout",
+                        "title": "kuollut verso"
+                      },
+                      {
+                        "const": "MY.plantLifeStageSubterranean",
+                        "title": "mukula / sipuli / juuri"
+                      },
+                      {
+                        "const": "MY.plantLifeStageLivingPlant",
+                        "title": "elävä"
+                      },
+                      {
+                        "const": "MY.plantLifeStageDeadPlant",
+                        "title": "kuollut"
+                      }
+                    ],
+                    "title": "Löytyykö kukkivia yksilöitä?"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "title": "Lisätiedot"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
                     },
-                    "units": {
-                        "items": {
-                            "properties": {
-                                "identifications": {
-                                    "items": {
-                                        "properties": {
-                                            "taxon": {
-                                                "presence": {
-                                                    "message": "Laji t\u00e4ytyy ilmoittaa"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "presence": {
-                                        "message": "Laji t\u00e4ytyy ilmoittaa"
-                                    }
-                                }
-                            }
-                        },
-                        "presence": {
-                            "allowEmpty": false,
-                            "message": "V\u00e4hint\u00e4\u00e4n yksi havainto t\u00e4ytyy ilmoittaa."
+                    "title": "Kuvat"
+                  },
+                  "identifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxon": {
+                          "type": "string",
+                          "title": "Laji"
                         }
-                    }
-                }
+                      },
+                      "required": []
+                    },
+                    "minItems": 1,
+                    "title": ""
+                  },
+                  "unitFact": {
+                    "type": "object",
+                    "properties": {
+                      "autocompleteSelectedTaxonID": {
+                        "type": "string",
+                        "title": "Taxon ID selected from autocomplete"
+                      },
+                      "runningWaterInVicinity": {
+                        "type": "boolean",
+                        "title": "Onko kasvusto virtaavan veden vieressä?"
+                      }
+                    },
+                    "required": [],
+                    "title": ""
+                  }
+                },
+                "required": []
+              },
+              "uniqueItems": false,
+              "minItems": 1,
+              "title": ""
             },
-            "presence": {
-                "allowEmpty": false,
-                "message": "V\u00e4hint\u00e4\u00e4n yksi paikka t\u00e4ytyy ilmoittaa."
+            "geometry": {
+              "type": "object",
+              "properties": {},
+              "title": ""
             }
-        }
+          },
+          "required": []
+        },
+        "minItems": 1,
+        "title": ""
+      }
     },
-    "warnings": {}
+    "required": [
+      "gatherings"
+    ]
+  },
+  "excludeFromCopy": [
+    "$.gatherings[*].units"
+  ],
+  "id": "MHL.51",
+  "name": "Yksinkertainen lomake",
+  "language": "fi",
+  "title": "Mobiililomake",
+  "description": "Tällä lomakkeella voit tallentaa yksittäisiä havaintoja mobiililaitteen avulla. (testikäytössä)",
+  "shortDescription": "Kirjaa havainto mobiililaitteella. (testikäytössä)",
+  "uiSchema": {
+    "editors": {
+      "items": {},
+      "ui:field": "HiddenField"
+    },
+    "gatheringEvent": {
+      "leg": {
+        "items": {},
+        "ui:field": "HiddenField"
+      },
+      "legPublic": {
+        "ui:options": {
+          "allowUndefined": false
+        },
+        "ui:help": "Tarvittaessa voit piilottaa havainnoijien nimet avoimesta aineistosta valitsemalla \"Ei\"-vaihtoehdon. Havainnoijien nimet ovat aina viranomaisten käytettävissä."
+      }
+    },
+    "gatherings": {
+      "items": {
+        "units": {
+          "items": {
+            "informalTaxonGroups": {
+              "items": {},
+              "ui:field": "HiddenField"
+            },
+            "images": {
+              "items": {},
+              "ui:field": "ImageArrayField",
+              "ui:options": {
+                "addModal": true,
+                "autoOpenAddModal": true,
+                "autoOpenMetadataModal": false,
+                "metadataModal": false,
+                "exifParsers": [
+                  {
+                    "field": "/gatherings/0",
+                    "parse": "geometry",
+                    "type": "event",
+                    "eventName": "locate"
+                  },
+                  {
+                    "field": "/gatherings/0/geometry",
+                    "parse": "geometry",
+                    "type": "event",
+                    "eventName": "locate"
+                  },
+                  {
+                    "field": "/gatherings/0/dateBegin",
+                    "parse": "date",
+                    "type": "mutate"
+                  }
+                ]
+              }
+            },
+            "identifications": {
+              "items": {}
+            },
+            "unitFact": {
+              "autocompleteSelectedTaxonID": {
+                "ui:field": "HiddenField"
+              }
+            },
+            "plantLifeStage": {
+              "ui:widget": "AnyToBooleanWidget",
+              "ui:options": {
+                "trueValue": "MY.plantLifeStageFlower",
+                "falseValue": "MY.plantLifeStageSprout"
+              }
+            }
+          }
+        },
+        "ui:functions": [
+          {
+            "ui:field": "GeocoderField"
+          },
+          {
+            "ui:field": "AutosuggestField",
+            "ui:options": {
+              "autosuggestField": "taxon",
+              "allowNonsuggestedValue": true,
+              "suggestionInputField": "/units/0/identifications/0/taxon",
+              "suggestionValueField": "/units/0/unitFact/autocompleteSelectedTaxonID",
+              "suggestionValueParse": "autocompleteSelectedName || value",
+              "suggestionReceivers": {
+                "/units/0/identifications/0/taxon": "autocompleteSelectedName || value",
+                "/units/0/unitFact/autocompleteSelectedTaxonID": "key",
+                "/units/0/informalTaxonGroups": "$taxonGroup"
+              },
+              "taxonCardPlacement": "bottom"
+            }
+          },
+          {
+            "ui:field": "FlatField",
+            "ui:options": {
+              "fields": [
+                "units",
+                "units_0_identifications",
+                "units_0_unitFact"
+              ]
+            }
+          },
+          {
+            "ui:field": "NestField",
+            "ui:options": {
+              "nests": {
+                "taxonWrapper": {
+                  "title": "",
+                  "fields": [
+                    "units_0_identifications_0_taxon"
+                  ]
+                },
+                "localityWrapper": {
+                  "title": "",
+                  "fields": [
+                    "country",
+                    "municipality",
+                    "locality"
+                  ],
+                  "rootUiSchema": {
+                    "ui:field": "LocalityField",
+                    "ui:options": {
+                      "panelClassName": "top-no-border-radius clear-margin-above"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "ui:field": "DataLeakerField",
+            "ui:options": {
+              "props": {
+                "from": "/formData/geometry/radius",
+                "target": "/uiSchema/localityWrapper/ui:options/radius"
+              }
+            }
+          },
+          {
+            "ui:field": "ScopeField",
+            "ui:options": {
+              "fieldScopes": {
+                "units_0_informalTaxonGroups": {
+                  "MVL.343": {
+                    "fields": [
+                      "units_0_plantLifeStage",
+                      "units_0_areaInSquareMeters",
+                      "units_0_unitFact_runningWaterInVicinity"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "geometry": {
+          "ui:field": "MapField",
+          "ui:options": {
+            "geometryCollection": false,
+            "blockBeforeLocation": true,
+            "mobileEditor": true,
+            "mapOptions": {
+              "zoomToData": true,
+              "clickBeforeZoomAndPan": true
+            }
+          }
+        },
+        "dateBegin": {
+          "ui:options": {
+            "showButtons": true
+          },
+          "ui:widget": "DateTimeWidget"
+        },
+        "ui:order": [
+          "units_0_images",
+          "taxonWrapper",
+          "geometry",
+          "localityWrapper",
+          "localityDescription",
+          "dateBegin",
+          "units_0_count",
+          "units_0_areaInSquareMeters",
+          "units_0_notes",
+          "units_0_plantLifeStage",
+          "units_0_unitFact_runningWaterInVicinity",
+          "*"
+        ]
+      },
+      "ui:field": "SingleItemArrayField"
+    },
+    "ui:shortcuts": {
+      "alt": {
+        "fn": "help",
+        "delay": 1
+      },
+      "alt+F5": {
+        "fn": "revalidate"
+      },
+      "Enter": {
+        "fn": "navigate"
+      },
+      "shift+Enter": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "ctrl+Enter": {
+        "fn": "textareaRowInsert"
+      },
+      "alt+ ": {
+        "fn": "navigate"
+      },
+      "alt+shift+ ": {
+        "fn": "navigate",
+        "reverse": true
+      },
+      "alt+PageDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+PageUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowRight": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowLeft": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+ArrowUp": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+ArrowDown": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+h": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+j": {
+        "fn": "navigateArray",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+k": {
+        "fn": "navigateArray",
+        "reverse": true,
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havaintoon"
+      },
+      "alt+l": {
+        "fn": "navigateArray",
+        "target": "root_gatherings",
+        "targetLabel": "paikkaan"
+      },
+      "alt+n": {
+        "fn": "navigateArray"
+      },
+      "alt+p": {
+        "fn": "navigateArray",
+        "reverse": true
+      },
+      "alt+Insert": {
+        "fn": "insert"
+      },
+      "alt+i": {
+        "fn": "insert"
+      },
+      "alt+Delete": {
+        "fn": "delete"
+      },
+      "alt+d": {
+        "fn": "delete"
+      },
+      "alt+u": {
+        "fn": "insert",
+        "target": "root_gatherings_%{context[\"root_gatherings.activeIdx\"]}_units",
+        "targetLabel": "havainto"
+      },
+      "alt+g": {
+        "fn": "insert",
+        "target": "root_gatherings",
+        "targetLabel": "paikka"
+      },
+      "alt+t": {
+        "fn": "autosuggestToggle"
+      }
+    },
+    "secureLevel": {
+      "ui:widget": "AnyToBooleanWidget",
+      "ui:help": "Valitsemalla \"Ei\"-vaihtoehdon havainnon paikkatiedot karkeistetaan 10 x 10 km² karttaruutuun avoimessa aineistossa. Havainnon tarkat paikkatiedot ovat aina viranomaisten käytettävissä. Karkeistettuihin havaintoihin liitetyt valokuvat ovat julkisia.",
+      "ui:options": {
+        "trueValue": "MX.secureLevelNone",
+        "falseValue": "MX.secureLevelKM10",
+        "allowUndefined": false
+      }
+    },
+    "ui:order": [
+      "gatherings",
+      "legPublic",
+      "gatheringEvent",
+      "*"
+    ]
+  },
+  "options": {
+    "instructions": {
+      "fi": "https://laji.fi/about/1107",
+      "en": "https://laji.fi/about/1107",
+      "sv": "https://laji.fi/about/1107"
+    },
+    "mobile": true
+  },
+  "validators": {
+    "gatheringEvent": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "properties": {
+        "leg": {
+          "presence": {
+            "message": "Vähintään yksi havainnoija täytyy ilmoittaa."
+          }
+        }
+      }
+    },
+    "gatherings": {
+      "presence": {
+        "message": "Vähintään yksi paikka täytyy ilmoittaa.",
+        "allowEmpty": false
+      },
+      "items": {
+        "properties": {
+          "dateBegin": {
+            "presence": {
+              "message": "Päivämäärä täytyy ilmoittaa"
+            },
+            "datetime": {
+              "earliest": "1000-01-01",
+              "tooEarly": "Päivämäärä on liian varhainen. Varhaisin mahdollinen on %{date}",
+              "latest": "now",
+              "message": "Päivämäärä ei voi olla tulevaisuudessa."
+            }
+          },
+          "units": {
+            "presence": {
+              "message": "Vähintään yksi havainto täytyy ilmoittaa.",
+              "allowEmpty": false
+            },
+            "items": {
+              "properties": {
+                "identifications": {
+                  "presence": {
+                    "message": "Laji täytyy ilmoittaa"
+                  },
+                  "items": {
+                    "properties": {
+                      "taxon": {
+                        "presence": {
+                          "message": "Laji täytyy ilmoittaa"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "geometry": {
+            "geometry": {
+              "maximumSize": 10,
+              "message": {
+                "missingGeometries": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidBoundingBoxHectares": "Liian iso alue. Maksimi on %{max} hehtaaria",
+                "notGeometry": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "missingType": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidRadius": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidCoordinates": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "invalidGeometries": "Paikalla täytyy olla vähintään yksi kuvio.",
+                "noOverlap": "Paikalla täytyy olla vähintään yksi kuvio."
+              },
+              "boundingBoxMaxHectares": 5000000,
+              "requireShape": true,
+              "includeGatheringUnits": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "warnings": {},
+  "attributes": {
+    "id": "MHL.51"
+  }
 }
