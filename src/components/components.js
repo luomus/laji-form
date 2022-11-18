@@ -584,10 +584,13 @@ export const FetcherInput = React.forwardRef((props, ref) => {
 	const {loading, validationState, glyph, extra, onMouseOver, onMouseOut, className = "", InputComponent, ...inputProps} = props; // eslint-disable-line @typescript-eslint/no-unused-vars
 	const {InputGroup, FormGroup} = React.useContext(ReactContext).theme;
 	const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
+
 	const _extra = (!Array.isArray(extra)) ? [extra] : extra;
+	const has_extras = _extra.some(item => item !== null && item !== undefined);
+
 	const inputContent = (
 		<React.Fragment>
-			<InputGroup.Button>{..._extra}</InputGroup.Button>
+			{has_extras && <InputGroup.Button>{..._extra}</InputGroup.Button>}
 			<Input {...inputProps} ref={ref} />
 			{glyph}
 			{loading && <Spinner />}
