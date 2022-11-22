@@ -15,7 +15,6 @@ describe("dataset form (MHL.731)", () => {
 		await form.setState({ uiSchemaContext });
 		nameInEnglishInput$ = form.$locate("datasetName_en").$("input");
 		nameInFinnishInput$ = form.$locate("datasetName_fi").$("input");
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
 	});
 
 	it("sets correct name to dataset when adding a name in one language", async () => {
