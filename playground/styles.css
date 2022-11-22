@@ -1706,7 +1706,7 @@ min-height: 20px;
 }
 
 
-.laji-form .input-group .input-group-text, .laji-form .input-group .input-group-button {
+.laji-form .input-group .input-group-text, .laji-form .input-group .input-group-button > button {
 	height: 25px;
 	border-radius: 2px;
 	padding-bottom: 0;

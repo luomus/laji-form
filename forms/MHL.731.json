@@ -60,55 +60,69 @@
       "personsResponsible"
     ]
   },
-  "uiSchema":{
-    "owner":{
-      "name":"owner"
-    },
-    "datasetType":{
-      "name":"datasetType"
-    },
-    "datasetName":{
-      "name":"datasetName",
-      "validators":{
-        "properties":{
-          "en":{
-            "presence":{
-              "message":"Required field."
-            }
-          }
-        }
-      },
-      "ui:multiLanguage":true,
-      "en":{
-        "ui:required":true
-      }
-    },
-    "personsResponsible":{
-      "name":"personsResponsible"
-    },
-    "description":{
-      "name":"description",
-      "validators":{
-        "properties":{
-          "en":{
-            "presence":{
-              "message":"Required field."
-            }
-          }
-        }
-      },
-      "ui:multiLanguage":true,
-      "en":{
-        "ui:required":true
-      }
-    }
-  },
   "excludeFromCopy":[
 
   ],
   "name":"Kotka - Dataset",
   "language":"fi",
   "title":"Kotka - Dataset",
+  "uiSchema":{
+    "datasetName":{
+      "ui:multiLanguage":true,
+      "en":{
+        "ui:required":true
+      }
+    },
+    "description":{
+      "ui:multiLanguage":true,
+      "en":{
+        "ui:required":true
+      },
+      "ui:options":{
+        "inputType":"textarea"
+      }
+    },
+    "ui:grid":{
+      "lg":6,
+      "md":7,
+      "sm":8,
+      "xs":12,
+      "rows":[
+        [
+          "owner"
+        ],
+        [
+          "datasetType"
+        ],
+        [
+          "datasetName"
+        ],
+        [
+          "personsResponsible"
+        ],
+        [
+          "description"
+        ]
+      ]
+    },
+    "owner":{
+      "ui:widget":"AutosuggestWidget",
+      "ui:options":{
+        "autosuggestField":"organization",
+        "allowNonsuggestedValue":true,
+        "suggestionReceive":"key",
+        "displayValidationState":true,
+        "minFetchLength":0
+      }
+    },
+    "personsResponsible":{
+      "ui:widget":"InputWithDefaultValueButtonWidget",
+      "ui:options":{
+        "buttonLabel":"me",
+        "contextFieldForDefaultValue":"defaultPersonsResponsible"
+      }
+    }
+  },
   "context":"dataset",
   "id":"MHL.731",
   "validators":{

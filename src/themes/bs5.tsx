@@ -96,8 +96,14 @@ const _Modal: ModalI = Modal as unknown as ModalI;
 
 const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
 _InputGroup.Addon = InputGroup.Text;
-_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
-	<Button variant={"outline-secondary"} {...props} ref={ref} />
+_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({children, ...props}, ref) => (
+	<span {...props} ref={ref}>
+		{
+			React.Children.map(children, child => (
+				React.isValidElement(child) ? React.cloneElement(child, {variant: "outline-secondary"}) : child
+			))
+		}
+	</span>
 ));
 
 const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
