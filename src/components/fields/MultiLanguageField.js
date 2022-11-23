@@ -1,8 +1,7 @@
 import * as React from "react";
 import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
-import {rulesPropType} from "./ConditionalUiSchemaField";
-import {getUiOptions} from "../../utils";
+import { getUiOptions } from "../../utils";
 
 @BaseComponent
 export default class MultiLanguageField extends React.Component {

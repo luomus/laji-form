@@ -586,11 +586,11 @@ export const FetcherInput = React.forwardRef((props, ref) => {
 	const Input = InputComponent ? InputComponent : FetcherInputDefaultInput;
 
 	const _extra = (!Array.isArray(extra)) ? [extra] : extra;
-	const has_extras = _extra.some(item => item !== null && item !== undefined);
+	const hasExtras = _extra.some(item => item !== null && item !== undefined);
 
 	const inputContent = (
 		<React.Fragment>
-			{has_extras && <InputGroup.Button>{..._extra}</InputGroup.Button>}
+			{hasExtras && <InputGroup.Button>{..._extra}</InputGroup.Button>}
 			<Input {...inputProps} ref={ref} />
 			{glyph}
 			{loading && <Spinner />}

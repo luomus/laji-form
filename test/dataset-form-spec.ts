@@ -1,5 +1,5 @@
 import { Form, createForm } from "./test-utils";
-import { browser, ElementFinder, protractor } from "protractor";
+import { ElementFinder, protractor } from "protractor";
 
 describe("dataset form (MHL.731)", () => {
 	let form: Form;
@@ -40,8 +40,7 @@ describe("dataset form (MHL.731)", () => {
 	});
 
 	it("sets correct name to personsResponsible field when clicking a me button", async () => {
-		form.$locate("personsResponsible").$("button").click();
-		await browser.sleep(100);
+		await form.$locate("personsResponsible").$("button").click();
 
 		const $input = form.$locate("personsResponsible").$("input");
 		expect(await $input.getAttribute("value")).toBe("Test, User");
