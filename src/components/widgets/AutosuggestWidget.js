@@ -329,18 +329,8 @@ class OrganizationAutosuggestWidget extends React.Component {
 	static contextType = ReactContext;
 	constructor(props) {
 		super(props);
-		this.getInitialDefaultValue = this.getInitialDefaultValue.bind(this);
 		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
 		this.isValueSuggested = this.isValueSuggested.bind(this);
-	}
-
-	getInitialDefaultValue() {
-		const autosuggestField = this.props.options.autosuggestField;
-		return this.props.formContext.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: "", limit: 1}).then(suggestions => {
-			if (suggestions.length > 0) {
-				return suggestions[0];
-			}
-		});
 	}
 
 	getSuggestionFromValue(value) {
@@ -372,7 +362,6 @@ class OrganizationAutosuggestWidget extends React.Component {
 				includeSelf: true,
 				...propsOptions.queryOptions
 			},
-			getInitialDefaultValue: this.getInitialDefaultValue,
 			getSuggestionFromValue: this.getSuggestionFromValue,
 			isValueSuggested: this.isValueSuggested,
 			Wrapper: OrganizationWrapper,
@@ -400,8 +389,7 @@ export class Autosuggest extends React.Component {
 		onInputChange: PropTypes.func,
 		uiSchema: PropTypes.object,
 		informalTaxonGroups: PropTypes.string,
-		onInformalTaxonGroupSelected: PropTypes.func,
-		getInitialDefaultValue: PropTypes.func
+		onInformalTaxonGroupSelected: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -462,27 +450,16 @@ export class Autosuggest extends React.Component {
 	}
 
 	triggerConvert = (props) => {
-		const {value, getSuggestionFromValue, getInitialDefaultValue, suggestionReceive, onChange} = props;
-
-		if ((isEmptyString(value) && !getInitialDefaultValue) || (!isEmptyString(value) && !getSuggestionFromValue)) {
+		const {value, getSuggestionFromValue} = props;
+		if (isEmptyString(value) || !getSuggestionFromValue) {
 			if (this.state.suggestion && Object.keys(this.state.suggestion).length > 0) {
 				this.setState({suggestion: undefined, inputValue: value, suggestionForValue: value});
 			}
 			return;
 		}
 
-		let promise;
-		if (isEmptyString(value)) {
-			promise = getInitialDefaultValue().then(suggestion => {
-				onChange(suggestion[suggestionReceive]);
-				return suggestion;
-			});
-		} else {
-			promise = getSuggestionFromValue(value);
-		}
-
 		this.setState({isLoading: true});
-		promise.then(suggestion => {
+		getSuggestionFromValue(value).then(suggestion => {
 			if (!this.mounted) return;
 			this.setState({suggestion, inputValue: this.getSuggestionValue(suggestion), isLoading: false, suggestionForValue: value});
 		}).catch(() => {
