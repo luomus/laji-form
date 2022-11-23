@@ -7,11 +7,7 @@ import {getUiOptions} from "../../utils";
 @BaseComponent
 export default class MultiLanguageField extends React.Component {
 	static propTypes = {
-		uiSchema: PropTypes.shape({
-			"ui:options": PropTypes.shape({
-				inputType: PropTypes.oneOf(["basic", "textarea"])
-			})
-		}),
+		uiSchema: PropTypes.any,
 		schema: PropTypes.shape({
 			type: PropTypes.oneOf(["object"])
 		}).isRequired,
@@ -26,7 +22,7 @@ export default class MultiLanguageField extends React.Component {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		const {Label, lang} = this.props.formContext;
 		const {schema, uiSchema, idSchema, errorSchema, formData, required} = this.props;
-		const {inputType = "basic"} = getUiOptions(uiSchema);
+		const uiOptions = getUiOptions(uiSchema);
 
 		const languages = Object.keys(schema.properties).sort((a, b) => {
 			const sortA = Number(a !== lang);
@@ -46,8 +42,8 @@ export default class MultiLanguageField extends React.Component {
 							"ui:widget": "InputGroupWidget",
 							"ui:options": {
 								"inputGroupText": _lang,
-								"inputType": inputType,
-								"className": "multi-lang-input-group"
+								"className": "multi-lang-input-group",
+								...uiOptions
 							}
 						}}
 						errorSchema={errorSchema[_lang] || {}}

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseInputTemplate from "../templates/BaseInputTemplate";
 import ReactContext from "../../ReactContext";
-import {getUiOptions} from "../../utils";
+import {classNames, getUiOptions} from "../../utils";
 import TextareaWidget from "./TextareaWidget";
 
 export default class InputGroupWidget extends React.Component {
@@ -29,7 +29,7 @@ export default class InputGroupWidget extends React.Component {
 		const input = inputType === "textarea" ? <TextareaWidget {...this.props} /> : <BaseInputTemplate {...this.props} />;
 
 		return (
-			<InputGroup key={inputGroupText} className={"input-group-widget " + (inputType === "textarea" ? "input-group-textarea " : "") + className}>
+			<InputGroup key={inputGroupText} className={classNames("input-group-widget", `input-group-${inputType}`, className)}>
 				<InputGroup.Addon className={"input-group-text"}>
 					{inputGroupText + (this.props.required ? "*" : "")}
 				</InputGroup.Addon>
