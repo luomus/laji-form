@@ -1,13 +1,18 @@
 import { Form, createForm } from "./test-utils";
-import { browser, ElementFinder, protractor } from "protractor";
+import { ElementFinder, protractor } from "protractor";
 
 describe("dataset form (MHL.731)", () => {
 	let form: Form;
 	let nameInEnglishInput$: ElementFinder;
 	let nameInFinnishInput$: ElementFinder;
 
+	const uiSchemaContext = {
+		defaultPersonsResponsible: "Test, User"
+	};
+
 	beforeAll(async () => {
 		form = await createForm({id: "MHL.731"});
+		await form.setState({ uiSchemaContext });
 		nameInEnglishInput$ = form.$locate("datasetName_en").$("input");
 		nameInFinnishInput$ = form.$locate("datasetName_fi").$("input");
 	});
@@ -32,5 +37,14 @@ describe("dataset form (MHL.731)", () => {
 
 		expect(formData.datasetName["en"]).toBe(name1);
 		expect(formData.datasetName["fi"]).toBe(name2);
+	});
+
+	it("sets correct name to personsResponsible field when clicking a me button", async () => {
+		await form.$locate("personsResponsible").$("button").click();
+
+		const $input = form.$locate("personsResponsible").$("input");
+		expect(await $input.getAttribute("value")).toBe("Test, User");
+		const formData = await form.getChangedData();
+		expect(formData.personsResponsible).toBe("Test, User");
 	});
 });

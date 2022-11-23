@@ -50,8 +50,11 @@ import {
 	ListGroupItemProps,
 	AlertProps,
 	AccordionProps,
-	DropdownToggleProps
+	DropdownToggleProps,
+	FormGroupProps,
+	ValidationState
 } from "./theme";
+import { classNames } from "../utils";
 
 const mapAnyVariant = (variant?: VariantI | ButtonVariantI, defaultVariant: Variant | ButtonVariant = "secondary"): Variant | ButtonVariant => {
 	if (!variant || variant === "default") {
@@ -64,6 +67,12 @@ const mapVariant = (variant?: VariantI, defaultVariant?: Variant): Variant => {
 };
 const mapBtnVariant = (variant?: ButtonVariantI, defaultVariant?: ButtonVariant): ButtonVariant => {
 	return mapAnyVariant(variant, defaultVariant);
+};
+const mapValidationStateToClass = (validationState?: ValidationState|null): string => {
+	if (!validationState) {
+		return "";
+	}
+	return "text-" + (validationState === "error" ? "danger" : validationState);
 };
 
 const _Card = React.forwardRef<HTMLDivElement, PanelProps>(({variant, ...props}, ref) => (
@@ -87,8 +96,14 @@ const _Modal: ModalI = Modal as unknown as ModalI;
 
 const _InputGroup: InputGroupI = InputGroup as unknown as InputGroupI;
 _InputGroup.Addon = InputGroup.Text;
-_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
-	<Button variant={"outline-secondary"} {...props} ref={ref} />
+_InputGroup.Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({children, ...props}, ref) => (
+	<span {...props} ref={ref}>
+		{
+			React.Children.map(children, child => (
+				React.isValidElement(child) ? React.cloneElement(child, {variant: "outline-secondary"}) : child
+			))
+		}
+	</span>
 ));
 
 const _Dropdown: DropdownI = Dropdown as unknown as DropdownI;
@@ -112,7 +127,7 @@ const theme: Theme = {
 	Modal: _Modal,
 	Row: React.forwardRef<typeof Row, JSX.IntrinsicAttributes>((props, ref) => <Row {...props} ref={ref} />),
 	Col: React.forwardRef<typeof Col, ColProps>((props, ref) => <Col {...props} ref={ref} />),
-	FormGroup,
+	FormGroup: React.forwardRef<typeof FormGroup, FormGroupProps>(({validationState, className, ...props}, ref) => <FormGroup {...props as any} className={classNames(className, mapValidationStateToClass(validationState))} ref={ref} />),
 	InputGroup: _InputGroup,
 	FormControl: React.forwardRef<typeof FormControl, FormControlProps>((props, ref) => <FormControl {...props as any} ref={ref} />),
 	ListGroup: React.forwardRef<HTMLDivElement, ListGroupProps>((props, ref) => <ListGroup variant={"flush"} {...props} ref={ref} />),

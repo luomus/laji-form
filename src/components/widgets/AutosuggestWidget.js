@@ -32,6 +32,8 @@ export default class _AutosuggestWidget extends React.Component {
 			case "friends":
 			case "person":
 				return <FriendsAutosuggestWidget {...this.props} />;
+			case "organization":
+				return <OrganizationAutosuggestWidget {...this.props} />;
 			default: 
 				return <RangeAutosuggestWidget {...this.props} />;
 			}
@@ -52,6 +54,9 @@ export default class _AutosuggestWidget extends React.Component {
 			case "friends":
 			case "person":
 				component = FriendsAutosuggestWidget;
+				break;
+			case "organization":
+				component = OrganizationAutosuggestWidget;
 				break;
 			default:
 				component = RangeAutosuggestWidget;
@@ -320,6 +325,53 @@ class FriendsAutosuggestWidget extends React.Component {
 	}
 }
 
+class OrganizationAutosuggestWidget extends React.Component {
+	static contextType = ReactContext;
+	constructor(props) {
+		super(props);
+		this.getSuggestionFromValue = this.getSuggestionFromValue.bind(this);
+		this.isValueSuggested = this.isValueSuggested.bind(this);
+	}
+
+	getSuggestionFromValue(value) {
+		if (this.isValueSuggested(value)) {
+			const autosuggestField = this.props.options.autosuggestField;
+			return this.props.formContext.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, limit: 1}).then(suggestions => {
+				if (suggestions.length > 0 && suggestions[0]["key"] === value) {
+					return suggestions[0];
+				}
+			});
+		} else {
+			return Promise.reject();
+		}
+	}
+
+	isValueSuggested(value) {
+		return !isEmptyString(value) && value.match(/MOS\.\d+/);
+	}
+
+	findExactMatch = (suggestions, inputValue) => {
+		return suggestions.find(suggestion => (suggestion && suggestion.value.toLowerCase() === inputValue.trim().toLowerCase()));
+	}
+
+	render() {
+		const {options: propsOptions, ...propsWithoutOptions} = this.props;
+
+		const options = {
+			query: {
+				includeSelf: true,
+				...propsOptions.queryOptions
+			},
+			getSuggestionFromValue: this.getSuggestionFromValue,
+			isValueSuggested: this.isValueSuggested,
+			Wrapper: OrganizationWrapper,
+			findExactMatch: this.findExactMatch
+		};
+
+		return <Autosuggest {...options} {...propsWithoutOptions} {...propsOptions} />;
+	}
+}
+
 class RangeAutosuggestWidget extends React.Component {
 	render() {
 		const {options: propsOptions, ...propsWithoutOptions} = this.props;
@@ -337,7 +389,7 @@ export class Autosuggest extends React.Component {
 		onInputChange: PropTypes.func,
 		uiSchema: PropTypes.object,
 		informalTaxonGroups: PropTypes.string,
-		onInformalTaxonGroupSelected: PropTypes.func,
+		onInformalTaxonGroupSelected: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -1317,6 +1369,19 @@ const FriendsWrapper = React.forwardRef(({formContext, children, id, inputValue,
 	}
 	const tooltip = (
 		<Tooltip id={`${id}-tooltip`}>{formContext.translations.UnknownName}</Tooltip>
+	);
+	return (
+		<OverlayTrigger overlay={tooltip} placement="top" ref={ref}>{children}</OverlayTrigger>
+	);
+});
+
+const OrganizationWrapper = React.forwardRef(({formContext, children, id, inputValue, isSuggested}, ref) => {
+	const {Tooltip} = React.useContext(ReactContext).theme;
+	if (!inputValue || isSuggested) {
+		return children;
+	}
+	const tooltip = (
+		<Tooltip id={`${id}-tooltip`}>{formContext.translations.UnknownOrganization}</Tooltip>
 	);
 	return (
 		<OverlayTrigger overlay={tooltip} placement="top" ref={ref}>{children}</OverlayTrigger>
