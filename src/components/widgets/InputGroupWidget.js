@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseInputTemplate from "../templates/BaseInputTemplate";
 import ReactContext from "../../ReactContext";
-import {classNames, getUiOptions} from "../../utils";
+import { classNames, getUiOptions } from "../../utils";
 import TextareaWidget from "./TextareaWidget";
 
 export default class InputGroupWidget extends React.Component {

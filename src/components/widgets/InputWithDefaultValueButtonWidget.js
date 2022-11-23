@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import BaseInputTemplate from "../templates/BaseInputTemplate";
 import ReactContext from "../../ReactContext";
-import {getUiOptions} from "../../utils";
+import { getUiOptions } from "../../utils";
 
 export default class InputWithDefaultValueButtonWidget extends React.Component {
 	static contextType = ReactContext;
