@@ -112,7 +112,8 @@ const widgets = importLocalComponents<Widget>("widgets", [
 	"TaxonImageWidget",
 	"UpperCaseWidget",
 	"NumberWidget",
-	"InputGroupWidget"
+	"InputGroupWidget",
+	"InputWithDefaultValueButtonWidget"
 ]);
 
 const templates = importLocalComponents<TemplatesType>("templates", [

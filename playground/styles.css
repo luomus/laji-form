@@ -1683,12 +1683,41 @@ min-height: 20px;
 .laji-form .glyph-button > .svg-inline--fa {
 	font-size: initial;
 }
+.laji-form .form-control-feedback.svg-inline--fa {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 2;
+	display: block;
+	text-align: center;
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
+}
+.laji-form .fetcher-input.text-warning input {
+	border-color: #f0ad4e !important;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+}
+.laji-form .fetcher-input.text-danger input {
+	border-color: #a94442 !important;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+}
 
 
-.laji-form .input-group .input-group-text {
+.laji-form .input-group .input-group-text, .laji-form .input-group .input-group-button > button {
 	height: 25px;
-	font-size: 13px;
 	border-radius: 2px;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+.laji-form .input-group .input-group-text {
+	font-size: 13px;
+}
+.laji-form .input-group.input-group-textarea .input-group-text {
+	height: initial;
+	align-items: start;
 }
 .laji-form .input-group > :not(:last-child) {
 	border-top-right-radius: 0;

@@ -1,6 +1,7 @@
 import * as React from "react";
 import BaseComponent from "../BaseComponent";
 import * as PropTypes from "prop-types";
+import { getUiOptions } from "../../utils";
 
 @BaseComponent
 export default class MultiLanguageField extends React.Component {
@@ -20,6 +21,8 @@ export default class MultiLanguageField extends React.Component {
 		const SchemaField = this.props.registry.fields.SchemaField;
 		const {Label, lang} = this.props.formContext;
 		const {schema, uiSchema, idSchema, errorSchema, formData, required} = this.props;
+		const uiOptions = getUiOptions(uiSchema);
+
 		const languages = Object.keys(schema.properties).sort((a, b) => {
 			const sortA = Number(a !== lang);
 			const sortB = Number(b !== lang);
@@ -36,7 +39,11 @@ export default class MultiLanguageField extends React.Component {
 						schema={{title: "", ...schema.properties[_lang]}}
 						uiSchema={{
 							"ui:widget": "InputGroupWidget",
-							"ui:options": {"inputGroupText": _lang, "className": "multi-lang-input-group"}
+							"ui:options": {
+								"inputGroupText": _lang,
+								"className": "multi-lang-input-group",
+								...uiOptions
+							}
 						}}
 						errorSchema={errorSchema[_lang] || {}}
 						idSchema={idSchema[_lang]}

@@ -59,6 +59,11 @@
 		"en": "Not known name",
 		"sv": "Okänt namn"
 	},
+	"unknownOrganization": {
+		"fi": "Tuntematon organisaatio",
+		"en": "Unknown organization",
+		"sv": "Okänd organisation"
+	},
 	"fix": {
 		"fi": "Korjaa",
 		"en": "Fix",

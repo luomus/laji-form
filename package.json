@@ -1,6 +1,6 @@
 {
   "name": "laji-form",
-  "version": "14.1.4",
+  "version": "14.1.6",
   "description": "React module capable of building dynamic forms from Laji form json schemas",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -41,7 +41,7 @@
     "exif-js": "^2.3.0",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
-    "laji-map": "^3.17.1",
+    "laji-map": "^3.17.5",
     "laji-validate": "0.0.115",
     "moment": "^2.29.1",
     "prop-types": "^15.5.8",
