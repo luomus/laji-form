@@ -335,10 +335,12 @@ class OrganizationAutosuggestWidget extends React.Component {
 
 	getSuggestionFromValue(value) {
 		if (this.isValueSuggested(value)) {
-			const autosuggestField = this.props.options.autosuggestField;
-			return this.props.formContext.apiClient.fetchCached("/autocomplete/" + autosuggestField, {q: value, limit: 1}).then(suggestions => {
-				if (suggestions.length > 0 && suggestions[0]["key"] === value) {
-					return suggestions[0];
+			return this.props.formContext.apiClient.fetchCached(`/organization/by-id/${value}`).then(({fullName}) => {
+				if (fullName) {
+					return {
+						value: fullName,
+						key: value
+					};
 				}
 			});
 		} else {
