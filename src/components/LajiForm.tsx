@@ -25,6 +25,7 @@ import CustomEventService from "../services/custom-event-service";
 import SubmitHookService, { SubmitHook } from "../services/submit-hook-service";
 import DOMIdService from "../services/dom-id-service";
 import IdService from "../services/id-service";
+import RootInstanceService from "../services/root-instance-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -228,7 +229,8 @@ export interface FormContext {
 		customEvents: CustomEventService,
 		submitHooks: SubmitHookService,
 		DOMIds: DOMIdService,
-		ids: IdService
+		ids: IdService,
+		rootInstance: RootInstanceService
 	}
 }
 
@@ -258,9 +260,6 @@ export type ByLang = {[key: string]: string};
 export type Translations = Record<Lang, ByLang>;
 
 export interface RootContext {
-	formInstance: LajiForm;
-	formData: any;
-	removeGlobalEventHandler: (name: string, fn: React.EventHandler<any>) => void;
 	singletonMap: any;
 	errorList: ErrorListTemplate;
 	[prop: string]: any;
@@ -342,7 +341,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		};
 		if (((!this.state && props.schema && Object.keys(props.schema).length) || (this.state && !("formData" in this.state))) || ("formData" in props && props.formData !== this.props.formData)) {
 			state.formData = state.formContext.services.ids.addLajiFormIds(getDefaultFormState(props.schema, props.formData, props.schema))[0];
-			this._context.formData = state.formData;
 		} else if (this.state && this.formRef.current) {
 			state.formData = this.formRef.current.state.formData;
 		}
@@ -350,6 +348,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 			state.extraErrors = {};
 		}
 		this.memoizedFormContext.services.ids.setFormData(state.formData);
+		this.memoizedFormContext.services.rootInstance.setFormData(state.formData);
 		return state;
 	}
 
@@ -388,6 +387,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				services.focus.setFormContext(this.memoizedFormContext);
 				services.settings.setSettings(props.settings);
 				services.ids.setSchema(props.schema);
+				services.rootInstance.setSchema(props.schema);
 			} else {
 				this.memoizedFormContext.services.keyHandler = new KeyHandlerService(this.memoizedFormContext);
 				this.memoizedFormContext.services.settings = new SettingsService(this.onSettingsChange, props.settings);
@@ -397,6 +397,9 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				this.memoizedFormContext.services.submitHooks = new SubmitHookService(this.onSubmitHooksChange);
 				this.memoizedFormContext.services.DOMIds = new DOMIdService();
 				this.memoizedFormContext.services.ids = new IdService(props.schema, props.formData);
+				this.memoizedFormContext.services.rootInstance = new RootInstanceService(
+					props.schema, props.formData, (formData) => this.onChange({formData}), this.validate, () => this.validateAndSubmit(false)
+				);
 			}
 			return this.memoizedFormContext;
 		}
@@ -404,6 +407,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	componentDidMount() {
 		this.mounted = true;
+		this.memoizedFormContext.services.rootInstance.setIsMounted(true);
 		this.props.autoFocus && this.memoizedFormContext.utils.focusById("root");
 
 		(Object.keys(this.memoizedFormContext.services) as (keyof FormContext["services"])[]).forEach(service => {
@@ -415,6 +419,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 
 	componentWillUnmount() {
 		this.mounted = false;
+		this.memoizedFormContext.services.rootInstance.setIsMounted(false);
 		if (this._context.singletonMap) this._context.singletonMap.destroy();
 		(Object.keys(this.memoizedFormContext.services) as (keyof FormContext["services"])[]).forEach(service => {
 			(this.memoizedFormContext.services[service] as any).destroy?.();
@@ -470,8 +475,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 					: this.memoizedFormContext.services.ids.removeLajiFormIds(formData);
 				this.props.onChange(_formData);
 			}
-			this._context.formData = formData;
 			this.memoizedFormContext.services.ids.setFormData(formData);
+			this.memoizedFormContext.services.rootInstance.setFormData(formData);
 			!this.validating && this.validate(!!"warnings", !"nonlive");
 		});
 	}
@@ -711,9 +716,10 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	}
 
 	popErrorListIfNeeded = () => {
+		const errorList = this.memoizedFormContext.services.rootInstance.getErrorListInstance();
 		let errorListElem;
 		try {
-			errorListElem = findDOMNode(this._context.errorList) as Element;
+			errorListElem = findDOMNode(errorList) as Element;
 		} catch (e) {
 			// Empty
 		}
@@ -721,8 +727,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		const wouldScrollTo = getScrollPositionForScrollIntoViewIfNeeded(errorListElem, this.props.topOffset, this.props.bottomOffset) || 0;
 		const scrollAmount = wouldScrollTo - getWindowScrolled();
 
-		if (!this._context.errorList.state.poppedTouched && scrollAmount !== 0) {
-			this._context.errorList.expand();
+		if (!errorList.state.poppedTouched && scrollAmount !== 0) {
+			errorList.expand();
 		}
 		highlightElem(errorListElem);
 	}

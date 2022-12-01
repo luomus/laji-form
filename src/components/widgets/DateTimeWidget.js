@@ -276,7 +276,7 @@ export default class DateTimeWidget extends React.Component {
 	}
 
 	setSameAsToday = () => {
-		const {formData} = this.getContext();
+		const formData = this.props.formContext.services.rootInstance.getFormData();
 		const sameOptions = getUiOptions(this.props).showButtons.same || {};
 		const {path = "/gatheringEvent/dateBegin"} = sameOptions;
 		const today = parseJSONPointer(formData, path, !!"safely");

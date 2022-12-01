@@ -137,7 +137,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 		apiClient: ApiClient;
 		_context: any;
-		mainContext: RootContext;
 		mounted: boolean;
 		fetching: any;
 
@@ -175,7 +174,6 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 			this._context = new Context(`${this.KEY}_ARRAY_FIELD`);
 			if (!this._context.metadatas) this._context.metadatas = {};
 			if (!this._context.tmpMedias) this._context.tmpMedias = {};
-			this.mainContext = (this as any).getContext();
 			this.state = {tmpMedias: Object.keys(this._context.tmpMedias[this.getContainerId()] || {}).map(i => +i)};
 			const {addModal, autoOpenAddModal} = options;
 			if (addModal
@@ -544,9 +542,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				);
 			}, Promise.resolve(found)).then((found) => {
 				let {registry} = this.props;
-				const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
-				const {schema} = lajiFormInstance.props;
-				let {formData} = lajiFormInstance.state;
+				const lajiFormInstance = this.props.formContext.services.rootInstance;
+				const schema = lajiFormInstance.getSchema();
+				let formData = lajiFormInstance.getFormData();
 				exifParsers.filter((f: any) => f.type === "event" || found[f.parse]).forEach(({field, parse, type, eventName}: any) => {
 					if (type === "mutate") {
 						formData = updateFormDataWithJSONPointer({formData, schema, registry}, found[parse], field);
@@ -560,9 +558,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 		}
 
 		sideEffects = (formData: any) => {
-			const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
-			const {formData: lajiFormFormData} = lajiFormInstance.state;
-			const {schema} = lajiFormInstance.props;
+			const lajiFormInstance = this.props.formContext.services.rootInstance;
+			const schema = lajiFormInstance.getSchema();
+			const lajiFormFormData = lajiFormInstance.getFormData();
 			const {sideEffects} = getUiOptions(this.props.uiSchema);
 			if (sideEffects) {
 				const thisPath = idSchemaIdToJSONPointer(this.props.idSchema.$id);
@@ -585,7 +583,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}, formData);
 			}
 			if (formData !== lajiFormFormData) {
-				lajiFormInstance.onChange({formData});
+				lajiFormInstance.onChange(formData);
 			}
 		}
 
@@ -598,9 +596,9 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 
 			const id = this.getContainerId();
 
-			const lajiFormInstance = (new Context(this.props.formContext.contextId) as RootContext).formInstance;
+			const lajiFormInstance = this.props.formContext.services.rootInstance;
 			const saveAndOnChange = () => this.saveMedias(files).then(mediaIds => {
-				if (!lajiFormInstance.mounted || !mediaIds) {
+				if (!lajiFormInstance.isMounted() || !mediaIds) {
 					return;
 				}
 
@@ -611,12 +609,12 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				const newFormData = [
 					...(this.mounted
 						? this.props.formData || []
-						: parseJSONPointer(lajiFormInstance.state.formData, pointer) || []
+						: parseJSONPointer(lajiFormInstance.getFormData(), pointer) || []
 					),
 					...mediaIds
 				];
 
-				if (!lajiFormInstance.mounted) return;
+				if (!lajiFormInstance.isMounted()) return;
 
 				if ((this.mounted || id === "root") && id === this.getContainerId()) {
 					this.props.onChange(newFormData);
@@ -633,7 +631,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 
 				pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, id);
-				lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+				lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 			});
 
 			(this as any).addSubmitHook(saveAndOnChange);

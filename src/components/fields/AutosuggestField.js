@@ -253,10 +253,10 @@ export default class AutosuggestField extends React.Component {
 					return changed;
 				}, formData);
 			}
-			const lajiFormInstance = new Context(formContext.contextId).formInstance;
+			const lajiFormInstance = formContext.services.rootInstance;
 			const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, this.getUUID());
 			const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...formData};
-			lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+			lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 		}
 	}
 

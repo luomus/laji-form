@@ -198,7 +198,6 @@ export default class GeocoderField extends React.Component {
 	}
 
 	updateForGeometry = (props, callback, geometry) => {
-		const mainContext = new Context(props.formContext.contextId);
 		const {fields} = this.getOptions();
 		const fieldByKeys = fields.reduce((_fields, option) => {
 			_fields[option] = true;
@@ -221,7 +220,7 @@ export default class GeocoderField extends React.Component {
 
 		const join = (oldValue, value) => isEmptyString(oldValue) ? value : `${oldValue}, ${value}`;
 
-		const lajiFormInstance = mainContext.formInstance;
+		const lajiFormInstance = props.formContext.services.rootInstance;
 		const timestamp = Date.now();
 		this.promiseTimestamp = timestamp;
 		const doAsync = () => {
@@ -340,8 +339,8 @@ export default class GeocoderField extends React.Component {
 								this.props.onChange({...(this.props.formData || {}), ...changes});
 							} else {
 								const pointer = this.props.formContext.services.ids.getJSONPointerFromLajiFormIdAndFormDataAndIdSchemaId(this.props.idSchema.$id, this.getUUID());
-								const newFormData = {...parseJSONPointer(lajiFormInstance.state.formData, pointer), ...changes};
-								lajiFormInstance.onChange({formData: updateSafelyWithJSONPointer(lajiFormInstance.state.formData, newFormData, pointer)});
+								const newFormData = {...parseJSONPointer(lajiFormInstance.getFormData(), pointer), ...changes};
+								lajiFormInstance.onChange(updateSafelyWithJSONPointer(lajiFormInstance.getFormData(), newFormData, pointer));
 							}
 							if (callback) callback();
 						});
