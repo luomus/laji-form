@@ -82,7 +82,7 @@ export default class MapField extends React.Component {
 		const {uiSchema} = this.props;
 		const {mapOptions = {}} = getUiOptions(uiSchema);
 		if (mapOptions.singleton) {
-			const map = this.props.formContext.services.singletonMap;
+			const {map} = this.props.formContext.services.singletonMap;
 			if (map && map.getOptions().locate && map.userLocation) {
 				this.onLocate(map.userLocation.latlng, map.userLocation.accuracy);
 			}
@@ -162,7 +162,7 @@ export default class MapField extends React.Component {
 		let singletonHasLocate = false;
 		let singletonRendered = false;
 		if (isSingleton) {
-			const map = this.getContext().singletonMap;
+			const {map} = this.props.formContext.services.singletonMap;
 			if (map) {
 				singletonRendered = true;
 				singletonHasLocate = map.getOptions().locate;
