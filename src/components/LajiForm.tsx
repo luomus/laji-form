@@ -223,6 +223,7 @@ export interface FormContext {
 	setTimeout: (fn: () => void, time?: number) => void;
 	utils: ReactUtilsType;
 	lajiGeoServerAddress: string;
+	globals: Record<string, unknown>; // Used to store data mutably between components so doesn't affect React rendering.
 	services: {
 		keyHandler: KeyHandlerService,
 		settings: SettingsService,
@@ -279,7 +280,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	shortcutHelpRef = React.createRef<any>();
 	apiClient: ApiClient;
 	_id: number;
-	_context: RootContext;
 	propagateSubmit = true;
 	formRef = React.createRef<Form>();
 	mounted: boolean;
@@ -313,8 +313,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 		initializeValidation(this.apiClient);
 		this._id = getNewId();
-
-		this._context = new InstanceContext(this._id) as RootContext;
 
 		this.getMemoizedFormContext(props); // Initialize form context.
 		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
@@ -377,7 +375,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				setTimeout: this.setTimeout,
 				services: {},
 				formRef: this.formRef,
-				lajiGeoServerAddress: props.lajiGeoServerAddress
+				lajiGeoServerAddress: props.lajiGeoServerAddress,
+				globals: new InstanceContext(this._id)
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
 			if (services) {

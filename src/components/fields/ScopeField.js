@@ -158,19 +158,18 @@ export default class ScopeField extends React.Component {
 			: (this.state ? this.state.additionalFields : {});
 
 		if (additionalsPersistenceKey) {
-			const mainContext = this.getContext();
-			this._context = mainContext[ `scopeField_${additionalsPersistenceKey}`];
+			this._globals = props.formContext.globals[`scopeField_${additionalsPersistenceKey}`];
 		}
 
-		if (this._context) {
+		if (this._globals) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceField) {
 				const additionalPersistenceValue = this.getAdditionalPersistenceValue(props);
 				additionalPersistenceValue.forEach(item => {
-					if (this._context && this._context[item]) additionalsToAdd = {...additionalsToAdd, ...this._context[item]};
+					if (this._globals && this._globals[item]) additionalsToAdd = {...additionalsToAdd, ...this._globals[item]};
 				});
 			} else {
-				if (this._context) additionalsToAdd = this._context;
+				if (this._globals) additionalsToAdd = this._globals;
 			}
 			additionalFields = {...additionalFields, ...additionalsToAdd};
 		}
@@ -504,20 +503,20 @@ export default class ScopeField extends React.Component {
 			return {...additionalFields, [field]: !this.propertyIsIncluded(field)};
 		}, this.state.additionalFields);
 
-		if (this.context) {
+		if (this._globals) {
 			const additionalsPersistenceVal = this.getAdditionalPersistenceValue(this.props, !"don't include undefined");
-			let contextEntry = this._context || {};
+			let globalsEntry = this._globals || {};
 			if (additionalsPersistenceField) {
 				let additionalsKeys = this.props.schema.properties[additionalsPersistenceField].type === "array"
 					? additionalsPersistenceVal
 					: [additionalsPersistenceVal];
 				if (additionalsKeys.length === 0) additionalsKeys = ["undefined"];
 				additionalsKeys.forEach(persistenceKey => {
-					contextEntry[persistenceKey] = additionalFields;
+					globalsEntry[persistenceKey] = additionalFields;
 				});
-				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = contextEntry;
+				this.props.formContext.globals[`scopeField_${additionalsPersistenceKey}`] = globalsEntry;
 			} else if (additionalsPersistenceKey) {
-				this.getContext()[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
+				this.props.formContext.globals[`scopeField_${additionalsPersistenceKey}`] = additionalFields;
 			}
 		}
 		this.setState({additionalFields, ...this.getSchemasAndAdditionals(this.props, {...this.state, additionalFields})});

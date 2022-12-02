@@ -18,11 +18,11 @@ export default class SingleItemArrayField extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(props);
+		props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(props);
 	}
 
 	componentDidUpdate() {
-		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(this.props);
+		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.getActiveIdx(this.props);
 	}
 
 	getStateFromProps(props) {

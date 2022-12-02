@@ -126,7 +126,7 @@ export default class SelectTreeField extends React.Component {
 		if (e.key == "Enter" && !e.ctrlKey) {
 			e.preventDefault();
 			e.stopPropagation();
-			this.getContext().setImmediate(() => {
+			this.props.formContext.setTimeout(() => {
 				this.props.formContext.services.focus.focusNextInput(e.shiftKey);
 			});
 		}

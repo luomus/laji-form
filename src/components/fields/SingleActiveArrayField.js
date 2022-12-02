@@ -57,7 +57,7 @@ export default class SingleActiveArrayField extends React.Component {
 			...this.getStateFromProps(props), popups: {}
 		};
 		const id = `${this.props.idSchema.$id}`;
-		this.getContext()[`${id}.activeIdx`] = this.state.activeIdx;
+		this.props.formContext.globals[`${id}.activeIdx`] = this.state.activeIdx;
 	}
 
 	getInitialActiveIdx = (props) => {
@@ -91,7 +91,7 @@ export default class SingleActiveArrayField extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
 		const options = getUiOptions(this.props);
 		const prevOptions = getUiOptions(prevProps);
-		this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
+		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = this.state.activeIdx;
 		const {idToFocusAfterNavigate, idToScrollAfterNavigate, focusOnNavigate = true, renderer = "accordion", idxOffsets, totalOffset, affixed} = getUiOptions(this.props.uiSchema);
 		if (renderer === "uncontrolled") return;
 		if ((prevProps.formData || []).length === (this.props.formData || []).length && ("activeIdx" in options && options.activeIdx !== prevOptions.activeIdx || (!("activeIdx" in options) && this.state.activeIdx !== prevState.activeIdx))) {

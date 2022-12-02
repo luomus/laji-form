@@ -374,6 +374,7 @@ class NamedPlaceChooser extends React.Component {
 						controls={{draw: false}}
 						lang={this.props.formContext.lang}
 						bodyAsDialogRoot={false}
+						formContext={this.props.formContext}
 					/>
 					{(!places) ? <Spinner /> : null}
 					<div style={{display: "none"}} ref={this.setPopupContainerRef}>
