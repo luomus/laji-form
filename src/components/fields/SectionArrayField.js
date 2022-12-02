@@ -162,7 +162,7 @@ class SectionArrayFieldTemplate extends React.Component {
 	}
 	onFocuses = []
 	getOnFocus = (i) => () => {
-		this.props.formContext.this.getContext()[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
+		this.props.formContext.globals[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
 	getElemsForRowIdx = (rowIdx) => {

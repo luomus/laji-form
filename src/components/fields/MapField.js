@@ -6,7 +6,6 @@ import { Affix } from "../components";
 import { getUiOptions, isObject } from "../../utils";
 import BaseComponent from "../BaseComponent";
 const equals = require("deep-equal");
-import Context from "../../Context";
 import * as Spinner from "react-spinner";
 import { Button, Fullscreen } from "../components";
 import { anyToFeatureCollection } from "laji-map/lib/utils";
@@ -83,7 +82,7 @@ export default class MapField extends React.Component {
 		const {uiSchema} = this.props;
 		const {mapOptions = {}} = getUiOptions(uiSchema);
 		if (mapOptions.singleton) {
-			const map = this.getContext().singletonMap;
+			const map = this.props.formContext.services.singletonMap;
 			if (map && map.getOptions().locate && map.userLocation) {
 				this.onLocate(map.userLocation.latlng, map.userLocation.accuracy);
 			}

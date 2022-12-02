@@ -1949,9 +1949,10 @@ export class Map extends React.Component {
 	}
 
 	componentWillUnmount() {
-		!this.props.singleton && this.map && this.map.destroy();
-		if (this.hasSingletonHandle) {
-			new Context(this.props.formContext.contextId).onSingletonHandleGrabbed = undefined;
+		if (this.props.singleton) {
+			this.props.formContext.services.singletonMap.release(this);
+		} else {
+			this.map && this.map.destroy();
 		}
 		this.mounted = false;
 	}
@@ -1959,19 +1960,19 @@ export class Map extends React.Component {
 	componentDidUpdate(prevProps) {
 		const {hidden, onComponentDidMount, singleton} = this.props;
 		const {...props} = this.props;
-		if (!singleton || this.hasSingletonHandle) {
 
+		if (!hidden && !this.map) {
+			this.initializeMap(props);
+			if (onComponentDidMount) onComponentDidMount(this.map);
+		}
+
+		if (!singleton || this.props.formContext.services.singletonMap.amOwner(this)) {
 			if (this.map && prevProps.lineTransect && props.lineTransect && "activeIdx" in props.lineTransect) {
 				this.map.setLTActiveIdx(props.lineTransect.activeIdx);
 			}
 			if (prevProps.lineTransect) delete props.lineTransect;
 
 			this.setMapOptions(this.getEnhancedMapOptions(prevProps), this.getEnhancedMapOptions(this.props));
-		}
-
-		if (!hidden && !this.map) {
-			this.initializeMap(props);
-			if (onComponentDidMount) onComponentDidMount(this.map);
 		}
 	}
 
@@ -2017,7 +2018,7 @@ export class Map extends React.Component {
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;
 		mapOptions.rootElem = this.refs.map;
-		const lajiGeoServerAddress = this.props.contextId !== undefined && new Context(this.props.contextId).lajiGeoServerAddress;
+		const {lajiGeoServerAddress} = this.props.formContext;
 		if (lajiGeoServerAddress) {
 			mapOptions.lajiGeoServerAddress = lajiGeoServerAddress;
 		}
@@ -2057,20 +2058,9 @@ export class Map extends React.Component {
 	initializeMap = (props) => {
 		const mapOptions = this.getEnhancedMapOptions(props);
 		if (props.singleton) {
-			const context = new Context(props.formContext.contextId);
-			context.onSingletonHandleGrabbed && context.onSingletonHandleGrabbed();
-			this.hasSingletonHandle = true;
-			if (!context.singletonMap) {
-				context.singletonMap = new LajiMap(mapOptions);
-				this.map = context.singletonMap;
-				this.mounted && props.singleton && this.hasSingletonHandle && props.zoomToData && this.map.zoomToData(props.zoomToData);
-			} else {
-				this.map = context.singletonMap;
-				this.setMapOptions(context.singletonMap.getOptions(), mapOptions);
-			}
-			context.onSingletonHandleGrabbed = () => {
-				this.hasSingletonHandle = false;
-			};
+			const singletonMapService = props.formContext.services.singletonMap;
+			this.map = singletonMapService.grab(this, mapOptions);
+			this.setMapOptions(this.map.getOptions(), mapOptions);
 		} else {
 			this.map = new LajiMap(mapOptions);
 		}

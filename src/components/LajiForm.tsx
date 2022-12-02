@@ -26,6 +26,7 @@ import SubmitHookService, { SubmitHook } from "../services/submit-hook-service";
 import DOMIdService from "../services/dom-id-service";
 import IdService from "../services/id-service";
 import RootInstanceService from "../services/root-instance-service";
+import SingletonMapService from "../services/singleton-map-service";
 
 const fields = importLocalComponents<Field>("fields", [
 	"SchemaField",
@@ -221,6 +222,7 @@ export interface FormContext {
 	theme: Theme;
 	setTimeout: (fn: () => void, time?: number) => void;
 	utils: ReactUtilsType;
+	lajiGeoServerAddress: string;
 	services: {
 		keyHandler: KeyHandlerService,
 		settings: SettingsService,
@@ -230,7 +232,8 @@ export interface FormContext {
 		submitHooks: SubmitHookService,
 		DOMIds: DOMIdService,
 		ids: IdService,
-		rootInstance: RootInstanceService
+		rootInstance: RootInstanceService,
+		singletonMap: SingletonMapService
 	}
 }
 
@@ -260,7 +263,6 @@ export type ByLang = {[key: string]: string};
 export type Translations = Record<Lang, ByLang>;
 
 export interface RootContext {
-	singletonMap: any;
 	errorList: ErrorListTemplate;
 	[prop: string]: any;
 }
@@ -313,11 +315,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		this._id = getNewId();
 
 		this._context = new InstanceContext(this._id) as RootContext;
-		this._context.formInstance = this;
-		this._context.formData = props.formData;
-		if (props.lajiGeoServerAddress) {
-			this._context.lajiGeoServerAddress = props.lajiGeoServerAddress;
-		}
 
 		this.getMemoizedFormContext(props); // Initialize form context.
 		this.resetShortcuts((props.uiSchema || {})["ui:shortcuts"]);
@@ -349,11 +346,12 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 		}
 		this.memoizedFormContext.services.ids.setFormData(state.formData);
 		this.memoizedFormContext.services.rootInstance.setFormData(state.formData);
+
 		return state;
 	}
 
 	getMemoizedFormContext(props: LajiFormProps): FormContext {
-		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext", "settings", "schema", "uiSchemaContext"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
+		const nextKey = (["lang", "topOffset", "bottomOffset", "formContext", "settings", "schema", "uiSchemaContext", "lajiGeoServerAddress"] as (keyof LajiFormProps)[]).reduce((key, prop) => {
 			key[prop] = props[prop];
 			return key;
 		}, {} as Record<keyof LajiFormProps, any>);
@@ -378,7 +376,8 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				mediaMetadata: props.mediaMetadata,
 				setTimeout: this.setTimeout,
 				services: {},
-				formRef: this.formRef
+				formRef: this.formRef,
+				lajiGeoServerAddress: props.lajiGeoServerAddress
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
 			if (services) {
@@ -400,6 +399,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				this.memoizedFormContext.services.rootInstance = new RootInstanceService(
 					props.schema, props.formData, (formData) => this.onChange({formData}), this.validate, () => this.validateAndSubmit(false)
 				);
+				this.memoizedFormContext.services.singletonMap = new SingletonMapService();
 			}
 			return this.memoizedFormContext;
 		}
@@ -420,7 +420,6 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 	componentWillUnmount() {
 		this.mounted = false;
 		this.memoizedFormContext.services.rootInstance.setIsMounted(false);
-		if (this._context.singletonMap) this._context.singletonMap.destroy();
 		(Object.keys(this.memoizedFormContext.services) as (keyof FormContext["services"])[]).forEach(service => {
 			(this.memoizedFormContext.services[service] as any).destroy?.();
 		});
