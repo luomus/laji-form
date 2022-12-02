@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button, DeleteButton, Help } from "../components";
 import * as merge from "deepmerge";
 import { getUiOptions, isNullOrUndefined, isObject, isDescendant, getTabbableFields, canAdd, getReactComponentName, getUUID, getIdxWithOffset, getIdxWithoutOffset } from "../../utils";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { getTemplate } from "@rjsf/utils";
@@ -31,8 +31,8 @@ export function beforeAdd(props) {
 			: 0;
 	idx = offset + idx;
 	let idToFocus = `${props.idSchema.$id}_${idx}`;
-	new Context(contextId).idToFocus = idToFocus;
-	new Context(contextId).idToScroll = idToScrollAfterAdd;
+	getContext(contextId).idToFocus = idToFocus;
+	getContext(contextId).idToScroll = idToScrollAfterAdd;
 }
 
 const buttonDefinitions = {
@@ -220,7 +220,7 @@ export function handlesArrayKeys(ComposedComponent) {
 		}
 
 		onFocus = target => {
-			const context = new Context(this.props.formContext.contextId);
+			const context = getContext(this.props.formContext.contextId);
 			if (target === "last") {
 				context.idToFocus =  `${this.props.idSchema.$id}_${this.props.formData.length - 1}`;
 				context.idToScroll = `_laji-form_${this.props.formContext.contextId}_${this.props.idSchema.$id}_${this.props.formData.length - 2}`;
@@ -279,7 +279,7 @@ export class ArrayFieldTemplateWithoutKeyHandling extends React.Component {
 	}
 	onFocuses = []
 	getOnFocus = (i) => () => {
-		new Context(this.props.formContext.contextId)[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
+		getContext(this.props.formContext.contextId)[`${this.props.idSchema.$id}.activeIdx`] = i + (getUiOptions(this.props.uiSchema).startIdx || 0);
 	}
 
 	render() {

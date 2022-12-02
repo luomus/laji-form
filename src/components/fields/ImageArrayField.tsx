@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import update from "immutability-helper";
-import Context from "../../Context";
+import getContext from "../../Context";
 import DropZone from "react-dropzone";
 import { DeleteButton, Button } from "../components";
 import LajiForm from "../LajiForm";
@@ -11,7 +11,7 @@ const Spinner = require("react-spinner");
 import * as exif from "exif-js";
 import { validateLatLng, wgs84Validator } from "laji-map/lib/utils";
 import * as moment from "moment";
-import { FieldProps, RootContext } from "../LajiForm";
+import { FieldProps } from "../LajiForm";
 import ApiClient from "../../ApiClient";
 import ReactContext from "../../ReactContext";
 import { getTemplate } from "@rjsf/utils";
@@ -171,7 +171,7 @@ export function MediaArrayField<LFC extends Constructor<React.Component<FieldPro
 				}
 			});
 			this.apiClient = props.formContext.apiClient;
-			this._context = new Context(`${this.KEY}_ARRAY_FIELD`);
+			this._context = getContext(`${this.KEY}_ARRAY_FIELD`);
 			if (!this._context.metadatas) this._context.metadatas = {};
 			if (!this._context.tmpMedias) this._context.tmpMedias = {};
 			this.state = {tmpMedias: Object.keys(this._context.tmpMedias[this.getContainerId()] || {}).map(i => +i)};

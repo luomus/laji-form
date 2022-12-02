@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import * as PropTypes from "prop-types";
 import BaseComponent from "../BaseComponent";
 import { GlyphButton, OverlayTrigger } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { getUiOptions, getInnerUiSchema, formatErrorMessage, filteredErrors, parseJSONPointer, updateFormDataWithJSONPointer, parseSchemaFromFormDataPointer, JSONPointerToId, getUUID, getDefaultFormState } from "../../utils";
 import { Map, parseGeometries, getFeatureStyleWithHighlight, getFeatureStyleWithLowerOpacity } from "./MapArrayField";
 import ReactContext from "../../ReactContext";
@@ -119,7 +119,7 @@ class LocationButton extends React.Component {
 
 	getUnitData = () => {
 		const {that} = this.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		const emptyFeatureCollection = {featureCollection: {type: "FeatureCollection", features: []}};
 
@@ -168,7 +168,7 @@ class LocationButton extends React.Component {
 
 	getLolifeData = () => {
 		const {that} = this.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		const {strategy = "unit"} = getUiOptions(that.props.uiSchema);
 
@@ -204,7 +204,7 @@ class LocationButton extends React.Component {
 	onClick = () => {
 		const {that} = this.props;
 		const {disabled, readonly} = that.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 
 		this.triggerLayer = undefined;
@@ -364,7 +364,7 @@ class LocationButton extends React.Component {
 
 	getUnitMiniMapData = () => {
 		const {that} = this.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		const geometry = this.getGeometry();
 
@@ -390,7 +390,7 @@ class LocationButton extends React.Component {
 
 	getLolifeMiniMapData = () => {
 		const {that} = this.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		const draw = map.getDraw();
 		return [
@@ -412,7 +412,7 @@ class LocationButton extends React.Component {
 
 	getLolifeUnitMiniMapData = () => {
 		const {that} = this.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		const {map} = mapContext;
 		const id = getUUID(that.props.formData);
 		return [
@@ -448,7 +448,7 @@ class LocationButton extends React.Component {
 
 	onEntered = () => {
 		const {that} = this.props;
-		const mapContext = new Context(`${that.props.formContext.contextId}_MAP`);
+		const mapContext = getContext(`${that.props.formContext.contextId}_MAP`);
 		if (!mapContext) {
 			return;
 		}

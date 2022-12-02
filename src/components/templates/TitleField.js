@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Help, OverlayTrigger } from "../components";
 import { isEmptyString, parseJSONPointer, classNames, getUiOptions } from "../../utils";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 
 const TitleField = ({title, id, formData, style, uiSchema = {}, registry = {}}) => {
@@ -60,7 +60,7 @@ export default TitleField;
 const _titleFormatters = {
 	informalTaxonGroup: ({formData, value, renderer}) => {
 		const informalTaxonGroup = parseJSONPointer(formData, value, !!"safely");
-		const {informalTaxonGroupsById = {}} = new Context();
+		const {informalTaxonGroupsById = {}} = getContext();
 		const name = informalTaxonGroupsById[informalTaxonGroup] ? informalTaxonGroupsById[informalTaxonGroup].name : "";
 		return informalTaxonGroup ? <span key={renderer}><div className={`informal-group-image ${informalTaxonGroup}`} /> {name}</span> : undefined;
 	}

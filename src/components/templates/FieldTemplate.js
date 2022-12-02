@@ -1,5 +1,5 @@
 import * as React from "react";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { Help, TooltipComponent } from "../components";
 import { isMultiSelect, getUiOptions, formatErrorMessage, classNames } from "../../utils";
 
@@ -27,7 +27,7 @@ export default class FieldTemplateTemplate extends React.Component {
 	componentDidMount() {
 		const {formContext} = this.props;
 		const contextId = formContext.contextId;
-		const _context = new Context(contextId);
+		const _context = getContext(contextId);
 		const {idToFocus, idToScroll} = _context;
 		if (this.canFocus() && idToFocus !== undefined && this.state.id === idToFocus) {
 			if (this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll)) {
@@ -47,7 +47,7 @@ export default class FieldTemplateTemplate extends React.Component {
 
 	receiveId = (id) => {
 		this.setState({id}, () => {
-			const {idToFocus, idToScroll} = new Context(this.props.formContext.contextId);
+			const {idToFocus, idToScroll} = getContext(this.props.formContext.contextId);
 			if (this.canFocus() && idToFocus === id) {
 				this.props.formContext.utils.focusAndScroll(idToFocus, idToScroll);
 			}

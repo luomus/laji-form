@@ -5,7 +5,7 @@ const equals = require("deep-equal");
 import { getUiOptions, getInnerUiSchema, isEmptyString, updateSafelyWithJSONPointer, parseJSONPointer, getDefaultFormState } from "../../utils";
 import BaseComponent from "../BaseComponent";
 import * as fetch from "isomorphic-fetch";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { Button } from "../components";
 import * as Spinner from "react-spinner";
@@ -194,7 +194,7 @@ export default class GeocoderField extends React.Component {
 	}
 
 	getComponentContext = () => {
-		return new Context(`${this.props.formContext.contextId}_${this.getUUID()}_GEOCODERFIELD`);
+		return getContext(`${this.props.formContext.contextId}_${this.getUUID()}_GEOCODERFIELD`);
 	}
 
 	updateForGeometry = (props, callback, geometry) => {

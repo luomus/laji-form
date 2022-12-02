@@ -15,7 +15,7 @@ import Form from "@rjsf/core";
 import { FieldProps as RJSFFieldProps, WidgetProps as RJSFWidgetProps, Field, Widget, TemplatesType } from "@rjsf/utils";
 import ErrorListTemplate from "./templates/ErrorListTemplate";
 import ApiClient, { ApiClientImplementation } from "../ApiClient";
-import InstanceContext from "../Context";
+import instanceContext from "../Context";
 import * as translations from "../translations.json";
 import KeyHandlerService, { ShortcutKeys } from "../services/key-handler-service";
 import SettingsService, { Settings } from "../services/settings-service";
@@ -263,11 +263,6 @@ export interface Notifier {
 export type ByLang = {[key: string]: string};
 export type Translations = Record<Lang, ByLang>;
 
-export interface RootContext {
-	errorList: ErrorListTemplate;
-	[prop: string]: any;
-}
-
 export default class LajiForm extends React.Component<LajiFormProps, LajiFormState> {
 	static contextType = Context;
 	private contextMemoizeKey: Record<keyof LajiFormProps, any>;
@@ -376,7 +371,7 @@ export default class LajiForm extends React.Component<LajiFormProps, LajiFormSta
 				services: {},
 				formRef: this.formRef,
 				lajiGeoServerAddress: props.lajiGeoServerAddress,
-				globals: new InstanceContext(this._id)
+				globals: instanceContext(this._id)
 			};
 			this.memoizedFormContext.utils = ReactUtils(this.memoizedFormContext);
 			if (services) {

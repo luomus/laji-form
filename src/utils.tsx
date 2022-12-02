@@ -1,13 +1,13 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isSelect as _isSelect, isMultiSelect as _isMultiSelect, getDefaultFormState as _getDefaultFormState } from "@rjsf/utils";
-import Context from "./Context";
+import getContext from "./Context";
 import ReactContext from "./ReactContext";
 import update, { Spec as UpdateObject } from "immutability-helper";
 import { isObject as  _isObject } from "laji-map/lib/utils";
 const deepEquals = require("deep-equal");
 import { UiSchema, RJSFSchema } from "@rjsf/utils";
-import { FormContext, RootContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
+import { FormContext, Translations, Lang, FieldProps, ByLang } from "./components/LajiForm";
 import rjsfValidator from "@rjsf/validator-ajv6";
 
 export const isObject = _isObject;
@@ -129,7 +129,7 @@ interface SchemaFieldWrappersContext {
 
 export function getInnerUiSchema(parentUiSchema: UiSchema) {
 	let {uiSchema, ...restOfUiSchema} = parentUiSchema || {};
-	if (uiSchema && ((new Context("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (new Context("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
+	if (uiSchema && ((getContext("VIRTUAL_SCHEMA_NAMES") as VirtualSchemaNamesContext)[uiSchema["ui:field"]] || (getContext("SCHEMA_FIELD_WRAPPERS") as SchemaFieldWrappersContext)[uiSchema["ui:field"]]) && parentUiSchema["ui:buttons"]) {
 		uiSchema = {
 			...uiSchema,
 			"ui:buttons": [
@@ -367,7 +367,7 @@ const _focusById = (context: FormContext) => (id: string, focus = true) => {
 		if (tabbableFields && tabbableFields.length) {
 			focus && tabbableFields[0].focus();
 			scrollIntoViewIfNeeded(elem, context.topOffset, context.bottomOffset);
-			const rootContext = new Context(context.contextId) as RootContext;
+			const rootContext = getContext(context.contextId);
 			rootContext.lastIdToFocus = id; // Mark for components that manipulate scroll positions
 			rootContext.windowScrolled = getWindowScrolled();
 			return true;
@@ -380,7 +380,7 @@ export const focusById = (context: FormContext, id: string, focus?: boolean) => 
 
 const _focusAndScroll = (context: FormContext) => (idToFocus?: string, idToScroll?: string, focus = true) => {
 	const {contextId, topOffset, bottomOffset} = context;
-	const _context = new Context(contextId) as RootContext;
+	const _context = getContext(contextId);
 	if (idToFocus === undefined && idToScroll === undefined) return;
 	if (idToFocus && !context.utils.focusById(getKeyHandlerTargetId(idToFocus, _context), focus)) return false;
 	if (idToScroll) {
@@ -414,14 +414,14 @@ const _focusAndScroll = (context: FormContext) => (idToFocus?: string, idToScrol
 export const focusAndScroll = (context: FormContext, idToFocus?: string, idToScroll?: string, focus?: boolean) => _focusAndScroll(context)(idToFocus, idToScroll, focus);
 
 const _shouldSyncScroll = (context: FormContext) => () => {
-	return (new Context(context.contextId) as RootContext).windowScrolled === getWindowScrolled();
+	return getContext(context.contextId).windowScrolled === getWindowScrolled();
 };
 
 export const shouldSyncScroll = (context: FormContext) => _shouldSyncScroll(context)();
 
 export const _syncScroll = (context: FormContext) => (force = false) => {
 	if (force || shouldSyncScroll(context)) {
-		const {lastIdToFocus, lastIdToScroll} = new Context(context.contextId) as RootContext;
+		const {lastIdToFocus, lastIdToScroll} = getContext(context.contextId);
 		focusAndScroll(context, lastIdToFocus, lastIdToScroll, false);
 	}
 };
@@ -471,7 +471,7 @@ const _keyboardClick = ({contextId}: Pick<FormContext, "contextId">) => (fn: (e:
 	return (e: KeyboardEvent | React.KeyboardEvent) => {
 		let keys = [" ", "Enter"];
 		if ((e.target as HTMLElement)?.matches?.(tabbableSelectorsQuery)) {
-			const {shortcuts} = new Context(contextId) as RootContext;
+			const {shortcuts} = getContext(contextId);
 			keys = keys.filter(k => !shortcuts[k]);
 		}
 		if (keys.every(k => e.key !== k)) {
@@ -536,7 +536,7 @@ export function isDescendant(parent: HTMLElement | null, child: HTMLElement) {
 	return false;
 }
 
-export function getKeyHandlerTargetId(target = "", context: RootContext, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
+export function getKeyHandlerTargetId(target = "", context: any, formData?: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	while (target.match(/%\{([^{}]*)\}/)) {
 		const path = /%\{([^{}]*)\}/.exec(target)?.[1] || "";
 		if (!path.startsWith("context") && !path.startsWith("formData")) throw Error("Should evaluate 'context' or 'formData'");

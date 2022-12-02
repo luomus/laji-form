@@ -1,5 +1,5 @@
-import {FormContext, RootContext} from "../components/LajiForm";
-import Context from "../Context";
+import { FormContext } from "../components/LajiForm";
+import getContext from "../Context";
 import { getKeyHandlerTargetId, isDescendant } from "../utils";
 
 export type KeyFunctions = {[fnName: string]: (e: KeyboardEvent, options: any) => boolean | void}
@@ -147,7 +147,7 @@ export default class KeyhandlerService {
 
 		const targets = this.keyHandlerTargets
 			.filter(({handler}) => handler.conditions.every(condition => condition(e)))
-			.map(({id}) => getKeyHandlerTargetId(id, new Context(this.formContext.contextId) as RootContext));
+			.map(({id}) => getKeyHandlerTargetId(id, getContext(this.formContext.contextId)));
 		order = [...targets, ...order];
 
 		order.some(id => this.keyHandleListeners[id]?.some((keyHandleListener: KeyHandleListener) => keyHandleListener(e)));
@@ -206,7 +206,7 @@ export default class KeyhandlerService {
 		}
 
 		const highPriorityHandled = this.keyHandlers.some(keyHandler => {
-			let target = getKeyHandlerTargetId(keyHandler.target, new Context(this.formContext.contextId) as RootContext);
+			let target = getKeyHandlerTargetId(keyHandler.target, getContext(this.formContext.contextId));
 			if (keyFunctions[keyHandler.fn] && "target" in keyHandler && id.match(target) && keyHandler.conditions.every(condition => condition(e))) {
 				if (!handleKey(keyHandler)) {
 					e.preventDefault();

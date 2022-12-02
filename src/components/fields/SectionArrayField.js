@@ -5,7 +5,7 @@ import { getUiOptions, updateSafelyWithJSONPointer, uiSchemaJSONPointer, parseSc
 import VirtualSchemaField from "../VirtualSchemaField";
 import TitleFieldTemplate from "../templates/TitleField";
 import { DeleteButton, Button, Affix } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { handlesArrayKeys, arrayKeyFunctions } from "../templates/ArrayFieldTemplate";
 
@@ -414,8 +414,8 @@ class SectionArrayFieldTemplate extends React.Component {
 
 		const idToFocus =  `${this.props.idSchema.$id}_${idx}`;
 		let {idToScrollAfterAdd = `${this.props.idSchema.$id}-add-section`} = getUiOptions(uiSchema || {});
-		new Context(formContext.contextId).idToFocus = idToFocus;
-		new Context(formContext.contextId).idToScroll = idToScrollAfterAdd;
+		getContext(formContext.contextId).idToFocus = idToFocus;
+		getContext(formContext.contextId).idToScroll = idToScrollAfterAdd;
 
 		formContext.this.props.onChange(items);
 		this.hideAddSection();

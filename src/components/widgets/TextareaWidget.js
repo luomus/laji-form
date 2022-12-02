@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { stringifyKeyCombo } from "../../utils";
 import { TooltipComponent } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { getUiOptions } from "../../utils";
 
@@ -24,7 +24,7 @@ export default class TextareaWidget extends React.Component {
 		this.state = this.getStateFromProps(props);
 		this.textareaRef = React.createRef();
 
-		this._context = new Context(props.formContext.contextId);
+		this._context = getContext(props.formContext.contextId);
 		Object.keys(props.formContext.services.keyHandler.shortcuts).some(keyCombo => {
 			if (keyCombo === "Enter") {
 			//	// Direct mutation should be ok in constructor.

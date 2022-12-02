@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, getUiOptions, isEmptyString, getNestedTailUiSchema, updateTailUiSchema, bringRemoteFormData,  getDefaultFormState  } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import { FetcherInput } from "../components";
 import { Autosuggest } from "../widgets/AutosuggestWidget";
@@ -38,7 +38,7 @@ export default class UnitShorthandField extends React.Component {
 		const {persistenceKey} = getUiOptions(props.uiSchema);
 		let showSchema = undefined;
 		if (persistenceKey) {
-			const persistingContainer = new Context(`${props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`);
+			const persistingContainer = getContext(`${props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`);
 			if (persistingContainer && "value" in persistingContainer) {
 				showSchema = persistingContainer.value;
 			} else {
@@ -75,7 +75,7 @@ export default class UnitShorthandField extends React.Component {
 		const {persistenceKey} = getUiOptions(this.props.uiSchema);
 		this.setState({showSchema: !this.state.showSchema}, () => {
 			this.props.formContext.utils.focusById(this.props.idSchema.$id);
-			new Context(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
+			getContext(`${this.props.formContext.contextId}_UNIT_SHORTHAND_FIELD_PERSISTENCE_${persistenceKey}`).value = this.state.showSchema;
 		});
 	}
 

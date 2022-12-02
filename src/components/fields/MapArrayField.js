@@ -9,7 +9,7 @@ import { combineColors } from "laji-map/lib/utils";
 import { NORMAL_COLOR }  from "laji-map/lib/globals";
 import { Button, Stretch } from "../components";
 import { getUiOptions, getInnerUiSchema, hasData, immutableDelete, getBootstrapCols, isNullOrUndefined, parseJSONPointer, injectButtons, formatErrorMessage, getUpdateObjectFromJSONPointer, isEmptyString, isObject, formatValue, parseSchemaFromFormDataPointer, parseUiSchemaFromFormDataPointer, scrollIntoViewIfNeeded, updateSafelyWithJSONPointer, getUUID, highlightElem, getDefaultFormState } from "../../utils";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getPropsForFields } from "./NestField";
@@ -1131,7 +1131,7 @@ class _MapArrayField extends ComposedComponent { // eslint-disable-line indent
 
 	constructor(props) {
 		super(props);
-		this._context = new Context(`${props.formContext.contextId}_MAP_CONTAINER`);
+		this._context = getContext(`${props.formContext.contextId}_MAP_CONTAINER`);
 		this._context.featureIdxsToItemIdxs = {};
 		this._context.setState = (state, callback) => this.setState(state, callback);
 
@@ -1780,8 +1780,8 @@ export class MapComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {mapOptions: {}};
-		this.mainContext = new Context(props.formContext.contextId);
-		this._context = new Context(`${props.formContext.contextId}_MAP`);
+		this.mainContext = getContext(props.formContext.contextId);
+		this._context = getContext(`${props.formContext.contextId}_MAP`);
 		this._context.grabFocus = this.grabFocus;
 		this._context.releaseFocus = this.releaseFocus;
 		this._context.showPanel = this.showPanel;

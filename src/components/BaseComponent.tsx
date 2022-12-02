@@ -1,7 +1,7 @@
 const deepEquals = require("deep-equal");
 import { getReactComponentName, parseJSONPointer, getUUID as _getUUID } from "../utils";
-import Context from "../Context";
-import { FieldProps, WidgetProps, RootContext } from "./LajiForm";
+import getContext from "../Context";
+import { FieldProps, WidgetProps } from "./LajiForm";
 import { SubmitHook } from "../services/submit-hook-service";
 
 type Constructor<T> = new(...args: any[]) => T;
@@ -29,7 +29,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		loadSettings(props: P, target: any = {}, rule: RegExp) {
 			const {uiSchema, formContext} = props;
 
-			if (uiSchema && uiSchema["ui:settings"]) {
+			if (uiSchema?.["ui:settings"]) {
 				const {settings} = formContext.services.settings;
 				uiSchema["ui:settings"].forEach((key: string) => {
 					if (this.getSettingsKey(props, key) in settings) {
@@ -135,7 +135,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 		}
 
 		getContext() {
-			return new Context(this.props.formContext.contextId) as RootContext;
+			return getContext(this.props.formContext.contextId);
 		}
 
 		getUUID() {

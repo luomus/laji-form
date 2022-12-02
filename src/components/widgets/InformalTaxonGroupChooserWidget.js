@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { TooltipComponent } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import * as Spinner from "react-spinner";
 import BaseComponent from "../BaseComponent";
@@ -144,7 +144,7 @@ export function getInformalGroups(apiClient) {
 		const informalTaxonGroups = mapGroupsById(response.results);
 		// Contains all groups in flat object.
 		const informalTaxonGroupsById = walk({}, response.results);
-		new Context().informalTaxonGroupsById = informalTaxonGroupsById;
+		getContext().informalTaxonGroupsById = informalTaxonGroupsById;
 		return Promise.resolve({informalTaxonGroups, informalTaxonGroupsById});
 	});
 }

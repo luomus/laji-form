@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { getUiOptions } from "../../utils";
 import Isvg from "react-inlinesvg";
 import SelectWidget from "./SelectWidget";
@@ -18,7 +18,7 @@ export default class ImageSelectWidget extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this._context = new Context("IMAGES");
+		this._context = getContext("IMAGES");
 	}
 
 	render() {

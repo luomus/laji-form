@@ -8,7 +8,7 @@ import { orderProperties } from "@rjsf/utils";
 import { DeleteButton, Help, TooltipComponent, Button, Affix } from "../components";
 import _ArrayFieldTemplate, { getButtons, getButtonElems, getButtonsForPosition, arrayKeyFunctions, arrayItemKeyFunctions, handlesArrayKeys, beforeAdd, onDelete } from "../templates/ArrayFieldTemplate";
 import { copyItemFunction } from "./ArrayField";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { getLineTransectStartEndDistancesForIdx } from "laji-map/lib/utils";
@@ -842,7 +842,7 @@ class TableArrayFieldTemplate extends React.Component {
 		const Title = renderTitleAsLabel ? Label : TitleFieldTemplate;
 		const foundProps = {};
 		const shownColumnsDict = dictionarify(shownColumns);
-		const {tmpImgs = {}} = new Context("IMAGE_ARRAY_FIELD");
+		const {tmpImgs = {}} = getContext("IMAGE_ARRAY_FIELD");
 		let cols = Object.keys(schema.items.properties).reduce((_cols, prop) => {
 			if (formData.some(item => {
 				const found = 
@@ -1016,7 +1016,7 @@ const headerFormatters = {
 
 			that.hoveredIdx = idx;
 			if (!force && idx === that.state.activeIdx) return;
-			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
+			const map = getContext(`${that.props.formContext.contextId}_MAP`).map;
 			const gatheringGeometries = (item && item.geometry && item.geometry.geometries) ? item.geometry.geometries : [];
 
 			const unitGeometries = [...(item && item.units ? item.units : [])]
@@ -1035,7 +1035,7 @@ const headerFormatters = {
 			});
 		},
 		onMouseLeave: (that) => {
-			const map = new Context(`${that.props.formContext.contextId}_MAP`).map;
+			const map = getContext(`${that.props.formContext.contextId}_MAP`).map;
 			const lastData = map.data[map.data.length -1];
 			if (lastData && lastData.temp) {
 				map.removeData(map.data.length - 1);

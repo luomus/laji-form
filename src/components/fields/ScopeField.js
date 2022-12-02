@@ -5,7 +5,7 @@ const equals = require("deep-equal");
 import * as Spinner from "react-spinner";
 import { GlyphButton } from "../components";
 import { propertyHasData, hasData, isDefaultData, getUiOptions, getInnerUiSchema, parseJSONPointer, isNullOrUndefined, dictionarify, isObject } from "../../utils";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { computeUiSchema } from "./ConditionalUiSchemaField";
@@ -134,7 +134,7 @@ export default class ScopeField extends React.Component {
 		const {additionalsPersistenceField, additionalPersistenceContextKey} = getUiOptions(props.uiSchema);
 		let formDataItem = props.formData[additionalsPersistenceField];
 		if (additionalPersistenceContextKey && (formDataItem === undefined || Array.isArray(formDataItem) && formDataItem.length === 0)) {
-			formDataItem = new Context(this.props.formContext.contextId)[additionalPersistenceContextKey];
+			formDataItem = getContext(this.props.formContext.contextId)[additionalPersistenceContextKey];
 		}
 		let items = (Array.isArray(formDataItem) ? formDataItem : [formDataItem]);
 		if (includeUndefined) items = ["undefined", ...items];
@@ -647,4 +647,4 @@ function GlyphField({settings, idSchema, formData, schema, isIncluded, toggleAdd
 	);
 }
 
-new Context("SCHEMA_FIELD_WRAPPERS").ScopeField = true;
+getContext("SCHEMA_FIELD_WRAPPERS").ScopeField = true;

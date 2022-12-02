@@ -9,7 +9,7 @@ import {
 	parseSchemaFromFormDataPointer
 } from "../../utils";
 import BaseComponent from "../BaseComponent";
-import Context from "../../Context";
+import getContext from "../../Context";
 
 @BaseComponent
 export default class ToggleAdditionalArrayFieldsField extends React.Component {
@@ -39,7 +39,7 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 	getInitialVisible(props) {
 		const {additionalFields} = getUiOptions(props.uiSchema);
 
-		const context = new Context(props.formContext.contextId);
+		const context = getContext(props.formContext.contextId);
 		let visible = context[this.getTogglePersistenceContextKey(props)] || false;
 
 		if (!visible) {
@@ -66,7 +66,7 @@ export default class ToggleAdditionalArrayFieldsField extends React.Component {
 
 	toggleVisibility = () => {
 		const visible = !this.state.visible;
-		const context = new Context(this.props.formContext.contextId);
+		const context = getContext(this.props.formContext.contextId);
 		context[this.getTogglePersistenceContextKey(this.props)] = visible;
 		this.setState({visible});
 	}

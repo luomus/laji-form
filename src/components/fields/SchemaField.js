@@ -1,5 +1,5 @@
 import * as React from "react";
-import Context from "../../Context";
+import getContext from "../../Context";
 import { isMultiSelect, getUiOptions } from "../../utils";
 import { isObject } from "laji-map/lib/utils";
 import { getInjectedUiSchema } from "./ContextInjectionField";

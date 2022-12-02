@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import { getUiOptions, getInnerUiSchema, isEmptyString, addLajiFormIds, getDefaultFormState } from "../../utils";
 import { Button, DeleteButton } from "../components";
 import * as Spinner from "react-spinner";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import { Map } from "./MapArrayField";
@@ -446,4 +446,4 @@ class Popup extends React.Component {
 	}
 }
 
-new Context("SCHEMA_FIELD_WRAPPERS").NamedPlaceChooserField = true;
+getContext("SCHEMA_FIELD_WRAPPERS").NamedPlaceChooserField = true;

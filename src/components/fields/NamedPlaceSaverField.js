@@ -3,7 +3,7 @@ import { findDOMNode }  from "react-dom";
 import * as PropTypes from "prop-types";
 import { getInnerUiSchema, isEmptyString, getUiOptions } from "../../utils";
 import { Button } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 import BaseComponent from "../BaseComponent";
 import * as Spinner from "react-spinner";
@@ -277,4 +277,4 @@ class PlaceSaverDialog extends React.Component {
 	}
 }
 
-new Context("SCHEMA_FIELD_WRAPPERS").NamedPlaceSaverField = true;
+getContext("SCHEMA_FIELD_WRAPPERS").NamedPlaceSaverField = true;

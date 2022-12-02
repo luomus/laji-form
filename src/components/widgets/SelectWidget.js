@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import * as Combobox from "react-widgets/lib/Combobox";
 import * as Multiselect from "react-widgets/lib/Multiselect";
 import { TooltipComponent } from "../components";
-import Context from "../../Context";
+import getContext from "../../Context";
 import ReactContext from "../../ReactContext";
 
 import { isEmptyString, getUiOptions, filter } from "../../utils";
@@ -15,7 +15,7 @@ class SelectWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = this.getStateFromProps(props);
-		this._context = new Context(this.props.formContext.contextId);
+		this._context = getContext(this.props.formContext.contextId);
 	}
 
 	componentDidMount() {
