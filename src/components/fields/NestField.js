@@ -129,13 +129,10 @@ export default class NestField extends React.Component {
 
 	static getName() {return "NestField";}
 
-	getStateFromProps(props) {
-		const options = this.getUiOptions();
+	getStateFromProps(props, origProps) {
+		let {schema, uiSchema, idSchema, errorSchema, formData = {}} = props;
 
-		let {schema, uiSchema, idSchema, errorSchema, formData = {}, registry} = props;
-
-		const {nests, buttonsNest} = options;
-		const buttons = getUiOptions(uiSchema).buttons;
+		const {nests, buttonsNest, buttons} = getUiOptions(origProps.uiSchema);
 		const uiButtons = uiSchema["ui:buttons"];
 
 		const nestedPropsMap = {};
