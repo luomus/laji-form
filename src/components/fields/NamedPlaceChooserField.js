@@ -40,6 +40,10 @@ export default class NamedPlaceChooserField extends React.Component {
 
 	getUiSchema = (props) => {
 		if (this.buttonDefinition) {
+			this.buttonDefinition = {
+				...this.buttonDefinition,
+				label: props.formContext.translations.ChooseFromNamedPlace
+			};
 			const innerUiSchema = getInnerUiSchema(props.uiSchema);
 			const options = getUiOptions(innerUiSchema);
 			return {
