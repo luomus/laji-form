@@ -22,12 +22,15 @@ export default class InputWithDefaultValueButtonWidget extends React.Component {
 	render() {
 		const {InputGroup, Button} = this.context.theme;
 		const {buttonLabel} = getUiOptions(this.props);
+		const {disabled, readonly} = this.props;
 
 		return (
 			<InputGroup>
 				<BaseInputTemplate {...this.props} />
 				<InputGroup.Button className={"input-group-button"}>
-					<Button onClick={this.onClick}>{buttonLabel}</Button>
+					<Button onClick={this.onClick} disabled={disabled || readonly}>
+						{buttonLabel}
+					</Button>
 				</InputGroup.Button>
 			</InputGroup>
 		);

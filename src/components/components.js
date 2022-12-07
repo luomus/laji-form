@@ -452,10 +452,12 @@ export function Label({label, help, children, id, required, contextId, helpHover
 		): label}</Tooltip>
 	);
 
+	const requiredHtml = required ? "<span class='text-danger'>*</span>" : "";
+
 	const labelElem = (
 		<label htmlFor={id}>
 			<div>
-				<strong dangerouslySetInnerHTML={{__html: label + (required ? "*" :  "")}} />
+				<strong dangerouslySetInnerHTML={{__html: label + requiredHtml}} />
 				{showHelp ? <Help /> : null}
 			</div>
 			{children}

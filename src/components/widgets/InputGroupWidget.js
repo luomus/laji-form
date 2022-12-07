@@ -31,7 +31,7 @@ export default class InputGroupWidget extends React.Component {
 		return (
 			<InputGroup key={inputGroupText} className={classNames("input-group-widget", `input-group-${inputType}`, className)}>
 				<InputGroup.Addon className={"input-group-text"}>
-					{inputGroupText + (this.props.required ? "*" : "")}
+					{inputGroupText}{this.props.required && <span className={"text-danger"}>*</span>}
 				</InputGroup.Addon>
 				{input}
 			</InputGroup>
