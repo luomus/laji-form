@@ -47,6 +47,7 @@ export default class SettingsService {
 	onSettingsChange = (global = false) => {
 		const settings = this.getSettings(global);
 		if (!equals(this.settings, settings)) {
+			this.settings = settings;
 			this._onSettingsChange(settings, global)
 		}
 	}

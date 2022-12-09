@@ -2018,7 +2018,6 @@ export class Map extends React.Component {
 		mapOptions.lang = mapOptions.lang || formContext.lang;
 		mapOptions.googleApiKey = formContext.googleApiKey;
 		mapOptions.rootElem = this.refs.map;
-		console.log(props);
 		const {lajiGeoServerAddress} = props.formContext;
 		if (lajiGeoServerAddress) {
 			mapOptions.lajiGeoServerAddress = lajiGeoServerAddress;

@@ -154,14 +154,15 @@ export default class ScopeField extends React.Component {
 		const {additionalsPersistenceField, additionalsPersistenceKey} = getUiOptions(props.uiSchema);
 
 		let additionalFields = additionalsPersistenceField
-			?  {}
+			? {}
 			: (this.state ? this.state.additionalFields : {});
 
 		if (additionalsPersistenceKey) {
+			if (!props.formContext.globals[`scopeField_${additionalsPersistenceKey}`]) {
+				props.formContext.globals[`scopeField_${additionalsPersistenceKey}`] = {};
+			}
 			this._globals = props.formContext.globals[`scopeField_${additionalsPersistenceKey}`];
-		}
 
-		if (this._globals) {
 			let additionalsToAdd = {};
 			if (additionalsPersistenceField) {
 				const additionalPersistenceValue = this.getAdditionalPersistenceValue(props);

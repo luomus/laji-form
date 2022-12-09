@@ -1,6 +1,5 @@
 const deepEquals = require("deep-equal");
 import { getReactComponentName, parseJSONPointer, getUUID as _getUUID } from "../utils";
-import getContext from "../Context";
 import { FieldProps, WidgetProps } from "./LajiForm";
 import { SubmitHook } from "../services/submit-hook-service";
 
@@ -21,7 +20,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			const props: P = args[0];
 			super(props);
 			this.onChange = this.onChange.bind(this);
-			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadContextSettings(props, this.getContext());
+			if (props.uiSchema && props.uiSchema["ui:settings"]) this.loadGlobalSettings(props, this.getGlobals());
 			if (!this.state && this.getStateFromProps) this.state = this.getStateFromProps(props);
 			if (props.uiSchema && props.uiSchema["ui:settings"]) this.state = this.loadStateSettings(props, this.state);
 		}
@@ -46,7 +45,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			return target;
 		}
 
-		loadContextSettings(props: P, context: any) {
+		loadGlobalSettings(props: P, context: any) {
 			return this.loadSettings(props, context, /^%/);
 		}
 
@@ -97,7 +96,7 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			if (props.uiSchema) (props.uiSchema["ui:settings"] || []).forEach((key: string) => {
 				this.props.formContext.services.settings.addSettingSaver(this.getSettingsKey(props, key), () => {
 					if (key.match(/^%/)) {
-						return parseSettingSaver(this.getContext(), key.replace(/^%[^/]*/, ""));
+						return parseSettingSaver(this.getGlobals(), key.replace(/^%[^/]*/, ""));
 					} else {
 						return parseSettingSaver(this.state, key);
 					}
@@ -134,8 +133,8 @@ export function BaseComponent<P extends FieldProps | WidgetProps, S, LFC extends
 			super.onChange ? super.onChange(formData) : this.props.onChange(formData);
 		}
 
-		getContext() {
-			return getContext(this.props.formContext.contextId);
+		getGlobals() {
+			return this.props.formContext.globals;
 		}
 
 		getUUID() {
